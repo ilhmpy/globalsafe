@@ -3,7 +3,7 @@ import * as signalR from "@microsoft/signalr";
 
 type Nulable<T> = T | null;
 //"https://dev.globalsafe.me/api";
-const APIURL = "ws://dev.globalsafe.me/api";
+const APIURL = "https://dev.globalsafe.me/api/accounts";
 
 export const AppContext = React.createContext<any>({
   hubConnection: null,

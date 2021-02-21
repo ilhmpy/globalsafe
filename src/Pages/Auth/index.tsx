@@ -44,7 +44,7 @@ export const Authentication = () => {
 
               if (hubConnection) {
                 hubConnection
-                  .invoke("CheckAccount", "test")
+                  .invoke("SendAuthCode", "stella1")
                   .then((res: any) => {
                     console.log("res", res);
                   })
