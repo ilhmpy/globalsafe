@@ -21,8 +21,17 @@ steps:
   displayName: 'npm install and build'
   failOnStderr: false
 
+
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(System.DefaultWorkingDirectory)/build'
+    includeRootFolder: false
+    archiveType: 'tar'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/archive/front.tar.gz'
+    replaceExistingArchive: true
+
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: 'build'
+    PathtoPublish: '$(build.artifactstagingdirectory)/archive/'
     ArtifactName: 'front'
     publishLocation: 'Container'
