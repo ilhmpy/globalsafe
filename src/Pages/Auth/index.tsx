@@ -6,17 +6,68 @@ import styled from "styled-components/macro";
 import { Input, MyInput } from "../../components/UI/Input";
 import { Page } from "../../components/UI/Page";
 import { AppContext } from "../../context/HubContext";
-import { Formik, Form, ErrorMessage, Field } from "formik";
-import * as Yup from "yup";
+import { useHistory } from "react-router-dom";
 
 export const Authentication = () => {
-  const [formValues, setFormValues] = useState<any>();
-  const validationSchema = Yup.object().shape({
-    name: Yup.string().min(2, "Логин не верный").required("Введите логин"),
-  });
-
+  const [error, setError] = useState(true);
+  const [login, setLogin] = useState(false);
+  const [password, setPassword] = useState("");
+  const [value, setValue] = useState("");
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
+  const history = useHistory();
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setError(true);
+    setValue(e.target.value);
+  };
+
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log("submit", value);
+    if (hubConnection) {
+      hubConnection
+        .invoke("CheckAccount", value)
+        .then((res: boolean) => {
+          console.log("res", res);
+          if (res) {
+            loginSubmit();
+          } else {
+            setError(false);
+            setValue("");
+          }
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  };
+
+  const singIn = () => {
+    if (hubConnection) {
+      hubConnection
+        .invoke("SignIn", { login: value, password: password, signInMethod: 3 })
+        .then((res: any) => {
+          console.log("res", res);
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  };
+
+  const loginSubmit = () => {
+    if (hubConnection) {
+      hubConnection
+        .invoke("SendAuthCode", value)
+        .then((res: boolean) => {
+          console.log("res", res);
+          setLogin(true);
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  };
+
+  const onSubmitCode = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    singIn();
+  };
 
   return (
     <Page>
@@ -25,82 +76,48 @@ export const Authentication = () => {
       </Container>
       <Container>
         <CardContainer>
-          {/* <<FormBlock>
-            <H4>Войти в аккаунт</H4>
-            <Input placeholder="Введите логин" />
-            <Submit danger type="submit">
-              Получить код
-            </Submit>
-          </FormBlock> */}
-          <H4>Войти в аккаунт</H4>
-          <Formik
-            initialValues={{
-              name: "",
-            }}
-            validationSchema={validationSchema}
-            onSubmit={(values, actions) => {
-              // console.log(values);
-              setFormValues(values);
-
-              if (hubConnection) {
-                hubConnection
-                  .invoke("SendAuthCode", "stella1")
-                  .then((res: any) => {
-                    console.log("res", res);
-                  })
-                  .catch((e: Error) => {
-                    console.log(e);
-                  });
-              }
-
-              const timeOut = setTimeout(() => {
-                actions.setSubmitting(false);
-
-                clearTimeout(timeOut);
-              }, 1000);
-            }}
-          >
-            {({
-              values,
-              errors,
-              touched,
-              handleSubmit,
-              isSubmitting,
-              isValidating,
-              isValid,
-            }) => {
-              return (
-                <>
-                  <FormBlock
-                    name="contact"
-                    method="post"
-                    onSubmit={handleSubmit}
-                  >
-                    <MyInput
-                      type="text"
-                      name="name"
-                      placeholder="Введите логин"
-                      valid={touched.name && !errors.name}
-                      error={touched.name && errors.name}
-                    />
-                    {errors.name && touched.name && (
-                      <StyledInlineErrorMessage>
-                        {errors.name}
-                      </StyledInlineErrorMessage>
-                    )}
-                    <Submit
-                      as="button"
-                      disabled={!isValid || isSubmitting}
-                      danger
-                      type="submit"
-                    >
-                      Получить код
-                    </Submit>
-                  </FormBlock>
-                </>
-              );
-            }}
-          </Formik>
+          {login ? (
+            <FormBlock onSubmit={onSubmitCode}>
+              <H4>Войти в аккаунт</H4>
+              <Input
+                value={password}
+                name="password"
+                placeholder="Введите код"
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              {!error && (
+                <StyledInlineErrorMessage>
+                  Код не верный
+                </StyledInlineErrorMessage>
+              )}
+              <Submit
+                as="button"
+                danger
+                type="submit"
+                disabled={password === ""}
+              >
+                Войти
+              </Submit>
+            </FormBlock>
+          ) : (
+            <FormBlock onSubmit={onSubmit}>
+              <H4>Войти в аккаунт</H4>
+              <Input
+                value={value}
+                name="login"
+                placeholder="Введите логин"
+                onChange={onChange}
+              />
+              {!error && (
+                <StyledInlineErrorMessage>
+                  Логин не верный
+                </StyledInlineErrorMessage>
+              )}
+              <Submit as="button" danger type="submit" disabled={value === ""}>
+                Получить код
+              </Submit>
+            </FormBlock>
+          )}
         </CardContainer>
       </Container>
     </Page>
@@ -116,7 +133,7 @@ const H4 = styled.h4`
   margin-bottom: 20px;
 `;
 
-const FormBlock = styled(Form)`
+const FormBlock = styled.form`
   margin: 0 auto;
   width: 200px;
   display: flex;
