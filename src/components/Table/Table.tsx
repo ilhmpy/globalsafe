@@ -1,9 +1,27 @@
-import React from "react";
+import React, { useState, useContext, useEffect } from "react";
+import { AppContext } from "../../context/HubContext";
 import styled from "styled-components/macro";
 import { ReactComponent as Filter } from "../../assets/svg/filter.svg";
 
 export const Tables = () => {
   const arr = [1, 2, 3, 4];
+  const [num, setNum] = useState(5);
+  const [list, setList] = useState<any>([]);
+  const appContext = useContext(AppContext);
+  const hubConnection = appContext.hubConnection;
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection
+        .invoke("GetUserDeposits", [1, 2, 3, 4], 0, 20)
+        .then((res: any) => {
+          console.log("coll", res);
+          setList(res.collection);
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  }, [hubConnection]);
+
   return (
     <TableWrap>
       <Table>
@@ -27,26 +45,30 @@ export const Tables = () => {
             </tr>
           );
         })} */}
-          <TR>
-            <TD>
-              <Name>Название Депозита №1</Name>
-              <NameData>
-                <NameData>01/01/2020</NameData>{" "}
-                <NameData>&nbsp; - &nbsp;</NameData>
-                <NameData green>31/12/2021</NameData>
-              </NameData>
-            </TD>
-            <TD>
-              <Text>Описание первого депозита с повышенной доходностью</Text>
-            </TD>
-            <TD>
-              <Text>40 000</Text>
-            </TD>
-            <TD>
-              <Text>01 марта 2021</Text>
-            </TD>
-          </TR>
-          <TR>
+          {list.length &&
+            list.map((item: any) => (
+              <TR key={item.safeId}>
+                <TD>
+                  <Name>{item.deposit.name}</Name>
+                  <NameData>
+                    <NameData>01/01/2020</NameData>{" "}
+                    <NameData>&nbsp; - &nbsp;</NameData>
+                    <NameData green>31/12/2021</NameData>
+                  </NameData>
+                </TD>
+                <TD>
+                  <Text>{item.deposit.description}</Text>
+                </TD>
+                <TD>
+                  <Text>{item.amount}</Text>
+                </TD>
+                <TD>
+                  <Text>01 марта 2021</Text>
+                </TD>
+              </TR>
+            ))}
+
+          {/* <TR>
             <TD>
               <Name>Название Депозита №2</Name>
               <NameData>
@@ -64,7 +86,7 @@ export const Tables = () => {
             <TD>
               <Text>04 марта 2021</Text>
             </TD>
-          </TR>
+          </TR> */}
         </tbody>
       </Table>
     </TableWrap>
@@ -120,6 +142,12 @@ const TR = styled.tr`
   border-bottom: 1px solid rgba(81, 81, 114, 0.2);
   &:last-child {
     opacity: 0.4;
+  }
+  &:nth-child(3) {
+    padding-left: 30px;
+  }
+  ${TD}:nth-child(3) {
+    padding-left: 30px;
   }
   @media (max-width: 992px) {
     ${TH}:last-child,
