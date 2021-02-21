@@ -24,9 +24,9 @@ steps:
 - task: ArchiveFiles@2
   inputs:
     rootFolderOrFile: '$(Build.BinariesDirectory)'
-    includeRootFolder: false
+    includeRootFolder: true
     archiveType: 'tar'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/archive/front.tar.gz'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/front.tar.gz'
     replaceExistingArchive: true
 
 - task: PublishBuildArtifacts@1
