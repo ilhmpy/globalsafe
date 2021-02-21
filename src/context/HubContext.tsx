@@ -20,6 +20,7 @@ export const HubProvider: FC = ({ children }) => {
       .withUrl(APIURL, {
         skipNegotiation: true,
         transport: signalR.HttpTransportType.WebSockets,
+        accessTokenFactory: () => localStorage.getItem("token") || "",
       })
       .withAutomaticReconnect()
       .build();

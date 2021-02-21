@@ -47,10 +47,16 @@ export const Authentication = () => {
         .invoke("SignIn", { login: value, password: password, signInMethod: 3 })
         .then((res: any) => {
           console.log("res", res);
+          if (res.token !== null) {
+            localStorage.setItem("token", res.token);
+            history.push("/info");
+          }
         })
         .catch((err: Error) => console.log(err));
     }
   };
+
+  console.log("value", value, password);
 
   const loginSubmit = () => {
     if (hubConnection) {
