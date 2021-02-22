@@ -25,7 +25,7 @@ export const Header = () => {
 
   function handleClick() {
     if (!user) {
-      history.push("/register");
+      history.push("/login");
     } else {
       history.push("/info");
     }
@@ -60,7 +60,13 @@ export const Header = () => {
             <span></span>
           </MenuBtn>
           <HeaderMenu open={open}>
-            <Nav onClose={onClose} />
+            <Nav
+              onClose={onClose}
+              handleClick={handleClick}
+              user={user}
+              logOut={logOut}
+              location={location.pathname}
+            />
           </HeaderMenu>
           {location.pathname === "/" ? (
             <Button onClick={handleClick}>Личный кабинет</Button>

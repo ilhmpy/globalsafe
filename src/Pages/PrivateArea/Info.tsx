@@ -104,7 +104,7 @@ export const Info = () => {
         <Container>
           <Card>
             <InfoWrap>
-              <InfoTitle>Account1</InfoTitle>
+              <InfoTitle>{user}</InfoTitle>
               {/* <InfoButtons>
                 <Button dangerOutline>Новый депозит</Button>
                 <Button danger>Вывести деньги</Button>
