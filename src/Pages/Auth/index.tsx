@@ -3,6 +3,7 @@ import { Button } from "../../components/Button/Button";
 import { UpTitle } from "../../components/UI/UpTitle";
 import { Container, Card } from "../../globalStyles";
 import styled from "styled-components/macro";
+import { Redirect } from "react-router-dom";
 import { Input, MyInput } from "../../components/UI/Input";
 import { Page } from "../../components/UI/Page";
 import { AppContext } from "../../context/HubContext";
@@ -16,6 +17,8 @@ export const Authentication = () => {
   const [value, setValue] = useState("");
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
+  const user = appContext.user;
+  const logIn = appContext.login;
   const history = useHistory();
   const [myToken, setMyToken] = useLocalStorage("token");
 
@@ -23,6 +26,11 @@ export const Authentication = () => {
     setError(true);
     setValue(e.target.value);
   };
+  useEffect(() => {
+    if (user) {
+      history.replace("/info");
+    }
+  }, [user]);
 
   const onChangeNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError(true);
@@ -49,6 +57,11 @@ export const Authentication = () => {
     }
   };
 
+  const t =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyODUyODExMzgxMTU2MDg1NzYiLCJ1bmlxdWVfbmFtZSI6InN0ZWxsYTEiLCJlbWFpbCI6IiIsIm5iZiI6MTYxMzkzMzkxMywiZXhwIjoxNjIxNjIzNTEzLCJpYXQiOjE2MTM5MzM5MTN9.yr9i-GiMELpdz0_kIRZLGu6SEjy6jn2ExqDaAQ6BJKI";
+  const fake = () => {
+    logIn(t);
+  };
   const singIn = () => {
     if (hubConnection) {
       hubConnection
@@ -56,11 +69,10 @@ export const Authentication = () => {
         .then((res: any) => {
           console.log("res", res);
           if (res.token !== null) {
-            setMyToken(res.token);
-            history.push("/info");
+            logIn(res.token);
           }
         })
-        .catch((err: Error) => console.log(err));
+        .catch((err: Error) => setError(false));
     }
   };
 
@@ -135,6 +147,7 @@ export const Authentication = () => {
               </Submit>
             </FormBlock>
           )}
+          {/* <Submit onClick={fake}>Fake</Submit> */}
         </CardContainer>
       </Container>
     </AuthPage>
