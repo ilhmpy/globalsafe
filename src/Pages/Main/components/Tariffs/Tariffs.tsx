@@ -78,7 +78,6 @@ export const Tariffs = () => {
       {isNormalOpen && (
         <Modal onClose={() => setIsNormalOpen(false)}>
           <ModalBlock>
-            <span onClick={() => setIsNormalOpen(false)}>&times;</span>
             <ModalTitle>Размер депозита</ModalTitle>
             <Input
               onChange={onChange}

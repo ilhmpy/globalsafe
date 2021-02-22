@@ -2,26 +2,81 @@ import React, { useState, useContext, useEffect } from "react";
 import { AppContext } from "../../context/HubContext";
 import styled from "styled-components/macro";
 import { ReactComponent as Filter } from "../../assets/svg/filter.svg";
+import { Name, NameData, Text } from "./Table.styled";
 import moment from "moment";
 import "moment/locale/ru";
+import { Balance } from "../../types/balance";
+import { useHistory } from "react-router-dom";
+
+import { TableModal } from "./TableModal";
 moment.locale("ru");
 
-export const Tables = () => {
+const Row = ({ data }: any) => {
+  const [open, setOpen] = useState<boolean | string>(false);
+  const history = useHistory();
+  const onClose = () => {
+    console.log("close");
+    setOpen(false);
+  };
+
+  const onClick = (id: string) => {
+    if (window.innerWidth < 992) {
+      history.push(`info/${id}`);
+    } else {
+      setOpen(data.safeId);
+    }
+  };
+
+  return (
+    <>
+      <TR key={data.safeId} onClick={() => onClick(data.safeId)}>
+        <TD>
+          <Name>{data.deposit.name}</Name>
+          <NameData>
+            <NameData>
+              {moment(data.creationDate).format("DD/MM/YYYY")}
+            </NameData>{" "}
+            <NameData>&nbsp; - &nbsp;</NameData>
+            <NameData
+              green={
+                moment.utc().valueOf() > moment.utc(data.endDate).valueOf()
+              }
+            >
+              {moment(data.endDate).format("DD/MM/YYYY")}
+            </NameData>
+          </NameData>
+        </TD>
+        <TD>
+          <Text>{data.deposit.description}</Text>
+        </TD>
+        <TD>
+          <Text>{data.amountView}</Text>
+          <Text>{Balance[data.deposit.depositKind]}</Text>
+        </TD>
+        <TD>
+          <Text>
+            {data.paymentAmount.toString().length > 15
+              ? data.paymentAmount.toFixed(7)
+              : data.paymentAmount}
+          </Text>
+          <Text>{Balance[data.deposit.depositKind]}</Text>
+        </TD>
+        <TD>
+          <Text>{moment(data.paymentDate).format("DD MMMM YYYY")}</Text>
+        </TD>
+      </TR>
+      <TableModal onClose={onClose} open={open} data={data} />
+    </>
+  );
+};
+
+export const Tables = ({ list }: any) => {
   const [num, setNum] = useState(5);
-  const [list, setList] = useState<any>([]);
+
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
 
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection
-        .invoke("GetUserDeposits", [1, 2, 3, 4], 0, 20)
-        .then((res: any) => {
-          setList(res.collection);
-        })
-        .catch((err: Error) => console.log(err));
-    }
-  }, [hubConnection]);
+  console.log("list", list);
 
   return (
     <TableWrap>
@@ -40,67 +95,10 @@ export const Tables = () => {
         </thead>
         <tbody>
           {list.length ? (
-            list.map((item: any) => (
-              <TR key={item.safeId}>
-                <TD>
-                  <Name>{item.deposit.name}</Name>
-                  <NameData>
-                    <NameData>
-                      {moment(item.creationDate).format("DD/MM/YYYY")}
-                    </NameData>{" "}
-                    <NameData>&nbsp; - &nbsp;</NameData>
-                    <NameData
-                      green={
-                        moment.utc().valueOf() >
-                        moment.utc(item.endDate).valueOf()
-                      }
-                    >
-                      {moment(item.endDate).format("DD/MM/YYYY")}
-                    </NameData>
-                  </NameData>
-                </TD>
-                <TD>
-                  <Text>{item.deposit.description}</Text>
-                </TD>
-                <TD>
-                  <Text>{item.amountView}</Text>
-                  <Text>CWD</Text>
-                </TD>
-                <TD>
-                  <Text>
-                    {item.paymentAmount.toString().length > 15
-                      ? item.paymentAmount.toFixed(7)
-                      : item.paymentAmount}
-                  </Text>
-                </TD>
-                <TD>
-                  <Text>{moment(item.paymentDate).format("DD MMMM YYYY")}</Text>
-                </TD>
-              </TR>
-            ))
+            list.map((item: any) => <Row key={item.safeId} data={item} />)
           ) : (
             <TR></TR>
           )}
-
-          {/* <TR>
-            <TD>
-              <Name>Название Депозита №2</Name>
-              <NameData>
-                <NameData>01/01/2020</NameData>{" "}
-                <NameData>&nbsp; - &nbsp;</NameData>
-                <NameData green>31/12/2021</NameData>
-              </NameData>
-            </TD>
-            <TD>
-              <Text>Описание первого депозита с повышенной доходностью</Text>
-            </TD>
-            <TD>
-              <Text>140 000</Text>
-            </TD>
-            <TD>
-              <Text>04 марта 2021</Text>
-            </TD>
-          </TR> */}
         </tbody>
       </Table>
     </TableWrap>
@@ -180,6 +178,11 @@ const TD = styled.td`
 
 const TR = styled.tr`
   border-bottom: 1px solid rgba(81, 81, 114, 0.2);
+  cursor: pointer;
+  transition: 0.3s;
+  &:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
   &:last-child {
     opacity: 0.4;
   }
@@ -202,35 +205,6 @@ const TR = styled.tr`
       display: none;
     }
   }
-`;
-
-const Name = styled.div`
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 16px;
-  @media (max-width: 992px) {
-    font-weight: 400;
-  }
-`;
-
-const NameData = styled.div<{ green?: boolean }>`
-  font-weight: normal;
-  font-size: 12px;
-  letter-spacing: 0.1px;
-  color: ${(props) => (props.green ? "#c9da99" : "#515172")};
-  display: flex;
-  align-items: center;
-  @media (max-width: 992px) {
-    font-size: 10px;
-  }
-`;
-
-const Text = styled.div`
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 16px;
-  letter-spacing: 0.1px;
-  color: #515172;
 `;
 
 const StyledFilter = styled(Filter)`

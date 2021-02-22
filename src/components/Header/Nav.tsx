@@ -7,6 +7,7 @@ import {
   LinkButton,
 } from "./Header.elements";
 import { Link } from "react-router-dom";
+import { HashLink } from "react-router-hash-link";
 
 type Props = {
   onClose: () => void;
@@ -35,51 +36,24 @@ export const Nav: FC<Props> = ({
             <LinkButton onClick={handleClick}>Личный кабинет</LinkButton>
           )}
         </ListItem>
+
         <ListItem>
-          <StyledLink
-            to="banner"
-            spy={true}
-            smooth={true}
-            offset={-50}
-            duration={500}
-            onClick={onClose}
-          >
+          <StyledLink smooth to="/#banner" onClick={onClose}>
             Емко и по-делу
           </StyledLink>
         </ListItem>
         <ListItem>
-          <StyledLink
-            to="tariffs"
-            spy={true}
-            smooth={true}
-            offset={-50}
-            duration={500}
-            onClick={onClose}
-          >
+          <StyledLink to="/#tariffs" smooth onClick={onClose}>
             Тарифы
           </StyledLink>
         </ListItem>
         <ListItem>
-          <StyledLink
-            to="about"
-            spy={true}
-            smooth={true}
-            offset={-50}
-            duration={500}
-            onClick={onClose}
-          >
+          <StyledLink to="/#about" smooth onClick={onClose}>
             О нас
           </StyledLink>
         </ListItem>
         <ListItem>
-          <StyledLink
-            to="contact"
-            spy={true}
-            smooth={true}
-            offset={-50}
-            duration={500}
-            onClick={onClose}
-          >
+          <StyledLink to="/#contact" smooth onClick={onClose}>
             Контакты
           </StyledLink>
         </ListItem>

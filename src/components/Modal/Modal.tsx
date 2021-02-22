@@ -16,7 +16,10 @@ export const Modal: React.FC<ModalProps> = ({ children, onClose }) => {
   return (
     <Portal>
       <ModalContainer onClick={handleContainerClick}>
-        <ModalComponent>{children}</ModalComponent>
+        <ModalComponent>
+          <span onClick={onClose}>&times;</span>
+          {children}
+        </ModalComponent>
       </ModalContainer>
     </Portal>
   );
@@ -39,8 +42,9 @@ const ModalContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 300;
+  z-index: 99999;
   cursor: pointer;
+  overflow: auto;
 `;
 
 const ModalComponent = styled.div`
@@ -48,9 +52,20 @@ const ModalComponent = styled.div`
   background: #fafafa;
   border-radius: 0.25rem;
   padding: 1rem;
-  max-height: 80vh;
   max-width: 400px;
   width: 100%;
   position: relative;
-  overflow: auto;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  span {
+    color: #333;
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    cursor: pointer;
+    z-index: 9999;
+    font-size: 18px;
+    &:hover {
+      color: #000;
+    }
 `;
