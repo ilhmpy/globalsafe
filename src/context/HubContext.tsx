@@ -6,12 +6,11 @@ import { useHistory } from "react-router-dom";
 
 type Nulable<T> = T | null;
 
-console.log("Api", API_URL);
-
 export const AppContext = React.createContext<any>({
   hubConnection: null,
   user: null,
   logOut: () => {},
+  login: () => {},
   loading: true,
 });
 
@@ -63,7 +62,7 @@ export const HubProvider: FC = ({ children }) => {
         hubConnection.stop();
       }
     };
-  }, [hubConnection]);
+  }, [hubConnection, myToken, setUser]);
 
   const logOut = () => {
     setMyToken(null);
@@ -72,10 +71,16 @@ export const HubProvider: FC = ({ children }) => {
     console.log("logout");
   };
 
+  const login = (token: string) => {
+    setMyToken(token);
+  };
+
   console.log("user", user);
 
   return (
-    <AppContext.Provider value={{ hubConnection, user, logOut, loading }}>
+    <AppContext.Provider
+      value={{ hubConnection, user, logOut, loading, login }}
+    >
       {children}
     </AppContext.Provider>
   );
