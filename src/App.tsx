@@ -17,7 +17,7 @@ function App() {
           <Switch>
             <Route path="/" component={Main} exact />
             <Route path="/info" component={Info} />
-            <Route path="/register" component={Authentication} />
+            <Route path="/login" component={Authentication} />
           </Switch>
         </div>
       </HubProvider>

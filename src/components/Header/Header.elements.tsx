@@ -111,20 +111,15 @@ export const List = styled.ul`
 `;
 
 export const ListItem = styled.li<{ mob?: boolean }>`
-  padding: 0 30px;
+  padding: 0px 30px;
   display: ${(props) => props.mob && "none"};
   position: relative;
+
   @media (max-width: 992px) {
     display: ${(props) => props.mob && "block"};
-    &:before {
-      content: "";
-      display: inline-block;
-      width: 100%;
-      height: 1px;
-      border-radius: 2px;
-      background-color: rgba(81, 81, 114, 0.2);
-      margin-bottom: 20px;
-    }
+    width: 100%;
+    padding: 20px 0px;
+    border-top: 1px solid rgba(81, 81, 114, 0.2);
   }
 `;
 
@@ -142,4 +137,12 @@ export const StyledLink = styled(Link).attrs({ activeClass })`
   &:hover {
     color: #ff416e;
   }
+`;
+
+export const LinkButton = styled.div`
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 14px;
+  color: #0e0d3d;
+  padding: 20px 0px;
 `;
