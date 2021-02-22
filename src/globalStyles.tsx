@@ -20,6 +20,7 @@ body{
       82.3deg
       , #effff9 3.67%, #f3f9ff 22.57%, #fffdf0 44.98%, #fff0f0 73%, #f0f0ff 95.88% ), #ffffff;
           background-repeat: no-repeat;
+      height: 100%;
 } 
 img{
     max-width: 100%;  
