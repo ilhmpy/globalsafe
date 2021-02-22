@@ -2,9 +2,11 @@ import React, { useState, useContext, useEffect } from "react";
 import { AppContext } from "../../context/HubContext";
 import styled from "styled-components/macro";
 import { ReactComponent as Filter } from "../../assets/svg/filter.svg";
+import moment from "moment";
+import "moment/locale/ru";
+moment.locale("ru");
 
 export const Tables = () => {
-  const arr = [1, 2, 3, 4];
   const [num, setNum] = useState(5);
   const [list, setList] = useState<any>([]);
   const appContext = useContext(AppContext);
@@ -15,7 +17,6 @@ export const Tables = () => {
       hubConnection
         .invoke("GetUserDeposits", [1, 2, 3, 4], 0, 20)
         .then((res: any) => {
-          console.log("coll", res);
           setList(res.collection);
         })
         .catch((err: Error) => console.log(err));
@@ -25,48 +26,61 @@ export const Tables = () => {
   return (
     <TableWrap>
       <Table>
-        <TR>
-          <TH>Название</TH>
-          <TH>Описание</TH>
-          <TH>Сумма депозита</TH>
-          <TH>
-            <p>Дата следующей выплаты</p>
-            <span>Дата след. выплаты</span> <StyledFilter />
-          </TH>
-        </TR>
+        <thead>
+          <TR>
+            <TH>Название</TH>
+            <TH>Описание</TH>
+            <TH>Депозит</TH>
+            <TH>Пл. выплата</TH>
+            <TH>
+              <p>Дата следующей выплаты</p>
+              <span>Дата след. выплаты</span> <StyledFilter />
+            </TH>
+          </TR>
+        </thead>
         <tbody>
-          {/* {Object.values(arr).map((value, index) => {
-          return (
-            <tr key={index}>
-              <td>{value}</td>
-              <td>{value}</td>
-              <td>{value}</td>
-              <td>{value}</td>
-            </tr>
-          );
-        })} */}
-          {list.length &&
+          {list.length ? (
             list.map((item: any) => (
               <TR key={item.safeId}>
                 <TD>
                   <Name>{item.deposit.name}</Name>
                   <NameData>
-                    <NameData>01/01/2020</NameData>{" "}
+                    <NameData>
+                      {moment(item.creationDate).format("DD/MM/YYYY")}
+                    </NameData>{" "}
                     <NameData>&nbsp; - &nbsp;</NameData>
-                    <NameData green>31/12/2021</NameData>
+                    <NameData
+                      green={
+                        moment.utc().valueOf() >
+                        moment.utc(item.endDate).valueOf()
+                      }
+                    >
+                      {moment(item.endDate).format("DD/MM/YYYY")}
+                    </NameData>
                   </NameData>
                 </TD>
                 <TD>
                   <Text>{item.deposit.description}</Text>
                 </TD>
                 <TD>
-                  <Text>{item.amount}</Text>
+                  <Text>{item.amountView}</Text>
+                  <Text>CWD</Text>
                 </TD>
                 <TD>
-                  <Text>01 марта 2021</Text>
+                  <Text>
+                    {item.paymentAmount.toString().length > 15
+                      ? item.paymentAmount.toFixed(7)
+                      : item.paymentAmount}
+                  </Text>
+                </TD>
+                <TD>
+                  <Text>{moment(item.paymentDate).format("DD MMMM YYYY")}</Text>
                 </TD>
               </TR>
-            ))}
+            ))
+          ) : (
+            <TR></TR>
+          )}
 
           {/* <TR>
             <TD>
@@ -115,7 +129,20 @@ const TH = styled.th`
   line-height: 14px;
   letter-spacing: 0.1px;
   color: rgba(81, 81, 114, 0.6);
-  padding: 10px 5px;
+  padding: 10px 0;
+  &:nth-child(1) {
+    width: 188px;
+  }
+  &:nth-child(2) {
+    width: 250px;
+  }
+  &:nth-child(3) {
+    width: 130px;
+    padding-left: 10px;
+  }
+  &:nth-child(4) {
+    width: 123px;
+  }
   p {
     display: inline-block;
   }
@@ -135,7 +162,20 @@ const TH = styled.th`
 `;
 
 const TD = styled.td`
-  padding: 9px;
+  padding: 9px 0 10px 0;
+  &:nth-child(1) {
+    width: 188px;
+  }
+  &:nth-child(2) {
+    width: 250px;
+  }
+  &:nth-child(3) {
+    width: 130px;
+    padding-left: 10px;
+  }
+  &:nth-child(4) {
+    width: 123px;
+  }
 `;
 
 const TR = styled.tr`
@@ -143,12 +183,7 @@ const TR = styled.tr`
   &:last-child {
     opacity: 0.4;
   }
-  &:nth-child(3) {
-    padding-left: 30px;
-  }
-  ${TD}:nth-child(3) {
-    padding-left: 30px;
-  }
+
   @media (max-width: 992px) {
     ${TH}:last-child,
     ${TD}:last-child {
@@ -160,8 +195,10 @@ const TR = styled.tr`
     }
     ${TH}:nth-child(2),
     ${TH}:nth-child(3),
+    ${TH}:nth-child(4),
     ${TD}:nth-child(2),
-    ${TD}:nth-child(3) {
+    ${TD}:nth-child(3),
+    ${TD}:nth-child(4) {
       display: none;
     }
   }
@@ -198,6 +235,7 @@ const Text = styled.div`
 
 const StyledFilter = styled(Filter)`
   margin-left: 20px;
+  flex: none;
   &:hover {
     fill: #333;
   }

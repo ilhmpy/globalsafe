@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Container } from "../../globalStyles";
 import { ReactComponent as Logo } from "../../assets/svg/logo.svg";
 import {
@@ -12,10 +12,14 @@ import { Button } from "../Button/Button";
 import { Nav } from "./Nav";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components/macro";
+import { AppContext } from "../../context/HubContext";
 
 export const Header = () => {
   const [header, setHeader] = useState(false);
   const [open, setOpen] = useState(false);
+  const appContext = useContext(AppContext);
+  const user = appContext.user;
+  const logOut = appContext.logOut;
   let history = useHistory();
 
   function handleClick() {
@@ -30,6 +34,7 @@ export const Header = () => {
         setHeader(false);
       }
     };
+    handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -52,7 +57,11 @@ export const Header = () => {
           <HeaderMenu open={open}>
             <Nav onClose={onClose} />
           </HeaderMenu>
-          <Button onClick={handleClick}>Личный кабинет</Button>
+          {user ? (
+            <Button onClick={logOut}>Выйти</Button>
+          ) : (
+            <Button onClick={handleClick}>Личный кабинет</Button>
+          )}
         </HeaderInner>
       </Container>
     </HeaderWrap>

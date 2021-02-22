@@ -1,10 +1,12 @@
-import React, { useState, MouseEvent } from "react";
+import React, { useState, MouseEvent, useContext } from "react";
 import { Header } from "../../components/Header/Header";
 import styled from "styled-components/macro";
 import { Card, Container, ContainerRow } from "../../globalStyles";
 import { UpTitle } from "../../components/UI/UpTitle";
+import { Redirect } from "react-router-dom";
 import { Button } from "../../components/Button/Button";
 import { Doughnut } from "react-chartjs-2";
+import { AppContext } from "../../context/HubContext";
 import { RoundChart } from "../../components/Charts/Chart";
 import { Tables } from "../../components/Table/Table";
 const Chart = require("react-chartjs-2").Chart;
@@ -74,12 +76,23 @@ const opt = {
 export const Info = () => {
   const [active, setActive] = useState(1);
   const [card, setCard] = useState(0);
+  const appContext = useContext(AppContext);
+  const user = appContext.user;
+  const loading = appContext.loading;
 
   const handleClick = (id: number) => {
     if (id !== active) {
       setActive(id);
     }
   };
+
+  if (user === null) {
+    return null;
+  }
+
+  if (user === false) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <>

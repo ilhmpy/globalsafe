@@ -39,8 +39,19 @@ export const Button = styled.a<Props>`
       background: #FF416E;
       color: #fff;
       border-color: #FF416E;
-      &:hover{
-        opacity: 0.9
+      &:hover,
+      &:focus{
+        outline: none;
+        background: #FF416E;
+        border-color: #FF416E;
+        box-shadow: 0px 4px 10px #FF416E;
+      }
+      &:disabled {
+        background: rgba(14, 13, 61, .2);
+        box-shadow: none;
+        color: #fff ;
+        border-color: rgba(14, 13, 61, .1);
+        outline: none;
       }
       `;
     } else if (props.dangerOutline) {

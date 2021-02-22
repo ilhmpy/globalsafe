@@ -7,6 +7,7 @@ import { Input, MyInput } from "../../components/UI/Input";
 import { Page } from "../../components/UI/Page";
 import { AppContext } from "../../context/HubContext";
 import { useHistory } from "react-router-dom";
+import useLocalStorage from "../../hooks/useLocalStorage";
 
 export const Authentication = () => {
   const [error, setError] = useState(true);
@@ -16,10 +17,16 @@ export const Authentication = () => {
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const history = useHistory();
+  const [myToken, setMyToken] = useLocalStorage("token");
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError(true);
     setValue(e.target.value);
+  };
+
+  const onChangeNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setError(true);
+    setPassword(e.target.value);
   };
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -31,6 +38,7 @@ export const Authentication = () => {
         .then((res: boolean) => {
           console.log("res", res);
           if (res) {
+            setError(true);
             loginSubmit();
           } else {
             setError(false);
@@ -48,7 +56,7 @@ export const Authentication = () => {
         .then((res: any) => {
           console.log("res", res);
           if (res.token !== null) {
-            localStorage.setItem("token", res.token);
+            setMyToken(res.token);
             history.push("/info");
           }
         })
@@ -64,9 +72,12 @@ export const Authentication = () => {
         .invoke("SendAuthCode", value)
         .then((res: boolean) => {
           console.log("res", res);
+          setError(true);
           setLogin(true);
         })
-        .catch((err: Error) => console.log(err));
+        .catch((err: Error) => {
+          setError(false);
+        });
     }
   };
 
@@ -89,7 +100,7 @@ export const Authentication = () => {
                 value={password}
                 name="password"
                 placeholder="Введите код"
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={onChangeNumber}
               />
               {!error && (
                 <StyledInlineErrorMessage>
@@ -112,7 +123,7 @@ export const Authentication = () => {
                 value={value}
                 name="login"
                 placeholder="Введите логин"
-                onChange={onChange}
+                onChange={onChangeValue}
               />
               {!error && (
                 <StyledInlineErrorMessage>
@@ -148,19 +159,6 @@ const FormBlock = styled.form`
 
 const Submit = styled(Button)`
   max-width: 100%;
-  &:disabled {
-    cursor: pointer;
-    background-color: rgb(163, 168, 173);
-    box-shadow: none;
-    color: rgb(255, 255, 255) !important;
-    border-color: rgb(163, 168, 173);
-    outline: none;
-    &:hover,
-    &:focus {
-      cursor: not-allowed;
-      outline: none;
-    }
-  }
 `;
 
 const CardContainer = styled(Card)`

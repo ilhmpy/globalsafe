@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import { HeaderNav, List, ListItem, StyledLink } from "./Header.elements";
+import { Link } from "react-router-dom";
 
 type Props = {
   onClose: () => void;
@@ -10,7 +11,7 @@ export const Nav: FC<Props> = ({ onClose }: Props) => {
     <HeaderNav>
       <List>
         <ListItem mob>
-          <a href="/">Личный кабинет</a>
+          <Link to="/register">Личный кабинет</Link>
         </ListItem>
         <ListItem>
           <StyledLink
