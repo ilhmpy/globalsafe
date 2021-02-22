@@ -6,6 +6,8 @@ import { useHistory } from "react-router-dom";
 
 type Nulable<T> = T | null;
 
+console.log("Api", API_URL);
+
 export const AppContext = React.createContext<any>({
   hubConnection: null,
   user: null,

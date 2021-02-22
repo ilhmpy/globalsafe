@@ -87,7 +87,7 @@ export const Authentication = () => {
   };
 
   return (
-    <Page>
+    <AuthPage>
       <Container>
         <UpTitle>Личный кабинет</UpTitle>
       </Container>
@@ -137,7 +137,7 @@ export const Authentication = () => {
           )}
         </CardContainer>
       </Container>
-    </Page>
+    </AuthPage>
   );
 };
 
@@ -197,4 +197,8 @@ export const CodeWrapper = styled.pre`
       margin-top: 0;
     }
   }
+`;
+
+const AuthPage = styled(Page)`
+  height: 100vh;
 `;

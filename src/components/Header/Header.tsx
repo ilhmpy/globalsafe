@@ -10,7 +10,7 @@ import {
 } from "./Header.elements";
 import { Button } from "../Button/Button";
 import { Nav } from "./Nav";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import styled from "styled-components/macro";
 import { AppContext } from "../../context/HubContext";
 
@@ -21,9 +21,14 @@ export const Header = () => {
   const user = appContext.user;
   const logOut = appContext.logOut;
   let history = useHistory();
+  let location = useLocation();
 
   function handleClick() {
-    history.push("/register");
+    if (!user) {
+      history.push("/register");
+    } else {
+      history.push("/info");
+    }
   }
 
   useEffect(() => {
@@ -57,7 +62,9 @@ export const Header = () => {
           <HeaderMenu open={open}>
             <Nav onClose={onClose} />
           </HeaderMenu>
-          {user ? (
+          {location.pathname === "/" ? (
+            <Button onClick={handleClick}>Личный кабинет</Button>
+          ) : user ? (
             <Button onClick={logOut}>Выйти</Button>
           ) : (
             <Button onClick={handleClick}>Личный кабинет</Button>
