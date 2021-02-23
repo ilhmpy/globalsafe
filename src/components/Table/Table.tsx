@@ -42,9 +42,7 @@ const Row = ({ data }: any) => {
             </Styled.NameData>{" "}
             <Styled.NameData>&nbsp; - &nbsp;</Styled.NameData>
             <Styled.NameData
-              green={
-                moment.utc().valueOf() > moment.utc(data.endDate).valueOf()
-              }
+              green={moment.valueOf() > moment(data.endDate).valueOf()}
             >
               {moment(data.endDate).format("DD/MM/YYYY")}
             </Styled.NameData>
@@ -86,7 +84,7 @@ export const Tables = ({ list }: any) => {
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
 
-  console.log("list", list);
+  // console.log("list", list);
 
   return (
     <Styled.TableWrap>
