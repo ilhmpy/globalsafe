@@ -81,7 +81,7 @@ export const Tariffs = () => {
             <ModalTitle>Размер депозита</ModalTitle>
             <Input
               onChange={onChange}
-              placeholder="Введите сумму"
+              placeholder={min.toString()}
               type="number"
               ref={inputRef}
               value={value}
@@ -98,7 +98,7 @@ export const Tariffs = () => {
           <div className="item__subtitle">
             <Text>Депозит на срок 3 месяца:</Text>
             <Text>⁃ от 500 CWD на условиях 50/50</Text>
-            <Text>⁃ от 30.000 CWD на условиях 55/45</Text>
+            {/* <Text>⁃ от 30.000 CWD на условиях 55/45</Text> */}
             <Text>
               Выплата первой прибыли от Фонда через два месяца после размещения
               доверительного депозита.
@@ -184,7 +184,7 @@ export const Tariffs = () => {
           <BlockTitle>Start 30 000+</BlockTitle>
           <div>
             <Text>Депозит на срок 3 месяца:</Text>
-            <Text>⁃ от 500 CWD на условиях 50/50</Text>
+            {/* <Text>⁃ от 500 CWD на условиях 50/50</Text> */}
             <Text>⁃ от 30.000 CWD на условиях 55/45</Text>
             <Text>
               Выплата первой прибыли от Фонда через два месяца после размещения
@@ -254,12 +254,12 @@ export const Tariffs = () => {
           </div>
           <input
             type="hidden"
-            value="https://crowdwiz.biz/shopping/payment?to_name=global-car&amount=100000"
+            value="https://crowdwiz.biz/shopping/payment?to_name=global-car&amount=10000"
           />
           <Button
             onClick={() =>
               handleClick(
-                "https://crowdwiz.biz/shopping/payment?to_name=global-car&amount=100000",
+                "https://crowdwiz.biz/shopping/payment?to_name=global-car&amount=10000",
                 100000
               )
             }
@@ -282,7 +282,7 @@ export const Tariffs = () => {
               <div className="item__subtitle">
                 <Text>Депозит на срок 3 месяца:</Text>
                 <Text>⁃ от 500 CWD на условиях 50/50</Text>
-                <Text>⁃ от 30.000 CWD на условиях 55/45</Text>
+                {/* <Text>⁃ от 30.000 CWD на условиях 55/45</Text> */}
                 <Text>
                   Выплата первой прибыли от Фонда через два месяца после
                   размещения доверительного депозита.
@@ -370,7 +370,7 @@ export const Tariffs = () => {
               <BlockTitle>Start 30 000+</BlockTitle>
               <div>
                 <Text>Депозит на срок 3 месяца:</Text>
-                <Text>⁃ от 500 CWD на условиях 50/50</Text>
+                {/* <Text>⁃ от 500 CWD на условиях 50/50</Text> */}
                 <Text>⁃ от 30.000 CWD на условиях 55/45</Text>
                 <Text>
                   Выплата первой прибыли от Фонда через два месяца после
@@ -443,12 +443,12 @@ export const Tariffs = () => {
               </div>
               <input
                 type="hidden"
-                value="https://crowdwiz.biz/shopping/payment?to_name=global-car&amount=100000"
+                value="https://crowdwiz.biz/shopping/payment?to_name=global-car&amount=10000"
               />
               <Button
                 onClick={() =>
                   handleClick(
-                    "https://crowdwiz.biz/shopping/payment?to_name=global-car&amount=100000",
+                    "https://crowdwiz.biz/shopping/payment?to_name=global-car&amount=10000",
                     100000
                   )
                 }
