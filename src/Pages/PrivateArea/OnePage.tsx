@@ -73,13 +73,13 @@ export const OnePage = ({ match }: RouteComponentProps<PropsMatch>) => {
               </InfoButtons> */}
             </Styled.InfoWrap>
             <Styled.Tabs>
-              <Styled.Tab active={active === 0}>Информация</Styled.Tab>
+              {/* <Styled.Tab active={active === 0}>Информация</Styled.Tab> */}
               <Styled.Tab onClick={() => handleClick(1)} active={active === 1}>
                 Депозиты
               </Styled.Tab>
-              <Styled.Tab onClick={() => handleClick(2)} active={active === 2}>
+              {/* <Styled.Tab onClick={() => handleClick(2)} active={active === 2}>
                 Баланс
-              </Styled.Tab>
+              </Styled.Tab> */}
             </Styled.Tabs>
           </Card>
         </Container>
