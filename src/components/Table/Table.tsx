@@ -59,9 +59,11 @@ const Row = ({ data }: any) => {
         </Styled.TD>
         <Styled.TD>
           <Styled.Text>
-            {data.paymentAmount.toString().length > 15
-              ? data.paymentAmount.toFixed(7)
-              : data.paymentAmount}
+            {data.paymentAmount
+              ? data.paymentAmount.toString().length > 15
+                ? data.paymentAmount.toFixed(7)
+                : data.paymentAmount
+              : "-"}
           </Styled.Text>
           <Styled.Text>{Balance[data.deposit.depositKind]}</Styled.Text>
         </Styled.TD>
