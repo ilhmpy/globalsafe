@@ -68,9 +68,7 @@ export const InfoBlock = ({ data }: any) => {
           </LI>
           <LI>
             <Text>Сумма взноса</Text>
-            <Text>
-              {data.baseAmountView}&nbsp; {Balance[data.deposit.asset]}
-            </Text>
+            <Text>{data.baseAmountView}&nbsp; CWD</Text>
           </LI>
           <LI>
             <Text>Планируемая выплата</Text>
