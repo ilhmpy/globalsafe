@@ -22,29 +22,6 @@ export const NameData = styled.div<{ green?: boolean }>`
   }
 `;
 
-export const Text = styled.div`
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 16px;
-  letter-spacing: 0.1px;
-  color: #515172;
-`;
-
-export const TableWrap = styled.div`
-  width: 100%;
-  padding: 34px 90px;
-  @media (max-width: 992px) {
-    padding: 15px 10px;
-  }
-`;
-
-export const Table = styled.table`
-  width: 100%;
-  display: table;
-  border-collapse: collapse;
-  table-layout: fixed;
-`;
-
 export const TH = styled.th`
   text-align: left;
   font-weight: normal;
@@ -101,12 +78,28 @@ export const TD = styled.td`
   }
 `;
 
+export const Text = styled.div`
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 16px;
+  letter-spacing: 0.1px;
+  color: #515172;
+`;
+
+export const TableWrap = styled.div`
+  width: 100%;
+  padding: 34px 90px;
+  @media (max-width: 992px) {
+    padding: 15px 10px;
+  }
+`;
+
 export const TR = styled.tr<{ disactive?: boolean }>`
   border-bottom: 1px solid rgba(81, 81, 114, 0.2);
   cursor: pointer;
   transition: 0.3s;
   opacity: ${(props) => (props.disactive ? "0.4" : "1")};
-  &:hover {
+  &:not(thead tr):hover {
     background: rgba(0, 0, 0, 0.05);
   }
   @media (max-width: 992px) {
@@ -127,6 +120,13 @@ export const TR = styled.tr<{ disactive?: boolean }>`
       display: none;
     }
   }
+`;
+
+export const Table = styled.table`
+  width: 100%;
+  display: table;
+  border-collapse: collapse;
+  table-layout: fixed;
 `;
 
 export const StyledFilter = styled(Filter)`
