@@ -133,6 +133,7 @@ export const StyledLink = styled(HashLink).attrs({ activeclassname })`
   font-weight: 500;
   font-size: 14px;
   line-height: 16px;
+  color: #0e0d3d;
   cursor: pointer;
   transition: all 0.3s ease 0s;
   &:hover {
