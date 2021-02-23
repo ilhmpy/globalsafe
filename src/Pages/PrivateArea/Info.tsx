@@ -125,13 +125,13 @@ export const Info = () => {
               </InfoButtons> */}
             </InfoWrap>
             <Tabs>
-              <Tab active={active === 0}>Информация</Tab>
+              {/* <Tab active={active === 0}>Информация</Tab> */}
               <Tab onClick={() => handleClick(1)} active={active === 1}>
                 Депозиты
               </Tab>
-              <Tab onClick={() => handleClick(2)} active={active === 2}>
+              {/* <Tab onClick={() => handleClick(2)} active={active === 2}>
                 Баланс
-              </Tab>
+              </Tab> */}
             </Tabs>
           </Card>
         </Container>
