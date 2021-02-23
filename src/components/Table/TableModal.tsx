@@ -63,24 +63,27 @@ export const InfoBlock = ({ data }: any) => {
           <LI>
             <Text>Сумма депозита</Text>
             <Text>
-              {data.amountView}&nbsp; {Balance[data.deposit.depositKind]}
+              {data.amountView}&nbsp; {Balance[data.deposit.asset]}
             </Text>
           </LI>
           <LI>
             <Text>Сумма взноса</Text>
             <Text>
-              {data.baseAmountView}&nbsp; {Balance[data.deposit.depositKind]}
+              {data.baseAmountView}&nbsp; {Balance[data.deposit.asset]}
             </Text>
           </LI>
           <LI>
             <Text>Планируемая выплата</Text>
             <Text>
-              {data.paymentAmount
-                ? data.paymentAmount.toString().length > 15
-                  ? data.paymentAmount.toFixed(7)
-                  : data.paymentAmount
+              {data.paymentAmountView
+                ? data.paymentAmountView.toString().length > 15
+                  ? data.paymentAmountView.toFixed(7)
+                  : data.paymentAmountView
                 : "-"}
             </Text>
+            {data.paymentAmountView && (
+              <Text>{Balance[data.deposit.asset]}</Text>
+            )}
           </LI>
         </List>
       )}

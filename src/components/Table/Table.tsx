@@ -55,17 +55,19 @@ const Row = ({ data }: any) => {
         </Styled.TD>
         <Styled.TD>
           <Styled.Text>{data.amountView}</Styled.Text>
-          <Styled.Text>{Balance[data.deposit.depositKind]}</Styled.Text>
+          <Styled.Text>{Balance[data.deposit.asset]}</Styled.Text>
         </Styled.TD>
         <Styled.TD>
           <Styled.Text>
-            {data.paymentAmount
-              ? data.paymentAmount.toString().length > 15
-                ? data.paymentAmount.toFixed(7)
-                : data.paymentAmount
+            {data.paymentAmountView
+              ? data.paymentAmountView.toString().length > 15
+                ? data.paymentAmountView.toFixed(7)
+                : data.paymentAmountView
               : "-"}
           </Styled.Text>
-          <Styled.Text>{Balance[data.deposit.depositKind]}</Styled.Text>
+          {data.paymentAmountView && (
+            <Styled.Text>{Balance[data.deposit.asset]}</Styled.Text>
+          )}
         </Styled.TD>
         <Styled.TD>
           <Styled.Text>

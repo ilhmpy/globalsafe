@@ -20,6 +20,7 @@ export const LeftIcon = styled(Left)`
 
 export const Page = styled.div`
   margin-top: 100px;
+  height: 100%;
 `;
 
 export const InfoWrap = styled.div`
