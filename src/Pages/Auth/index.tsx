@@ -70,6 +70,8 @@ export const Authentication = () => {
           console.log("res", res);
           if (res.token !== null) {
             logIn(res.token);
+          } else {
+            setError(false);
           }
         })
         .catch((err: Error) => setError(false));

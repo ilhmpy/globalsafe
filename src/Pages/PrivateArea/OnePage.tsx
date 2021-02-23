@@ -1,4 +1,4 @@
-import React, { useState, MouseEvent, useContext, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Header } from "../../components/Header/Header";
 import styled from "styled-components/macro";
 import { Card, Container, ContainerRow } from "../../globalStyles";
@@ -9,80 +9,24 @@ import { Doughnut } from "react-chartjs-2";
 import { AppContext } from "../../context/HubContext";
 import { RoundChart } from "../../components/Charts/Chart";
 import { Tables } from "../../components/Table/Table";
-const Chart = require("react-chartjs-2").Chart;
+import { InfoBlock } from "../../components/Table/TableModal";
+import { RouteComponentProps, useLocation, Link } from "react-router-dom";
+import { ReactComponent as Left } from "../../assets/svg/left.svg";
 
-var originalDoughnutDraw = Chart.controllers.doughnut.prototype.draw;
-Chart.helpers.extend(Chart.controllers.doughnut.prototype, {
-  draw: function () {
-    originalDoughnutDraw.apply(this, arguments);
-
-    var chart = this.chart.chart;
-    var ctx = chart.ctx;
-    var width = chart.width;
-    var height = chart.height;
-
-    var fontSize = (height / 114).toFixed(2);
-    ctx.font = fontSize + "em Verdana";
-    ctx.textBaseline = "middle";
-
-    var text = chart.config.data.text,
-      textX = Math.round((width - ctx.measureText(text).width) / 2),
-      textY = height / 2;
-
-    ctx.fillText(text, textX, textY);
-  },
-});
-
-const data = {
-  labels: [
-    "Депозит #1",
-    "Депозит #2",
-    "Депозит #3",
-    "Депозит #4",
-    "Депозит #5",
-  ],
-  datasets: [
-    {
-      data: [100, 100, 100, 100, 100],
-      backgroundColor: [
-        "rgba(255, 65, 110, 1)",
-        "rgba(255, 65, 110, .8)",
-        "rgba(255, 65, 110, .6)",
-        "rgba(255, 65, 110, .25)",
-        "rgba(255, 65, 110, .1)",
-      ],
-      hoverBackgroundColor: [
-        "#FF6384",
-        "#36A2EB",
-        "#FFCE56",
-        "#36A2EB",
-        "#FFCE56",
-      ],
-    },
-  ],
-  text: "101 000",
+type PropsMatch = {
+  slug: string;
 };
 
-const opt = {
-  tooltips: {
-    backgroundColor: "#FFF",
-    titleFontSize: 16,
-    titleFontColor: "#0066ff",
-    bodyFontColor: "#000",
-    bodyFontSize: 14,
-    displayColors: false,
-  },
-};
-export const Info = () => {
+export const OnePage = ({ match }: RouteComponentProps<PropsMatch>) => {
   const [active, setActive] = useState(1);
-  const [card, setCard] = useState(0);
   const [list, setList] = useState<any>([]);
+  const [card, setCard] = useState(0);
   const appContext = useContext(AppContext);
   const user = appContext.user;
-
   const hubConnection = appContext.hubConnection;
-  const loading = appContext.loading;
-
+  const location = useLocation();
+  const safeId = match.params.slug;
+  console.log("safeId", safeId);
   useEffect(() => {
     if (hubConnection) {
       hubConnection
@@ -93,6 +37,10 @@ export const Info = () => {
         .catch((err: Error) => console.log(err));
     }
   }, [hubConnection]);
+
+  const data = list.filter((item: any) => item.safeId === safeId);
+
+  console.log("data", data);
 
   const handleClick = (id: number) => {
     if (id !== active) {
@@ -197,8 +145,14 @@ export const Info = () => {
           </Content>
           <Content active={active === 1}>
             <Container>
+              <Back to="/info">
+                <LeftIcon />
+                Назад к списку
+              </Back>
+            </Container>
+            <Container>
               <Card>
-                <Tables list={list} />
+                <InfoBlock data={data[0]} />
               </Card>
             </Container>
           </Content>
@@ -208,6 +162,20 @@ export const Info = () => {
     </>
   );
 };
+
+const Back = styled(Link)`
+  margin-right: auto;
+  margin-bottom: 20px;
+  color: #515172;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+`;
+
+const LeftIcon = styled(Left)`
+  margin-right: 12px;
+  fill: #515172;
+`;
 
 const Page = styled.div`
   margin-top: 100px;

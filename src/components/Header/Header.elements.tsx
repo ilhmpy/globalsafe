@@ -1,6 +1,7 @@
 import { Link } from "react-scroll";
 import styled from "styled-components/macro";
 import { Button } from "../Button/Button";
+import { HashLink } from "react-router-hash-link";
 
 export const HeaderWrap = styled.header<{ header?: boolean }>`
   width: 100%;
@@ -123,10 +124,10 @@ export const ListItem = styled.li<{ mob?: boolean }>`
   }
 `;
 
-const activeClass = "active";
+const activeclassname = "active";
 
-export const StyledLink = styled(Link).attrs({ activeClass })`
-  &.${activeClass} {
+export const StyledLink = styled(HashLink).attrs({ activeclassname })`
+  &.${activeclassname} {
     color: red;
   }
   font-weight: 500;
