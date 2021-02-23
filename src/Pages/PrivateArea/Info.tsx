@@ -211,6 +211,7 @@ export const Info = () => {
 
 const Page = styled.div`
   margin-top: 100px;
+  height: 100%;
 `;
 
 const InfoWrap = styled.div`
