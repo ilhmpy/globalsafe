@@ -107,13 +107,13 @@ export const Tariffs = () => {
           <input
             className="link"
             type="hidden"
-            value="https://crowdwiz.biz/shopping/payment?to_name=start-1&amount=500"
+            value="https://cwd.global/shopping/payment?to_name=start-1&amount=500"
           />
 
           <Button
             onClick={() =>
               handleClick(
-                "https://crowdwiz.biz/shopping/payment?to_name=start-1&amount=500",
+                "https://cwd.global/shopping/payment?to_name=start-1&amount=500",
                 500
               )
             }
@@ -136,12 +136,12 @@ export const Tariffs = () => {
           </div>
           <input
             type="hidden"
-            value="https://crowdwiz.biz/shopping/payment?to_name=expert-10&amount=1000"
+            value="https://cwd.global/shopping/payment?to_name=expert-10&amount=1000"
           />
           <Button
             onClick={() =>
               handleClick(
-                "https://crowdwiz.biz/shopping/payment?to_name=expert-10&amount=1000",
+                "https://cwd.global/shopping/payment?to_name=expert-10&amount=1000",
                 1000
               )
             }
@@ -164,12 +164,12 @@ export const Tariffs = () => {
           </div>
           <input
             type="hidden"
-            value="https://crowdwiz.biz/shopping/payment?to_name=infinity-8&amount=1000"
+            value="https://cwd.global/shopping/payment?to_name=infinity-8&amount=1000"
           />
           <Button
             onClick={() =>
               handleClick(
-                "https://crowdwiz.biz/shopping/payment?to_name=infinity-8&amount=1000",
+                "https://cwd.global/shopping/payment?to_name=infinity-8&amount=1000",
                 1000
               )
             }
@@ -192,12 +192,12 @@ export const Tariffs = () => {
           </div>
           <input
             type="hidden"
-            value="https://crowdwiz.biz/shopping/payment?to_name=start2&amount=30000"
+            value="https://cwd.global/shopping/payment?to_name=start2&amount=30000"
           />
           <Button
             onClick={() =>
               handleClick(
-                "https://crowdwiz.biz/shopping/payment?to_name=start2&amount=30000",
+                "https://cwd.global/shopping/payment?to_name=start2&amount=30000",
                 30000
               )
             }
@@ -222,12 +222,12 @@ export const Tariffs = () => {
           </div>
           <input
             type="hidden"
-            value="https://crowdwiz.biz/shopping/payment?to_name=platinum-if&amount=8000"
+            value="https://cwd.global/shopping/payment?to_name=platinum-if&amount=8000"
           />
           <Button
             onClick={() =>
               handleClick(
-                "https://crowdwiz.biz/shopping/payment?to_name=platinum-if&amount=8000",
+                "https://cwd.global/shopping/payment?to_name=platinum-if&amount=8000",
                 8000
               )
             }
@@ -253,12 +253,12 @@ export const Tariffs = () => {
           </div>
           <input
             type="hidden"
-            value="https://crowdwiz.biz/shopping/payment?to_name=global-car&amount=10000"
+            value="https://cwd.global/shopping/payment?to_name=global-car&amount=10000"
           />
           <Button
             onClick={() =>
               handleClick(
-                "https://crowdwiz.biz/shopping/payment?to_name=global-car&amount=10000",
+                "https://cwd.global/shopping/payment?to_name=global-car&amount=10000",
                 100000
               )
             }
@@ -290,12 +290,12 @@ export const Tariffs = () => {
               <input
                 className="link"
                 type="hidden"
-                value="https://crowdwiz.biz/shopping/payment?to_name=start-1&amount=500"
+                value="https://cwd.global/shopping/payment?to_name=start-1&amount=500"
               />
               <Button
                 onClick={() =>
                   handleClick(
-                    "https://crowdwiz.biz/shopping/payment?to_name=start-1&amount=500",
+                    "https://cwd.global/shopping/payment?to_name=start-1&amount=500",
                     500
                   )
                 }
@@ -318,12 +318,12 @@ export const Tariffs = () => {
               </div>
               <input
                 type="hidden"
-                value="https://crowdwiz.biz/shopping/payment?to_name=expert-10&amount=1000"
+                value="https://cwd.global/shopping/payment?to_name=expert-10&amount=1000"
               />
               <Button
                 onClick={() =>
                   handleClick(
-                    "https://crowdwiz.biz/shopping/payment?to_name=expert-10&amount=1000",
+                    "https://cwd.global/shopping/payment?to_name=expert-10&amount=1000",
                     1000
                   )
                 }
@@ -347,12 +347,12 @@ export const Tariffs = () => {
               </div>
               <input
                 type="hidden"
-                value="https://crowdwiz.biz/shopping/payment?to_name=infinity-8&amount=1000"
+                value="https://cwd.global/shopping/payment?to_name=infinity-8&amount=1000"
               />
               <Button
                 onClick={() =>
                   handleClick(
-                    "https://crowdwiz.biz/shopping/payment?to_name=infinity-8&amount=1000",
+                    "https://cwd.global/shopping/payment?to_name=infinity-8&amount=1000",
                     1000
                   )
                 }
@@ -376,12 +376,12 @@ export const Tariffs = () => {
               </div>
               <input
                 type="hidden"
-                value="https://crowdwiz.biz/shopping/payment?to_name=start2&amount=30000"
+                value="https://cwd.global/shopping/payment?to_name=start2&amount=30000"
               />
               <Button
                 onClick={() =>
                   handleClick(
-                    "https://crowdwiz.biz/shopping/payment?to_name=start2&amount=30000",
+                    "https://cwd.global/shopping/payment?to_name=start2&amount=30000",
                     30000
                   )
                 }
@@ -407,12 +407,12 @@ export const Tariffs = () => {
               </div>
               <input
                 type="hidden"
-                value="https://crowdwiz.biz/shopping/payment?to_name=platinum-if&amount=8000"
+                value="https://cwd.global/shopping/payment?to_name=platinum-if&amount=8000"
               />
               <Button
                 onClick={() =>
                   handleClick(
-                    "https://crowdwiz.biz/shopping/payment?to_name=platinum-if&amount=8000",
+                    "https://cwd.global/shopping/payment?to_name=platinum-if&amount=8000",
                     8000
                   )
                 }
@@ -440,12 +440,12 @@ export const Tariffs = () => {
               </div>
               <input
                 type="hidden"
-                value="https://crowdwiz.biz/shopping/payment?to_name=global-car&amount=10000"
+                value="https://cwd.global/shopping/payment?to_name=global-car&amount=10000"
               />
               <Button
                 onClick={() =>
                   handleClick(
-                    "https://crowdwiz.biz/shopping/payment?to_name=global-car&amount=10000",
+                    "https://cwd.global/shopping/payment?to_name=global-car&amount=10000",
                     10000
                   )
                 }
