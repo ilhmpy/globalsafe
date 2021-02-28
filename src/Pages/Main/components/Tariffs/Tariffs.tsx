@@ -70,8 +70,7 @@ export const Tariffs = () => {
         <H1>Для Вас !</H1>
       </Container>
       <DescContainer>
-        <p>Партнерка для контрактов START, EXPERT, INFINITY: 7% c первой линии;</p>
-				<p>Партнерка для контрактов ЖИЛФОНД: 2% c первой линии; 0,5% со второй и третьей линии;</p>
+        <p>Партнерка для контрактов START, EXPERT, INFINITY: 5% c первой линии; 2% со второй линии; 1% с третьей линиии</p>
 				<p>Партнерка для контрактов АВТОБОНУС: 3% c первой линии; 1,5% со второй и 1% c третьей линии;</p>
       </DescContainer>
       {isNormalOpen && (
@@ -95,12 +94,12 @@ export const Tariffs = () => {
         <BlockItem>
           <BlockTitle>START</BlockTitle>
           <div className="item__subtitle">
-            <Text>Депозит от 500 CWD на срок 3 месяца:</Text>
+            <Text>Депозит от 500 CWD на срок 4 месяца:</Text>
             <Text>На условиях 50/50</Text>
             {/* <Text>⁃ от 30.000 CWD на условиях 55/45</Text> */}
             <Text>
               Выплата первой прибыли от Фонда 
-							через два месяца после размещения 
+							каждые два месяца после размещения 
 							доверительного депозита.
             </Text>
           </div>
@@ -126,8 +125,8 @@ export const Tariffs = () => {
         <BlockItem>
           <BlockTitle>EXPERT</BlockTitle>
           <div>
-            <Text>Депозит от 1000 CWD на срок 5 месяцев</Text>
-            <Text>На условиях 90/10</Text>
+            <Text>Депозит от 1000 CWD на срок 6 месяцев</Text>
+            <Text>На условиях 80/20</Text>
             {/*<Text>⁃ от 30.000 CWD на условиях 55/45</Text>*/}
             <Text>
               Прибыль выплачивается в конце срока размещения депозита. Тело
@@ -155,9 +154,9 @@ export const Tariffs = () => {
           <BlockTitle>INFINITY</BlockTitle>
           <div>
             <Text>Депозит от 1000 CWD на срок 8 месяцев</Text>
-            <Text>На условиях 80/20</Text>
+            <Text>На условиях 70/30</Text>
             <Text>
-              Выплата прибыли (80% от прибыли вашего депозита) каждый месяц в
+              Выплата прибыли (70% от прибыли вашего депозита) каждые два месяца в
               течение всего срока размещения. Тело депозита заморожено на весь
               срок.
             </Text>
@@ -176,64 +175,6 @@ export const Tariffs = () => {
             red
           >
             Хочу Infinity
-          </Button>
-        </BlockItem>
-
-        <BlockItem>
-          <BlockTitle>Start 30 000+</BlockTitle>
-          <div>
-            <Text>Депозит от 30 000 CWD на срок 3 месяца:</Text>
-            {/* <Text>⁃ от 500 CWD на условиях 50/50</Text> */}
-            <Text>На условиях 55/45</Text>
-            <Text>
-              Выплата первой прибыли от Фонда через два месяца после размещения
-              доверительного депозита
-            </Text>
-          </div>
-          <input
-            type="hidden"
-            value="https://cwd.global/shopping/payment?to_name=start2&amount=30000"
-          />
-          <Button
-            onClick={() =>
-              handleClick(
-                "https://cwd.global/shopping/payment?to_name=start2&amount=30000",
-                30000
-              )
-            }
-            pink
-          >
-            Хочу START 30 000+
-          </Button>
-        </BlockItem>
-
-        <BlockItem>
-          <BlockTitle>ЖИЛФОНД</BlockTitle>
-          <div>
-            <Text>Депозит от 8000 CWD на срок 6 месяцев:</Text>
-            <Text>
-              Накопить на ПЕРВОНАЧАЛЬНЫЙ взнос (минимум 30% от стоимости
-              квартиры):
-            </Text>
-            <Text>
-              Полная заморозка депозита на условиях выплаты вашей прибыли от
-              Фонда через 6 месяцев напрямую в кооператив.
-            </Text>
-          </div>
-          <input
-            type="hidden"
-            value="https://cwd.global/shopping/payment?to_name=platinum-if&amount=8000"
-          />
-          <Button
-            onClick={() =>
-              handleClick(
-                "https://cwd.global/shopping/payment?to_name=platinum-if&amount=8000",
-                8000
-              )
-            }
-            purple
-          >
-            Хочу ЖИЛФОНД
           </Button>
         </BlockItem>
 
@@ -279,11 +220,11 @@ export const Tariffs = () => {
             <BlockItem>
               <BlockTitle>START</BlockTitle>
               <div className="item__subtitle">
-                <Text>Депозит от 500 CWD на срок 3 месяца:</Text>
+                <Text>Депозит от 500 CWD на срок 4 месяца:</Text>
                 <Text>На условиях 50/50</Text>
                 {/* <Text>⁃ от 30.000 CWD на условиях 55/45</Text> */}
                 <Text>
-                  Выплата первой прибыли от Фонда через два месяца после
+                  Выплата первой прибыли от Фонда каждые два месяца после
                   размещения доверительного депозита.
                 </Text>
               </div>
@@ -309,8 +250,8 @@ export const Tariffs = () => {
             <BlockItem>
               <BlockTitle>EXPERT</BlockTitle>
               <div>
-                <Text>Депозит от 1000 CWD на срок 5 месяцев</Text>
-                <Text>На условиях 90/10</Text>
+                <Text>Депозит от 1000 CWD на срок 6 месяцев</Text>
+                <Text>На условиях 80/20</Text>
                 <Text>
                   Прибыль выплачивается в конце срока размещения депозита. Тело
                   депозита заморожено на весь срок.
@@ -338,9 +279,9 @@ export const Tariffs = () => {
               <BlockTitle>INFINITY</BlockTitle>
               <div>
                 <Text>Депозит от 1000 CWD на срок 8 месяцев</Text>
-                <Text>На условиях 80/20</Text>
+                <Text>На условиях 70/30</Text>
                 <Text>
-                  Выплата прибыли (80% от прибыли вашего депозита) каждый месяц
+                  Выплата прибыли (70% от прибыли вашего депозита) каждые два месяца
                   в течение всего срока размещения. Тело депозита заморожено на
                   весь срок.
                 </Text>
@@ -359,66 +300,6 @@ export const Tariffs = () => {
                 red
               >
                 Хочу Infinity
-              </Button>
-            </BlockItem>
-          </SwiperSlide>
-          <SwiperSlide>
-            <BlockItem>
-              <BlockTitle>Start 30 000+</BlockTitle>
-              <div>
-                <Text>Депозит от 30 0000 CWD на срок 3 месяца:</Text>
-                {/* <Text>⁃ от 500 CWD на условиях 50/50</Text> */}
-                <Text>На условиях 55/45</Text>
-                <Text>
-                  Выплата первой прибыли от Фонда через два месяца после
-                  размещения доверительного депозита
-                </Text>
-              </div>
-              <input
-                type="hidden"
-                value="https://cwd.global/shopping/payment?to_name=start2&amount=30000"
-              />
-              <Button
-                onClick={() =>
-                  handleClick(
-                    "https://cwd.global/shopping/payment?to_name=start2&amount=30000",
-                    30000
-                  )
-                }
-                pink
-              >
-                Хочу START 30 000+
-              </Button>
-            </BlockItem>
-          </SwiperSlide>
-          <SwiperSlide>
-            <BlockItem>
-              <BlockTitle>ЖИЛФОНД</BlockTitle>
-              <div>
-                <Text>Депозит от 8000 CWD на срок 6 месяцев:</Text>
-                <Text>
-                  Накопить на ПЕРВОНАЧАЛЬНЫЙ взнос (минимум 30% от стоимости
-                  квартиры):
-                </Text>
-                <Text>
-                  Полная заморозка депозита на условиях выплаты вашей прибыли от
-                  Фонда через 6 месяцев напрямую в кооператив.
-                </Text>
-              </div>
-              <input
-                type="hidden"
-                value="https://cwd.global/shopping/payment?to_name=platinum-if&amount=8000"
-              />
-              <Button
-                onClick={() =>
-                  handleClick(
-                    "https://cwd.global/shopping/payment?to_name=platinum-if&amount=8000",
-                    8000
-                  )
-                }
-                purple
-              >
-                Хочу ЖИЛФОНД
               </Button>
             </BlockItem>
           </SwiperSlide>
