@@ -29,7 +29,7 @@ export const About = () => {
         <BlockItem>
           <Img src={img2} alt="" />
           <BlockInner>
-            <BlockTitle>Светлана</BlockTitle>
+            <BlockTitle>Ирина</BlockTitle>
             <BlockSubtitle>Учредитель</BlockSubtitle>
           </BlockInner>
         </BlockItem>
@@ -37,7 +37,7 @@ export const About = () => {
         <BlockItem>
           <Img src={img3} alt="" />
           <BlockInner>
-            <BlockTitle>Ирина</BlockTitle>
+            <BlockTitle>Светлана</BlockTitle>
             <BlockSubtitle>Учредитель</BlockSubtitle>
           </BlockInner>
         </BlockItem>

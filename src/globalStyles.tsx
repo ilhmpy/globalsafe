@@ -31,6 +31,92 @@ img{
 a{
   text-decoration: none;
 }
+.chart-toltip{
+  display: flex;
+  flex-direction: column;
+  background: #FFFFFF;
+  // box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.235536);
+  border-radius: 8px;
+  padding: 8px 8px 2px;
+  position: relative;
+}
+.chart-toltip-arrow{
+  position: absolute;
+  bottom: -10px;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: black transparent transparent transparent;
+}
+.chart-tottip-light{
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 14px;
+  color: rgba(0, 0, 0, 0.4);
+}
+.chart-tottip-bold{
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 24px;
+  color: #0E0D3D;
+  padding-bottom: 2px;
+}
+
+.column-toltip{
+  background: #fff !important;
+  border-color: rgba(0, 0, 0, 0);
+  box-shadow: none;
+  padding: 20px;
+  border: none;
+  outline: none;
+  fill: none;
+}
+.column-toltip-light{
+  font-size: 10px;
+  line-height: 12px;
+  text-align: center;
+  color: #515172;
+}
+.column-toltip-bold{
+  font-weight: bold;
+  font-size: 10px;
+  line-height: 12px;
+  text-align: center;
+  color: #0E0D3D;
+}
+#chart1 .apexcharts-tooltip,
+#chart2 .apexcharts-tooltip{
+  background: rgba(255, 255, 255, 1);
+  border: none;
+  box-shadow: none;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+.alert-enter {
+  opacity: 0;
+  transform: translateX(-400px);
+}
+.alert-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 300ms ease-in;
+}
+.alert-exit {
+  opacity: 1;
+  transform: translateX(-400px);
+}
+.alert-exit-active {
+  opacity: 0;
+  transform: translateX(0px);
+  transform-origin: 50% 50%;
+  transition: all 300ms ease-in;
+}
 `;
 
 export const Container = styled.div`
@@ -52,6 +138,8 @@ export const Container = styled.div`
 export const ContainerRow = styled(Container)`
   padding-right: 0px;
   padding-left: 0px;
+  display: flex;
+  flex-wrap: wrap;
 `;
 
 export const Card = styled.div`

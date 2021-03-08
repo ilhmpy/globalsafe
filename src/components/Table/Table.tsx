@@ -69,7 +69,9 @@ const Row = ({ data }: any) => {
         </Styled.TD>
         <Styled.TD>
           <Styled.Text>
-            {moment(data.paymentDate).format("DD MMMM YYYY")}
+            {data.paymentDate
+              ? moment(data.paymentDate).format("DD MMMM YYYY")
+              : "-"}
           </Styled.Text>
         </Styled.TD>
       </Styled.TR>
