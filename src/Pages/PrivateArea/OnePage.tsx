@@ -6,7 +6,6 @@ import { UpTitle } from "../../components/UI/UpTitle";
 import { Redirect } from "react-router-dom";
 import { Button } from "../../components/Button/Button";
 import { Doughnut } from "react-chartjs-2";
-import { Tabs, Tab } from "../../components/UI/Tabs";
 import { AppContext } from "../../context/HubContext";
 import { RoundChart } from "../../components/Charts/Chart";
 import { Tables } from "../../components/Table/Table";
@@ -73,15 +72,15 @@ export const OnePage = ({ match }: RouteComponentProps<PropsMatch>) => {
                 <Button danger>Вывести деньги</Button>
               </InfoButtons> */}
             </Styled.InfoWrap>
-            <Tabs>
-              {/* <Tab active={active === 0}>Информация</Tab> */}
-              <Tab onClick={() => handleClick(1)} active={active === 1}>
+            <Styled.Tabs>
+              {/* <Styled.Tab active={active === 0}>Информация</Styled.Tab> */}
+              <Styled.Tab onClick={() => handleClick(1)} active={active === 1}>
                 Депозиты
-              </Tab>
-              {/* <Tab onClick={() => handleClick(2)} active={active === 2}>
+              </Styled.Tab>
+              {/* <Styled.Tab onClick={() => handleClick(2)} active={active === 2}>
                 Баланс
-              </Tab> */}
-            </Tabs>
+              </Styled.Tab> */}
+            </Styled.Tabs>
           </Card>
         </Container>
 

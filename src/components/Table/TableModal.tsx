@@ -58,11 +58,7 @@ export const InfoBlock = ({ data }: any) => {
           </LI>
           <LI>
             <Text>Дата следующей выплаты</Text>
-            <Text>
-              {data.paymentDate
-                ? moment(data.paymentDate).format("DD MMMM YYYY")
-                : "-"}
-            </Text>
+            <Text>{moment(data.paymentDate).format("DD MMMM YYYY")}</Text>
           </LI>
           <LI>
             <Text>Сумма депозита</Text>
