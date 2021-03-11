@@ -11,7 +11,7 @@ export const UpTitle = styled.div<{ small?: boolean }>`
     content: "";
     display: inline-block;
     background: #ff416e;
-    margin-right: 20px;
+    margin-right: 13px;
     width: 70px;
     height: 1px;
     margin-bottom: 4px;

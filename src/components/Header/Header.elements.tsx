@@ -47,7 +47,7 @@ export const HeaderMenu = styled.div<{ open?: boolean }>`
     background: #fff;
     width: 100%;
     height: 100%;
-    left: ${(props) => (props.open ? "0" : "-100%")} ;
+    left: ${(props) => (props.open ? "0" : "-100%")};
     top: 0;
     padding: 0 50px;
     overflow: auto;
@@ -56,7 +56,6 @@ export const HeaderMenu = styled.div<{ open?: boolean }>`
     -webkit-transition: all 0.3s ease 0s;
     -o-transition: all 0.3s ease 0s;
     transition: all 0.3s ease 0s;
-}
   }
 `;
 

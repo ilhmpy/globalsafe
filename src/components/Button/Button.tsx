@@ -10,6 +10,7 @@ type Props = {
   pink?: boolean;
   purple?: boolean;
   yellow?: boolean;
+  mb?: boolean;
 };
 
 export const Button = styled.a<Props>`
@@ -26,11 +27,21 @@ export const Button = styled.a<Props>`
   border-color: #0e0d3d;
   box-sizing: border-box;
   border-radius: 24px;
+  margin-bottom: ${(props) => (props.mb ? "20px" : "0")};
   cursor: pointer;
   transition: all 0.3s ease 0s;
+  -webkit-appearance: button;
+  -moz-appearance: button;
+  appearance: button;
   &:hover {
     box-shadow: 0px 4px 10px #0e0d3d;
     border-color: #0e0d3d;
+  }
+  &:focus,
+  &:active {
+    outline: none;
+    border-radius: 24px;
+    background: inherit;
   }
   ${(props) => {
     if (props.danger) {
@@ -55,11 +66,12 @@ export const Button = styled.a<Props>`
       `;
     } else if (props.dangerOutline) {
       return `
-      background: #FFF;
-      color: rgba(14, 13, 61, 0.4);
+      background: transparent;
+      color: rgba(14, 13, 61, 1);
       border-color: #FF416E;
       &:hover{
         box-shadow: 0px 4px 10px #FF416E;
+        border-color: #FF416E;
       }
       `;
     } else if (props.green) {
@@ -139,5 +151,8 @@ export const Button = styled.a<Props>`
   @media (max-width: 992px) {
     padding-left: 3px;
     padding-right: 3px;
+  }
+  @media (max-width: 768px) {
+    cursor: initial;
   }
 `;

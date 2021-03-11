@@ -12,14 +12,14 @@ Chart.helpers.extend(Chart.controllers.doughnut.prototype, {
     var width = chart.width - 60;
     var height = chart.height;
 
-    var fontSize = (height / 114).toFixed(2);
-    ctx.font = fontSize + "em Verdana";
-
+    var fontSize = 24;
+    ctx.font = fontSize + "px Roboto";
+    ctx.fontWeight = "bold";
     ctx.textBaseline = "middle";
 
     var text = chart.config.data.text,
-      textX = Math.round((width - ctx.measureText(text).width) / 2),
-      textY = (height + 40) / 2;
+      textX = Math.round((width - ctx.measureText(text).width) / 2 - 45),
+      textY = (height + 10) / 2;
 
     ctx.fillText(text, textX, textY);
   },
@@ -28,7 +28,7 @@ Chart.helpers.extend(Chart.controllers.doughnut.prototype, {
 const chartOptions = {
   plugins: {
     outlabels: {
-      display: false,
+      display: true,
     },
   },
   legend: {
@@ -37,7 +37,7 @@ const chartOptions = {
     onClick: null,
     color: "rgba(0, 0, 0, 0.4)",
     labels: {
-      boxWidth: 15,
+      boxWidth: 280,
       boxHeight: 15,
       fontSize: 18,
       textAlign: "center",

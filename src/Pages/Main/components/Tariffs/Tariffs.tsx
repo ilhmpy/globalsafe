@@ -33,7 +33,7 @@ export const Tariffs = () => {
   const [min, setMin] = useState(500);
   const [value, setValue] = useState("");
   const history = useHistory();
-  const inputRef = useRef<any>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleClick = (str: string, num: number) => {
     setIsNormalOpen(true);
@@ -45,7 +45,7 @@ export const Tariffs = () => {
   };
 
   useEffect(() => {
-    if (value) {
+    if (value && inputRef && inputRef.current) {
       inputRef.current.focus();
     }
   }, [value]);
@@ -70,8 +70,10 @@ export const Tariffs = () => {
         <H1>Для Вас !</H1>
       </Container>
       <DescContainer>
-        <p>Партнерка для контрактов START, EXPERT, INFINITY: 5% c первой линии; 2% со второй линии; 1% с третьей линиии</p>
-				<p>Партнерка для контрактов АВТОБОНУС: 3% c первой линии; 1,5% со второй и 1% c третьей линии;</p>
+        <p>
+          Партнерка для всех видов контракта: 5% c первой линии; 1% - со второй
+          линии; 1% - с третьей линии в глубину.
+        </p>
       </DescContainer>
       {isNormalOpen && (
         <Modal onClose={() => setIsNormalOpen(false)}>
@@ -94,25 +96,24 @@ export const Tariffs = () => {
         <BlockItem>
           <BlockTitle>START</BlockTitle>
           <div className="item__subtitle">
-            <Text>Депозит от 500 CWD на срок 4 месяца:</Text>
-            <Text>На условиях 50/50</Text>
+            <Text>Депозит на срок 3 месяца:</Text>
+            <Text>⁃ от 500 CWD на условиях 50/50</Text>
             {/* <Text>⁃ от 30.000 CWD на условиях 55/45</Text> */}
             <Text>
-              Выплата первой прибыли от Фонда 
-							каждые два месяца после размещения 
-							доверительного депозита.
+              Выплата первой прибыли от Фонда через два месяца после размещения
+              доверительного депозита.
             </Text>
           </div>
           <input
             className="link"
             type="hidden"
-            value="https://cwd.global/shopping/payment?to_name=start-1&amount=500"
+            value="https://crowdwiz.biz/shopping/payment?to_name=start-1&amount=500"
           />
 
           <Button
             onClick={() =>
               handleClick(
-                "https://cwd.global/shopping/payment?to_name=start-1&amount=500",
+                "https://crowdwiz.biz/shopping/payment?to_name=start-1&amount=500",
                 500
               )
             }
@@ -125,9 +126,9 @@ export const Tariffs = () => {
         <BlockItem>
           <BlockTitle>EXPERT</BlockTitle>
           <div>
-            <Text>Депозит от 1000 CWD на срок 6 месяцев</Text>
-            <Text>На условиях 80/20</Text>
-            {/*<Text>⁃ от 30.000 CWD на условиях 55/45</Text>*/}
+            <Text>Депозит от 1000 CWD на срок 5 месяцев</Text>
+            <Text>На условиях 90/10</Text>
+            <Text>⁃ от 30.000 CWD на условиях 55/45</Text>
             <Text>
               Прибыль выплачивается в конце срока размещения депозита. Тело
               депозита заморожено на весь срок.
@@ -135,12 +136,12 @@ export const Tariffs = () => {
           </div>
           <input
             type="hidden"
-            value="https://cwd.global/shopping/payment?to_name=expert-10&amount=1000"
+            value="https://crowdwiz.biz/shopping/payment?to_name=expert-10&amount=1000"
           />
           <Button
             onClick={() =>
               handleClick(
-                "https://cwd.global/shopping/payment?to_name=expert-10&amount=1000",
+                "https://crowdwiz.biz/shopping/payment?to_name=expert-10&amount=1000",
                 1000
               )
             }
@@ -154,21 +155,22 @@ export const Tariffs = () => {
           <BlockTitle>INFINITY</BlockTitle>
           <div>
             <Text>Депозит от 1000 CWD на срок 8 месяцев</Text>
-            <Text>На условиях 70/30</Text>
+            <Text>На условиях 80/20</Text>
+            <Text>⁃ от 30.000 CWD на условиях 55/45</Text>
             <Text>
-              Выплата прибыли (70% от прибыли вашего депозита) каждые два месяца в
+              Выплата прибыли (80% от прибыли вашего депозита) каждый месяц в
               течение всего срока размещения. Тело депозита заморожено на весь
               срок.
             </Text>
           </div>
           <input
             type="hidden"
-            value="https://cwd.global/shopping/payment?to_name=infinity-8&amount=1000"
+            value="https://crowdwiz.biz/shopping/payment?to_name=infinity-8&amount=1000"
           />
           <Button
             onClick={() =>
               handleClick(
-                "https://cwd.global/shopping/payment?to_name=infinity-8&amount=1000",
+                "https://crowdwiz.biz/shopping/payment?to_name=infinity-8&amount=1000",
                 1000
               )
             }
@@ -179,27 +181,85 @@ export const Tariffs = () => {
         </BlockItem>
 
         <BlockItem>
-          <BlockTitle>АВТОБОНУС</BlockTitle>
+          <BlockTitle>Start 30 000+</BlockTitle>
           <div>
+            <Text>Депозит на срок 3 месяца:</Text>
+            {/* <Text>⁃ от 500 CWD на условиях 50/50</Text> */}
+            <Text>⁃ от 30.000 CWD на условиях 55/45</Text>
             <Text>
-              Приобретение АВТОМОБИЛЯ всего за 40% от его
-              рыночной стоимости
-            </Text>
-            <Text>3 НЕДЕЛЯ (40/60) с 06/03 (с 21:00) по 13/03 (до 20:59):</Text>
-            <Text>
-              Вы вносите 40% стоимости автомобиля (в CWD) на аккаунт Фонда.
-              <br />
-              Через 5 месяцев Фонд добавляет 60% от стоимости автомобиля
+              Выплата первой прибыли от Фонда через два месяца после размещения
+              доверительного депозита
             </Text>
           </div>
           <input
             type="hidden"
-            value="https://cwd.global/shopping/payment?to_name=global-car&amount=10000"
+            value="https://crowdwiz.biz/shopping/payment?to_name=start2&amount=30000"
           />
           <Button
             onClick={() =>
               handleClick(
-                "https://cwd.global/shopping/payment?to_name=global-car&amount=10000",
+                "https://crowdwiz.biz/shopping/payment?to_name=start2&amount=30000",
+                30000
+              )
+            }
+            pink
+          >
+            Хочу START 30 000+
+          </Button>
+        </BlockItem>
+
+        <BlockItem>
+          <BlockTitle>ЖИЛФОНД</BlockTitle>
+          <div>
+            <Text>Депозит от 8000 CWD на срок 6 месяцев:</Text>
+            <Text>
+              Накопить на ПЕРВОНАЧАЛЬНЫЙ взнос (минимум 30% от стоимости
+              квартиры):
+            </Text>
+            <Text>
+              Полная заморозка депозита на условиях выплаты вашей прибыли от
+              Фонда через 6 месяцев напрямую в кооператив.
+            </Text>
+          </div>
+          <input
+            type="hidden"
+            value="https://crowdwiz.biz/shopping/payment?to_name=platinum-if&amount=8000"
+          />
+          <Button
+            onClick={() =>
+              handleClick(
+                "https://crowdwiz.biz/shopping/payment?to_name=platinum-if&amount=8000",
+                8000
+              )
+            }
+            purple
+          >
+            Хочу ЖИЛФОНД
+          </Button>
+        </BlockItem>
+
+        <BlockItem>
+          <BlockTitle>АВТОБОНУС</BlockTitle>
+          <div>
+            <Text>
+              Приобретение АВТОМОБИЛЯ всего за 30, 35, 40 или 45% от его
+              рыночной стоимости
+            </Text>
+            <Text>1 НЕДЕЛЯ (30/70) с 19/02 по 25/02:</Text>
+            <Text>
+              Вы вносите 30% стоимости автомобиля (в краудах) на аккаунт Фонда.
+              <br />
+              Через 5 месяцев Фонд добавляет 70% от стоимости автомобиля
+            </Text>
+          </div>
+          <input
+            type="hidden"
+            value="https://crowdwiz.biz/shopping/payment?to_name=global-car&amount=10000"
+          />
+          <Button
+            onClick={() =>
+              handleClick(
+                "https://crowdwiz.biz/shopping/payment?to_name=global-car&amount=10000",
                 100000
               )
             }
@@ -220,23 +280,23 @@ export const Tariffs = () => {
             <BlockItem>
               <BlockTitle>START</BlockTitle>
               <div className="item__subtitle">
-                <Text>Депозит от 500 CWD на срок 4 месяца:</Text>
-                <Text>На условиях 50/50</Text>
+                <Text>Депозит на срок 3 месяца:</Text>
+                <Text>⁃ от 500 CWD на условиях 50/50</Text>
                 {/* <Text>⁃ от 30.000 CWD на условиях 55/45</Text> */}
                 <Text>
-                  Выплата первой прибыли от Фонда каждые два месяца после
+                  Выплата первой прибыли от Фонда через два месяца после
                   размещения доверительного депозита.
                 </Text>
               </div>
               <input
                 className="link"
                 type="hidden"
-                value="https://cwd.global/shopping/payment?to_name=start-1&amount=500"
+                value="https://crowdwiz.biz/shopping/payment?to_name=start-1&amount=500"
               />
               <Button
                 onClick={() =>
                   handleClick(
-                    "https://cwd.global/shopping/payment?to_name=start-1&amount=500",
+                    "https://crowdwiz.biz/shopping/payment?to_name=start-1&amount=500",
                     500
                   )
                 }
@@ -250,8 +310,9 @@ export const Tariffs = () => {
             <BlockItem>
               <BlockTitle>EXPERT</BlockTitle>
               <div>
-                <Text>Депозит от 1000 CWD на срок 6 месяцев</Text>
-                <Text>На условиях 80/20</Text>
+                <Text>Депозит от 1000 CWD на срок 5 месяцев</Text>
+                <Text>На условиях 90/10</Text>
+                <Text>⁃ от 30.000 CWD на условиях 55/45</Text>
                 <Text>
                   Прибыль выплачивается в конце срока размещения депозита. Тело
                   депозита заморожено на весь срок.
@@ -259,12 +320,12 @@ export const Tariffs = () => {
               </div>
               <input
                 type="hidden"
-                value="https://cwd.global/shopping/payment?to_name=expert-10&amount=1000"
+                value="https://crowdwiz.biz/shopping/payment?to_name=expert-10&amount=1000"
               />
               <Button
                 onClick={() =>
                   handleClick(
-                    "https://cwd.global/shopping/payment?to_name=expert-10&amount=1000",
+                    "https://crowdwiz.biz/shopping/payment?to_name=expert-10&amount=1000",
                     1000
                   )
                 }
@@ -279,21 +340,22 @@ export const Tariffs = () => {
               <BlockTitle>INFINITY</BlockTitle>
               <div>
                 <Text>Депозит от 1000 CWD на срок 8 месяцев</Text>
-                <Text>На условиях 70/30</Text>
+                <Text>На условиях 80/20</Text>
+                <Text>⁃ от 30.000 CWD на условиях 55/45</Text>
                 <Text>
-                  Выплата прибыли (70% от прибыли вашего депозита) каждые два месяца
+                  Выплата прибыли (80% от прибыли вашего депозита) каждый месяц
                   в течение всего срока размещения. Тело депозита заморожено на
                   весь срок.
                 </Text>
               </div>
               <input
                 type="hidden"
-                value="https://cwd.global/shopping/payment?to_name=infinity-8&amount=1000"
+                value="https://crowdwiz.biz/shopping/payment?to_name=infinity-8&amount=1000"
               />
               <Button
                 onClick={() =>
                   handleClick(
-                    "https://cwd.global/shopping/payment?to_name=infinity-8&amount=1000",
+                    "https://crowdwiz.biz/shopping/payment?to_name=infinity-8&amount=1000",
                     1000
                   )
                 }
@@ -305,29 +367,89 @@ export const Tariffs = () => {
           </SwiperSlide>
           <SwiperSlide>
             <BlockItem>
+              <BlockTitle>Start 30 000+</BlockTitle>
+              <div>
+                <Text>Депозит на срок 3 месяца:</Text>
+                {/* <Text>⁃ от 500 CWD на условиях 50/50</Text> */}
+                <Text>⁃ от 30.000 CWD на условиях 55/45</Text>
+                <Text>
+                  Выплата первой прибыли от Фонда через два месяца после
+                  размещения доверительного депозита
+                </Text>
+              </div>
+              <input
+                type="hidden"
+                value="https://crowdwiz.biz/shopping/payment?to_name=start2&amount=30000"
+              />
+              <Button
+                onClick={() =>
+                  handleClick(
+                    "https://crowdwiz.biz/shopping/payment?to_name=start2&amount=30000",
+                    30000
+                  )
+                }
+                pink
+              >
+                Хочу START 30 000+
+              </Button>
+            </BlockItem>
+          </SwiperSlide>
+          <SwiperSlide>
+            <BlockItem>
+              <BlockTitle>ЖИЛФОНД</BlockTitle>
+              <div>
+                <Text>Депозит от 8000 CWD на срок 6 месяцев:</Text>
+                <Text>
+                  Накопить на ПЕРВОНАЧАЛЬНЫЙ взнос (минимум 30% от стоимости
+                  квартиры):
+                </Text>
+                <Text>
+                  Полная заморозка депозита на условиях выплаты вашей прибыли от
+                  Фонда через 6 месяцев напрямую в кооператив.
+                </Text>
+              </div>
+              <input
+                type="hidden"
+                value="https://crowdwiz.biz/shopping/payment?to_name=platinum-if&amount=8000"
+              />
+              <Button
+                onClick={() =>
+                  handleClick(
+                    "https://crowdwiz.biz/shopping/payment?to_name=platinum-if&amount=8000",
+                    8000
+                  )
+                }
+                purple
+              >
+                Хочу ЖИЛФОНД
+              </Button>
+            </BlockItem>
+          </SwiperSlide>
+          <SwiperSlide>
+            <BlockItem>
               <BlockTitle>АВТОБОНУС</BlockTitle>
               <div>
                 <Text>
-                  Приобретение АВТОМОБИЛЯ всего за 40% от его
+                  Приобретение АВТОМОБИЛЯ всего за 30, 35, 40 или 45% от его
                   рыночной стоимости
                 </Text>
-                <Text>3 НЕДЕЛЯ (40/60) с 06/03 (с 21:00) по 13/03 (до 20:59):</Text>
+                <Text>1 НЕДЕЛЯ (30/70) с 19/02 по 25/02:</Text>
                 <Text>
-                  Вы вносите 40% стоимости автомобиля (в CWD) на аккаунт
+                  Вы вносите 30% стоимости автомобиля (в краудах) на аккаунт
                   Фонда.
-                  <br /> Через 5 месяцев Фонд добавляет 60% от стоимости
+                  <br /> Через 5 месяцев Фонд добавляет 70% от стоимости
                   автомобиля
                 </Text>
               </div>
               <input
                 type="hidden"
-                value="https://cwd.global/shopping/payment?to_name=global-car&amount=10000"
+                value="https://crowdwiz.biz/shopping/payment?to_name=global-car&amount=10000"
               />
               <Button
                 onClick={() =>
                   handleClick(
-                    "https://cwd.global/shopping/payment?to_name=global-car&amount=10000",
-                    10000
+                    "https://crowdwiz.biz/shopping/payment?to_name=global-car&amount=10000",
+                    100000
                   )
                 }
                 yellow
