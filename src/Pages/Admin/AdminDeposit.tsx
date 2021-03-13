@@ -17,6 +17,7 @@ import "swiper/components/navigation/navigation.scss";
 import "swiper/components/pagination/pagination.scss";
 import "swiper/components/scrollbar/scrollbar.scss";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { FilterMenu } from "../../components/FilterMenu/FilterMenu";
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
 const data = [
@@ -66,6 +67,11 @@ for (let i = 0; i < Math.ceil(data.length / size); i++) {
 export const AdminDeposit = () => {
   const sizes = useWindowSize();
   const size = sizes < 768;
+  // const [id, setId] = useState(0)
+  // console.log('id', id)
+  const filterClick = (id: number) => {
+    console.log("click", id);
+  };
   return (
     <Styled.Wrapper>
       <SideNavbar />
@@ -172,6 +178,7 @@ export const AdminDeposit = () => {
               <TableHeadItem>
                 <Filter />
               </TableHeadItem>
+              <FilterMenu filterClick={filterClick} />
             </TableHead>
             <TableBody>
               <TableBodyItem>Account 1</TableBodyItem>
@@ -205,9 +212,11 @@ const NotFound = styled.div`
 
 const PaymentsTable = styled.div`
   padding: 30px;
+  min-height: 556px;
 `;
 
 const TableHead = styled.ul`
+  position: relative;
   list-style: none;
   display: flex;
   align-items: center;
@@ -319,19 +328,20 @@ const HalfRound = styled.div`
   span {
     position: absolute;
     top: 33%;
-    left: 18px;
+    left: 9px;
     font-weight: normal;
     font-size: 36px;
     line-height: 42px;
     text-align: center;
     display: block;
-    width: 45px;
+    width: 63px;
     color: #000000;
     @media (max-width: 768px) {
       font-size: 14px;
       line-height: 16px;
       top: 36%;
       left: 3px;
+      width: 39px;
       font-weight: bold;
     }
   }

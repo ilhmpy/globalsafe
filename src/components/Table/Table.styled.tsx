@@ -88,6 +88,7 @@ export const Text = styled.div`
 
 export const TableWrap = styled.div`
   width: 100%;
+  position: relative;
   padding: 34px 90px;
   @media (max-width: 992px) {
     padding: 15px 10px;

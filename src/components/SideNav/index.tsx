@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import styled from "styled-components/macro";
 import { ReactComponent as Logo } from "../../assets/svg/logo.svg";
 import { ReactComponent as DashBoard } from "../../assets/svg/dashboard.svg";
@@ -14,16 +14,16 @@ export const SideNavbar = () => {
   const [navWidth, setNavWidth] = useState(false);
   const sizes = useWindowSize();
   const size = sizes < 1200;
+  console.log("sizes", sizes);
+  console.log("size", size);
+  console.log("navWidth", navWidth);
 
   useEffect(() => {
-    if (sizes === 0) {
-      return;
-    } else if (size && sizes > 0) {
+    if (sizes !== 0 && size) {
+      console.log("if true");
       setNavWidth(true);
-    } else {
-      setNavWidth(false);
     }
-  }, [size]);
+  }, [sizes]);
 
   const navShow = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -73,7 +73,7 @@ export const SideNavbar = () => {
             </StyledLink>
           </Li>
           <Li>
-            <StyledLink to="admin/portfolio">
+            <StyledLink to="/admin/portfolio">
               <Briefcase />
               <Text>Портфель</Text>
             </StyledLink>

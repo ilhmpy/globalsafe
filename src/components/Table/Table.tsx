@@ -9,6 +9,7 @@ import { Balance } from "../../types/balance";
 import { useHistory } from "react-router-dom";
 
 import { TableModal } from "./TableModal";
+import { FilterMenu } from "../FilterMenu/FilterMenu";
 moment.locale("ru");
 
 const Row = ({ data }: any) => {
@@ -85,13 +86,16 @@ export const Tables = ({ list }: any) => {
 
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
-
+  const filterClick = (id: number) => {
+    console.log("click", id);
+  };
   // console.log("list", list);
 
   return (
     <Styled.TableWrap>
+      {/* <FilterMenu filterClick={filterClick} /> */}
       <Styled.Table>
-        <thead>
+        <thead style={{ position: "relative" }}>
           <Styled.TR>
             <Styled.TH>Название</Styled.TH>
             <Styled.TH>Описание</Styled.TH>
@@ -99,7 +103,8 @@ export const Tables = ({ list }: any) => {
             <Styled.TH>Пл. выплата</Styled.TH>
             <Styled.TH>
               <p>Дата следующей выплаты</p>
-              <span>Дата след. выплаты</span> <Styled.StyledFilter />
+              <span>Дата след. выплаты</span>
+              <Styled.StyledFilter />
             </Styled.TH>
           </Styled.TR>
         </thead>

@@ -62,11 +62,14 @@ export const InfoWrap = styled.div`
   }
 `;
 
+export const UserBlock = styled.div``;
+
 export const InfoTitle = styled.h4`
   font-weight: 500;
   font-size: 18px;
   line-height: 21px;
   color: #0e0d3d;
+  margin-bottom: 20px;
 `;
 
 export const InfoButtons = styled.div`
@@ -201,11 +204,9 @@ export const ContainerRow = styled(Container)`
 export const Content = styled.div<{ active?: boolean }>`
   ${(props) => (props.active ? "" : "display:none")};
   @media (max-width: 992px) {
-    height: 100%;
     min-height: 350px;
     ${HalfTabs} {
-      padding-top: 25px;
-      padding-left: 20px;
+      padding: 25px 10px;
     }
   }
 `;

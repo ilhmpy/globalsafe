@@ -19,6 +19,21 @@ import { TestChart } from "../../components/Charts/Test";
 import { CSSTransition } from "react-transition-group";
 import useWindowSize from "../../hooks/useWindowSize";
 import { Collection, RootList } from "../../types/info";
+import { Modal } from "../../components/Modal/Modal";
+import moment from "moment";
+import "moment/locale/ru";
+import { ModalCalendarInput } from "../../components/UI/DayPicker";
+moment.locale("ru");
+
+type Obj = {
+  id: string;
+  operationKind: number;
+  balance: number;
+};
+
+type Deposit = {
+  [elemName: string]: Obj[];
+};
 
 export const Info = () => {
   const [active, setActive] = useState(0);
@@ -27,21 +42,51 @@ export const Info = () => {
   const [card2, setCard2] = useState(0);
   const [activMob, setActiveMob] = useState(0);
   const [list, setList] = useState<Collection[]>([]);
+  const [depositTotal, setDepositTotal] = useState(0);
+  const [totalPayed, setTotalPayed] = useState(0);
+  const [nextDate, setNextDate] = useState<null | Date>(null);
+  const [balanceLog, setBalanceLog] = useState<Deposit | null>(null);
+  const [depositTabs, setDepositTabs] = useState(0);
+  const [dateFrom, setDateFrom] = useState(new Date("2021-02-09T00:47:45"));
+  const [dateTo, setDateTo] = useState(new Date());
+  const [balanceLogs, setBalanceLogs] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+  const [open, setOpen] = useState(false);
   const sizes = useWindowSize();
   const size = sizes < 992;
   const appContext = useContext(AppContext);
   const user = appContext.user;
+  const balance = appContext.balance;
 
   const hubConnection = appContext.hubConnection;
   const loading = appContext.loading;
 
-  // const chartData = useMemo(() => list.map(item), [])
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection
+        .invoke("GetTotalDepositsAmount")
+        .then((res) => {
+          setDepositTotal(res);
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  }, [hubConnection]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection
+        .invoke("GetTotalPayedAmount")
+        .then((res) => {
+          setTotalPayed(res);
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  }, [hubConnection]);
 
   useEffect(() => {
     if (hubConnection) {
       hubConnection
         .invoke<RootList>("GetUserDeposits", [1, 2, 3, 4], 0, 30)
-        .then((res: any) => {
+        .then((res) => {
           setList(res.collection);
         })
         .catch((err: Error) => console.log(err));
@@ -51,17 +96,9 @@ export const Info = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke(
-          "GetBalanceLog",
-          1,
-          [0, 1, 2, 3, 4, 5, 6, 7, 8],
-          new Date("2021-02-09T00:47:45"),
-          new Date(),
-          0,
-          10
-        )
-        .then((res: any) => {
-          console.log("res", res);
+        .invoke("GetUserNextPaymentDate")
+        .then((res) => {
+          setNextDate(res);
         })
         .catch((err: Error) => console.log(err));
     }
@@ -70,9 +107,44 @@ export const Info = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke("GetActiveDeposits")
+        .invoke("GetBalanceLog", 1, balanceLogs, dateFrom, dateTo, 0, 30)
         .then((res: any) => {
-          console.log("res active", res);
+          console.log("res", res);
+          function getFormatedDate(dateStr: Date) {
+            let date = moment(dateStr).format("DD MMMM YYYY");
+            return date;
+          }
+          if (res.collection.length) {
+            let result: any = {};
+            res.collection.forEach((item: any) => {
+              const d = getFormatedDate(item.operationDate);
+
+              const obj = {
+                id: item.balanceSafeId,
+                operationKind: item.operationKind,
+                balance: item.balanceDelta,
+              };
+
+              if (result[d]) {
+                result[d].push(obj);
+              } else {
+                result[d] = [obj];
+              }
+            });
+            setBalanceLog(result);
+          } else {
+            setBalanceLog(null);
+          }
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  }, [hubConnection, dateTo, dateFrom, balanceLogs]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection
+        .invoke("GetActiveDepositsCount")
+        .then((res: any) => {
           setActiveDeposite(res);
         })
         .catch((err: Error) => console.log(err));
@@ -90,27 +162,26 @@ export const Info = () => {
     }
   }, [hubConnection]);
 
-  const depositSum = useMemo(
-    () =>
-      list.reduce((a, b) => {
-        return a + b.amountView;
-      }, 0),
-    [list]
-  );
-
-  const allSum = useMemo(
-    () =>
-      list.reduce((a, b) => {
-        return a + b.baseAmountView;
-      }, 0),
-    [list]
-  );
-
   const handleClick = (id: number) => {
     if (id !== active) {
       setActive(id);
     }
   };
+
+  const handleBalance = (id: number) => {
+    if (id !== depositTabs) {
+      setDepositTabs(id);
+      if (id === 0) {
+        setBalanceLogs([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+      } else if (id === 1) {
+        setBalanceLogs([1]);
+      } else if (id === 2) {
+        setBalanceLogs([2]);
+      }
+    }
+  };
+
+  const filterData = () => {};
 
   console.log("list", list);
 
@@ -122,6 +193,24 @@ export const Info = () => {
     return <Redirect to="/" />;
   }
 
+  const operation = (id: number) => {
+    if (id === 6) {
+      return "Открытие депозита";
+    } else if (id === 7) {
+      return "Начисление дивидендов";
+    } else if (id === 8) {
+      return "Закрытие депозита";
+    } else if (id === 2) {
+      return "Вывод баланса";
+    } else if (id === 1) {
+      return "Пополнение баланса";
+    }
+  };
+
+  const onClose = () => {
+    setOpen(false);
+  };
+
   return (
     <>
       <Header />
@@ -132,11 +221,21 @@ export const Info = () => {
         <Container>
           <Card>
             <Styled.InfoWrap>
-              <Styled.InfoTitle>{user}</Styled.InfoTitle>
-              {/* <InfoButtons>
+              <Styled.UserBlock>
+                <Styled.InfoTitle>{user}</Styled.InfoTitle>
+                <Styled.BalanceItem>
+                  <Styled.BalanceItemName>Баланс</Styled.BalanceItemName>
+                  <Styled.BalanceItemValue pink>
+                    {balance
+                      ? (balance / 100000).toFixed(4).toLocaleString()
+                      : "0"}
+                  </Styled.BalanceItemValue>
+                </Styled.BalanceItem>
+              </Styled.UserBlock>
+              <Styled.InfoButtons>
                 <Button dangerOutline>Новый депозит</Button>
                 <Button danger>Вывести деньги</Button>
-              </InfoButtons> */}
+              </Styled.InfoButtons>
             </Styled.InfoWrap>
             <Tabs>
               <Tab onClick={() => handleClick(0)} active={active === 0}>
@@ -160,19 +259,19 @@ export const Info = () => {
                   <Styled.DepositItem>
                     <Styled.DepositName>Открытые депозиты</Styled.DepositName>
                     <Styled.DepositValue>
-                      {activeDeposite ? activeDeposite.toLocaleString() : ""}
+                      {activeDeposite ? activeDeposite.toLocaleString() : "-"}
                     </Styled.DepositValue>
                   </Styled.DepositItem>
                   <Styled.DepositItem>
                     <Styled.DepositName>Сумма в депозитах</Styled.DepositName>
                     <Styled.DepositValue>
-                      {depositSum ? depositSum.toFixed(2).toLocaleString() : ""}
+                      {(depositTotal / 100000).toFixed(4).toLocaleString()}
                     </Styled.DepositValue>
                   </Styled.DepositItem>
                   <Styled.DepositItem>
                     <Styled.DepositName>Всего выплачено</Styled.DepositName>
                     <Styled.DepositValue>
-                      {allSum ? allSum.toFixed(2).toLocaleString() : ""}
+                      {(totalPayed / 100000).toFixed(4).toLocaleString()}
                     </Styled.DepositValue>
                   </Styled.DepositItem>
                 </Styled.Deposit>
@@ -209,12 +308,16 @@ export const Info = () => {
                       <TestChart
                         percent
                         labels={list.map((i: any) => i.deposit.name)}
-                        series={list.map((i: any) => i.amountView)}
+                        series={list.map((i: any) => i.payedAmountView)}
                       />
                     </CSSTransition>
                     <Styled.NextPay>
                       Следующая выплата:{" "}
-                      <Styled.Date>01 марта 2021</Styled.Date>
+                      <Styled.Date>
+                        {nextDate
+                          ? moment(nextDate).format("DD MMMM YYYY")
+                          : "-"}
+                      </Styled.Date>
                     </Styled.NextPay>
                   </Styled.HalfContent>
                   <Styled.HalfContent card={card === 1}>
@@ -226,12 +329,16 @@ export const Info = () => {
                     >
                       <TestChart
                         labels={list.map((i: any) => i.deposit.name)}
-                        series={list.map((i: any) => i.amountView)}
+                        series={list.map((i: any) => i.payedAmountView)}
                       />
                     </CSSTransition>
                     <Styled.NextPay>
                       Следующая выплата:{" "}
-                      <Styled.Date>01 марта 2021</Styled.Date>
+                      <Styled.Date>
+                        {nextDate
+                          ? moment(nextDate).format("DD MMMM YYYY")
+                          : "-"}
+                      </Styled.Date>
                     </Styled.NextPay>
                   </Styled.HalfContent>
                 </Styled.Half>
@@ -335,10 +442,14 @@ export const Info = () => {
                           >
                             <TestChart
                               percent
+                              mobHeight={150}
                               labels={list.map((i: any) => i.deposit.name)}
-                              series={list.map((i: any) => i.amountView)}
+                              series={list.map((i: any) => i.payedAmountView)}
                             />
                           </CSSTransition>
+                          <Styled.NextPay>
+                            <Styled.Date></Styled.Date>
+                          </Styled.NextPay>
                         </Styled.HalfContent>
 
                         <Styled.HalfContent card={card === 1}>
@@ -349,14 +460,19 @@ export const Info = () => {
                             unmountOnExit
                           >
                             <TestChart
+                              mobHeight={150}
                               labels={list.map((i: any) => i.deposit.name)}
-                              series={list.map((i: any) => i.amountView)}
+                              series={list.map((i: any) => i.payedAmountView)}
                             />
                           </CSSTransition>
                         </Styled.HalfContent>
                         <Styled.NextPay>
                           Следующая выплата:{" "}
-                          <Styled.Date>01 марта 2021</Styled.Date>
+                          <Styled.Date>
+                            {nextDate
+                              ? moment(nextDate).format("DD MMMM YYYY")
+                              : "-"}
+                          </Styled.Date>
                         </Styled.NextPay>
                       </>
                     </CSSTransition>
@@ -394,10 +510,14 @@ export const Info = () => {
                           >
                             <TestChart
                               percent
+                              mobHeight={150}
                               labels={list.map((i: any) => i.deposit.name)}
                               series={list.map((i: any) => i.baseAmountView)}
                             />
                           </CSSTransition>
+                          <Styled.NextPay>
+                            <Styled.Date></Styled.Date>
+                          </Styled.NextPay>
                         </Styled.HalfContent>
 
                         <Styled.HalfContent card={card2 === 1}>
@@ -408,10 +528,14 @@ export const Info = () => {
                             unmountOnExit
                           >
                             <TestChart
+                              mobHeight={150}
                               labels={list.map((i: any) => i.deposit.name)}
                               series={list.map((i: any) => i.baseAmountView)}
                             />
                           </CSSTransition>
+                          <Styled.NextPay>
+                            <Styled.Date></Styled.Date>
+                          </Styled.NextPay>
                         </Styled.HalfContent>
                       </>
                     </CSSTransition>
@@ -436,34 +560,51 @@ export const Info = () => {
                   <Styled.BalanceItem>
                     <Styled.BalanceItemName>Баланс</Styled.BalanceItemName>
                     <Styled.BalanceItemValue pink>
-                      110 500
+                      {balance
+                        ? (balance / 100000).toFixed(4).toLocaleString()
+                        : "0"}
                     </Styled.BalanceItemValue>
                   </Styled.BalanceItem>
 
                   <Styled.BalanceItem>
                     <Styled.BalanceItemName>Поступления</Styled.BalanceItemName>
                     <Styled.BalanceItemValue pink>
-                      80 000
+                      {(depositTotal / 100000).toFixed(4).toLocaleString()}
                     </Styled.BalanceItemValue>
                   </Styled.BalanceItem>
 
                   <Styled.BalanceItem>
                     <Styled.BalanceItemName>Выводы</Styled.BalanceItemName>
-                    <Styled.BalanceItemValue>30 500</Styled.BalanceItemValue>
+                    <Styled.BalanceItemValue>
+                      {(totalPayed / 100000).toFixed(4).toLocaleString()}
+                    </Styled.BalanceItemValue>
                   </Styled.BalanceItem>
                 </Styled.BalanceList>
-                <Button>За все время</Button>
+                <Button onClick={() => setOpen(true)}>За все время</Button>
               </Styled.BalanceWrap>
             </Container>
 
             <Container>
               <Card>
                 <Styled.BalanceTabHead>
-                  <Styled.BalanceTabItem active>
+                  <Styled.BalanceTabItem
+                    onClick={() => handleBalance(0)}
+                    active={depositTabs === 0}
+                  >
                     Все операции
                   </Styled.BalanceTabItem>
-                  <Styled.BalanceTabItem>Поступления</Styled.BalanceTabItem>
-                  <Styled.BalanceTabItem>Выводы</Styled.BalanceTabItem>
+                  <Styled.BalanceTabItem
+                    onClick={() => handleBalance(1)}
+                    active={depositTabs === 1}
+                  >
+                    Поступления
+                  </Styled.BalanceTabItem>
+                  <Styled.BalanceTabItem
+                    onClick={() => handleBalance(2)}
+                    active={depositTabs === 2}
+                  >
+                    Выводы
+                  </Styled.BalanceTabItem>
                 </Styled.BalanceTabHead>
               </Card>
             </Container>
@@ -478,53 +619,55 @@ export const Info = () => {
                         <Styled.DataListName>Сумма</Styled.DataListName>
                       </Styled.DataListItem>
                     </Styled.DataListHead>
-                    <Styled.DataListDate>
-                      25 февраля 2021 г.
-                    </Styled.DataListDate>
-                    <Styled.DataListItem>
-                      <Styled.DataListName>
-                        Начисление дивидендов
-                      </Styled.DataListName>
-                      <Styled.DataListSum plus>+ 50 000</Styled.DataListSum>
-                    </Styled.DataListItem>
-                    <Styled.DataListItem>
-                      <Styled.DataListName>
-                        Начисление дивидендов
-                      </Styled.DataListName>
-                      <Styled.DataListSum plus>+ 3 000</Styled.DataListSum>
-                    </Styled.DataListItem>
-                    <Styled.DataListItem>
-                      <Styled.DataListName>
-                        Открытие депозита
-                      </Styled.DataListName>
-                      <Styled.DataListSum>- 20 000</Styled.DataListSum>
-                    </Styled.DataListItem>
-                    <Styled.DataListDate>
-                      25 февраля 2021 г.
-                    </Styled.DataListDate>
-                    <Styled.DataListItem>
-                      <Styled.DataListName>
-                        Начисление дивидендов
-                      </Styled.DataListName>
-                      <Styled.DataListSum plus>+ 36 000</Styled.DataListSum>
-                    </Styled.DataListItem>
-                    <Styled.DataListItem>
-                      <Styled.DataListName>
-                        Начисление дивидендов
-                      </Styled.DataListName>
-                      <Styled.DataListSum plus>+ 30 000</Styled.DataListSum>
-                    </Styled.DataListItem>
-                    <Styled.DataListItem>
-                      <Styled.DataListName>
-                        Начисление дивидендов
-                      </Styled.DataListName>
-                      <Styled.DataListSum>- 10 000</Styled.DataListSum>
-                    </Styled.DataListItem>
+                    {balanceLog ? (
+                      Object.keys(balanceLog).map((key) => (
+                        <div key={key}>
+                          <Styled.DataListDate>{key}</Styled.DataListDate>
+
+                          {balanceLog[key].map((item, idx) => (
+                            <Styled.DataListItem key={item.id + idx}>
+                              <Styled.DataListName>
+                                {operation(item.operationKind)}
+                              </Styled.DataListName>
+                              <Styled.DataListSum
+                                plus={item.operationKind !== 6}
+                              >
+                                {item.operationKind !== 6 ? "+" : "-"}{" "}
+                                {item.balance}
+                              </Styled.DataListSum>
+                            </Styled.DataListItem>
+                          ))}
+                        </div>
+                      ))
+                    ) : (
+                      <div>нет данных</div>
+                    )}
                   </Styled.DataList>
                 </Styled.DataListWrap>
               </Card>
             </Container>
           </Styled.Content>
+          {open && (
+            <Modal onClose={onClose}>
+              <ModalContent>
+                <ModalTitle>Выберите период</ModalTitle>
+                <ModalItem>
+                  <DateTitle>Этот месяц</DateTitle>
+                  <DateText>Февраль 2021</DateText>
+                </ModalItem>
+                <ModalItem>
+                  <DateTitle>Этот год</DateTitle>
+                  <DateText>2021</DateText>
+                </ModalItem>
+                <ModalItem>
+                  <DateTitle></DateTitle>
+                  <DateText red>За все время</DateText>
+                </ModalItem>
+                <DateTitle>Свободный</DateTitle>
+              </ModalContent>
+              <ModalCalendarInput />
+            </Modal>
+          )}
         </>
       </Styled.Page>
     </>
@@ -533,4 +676,40 @@ export const Info = () => {
 
 const ChartBlock = styled.div`
   width: 100%;
+`;
+
+const ModalContent = styled.div`
+  padding-top: 10px;
+`;
+
+const ModalTitle = styled.h3`
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 28px;
+  text-align: center;
+  color: #0e0d3d;
+  padding-bottom: 15px;
+`;
+
+const ModalItem = styled.div`
+  border-bottom: 1px solid rgba(66, 139, 202, 0.2);
+  padding: 10px 0;
+`;
+
+const DateTitle = styled.p`
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 16px;
+  color: #515172;
+  opacity: 0.4;
+  text-align: center;
+  padding-bottom: 5px;
+`;
+
+const DateText = styled.p<{ red?: boolean }>`
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 21px;
+  color: ${(props) => (props.red ? "#FF416E" : "#515172")};
+  text-align: center;
 `;

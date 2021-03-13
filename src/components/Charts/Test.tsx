@@ -314,6 +314,14 @@ export const ColumnChartThree = () => {
         colors: ["transparent"],
       },
       xaxis: {
+        tickPlacement: "on",
+        labels: {
+          rotate: -45,
+          rotateAlways: true,
+          style: {
+            fontSize: "10px",
+          },
+        },
         categories: [
           "Янв",
           "Фев",
@@ -328,11 +336,7 @@ export const ColumnChartThree = () => {
           "Ноя",
           "Дек",
         ],
-        labels: {
-          style: {
-            fontSize: "10px",
-          },
-        },
+
         axisBorder: {
           show: false,
         },
