@@ -14,7 +14,6 @@ type Props = {
 };
 
 export const TableModal = ({ onClose, open, data }: Props) => {
-  console.log("open", open);
   return (
     <>
       {!!(open === data.safeId) && (

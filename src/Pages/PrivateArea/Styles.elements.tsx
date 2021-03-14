@@ -3,6 +3,14 @@ import { Button } from "../../components/Button/Button";
 import { ReactComponent as Left } from "../../assets/svg/left.svg";
 import { Link } from "react-router-dom";
 import { Card, Container } from "../../globalStyles";
+import { ReactComponent as BackIcon } from "../../assets/svg/arrowLeftModal.svg";
+
+export const ModalBack = styled(BackIcon)<{ right?: boolean }>`
+  width: 16px;
+  height: 16px;
+  margin-left: 10px;
+  transform: ${(props) => (props.right ? "rotate(180deg)" : "rotate(0deg)")};
+`;
 
 export const Date = styled.div`
   font-weight: bold;
@@ -384,4 +392,150 @@ export const DataListDate = styled.div`
   text-align: center;
   border: 1px solid #ff416e;
   border-radius: 24px;
+`;
+
+export const ModalButton = styled(Button)<{ mb?: boolean }>`
+  max-width: 100%;
+  width: 100%;
+  margin-bottom: ${(props) => (props.mb ? "20px" : "0")};
+`;
+
+export const ModalBlock = styled.div`
+  max-width: 230px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 50px 10px;
+`;
+
+export const ModalWrap = styled.div`
+  @media (max-width: 768px) {
+    .close {
+      display: none;
+    }
+  }
+`;
+
+export const Arrow = styled(Left)`
+  position: absolute;
+  width: 16px;
+  height: 16px;
+`;
+
+export const NotFound = styled.div`
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 21px;
+  padding: 30px;
+  letter-spacing: 0.1px;
+  min-height: 250px;
+  color: #0e0d3d;
+`;
+
+export const ModalContent = styled.div`
+  padding-top: 10px;
+  position: relative;
+`;
+
+export const ModalTitle = styled.h3<{ mt?: boolean }>`
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 28px;
+  text-align: center;
+  color: #0e0d3d;
+  padding-bottom: 15px;
+  margin-top: ${(props) => (props.mt ? "40px" : 0)};
+  @media (max-width: 768px) {
+    font-size: 18px;
+    line-height: 21px;
+  }
+`;
+
+export const ModalItem = styled.div`
+  border-bottom: 1px solid rgba(66, 139, 202, 0.2);
+  padding: 0 0 10px;
+`;
+
+export const DateTitle = styled.p`
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 16px;
+  color: #515172;
+  opacity: 0.4;
+  text-align: center;
+  padding-bottom: 5px;
+  padding-top: 10px;
+`;
+
+export const DateText = styled.p<{ red?: boolean }>`
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 21px;
+  color: ${(props) => (props.red ? "#FF416E" : "#515172")};
+  text-align: center;
+`;
+
+export const ModalList = styled.ul`
+  list-style: none;
+  width: 100%;
+  margin-bottom: 30px;
+`;
+
+export const ModalListText = styled.div<{ head?: boolean }>`
+  font-weight: normal;
+  width: 33.333%;
+  font-size: 14px;
+  line-height: 16px;
+  letter-spacing: 0.1px;
+  padding-right: 5px;
+  color: ${(props) => (props.head ? "rgba(86, 101, 127, 0.6)" : "#515172")};
+`;
+
+export const ModalListItem = styled.li`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(66, 139, 202, 0.3);
+  padding: 9px 0;
+  &:first-child {
+    cursor: initial;
+    border-bottom: 0;
+    &:hover {
+      background: transparent;
+    }
+  }
+  &:hover:not(:first-child) {
+    cursor: pointer;
+    background: rgba(66, 139, 202, 0.109);
+  }
+`;
+
+export const Conditions = styled.div`
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 16px;
+  letter-spacing: 0.1px;
+  padding-left: 40px;
+  color: #56657f;
+  max-width: 200px;
+  width: 100%;
+  @media (max-width: 576px) {
+    max-width: 100%;
+    margin-top: 40px;
+    text-align: center;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+`;
+
+export const ModalDeposits = styled.div`
+  display: flex;
+  justify-content: center;
+  padding-bottom: 40px;
+  @media (max-width: 576px) {
+    flex-wrap: wrap;
+  }
+`;
+
+export const ModalDepositsWrap = styled.div`
+  width: 540px;
 `;

@@ -4,9 +4,10 @@ import React, {
   useContext,
   useEffect,
   useMemo,
+  useRef,
 } from "react";
 import { Header } from "../../components/Header/Header";
-import styled from "styled-components/macro";
+import styled, { css } from "styled-components/macro";
 import * as Styled from "./Styles.elements";
 import { Tabs, Tab } from "../../components/UI/Tabs";
 import { Card, Container } from "../../globalStyles";
@@ -20,9 +21,15 @@ import { CSSTransition } from "react-transition-group";
 import useWindowSize from "../../hooks/useWindowSize";
 import { Collection, RootList } from "../../types/info";
 import { Modal } from "../../components/Modal/Modal";
+import { ReactComponent as Left } from "../../assets/svg/arrowLeftModal.svg";
 import moment from "moment";
 import "moment/locale/ru";
-import { ModalCalendarInput } from "../../components/UI/DayPicker";
+import { ModalRangeInput } from "../../components/UI/DayPicker";
+import { Input } from "../../components/UI/Input";
+import { OpenDate } from "../../types/dates";
+import { RootDeposits, DepositsCollection } from "../../types/info";
+import ReactNotification, { store } from "react-notifications-component";
+import "react-notifications-component/dist/theme.css";
 moment.locale("ru");
 
 type Obj = {
@@ -47,18 +54,51 @@ export const Info = () => {
   const [nextDate, setNextDate] = useState<null | Date>(null);
   const [balanceLog, setBalanceLog] = useState<Deposit | null>(null);
   const [depositTabs, setDepositTabs] = useState(0);
-  const [dateFrom, setDateFrom] = useState(new Date("2021-02-09T00:47:45"));
-  const [dateTo, setDateTo] = useState(new Date());
   const [balanceLogs, setBalanceLogs] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8]);
   const [open, setOpen] = useState(false);
+  const [withdraw, setWithdraw] = useState(false);
+  const [addDeposit, setAddDeposit] = useState(false);
+  const [withdrawValue, setWithdrawValue] = useState("");
+  const [addDepositValue, setAddDepositValue] = useState("");
+  const [depositListModal, setDepositListModal] = useState(false);
+  const [depositSelect, setDepositSelect] = useState<null | DepositsCollection>(
+    null
+  );
+  const [depositsList, setDepositsList] = useState<DepositsCollection[] | null>(
+    null
+  );
+  const [openDate, setOpenDate] = useState<OpenDate>({
+    from: new Date("2021-02-09T00:47:45"),
+    to: new Date(),
+  });
   const sizes = useWindowSize();
   const size = sizes < 992;
   const appContext = useContext(AppContext);
   const user = appContext.user;
   const balance = appContext.balance;
+  const inputRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (withdrawValue) {
+      inputRef.current.focus();
+    }
+  }, [withdrawValue]);
 
   const hubConnection = appContext.hubConnection;
   const loading = appContext.loading;
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection
+        .invoke<RootDeposits>("GetDeposits", 0, 10)
+        .then((res) => {
+          if (res.collection.length) {
+            setDepositsList(res.collection);
+          }
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  }, [hubConnection]);
 
   useEffect(() => {
     if (hubConnection) {
@@ -107,7 +147,15 @@ export const Info = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke("GetBalanceLog", 1, balanceLogs, dateFrom, dateTo, 0, 30)
+        .invoke(
+          "GetBalanceLog",
+          1,
+          balanceLogs,
+          openDate.from,
+          openDate.to,
+          0,
+          30
+        )
         .then((res: any) => {
           console.log("res", res);
           function getFormatedDate(dateStr: Date) {
@@ -120,7 +168,7 @@ export const Info = () => {
               const d = getFormatedDate(item.operationDate);
 
               const obj = {
-                id: item.balanceSafeId,
+                id: item.referenceSafeId,
                 operationKind: item.operationKind,
                 balance: item.balanceDelta,
               };
@@ -138,7 +186,7 @@ export const Info = () => {
         })
         .catch((err: Error) => console.log(err));
     }
-  }, [hubConnection, dateTo, dateFrom, balanceLogs]);
+  }, [hubConnection, openDate, balanceLogs]);
 
   useEffect(() => {
     if (hubConnection) {
@@ -183,8 +231,6 @@ export const Info = () => {
 
   const filterData = () => {};
 
-  console.log("list", list);
-
   if (user === null) {
     return null;
   }
@@ -211,6 +257,86 @@ export const Info = () => {
     setOpen(false);
   };
 
+  const alert = (
+    title: string,
+    message: string,
+    type: "success" | "default" | "warning" | "info" | "danger"
+  ) => {
+    store.addNotification({
+      title: title,
+      message: message,
+      type: type,
+      insert: "top",
+      container: "top-right",
+      animationIn: ["animate__animated", "animate__fadeIn"],
+      animationOut: ["animate__animated", "animate__fadeOut"],
+      dismiss: {
+        duration: 5000,
+      },
+    });
+  };
+
+  const withdrawBalance = () => {
+    if (hubConnection) {
+      hubConnection
+        .invoke("Withdraw", 1, +withdrawValue)
+        .then((res) => {
+          // console.log("Withdraw", res);
+          if (res === 1) {
+            setWithdraw(false);
+            setWithdrawValue("");
+            alert("Успешно", "Средства успешно переведены", "success");
+          } else {
+            setWithdraw(false);
+            setWithdrawValue("");
+            alert("Ошибка", "Ошибка вывода", "danger");
+          }
+        })
+        .catch((err: Error) => {
+          setWithdraw(false);
+          setWithdrawValue("");
+          alert("Ошибка", "Ошибка вывода", "danger");
+        });
+    }
+  };
+
+  const selectDeposit = (item: DepositsCollection) => {
+    console.log("item", item);
+    setDepositSelect(item);
+    setDepositListModal(false);
+    setAddDepositValue((item.minAmount / 100000).toString());
+    setAddDeposit(true);
+  };
+
+  const openNewDeposit = () => {
+    setAddDeposit(false);
+    if (hubConnection && depositSelect !== null) {
+      hubConnection
+        .invoke("CreateUserDeposit", addDepositValue, depositSelect.id)
+        .then((res) => {
+          // console.log("CreateUserDeposit", res);
+          if (res === 1) {
+            setWithdraw(false);
+            setWithdrawValue("");
+            alert("Успешно", "Депозит успешно создан", "success");
+          } else {
+            setWithdraw(false);
+            setWithdrawValue("");
+            alert("Ошибка", "Депозит не создан", "danger");
+          }
+        })
+        .catch((err: Error) => {
+          setWithdraw(false);
+          setWithdrawValue("");
+          alert("Ошибка", "Депозит не создан", "danger");
+        })
+        .finally(() => {
+          setDepositSelect(null);
+          setAddDepositValue("");
+        });
+    }
+  };
+
   return (
     <>
       <Header />
@@ -218,6 +344,7 @@ export const Info = () => {
         <Container>
           <UpTitle>Личный кабинет</UpTitle>
         </Container>
+        <ReactNotification />
         <Container>
           <Card>
             <Styled.InfoWrap>
@@ -226,15 +353,17 @@ export const Info = () => {
                 <Styled.BalanceItem>
                   <Styled.BalanceItemName>Баланс</Styled.BalanceItemName>
                   <Styled.BalanceItemValue pink>
-                    {balance
-                      ? (balance / 100000).toFixed(4).toLocaleString()
-                      : "0"}
+                    {balance ? balance.toLocaleString() : "0"}
                   </Styled.BalanceItemValue>
                 </Styled.BalanceItem>
               </Styled.UserBlock>
               <Styled.InfoButtons>
-                <Button dangerOutline>Новый депозит</Button>
-                <Button danger>Вывести деньги</Button>
+                <Button dangerOutline onClick={() => setAddDeposit(true)}>
+                  Новый депозит
+                </Button>
+                <Button danger onClick={() => setWithdraw(true)}>
+                  Вывести деньги
+                </Button>
               </Styled.InfoButtons>
             </Styled.InfoWrap>
             <Tabs>
@@ -265,13 +394,13 @@ export const Info = () => {
                   <Styled.DepositItem>
                     <Styled.DepositName>Сумма в депозитах</Styled.DepositName>
                     <Styled.DepositValue>
-                      {(depositTotal / 100000).toFixed(4).toLocaleString()}
+                      {depositTotal.toLocaleString()}
                     </Styled.DepositValue>
                   </Styled.DepositItem>
                   <Styled.DepositItem>
                     <Styled.DepositName>Всего выплачено</Styled.DepositName>
                     <Styled.DepositValue>
-                      {(totalPayed / 100000).toFixed(4).toLocaleString()}
+                      {totalPayed.toLocaleString()}
                     </Styled.DepositValue>
                   </Styled.DepositItem>
                 </Styled.Deposit>
@@ -560,23 +689,21 @@ export const Info = () => {
                   <Styled.BalanceItem>
                     <Styled.BalanceItemName>Баланс</Styled.BalanceItemName>
                     <Styled.BalanceItemValue pink>
-                      {balance
-                        ? (balance / 100000).toFixed(4).toLocaleString()
-                        : "0"}
+                      {balance ? balance.toLocaleString() : "0"}
                     </Styled.BalanceItemValue>
                   </Styled.BalanceItem>
 
                   <Styled.BalanceItem>
                     <Styled.BalanceItemName>Поступления</Styled.BalanceItemName>
                     <Styled.BalanceItemValue pink>
-                      {(depositTotal / 100000).toFixed(4).toLocaleString()}
+                      {depositTotal.toLocaleString()}
                     </Styled.BalanceItemValue>
                   </Styled.BalanceItem>
 
                   <Styled.BalanceItem>
                     <Styled.BalanceItemName>Выводы</Styled.BalanceItemName>
                     <Styled.BalanceItemValue>
-                      {(totalPayed / 100000).toFixed(4).toLocaleString()}
+                      {totalPayed.toLocaleString()}
                     </Styled.BalanceItemValue>
                   </Styled.BalanceItem>
                 </Styled.BalanceList>
@@ -632,7 +759,11 @@ export const Info = () => {
                               <Styled.DataListSum
                                 plus={item.operationKind !== 6}
                               >
-                                {item.operationKind !== 6 ? "+" : "-"}{" "}
+                                {item.balance < 0
+                                  ? ""
+                                  : item.operationKind !== 6
+                                  ? "+"
+                                  : "-"}{" "}
                                 {item.balance}
                               </Styled.DataListSum>
                             </Styled.DataListItem>
@@ -640,7 +771,10 @@ export const Info = () => {
                         </div>
                       ))
                     ) : (
-                      <div>нет данных</div>
+                      <Styled.NotFound>
+                        Данные не обнаружены. Попробуйте изменить параметры
+                        поиска.
+                      </Styled.NotFound>
                     )}
                   </Styled.DataList>
                 </Styled.DataListWrap>
@@ -648,24 +782,126 @@ export const Info = () => {
             </Container>
           </Styled.Content>
           {open && (
-            <Modal onClose={onClose}>
-              <ModalContent>
-                <ModalTitle>Выберите период</ModalTitle>
-                <ModalItem>
-                  <DateTitle>Этот месяц</DateTitle>
-                  <DateText>Февраль 2021</DateText>
-                </ModalItem>
-                <ModalItem>
-                  <DateTitle>Этот год</DateTitle>
-                  <DateText>2021</DateText>
-                </ModalItem>
-                <ModalItem>
-                  <DateTitle></DateTitle>
-                  <DateText red>За все время</DateText>
-                </ModalItem>
-                <DateTitle>Свободный</DateTitle>
-              </ModalContent>
-              <ModalCalendarInput />
+            <Styled.ModalWrap>
+              <Modal onClose={onClose}>
+                <Styled.ModalContent>
+                  {/* <Arrow onClick={onClose} /> */}
+                  <Styled.ModalTitle>Выберите период</Styled.ModalTitle>
+                  <Styled.ModalItem>
+                    <Styled.DateTitle>Этот месяц</Styled.DateTitle>
+                    <Styled.DateText>
+                      {moment().format("MMMM YYYY")}
+                    </Styled.DateText>
+                  </Styled.ModalItem>
+                  <Styled.ModalItem>
+                    <Styled.DateTitle>Этот год</Styled.DateTitle>
+                    <Styled.DateText>{moment().format("YYYY")}</Styled.DateText>
+                  </Styled.ModalItem>
+                  <Styled.ModalItem>
+                    <Styled.DateTitle></Styled.DateTitle>
+                    <Styled.DateText red>За все время</Styled.DateText>
+                  </Styled.ModalItem>
+                  <Styled.DateTitle>Свободный</Styled.DateTitle>
+                </Styled.ModalContent>
+                <ModalRangeInput
+                  onClose={onClose}
+                  openDate={openDate}
+                  setOpenDate={setOpenDate}
+                />
+              </Modal>
+            </Styled.ModalWrap>
+          )}
+          {withdraw && (
+            <Modal onClose={() => setWithdraw(false)}>
+              <Styled.ModalBlock>
+                <Styled.ModalTitle>Вывести деньги</Styled.ModalTitle>
+                <Input
+                  onChange={(e) => setWithdrawValue(e.target.value)}
+                  placeholder="Введите сумму"
+                  type="number"
+                  ref={inputRef}
+                  value={withdrawValue}
+                />
+                <Styled.ModalButton
+                  as="button"
+                  disabled={!withdrawValue}
+                  onClick={withdrawBalance}
+                  danger
+                >
+                  Вывести деньги
+                </Styled.ModalButton>
+              </Styled.ModalBlock>
+            </Modal>
+          )}
+          {addDeposit && (
+            <Styled.ModalDepositsWrap>
+              <Modal width={540} onClose={() => setAddDeposit(false)}>
+                <Styled.ModalTitle mt>Добавить депозит</Styled.ModalTitle>
+                <Styled.ModalDeposits>
+                  <div>
+                    <Styled.ModalButton
+                      mb
+                      as="button"
+                      onClick={() => setDepositListModal(true)}
+                      dangerOutline
+                    >
+                      {depositSelect ? depositSelect.name : "Выберите депозит"}{" "}
+                      <Styled.ModalBack right />
+                    </Styled.ModalButton>
+                    <Input
+                      onChange={(e) => setAddDepositValue(e.target.value)}
+                      placeholder="Введите сумму"
+                      type="number"
+                      ref={inputRef}
+                      value={addDepositValue}
+                    />
+                    <Styled.ModalButton
+                      as="button"
+                      disabled={!addDepositValue}
+                      onClick={openNewDeposit}
+                      danger
+                    >
+                      Добавить
+                    </Styled.ModalButton>
+                  </div>
+                  {depositSelect ? (
+                    <Styled.Conditions>
+                      {depositSelect.description}
+                    </Styled.Conditions>
+                  ) : (
+                    ""
+                  )}
+                </Styled.ModalDeposits>
+              </Modal>
+            </Styled.ModalDepositsWrap>
+          )}
+          {depositListModal && (
+            <Modal onClose={() => setDepositListModal(false)}>
+              <Styled.ModalBack onClick={() => setDepositListModal(false)} />
+              <Styled.ModalTitle>Добавить депозит</Styled.ModalTitle>
+              <Styled.ModalList>
+                <Styled.ModalListItem>
+                  <Styled.ModalListText head>Название</Styled.ModalListText>
+                  <Styled.ModalListText head>Мин. платеж</Styled.ModalListText>
+                  <Styled.ModalListText head>Срок вклада</Styled.ModalListText>
+                </Styled.ModalListItem>
+                {depositsList
+                  ? depositsList.map((item) => (
+                      <Styled.ModalListItem
+                        key={item.id}
+                        onClick={() => selectDeposit(item)}
+                      >
+                        <Styled.ModalListText>{item.name}</Styled.ModalListText>
+                        <Styled.ModalListText>
+                          {(item.minAmount / 100000).toLocaleString()}
+                        </Styled.ModalListText>
+                        <Styled.ModalListText>
+                          {item.duration} дн
+                        </Styled.ModalListText>
+                      </Styled.ModalListItem>
+                    ))
+                  : ""}
+              </Styled.ModalList>
             </Modal>
           )}
         </>
@@ -673,43 +909,3 @@ export const Info = () => {
     </>
   );
 };
-
-const ChartBlock = styled.div`
-  width: 100%;
-`;
-
-const ModalContent = styled.div`
-  padding-top: 10px;
-`;
-
-const ModalTitle = styled.h3`
-  font-weight: 500;
-  font-size: 24px;
-  line-height: 28px;
-  text-align: center;
-  color: #0e0d3d;
-  padding-bottom: 15px;
-`;
-
-const ModalItem = styled.div`
-  border-bottom: 1px solid rgba(66, 139, 202, 0.2);
-  padding: 10px 0;
-`;
-
-const DateTitle = styled.p`
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 16px;
-  color: #515172;
-  opacity: 0.4;
-  text-align: center;
-  padding-bottom: 5px;
-`;
-
-const DateText = styled.p<{ red?: boolean }>`
-  font-weight: normal;
-  font-size: 18px;
-  line-height: 21px;
-  color: ${(props) => (props.red ? "#FF416E" : "#515172")};
-  text-align: center;
-`;

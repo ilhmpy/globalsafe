@@ -29,7 +29,7 @@ export const Tab = styled.button<{ active: boolean }>`
   @media (max-width: 992px) {
     padding-left: 0px;
     width: 80px;
-    text-align: center;
+
     &:first-child {
       width: 90px;
     }

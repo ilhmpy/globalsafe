@@ -5,6 +5,7 @@ import { ReactComponent as Left } from "../../assets/svg/monthLeft.svg";
 import DayPicker, { DateUtils } from "react-day-picker";
 import DayPickerInput from "react-day-picker/DayPickerInput";
 import useOnClickOutside from "../../hooks/useOutsideHook";
+import { OpenDate } from "../../types/dates";
 import moment from "moment";
 import "moment/locale/ru";
 import "react-day-picker/lib/style.css";
@@ -213,21 +214,27 @@ export const CalendarInput = () => {
 };
 
 export const ModalInput = (props: any) => {
-  const { value, onFocus, onBlur } = props;
+  const { value, onFocus, onBlur, selectedDays } = props;
+  // console.log("props", props.day);
   return (
     <ModalComp>
-      {value ? moment(new Date(value)).format("DD MMMM YYYY") : "sdf"}
-      <input ref={props.ref} onClick={onFocus} onBlur={onBlur} />
+      {props.day ? moment(new Date(props.day)).format("DD MMMM YYYY") : ""}
+      <input ref={props.ref} onClick={onFocus} />
     </ModalComp>
   );
 };
 
-export const ModalCalendarInput = () => {
+export const ModalCalendarInput: FC<{
+  left?: boolean;
+  handleDayClick: (day: any) => void;
+  day: any;
+}> = ({ left, handleDayClick, day }) => {
+  const [selectedDay, setSelectedDay] = useState<any>(day);
   return (
-    <InputCustom>
+    <ModalInputCustom left={left}>
       <DayPickerInput
         component={React.forwardRef((props, ref) => (
-          <ModalInput {...props} innerRef={ref} />
+          <ModalInput {...props} day={selectedDay} innerRef={ref} />
         ))}
         onDayChange={(day: any) => console.log(day)}
         dayPickerProps={{
@@ -235,9 +242,79 @@ export const ModalCalendarInput = () => {
           months: MONTHS,
           weekdaysShort: WEEKDAYS_SHORT,
           navbarElement: <Navbar />,
+          onDayClick: handleDayClick,
+          selectedDays: selectedDay,
         }}
       />
-    </InputCustom>
+    </ModalInputCustom>
+  );
+};
+
+export const ModalRangeInput: FC<{
+  label?: string;
+  openDate: OpenDate;
+  setOpenDate: (openDate: OpenDate) => void;
+  onClose: () => void;
+}> = ({ openDate, setOpenDate, onClose }) => {
+  const [showOpen, setShowOpen] = useState(false);
+  const [selfDate, setselfDate] = useState<any>({
+    from: undefined,
+    to: undefined,
+  });
+  const ref = useRef(null);
+
+  const handleClickOutside = () => {
+    setShowOpen(false);
+  };
+
+  useOnClickOutside(ref, handleClickOutside);
+
+  const handleDayClick = (day: Date) => {
+    const range = DateUtils.addDayToRange(day, selfDate);
+    setselfDate({ from: range.from, to: range.to });
+    if (range.from && range.to) {
+      setOpenDate({ from: range.from, to: range.to });
+      setselfDate({
+        from: undefined,
+        to: undefined,
+      });
+      onClose();
+    }
+  };
+
+  const modifiers = { start: selfDate.from, end: selfDate.to };
+
+  return (
+    <>
+      <RangeInputs ref={ref}>
+        <CalendarWrap onClick={() => setShowOpen(!showOpen)}>
+          <CalendarItem>
+            <CalendarLabel>C</CalendarLabel>
+            <ModalComp>
+              {selfDate.from ? moment(selfDate.from).format("DD.MM.YY") : ""}
+            </ModalComp>
+          </CalendarItem>
+          <CalendarItem>
+            <CalendarLabel>По</CalendarLabel>
+            <ModalComp>
+              {selfDate.to ? `${moment(selfDate.to).format("DD.MM.YY")} ` : ""}
+            </ModalComp>
+          </CalendarItem>
+        </CalendarWrap>
+        {showOpen && (
+          <CustomDatePicker
+            selectedDays={[selfDate.from, selfDate]}
+            months={MONTHS}
+            onDayClick={handleDayClick}
+            firstDayOfWeek={1}
+            modifiers={modifiers}
+            weekdaysLong={WEEKDAYS_LONG}
+            weekdaysShort={WEEKDAYS_SHORT}
+            navbarElement={<Navbar />}
+          />
+        )}
+      </RangeInputs>
+    </>
   );
 };
 
@@ -295,6 +372,29 @@ export const TestInput: FC<{ label: string }> = ({ label }) => {
   );
 };
 
+const flex = css`
+  display: flex;
+  align-items: flex-end;
+`;
+
+const CalendarLabel = styled.div`
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 16px;
+  color: #515172;
+  padding-right: 10px;
+`;
+
+const CalendarItem = styled.div`
+  ${flex}
+`;
+
+const CalendarWrap = styled.div`
+  ${flex};
+  width: 100%;
+  justify-content: space-between;
+`;
+
 const MyComp = styled.label`
   font-size: 14px;
   line-height: 16px;
@@ -327,9 +427,13 @@ const MyComp = styled.label`
 
 const ModalComp = styled(MyComp)`
   border: none;
-  width: 100%;
+  width: 130px;
   border-radius: 0;
   border-bottom: 1px solid rgba(66, 139, 202, 0.2);
+  padding: 4px 0;
+  @media (max-width: 768px) {
+    width: 90px;
+  }
 `;
 
 const InputCustom = styled.div`
@@ -407,6 +511,18 @@ const InputCustom = styled.div`
   .DayPicker:focus,
   .DayPicker-wrapper:focus {
     outline: none;
+  }
+`;
+
+const ModalInputCustom = styled(InputCustom)<{ left?: boolean }>`
+  .DayPickerInput-Overlay {
+    right: ${(props) => (props.left ? "auto" : "0")};
+    left: ${(props) => (props.left ? "-16px" : "auto")};
+    bottom: 100%;
+    z-index: 10000;
+    @media (max-width: 768px) {
+      right: -15px;
+    }
   }
 `;
 

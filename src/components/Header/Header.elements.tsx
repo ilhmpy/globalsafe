@@ -145,5 +145,4 @@ export const LinkButton = styled.div`
   font-size: 12px;
   line-height: 14px;
   color: #0e0d3d;
-  padding: 20px 0px;
 `;

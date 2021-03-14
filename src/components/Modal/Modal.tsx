@@ -4,9 +4,10 @@ import { Portal } from "../Portal/Portal";
 
 type ModalProps = {
   onClose: () => void;
+  width?: number;
 };
 
-export const Modal: React.FC<ModalProps> = ({ children, onClose }) => {
+export const Modal: React.FC<ModalProps> = ({ children, onClose, width }) => {
   const handleContainerClick = (e: React.MouseEvent) => {
     if (e.currentTarget === e.target) {
       onClose();
@@ -16,8 +17,10 @@ export const Modal: React.FC<ModalProps> = ({ children, onClose }) => {
   return (
     <Portal>
       <ModalContainer onClick={handleContainerClick}>
-        <ModalComponent>
-          <span onClick={onClose}>&times;</span>
+        <ModalComponent width={width}>
+          <span className="close" onClick={onClose}>
+            &times;
+          </span>
           {children}
         </ModalComponent>
       </ModalContainer>
@@ -47,12 +50,12 @@ const ModalContainer = styled.div`
   overflow: auto;
 `;
 
-const ModalComponent = styled.div`
+const ModalComponent = styled.div<{ width?: number }>`
   cursor: auto;
   background: #fafafa;
   border-radius: 0.25rem;
   padding: 1rem;
-  max-width: 400px;
+  max-width: ${(props) => (props.width ? props.width + "px" : "400px")};
   width: 100%;
   position: relative;
   margin-top: 40px;
@@ -68,4 +71,5 @@ const ModalComponent = styled.div`
     &:hover {
       color: #000;
     }
+  }
 `;
