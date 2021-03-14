@@ -1,4 +1,4 @@
 export type OpenDate = {
-    from: Date;
-    to: Date;
+    from: Date | undefined;
+    to: Date | undefined;
   };

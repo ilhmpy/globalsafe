@@ -68,8 +68,8 @@ export const Info = () => {
     null
   );
   const [openDate, setOpenDate] = useState<OpenDate>({
-    from: new Date("2021-02-09T00:47:45"),
-    to: new Date(),
+    from: undefined,
+    to: undefined,
   });
   const sizes = useWindowSize();
   const size = sizes < 992;
@@ -151,8 +151,8 @@ export const Info = () => {
           "GetBalanceLog",
           1,
           balanceLogs,
-          openDate.from,
-          openDate.to,
+          openDate.from && new Date("2021-02-09T00:47:45"),
+          openDate.to && new Date(),
           0,
           30
         )
@@ -353,7 +353,7 @@ export const Info = () => {
                 <Styled.BalanceItem>
                   <Styled.BalanceItemName>Баланс</Styled.BalanceItemName>
                   <Styled.BalanceItemValue pink>
-                    {balance ? balance.toLocaleString() : "0"}
+                    {balance ? (balance / 100000).toLocaleString() : "0"}
                   </Styled.BalanceItemValue>
                 </Styled.BalanceItem>
               </Styled.UserBlock>
@@ -388,19 +388,21 @@ export const Info = () => {
                   <Styled.DepositItem>
                     <Styled.DepositName>Открытые депозиты</Styled.DepositName>
                     <Styled.DepositValue>
-                      {activeDeposite ? activeDeposite.toLocaleString() : "-"}
+                      {activeDeposite
+                        ? (activeDeposite / 100000).toLocaleString()
+                        : "-"}
                     </Styled.DepositValue>
                   </Styled.DepositItem>
                   <Styled.DepositItem>
                     <Styled.DepositName>Сумма в депозитах</Styled.DepositName>
                     <Styled.DepositValue>
-                      {depositTotal.toLocaleString()}
+                      {(depositTotal / 100000).toLocaleString()}
                     </Styled.DepositValue>
                   </Styled.DepositItem>
                   <Styled.DepositItem>
                     <Styled.DepositName>Всего выплачено</Styled.DepositName>
                     <Styled.DepositValue>
-                      {totalPayed.toLocaleString()}
+                      {(totalPayed / 100000).toLocaleString()}
                     </Styled.DepositValue>
                   </Styled.DepositItem>
                 </Styled.Deposit>
@@ -689,25 +691,35 @@ export const Info = () => {
                   <Styled.BalanceItem>
                     <Styled.BalanceItemName>Баланс</Styled.BalanceItemName>
                     <Styled.BalanceItemValue pink>
-                      {balance ? balance.toLocaleString() : "0"}
+                      {balance ? (balance / 100000).toLocaleString() : "0"}
                     </Styled.BalanceItemValue>
                   </Styled.BalanceItem>
 
                   <Styled.BalanceItem>
                     <Styled.BalanceItemName>Поступления</Styled.BalanceItemName>
                     <Styled.BalanceItemValue pink>
-                      {depositTotal.toLocaleString()}
+                      {(depositTotal / 100000).toLocaleString()}
                     </Styled.BalanceItemValue>
                   </Styled.BalanceItem>
 
                   <Styled.BalanceItem>
                     <Styled.BalanceItemName>Выводы</Styled.BalanceItemName>
                     <Styled.BalanceItemValue>
-                      {totalPayed.toLocaleString()}
+                      {(totalPayed / 100000).toLocaleString()}
                     </Styled.BalanceItemValue>
                   </Styled.BalanceItem>
                 </Styled.BalanceList>
-                <Button onClick={() => setOpen(true)}>За все время</Button>
+                <Button onClick={() => setOpen(true)}>
+                  {openDate.from ? (
+                    <span>
+                      {moment(openDate.from).format("DD.MM.YYYY") +
+                        "-" +
+                        moment(openDate.to).format("DD.MM.YYYY")}
+                    </span>
+                  ) : (
+                    "За все время"
+                  )}
+                </Button>
               </Styled.BalanceWrap>
             </Container>
 
@@ -762,7 +774,9 @@ export const Info = () => {
                                   : item.operationKind !== 6
                                   ? "+"
                                   : "-"}{" "}
-                                {item.balance}
+                                {(item.balance / 100000)
+                                  .toFixed(5)
+                                  .toLocaleString()}
                               </Styled.DataListSum>
                             </Styled.DataListItem>
                           ))}
