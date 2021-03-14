@@ -16,7 +16,6 @@ const Row = ({ data }: any) => {
   const [open, setOpen] = useState<boolean | string>(false);
   const history = useHistory();
   const onClose = () => {
-    console.log("close");
     setOpen(false);
   };
 
@@ -33,7 +32,7 @@ const Row = ({ data }: any) => {
       <Styled.TR
         key={data.safeId}
         onClick={() => onClick(data.safeId)}
-        disactive={!data.deposit.isActive}
+        disactive={data.state === 4}
       >
         <Styled.TD>
           <Styled.Name>{data.deposit.name}</Styled.Name>

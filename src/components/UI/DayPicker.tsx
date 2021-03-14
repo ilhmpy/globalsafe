@@ -286,7 +286,7 @@ export const ModalRangeInput: FC<{
 
   return (
     <>
-      <RangeInputs ref={ref}>
+      <DatePickerContainer ref={ref}>
         <CalendarWrap onClick={() => setShowOpen(!showOpen)}>
           <CalendarItem>
             <CalendarLabel>C</CalendarLabel>
@@ -313,7 +313,7 @@ export const ModalRangeInput: FC<{
             navbarElement={<Navbar />}
           />
         )}
-      </RangeInputs>
+      </DatePickerContainer>
     </>
   );
 };
@@ -547,10 +547,6 @@ const Input = styled.input`
   }
 `;
 
-const DatePickerContainer = styled.div`
-  background: white;
-`;
-
 const CustomDatePicker = styled(DayPicker)`
   background: #ffffff;
   border: 1px solid #e5e5e5;
@@ -631,6 +627,20 @@ const CustomDatePicker = styled(DayPicker)`
   .DayPicker:focus,
   .DayPicker-wrapper:focus {
     outline: none;
+  }
+`;
+
+const DatePickerContainer = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  ${CustomDatePicker} {
+    position: absolute;
+    margin: 0;
+    bottom: 100%;
+    right: 0;
+    left: 0;
+    z-index: 9999;
   }
 `;
 

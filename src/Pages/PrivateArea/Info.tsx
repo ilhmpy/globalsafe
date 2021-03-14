@@ -222,7 +222,7 @@ export const Info = () => {
       if (id === 0) {
         setBalanceLogs([0, 1, 2, 3, 4, 5, 6, 7, 8]);
       } else if (id === 1) {
-        setBalanceLogs([1]);
+        setBalanceLogs([1, 7, 8]);
       } else if (id === 2) {
         setBalanceLogs([2]);
       }
@@ -756,9 +756,7 @@ export const Info = () => {
                               <Styled.DataListName>
                                 {operation(item.operationKind)}
                               </Styled.DataListName>
-                              <Styled.DataListSum
-                                plus={item.operationKind !== 6}
-                              >
+                              <Styled.DataListSum plus={item.balance >= 0}>
                                 {item.balance < 0
                                   ? ""
                                   : item.operationKind !== 6
