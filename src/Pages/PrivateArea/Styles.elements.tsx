@@ -5,11 +5,32 @@ import { Link } from "react-router-dom";
 import { Card, Container } from "../../globalStyles";
 import { ReactComponent as BackIcon } from "../../assets/svg/arrowLeftModal.svg";
 
-export const ModalBack = styled(BackIcon)<{ right?: boolean }>`
+export const Select = styled.select`
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 21px;
+  color: #515172;
+  appearance: none;
+  border: none;
+  padding: 0 10px;
+  outline: none;
+  background: transparent;
+`;
+
+export const ModalBack = styled(BackIcon)`
+  width: 16px;
+  height: 16px;
+`;
+
+export const DateButton = styled(Button)`
+  padding: 12px 15px;
+`;
+
+export const IconRotate = styled.div<{ rights?: boolean }>`
   width: 16px;
   height: 16px;
   margin-left: 10px;
-  transform: ${(props) => (props.right ? "rotate(180deg)" : "rotate(0deg)")};
+  transform: ${(props) => (props.rights ? "rotate(180deg)" : "rotate(0deg)")};
 `;
 
 export const Date = styled.div`
@@ -291,7 +312,7 @@ export const BalanceWrap = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  ${Button} {
+  ${DateButton} {
     margin-left: 180px;
     @media (max-width: 992px) {
       margin-left: 0;

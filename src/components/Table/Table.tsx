@@ -103,7 +103,7 @@ export const Tables = ({ list }: any) => {
             <Styled.TH>
               <p>Дата следующей выплаты</p>
               <span>Дата след. выплаты</span>
-              <Styled.StyledFilter />
+              {/* <Styled.StyledFilter /> */}
             </Styled.TH>
           </Styled.TR>
         </thead>

@@ -117,6 +117,24 @@ input[type=number] {
   transform-origin: 50% 50%;
   transition: all 300ms ease-in;
 }
+
+
+.modal-enter {
+  opacity: 0;
+  transform: scale(0.9);
+}
+.modal-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 300ms, transform 300ms;
+}
+.modal-exit {
+  opacity: 0;
+}
+.modal-exit-active {
+  opacity: 0;
+}
+
 `;
 
 export const Container = styled.div`

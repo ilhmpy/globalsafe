@@ -30,6 +30,7 @@ import { OpenDate } from "../../types/dates";
 import { RootDeposits, DepositsCollection } from "../../types/info";
 import ReactNotification, { store } from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
+import { DepositListModal } from "./Modals";
 moment.locale("ru");
 
 type Obj = {
@@ -61,6 +62,8 @@ export const Info = () => {
   const [withdrawValue, setWithdrawValue] = useState("");
   const [addDepositValue, setAddDepositValue] = useState("");
   const [depositListModal, setDepositListModal] = useState(false);
+  const [selectedYear, setSelectedYear] = useState<any>("2021");
+  const [selectedMonth, setSelectedMonth] = useState<any>("3");
   const [depositSelect, setDepositSelect] = useState<null | DepositsCollection>(
     null
   );
@@ -151,8 +154,8 @@ export const Info = () => {
           "GetBalanceLog",
           1,
           balanceLogs,
-          openDate.from && new Date("2021-02-09T00:47:45"),
-          openDate.to && new Date(),
+          openDate.from || new Date("2021-02-09T00:47:45"),
+          openDate.to || new Date(),
           0,
           30
         )
@@ -229,8 +232,6 @@ export const Info = () => {
     }
   };
 
-  const filterData = () => {};
-
   if (user === null) {
     return null;
   }
@@ -300,12 +301,15 @@ export const Info = () => {
     }
   };
 
-  const selectDeposit = (item: DepositsCollection) => {
-    console.log("item", item);
-    setDepositSelect(item);
-    setDepositListModal(false);
-    setAddDepositValue((item.minAmount / 100000).toString());
+  const handleBackModal = () => {
     setAddDeposit(true);
+    setDepositListModal(false);
+  };
+
+  const selectDeposit = (item: DepositsCollection) => {
+    handleBackModal();
+    setDepositSelect(item);
+    setAddDepositValue((item.minAmount / 100000).toString());
   };
 
   const openNewDeposit = () => {
@@ -335,6 +339,39 @@ export const Info = () => {
           setAddDepositValue("");
         });
     }
+  };
+
+  const handleDepositModal = () => {
+    setAddDeposit(false);
+    setDepositListModal(true);
+  };
+
+  const onHandleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedYear(e.target.value);
+  };
+
+  const minOffset = 0;
+  const maxOffset = 10;
+  const thisYear = new Date().getFullYear();
+  const thisMonth = moment.months();
+  const options = [];
+
+  for (let i = minOffset; i <= maxOffset; i++) {
+    const year = thisYear - i;
+    options.push(<option value={year}>{year}</option>);
+  }
+
+  const onHandleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedMonth(e.target.value);
+    let start: any = moment(
+      `${e.target.value}.${selectedYear}`,
+      "M.YYYY"
+    ).startOf("month");
+    let end: any = moment(`${e.target.value}.${selectedYear}`, "M.YYYY").endOf(
+      "month"
+    );
+
+    setOpenDate({ from: start._d, to: end._d });
   };
 
   return (
@@ -709,7 +746,7 @@ export const Info = () => {
                     </Styled.BalanceItemValue>
                   </Styled.BalanceItem>
                 </Styled.BalanceList>
-                <Button onClick={() => setOpen(true)}>
+                <Styled.DateButton onClick={() => setOpen(true)}>
                   {openDate.from ? (
                     <span>
                       {moment(openDate.from).format("DD.MM.YYYY") +
@@ -719,7 +756,7 @@ export const Info = () => {
                   ) : (
                     "За все время"
                   )}
-                </Button>
+                </Styled.DateButton>
               </Styled.BalanceWrap>
             </Container>
 
@@ -802,16 +839,41 @@ export const Info = () => {
                   <Styled.ModalItem>
                     <Styled.DateTitle>Этот месяц</Styled.DateTitle>
                     <Styled.DateText>
-                      {moment().format("MMMM YYYY")}
+                      <Styled.Select
+                        value={selectedMonth}
+                        onChange={onHandleMonthChange}
+                      >
+                        {thisMonth.map((i, idx) => (
+                          <option key={i} value={idx + 1}>
+                            {i}&nbsp;
+                            {selectedYear ? selectedYear : "2021"}
+                          </option>
+                        ))}
+                      </Styled.Select>
                     </Styled.DateText>
                   </Styled.ModalItem>
                   <Styled.ModalItem>
                     <Styled.DateTitle>Этот год</Styled.DateTitle>
-                    <Styled.DateText>{moment().format("YYYY")}</Styled.DateText>
+                    <Styled.DateText>
+                      <Styled.Select
+                        value={selectedYear}
+                        onChange={onHandleSelectChange}
+                      >
+                        {options}
+                      </Styled.Select>
+                    </Styled.DateText>
                   </Styled.ModalItem>
                   <Styled.ModalItem>
                     <Styled.DateTitle></Styled.DateTitle>
-                    <Styled.DateText red>За все время</Styled.DateText>
+                    {openDate.from ? (
+                      <Styled.DateText>
+                        {moment(openDate.from).format("DD.MM.YYYY") +
+                          "-" +
+                          moment(openDate.to).format("DD.MM.YYYY")}
+                      </Styled.DateText>
+                    ) : (
+                      <Styled.DateText red>За все время</Styled.DateText>
+                    )}
                   </Styled.ModalItem>
                   <Styled.DateTitle>Свободный</Styled.DateTitle>
                 </Styled.ModalContent>
@@ -845,7 +907,12 @@ export const Info = () => {
               </Styled.ModalBlock>
             </Modal>
           )}
-          {addDeposit && (
+          <CSSTransition
+            in={addDeposit && !depositListModal}
+            timeout={300}
+            classNames="modal"
+            unmountOnExit
+          >
             <Styled.ModalDepositsWrap>
               <Modal width={540} onClose={() => setAddDeposit(false)}>
                 <Styled.ModalTitle mt>Добавить депозит</Styled.ModalTitle>
@@ -854,11 +921,13 @@ export const Info = () => {
                     <Styled.ModalButton
                       mb
                       as="button"
-                      onClick={() => setDepositListModal(true)}
+                      onClick={handleDepositModal}
                       dangerOutline
                     >
                       {depositSelect ? depositSelect.name : "Выберите депозит"}{" "}
-                      <Styled.ModalBack right />
+                      <Styled.IconRotate rights>
+                        <Styled.ModalBack />
+                      </Styled.IconRotate>
                     </Styled.ModalButton>
                     <Input
                       onChange={(e) => setAddDepositValue(e.target.value)}
@@ -886,36 +955,14 @@ export const Info = () => {
                 </Styled.ModalDeposits>
               </Modal>
             </Styled.ModalDepositsWrap>
-          )}
-          {depositListModal && (
-            <Modal onClose={() => setDepositListModal(false)}>
-              <Styled.ModalBack onClick={() => setDepositListModal(false)} />
-              <Styled.ModalTitle>Добавить депозит</Styled.ModalTitle>
-              <Styled.ModalList>
-                <Styled.ModalListItem>
-                  <Styled.ModalListText head>Название</Styled.ModalListText>
-                  <Styled.ModalListText head>Мин. платеж</Styled.ModalListText>
-                  <Styled.ModalListText head>Срок вклада</Styled.ModalListText>
-                </Styled.ModalListItem>
-                {depositsList
-                  ? depositsList.map((item) => (
-                      <Styled.ModalListItem
-                        key={item.id}
-                        onClick={() => selectDeposit(item)}
-                      >
-                        <Styled.ModalListText>{item.name}</Styled.ModalListText>
-                        <Styled.ModalListText>
-                          {(item.minAmount / 100000).toLocaleString()}
-                        </Styled.ModalListText>
-                        <Styled.ModalListText>
-                          {item.duration} дн
-                        </Styled.ModalListText>
-                      </Styled.ModalListItem>
-                    ))
-                  : ""}
-              </Styled.ModalList>
-            </Modal>
-          )}
+          </CSSTransition>
+          <DepositListModal
+            depositListModal={depositListModal}
+            setDepositListModal={setDepositListModal}
+            handleBackModal={handleBackModal}
+            depositsList={depositsList}
+            selectDeposit={selectDeposit}
+          />
         </>
       </Styled.Page>
     </>
