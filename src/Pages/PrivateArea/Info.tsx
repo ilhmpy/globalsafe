@@ -372,6 +372,7 @@ export const Info = () => {
     );
 
     setOpenDate({ from: start._d, to: end._d });
+    onClose();
   };
 
   return (
