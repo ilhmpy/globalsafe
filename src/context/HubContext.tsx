@@ -3,15 +3,24 @@ import * as signalR from "@microsoft/signalr";
 import { API_URL } from "../constantes/api";
 import useLocalStorage from "../hooks/useLocalStorage";
 import { useHistory } from "react-router-dom";
-
 type Nulable<T> = T | null;
 
-export const AppContext = React.createContext<any>({
+type Context = {
+  user: null | string | false;
+  hubConnection: Nulable<signalR.HubConnection>;
+  logOut: () => void;
+  login: (token: string) => void;
+  loading: boolean;
+  balance: null | number;
+};
+
+export const AppContext = React.createContext<Context>({
   hubConnection: null,
   user: null,
   logOut: () => {},
   login: () => {},
   loading: true,
+  balance: null,
 });
 
 export const HubProvider: FC = ({ children }) => {
@@ -20,6 +29,7 @@ export const HubProvider: FC = ({ children }) => {
   >(null);
   const [user, setUser] = useState<null | string | false>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [balance, setBalance] = useState<null | number>(null);
   const [myToken, setMyToken] = useLocalStorage("token");
   const history = useHistory();
 
@@ -47,7 +57,8 @@ export const HubProvider: FC = ({ children }) => {
       hubConnection
         .invoke("GetSigned")
         .then((res) => {
-          console.log("GetSigned", res.name);
+          // console.log("GetSigned", res);
+          setBalance(res.balances[0].volume);
           setUser(res.name);
           setLoading(false);
         })
@@ -68,18 +79,15 @@ export const HubProvider: FC = ({ children }) => {
     setMyToken(null);
     setUser(null);
     history.replace("/");
-    console.log("logout");
   };
 
   const login = (token: string) => {
     setMyToken(token);
   };
 
-  console.log("user", user);
-
   return (
     <AppContext.Provider
-      value={{ hubConnection, user, logOut, loading, login }}
+      value={{ hubConnection, user, logOut, loading, login, balance }}
     >
       {children}
     </AppContext.Provider>

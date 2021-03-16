@@ -9,13 +9,13 @@ import { Balance } from "../../types/balance";
 import { useHistory } from "react-router-dom";
 
 import { TableModal } from "./TableModal";
+import { FilterMenu } from "../FilterMenu/FilterMenu";
 moment.locale("ru");
 
 const Row = ({ data }: any) => {
   const [open, setOpen] = useState<boolean | string>(false);
   const history = useHistory();
   const onClose = () => {
-    console.log("close");
     setOpen(false);
   };
 
@@ -32,7 +32,7 @@ const Row = ({ data }: any) => {
       <Styled.TR
         key={data.safeId}
         onClick={() => onClick(data.safeId)}
-        disactive={!data.deposit.isActive}
+        disactive={data.state === 4}
       >
         <Styled.TD>
           <Styled.Name>{data.deposit.name}</Styled.Name>
@@ -69,7 +69,9 @@ const Row = ({ data }: any) => {
         </Styled.TD>
         <Styled.TD>
           <Styled.Text>
-            {moment(data.paymentDate).format("DD MMMM YYYY")}
+            {data.paymentDate
+              ? moment(data.paymentDate).format("DD MMMM YYYY")
+              : "-"}
           </Styled.Text>
         </Styled.TD>
       </Styled.TR>
@@ -83,13 +85,16 @@ export const Tables = ({ list }: any) => {
 
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
-
+  const filterClick = (id: number) => {
+    console.log("click", id);
+  };
   // console.log("list", list);
 
   return (
     <Styled.TableWrap>
+      {/* <FilterMenu filterClick={filterClick} /> */}
       <Styled.Table>
-        <thead>
+        <thead style={{ position: "relative" }}>
           <Styled.TR>
             <Styled.TH>Название</Styled.TH>
             <Styled.TH>Описание</Styled.TH>
@@ -97,7 +102,8 @@ export const Tables = ({ list }: any) => {
             <Styled.TH>Пл. выплата</Styled.TH>
             <Styled.TH>
               <p>Дата следующей выплаты</p>
-              <span>Дата след. выплаты</span> <Styled.StyledFilter />
+              <span>Дата след. выплаты</span>
+              {/* <Styled.StyledFilter /> */}
             </Styled.TH>
           </Styled.TR>
         </thead>

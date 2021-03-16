@@ -14,7 +14,6 @@ type Props = {
 };
 
 export const TableModal = ({ onClose, open, data }: Props) => {
-  console.log("open", open);
   return (
     <>
       {!!(open === data.safeId) && (
@@ -58,7 +57,11 @@ export const InfoBlock = ({ data }: any) => {
           </LI>
           <LI>
             <Text>Дата следующей выплаты</Text>
-            <Text>{moment(data.paymentDate).format("DD MMMM YYYY")}</Text>
+            <Text>
+              {data.paymentDate
+                ? moment(data.paymentDate).format("DD MMMM YYYY")
+                : "-"}
+            </Text>
           </LI>
           <LI>
             <Text>Сумма депозита</Text>
