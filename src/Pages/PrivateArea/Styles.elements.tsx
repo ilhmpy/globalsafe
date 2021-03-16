@@ -13,6 +13,7 @@ export const Select = styled.select`
   appearance: none;
   border: none;
   padding: 0 10px;
+  text-align-last: center;
   outline: none;
   background: transparent;
 `;

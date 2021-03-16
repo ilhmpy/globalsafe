@@ -272,8 +272,11 @@ export const ModalRangeInput: FC<{
   const handleDayClick = (day: Date) => {
     const range = DateUtils.addDayToRange(day, selfDate);
     setselfDate({ from: range.from, to: range.to });
-    if (range.from && range.to) {
-      setOpenDate({ from: range.from, to: range.to });
+  };
+
+  const handleChange = () => {
+    if (selfDate.from && selfDate.to) {
+      setOpenDate({ from: selfDate.from, to: selfDate.to });
       setselfDate({
         from: undefined,
         to: undefined,
@@ -288,7 +291,14 @@ export const ModalRangeInput: FC<{
     <>
       <DatePickerContainer ref={ref}>
         <CalendarWrap onClick={() => setShowOpen(!showOpen)}>
-          <CalendarItem>
+          <Period>
+            {selfDate.from
+              ? moment(selfDate.from).format("DD.MM.YY") +
+                " " +
+                moment(selfDate.to).format("DD.MM.YY")
+              : "Указать период..."}
+          </Period>
+          {/* <CalendarItem>
             <CalendarLabel>C</CalendarLabel>
             <ModalComp>
               {selfDate.from ? moment(selfDate.from).format("DD.MM.YY") : ""}
@@ -299,7 +309,7 @@ export const ModalRangeInput: FC<{
             <ModalComp>
               {selfDate.to ? `${moment(selfDate.to).format("DD.MM.YY")} ` : ""}
             </ModalComp>
-          </CalendarItem>
+          </CalendarItem> */}
         </CalendarWrap>
         {showOpen && (
           <CustomDatePicker
@@ -307,6 +317,8 @@ export const ModalRangeInput: FC<{
             months={MONTHS}
             onDayClick={handleDayClick}
             firstDayOfWeek={1}
+            todayButton="Готово"
+            onTodayButtonClick={handleChange}
             modifiers={modifiers}
             weekdaysLong={WEEKDAYS_LONG}
             weekdaysShort={WEEKDAYS_SHORT}
@@ -372,6 +384,15 @@ export const TestInput: FC<{ label: string }> = ({ label }) => {
   );
 };
 
+const Period = styled.div`
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 21px;
+  color: #515172;
+  text-align: center;
+  padding: 15px 5px 5px;
+`;
+
 const flex = css`
   display: flex;
   align-items: flex-end;
@@ -392,7 +413,7 @@ const CalendarItem = styled.div`
 const CalendarWrap = styled.div`
   ${flex};
   width: 100%;
-  justify-content: space-between;
+  justify-content: center;
 `;
 
 const MyComp = styled.label`
@@ -628,9 +649,26 @@ const CustomDatePicker = styled(DayPicker)`
   .DayPicker-wrapper:focus {
     outline: none;
   }
+  .DayPicker-TodayButton {
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 16px;
+    display: block;
+    width: 100%;
+    text-align: center;
+    color: #ff416e;
+    background: #fff;
+    padding: 10px;
+  }
 `;
 
 const DatePickerContainer = styled.div`
+  .DayPicker-Footer {
+    border-top: 1px solid rgba(66, 139, 202, 0.2);
+  }
   position: relative;
   display: flex;
   align-items: center;

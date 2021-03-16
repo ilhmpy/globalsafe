@@ -14,13 +14,9 @@ export const SideNavbar = () => {
   const [navWidth, setNavWidth] = useState(false);
   const sizes = useWindowSize();
   const size = sizes < 1200;
-  console.log("sizes", sizes);
-  console.log("size", size);
-  console.log("navWidth", navWidth);
 
   useEffect(() => {
     if (sizes !== 0 && size) {
-      console.log("if true");
       setNavWidth(true);
     }
   }, [sizes]);

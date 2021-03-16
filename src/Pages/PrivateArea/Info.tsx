@@ -15,6 +15,7 @@ import { UpTitle } from "../../components/UI/UpTitle";
 import { Redirect } from "react-router-dom";
 import { Button } from "../../components/Button/Button";
 import { AppContext } from "../../context/HubContext";
+import { AmountContext } from "../../context/AmountContext";
 import { Tables } from "../../components/Table/Table";
 import { TestChart } from "../../components/Charts/Test";
 import { CSSTransition } from "react-transition-group";
@@ -50,8 +51,6 @@ export const Info = () => {
   const [card2, setCard2] = useState(0);
   const [activMob, setActiveMob] = useState(0);
   const [list, setList] = useState<Collection[]>([]);
-  const [depositTotal, setDepositTotal] = useState(0);
-  const [totalPayed, setTotalPayed] = useState(0);
   const [nextDate, setNextDate] = useState<null | Date>(null);
   const [balanceLog, setBalanceLog] = useState<Deposit | null>(null);
   const [depositTabs, setDepositTabs] = useState(0);
@@ -79,6 +78,8 @@ export const Info = () => {
   const appContext = useContext(AppContext);
   const user = appContext.user;
   const balance = appContext.balance;
+  const amountContext = useContext(AmountContext);
+  const { totalPayed, depositTotal } = amountContext;
   const inputRef = useRef<any>(null);
 
   useEffect(() => {
@@ -98,28 +99,6 @@ export const Info = () => {
           if (res.collection.length) {
             setDepositsList(res.collection);
           }
-        })
-        .catch((err: Error) => console.log(err));
-    }
-  }, [hubConnection]);
-
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection
-        .invoke("GetTotalDepositsAmount")
-        .then((res) => {
-          setDepositTotal(res);
-        })
-        .catch((err: Error) => console.log(err));
-    }
-  }, [hubConnection]);
-
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection
-        .invoke("GetTotalPayedAmount")
-        .then((res) => {
-          setTotalPayed(res);
         })
         .catch((err: Error) => console.log(err));
     }
@@ -348,6 +327,16 @@ export const Info = () => {
 
   const onHandleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedYear(e.target.value);
+    let start: any = moment(
+      `${selectedMonth}.${e.target.value}`,
+      "M.YYYY"
+    ).startOf("month");
+
+    let end: any = moment(`${selectedMonth}.${e.target.value}`, "M.YYYY").endOf(
+      "month"
+    );
+    setOpenDate({ from: start._d, to: end._d });
+    onClose();
   };
 
   const minOffset = 0;
@@ -372,6 +361,11 @@ export const Info = () => {
     );
 
     setOpenDate({ from: start._d, to: end._d });
+    onClose();
+  };
+
+  const allTime = () => {
+    setOpenDate({ from: new Date("2021-02-09T00:47:45"), to: new Date() });
     onClose();
   };
 
@@ -400,7 +394,7 @@ export const Info = () => {
                   Новый депозит
                 </Button>
                 <Button danger onClick={() => setWithdraw(true)}>
-                  Вывести деньги
+                  Вывести средства
                 </Button>
               </Styled.InfoButtons>
             </Styled.InfoWrap>
@@ -866,17 +860,10 @@ export const Info = () => {
                   </Styled.ModalItem>
                   <Styled.ModalItem>
                     <Styled.DateTitle></Styled.DateTitle>
-                    {openDate.from ? (
-                      <Styled.DateText>
-                        {moment(openDate.from).format("DD.MM.YYYY") +
-                          "-" +
-                          moment(openDate.to).format("DD.MM.YYYY")}
-                      </Styled.DateText>
-                    ) : (
-                      <Styled.DateText red>За все время</Styled.DateText>
-                    )}
+                    <Styled.DateText red onClick={allTime}>
+                      За все время
+                    </Styled.DateText>
                   </Styled.ModalItem>
-                  <Styled.DateTitle>Свободный</Styled.DateTitle>
                 </Styled.ModalContent>
                 <ModalRangeInput
                   onClose={onClose}
@@ -889,7 +876,7 @@ export const Info = () => {
           {withdraw && (
             <Modal onClose={() => setWithdraw(false)}>
               <Styled.ModalBlock>
-                <Styled.ModalTitle>Вывести деньги</Styled.ModalTitle>
+                <Styled.ModalTitle>Вывести средства</Styled.ModalTitle>
                 <Input
                   onChange={(e) => setWithdrawValue(e.target.value)}
                   placeholder="Введите сумму"
@@ -903,7 +890,7 @@ export const Info = () => {
                   onClick={withdrawBalance}
                   danger
                 >
-                  Вывести деньги
+                  Вывести средства
                 </Styled.ModalButton>
               </Styled.ModalBlock>
             </Modal>
