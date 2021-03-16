@@ -19,6 +19,8 @@ import { Button } from "../../components/Button/Button";
 import useWindowSize from "../../hooks/useWindowSize";
 import { Checkbox } from "../../components/UI/Checkbox";
 import { RootPayments, PaymentsCollection } from "../../types/payments";
+import ReactNotification, { store } from "react-notifications-component";
+import "react-notifications-component/dist/theme.css";
 import moment from "moment";
 
 const InputWrap: FC<{ val: any }> = ({ val }: any) => {
@@ -210,8 +212,16 @@ export const AdminPay = () => {
   const hubConnection = appContext.hubConnection;
   const amountContext = useContext(AmountContext);
   const [totalDeposits, setTotalDeposits] = useState(0);
+  const [totalPayDeposits, setTotalPayDeposits] = useState(0);
+  const [depositPayList, setDepositPayList] = useState<any>([]);
+  const [paymentsList, setPaymentsList] = useState<any>([]);
+  const [totalPayments, setTotalPayments] = useState(0);
   const [count, setCount] = useState(30);
+  const [countPayments, setCountPayments] = useState(30);
+  const [countPay, setPayCount] = useState(20);
+  const [numPayments, setNumPayments] = useState(20);
   const [num, setNum] = useState(20);
+  const [numPay, setPayNum] = useState(20);
   const { totalPayed, depositTotal } = amountContext;
 
   const handleContainerClick = (e: React.MouseEvent) => {
@@ -231,6 +241,31 @@ export const AdminPay = () => {
       hubConnection
         .invoke<RootPayments>(
           "GetUsersDeposits",
+          [5],
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          0,
+          20
+        )
+        .then((res) => {
+          console.log("res Payments", res);
+          setTotalPayments(res.totalRecords);
+          setPaymentsList(res.collection);
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  }, [hubConnection]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection
+        .invoke<RootPayments>(
+          "GetUsersDeposits",
           [6],
           null,
           null,
@@ -243,7 +278,7 @@ export const AdminPay = () => {
           20
         )
         .then((res) => {
-          console.log("(res", res);
+          console.log("res", res);
           setTotalDeposits(res.totalRecords);
           setDepositList(res.collection);
         })
@@ -251,9 +286,30 @@ export const AdminPay = () => {
     }
   }, [hubConnection]);
 
-  console.log("depositList", depositList);
-
-  console.log("count", count);
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection
+        .invoke<RootPayments>(
+          "GetUsersDeposits",
+          [1, 2, 3, 4, 5, 6],
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          true,
+          0,
+          20
+        )
+        .then((res) => {
+          console.log("res true", res);
+          setTotalPayDeposits(res.totalRecords);
+          setDepositPayList(res.collection);
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  }, [hubConnection]);
 
   useEffect(() => {
     if (hubConnection) {
@@ -266,7 +322,35 @@ export const AdminPay = () => {
     }
   }, [hubConnection]);
 
-  let requestCache: any = {};
+  const loadMorePayments = (startIndex: any, stopIndex: any): any => {
+    if (stopIndex >= count && stopIndex < totalPayments) {
+      if (hubConnection) {
+        hubConnection
+          .invoke<RootPayments>(
+            "GetUsersDeposits",
+            [5],
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            numPayments,
+            20
+          )
+          .then((res) => {
+            setPaymentsList([...paymentsList, ...res.collection]);
+            setCountPayments(countPayments + 10);
+            setNumPayments(numPayments + 20);
+          })
+          .catch((err: Error) => console.log(err));
+      }
+    }
+
+    // console.log("startIndex", startIndex);
+    // console.log("stopIndex", stopIndex);
+  };
 
   const loadMoreItems = (startIndex: any, stopIndex: any): any => {
     if (stopIndex >= count && stopIndex < totalDeposits) {
@@ -294,13 +378,85 @@ export const AdminPay = () => {
       }
     }
 
+    // console.log("startIndex", startIndex);
+    // console.log("stopIndex", stopIndex);
+  };
+
+  const loadMorePayItems = (startIndex: any, stopIndex: any): any => {
     console.log("startIndex", startIndex);
     console.log("stopIndex", stopIndex);
+    if (stopIndex >= countPay && stopIndex < totalPayDeposits) {
+      if (hubConnection) {
+        hubConnection
+          .invoke<RootPayments>(
+            "GetUsersDeposits",
+            [1, 2, 3, 4, 5, 6],
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            true,
+            numPay,
+            20
+          )
+          .then((res) => {
+            setDepositPayList([...depositPayList, ...res.collection]);
+            setPayCount(countPay + 10);
+            setPayNum(numPay + 20);
+          })
+          .catch((err: Error) => console.log(err));
+      }
+    }
   };
+
+  console.log("paymentsList", paymentsList);
 
   function isItemLoaded({ index }: any) {
     return !!depositList[index];
   }
+
+  function isItemLoadedPay({ index }: any) {
+    return !!depositPayList[index];
+  }
+
+  function isItemLoadedPayments({ index }: any) {
+    return !!paymentsList[index];
+  }
+
+  const alert = (
+    title: string,
+    message: string,
+    type: "success" | "default" | "warning" | "info" | "danger"
+  ) => {
+    store.addNotification({
+      title: title,
+      message: message,
+      type: type,
+      insert: "top",
+      container: "top-right",
+      animationIn: ["animate__animated", "animate__fadeIn"],
+      animationOut: ["animate__animated", "animate__fadeOut"],
+      dismiss: {
+        duration: 5000,
+      },
+    });
+  };
+
+  const confirmPay = (id: string) => {
+    if (hubConnection) {
+      hubConnection
+        .invoke("ConfirmDepositPayment", id)
+        .then((res) => {
+          console.log("ConfirmDepositPayment", res);
+          alert("Успешно", "Выполнено", "success");
+        })
+        .catch((err: Error) => {
+          alert("Ошибка", "Произошла ошибка", "danger");
+        });
+    }
+  };
 
   const paymentsConfirm = () => {
     if (hubConnection) {
@@ -308,8 +464,11 @@ export const AdminPay = () => {
         .invoke("ConfirmAllDepositsPayment")
         .then((res) => {
           console.log("(res", res);
+          alert("Успешно", "", "success");
         })
-        .catch((err: Error) => console.log(err));
+        .catch((err: Error) => {
+          alert("Ошибка", "Произошла ошибка", "danger");
+        });
     }
   };
 
@@ -336,11 +495,82 @@ export const AdminPay = () => {
               </TableBodyItem>
               <TableBodyItem>
                 {size ? (
-                  <Checkbox />
+                  <Checkbox
+                    onChange={() => confirmPay(depositList[index].safeId)}
+                  />
                 ) : (
-                  <Button dangerOutline>Подтвердить</Button>
+                  <Button
+                    dangerOutline
+                    onClick={() => confirmPay(depositList[index].safeId)}
+                  >
+                    Подтвердить
+                  </Button>
                 )}
               </TableBodyItem>
+            </>
+          ) : (
+            <TableBodyItem>Loading...</TableBodyItem>
+          )}
+        </TableBody>
+      </>
+    );
+  }
+
+  function rowRendererPay({ key, index, style }: any) {
+    return (
+      <>
+        <TableBody key={key} style={style}>
+          {depositPayList.length && depositPayList[index] ? (
+            <>
+              <TableBodyItemPaid>
+                {depositPayList[index].userName}
+              </TableBodyItemPaid>
+              <TableBodyItemPaid>
+                {depositPayList[index].deposit.name}
+              </TableBodyItemPaid>
+              <TableBodyItemPaid>
+                {moment(depositPayList[index].paymentDate).format("DD/MM/YYYY")}
+              </TableBodyItemPaid>
+              <TableBodyItemPaid>Начисление дивидендов</TableBodyItemPaid>
+              <TableBodyItemPaid>
+                {depositPayList[index].amountView.toLocaleString()}
+              </TableBodyItemPaid>
+              <TableBodyItemPaid>
+                {depositPayList[index].baseAmountView}
+              </TableBodyItemPaid>
+              <TableBodyItemPaid></TableBodyItemPaid>
+            </>
+          ) : (
+            <TableBodyItem>Loading...</TableBodyItem>
+          )}
+        </TableBody>
+      </>
+    );
+  }
+
+  function rowRendererPayments({ index, style }: any) {
+    return (
+      <>
+        <TableBody style={style}>
+          {paymentsList.length && paymentsList[index] ? (
+            <>
+              <TableBodyItemPaid>
+                {paymentsList[index].userName}
+              </TableBodyItemPaid>
+              <TableBodyItemPaid>
+                {paymentsList[index].deposit.name}
+              </TableBodyItemPaid>
+              <TableBodyItemPaid>
+                {moment(paymentsList[index].paymentDate).format("DD/MM/YYYY")}
+              </TableBodyItemPaid>
+              <TableBodyItemPaid>Начисление дивидендов</TableBodyItemPaid>
+              <TableBodyItemPaid>
+                {paymentsList[index].amountView.toLocaleString()}
+              </TableBodyItemPaid>
+              <TableBodyItemPaid>
+                {paymentsList[index].baseAmountView}
+              </TableBodyItemPaid>
+              <TableBodyItemPaid></TableBodyItemPaid>
             </>
           ) : (
             <TableBodyItem>Loading...</TableBodyItem>
@@ -361,7 +591,7 @@ export const AdminPay = () => {
             <Exit />
           </Styled.UserName>
         </Styled.HeadBlock>
-
+        <ReactNotification />
         <Card>
           <PayList>
             <PayItem>
@@ -407,16 +637,16 @@ export const AdminPay = () => {
             <PayTab onClick={() => handleClick(0)} active={active === 0}>
               На согласовании
             </PayTab>
-            <PayTab onClick={() => handleClick(1)} active={active === 1}>
+            <Tab onClick={() => handleClick(1)} active={active === 1}>
               Выплачено
-            </PayTab>
-            <PayTab onClick={() => handleClick(2)} active={active === 2}>
+            </Tab>
+            <Tab onClick={() => handleClick(2)} active={active === 2}>
               К выплате
-            </PayTab>
+            </Tab>
           </Tabs>
         </Card>
         <ButtonWrap>
-          <Button dangerOutline mb onClick={() => setCount(20)}>
+          <Button dangerOutline mb onClick={paymentsConfirm}>
             Согласовать все
           </Button>
         </ButtonWrap>
@@ -431,35 +661,36 @@ export const AdminPay = () => {
                 <TableHeadItem>Категория</TableHeadItem>
                 <TableHeadItem>Сумма вклада</TableHeadItem>
                 <TableHeadItem>Сумма выплаты</TableHeadItem>
-                <TableHeadItem>
-                  <Filter />
-                </TableHeadItem>
+                <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
               </TableHead>
-              {/* <VirtualTable data={depositList} rowHeight={56} visibleRows={6} /> */}
-              <AutoSizer>
-                {({ height, width }) => (
-                  <InfiniteLoader
-                    isItemLoaded={isItemLoaded}
-                    loadMoreItems={loadMoreItems}
-                    itemCount={totalDeposits}
-                    minimumBatchSize={1}
-                    threshold={1}
-                  >
-                    {({ onItemsRendered, ref }) => (
-                      <List
-                        height={height}
-                        ref={ref}
-                        onItemsRendered={onItemsRendered}
-                        itemCount={totalDeposits}
-                        itemSize={56}
-                        width={width}
-                      >
-                        {rowRenderer}
-                      </List>
-                    )}
-                  </InfiniteLoader>
-                )}
-              </AutoSizer>
+              {depositList.length ? (
+                <AutoSizer>
+                  {({ height, width }) => (
+                    <InfiniteLoader
+                      isItemLoaded={isItemLoaded}
+                      loadMoreItems={loadMoreItems}
+                      itemCount={totalDeposits}
+                      minimumBatchSize={1}
+                      threshold={1}
+                    >
+                      {({ onItemsRendered, ref }) => (
+                        <List
+                          height={height}
+                          ref={ref}
+                          onItemsRendered={onItemsRendered}
+                          itemCount={totalDeposits}
+                          itemSize={56}
+                          width={width}
+                        >
+                          {rowRenderer}
+                        </List>
+                      )}
+                    </InfiniteLoader>
+                  )}
+                </AutoSizer>
+              ) : (
+                <NotFound>Данные не обнаружены.</NotFound>
+              )}
             </PaymentsTable>
           </Card>
         </Content>
@@ -473,19 +704,36 @@ export const AdminPay = () => {
                 <TableHeadItemPaid>Категория</TableHeadItemPaid>
                 <TableHeadItemPaid>Сумма вклада</TableHeadItemPaid>
                 <TableHeadItemPaid>Сумма выплаты</TableHeadItemPaid>
-                <TableHeadItemPaid>
-                  <Filter />
-                </TableHeadItemPaid>
+                <TableHeadItemPaid>{/* <Filter /> */}</TableHeadItemPaid>
               </TableHead>
-              <TableBody>
-                <TableBodyItemPaid>Account 1</TableBodyItemPaid>
-                <TableBodyItemPaid>Название Депозита №1</TableBodyItemPaid>
-                <TableBodyItemPaid>01/03/2021</TableBodyItemPaid>
-                <TableBodyItemPaid>Начисление дивидендов</TableBodyItemPaid>
-                <TableBodyItemPaid>140 000</TableBodyItemPaid>
-                <TableBodyItemPaid>40 000</TableBodyItemPaid>
-                <TableBodyItemPaid></TableBodyItemPaid>
-              </TableBody>
+              {depositPayList.length ? (
+                <AutoSizer>
+                  {({ height, width }) => (
+                    <InfiniteLoader
+                      isItemLoaded={isItemLoadedPay}
+                      loadMoreItems={loadMorePayItems}
+                      itemCount={totalPayDeposits}
+                      minimumBatchSize={0}
+                      threshold={1}
+                    >
+                      {({ onItemsRendered, ref }) => (
+                        <List
+                          height={height}
+                          ref={ref}
+                          onItemsRendered={onItemsRendered}
+                          itemCount={totalPayDeposits}
+                          itemSize={56}
+                          width={width}
+                        >
+                          {rowRendererPay}
+                        </List>
+                      )}
+                    </InfiniteLoader>
+                  )}
+                </AutoSizer>
+              ) : (
+                <NotFound>Данные не обнаружены.</NotFound>
+              )}
             </PaymentsTable>
           </Card>
         </Content>
@@ -500,11 +748,38 @@ export const AdminPay = () => {
                 <TableHeadItemPaid>Категория</TableHeadItemPaid>
                 <TableHeadItemPaid>Сумма вклада</TableHeadItemPaid>
                 <TableHeadItemPaid>Сумма выплаты</TableHeadItemPaid>
-                <TableHeadItemPaid>
-                  <Filter />
-                </TableHeadItemPaid>
+                <TableHeadItemPaid>{/* <Filter /> */}</TableHeadItemPaid>
               </TableHead>
-              <TableBody>
+              {paymentsList.length ? (
+                <AutoSizer>
+                  {({ height, width }) => (
+                    <InfiniteLoader
+                      isItemLoaded={isItemLoadedPayments}
+                      loadMoreItems={loadMorePayments}
+                      itemCount={totalPayments}
+                      minimumBatchSize={1}
+                      threshold={1}
+                    >
+                      {({ onItemsRendered, ref }) => (
+                        <List
+                          height={height}
+                          ref={ref}
+                          onItemsRendered={onItemsRendered}
+                          itemCount={totalPayments}
+                          itemSize={56}
+                          width={width}
+                        >
+                          {rowRendererPayments}
+                        </List>
+                      )}
+                    </InfiniteLoader>
+                  )}
+                </AutoSizer>
+              ) : (
+                <NotFound>Данные не обнаружены.</NotFound>
+              )}
+
+              {/* <TableBody>
                 <TableBodyItemPaid>Account 1</TableBodyItemPaid>
                 <TableBodyItemPaid>Название Депозита №1</TableBodyItemPaid>
                 <TableBodyItemPaid>01/03/2021</TableBodyItemPaid>
@@ -512,7 +787,7 @@ export const AdminPay = () => {
                 <TableBodyItemPaid>140 000</TableBodyItemPaid>
                 <TableBodyItemPaid>40 000</TableBodyItemPaid>
                 <TableBodyItemPaid></TableBodyItemPaid>
-              </TableBody>
+              </TableBody> */}
             </PaymentsTable>
           </Card>
         </Content>
@@ -521,8 +796,21 @@ export const AdminPay = () => {
   );
 };
 
+const NotFound = styled.div`
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 21px;
+  padding: 30px;
+  letter-spacing: 0.1px;
+  min-height: 250px;
+  color: #0e0d3d;
+`;
+
 const PayTab = styled(Tab)`
   width: 135px;
+  @media (max-width: 768px) {
+    width: 100px !important;
+  }
 `;
 
 const CalendarWrap = styled.div`
@@ -686,6 +974,7 @@ const Tabs = styled.div`
   display: flex;
   padding: 12px 20px 0;
   @media (max-width: 768px) {
+    padding: 12px 10px 0;
     ${Tab} {
       width: 80px;
       &:first-child {

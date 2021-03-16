@@ -420,9 +420,7 @@ export const Info = () => {
                   <Styled.DepositItem>
                     <Styled.DepositName>Открытые депозиты</Styled.DepositName>
                     <Styled.DepositValue>
-                      {activeDeposite
-                        ? (activeDeposite / 100000).toLocaleString()
-                        : "-"}
+                      {activeDeposite ? activeDeposite : "-"}
                     </Styled.DepositValue>
                   </Styled.DepositItem>
                   <Styled.DepositItem>
@@ -741,17 +739,21 @@ export const Info = () => {
                     </Styled.BalanceItemValue>
                   </Styled.BalanceItem>
                 </Styled.BalanceList>
-                <Styled.DateButton onClick={() => setOpen(true)}>
-                  {openDate.from ? (
-                    <span>
-                      {moment(openDate.from).format("DD.MM.YYYY") +
-                        "-" +
-                        moment(openDate.to).format("DD.MM.YYYY")}
-                    </span>
-                  ) : (
-                    "За все время"
-                  )}
-                </Styled.DateButton>
+                <div style={{ visibility: "hidden" }}>
+                  <Styled.DateButton>
+                    {/* onClick={() => setOpen(true)} */}
+
+                    {openDate.from ? (
+                      <span>
+                        {moment(openDate.from).format("DD.MM.YYYY") +
+                          "-" +
+                          moment(openDate.to).format("DD.MM.YYYY")}
+                      </span>
+                    ) : (
+                      "За все время"
+                    )}
+                  </Styled.DateButton>
+                </div>
               </Styled.BalanceWrap>
             </Container>
 
