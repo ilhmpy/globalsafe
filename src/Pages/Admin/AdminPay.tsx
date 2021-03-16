@@ -184,7 +184,7 @@ type TableProps = {
 //             <TableBodyItem>{item.deposit.name}</TableBodyItem>
 //             <TableBodyItem>100</TableBodyItem>
 //             <TableBodyItem>
-//               {moment(item.paymentDate).format("DD/MM/YYYY")}
+//               {moment(item.prevPayment).format("DD/MM/YYYY")}
 //             </TableBodyItem>
 //             <TableBodyItem>Начисление дивидендов</TableBodyItem>
 //             <TableBodyItem>{item.amountView.toLocaleString()}</TableBodyItem>
@@ -484,14 +484,14 @@ export const AdminPay = () => {
               <TableBodyItem>{depositList[index].deposit.name}</TableBodyItem>
               <TableBodyItem>100</TableBodyItem>
               <TableBodyItem>
-                {moment(depositList[index].paymentDate).format("DD/MM/YYYY")}
+                {moment(depositList[index].prevPayment).format("DD/MM/YYYY")}
               </TableBodyItem>
               <TableBodyItem>Начисление дивидендов</TableBodyItem>
               <TableBodyItem>
-                {depositList[index].amountView.toLocaleString()}
+                {depositList[index].baseAmountView.toLocaleString()}
               </TableBodyItem>
               <TableBodyItem>
-                <InputWrap val={depositList[index].baseAmountView} />
+                <InputWrap val={depositList[index].payedAmountView} />
               </TableBodyItem>
               <TableBodyItem>
                 {size ? (
@@ -529,14 +529,14 @@ export const AdminPay = () => {
                 {depositPayList[index].deposit.name}
               </TableBodyItemPaid>
               <TableBodyItemPaid>
-                {moment(depositPayList[index].paymentDate).format("DD/MM/YYYY")}
+                {moment(depositPayList[index].prevPayment).format("DD/MM/YYYY")}
               </TableBodyItemPaid>
               <TableBodyItemPaid>Начисление дивидендов</TableBodyItemPaid>
               <TableBodyItemPaid>
-                {depositPayList[index].amountView.toLocaleString()}
+                {depositPayList[index].baseAmountView.toLocaleString()}
               </TableBodyItemPaid>
               <TableBodyItemPaid>
-                {depositPayList[index].baseAmountView}
+                {depositPayList[index].payedAmountView}
               </TableBodyItemPaid>
               <TableBodyItemPaid></TableBodyItemPaid>
             </>
@@ -561,14 +561,14 @@ export const AdminPay = () => {
                 {paymentsList[index].deposit.name}
               </TableBodyItemPaid>
               <TableBodyItemPaid>
-                {moment(paymentsList[index].paymentDate).format("DD/MM/YYYY")}
+                {moment(paymentsList[index].prevPayment).format("DD/MM/YYYY")}
               </TableBodyItemPaid>
               <TableBodyItemPaid>Начисление дивидендов</TableBodyItemPaid>
               <TableBodyItemPaid>
-                {paymentsList[index].amountView.toLocaleString()}
+                {paymentsList[index].baseAmountView.toLocaleString()}
               </TableBodyItemPaid>
               <TableBodyItemPaid>
-                {paymentsList[index].baseAmountView}
+                {paymentsList[index].payedAmountView}
               </TableBodyItemPaid>
               <TableBodyItemPaid></TableBodyItemPaid>
             </>
