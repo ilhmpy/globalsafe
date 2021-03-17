@@ -140,10 +140,69 @@ const PayText = styled.p<{ small?: boolean }>`
   color: ${(props) => (props.small ? "rgba(81, 81, 114, 0.6)" : "#515172")};
 `;
 
-type TableProps = {
-  data: PaymentsCollection[];
-  rowHeight: number;
-  visibleRows: number;
+type ListProps = {
+  data: PaymentsCollection;
+  adjustPay: (id: string, val: number) => void;
+  confirmPay: (id: string) => void;
+};
+
+const DepositList: FC<ListProps> = ({
+  data,
+  adjustPay,
+  confirmPay,
+}: ListProps) => {
+  const [value, setValue] = useState("");
+  const sizes = useWindowSize();
+  const size = sizes < 992;
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+  };
+
+  const payments = (id: string) => {
+    if (value !== "") {
+      adjustPay(id, +value * 100000);
+    } else {
+      confirmPay(id);
+    }
+  };
+
+  return (
+    <TableBody>
+      <TableBodyItem title={data.userName}>{data.userName}</TableBodyItem>
+      <TableBodyItem>{data.deposit.name}</TableBodyItem>
+      <TableBodyItem>
+        {value
+          ? ((+value / data.baseAmountView) * 100).toFixed(1)
+          : ((data.payAmount / data.baseAmount) * 100).toFixed(1)}
+      </TableBodyItem>
+      <TableBodyItem>
+        {data.paymentDate ? moment(data.paymentDate).format("DD/MM/YYYY") : "-"}
+      </TableBodyItem>
+      <TableBodyItem>Начисление дивидендов</TableBodyItem>
+      <TableBodyItem>{data.baseAmountView.toLocaleString()}</TableBodyItem>
+      <TableBodyItem>
+        <InputWrap
+          val={value}
+          placeholder={(data.payAmount / 100000).toFixed(2).toString()}
+          onChange={onChange}
+        />
+      </TableBodyItem>
+      <TableBodyItem>
+        {size ? (
+          <Checkbox
+            checked={data.state === 5}
+            onChange={() => payments(data.safeId)}
+          />
+        ) : data.state === 5 ? (
+          <Button greenOutline>Подтверждено</Button>
+        ) : (
+          <Button dangerOutline onClick={() => payments(data.safeId)}>
+            Подтвердить
+          </Button>
+        )}
+      </TableBodyItem>
+    </TableBody>
+  );
 };
 
 export const AdminPay = () => {
@@ -236,7 +295,7 @@ export const AdminPay = () => {
       hubConnection
         .invoke<RootPayments>(
           "GetUsersDeposits",
-          [6],
+          [5, 6],
           null,
           null,
           null,
@@ -370,8 +429,8 @@ export const AdminPay = () => {
       hubConnection
         .invoke("ConfirmDepositPayment", id)
         .then((res) => {
-          console.log("ConfirmDepositPayment", res);
           alert("Успешно", "Выполнено", "success");
+          console.log("ConfirmDepositPayment", res);
         })
         .catch((err: Error) => {
           alert("Ошибка", "Произошла ошибка", "danger");
@@ -391,19 +450,6 @@ export const AdminPay = () => {
         .catch((err: Error) => {
           alert("Ошибка", "Произошла ошибка", "danger");
         });
-    }
-  };
-
-  const [value, setValue] = useState("");
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-  };
-  const payments = (id: string) => {
-    if (value !== "") {
-      adjustPay(id, +value * 100000);
-    } else {
-      confirmPay(id);
     }
   };
 
@@ -432,7 +478,7 @@ export const AdminPay = () => {
             <Exit />
           </Styled.UserName>
         </Styled.HeadBlock>
-        <ReactNotification />
+
         <Card>
           <PayList>
             <PayItem>
@@ -486,11 +532,14 @@ export const AdminPay = () => {
             </Tab>
           </Tabs>
         </Card>
-        <ButtonWrap>
-          <Button dangerOutline mb onClick={paymentsConfirm}>
-            Согласовать все
-          </Button>
-        </ButtonWrap>
+        <ReactNotification />
+        {active === 0 && (
+          <ButtonWrap>
+            <Button dangerOutline mb onClick={paymentsConfirm}>
+              Согласовать все
+            </Button>
+          </ButtonWrap>
+        )}
         <Content active={active === 0}>
           <Card>
             <PaymentsTable>
@@ -518,50 +567,12 @@ export const AdminPay = () => {
                     }
                   >
                     {depositList.map((item: PaymentsCollection) => (
-                      <TableBody key={item.safeId}>
-                        <TableBodyItem title={item.userName}>
-                          {item.userName}
-                        </TableBodyItem>
-                        <TableBodyItem>{item.deposit.name}</TableBodyItem>
-                        <TableBodyItem>
-                          {value
-                            ? ((+value / item.baseAmountView) * 100).toFixed(1)
-                            : (
-                                (item.payAmount / item.baseAmount) *
-                                100
-                              ).toFixed(1)}
-                        </TableBodyItem>
-                        <TableBodyItem>
-                          {item.prevPayment
-                            ? moment(item.prevPayment).format("DD/MM/YYYY")
-                            : "-"}
-                        </TableBodyItem>
-                        <TableBodyItem>Начисление дивидендов</TableBodyItem>
-                        <TableBodyItem>
-                          {item.baseAmountView.toLocaleString()}
-                        </TableBodyItem>
-                        <TableBodyItem>
-                          <InputWrap
-                            val={value}
-                            placeholder={(item.payAmount / 100000)
-                              .toFixed(2)
-                              .toString()}
-                            onChange={onChange}
-                          />
-                        </TableBodyItem>
-                        <TableBodyItem>
-                          {size ? (
-                            <Checkbox onChange={() => payments(item.safeId)} />
-                          ) : (
-                            <Button
-                              dangerOutline
-                              onClick={() => payments(item.safeId)}
-                            >
-                              Подтвердить
-                            </Button>
-                          )}
-                        </TableBodyItem>
-                      </TableBody>
+                      <DepositList
+                        key={item.safeId}
+                        data={item}
+                        adjustPay={adjustPay}
+                        confirmPay={confirmPay}
+                      />
                     ))}
                   </InfiniteScroll>
                 </Scrollbars>
@@ -658,7 +669,7 @@ export const AdminPay = () => {
                           {item.deposit.name}
                         </TableBodyItemPaid>
                         <TableBodyItemPaid>
-                          {moment(item.prevPayment).format("DD/MM/YYYY")}
+                          {moment(item.paymentDate).format("DD/MM/YYYY")}
                         </TableBodyItemPaid>
                         <TableBodyItemPaid>
                           Начисление дивидендов

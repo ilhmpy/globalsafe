@@ -4,6 +4,7 @@ type Props = {
   danger?: boolean;
   primary?: boolean;
   dangerOutline?: boolean;
+  greenOutline?: boolean;
   green?: boolean;
   blue?: boolean;
   red?: boolean;
@@ -85,7 +86,17 @@ export const Button = styled.a<Props>`
         box-shadow: 0px 4px 10px #bcd476;
         background-color: rgba(188, 212, 118, 0.7);
       }
-      `;
+     `;
+    } else if (props.greenOutline) {
+      return `
+        background: transparent;
+        color: rgba(14, 13, 61, 1);
+        border-color: #BCD476;
+        &:hover{
+        border-color: rgba(188,212,118, 0.7);
+        box-shadow: 0px 4px 10px #bcd476;
+      }
+        `;
     } else if (props.blue) {
       return `
       background-color: #6db9ff;
