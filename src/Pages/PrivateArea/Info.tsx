@@ -107,7 +107,7 @@ export const Info = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<RootList>("GetUserDeposits", [1, 2, 3, 4], 0, 30)
+        .invoke<RootList>("GetUserDeposits", [1, 2, 3, 4, 5, 6], 0, 30)
         .then((res) => {
           setList(res.collection);
         })
@@ -259,7 +259,7 @@ export const Info = () => {
   const withdrawBalance = () => {
     if (hubConnection) {
       hubConnection
-        .invoke("Withdraw", 1, +withdrawValue)
+        .invoke("Withdraw", 1, +withdrawValue * 100000)
         .then((res) => {
           // console.log("Withdraw", res);
           if (res === 1) {
