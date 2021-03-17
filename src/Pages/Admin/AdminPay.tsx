@@ -387,7 +387,7 @@ export const AdminPay = () => {
       hubConnection
         .invoke<RootPayments>(
           "GetUsersDeposits",
-          [6],
+          [5, 6],
           null,
           null,
           null,
