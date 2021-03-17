@@ -23,20 +23,30 @@ import ReactNotification, { store } from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 import moment from "moment";
 
-const InputWrap: FC<{ val: any }> = ({ val }: any) => {
-  const [value, setValue] = useState(val);
+const InputWrap: FC<{
+  val: any;
+  placeholder: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}> = ({ val, onChange, placeholder }: any) => {
+  // const [value, setValue] = useState(val);
   const inputRef = useRef<HTMLInputElement>(null);
   const focusField = () => {
     if (inputRef && inputRef.current) {
       inputRef.current.focus();
     }
   };
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-  };
+  // const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setValue(e.target.value);
+  // };
   return (
     <InputIcon>
-      <Input onChange={onChange} ref={inputRef} value={value} type="number" />
+      <Input
+        onChange={onChange}
+        ref={inputRef}
+        value={val}
+        placeholder={placeholder}
+        type="number"
+      />
       <Pen onClick={focusField} />
     </InputIcon>
   );
@@ -133,73 +143,6 @@ type TableProps = {
   rowHeight: number;
   visibleRows: number;
 };
-
-// const VirtualTable: FC<TableProps> = ({
-//   data,
-//   rowHeight,
-//   visibleRows,
-// }: TableProps) => {
-//   const [start, setStart] = useState(0);
-//   const rootRef = useRef<HTMLInputElement>(null);
-//   const sizes = useWindowSize();
-//   const size = sizes < 992;
-//   function getTopHeight() {
-//     return rowHeight * start;
-//   }
-//   function getBottomHeight() {
-//     return rowHeight * (data.length - (start + visibleRows + 1));
-//   }
-
-//   useEffect(() => {
-//     function onScroll(e: any) {
-//       setStart(
-//         Math.min(
-//           data.length - visibleRows - 1,
-//           Math.floor(e.target.scrollTop / rowHeight)
-//         )
-//       );
-//     }
-//     if (rootRef && rootRef.current) {
-//       rootRef.current.addEventListener("scroll", onScroll);
-//     }
-
-//     return () => {
-//       if (rootRef && rootRef.current) {
-//         rootRef.current.removeEventListener("scroll", onScroll);
-//       }
-//     };
-//   }, [data.length, visibleRows, rowHeight]);
-
-//   return (
-//     <div
-//       style={{ height: rowHeight * visibleRows + 1, overflow: "auto" }}
-//       ref={rootRef}
-//     >
-//       <div style={{ height: getTopHeight() }} />
-//       {data
-//         .slice(start, start + visibleRows + 1)
-//         .map((item, rowIndex: number) => (
-//           <TableBody style={{ height: rowHeight }} key={start + rowIndex}>
-//             <TableBodyItem title={item.userName}>{item.userName}</TableBodyItem>
-//             <TableBodyItem>{item.deposit.name}</TableBodyItem>
-//             <TableBodyItem>100</TableBodyItem>
-//             <TableBodyItem>
-//               {moment(item.prevPayment).format("DD/MM/YYYY")}
-//             </TableBodyItem>
-//             <TableBodyItem>Начисление дивидендов</TableBodyItem>
-//             <TableBodyItem>{item.amountView.toLocaleString()}</TableBodyItem>
-//             <TableBodyItem>
-//               <InputWrap />
-//             </TableBodyItem>
-//             <TableBodyItem>
-//               {size ? <Checkbox /> : <Button dangerOutline>Подтвердить</Button>}
-//             </TableBodyItem>
-//           </TableBody>
-//         ))}
-//       <div style={{ height: getBottomHeight() }} />
-//     </div>
-//   );
-// };
 
 export const AdminPay = () => {
   const [active, setActive] = useState(0);
@@ -411,7 +354,7 @@ export const AdminPay = () => {
     }
   };
 
-  console.log("paymentsList", paymentsList);
+  console.log("depositList", depositList);
 
   function isItemLoaded({ index }: any) {
     return !!depositList[index];
@@ -458,6 +401,21 @@ export const AdminPay = () => {
     }
   };
 
+  const adjustPay = (id: string, amount: number) => {
+    if (hubConnection) {
+      hubConnection
+        .invoke("AdjustDepositPayment", id, amount)
+        .then((res) => {
+          console.log("AdjustDepositPayment", res);
+          alert("Успешно", "Выполнено", "success");
+          confirmPay(id);
+        })
+        .catch((err: Error) => {
+          alert("Ошибка", "Произошла ошибка", "danger");
+        });
+    }
+  };
+
   const paymentsConfirm = () => {
     if (hubConnection) {
       hubConnection
@@ -472,7 +430,19 @@ export const AdminPay = () => {
     }
   };
 
-  function rowRenderer({ index, style }: any) {
+  function RowRenderer({ index, style }: any) {
+    const [value, setValue] = useState("");
+
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setValue(e.target.value);
+    };
+    const payments = (id: string) => {
+      if (value !== "") {
+        adjustPay(id, +value * 100000);
+      } else {
+        confirmPay(id);
+      }
+    };
     return (
       <>
         <TableBody style={style}>
@@ -482,26 +452,45 @@ export const AdminPay = () => {
                 {depositList[index].userName}
               </TableBodyItem>
               <TableBodyItem>{depositList[index].deposit.name}</TableBodyItem>
-              <TableBodyItem>100</TableBodyItem>
               <TableBodyItem>
-                {moment(depositList[index].prevPayment).format("DD/MM/YYYY")}
+                {value
+                  ? (
+                      (+value / depositList[index].baseAmountView) *
+                      100
+                    ).toFixed(1)
+                  : (
+                      (depositList[index].payAmount /
+                        depositList[index].baseAmount) *
+                      100
+                    ).toFixed(1)}
+              </TableBodyItem>
+              <TableBodyItem>
+                {depositList[index].prevPayment
+                  ? moment(depositList[index].prevPayment).format("DD/MM/YYYY")
+                  : "-"}
               </TableBodyItem>
               <TableBodyItem>Начисление дивидендов</TableBodyItem>
               <TableBodyItem>
                 {depositList[index].baseAmountView.toLocaleString()}
               </TableBodyItem>
               <TableBodyItem>
-                <InputWrap val={depositList[index].payedAmountView} />
+                <InputWrap
+                  val={value}
+                  placeholder={(depositList[index].payAmount / 100000)
+                    .toFixed(2)
+                    .toString()}
+                  onChange={onChange}
+                />
               </TableBodyItem>
               <TableBodyItem>
                 {size ? (
                   <Checkbox
-                    onChange={() => confirmPay(depositList[index].safeId)}
+                    onChange={() => payments(depositList[index].safeId)}
                   />
                 ) : (
                   <Button
                     dangerOutline
-                    onClick={() => confirmPay(depositList[index].safeId)}
+                    onClick={() => payments(depositList[index].safeId)}
                   >
                     Подтвердить
                   </Button>
@@ -682,7 +671,7 @@ export const AdminPay = () => {
                           itemSize={56}
                           width={width}
                         >
-                          {rowRenderer}
+                          {RowRenderer}
                         </List>
                       )}
                     </InfiniteLoader>
