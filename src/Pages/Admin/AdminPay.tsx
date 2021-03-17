@@ -472,10 +472,10 @@ export const AdminPay = () => {
     }
   };
 
-  function rowRenderer({ key, index, style }: any) {
+  function rowRenderer({ index, style }: any) {
     return (
       <>
-        <TableBody key={key} style={style}>
+        <TableBody style={style}>
           {depositList.length && depositList[index] ? (
             <>
               <TableBodyItem title={depositList[index].userName}>
@@ -516,10 +516,10 @@ export const AdminPay = () => {
     );
   }
 
-  function rowRendererPay({ key, index, style }: any) {
+  function rowRendererPay({ index, style }: any) {
     return (
       <>
-        <TableBody key={key} style={style}>
+        <TableBody style={style}>
           {depositPayList.length && depositPayList[index] ? (
             <>
               <TableBodyItemPaid>
@@ -712,7 +712,7 @@ export const AdminPay = () => {
                     <InfiniteLoader
                       isItemLoaded={isItemLoadedPay}
                       loadMoreItems={loadMorePayItems}
-                      itemCount={totalPayDeposits}
+                      itemCount={depositPayList.length}
                       minimumBatchSize={0}
                       threshold={1}
                     >
@@ -721,7 +721,7 @@ export const AdminPay = () => {
                           height={height}
                           ref={ref}
                           onItemsRendered={onItemsRendered}
-                          itemCount={totalPayDeposits}
+                          itemCount={depositPayList.length}
                           itemSize={56}
                           width={width}
                         >
@@ -756,7 +756,7 @@ export const AdminPay = () => {
                     <InfiniteLoader
                       isItemLoaded={isItemLoadedPayments}
                       loadMoreItems={loadMorePayments}
-                      itemCount={totalPayments}
+                      itemCount={paymentsList.length}
                       minimumBatchSize={1}
                       threshold={1}
                     >
@@ -765,7 +765,7 @@ export const AdminPay = () => {
                           height={height}
                           ref={ref}
                           onItemsRendered={onItemsRendered}
-                          itemCount={totalPayments}
+                          itemCount={paymentsList.length}
                           itemSize={56}
                           width={width}
                         >

@@ -259,7 +259,7 @@ export const Info = () => {
   const withdrawBalance = () => {
     if (hubConnection) {
       hubConnection
-        .invoke("Withdraw", 1, +withdrawValue)
+        .invoke("Withdraw", 1, +withdrawValue * 100000)
         .then((res) => {
           // console.log("Withdraw", res);
           if (res === 1) {
