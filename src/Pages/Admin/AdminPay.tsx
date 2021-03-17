@@ -20,7 +20,9 @@ import useWindowSize from "../../hooks/useWindowSize";
 import { Checkbox } from "../../components/UI/Checkbox";
 import { RootPayments, PaymentsCollection } from "../../types/payments";
 import ReactNotification, { store } from "react-notifications-component";
+import InfiniteScroll from "react-infinite-scroller";
 import "react-notifications-component/dist/theme.css";
+import { Scrollbars } from "react-custom-scrollbars";
 import moment from "moment";
 
 const InputWrap: FC<{
@@ -159,17 +161,41 @@ export const AdminPay = () => {
   const [depositPayList, setDepositPayList] = useState<any>([]);
   const [paymentsList, setPaymentsList] = useState<any>([]);
   const [totalPayments, setTotalPayments] = useState(0);
-  const [count, setCount] = useState(30);
+  const [count, setCount] = useState(true);
   const [countPayments, setCountPayments] = useState(30);
-  const [countPay, setPayCount] = useState(20);
+  const [countPay, setPayCount] = useState(true);
   const [numPayments, setNumPayments] = useState(20);
   const [num, setNum] = useState(20);
   const [numPay, setPayNum] = useState(20);
+  const [next, setNext] = useState(true);
   const { totalPayed, depositTotal } = amountContext;
 
-  const handleContainerClick = (e: React.MouseEvent) => {
-    if (e.currentTarget === e.target) {
-      setShow(false);
+  const myLoad = (...arg: any) => {
+    console.log("arguments", arg);
+    if (hubConnection) {
+      setNext(false);
+      hubConnection
+        .invoke<RootPayments>(
+          "GetUsersDeposits",
+          [1, 2, 3, 4, 5, 6],
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          true,
+          numPay,
+          20
+        )
+        .then((res) => {
+          if (res.collection.length) {
+            setDepositPayList([...depositPayList, ...res.collection]);
+            setPayNum(numPay + 20);
+            setNext(true);
+          }
+        })
+        .catch((err: Error) => console.log(err));
     }
   };
 
@@ -199,6 +225,7 @@ export const AdminPay = () => {
           console.log("res Payments", res);
           setTotalPayments(res.totalRecords);
           setPaymentsList(res.collection);
+          setNumPayments(20);
         })
         .catch((err: Error) => console.log(err));
     }
@@ -221,9 +248,10 @@ export const AdminPay = () => {
           20
         )
         .then((res) => {
-          console.log("res", res);
+          console.log("res 6", res);
           setTotalDeposits(res.totalRecords);
           setDepositList(res.collection);
+          setNum(20);
         })
         .catch((err: Error) => console.log(err));
     }
@@ -249,6 +277,7 @@ export const AdminPay = () => {
           console.log("res true", res);
           setTotalPayDeposits(res.totalRecords);
           setDepositPayList(res.collection);
+          setPayNum(20);
         })
         .catch((err: Error) => console.log(err));
     }
@@ -265,108 +294,57 @@ export const AdminPay = () => {
     }
   }, [hubConnection]);
 
-  const loadMorePayments = (startIndex: any, stopIndex: any): any => {
-    if (stopIndex >= count && stopIndex < totalPayments) {
-      if (hubConnection) {
-        hubConnection
-          .invoke<RootPayments>(
-            "GetUsersDeposits",
-            [5],
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            numPayments,
-            20
-          )
-          .then((res) => {
-            setPaymentsList([...paymentsList, ...res.collection]);
-            setCountPayments(countPayments + 10);
-            setNumPayments(numPayments + 20);
-          })
-          .catch((err: Error) => console.log(err));
-      }
-    }
-
-    // console.log("startIndex", startIndex);
-    // console.log("stopIndex", stopIndex);
-  };
-
-  const loadMoreItems = (startIndex: any, stopIndex: any): any => {
-    if (stopIndex >= count && stopIndex < totalDeposits) {
-      if (hubConnection) {
-        hubConnection
-          .invoke<RootPayments>(
-            "GetUsersDeposits",
-            [6],
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            num,
-            20
-          )
-          .then((res) => {
-            setDepositList([...depositList, ...res.collection]);
-            setCount(count + 10);
-            setNum(num + 20);
-          })
-          .catch((err: Error) => console.log(err));
-      }
-    }
-
-    // console.log("startIndex", startIndex);
-    // console.log("stopIndex", stopIndex);
-  };
-
-  const loadMorePayItems = (startIndex: any, stopIndex: any): any => {
-    console.log("startIndex", startIndex);
-    console.log("stopIndex", stopIndex);
-    if (stopIndex >= countPay && stopIndex < totalPayDeposits) {
-      if (hubConnection) {
-        hubConnection
-          .invoke<RootPayments>(
-            "GetUsersDeposits",
-            [1, 2, 3, 4, 5, 6],
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            true,
-            numPay,
-            20
-          )
-          .then((res) => {
-            setDepositPayList([...depositPayList, ...res.collection]);
-            setPayCount(countPay + 10);
-            setPayNum(numPay + 20);
-          })
-          .catch((err: Error) => console.log(err));
-      }
+  const loadMorePayments = () => {
+    if (hubConnection) {
+      setPayCount(false);
+      hubConnection
+        .invoke<RootPayments>(
+          "GetUsersDeposits",
+          [5],
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          numPayments,
+          20
+        )
+        .then((res) => {
+          setPaymentsList([...paymentsList, ...res.collection]);
+          setNumPayments(numPayments + 20);
+          setPayCount(true);
+        })
+        .catch((err: Error) => console.log(err));
     }
   };
 
-  console.log("depositList", depositList);
-
-  function isItemLoaded({ index }: any) {
-    return !!depositList[index];
-  }
-
-  function isItemLoadedPay({ index }: any) {
-    return !!depositPayList[index];
-  }
-
-  function isItemLoadedPayments({ index }: any) {
-    return !!paymentsList[index];
-  }
+  const loadMoreItems = () => {
+    if (hubConnection) {
+      setCount(false);
+      hubConnection
+        .invoke<RootPayments>(
+          "GetUsersDeposits",
+          [6],
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          num,
+          20
+        )
+        .then((res) => {
+          setDepositList([...depositList, ...res.collection]);
+          setCount(true);
+          setNum(num + 20);
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  };
 
   const alert = (
     title: string,
@@ -416,6 +394,19 @@ export const AdminPay = () => {
     }
   };
 
+  const [value, setValue] = useState("");
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+  };
+  const payments = (id: string) => {
+    if (value !== "") {
+      adjustPay(id, +value * 100000);
+    } else {
+      confirmPay(id);
+    }
+  };
+
   const paymentsConfirm = () => {
     if (hubConnection) {
       hubConnection
@@ -429,145 +420,6 @@ export const AdminPay = () => {
         });
     }
   };
-
-  function RowRenderer({ index, style }: any) {
-    const [value, setValue] = useState("");
-
-    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setValue(e.target.value);
-    };
-    const payments = (id: string) => {
-      if (value !== "") {
-        adjustPay(id, +value * 100000);
-      } else {
-        confirmPay(id);
-      }
-    };
-    return (
-      <>
-        <TableBody style={style}>
-          {depositList.length && depositList[index] ? (
-            <>
-              <TableBodyItem title={depositList[index].userName}>
-                {depositList[index].userName}
-              </TableBodyItem>
-              <TableBodyItem>{depositList[index].deposit.name}</TableBodyItem>
-              <TableBodyItem>
-                {value
-                  ? (
-                      (+value / depositList[index].baseAmountView) *
-                      100
-                    ).toFixed(1)
-                  : (
-                      (depositList[index].payAmount /
-                        depositList[index].baseAmount) *
-                      100
-                    ).toFixed(1)}
-              </TableBodyItem>
-              <TableBodyItem>
-                {depositList[index].prevPayment
-                  ? moment(depositList[index].prevPayment).format("DD/MM/YYYY")
-                  : "-"}
-              </TableBodyItem>
-              <TableBodyItem>Начисление дивидендов</TableBodyItem>
-              <TableBodyItem>
-                {depositList[index].baseAmountView.toLocaleString()}
-              </TableBodyItem>
-              <TableBodyItem>
-                <InputWrap
-                  val={value}
-                  placeholder={(depositList[index].payAmount / 100000)
-                    .toFixed(2)
-                    .toString()}
-                  onChange={onChange}
-                />
-              </TableBodyItem>
-              <TableBodyItem>
-                {size ? (
-                  <Checkbox
-                    onChange={() => payments(depositList[index].safeId)}
-                  />
-                ) : (
-                  <Button
-                    dangerOutline
-                    onClick={() => payments(depositList[index].safeId)}
-                  >
-                    Подтвердить
-                  </Button>
-                )}
-              </TableBodyItem>
-            </>
-          ) : (
-            <TableBodyItem>Loading...</TableBodyItem>
-          )}
-        </TableBody>
-      </>
-    );
-  }
-
-  function rowRendererPay({ index, style }: any) {
-    return (
-      <>
-        <TableBody style={style}>
-          {depositPayList.length && depositPayList[index] ? (
-            <>
-              <TableBodyItemPaid>
-                {depositPayList[index].userName}
-              </TableBodyItemPaid>
-              <TableBodyItemPaid>
-                {depositPayList[index].deposit.name}
-              </TableBodyItemPaid>
-              <TableBodyItemPaid>
-                {moment(depositPayList[index].prevPayment).format("DD/MM/YYYY")}
-              </TableBodyItemPaid>
-              <TableBodyItemPaid>Начисление дивидендов</TableBodyItemPaid>
-              <TableBodyItemPaid>
-                {depositPayList[index].baseAmountView.toLocaleString()}
-              </TableBodyItemPaid>
-              <TableBodyItemPaid>
-                {depositPayList[index].payedAmountView}
-              </TableBodyItemPaid>
-              <TableBodyItemPaid></TableBodyItemPaid>
-            </>
-          ) : (
-            <TableBodyItem>Loading...</TableBodyItem>
-          )}
-        </TableBody>
-      </>
-    );
-  }
-
-  function rowRendererPayments({ index, style }: any) {
-    return (
-      <>
-        <TableBody style={style}>
-          {paymentsList.length && paymentsList[index] ? (
-            <>
-              <TableBodyItemPaid>
-                {paymentsList[index].userName}
-              </TableBodyItemPaid>
-              <TableBodyItemPaid>
-                {paymentsList[index].deposit.name}
-              </TableBodyItemPaid>
-              <TableBodyItemPaid>
-                {moment(paymentsList[index].prevPayment).format("DD/MM/YYYY")}
-              </TableBodyItemPaid>
-              <TableBodyItemPaid>Начисление дивидендов</TableBodyItemPaid>
-              <TableBodyItemPaid>
-                {paymentsList[index].baseAmountView.toLocaleString()}
-              </TableBodyItemPaid>
-              <TableBodyItemPaid>
-                {paymentsList[index].payedAmountView}
-              </TableBodyItemPaid>
-              <TableBodyItemPaid></TableBodyItemPaid>
-            </>
-          ) : (
-            <TableBodyItem>Loading...</TableBodyItem>
-          )}
-        </TableBody>
-      </>
-    );
-  }
 
   return (
     <Styled.Wrapper>
@@ -653,30 +505,66 @@ export const AdminPay = () => {
                 <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
               </TableHead>
               {depositList.length ? (
-                <AutoSizer>
-                  {({ height, width }) => (
-                    <InfiniteLoader
-                      isItemLoaded={isItemLoaded}
-                      loadMoreItems={loadMoreItems}
-                      itemCount={totalDeposits}
-                      minimumBatchSize={1}
-                      threshold={1}
-                    >
-                      {({ onItemsRendered, ref }) => (
-                        <List
-                          height={height}
-                          ref={ref}
-                          onItemsRendered={onItemsRendered}
-                          itemCount={totalDeposits}
-                          itemSize={56}
-                          width={width}
-                        >
-                          {RowRenderer}
-                        </List>
-                      )}
-                    </InfiniteLoader>
-                  )}
-                </AutoSizer>
+                <Scrollbars style={{ height: "500px" }}>
+                  <InfiniteScroll
+                    pageStart={0}
+                    loadMore={loadMoreItems}
+                    hasMore={count}
+                    useWindow={false}
+                    loader={
+                      <div className="loader" key={0}>
+                        Loading ...
+                      </div>
+                    }
+                  >
+                    {depositList.map((item: PaymentsCollection) => (
+                      <TableBody key={item.safeId}>
+                        <TableBodyItem title={item.userName}>
+                          {item.userName}
+                        </TableBodyItem>
+                        <TableBodyItem>{item.deposit.name}</TableBodyItem>
+                        <TableBodyItem>
+                          {value
+                            ? ((+value / item.baseAmountView) * 100).toFixed(1)
+                            : (
+                                (item.payAmount / item.baseAmount) *
+                                100
+                              ).toFixed(1)}
+                        </TableBodyItem>
+                        <TableBodyItem>
+                          {item.prevPayment
+                            ? moment(item.prevPayment).format("DD/MM/YYYY")
+                            : "-"}
+                        </TableBodyItem>
+                        <TableBodyItem>Начисление дивидендов</TableBodyItem>
+                        <TableBodyItem>
+                          {item.baseAmountView.toLocaleString()}
+                        </TableBodyItem>
+                        <TableBodyItem>
+                          <InputWrap
+                            val={value}
+                            placeholder={(item.payAmount / 100000)
+                              .toFixed(2)
+                              .toString()}
+                            onChange={onChange}
+                          />
+                        </TableBodyItem>
+                        <TableBodyItem>
+                          {size ? (
+                            <Checkbox onChange={() => payments(item.safeId)} />
+                          ) : (
+                            <Button
+                              dangerOutline
+                              onClick={() => payments(item.safeId)}
+                            >
+                              Подтвердить
+                            </Button>
+                          )}
+                        </TableBodyItem>
+                      </TableBody>
+                    ))}
+                  </InfiniteScroll>
+                </Scrollbars>
               ) : (
                 <NotFound>Данные не обнаружены.</NotFound>
               )}
@@ -695,31 +583,42 @@ export const AdminPay = () => {
                 <TableHeadItemPaid>Сумма выплаты</TableHeadItemPaid>
                 <TableHeadItemPaid>{/* <Filter /> */}</TableHeadItemPaid>
               </TableHead>
-              {depositPayList.length ? (
-                <AutoSizer>
-                  {({ height, width }) => (
-                    <InfiniteLoader
-                      isItemLoaded={isItemLoadedPay}
-                      loadMoreItems={loadMorePayItems}
-                      itemCount={depositPayList.length}
-                      minimumBatchSize={0}
-                      threshold={1}
-                    >
-                      {({ onItemsRendered, ref }) => (
-                        <List
-                          height={height}
-                          ref={ref}
-                          onItemsRendered={onItemsRendered}
-                          itemCount={depositPayList.length}
-                          itemSize={56}
-                          width={width}
-                        >
-                          {rowRendererPay}
-                        </List>
-                      )}
-                    </InfiniteLoader>
-                  )}
-                </AutoSizer>
+              {depositList.length ? (
+                <Scrollbars style={{ height: "500px" }}>
+                  <InfiniteScroll
+                    pageStart={0}
+                    loadMore={myLoad}
+                    hasMore={next}
+                    useWindow={false}
+                    loader={
+                      <div className="loader" key={0}>
+                        Loading ...
+                      </div>
+                    }
+                  >
+                    {depositPayList.map((item: PaymentsCollection) => (
+                      <TableBody key={item.safeId}>
+                        <TableBodyItemPaid>{item.userName}</TableBodyItemPaid>
+                        <TableBodyItemPaid>
+                          {item.deposit.name}
+                        </TableBodyItemPaid>
+                        <TableBodyItemPaid>
+                          {moment(item.prevPayment).format("DD/MM/YYYY")}
+                        </TableBodyItemPaid>
+                        <TableBodyItemPaid>
+                          Начисление дивидендов
+                        </TableBodyItemPaid>
+                        <TableBodyItemPaid>
+                          {item.baseAmountView.toLocaleString()}
+                        </TableBodyItemPaid>
+                        <TableBodyItemPaid>
+                          {item.payedAmountView}
+                        </TableBodyItemPaid>
+                        <TableBodyItemPaid></TableBodyItemPaid>
+                      </TableBody>
+                    ))}
+                  </InfiniteScroll>
+                </Scrollbars>
               ) : (
                 <NotFound>Данные не обнаружены.</NotFound>
               )}
@@ -740,30 +639,41 @@ export const AdminPay = () => {
                 <TableHeadItemPaid>{/* <Filter /> */}</TableHeadItemPaid>
               </TableHead>
               {paymentsList.length ? (
-                <AutoSizer>
-                  {({ height, width }) => (
-                    <InfiniteLoader
-                      isItemLoaded={isItemLoadedPayments}
-                      loadMoreItems={loadMorePayments}
-                      itemCount={paymentsList.length}
-                      minimumBatchSize={1}
-                      threshold={1}
-                    >
-                      {({ onItemsRendered, ref }) => (
-                        <List
-                          height={height}
-                          ref={ref}
-                          onItemsRendered={onItemsRendered}
-                          itemCount={paymentsList.length}
-                          itemSize={56}
-                          width={width}
-                        >
-                          {rowRendererPayments}
-                        </List>
-                      )}
-                    </InfiniteLoader>
-                  )}
-                </AutoSizer>
+                <Scrollbars style={{ height: "500px" }}>
+                  <InfiniteScroll
+                    pageStart={0}
+                    loadMore={loadMorePayments}
+                    hasMore={countPay}
+                    useWindow={false}
+                    loader={
+                      <div className="loader" key={0}>
+                        Loading ...
+                      </div>
+                    }
+                  >
+                    {paymentsList.map((item: PaymentsCollection) => (
+                      <TableBody key={item.safeId}>
+                        <TableBodyItemPaid>{item.userName}</TableBodyItemPaid>
+                        <TableBodyItemPaid>
+                          {item.deposit.name}
+                        </TableBodyItemPaid>
+                        <TableBodyItemPaid>
+                          {moment(item.prevPayment).format("DD/MM/YYYY")}
+                        </TableBodyItemPaid>
+                        <TableBodyItemPaid>
+                          Начисление дивидендов
+                        </TableBodyItemPaid>
+                        <TableBodyItemPaid>
+                          {item.baseAmountView.toLocaleString()}
+                        </TableBodyItemPaid>
+                        <TableBodyItemPaid>
+                          {item.payedAmountView}
+                        </TableBodyItemPaid>
+                        <TableBodyItemPaid></TableBodyItemPaid>
+                      </TableBody>
+                    ))}
+                  </InfiniteScroll>
+                </Scrollbars>
               ) : (
                 <NotFound>Данные не обнаружены.</NotFound>
               )}

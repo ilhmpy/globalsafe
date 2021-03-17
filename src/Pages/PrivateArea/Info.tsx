@@ -107,7 +107,7 @@ export const Info = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<RootList>("GetUserDeposits", [1, 2, 3, 4], 0, 30)
+        .invoke<RootList>("GetUserDeposits", [1, 2, 3, 4, 5, 6], 0, 30)
         .then((res) => {
           setList(res.collection);
         })
