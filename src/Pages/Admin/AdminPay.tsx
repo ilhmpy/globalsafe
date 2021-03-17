@@ -28,21 +28,20 @@ import moment from "moment";
 const InputWrap: FC<{
   val: any;
   placeholder: string;
+  done: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}> = ({ val, onChange, placeholder }: any) => {
-  // const [value, setValue] = useState(val);
+}> = ({ val, onChange, placeholder, done }: any) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const focusField = () => {
     if (inputRef && inputRef.current) {
       inputRef.current.focus();
     }
   };
-  // const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setValue(e.target.value);
-  // };
+
   return (
-    <InputIcon>
+    <InputIcon dis={done}>
       <Input
+        disabled={done}
         onChange={onChange}
         ref={inputRef}
         value={val}
@@ -152,6 +151,7 @@ const DepositList: FC<ListProps> = ({
   confirmPay,
 }: ListProps) => {
   const [value, setValue] = useState("");
+  const [done, setDone] = useState(false);
   const sizes = useWindowSize();
   const size = sizes < 992;
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -159,6 +159,7 @@ const DepositList: FC<ListProps> = ({
   };
 
   const payments = (id: string) => {
+    setDone(true);
     if (value !== "") {
       adjustPay(id, +value * 100000);
     } else {
@@ -182,6 +183,7 @@ const DepositList: FC<ListProps> = ({
       <TableBodyItem>{data.baseAmountView.toLocaleString()}</TableBodyItem>
       <TableBodyItem>
         <InputWrap
+          done={done || data.state === 5}
           val={value}
           placeholder={(data.payAmount / 100000).toFixed(2).toString()}
           onChange={onChange}
@@ -190,10 +192,10 @@ const DepositList: FC<ListProps> = ({
       <TableBodyItem>
         {size ? (
           <Checkbox
-            checked={data.state === 5}
+            checked={done || data.state === 5}
             onChange={() => payments(data.safeId)}
           />
-        ) : data.state === 5 ? (
+        ) : done || data.state === 5 ? (
           <Button greenOutline>Подтверждено</Button>
         ) : (
           <Button dangerOutline onClick={() => payments(data.safeId)}>
@@ -532,7 +534,7 @@ export const AdminPay = () => {
             </Tab>
           </Tabs>
         </Card>
-        <ReactNotification />
+
         {active === 0 && (
           <ButtonWrap>
             <Button dangerOutline mb onClick={paymentsConfirm}>
@@ -582,6 +584,7 @@ export const AdminPay = () => {
             </PaymentsTable>
           </Card>
         </Content>
+        <ReactNotification />
         <Content active={active === 1}>
           <Card>
             <PaymentsTable>
@@ -730,7 +733,7 @@ const CalendarWrap = styled.div`
   z-index: 999;
 `;
 
-const InputIcon = styled.div`
+const InputIcon = styled.div<{ dis?: boolean }>`
   display: flex;
   align-items: center;
   @media (max-width: 576px) {
@@ -742,7 +745,7 @@ const InputIcon = styled.div`
       transition: 0.3s;
     }
     &:hover path {
-      fill: #000;
+      fill: ${(props) => (props.dis ? "#515172" : "#000")};
     }
     @media (max-width: 576px) {
       display: none;
@@ -754,6 +757,9 @@ const Input = styled.input`
   border: none;
   outline: none;
   width: 75px;
+  &:disabled {
+    background: #fff;
+  }
 `;
 
 const PaymentsTable = styled.div`
