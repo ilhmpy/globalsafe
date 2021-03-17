@@ -64,6 +64,9 @@ export const Button = styled.a<Props>`
         border-color: rgba(14, 13, 61, .1);
         outline: none;
       }
+      @media (max-width: 768px){
+        font-weight: 400;
+      }
       `;
     } else if (props.dangerOutline) {
       return `

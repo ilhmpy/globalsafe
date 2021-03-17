@@ -681,7 +681,7 @@ export const AdminPay = () => {
                           {item.baseAmountView.toLocaleString()}
                         </TableBodyItemPaid>
                         <TableBodyItemPaid>
-                          {item.payedAmountView}
+                          {item.paymentAmountView}
                         </TableBodyItemPaid>
                         <TableBodyItemPaid></TableBodyItemPaid>
                       </TableBody>
@@ -691,16 +691,6 @@ export const AdminPay = () => {
               ) : (
                 <NotFound>Данные не обнаружены.</NotFound>
               )}
-
-              {/* <TableBody>
-                <TableBodyItemPaid>Account 1</TableBodyItemPaid>
-                <TableBodyItemPaid>Название Депозита №1</TableBodyItemPaid>
-                <TableBodyItemPaid>01/03/2021</TableBodyItemPaid>
-                <TableBodyItemPaid>Начисление дивидендов</TableBodyItemPaid>
-                <TableBodyItemPaid>140 000</TableBodyItemPaid>
-                <TableBodyItemPaid>40 000</TableBodyItemPaid>
-                <TableBodyItemPaid></TableBodyItemPaid>
-              </TableBody> */}
             </PaymentsTable>
           </Card>
         </Content>
@@ -721,7 +711,7 @@ const NotFound = styled.div`
 
 const PayTab = styled(Tab)`
   width: 135px;
-  @media (max-width: 768px) {
+  @media (max-width: 992px) {
     width: 100px !important;
   }
 `;
@@ -765,9 +755,6 @@ const Input = styled.input`
 const PaymentsTable = styled.div`
   padding: 30px;
   height: 600px;
-  @media (max-width: 768px) {
-    height: 300px;
-  }
 `;
 
 const TableHead = styled.ul`
@@ -889,12 +876,20 @@ const TableBodyItemPaid = styled(TableHeadItemPaid)`
 const Tabs = styled.div`
   display: flex;
   padding: 12px 20px 0;
+  @media (max-width: 992px) {
+    align-items: flex-end;
+    padding-top: 0;
+    ${Tab} {
+      width: 90px;
+    }
+  }
   @media (max-width: 768px) {
-    padding: 12px 10px 0;
+    padding: 0px 10px 0;
     ${Tab} {
       width: 80px;
       &:first-child {
         text-align: left;
+        width: 100px;
       }
       &:last-child {
         text-align: right;
@@ -913,6 +908,7 @@ const PayList = styled.div`
   padding: 20px;
   @media (max-width: 992px) {
     flex-wrap: wrap;
+    justify-content: center;
   }
 `;
 
@@ -936,7 +932,10 @@ const PayItem = styled.div`
     ${Styled.ChartItemDate} {
       display: none;
     }
-    &:last-child {
+    &:nth-child(3) {
+      width: 100%;
+    }
+    /* &:last-child {
       display: flex;
       margin-bottom: 0px;
       ${Styled.ChartItemDate} {
@@ -946,7 +945,7 @@ const PayItem = styled.div`
         margin-right: auto;
         padding: 6px 12px;
       }
-    }
+    } */
   }
   @media (max-width: 576px) {
   }
