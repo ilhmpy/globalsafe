@@ -1,9 +1,9 @@
 import React, { useState, useRef, useContext, useEffect, FC } from "react";
 import { ReactComponent as Pen } from "../../../assets/svg/pen.svg";
 import { Checkbox } from "../../../components/UI/Checkbox";
-import { PaymentsCollection } from "../../../types/payments";
+import { PaymentsCollection, CollectionCharges } from "../../../types/payments";
 import useWindowSize from "../../../hooks/useWindowSize";
-import { ModalPay, ModalPaid } from "./Payments";
+import { ModalPay, ModalPaid, ModalPayList } from "./Payments";
 import { CSSTransition } from "react-transition-group";
 import { Button } from "../../../components/Button/Button";
 import { InputWrap } from "./InputWrap";
@@ -22,7 +22,9 @@ export const DepositList: FC<ListProps> = ({
   adjustPay,
   confirmPay,
 }: ListProps) => {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(
+    (data.payAmount / 100000).toFixed(2).toString()
+  );
   const [done, setDone] = useState(false);
   const [procent, setProcent] = useState(
     ((data.payAmount / data.baseAmount) * 100).toFixed(1).toString()
@@ -41,13 +43,14 @@ export const DepositList: FC<ListProps> = ({
   useOnClickOutside(elemref, handleClickOutside);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.stopPropagation();
     if (+e.target.value <= 0) {
       setValue("");
       setProcent("");
     } else {
       setValue(e.target.value);
       const proc = ((+e.target.value / data.baseAmountView) * 100).toFixed(1);
-
+      console.log("proc", proc);
       setProcent(proc.toString());
     }
   };
@@ -227,6 +230,57 @@ export const PaymentsList: FC<PayProps> = ({ data }: PayProps) => {
           {data.baseAmountView.toLocaleString()}
         </TableBodyItemPaid>
         <TableBodyItemPaid>{data.paymentAmountView}</TableBodyItemPaid>
+        <TableBodyItemPaid></TableBodyItemPaid>
+      </TableBody>
+    </div>
+  );
+};
+
+type Prop = {
+  data: CollectionCharges;
+};
+
+export const PaymentsListPay: FC<Prop> = ({ data }: Prop) => {
+  const [open, setOpen] = useState(false);
+
+  const onClose = () => {
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [open]);
+
+  const modalOpen = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setOpen(true);
+  };
+  return (
+    <div>
+      <CSSTransition in={open} timeout={300} classNames="modal" unmountOnExit>
+        <ModalPayList onClose={onClose} data={data} />
+      </CSSTransition>
+      <TableBody onClick={modalOpen}>
+        <TableBodyItemPaid>{data.account}</TableBodyItemPaid>
+        <TableBodyItemPaid>{data.userDeposit.deposit.name}</TableBodyItemPaid>
+        <TableBodyItemPaid>
+          {moment(data.userDeposit.prevPayment).format("DD/MM/YYYY")}
+        </TableBodyItemPaid>
+        <TableBodyItemPaid>
+          {data.userDeposit.state === 4
+            ? "Закрытие вклада"
+            : "Начисление дивидендов"}
+        </TableBodyItemPaid>
+        <TableBodyItemPaid>
+          {data.userDeposit.baseAmountView.toLocaleString()}
+        </TableBodyItemPaid>
+        <TableBodyItemPaid>
+          {data.userDeposit.paymentAmountView}
+        </TableBodyItemPaid>
         <TableBodyItemPaid></TableBodyItemPaid>
       </TableBody>
     </div>

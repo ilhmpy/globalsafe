@@ -50,6 +50,7 @@ export const InputWrap: FC<{
           dis={done}
           onBlur={onBlur}
           disabled={done}
+          onClick={(e) => e.stopPropagation()}
           onChange={onChange}
           ref={inputRef}
           value={val}
