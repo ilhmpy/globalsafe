@@ -333,8 +333,9 @@ export const BalanceTabHead = styled.div`
   justify-content: flex-start;
   padding: 22px 90px;
   @media (max-width: 768px) {
-    padding: 22px 20px;
+    padding: 22px 10px;
     justify-content: space-between;
+    align-items: flex-end;
   }
 `;
 

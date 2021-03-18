@@ -57,7 +57,7 @@ export const HubProvider: FC = ({ children }) => {
       hubConnection
         .invoke("GetSigned")
         .then((res) => {
-          console.log("GetSigned", res);
+          // console.log("GetSigned", res);
           if (res.balances[0]) {
             setBalance(res.balances[0].volume);
           }
