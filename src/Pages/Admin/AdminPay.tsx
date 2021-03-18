@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext, useEffect, FC } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import * as Styled from "./Styled.elements";
 import styled, { css } from "styled-components/macro";
 import { SideNavbar } from "../../components/SideNav";
@@ -6,206 +6,25 @@ import { Card } from "../../globalStyles";
 import { UpTitle } from "../../components/UI/UpTitle";
 import { ReactComponent as Exit } from "../../assets/svg/exit.svg";
 import { ReactComponent as Filter } from "../../assets/svg/filter.svg";
-import { ReactComponent as Pen } from "../../assets/svg/pen.svg";
 import { Tab, Content } from "../../components/UI/Tabs";
 import { AppContext } from "../../context/HubContext";
 import { AmountContext } from "../../context/AmountContext";
 // import { InfiniteLoader, AutoSizer, List } from "react-virtualized";
-import { FixedSizeList as List } from "react-window";
-import AutoSizer from "react-virtualized-auto-sizer";
-import InfiniteLoader from "react-window-infinite-loader";
-import "react-virtualized/styles.css"; // only needs to be imported once
+// import { FixedSizeList as List } from "react-window";
+// import AutoSizer from "react-virtualized-auto-sizer";
+// import InfiniteLoader from "react-window-infinite-loader";
+// import "react-virtualized/styles.css";
 import { Button } from "../../components/Button/Button";
 import useWindowSize from "../../hooks/useWindowSize";
-import { Checkbox } from "../../components/UI/Checkbox";
 import { RootPayments, PaymentsCollection } from "../../types/payments";
 import ReactNotification, { store } from "react-notifications-component";
 import InfiniteScroll from "react-infinite-scroller";
 import "react-notifications-component/dist/theme.css";
+import { CSSTransition } from "react-transition-group";
+import { ModalPay } from "./AdminPay/Payments";
 import { Scrollbars } from "react-custom-scrollbars";
+import { DepositList } from "./AdminPay/DepositList";
 import moment from "moment";
-
-const InputWrap: FC<{
-  val: any;
-  placeholder: string;
-  done: boolean;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}> = ({ val, onChange, placeholder, done }: any) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const focusField = () => {
-    if (inputRef && inputRef.current) {
-      inputRef.current.focus();
-    }
-  };
-
-  return (
-    <InputIcon dis={done}>
-      <Input
-        disabled={done}
-        onChange={onChange}
-        ref={inputRef}
-        value={val}
-        placeholder={placeholder}
-        type="number"
-      />
-      <Pen onClick={focusField} />
-    </InputIcon>
-  );
-};
-
-const PaymentsPay = () => {
-  return (
-    <PayCard>
-      <PayCardBlock>
-        <PayName>Депозит №1</PayName>
-      </PayCardBlock>
-      <PayCardBlock>
-        <PayText small>Пользователь</PayText>
-        <PayText>Account 1</PayText>
-      </PayCardBlock>
-      <PayCardBlock>
-        <PayText small>% доходности</PayText>
-        <PayText>100</PayText>
-      </PayCardBlock>
-      <PayCardBlock>
-        <PayText small>Дата выплаты</PayText>
-        <PayText>01/03/2021</PayText>
-      </PayCardBlock>
-      <PayCardBlock>
-        <PayText small>Категория</PayText>
-        <PayText>Начисление дивидендов</PayText>
-      </PayCardBlock>
-      <PayCardBlock>
-        <PayText small>Сумма вклада</PayText>
-        <PayText>400 000</PayText>
-      </PayCardBlock>
-      <PayCardBlock>
-        <PayText small>Сумма выплаты</PayText>
-        <PayInput type="number" placeholder="20 000" />
-      </PayCardBlock>
-      <PayCardBlock>
-        <Button dangerOutline>Подтвердить</Button>
-      </PayCardBlock>
-    </PayCard>
-  );
-};
-
-const PayCard = styled(Card)`
-  padding: 20px;
-`;
-
-const PayCardBlock = styled.div`
-  margin-bottom: 20px;
-  &:focus,
-  &:active {
-    outline: none;
-    border-radius: 24px;
-    background: transparent;
-  }
-  ${Button} {
-    margin-left: auto;
-    margin-right: auto;
-  }
-`;
-
-const PayName = styled.div`
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 16px;
-  letter-spacing: 0.1px;
-  color: #515172;
-`;
-
-const PayInput = styled.input`
-  border: none;
-  font-size: 14px;
-  width: 100%;
-  line-height: 16px;
-  letter-spacing: 0.1px;
-  color: #515172;
-  padding-right: 10px;
-  border-bottom: 1px solid rgba(81, 81, 114, 0.2);
-  &:focus {
-    outline: none;
-    border-bottom: 1px solid rgba(81, 81, 114, 0.8);
-  }
-`;
-
-const PayText = styled.p<{ small?: boolean }>`
-  font-weight: normal;
-  font-size: ${(props) => (props.small ? "12px" : "14px")};
-  line-height: ${(props) => (props.small ? "21px" : "16px")};
-  letter-spacing: 0.1px;
-  color: ${(props) => (props.small ? "rgba(81, 81, 114, 0.6)" : "#515172")};
-`;
-
-type ListProps = {
-  data: PaymentsCollection;
-  adjustPay: (id: string, val: number) => void;
-  confirmPay: (id: string) => void;
-};
-
-const DepositList: FC<ListProps> = ({
-  data,
-  adjustPay,
-  confirmPay,
-}: ListProps) => {
-  const [value, setValue] = useState("");
-  const [done, setDone] = useState(false);
-  const sizes = useWindowSize();
-  const size = sizes < 992;
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-  };
-
-  const payments = (id: string) => {
-    setDone(true);
-    if (value !== "") {
-      adjustPay(id, +value * 100000);
-    } else {
-      confirmPay(id);
-    }
-  };
-
-  return (
-    <TableBody>
-      <TableBodyItem title={data.userName}>{data.userName}</TableBodyItem>
-      <TableBodyItem>{data.deposit.name}</TableBodyItem>
-      <TableBodyItem>
-        {value
-          ? ((+value / data.baseAmountView) * 100).toFixed(1)
-          : ((data.payAmount / data.baseAmount) * 100).toFixed(1)}
-      </TableBodyItem>
-      <TableBodyItem>
-        {data.paymentDate ? moment(data.paymentDate).format("DD/MM/YYYY") : "-"}
-      </TableBodyItem>
-      <TableBodyItem>Начисление дивидендов</TableBodyItem>
-      <TableBodyItem>{data.baseAmountView.toLocaleString()}</TableBodyItem>
-      <TableBodyItem>
-        <InputWrap
-          done={done || data.state === 5}
-          val={value}
-          placeholder={(data.payAmount / 100000).toFixed(2).toString()}
-          onChange={onChange}
-        />
-      </TableBodyItem>
-      <TableBodyItem>
-        {size ? (
-          <Checkbox
-            checked={done || data.state === 5}
-            onChange={() => payments(data.safeId)}
-          />
-        ) : done || data.state === 5 ? (
-          <Button greenOutline>Подтверждено</Button>
-        ) : (
-          <Button dangerOutline onClick={() => payments(data.safeId)}>
-            Подтвердить
-          </Button>
-        )}
-      </TableBodyItem>
-    </TableBody>
-  );
-};
 
 export const AdminPay = () => {
   const [active, setActive] = useState(0);
@@ -230,6 +49,8 @@ export const AdminPay = () => {
   const [numPay, setPayNum] = useState(20);
   const [next, setNext] = useState(true);
   const { totalPayed, depositTotal } = amountContext;
+  const [open, setOpen] = useState<boolean>(false);
+  const [dataModal, setDataModal] = useState<PaymentsCollection | any>({});
 
   const myLoad = (...arg: any) => {
     console.log("arguments", arg);
@@ -283,7 +104,7 @@ export const AdminPay = () => {
           20
         )
         .then((res) => {
-          console.log("res Payments", res);
+          // console.log("res Payments", res);
           setTotalPayments(res.totalRecords);
           setPaymentsList(res.collection);
           setNumPayments(20);
@@ -335,7 +156,7 @@ export const AdminPay = () => {
           20
         )
         .then((res) => {
-          console.log("res true", res);
+          // console.log("res true", res);
           setTotalPayDeposits(res.totalRecords);
           setDepositPayList(res.collection);
           setPayNum(20);
@@ -446,8 +267,7 @@ export const AdminPay = () => {
         .invoke("AdjustDepositPayment", id, amount)
         .then((res) => {
           console.log("AdjustDepositPayment", res);
-          alert("Успешно", "Выполнено", "success");
-          confirmPay(id);
+          alert("Успешно", "Подтверждено", "success");
         })
         .catch((err: Error) => {
           alert("Ошибка", "Произошла ошибка", "danger");
@@ -468,9 +288,9 @@ export const AdminPay = () => {
         });
     }
   };
-
   return (
     <Styled.Wrapper>
+      <ReactNotification />
       <SideNavbar />
       <Styled.Content>
         <Styled.HeadBlock>
@@ -542,6 +362,7 @@ export const AdminPay = () => {
             </Button>
           </ButtonWrap>
         )}
+
         <Content active={active === 0}>
           <Card>
             <PaymentsTable>
@@ -550,7 +371,7 @@ export const AdminPay = () => {
                 <TableHeadItem>Название</TableHeadItem>
                 <TableHeadItem>% доходности</TableHeadItem>
                 <TableHeadItem>Дата выплаты</TableHeadItem>
-                <TableHeadItem>Категория</TableHeadItem>
+                <TableHeadItem>Доходность по программе</TableHeadItem>
                 <TableHeadItem>Сумма вклада</TableHeadItem>
                 <TableHeadItem>Сумма выплаты</TableHeadItem>
                 <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
@@ -584,7 +405,7 @@ export const AdminPay = () => {
             </PaymentsTable>
           </Card>
         </Content>
-        <ReactNotification />
+
         <Content active={active === 1}>
           <Card>
             <PaymentsTable>
@@ -620,7 +441,9 @@ export const AdminPay = () => {
                           {moment(item.prevPayment).format("DD/MM/YYYY")}
                         </TableBodyItemPaid>
                         <TableBodyItemPaid>
-                          Начисление дивидендов
+                          {item.state === 4
+                            ? "Закрытие вклада"
+                            : "Начисление дивидендов"}
                         </TableBodyItemPaid>
                         <TableBodyItemPaid>
                           {item.baseAmountView.toLocaleString()}
@@ -675,7 +498,9 @@ export const AdminPay = () => {
                           {moment(item.paymentDate).format("DD/MM/YYYY")}
                         </TableBodyItemPaid>
                         <TableBodyItemPaid>
-                          Начисление дивидендов
+                          {item.state === 4
+                            ? "Закрытие вклада"
+                            : "Начисление дивидендов"}
                         </TableBodyItemPaid>
                         <TableBodyItemPaid>
                           {item.baseAmountView.toLocaleString()}
@@ -716,42 +541,6 @@ const PayTab = styled(Tab)`
   }
 `;
 
-const CalendarWrap = styled.div`
-  position: absolute;
-  bottom: -249px;
-  left: -138px;
-  z-index: 999;
-`;
-
-const InputIcon = styled.div<{ dis?: boolean }>`
-  display: flex;
-  align-items: center;
-  @media (max-width: 576px) {
-    justify-content: center;
-  }
-  svg {
-    cursor: pointer;
-    path {
-      transition: 0.3s;
-    }
-    &:hover path {
-      fill: ${(props) => (props.dis ? "#515172" : "#000")};
-    }
-    @media (max-width: 576px) {
-      display: none;
-    }
-  }
-`;
-
-const Input = styled.input`
-  border: none;
-  outline: none;
-  width: 75px;
-  &:disabled {
-    background: #fff;
-  }
-`;
-
 const PaymentsTable = styled.div`
   padding: 30px;
   height: 600px;
@@ -787,7 +576,7 @@ const TableHeadItem = styled.li`
     max-width: 110px;
   }
   &:nth-child(3) {
-    max-width: 90px;
+    max-width: 110px;
     @media (max-width: 992px) {
       display: none;
     }
@@ -855,18 +644,13 @@ const TableHeadItemPaid = styled(TableHeadItem)`
 `;
 
 const TableBody = styled(TableHead)`
-  padding: 10px 0;
+  padding: 10px 10px 10px 0;
 `;
 
 const TableBodyItemCss = css`
   font-weight: normal;
   font-size: 14px;
   line-height: 16px;
-  color: #515172;
-`;
-
-const TableBodyItem = styled(TableHeadItem)`
-  ${TableBodyItemCss}
 `;
 
 const TableBodyItemPaid = styled(TableHeadItemPaid)`
@@ -894,7 +678,7 @@ const Tabs = styled.div`
       &:last-child {
         text-align: right;
         &:before {
-          left: 23px;
+          left: 10px;
         }
       }
     }
@@ -935,17 +719,6 @@ const PayItem = styled.div`
     &:nth-child(3) {
       width: 100%;
     }
-    /* &:last-child {
-      display: flex;
-      margin-bottom: 0px;
-      ${Styled.ChartItemDate} {
-        display: inline-block;
-        max-width: 180px;
-        margin-left: auto;
-        margin-right: auto;
-        padding: 6px 12px;
-      }
-    } */
   }
   @media (max-width: 576px) {
   }

@@ -31,7 +31,7 @@ export const Tab = styled.button<{ active: boolean }>`
     width: 80px;
 
     &:first-child {
-      width: 90px;
+      width: 100px;
     }
     &:last-child {
       padding-right: 0px;
