@@ -40,12 +40,22 @@ export const DepositList: FC<ListProps> = ({
   useOnClickOutside(elemref, handleClickOutside);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-    const proc = (+e.target.value / data.baseAmountView) * 100;
-    setProcent(proc.toString());
+    if (+e.target.value <= 0) {
+      setValue("0");
+      setProcent("0");
+    } else {
+      setValue(e.target.value);
+      const proc = ((+e.target.value / data.baseAmountView) * 100).toFixed(2);
+
+      setProcent(proc.toString());
+    }
   };
 
   const disabled = done || data.state === 5;
+
+  const onClose = () => {
+    setOpen(false);
+  };
 
   const paymentsAdjust = () => {
     if (value !== "") {
@@ -56,22 +66,23 @@ export const DepositList: FC<ListProps> = ({
   const paymentsConfirm = (id: string) => {
     setDone(true);
     confirmPay(id);
+    onClose();
   };
 
   const onHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setProcent(e.target.value);
-    const values = (data.baseAmountView * +e.target.value) / 100;
-    setValue(values.toString());
-  };
-
-  const modalOpen = () => {
-    if (modal) {
-      setOpen(true);
+    if (+e.target.value <= 0) {
+      setValue("0");
+      setProcent("0");
+    } else {
+      setProcent(e.target.value);
+      const values = ((data.baseAmountView * +e.target.value) / 100).toFixed(2);
+      setValue(values.toString());
     }
   };
 
-  const onClose = () => {
-    setOpen(false);
+  const modalOpen = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setOpen(true);
   };
 
   return (
@@ -86,6 +97,7 @@ export const DepositList: FC<ListProps> = ({
           value={value}
           onHandleChange={onHandleChange}
           onChange={onChange}
+          paymentsConfirm={paymentsConfirm}
         />
       </CSSTransition>
       <TableBody onClick={modalOpen}>
@@ -100,7 +112,7 @@ export const DepositList: FC<ListProps> = ({
               done={disabled}
               val={procent}
               placeholder={
-                value
+                +value > 0
                   ? ((+value / data.baseAmountView) * 100).toFixed(1)
                   : ((data.payAmount / data.baseAmount) * 100).toFixed(1)
               }
@@ -227,6 +239,10 @@ const TableHeadItem = styled.li`
 
 const TableBody = styled(TableHead)`
   padding: 10px 10px 10px 0;
+  transition: background 0.3s;
+  &:hover {
+    background: rgba(66, 139, 202, 0.109);
+  }
 `;
 
 const TableBodyItemCss = css`

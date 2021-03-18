@@ -12,7 +12,8 @@ export const InputWrap: FC<{
 }> = ({ val, onChange, placeholder, done, paymentsAdjust }: any) => {
   const [showCheck, setShowCheck] = useState(done);
   const inputRef = useRef<HTMLInputElement>(null);
-  const focusField = () => {
+  const focusField = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setShowCheck(true);
     if (inputRef && inputRef.current) {
       inputRef.current.focus();
@@ -30,11 +31,16 @@ export const InputWrap: FC<{
     paymentsAdjust();
   };
 
+  const onBlur = () => {
+    setShowCheck(false);
+  };
+
   return (
     <InputIcon dis={done}>
       {showCheck && !done ? (
         <Input
           dis={done}
+          onBlur={onBlur}
           disabled={done}
           onChange={onChange}
           ref={inputRef}
@@ -43,7 +49,7 @@ export const InputWrap: FC<{
           type="number"
         />
       ) : (
-        <Text dis={done}>{placeholder}</Text>
+        <Text dis={done}>{+val > 0 ? val : placeholder}</Text>
       )}
       {showCheck && !done ? (
         <Checkbox checked={true} onChange={handleChange} />
@@ -58,10 +64,12 @@ const Text = styled.div<{ dis?: boolean }>`
   color: ${(props) => (props.dis ? "#c4c4c4" : "#515172")};
   width: 75px;
   margin-right: 6px;
+  font-size: 14px;
 `;
 
 const InputIcon = styled.div<{ dis?: boolean }>`
   display: flex;
+  height: 25px;
   align-items: center;
   @media (max-width: 576px) {
     justify-content: center;

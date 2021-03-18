@@ -18,6 +18,7 @@ type ListProps = {
   onHandleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onClose: () => void;
+  paymentsConfirm: (id: string) => void;
 };
 
 export const ModalPay: FC<ListProps> = ({
@@ -29,6 +30,7 @@ export const ModalPay: FC<ListProps> = ({
   onHandleChange,
   onChange,
   onClose,
+  paymentsConfirm,
 }: ListProps) => {
   const handleContainerClick = (e: React.MouseEvent) => {
     if (e.currentTarget === e.target) {
@@ -49,21 +51,23 @@ export const ModalPay: FC<ListProps> = ({
           <PayText small>Пользователь</PayText>
           <PayText>{data.userName}</PayText>
         </PayCardBlock>
-        <PayCardBlock>
-          <PayText small>% доходности</PayText>
-          <PayText></PayText>
-          <InputWrap
-            paymentsAdjust={paymentsAdjust}
-            done={disabled}
-            val={procent}
-            placeholder={
-              value
-                ? ((+value / data.baseAmountView) * 100).toFixed(1)
-                : ((data.payAmount / data.baseAmount) * 100).toFixed(1)
-            }
-            onChange={onHandleChange}
-          />
-        </PayCardBlock>
+        {data.state !== 5 && (
+          <PayCardBlock>
+            <PayText small>% доходности</PayText>
+            {/* <PayText></PayText> */}
+            <InputWrap
+              paymentsAdjust={paymentsAdjust}
+              done={disabled}
+              val={procent}
+              placeholder={
+                value
+                  ? ((+value / data.baseAmountView) * 100).toFixed(1)
+                  : ((data.payAmount / data.baseAmount) * 100).toFixed(1)
+              }
+              onChange={onHandleChange}
+            />
+          </PayCardBlock>
+        )}
         <PayCardBlock>
           <PayText small>Дата выплаты</PayText>
           <PayText>
@@ -80,24 +84,34 @@ export const ModalPay: FC<ListProps> = ({
           <PayText small>Сумма вклада</PayText>
           <PayText>{data.baseAmountView.toLocaleString()}</PayText>
         </PayCardBlock>
-        <PayCardBlock>
-          <PayText small>Сумма выплаты</PayText>
-          {/* <PayInput type="number" placeholder="20 000" /> */}
-          <InputWrap
-            paymentsAdjust={paymentsAdjust}
-            done={disabled}
-            val={value}
-            placeholder={(data.payAmount / 100000).toFixed(2).toString()}
-            onChange={onChange}
-          />
-        </PayCardBlock>
-        <PayCardBlock>
-          <Button dangerOutline>Подтвердить</Button>
-        </PayCardBlock>
+        {data.state !== 5 && (
+          <PayCardBlock>
+            <PayText small>Сумма выплаты</PayText>
+            <InputWrap
+              paymentsAdjust={paymentsAdjust}
+              done={disabled}
+              val={value}
+              placeholder={(data.payAmount / 100000).toFixed(2).toString()}
+              onChange={onChange}
+            />
+            <Hr />
+          </PayCardBlock>
+        )}
+        {data.state !== 5 && (
+          <PayCardBlock>
+            <Button dangerOutline onClick={() => paymentsConfirm(data.safeId)}>
+              Подтвердить
+            </Button>
+          </PayCardBlock>
+        )}
       </PayCard>
     </Container>
   );
 };
+
+const Hr = styled.hr`
+  background: rgba(81, 81, 114, 0.2);
+`;
 
 const Container = styled.div`
   width: 100%;
@@ -110,7 +124,6 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 99999;
-  cursor: pointer;
   overflow: auto;
 `;
 
@@ -143,6 +156,16 @@ const PayCardBlock = styled.div`
     }
     div {
       justify-content: space-between;
+    }
+  }
+  input {
+    background: #fafafa;
+    &:focus {
+      padding: 0;
+      border: 0;
+      background: #fafafa;
+      font-size: 14px;
+      line-height: 16px;
     }
   }
 `;
