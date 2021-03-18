@@ -23,7 +23,7 @@ import "react-notifications-component/dist/theme.css";
 import { CSSTransition } from "react-transition-group";
 import { ModalPay } from "./AdminPay/Payments";
 import { Scrollbars } from "react-custom-scrollbars";
-import { DepositList } from "./AdminPay/DepositList";
+import { DepositList, PaymentsList } from "./AdminPay/DepositList";
 import moment from "moment";
 
 export const AdminPay = () => {
@@ -87,6 +87,21 @@ export const AdminPay = () => {
     }
   };
 
+  const confirmPay = (id: string) => {
+    if (hubConnection) {
+      hubConnection
+        .invoke("ConfirmDepositPayment", id)
+        .then((res) => {
+          // alert("Успешно", "Выполнено", "success");
+          console.log("ConfirmDepositPayment", res);
+        })
+        .catch((err: Error) => {
+          console.log(err);
+          // alert("Ошибка", "Произошла ошибка", "danger");
+        });
+    }
+  };
+
   useEffect(() => {
     if (hubConnection) {
       hubConnection
@@ -104,14 +119,14 @@ export const AdminPay = () => {
           20
         )
         .then((res) => {
-          // console.log("res Payments", res);
+          console.log("res Payments", res);
           setTotalPayments(res.totalRecords);
           setPaymentsList(res.collection);
           setNumPayments(20);
         })
         .catch((err: Error) => console.log(err));
     }
-  }, [hubConnection]);
+  }, [hubConnection, active]);
 
   useEffect(() => {
     if (hubConnection) {
@@ -130,7 +145,7 @@ export const AdminPay = () => {
           20
         )
         .then((res) => {
-          console.log("res 6", res);
+          // console.log("res 6", res);
           setTotalDeposits(res.totalRecords);
           setDepositList(res.collection);
           setNum(20);
@@ -194,9 +209,11 @@ export const AdminPay = () => {
           20
         )
         .then((res) => {
-          setPaymentsList([...paymentsList, ...res.collection]);
-          setNumPayments(numPayments + 20);
-          setPayCount(true);
+          if (res.collection.length) {
+            setPaymentsList([...paymentsList, ...res.collection]);
+            setNumPayments(numPayments + 20);
+            setPayCount(true);
+          }
         })
         .catch((err: Error) => console.log(err));
     }
@@ -245,20 +262,6 @@ export const AdminPay = () => {
         duration: 5000,
       },
     });
-  };
-
-  const confirmPay = (id: string) => {
-    if (hubConnection) {
-      hubConnection
-        .invoke("ConfirmDepositPayment", id)
-        .then((res) => {
-          alert("Успешно", "Выполнено", "success");
-          console.log("ConfirmDepositPayment", res);
-        })
-        .catch((err: Error) => {
-          alert("Ошибка", "Произошла ошибка", "danger");
-        });
-    }
   };
 
   const adjustPay = (id: string, amount: number) => {
@@ -489,27 +492,28 @@ export const AdminPay = () => {
                     }
                   >
                     {paymentsList.map((item: PaymentsCollection) => (
-                      <TableBody key={item.safeId}>
-                        <TableBodyItemPaid>{item.userName}</TableBodyItemPaid>
-                        <TableBodyItemPaid>
-                          {item.deposit.name}
-                        </TableBodyItemPaid>
-                        <TableBodyItemPaid>
-                          {moment(item.paymentDate).format("DD/MM/YYYY")}
-                        </TableBodyItemPaid>
-                        <TableBodyItemPaid>
-                          {item.state === 4
-                            ? "Закрытие вклада"
-                            : "Начисление дивидендов"}
-                        </TableBodyItemPaid>
-                        <TableBodyItemPaid>
-                          {item.baseAmountView.toLocaleString()}
-                        </TableBodyItemPaid>
-                        <TableBodyItemPaid>
-                          {item.paymentAmountView}
-                        </TableBodyItemPaid>
-                        <TableBodyItemPaid></TableBodyItemPaid>
-                      </TableBody>
+                      <PaymentsList key={item.safeId} data={item} />
+                      // <TableBody>
+                      //   <TableBodyItemPaid>{item.userName}</TableBodyItemPaid>
+                      //   <TableBodyItemPaid>
+                      //     {item.deposit.name}
+                      //   </TableBodyItemPaid>
+                      //   <TableBodyItemPaid>
+                      //     {moment(item.paymentDate).format("DD/MM/YYYY")}
+                      //   </TableBodyItemPaid>
+                      //   <TableBodyItemPaid>
+                      //     {item.state === 4
+                      //       ? "Закрытие вклада"
+                      //       : "Начисление дивидендов"}
+                      //   </TableBodyItemPaid>
+                      //   <TableBodyItemPaid>
+                      //     {item.baseAmountView.toLocaleString()}
+                      //   </TableBodyItemPaid>
+                      //   <TableBodyItemPaid>
+                      //     {item.paymentAmountView}
+                      //   </TableBodyItemPaid>
+                      //   <TableBodyItemPaid></TableBodyItemPaid>
+                      // </TableBody>
                     ))}
                   </InfiniteScroll>
                 </Scrollbars>
@@ -651,6 +655,7 @@ const TableBodyItemCss = css`
   font-weight: normal;
   font-size: 14px;
   line-height: 16px;
+  color: #515172;
 `;
 
 const TableBodyItemPaid = styled(TableHeadItemPaid)`

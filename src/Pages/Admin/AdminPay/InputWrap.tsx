@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext, useEffect, FC } from "react";
+import React, { useState, useRef, useEffect, FC } from "react";
 import { ReactComponent as Pen } from "../../../assets/svg/pen.svg";
 import { Checkbox } from "../../../components/UI/Checkbox";
 import styled from "styled-components/macro";
@@ -35,6 +35,14 @@ export const InputWrap: FC<{
     setShowCheck(false);
   };
 
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Escape") {
+      setShowCheck(false);
+    } else if (e.key === "Enter") {
+      handleChange();
+    }
+  };
+
   return (
     <InputIcon dis={done}>
       {showCheck && !done ? (
@@ -45,8 +53,8 @@ export const InputWrap: FC<{
           onChange={onChange}
           ref={inputRef}
           value={val}
-          placeholder={placeholder}
           type="number"
+          onKeyDown={onKeyDown}
         />
       ) : (
         <Text dis={done}>{+val > 0 ? val : placeholder}</Text>

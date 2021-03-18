@@ -109,27 +109,79 @@ export const ModalPay: FC<ListProps> = ({
   );
 };
 
+type PaidProps = {
+  data: PaymentsCollection;
+  onClose: () => void;
+};
+
+export const ModalPaid: FC<PaidProps> = ({ data, onClose }: PaidProps) => {
+  const handleContainerClick = (e: React.MouseEvent) => {
+    if (e.currentTarget === e.target) {
+      onClose();
+    }
+  };
+  return (
+    <Container onClick={handleContainerClick}>
+      <PayCard>
+        <PayCardBlock>
+          <PayName>{data.deposit.name}</PayName>
+        </PayCardBlock>
+        <PayCardBlock>
+          <PayText small>Пользователь</PayText>
+          <PayText>{data.userName}</PayText>
+        </PayCardBlock>
+        <PayCardBlock>
+          <PayText small>Дата выплаты</PayText>
+          <PayText>{moment(data.paymentDate).format("DD/MM/YYYY")}</PayText>
+        </PayCardBlock>
+        <PayCardBlock>
+          <PayText small>Категория</PayText>
+          <PayText>
+            {data.state === 4 ? "Закрытие вклада" : "Начисление дивидендов"}
+          </PayText>
+        </PayCardBlock>
+        <PayCardBlock>
+          <PayText small>Сумма вклада</PayText>
+          <PayText>{data.baseAmountView.toLocaleString()}</PayText>
+        </PayCardBlock>
+        <PayCardBlock>
+          <PayText small>Сумма выплаты</PayText>
+          <PayText>{data.paymentAmountView}</PayText>
+        </PayCardBlock>
+        <PayCardBlock></PayCardBlock>
+      </PayCard>
+    </Container>
+  );
+};
+
 const Hr = styled.hr`
   background: rgba(81, 81, 114, 0.2);
 `;
 
 const Container = styled.div`
   width: 100%;
-  height: 100vh;
   position: fixed;
-  left: 0;
   top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   background: rgba(0, 0, 0, 0.2);
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   z-index: 99999;
-  overflow: auto;
+  overflow-y: auto;
+  body {
+    overflow: hidden;
+  }
 `;
 
 const PayCard = styled(Card)`
   padding: 20px;
   width: 280px;
+  height: auto;
+  overflow: auto;
   position: relative;
   margin-top: 40px;
   margin-bottom: 40px;
@@ -150,12 +202,12 @@ const PayCardBlock = styled.div`
     margin-left: auto;
     margin-right: auto;
   }
+  div {
+    justify-content: space-between;
+  }
   @media (max-width: 576px) {
     svg {
       display: block;
-    }
-    div {
-      justify-content: space-between;
     }
   }
   input {
