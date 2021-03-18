@@ -28,6 +28,7 @@ export const DepositList: FC<ListProps> = ({
   const [open, setOpen] = useState(false);
   const sizes = useWindowSize();
   const size = sizes < 992;
+  const modal = sizes < 768;
   const field = sizes > 576;
 
   const elemref = useRef<any>(null);
@@ -64,7 +65,9 @@ export const DepositList: FC<ListProps> = ({
   };
 
   const modalOpen = () => {
-    setOpen(true);
+    if (modal) {
+      setOpen(true);
+    }
   };
 
   const onClose = () => {
