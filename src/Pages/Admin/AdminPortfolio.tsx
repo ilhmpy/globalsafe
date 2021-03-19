@@ -98,17 +98,17 @@ export const AdminPortfolio = () => {
               <Styled.SelectContainer>
                 <Styled.SelectWrap>
                   <Styled.Label>Тип операции</Styled.Label>
-                  <Select />
+                  {/* <Select /> */}
                 </Styled.SelectWrap>
                 <Styled.InputsWrap>
-                  <TestInput label="Дата" />
+                  {/* <TestInput label="Дата" /> */}
                 </Styled.InputsWrap>
                 <Button danger>Применить</Button>
               </Styled.SelectContainer>
             </Styled.FilterBlock>
           </FilterLeft>
           <FilterRight>
-            <Select placeholder="Введите операцию" />
+            {/* <Select placeholder="Введите операцию" /> */}
             <ButtonWrap>
               <Button danger>Добавить</Button>
               <Button dangerOutline>Удалить</Button>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import * as Styled from "./Styled.elements";
 import styled, { css } from "styled-components/macro";
 import { SideNavbar } from "../../components/SideNav";
@@ -11,67 +11,173 @@ import useWindowSize from "../../hooks/useWindowSize";
 import { Select } from "../../components/Select/Select";
 import { TestInput } from "../../components/UI/DayPicker";
 import { Button } from "../../components/Button/Button";
+import { AppContext } from "../../context/HubContext";
+import { OpenDate } from "../../types/dates";
+import { FilterMenu } from "../../components/FilterMenu/FilterMenu";
+import { Scrollbars } from "react-custom-scrollbars";
+import {
+  DepositStats,
+  ListDeposits,
+  CollectionListDeposits,
+} from "../../types/deposits";
+import {
+  RootPayments,
+  PaymentsCollection,
+  CollectionCharges,
+} from "../../types/payments";
+import moment from "moment";
+import InfiniteScroll from "react-infinite-scroller";
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import "swiper/swiper.scss";
 import "swiper/components/navigation/navigation.scss";
 import "swiper/components/pagination/pagination.scss";
 import "swiper/components/scrollbar/scrollbar.scss";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { FilterMenu } from "../../components/FilterMenu/FilterMenu";
+
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
-const data = [
-  {
-    id: 1,
-    name: "Депозит #1",
-    value: 1700000,
-    halfValue: 16,
-    color: "#BCD476",
-  },
-  { id: 2, name: "Депозит #2", value: 600000, halfValue: 3, color: "#6DB9FF" },
-  { id: 3, name: "Депозит #3", value: 900000, halfValue: 9, color: "#FF416E" },
-  {
-    id: 4,
-    name: "Депозит #4",
-    value: 9800000,
-    halfValue: 11,
-    color: "#A78CF2",
-  },
-  {
-    id: 5,
-    name: "Депозит #5",
-    value: 9800000,
-    halfValue: 11,
-    color: "#F28CE8",
-  },
-  { id: 6, name: "Депозит #6", value: 60000, halfValue: 4, color: "#BCD476" },
-  { id: 7, name: "Депозит #7", value: 10000, halfValue: 1, color: "#6DB9FF" },
-  { id: 8, name: "Депозит #8", value: 550000, halfValue: 54, color: "#FF416E" },
-  { id: 9, name: "Депозит #9", value: 100000, halfValue: 8, color: "#A78CF2" },
-  {
-    id: 10,
-    name: "Депозит #10",
-    value: 800000,
-    halfValue: 6,
-    color: "#F28CE8",
-  },
-];
-
-const size = 4;
-
-const newArray: any[] = [];
-for (let i = 0; i < Math.ceil(data.length / size); i++) {
-  newArray[i] = data.slice(i * size, i * size + size);
-}
-
 export const AdminDeposit = () => {
+  const [statsDeposit, setStatsDeposit] = useState<DepositStats[]>([]);
+  const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>(
+    []
+  );
+  const [depositsList, setDepositsList] = useState<PaymentsCollection[]>([]);
+  const [checkList, setCheckList] = useState<any>([]);
+  const [name, setName] = useState("");
+  const [openDate, setOpenDate] = useState<OpenDate>({
+    from: undefined,
+    to: undefined,
+  });
+  const [closeDate, setCloseDate] = useState<OpenDate>({
+    from: undefined,
+    to: undefined,
+  });
+  const [count, setCount] = useState(true);
+  const [num, setNum] = useState(20);
+
+  const myLoad = (...arg: any) => {
+    if (hubConnection) {
+      setCount(false);
+      hubConnection
+        .invoke<RootPayments>(
+          "GetUsersDeposits",
+          [1, 2, 3, 4, 5, 6],
+          name || null,
+          namesProgram.length ? namesProgram : null,
+          openDate.from || null,
+          openDate.to || null,
+          closeDate.from || null,
+          closeDate.to || null,
+          null,
+          num,
+          20
+        )
+        .then((res) => {
+          if (res.collection.length) {
+            console.log("loadMoreItems", res);
+            setDepositsList([...depositsList, ...res.collection]);
+            setCount(true);
+            setNum(num + 20);
+          }
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  };
+
+  useEffect(() => {
+    setNum(20);
+  }, []);
+
+  const namesProgram = checkList.map((i: any) => i.label);
+
+  // console.log(
+  //   "checkList",
+  //   name || null,
+  //   namesProgram.length ? namesProgram : null,
+  //   openDate.from || null,
+  //   openDate.to || null,
+  //   closeDate.from || null,
+  //   closeDate.to || null
+  // );
+
+  const appContext = useContext(AppContext);
+  const hubConnection = appContext.hubConnection;
   const sizes = useWindowSize();
   const size = sizes < 768;
-  // const [id, setId] = useState(0)
-  // console.log('id', id)
+
   const filterClick = (id: number) => {
     console.log("click", id);
   };
+
+  // const arr = listDeposits.map((item) => item.name);
+  // console.log("arr", arr);
+  const arrSizeBig = 8;
+  const arrSizeMob = 4;
+
+  const newArrayBig: any[] = [];
+  for (let i = 0; i < Math.ceil(statsDeposit.length / arrSizeBig); i++) {
+    newArrayBig[i] = statsDeposit.slice(
+      i * arrSizeBig,
+      i * arrSizeBig + arrSizeBig
+    );
+  }
+
+  const newArrayMob: any[] = [];
+  for (let i = 0; i < Math.ceil(statsDeposit.length / arrSizeMob); i++) {
+    newArrayMob[i] = statsDeposit.slice(
+      i * arrSizeMob,
+      i * arrSizeMob + arrSizeMob
+    );
+  }
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection
+        .invoke<DepositStats[]>("GetUsersDepositsStats")
+        .then((res) => {
+          setStatsDeposit(res);
+          console.log("GetUsersDepositsStats", res);
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  }, [hubConnection]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection
+        .invoke<ListDeposits>("GetDeposits", 0, 40)
+        .then((res) => {
+          console.log("GetDeposits", res);
+          setListDeposits(res.collection);
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  }, [hubConnection]);
+
+  const submit = () => {
+    if (hubConnection) {
+      hubConnection
+        .invoke<RootPayments>(
+          "GetUsersDeposits",
+          [1, 2, 3, 4, 5, 6],
+          name || null,
+          namesProgram.length ? namesProgram : null,
+          openDate.from || null,
+          openDate.to || null,
+          closeDate.from || null,
+          closeDate.to || null,
+          null,
+          0,
+          20
+        )
+        .then((res) => {
+          console.log("submit", res);
+          setDepositsList(res.collection);
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  };
+
   return (
     <Styled.Wrapper>
       <SideNavbar />
@@ -84,85 +190,128 @@ export const AdminDeposit = () => {
           </Styled.UserName>
         </Styled.HeadBlock>
         <Styled.TitleHead>Активные депозиты</Styled.TitleHead>
-        <DepositWrap>
-          {!size &&
-            data.map((item) => (
-              <DepositItem key={item.id}>
-                <Styled.PayItemHead mb>
-                  <UpTitle small>{item.name}</UpTitle>
-                </Styled.PayItemHead>
-                <RadialWrap>
-                  <HalfRound>
-                    <span>{item.halfValue}</span>
-                    <HalfRoundBorder
-                      width={size ? "47" : "90"}
-                      height={size ? "63" : "123"}
-                      color={item.color}
-                    />
-                  </HalfRound>
-                  <Styled.Radial bg={item.color}>
-                    <span>{item.value}</span>
-                    <span>CWD</span>
-                  </Styled.Radial>
-                </RadialWrap>
-              </DepositItem>
-            ))}
-          {size && (
-            <MySwiperContainer>
-              <Swiper
-                spaceBetween={50}
-                slidesPerView={1}
-                pagination={{ clickable: true }}
-              >
-                {newArray.map((i, idx) => (
-                  <SwiperSlide key={idx}>
-                    <DepositItemWrap>
-                      {i.map((item: any) => (
-                        <DepositItemInner key={item.id}>
-                          <DepositItem>
-                            <Styled.PayItemHead mb>
-                              <UpTitle small>{item.name}</UpTitle>
-                            </Styled.PayItemHead>
-                            <RadialWrap>
-                              <HalfRound>
-                                <span>{item.halfValue}</span>
-                                <HalfRoundBorder
-                                  width={"47"}
-                                  height={"63"}
-                                  color={item.color}
-                                />
-                              </HalfRound>
-                              <Styled.Radial bg={item.color}>
-                                <span>{item.value}</span>
-                                <span>CWD</span>
-                              </Styled.Radial>
-                            </RadialWrap>
-                          </DepositItem>
-                        </DepositItemInner>
-                      ))}
-                    </DepositItemWrap>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-            </MySwiperContainer>
-          )}
-        </DepositWrap>
+        <div>
+          <DepositWrap>
+            {!size && (
+              <DepositInner>
+                <Swiper
+                  spaceBetween={10}
+                  slidesPerView={1}
+                  pagination={{ clickable: true }}
+                >
+                  {newArrayBig.map((i, idx) => (
+                    <SwiperSlide key={idx} style={{ maxWidth: 1130 }}>
+                      <SwiperInner>
+                        {!size &&
+                          i.map((item: DepositStats, idx: number) => (
+                            <DepositItem key={idx}>
+                              <Styled.PayItemHead mb>
+                                <UpTitle small>{item.depositName}</UpTitle>
+                              </Styled.PayItemHead>
+                              <RadialWrap>
+                                <HalfRound>
+                                  <span>{item.count}</span>
+                                  <HalfRoundBorder
+                                    width={size ? "47" : "90"}
+                                    height={size ? "63" : "123"}
+                                    color={"#A78CF2"}
+                                  />
+                                </HalfRound>
+                                <Styled.Radial bg={"#A78CF2"}>
+                                  <span>
+                                    {(item.amount / 100000)
+                                      .toFixed(1)
+                                      .toLocaleString()}
+                                  </span>
+                                  <span>CWD</span>
+                                </Styled.Radial>
+                              </RadialWrap>
+                            </DepositItem>
+                          ))}
+                      </SwiperInner>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </DepositInner>
+            )}
+            {size && (
+              <MySwiperContainer>
+                <Swiper
+                  spaceBetween={50}
+                  slidesPerView={1}
+                  pagination={{ clickable: true }}
+                >
+                  {newArrayMob.map((i, idx) => (
+                    <SwiperSlide key={idx}>
+                      <DepositItemWrap>
+                        {i.map((item: DepositStats, idx: number) => (
+                          <DepositItemInner key={idx}>
+                            <DepositItem>
+                              <Styled.PayItemHead mb>
+                                <UpTitle small>{item.depositName}</UpTitle>
+                              </Styled.PayItemHead>
+                              <RadialWrap>
+                                <HalfRound>
+                                  <span>{item.count}</span>
+                                  <HalfRoundBorder
+                                    width={"47"}
+                                    height={"63"}
+                                    color={"#A78CF2"}
+                                  />
+                                </HalfRound>
+                                <Styled.Radial bg={"#A78CF2"}>
+                                  <span>
+                                    {(item.amount / 100000)
+                                      .toFixed(1)
+                                      .toLocaleString()}
+                                  </span>
+                                  <span>CWD</span>
+                                </Styled.Radial>
+                              </RadialWrap>
+                            </DepositItem>
+                          </DepositItemInner>
+                        ))}
+                      </DepositItemWrap>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </MySwiperContainer>
+            )}
+          </DepositWrap>
+        </div>
+
         <Styled.FilterBlock>
           <Styled.SelectContainer>
             <Styled.SelectWrap>
               <Styled.Label>Пользователь</Styled.Label>
-              <Select />
+              <Input value={name} onChange={(e) => setName(e.target.value)} />
             </Styled.SelectWrap>
             <Styled.SelectWrap>
               <Styled.Label>Название программы</Styled.Label>
-              <Select />
+              <Select
+                checkList={checkList}
+                setCheckList={setCheckList}
+                values={listDeposits.map((item) => item.name)}
+              />
             </Styled.SelectWrap>
             <Styled.InputsWrap>
-              <TestInput label="Дата открытия" />
-              <TestInput label="Дата след.выплаты" />
+              <InputsWrapItem>
+                <TestInput
+                  setOpenDate={setOpenDate}
+                  openDate={openDate}
+                  label="Дата открытия"
+                />
+              </InputsWrapItem>
+              <TestInput
+                setOpenDate={setCloseDate}
+                openDate={closeDate}
+                label="Дата след.выплаты"
+              />
             </Styled.InputsWrap>
 
-            <Button danger>Применить</Button>
+            <Button danger onClick={submit}>
+              Применить
+            </Button>
           </Styled.SelectContainer>
         </Styled.FilterBlock>
         <Card>
@@ -175,21 +324,45 @@ export const AdminDeposit = () => {
               <TableHeadItem>Сумма депозита</TableHeadItem>
               <TableHeadItem>Дата след. выплаты</TableHeadItem>
               <TableHeadItem>Выплачено</TableHeadItem>
-              <TableHeadItem>
-                <Filter />
-              </TableHeadItem>
-              <FilterMenu filterClick={filterClick} />
+              <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
+              {/* <FilterMenu filterClick={filterClick} /> */}
             </TableHead>
-            <TableBody>
-              <TableBodyItem>Account 1</TableBodyItem>
-              <TableBodyItem>Название Депозита №1</TableBodyItem>
-              <TableBodyItem>01/03/2021</TableBodyItem>
-              <TableBodyItem>01/03/2022</TableBodyItem>
-              <TableBodyItem>140 000</TableBodyItem>
-              <TableBodyItem>03/04/2021</TableBodyItem>
-              <TableBodyItem>40 000</TableBodyItem>
-              <TableBodyItem></TableBodyItem>
-            </TableBody>
+            {depositsList.length ? (
+              <Scrollbars style={{ height: "500px" }}>
+                <InfiniteScroll
+                  pageStart={0}
+                  loadMore={myLoad}
+                  hasMore={count}
+                  useWindow={false}
+                  loader={
+                    <div className="loader" key={0}>
+                      Loading ...
+                    </div>
+                  }
+                >
+                  {depositsList.map((item) => (
+                    <TableBody key={item.safeId}>
+                      <TableBodyItem>{item.userName}</TableBodyItem>
+                      <TableBodyItem>{item.deposit.name}</TableBodyItem>
+                      <TableBodyItem>
+                        {moment(item.creationDate).format("DD/MM/YYYY")}
+                      </TableBodyItem>
+                      <TableBodyItem>
+                        {moment(item.endDate).format("DD/MM/YYYY")}
+                      </TableBodyItem>
+                      <TableBodyItem>{item.amountView}</TableBodyItem>
+                      <TableBodyItem>
+                        {moment(item.paymentDate).format("DD/MM/YYYY")}
+                      </TableBodyItem>
+                      <TableBodyItem>{item.baseAmountView}</TableBodyItem>
+                      <TableBodyItem></TableBodyItem>
+                    </TableBody>
+                  ))}
+                </InfiniteScroll>
+              </Scrollbars>
+            ) : (
+              <NotFound>Данные не обнаружены.</NotFound>
+            )}
           </PaymentsTable>
           {/* <NotFound>
             Данные не обнаружены. Попробуйте изменить параметры поиска.
@@ -200,6 +373,27 @@ export const AdminDeposit = () => {
   );
 };
 
+const InputsWrapItem = styled.div`
+  margin-right: 10px;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  border: 1px solid rgba(86, 101, 127, 0.3);
+  box-sizing: border-box;
+  border-radius: 2px;
+  min-height: 40px;
+  padding: 8px;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 21px;
+  letter-spacing: 0.1px;
+  color: #515172;
+  &:focus {
+    outline: none;
+  }
+`;
+
 const NotFound = styled.div`
   font-weight: normal;
   font-size: 12px;
@@ -208,6 +402,30 @@ const NotFound = styled.div`
   letter-spacing: 0.1px;
   min-height: 250px;
   color: #0e0d3d;
+`;
+
+const DepositInner = styled.div`
+  margin: 0 auto;
+  min-width: 0;
+  @media (max-width: 1470px) {
+    max-width: 930px;
+  }
+  @media (max-width: 1270px) {
+    max-width: 800px;
+  }
+  @media (max-width: 910px) {
+    max-width: 700px;
+  }
+  @media (max-width: 800px) {
+    max-width: 640px;
+  }
+`;
+
+const SwiperInner = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 0 auto;
 `;
 
 const PaymentsTable = styled.div`
@@ -330,14 +548,14 @@ const HalfRound = styled.div`
     top: 33%;
     left: 9px;
     font-weight: normal;
-    font-size: 36px;
+    font-size: 26px;
     line-height: 42px;
     text-align: center;
     display: block;
     width: 63px;
     color: #000000;
     @media (max-width: 768px) {
-      font-size: 14px;
+      font-size: 10px;
       line-height: 16px;
       top: 36%;
       left: 3px;
@@ -381,12 +599,12 @@ const DepositItem = styled.div`
       border-width: 3px;
     }
     span {
-      font-size: 21px;
-      line-height: 26px;
+      font-size: 16px;
+      line-height: 20px;
       text-align: right;
       color: #000000;
       @media (max-width: 768px) {
-        font-size: 12px;
+        font-size: 9px;
         line-height: 14px;
       }
     }

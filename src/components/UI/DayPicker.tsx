@@ -330,9 +330,14 @@ export const ModalRangeInput: FC<{
   );
 };
 
-export const TestInput: FC<{ label: string }> = ({ label }) => {
+export const TestInput: FC<{
+  label: string;
+  openDate: OpenDate;
+  setOpenDate: (openDate: OpenDate) => void;
+  onClose?: () => void;
+}> = ({ label, openDate, setOpenDate }) => {
   const [showOpen, setShowOpen] = useState(false);
-  const [openDate, setOpenDate] = useState<any>({
+  const [selfDate, setSelfDate] = useState<any>({
     from: undefined,
     to: undefined,
   });
@@ -346,11 +351,22 @@ export const TestInput: FC<{ label: string }> = ({ label }) => {
   useOnClickOutside(ref, handleClickOutside);
 
   const handleDayClick = (day: Date) => {
-    const range = DateUtils.addDayToRange(day, openDate);
+    const range = DateUtils.addDayToRange(day, selfDate);
+    setSelfDate({ from: range.from, to: range.to });
     setOpenDate({ from: range.from, to: range.to });
   };
 
-  const modifiers = { start: openDate.from, end: openDate.to };
+  const handleChange = () => {
+    if (selfDate.from && selfDate.to) {
+      setOpenDate({ from: selfDate.from, to: selfDate.to });
+      setSelfDate({
+        from: undefined,
+        to: undefined,
+      });
+    }
+  };
+
+  const modifiers = { start: selfDate.from, end: selfDate.to };
 
   return (
     <>
@@ -359,20 +375,21 @@ export const TestInput: FC<{ label: string }> = ({ label }) => {
           <DateLabel>{label}</DateLabel>
           <DateInput>
             <span>
-              {openDate.from ? moment(openDate.from).format("DD.MM.YY") : ""}
+              {selfDate.from ? moment(selfDate.from).format("DD.MM.YY") : ""}
             </span>
             <span>
-              {openDate.to ? `-${moment(openDate.to).format("DD.MM.YY")} ` : ""}
+              {selfDate.to ? `-${moment(selfDate.to).format("DD.MM.YY")} ` : ""}
             </span>
           </DateInput>
         </BoxInput>
 
         {showOpen && (
           <CustomDatePicker
-            selectedDays={[openDate.from, openDate]}
+            selectedDays={[selfDate.from, selfDate]}
             months={MONTHS}
             onDayClick={handleDayClick}
             firstDayOfWeek={1}
+            onTodayButtonClick={handleChange}
             modifiers={modifiers}
             weekdaysLong={WEEKDAYS_LONG}
             weekdaysShort={WEEKDAYS_SHORT}
