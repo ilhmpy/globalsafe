@@ -12,6 +12,7 @@ type Context = {
   login: (token: string) => void;
   loading: boolean;
   balance: null | number;
+  isAdmin: boolean;
 };
 
 export const AppContext = React.createContext<Context>({
@@ -21,6 +22,7 @@ export const AppContext = React.createContext<Context>({
   login: () => {},
   loading: true,
   balance: null,
+  isAdmin: false,
 });
 
 export const HubProvider: FC = ({ children }) => {
@@ -30,6 +32,7 @@ export const HubProvider: FC = ({ children }) => {
   const [user, setUser] = useState<null | string | false>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [balance, setBalance] = useState<null | number>(null);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [myToken, setMyToken] = useLocalStorage("token");
   const history = useHistory();
 
@@ -57,11 +60,13 @@ export const HubProvider: FC = ({ children }) => {
       hubConnection
         .invoke("GetSigned")
         .then((res) => {
-          // console.log("GetSigned", res);
+          console.log("GetSigned", res);
           if (res.balances[0]) {
             setBalance(res.balances[0].volume);
           }
-
+          if (res.roles[0].name === "administrator") {
+            setIsAdmin(true);
+          }
           setUser(res.name);
           setLoading(false);
         })
@@ -90,7 +95,7 @@ export const HubProvider: FC = ({ children }) => {
 
   return (
     <AppContext.Provider
-      value={{ hubConnection, user, logOut, loading, login, balance }}
+      value={{ hubConnection, user, logOut, loading, login, balance, isAdmin }}
     >
       {children}
     </AppContext.Provider>

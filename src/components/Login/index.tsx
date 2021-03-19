@@ -12,10 +12,12 @@ export const LoginComponent = () => {
   const [login, setLogin] = useState(false);
   const [password, setPassword] = useState("");
   const [value, setValue] = useState("");
+  const [where, setWhere] = useState(false);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const user = appContext.user;
   const logIn = appContext.login;
+  const admin = appContext.isAdmin;
   const history = useHistory();
 
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,7 +28,7 @@ export const LoginComponent = () => {
     if (user) {
       history.replace("/info");
     }
-  }, [user]);
+  }, []);
 
   const onChangeNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError(true);
@@ -61,6 +63,8 @@ export const LoginComponent = () => {
           console.log("res", res);
           if (res.token !== null) {
             logIn(res.token);
+            setWhere(true);
+            setLogin(false);
           } else {
             setError(false);
           }
@@ -95,7 +99,34 @@ export const LoginComponent = () => {
     <Container>
       <CardContainer>
         <CSSTransition
-          in={login}
+          in={where || !!user}
+          timeout={300}
+          classNames="alert"
+          unmountOnExit
+        >
+          <FormBlock>
+            <H4>Куда войти?</H4>
+
+            <Submit
+              mb
+              as="button"
+              onClick={() => history.push("/info")}
+              dangerOutline
+            >
+              Личный кабинет
+            </Submit>
+            <Submit
+              as="button"
+              onClick={() => history.push("/admin")}
+              danger
+              disabled={!admin}
+            >
+              Админка
+            </Submit>
+          </FormBlock>
+        </CSSTransition>
+        <CSSTransition
+          in={login && !user}
           timeout={300}
           classNames="alert"
           unmountOnExit
@@ -119,7 +150,7 @@ export const LoginComponent = () => {
         </CSSTransition>
 
         <CSSTransition
-          in={!login}
+          in={!login && !user}
           timeout={300}
           classNames="alert"
           unmountOnExit
@@ -164,8 +195,9 @@ const FormBlock = styled.form`
   flex-direction: column;
 `;
 
-const Submit = styled(Button)`
+const Submit = styled(Button)<{ mb?: boolean }>`
   max-width: 100%;
+  margin-bottom: ${(props) => (props.mb ? "20px" : "0")};
 `;
 
 const CardContainer = styled(Card)`

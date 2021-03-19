@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, FC } from "react";
 import { ReactComponent as Pen } from "../../../assets/svg/pen.svg";
 import { Checkbox } from "../../../components/UI/Checkbox";
 import styled from "styled-components/macro";
+import { RoundButton } from "../../../components/UI/RoundButton";
 
 export const InputWrap: FC<{
   val: any;
@@ -26,12 +27,16 @@ export const InputWrap: FC<{
     }
   }, [inputRef, showCheck]);
 
-  const handleChange = () => {
-    setShowCheck(false);
+  const handleChange = (e: any) => {
+    console.log("handleChange");
+    e.stopPropagation();
+
     paymentsAdjust();
+    setShowCheck(false);
   };
 
-  const onBlur = () => {
+  const onBlur = (e: any) => {
+    console.log("blur", e.target.localName != "input");
     setShowCheck(false);
   };
 
@@ -39,7 +44,8 @@ export const InputWrap: FC<{
     if (e.key === "Escape") {
       setShowCheck(false);
     } else if (e.key === "Enter") {
-      handleChange();
+      setShowCheck(false);
+      paymentsAdjust();
     }
   };
 
@@ -48,7 +54,6 @@ export const InputWrap: FC<{
       {showCheck && !done ? (
         <Input
           dis={done}
-          onBlur={onBlur}
           disabled={done}
           onClick={(e) => e.stopPropagation()}
           onChange={onChange}
@@ -58,11 +63,14 @@ export const InputWrap: FC<{
           onKeyDown={onKeyDown}
         />
       ) : (
-        <Text dis={done}>{+val > 0 ? val : placeholder}</Text>
+        <Text dis={done}>
+          {+val > 0 ? Number(val).toFixed(1) : Number(placeholder).toFixed(1)}
+        </Text>
       )}
       {showCheck && !done ? (
-        <Checkbox checked={true} onChange={handleChange} />
+        <RoundButton onClick={(e) => handleChange(e)} />
       ) : (
+        // <Checkbox checked={true} onChange={handleChange} />
         <Pen onClick={focusField} />
       )}
     </InputIcon>
@@ -103,6 +111,7 @@ const Input = styled.input<{ dis?: boolean }>`
   outline: none;
   width: 75px;
   margin-right: 6px;
+  position: relative;
   &:disabled {
     background: #fff;
   }
