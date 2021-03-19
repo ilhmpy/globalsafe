@@ -20,6 +20,7 @@ export const Header = () => {
   const appContext = useContext(AppContext);
   const user = appContext.user;
   const logOut = appContext.logOut;
+  const admin = appContext.isAdmin;
   let history = useHistory();
   let location = useLocation();
 
@@ -48,6 +49,10 @@ export const Header = () => {
     setOpen(false);
   };
 
+  const toAdmin = () => {
+    history.push("/admin");
+  };
+
   return (
     <HeaderWrap header={header}>
       <Container>
@@ -66,14 +71,22 @@ export const Header = () => {
               user={user}
               logOut={logOut}
               location={location.pathname}
+              admin={admin}
             />
           </HeaderMenu>
+          {admin && (
+            <Button danger onClick={toAdmin}>
+              Админка
+            </Button>
+          )}
           {location.pathname === "/" ? (
             <Button onClick={handleClick}>Личный кабинет</Button>
           ) : user ? (
             <Button onClick={logOut}>Выйти</Button>
           ) : (
-            <Button onClick={handleClick}>Личный кабинет</Button>
+            <>
+              <Button onClick={handleClick}>Личный кабинет</Button>
+            </>
           )}
         </HeaderInner>
       </Container>

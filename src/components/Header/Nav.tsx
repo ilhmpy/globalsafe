@@ -15,6 +15,7 @@ type Props = {
   user: null | false | string;
   logOut: () => void;
   location: string;
+  admin: boolean;
 };
 
 export const Nav: FC<Props> = ({
@@ -23,6 +24,7 @@ export const Nav: FC<Props> = ({
   user,
   logOut,
   location,
+  admin,
 }: Props) => {
   return (
     <HeaderNav>
@@ -36,6 +38,13 @@ export const Nav: FC<Props> = ({
             <LinkButton onClick={handleClick}>Личный кабинет</LinkButton>
           )}
         </ListItem>
+        {admin && (
+          <ListItem mob>
+            <StyledLink smooth to="/admin" onClick={onClose}>
+              Админка
+            </StyledLink>
+          </ListItem>
+        )}
 
         <ListItem>
           <StyledLink smooth to="/#banner" onClick={onClose}>
