@@ -16,14 +16,23 @@ import { AmountContext } from "../../context/AmountContext";
 // import "react-virtualized/styles.css";
 import { Button } from "../../components/Button/Button";
 import useWindowSize from "../../hooks/useWindowSize";
-import { RootPayments, PaymentsCollection } from "../../types/payments";
+import {
+  RootPayments,
+  PaymentsCollection,
+  RootCharges,
+  CollectionCharges,
+} from "../../types/payments";
 import ReactNotification, { store } from "react-notifications-component";
 import InfiniteScroll from "react-infinite-scroller";
 import "react-notifications-component/dist/theme.css";
 import { CSSTransition } from "react-transition-group";
 import { ModalPay } from "./AdminPay/Payments";
 import { Scrollbars } from "react-custom-scrollbars";
-import { DepositList, PaymentsList } from "./AdminPay/DepositList";
+import {
+  DepositList,
+  PaymentsList,
+  PaymentsListPay,
+} from "./AdminPay/DepositList";
 import moment from "moment";
 
 export const AdminPay = () => {
@@ -52,24 +61,23 @@ export const AdminPay = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [dataModal, setDataModal] = useState<PaymentsCollection | any>({});
 
+  const getPaymentsOverview = () => {
+    if (hubConnection) {
+      hubConnection
+        .invoke("GetPaymentsOverview")
+        .then((res) => {
+          setSum(res);
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  };
+
   const myLoad = (...arg: any) => {
     console.log("arguments", arg);
     if (hubConnection) {
       setNext(false);
       hubConnection
-        .invoke<RootPayments>(
-          "GetUsersDeposits",
-          [1, 2, 3, 4, 5, 6],
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          true,
-          numPay,
-          20
-        )
+        .invoke<RootCharges>("GetDepositsCharges", [7, 8], numPay, 20)
         .then((res) => {
           if (res.collection.length) {
             setDepositPayList([...depositPayList, ...res.collection]);
@@ -94,6 +102,7 @@ export const AdminPay = () => {
         .then((res) => {
           // alert("Успешно", "Выполнено", "success");
           console.log("ConfirmDepositPayment", res);
+          getPaymentsOverview();
         })
         .catch((err: Error) => {
           console.log(err);
@@ -155,23 +164,33 @@ export const AdminPay = () => {
   }, [hubConnection]);
 
   useEffect(() => {
+    // if (hubConnection) {
+    //   hubConnection
+    //     .invoke<RootPayments>(
+    //       "GetUsersDeposits",
+    //       [1, 2, 3, 4, 5, 6],
+    //       null,
+    //       null,
+    //       null,
+    //       null,
+    //       null,
+    //       null,
+    //       true,
+    //       0,
+    //       20
+    //     )
+    //     .then((res) => {
+    //       // console.log("res true", res);
+    //       setTotalPayDeposits(res.totalRecords);
+    //       setDepositPayList(res.collection);
+    //       setPayNum(20);
+    //     })
+    //     .catch((err: Error) => console.log(err));
+    // }
     if (hubConnection) {
       hubConnection
-        .invoke<RootPayments>(
-          "GetUsersDeposits",
-          [1, 2, 3, 4, 5, 6],
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          true,
-          0,
-          20
-        )
+        .invoke<RootCharges>("GetDepositsCharges", [7, 8], 0, 20)
         .then((res) => {
-          // console.log("res true", res);
           setTotalPayDeposits(res.totalRecords);
           setDepositPayList(res.collection);
           setPayNum(20);
@@ -181,14 +200,7 @@ export const AdminPay = () => {
   }, [hubConnection]);
 
   useEffect(() => {
-    if (hubConnection) {
-      hubConnection
-        .invoke("GetPaymentsOverview")
-        .then((res) => {
-          setSum(res);
-        })
-        .catch((err: Error) => console.log(err));
-    }
+    getPaymentsOverview();
   }, [hubConnection]);
 
   const loadMorePayments = () => {
@@ -270,6 +282,7 @@ export const AdminPay = () => {
         .invoke("AdjustDepositPayment", id, amount)
         .then((res) => {
           console.log("AdjustDepositPayment", res);
+          getPaymentsOverview();
           alert("Успешно", "Подтверждено", "success");
         })
         .catch((err: Error) => {
@@ -285,6 +298,7 @@ export const AdminPay = () => {
         .then((res) => {
           console.log("(res", res);
           alert("Успешно", "", "success");
+          getPaymentsOverview();
         })
         .catch((err: Error) => {
           alert("Ошибка", "Произошла ошибка", "danger");
@@ -434,28 +448,29 @@ export const AdminPay = () => {
                       </div>
                     }
                   >
-                    {depositPayList.map((item: PaymentsCollection) => (
-                      <TableBody key={item.safeId}>
-                        <TableBodyItemPaid>{item.userName}</TableBodyItemPaid>
-                        <TableBodyItemPaid>
-                          {item.deposit.name}
-                        </TableBodyItemPaid>
-                        <TableBodyItemPaid>
-                          {moment(item.prevPayment).format("DD/MM/YYYY")}
-                        </TableBodyItemPaid>
-                        <TableBodyItemPaid>
-                          {item.state === 4
-                            ? "Закрытие вклада"
-                            : "Начисление дивидендов"}
-                        </TableBodyItemPaid>
-                        <TableBodyItemPaid>
-                          {item.baseAmountView.toLocaleString()}
-                        </TableBodyItemPaid>
-                        <TableBodyItemPaid>
-                          {item.payedAmountView}
-                        </TableBodyItemPaid>
-                        <TableBodyItemPaid></TableBodyItemPaid>
-                      </TableBody>
+                    {depositPayList.map((item: CollectionCharges) => (
+                      <PaymentsListPay key={item.safeId} data={item} />
+                      // <TableBody key={item.safeId}>
+                      //   <TableBodyItemPaid>{item.userName}</TableBodyItemPaid>
+                      //   <TableBodyItemPaid>
+                      //     {item.deposit.name}
+                      //   </TableBodyItemPaid>
+                      //   <TableBodyItemPaid>
+                      //     {moment(item.prevPayment).format("DD/MM/YYYY")}
+                      //   </TableBodyItemPaid>
+                      //   <TableBodyItemPaid>
+                      //     {item.state === 4
+                      //       ? "Закрытие вклада"
+                      //       : "Начисление дивидендов"}
+                      //   </TableBodyItemPaid>
+                      //   <TableBodyItemPaid>
+                      //     {item.baseAmountView.toLocaleString()}
+                      //   </TableBodyItemPaid>
+                      //   <TableBodyItemPaid>
+                      //     {item.payedAmountView}
+                      //   </TableBodyItemPaid>
+                      //   <TableBodyItemPaid></TableBodyItemPaid>
+                      // </TableBody>
                     ))}
                   </InfiniteScroll>
                 </Scrollbars>

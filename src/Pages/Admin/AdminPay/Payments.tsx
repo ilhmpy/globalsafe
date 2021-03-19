@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import styled from "styled-components/macro";
 import { Button } from "../../../components/Button/Button";
 import { Card } from "../../../globalStyles";
-import { PaymentsCollection } from "../../../types/payments";
+import { PaymentsCollection, CollectionCharges } from "../../../types/payments";
 import { InputWrap } from "./InputWrap";
 
 import moment from "moment";
@@ -147,6 +147,55 @@ export const ModalPaid: FC<PaidProps> = ({ data, onClose }: PaidProps) => {
         <PayCardBlock>
           <PayText small>Сумма выплаты</PayText>
           <PayText>{data.paymentAmountView}</PayText>
+        </PayCardBlock>
+        <PayCardBlock></PayCardBlock>
+      </PayCard>
+    </Container>
+  );
+};
+
+type Prop = {
+  data: CollectionCharges;
+  onClose: () => void;
+};
+
+export const ModalPayList: FC<Prop> = ({ data, onClose }: Prop) => {
+  const handleContainerClick = (e: React.MouseEvent) => {
+    if (e.currentTarget === e.target) {
+      onClose();
+    }
+  };
+  return (
+    <Container onClick={handleContainerClick}>
+      <PayCard>
+        <PayCardBlock>
+          <PayName>{data.userDeposit.deposit.name}</PayName>
+        </PayCardBlock>
+        <PayCardBlock>
+          <PayText small>Пользователь</PayText>
+          <PayText>{data.account}</PayText>
+        </PayCardBlock>
+        <PayCardBlock>
+          <PayText small>Дата выплаты</PayText>
+          <PayText>
+            {moment(data.userDeposit.prevPayment).format("DD/MM/YYYY")}
+          </PayText>
+        </PayCardBlock>
+        <PayCardBlock>
+          <PayText small>Категория</PayText>
+          <PayText>
+            {data.userDeposit.state === 4
+              ? "Закрытие вклада"
+              : "Начисление дивидендов"}
+          </PayText>
+        </PayCardBlock>
+        <PayCardBlock>
+          <PayText small>Сумма вклада</PayText>
+          <PayText>{data.userDeposit.baseAmountView.toLocaleString()}</PayText>
+        </PayCardBlock>
+        <PayCardBlock>
+          <PayText small>Сумма выплаты</PayText>
+          <PayText>{data.userDeposit.paymentAmountView}</PayText>
         </PayCardBlock>
         <PayCardBlock></PayCardBlock>
       </PayCard>
