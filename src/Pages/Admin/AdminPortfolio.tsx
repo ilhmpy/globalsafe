@@ -158,17 +158,19 @@ export const AdminPortfolio = () => {
         <Card>
           <PaymentsTable>
             <TableHead>
-              <TableHeadItem>Дата</TableHeadItem>
-              <TableHeadItem>Тип операции</TableHeadItem>
-              <TableHeadItem>Сумма операции</TableHeadItem>
+              <TableHeadItem>Дата покупки</TableHeadItem>
+              <TableHeadItem>Первичное количество</TableHeadItem>
+              <TableHeadItem>Стоимость за единицу, CWD</TableHeadItem>
+              <TableHeadItem>Текущее количество</TableHeadItem>
               <TableHeadItem>
                 <Filter />
               </TableHeadItem>
             </TableHead>
             <TableBody>
               <TableBodyItem>01/03/2021</TableBodyItem>
-              <TableBodyItem>Торги</TableBodyItem>
-              <TableBodyItem>+ 50 000</TableBodyItem>
+              <TableBodyItem>3</TableBodyItem>
+              <TableBodyItem>2 000</TableBodyItem>
+              <TableBodyItem>3</TableBodyItem>
               <TableBodyItem></TableBodyItem>
             </TableBody>
           </PaymentsTable>
@@ -218,7 +220,7 @@ const TableHeadItem = styled.li`
     }
   }
   &:nth-child(3) {
-    max-width: 110px;
+    max-width: 160px;
     @media (max-width: 768px) {
       max-width: 80px;
     }
@@ -227,7 +229,7 @@ const TableHeadItem = styled.li`
     }
   }
   &:nth-child(4) {
-    max-width: 110px;
+    max-width: 200px;
     text-align: right;
     margin-left: auto;
     @media (max-width: 576px) {

@@ -10,13 +10,19 @@ export const Wrapper = styled.div`
   max-width: 1440px;
   margin-right: auto;
   margin-left: auto;
+  position: relative;
 `;
 
 export const Content = styled.div<{ mtbig?: boolean }>`
   flex-grow: 1;
   margin: ${(props) => (props.mtbig ? "60px auto 40px" : "30px auto 40px")};
   padding: 0 40px 0;
-  max-width: 1210px;
+  @media (max-width: 1200px) {
+    margin-left: 60px;
+  }
+  @media (max-width: 992px) {
+    margin-left: 0px;
+  }
   @media (max-width: 768px) {
     padding: 0 20px 0;
   }

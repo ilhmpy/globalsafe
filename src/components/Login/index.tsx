@@ -19,7 +19,7 @@ export const LoginComponent = () => {
   const logIn = appContext.login;
   const admin = appContext.isAdmin;
   const history = useHistory();
-  console.log("name");
+
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError(true);
     setValue(e.target.value);

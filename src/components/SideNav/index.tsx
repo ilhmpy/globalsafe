@@ -23,25 +23,24 @@ export const SideNavbar = () => {
 
   const navShow = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (!size) {
-      setNavWidth(!navWidth);
-    }
+    setNavWidth(!navWidth);
+    // if (!size) {
+    //   setNavWidth(!navWidth);
+    // }
   };
 
   return (
     <SideNav small={navWidth}>
-      {!size && (
-        <NavHead>
-          <Burger onClick={navShow}>
-            <span></span>
-            <span></span>
-            <span></span>
-          </Burger>
-          <Link to="/">
-            <LogoBrand />
-          </Link>
-        </NavHead>
-      )}
+      <NavHead>
+        <Burger onClick={navShow}>
+          <span></span>
+          <span></span>
+          <span></span>
+        </Burger>
+        <Link to="/">
+          <LogoBrand />
+        </Link>
+      </NavHead>
       <SideInner>
         <Ul>
           <Li>
@@ -102,6 +101,13 @@ const SideNav = styled.div<{ small: boolean }>`
   flex: none;
   background: #fff;
   transition: 0.3s;
+  @media (max-width: 1200px) {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 9999;
+    box-shadow: 0px 1px 3px rgb(0 0 0 / 25%);
+  }
   @media (max-width: 992px) {
     display: none;
   }
