@@ -154,6 +154,41 @@ export const ModalPaid: FC<PaidProps> = ({ data, onClose }: PaidProps) => {
   );
 };
 
+export const ModalDeposit: FC<PaidProps> = ({ data, onClose }: PaidProps) => {
+  const handleContainerClick = (e: React.MouseEvent) => {
+    if (e.currentTarget === e.target) {
+      onClose();
+    }
+  };
+  return (
+    <Container onClick={handleContainerClick}>
+      <PayCard>
+        <PayCardBlock>
+          <PayName>{data.deposit.name}</PayName>
+          <PayText>
+            {moment(data.creationDate).format("DD/MM/YYYY") +
+              "-" +
+              moment(data.endDate).format("DD/MM/YYYY")}
+          </PayText>
+        </PayCardBlock>
+        <PayCardBlock>
+          <PayText small>Пользователь</PayText>
+          <PayText>{data.userName}</PayText>
+        </PayCardBlock>
+        <PayCardBlock>
+          <PayText small>Дата следующей выплаты</PayText>
+          <PayText>{moment(data.paymentDate).format("DD/MM/YYYY")}</PayText>
+        </PayCardBlock>
+        <PayCardBlock>
+          <PayText small>Выплачено</PayText>
+          <PayText>{data.baseAmountView}</PayText>
+        </PayCardBlock>
+        <PayCardBlock></PayCardBlock>
+      </PayCard>
+    </Container>
+  );
+};
+
 type Prop = {
   data: CollectionCharges;
   onClose: () => void;

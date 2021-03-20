@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, FC } from "react";
 import * as Styled from "./Styled.elements";
 import styled, { css } from "styled-components/macro";
 import { SideNavbar } from "../../components/SideNav";
@@ -15,6 +15,8 @@ import { AppContext } from "../../context/HubContext";
 import { OpenDate } from "../../types/dates";
 import { FilterMenu } from "../../components/FilterMenu/FilterMenu";
 import { Scrollbars } from "react-custom-scrollbars";
+import { CSSTransition } from "react-transition-group";
+// import { AdminDepositList } from "./AdminPay/DepositList";
 import {
   DepositStats,
   ListDeposits,
@@ -33,8 +35,48 @@ import "swiper/components/navigation/navigation.scss";
 import "swiper/components/pagination/pagination.scss";
 import "swiper/components/scrollbar/scrollbar.scss";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { ModalDeposit } from "./AdminPay/Payments";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
+type PayProps = {
+  data: PaymentsCollection;
+};
+
+const AdminDepositList: FC<PayProps> = ({ data }: PayProps) => {
+  const [open, setOpen] = useState(false);
+
+  const onClose = () => {
+    setOpen(false);
+  };
+
+  const modalOpen = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setOpen(true);
+  };
+  return (
+    <div>
+      <CSSTransition in={open} timeout={300} classNames="modal" unmountOnExit>
+        <ModalDeposit onClose={onClose} data={data} />
+      </CSSTransition>
+      <TableBody onClick={modalOpen}>
+        <TableBodyItem>{data.userName}</TableBodyItem>
+        <TableBodyItem>{data.deposit.name}</TableBodyItem>
+        <TableBodyItem>
+          {moment(data.creationDate).format("DD/MM/YYYY")}
+        </TableBodyItem>
+        <TableBodyItem>
+          {moment(data.endDate).format("DD/MM/YYYY")}
+        </TableBodyItem>
+        <TableBodyItem>{data.amountView ? data.amountView : "-"}</TableBodyItem>
+        <TableBodyItem>
+          {moment(data.paymentDate).format("DD/MM/YYYY")}
+        </TableBodyItem>
+        <TableBodyItem>{data.baseAmountView}</TableBodyItem>
+        <TableBodyItem></TableBodyItem>
+      </TableBody>
+    </div>
+  );
+};
 
 export const AdminDeposit = () => {
   const [statsDeposit, setStatsDeposit] = useState<DepositStats[]>([]);
@@ -89,17 +131,6 @@ export const AdminDeposit = () => {
   }, []);
 
   const namesProgram = checkList.map((i: any) => i.label);
-
-  // console.log(
-  //   "checkList",
-  //   name || null,
-  //   namesProgram.length ? namesProgram : null,
-  //   openDate.from || null,
-  //   openDate.to || null,
-  //   closeDate.from || null,
-  //   closeDate.to || null
-  // );
-
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const sizes = useWindowSize();
@@ -109,9 +140,7 @@ export const AdminDeposit = () => {
     console.log("click", id);
   };
 
-  // const arr = listDeposits.map((item) => item.name);
-  // console.log("arr", arr);
-  const arrSizeBig = 8;
+  const arrSizeBig = 10;
   const arrSizeMob = 4;
 
   const newArrayBig: any[] = [];
@@ -341,22 +370,23 @@ export const AdminDeposit = () => {
                   }
                 >
                   {depositsList.map((item) => (
-                    <TableBody key={item.safeId}>
-                      <TableBodyItem>{item.userName}</TableBodyItem>
-                      <TableBodyItem>{item.deposit.name}</TableBodyItem>
-                      <TableBodyItem>
-                        {moment(item.creationDate).format("DD/MM/YYYY")}
-                      </TableBodyItem>
-                      <TableBodyItem>
-                        {moment(item.endDate).format("DD/MM/YYYY")}
-                      </TableBodyItem>
-                      <TableBodyItem>{item.amountView}</TableBodyItem>
-                      <TableBodyItem>
-                        {moment(item.paymentDate).format("DD/MM/YYYY")}
-                      </TableBodyItem>
-                      <TableBodyItem>{item.baseAmountView}</TableBodyItem>
-                      <TableBodyItem></TableBodyItem>
-                    </TableBody>
+                    <AdminDepositList data={item} key={item.safeId} />
+                    // <TableBody key={item.safeId}>
+                    //   <TableBodyItem>{item.userName}</TableBodyItem>
+                    //   <TableBodyItem>{item.deposit.name}</TableBodyItem>
+                    //   <TableBodyItem>
+                    //     {moment(item.creationDate).format("DD/MM/YYYY")}
+                    //   </TableBodyItem>
+                    //   <TableBodyItem>
+                    //     {moment(item.endDate).format("DD/MM/YYYY")}
+                    //   </TableBodyItem>
+                    //   <TableBodyItem>{item.amountView}</TableBodyItem>
+                    //   <TableBodyItem>
+                    //     {moment(item.paymentDate).format("DD/MM/YYYY")}
+                    //   </TableBodyItem>
+                    //   <TableBodyItem>{item.baseAmountView}</TableBodyItem>
+                    //   <TableBodyItem></TableBodyItem>
+                    // </TableBody>
                   ))}
                 </InfiniteScroll>
               </Scrollbars>
@@ -375,6 +405,10 @@ export const AdminDeposit = () => {
 
 const InputsWrapItem = styled.div`
   margin-right: 10px;
+  width: 100%;
+  @media (max-width: 576px) {
+    margin-right: 0px;
+  }
 `;
 
 const Input = styled.input`
@@ -418,6 +452,13 @@ const DepositInner = styled.div`
   }
   @media (max-width: 800px) {
     max-width: 640px;
+  }
+  .swiper-pagination-fraction,
+  .swiper-pagination-custom,
+  .swiper-container-horizontal > .swiper-pagination-bullets {
+    bottom: 0px;
+    left: 0;
+    width: 100%;
   }
 `;
 
@@ -503,6 +544,11 @@ const TableHeadItem = styled.li`
 
 const TableBody = styled(TableHead)`
   padding: 10px 0;
+  transition: 0.3s;
+  cursor: pointer;
+  &:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
 `;
 
 const TableBodyItemCss = css`

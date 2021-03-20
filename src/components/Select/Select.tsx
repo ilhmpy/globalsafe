@@ -161,7 +161,7 @@ const CustomSelect = styled.div`
 const InputWrap = styled.div`
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
+  overflow: hidden;
   padding-right: 32px;
 `;
 
