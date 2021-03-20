@@ -19,7 +19,7 @@ export const LoginComponent = () => {
   const logIn = appContext.login;
   const admin = appContext.isAdmin;
   const history = useHistory();
-  console.log("name", user);
+  console.log("name");
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError(true);
     setValue(e.target.value);
@@ -148,6 +148,12 @@ export const LoginComponent = () => {
             <Submit as="button" danger type="submit" disabled={password === ""}>
               Войти
             </Submit>
+            <LinkTo
+              href={`https://cwd.global/account/${value}`}
+              target="_blank"
+            >
+              Перейти в активность
+            </LinkTo>
           </FormBlock>
         </CSSTransition>
 
@@ -180,6 +186,15 @@ export const LoginComponent = () => {
     </Container>
   );
 };
+
+const LinkTo = styled.a`
+  margin-top: 20px;
+  font-size: 12px;
+  line-height: 14px;
+  text-align: center;
+  text-decoration-line: underline;
+  color: #515172;
+`;
 
 const H4 = styled.h4`
   text-align: center;
