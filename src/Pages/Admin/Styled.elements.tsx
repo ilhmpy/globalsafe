@@ -213,3 +213,47 @@ export const InputsWrap = styled.div`
     width: 100%;
   }
 `;
+
+export const PayItem = styled.div`
+  position: relative;
+  display: flex;
+  width: 33.3333%;
+  text-align: center;
+  justify-content: center;
+  flex-direction: column;
+  ${UpTitle} {
+    margin-bottom: 0;
+    margin-right: 10px;
+  }
+  &:last-child {
+    display: none;
+  }
+  @media (max-width: 768px) {
+    width: 50%;
+    margin-bottom: 20px;
+    &:nth-child(3) {
+      width: 100%;
+    }
+  }
+`;
+
+export const PayList = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  @media (max-width: 992px) {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+`;
+
+export const NotFound = styled.div`
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 21px;
+  padding: 30px;
+  letter-spacing: 0.1px;
+  min-height: 250px;
+  color: #0e0d3d;
+`;

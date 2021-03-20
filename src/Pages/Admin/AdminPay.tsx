@@ -328,8 +328,8 @@ export const AdminPay = () => {
         </Styled.HeadBlock>
 
         <Card>
-          <PayList>
-            <PayItem>
+          <Styled.PayList>
+            <Styled.PayItem>
               <Styled.PayItemHead mb>
                 <UpTitle small>К выплате</UpTitle>
               </Styled.PayItemHead>
@@ -339,8 +339,8 @@ export const AdminPay = () => {
                 </span>
                 <span>CWD</span>
               </Styled.Radial>
-            </PayItem>
-            <PayItem>
+            </Styled.PayItem>
+            <Styled.PayItem>
               <Styled.PayItemHead mb>
                 <UpTitle small>Выплачено</UpTitle>
               </Styled.PayItemHead>
@@ -351,8 +351,8 @@ export const AdminPay = () => {
                 </span>
                 <span>CWD</span>
               </Styled.Radial>
-            </PayItem>
-            <PayItem>
+            </Styled.PayItem>
+            <Styled.PayItem>
               <Styled.PayItemHead mb>
                 <UpTitle small>На согласовании</UpTitle>
                 {/* {sizes > 768 && <CalendarInput />} */}
@@ -363,9 +363,9 @@ export const AdminPay = () => {
                 </span>
                 <span>CWD</span>
               </Styled.Radial>
-            </PayItem>
-            <PayItem></PayItem>
-          </PayList>
+            </Styled.PayItem>
+            <Styled.PayItem></Styled.PayItem>
+          </Styled.PayList>
         </Card>
         <Card>
           <Tabs>
@@ -711,45 +711,6 @@ const Tabs = styled.div`
         }
       }
     }
-  }
-`;
-
-const PayList = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  padding: 20px;
-  @media (max-width: 992px) {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-`;
-
-const PayItem = styled.div`
-  position: relative;
-  display: flex;
-  width: 33.3333%;
-  text-align: center;
-  justify-content: center;
-  flex-direction: column;
-  ${UpTitle} {
-    margin-bottom: 0;
-    margin-right: 10px;
-  }
-  &:last-child {
-    display: none;
-  }
-  @media (max-width: 768px) {
-    width: 50%;
-    margin-bottom: 20px;
-    ${Styled.ChartItemDate} {
-      display: none;
-    }
-    &:nth-child(3) {
-      width: 100%;
-    }
-  }
-  @media (max-width: 576px) {
   }
 `;
 

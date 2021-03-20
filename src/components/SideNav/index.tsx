@@ -90,6 +90,7 @@ const SideInner = styled.div`
   height: calc(100% - 80px);
   @media (max-width: 1200px) {
     height: calc(100%);
+    justify-content: flex-start;
   }
 `;
 
@@ -105,6 +106,7 @@ const SideNav = styled.div<{ small: boolean }>`
     position: absolute;
     left: 0;
     top: 0;
+    bottom: 0;
     z-index: 9999;
     box-shadow: 0px 1px 3px rgb(0 0 0 / 25%);
   }
@@ -220,6 +222,9 @@ const Logout = styled.div`
   white-space: nowrap;
   align-items: center;
   padding: 11px 20px;
+  @media (max-width: 1200px) {
+    margin-top: 200px;
+  }
   svg {
     width: 24px;
     height: 24px;
