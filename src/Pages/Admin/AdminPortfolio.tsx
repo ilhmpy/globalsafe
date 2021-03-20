@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import * as Styled from "./Styled.elements";
 import styled, { css } from "styled-components/macro";
 import { SideNavbar } from "../../components/SideNav";
@@ -14,16 +14,54 @@ import useWindowSize from "../../hooks/useWindowSize";
 import { TestChart } from "../../components/Charts/Test";
 import { CSSTransition } from "react-transition-group";
 import { Tab, Content } from "../../components/UI/Tabs";
+import { AppContext } from "../../context/HubContext";
+import { Portfolio } from "../../types/portfolio";
+import { Balance } from "../../types/balance";
 
 export const AdminPortfolio = () => {
-  const [card, setCard] = useState(0);
+  const [card, setCard] = useState(3);
   const [active, setActive] = useState(0);
+  const [basket, setBasket] = useState<Portfolio>({
+    GCWD: 0,
+    DIAMOND: 0,
+    MGCWD: 0,
+  });
+
+  const appContext = useContext(AppContext);
+  const hubConnection = appContext.hubConnection;
 
   const handleClick = (id: number) => {
     if (id !== active) {
       setActive(id);
     }
   };
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection
+        .invoke<Portfolio>("GetBasketsOverview")
+        .then((res) => {
+          console.log("GetBasketsOverview", res);
+          setBasket(res);
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  }, [hubConnection]);
+
+  console.log("Balance", Balance[3]);
+
+  // GCWD 3  DIAMOND 4 MGCWD 2
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection
+        .invoke("GetBaskets", 3, 0, 20)
+        .then((res) => {
+          console.log("GetBaskets", res);
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  }, [hubConnection]);
 
   return (
     <Styled.Wrapper>
@@ -58,10 +96,10 @@ export const AdminPortfolio = () => {
             >
               <TestChart
                 percent
-                labels={["GCWD", "MGCWD", "Diamond"]}
-                series={[200, 20, 20]}
+                labels={Object.keys(basket)}
+                series={Object.values(basket)}
                 mobHeight={150}
-                mobLegend={100}
+                mobLegend={120}
               />
             </CSSTransition>
           </HalfContent>
@@ -73,48 +111,50 @@ export const AdminPortfolio = () => {
               unmountOnExit
             >
               <TestChart
-                labels={["GCWD", "MGCWD", "Diamond"]}
-                series={[200, 20, 20]}
+                labels={Object.keys(basket)}
+                series={Object.values(basket)}
+                mobHeight={150}
+                mobLegend={120}
               />
             </CSSTransition>
           </HalfContent>
         </ChartContainer>
         <TabsCard>
           <Tabs>
-            <Tab onClick={() => handleClick(0)} active={active === 0}>
+            <Tab onClick={() => handleClick(0)} active={active === 3}>
               GCWD
             </Tab>
-            <Tab onClick={() => handleClick(1)} active={active === 1}>
+            <Tab onClick={() => handleClick(1)} active={active === 2}>
               MGCWD
             </Tab>
-            <Tab onClick={() => handleClick(2)} active={active === 2}>
+            <Tab onClick={() => handleClick(2)} active={active === 4}>
               DIAMOND
             </Tab>
           </Tabs>
         </TabsCard>
-        <FilterWrap>
+        {/* <FilterWrap>
           <FilterLeft>
             <Styled.FilterBlock>
               <Styled.SelectContainer>
                 <Styled.SelectWrap>
                   <Styled.Label>Тип операции</Styled.Label>
-                  {/* <Select /> */}
+                  <Select /> 
                 </Styled.SelectWrap>
                 <Styled.InputsWrap>
-                  {/* <TestInput label="Дата" /> */}
+                  <TestInput label="Дата" /> 
                 </Styled.InputsWrap>
                 <Button danger>Применить</Button>
               </Styled.SelectContainer>
             </Styled.FilterBlock>
           </FilterLeft>
           <FilterRight>
-            {/* <Select placeholder="Введите операцию" /> */}
+             <Select placeholder="Введите операцию" /> 
             <ButtonWrap>
               <Button danger>Добавить</Button>
               <Button dangerOutline>Удалить</Button>
             </ButtonWrap>
           </FilterRight>
-        </FilterWrap>
+        </FilterWrap> */}
         <Card>
           <PaymentsTable>
             <TableHead>

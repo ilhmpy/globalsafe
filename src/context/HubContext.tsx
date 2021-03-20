@@ -61,20 +61,19 @@ export const HubProvider: FC = ({ children }) => {
         .invoke("GetSigned")
         .then((res) => {
           console.log("GetSigned", res);
+          setUser(res.name);
+          setLoading(false);
           if (res.balances[0]) {
             setBalance(res.balances[0].volume);
           }
           if (res.roles[0].name === "administrator") {
             setIsAdmin(true);
           }
-          setUser(res.name);
-          setLoading(false);
         })
         .catch((err) => {
           console.log(err);
           setIsAdmin(false);
           setLoading(false);
-          setUser(false);
         });
     }
     return function cleanup() {
@@ -82,7 +81,7 @@ export const HubProvider: FC = ({ children }) => {
         hubConnection.stop();
       }
     };
-  }, [hubConnection, myToken, setUser]);
+  }, [hubConnection, myToken]);
 
   const logOut = () => {
     setMyToken(null);
