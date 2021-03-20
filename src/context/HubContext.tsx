@@ -72,6 +72,7 @@ export const HubProvider: FC = ({ children }) => {
         })
         .catch((err) => {
           console.log(err);
+          setIsAdmin(false);
           setLoading(false);
           setUser(false);
         });
@@ -86,6 +87,7 @@ export const HubProvider: FC = ({ children }) => {
   const logOut = () => {
     setMyToken(null);
     setUser(null);
+    setIsAdmin(false);
     history.replace("/");
   };
 

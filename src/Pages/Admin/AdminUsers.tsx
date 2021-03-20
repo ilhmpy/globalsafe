@@ -30,14 +30,14 @@ export const AdminUsers = () => {
           <Styled.SelectContainer>
             <Styled.SelectWrap>
               <Styled.Label>Пользователь</Styled.Label>
-              <Select />
+              {/* <Select /> */}
             </Styled.SelectWrap>
             <Styled.SelectWrap>
               <Styled.Label>Название программы</Styled.Label>
-              <Select />
+              {/* <Select /> */}
             </Styled.SelectWrap>
             <Styled.InputsWrap>
-              <TestInput label="Дата создания" />
+              {/* <TestInput label="Дата создания" /> */}
             </Styled.InputsWrap>
 
             <Button danger>Применить</Button>

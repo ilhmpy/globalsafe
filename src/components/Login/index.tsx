@@ -93,6 +93,8 @@ export const LoginComponent = () => {
   const onSubmitCode = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     singIn();
+    // setWhere(true);
+    // setLogin(false);
   };
 
   return (
@@ -126,7 +128,7 @@ export const LoginComponent = () => {
           </FormBlock>
         </CSSTransition>
         <CSSTransition
-          in={login && !user}
+          in={login && !user && !where}
           timeout={300}
           classNames="alert"
           unmountOnExit
@@ -150,7 +152,7 @@ export const LoginComponent = () => {
         </CSSTransition>
 
         <CSSTransition
-          in={!login && !user}
+          in={!login && !user && !where}
           timeout={300}
           classNames="alert"
           unmountOnExit

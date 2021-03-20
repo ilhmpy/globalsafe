@@ -3,7 +3,7 @@ import { ReactComponent as Pen } from "../../../assets/svg/pen.svg";
 import { Checkbox } from "../../../components/UI/Checkbox";
 import { PaymentsCollection, CollectionCharges } from "../../../types/payments";
 import useWindowSize from "../../../hooks/useWindowSize";
-import { ModalPay, ModalPaid, ModalPayList } from "./Payments";
+import { ModalPay, ModalPaid, ModalPayList, ModalDeposit } from "./Payments";
 import { CSSTransition } from "react-transition-group";
 import { Button } from "../../../components/Button/Button";
 import { InputWrap } from "./InputWrap";
@@ -124,11 +124,9 @@ export const DepositList: FC<ListProps> = ({
               paymentsAdjust={paymentsAdjust}
               done={disabled}
               val={procent}
-              placeholder={
-                +value > 0
-                  ? ((+value / data.baseAmountView) * 100).toFixed(1)
-                  : ((data.payAmount / data.baseAmount) * 100).toFixed(1)
-              }
+              placeholder={((data.payAmount / data.baseAmount) * 100).toFixed(
+                1
+              )}
               onChange={onHandleChange}
             />
           ) : (
@@ -231,6 +229,50 @@ export const PaymentsList: FC<PayProps> = ({ data }: PayProps) => {
         </TableBodyItemPaid>
         <TableBodyItemPaid>{data.paymentAmountView}</TableBodyItemPaid>
         <TableBodyItemPaid></TableBodyItemPaid>
+      </TableBody>
+    </div>
+  );
+};
+
+export const AdminDepositList: FC<PayProps> = ({ data }: PayProps) => {
+  const [open, setOpen] = useState(false);
+
+  const onClose = () => {
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [open]);
+
+  const modalOpen = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setOpen(true);
+  };
+  return (
+    <div>
+      <CSSTransition in={open} timeout={300} classNames="modal" unmountOnExit>
+        <ModalPaid onClose={onClose} data={data} />
+      </CSSTransition>
+      <TableBody onClick={modalOpen}>
+        <TableBodyItem>{data.userName}</TableBodyItem>
+        <TableBodyItem>{data.deposit.name}</TableBodyItem>
+        <TableBodyItem>
+          {moment(data.creationDate).format("DD/MM/YYYY")}
+        </TableBodyItem>
+        <TableBodyItem>
+          {moment(data.endDate).format("DD/MM/YYYY")}
+        </TableBodyItem>
+        <TableBodyItem>{data.amountView ? data.amountView : "-"}</TableBodyItem>
+        <TableBodyItem>
+          {moment(data.paymentDate).format("DD/MM/YYYY")}
+        </TableBodyItem>
+        <TableBodyItem>{data.baseAmountView}</TableBodyItem>
+        <TableBodyItem></TableBodyItem>
       </TableBody>
     </div>
   );

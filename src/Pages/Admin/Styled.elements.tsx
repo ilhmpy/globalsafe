@@ -97,19 +97,20 @@ export const ChartItemDate = styled.div`
 
 export const PayItemHead = styled.div<{ mb?: boolean }>`
   display: flex;
+  text-align: right;
   justify-content: center;
   margin: 0 auto ${(props) => (props.mb ? "12px" : "0")};
   &:last-child() {
     margin-bottom: 12px;
   }
   align-items: center;
-  @media (max-width: 992px) {
+  /* @media (max-width: 992px) {
     ${UpTitle} {
       &:before {
         width: 15px;
       }
     }
-  }
+  } */
   @media (max-width: 768px) {
     margin: 0 auto ${(props) => (props.mb ? "8px" : "0")};
   }
@@ -128,8 +129,8 @@ export const Radial = styled.div<{ bg: string }>`
   border: 7px solid ${(props) => props.bg};
   span {
     font-weight: normal;
-    font-size: 24px;
-    line-height: 28px;
+    font-size: 16px;
+    line-height: 20px;
     text-align: center;
     color: #000000;
   }

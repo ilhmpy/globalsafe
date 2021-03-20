@@ -257,7 +257,6 @@ export const AdminPay = () => {
         )
         .then((res) => {
           if (res.collection.length) {
-            console.log("loadMoreItems", res);
             setDepositList([...depositList, ...res.collection]);
             setCount(true);
             setNum(num + 20);
@@ -266,8 +265,6 @@ export const AdminPay = () => {
         .catch((err: Error) => console.log(err));
     }
   };
-
-  console.log("num", num);
 
   const alert = (
     title: string,
