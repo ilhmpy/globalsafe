@@ -170,6 +170,7 @@ export const AdminPortfolio = () => {
         .invoke<RootPortfolio>("GetBaskets", 2, 0, 20)
         .then((res) => {
           setLoading(false);
+          console.log("res", res);
           setBasketMGCWD(res.collection);
           setNumMGCWD(20);
         })
@@ -340,10 +341,7 @@ export const AdminPortfolio = () => {
                       }
                     >
                       {basketGCWD.map((item, idx) => (
-                        <TableList
-                          key={item.id.toString() + idx + item.creationDate}
-                          data={item}
-                        />
+                        <TableList key={item.safeId} data={item} />
                       ))}
                     </InfiniteScroll>
                   </Scrollbars>
@@ -381,10 +379,7 @@ export const AdminPortfolio = () => {
                       }
                     >
                       {basketMGCWD.map((item, idx) => (
-                        <TableList
-                          key={item.id.toString() + idx + item.creationDate}
-                          data={item}
-                        />
+                        <TableList key={item.safeId} data={item} />
                       ))}
                     </InfiniteScroll>
                   </Scrollbars>
@@ -420,10 +415,7 @@ export const AdminPortfolio = () => {
                       }
                     >
                       {basketDIAMOND.map((item, idx) => (
-                        <TableList
-                          key={item.id.toString() + idx + item.creationDate}
-                          data={item}
-                        />
+                        <TableList key={item.safeId} data={item} />
                       ))}
                     </InfiniteScroll>
                   </Scrollbars>
@@ -511,6 +503,11 @@ const TableHeadItem = styled.li`
 
 const TableBody = styled(TableHead)`
   padding: 10px 0;
+  cursor: pointer;
+  transition: 0.3s;
+  &:hover {
+    background: rgba(66, 139, 202, 0.109);
+  }
 `;
 
 const TableBodyItemCss = css`

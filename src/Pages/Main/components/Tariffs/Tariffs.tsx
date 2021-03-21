@@ -74,10 +74,10 @@ export const Tariffs = () => {
           Партнерка для контрактов START, EXPERT, INFINITY: 5% c первой линии;
           2% со второй линии; 1% с третьей линиии
         </p>
-        <p>
+        {/* <p>
           Партнерка для контрактов АВТОБОНУС: 3% c первой линии; 1,5% со второй
           и 1% c третьей линии;
-        </p>
+        </p> */}
       </DescContainer>
       {isNormalOpen && (
         <Modal onClose={() => setIsNormalOpen(false)}>
@@ -183,7 +183,7 @@ export const Tariffs = () => {
           </Button>
         </BlockItem>
 
-        <BlockItem>
+        {/* <BlockItem>
           <BlockTitle>АВТОБОНУС</BlockTitle>
           <div>
             <Text>
@@ -211,7 +211,7 @@ export const Tariffs = () => {
           >
             Хочу Автобонус
           </Button>
-        </BlockItem>
+        </BlockItem> */}
       </BlockContainers>
       <SwiperContainer>
         <Swiper
@@ -307,7 +307,7 @@ export const Tariffs = () => {
               </Button>
             </BlockItem>
           </SwiperSlide>
-          <SwiperSlide>
+          {/* <SwiperSlide>
             <BlockItem>
               <BlockTitle>АВТОБОНУС</BlockTitle>
               <div>
@@ -339,7 +339,7 @@ export const Tariffs = () => {
                 Хочу Автобонус
               </Button>
             </BlockItem>
-          </SwiperSlide>
+          </SwiperSlide> */}
         </Swiper>
       </SwiperContainer>
     </div>

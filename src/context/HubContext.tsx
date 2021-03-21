@@ -66,7 +66,7 @@ export const HubProvider: FC = ({ children }) => {
           if (res.balances[0]) {
             setBalance(res.balances[0].volume);
           }
-          if (res.roles[0].name === "administrator") {
+          if (res.roles.length && res.roles[0].name === "administrator") {
             setIsAdmin(true);
           }
         })

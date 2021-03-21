@@ -12,6 +12,7 @@ export interface CollectionPortfolio {
     unitPrice: number;
     creationDate: Date;
     opearionId: number;
+    safeId: string;
 }
 
 export interface RootPortfolio {

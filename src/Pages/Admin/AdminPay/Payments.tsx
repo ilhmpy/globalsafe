@@ -5,6 +5,7 @@ import { Card } from "../../../globalStyles";
 import { PaymentsCollection, CollectionCharges } from "../../../types/payments";
 import { CollectionPortfolio } from "../../../types/portfolio";
 import { InputWrap } from "./InputWrap";
+import { CollectionUsers } from "../../../types/users";
 
 import moment from "moment";
 
@@ -270,6 +271,61 @@ export const ModalPortfolio: FC<{
         <PayCardBlock>
           <PayText small>Текущее количество</PayText>
           <PayText>{data.volume}</PayText>
+        </PayCardBlock>
+      </PayCard>
+    </Container>
+  );
+};
+
+export const ModalUsers: FC<{
+  data: CollectionUsers;
+  onClose: () => void;
+  lock: boolean;
+  unLocked: (id: string) => void;
+  locked: (id: string) => void;
+}> = ({ data, lock, onClose, locked, unLocked }) => {
+  const handleContainerClick = (e: React.MouseEvent) => {
+    if (e.currentTarget === e.target) {
+      onClose();
+    }
+  };
+  return (
+    <Container onClick={handleContainerClick}>
+      <PayCard>
+        <PayCardBlock>
+          <PayText small>Пользователь</PayText>
+          <PayText>{data.name}</PayText>
+        </PayCardBlock>
+        <PayCardBlock>
+          <PayText small>Баланс</PayText>
+          <PayText>
+            {data.balances.length
+              ? (data.balances[0].volume / 100000).toLocaleString()
+              : "-"}
+          </PayText>
+        </PayCardBlock>
+        <PayCardBlock>
+          <PayText small>Роль</PayText>
+          <PayText>{data.roles.length ? data.roles[0].name : "-"}</PayText>
+        </PayCardBlock>
+        <PayCardBlock>
+          <PayText small>Дата создания</PayText>
+          <PayText>{moment(data.creationDate).format("DD/MM/YYYY")}</PayText>
+        </PayCardBlock>
+        <PayCardBlock>
+          <PayText small>Язык</PayText>
+          <PayText>Русский</PayText>
+        </PayCardBlock>
+        <PayCardBlock>
+          {lock ? (
+            <Button greenOutline onClick={() => unLocked(data.safeId)}>
+              Разблокировать
+            </Button>
+          ) : (
+            <Button dangerOutline onClick={() => locked(data.safeId)}>
+              Заблокировать
+            </Button>
+          )}
         </PayCardBlock>
       </PayCard>
     </Container>
