@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, FC } from "react";
 import { Container } from "../../globalStyles";
 import { ReactComponent as Logo } from "../../assets/svg/logo.svg";
 import {
@@ -13,8 +13,9 @@ import { Nav } from "./Nav";
 import { useHistory, useLocation } from "react-router-dom";
 import styled from "styled-components/macro";
 import { AppContext } from "../../context/HubContext";
+import { NavAdmin } from "./NavAdmin";
 
-export const Header = () => {
+export const Header: FC<{ admPanel?: boolean }> = ({ admPanel }) => {
   const [header, setHeader] = useState(false);
   const [open, setOpen] = useState(false);
   const appContext = useContext(AppContext);
@@ -65,14 +66,18 @@ export const Header = () => {
             <span></span>
           </MenuBtn>
           <HeaderMenu open={open}>
-            <Nav
-              onClose={onClose}
-              handleClick={handleClick}
-              user={user}
-              logOut={logOut}
-              location={location.pathname}
-              admin={admin}
-            />
+            {admPanel ? (
+              <NavAdmin onClose={onClose} />
+            ) : (
+              <Nav
+                onClose={onClose}
+                handleClick={handleClick}
+                user={user}
+                logOut={logOut}
+                location={location.pathname}
+                admin={admin}
+              />
+            )}
           </HeaderMenu>
           {admin && (
             <Button danger onClick={toAdmin}>

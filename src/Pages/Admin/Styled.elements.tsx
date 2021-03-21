@@ -11,6 +11,9 @@ export const Wrapper = styled.div`
   margin-right: auto;
   margin-left: auto;
   position: relative;
+  @media (max-width: 992px){
+    margin-top: 82px;
+  }
 `;
 
 export const Content = styled.div<{ mtbig?: boolean }>`

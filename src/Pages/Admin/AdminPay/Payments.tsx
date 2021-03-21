@@ -3,6 +3,7 @@ import styled from "styled-components/macro";
 import { Button } from "../../../components/Button/Button";
 import { Card } from "../../../globalStyles";
 import { PaymentsCollection, CollectionCharges } from "../../../types/payments";
+import { CollectionPortfolio } from "../../../types/portfolio";
 import { InputWrap } from "./InputWrap";
 
 import moment from "moment";
@@ -181,7 +182,7 @@ export const ModalDeposit: FC<PaidProps> = ({ data, onClose }: PaidProps) => {
         </PayCardBlock>
         <PayCardBlock>
           <PayText small>Выплачено</PayText>
-          <PayText>{data.baseAmountView}</PayText>
+          <PayText>{data.payedAmountView}</PayText>
         </PayCardBlock>
         <PayCardBlock></PayCardBlock>
       </PayCard>
@@ -230,9 +231,46 @@ export const ModalPayList: FC<Prop> = ({ data, onClose }: Prop) => {
         </PayCardBlock>
         <PayCardBlock>
           <PayText small>Сумма выплаты</PayText>
-          <PayText>{data.userDeposit.paymentAmountView}</PayText>
+          <PayText>
+            {(data.amount / 100000).toFixed(2).toLocaleString()}
+          </PayText>
         </PayCardBlock>
         <PayCardBlock></PayCardBlock>
+      </PayCard>
+    </Container>
+  );
+};
+
+export const ModalPortfolio: FC<{
+  data: CollectionPortfolio;
+  onClose: () => void;
+}> = ({ data, onClose }) => {
+  const handleContainerClick = (e: React.MouseEvent) => {
+    if (e.currentTarget === e.target) {
+      onClose();
+    }
+  };
+  return (
+    <Container onClick={handleContainerClick}>
+      <PayCard>
+        <PayCardBlock>
+          <PayText small>Дата покупки</PayText>
+          <PayText>{moment(data.creationDate).format("DD/MM/YYYY")}</PayText>
+        </PayCardBlock>
+        <PayCardBlock>
+          <PayText small>Первичное количество</PayText>
+          <PayText>{data.initialVolume}</PayText>
+        </PayCardBlock>
+        <PayCardBlock>
+          <PayText small>Стоимость за единицу, CWD</PayText>
+          <PayText>
+            {(data.unitPrice / 100000).toFixed(2).toLocaleString()}
+          </PayText>
+        </PayCardBlock>
+        <PayCardBlock>
+          <PayText small>Текущее количество</PayText>
+          <PayText>{data.volume}</PayText>
+        </PayCardBlock>
       </PayCard>
     </Container>
   );
@@ -245,30 +283,22 @@ const Hr = styled.hr`
 const Container = styled.div`
   width: 100%;
   position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  inset: 0px;
   /* background: rgba(0, 0, 0, 0.2); */
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   z-index: 99999;
-  overflow-y: auto;
-  body {
-    overflow: hidden;
-  }
+  overflow: auto;
+  align-items: center;
 `;
 
 const PayCard = styled(Card)`
   padding: 20px;
   width: 280px;
-  height: auto;
-  overflow: auto;
+  /* height: auto; */
   position: relative;
-  margin-top: 40px;
-  margin-bottom: 40px;
+  margin: auto;
+  /* margin-bottom: 40px; */
   background: #fafafa;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
   border-radius: 10px;

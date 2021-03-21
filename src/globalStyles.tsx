@@ -122,10 +122,11 @@ input[type=number] {
 .modal-enter {
   opacity: 0;
   transform: scale(0.9);
+  transform: translateY(-100%);
 }
 .modal-enter-active {
   opacity: 1;
-  transform: translateX(0);
+  transform: translatey(0);
   transition: opacity 300ms, transform 300ms;
 }
 .modal-exit {

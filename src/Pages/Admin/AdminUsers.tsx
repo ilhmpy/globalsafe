@@ -7,10 +7,10 @@ import { UpTitle } from "../../components/UI/UpTitle";
 import { ReactComponent as Exit } from "../../assets/svg/exit.svg";
 import { ReactComponent as Filter } from "../../assets/svg/filter.svg";
 import { Select } from "../../components/Select/Select";
+import useWindowSize from "../../hooks/useWindowSize";
 import { TestInput } from "../../components/UI/DayPicker";
 import { Button } from "../../components/Button/Button";
 import { Checkbox } from "../../components/UI/Checkbox";
-import useWindowSize from "../../hooks/useWindowSize";
 import { AppContext } from "../../context/HubContext";
 import { OpenDate } from "../../types/dates";
 import {
@@ -18,6 +18,7 @@ import {
   ListDeposits,
   CollectionListDeposits,
 } from "../../types/deposits";
+import { Header } from "../../components/Header/Header";
 
 export const AdminUsers = () => {
   const [name, setName] = useState("");
@@ -67,74 +68,77 @@ export const AdminUsers = () => {
   const sizes = useWindowSize();
   const size = sizes < 992;
   return (
-    <Styled.Wrapper>
-      <SideNavbar />
-      <Styled.Content>
-        <Styled.HeadBlock>
-          <UpTitle small>Пользователи</UpTitle>
-          <Styled.UserName>
-            <span>Admin</span>
-            <Exit />
-          </Styled.UserName>
-        </Styled.HeadBlock>
-        <Styled.FilterBlock>
-          <Styled.SelectContainer>
-            <Styled.SelectWrap>
-              <Styled.Label>Пользователь</Styled.Label>
-              <Input value={name} onChange={(e) => setName(e.target.value)} />
-            </Styled.SelectWrap>
-            <Styled.SelectWrap>
-              <Styled.Label>Название программы</Styled.Label>
-              <Select
-                checkList={checkList}
-                setCheckList={setCheckList}
-                values={listDeposits.map((item) => item.name)}
-              />
-            </Styled.SelectWrap>
-            <Styled.InputsWrap>
-              <TestInput
-                setOpenDate={setOpenDate}
-                openDate={openDate}
-                label="Дата создания"
-              />
-            </Styled.InputsWrap>
+    <>
+      {size && <Header admPanel />}
+      <Styled.Wrapper>
+        <SideNavbar />
+        <Styled.Content>
+          <Styled.HeadBlock>
+            <UpTitle small>Пользователи</UpTitle>
+            <Styled.UserName>
+              <span>Admin</span>
+              <Exit />
+            </Styled.UserName>
+          </Styled.HeadBlock>
+          <Styled.FilterBlock>
+            <Styled.SelectContainer>
+              <Styled.SelectWrap>
+                <Styled.Label>Пользователь</Styled.Label>
+                <Input value={name} onChange={(e) => setName(e.target.value)} />
+              </Styled.SelectWrap>
+              <Styled.SelectWrap>
+                <Styled.Label>Название программы</Styled.Label>
+                <Select
+                  checkList={checkList}
+                  setCheckList={setCheckList}
+                  values={listDeposits.map((item) => item.name)}
+                />
+              </Styled.SelectWrap>
+              <Styled.InputsWrap>
+                <TestInput
+                  setOpenDate={setOpenDate}
+                  openDate={openDate}
+                  label="Дата создания"
+                />
+              </Styled.InputsWrap>
 
-            <Button danger onClick={submit}>
-              Применить
-            </Button>
-          </Styled.SelectContainer>
-        </Styled.FilterBlock>
-        <Card>
-          <PaymentsTable>
-            <TableHead>
-              <TableHeadItem>Пользователь</TableHeadItem>
-              <TableHeadItem>E-mail</TableHeadItem>
-              <TableHeadItem>Дата создания</TableHeadItem>
-              <TableHeadItem>Язык</TableHeadItem>
-              <TableHeadItem>
-                <Filter />
-              </TableHeadItem>
-            </TableHead>
-            <TableBody>
-              <TableBodyItem>Account 1</TableBodyItem>
-              <TableBodyItem>firstmessage.gmail.com</TableBodyItem>
-              <TableBodyItem>01/03/2022</TableBodyItem>
-              <TableBodyItem>Русский</TableBodyItem>
-              <TableBodyItem>
-                {size ? (
-                  <Checkbox icon />
-                ) : (
-                  <Button dangerOutline>Заблокировать</Button>
-                )}
-              </TableBodyItem>
-            </TableBody>
-          </PaymentsTable>
-          {/* <NotFound>
+              <Button danger onClick={submit}>
+                Применить
+              </Button>
+            </Styled.SelectContainer>
+          </Styled.FilterBlock>
+          <Card>
+            <PaymentsTable>
+              <TableHead>
+                <TableHeadItem>Пользователь</TableHeadItem>
+                <TableHeadItem>E-mail</TableHeadItem>
+                <TableHeadItem>Дата создания</TableHeadItem>
+                <TableHeadItem>Язык</TableHeadItem>
+                <TableHeadItem>
+                  <Filter />
+                </TableHeadItem>
+              </TableHead>
+              <TableBody>
+                <TableBodyItem>Account 1</TableBodyItem>
+                <TableBodyItem>firstmessage.gmail.com</TableBodyItem>
+                <TableBodyItem>01/03/2022</TableBodyItem>
+                <TableBodyItem>Русский</TableBodyItem>
+                <TableBodyItem>
+                  {size ? (
+                    <Checkbox icon />
+                  ) : (
+                    <Button dangerOutline>Заблокировать</Button>
+                  )}
+                </TableBodyItem>
+              </TableBody>
+            </PaymentsTable>
+            {/* <NotFound>
             Данные не обнаружены. Попробуйте изменить параметры поиска.
           </NotFound> */}
-        </Card>
-      </Styled.Content>
-    </Styled.Wrapper>
+          </Card>
+        </Styled.Content>
+      </Styled.Wrapper>
+    </>
   );
 };
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, FC } from "react";
+import React, { useState, useEffect, useContext, FC, useRef } from "react";
 import * as Styled from "./Styled.elements";
 import styled, { css } from "styled-components/macro";
 import { SideNavbar } from "../../components/SideNav";
@@ -15,6 +15,7 @@ import { TestChart } from "../../components/Charts/Test";
 import { CSSTransition } from "react-transition-group";
 import { Tab, Content } from "../../components/UI/Tabs";
 import { AppContext } from "../../context/HubContext";
+import { Header } from "../../components/Header/Header";
 import {
   Portfolio,
   RootPortfolio,
@@ -24,20 +25,38 @@ import { Balance } from "../../types/balance";
 import moment from "moment";
 import InfiniteScroll from "react-infinite-scroller";
 import { Scrollbars } from "react-custom-scrollbars";
+import { ModalPortfolio } from "./AdminPay/Payments";
+import { Loading } from "../../components/UI/Loading";
 
 const TableList: FC<{ data: CollectionPortfolio }> = ({ data }) => {
+  const [open, setOpen] = useState(false);
+
+  const onClose = () => {
+    setOpen(false);
+  };
+
+  const modalOpen = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setOpen(true);
+  };
+
   return (
-    <TableBody>
-      <TableBodyItem>
-        {moment(data.creationDate).format("DD/MM/YYYY")}
-      </TableBodyItem>
-      <TableBodyItem>{data.initialVolume}</TableBodyItem>
-      <TableBodyItem>
-        {(data.unitPrice / 100000).toFixed(2).toLocaleString()}
-      </TableBodyItem>
-      <TableBodyItem>{data.volume}</TableBodyItem>
-      <TableBodyItem></TableBodyItem>
-    </TableBody>
+    <div>
+      <CSSTransition in={open} timeout={300} classNames="modal" unmountOnExit>
+        <ModalPortfolio onClose={onClose} data={data} />
+      </CSSTransition>
+      <TableBody onClick={modalOpen}>
+        <TableBodyItem>
+          {moment(data.creationDate).format("DD/MM/YYYY")}
+        </TableBodyItem>
+        <TableBodyItem>{data.initialVolume}</TableBodyItem>
+        <TableBodyItem>
+          {(data.unitPrice / 100000).toFixed(2).toLocaleString()}
+        </TableBodyItem>
+        <TableBodyItem>{data.volume}</TableBodyItem>
+        <TableBodyItem></TableBodyItem>
+      </TableBody>
+    </div>
   );
 };
 
@@ -58,9 +77,12 @@ export const AdminPortfolio = () => {
   const [numGCWD, setNumGCWD] = useState(20);
   const [numMGCWD, setNumMGCWD] = useState(20);
   const [numDIAMOND, setNumDIAMOND] = useState(20);
+  const [loading, setLoading] = useState(true);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
-
+  const scrollGCWD = useRef<any>(null);
+  const sizes = useWindowSize();
+  const header = sizes < 992;
   const myLoadGCWD = () => {
     if (hubConnection) {
       setCountGCWD(false);
@@ -123,7 +145,6 @@ export const AdminPortfolio = () => {
       hubConnection
         .invoke<Portfolio>("GetBasketsOverview")
         .then((res) => {
-          console.log("GetBasketsOverview", res);
           setBasket(res);
         })
         .catch((err: Error) => console.log(err));
@@ -135,7 +156,7 @@ export const AdminPortfolio = () => {
       hubConnection
         .invoke<RootPortfolio>("GetBaskets", 3, 0, 20)
         .then((res) => {
-          console.log("GetBaskets", res);
+          setLoading(false);
           setBasketGCWD(res.collection);
           setNumGCWD(20);
         })
@@ -148,7 +169,7 @@ export const AdminPortfolio = () => {
       hubConnection
         .invoke<RootPortfolio>("GetBaskets", 2, 0, 20)
         .then((res) => {
-          console.log("GetBaskets", res);
+          setLoading(false);
           setBasketMGCWD(res.collection);
           setNumMGCWD(20);
         })
@@ -161,7 +182,7 @@ export const AdminPortfolio = () => {
       hubConnection
         .invoke<RootPortfolio>("GetBaskets", 4, 0, 20)
         .then((res) => {
-          console.log("GetBaskets", res);
+          setLoading(false);
           setBasketDIAMOND(res.collection);
           setNumDIAMOND(20);
         })
@@ -169,53 +190,53 @@ export const AdminPortfolio = () => {
     }
   }, [hubConnection]);
 
-  console.log("basketList", basketGCWD);
-
   return (
-    <Styled.Wrapper>
-      <SideNavbar />
-      <Styled.Content>
-        <Styled.HeadBlock>
-          <UpTitle small>Портфель</UpTitle>
-          <Styled.UserName>
-            <span>Admin</span>
-            <Exit />
-          </Styled.UserName>
-        </Styled.HeadBlock>
-        <ChartContainer>
-          <Styled.PayList>
-            <Styled.PayItem>
-              <Styled.PayItemHead mb>
-                <UpTitle small>GCWD</UpTitle>
-              </Styled.PayItemHead>
-              <Styled.Radial bg={"rgba(255, 65, 110, 0.2)"}>
-                <span>{basket.GCWD}</span>
-                <span></span>
-              </Styled.Radial>
-            </Styled.PayItem>
-            <Styled.PayItem>
-              <Styled.PayItemHead mb>
-                <UpTitle small>MGCWD</UpTitle>
-              </Styled.PayItemHead>
+    <>
+      {header && <Header admPanel />}
+      <Styled.Wrapper>
+        <SideNavbar />
+        <Styled.Content>
+          <Styled.HeadBlock>
+            <UpTitle small>Портфель</UpTitle>
+            <Styled.UserName>
+              <span>Admin</span>
+              <Exit />
+            </Styled.UserName>
+          </Styled.HeadBlock>
+          <ChartContainer>
+            <Styled.PayList>
+              <Styled.PayItem>
+                <Styled.PayItemHead mb>
+                  <UpTitle small>GCWD</UpTitle>
+                </Styled.PayItemHead>
+                <Styled.Radial bg={"rgba(255, 65, 110, 0.2)"}>
+                  <span>{basket.GCWD}</span>
+                  <span></span>
+                </Styled.Radial>
+              </Styled.PayItem>
+              <Styled.PayItem>
+                <Styled.PayItemHead mb>
+                  <UpTitle small>MGCWD</UpTitle>
+                </Styled.PayItemHead>
 
-              <Styled.Radial bg={"rgba(188, 212, 118, 0.2)"}>
-                <span>{basket.MGCWD}</span>
-                <span></span>
-              </Styled.Radial>
-            </Styled.PayItem>
-            <Styled.PayItem>
-              <Styled.PayItemHead mb>
-                <UpTitle small>DIAMOND</UpTitle>
-                {/* {sizes > 768 && <CalendarInput />} */}
-              </Styled.PayItemHead>
-              <Styled.Radial bg={"rgba(109, 185, 255, 0.2)"}>
-                <span>{basket.MGCWD}</span>
-                <span></span>
-              </Styled.Radial>
-            </Styled.PayItem>
-            <Styled.PayItem></Styled.PayItem>
-          </Styled.PayList>
-          {/* <HalfHead>
+                <Styled.Radial bg={"rgba(188, 212, 118, 0.2)"}>
+                  <span>{basket.MGCWD}</span>
+                  <span></span>
+                </Styled.Radial>
+              </Styled.PayItem>
+              <Styled.PayItem>
+                <Styled.PayItemHead mb>
+                  <UpTitle small>DIAMOND</UpTitle>
+                  {/* {sizes > 768 && <CalendarInput />} */}
+                </Styled.PayItemHead>
+                <Styled.Radial bg={"rgba(109, 185, 255, 0.2)"}>
+                  <span>{basket.MGCWD}</span>
+                  <span></span>
+                </Styled.Radial>
+              </Styled.PayItem>
+              <Styled.PayItem></Styled.PayItem>
+            </Styled.PayList>
+            {/* <HalfHead>
             <HalfTitle>Размер портфеля</HalfTitle>
             <HalfTabs>
               <HalfTab onClick={() => setCard(0)} card={card === 0}>
@@ -258,21 +279,21 @@ export const AdminPortfolio = () => {
               />
             </CSSTransition>
           </HalfContent> */}
-        </ChartContainer>
-        <TabsCard>
-          <Tabs>
-            <Tab onClick={() => handleClick(3)} active={active === 3}>
-              GCWD
-            </Tab>
-            <Tab onClick={() => handleClick(2)} active={active === 2}>
-              MGCWD
-            </Tab>
-            <Tab onClick={() => handleClick(4)} active={active === 4}>
-              DIAMOND
-            </Tab>
-          </Tabs>
-        </TabsCard>
-        {/* <FilterWrap>
+          </ChartContainer>
+          <TabsCard>
+            <Tabs>
+              <Tab onClick={() => handleClick(3)} active={active === 3}>
+                GCWD
+              </Tab>
+              <Tab onClick={() => handleClick(2)} active={active === 2}>
+                MGCWD
+              </Tab>
+              <Tab onClick={() => handleClick(4)} active={active === 4}>
+                DIAMOND
+              </Tab>
+            </Tabs>
+          </TabsCard>
+          {/* <FilterWrap>
           <FilterLeft>
             <Styled.FilterBlock>
               <Styled.SelectContainer>
@@ -295,127 +316,134 @@ export const AdminPortfolio = () => {
             </ButtonWrap>
           </FilterRight>
         </FilterWrap> */}
-        <Content active={active === 3}>
-          <Card>
-            <PaymentsTable>
-              <TableHead>
-                <TableHeadItem>Дата покупки</TableHeadItem>
-                <TableHeadItem>Первичное количество</TableHeadItem>
-                <TableHeadItem>Стоимость за единицу, CWD</TableHeadItem>
-                <TableHeadItem>Текущее количество</TableHeadItem>
-                <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
-              </TableHead>
-              {basketGCWD.length ? (
-                <Scrollbars style={{ height: "500px" }}>
-                  <InfiniteScroll
-                    pageStart={0}
-                    loadMore={myLoadGCWD}
-                    hasMore={countGCWD}
-                    useWindow={false}
-                    loader={
-                      <div className="loader" key={0}>
-                        Loading ...
-                      </div>
-                    }
-                  >
-                    {basketGCWD.map((item, idx) => (
-                      <TableList
-                        key={item.id.toString() + idx + item.creationDate}
-                        data={item}
-                      />
-                    ))}
-                  </InfiniteScroll>
-                </Scrollbars>
-              ) : (
-                <Styled.NotFound>
-                  Данные не обнаружены. Попробуйте изменить параметры поиска.
-                </Styled.NotFound>
-              )}
-            </PaymentsTable>
-          </Card>
-        </Content>
-        <Content active={active === 2}>
-          <Card>
-            <PaymentsTable>
-              <TableHead>
-                <TableHeadItem>Дата покупки</TableHeadItem>
-                <TableHeadItem>Первичное количество</TableHeadItem>
-                <TableHeadItem>Стоимость за единицу, CWD</TableHeadItem>
-                <TableHeadItem>Текущее количество</TableHeadItem>
-                <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
-              </TableHead>
-              {basketMGCWD.length ? (
-                <Scrollbars style={{ height: "500px" }}>
-                  <InfiniteScroll
-                    pageStart={0}
-                    loadMore={myLoadMGCWD}
-                    hasMore={countMGCWD}
-                    useWindow={false}
-                    loader={
-                      <div className="loader" key={0}>
-                        Loading ...
-                      </div>
-                    }
-                  >
-                    {basketMGCWD.map((item, idx) => (
-                      <TableList
-                        key={item.id.toString() + idx + item.creationDate}
-                        data={item}
-                      />
-                    ))}
-                  </InfiniteScroll>
-                </Scrollbars>
-              ) : (
-                <Styled.NotFound>
-                  Данные не обнаружены. Попробуйте изменить параметры поиска.
-                </Styled.NotFound>
-              )}
-            </PaymentsTable>
-          </Card>
-        </Content>
-        <Content active={active === 4}>
-          <Card>
-            <PaymentsTable>
-              <TableHead>
-                <TableHeadItem>Дата покупки</TableHeadItem>
-                <TableHeadItem>Первичное количество</TableHeadItem>
-                <TableHeadItem>Стоимость за единицу, CWD</TableHeadItem>
-                <TableHeadItem>Текущее количество</TableHeadItem>
-                <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
-              </TableHead>
-              {basketDIAMOND.length ? (
-                <Scrollbars style={{ height: "500px" }}>
-                  <InfiniteScroll
-                    pageStart={0}
-                    loadMore={myLoadDIAMOND}
-                    hasMore={countDIAMOND}
-                    useWindow={false}
-                    loader={
-                      <div className="loader" key={0}>
-                        Loading ...
-                      </div>
-                    }
-                  >
-                    {basketDIAMOND.map((item, idx) => (
-                      <TableList
-                        key={item.id.toString() + idx + item.creationDate}
-                        data={item}
-                      />
-                    ))}
-                  </InfiniteScroll>
-                </Scrollbars>
-              ) : (
-                <Styled.NotFound>
-                  Данные не обнаружены. Попробуйте изменить параметры поиска.
-                </Styled.NotFound>
-              )}
-            </PaymentsTable>
-          </Card>
-        </Content>
-      </Styled.Content>
-    </Styled.Wrapper>
+          <Content active={active === 3}>
+            <CardTable>
+              <PaymentsTable>
+                <TableHead>
+                  <TableHeadItem>Дата покупки</TableHeadItem>
+                  <TableHeadItem>Первичное количество</TableHeadItem>
+                  <TableHeadItem>Стоимость за единицу, CWD</TableHeadItem>
+                  <TableHeadItem>Текущее количество</TableHeadItem>
+                  <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
+                </TableHead>
+                {basketGCWD.length ? (
+                  <Scrollbars style={{ height: "500px" }}>
+                    <InfiniteScroll
+                      pageStart={0}
+                      loadMore={myLoadGCWD}
+                      hasMore={countGCWD}
+                      useWindow={false}
+                      loader={
+                        <div className="loader" key={0}>
+                          Loading ...
+                        </div>
+                      }
+                    >
+                      {basketGCWD.map((item, idx) => (
+                        <TableList
+                          key={item.id.toString() + idx + item.creationDate}
+                          data={item}
+                        />
+                      ))}
+                    </InfiniteScroll>
+                  </Scrollbars>
+                ) : loading ? (
+                  <Loading />
+                ) : (
+                  <Styled.NotFound>
+                    Данные не обнаружены. Попробуйте изменить параметры поиска.
+                  </Styled.NotFound>
+                )}
+              </PaymentsTable>
+            </CardTable>
+          </Content>
+          <Content active={active === 2}>
+            <CardTable>
+              <PaymentsTable>
+                <TableHead>
+                  <TableHeadItem>Дата покупки</TableHeadItem>
+                  <TableHeadItem>Первичное количество</TableHeadItem>
+                  <TableHeadItem>Стоимость за единицу, CWD</TableHeadItem>
+                  <TableHeadItem>Текущее количество</TableHeadItem>
+                  <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
+                </TableHead>
+                {basketMGCWD.length ? (
+                  <Scrollbars style={{ height: "500px" }}>
+                    <InfiniteScroll
+                      pageStart={0}
+                      loadMore={myLoadMGCWD}
+                      hasMore={countMGCWD}
+                      useWindow={false}
+                      loader={
+                        <div className="loader" key={0}>
+                          Loading ...
+                        </div>
+                      }
+                    >
+                      {basketMGCWD.map((item, idx) => (
+                        <TableList
+                          key={item.id.toString() + idx + item.creationDate}
+                          data={item}
+                        />
+                      ))}
+                    </InfiniteScroll>
+                  </Scrollbars>
+                ) : (
+                  <Styled.NotFound>
+                    Данные не обнаружены. Попробуйте изменить параметры поиска.
+                  </Styled.NotFound>
+                )}
+              </PaymentsTable>
+            </CardTable>
+          </Content>
+          <Content active={active === 4}>
+            <CardTable>
+              <PaymentsTable>
+                <TableHead>
+                  <TableHeadItem>Дата покупки</TableHeadItem>
+                  <TableHeadItem>Первичное количество</TableHeadItem>
+                  <TableHeadItem>Стоимость за единицу, CWD</TableHeadItem>
+                  <TableHeadItem>Текущее количество</TableHeadItem>
+                  <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
+                </TableHead>
+                {basketDIAMOND.length ? (
+                  <Scrollbars style={{ height: "500px" }}>
+                    <InfiniteScroll
+                      pageStart={0}
+                      loadMore={myLoadDIAMOND}
+                      hasMore={countDIAMOND}
+                      useWindow={false}
+                      loader={
+                        <div className="loader" key={0}>
+                          Loading ...
+                        </div>
+                      }
+                    >
+                      {basketDIAMOND.map((item, idx) => (
+                        <TableList
+                          key={item.id.toString() + idx + item.creationDate}
+                          data={item}
+                        />
+                      ))}
+                    </InfiniteScroll>
+                  </Scrollbars>
+                ) : (
+                  <Styled.NotFound>
+                    Данные не обнаружены. Попробуйте изменить параметры поиска.
+                  </Styled.NotFound>
+                )}
+              </PaymentsTable>
+            </CardTable>
+          </Content>
+        </Styled.Content>
+      </Styled.Wrapper>
+    </>
   );
 };
+
+const CardTable = styled(Card)`
+  height: 600px;
+`;
 
 const PaymentsTable = styled.div`
   padding: 30px;
