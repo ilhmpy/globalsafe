@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, FC } from "react";
 import * as Styled from "./Styled.elements";
 import styled, { css } from "styled-components/macro";
 import { SideNavbar } from "../../components/SideNav";
@@ -7,10 +7,10 @@ import { UpTitle } from "../../components/UI/UpTitle";
 import { ReactComponent as Exit } from "../../assets/svg/exit.svg";
 import { ReactComponent as Filter } from "../../assets/svg/filter.svg";
 import { Select } from "../../components/Select/Select";
+import useWindowSize from "../../hooks/useWindowSize";
 import { TestInput } from "../../components/UI/DayPicker";
 import { Button } from "../../components/Button/Button";
 import { Checkbox } from "../../components/UI/Checkbox";
-import useWindowSize from "../../hooks/useWindowSize";
 import { AppContext } from "../../context/HubContext";
 import { OpenDate } from "../../types/dates";
 import {
@@ -18,27 +18,132 @@ import {
   ListDeposits,
   CollectionListDeposits,
 } from "../../types/deposits";
+import { Header } from "../../components/Header/Header";
+import { RootUsers, CollectionUsers } from "../../types/users";
+import { Loading } from "../../components/UI/Loading";
+import { Scrollbars } from "react-custom-scrollbars";
+import InfiniteScroll from "react-infinite-scroller";
+import { ModalUsers } from "./AdminPay/Payments";
+import { CSSTransition } from "react-transition-group";
+import moment from "moment";
+
+type PropsTable = {
+  lockAccount: (id: string) => void;
+  unLockAccount: (id: string) => void;
+  data: CollectionUsers;
+};
+
+const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
+  const [lock, setLock] = useState(
+    data.lockoutEnd &&
+      moment(data.lockoutEnd).valueOf() >= moment.utc().valueOf()
+  );
+  const [open, setOpen] = useState(false);
+
+  const onClose = () => {
+    setOpen(false);
+  };
+
+  const modalOpen = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setOpen(true);
+  };
+  const sizes = useWindowSize();
+  const size = sizes < 992;
+
+  const locked = (id: string) => {
+    setLock(true);
+    lockAccount(id);
+  };
+
+  const unLocked = (id: string) => {
+    setLock(false);
+    unLockAccount(id);
+  };
+
+  return (
+    <div>
+      <CSSTransition in={open} timeout={300} classNames="modal" unmountOnExit>
+        <ModalUsers
+          onClose={onClose}
+          data={data}
+          lock={lock}
+          unLocked={unLocked}
+          locked={locked}
+        />
+      </CSSTransition>
+      <TableBody onClick={modalOpen}>
+        <TableBodyItem>{data.name}</TableBodyItem>
+        <TableBodyItem>
+          {data.balances.length
+            ? (data.balances[0].volume / 100000).toLocaleString()
+            : "-"}
+        </TableBodyItem>
+        <TableBodyItem>
+          {data.roles.length ? data.roles[0].name : "-"}
+        </TableBodyItem>
+        <TableBodyItem>
+          {moment(data.creationDate).format("DD/MM/YYYY")}
+        </TableBodyItem>
+        <TableBodyItem>Русский</TableBodyItem>
+        <TableBodyItem>
+          {size ? (
+            lock ? (
+              <Checkbox
+                icon
+                checked={true}
+                onChange={() => unLocked(data.safeId)}
+              />
+            ) : (
+              <Checkbox
+                icon
+                checked={false}
+                onChange={() => locked(data.safeId)}
+              />
+            )
+          ) : lock ? (
+            <Button greenOutline onClick={() => unLocked(data.safeId)}>
+              Разблокировать
+            </Button>
+          ) : (
+            <Button dangerOutline onClick={() => locked(data.safeId)}>
+              Заблокировать
+            </Button>
+          )}
+        </TableBodyItem>
+      </TableBody>
+    </div>
+  );
+};
 
 export const AdminUsers = () => {
   const [name, setName] = useState("");
-  const [checkList, setCheckList] = useState<any>([]);
   const [openDate, setOpenDate] = useState<OpenDate>({
     from: undefined,
     to: undefined,
   });
-  const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>(
-    []
-  );
-  const namesProgram = checkList.map((i: any) => i.label);
+  const [listDeposits, setListDeposits] = useState<CollectionUsers[]>([]);
+  const [count, setCount] = useState(true);
+  const [num, setNum] = useState(20);
+  const [loading, setLoading] = useState(true);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
 
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<ListDeposits>("GetDeposits", 0, 40)
+        .invoke<RootUsers>(
+          "GetUsers",
+          name || null,
+          openDate.from || null,
+          openDate.to || null,
+          0,
+          20
+        )
         .then((res) => {
-          console.log("GetDeposits", res);
+          setLoading(false);
+          console.log("submit", res);
+          setNum(20);
           setListDeposits(res.collection);
         })
         .catch((err: Error) => console.log(err));
@@ -48,7 +153,7 @@ export const AdminUsers = () => {
   const submit = () => {
     if (hubConnection) {
       hubConnection
-        .invoke(
+        .invoke<RootUsers>(
           "GetUsers",
           name || null,
           openDate.from || null,
@@ -58,7 +163,33 @@ export const AdminUsers = () => {
         )
         .then((res) => {
           console.log("submit", res);
-          // setDepositsList(res.collection);
+          setLoading(false);
+          setNum(20);
+          setListDeposits(res.collection);
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  };
+
+  const myLoad = () => {
+    if (hubConnection) {
+      setCount(false);
+      hubConnection
+        .invoke<RootUsers>(
+          "GetUsers",
+          name || null,
+          openDate.from || null,
+          openDate.to || null,
+          num,
+          20
+        )
+        .then((res) => {
+          if (res.collection.length) {
+            console.log("loadMoreItems", res);
+            setListDeposits([...listDeposits, ...res.collection]);
+            setCount(true);
+            setNum(num + 20);
+          }
         })
         .catch((err: Error) => console.log(err));
     }
@@ -66,75 +197,115 @@ export const AdminUsers = () => {
 
   const sizes = useWindowSize();
   const size = sizes < 992;
-  return (
-    <Styled.Wrapper>
-      <SideNavbar />
-      <Styled.Content>
-        <Styled.HeadBlock>
-          <UpTitle small>Пользователи</UpTitle>
-          <Styled.UserName>
-            <span>Admin</span>
-            <Exit />
-          </Styled.UserName>
-        </Styled.HeadBlock>
-        <Styled.FilterBlock>
-          <Styled.SelectContainer>
-            <Styled.SelectWrap>
-              <Styled.Label>Пользователь</Styled.Label>
-              <Input value={name} onChange={(e) => setName(e.target.value)} />
-            </Styled.SelectWrap>
-            <Styled.SelectWrap>
-              <Styled.Label>Название программы</Styled.Label>
-              <Select
-                checkList={checkList}
-                setCheckList={setCheckList}
-                values={listDeposits.map((item) => item.name)}
-              />
-            </Styled.SelectWrap>
-            <Styled.InputsWrap>
-              <TestInput
-                setOpenDate={setOpenDate}
-                openDate={openDate}
-                label="Дата создания"
-              />
-            </Styled.InputsWrap>
 
-            <Button danger onClick={submit}>
-              Применить
-            </Button>
-          </Styled.SelectContainer>
-        </Styled.FilterBlock>
-        <Card>
-          <PaymentsTable>
-            <TableHead>
-              <TableHeadItem>Пользователь</TableHeadItem>
-              <TableHeadItem>E-mail</TableHeadItem>
-              <TableHeadItem>Дата создания</TableHeadItem>
-              <TableHeadItem>Язык</TableHeadItem>
-              <TableHeadItem>
-                <Filter />
-              </TableHeadItem>
-            </TableHead>
-            <TableBody>
-              <TableBodyItem>Account 1</TableBodyItem>
-              <TableBodyItem>firstmessage.gmail.com</TableBodyItem>
-              <TableBodyItem>01/03/2022</TableBodyItem>
-              <TableBodyItem>Русский</TableBodyItem>
-              <TableBodyItem>
-                {size ? (
-                  <Checkbox icon />
-                ) : (
-                  <Button dangerOutline>Заблокировать</Button>
-                )}
-              </TableBodyItem>
-            </TableBody>
-          </PaymentsTable>
-          {/* <NotFound>
-            Данные не обнаружены. Попробуйте изменить параметры поиска.
-          </NotFound> */}
-        </Card>
-      </Styled.Content>
-    </Styled.Wrapper>
+  const lockAccount = (id: string) => {
+    if (hubConnection) {
+      hubConnection
+        .invoke("LockAccount", id)
+        .then((res) => {
+          console.log("LockAccount", res);
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  };
+
+  const unLockAccount = (id: string) => {
+    if (hubConnection) {
+      hubConnection
+        .invoke("UnlockAccount", id)
+        .then((res) => {
+          console.log("UnlockAccount", res);
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  };
+
+  return (
+    <>
+      {size && <Header admPanel />}
+      <Styled.Wrapper>
+        <SideNavbar />
+        <Styled.Content>
+          <Styled.HeadBlock>
+            <UpTitle small>Пользователи</UpTitle>
+            <Styled.UserName>
+              <span>Admin</span>
+              <Exit />
+            </Styled.UserName>
+          </Styled.HeadBlock>
+          <Styled.FilterBlock>
+            <Styled.SelectContainer>
+              <Styled.SelectWrap>
+                <Styled.Label>Пользователь</Styled.Label>
+                <Input value={name} onChange={(e) => setName(e.target.value)} />
+              </Styled.SelectWrap>
+              <Styled.SelectWrap>
+                <Styled.Label>Название программы</Styled.Label>
+                <Input />
+                {/* <Select
+                  checkList={checkList}
+                  setCheckList={setCheckList}
+                  values={listDeposits.map((item) => item.name)}
+                /> */}
+              </Styled.SelectWrap>
+              <Styled.InputsWrap>
+                <TestInput
+                  setOpenDate={setOpenDate}
+                  openDate={openDate}
+                  label="Дата создания"
+                />
+              </Styled.InputsWrap>
+
+              <Button danger onClick={submit}>
+                Применить
+              </Button>
+            </Styled.SelectContainer>
+          </Styled.FilterBlock>
+          <Card>
+            <PaymentsTable>
+              <TableHead>
+                <TableHeadItem>Пользователь</TableHeadItem>
+                <TableHeadItem>Баланс</TableHeadItem>
+                <TableHeadItem>Роль</TableHeadItem>
+                <TableHeadItem>Дата создания</TableHeadItem>
+                <TableHeadItem>Язык</TableHeadItem>
+                <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
+              </TableHead>
+              {listDeposits.length ? (
+                <Scrollbars style={{ height: "500px" }}>
+                  <InfiniteScroll
+                    pageStart={0}
+                    loadMore={myLoad}
+                    hasMore={count}
+                    useWindow={false}
+                    loader={
+                      <div className="loader" key={0}>
+                        Loading ...
+                      </div>
+                    }
+                  >
+                    {listDeposits.map((item) => (
+                      <UserTable
+                        data={item}
+                        key={item.safeId}
+                        unLockAccount={unLockAccount}
+                        lockAccount={lockAccount}
+                      />
+                    ))}
+                  </InfiniteScroll>
+                </Scrollbars>
+              ) : loading ? (
+                <Loading />
+              ) : (
+                <NotFound>
+                  Данные не обнаружены. Попробуйте изменить параметры поиска.
+                </NotFound>
+              )}
+            </PaymentsTable>
+          </Card>
+        </Styled.Content>
+      </Styled.Wrapper>
+    </>
   );
 };
 
@@ -181,6 +352,7 @@ const TableHead = styled.ul`
   list-style: none;
   display: flex;
   align-items: center;
+  width: 100%;
   justify-content: space-between;
   padding-bottom: 6px;
   border-bottom: 1px solid rgba(81, 81, 114, 0.2);
@@ -195,9 +367,15 @@ const TableHeadItem = styled.li`
   width: 100%;
   &:nth-child(1) {
     max-width: 97px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   &:nth-child(2) {
-    max-width: 182px;
+    max-width: 110px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     @media (max-width: 992px) {
       display: none;
     }
@@ -207,14 +385,23 @@ const TableHeadItem = styled.li`
     @media (max-width: 768px) {
       max-width: 80px;
     }
+    @media (max-width: 576px) {
+      display: none;
+    }
   }
   &:nth-child(4) {
-    max-width: 110px;
+    max-width: 100px;
+  }
+  &:nth-child(5) {
+    max-width: 90px;
+    @media (max-width: 992px) {
+      max-width: 80px;
+    }
     @media (max-width: 768px) {
       display: none;
     }
   }
-  &:nth-child(5) {
+  &:nth-child(6) {
     max-width: 130px;
     text-align: right;
     @media (max-width: 992px) {
@@ -225,6 +412,11 @@ const TableHeadItem = styled.li`
 
 const TableBody = styled(TableHead)`
   padding: 10px 0;
+  cursor: pointer;
+  transition: 0.3s;
+  &:hover {
+    background: rgba(66, 139, 202, 0.109);
+  }
 `;
 
 const TableBodyItemCss = css`

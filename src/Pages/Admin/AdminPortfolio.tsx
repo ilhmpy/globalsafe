@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, FC, useRef } from "react";
 import * as Styled from "./Styled.elements";
 import styled, { css } from "styled-components/macro";
 import { SideNavbar } from "../../components/SideNav";
@@ -15,20 +15,124 @@ import { TestChart } from "../../components/Charts/Test";
 import { CSSTransition } from "react-transition-group";
 import { Tab, Content } from "../../components/UI/Tabs";
 import { AppContext } from "../../context/HubContext";
-import { Portfolio } from "../../types/portfolio";
+import { Header } from "../../components/Header/Header";
+import {
+  Portfolio,
+  RootPortfolio,
+  CollectionPortfolio,
+} from "../../types/portfolio";
 import { Balance } from "../../types/balance";
+import moment from "moment";
+import InfiniteScroll from "react-infinite-scroller";
+import { Scrollbars } from "react-custom-scrollbars";
+import { ModalPortfolio } from "./AdminPay/Payments";
+import { Loading } from "../../components/UI/Loading";
+
+const TableList: FC<{ data: CollectionPortfolio }> = ({ data }) => {
+  const [open, setOpen] = useState(false);
+
+  const onClose = () => {
+    setOpen(false);
+  };
+
+  const modalOpen = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setOpen(true);
+  };
+
+  return (
+    <div>
+      <CSSTransition in={open} timeout={300} classNames="modal" unmountOnExit>
+        <ModalPortfolio onClose={onClose} data={data} />
+      </CSSTransition>
+      <TableBody onClick={modalOpen}>
+        <TableBodyItem>
+          {moment(data.creationDate).format("DD/MM/YYYY")}
+        </TableBodyItem>
+        <TableBodyItem>{data.initialVolume}</TableBodyItem>
+        <TableBodyItem>
+          {(data.unitPrice / 100000).toFixed(2).toLocaleString()}
+        </TableBodyItem>
+        <TableBodyItem>{data.volume}</TableBodyItem>
+        <TableBodyItem></TableBodyItem>
+      </TableBody>
+    </div>
+  );
+};
 
 export const AdminPortfolio = () => {
-  const [card, setCard] = useState(3);
-  const [active, setActive] = useState(0);
+  const [card, setCard] = useState(0);
+  const [active, setActive] = useState(3);
   const [basket, setBasket] = useState<Portfolio>({
     GCWD: 0,
     DIAMOND: 0,
     MGCWD: 0,
   });
-
+  const [basketGCWD, setBasketGCWD] = useState<CollectionPortfolio[]>([]);
+  const [basketMGCWD, setBasketMGCWD] = useState<CollectionPortfolio[]>([]);
+  const [basketDIAMOND, setBasketDIAMOND] = useState<CollectionPortfolio[]>([]);
+  const [countGCWD, setCountGCWD] = useState(true);
+  const [countDIAMOND, setCountDIAMOND] = useState(true);
+  const [countMGCWD, setCountMGCWD] = useState(true);
+  const [numGCWD, setNumGCWD] = useState(20);
+  const [numMGCWD, setNumMGCWD] = useState(20);
+  const [numDIAMOND, setNumDIAMOND] = useState(20);
+  const [loading, setLoading] = useState(true);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
+  const scrollGCWD = useRef<any>(null);
+  const sizes = useWindowSize();
+  const header = sizes < 992;
+  const myLoadGCWD = () => {
+    if (hubConnection) {
+      setCountGCWD(false);
+      hubConnection
+        .invoke<RootPortfolio>("GetBaskets", 3, numGCWD, 20)
+        .then((res) => {
+          if (res.collection.length) {
+            console.log("loadMoreItems", res);
+            setBasketGCWD([...basketGCWD, ...res.collection]);
+            setCountGCWD(true);
+            setNumGCWD(numGCWD + 20);
+          }
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  };
+
+  const myLoadMGCWD = () => {
+    if (hubConnection) {
+      setCountMGCWD(false);
+      hubConnection
+        .invoke<RootPortfolio>("GetBaskets", 2, numMGCWD, 20)
+        .then((res) => {
+          if (res.collection.length) {
+            console.log("loadMoreItems", res);
+            setBasketMGCWD([...basketMGCWD, ...res.collection]);
+            setCountMGCWD(true);
+            setNumMGCWD(numMGCWD + 20);
+          }
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  };
+
+  const myLoadDIAMOND = () => {
+    if (hubConnection) {
+      setCountDIAMOND(false);
+      hubConnection
+        .invoke<RootPortfolio>("GetBaskets", 4, numDIAMOND, 20)
+        .then((res) => {
+          if (res.collection.length) {
+            console.log("loadMoreItems", res);
+            setBasketDIAMOND([...basketDIAMOND, ...res.collection]);
+            setCountDIAMOND(true);
+            setNumDIAMOND(numDIAMOND + 20);
+          }
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  };
 
   const handleClick = (id: number) => {
     if (id !== active) {
@@ -41,41 +145,99 @@ export const AdminPortfolio = () => {
       hubConnection
         .invoke<Portfolio>("GetBasketsOverview")
         .then((res) => {
-          console.log("GetBasketsOverview", res);
           setBasket(res);
         })
         .catch((err: Error) => console.log(err));
     }
   }, [hubConnection]);
 
-  console.log("Balance", Balance[3]);
-
-  // GCWD 3  DIAMOND 4 MGCWD 2
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection
+        .invoke<RootPortfolio>("GetBaskets", 3, 0, 20)
+        .then((res) => {
+          setLoading(false);
+          setBasketGCWD(res.collection);
+          setNumGCWD(20);
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  }, [hubConnection]);
 
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke("GetBaskets", 3, 0, 20)
+        .invoke<RootPortfolio>("GetBaskets", 2, 0, 20)
         .then((res) => {
-          console.log("GetBaskets", res);
+          setLoading(false);
+          console.log("res", res);
+          setBasketMGCWD(res.collection);
+          setNumMGCWD(20);
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  }, [hubConnection]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection
+        .invoke<RootPortfolio>("GetBaskets", 4, 0, 20)
+        .then((res) => {
+          setLoading(false);
+          setBasketDIAMOND(res.collection);
+          setNumDIAMOND(20);
         })
         .catch((err: Error) => console.log(err));
     }
   }, [hubConnection]);
 
   return (
-    <Styled.Wrapper>
-      <SideNavbar />
-      <Styled.Content>
-        <Styled.HeadBlock>
-          <UpTitle small>Портфель</UpTitle>
-          <Styled.UserName>
-            <span>Admin</span>
-            <Exit />
-          </Styled.UserName>
-        </Styled.HeadBlock>
-        <ChartContainer>
-          <HalfHead>
+    <>
+      {header && <Header admPanel />}
+      <Styled.Wrapper>
+        <SideNavbar />
+        <Styled.Content>
+          <Styled.HeadBlock>
+            <UpTitle small>Портфель</UpTitle>
+            <Styled.UserName>
+              <span>Admin</span>
+              <Exit />
+            </Styled.UserName>
+          </Styled.HeadBlock>
+          <ChartContainer>
+            <Styled.PayList>
+              <Styled.PayItem>
+                <Styled.PayItemHead mb>
+                  <UpTitle small>GCWD</UpTitle>
+                </Styled.PayItemHead>
+                <Styled.Radial bg={"rgba(255, 65, 110, 0.2)"}>
+                  <span>{basket.GCWD}</span>
+                  <span></span>
+                </Styled.Radial>
+              </Styled.PayItem>
+              <Styled.PayItem>
+                <Styled.PayItemHead mb>
+                  <UpTitle small>MGCWD</UpTitle>
+                </Styled.PayItemHead>
+
+                <Styled.Radial bg={"rgba(188, 212, 118, 0.2)"}>
+                  <span>{basket.MGCWD}</span>
+                  <span></span>
+                </Styled.Radial>
+              </Styled.PayItem>
+              <Styled.PayItem>
+                <Styled.PayItemHead mb>
+                  <UpTitle small>DIAMOND</UpTitle>
+                  {/* {sizes > 768 && <CalendarInput />} */}
+                </Styled.PayItemHead>
+                <Styled.Radial bg={"rgba(109, 185, 255, 0.2)"}>
+                  <span>{basket.MGCWD}</span>
+                  <span></span>
+                </Styled.Radial>
+              </Styled.PayItem>
+              <Styled.PayItem></Styled.PayItem>
+            </Styled.PayList>
+            {/* <HalfHead>
             <HalfTitle>Размер портфеля</HalfTitle>
             <HalfTabs>
               <HalfTab onClick={() => setCard(0)} card={card === 0}>
@@ -117,22 +279,22 @@ export const AdminPortfolio = () => {
                 mobLegend={120}
               />
             </CSSTransition>
-          </HalfContent>
-        </ChartContainer>
-        <TabsCard>
-          <Tabs>
-            <Tab onClick={() => handleClick(0)} active={active === 3}>
-              GCWD
-            </Tab>
-            <Tab onClick={() => handleClick(1)} active={active === 2}>
-              MGCWD
-            </Tab>
-            <Tab onClick={() => handleClick(2)} active={active === 4}>
-              DIAMOND
-            </Tab>
-          </Tabs>
-        </TabsCard>
-        {/* <FilterWrap>
+          </HalfContent> */}
+          </ChartContainer>
+          <TabsCard>
+            <Tabs>
+              <Tab onClick={() => handleClick(3)} active={active === 3}>
+                GCWD
+              </Tab>
+              <Tab onClick={() => handleClick(2)} active={active === 2}>
+                MGCWD
+              </Tab>
+              <Tab onClick={() => handleClick(4)} active={active === 4}>
+                DIAMOND
+              </Tab>
+            </Tabs>
+          </TabsCard>
+          {/* <FilterWrap>
           <FilterLeft>
             <Styled.FilterBlock>
               <Styled.SelectContainer>
@@ -155,31 +317,125 @@ export const AdminPortfolio = () => {
             </ButtonWrap>
           </FilterRight>
         </FilterWrap> */}
-        <Card>
-          <PaymentsTable>
-            <TableHead>
-              <TableHeadItem>Дата</TableHeadItem>
-              <TableHeadItem>Тип операции</TableHeadItem>
-              <TableHeadItem>Сумма операции</TableHeadItem>
-              <TableHeadItem>
-                <Filter />
-              </TableHeadItem>
-            </TableHead>
-            <TableBody>
-              <TableBodyItem>01/03/2021</TableBodyItem>
-              <TableBodyItem>Торги</TableBodyItem>
-              <TableBodyItem>+ 50 000</TableBodyItem>
-              <TableBodyItem></TableBodyItem>
-            </TableBody>
-          </PaymentsTable>
-          {/* <NotFound>
-            Данные не обнаружены. Попробуйте изменить параметры поиска.
-          </NotFound> */}
-        </Card>
-      </Styled.Content>
-    </Styled.Wrapper>
+          <Content active={active === 3}>
+            <CardTable>
+              <PaymentsTable>
+                <TableHead>
+                  <TableHeadItem>Дата покупки</TableHeadItem>
+                  <TableHeadItem>Первичное количество</TableHeadItem>
+                  <TableHeadItem>Стоимость за единицу, CWD</TableHeadItem>
+                  <TableHeadItem>Текущее количество</TableHeadItem>
+                  <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
+                </TableHead>
+                {basketGCWD.length ? (
+                  <Scrollbars style={{ height: "500px" }}>
+                    <InfiniteScroll
+                      pageStart={0}
+                      loadMore={myLoadGCWD}
+                      hasMore={countGCWD}
+                      useWindow={false}
+                      loader={
+                        <div className="loader" key={0}>
+                          Loading ...
+                        </div>
+                      }
+                    >
+                      {basketGCWD.map((item, idx) => (
+                        <TableList key={item.safeId} data={item} />
+                      ))}
+                    </InfiniteScroll>
+                  </Scrollbars>
+                ) : loading ? (
+                  <Loading />
+                ) : (
+                  <Styled.NotFound>
+                    Данные не обнаружены. Попробуйте изменить параметры поиска.
+                  </Styled.NotFound>
+                )}
+              </PaymentsTable>
+            </CardTable>
+          </Content>
+          <Content active={active === 2}>
+            <CardTable>
+              <PaymentsTable>
+                <TableHead>
+                  <TableHeadItem>Дата покупки</TableHeadItem>
+                  <TableHeadItem>Первичное количество</TableHeadItem>
+                  <TableHeadItem>Стоимость за единицу, CWD</TableHeadItem>
+                  <TableHeadItem>Текущее количество</TableHeadItem>
+                  <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
+                </TableHead>
+                {basketMGCWD.length ? (
+                  <Scrollbars style={{ height: "500px" }}>
+                    <InfiniteScroll
+                      pageStart={0}
+                      loadMore={myLoadMGCWD}
+                      hasMore={countMGCWD}
+                      useWindow={false}
+                      loader={
+                        <div className="loader" key={0}>
+                          Loading ...
+                        </div>
+                      }
+                    >
+                      {basketMGCWD.map((item, idx) => (
+                        <TableList key={item.safeId} data={item} />
+                      ))}
+                    </InfiniteScroll>
+                  </Scrollbars>
+                ) : (
+                  <Styled.NotFound>
+                    Данные не обнаружены. Попробуйте изменить параметры поиска.
+                  </Styled.NotFound>
+                )}
+              </PaymentsTable>
+            </CardTable>
+          </Content>
+          <Content active={active === 4}>
+            <CardTable>
+              <PaymentsTable>
+                <TableHead>
+                  <TableHeadItem>Дата покупки</TableHeadItem>
+                  <TableHeadItem>Первичное количество</TableHeadItem>
+                  <TableHeadItem>Стоимость за единицу, CWD</TableHeadItem>
+                  <TableHeadItem>Текущее количество</TableHeadItem>
+                  <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
+                </TableHead>
+                {basketDIAMOND.length ? (
+                  <Scrollbars style={{ height: "500px" }}>
+                    <InfiniteScroll
+                      pageStart={0}
+                      loadMore={myLoadDIAMOND}
+                      hasMore={countDIAMOND}
+                      useWindow={false}
+                      loader={
+                        <div className="loader" key={0}>
+                          Loading ...
+                        </div>
+                      }
+                    >
+                      {basketDIAMOND.map((item, idx) => (
+                        <TableList key={item.safeId} data={item} />
+                      ))}
+                    </InfiniteScroll>
+                  </Scrollbars>
+                ) : (
+                  <Styled.NotFound>
+                    Данные не обнаружены. Попробуйте изменить параметры поиска.
+                  </Styled.NotFound>
+                )}
+              </PaymentsTable>
+            </CardTable>
+          </Content>
+        </Styled.Content>
+      </Styled.Wrapper>
+    </>
   );
 };
+
+const CardTable = styled(Card)`
+  height: 600px;
+`;
 
 const PaymentsTable = styled.div`
   padding: 30px;
@@ -192,7 +448,7 @@ const TableHead = styled.ul`
   justify-content: flex-start;
   padding-bottom: 6px;
   border-bottom: 1px solid rgba(81, 81, 114, 0.2);
-  @media (max-width: 576px) {
+  @media (max-width: 992px) {
     justify-content: space-between;
   }
 `;
@@ -204,41 +460,54 @@ const TableHeadItem = styled.li`
   letter-spacing: 0.1px;
   color: rgba(81, 81, 114, 0.6);
   width: 100%;
+  @media (max-width: 992px) {
+    padding-right: 5px;
+  }
   &:nth-child(1) {
     max-width: 150px;
     @media (max-width: 576px) {
-      max-width: 50px;
-      word-break: break-word;
+      max-width: 80px;
     }
   }
   &:nth-child(2) {
     max-width: 200px;
     @media (max-width: 576px) {
-      max-width: 74px;
+      display: none;
     }
   }
   &:nth-child(3) {
-    max-width: 110px;
+    max-width: 200px;
     @media (max-width: 768px) {
       max-width: 80px;
     }
     @media (max-width: 576px) {
-      max-width: 64px;
+      max-width: 90px;
+      text-align: center;
     }
   }
   &:nth-child(4) {
-    max-width: 110px;
-    text-align: right;
-    margin-left: auto;
+    max-width: 200px;
     @media (max-width: 576px) {
-      max-width: 40px;
+      display: none;
+      max-width: 20px;
       margin-left: 0;
+    }
+  }
+  &:nth-child(5) {
+    max-width: 80px;
+    @media (max-width: 992px) {
+      max-width: 30px;
     }
   }
 `;
 
 const TableBody = styled(TableHead)`
   padding: 10px 0;
+  cursor: pointer;
+  transition: 0.3s;
+  &:hover {
+    background: rgba(66, 139, 202, 0.109);
+  }
 `;
 
 const TableBodyItemCss = css`

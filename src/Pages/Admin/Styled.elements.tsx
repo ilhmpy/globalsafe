@@ -10,13 +10,22 @@ export const Wrapper = styled.div`
   max-width: 1440px;
   margin-right: auto;
   margin-left: auto;
+  position: relative;
+  @media (max-width: 992px){
+    margin-top: 82px;
+  }
 `;
 
 export const Content = styled.div<{ mtbig?: boolean }>`
   flex-grow: 1;
   margin: ${(props) => (props.mtbig ? "60px auto 40px" : "30px auto 40px")};
   padding: 0 40px 0;
-  max-width: 1210px;
+  @media (max-width: 1200px) {
+    margin-left: 60px;
+  }
+  @media (max-width: 992px) {
+    margin-left: 0px;
+  }
   @media (max-width: 768px) {
     padding: 0 20px 0;
   }
@@ -206,4 +215,48 @@ export const InputsWrap = styled.div`
     flex-wrap: wrap;
     width: 100%;
   }
+`;
+
+export const PayItem = styled.div`
+  position: relative;
+  display: flex;
+  width: 33.3333%;
+  text-align: center;
+  justify-content: center;
+  flex-direction: column;
+  ${UpTitle} {
+    margin-bottom: 0;
+    margin-right: 10px;
+  }
+  &:last-child {
+    display: none;
+  }
+  @media (max-width: 768px) {
+    width: 50%;
+    margin-bottom: 20px;
+    &:nth-child(3) {
+      width: 100%;
+    }
+  }
+`;
+
+export const PayList = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  @media (max-width: 992px) {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+`;
+
+export const NotFound = styled.div`
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 21px;
+  padding: 30px;
+  letter-spacing: 0.1px;
+  min-height: 250px;
+  color: #0e0d3d;
 `;

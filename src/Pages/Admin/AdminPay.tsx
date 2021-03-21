@@ -34,6 +34,7 @@ import {
   PaymentsListPay,
 } from "./AdminPay/DepositList";
 import moment from "moment";
+import { Header } from "../../components/Header/Header";
 
 export const AdminPay = () => {
   const [active, setActive] = useState(0);
@@ -201,11 +202,6 @@ export const AdminPay = () => {
     }
   }, [hubConnection]);
 
-  // console.log(
-  //   "names",
-  //   depositList.map((item: any) => item.userName)
-  // );
-
   useEffect(() => {
     getPaymentsOverview();
   }, [hubConnection]);
@@ -315,240 +311,243 @@ export const AdminPay = () => {
     }
   };
   return (
-    <Styled.Wrapper>
-      <ReactNotification />
-      <SideNavbar />
-      <Styled.Content>
-        <Styled.HeadBlock>
-          <UpTitle small>Выплаты</UpTitle>
-          <Styled.UserName>
-            <span>Admin</span>
-            <Exit />
-          </Styled.UserName>
-        </Styled.HeadBlock>
+    <>
+      {size && <Header admPanel />}
+      <Styled.Wrapper>
+        <ReactNotification />
+        <SideNavbar />
+        <Styled.Content>
+          <Styled.HeadBlock>
+            <UpTitle small>Выплаты</UpTitle>
+            <Styled.UserName>
+              <span>Admin</span>
+              <Exit />
+            </Styled.UserName>
+          </Styled.HeadBlock>
 
-        <Card>
-          <PayList>
-            <PayItem>
-              <Styled.PayItemHead mb>
-                <UpTitle small>К выплате</UpTitle>
-              </Styled.PayItemHead>
-              <Styled.Radial bg={"rgba(255, 65, 110, 0.2)"}>
-                <span>
-                  {sum ? (sum[2] / 100000).toFixed(0).toLocaleString() : "-"}
-                </span>
-                <span>CWD</span>
-              </Styled.Radial>
-            </PayItem>
-            <PayItem>
-              <Styled.PayItemHead mb>
-                <UpTitle small>Выплачено</UpTitle>
-              </Styled.PayItemHead>
-
-              <Styled.Radial bg={"rgba(188, 212, 118, 0.2)"}>
-                <span>
-                  {sum ? (sum[0] / 100000).toFixed(0).toLocaleString() : "-"}
-                </span>
-                <span>CWD</span>
-              </Styled.Radial>
-            </PayItem>
-            <PayItem>
-              <Styled.PayItemHead mb>
-                <UpTitle small>На согласовании</UpTitle>
-                {/* {sizes > 768 && <CalendarInput />} */}
-              </Styled.PayItemHead>
-              <Styled.Radial bg={"rgba(109, 185, 255, 0.2)"}>
-                <span>
-                  {sum ? (sum[1] / 100000).toFixed(0).toLocaleString() : "-"}
-                </span>
-                <span>CWD</span>
-              </Styled.Radial>
-            </PayItem>
-            <PayItem></PayItem>
-          </PayList>
-        </Card>
-        <Card>
-          <Tabs>
-            <PayTab onClick={() => handleClick(0)} active={active === 0}>
-              На согласовании
-            </PayTab>
-            <Tab onClick={() => handleClick(1)} active={active === 1}>
-              Выплачено
-            </Tab>
-            <Tab onClick={() => handleClick(2)} active={active === 2}>
-              К выплате
-            </Tab>
-          </Tabs>
-        </Card>
-
-        {active === 0 && (
-          <ButtonWrap>
-            <Button dangerOutline mb onClick={paymentsConfirm}>
-              Согласовать все
-            </Button>
-          </ButtonWrap>
-        )}
-
-        <Content active={active === 0}>
           <Card>
-            <PaymentsTable>
-              <TableHead>
-                <TableHeadItem>Пользователь</TableHeadItem>
-                <TableHeadItem>Название</TableHeadItem>
-                <TableHeadItem>% доходности</TableHeadItem>
-                <TableHeadItem>Дата выплаты</TableHeadItem>
-                <TableHeadItem>Доходность по программе</TableHeadItem>
-                <TableHeadItem>Сумма вклада</TableHeadItem>
-                <TableHeadItem>Сумма выплаты</TableHeadItem>
-                <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
-              </TableHead>
-              {depositList.length ? (
-                <Scrollbars style={{ height: "500px" }}>
-                  <InfiniteScroll
-                    pageStart={0}
-                    loadMore={loadMoreItems}
-                    hasMore={count}
-                    useWindow={false}
-                    loader={
-                      <div className="loader" key={0}>
-                        Loading ...
-                      </div>
-                    }
-                  >
-                    {depositList.map((item: PaymentsCollection) => (
-                      <DepositList
-                        key={item.safeId}
-                        data={item}
-                        adjustPay={adjustPay}
-                        confirmPay={confirmPay}
-                      />
-                    ))}
-                  </InfiniteScroll>
-                </Scrollbars>
-              ) : (
-                <NotFound>Данные не обнаружены.</NotFound>
-              )}
-            </PaymentsTable>
-          </Card>
-        </Content>
+            <Styled.PayList>
+              <Styled.PayItem>
+                <Styled.PayItemHead mb>
+                  <UpTitle small>К выплате</UpTitle>
+                </Styled.PayItemHead>
+                <Styled.Radial bg={"rgba(255, 65, 110, 0.2)"}>
+                  <span>
+                    {sum ? (sum[2] / 100000).toFixed(0).toLocaleString() : "-"}
+                  </span>
+                  <span>CWD</span>
+                </Styled.Radial>
+              </Styled.PayItem>
+              <Styled.PayItem>
+                <Styled.PayItemHead mb>
+                  <UpTitle small>Выплачено</UpTitle>
+                </Styled.PayItemHead>
 
-        <Content active={active === 1}>
-          <Card>
-            <PaymentsTable>
-              <TableHead>
-                <TableHeadItemPaid>Пользователь</TableHeadItemPaid>
-                <TableHeadItemPaid>Название</TableHeadItemPaid>
-                <TableHeadItemPaid>Дата выплаты</TableHeadItemPaid>
-                <TableHeadItemPaid>Категория</TableHeadItemPaid>
-                <TableHeadItemPaid>Сумма вклада</TableHeadItemPaid>
-                <TableHeadItemPaid>Сумма выплаты</TableHeadItemPaid>
-                <TableHeadItemPaid>{/* <Filter /> */}</TableHeadItemPaid>
-              </TableHead>
-              {depositList.length ? (
-                <Scrollbars style={{ height: "500px" }}>
-                  <InfiniteScroll
-                    pageStart={0}
-                    loadMore={myLoad}
-                    hasMore={next}
-                    useWindow={false}
-                    loader={
-                      <div className="loader" key={0}>
-                        Loading ...
-                      </div>
-                    }
-                  >
-                    {depositPayList.map((item: CollectionCharges) => (
-                      <PaymentsListPay key={item.safeId} data={item} />
-                      // <TableBody key={item.safeId}>
-                      //   <TableBodyItemPaid>{item.userName}</TableBodyItemPaid>
-                      //   <TableBodyItemPaid>
-                      //     {item.deposit.name}
-                      //   </TableBodyItemPaid>
-                      //   <TableBodyItemPaid>
-                      //     {moment(item.prevPayment).format("DD/MM/YYYY")}
-                      //   </TableBodyItemPaid>
-                      //   <TableBodyItemPaid>
-                      //     {item.state === 4
-                      //       ? "Закрытие вклада"
-                      //       : "Начисление дивидендов"}
-                      //   </TableBodyItemPaid>
-                      //   <TableBodyItemPaid>
-                      //     {item.baseAmountView.toLocaleString()}
-                      //   </TableBodyItemPaid>
-                      //   <TableBodyItemPaid>
-                      //     {item.payedAmountView}
-                      //   </TableBodyItemPaid>
-                      //   <TableBodyItemPaid></TableBodyItemPaid>
-                      // </TableBody>
-                    ))}
-                  </InfiniteScroll>
-                </Scrollbars>
-              ) : (
-                <NotFound>Данные не обнаружены.</NotFound>
-              )}
-            </PaymentsTable>
+                <Styled.Radial bg={"rgba(188, 212, 118, 0.2)"}>
+                  <span>
+                    {sum ? (sum[0] / 100000).toFixed(0).toLocaleString() : "-"}
+                  </span>
+                  <span>CWD</span>
+                </Styled.Radial>
+              </Styled.PayItem>
+              <Styled.PayItem>
+                <Styled.PayItemHead mb>
+                  <UpTitle small>На согласовании</UpTitle>
+                  {/* {sizes > 768 && <CalendarInput />} */}
+                </Styled.PayItemHead>
+                <Styled.Radial bg={"rgba(109, 185, 255, 0.2)"}>
+                  <span>
+                    {sum ? (sum[1] / 100000).toFixed(0).toLocaleString() : "-"}
+                  </span>
+                  <span>CWD</span>
+                </Styled.Radial>
+              </Styled.PayItem>
+              <Styled.PayItem></Styled.PayItem>
+            </Styled.PayList>
           </Card>
-        </Content>
+          <Card>
+            <Tabs>
+              <PayTab onClick={() => handleClick(0)} active={active === 0}>
+                На согласовании
+              </PayTab>
+              <Tab onClick={() => handleClick(1)} active={active === 1}>
+                Выплачено
+              </Tab>
+              <Tab onClick={() => handleClick(2)} active={active === 2}>
+                К выплате
+              </Tab>
+            </Tabs>
+          </Card>
 
-        <Content active={active === 2}>
-          <Card>
-            <PaymentsTable>
-              <TableHead>
-                <TableHeadItemPaid>Пользователь</TableHeadItemPaid>
-                <TableHeadItemPaid>Название</TableHeadItemPaid>
-                <TableHeadItemPaid>Дата выплаты</TableHeadItemPaid>
-                <TableHeadItemPaid>Категория</TableHeadItemPaid>
-                <TableHeadItemPaid>Сумма вклада</TableHeadItemPaid>
-                <TableHeadItemPaid>Сумма выплаты</TableHeadItemPaid>
-                <TableHeadItemPaid>{/* <Filter /> */}</TableHeadItemPaid>
-              </TableHead>
-              {paymentsList.length ? (
-                <Scrollbars style={{ height: "500px" }}>
-                  <InfiniteScroll
-                    pageStart={0}
-                    loadMore={loadMorePayments}
-                    hasMore={countPay}
-                    useWindow={false}
-                    loader={
-                      <div className="loader" key={0}>
-                        Loading ...
-                      </div>
-                    }
-                  >
-                    {paymentsList.map((item: PaymentsCollection) => (
-                      <PaymentsList key={item.safeId} data={item} />
-                      // <TableBody>
-                      //   <TableBodyItemPaid>{item.userName}</TableBodyItemPaid>
-                      //   <TableBodyItemPaid>
-                      //     {item.deposit.name}
-                      //   </TableBodyItemPaid>
-                      //   <TableBodyItemPaid>
-                      //     {moment(item.paymentDate).format("DD/MM/YYYY")}
-                      //   </TableBodyItemPaid>
-                      //   <TableBodyItemPaid>
-                      //     {item.state === 4
-                      //       ? "Закрытие вклада"
-                      //       : "Начисление дивидендов"}
-                      //   </TableBodyItemPaid>
-                      //   <TableBodyItemPaid>
-                      //     {item.baseAmountView.toLocaleString()}
-                      //   </TableBodyItemPaid>
-                      //   <TableBodyItemPaid>
-                      //     {item.paymentAmountView}
-                      //   </TableBodyItemPaid>
-                      //   <TableBodyItemPaid></TableBodyItemPaid>
-                      // </TableBody>
-                    ))}
-                  </InfiniteScroll>
-                </Scrollbars>
-              ) : (
-                <NotFound>Данные не обнаружены.</NotFound>
-              )}
-            </PaymentsTable>
-          </Card>
-        </Content>
-      </Styled.Content>
-    </Styled.Wrapper>
+          {active === 0 && (
+            <ButtonWrap>
+              <Button dangerOutline mb onClick={paymentsConfirm}>
+                Согласовать все
+              </Button>
+            </ButtonWrap>
+          )}
+
+          <Content active={active === 0}>
+            <Card>
+              <PaymentsTable>
+                <TableHead>
+                  <TableHeadItem>Пользователь</TableHeadItem>
+                  <TableHeadItem>Название</TableHeadItem>
+                  <TableHeadItem>% доходности</TableHeadItem>
+                  <TableHeadItem>Дата выплаты</TableHeadItem>
+                  <TableHeadItem>Доходность по программе</TableHeadItem>
+                  <TableHeadItem>Сумма вклада</TableHeadItem>
+                  <TableHeadItem>Сумма выплаты</TableHeadItem>
+                  <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
+                </TableHead>
+                {depositList.length ? (
+                  <Scrollbars style={{ height: "500px" }}>
+                    <InfiniteScroll
+                      pageStart={0}
+                      loadMore={loadMoreItems}
+                      hasMore={count}
+                      useWindow={false}
+                      loader={
+                        <div className="loader" key={0}>
+                          Loading ...
+                        </div>
+                      }
+                    >
+                      {depositList.map((item: PaymentsCollection) => (
+                        <DepositList
+                          key={item.safeId}
+                          data={item}
+                          adjustPay={adjustPay}
+                          confirmPay={confirmPay}
+                        />
+                      ))}
+                    </InfiniteScroll>
+                  </Scrollbars>
+                ) : (
+                  <NotFound>Данные не обнаружены.</NotFound>
+                )}
+              </PaymentsTable>
+            </Card>
+          </Content>
+
+          <Content active={active === 1}>
+            <Card>
+              <PaymentsTable>
+                <TableHead>
+                  <TableHeadItemPaid>Пользователь</TableHeadItemPaid>
+                  <TableHeadItemPaid>Название</TableHeadItemPaid>
+                  <TableHeadItemPaid>Дата выплаты</TableHeadItemPaid>
+                  <TableHeadItemPaid>Категория</TableHeadItemPaid>
+                  <TableHeadItemPaid>Сумма вклада</TableHeadItemPaid>
+                  <TableHeadItemPaid>Сумма выплаты</TableHeadItemPaid>
+                  <TableHeadItemPaid>{/* <Filter /> */}</TableHeadItemPaid>
+                </TableHead>
+                {depositList.length ? (
+                  <Scrollbars style={{ height: "500px" }}>
+                    <InfiniteScroll
+                      pageStart={0}
+                      loadMore={myLoad}
+                      hasMore={next}
+                      useWindow={false}
+                      loader={
+                        <div className="loader" key={0}>
+                          Loading ...
+                        </div>
+                      }
+                    >
+                      {depositPayList.map((item: CollectionCharges) => (
+                        <PaymentsListPay key={item.safeId} data={item} />
+                        // <TableBody key={item.safeId}>
+                        //   <TableBodyItemPaid>{item.userName}</TableBodyItemPaid>
+                        //   <TableBodyItemPaid>
+                        //     {item.deposit.name}
+                        //   </TableBodyItemPaid>
+                        //   <TableBodyItemPaid>
+                        //     {moment(item.prevPayment).format("DD/MM/YYYY")}
+                        //   </TableBodyItemPaid>
+                        //   <TableBodyItemPaid>
+                        //     {item.state === 4
+                        //       ? "Закрытие вклада"
+                        //       : "Начисление дивидендов"}
+                        //   </TableBodyItemPaid>
+                        //   <TableBodyItemPaid>
+                        //     {item.baseAmountView.toLocaleString()}
+                        //   </TableBodyItemPaid>
+                        //   <TableBodyItemPaid>
+                        //     {item.payedAmountView}
+                        //   </TableBodyItemPaid>
+                        //   <TableBodyItemPaid></TableBodyItemPaid>
+                        // </TableBody>
+                      ))}
+                    </InfiniteScroll>
+                  </Scrollbars>
+                ) : (
+                  <NotFound>Данные не обнаружены.</NotFound>
+                )}
+              </PaymentsTable>
+            </Card>
+          </Content>
+
+          <Content active={active === 2}>
+            <Card>
+              <PaymentsTable>
+                <TableHead>
+                  <TableHeadItemPaid>Пользователь</TableHeadItemPaid>
+                  <TableHeadItemPaid>Название</TableHeadItemPaid>
+                  <TableHeadItemPaid>Дата выплаты</TableHeadItemPaid>
+                  <TableHeadItemPaid>Категория</TableHeadItemPaid>
+                  <TableHeadItemPaid>Сумма вклада</TableHeadItemPaid>
+                  <TableHeadItemPaid>Сумма выплаты</TableHeadItemPaid>
+                  <TableHeadItemPaid>{/* <Filter /> */}</TableHeadItemPaid>
+                </TableHead>
+                {paymentsList.length ? (
+                  <Scrollbars style={{ height: "500px" }}>
+                    <InfiniteScroll
+                      pageStart={0}
+                      loadMore={loadMorePayments}
+                      hasMore={countPay}
+                      useWindow={false}
+                      loader={
+                        <div className="loader" key={0}>
+                          Loading ...
+                        </div>
+                      }
+                    >
+                      {paymentsList.map((item: PaymentsCollection) => (
+                        <PaymentsList key={item.safeId} data={item} />
+                        // <TableBody>
+                        //   <TableBodyItemPaid>{item.userName}</TableBodyItemPaid>
+                        //   <TableBodyItemPaid>
+                        //     {item.deposit.name}
+                        //   </TableBodyItemPaid>
+                        //   <TableBodyItemPaid>
+                        //     {moment(item.paymentDate).format("DD/MM/YYYY")}
+                        //   </TableBodyItemPaid>
+                        //   <TableBodyItemPaid>
+                        //     {item.state === 4
+                        //       ? "Закрытие вклада"
+                        //       : "Начисление дивидендов"}
+                        //   </TableBodyItemPaid>
+                        //   <TableBodyItemPaid>
+                        //     {item.baseAmountView.toLocaleString()}
+                        //   </TableBodyItemPaid>
+                        //   <TableBodyItemPaid>
+                        //     {item.paymentAmountView}
+                        //   </TableBodyItemPaid>
+                        //   <TableBodyItemPaid></TableBodyItemPaid>
+                        // </TableBody>
+                      ))}
+                    </InfiniteScroll>
+                  </Scrollbars>
+                ) : (
+                  <NotFound>Данные не обнаружены.</NotFound>
+                )}
+              </PaymentsTable>
+            </Card>
+          </Content>
+        </Styled.Content>
+      </Styled.Wrapper>
+    </>
   );
 };
 
@@ -656,17 +655,18 @@ const TableHeadItemPaid = styled(TableHeadItem)`
     max-width: 170px;
   }
   &:nth-child(5) {
-    max-width: 100px;
+    max-width: 112px;
   }
   &:nth-child(6) {
     max-width: 100px;
+    text-align: left;
     @media (max-width: 576px) {
       display: block;
       text-align: center;
     }
   }
   &:nth-child(7) {
-    max-width: 40px;
+    max-width: 50px;
     text-align: right;
   }
 `;
@@ -711,45 +711,6 @@ const Tabs = styled.div`
         }
       }
     }
-  }
-`;
-
-const PayList = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  padding: 20px;
-  @media (max-width: 992px) {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-`;
-
-const PayItem = styled.div`
-  position: relative;
-  display: flex;
-  width: 33.3333%;
-  text-align: center;
-  justify-content: center;
-  flex-direction: column;
-  ${UpTitle} {
-    margin-bottom: 0;
-    margin-right: 10px;
-  }
-  &:last-child {
-    display: none;
-  }
-  @media (max-width: 768px) {
-    width: 50%;
-    margin-bottom: 20px;
-    ${Styled.ChartItemDate} {
-      display: none;
-    }
-    &:nth-child(3) {
-      width: 100%;
-    }
-  }
-  @media (max-width: 576px) {
   }
 `;
 

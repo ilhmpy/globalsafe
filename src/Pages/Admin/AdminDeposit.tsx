@@ -36,6 +36,8 @@ import "swiper/components/pagination/pagination.scss";
 import "swiper/components/scrollbar/scrollbar.scss";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { ModalDeposit } from "./AdminPay/Payments";
+import { Header } from "../../components/Header/Header";
+import { Loading } from "../../components/UI/Loading";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 type PayProps = {
@@ -71,7 +73,7 @@ const AdminDepositList: FC<PayProps> = ({ data }: PayProps) => {
         <TableBodyItem>
           {moment(data.paymentDate).format("DD/MM/YYYY")}
         </TableBodyItem>
-        <TableBodyItem>{data.baseAmountView}</TableBodyItem>
+        <TableBodyItem>{data.payedAmountView}</TableBodyItem>
         <TableBodyItem></TableBodyItem>
       </TableBody>
     </div>
@@ -83,6 +85,7 @@ export const AdminDeposit = () => {
   const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>(
     []
   );
+  const [loading, setLoading] = useState(true);
   const [depositsList, setDepositsList] = useState<PaymentsCollection[]>([]);
   const [checkList, setCheckList] = useState<any>([]);
   const [name, setName] = useState("");
@@ -135,6 +138,7 @@ export const AdminDeposit = () => {
   const hubConnection = appContext.hubConnection;
   const sizes = useWindowSize();
   const size = sizes < 768;
+  const header = sizes < 992;
 
   const filterClick = (id: number) => {
     console.log("click", id);
@@ -183,23 +187,52 @@ export const AdminDeposit = () => {
     }
   }, [hubConnection]);
 
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection
+        .invoke<RootPayments>(
+          "GetUsersDeposits",
+          [1, 2, 3, 4, 5, 6],
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          0,
+          20
+        )
+        .then((res) => {
+          setNum(20);
+          setLoading(false);
+          setDepositsList(res.collection);
+        })
+        .catch((err: Error) => {
+          setLoading(false);
+          console.log(err);
+        });
+    }
+  }, [hubConnection]);
+
   const submit = () => {
     if (hubConnection) {
       hubConnection
         .invoke<RootPayments>(
           "GetUsersDeposits",
           [1, 2, 3, 4, 5, 6],
-          name || null,
+          name ? name : null,
           namesProgram.length ? namesProgram : null,
-          openDate.from || null,
-          openDate.to || null,
-          closeDate.from || null,
-          closeDate.to || null,
+          openDate.from ? openDate.from : null,
+          openDate.to ? openDate.to : null,
+          closeDate.from ? closeDate.from : null,
+          closeDate.to ? closeDate.from : null,
           null,
           0,
           20
         )
         .then((res) => {
+          setNum(20);
           console.log("submit", res);
           setDepositsList(res.collection);
         })
@@ -208,198 +241,187 @@ export const AdminDeposit = () => {
   };
 
   return (
-    <Styled.Wrapper>
-      <SideNavbar />
-      <Styled.Content>
-        <Styled.HeadBlock>
-          <UpTitle small>Выплаты</UpTitle>
-          <Styled.UserName>
-            <span>Admin</span>
-            <Exit />
-          </Styled.UserName>
-        </Styled.HeadBlock>
-        <Styled.TitleHead>Активные депозиты</Styled.TitleHead>
-        <div>
-          <DepositWrap>
-            {!size && (
-              <DepositInner>
-                <Swiper
-                  spaceBetween={10}
-                  slidesPerView={1}
-                  pagination={{ clickable: true }}
-                >
-                  {newArrayBig.map((i, idx) => (
-                    <SwiperSlide key={idx} style={{ maxWidth: 1130 }}>
-                      <SwiperInner>
-                        {!size &&
-                          i.map((item: DepositStats, idx: number) => (
-                            <DepositItem key={idx}>
-                              <Styled.PayItemHead mb>
-                                <UpTitle small>{item.depositName}</UpTitle>
-                              </Styled.PayItemHead>
-                              <RadialWrap>
-                                <HalfRound>
-                                  <span>{item.count}</span>
-                                  <HalfRoundBorder
-                                    width={size ? "47" : "90"}
-                                    height={size ? "63" : "123"}
-                                    color={"#A78CF2"}
-                                  />
-                                </HalfRound>
-                                <Styled.Radial bg={"#A78CF2"}>
-                                  <span>
-                                    {(item.amount / 100000)
-                                      .toFixed(1)
-                                      .toLocaleString()}
-                                  </span>
-                                  <span>CWD</span>
-                                </Styled.Radial>
-                              </RadialWrap>
-                            </DepositItem>
+    <>
+      {header && <Header admPanel />}
+      <Styled.Wrapper>
+        <SideNavbar />
+        <Styled.Content>
+          <Styled.HeadBlock>
+            <UpTitle small>Выплаты</UpTitle>
+            <Styled.UserName>
+              <span>Admin</span>
+              <Exit />
+            </Styled.UserName>
+          </Styled.HeadBlock>
+          <Styled.TitleHead>Активные депозиты</Styled.TitleHead>
+          <div>
+            <DepositWrap>
+              {!size && (
+                <DepositInner>
+                  <Swiper
+                    spaceBetween={10}
+                    slidesPerView={1}
+                    pagination={{ clickable: true }}
+                  >
+                    {newArrayBig.map((i, idx) => (
+                      <SwiperSlide key={idx} style={{ maxWidth: 1130 }}>
+                        <SwiperInner>
+                          {!size &&
+                            i.map((item: DepositStats, idx: number) => (
+                              <DepositItem key={idx}>
+                                <Styled.PayItemHead mb>
+                                  <UpTitle small>{item.depositName}</UpTitle>
+                                </Styled.PayItemHead>
+                                <RadialWrap>
+                                  <HalfRound>
+                                    <span>{item.count}</span>
+                                    <HalfRoundBorder
+                                      width={size ? "47" : "90"}
+                                      height={size ? "63" : "123"}
+                                      color={"#A78CF2"}
+                                    />
+                                  </HalfRound>
+                                  <Styled.Radial bg={"#A78CF2"}>
+                                    <span>
+                                      {(item.amount / 100000)
+                                        .toFixed(1)
+                                        .toLocaleString()}
+                                    </span>
+                                    <span>CWD</span>
+                                  </Styled.Radial>
+                                </RadialWrap>
+                              </DepositItem>
+                            ))}
+                        </SwiperInner>
+                      </SwiperSlide>
+                    ))}
+                  </Swiper>
+                </DepositInner>
+              )}
+              {size && (
+                <MySwiperContainer>
+                  <Swiper
+                    spaceBetween={50}
+                    slidesPerView={1}
+                    pagination={{ clickable: true }}
+                  >
+                    {newArrayMob.map((i, idx) => (
+                      <SwiperSlide key={idx}>
+                        <DepositItemWrap>
+                          {i.map((item: DepositStats, idx: number) => (
+                            <DepositItemInner key={idx}>
+                              <DepositItem>
+                                <Styled.PayItemHead mb>
+                                  <UpTitle small>{item.depositName}</UpTitle>
+                                </Styled.PayItemHead>
+                                <RadialWrap>
+                                  <HalfRound>
+                                    <span>{item.count}</span>
+                                    <HalfRoundBorder
+                                      width={"47"}
+                                      height={"63"}
+                                      color={"#A78CF2"}
+                                    />
+                                  </HalfRound>
+                                  <Styled.Radial bg={"#A78CF2"}>
+                                    <span>
+                                      {(item.amount / 100000)
+                                        .toFixed(1)
+                                        .toLocaleString()}
+                                    </span>
+                                    <span>CWD</span>
+                                  </Styled.Radial>
+                                </RadialWrap>
+                              </DepositItem>
+                            </DepositItemInner>
                           ))}
-                      </SwiperInner>
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-              </DepositInner>
-            )}
-            {size && (
-              <MySwiperContainer>
-                <Swiper
-                  spaceBetween={50}
-                  slidesPerView={1}
-                  pagination={{ clickable: true }}
-                >
-                  {newArrayMob.map((i, idx) => (
-                    <SwiperSlide key={idx}>
-                      <DepositItemWrap>
-                        {i.map((item: DepositStats, idx: number) => (
-                          <DepositItemInner key={idx}>
-                            <DepositItem>
-                              <Styled.PayItemHead mb>
-                                <UpTitle small>{item.depositName}</UpTitle>
-                              </Styled.PayItemHead>
-                              <RadialWrap>
-                                <HalfRound>
-                                  <span>{item.count}</span>
-                                  <HalfRoundBorder
-                                    width={"47"}
-                                    height={"63"}
-                                    color={"#A78CF2"}
-                                  />
-                                </HalfRound>
-                                <Styled.Radial bg={"#A78CF2"}>
-                                  <span>
-                                    {(item.amount / 100000)
-                                      .toFixed(1)
-                                      .toLocaleString()}
-                                  </span>
-                                  <span>CWD</span>
-                                </Styled.Radial>
-                              </RadialWrap>
-                            </DepositItem>
-                          </DepositItemInner>
-                        ))}
-                      </DepositItemWrap>
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-              </MySwiperContainer>
-            )}
-          </DepositWrap>
-        </div>
+                        </DepositItemWrap>
+                      </SwiperSlide>
+                    ))}
+                  </Swiper>
+                </MySwiperContainer>
+              )}
+            </DepositWrap>
+          </div>
 
-        <Styled.FilterBlock>
-          <Styled.SelectContainer>
-            <Styled.SelectWrap>
-              <Styled.Label>Пользователь</Styled.Label>
-              <Input value={name} onChange={(e) => setName(e.target.value)} />
-            </Styled.SelectWrap>
-            <Styled.SelectWrap>
-              <Styled.Label>Название программы</Styled.Label>
-              <Select
-                checkList={checkList}
-                setCheckList={setCheckList}
-                values={listDeposits.map((item) => item.name)}
-              />
-            </Styled.SelectWrap>
-            <Styled.InputsWrap>
-              <InputsWrapItem>
-                <TestInput
-                  setOpenDate={setOpenDate}
-                  openDate={openDate}
-                  label="Дата открытия"
+          <Styled.FilterBlock>
+            <Styled.SelectContainer>
+              <Styled.SelectWrap>
+                <Styled.Label>Пользователь</Styled.Label>
+                <Input value={name} onChange={(e) => setName(e.target.value)} />
+              </Styled.SelectWrap>
+              <Styled.SelectWrap>
+                <Styled.Label>Название программы</Styled.Label>
+                <Select
+                  checkList={checkList}
+                  setCheckList={setCheckList}
+                  values={listDeposits.map((item) => item.name)}
                 />
-              </InputsWrapItem>
-              <TestInput
-                setOpenDate={setCloseDate}
-                openDate={closeDate}
-                label="Дата след.выплаты"
-              />
-            </Styled.InputsWrap>
+              </Styled.SelectWrap>
+              <Styled.InputsWrap>
+                <InputsWrapItem>
+                  <TestInput
+                    setOpenDate={setOpenDate}
+                    openDate={openDate}
+                    label="Дата открытия"
+                  />
+                </InputsWrapItem>
+                <TestInput
+                  setOpenDate={setCloseDate}
+                  openDate={closeDate}
+                  label="Дата след.выплаты"
+                />
+              </Styled.InputsWrap>
 
-            <Button danger onClick={submit}>
-              Применить
-            </Button>
-          </Styled.SelectContainer>
-        </Styled.FilterBlock>
-        <Card>
-          <PaymentsTable>
-            <TableHead>
-              <TableHeadItem>Пользователь</TableHeadItem>
-              <TableHeadItem>Название</TableHeadItem>
-              <TableHeadItem>Дата открытия</TableHeadItem>
-              <TableHeadItem>Дата закрытия</TableHeadItem>
-              <TableHeadItem>Сумма депозита</TableHeadItem>
-              <TableHeadItem>Дата след. выплаты</TableHeadItem>
-              <TableHeadItem>Выплачено</TableHeadItem>
-              <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
-              {/* <FilterMenu filterClick={filterClick} /> */}
-            </TableHead>
-            {depositsList.length ? (
-              <Scrollbars style={{ height: "500px" }}>
-                <InfiniteScroll
-                  pageStart={0}
-                  loadMore={myLoad}
-                  hasMore={count}
-                  useWindow={false}
-                  loader={
-                    <div className="loader" key={0}>
-                      Loading ...
-                    </div>
-                  }
-                >
-                  {depositsList.map((item) => (
-                    <AdminDepositList data={item} key={item.safeId} />
-                    // <TableBody key={item.safeId}>
-                    //   <TableBodyItem>{item.userName}</TableBodyItem>
-                    //   <TableBodyItem>{item.deposit.name}</TableBodyItem>
-                    //   <TableBodyItem>
-                    //     {moment(item.creationDate).format("DD/MM/YYYY")}
-                    //   </TableBodyItem>
-                    //   <TableBodyItem>
-                    //     {moment(item.endDate).format("DD/MM/YYYY")}
-                    //   </TableBodyItem>
-                    //   <TableBodyItem>{item.amountView}</TableBodyItem>
-                    //   <TableBodyItem>
-                    //     {moment(item.paymentDate).format("DD/MM/YYYY")}
-                    //   </TableBodyItem>
-                    //   <TableBodyItem>{item.baseAmountView}</TableBodyItem>
-                    //   <TableBodyItem></TableBodyItem>
-                    // </TableBody>
-                  ))}
-                </InfiniteScroll>
-              </Scrollbars>
-            ) : (
-              <NotFound>Данные не обнаружены.</NotFound>
-            )}
-          </PaymentsTable>
-          {/* <NotFound>
+              <Button danger onClick={submit}>
+                Применить
+              </Button>
+            </Styled.SelectContainer>
+          </Styled.FilterBlock>
+          <Card>
+            <PaymentsTable>
+              <TableHead>
+                <TableHeadItem>Пользователь</TableHeadItem>
+                <TableHeadItem>Название</TableHeadItem>
+                <TableHeadItem>Дата открытия</TableHeadItem>
+                <TableHeadItem>Дата закрытия</TableHeadItem>
+                <TableHeadItem>Сумма депозита</TableHeadItem>
+                <TableHeadItem>Дата след. выплаты</TableHeadItem>
+                <TableHeadItem>Выплачено</TableHeadItem>
+                <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
+                {/* <FilterMenu filterClick={filterClick} /> */}
+              </TableHead>
+              {depositsList.length ? (
+                <Scrollbars style={{ height: "500px" }}>
+                  <InfiniteScroll
+                    pageStart={0}
+                    loadMore={myLoad}
+                    hasMore={count}
+                    useWindow={false}
+                    loader={
+                      <div className="loader" key={0}>
+                        Loading ...
+                      </div>
+                    }
+                  >
+                    {depositsList.map((item) => (
+                      <AdminDepositList data={item} key={item.safeId} />
+                    ))}
+                  </InfiniteScroll>
+                </Scrollbars>
+              ) : loading ? (
+                <Loading />
+              ) : (
+                <NotFound>Данные не обнаружены.</NotFound>
+              )}
+            </PaymentsTable>
+            {/* <NotFound>
             Данные не обнаружены. Попробуйте изменить параметры поиска.
           </NotFound> */}
-        </Card>
-      </Styled.Content>
-    </Styled.Wrapper>
+          </Card>
+        </Styled.Content>
+      </Styled.Wrapper>
+    </>
   );
 };
 

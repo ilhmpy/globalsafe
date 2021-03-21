@@ -12,59 +12,68 @@ import { UpTitle } from "../../components/UI/UpTitle";
 import "react-day-picker/lib/style.css";
 import { ReactComponent as Exit } from "../../assets/svg/exit.svg";
 import { Calendar } from "../../components/UI/DayPicker";
+import { Header } from "../../components/Header/Header";
+import useWindowSize from "../../hooks/useWindowSize";
 
 export const AdminMain = () => {
+  const sizes = useWindowSize();
+  const size = sizes < 992;
   return (
-    <Styled.Wrapper>
-      <SideNavbar />
-      <Styled.Content>
-        <Styled.HeadBlock>
-          <UpTitle small>Главный экран</UpTitle>
-          <Styled.UserName>
-            <span>Admin</span>
-            <Exit />
-          </Styled.UserName>
-        </Styled.HeadBlock>
-        <CardAdmin>
-          <MainChartsContainer>
-            <ChartItem>
-              <ChartItemHead>
-                <ChartItemTitle small>Новые депозиты</ChartItemTitle>
-                <Styled.ChartItemDate>За январь 2021</Styled.ChartItemDate>
-              </ChartItemHead>
-              <ColumnChart />
-            </ChartItem>
-            <ChartItem>
-              <ChartItemHead>
-                <ChartItemTitle small>Выплаты</ChartItemTitle>
-                <Styled.ChartItemDate>За февраль 2021 г.</Styled.ChartItemDate>
-              </ChartItemHead>
-              <ColumnChartTwo />
-            </ChartItem>
-            <ChartItem>
-              <ChartItemHead>
-                <ChartItemTitle small>Доходность фонда</ChartItemTitle>
-                <Styled.ChartItemDate>За все время</Styled.ChartItemDate>
-              </ChartItemHead>
-              <ColumnChartThree />
-            </ChartItem>
-          </MainChartsContainer>
-        </CardAdmin>
-        <CardDeposites>
-          <Calendar />
-          <Deposites>
-            <DepositItem>
-              <DepositTitle>Количество депозитов</DepositTitle>
-              <DepositValue>1 200</DepositValue>
-            </DepositItem>
-            <DepositItem>
-              <DepositTitle>Размер депозитов</DepositTitle>
-              <DepositValue>10 450</DepositValue>
-            </DepositItem>
-          </Deposites>
-        </CardDeposites>
-      </Styled.Content>
-    </Styled.Wrapper>
+    <>
+      {size && <Header admPanel />}
+      <Styled.Wrapper>
+        <SideNavbar />
+        <Styled.Content>
+          <Styled.HeadBlock>
+            <UpTitle small>Главный экран</UpTitle>
+            <Styled.UserName>
+              <span>Admin</span>
+              <Exit />
+            </Styled.UserName>
+          </Styled.HeadBlock>
+          <CardAdmin>
+            <MainChartsContainer>
+              <ChartItem>
+                <ChartItemHead>
+                  <ChartItemTitle small>Новые депозиты</ChartItemTitle>
+                  <Styled.ChartItemDate>За январь 2021</Styled.ChartItemDate>
+                </ChartItemHead>
+                <ColumnChart />
+              </ChartItem>
+              <ChartItem>
+                <ChartItemHead>
+                  <ChartItemTitle small>Выплаты</ChartItemTitle>
+                  <Styled.ChartItemDate>
+                    За февраль 2021 г.
+                  </Styled.ChartItemDate>
+                </ChartItemHead>
+                <ColumnChartTwo />
+              </ChartItem>
+              <ChartItem>
+                <ChartItemHead>
+                  <ChartItemTitle small>Доходность фонда</ChartItemTitle>
+                  <Styled.ChartItemDate>За все время</Styled.ChartItemDate>
+                </ChartItemHead>
+                <ColumnChartThree />
+              </ChartItem>
+            </MainChartsContainer>
+          </CardAdmin>
+          <CardDeposites>
+            <Calendar />
+            <Deposites>
+              <DepositItem>
+                <DepositTitle>Количество депозитов</DepositTitle>
+                <DepositValue>1 200</DepositValue>
+              </DepositItem>
+              <DepositItem>
+                <DepositTitle>Размер депозитов</DepositTitle>
+                <DepositValue>10 450</DepositValue>
+              </DepositItem>
+            </Deposites>
+          </CardDeposites>
+        </Styled.Content>
+      </Styled.Wrapper>
+    </>
   );
 };
 

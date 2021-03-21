@@ -90,14 +90,6 @@ export const DepositList: FC<ListProps> = ({
     setOpen(true);
   };
 
-  useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-  }, [open]);
-
   return (
     <div>
       <CSSTransition in={open} timeout={300} classNames="modal" unmountOnExit>
@@ -198,14 +190,6 @@ export const PaymentsList: FC<PayProps> = ({ data }: PayProps) => {
     setOpen(false);
   };
 
-  useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-  }, [open]);
-
   const modalOpen = (e: React.MouseEvent) => {
     e.stopPropagation();
     setOpen(true);
@@ -240,14 +224,6 @@ export const AdminDepositList: FC<PayProps> = ({ data }: PayProps) => {
   const onClose = () => {
     setOpen(false);
   };
-
-  useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-  }, [open]);
 
   const modalOpen = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -289,14 +265,6 @@ export const PaymentsListPay: FC<Prop> = ({ data }: Prop) => {
     setOpen(false);
   };
 
-  useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-  }, [open]);
-
   const modalOpen = (e: React.MouseEvent) => {
     e.stopPropagation();
     setOpen(true);
@@ -321,7 +289,7 @@ export const PaymentsListPay: FC<Prop> = ({ data }: Prop) => {
           {data.userDeposit.baseAmountView.toLocaleString()}
         </TableBodyItemPaid>
         <TableBodyItemPaid>
-          {data.userDeposit.paymentAmountView}
+          {(data.amount / 100000).toFixed(2).toLocaleString()}
         </TableBodyItemPaid>
         <TableBodyItemPaid></TableBodyItemPaid>
       </TableBody>
@@ -425,10 +393,11 @@ const TableHeadItemPaid = styled(TableHeadItem)`
     max-width: 170px;
   }
   &:nth-child(5) {
-    max-width: 100px;
+    max-width: 112px;
   }
   &:nth-child(6) {
     max-width: 100px;
+
     @media (max-width: 576px) {
       display: block;
       text-align: center;

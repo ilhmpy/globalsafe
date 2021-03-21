@@ -23,25 +23,24 @@ export const SideNavbar = () => {
 
   const navShow = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (!size) {
-      setNavWidth(!navWidth);
-    }
+    setNavWidth(!navWidth);
+    // if (!size) {
+    //   setNavWidth(!navWidth);
+    // }
   };
 
   return (
     <SideNav small={navWidth}>
-      {!size && (
-        <NavHead>
-          <Burger onClick={navShow}>
-            <span></span>
-            <span></span>
-            <span></span>
-          </Burger>
-          <Link to="/">
-            <LogoBrand />
-          </Link>
-        </NavHead>
-      )}
+      <NavHead>
+        <Burger onClick={navShow}>
+          <span></span>
+          <span></span>
+          <span></span>
+        </Burger>
+        <Link to="/">
+          <LogoBrand />
+        </Link>
+      </NavHead>
       <SideInner>
         <Ul>
           <Li>
@@ -91,6 +90,7 @@ const SideInner = styled.div`
   height: calc(100% - 80px);
   @media (max-width: 1200px) {
     height: calc(100%);
+    justify-content: flex-start;
   }
 `;
 
@@ -102,6 +102,14 @@ const SideNav = styled.div<{ small: boolean }>`
   flex: none;
   background: #fff;
   transition: 0.3s;
+  @media (max-width: 1200px) {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 9999;
+    box-shadow: 0px 1px 3px rgb(0 0 0 / 25%);
+  }
   @media (max-width: 992px) {
     display: none;
   }
@@ -214,6 +222,9 @@ const Logout = styled.div`
   white-space: nowrap;
   align-items: center;
   padding: 11px 20px;
+  @media (max-width: 1200px) {
+    margin-top: 200px;
+  }
   svg {
     width: 24px;
     height: 24px;
