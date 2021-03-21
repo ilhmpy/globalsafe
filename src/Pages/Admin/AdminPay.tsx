@@ -129,7 +129,6 @@ export const AdminPay = () => {
           20
         )
         .then((res) => {
-          // console.log("res Payments", res);
           setTotalPayments(res.totalRecords);
           setPaymentsList(res.collection);
           setNumPayments(20);
@@ -155,7 +154,6 @@ export const AdminPay = () => {
           20
         )
         .then((res) => {
-          // console.log("res 5 6", res);
           setTotalDeposits(res.totalRecords);
           setDepositList(res.collection);
           setNum(20);
@@ -165,29 +163,6 @@ export const AdminPay = () => {
   }, [hubConnection]);
 
   useEffect(() => {
-    // if (hubConnection) {
-    //   hubConnection
-    //     .invoke<RootPayments>(
-    //       "GetUsersDeposits",
-    //       [1, 2, 3, 4, 5, 6],
-    //       null,
-    //       null,
-    //       null,
-    //       null,
-    //       null,
-    //       null,
-    //       true,
-    //       0,
-    //       20
-    //     )
-    //     .then((res) => {
-    //       // console.log("res true", res);
-    //       setTotalPayDeposits(res.totalRecords);
-    //       setDepositPayList(res.collection);
-    //       setPayNum(20);
-    //     })
-    //     .catch((err: Error) => console.log(err));
-    // }
     if (hubConnection) {
       hubConnection
         .invoke<RootCharges>("GetDepositsCharges", [7, 8], 0, 20)
