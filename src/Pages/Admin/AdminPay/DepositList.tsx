@@ -63,7 +63,7 @@ export const DepositList: FC<ListProps> = ({
 
   const paymentsAdjust = () => {
     if (value !== "") {
-      adjustPay(data.safeId, (Number(value) * 100000) as number);
+      adjustPay(data.safeId, Math.trunc(Number(value) * 100000) as number);
     }
   };
 
