@@ -23,7 +23,7 @@ export const DepositList: FC<ListProps> = ({
   confirmPay,
 }: ListProps) => {
   const [value, setValue] = useState(
-    (data.payAmount / 100000).toFixed(2).toString()
+    (data.payAmount / 100000).toFixed(0).toString()
   );
   const [done, setDone] = useState(false);
   const [procent, setProcent] = useState(
