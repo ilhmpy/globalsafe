@@ -230,8 +230,8 @@ export const ColumnChart = () => {
       },
       tooltip: {
         custom: function ({ series, seriesIndex, dataPointIndex, w }: any) {
-          console.log("series", seriesIndex);
-          console.log("w", w);
+          // console.log("series", seriesIndex);
+          // console.log("w", w);
           return `
           <div class="column-toltip">
           <div class="column-toltip-light">14 января 2021</div>
@@ -363,8 +363,8 @@ export const ColumnChartThree = () => {
       },
       tooltip: {
         custom: function ({ series, seriesIndex, dataPointIndex, w }: any) {
-          console.log("series", seriesIndex);
-          console.log("w", w);
+          // console.log("series", seriesIndex);
+          // console.log("w", w);
           return `
           <div class="column-toltip">
           <div class="column-toltip-light">14 января 2021</div>
@@ -485,8 +485,8 @@ export const ColumnChartTwo = () => {
       },
       tooltip: {
         custom: function ({ series, seriesIndex, dataPointIndex, w }: any) {
-          console.log("series", seriesIndex);
-          console.log("w", w);
+          // console.log("series", seriesIndex);
+          // console.log("w", w);
           return `
           <div class="column-toltip">
           <div class="column-toltip-light">14 января 2021</div>

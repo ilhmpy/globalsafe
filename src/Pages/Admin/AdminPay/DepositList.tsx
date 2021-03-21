@@ -23,7 +23,7 @@ export const DepositList: FC<ListProps> = ({
   confirmPay,
 }: ListProps) => {
   const [value, setValue] = useState(
-    (data.payAmount / 100000).toFixed(2).toString()
+    (data.payAmount / 100000).toFixed(0).toString()
   );
   const [done, setDone] = useState(false);
   const [procent, setProcent] = useState(
@@ -49,7 +49,7 @@ export const DepositList: FC<ListProps> = ({
       setProcent("");
     } else {
       setValue(e.target.value);
-      const proc = ((+e.target.value / data.baseAmountView) * 100).toFixed(1);
+      const proc = ((+e.target.value / data.baseAmountView) * 100).toFixed(0);
       console.log("proc", proc);
       setProcent(proc.toString());
     }
@@ -63,7 +63,7 @@ export const DepositList: FC<ListProps> = ({
 
   const paymentsAdjust = () => {
     if (value !== "") {
-      adjustPay(data.safeId, +value * 100000);
+      adjustPay(data.safeId, (Number(value) * 100000) as number);
     }
   };
 
