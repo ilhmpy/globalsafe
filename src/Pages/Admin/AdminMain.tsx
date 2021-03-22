@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useContext, useEffect } from "react";
 import * as Styled from "./Styled.elements";
 import styled, { css } from "styled-components/macro";
 import { SideNavbar } from "../../components/SideNav";
@@ -7,17 +7,121 @@ import {
   ColumnChart,
   ColumnChartThree,
   ColumnChartTwo,
+  ColumnChartCwd,
 } from "../../components/Charts/Test";
 import { UpTitle } from "../../components/UI/UpTitle";
 import "react-day-picker/lib/style.css";
 import { ReactComponent as Exit } from "../../assets/svg/exit.svg";
-import { Calendar } from "../../components/UI/DayPicker";
+import { Calendar, MainAdminInput } from "../../components/UI/DayPicker";
 import { Header } from "../../components/Header/Header";
 import useWindowSize from "../../hooks/useWindowSize";
+import { OpenDate } from "../../types/dates";
+import { AppContext } from "../../context/HubContext";
+import moment from "moment";
+import { CSSTransition } from "react-transition-group";
+import { PaymentsStat } from "../../types/main";
 
 export const AdminMain = () => {
+  let currentMonth = moment().format("MMYYYY");
+  let year = moment().format("YYYY");
+  let prevMonth = moment().subtract(1, "months").date(1).format("MMYYYY");
+  let currentMonthStart: any = moment(currentMonth, "M.YYYY").startOf("month");
+  let currentMonthEnd: any = moment(currentMonth, "M.YYYY").endOf("month");
+
+  let prevMonthStart: any = moment(prevMonth, "M.YYYY").startOf("month");
+  let prevMonthEnd: any = moment(prevMonth, "M.YYYY").endOf("month");
+
+  let yearStart: any = moment(year, "YYYY").startOf("month");
+  let yearEnd: any = moment(year, "YYYY").endOf("year");
+
+  const backDays: any = moment().subtract(30, "days");
+
+  const appContext = useContext(AppContext);
+  const hubConnection = appContext.hubConnection;
+
+  const [openDate, setOpenDate] = useState<OpenDate>({
+    from: backDays._d,
+    to: new Date(),
+  });
+
+  const [depositsDate, setDepositsDate] = useState<OpenDate>({
+    from: backDays._d,
+    to: new Date(),
+  });
+
+  const [statDate, setStatDate] = useState<OpenDate>({
+    from: backDays._d,
+    to: new Date(),
+  });
+  const [revenueStat, setRevenueStat] = useState<PaymentsStat>({});
+  const [paymentsStat, setPaymentsStat] = useState<PaymentsStat>({});
+  const [depositsCreationStat, setDepositsCreationStat] = useState<any>({});
+  const [selectedDay, setSelectedDay] = useState<any>(new Date());
+  const [depositsCount, setDepositsCount] = useState(0);
+  const [depositsAmount, setDepositsAmount] = useState(0);
+  const [card, setCard] = useState(0);
   const sizes = useWindowSize();
   const size = sizes < 992;
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection
+        .invoke<PaymentsStat>(
+          "GetDepositsCreationStat",
+          depositsDate.from,
+          depositsDate.to
+        )
+        .then((res) => {
+          setDepositsCreationStat(res);
+        })
+        .catch((e) => console.log(e));
+    }
+  }, [hubConnection, depositsDate]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection
+        .invoke<PaymentsStat>("GetPaymentsStat", openDate.from, openDate.to)
+        .then((res) => {
+          setPaymentsStat(res);
+        })
+        .catch((e) => console.log(e));
+    }
+  }, [hubConnection, openDate]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection
+        .invoke<PaymentsStat>("GetRevenueStat", statDate.from, statDate.to)
+        .then((res) => {
+          setRevenueStat(res);
+        })
+        .catch((e) => console.log(e));
+    }
+  }, [hubConnection, statDate]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection
+        .invoke("GetUserDepositsAmount", selectedDay)
+        .then((res) => {
+          setDepositsAmount(res);
+        })
+        .catch((e) => console.log(e));
+    }
+  }, [hubConnection, selectedDay]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection
+        .invoke("GetUserDepositsCount", selectedDay)
+        .then((res) => {
+          setDepositsCount(res);
+        })
+        .catch((e) => console.log(e));
+    }
+  }, [hubConnection, selectedDay]);
+
   return (
     <>
       {size && <Header admPanel />}
@@ -36,38 +140,132 @@ export const AdminMain = () => {
               <ChartItem>
                 <ChartItemHead>
                   <ChartItemTitle small>Новые депозиты</ChartItemTitle>
-                  <Styled.ChartItemDate>За январь 2021</Styled.ChartItemDate>
+
+                  <MainAdminInput
+                    setOpenDate={setDepositsDate}
+                    openDate={depositsDate}
+                    label={"30 дней"}
+                  />
                 </ChartItemHead>
-                <ColumnChart />
+                <TabsChart>
+                  <TabsItem active={card === 0} onClick={() => setCard(0)}>
+                    CNT
+                  </TabsItem>
+                  <TabsItem>/</TabsItem>
+                  <TabsItem active={card === 1} onClick={() => setCard(1)}>
+                    CWD
+                  </TabsItem>
+                </TabsChart>
+                <TabsContent active={card === 0}>
+                  <CSSTransition
+                    in={card === 0}
+                    timeout={300}
+                    classNames="chart"
+                    unmountOnExit
+                  >
+                    <ColumnChart
+                      date={
+                        Object.keys(depositsCreationStat).length
+                          ? Object.keys(depositsCreationStat)
+                          : [""]
+                      }
+                      value={
+                        Object.values(depositsCreationStat).length
+                          ? Object.values(depositsCreationStat).map(
+                              (i: any) => i[0]
+                            )
+                          : [""]
+                      }
+                    />
+                  </CSSTransition>
+                </TabsContent>
+                <TabsContent active={card === 1}>
+                  <CSSTransition
+                    in={card === 1}
+                    timeout={300}
+                    classNames="chart"
+                    unmountOnExit
+                  >
+                    <ColumnChartCwd
+                      date={
+                        Object.keys(depositsCreationStat).length
+                          ? Object.keys(depositsCreationStat)
+                          : [""]
+                      }
+                      value={
+                        Object.values(depositsCreationStat).length
+                          ? Object.values(depositsCreationStat).map(
+                              (i: any) => i[1] / 100000
+                            )
+                          : [""]
+                      }
+                    />
+                  </CSSTransition>
+                </TabsContent>
               </ChartItem>
               <ChartItem>
                 <ChartItemHead>
                   <ChartItemTitle small>Выплаты</ChartItemTitle>
-                  <Styled.ChartItemDate>
-                    За февраль 2021 г.
-                  </Styled.ChartItemDate>
+                  <MainAdminInput
+                    setOpenDate={setOpenDate}
+                    openDate={openDate}
+                    label={"30 дней"}
+                  />
                 </ChartItemHead>
-                <ColumnChartTwo />
+                <ColumnChartTwo
+                  date={
+                    Object.keys(paymentsStat).length
+                      ? Object.keys(paymentsStat)
+                      : [""]
+                  }
+                  value={
+                    Object.values(paymentsStat).length
+                      ? Object.values(paymentsStat).map((i) => i / 100000)
+                      : [""]
+                  }
+                />
               </ChartItem>
               <ChartItem>
                 <ChartItemHead>
-                  <ChartItemTitle small>Доходность фонда</ChartItemTitle>
-                  <Styled.ChartItemDate>За все время</Styled.ChartItemDate>
+                  <ChartItemTitleLast small>
+                    Доходность фонда
+                  </ChartItemTitleLast>
+                  <MainAdminInput
+                    setOpenDate={setStatDate}
+                    openDate={statDate}
+                    label={"30 дней"}
+                  />
                 </ChartItemHead>
-                <ColumnChartThree />
+                <ColumnChartThree
+                  date={
+                    Object.keys(revenueStat).length
+                      ? Object.keys(revenueStat)
+                      : [""]
+                  }
+                  value={
+                    Object.values(revenueStat).length
+                      ? Object.values(revenueStat).map((i) => i / 100000)
+                      : [""]
+                  }
+                />
               </ChartItem>
             </MainChartsContainer>
           </CardAdmin>
           <CardDeposites>
-            <Calendar />
+            <Calendar
+              selectedDay={selectedDay}
+              setSelectedDay={setSelectedDay}
+            />
             <Deposites>
               <DepositItem>
                 <DepositTitle>Количество депозитов</DepositTitle>
-                <DepositValue>1 200</DepositValue>
+                <DepositValue>{depositsCount}</DepositValue>
               </DepositItem>
               <DepositItem>
                 <DepositTitle>Размер депозитов</DepositTitle>
-                <DepositValue>10 450</DepositValue>
+                <DepositValue>
+                  {(depositsAmount / 100000).toLocaleString()}
+                </DepositValue>
               </DepositItem>
             </Deposites>
           </CardDeposites>
@@ -76,6 +274,38 @@ export const AdminMain = () => {
     </>
   );
 };
+
+const TabsChart = styled.div`
+  display: flex;
+  align-items: center;
+  padding-left: 30px;
+  .chart-enter {
+    opacity: 0;
+  }
+  .chart-enter-active {
+    opacity: 1;
+    transition: 300ms;
+  }
+  .chart-exit {
+    opacity: 0;
+  }
+  .chart-exit-active {
+    opacity: 0;
+  }
+`;
+
+const TabsContent = styled.div<{ active?: boolean }>`
+  ${(props) => (props.active ? "" : "display:none")};
+`;
+
+const TabsItem = styled.div<{ active?: boolean }>`
+  font-weight: 500;
+  font-size: 20px;
+  text-transform: uppercase;
+  line-height: 14px;
+  cursor: pointer;
+  color: ${(props) => (props.active ? "#0e0d3d" : "rgba(14,13,61,.2)")};
+`;
 
 const CardAdmin = styled(Card)`
   @media (max-width: 768px) {
@@ -149,6 +379,23 @@ const ChartItemTitle = styled(UpTitle)`
   }
 `;
 
+const ChartItemTitleLast = styled(ChartItemTitle)`
+  text-align: right;
+  white-space: initial;
+  &:before {
+    width: 12%;
+  }
+  @media (max-width: 768px) {
+    margin: 0 auto 12px;
+    text-align: center;
+    width: 100%;
+    &:before {
+      width: 0;
+      margin: 0;
+    }
+  }
+`;
+
 const icon = css`
   position: absolute;
   top: 28px;
@@ -204,6 +451,11 @@ const DepositValue = styled.div`
   line-height: 84px;
   text-align: center;
   color: #ff416e;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 490px;
+  margin: 0 auto;
   @media (max-width: 1150px) {
     font-size: 60px;
     line-height: 72px;

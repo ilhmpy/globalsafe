@@ -39,12 +39,14 @@ export const TestChart: FC<Props> = ({
                 show: true,
                 label: "CWD",
                 offsetY: 60,
-                formatter: function (w: any) {
-                  return `${w.globals.seriesTotals
-                    .reduce((a: any, b: any) => {
-                      return a + b;
-                    }, 0)
-                    .toLocaleString()}`;
+                formatter: function (value: any) {
+                  if (value >= 1000000) {
+                    return (value / 1000000).toFixed(1) + "M";
+                  } else if (value >= 1000 && value < 1000000) {
+                    return (value / 1000).toFixed(1) + "k";
+                  } else {
+                    return value;
+                  }
                 },
               },
               value: {
@@ -160,11 +162,16 @@ const ChartWrap = styled.div`
   }
 `;
 
-export const ColumnChart = () => {
+type PropsColumn = {
+  date: string[];
+  value: number[] | string[];
+};
+
+export const ColumnChart: FC<PropsColumn> = ({ date, value }) => {
   const data = {
     series: [
       {
-        data: [34, 43, 31, 43, 33, 52],
+        data: value,
       },
     ],
 
@@ -172,9 +179,7 @@ export const ColumnChart = () => {
       chart: {
         type: "bar",
         events: {
-          click: function (chart: any, w: any, e: any) {
-            // console.log(chart, w, e)
-          },
+          click: function (chart: any, w: any, e: any) {},
         },
         toolbar: {
           show: false,
@@ -198,7 +203,7 @@ export const ColumnChart = () => {
         },
       },
       xaxis: {
-        categories: [[3534], [534534], [6457567], [3456546], [45747]],
+        categories: date,
         labels: {
           show: false,
         },
@@ -210,32 +215,37 @@ export const ColumnChart = () => {
         },
       },
       yaxis: {
-        show: true,
-        showAlways: true,
-        showForNullSeries: true,
-        seriesName: undefined,
-        opposite: false,
-        reversed: false,
-        logarithmic: false,
-        tickAmount: 6,
-        forceNiceScale: false,
-        floating: false,
-        decimalsInFloat: undefined,
+        fillColor: "#B3F7CA",
         labels: {
-          show: true,
-          offsetX: 0,
-          offsetY: 0,
-          rotate: 0,
+          background: "#775DD0",
+          formatter: function (value: any) {
+            if (value >= 1000000) {
+              return (value / 1000000).toFixed(1) + "M";
+            } else if (value >= 1000 && value < 1000000) {
+              return (value / 1000).toFixed(1) + "k";
+            } else {
+              return value;
+            }
+          },
+          style: {
+            colors: [],
+            fontSize: "10px",
+            fontFamily: "Roboto, sans-serif",
+            fontWeight: 400,
+            cssClass: "apexcharts-yaxis-label",
+          },
         },
       },
       tooltip: {
         custom: function ({ series, seriesIndex, dataPointIndex, w }: any) {
-          // console.log("series", seriesIndex);
-          // console.log("w", w);
           return `
           <div class="column-toltip">
-          <div class="column-toltip-light">14 января 2021</div>
-            <div class="column-toltip-bold">${w.globals.stackedSeriesTotals[dataPointIndex]} CWD</div>
+          <div class="column-toltip-light">${moment(
+            w.globals.labels[dataPointIndex]
+          ).format("DD MMMM YYYY")}</div>
+            <div class="column-toltip-bold">${w.globals.stackedSeriesTotals[
+              dataPointIndex
+            ].toLocaleString()}</div>
           </div>
           `;
         },
@@ -280,11 +290,136 @@ export const ColumnChart = () => {
   );
 };
 
-export const ColumnChartThree = () => {
+export const ColumnChartCwd: FC<PropsColumn> = ({
+  date = [""],
+  value = [""],
+}) => {
   const data = {
     series: [
       {
-        data: [44, 55, 57, 56, 61, 58, 63, 60, 66, 80, 23, 59],
+        data: value,
+      },
+    ],
+    options: {
+      chart: {
+        type: "bar",
+        events: {
+          click: function (chart: any, w: any, e: any) {},
+        },
+        toolbar: {
+          show: false,
+        },
+      },
+      fill: {
+        colors: ["#6DB9FF"],
+      },
+      states: {
+        normal: {
+          filter: {
+            type: "none",
+            value: 0,
+          },
+        },
+        hover: {
+          filter: {
+            type: "darken",
+            value: 0.5,
+          },
+        },
+      },
+      xaxis: {
+        categories: date,
+        labels: {
+          show: false,
+        },
+        axisBorder: {
+          show: false,
+        },
+        axisTicks: {
+          show: false,
+        },
+      },
+      yaxis: {
+        fillColor: "#B3F7CA",
+        labels: {
+          background: "#775DD0",
+          formatter: function (value: any) {
+            if (value >= 1000000) {
+              return (value / 1000000).toFixed(1) + "M";
+            } else if (value >= 1000 && value < 1000000) {
+              return (value / 1000).toFixed(1) + "k";
+            } else {
+              return value;
+            }
+          },
+          style: {
+            colors: [],
+            fontSize: "10px",
+            fontFamily: "Roboto, sans-serif",
+            fontWeight: 400,
+            cssClass: "apexcharts-yaxis-label",
+          },
+        },
+      },
+      tooltip: {
+        custom: function ({ series, seriesIndex, dataPointIndex, w }: any) {
+          return `
+          <div class="column-toltip">
+          <div class="column-toltip-light">${moment(
+            w.globals.labels[dataPointIndex]
+          ).format("DD MMMM YYYY")}</div>
+            <div class="column-toltip-bold">${w.globals.stackedSeriesTotals[
+              dataPointIndex
+            ].toLocaleString()}</div>
+          </div>
+          `;
+        },
+        // enabled: false,
+        fixed: {
+          enabled: true,
+          position: "topLeft", // topRight, topLeft, bottomRight, bottomLeft
+          offsetY: 0,
+          offsetX: 110,
+        },
+      },
+      legend: {
+        horizontalAlign: "center",
+        offsetX: 0,
+        show: false,
+      },
+      grid: {
+        show: false,
+      },
+      plotOptions: {
+        bar: {
+          borderRadius: 6,
+          columnWidth: "45%",
+          distributed: false,
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+    },
+  };
+
+  return (
+    <div id="chart1" style={{ position: "relative" }}>
+      <Chart
+        options={data.options}
+        series={data.series}
+        type="bar"
+        height={287}
+      />
+    </div>
+  );
+};
+
+export const ColumnChartThree: FC<PropsColumn> = ({ date, value }) => {
+  const data = {
+    series: [
+      {
+        data: value,
       },
     ],
     options: {
@@ -314,29 +449,14 @@ export const ColumnChartThree = () => {
         colors: ["transparent"],
       },
       xaxis: {
-        tickPlacement: "on",
+        categories: date,
         labels: {
-          rotate: -45,
-          rotateAlways: true,
+          show: false,
           style: {
             fontSize: "10px",
           },
+          offsetY: -4,
         },
-        categories: [
-          "Янв",
-          "Фев",
-          "Мар",
-          "Апр",
-          "Май",
-          "Июн",
-          "Июл",
-          "Авг",
-          "Сен",
-          "Окт",
-          "Ноя",
-          "Дек",
-        ],
-
         axisBorder: {
           show: false,
         },
@@ -363,12 +483,14 @@ export const ColumnChartThree = () => {
       },
       tooltip: {
         custom: function ({ series, seriesIndex, dataPointIndex, w }: any) {
-          // console.log("series", seriesIndex);
-          // console.log("w", w);
           return `
           <div class="column-toltip">
-          <div class="column-toltip-light">14 января 2021</div>
-            <div class="column-toltip-bold">${w.globals.stackedSeriesTotals[dataPointIndex]} CWD</div>
+          <div class="column-toltip-light">${moment(
+            w.globals.labels[dataPointIndex]
+          ).format("DD MMMM YYYY")}</div>
+            <div class="column-toltip-bold">${w.globals.stackedSeriesTotals[
+              dataPointIndex
+            ].toLocaleString()} CWD</div>
           </div>
           `;
         },
@@ -385,7 +507,13 @@ export const ColumnChartThree = () => {
         labels: {
           background: "#775DD0",
           formatter: function (value: any) {
-            return value + "%";
+            if (value >= 1000000) {
+              return (value / 1000000).toFixed(1) + "M";
+            } else if (value >= 1000 && value < 1000000) {
+              return (value / 1000).toFixed(1) + "k";
+            } else {
+              return value;
+            }
           },
           style: {
             colors: [],
@@ -411,11 +539,11 @@ export const ColumnChartThree = () => {
   );
 };
 
-export const ColumnChartTwo = () => {
+export const ColumnChartTwo: FC<PropsColumn> = ({ date, value }) => {
   const data = {
     series: [
       {
-        data: [34, 43, 31],
+        data: value,
       },
     ],
 
@@ -450,8 +578,9 @@ export const ColumnChartTwo = () => {
         },
       },
       xaxis: {
-        categories: [],
+        categories: date,
         labels: {
+          show: false,
           style: {
             fontSize: "10px",
           },
@@ -481,6 +610,15 @@ export const ColumnChartTwo = () => {
           offsetX: 0,
           offsetY: 0,
           rotate: 0,
+          formatter: function (value: any) {
+            if (value >= 1000000) {
+              return (value / 1000000).toFixed(1) + "M";
+            } else if (value >= 1000 && value < 1000000) {
+              return (value / 1000).toFixed(1) + "k";
+            } else {
+              return value;
+            }
+          },
         },
       },
       tooltip: {
@@ -489,8 +627,12 @@ export const ColumnChartTwo = () => {
           // console.log("w", w);
           return `
           <div class="column-toltip">
-          <div class="column-toltip-light">14 января 2021</div>
-            <div class="column-toltip-bold">${w.globals.stackedSeriesTotals[dataPointIndex]} CWD</div>
+          <div class="column-toltip-light">${moment(
+            w.globals.labels[dataPointIndex]
+          ).format("DD MMMM YYYY")}</div>
+            <div class="column-toltip-bold">${w.globals.stackedSeriesTotals[
+              dataPointIndex
+            ].toLocaleString()} CWD</div>
           </div>
           `;
         },
