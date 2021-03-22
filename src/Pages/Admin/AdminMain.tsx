@@ -7,6 +7,7 @@ import {
   ColumnChart,
   ColumnChartThree,
   ColumnChartTwo,
+  ColumnChartCwd,
 } from "../../components/Charts/Test";
 import { UpTitle } from "../../components/UI/UpTitle";
 import "react-day-picker/lib/style.css";
@@ -17,6 +18,7 @@ import useWindowSize from "../../hooks/useWindowSize";
 import { OpenDate } from "../../types/dates";
 import { AppContext } from "../../context/HubContext";
 import moment from "moment";
+import { CSSTransition } from "react-transition-group";
 import { PaymentsStat } from "../../types/main";
 
 export const AdminMain = () => {
@@ -31,17 +33,20 @@ export const AdminMain = () => {
 
   let yearStart: any = moment(year, "YYYY").startOf("month");
   let yearEnd: any = moment(year, "YYYY").endOf("year");
+
+  const backDays: any = moment().subtract(30, "days");
+
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
 
   const [openDate, setOpenDate] = useState<OpenDate>({
-    from: prevMonthStart._d,
-    to: prevMonthEnd._d,
+    from: backDays._d,
+    to: new Date(),
   });
 
   const [depositsDate, setDepositsDate] = useState<OpenDate>({
-    from: currentMonthStart._d,
-    to: currentMonthEnd._d,
+    from: backDays._d,
+    to: new Date(),
   });
 
   const [statDate, setStatDate] = useState<OpenDate>({
@@ -50,13 +55,11 @@ export const AdminMain = () => {
   });
   const [revenueStat, setRevenueStat] = useState<PaymentsStat>({});
   const [paymentsStat, setPaymentsStat] = useState<PaymentsStat>({});
-  const [
-    depositsCreationStat,
-    setDepositsCreationStat,
-  ] = useState<PaymentsStat>({});
+  const [depositsCreationStat, setDepositsCreationStat] = useState<any>({});
   const [selectedDay, setSelectedDay] = useState<any>(new Date());
   const [depositsCount, setDepositsCount] = useState(0);
   const [depositsAmount, setDepositsAmount] = useState(0);
+  const [card, setCard] = useState(0);
   const sizes = useWindowSize();
   const size = sizes < 992;
 
@@ -80,7 +83,6 @@ export const AdminMain = () => {
       hubConnection
         .invoke<PaymentsStat>("GetPaymentsStat", openDate.from, openDate.to)
         .then((res) => {
-          console.log("res", res);
           setPaymentsStat(res);
         })
         .catch((e) => console.log(e));
@@ -92,7 +94,6 @@ export const AdminMain = () => {
       hubConnection
         .invoke<PaymentsStat>("GetRevenueStat", statDate.from, statDate.to)
         .then((res) => {
-          console.log("res", res);
           setRevenueStat(res);
         })
         .catch((e) => console.log(e));
@@ -104,7 +105,6 @@ export const AdminMain = () => {
       hubConnection
         .invoke("GetUserDepositsAmount", selectedDay)
         .then((res) => {
-          console.log("GetUserDepositsAmount", res);
           setDepositsAmount(res);
         })
         .catch((e) => console.log(e));
@@ -116,7 +116,6 @@ export const AdminMain = () => {
       hubConnection
         .invoke("GetUserDepositsCount", selectedDay)
         .then((res) => {
-          console.log("GetUserDepositsCount", res);
           setDepositsCount(res);
         })
         .catch((e) => console.log(e));
@@ -141,24 +140,68 @@ export const AdminMain = () => {
               <ChartItem>
                 <ChartItemHead>
                   <ChartItemTitle small>Новые депозиты</ChartItemTitle>
+
                   <MainAdminInput
                     setOpenDate={setDepositsDate}
                     openDate={depositsDate}
-                    label={moment().format("MMMM YYYY")}
+                    label={"30 дней"}
                   />
                 </ChartItemHead>
-                <ColumnChart
-                  date={
-                    Object.keys(depositsCreationStat).length
-                      ? Object.keys(depositsCreationStat)
-                      : [""]
-                  }
-                  value={
-                    Object.values(depositsCreationStat).length
-                      ? Object.values(depositsCreationStat)
-                      : [""]
-                  }
-                />
+                <TabsChart>
+                  <TabsItem active={card === 0} onClick={() => setCard(0)}>
+                    CNT
+                  </TabsItem>
+                  <TabsItem>/</TabsItem>
+                  <TabsItem active={card === 1} onClick={() => setCard(1)}>
+                    CWD
+                  </TabsItem>
+                </TabsChart>
+                <TabsContent active={card === 0}>
+                  <CSSTransition
+                    in={card === 0}
+                    timeout={300}
+                    classNames="chart"
+                    unmountOnExit
+                  >
+                    <ColumnChart
+                      date={
+                        Object.keys(depositsCreationStat).length
+                          ? Object.keys(depositsCreationStat)
+                          : [""]
+                      }
+                      value={
+                        Object.values(depositsCreationStat).length
+                          ? Object.values(depositsCreationStat).map(
+                              (i: any) => i[0]
+                            )
+                          : [""]
+                      }
+                    />
+                  </CSSTransition>
+                </TabsContent>
+                <TabsContent active={card === 1}>
+                  <CSSTransition
+                    in={card === 1}
+                    timeout={300}
+                    classNames="chart"
+                    unmountOnExit
+                  >
+                    <ColumnChartCwd
+                      date={
+                        Object.keys(depositsCreationStat).length
+                          ? Object.keys(depositsCreationStat)
+                          : [""]
+                      }
+                      value={
+                        Object.values(depositsCreationStat).length
+                          ? Object.values(depositsCreationStat).map(
+                              (i: any) => i[1] / 100000
+                            )
+                          : [""]
+                      }
+                    />
+                  </CSSTransition>
+                </TabsContent>
               </ChartItem>
               <ChartItem>
                 <ChartItemHead>
@@ -166,7 +209,7 @@ export const AdminMain = () => {
                   <MainAdminInput
                     setOpenDate={setOpenDate}
                     openDate={openDate}
-                    label={moment().subtract(1, "months").format("MMMM YYYY")}
+                    label={"30 дней"}
                   />
                 </ChartItemHead>
                 <ColumnChartTwo
@@ -177,7 +220,7 @@ export const AdminMain = () => {
                   }
                   value={
                     Object.values(paymentsStat).length
-                      ? Object.values(paymentsStat)
+                      ? Object.values(paymentsStat).map((i) => i / 100000)
                       : [""]
                   }
                 />
@@ -221,7 +264,7 @@ export const AdminMain = () => {
               <DepositItem>
                 <DepositTitle>Размер депозитов</DepositTitle>
                 <DepositValue>
-                  {(depositsAmount / 100000).toFixed(0).toLocaleString()}
+                  {(depositsAmount / 100000).toLocaleString()}
                 </DepositValue>
               </DepositItem>
             </Deposites>
@@ -231,6 +274,38 @@ export const AdminMain = () => {
     </>
   );
 };
+
+const TabsChart = styled.div`
+  display: flex;
+  align-items: center;
+  padding-left: 30px;
+  .chart-enter {
+    opacity: 0;
+  }
+  .chart-enter-active {
+    opacity: 1;
+    transition: 300ms;
+  }
+  .chart-exit {
+    opacity: 0;
+  }
+  .chart-exit-active {
+    opacity: 0;
+  }
+`;
+
+const TabsContent = styled.div<{ active?: boolean }>`
+  ${(props) => (props.active ? "" : "display:none")};
+`;
+
+const TabsItem = styled.div<{ active?: boolean }>`
+  font-weight: 500;
+  font-size: 20px;
+  text-transform: uppercase;
+  line-height: 14px;
+  cursor: pointer;
+  color: ${(props) => (props.active ? "#0e0d3d" : "rgba(14,13,61,.2)")};
+`;
 
 const CardAdmin = styled(Card)`
   @media (max-width: 768px) {

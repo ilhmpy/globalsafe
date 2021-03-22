@@ -5,6 +5,7 @@ import { ReactComponent as Left } from "../../assets/svg/monthLeft.svg";
 import DayPicker, { DateUtils } from "react-day-picker";
 import DayPickerInput from "react-day-picker/DayPickerInput";
 import useOnClickOutside from "../../hooks/useOutsideHook";
+import { CSSTransition } from "react-transition-group";
 import { OpenDate } from "../../types/dates";
 import moment from "moment";
 import "moment/locale/ru";
@@ -437,15 +438,10 @@ export const MainAdminInput: FC<{
         to: undefined,
       });
     }
+    setShowOpen(false);
   };
 
   const modifiers = { start: selfDate.from, end: selfDate.to };
-
-  let currentMonth = moment().format("MMYYYY");
-  let prevMonth = moment().subtract(1, "months").date(1).format("MMYYYY");
-
-  let start: any = moment(prevMonth, "M.YYYY").startOf("month");
-  let end: any = moment(prevMonth, "M.YYYY").endOf("month");
 
   // console.log("start", start._d);
   // console.log("end", end._d);
@@ -473,19 +469,25 @@ export const MainAdminInput: FC<{
           </DateInput>
         </BoxInput>
 
-        {showOpen && (
+        <CSSTransition
+          in={showOpen}
+          timeout={300}
+          classNames="data"
+          unmountOnExit
+        >
           <CustomDatePicker
             selectedDays={[selfDate.from, selfDate]}
             months={MONTHS}
             onDayClick={handleDayClick}
             firstDayOfWeek={1}
             onTodayButtonClick={handleChange}
+            todayButton="Готово"
             modifiers={modifiers}
             weekdaysLong={WEEKDAYS_LONG}
             weekdaysShort={WEEKDAYS_SHORT}
             navbarElement={<Navbar />}
           />
-        )}
+        </CSSTransition>
       </AdminInputsContainer>
     </>
   );
@@ -877,6 +879,12 @@ const AdminInputsContainer = styled.div`
       left: 0;
       max-width: 300px;
     }
+  }
+  .DayPicker-Footer {
+    border-top: 1px solid rgba(66, 139, 202, 0.2);
+  }
+  .DayPicker-TodayButton:focus {
+    outline: none;
   }
 `;
 

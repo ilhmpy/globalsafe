@@ -135,7 +135,21 @@ input[type=number] {
 .modal-exit-active {
   opacity: 0;
 }
-
+.data-enter {
+  opacity: 0;
+}
+.data-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 300ms;
+}
+.data-exit {
+  opacity: 1;
+}
+.data-exit-active {
+  opacity: 0;
+  transition: 300ms;
+}
 `;
 
 export const Container = styled.div`

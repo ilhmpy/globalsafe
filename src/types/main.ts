@@ -1,3 +1,3 @@
 export type PaymentsStat = {
-    [elemName:string]: number;
+    [elemName:string]: number ;
 }

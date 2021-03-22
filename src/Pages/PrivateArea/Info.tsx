@@ -139,7 +139,6 @@ export const Info = () => {
           30
         )
         .then((res: any) => {
-          console.log("res", res);
           function getFormatedDate(dateStr: Date) {
             let date = moment(dateStr).format("DD MMMM YYYY");
             return date;
