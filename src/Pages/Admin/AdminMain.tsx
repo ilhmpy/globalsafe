@@ -50,8 +50,8 @@ export const AdminMain = () => {
   });
 
   const [statDate, setStatDate] = useState<OpenDate>({
-    from: yearStart._d,
-    to: yearEnd._d,
+    from: backDays._d,
+    to: new Date(),
   });
   const [revenueStat, setRevenueStat] = useState<PaymentsStat>({});
   const [paymentsStat, setPaymentsStat] = useState<PaymentsStat>({});
@@ -233,7 +233,7 @@ export const AdminMain = () => {
                   <MainAdminInput
                     setOpenDate={setStatDate}
                     openDate={statDate}
-                    label={"все время"}
+                    label={"30 дней"}
                   />
                 </ChartItemHead>
                 <ColumnChartThree
