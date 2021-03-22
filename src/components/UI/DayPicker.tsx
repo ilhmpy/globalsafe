@@ -85,12 +85,11 @@ export const InputDay = () => {
   );
 };
 
-export const Calendar = () => {
-  const [selectedDay, setSelectedDay] = useState<any>(null);
-
+export const Calendar: FC<{
+  selectedDay: Date;
+  setSelectedDay: (selectedDay: Date | string) => void;
+}> = ({ selectedDay, setSelectedDay }) => {
   const handleDayClick = (day: any, { selected }: any) => {
-    console.log("day", day.valueOf());
-    console.log("selected", selected);
     setSelectedDay(selected ? undefined : day);
   };
 
@@ -397,6 +396,97 @@ export const TestInput: FC<{
           />
         )}
       </RangeInputs>
+    </>
+  );
+};
+
+export const MainAdminInput: FC<{
+  label: string;
+  openDate: OpenDate;
+  setOpenDate: (openDate: OpenDate) => void;
+  onClose?: () => void;
+}> = ({ openDate, setOpenDate, label }) => {
+  const [showOpen, setShowOpen] = useState(false);
+  const [selfDate, setSelfDate] = useState<any>({
+    from: undefined,
+    to: undefined,
+  });
+
+  const ref = useRef(null);
+
+  const handleClickOutside = () => {
+    setShowOpen(false);
+  };
+
+  useOnClickOutside(ref, handleClickOutside);
+
+  const handleDayClick = (day: Date) => {
+    const range = DateUtils.addDayToRange(day, selfDate);
+    console.log("range", range);
+    setSelfDate({ from: range.from, to: range.to });
+    if (range.from && range.to) {
+      setOpenDate({ from: range.from, to: range.to });
+    }
+  };
+
+  const handleChange = () => {
+    if (selfDate.from && selfDate.to) {
+      setOpenDate({ from: selfDate.from, to: selfDate.to });
+      setSelfDate({
+        from: undefined,
+        to: undefined,
+      });
+    }
+  };
+
+  const modifiers = { start: selfDate.from, end: selfDate.to };
+
+  let currentMonth = moment().format("MMYYYY");
+  let prevMonth = moment().subtract(1, "months").date(1).format("MMYYYY");
+
+  let start: any = moment(prevMonth, "M.YYYY").startOf("month");
+  let end: any = moment(prevMonth, "M.YYYY").endOf("month");
+
+  // console.log("start", start._d);
+  // console.log("end", end._d);
+  return (
+    <>
+      <AdminInputsContainer ref={ref}>
+        <BoxInput onClick={() => setShowOpen(!showOpen)}>
+          <DateInput>
+            {selfDate.from && selfDate.to ? (
+              <>
+                <span>
+                  {selfDate.from
+                    ? moment(selfDate.from).format("DD.MM.YY")
+                    : ""}
+                </span>
+                <span>
+                  {selfDate.to
+                    ? `-${moment(selfDate.to).format("DD.MM.YY")} `
+                    : ""}
+                </span>
+              </>
+            ) : (
+              <span>За {label}</span>
+            )}
+          </DateInput>
+        </BoxInput>
+
+        {showOpen && (
+          <CustomDatePicker
+            selectedDays={[selfDate.from, selfDate]}
+            months={MONTHS}
+            onDayClick={handleDayClick}
+            firstDayOfWeek={1}
+            onTodayButtonClick={handleChange}
+            modifiers={modifiers}
+            weekdaysLong={WEEKDAYS_LONG}
+            weekdaysShort={WEEKDAYS_SHORT}
+            navbarElement={<Navbar />}
+          />
+        )}
+      </AdminInputsContainer>
     </>
   );
 };
@@ -749,6 +839,44 @@ const DateInput = styled.div`
   @media (max-width: 576px) {
     width: 100%;
     margin-bottom: 12px;
+  }
+`;
+
+const AdminInputsContainer = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  @media (max-width: 576px) {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  ${BoxInput} {
+    position: relative;
+    @media (max-width: 576px) {
+      margin: 0 15px;
+    }
+  }
+  ${DateInput} {
+    border: 1px solid #ff416e;
+    box-sizing: border-box;
+    border-radius: 24px;
+  }
+  ${CustomDatePicker} {
+    position: absolute;
+    top: 10px;
+    right: 0;
+    z-index: 9999;
+    @media (max-width: 992px) {
+      top: 40px;
+      width: auto;
+    }
+    @media (max-width: 576px) {
+      right: 0px;
+      top: calc(100% - 12px);
+      margin: 0 auto;
+      left: 0;
+      max-width: 300px;
+    }
   }
 `;
 

@@ -513,6 +513,9 @@ const TableHeadItem = styled.li`
   letter-spacing: 0.1px;
   color: rgba(81, 81, 114, 0.6);
   width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   &:nth-child(1) {
     max-width: 97px;
     @media (max-width: 768px) {
