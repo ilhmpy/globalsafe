@@ -128,6 +128,8 @@ export const AdminUsers = () => {
   const [loading, setLoading] = useState(true);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
+  const logOut = appContext.logOut;
+  const user = appContext.user;
 
   useEffect(() => {
     if (hubConnection) {
@@ -229,8 +231,8 @@ export const AdminUsers = () => {
           <Styled.HeadBlock>
             <UpTitle small>Пользователи</UpTitle>
             <Styled.UserName>
-              <span>Admin</span>
-              <Exit />
+              <span>{user}</span>
+              <Exit onClick={logOut} />
             </Styled.UserName>
           </Styled.HeadBlock>
           <Styled.FilterBlock>

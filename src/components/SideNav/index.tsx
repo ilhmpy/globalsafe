@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components/macro";
 import { ReactComponent as Logo } from "../../assets/svg/logo.svg";
 import { ReactComponent as DashBoard } from "../../assets/svg/dashboard.svg";
@@ -8,12 +8,15 @@ import { ReactComponent as Users } from "../../assets/svg/users.svg";
 import { ReactComponent as Briefcase } from "../../assets/svg/briefcase.svg";
 import { ReactComponent as Exit } from "../../assets/svg/exit.svg";
 import { NavLink, Link } from "react-router-dom";
+import { AppContext } from "../../context/HubContext";
 import useWindowSize from "../../hooks/useWindowSize";
 
 export const SideNavbar = () => {
   const [navWidth, setNavWidth] = useState(false);
   const sizes = useWindowSize();
   const size = sizes < 1200;
+  const appContext = useContext(AppContext);
+  const logOut = appContext.logOut;
 
   useEffect(() => {
     if (sizes !== 0 && size) {
@@ -74,7 +77,7 @@ export const SideNavbar = () => {
             </StyledLink>
           </Li>
         </Ul>
-        <Logout>
+        <Logout onClick={logOut}>
           <Exit />
           <Text>Выйти</Text>
         </Logout>
