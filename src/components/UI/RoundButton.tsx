@@ -1,5 +1,7 @@
 import styled from "styled-components/macro";
 import icon from "../../assets/svg/checkicon.svg";
+import lockopen from "../../assets/svg/lockopen.svg";
+import lockclose from "../../assets/svg/lockclose.svg";
 
 export const RoundButton = styled.div`
   width: 24px;
@@ -12,4 +14,22 @@ export const RoundButton = styled.div`
   background-repeat: no-repeat;
   background-position: center;
   background-size: 11px;
+`;
+
+export const LockButton = styled.button`
+  appearance: none;
+  border-radius: 50%;
+  border: 2px solid #ff416e;
+  background: url(${lockclose}) no-repeat center;
+  background-size: 11px;
+  height: 24px;
+  width: 24px;
+  &:focus {
+    outline: none;
+  }
+`;
+
+export const UnLockButton = styled(LockButton)`
+  background: url(${lockopen}) no-repeat center;
+  border-color: #bcd476;
 `;

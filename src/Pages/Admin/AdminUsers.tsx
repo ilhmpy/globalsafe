@@ -10,7 +10,7 @@ import { Select } from "../../components/Select/Select";
 import useWindowSize from "../../hooks/useWindowSize";
 import { TestInput } from "../../components/UI/DayPicker";
 import { Button } from "../../components/Button/Button";
-import { Checkbox } from "../../components/UI/Checkbox";
+// import { Checkbox } from "../../components/UI/Checkbox";
 import { AppContext } from "../../context/HubContext";
 import { OpenDate } from "../../types/dates";
 import {
@@ -27,6 +27,7 @@ import { ModalUsers } from "./AdminPay/Payments";
 import { CSSTransition } from "react-transition-group";
 import { Redirect } from "react-router-dom";
 import moment from "moment";
+import { LockButton, UnLockButton } from "../../components/UI/RoundButton";
 
 type PropsTable = {
   lockAccount: (id: string) => void;
@@ -52,12 +53,16 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
   const sizes = useWindowSize();
   const size = sizes < 992;
 
-  const locked = (id: string) => {
+  const locked = (e: any, id: string) => {
+    e.preventDefault();
+    e.stopPropagation();
     setLock(true);
     lockAccount(id);
   };
 
-  const unLocked = (id: string) => {
+  const unLocked = (e: any, id: string) => {
+    e.preventDefault();
+    e.stopPropagation();
     setLock(false);
     unLockAccount(id);
   };
@@ -90,24 +95,26 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
         <TableBodyItem>
           {size ? (
             lock ? (
-              <Checkbox
-                icon
-                checked={true}
-                onChange={() => unLocked(data.safeId)}
-              />
+              <UnLockButton onClick={(e) => unLocked(e, data.safeId)} />
             ) : (
-              <Checkbox
-                icon
-                checked={false}
-                onChange={() => locked(data.safeId)}
-              />
+              <LockButton onClick={(e) => locked(e, data.safeId)} />
             )
           ) : lock ? (
-            <Button greenOutline onClick={() => unLocked(data.safeId)}>
+            <Button
+              greenOutline
+              onClick={(e) => {
+                unLocked(e, data.safeId);
+              }}
+            >
               Разблокировать
             </Button>
           ) : (
-            <Button dangerOutline onClick={() => locked(data.safeId)}>
+            <Button
+              dangerOutline
+              onClick={(e) => {
+                locked(e, data.safeId);
+              }}
+            >
               Заблокировать
             </Button>
           )}
@@ -228,9 +235,9 @@ export const AdminUsers = () => {
     }
   };
 
-  if (admin === false) {
-    return <Redirect to="/" />;
-  }
+  // if (admin === false) {
+  //   return <Redirect to="/" />;
+  // }
 
   return (
     <>
@@ -245,6 +252,7 @@ export const AdminUsers = () => {
               <Exit onClick={logOut} />
             </Styled.UserName>
           </Styled.HeadBlock>
+
           <Styled.FilterBlock>
             <Styled.SelectContainer>
               <Styled.SelectWrap>
