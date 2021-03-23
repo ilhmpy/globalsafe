@@ -191,6 +191,7 @@ export const Info = () => {
           30
         )
         .then((res: any) => {
+          setLoading(false);
           setNum(20);
           function getFormatedDate(dateStr: Date) {
             let date = moment(dateStr).format("DD MMMM YYYY");
@@ -218,7 +219,10 @@ export const Info = () => {
             setBalanceLog(null);
           }
         })
-        .catch((err: Error) => console.log(err));
+        .catch((err: Error) => {
+          setLoading(false);
+          console.log(err);
+        });
     }
   }, [hubConnection, openDate, balanceLogs]);
 
@@ -236,6 +240,7 @@ export const Info = () => {
           30
         )
         .then((res) => {
+          setLoading(false);
           if (res.collection.length) {
             // console.log("loadMoreItems", res);
 
@@ -264,7 +269,10 @@ export const Info = () => {
             setNum(num + 20);
           }
         })
-        .catch((err: Error) => console.log(err));
+        .catch((err: Error) => {
+          setLoading(false);
+          console.log(err);
+        });
     }
   };
 
@@ -1019,7 +1027,7 @@ export const Info = () => {
                   </Styled.ModalItem>
                   <Styled.ModalItem>
                     <Styled.DateTitle></Styled.DateTitle>
-                    <Styled.DateText red onClick={allDate}>
+                    <Styled.DateText onClick={allDate}>
                       За все время
                     </Styled.DateText>
                   </Styled.ModalItem>

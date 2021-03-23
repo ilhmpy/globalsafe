@@ -94,7 +94,6 @@ export const AdminPortfolio = () => {
         .invoke<RootPortfolio>("GetBaskets", 3, numGCWD, 20)
         .then((res) => {
           if (res.collection.length) {
-            console.log("loadMoreItems", res);
             setBasketGCWD([...basketGCWD, ...res.collection]);
             setCountGCWD(true);
             setNumGCWD(numGCWD + 20);
@@ -111,7 +110,6 @@ export const AdminPortfolio = () => {
         .invoke<RootPortfolio>("GetBaskets", 2, numMGCWD, 20)
         .then((res) => {
           if (res.collection.length) {
-            console.log("loadMoreItems", res);
             setBasketMGCWD([...basketMGCWD, ...res.collection]);
             setCountMGCWD(true);
             setNumMGCWD(numMGCWD + 20);
@@ -128,7 +126,7 @@ export const AdminPortfolio = () => {
         .invoke<RootPortfolio>("GetBaskets", 4, numDIAMOND, 20)
         .then((res) => {
           if (res.collection.length) {
-            console.log("loadMoreItems", res);
+            setLoading(false);
             setBasketDIAMOND([...basketDIAMOND, ...res.collection]);
             setCountDIAMOND(true);
             setNumDIAMOND(numDIAMOND + 20);
@@ -174,11 +172,13 @@ export const AdminPortfolio = () => {
         .invoke<RootPortfolio>("GetBaskets", 2, 0, 20)
         .then((res) => {
           setLoading(false);
-          console.log("res", res);
           setBasketMGCWD(res.collection);
           setNumMGCWD(20);
         })
-        .catch((err: Error) => console.log(err));
+        .catch((err: Error) => {
+          setLoading(false);
+          console.log(err);
+        });
     }
   }, [hubConnection]);
 

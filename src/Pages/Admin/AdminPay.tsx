@@ -28,6 +28,7 @@ import "react-notifications-component/dist/theme.css";
 import { CSSTransition } from "react-transition-group";
 import { ModalPay } from "./AdminPay/Payments";
 import { Scrollbars } from "react-custom-scrollbars";
+import { Loading } from "../../components/UI/Loading";
 import {
   DepositList,
   PaymentsList,
@@ -65,6 +66,7 @@ export const AdminPay = () => {
   const { totalPayed, depositTotal } = amountContext;
   const [open, setOpen] = useState<boolean>(false);
   const [dataModal, setDataModal] = useState<PaymentsCollection | any>({});
+  const [loading, setLoading] = useState(true);
 
   const getPaymentsOverview = () => {
     if (hubConnection) {
@@ -133,11 +135,15 @@ export const AdminPay = () => {
           20
         )
         .then((res) => {
+          setLoading(false);
           setTotalPayments(res.totalRecords);
           setPaymentsList(res.collection);
           setNumPayments(20);
         })
-        .catch((err: Error) => console.log(err));
+        .catch((err: Error) => {
+          setLoading(false);
+          console.log(err);
+        });
     }
   }, [hubConnection, active]);
 
@@ -158,11 +164,15 @@ export const AdminPay = () => {
           20
         )
         .then((res) => {
+          setLoading(false);
           setTotalDeposits(res.totalRecords);
           setDepositList(res.collection);
           setNum(20);
         })
-        .catch((err: Error) => console.log(err));
+        .catch((err: Error) => {
+          setLoading(false);
+          console.log(err);
+        });
     }
   }, [hubConnection]);
 
@@ -171,13 +181,17 @@ export const AdminPay = () => {
       hubConnection
         .invoke<RootCharges>("GetDepositsCharges", [7, 8], 0, 20)
         .then((res) => {
+          setLoading(false);
           if (res.collection.length) {
             setTotalPayDeposits(res.totalRecords);
             setDepositPayList(res.collection);
             setPayNum(20);
           }
         })
-        .catch((err: Error) => console.log(err));
+        .catch((err: Error) => {
+          setLoading(false);
+          console.log(err);
+        });
     }
   }, [hubConnection]);
 
@@ -203,6 +217,7 @@ export const AdminPay = () => {
           20
         )
         .then((res) => {
+          setLoading(false);
           if (res.collection.length) {
             setPaymentsList([...paymentsList, ...res.collection]);
             setNumPayments(numPayments + 20);
@@ -231,6 +246,7 @@ export const AdminPay = () => {
           20
         )
         .then((res) => {
+          setLoading(false);
           if (res.collection.length) {
             setDepositList([...depositList, ...res.collection]);
             setCount(true);
@@ -265,7 +281,6 @@ export const AdminPay = () => {
       hubConnection
         .invoke("AdjustDepositPayment", id, amount)
         .then((res) => {
-          console.log("AdjustDepositPayment", res);
           getPaymentsOverview();
           alert("Успешно", "Подтверждено", "success");
         })
@@ -280,7 +295,6 @@ export const AdminPay = () => {
       hubConnection
         .invoke("ConfirmAllDepositsPayment")
         .then((res) => {
-          console.log("(res", res);
           alert("Успешно", "", "success");
           getPaymentsOverview();
         })
@@ -407,8 +421,12 @@ export const AdminPay = () => {
                       ))}
                     </InfiniteScroll>
                   </Scrollbars>
+                ) : loading ? (
+                  <Loading />
                 ) : (
-                  <NotFound>Данные не обнаружены.</NotFound>
+                  <NotFound>
+                    Данные не обнаружены. Попробуйте изменить параметры поиска.
+                  </NotFound>
                 )}
               </PaymentsTable>
             </Card>
@@ -465,8 +483,12 @@ export const AdminPay = () => {
                       ))}
                     </InfiniteScroll>
                   </Scrollbars>
+                ) : loading ? (
+                  <Loading />
                 ) : (
-                  <NotFound>Данные не обнаружены.</NotFound>
+                  <NotFound>
+                    Данные не обнаружены. Попробуйте изменить параметры поиска.
+                  </NotFound>
                 )}
               </PaymentsTable>
             </Card>
@@ -523,8 +545,12 @@ export const AdminPay = () => {
                       ))}
                     </InfiniteScroll>
                   </Scrollbars>
+                ) : loading ? (
+                  <Loading />
                 ) : (
-                  <NotFound>Данные не обнаружены.</NotFound>
+                  <NotFound>
+                    Данные не обнаружены. Попробуйте изменить параметры поиска.
+                  </NotFound>
                 )}
               </PaymentsTable>
             </Card>

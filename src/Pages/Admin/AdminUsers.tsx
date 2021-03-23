@@ -146,11 +146,13 @@ export const AdminUsers = () => {
         )
         .then((res) => {
           setLoading(false);
-          console.log("submit", res);
           setNum(20);
           setListDeposits(res.collection);
         })
-        .catch((err: Error) => console.log(err));
+        .catch((err: Error) => {
+          setLoading(false);
+          console.log(err);
+        });
     }
   }, [hubConnection]);
 
@@ -166,12 +168,14 @@ export const AdminUsers = () => {
           20
         )
         .then((res) => {
-          console.log("submit", res);
           setLoading(false);
           setNum(20);
           setListDeposits(res.collection);
         })
-        .catch((err: Error) => console.log(err));
+        .catch((err: Error) => {
+          setLoading(false);
+          console.log(err);
+        });
     }
   };
 
@@ -189,7 +193,7 @@ export const AdminUsers = () => {
         )
         .then((res) => {
           if (res.collection.length) {
-            console.log("loadMoreItems", res);
+            setLoading(false);
             setListDeposits([...listDeposits, ...res.collection]);
             setCount(true);
             setNum(num + 20);

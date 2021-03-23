@@ -119,8 +119,8 @@ export const AdminDeposit = () => {
           20
         )
         .then((res) => {
+          setLoading(false);
           if (res.collection.length) {
-            console.log("loadMoreItems", res);
             setDepositsList([...depositsList, ...res.collection]);
             setCount(true);
             setNum(num + 20);
@@ -237,7 +237,6 @@ export const AdminDeposit = () => {
         )
         .then((res) => {
           setNum(20);
-          console.log("submit", res);
           setDepositsList(res.collection);
         })
         .catch((err: Error) => console.log(err));
