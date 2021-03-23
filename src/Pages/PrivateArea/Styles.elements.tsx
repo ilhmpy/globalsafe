@@ -100,6 +100,13 @@ export const InfoTitle = styled.h4`
   line-height: 21px;
   color: #0e0d3d;
   margin-bottom: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 350px;
+  @media (max-width: 576px) {
+    max-width: 80px;
+  }
 `;
 
 export const InfoButtons = styled.div`

@@ -422,10 +422,6 @@ export const MainAdminInput: FC<{
   const handleChange = () => {
     if (selfDate.from && selfDate.to) {
       setOpenDate({ from: selfDate.from, to: selfDate.to });
-      setSelfDate({
-        from: undefined,
-        to: undefined,
-      });
     }
     setShowOpen(false);
   };

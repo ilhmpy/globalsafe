@@ -26,7 +26,7 @@ function App() {
             <Switch>
               <Route path="/" component={Main} exact />
               <Route path="/admin" component={AdminMain} exact />
-              <Route path="/admin/login" component={AdminLogin} />
+              {/* <Route path="/admin/login" component={AdminLogin} /> */}
               <Route path="/admin/payments" component={AdminPay} />
               <Route path="/admin/deposit" component={AdminDeposit} />
               <Route path="/admin/users" component={AdminUsers} />

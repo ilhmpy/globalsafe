@@ -25,6 +25,7 @@ import { Scrollbars } from "react-custom-scrollbars";
 import InfiniteScroll from "react-infinite-scroller";
 import { ModalUsers } from "./AdminPay/Payments";
 import { CSSTransition } from "react-transition-group";
+import { Redirect } from "react-router-dom";
 import moment from "moment";
 
 type PropsTable = {
@@ -128,6 +129,7 @@ export const AdminUsers = () => {
   const [loading, setLoading] = useState(true);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
+  const admin = appContext.isAdmin;
   const logOut = appContext.logOut;
   const user = appContext.user;
 
@@ -144,11 +146,13 @@ export const AdminUsers = () => {
         )
         .then((res) => {
           setLoading(false);
-          console.log("submit", res);
           setNum(20);
           setListDeposits(res.collection);
         })
-        .catch((err: Error) => console.log(err));
+        .catch((err: Error) => {
+          setLoading(false);
+          console.log(err);
+        });
     }
   }, [hubConnection]);
 
@@ -164,12 +168,14 @@ export const AdminUsers = () => {
           20
         )
         .then((res) => {
-          console.log("submit", res);
           setLoading(false);
           setNum(20);
           setListDeposits(res.collection);
         })
-        .catch((err: Error) => console.log(err));
+        .catch((err: Error) => {
+          setLoading(false);
+          console.log(err);
+        });
     }
   };
 
@@ -187,7 +193,7 @@ export const AdminUsers = () => {
         )
         .then((res) => {
           if (res.collection.length) {
-            console.log("loadMoreItems", res);
+            setLoading(false);
             setListDeposits([...listDeposits, ...res.collection]);
             setCount(true);
             setNum(num + 20);
@@ -221,6 +227,10 @@ export const AdminUsers = () => {
         .catch((err: Error) => console.log(err));
     }
   };
+
+  if (admin === false) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <>

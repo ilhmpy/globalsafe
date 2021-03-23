@@ -20,6 +20,7 @@ import { AppContext } from "../../context/HubContext";
 import moment from "moment";
 import { CSSTransition } from "react-transition-group";
 import { PaymentsStat } from "../../types/main";
+import { Redirect } from "react-router-dom";
 
 export const AdminMain = () => {
   let currentMonth = moment().format("MMYYYY");
@@ -40,6 +41,7 @@ export const AdminMain = () => {
   const hubConnection = appContext.hubConnection;
   const logOut = appContext.logOut;
   const user = appContext.user;
+  const admin = appContext.isAdmin;
 
   const [openDate, setOpenDate] = useState<OpenDate>({
     from: backDays._d,
@@ -123,6 +125,10 @@ export const AdminMain = () => {
         .catch((e) => console.log(e));
     }
   }, [hubConnection, selectedDay]);
+
+  if (admin === false) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <>

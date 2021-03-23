@@ -48,7 +48,7 @@ type Deposit = {
 };
 
 export const Info = () => {
-  const [active, setActive] = useState(0);
+  const [active, setActive] = useState(1);
   const [activeDeposite, setActiveDeposite] = useState(0);
   const [card, setCard] = useState(0);
   const [card2, setCard2] = useState(0);
@@ -191,6 +191,7 @@ export const Info = () => {
           30
         )
         .then((res: any) => {
+          setLoading(false);
           setNum(20);
           function getFormatedDate(dateStr: Date) {
             let date = moment(dateStr).format("DD MMMM YYYY");
@@ -218,7 +219,10 @@ export const Info = () => {
             setBalanceLog(null);
           }
         })
-        .catch((err: Error) => console.log(err));
+        .catch((err: Error) => {
+          setLoading(false);
+          console.log(err);
+        });
     }
   }, [hubConnection, openDate, balanceLogs]);
 
@@ -236,8 +240,9 @@ export const Info = () => {
           30
         )
         .then((res) => {
+          setLoading(false);
           if (res.collection.length) {
-            console.log("loadMoreItems", res);
+            // console.log("loadMoreItems", res);
 
             if (res.collection.length) {
               let result: any = {};
@@ -264,11 +269,12 @@ export const Info = () => {
             setNum(num + 20);
           }
         })
-        .catch((err: Error) => console.log(err));
+        .catch((err: Error) => {
+          setLoading(false);
+          console.log(err);
+        });
     }
   };
-
-  console.log("setBalanceLog", balanceLog);
 
   useEffect(() => {
     if (hubConnection) {
@@ -286,7 +292,7 @@ export const Info = () => {
       hubConnection
         .invoke("GetBalanceOperationSum", 1, [0, 1, 2, 3, 4, 5, 6, 7, 8])
         .then((res: any) => {
-          console.log("GetBalanceOperationSum", res);
+          // console.log("GetBalanceOperationSum", res);
         })
         .catch((err: Error) => console.log(err));
     }
@@ -568,8 +574,16 @@ export const Info = () => {
                     >
                       <TestChart
                         percent
-                        labels={list.map((i: any) => i.deposit.name)}
-                        series={list.map((i: any) => i.payedAmountView)}
+                        labels={
+                          list.length
+                            ? list.map((i: any) => i.deposit.name)
+                            : [""]
+                        }
+                        series={
+                          list.length
+                            ? list.map((i: any) => i.payedAmountView)
+                            : [""]
+                        }
                       />
                     </CSSTransition>
                     <Styled.NextPay>
@@ -589,8 +603,16 @@ export const Info = () => {
                       unmountOnExit
                     >
                       <TestChart
-                        labels={list.map((i: any) => i.deposit.name)}
-                        series={list.map((i: any) => i.payedAmountView)}
+                        labels={
+                          list.length
+                            ? list.map((i: any) => i.deposit.name)
+                            : [""]
+                        }
+                        series={
+                          list.length
+                            ? list.map((i: any) => i.payedAmountView)
+                            : [""]
+                        }
                       />
                     </CSSTransition>
                     <Styled.NextPay>
@@ -632,8 +654,16 @@ export const Info = () => {
                     >
                       <TestChart
                         percent
-                        labels={list.map((i: any) => i.deposit.name)}
-                        series={list.map((i: any) => i.baseAmountView)}
+                        labels={
+                          list.length
+                            ? list.map((i: any) => i.deposit.name)
+                            : [""]
+                        }
+                        series={
+                          list.length
+                            ? list.map((i: any) => i.baseAmountView)
+                            : [""]
+                        }
                       />
                     </CSSTransition>
                   </Styled.HalfContent>
@@ -645,8 +675,16 @@ export const Info = () => {
                       unmountOnExit
                     >
                       <TestChart
-                        labels={list.map((i: any) => i.deposit.name)}
-                        series={list.map((i: any) => i.baseAmountView)}
+                        labels={
+                          list.length
+                            ? list.map((i: any) => i.deposit.name)
+                            : [""]
+                        }
+                        series={
+                          list.length
+                            ? list.map((i: any) => i.baseAmountView)
+                            : [""]
+                        }
                       />
                     </CSSTransition>
                   </Styled.HalfContent>
@@ -703,9 +741,17 @@ export const Info = () => {
                           >
                             <TestChart
                               percent
-                              mobHeight={150}
-                              labels={list.map((i: any) => i.deposit.name)}
-                              series={list.map((i: any) => i.payedAmountView)}
+                              mobHeight={list.length ? 150 : 0}
+                              labels={
+                                list.length
+                                  ? list.map((i: any) => i.deposit.name)
+                                  : [""]
+                              }
+                              series={
+                                list.length
+                                  ? list.map((i: any) => i.payedAmountView)
+                                  : [""]
+                              }
                             />
                           </CSSTransition>
                           <Styled.NextPay>
@@ -721,9 +767,17 @@ export const Info = () => {
                             unmountOnExit
                           >
                             <TestChart
-                              mobHeight={150}
-                              labels={list.map((i: any) => i.deposit.name)}
-                              series={list.map((i: any) => i.payedAmountView)}
+                              mobHeight={list.length ? 150 : 0}
+                              labels={
+                                list.length
+                                  ? list.map((i: any) => i.deposit.name)
+                                  : [""]
+                              }
+                              series={
+                                list.length
+                                  ? list.map((i: any) => i.payedAmountView)
+                                  : [""]
+                              }
                             />
                           </CSSTransition>
                         </Styled.HalfContent>
@@ -771,9 +825,17 @@ export const Info = () => {
                           >
                             <TestChart
                               percent
-                              mobHeight={150}
-                              labels={list.map((i: any) => i.deposit.name)}
-                              series={list.map((i: any) => i.baseAmountView)}
+                              mobHeight={list.length ? 150 : 0}
+                              labels={
+                                list.length
+                                  ? list.map((i: any) => i.deposit.name)
+                                  : [""]
+                              }
+                              series={
+                                list.length
+                                  ? list.map((i: any) => i.baseAmountView)
+                                  : [""]
+                              }
                             />
                           </CSSTransition>
                           <Styled.NextPay>
@@ -789,9 +851,17 @@ export const Info = () => {
                             unmountOnExit
                           >
                             <TestChart
-                              mobHeight={150}
-                              labels={list.map((i: any) => i.deposit.name)}
-                              series={list.map((i: any) => i.baseAmountView)}
+                              mobHeight={list.length ? 150 : 0}
+                              labels={
+                                list.length
+                                  ? list.map((i: any) => i.deposit.name)
+                                  : [""]
+                              }
+                              series={
+                                list.length
+                                  ? list.map((i: any) => i.baseAmountView)
+                                  : [""]
+                              }
                             />
                           </CSSTransition>
                           <Styled.NextPay>
@@ -927,43 +997,17 @@ export const Info = () => {
                         поиска.
                       </Styled.NotFound>
                     )}
-
-                    {/* {balanceLog ? (
-                      Object.keys(balanceLog).map((key) => (
-                        <div key={key}>
-                          <Styled.DataListDate>{key}</Styled.DataListDate>
-
-                          {balanceLog[key].map((item, idx) => (
-                            <Styled.DataListItem key={item.id + idx}>
-                              <Styled.DataListName>
-                                {operation(item.operationKind)}
-                              </Styled.DataListName>
-                              <Styled.DataListSum plus={item.balance >= 0}>
-                                {item.balance < 0
-                                  ? ""
-                                  : item.operationKind !== 6
-                                  ? "+"
-                                  : "-"}{" "}
-                                {(item.balance / 100000)
-                                  .toFixed(5)
-                                  .toLocaleString()}
-                              </Styled.DataListSum>
-                            </Styled.DataListItem>
-                          ))}
-                        </div>
-                      ))
-                    ) : (
-                      <Styled.NotFound>
-                        Данные не обнаружены. Попробуйте изменить параметры
-                        поиска.
-                      </Styled.NotFound>
-                    )} */}
                   </Styled.DataList>
                 </Styled.DataListWrap>
               </Card>
             </Container>
           </Styled.Content>
-          {open && (
+          <CSSTransition
+            in={open}
+            timeout={300}
+            classNames="modal"
+            unmountOnExit
+          >
             <Styled.ModalWrap>
               <Modal onClose={onClose}>
                 <Styled.ModalContent>
@@ -983,7 +1027,7 @@ export const Info = () => {
                   </Styled.ModalItem>
                   <Styled.ModalItem>
                     <Styled.DateTitle></Styled.DateTitle>
-                    <Styled.DateText red onClick={allDate}>
+                    <Styled.DateText onClick={allDate}>
                       За все время
                     </Styled.DateText>
                   </Styled.ModalItem>
@@ -995,7 +1039,7 @@ export const Info = () => {
                 />
               </Modal>
             </Styled.ModalWrap>
-          )}
+          </CSSTransition>
           {withdraw && (
             <Modal onClose={() => setWithdraw(false)}>
               <Styled.ModalBlock>
