@@ -11,7 +11,7 @@ export const Wrapper = styled.div`
   margin-right: auto;
   margin-left: auto;
   position: relative;
-  @media (max-width: 992px){
+  @media (max-width: 992px) {
     margin-top: 82px;
   }
 `;
@@ -42,6 +42,13 @@ export const UserName = styled.div`
     line-height: 16px;
     text-align: right;
     color: #0e0d3d;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 350px;
+    @media (max-width: 576px) {
+      max-width: 100px;
+    }
   }
   svg {
     display: none;

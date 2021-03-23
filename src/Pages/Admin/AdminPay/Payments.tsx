@@ -366,7 +366,7 @@ const Container = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  /* background: rgba(0, 0, 0, 0.2); */
+  background-color: rgba(0, 0, 0, 0.2);
   display: block;
   z-index: 99999;
   overflow: auto;

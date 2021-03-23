@@ -16,13 +16,15 @@ export const Modal: React.FC<ModalProps> = ({ children, onClose, width }) => {
 
   return (
     <Portal>
-      <ModalContainer onClick={handleContainerClick}>
-        <ModalComponent width={width}>
-          <span className="close" onClick={onClose}>
-            &times;
-          </span>
-          {children}
-        </ModalComponent>
+      <ModalContainer>
+        <Center onClick={handleContainerClick}>
+          <ModalComponent width={width}>
+            <span className="close" onClick={onClose}>
+              &times;
+            </span>
+            {children}
+          </ModalComponent>
+        </Center>
       </ModalContainer>
     </Portal>
   );
@@ -35,22 +37,30 @@ const Main = styled.div`
   align-items: center;
 `;
 
-const ModalContainer = styled.div`
-  width: 100%;
-  height: 100vh;
-  position: fixed;
-  left: 0;
-  top: 0;
-  background: rgba(0, 0, 0, 0.2);
+const Center = styled.div`
+  min-height: calc(100% - 3.5rem);
+  margin: 1.75rem auto;
   display: flex;
-  justify-content: center;
   align-items: center;
+`;
+
+const ModalContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: block;
   z-index: 99999;
-  cursor: pointer;
   overflow: auto;
 `;
 
 const ModalComponent = styled.div<{ width?: number }>`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 50px auto;
   cursor: auto;
   background: #fafafa;
   border-radius: 0.25rem;
@@ -58,8 +68,6 @@ const ModalComponent = styled.div<{ width?: number }>`
   max-width: ${(props) => (props.width ? props.width + "px" : "400px")};
   width: 100%;
   position: relative;
-  margin-top: 40px;
-  margin-bottom: 40px;
   span {
     color: #333;
     position: absolute;

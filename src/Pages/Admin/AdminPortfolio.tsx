@@ -27,6 +27,7 @@ import InfiniteScroll from "react-infinite-scroller";
 import { Scrollbars } from "react-custom-scrollbars";
 import { ModalPortfolio } from "./AdminPay/Payments";
 import { Loading } from "../../components/UI/Loading";
+import { Redirect } from "react-router-dom";
 
 const TableList: FC<{ data: CollectionPortfolio }> = ({ data }) => {
   const [open, setOpen] = useState(false);
@@ -81,6 +82,7 @@ export const AdminPortfolio = () => {
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const logOut = appContext.logOut;
+  const admin = appContext.isAdmin;
   const user = appContext.user;
   const scrollGCWD = useRef<any>(null);
   const sizes = useWindowSize();
@@ -192,6 +194,10 @@ export const AdminPortfolio = () => {
         .catch((err: Error) => console.log(err));
     }
   }, [hubConnection]);
+
+  if (admin === false) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <>

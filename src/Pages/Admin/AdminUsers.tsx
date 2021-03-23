@@ -25,6 +25,7 @@ import { Scrollbars } from "react-custom-scrollbars";
 import InfiniteScroll from "react-infinite-scroller";
 import { ModalUsers } from "./AdminPay/Payments";
 import { CSSTransition } from "react-transition-group";
+import { Redirect } from "react-router-dom";
 import moment from "moment";
 
 type PropsTable = {
@@ -128,6 +129,7 @@ export const AdminUsers = () => {
   const [loading, setLoading] = useState(true);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
+  const admin = appContext.isAdmin;
   const logOut = appContext.logOut;
   const user = appContext.user;
 
@@ -221,6 +223,10 @@ export const AdminUsers = () => {
         .catch((err: Error) => console.log(err));
     }
   };
+
+  if (admin === false) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <>

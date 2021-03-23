@@ -38,6 +38,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { ModalDeposit } from "./AdminPay/Payments";
 import { Header } from "../../components/Header/Header";
 import { Loading } from "../../components/UI/Loading";
+import { Redirect } from "react-router-dom";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 type PayProps = {
@@ -138,6 +139,7 @@ export const AdminDeposit = () => {
   const hubConnection = appContext.hubConnection;
   const logOut = appContext.logOut;
   const user = appContext.user;
+  const admin = appContext.isAdmin;
   const sizes = useWindowSize();
   const size = sizes < 768;
   const header = sizes < 992;
@@ -241,6 +243,10 @@ export const AdminDeposit = () => {
         .catch((err: Error) => console.log(err));
     }
   };
+
+  if (admin === false) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <>

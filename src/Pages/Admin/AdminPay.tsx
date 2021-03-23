@@ -35,6 +35,7 @@ import {
 } from "./AdminPay/DepositList";
 import moment from "moment";
 import { Header } from "../../components/Header/Header";
+import { Redirect } from "react-router-dom";
 
 export const AdminPay = () => {
   const [active, setActive] = useState(0);
@@ -47,6 +48,7 @@ export const AdminPay = () => {
   const hubConnection = appContext.hubConnection;
   const logOut = appContext.logOut;
   const user = appContext.user;
+  const admin = appContext.isAdmin;
   const amountContext = useContext(AmountContext);
   const [totalDeposits, setTotalDeposits] = useState(0);
   const [totalPayDeposits, setTotalPayDeposits] = useState(0);
@@ -287,6 +289,11 @@ export const AdminPay = () => {
         });
     }
   };
+
+  if (admin === false) {
+    return <Redirect to="/" />;
+  }
+
   return (
     <>
       {size && <Header admPanel />}
