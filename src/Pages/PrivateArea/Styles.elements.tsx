@@ -495,6 +495,14 @@ export const DateText = styled.p<{ red?: boolean }>`
   line-height: 21px;
   color: ${(props) => (props.red ? "#FF416E" : "#515172")};
   text-align: center;
+  transition: 0.3s;
+  cursor: pointer;
+  @media (max-width: 992px) {
+    cursor: initial;
+  }
+  &:hover {
+    color: #ff416e;
+  }
 `;
 
 export const ModalList = styled.ul`

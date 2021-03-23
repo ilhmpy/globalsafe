@@ -39,14 +39,12 @@ export const TestChart: FC<Props> = ({
                 show: true,
                 label: "CWD",
                 offsetY: 60,
-                formatter: function (value: any) {
-                  if (value >= 1000000) {
-                    return (value / 1000000).toFixed(1) + "M";
-                  } else if (value >= 1000 && value < 1000000) {
-                    return (value / 1000).toFixed(1) + "k";
-                  } else {
-                    return value;
-                  }
+                formatter: function (w: any) {
+                  return `${w.globals.seriesTotals
+                    .reduce((a: any, b: any) => {
+                      return a + b;
+                    }, 0)
+                    .toLocaleString()}`;
                 },
               },
               value: {

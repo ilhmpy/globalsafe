@@ -45,6 +45,8 @@ export const AdminPay = () => {
   const [depositList, setDepositList] = useState<any>([]);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
+  const logOut = appContext.logOut;
+  const user = appContext.user;
   const amountContext = useContext(AmountContext);
   const [totalDeposits, setTotalDeposits] = useState(0);
   const [totalPayDeposits, setTotalPayDeposits] = useState(0);
@@ -295,8 +297,8 @@ export const AdminPay = () => {
           <Styled.HeadBlock>
             <UpTitle small>Выплаты</UpTitle>
             <Styled.UserName>
-              <span>Admin</span>
-              <Exit />
+              <span>{user}</span>
+              <Exit onClick={logOut} />
             </Styled.UserName>
           </Styled.HeadBlock>
 

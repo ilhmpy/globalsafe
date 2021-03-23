@@ -80,6 +80,8 @@ export const AdminPortfolio = () => {
   const [loading, setLoading] = useState(true);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
+  const logOut = appContext.logOut;
+  const user = appContext.user;
   const scrollGCWD = useRef<any>(null);
   const sizes = useWindowSize();
   const header = sizes < 992;
@@ -200,8 +202,8 @@ export const AdminPortfolio = () => {
           <Styled.HeadBlock>
             <UpTitle small>Портфель</UpTitle>
             <Styled.UserName>
-              <span>Admin</span>
-              <Exit />
+              <span>{user}</span>
+              <Exit onClick={logOut} />
             </Styled.UserName>
           </Styled.HeadBlock>
           <ChartContainer>

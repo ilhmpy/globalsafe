@@ -32,6 +32,9 @@ import { RootDeposits, DepositsCollection } from "../../types/info";
 import ReactNotification, { store } from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 import { DepositListModal } from "./Modals";
+import InfiniteScroll from "react-infinite-scroller";
+import { Scrollbars } from "react-custom-scrollbars";
+import { Loading } from "../../components/UI/Loading";
 moment.locale("ru");
 
 type Obj = {
@@ -70,9 +73,10 @@ export const Info = () => {
     null
   );
   const [openDate, setOpenDate] = useState<OpenDate>({
-    from: undefined,
-    to: undefined,
+    from: new Date("2019-01-01T00:47:45"),
+    to: new Date(),
   });
+  const [selected, setSelected] = useState("За все время");
   const sizes = useWindowSize();
   const size = sizes < 992;
   const appContext = useContext(AppContext);
@@ -80,7 +84,56 @@ export const Info = () => {
   const balance = appContext.balance;
   const amountContext = useContext(AmountContext);
   const { totalPayed, depositTotal } = amountContext;
+  const [count, setCount] = useState(true);
+  const [num, setNum] = useState(20);
+  const [loading, setLoading] = useState(true);
   const inputRef = useRef<any>(null);
+
+  const yearSelected = () => {
+    let year = moment().format("YYYY");
+    let yearStart: any = moment(year, "YYYY").startOf("month");
+    let yearEnd: any = moment(year, "YYYY").endOf("year");
+    setOpenDate({
+      from: yearStart._d,
+      to: yearEnd._d,
+    });
+    setSelected(`За ${moment().format("YYYY")}`);
+    onClose();
+  };
+
+  const monthSelected = () => {
+    let currentMonth = moment().format("MMYYYY");
+    let currentMonthStart: any = moment(currentMonth, "M.YYYY").startOf(
+      "month"
+    );
+    let currentMonthEnd: any = moment(currentMonth, "M.YYYY").endOf("month");
+    setOpenDate({
+      from: currentMonthStart._d,
+      to: currentMonthEnd._d,
+    });
+    setSelected(`За ${moment().format("MMMM YYYY")}`);
+    onClose();
+  };
+
+  const rangeDate = (from: Date, to: Date) => {
+    setOpenDate({
+      from: from,
+      to: to,
+    });
+    setSelected(
+      `${moment(from).format("DD.MM.YY")} - ${moment(to).format("DD.MM.YY")}`
+    );
+    onClose();
+  };
+
+  const allDate = () => {
+    setOpenDate({
+      from: new Date("2019-01-01T00:47:45"),
+      to: new Date(),
+    });
+    setSelected("За все время");
+    onClose();
+  };
 
   useEffect(() => {
     if (withdrawValue) {
@@ -89,7 +142,6 @@ export const Info = () => {
   }, [withdrawValue]);
 
   const hubConnection = appContext.hubConnection;
-  const loading = appContext.loading;
 
   useEffect(() => {
     if (hubConnection) {
@@ -139,6 +191,7 @@ export const Info = () => {
           30
         )
         .then((res: any) => {
+          setNum(20);
           function getFormatedDate(dateStr: Date) {
             let date = moment(dateStr).format("DD MMMM YYYY");
             return date;
@@ -168,6 +221,54 @@ export const Info = () => {
         .catch((err: Error) => console.log(err));
     }
   }, [hubConnection, openDate, balanceLogs]);
+
+  const myLoad = () => {
+    if (hubConnection) {
+      setCount(false);
+      hubConnection
+        .invoke(
+          "GetBalanceLog",
+          1,
+          balanceLogs,
+          openDate.from,
+          openDate.to,
+          num,
+          30
+        )
+        .then((res) => {
+          if (res.collection.length) {
+            console.log("loadMoreItems", res);
+
+            if (res.collection.length) {
+              let result: any = {};
+              res.collection.forEach((item: any) => {
+                const d = moment(item.operationDate).format("DD MMMM YYYY");
+                const obj = {
+                  id: item.referenceSafeId,
+                  operationKind: item.operationKind,
+                  balance: item.balanceDelta,
+                };
+
+                if (result[d]) {
+                  result[d].push(obj);
+                } else {
+                  result[d] = [obj];
+                }
+              });
+              setBalanceLog(Object.assign(balanceLog, result));
+            } else {
+              setBalanceLog(null);
+            }
+
+            setCount(true);
+            setNum(num + 20);
+          }
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  };
+
+  console.log("setBalanceLog", balanceLog);
 
   useEffect(() => {
     if (hubConnection) {
@@ -738,21 +839,10 @@ export const Info = () => {
                     </Styled.BalanceItemValue>
                   </Styled.BalanceItem>
                 </Styled.BalanceList>
-                <div style={{ visibility: "hidden" }}>
-                  <Styled.DateButton>
-                    {/* onClick={() => setOpen(true)} */}
 
-                    {openDate.from ? (
-                      <span>
-                        {moment(openDate.from).format("DD.MM.YYYY") +
-                          "-" +
-                          moment(openDate.to).format("DD.MM.YYYY")}
-                      </span>
-                    ) : (
-                      "За все время"
-                    )}
-                  </Styled.DateButton>
-                </div>
+                <Styled.DateButton onClick={() => setOpen(true)}>
+                  <span>{selected}</span>
+                </Styled.DateButton>
               </Styled.BalanceWrap>
             </Container>
 
@@ -792,6 +882,53 @@ export const Info = () => {
                       </Styled.DataListItem>
                     </Styled.DataListHead>
                     {balanceLog ? (
+                      <Scrollbars style={{ height: "500px" }}>
+                        <InfiniteScroll
+                          pageStart={0}
+                          loadMore={myLoad}
+                          hasMore={count}
+                          useWindow={false}
+                          loader={
+                            <div className="loader" key={0}>
+                              Loading ...
+                            </div>
+                          }
+                        >
+                          {Object.keys(balanceLog).map((key) => (
+                            <div key={key}>
+                              <Styled.DataListDate>{key}</Styled.DataListDate>
+
+                              {balanceLog[key].map((item, idx) => (
+                                <Styled.DataListItem key={item.id + idx}>
+                                  <Styled.DataListName>
+                                    {operation(item.operationKind)}
+                                  </Styled.DataListName>
+                                  <Styled.DataListSum plus={item.balance >= 0}>
+                                    {item.balance < 0
+                                      ? ""
+                                      : item.operationKind !== 6
+                                      ? "+"
+                                      : "-"}{" "}
+                                    {(item.balance / 100000)
+                                      .toFixed(5)
+                                      .toLocaleString()}
+                                  </Styled.DataListSum>
+                                </Styled.DataListItem>
+                              ))}
+                            </div>
+                          ))}
+                        </InfiniteScroll>
+                      </Scrollbars>
+                    ) : loading ? (
+                      <Loading />
+                    ) : (
+                      <Styled.NotFound>
+                        Данные не обнаружены. Попробуйте изменить параметры
+                        поиска.
+                      </Styled.NotFound>
+                    )}
+
+                    {/* {balanceLog ? (
                       Object.keys(balanceLog).map((key) => (
                         <div key={key}>
                           <Styled.DataListDate>{key}</Styled.DataListDate>
@@ -820,7 +957,7 @@ export const Info = () => {
                         Данные не обнаружены. Попробуйте изменить параметры
                         поиска.
                       </Styled.NotFound>
-                    )}
+                    )} */}
                   </Styled.DataList>
                 </Styled.DataListWrap>
               </Card>
@@ -834,34 +971,19 @@ export const Info = () => {
                   <Styled.ModalTitle>Выберите период</Styled.ModalTitle>
                   <Styled.ModalItem>
                     <Styled.DateTitle>Этот месяц</Styled.DateTitle>
-                    <Styled.DateText>
-                      <Styled.Select
-                        value={selectedMonth}
-                        onChange={onHandleMonthChange}
-                      >
-                        {thisMonth.map((i, idx) => (
-                          <option key={i} value={idx + 1}>
-                            {i}&nbsp;
-                            {selectedYear ? selectedYear : "2021"}
-                          </option>
-                        ))}
-                      </Styled.Select>
+                    <Styled.DateText onClick={monthSelected}>
+                      {moment().format("MMMM YYYY")}
                     </Styled.DateText>
                   </Styled.ModalItem>
                   <Styled.ModalItem>
                     <Styled.DateTitle>Этот год</Styled.DateTitle>
-                    <Styled.DateText>
-                      <Styled.Select
-                        value={selectedYear}
-                        onChange={onHandleSelectChange}
-                      >
-                        {options}
-                      </Styled.Select>
+                    <Styled.DateText onClick={yearSelected}>
+                      {moment().format("YYYY")}
                     </Styled.DateText>
                   </Styled.ModalItem>
                   <Styled.ModalItem>
                     <Styled.DateTitle></Styled.DateTitle>
-                    <Styled.DateText red onClick={allTime}>
+                    <Styled.DateText red onClick={allDate}>
                       За все время
                     </Styled.DateText>
                   </Styled.ModalItem>
@@ -869,7 +991,7 @@ export const Info = () => {
                 <ModalRangeInput
                   onClose={onClose}
                   openDate={openDate}
-                  setOpenDate={setOpenDate}
+                  setOpenDate={rangeDate}
                 />
               </Modal>
             </Styled.ModalWrap>

@@ -38,6 +38,8 @@ export const AdminMain = () => {
 
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
+  const logOut = appContext.logOut;
+  const user = appContext.user;
 
   const [openDate, setOpenDate] = useState<OpenDate>({
     from: backDays._d,
@@ -131,8 +133,8 @@ export const AdminMain = () => {
           <Styled.HeadBlock>
             <UpTitle small>Главный экран</UpTitle>
             <Styled.UserName>
-              <span>Admin</span>
-              <Exit />
+              <span>{user}</span>
+              <Exit onClick={logOut} />
             </Styled.UserName>
           </Styled.HeadBlock>
           <CardAdmin>

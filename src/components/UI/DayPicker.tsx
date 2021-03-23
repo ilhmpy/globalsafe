@@ -253,7 +253,7 @@ export const ModalCalendarInput: FC<{
 export const ModalRangeInput: FC<{
   label?: string;
   openDate: OpenDate;
-  setOpenDate: (openDate: OpenDate) => void;
+  setOpenDate: (from: Date, to: Date) => void;
   onClose: () => void;
 }> = ({ openDate, setOpenDate, onClose }) => {
   const [showOpen, setShowOpen] = useState(false);
@@ -276,7 +276,7 @@ export const ModalRangeInput: FC<{
 
   const handleChange = () => {
     if (selfDate.from && selfDate.to) {
-      setOpenDate({ from: selfDate.from, to: selfDate.to });
+      setOpenDate(selfDate.from, selfDate.to);
       setselfDate({
         from: undefined,
         to: undefined,
@@ -291,25 +291,14 @@ export const ModalRangeInput: FC<{
     <>
       <DatePickerContainer ref={ref}>
         <CalendarWrap onClick={() => setShowOpen(!showOpen)}>
-          <Period>
+          <Period>Указать период...</Period>
+          {/* <Period>
             {selfDate.from
               ? moment(selfDate.from).format("DD.MM.YY") +
                 " " +
                 moment(selfDate.to).format("DD.MM.YY")
               : "Указать период..."}
-          </Period>
-          {/* <CalendarItem>
-            <CalendarLabel>C</CalendarLabel>
-            <ModalComp>
-              {selfDate.from ? moment(selfDate.from).format("DD.MM.YY") : ""}
-            </ModalComp>
-          </CalendarItem>
-          <CalendarItem>
-            <CalendarLabel>По</CalendarLabel>
-            <ModalComp>
-              {selfDate.to ? `${moment(selfDate.to).format("DD.MM.YY")} ` : ""}
-            </ModalComp>
-          </CalendarItem> */}
+          </Period> */}
         </CalendarWrap>
         {showOpen && (
           <CustomDatePicker
@@ -500,6 +489,13 @@ const Period = styled.div`
   color: #515172;
   text-align: center;
   padding: 15px 5px 5px;
+  cursor: pointer;
+  @media (max-width: 992px) {
+    cursor: initial;
+  }
+  &:hover {
+    color: #ff416e;
+  }
 `;
 
 const flex = css`
@@ -784,10 +780,19 @@ const DatePickerContainer = styled.div`
   ${CustomDatePicker} {
     position: absolute;
     margin: 0;
-    bottom: 100%;
+    bottom: -90px;
     right: 0;
     left: 0;
     z-index: 9999;
+    @media (max-width: 576px) {
+      bottom: -60px;
+    }
+    .DayPicker-Months {
+      height: 395px;
+      @media (max-width: 576px) {
+        height: 314px;
+      }
+    }
   }
 `;
 
