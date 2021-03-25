@@ -48,7 +48,7 @@ type Deposit = {
 };
 
 export const Info = () => {
-  const [active, setActive] = useState(1);
+  const [active, setActive] = useState(0);
   const [activeDeposite, setActiveDeposite] = useState(0);
   const [card, setCard] = useState(0);
   const [card2, setCard2] = useState(0);
@@ -159,13 +159,14 @@ export const Info = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<RootList>("GetUserDeposits", [1, 2, 3, 4, 5, 6], 0, 30)
+        .invoke<RootList>("GetUserDeposits", [1, 2, 3, 4, 5, 6], 0, 20)
         .then((res) => {
+          console.log("GetUserDeposits", res);
           setList(res.collection);
         })
         .catch((err: Error) => console.log(err));
     }
-  }, [hubConnection]);
+  }, [hubConnection, active]);
 
   useEffect(() => {
     if (hubConnection) {
