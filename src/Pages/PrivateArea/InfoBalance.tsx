@@ -47,7 +47,7 @@ type Deposit = {
   [elemName: string]: Obj[];
 };
 
-export const Info = () => {
+export const InfoBalance = () => {
   const [active, setActive] = useState(0);
   const [activeDeposite, setActiveDeposite] = useState(0);
   const [card, setCard] = useState(0);
@@ -521,355 +521,121 @@ export const Info = () => {
 
         <>
           <Container>
-            <Card>
-              <Styled.Deposit>
-                <Styled.DepositItem>
-                  <Styled.DepositName>Открытые депозиты</Styled.DepositName>
-                  <Styled.DepositValue>
-                    {activeDeposite ? activeDeposite : "-"}
-                  </Styled.DepositValue>
-                </Styled.DepositItem>
-                <Styled.DepositItem>
-                  <Styled.DepositName>Сумма в депозитах</Styled.DepositName>
-                  <Styled.DepositValue>
+            <Styled.BalanceWrap>
+              <Styled.BalanceList>
+                <Styled.BalanceItem>
+                  <Styled.BalanceItemName>Баланс</Styled.BalanceItemName>
+                  <Styled.BalanceItemValue pink>
+                    {balance ? (balance / 100000).toLocaleString() : "0"}
+                  </Styled.BalanceItemValue>
+                </Styled.BalanceItem>
+
+                <Styled.BalanceItem>
+                  <Styled.BalanceItemName>Поступления</Styled.BalanceItemName>
+                  <Styled.BalanceItemValue pink>
                     {(depositTotal / 100000).toLocaleString()}
-                  </Styled.DepositValue>
-                </Styled.DepositItem>
-                <Styled.DepositItem>
-                  <Styled.DepositName>Всего выплачено</Styled.DepositName>
-                  <Styled.DepositValue>
+                  </Styled.BalanceItemValue>
+                </Styled.BalanceItem>
+
+                <Styled.BalanceItem>
+                  <Styled.BalanceItemName>Выводы</Styled.BalanceItemName>
+                  <Styled.BalanceItemValue>
                     {(totalPayed / 100000).toLocaleString()}
-                  </Styled.DepositValue>
-                </Styled.DepositItem>
-              </Styled.Deposit>
+                  </Styled.BalanceItemValue>
+                </Styled.BalanceItem>
+              </Styled.BalanceList>
+
+              <Styled.DateButton onClick={() => setOpen(true)}>
+                <span>{selected}</span>
+              </Styled.DateButton>
+            </Styled.BalanceWrap>
+          </Container>
+
+          <Container>
+            <Card>
+              <Styled.BalanceTabHead>
+                <Styled.BalanceTabItem
+                  onClick={() => handleBalance(0)}
+                  active={depositTabs === 0}
+                >
+                  Все операции
+                </Styled.BalanceTabItem>
+                <Styled.BalanceTabItem
+                  onClick={() => handleBalance(1)}
+                  active={depositTabs === 1}
+                >
+                  Поступления
+                </Styled.BalanceTabItem>
+                <Styled.BalanceTabItem
+                  onClick={() => handleBalance(2)}
+                  active={depositTabs === 2}
+                >
+                  Выводы
+                </Styled.BalanceTabItem>
+              </Styled.BalanceTabHead>
             </Card>
           </Container>
-          {!size && (
-            <Styled.ContainerRow>
-              <Styled.Half>
-                <Styled.HalfHead>
-                  <Styled.HalfTitle>Выплаты</Styled.HalfTitle>
-                  <Styled.HalfTabs>
-                    <Styled.HalfTab
-                      onClick={() => setCard(0)}
-                      card={card === 0}
-                    >
-                      %
-                    </Styled.HalfTab>
-                    <Styled.HalfTab>/</Styled.HalfTab>
-                    <Styled.HalfTab
-                      onClick={() => setCard(1)}
-                      card={card === 1}
-                    >
-                      CWD
-                    </Styled.HalfTab>
-                  </Styled.HalfTabs>
-                </Styled.HalfHead>
-                <Styled.HalfContent card={card === 0}>
-                  <CSSTransition
-                    in={card === 0}
-                    timeout={300}
-                    classNames="chart"
-                    unmountOnExit
-                  >
-                    <TestChart
-                      percent
-                      labels={
-                        list.length
-                          ? list.map((i: any) => i.deposit.name)
-                          : [""]
-                      }
-                      series={
-                        list.length
-                          ? list.map((i: any) => i.payedAmountView)
-                          : [""]
-                      }
-                    />
-                  </CSSTransition>
-                  <Styled.NextPay>
-                    Следующая выплата:{" "}
-                    <Styled.Date>
-                      {nextDate ? moment(nextDate).format("DD MMMM YYYY") : "-"}
-                    </Styled.Date>
-                  </Styled.NextPay>
-                </Styled.HalfContent>
-                <Styled.HalfContent card={card === 1}>
-                  <CSSTransition
-                    in={card === 1}
-                    timeout={300}
-                    classNames="chart"
-                    unmountOnExit
-                  >
-                    <TestChart
-                      labels={
-                        list.length
-                          ? list.map((i: any) => i.deposit.name)
-                          : [""]
-                      }
-                      series={
-                        list.length
-                          ? list.map((i: any) => i.payedAmountView)
-                          : [""]
-                      }
-                    />
-                  </CSSTransition>
-                  <Styled.NextPay>
-                    Следующая выплата:{" "}
-                    <Styled.Date>
-                      {nextDate ? moment(nextDate).format("DD MMMM YYYY") : "-"}
-                    </Styled.Date>
-                  </Styled.NextPay>
-                </Styled.HalfContent>
-              </Styled.Half>
 
-              <Styled.Half>
-                <Styled.HalfHead>
-                  <Styled.HalfTitle>Поступления</Styled.HalfTitle>
-                  <Styled.HalfTabs>
-                    <Styled.HalfTab
-                      onClick={() => setCard2(0)}
-                      card={card2 === 0}
-                    >
-                      %
-                    </Styled.HalfTab>
-                    <Styled.HalfTab>/</Styled.HalfTab>
-                    <Styled.HalfTab
-                      onClick={() => setCard2(1)}
-                      card={card2 === 1}
-                    >
-                      CWD
-                    </Styled.HalfTab>
-                  </Styled.HalfTabs>
-                </Styled.HalfHead>
-                <Styled.HalfContent card={card2 === 0}>
-                  <CSSTransition
-                    in={card2 === 0}
-                    timeout={300}
-                    classNames="chart"
-                    unmountOnExit
-                  >
-                    <TestChart
-                      percent
-                      labels={
-                        list.length
-                          ? list.map((i: any) => i.deposit.name)
-                          : [""]
-                      }
-                      series={
-                        list.length
-                          ? list.map((i: any) => i.baseAmountView)
-                          : [""]
-                      }
-                    />
-                  </CSSTransition>
-                </Styled.HalfContent>
-                <Styled.HalfContent card={card2 === 1}>
-                  <CSSTransition
-                    in={card2 === 1}
-                    timeout={300}
-                    classNames="chart"
-                    unmountOnExit
-                  >
-                    <TestChart
-                      labels={
-                        list.length
-                          ? list.map((i: any) => i.deposit.name)
-                          : [""]
-                      }
-                      series={
-                        list.length
-                          ? list.map((i: any) => i.baseAmountView)
-                          : [""]
-                      }
-                    />
-                  </CSSTransition>
-                </Styled.HalfContent>
-              </Styled.Half>
-            </Styled.ContainerRow>
-          )}
+          <Container>
+            <Card>
+              <Styled.DataListWrap>
+                <Styled.DataList>
+                  <Styled.DataListHead>
+                    <Styled.DataListItem>
+                      <Styled.DataListName>Название</Styled.DataListName>
+                      <Styled.DataListName>Сумма</Styled.DataListName>
+                    </Styled.DataListItem>
+                  </Styled.DataListHead>
+                  {balanceLog ? (
+                    <Scrollbars style={{ height: "500px" }}>
+                      <InfiniteScroll
+                        pageStart={0}
+                        loadMore={myLoad}
+                        hasMore={count}
+                        useWindow={false}
+                        loader={
+                          <div className="loader" key={0}>
+                            Loading ...
+                          </div>
+                        }
+                      >
+                        {Object.keys(balanceLog).map((key) => (
+                          <div key={key}>
+                            <Styled.DataListDate>{key}</Styled.DataListDate>
 
-          {size && (
-            <Container>
-              <Card>
-                <Styled.HalfTabs>
-                  <Styled.MobHalfTab
-                    onClick={() => setActiveMob(0)}
-                    card={activMob === 0}
-                  >
-                    Выплаты
-                  </Styled.MobHalfTab>
-                  <Styled.MobHalfTab
-                    onClick={() => setActiveMob(1)}
-                    card={activMob === 1}
-                  >
-                    Поступления
-                  </Styled.MobHalfTab>
-                </Styled.HalfTabs>
-                <Styled.Content active={activMob === 0}>
-                  <CSSTransition
-                    in={activMob === 0}
-                    timeout={300}
-                    classNames="chart"
-                    unmountOnExit
-                  >
-                    <>
-                      <Styled.HalfTabs>
-                        <Styled.HalfTab
-                          onClick={() => setCard(0)}
-                          card={card === 0}
-                        >
-                          %
-                        </Styled.HalfTab>
-                        <Styled.HalfTab>/</Styled.HalfTab>
-                        <Styled.HalfTab
-                          onClick={() => setCard(1)}
-                          card={card === 1}
-                        >
-                          CWD
-                        </Styled.HalfTab>
-                      </Styled.HalfTabs>
-                      <Styled.HalfContent card={card === 0}>
-                        <CSSTransition
-                          in={card === 0}
-                          timeout={300}
-                          classNames="chart"
-                          unmountOnExit
-                        >
-                          <TestChart
-                            percent
-                            mobHeight={list.length ? 150 : 0}
-                            labels={
-                              list.length
-                                ? list.map((i: any) => i.deposit.name)
-                                : [""]
-                            }
-                            series={
-                              list.length
-                                ? list.map((i: any) => i.payedAmountView)
-                                : [""]
-                            }
-                          />
-                        </CSSTransition>
-                        <Styled.NextPay>
-                          <Styled.Date></Styled.Date>
-                        </Styled.NextPay>
-                      </Styled.HalfContent>
-
-                      <Styled.HalfContent card={card === 1}>
-                        <CSSTransition
-                          in={card === 1}
-                          timeout={300}
-                          classNames="chart"
-                          unmountOnExit
-                        >
-                          <TestChart
-                            mobHeight={list.length ? 150 : 0}
-                            labels={
-                              list.length
-                                ? list.map((i: any) => i.deposit.name)
-                                : [""]
-                            }
-                            series={
-                              list.length
-                                ? list.map((i: any) => i.payedAmountView)
-                                : [""]
-                            }
-                          />
-                        </CSSTransition>
-                      </Styled.HalfContent>
-                      <Styled.NextPay>
-                        Следующая выплата:{" "}
-                        <Styled.Date>
-                          {nextDate
-                            ? moment(nextDate).format("DD MMMM YYYY")
-                            : "-"}
-                        </Styled.Date>
-                      </Styled.NextPay>
-                    </>
-                  </CSSTransition>
-                </Styled.Content>
-                <Styled.Content active={activMob === 1}>
-                  <CSSTransition
-                    in={activMob === 1}
-                    timeout={300}
-                    classNames="chart"
-                    unmountOnExit
-                  >
-                    <>
-                      <Styled.HalfTabs>
-                        <Styled.HalfTab
-                          onClick={() => setCard2(0)}
-                          card={card2 === 0}
-                        >
-                          %
-                        </Styled.HalfTab>
-                        <Styled.HalfTab>/</Styled.HalfTab>
-                        <Styled.HalfTab
-                          onClick={() => setCard2(1)}
-                          card={card2 === 1}
-                        >
-                          CWD
-                        </Styled.HalfTab>
-                      </Styled.HalfTabs>
-
-                      <Styled.HalfContent card={card2 === 0}>
-                        <CSSTransition
-                          in={card2 === 0}
-                          timeout={300}
-                          classNames="chart"
-                          unmountOnExit
-                        >
-                          <TestChart
-                            percent
-                            mobHeight={list.length ? 150 : 0}
-                            labels={
-                              list.length
-                                ? list.map((i: any) => i.deposit.name)
-                                : [""]
-                            }
-                            series={
-                              list.length
-                                ? list.map((i: any) => i.baseAmountView)
-                                : [""]
-                            }
-                          />
-                        </CSSTransition>
-                        <Styled.NextPay>
-                          <Styled.Date></Styled.Date>
-                        </Styled.NextPay>
-                      </Styled.HalfContent>
-
-                      <Styled.HalfContent card={card2 === 1}>
-                        <CSSTransition
-                          in={card2 === 1}
-                          timeout={300}
-                          classNames="chart"
-                          unmountOnExit
-                        >
-                          <TestChart
-                            mobHeight={list.length ? 150 : 0}
-                            labels={
-                              list.length
-                                ? list.map((i: any) => i.deposit.name)
-                                : [""]
-                            }
-                            series={
-                              list.length
-                                ? list.map((i: any) => i.baseAmountView)
-                                : [""]
-                            }
-                          />
-                        </CSSTransition>
-                        <Styled.NextPay>
-                          <Styled.Date></Styled.Date>
-                        </Styled.NextPay>
-                      </Styled.HalfContent>
-                    </>
-                  </CSSTransition>
-                </Styled.Content>
-              </Card>
-            </Container>
-          )}
+                            {balanceLog[key].map((item, idx) => (
+                              <Styled.DataListItem key={item.id + idx}>
+                                <Styled.DataListName>
+                                  {operation(item.operationKind)}
+                                </Styled.DataListName>
+                                <Styled.DataListSum plus={item.balance >= 0}>
+                                  {item.balance < 0
+                                    ? ""
+                                    : item.operationKind !== 6
+                                    ? "+"
+                                    : "-"}{" "}
+                                  {(item.balance / 100000)
+                                    .toFixed(5)
+                                    .toLocaleString()}
+                                </Styled.DataListSum>
+                              </Styled.DataListItem>
+                            ))}
+                          </div>
+                        ))}
+                      </InfiniteScroll>
+                    </Scrollbars>
+                  ) : loading ? (
+                    <Loading />
+                  ) : (
+                    <Styled.NotFound>
+                      Данные не обнаружены. Попробуйте изменить параметры
+                      поиска.
+                    </Styled.NotFound>
+                  )}
+                </Styled.DataList>
+              </Styled.DataListWrap>
+            </Card>
+          </Container>
 
           <CSSTransition
             in={open}

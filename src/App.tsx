@@ -15,6 +15,8 @@ import {
   AdminPortfolio,
 } from "./Pages/Admin";
 import { AmountProvider } from "./context/AmountContext";
+import { InfoDeposits } from "./Pages/PrivateArea/InfoDeposits";
+import { InfoBalance } from "./Pages/PrivateArea/InfoBalance";
 
 function App() {
   return (
@@ -32,7 +34,9 @@ function App() {
               <Route path="/admin/users" component={AdminUsers} />
               <Route path="/admin/portfolio" component={AdminPortfolio} />
               <Route path="/info" component={Info} exact />
-              <Route path="/info/:slug" component={OnePage} />
+              <Route path="/deposits" component={InfoDeposits} exact />
+              <Route path="/balance" component={InfoBalance} exact />
+              <Route path="/deposits/:slug" component={OnePage} />
               <Route path="/login" component={Authentication} />
               <Route component={Main} />
             </Switch>
