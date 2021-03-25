@@ -259,15 +259,10 @@ export const AdminUsers = () => {
                 <Styled.Label>Пользователь</Styled.Label>
                 <Input value={name} onChange={(e) => setName(e.target.value)} />
               </Styled.SelectWrap>
-              <Styled.SelectWrap>
+              {/* <Styled.SelectWrap>
                 <Styled.Label>Название программы</Styled.Label>
                 <Input />
-                {/* <Select
-                  checkList={checkList}
-                  setCheckList={setCheckList}
-                  values={listDeposits.map((item) => item.name)}
-                /> */}
-              </Styled.SelectWrap>
+              </Styled.SelectWrap> */}
               <Styled.InputsWrap>
                 <TestInput
                   setOpenDate={setOpenDate}
