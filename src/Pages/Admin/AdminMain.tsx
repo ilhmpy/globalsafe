@@ -278,11 +278,15 @@ export const AdminMain = () => {
             <Deposites>
               <DepositItem>
                 <DepositTitle>Количество депозитов</DepositTitle>
-                <DepositValue>{sumFormat(depositsCount)}</DepositValue>
+                <DepositValue>{depositsCount}</DepositValue>
               </DepositItem>
               <DepositItem>
                 <DepositTitle>Размер депозитов</DepositTitle>
-                <DepositValue>{sumFormat(depositsAmount)}</DepositValue>
+                <DepositValue>
+                  {depositsAmount.toLocaleString("ru-RU", {
+                    maximumFractionDigits: 1,
+                  })}
+                </DepositValue>
               </DepositItem>
             </Deposites>
           </CardDeposites>
