@@ -316,7 +316,7 @@ export const AdminPay = () => {
         <SideNavbar />
         <Styled.Content>
           <Styled.HeadBlock>
-            <UpTitle small>Выплаты</UpTitle>
+            <SelfUpTitle small>Выплаты</SelfUpTitle>
             <Styled.UserName>
               <span>{user}</span>
               <Exit onClick={logOut} />
@@ -327,35 +327,43 @@ export const AdminPay = () => {
             <Styled.PayList>
               <Styled.PayItem>
                 <Styled.PayItemHead mb>
-                  <UpTitle small>К выплате</UpTitle>
+                  <SelfUpTitle small>К выплате</SelfUpTitle>
                 </Styled.PayItemHead>
                 <Styled.Radial bg={"rgba(255, 65, 110, 0.2)"}>
                   <span>
-                    {sum ? (sum[2] / 100000).toFixed(0).toLocaleString() : "-"}
+                    {sum ? (sum[2] / 100000).toLocaleString("ru-RU") : "-"}
                   </span>
                   <span>CWD</span>
                 </Styled.Radial>
               </Styled.PayItem>
               <Styled.PayItem>
                 <Styled.PayItemHead mb>
-                  <UpTitle small>Выплачено</UpTitle>
+                  <SelfUpTitle small>Выплачено</SelfUpTitle>
                 </Styled.PayItemHead>
 
                 <Styled.Radial bg={"rgba(188, 212, 118, 0.2)"}>
                   <span>
-                    {sum ? (sum[0] / 100000).toFixed(0).toLocaleString() : "-"}
+                    {sum
+                      ? (sum[0] / 100000).toLocaleString("ru-RU", {
+                          maximumFractionDigits: 0,
+                        })
+                      : "-"}
                   </span>
                   <span>CWD</span>
                 </Styled.Radial>
               </Styled.PayItem>
               <Styled.PayItem>
                 <Styled.PayItemHead mb>
-                  <UpTitle small>На согласовании</UpTitle>
+                  <SelfUpTitle small>На согласовании</SelfUpTitle>
                   {/* {sizes > 768 && <CalendarInput />} */}
                 </Styled.PayItemHead>
                 <Styled.Radial bg={"rgba(109, 185, 255, 0.2)"}>
                   <span>
-                    {sum ? (sum[1] / 100000).toFixed(0).toLocaleString() : "-"}
+                    {sum
+                      ? (sum[1] / 100000).toLocaleString("ru-RU", {
+                          maximumFractionDigits: 0,
+                        })
+                      : "-"}
                   </span>
                   <span>CWD</span>
                 </Styled.Radial>
@@ -561,6 +569,14 @@ export const AdminPay = () => {
   );
 };
 
+const SelfUpTitle = styled(UpTitle)`
+  @media (max-width: 768px) {
+    &:before {
+      width: 13px;
+    }
+  }
+`;
+
 const NotFound = styled.div`
   font-weight: normal;
   font-size: 12px;
@@ -575,6 +591,9 @@ const PayTab = styled(Tab)`
   width: 135px;
   @media (max-width: 992px) {
     width: 100px !important;
+  }
+  @media (max-width: 768px) {
+    width: 110px !important;
   }
 `;
 
@@ -699,6 +718,14 @@ const TableBodyItemPaid = styled(TableHeadItemPaid)`
 const Tabs = styled.div`
   display: flex;
   padding: 12px 20px 0;
+  ${Tab} {
+    &:nth-child(2) {
+      width: 90px;
+      @media (max-width: 768px) {
+        width: 70px;
+      }
+    }
+  }
   @media (max-width: 992px) {
     align-items: flex-end;
     padding-top: 0;
