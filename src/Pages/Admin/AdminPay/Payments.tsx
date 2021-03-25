@@ -296,8 +296,8 @@ export const ModalUsers: FC<{
   data: CollectionUsers;
   onClose: () => void;
   lock: boolean;
-  unLocked: (id: string) => void;
-  locked: (id: string) => void;
+  unLocked: (e: any, id: string) => void;
+  locked: (e: any, id: string) => void;
 }> = ({ data, lock, onClose, locked, unLocked }) => {
   const handleContainerClick = (e: React.MouseEvent) => {
     if (e.currentTarget === e.target) {
@@ -334,11 +334,11 @@ export const ModalUsers: FC<{
           </PayCardBlock>
           <PayCardBlock>
             {lock ? (
-              <Button greenOutline onClick={() => unLocked(data.safeId)}>
+              <Button greenOutline onClick={(e) => unLocked(e, data.safeId)}>
                 Разблокировать
               </Button>
             ) : (
-              <Button dangerOutline onClick={() => locked(data.safeId)}>
+              <Button dangerOutline onClick={(e) => locked(e, data.safeId)}>
                 Заблокировать
               </Button>
             )}

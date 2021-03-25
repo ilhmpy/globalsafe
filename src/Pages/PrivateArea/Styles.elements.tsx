@@ -4,6 +4,59 @@ import { ReactComponent as Left } from "../../assets/svg/left.svg";
 import { Link } from "react-router-dom";
 import { Card, Container } from "../../globalStyles";
 import { ReactComponent as BackIcon } from "../../assets/svg/arrowLeftModal.svg";
+import { NavLink } from "react-router-dom";
+
+const activeclassname = "active";
+
+export const NavTabs = styled(NavLink).attrs({ activeclassname })`
+  display: inline-block;
+  &:hover {
+    background-color: white;
+  }
+  div {
+    border: none;
+    outline: none;
+
+    cursor: pointer;
+    position: relative;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16px;
+    padding: 12px 0;
+    width: 120px;
+    color: #0e0d3d;
+    text-align: left;
+    background: transparent;
+    position: relative;
+    @media (max-width: 992px) {
+      padding-left: 0px;
+      width: 80px;
+      cursor: initial;
+      &:first-child {
+        width: 100px;
+      }
+      &:last-child {
+        padding-right: 0px;
+      }
+    }
+  }
+  &.${activeclassname} {
+    div {
+      font-weight: 600;
+    }
+    div:before {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      display: block;
+      left: 0;
+      height: 1px;
+      width: 46px;
+      background: #ff416e;
+      border-radius: 0px 2px 2px 0px;
+    }
+  }
+`;
 
 export const Select = styled.select`
   font-weight: normal;

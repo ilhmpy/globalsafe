@@ -126,9 +126,9 @@ export const AdminMain = () => {
     }
   }, [hubConnection, selectedDay]);
 
-  if (admin === false) {
-    return <Redirect to="/" />;
-  }
+  // if (admin === false) {
+  //   return <Redirect to="/" />;
+  // }
 
   return (
     <>

@@ -304,9 +304,9 @@ export const AdminPay = () => {
     }
   };
 
-  if (admin === false) {
-    return <Redirect to="/" />;
-  }
+  // if (admin === false) {
+  //   return <Redirect to="/" />;
+  // }
 
   return (
     <>

@@ -243,9 +243,9 @@ export const AdminDeposit = () => {
     }
   };
 
-  if (admin === false) {
-    return <Redirect to="/" />;
-  }
+  // if (admin === false) {
+  //   return <Redirect to="/" />;
+  // }
 
   return (
     <>

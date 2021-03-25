@@ -27,11 +27,11 @@ export const OnePage = ({ match }: RouteComponentProps<PropsMatch>) => {
   const hubConnection = appContext.hubConnection;
   const location = useLocation();
   const safeId = match.params.slug;
-  console.log("safeId", safeId);
+  // console.log("safeId", safeId);
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke("GetUserDeposits", [1, 2, 3, 4], 0, 20)
+        .invoke("GetUserDeposits", [1, 2, 3, 4, 5, 6], 0, 20)
         .then((res: any) => {
           setList(res.collection);
         })
@@ -41,7 +41,7 @@ export const OnePage = ({ match }: RouteComponentProps<PropsMatch>) => {
 
   const data = list.filter((item: any) => item.safeId === safeId);
 
-  console.log("data", data);
+  // console.log("data", data);
 
   const handleClick = (id: number) => {
     if (id !== active) {
@@ -160,7 +160,7 @@ export const OnePage = ({ match }: RouteComponentProps<PropsMatch>) => {
           </Styled.Content>
           <Styled.Content active={active === 1}>
             <Container>
-              <Styled.Back to="/info">
+              <Styled.Back to="/deposits">
                 <Styled.LeftIcon />
                 Назад к списку
               </Styled.Back>
@@ -170,9 +170,6 @@ export const OnePage = ({ match }: RouteComponentProps<PropsMatch>) => {
                 <InfoBlock data={data[0]} />
               </Card>
             </Container>
-          </Styled.Content>
-          <Styled.Content active={active === 2}>
-            {/* <h1>Content 3</h1> */}
           </Styled.Content>
         </>
       </Styled.Page>

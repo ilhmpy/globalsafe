@@ -195,9 +195,9 @@ export const AdminPortfolio = () => {
     }
   }, [hubConnection]);
 
-  if (admin === false) {
-    return <Redirect to="/" />;
-  }
+  // if (admin === false) {
+  //   return <Redirect to="/" />;
+  // }
 
   return (
     <>

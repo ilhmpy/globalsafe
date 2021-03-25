@@ -21,7 +21,7 @@ const Row = ({ data }: any) => {
 
   const onClick = (id: string) => {
     if (window.innerWidth < 992) {
-      history.push(`info/${id}`);
+      history.push(`deposits/${id}`);
     } else {
       setOpen(data.safeId);
     }
