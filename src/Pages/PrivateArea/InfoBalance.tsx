@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useMemo,
   useRef,
+  FC,
 } from "react";
 import { Header } from "../../components/Header/Header";
 import styled, { css } from "styled-components/macro";
@@ -31,7 +32,7 @@ import { OpenDate } from "../../types/dates";
 import { RootDeposits, DepositsCollection } from "../../types/info";
 import ReactNotification, { store } from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
-import { DepositListModal } from "./Modals";
+import { DepositListModal, ModalDividends } from "./Modals";
 import InfiniteScroll from "react-infinite-scroller";
 import { Scrollbars } from "react-custom-scrollbars";
 import { Loading } from "../../components/UI/Loading";
@@ -47,14 +48,63 @@ type Deposit = {
   [elemName: string]: Obj[];
 };
 
+type BalanceTableProps = {
+  balanceLog: Deposit | null;
+};
+
+const BalanceTable: FC<BalanceTableProps> = ({ balanceLog }) => {
+  const [divModal, setDivModal] = useState(false);
+  const operation = (id: number) => {
+    if (id === 6) {
+      return "Открытие депозита";
+    } else if (id === 7) {
+      return "Начисление дивидендов";
+    } else if (id === 8) {
+      return "Закрытие депозита";
+    } else if (id === 2) {
+      return "Вывод баланса";
+    } else if (id === 1) {
+      return "Пополнение баланса";
+    }
+  };
+  return (
+    <>
+      {balanceLog &&
+        Object.keys(balanceLog).map((key) => (
+          <div key={key}>
+            <Styled.DataListDate>{key}</Styled.DataListDate>
+
+            {balanceLog[key].map((item, idx) => (
+              <div>
+                <ModalDividends key={item.id + idx} />
+                <Styled.DataListItem
+                  key={item.id + idx}
+                  divident={item.operationKind === 7}
+                >
+                  <Styled.DataListName>
+                    {operation(item.operationKind)}
+                  </Styled.DataListName>
+                  <Styled.DataListSum plus={item.balance >= 0}>
+                    {item.balance < 0
+                      ? ""
+                      : item.operationKind !== 6
+                      ? "+"
+                      : "-"}{" "}
+                    {(item.balance / 100000).toFixed(5).toLocaleString()}
+                  </Styled.DataListSum>
+                </Styled.DataListItem>
+              </div>
+            ))}
+          </div>
+        ))}
+    </>
+  );
+};
+
 export const InfoBalance = () => {
   const [active, setActive] = useState(0);
   const [activeDeposite, setActiveDeposite] = useState(0);
-  const [card, setCard] = useState(0);
-  const [card2, setCard2] = useState(0);
-  const [activMob, setActiveMob] = useState(0);
-  const [list, setList] = useState<Collection[]>([]);
-  const [nextDate, setNextDate] = useState<null | Date>(null);
+
   const [balanceLog, setBalanceLog] = useState<Deposit | null>(null);
   const [depositTabs, setDepositTabs] = useState(0);
   const [balanceLogs, setBalanceLogs] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8]);
@@ -77,8 +127,6 @@ export const InfoBalance = () => {
     to: new Date(),
   });
   const [selected, setSelected] = useState("За все время");
-  const sizes = useWindowSize();
-  const size = sizes < 992;
   const appContext = useContext(AppContext);
   const user = appContext.user;
   const balance = appContext.balance;
@@ -100,6 +148,8 @@ export const InfoBalance = () => {
     setSelected(`За ${moment().format("YYYY")}`);
     onClose();
   };
+
+  // console.log("balanceLog", balanceLog);
 
   const monthSelected = () => {
     let currentMonth = moment().format("MMYYYY");
@@ -156,28 +206,28 @@ export const InfoBalance = () => {
     }
   }, [hubConnection]);
 
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection
-        .invoke<RootList>("GetUserDeposits", [1, 2, 3, 4, 5, 6], 0, 20)
-        .then((res) => {
-          console.log("GetUserDeposits", res);
-          setList(res.collection);
-        })
-        .catch((err: Error) => console.log(err));
-    }
-  }, [hubConnection]);
+  // useEffect(() => {
+  //   if (hubConnection) {
+  //     hubConnection
+  //       .invoke<RootList>("GetUserDeposits", [1, 2, 3, 4, 5, 6], 0, 20)
+  //       .then((res) => {
+  //         console.log("GetUserDeposits", res);
+  //         setList(res.collection);
+  //       })
+  //       .catch((err: Error) => console.log(err));
+  //   }
+  // }, [hubConnection]);
 
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection
-        .invoke("GetUserNextPaymentDate")
-        .then((res) => {
-          setNextDate(res);
-        })
-        .catch((err: Error) => console.log(err));
-    }
-  }, [hubConnection]);
+  // useEffect(() => {
+  //   if (hubConnection) {
+  //     hubConnection
+  //       .invoke("GetUserNextPaymentDate")
+  //       .then((res) => {
+  //         setNextDate(res);
+  //       })
+  //       .catch((err: Error) => console.log(err));
+  //   }
+  // }, [hubConnection]);
 
   useEffect(() => {
     if (hubConnection) {
@@ -192,8 +242,8 @@ export const InfoBalance = () => {
           30
         )
         .then((res: any) => {
+          console.log("res", res);
           setLoading(false);
-          setNum(20);
           function getFormatedDate(dateStr: Date) {
             let date = moment(dateStr).format("DD MMMM YYYY");
             return date;
@@ -277,16 +327,16 @@ export const InfoBalance = () => {
     }
   };
 
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection
-        .invoke("GetActiveDepositsCount")
-        .then((res: any) => {
-          setActiveDeposite(res);
-        })
-        .catch((err: Error) => console.log(err));
-    }
-  }, [hubConnection]);
+  // useEffect(() => {
+  //   if (hubConnection) {
+  //     hubConnection
+  //       .invoke("GetActiveDepositsCount")
+  //       .then((res: any) => {
+  //         setActiveDeposite(res);
+  //       })
+  //       .catch((err: Error) => console.log(err));
+  //   }
+  // }, [hubConnection]);
 
   useEffect(() => {
     if (hubConnection) {
@@ -299,11 +349,11 @@ export const InfoBalance = () => {
     }
   }, [hubConnection]);
 
-  const handleClick = (id: number) => {
-    if (id !== active) {
-      setActive(id);
-    }
-  };
+  // const handleClick = (id: number) => {
+  //   if (id !== active) {
+  //     setActive(id);
+  //   }
+  // };
 
   const handleBalance = (id: number) => {
     if (id !== depositTabs) {
@@ -432,19 +482,19 @@ export const InfoBalance = () => {
     setDepositListModal(true);
   };
 
-  const onHandleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedYear(e.target.value);
-    let start: any = moment(
-      `${selectedMonth}.${e.target.value}`,
-      "M.YYYY"
-    ).startOf("month");
+  // const onHandleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  //   setSelectedYear(e.target.value);
+  //   let start: any = moment(
+  //     `${selectedMonth}.${e.target.value}`,
+  //     "M.YYYY"
+  //   ).startOf("month");
 
-    let end: any = moment(`${selectedMonth}.${e.target.value}`, "M.YYYY").endOf(
-      "month"
-    );
-    setOpenDate({ from: start._d, to: end._d });
-    onClose();
-  };
+  //   let end: any = moment(`${selectedMonth}.${e.target.value}`, "M.YYYY").endOf(
+  //     "month"
+  //   );
+  //   setOpenDate({ from: start._d, to: end._d });
+  //   onClose();
+  // };
 
   const minOffset = 0;
   const maxOffset = 10;
@@ -457,23 +507,28 @@ export const InfoBalance = () => {
     options.push(<option value={year}>{year}</option>);
   }
 
-  const onHandleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedMonth(e.target.value);
-    let start: any = moment(
-      `${e.target.value}.${selectedYear}`,
-      "M.YYYY"
-    ).startOf("month");
-    let end: any = moment(`${e.target.value}.${selectedYear}`, "M.YYYY").endOf(
-      "month"
-    );
+  // const onHandleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  //   setSelectedMonth(e.target.value);
+  //   let start: any = moment(
+  //     `${e.target.value}.${selectedYear}`,
+  //     "M.YYYY"
+  //   ).startOf("month");
+  //   let end: any = moment(`${e.target.value}.${selectedYear}`, "M.YYYY").endOf(
+  //     "month"
+  //   );
 
-    setOpenDate({ from: start._d, to: end._d });
-    onClose();
-  };
+  //   setOpenDate({ from: start._d, to: end._d });
+  //   onClose();
+  // };
 
-  const allTime = () => {
-    setOpenDate({ from: new Date("2021-02-09T00:47:45"), to: new Date() });
-    onClose();
+  // const allTime = () => {
+  //   setOpenDate({ from: new Date("2021-02-09T00:47:45"), to: new Date() });
+  //   onClose();
+  // };
+
+  const dividentModal = (id: number) => {
+    if (id === 7) {
+    }
   };
 
   return (
@@ -605,7 +660,10 @@ export const InfoBalance = () => {
                             <Styled.DataListDate>{key}</Styled.DataListDate>
 
                             {balanceLog[key].map((item, idx) => (
-                              <Styled.DataListItem key={item.id + idx}>
+                              <Styled.DataListItem
+                                key={item.id + idx}
+                                divident={item.operationKind === 7}
+                              >
                                 <Styled.DataListName>
                                   {operation(item.operationKind)}
                                 </Styled.DataListName>
