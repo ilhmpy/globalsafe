@@ -6,6 +6,28 @@ import { Card, Container } from "../../globalStyles";
 import { ReactComponent as BackIcon } from "../../assets/svg/arrowLeftModal.svg";
 import { NavLink } from "react-router-dom";
 
+export const Loader = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: block;
+  z-index: 99999;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
+
+export const TopUpButton = styled(Button)`
+  margin-right: auto;
+  @media (max-width: 992px) {
+    margin-left: auto;
+  }
+`;
+
 export const ModalDividends = styled.div`
   padding: 20px 10px 0px;
 `;

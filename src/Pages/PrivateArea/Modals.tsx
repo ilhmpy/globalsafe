@@ -3,6 +3,9 @@ import * as Styled from "./Styles.elements";
 import { CSSTransition } from "react-transition-group";
 import { Modal } from "../../components/Modal/Modal";
 import { DepositsCollection } from "../../types/info";
+import moment from "moment";
+import "moment/locale/ru";
+moment.locale("ru");
 
 type Props = {
   depositListModal: boolean;
@@ -57,42 +60,63 @@ export const DepositListModal: FC<Props> = ({
   );
 };
 
-export const ModalDividends = () => {
+type DividendsProps = {
+  onClose: () => void;
+  data: any;
+  open: boolean;
+};
+
+export const ModalDividends: FC<DividendsProps> = ({ onClose, data, open }) => {
+  const handleContainerClick = (e: React.MouseEvent) => {
+    if (e.currentTarget === e.target) {
+      onClose();
+    }
+  };
   return (
-    <CSSTransition in={false} timeout={3} classNames="modal" unmountOnExit>
-      <Modal onClose={() => false} width={280}>
-        <Styled.ModalDividends>
-          <Styled.PayCardBlock>
-            <Styled.PayText wbold>Начисление дивидендов</Styled.PayText>
-            <Styled.PayText>25 февраля 2021г.</Styled.PayText>
-            <Styled.Hr />
-          </Styled.PayCardBlock>
-          <Styled.PayCardBlock>
-            <Styled.PayText small>Название</Styled.PayText>
-            <Styled.PayText>Депозит №1</Styled.PayText>
-          </Styled.PayCardBlock>
-          <Styled.PayCardBlock>
-            <Styled.PayText small>Дата открытия</Styled.PayText>
-            <Styled.PayText>01/01/2019</Styled.PayText>
-          </Styled.PayCardBlock>
-          <Styled.PayCardBlock>
-            <Styled.PayText small>Сумма депозита</Styled.PayText>
-            <Styled.PayText>400 000</Styled.PayText>
-          </Styled.PayCardBlock>
-          <Styled.PayCardBlock>
-            <Styled.PayText small>Дата следующей выплаты</Styled.PayText>
-            <Styled.PayText>01/03/2021</Styled.PayText>
-          </Styled.PayCardBlock>
-          <Styled.PayCardBlock>
-            <Styled.PayText small>Сумма выплаты</Styled.PayText>
-            <Styled.PayText>40 000</Styled.PayText>
-          </Styled.PayCardBlock>
-          <Styled.PayCardBlock>
-            <Styled.PayText small>Процент выплаты</Styled.PayText>
-            <Styled.PayText>10%</Styled.PayText>
-          </Styled.PayCardBlock>
-        </Styled.ModalDividends>
-      </Modal>
-    </CSSTransition>
+    <Modal onClose={onClose} width={280}>
+      <Styled.ModalDividends onClick={handleContainerClick}>
+        <Styled.PayCardBlock>
+          <Styled.PayText wbold>Начисление дивидендов</Styled.PayText>
+          <Styled.PayText>
+            {moment(data.date).format("DD MMMM YYYY")}г.
+          </Styled.PayText>
+          <Styled.Hr />
+        </Styled.PayCardBlock>
+        <Styled.PayCardBlock>
+          <Styled.PayText small>Название</Styled.PayText>
+          <Styled.PayText>{data.userDeposit.deposit.name}</Styled.PayText>
+        </Styled.PayCardBlock>
+        <Styled.PayCardBlock>
+          <Styled.PayText small>Дата открытия</Styled.PayText>
+          <Styled.PayText>
+            {moment(data.userDeposit.creationDate).format("DD/MM/YYYY")}
+          </Styled.PayText>
+        </Styled.PayCardBlock>
+        <Styled.PayCardBlock>
+          <Styled.PayText small>Сумма депозита</Styled.PayText>
+          <Styled.PayText>{data.userDeposit.amountView}</Styled.PayText>
+        </Styled.PayCardBlock>
+        <Styled.PayCardBlock>
+          <Styled.PayText small>Дата следующей выплаты</Styled.PayText>
+          <Styled.PayText>
+            {moment(data.userDeposit.paymentDate).format("DD/MM/YYYY")}
+          </Styled.PayText>
+        </Styled.PayCardBlock>
+        <Styled.PayCardBlock>
+          <Styled.PayText small>Сумма выплаты</Styled.PayText>
+          <Styled.PayText>
+            {data.userDeposit.paymentAmountView
+              ? data.userDeposit.paymentAmountView
+              : 0}
+          </Styled.PayText>
+        </Styled.PayCardBlock>
+        <Styled.PayCardBlock>
+          <Styled.PayText small>Процент выплаты</Styled.PayText>
+          <Styled.PayText>
+            {((data.balance / data.userDeposit.baseAmount) * 100).toFixed(2)}%
+          </Styled.PayText>
+        </Styled.PayCardBlock>
+      </Styled.ModalDividends>
+    </Modal>
   );
 };

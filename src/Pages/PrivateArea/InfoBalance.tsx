@@ -49,7 +49,7 @@ type Deposit = {
 };
 
 type BalanceTableProps = {
-  balanceLog: Deposit | null;
+  balanceLog: any;
 };
 
 const BalanceTable: FC<BalanceTableProps> = ({ balanceLog }) => {
@@ -67,36 +67,41 @@ const BalanceTable: FC<BalanceTableProps> = ({ balanceLog }) => {
       return "Пополнение баланса";
     }
   };
+
+  const dividentModal = (id: number) => {
+    console.log("id", id);
+    if (id === 7) {
+      setDivModal(true);
+    }
+  };
+
+  const onClose = () => {
+    setDivModal(false);
+  };
+
   return (
     <>
-      {balanceLog &&
-        Object.keys(balanceLog).map((key) => (
-          <div key={key}>
-            <Styled.DataListDate>{key}</Styled.DataListDate>
-
-            {balanceLog[key].map((item, idx) => (
-              <div>
-                <ModalDividends key={item.id + idx} />
-                <Styled.DataListItem
-                  key={item.id + idx}
-                  divident={item.operationKind === 7}
-                >
-                  <Styled.DataListName>
-                    {operation(item.operationKind)}
-                  </Styled.DataListName>
-                  <Styled.DataListSum plus={item.balance >= 0}>
-                    {item.balance < 0
-                      ? ""
-                      : item.operationKind !== 6
-                      ? "+"
-                      : "-"}{" "}
-                    {(item.balance / 100000).toFixed(5).toLocaleString()}
-                  </Styled.DataListSum>
-                </Styled.DataListItem>
-              </div>
-            ))}
-          </div>
-        ))}
+      <div>
+        {divModal && (
+          <ModalDividends open={divModal} data={balanceLog} onClose={onClose} />
+        )}
+        <Styled.DataListItem
+          divident={balanceLog.operationKind === 7}
+          onClick={() => dividentModal(balanceLog.operationKind)}
+        >
+          <Styled.DataListName>
+            {operation(balanceLog.operationKind)}
+          </Styled.DataListName>
+          <Styled.DataListSum plus={balanceLog.balance >= 0}>
+            {balanceLog.balance < 0
+              ? ""
+              : balanceLog.operationKind !== 6
+              ? "+"
+              : "-"}{" "}
+            {(balanceLog.balance / 100000).toFixed(5).toLocaleString()}
+          </Styled.DataListSum>
+        </Styled.DataListItem>
+      </div>
     </>
   );
 };
@@ -135,6 +140,9 @@ export const InfoBalance = () => {
   const [count, setCount] = useState(true);
   const [num, setNum] = useState(20);
   const [loading, setLoading] = useState(true);
+  const [addBalance, setAddBalance] = useState(false);
+  const [balanceValue, setBalanceValue] = useState("");
+  const [loadDeposit, setLoadDeposit] = useState(false);
   const inputRef = useRef<any>(null);
 
   const yearSelected = () => {
@@ -149,7 +157,7 @@ export const InfoBalance = () => {
     onClose();
   };
 
-  // console.log("balanceLog", balanceLog);
+  console.log("balanceLog", balanceLog);
 
   const monthSelected = () => {
     let currentMonth = moment().format("MMYYYY");
@@ -198,7 +206,9 @@ export const InfoBalance = () => {
       hubConnection
         .invoke<RootDeposits>("GetDeposits", 0, 10)
         .then((res) => {
+          console.log("GetDeposits 111", res);
           if (res.collection.length) {
+            console.log("GetDeposits 111", res);
             setDepositsList(res.collection);
           }
         })
@@ -206,40 +216,16 @@ export const InfoBalance = () => {
     }
   }, [hubConnection]);
 
-  // useEffect(() => {
-  //   if (hubConnection) {
-  //     hubConnection
-  //       .invoke<RootList>("GetUserDeposits", [1, 2, 3, 4, 5, 6], 0, 20)
-  //       .then((res) => {
-  //         console.log("GetUserDeposits", res);
-  //         setList(res.collection);
-  //       })
-  //       .catch((err: Error) => console.log(err));
-  //   }
-  // }, [hubConnection]);
-
-  // useEffect(() => {
-  //   if (hubConnection) {
-  //     hubConnection
-  //       .invoke("GetUserNextPaymentDate")
-  //       .then((res) => {
-  //         setNextDate(res);
-  //       })
-  //       .catch((err: Error) => console.log(err));
-  //   }
-  // }, [hubConnection]);
-
   useEffect(() => {
     if (hubConnection) {
       hubConnection
         .invoke(
-          "GetBalanceLog",
-          1,
+          "GetUserDepositsCharges",
           balanceLogs,
           openDate.from || new Date("2021-02-09T00:47:45"),
           openDate.to || new Date(),
           0,
-          30
+          20
         )
         .then((res: any) => {
           console.log("res", res);
@@ -254,9 +240,11 @@ export const InfoBalance = () => {
               const d = getFormatedDate(item.operationDate);
 
               const obj = {
-                id: item.referenceSafeId,
+                id: item.safeId,
                 operationKind: item.operationKind,
-                balance: item.balanceDelta,
+                balance: item.amount,
+                date: item.operationDate,
+                userDeposit: item.userDeposit,
               };
 
               if (result[d]) {
@@ -282,13 +270,12 @@ export const InfoBalance = () => {
       setCount(false);
       hubConnection
         .invoke(
-          "GetBalanceLog",
-          1,
+          "GetUserDepositsCharges",
           balanceLogs,
           openDate.from,
           openDate.to,
           num,
-          30
+          20
         )
         .then((res) => {
           setLoading(false);
@@ -300,9 +287,11 @@ export const InfoBalance = () => {
               res.collection.forEach((item: any) => {
                 const d = moment(item.operationDate).format("DD MMMM YYYY");
                 const obj = {
-                  id: item.referenceSafeId,
+                  id: item.safeId,
                   operationKind: item.operationKind,
-                  balance: item.balanceDelta,
+                  balance: item.amount,
+                  date: item.operationDate,
+                  userDeposit: item.userDeposit,
                 };
 
                 if (result[d]) {
@@ -315,7 +304,6 @@ export const InfoBalance = () => {
             } else {
               setBalanceLog(null);
             }
-
             setCount(true);
             setNum(num + 20);
           }
@@ -327,16 +315,24 @@ export const InfoBalance = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (hubConnection) {
-  //     hubConnection
-  //       .invoke("GetActiveDepositsCount")
-  //       .then((res: any) => {
-  //         setActiveDeposite(res);
-  //       })
-  //       .catch((err: Error) => console.log(err));
-  //   }
-  // }, [hubConnection]);
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection
+        .invoke(
+          "GetBalanceLog",
+          1,
+          balanceLogs,
+          openDate.from || new Date("2021-02-09T00:47:45"),
+          openDate.to || new Date(),
+          num,
+          30
+        )
+        .then((res: any) => {
+          console.log("GetBalanceLog", res);
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  }, [hubConnection, balanceLogs, openDate]);
 
   useEffect(() => {
     if (hubConnection) {
@@ -451,10 +447,12 @@ export const InfoBalance = () => {
   const openNewDeposit = () => {
     setAddDeposit(false);
     if (hubConnection && depositSelect !== null) {
+      setLoadDeposit(true);
       hubConnection
         .invoke("CreateUserDeposit", addDepositValue, depositSelect.id)
         .then((res) => {
           // console.log("CreateUserDeposit", res);
+          setLoadDeposit(true);
           if (res === 1) {
             setWithdraw(false);
             setWithdrawValue("");
@@ -466,6 +464,7 @@ export const InfoBalance = () => {
           }
         })
         .catch((err: Error) => {
+          setLoadDeposit(true);
           setWithdraw(false);
           setWithdrawValue("");
           alert("Ошибка", "Депозит не создан", "danger");
@@ -482,20 +481,6 @@ export const InfoBalance = () => {
     setDepositListModal(true);
   };
 
-  // const onHandleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  //   setSelectedYear(e.target.value);
-  //   let start: any = moment(
-  //     `${selectedMonth}.${e.target.value}`,
-  //     "M.YYYY"
-  //   ).startOf("month");
-
-  //   let end: any = moment(`${selectedMonth}.${e.target.value}`, "M.YYYY").endOf(
-  //     "month"
-  //   );
-  //   setOpenDate({ from: start._d, to: end._d });
-  //   onClose();
-  // };
-
   const minOffset = 0;
   const maxOffset = 10;
   const thisYear = new Date().getFullYear();
@@ -507,27 +492,15 @@ export const InfoBalance = () => {
     options.push(<option value={year}>{year}</option>);
   }
 
-  // const onHandleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  //   setSelectedMonth(e.target.value);
-  //   let start: any = moment(
-  //     `${e.target.value}.${selectedYear}`,
-  //     "M.YYYY"
-  //   ).startOf("month");
-  //   let end: any = moment(`${e.target.value}.${selectedYear}`, "M.YYYY").endOf(
-  //     "month"
-  //   );
-
-  //   setOpenDate({ from: start._d, to: end._d });
-  //   onClose();
-  // };
-
-  // const allTime = () => {
-  //   setOpenDate({ from: new Date("2021-02-09T00:47:45"), to: new Date() });
-  //   onClose();
-  // };
-
-  const dividentModal = (id: number) => {
-    if (id === 7) {
+  const getTopUp = () => {
+    if (hubConnection) {
+      hubConnection
+        .invoke("GetTopUpUrl", +balanceValue * 100000)
+        .then((res: any) => {
+          // console.log("GetTopUpUrl", res);
+          window.open(res);
+        })
+        .catch((err: Error) => console.log(err));
     }
   };
 
@@ -576,8 +549,16 @@ export const InfoBalance = () => {
         </Container>
 
         <>
+          {loadDeposit && (
+            <Styled.Loader>
+              <Loading />
+            </Styled.Loader>
+          )}
           <Container>
             <Styled.BalanceWrap>
+              <Styled.TopUpButton blue onClick={() => setAddBalance(true)}>
+                Пополнить баланс
+              </Styled.TopUpButton>
               <Styled.BalanceList>
                 <Styled.BalanceItem>
                   <Styled.BalanceItemName>Баланс</Styled.BalanceItemName>
@@ -655,29 +636,13 @@ export const InfoBalance = () => {
                           </div>
                         }
                       >
+                        {/* <BalanceTable balanceLog={balanceLog} /> */}
                         {Object.keys(balanceLog).map((key) => (
                           <div key={key}>
                             <Styled.DataListDate>{key}</Styled.DataListDate>
 
                             {balanceLog[key].map((item, idx) => (
-                              <Styled.DataListItem
-                                key={item.id + idx}
-                                divident={item.operationKind === 7}
-                              >
-                                <Styled.DataListName>
-                                  {operation(item.operationKind)}
-                                </Styled.DataListName>
-                                <Styled.DataListSum plus={item.balance >= 0}>
-                                  {item.balance < 0
-                                    ? ""
-                                    : item.operationKind !== 6
-                                    ? "+"
-                                    : "-"}{" "}
-                                  {(item.balance / 100000)
-                                    .toFixed(5)
-                                    .toLocaleString()}
-                                </Styled.DataListSum>
-                              </Styled.DataListItem>
+                              <BalanceTable key={item.id} balanceLog={item} />
                             ))}
                           </div>
                         ))}
@@ -756,6 +721,33 @@ export const InfoBalance = () => {
               </Styled.ModalBlock>
             </Modal>
           )}
+          <CSSTransition
+            in={addBalance}
+            timeout={300}
+            classNames="modal"
+            unmountOnExit
+          >
+            <Modal onClose={() => setAddBalance(false)}>
+              <Styled.ModalBlock>
+                <Styled.ModalTitle>Пополнить баланс</Styled.ModalTitle>
+                <Input
+                  onChange={(e) => setBalanceValue(e.target.value)}
+                  placeholder="Введите сумму"
+                  type="number"
+                  ref={inputRef}
+                  value={balanceValue}
+                />
+                <Styled.ModalButton
+                  as="button"
+                  disabled={!balanceValue}
+                  onClick={getTopUp}
+                  danger
+                >
+                  Пополнить
+                </Styled.ModalButton>
+              </Styled.ModalBlock>
+            </Modal>
+          </CSSTransition>
           <CSSTransition
             in={addDeposit && !depositListModal}
             timeout={300}
