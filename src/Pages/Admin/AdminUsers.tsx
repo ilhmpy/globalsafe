@@ -241,85 +241,85 @@ export const AdminUsers = () => {
 
   return (
     <>
-      {size && <Header admPanel />}
+      {/* {size && <Header admPanel />}
       <Styled.Wrapper>
         <SideNavbar />
-        <Styled.Content>
-          <Styled.HeadBlock>
-            <UpTitle small>Пользователи</UpTitle>
-            <Styled.UserName>
-              <span>{user}</span>
-              <Exit onClick={logOut} />
-            </Styled.UserName>
-          </Styled.HeadBlock>
+        <Styled.Content> */}
+      <Styled.HeadBlock>
+        <UpTitle small>Пользователи</UpTitle>
+        <Styled.UserName>
+          <span>{user}</span>
+          <Exit onClick={logOut} />
+        </Styled.UserName>
+      </Styled.HeadBlock>
 
-          <Styled.FilterBlock>
-            <Styled.SelectContainer>
-              <Styled.SelectWrap>
-                <Styled.Label>Пользователь</Styled.Label>
-                <Input value={name} onChange={(e) => setName(e.target.value)} />
-              </Styled.SelectWrap>
-              {/* <Styled.SelectWrap>
+      <Styled.FilterBlock>
+        <Styled.SelectContainer>
+          <Styled.SelectWrap>
+            <Styled.Label>Пользователь</Styled.Label>
+            <Input value={name} onChange={(e) => setName(e.target.value)} />
+          </Styled.SelectWrap>
+          {/* <Styled.SelectWrap>
                 <Styled.Label>Название программы</Styled.Label>
                 <Input />
               </Styled.SelectWrap> */}
-              <Styled.InputsWrap>
-                <TestInput
-                  setOpenDate={setOpenDate}
-                  openDate={openDate}
-                  label="Дата создания"
-                />
-              </Styled.InputsWrap>
+          <Styled.InputsWrap>
+            <TestInput
+              setOpenDate={setOpenDate}
+              openDate={openDate}
+              label="Дата создания"
+            />
+          </Styled.InputsWrap>
 
-              <Button danger onClick={submit}>
-                Применить
-              </Button>
-            </Styled.SelectContainer>
-          </Styled.FilterBlock>
-          <Card>
-            <PaymentsTable>
-              <TableHead>
-                <TableHeadItem>Пользователь</TableHeadItem>
-                <TableHeadItem>Баланс</TableHeadItem>
-                <TableHeadItem>Роль</TableHeadItem>
-                <TableHeadItem>Дата создания</TableHeadItem>
-                <TableHeadItem>Язык</TableHeadItem>
-                <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
-              </TableHead>
-              {listDeposits.length ? (
-                <Scrollbars style={{ height: "500px" }}>
-                  <InfiniteScroll
-                    pageStart={0}
-                    loadMore={myLoad}
-                    hasMore={count}
-                    useWindow={false}
-                    loader={
-                      <div className="loader" key={0}>
-                        Loading ...
-                      </div>
-                    }
-                  >
-                    {listDeposits.map((item) => (
-                      <UserTable
-                        data={item}
-                        key={item.safeId}
-                        unLockAccount={unLockAccount}
-                        lockAccount={lockAccount}
-                      />
-                    ))}
-                  </InfiniteScroll>
-                </Scrollbars>
-              ) : loading ? (
-                <Loading />
-              ) : (
-                <NotFound>
-                  Данные не обнаружены. Попробуйте изменить параметры поиска.
-                </NotFound>
-              )}
-            </PaymentsTable>
-          </Card>
-        </Styled.Content>
-      </Styled.Wrapper>
+          <Button danger onClick={submit}>
+            Применить
+          </Button>
+        </Styled.SelectContainer>
+      </Styled.FilterBlock>
+      <Card>
+        <PaymentsTable>
+          <TableHead>
+            <TableHeadItem>Пользователь</TableHeadItem>
+            <TableHeadItem>Баланс</TableHeadItem>
+            <TableHeadItem>Роль</TableHeadItem>
+            <TableHeadItem>Дата создания</TableHeadItem>
+            <TableHeadItem>Язык</TableHeadItem>
+            <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
+          </TableHead>
+          {listDeposits.length ? (
+            <Scrollbars style={{ height: "500px" }}>
+              <InfiniteScroll
+                pageStart={0}
+                loadMore={myLoad}
+                hasMore={count}
+                useWindow={false}
+                loader={
+                  <div className="loader" key={0}>
+                    Loading ...
+                  </div>
+                }
+              >
+                {listDeposits.map((item) => (
+                  <UserTable
+                    data={item}
+                    key={item.safeId}
+                    unLockAccount={unLockAccount}
+                    lockAccount={lockAccount}
+                  />
+                ))}
+              </InfiniteScroll>
+            </Scrollbars>
+          ) : loading ? (
+            <Loading />
+          ) : (
+            <NotFound>
+              Данные не обнаружены. Попробуйте изменить параметры поиска.
+            </NotFound>
+          )}
+        </PaymentsTable>
+      </Card>
+      {/* </Styled.Content>
+      </Styled.Wrapper> */}
     </>
   );
 };

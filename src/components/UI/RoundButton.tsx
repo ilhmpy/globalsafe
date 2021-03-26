@@ -2,6 +2,7 @@ import styled from "styled-components/macro";
 import icon from "../../assets/svg/checkicon.svg";
 import lockopen from "../../assets/svg/lockopen.svg";
 import lockclose from "../../assets/svg/lockclose.svg";
+import info from "../../assets/svg/info.svg";
 
 export const RoundButton = styled.div`
   width: 24px;
@@ -32,4 +33,8 @@ export const LockButton = styled.button`
 export const UnLockButton = styled(LockButton)`
   background: url(${lockopen}) no-repeat center;
   border-color: #bcd476;
+`;
+
+export const InfoButton = styled(LockButton)`
+  background: url(${info}) no-repeat center;
 `;

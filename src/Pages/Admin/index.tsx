@@ -4,6 +4,7 @@ import { AdminPay } from "./AdminPay";
 import { AdminDeposit } from "./AdminDeposit";
 import { AdminUsers } from "./AdminUsers";
 import { AdminPortfolio } from "./AdminPortfolio";
+import { Admin } from "./Admin";
 
 export {
   AdminMain,
@@ -12,4 +13,5 @@ export {
   AdminDeposit,
   AdminUsers,
   AdminPortfolio,
+  Admin,
 };
