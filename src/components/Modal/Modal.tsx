@@ -63,7 +63,7 @@ const ModalComponent = styled.div<{ width?: number }>`
   margin: 50px auto;
   cursor: auto;
   background: #fafafa;
-  border-radius: 0.25rem;
+  border-radius: 10px;
   padding: 1rem;
   max-width: ${(props) => (props.width ? props.width + "px" : "400px")};
   width: 100%;

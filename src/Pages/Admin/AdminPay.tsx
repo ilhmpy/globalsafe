@@ -236,6 +236,7 @@ export const AdminPay = () => {
   const loadMoreItems = () => {
     if (hubConnection) {
       setCount(false);
+      console.log("loadMoreItems responce");
       hubConnection
         .invoke<RootPayments>(
           "GetUsersDeposits",
@@ -415,7 +416,7 @@ export const AdminPay = () => {
             {depositList.length ? (
               <Scrollbars style={{ height: "500px" }}>
                 <InfiniteScroll
-                  pageStart={0}
+                  pageStart={num}
                   loadMore={loadMoreItems}
                   hasMore={count}
                   useWindow={false}
@@ -461,7 +462,7 @@ export const AdminPay = () => {
             {depositPayList.length ? (
               <Scrollbars style={{ height: "500px" }}>
                 <InfiniteScroll
-                  pageStart={0}
+                  pageStart={numPay}
                   loadMore={myLoad}
                   hasMore={next}
                   useWindow={false}
@@ -502,7 +503,7 @@ export const AdminPay = () => {
             {paymentsList.length ? (
               <Scrollbars style={{ height: "500px" }}>
                 <InfiniteScroll
-                  pageStart={0}
+                  pageStart={numPayments}
                   loadMore={loadMorePayments}
                   hasMore={countPay}
                   useWindow={false}

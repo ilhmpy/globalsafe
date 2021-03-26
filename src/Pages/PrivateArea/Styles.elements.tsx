@@ -6,6 +6,55 @@ import { Card, Container } from "../../globalStyles";
 import { ReactComponent as BackIcon } from "../../assets/svg/arrowLeftModal.svg";
 import { NavLink } from "react-router-dom";
 
+export const ModalDividends = styled.div`
+  padding: 20px 10px 0px;
+`;
+
+export const Hr = styled.hr`
+  margin-top: 10px;
+  background: rgba(66, 139, 202, 0.2);
+`;
+
+export const PayText = styled.p<{ small?: boolean; wbold?: boolean }>`
+  font-weight: ${(props) => (props.wbold ? "500" : "400")};
+  font-size: ${(props) => (props.small ? "12px" : "14px")};
+  line-height: ${(props) => (props.small ? "21px" : "16px")};
+  letter-spacing: 0.1px;
+  color: ${(props) => (props.small ? "rgba(81, 81, 114, 0.6)" : "#515172")};
+`;
+
+export const PayCardBlock = styled.div`
+  margin-bottom: 20px;
+  &:focus,
+  &:active {
+    outline: none;
+    border-radius: 24px;
+    background: transparent;
+  }
+  ${Button} {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  div {
+    justify-content: space-between;
+  }
+  @media (max-width: 576px) {
+    svg {
+      display: block;
+    }
+  }
+  input {
+    background: #fafafa;
+    &:focus {
+      padding: 0;
+      border: 0;
+      background: #fafafa;
+      font-size: 14px;
+      line-height: 16px;
+    }
+  }
+`;
+
 const activeclassname = "active";
 
 export const NavTabs = styled(NavLink).attrs({ activeclassname })`
@@ -421,7 +470,7 @@ export const DataListWrap = styled.div`
 
 export const DataList = styled.div``;
 
-export const DataListItem = styled.div`
+export const DataListItem = styled.div<{ divident?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -432,6 +481,20 @@ export const DataListItem = styled.div`
     padding-bottom: 10px;
     padding-top: 10px;
   }
+  ${(props) => {
+    if (props.divident) {
+      return `
+      transition: .3s;
+      cursor: pointer;
+      @media (max-width: 992px){
+        cursor: relative;
+      }
+      &:hover{
+        background: rgba(0,0,0,0.05);
+      }
+      `;
+    }
+  }}
 `;
 
 export const DataListName = styled.span`

@@ -130,10 +130,6 @@ export const AdminDeposit = () => {
     }
   };
 
-  useEffect(() => {
-    setNum(20);
-  }, []);
-
   const namesProgram = checkList.map((i: any) => i.label);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
@@ -236,7 +232,7 @@ export const AdminDeposit = () => {
           20
         )
         .then((res) => {
-          setNum(20);
+          // setNum(20);
           setLoading(false);
           setDepositsList(res.collection);
         })
@@ -264,7 +260,7 @@ export const AdminDeposit = () => {
           20
         )
         .then((res) => {
-          setNum(20);
+          // setNum(20);
           setDepositsList(res.collection);
         })
         .catch((err: Error) => console.log(err));

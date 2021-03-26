@@ -56,3 +56,43 @@ export const DepositListModal: FC<Props> = ({
     </CSSTransition>
   );
 };
+
+export const ModalDividends = () => {
+  return (
+    <CSSTransition in={false} timeout={3} classNames="modal" unmountOnExit>
+      <Modal onClose={() => false} width={280}>
+        <Styled.ModalDividends>
+          <Styled.PayCardBlock>
+            <Styled.PayText wbold>Начисление дивидендов</Styled.PayText>
+            <Styled.PayText>25 февраля 2021г.</Styled.PayText>
+            <Styled.Hr />
+          </Styled.PayCardBlock>
+          <Styled.PayCardBlock>
+            <Styled.PayText small>Название</Styled.PayText>
+            <Styled.PayText>Депозит №1</Styled.PayText>
+          </Styled.PayCardBlock>
+          <Styled.PayCardBlock>
+            <Styled.PayText small>Дата открытия</Styled.PayText>
+            <Styled.PayText>01/01/2019</Styled.PayText>
+          </Styled.PayCardBlock>
+          <Styled.PayCardBlock>
+            <Styled.PayText small>Сумма депозита</Styled.PayText>
+            <Styled.PayText>400 000</Styled.PayText>
+          </Styled.PayCardBlock>
+          <Styled.PayCardBlock>
+            <Styled.PayText small>Дата следующей выплаты</Styled.PayText>
+            <Styled.PayText>01/03/2021</Styled.PayText>
+          </Styled.PayCardBlock>
+          <Styled.PayCardBlock>
+            <Styled.PayText small>Сумма выплаты</Styled.PayText>
+            <Styled.PayText>40 000</Styled.PayText>
+          </Styled.PayCardBlock>
+          <Styled.PayCardBlock>
+            <Styled.PayText small>Процент выплаты</Styled.PayText>
+            <Styled.PayText>10%</Styled.PayText>
+          </Styled.PayCardBlock>
+        </Styled.ModalDividends>
+      </Modal>
+    </CSSTransition>
+  );
+};
