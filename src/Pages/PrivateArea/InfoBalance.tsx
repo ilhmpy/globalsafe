@@ -157,7 +157,7 @@ export const InfoBalance = () => {
     onClose();
   };
 
-  console.log("balanceLog", balanceLog);
+  // console.log("balanceLog", balanceLog);
 
   const monthSelected = () => {
     let currentMonth = moment().format("MMYYYY");
@@ -449,10 +449,14 @@ export const InfoBalance = () => {
     if (hubConnection && depositSelect !== null) {
       setLoadDeposit(true);
       hubConnection
-        .invoke("CreateUserDeposit", addDepositValue, depositSelect.id)
+        .invoke(
+          "CreateUserDeposit",
+          +addDepositValue * 100000,
+          depositSelect.safeId
+        )
         .then((res) => {
-          // console.log("CreateUserDeposit", res);
-          setLoadDeposit(true);
+          console.log("CreateUserDeposit", res);
+          setLoadDeposit(false);
           if (res === 1) {
             setWithdraw(false);
             setWithdrawValue("");
@@ -464,7 +468,8 @@ export const InfoBalance = () => {
           }
         })
         .catch((err: Error) => {
-          setLoadDeposit(true);
+          console.log(err);
+          setLoadDeposit(false);
           setWithdraw(false);
           setWithdrawValue("");
           alert("Ошибка", "Депозит не создан", "danger");
