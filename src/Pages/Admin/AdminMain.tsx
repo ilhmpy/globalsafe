@@ -107,9 +107,10 @@ export const AdminMain = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke("GetUserDepositsAmount", selectedDay)
+        .invoke<number>("GetUserDepositsAmount", selectedDay)
         .then((res) => {
-          setDepositsAmount(res);
+          console.log("GetUserDepositsAmount", res);
+          setDepositsAmount(res / 100000);
         })
         .catch((e) => console.log(e));
     }
@@ -129,6 +130,16 @@ export const AdminMain = () => {
   // if (admin === false) {
   //   return <Redirect to="/" />;
   // }
+
+  const sumFormat = (value: number) => {
+    if (value >= 1000000) {
+      return (value / 1000000).toFixed(1) + "M";
+    } else if (value >= 1000 && value < 1000000) {
+      return (value / 1000).toFixed(1) + "k";
+    } else {
+      return value;
+    }
+  };
 
   return (
     <>
@@ -272,7 +283,9 @@ export const AdminMain = () => {
               <DepositItem>
                 <DepositTitle>Размер депозитов</DepositTitle>
                 <DepositValue>
-                  {(depositsAmount / 100000).toLocaleString()}
+                  {depositsAmount.toLocaleString("ru-RU", {
+                    maximumFractionDigits: 1,
+                  })}
                 </DepositValue>
               </DepositItem>
             </Deposites>

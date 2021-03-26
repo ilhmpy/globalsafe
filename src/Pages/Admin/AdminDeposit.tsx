@@ -167,6 +167,34 @@ export const AdminDeposit = () => {
     );
   }
 
+  const colors = (name: string) => {
+    switch (name) {
+      case "Программа ЖИЛФОНД":
+        return "#A78CF2";
+        break;
+      case "Программа START":
+        return "#BCD576";
+        break;
+      case "Программа START 30000+":
+        return "#F28CE8";
+        break;
+      case "АВТОБОНУС 30/70":
+        return "#FFB23E";
+        break;
+      case "Программа EXPERT":
+        return "#6DB9FF";
+        break;
+      case "АВТОБОНУС 40/60":
+        return "#FFB23E";
+        break;
+      case "Программа INFINITY":
+        return "#FF416E";
+        break;
+      default:
+        return "#6DB9FF";
+    }
+  };
+
   useEffect(() => {
     if (hubConnection) {
       hubConnection
@@ -274,31 +302,35 @@ export const AdminDeposit = () => {
                       <SwiperSlide key={idx} style={{ maxWidth: 1130 }}>
                         <SwiperInner>
                           {!size &&
-                            i.map((item: DepositStats, idx: number) => (
-                              <DepositItem key={idx}>
-                                <Styled.PayItemHead mb>
-                                  <UpTitle small>{item.depositName}</UpTitle>
-                                </Styled.PayItemHead>
-                                <RadialWrap>
-                                  <HalfRound>
-                                    <span>{item.count}</span>
-                                    <HalfRoundBorder
-                                      width={size ? "47" : "90"}
-                                      height={size ? "63" : "123"}
-                                      color={"#A78CF2"}
-                                    />
-                                  </HalfRound>
-                                  <Styled.Radial bg={"#A78CF2"}>
-                                    <span>
-                                      {(item.amount / 100000)
-                                        .toFixed(1)
-                                        .toLocaleString()}
-                                    </span>
-                                    <span>CWD</span>
-                                  </Styled.Radial>
-                                </RadialWrap>
-                              </DepositItem>
-                            ))}
+                            i.map((item: DepositStats, idx: number) => {
+                              const color = colors(item.depositName);
+
+                              return (
+                                <DepositItem key={idx}>
+                                  <Styled.PayItemHead mb>
+                                    <UpTitle small>{item.depositName}</UpTitle>
+                                  </Styled.PayItemHead>
+                                  <RadialWrap>
+                                    <HalfRound>
+                                      <span>{item.count}</span>
+                                      <HalfRoundBorder
+                                        width={size ? "47" : "90"}
+                                        height={size ? "63" : "123"}
+                                        color={color}
+                                      />
+                                    </HalfRound>
+                                    <Styled.Radial bg={color}>
+                                      <span>
+                                        {(item.amount / 100000)
+                                          .toFixed(1)
+                                          .toLocaleString()}
+                                      </span>
+                                      <span>CWD</span>
+                                    </Styled.Radial>
+                                  </RadialWrap>
+                                </DepositItem>
+                              );
+                            })}
                         </SwiperInner>
                       </SwiperSlide>
                     ))}
@@ -312,39 +344,46 @@ export const AdminDeposit = () => {
                     slidesPerView={1}
                     pagination={{ clickable: true }}
                   >
-                    {newArrayMob.map((i, idx) => (
-                      <SwiperSlide key={idx}>
-                        <DepositItemWrap>
-                          {i.map((item: DepositStats, idx: number) => (
-                            <DepositItemInner key={idx}>
-                              <DepositItem>
-                                <Styled.PayItemHead mb>
-                                  <UpTitle small>{item.depositName}</UpTitle>
-                                </Styled.PayItemHead>
-                                <RadialWrap>
-                                  <HalfRound>
-                                    <span>{item.count}</span>
-                                    <HalfRoundBorder
-                                      width={"47"}
-                                      height={"63"}
-                                      color={"#A78CF2"}
-                                    />
-                                  </HalfRound>
-                                  <Styled.Radial bg={"#A78CF2"}>
-                                    <span>
-                                      {(item.amount / 100000)
-                                        .toFixed(1)
-                                        .toLocaleString()}
-                                    </span>
-                                    <span>CWD</span>
-                                  </Styled.Radial>
-                                </RadialWrap>
-                              </DepositItem>
-                            </DepositItemInner>
-                          ))}
-                        </DepositItemWrap>
-                      </SwiperSlide>
-                    ))}
+                    {newArrayMob.map((i, idx) => {
+                      const color = colors(i.depositName);
+                      // "#" +
+                      // Math.floor(Math.random() * 16777215)
+                      //   .toString(16)
+                      //   .padStart(6, "0");
+                      return (
+                        <SwiperSlide key={idx}>
+                          <DepositItemWrap>
+                            {i.map((item: DepositStats, idx: number) => (
+                              <DepositItemInner key={idx}>
+                                <DepositItem>
+                                  <Styled.PayItemHead mb>
+                                    <UpTitle small>{item.depositName}</UpTitle>
+                                  </Styled.PayItemHead>
+                                  <RadialWrap>
+                                    <HalfRound>
+                                      <span>{item.count}</span>
+                                      <HalfRoundBorder
+                                        width={"47"}
+                                        height={"63"}
+                                        color={color}
+                                      />
+                                    </HalfRound>
+                                    <Styled.Radial bg={color}>
+                                      <span>
+                                        {(item.amount / 100000)
+                                          .toFixed(1)
+                                          .toLocaleString()}
+                                      </span>
+                                      <span>CWD</span>
+                                    </Styled.Radial>
+                                  </RadialWrap>
+                                </DepositItem>
+                              </DepositItemInner>
+                            ))}
+                          </DepositItemWrap>
+                        </SwiperSlide>
+                      );
+                    })}
                   </Swiper>
                 </MySwiperContainer>
               )}

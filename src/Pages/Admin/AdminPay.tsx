@@ -87,6 +87,7 @@ export const AdminPay = () => {
         .invoke<RootCharges>("GetDepositsCharges", [7, 8], numPay, 20)
         .then((res) => {
           if (res.collection.length) {
+            console.log("myLoad", res);
             setDepositPayList([...depositPayList, ...res.collection]);
             setPayNum(numPay + 20);
             setNext(true);
@@ -138,14 +139,14 @@ export const AdminPay = () => {
           setLoading(false);
           setTotalPayments(res.totalRecords);
           setPaymentsList(res.collection);
-          setNumPayments(20);
+          // setNumPayments(20);
         })
         .catch((err: Error) => {
           setLoading(false);
           console.log(err);
         });
     }
-  }, [hubConnection, active]);
+  }, [hubConnection]);
 
   useEffect(() => {
     if (hubConnection) {
@@ -165,9 +166,10 @@ export const AdminPay = () => {
         )
         .then((res) => {
           setLoading(false);
+          console.log("useEffect", res);
           setTotalDeposits(res.totalRecords);
           setDepositList(res.collection);
-          setNum(20);
+          // setNum(20);
         })
         .catch((err: Error) => {
           setLoading(false);
@@ -175,6 +177,8 @@ export const AdminPay = () => {
         });
     }
   }, [hubConnection]);
+
+  console.log("depositList", depositList);
 
   useEffect(() => {
     if (hubConnection) {
@@ -185,7 +189,7 @@ export const AdminPay = () => {
           if (res.collection.length) {
             setTotalPayDeposits(res.totalRecords);
             setDepositPayList(res.collection);
-            setPayNum(20);
+            // setPayNum(20);
           }
         })
         .catch((err: Error) => {
@@ -219,6 +223,7 @@ export const AdminPay = () => {
         .then((res) => {
           setLoading(false);
           if (res.collection.length) {
+            console.log("loadMorePayments", res);
             setPaymentsList([...paymentsList, ...res.collection]);
             setNumPayments(numPayments + 20);
             setPayCount(true);
@@ -248,6 +253,7 @@ export const AdminPay = () => {
         .then((res) => {
           setLoading(false);
           if (res.collection.length) {
+            console.log("loadMoreItems", res);
             setDepositList([...depositList, ...res.collection]);
             setCount(true);
             setNum(num + 20);
@@ -316,7 +322,7 @@ export const AdminPay = () => {
         <SideNavbar />
         <Styled.Content>
           <Styled.HeadBlock>
-            <UpTitle small>Выплаты</UpTitle>
+            <SelfUpTitle small>Выплаты</SelfUpTitle>
             <Styled.UserName>
               <span>{user}</span>
               <Exit onClick={logOut} />
@@ -327,35 +333,43 @@ export const AdminPay = () => {
             <Styled.PayList>
               <Styled.PayItem>
                 <Styled.PayItemHead mb>
-                  <UpTitle small>К выплате</UpTitle>
+                  <SelfUpTitle small>К выплате</SelfUpTitle>
                 </Styled.PayItemHead>
                 <Styled.Radial bg={"rgba(255, 65, 110, 0.2)"}>
                   <span>
-                    {sum ? (sum[2] / 100000).toFixed(0).toLocaleString() : "-"}
+                    {sum ? (sum[2] / 100000).toLocaleString("ru-RU") : "-"}
                   </span>
                   <span>CWD</span>
                 </Styled.Radial>
               </Styled.PayItem>
               <Styled.PayItem>
                 <Styled.PayItemHead mb>
-                  <UpTitle small>Выплачено</UpTitle>
+                  <SelfUpTitle small>Выплачено</SelfUpTitle>
                 </Styled.PayItemHead>
 
                 <Styled.Radial bg={"rgba(188, 212, 118, 0.2)"}>
                   <span>
-                    {sum ? (sum[0] / 100000).toFixed(0).toLocaleString() : "-"}
+                    {sum
+                      ? (sum[0] / 100000).toLocaleString("ru-RU", {
+                          maximumFractionDigits: 0,
+                        })
+                      : "-"}
                   </span>
                   <span>CWD</span>
                 </Styled.Radial>
               </Styled.PayItem>
               <Styled.PayItem>
                 <Styled.PayItemHead mb>
-                  <UpTitle small>На согласовании</UpTitle>
+                  <SelfUpTitle small>На согласовании</SelfUpTitle>
                   {/* {sizes > 768 && <CalendarInput />} */}
                 </Styled.PayItemHead>
                 <Styled.Radial bg={"rgba(109, 185, 255, 0.2)"}>
                   <span>
-                    {sum ? (sum[1] / 100000).toFixed(0).toLocaleString() : "-"}
+                    {sum
+                      ? (sum[1] / 100000).toLocaleString("ru-RU", {
+                          maximumFractionDigits: 0,
+                        })
+                      : "-"}
                   </span>
                   <span>CWD</span>
                 </Styled.Radial>
@@ -444,7 +458,7 @@ export const AdminPay = () => {
                   <TableHeadItemPaid>Сумма выплаты</TableHeadItemPaid>
                   <TableHeadItemPaid>{/* <Filter /> */}</TableHeadItemPaid>
                 </TableHead>
-                {depositList.length ? (
+                {depositPayList.length ? (
                   <Scrollbars style={{ height: "500px" }}>
                     <InfiniteScroll
                       pageStart={0}
@@ -459,27 +473,6 @@ export const AdminPay = () => {
                     >
                       {depositPayList.map((item: CollectionCharges) => (
                         <PaymentsListPay key={item.safeId} data={item} />
-                        // <TableBody key={item.safeId}>
-                        //   <TableBodyItemPaid>{item.userName}</TableBodyItemPaid>
-                        //   <TableBodyItemPaid>
-                        //     {item.deposit.name}
-                        //   </TableBodyItemPaid>
-                        //   <TableBodyItemPaid>
-                        //     {moment(item.prevPayment).format("DD/MM/YYYY")}
-                        //   </TableBodyItemPaid>
-                        //   <TableBodyItemPaid>
-                        //     {item.state === 4
-                        //       ? "Закрытие вклада"
-                        //       : "Начисление дивидендов"}
-                        //   </TableBodyItemPaid>
-                        //   <TableBodyItemPaid>
-                        //     {item.baseAmountView.toLocaleString()}
-                        //   </TableBodyItemPaid>
-                        //   <TableBodyItemPaid>
-                        //     {item.payedAmountView}
-                        //   </TableBodyItemPaid>
-                        //   <TableBodyItemPaid></TableBodyItemPaid>
-                        // </TableBody>
                       ))}
                     </InfiniteScroll>
                   </Scrollbars>
@@ -521,27 +514,6 @@ export const AdminPay = () => {
                     >
                       {paymentsList.map((item: PaymentsCollection) => (
                         <PaymentsList key={item.safeId} data={item} />
-                        // <TableBody>
-                        //   <TableBodyItemPaid>{item.userName}</TableBodyItemPaid>
-                        //   <TableBodyItemPaid>
-                        //     {item.deposit.name}
-                        //   </TableBodyItemPaid>
-                        //   <TableBodyItemPaid>
-                        //     {moment(item.paymentDate).format("DD/MM/YYYY")}
-                        //   </TableBodyItemPaid>
-                        //   <TableBodyItemPaid>
-                        //     {item.state === 4
-                        //       ? "Закрытие вклада"
-                        //       : "Начисление дивидендов"}
-                        //   </TableBodyItemPaid>
-                        //   <TableBodyItemPaid>
-                        //     {item.baseAmountView.toLocaleString()}
-                        //   </TableBodyItemPaid>
-                        //   <TableBodyItemPaid>
-                        //     {item.paymentAmountView}
-                        //   </TableBodyItemPaid>
-                        //   <TableBodyItemPaid></TableBodyItemPaid>
-                        // </TableBody>
                       ))}
                     </InfiniteScroll>
                   </Scrollbars>
@@ -561,6 +533,14 @@ export const AdminPay = () => {
   );
 };
 
+const SelfUpTitle = styled(UpTitle)`
+  @media (max-width: 768px) {
+    &:before {
+      width: 13px;
+    }
+  }
+`;
+
 const NotFound = styled.div`
   font-weight: normal;
   font-size: 12px;
@@ -575,6 +555,9 @@ const PayTab = styled(Tab)`
   width: 135px;
   @media (max-width: 992px) {
     width: 100px !important;
+  }
+  @media (max-width: 768px) {
+    width: 110px !important;
   }
 `;
 
@@ -699,6 +682,14 @@ const TableBodyItemPaid = styled(TableHeadItemPaid)`
 const Tabs = styled.div`
   display: flex;
   padding: 12px 20px 0;
+  ${Tab} {
+    &:nth-child(2) {
+      width: 90px;
+      @media (max-width: 768px) {
+        width: 70px;
+      }
+    }
+  }
   @media (max-width: 992px) {
     align-items: flex-end;
     padding-top: 0;
