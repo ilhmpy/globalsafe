@@ -79,15 +79,14 @@ export const AdminPay = () => {
     }
   };
 
-  const myLoad = (...arg: any) => {
-    console.log("arguments", arg);
-    if (hubConnection) {
-      setNext(false);
+  const myLoad = () => {
+    setNext(false);
+    if (hubConnection && depositPayList.length < totalPayDeposits) {
       hubConnection
         .invoke<RootCharges>("GetDepositsCharges", [7, 8], numPay, 20)
         .then((res) => {
           if (res.collection.length) {
-            console.log("myLoad", res);
+            // console.log("myLoad", res);
             setDepositPayList([...depositPayList, ...res.collection]);
             setPayNum(numPay + 20);
             setNext(true);
@@ -204,8 +203,8 @@ export const AdminPay = () => {
   }, [hubConnection]);
 
   const loadMorePayments = () => {
-    if (hubConnection) {
-      setPayCount(false);
+    setPayCount(false);
+    if (hubConnection && paymentsList.length < totalPayments) {
       hubConnection
         .invoke<RootPayments>(
           "GetUsersDeposits",
@@ -221,9 +220,7 @@ export const AdminPay = () => {
           20
         )
         .then((res) => {
-          setLoading(false);
           if (res.collection.length) {
-            console.log("loadMorePayments", res);
             setPaymentsList([...paymentsList, ...res.collection]);
             setNumPayments(numPayments + 20);
             setPayCount(true);
@@ -234,8 +231,8 @@ export const AdminPay = () => {
   };
 
   const loadMoreItems = () => {
-    if (hubConnection) {
-      setCount(false);
+    setCount(false);
+    if (hubConnection && depositList.length < totalDeposits) {
       console.log("loadMoreItems responce");
       hubConnection
         .invoke<RootPayments>(
@@ -252,7 +249,6 @@ export const AdminPay = () => {
           20
         )
         .then((res) => {
-          setLoading(false);
           if (res.collection.length) {
             console.log("loadMoreItems", res);
             setDepositList([...depositList, ...res.collection]);
@@ -416,7 +412,7 @@ export const AdminPay = () => {
             {depositList.length ? (
               <Scrollbars style={{ height: "500px" }}>
                 <InfiniteScroll
-                  pageStart={num}
+                  pageStart={10}
                   loadMore={loadMoreItems}
                   hasMore={count}
                   useWindow={false}
@@ -462,7 +458,7 @@ export const AdminPay = () => {
             {depositPayList.length ? (
               <Scrollbars style={{ height: "500px" }}>
                 <InfiniteScroll
-                  pageStart={numPay}
+                  pageStart={10}
                   loadMore={myLoad}
                   hasMore={next}
                   useWindow={false}
@@ -503,7 +499,7 @@ export const AdminPay = () => {
             {paymentsList.length ? (
               <Scrollbars style={{ height: "500px" }}>
                 <InfiniteScroll
-                  pageStart={numPayments}
+                  pageStart={10}
                   loadMore={loadMorePayments}
                   hasMore={countPay}
                   useWindow={false}
