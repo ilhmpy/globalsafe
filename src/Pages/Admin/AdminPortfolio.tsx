@@ -87,6 +87,7 @@ export const AdminPortfolio = () => {
   const scrollGCWD = useRef<any>(null);
   const sizes = useWindowSize();
   const header = sizes < 992;
+
   const myLoadGCWD = () => {
     if (hubConnection) {
       setCountGCWD(false);
@@ -160,7 +161,7 @@ export const AdminPortfolio = () => {
         .then((res) => {
           setLoading(false);
           setBasketGCWD(res.collection);
-          setNumGCWD(20);
+          // setNumGCWD(20);
         })
         .catch((err: Error) => console.log(err));
     }
@@ -173,7 +174,7 @@ export const AdminPortfolio = () => {
         .then((res) => {
           setLoading(false);
           setBasketMGCWD(res.collection);
-          setNumMGCWD(20);
+          // setNumMGCWD(20);
         })
         .catch((err: Error) => {
           setLoading(false);
@@ -189,7 +190,7 @@ export const AdminPortfolio = () => {
         .then((res) => {
           setLoading(false);
           setBasketDIAMOND(res.collection);
-          setNumDIAMOND(20);
+          // setNumDIAMOND(20);
         })
         .catch((err: Error) => console.log(err));
     }
