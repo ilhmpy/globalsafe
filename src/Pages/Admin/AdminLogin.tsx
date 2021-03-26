@@ -6,10 +6,7 @@ import { SideNavbar } from "../../components/SideNav";
 export const AdminLogin = () => {
   return (
     <Styled.Wrapper>
-      <SideNavbar />
-      <Styled.Content mtbig>
-        <LoginComponent />
-      </Styled.Content>
+      <LoginComponent />
     </Styled.Wrapper>
   );
 };

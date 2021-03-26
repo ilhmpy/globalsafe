@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, FC } from "react";
 import styled from "styled-components/macro";
 import { ReactComponent as Logo } from "../../assets/svg/logo.svg";
 import { ReactComponent as DashBoard } from "../../assets/svg/dashboard.svg";
@@ -11,26 +11,31 @@ import { NavLink, Link } from "react-router-dom";
 import { AppContext } from "../../context/HubContext";
 import useWindowSize from "../../hooks/useWindowSize";
 
-export const SideNavbar = () => {
-  const [navWidth, setNavWidth] = useState(false);
+type Props = {
+  navWidth: boolean;
+  navShow: (e: React.MouseEvent) => void;
+};
+
+export const SideNavbar: FC<Props> = ({ navWidth, navShow }) => {
+  // const [navWidth, setNavWidth] = useState(false);
   const sizes = useWindowSize();
   const size = sizes < 1200;
   const appContext = useContext(AppContext);
   const logOut = appContext.logOut;
 
-  useEffect(() => {
-    if (sizes !== 0 && size) {
-      setNavWidth(true);
-    }
-  }, [sizes]);
+  // useEffect(() => {
+  //   if (sizes !== 0 && size) {
+  //     setNavWidth(true);
+  //   }
+  // }, [sizes]);
 
-  const navShow = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setNavWidth(!navWidth);
-    // if (!size) {
-    //   setNavWidth(!navWidth);
-    // }
-  };
+  // const navShow = (e: React.MouseEvent) => {
+  //   e.preventDefault();
+  //   setNavWidth(!navWidth);
+  //   // if (!size) {
+  //   //   setNavWidth(!navWidth);
+  //   // }
+  // };
 
   return (
     <SideNav small={navWidth}>
@@ -101,15 +106,12 @@ const SideNav = styled.div<{ small: boolean }>`
   width: ${(props) => (props.small ? "56px" : "243px")};
   min-height: 100vh;
   overflow: hidden;
-  height: auto;
+  height: 100vh;
+  position: fixed;
   flex: none;
   background: #fff;
   transition: 0.3s;
   @media (max-width: 1200px) {
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
     z-index: 9999;
     box-shadow: 0px 1px 3px rgb(0 0 0 / 25%);
   }

@@ -484,6 +484,7 @@ export const InfoBalance = () => {
           <UpTitle>Личный кабинет</UpTitle>
         </Container>
         <ReactNotification />
+
         <Container>
           <Card>
             <Styled.InfoWrap>

@@ -143,155 +143,144 @@ export const AdminMain = () => {
 
   return (
     <>
-      {size && <Header admPanel />}
-      <Styled.Wrapper>
-        <SideNavbar />
-        <Styled.Content>
-          <Styled.HeadBlock>
-            <UpTitle small>Главный экран</UpTitle>
-            <Styled.UserName>
-              <span>{user}</span>
-              <Exit onClick={logOut} />
-            </Styled.UserName>
-          </Styled.HeadBlock>
-          <CardAdmin>
-            <MainChartsContainer>
-              <ChartItem>
-                <ChartItemHead>
-                  <ChartItemTitle small>Новые депозиты</ChartItemTitle>
+      <Styled.HeadBlock>
+        <UpTitle small>Главный экран</UpTitle>
+        <Styled.UserName>
+          <span>{user}</span>
+          <Exit onClick={logOut} />
+        </Styled.UserName>
+      </Styled.HeadBlock>
+      <CardAdmin>
+        <MainChartsContainer>
+          <ChartItem>
+            <ChartItemHead>
+              <ChartItemTitle small>Новые депозиты</ChartItemTitle>
 
-                  <MainAdminInput
-                    setOpenDate={setDepositsDate}
-                    openDate={depositsDate}
-                    label={"30 дней"}
-                  />
-                </ChartItemHead>
-                <TabsChart>
-                  <TabsItem active={card === 0} onClick={() => setCard(0)}>
-                    CNT
-                  </TabsItem>
-                  <TabsItem>/</TabsItem>
-                  <TabsItem active={card === 1} onClick={() => setCard(1)}>
-                    CWD
-                  </TabsItem>
-                </TabsChart>
-                <TabsContent active={card === 0}>
-                  <CSSTransition
-                    in={card === 0}
-                    timeout={300}
-                    classNames="chart"
-                    unmountOnExit
-                  >
-                    <ColumnChart
-                      date={
-                        Object.keys(depositsCreationStat).length
-                          ? Object.keys(depositsCreationStat)
-                          : [""]
-                      }
-                      value={
-                        Object.values(depositsCreationStat).length
-                          ? Object.values(depositsCreationStat).map(
-                              (i: any) => i[0]
-                            )
-                          : [""]
-                      }
-                    />
-                  </CSSTransition>
-                </TabsContent>
-                <TabsContent active={card === 1}>
-                  <CSSTransition
-                    in={card === 1}
-                    timeout={300}
-                    classNames="chart"
-                    unmountOnExit
-                  >
-                    <ColumnChartCwd
-                      date={
-                        Object.keys(depositsCreationStat).length
-                          ? Object.keys(depositsCreationStat)
-                          : [""]
-                      }
-                      value={
-                        Object.values(depositsCreationStat).length
-                          ? Object.values(depositsCreationStat).map(
-                              (i: any) => i[1] / 100000
-                            )
-                          : [""]
-                      }
-                    />
-                  </CSSTransition>
-                </TabsContent>
-              </ChartItem>
-              <ChartItem>
-                <ChartItemHead>
-                  <ChartItemTitle small>Выплаты</ChartItemTitle>
-                  <MainAdminInput
-                    setOpenDate={setOpenDate}
-                    openDate={openDate}
-                    label={"30 дней"}
-                  />
-                </ChartItemHead>
-                <ColumnChartTwo
+              <MainAdminInput
+                setOpenDate={setDepositsDate}
+                openDate={depositsDate}
+                label={"30 дней"}
+              />
+            </ChartItemHead>
+            <TabsChart>
+              <TabsItem active={card === 0} onClick={() => setCard(0)}>
+                CNT
+              </TabsItem>
+              <TabsItem>/</TabsItem>
+              <TabsItem active={card === 1} onClick={() => setCard(1)}>
+                CWD
+              </TabsItem>
+            </TabsChart>
+            <TabsContent active={card === 0}>
+              <CSSTransition
+                in={card === 0}
+                timeout={300}
+                classNames="chart"
+                unmountOnExit
+              >
+                <ColumnChart
                   date={
-                    Object.keys(paymentsStat).length
-                      ? Object.keys(paymentsStat)
+                    Object.keys(depositsCreationStat).length
+                      ? Object.keys(depositsCreationStat)
                       : [""]
                   }
                   value={
-                    Object.values(paymentsStat).length
-                      ? Object.values(paymentsStat).map((i) => i / 100000)
+                    Object.values(depositsCreationStat).length
+                      ? Object.values(depositsCreationStat).map(
+                          (i: any) => i[0]
+                        )
                       : [""]
                   }
                 />
-              </ChartItem>
-              <ChartItem>
-                <ChartItemHead>
-                  <ChartItemTitleLast small>
-                    Доходность фонда
-                  </ChartItemTitleLast>
-                  <MainAdminInput
-                    setOpenDate={setStatDate}
-                    openDate={statDate}
-                    label={"30 дней"}
-                  />
-                </ChartItemHead>
-                <ColumnChartThree
+              </CSSTransition>
+            </TabsContent>
+            <TabsContent active={card === 1}>
+              <CSSTransition
+                in={card === 1}
+                timeout={300}
+                classNames="chart"
+                unmountOnExit
+              >
+                <ColumnChartCwd
                   date={
-                    Object.keys(revenueStat).length
-                      ? Object.keys(revenueStat)
+                    Object.keys(depositsCreationStat).length
+                      ? Object.keys(depositsCreationStat)
                       : [""]
                   }
                   value={
-                    Object.values(revenueStat).length
-                      ? Object.values(revenueStat).map((i) => i / 100000)
+                    Object.values(depositsCreationStat).length
+                      ? Object.values(depositsCreationStat).map(
+                          (i: any) => i[1] / 100000
+                        )
                       : [""]
                   }
                 />
-              </ChartItem>
-            </MainChartsContainer>
-          </CardAdmin>
-          <CardDeposites>
-            <Calendar
-              selectedDay={selectedDay}
-              setSelectedDay={setSelectedDay}
+              </CSSTransition>
+            </TabsContent>
+          </ChartItem>
+          <ChartItem>
+            <ChartItemHead>
+              <ChartItemTitle small>Выплаты</ChartItemTitle>
+              <MainAdminInput
+                setOpenDate={setOpenDate}
+                openDate={openDate}
+                label={"30 дней"}
+              />
+            </ChartItemHead>
+            <ColumnChartTwo
+              date={
+                Object.keys(paymentsStat).length
+                  ? Object.keys(paymentsStat)
+                  : [""]
+              }
+              value={
+                Object.values(paymentsStat).length
+                  ? Object.values(paymentsStat).map((i) => i / 100000)
+                  : [""]
+              }
             />
-            <Deposites>
-              <DepositItem>
-                <DepositTitle>Количество депозитов</DepositTitle>
-                <DepositValue>{depositsCount}</DepositValue>
-              </DepositItem>
-              <DepositItem>
-                <DepositTitle>Размер депозитов</DepositTitle>
-                <DepositValue>
-                  {depositsAmount.toLocaleString("ru-RU", {
-                    maximumFractionDigits: 1,
-                  })}
-                </DepositValue>
-              </DepositItem>
-            </Deposites>
-          </CardDeposites>
-        </Styled.Content>
-      </Styled.Wrapper>
+          </ChartItem>
+          <ChartItem>
+            <ChartItemHead>
+              <ChartItemTitleLast small>Доходность фонда</ChartItemTitleLast>
+              <MainAdminInput
+                setOpenDate={setStatDate}
+                openDate={statDate}
+                label={"30 дней"}
+              />
+            </ChartItemHead>
+            <ColumnChartThree
+              date={
+                Object.keys(revenueStat).length
+                  ? Object.keys(revenueStat)
+                  : [""]
+              }
+              value={
+                Object.values(revenueStat).length
+                  ? Object.values(revenueStat).map((i) => i / 100000)
+                  : [""]
+              }
+            />
+          </ChartItem>
+        </MainChartsContainer>
+      </CardAdmin>
+      <CardDeposites>
+        <Calendar selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
+        <Deposites>
+          <DepositItem>
+            <DepositTitle>Количество депозитов</DepositTitle>
+            <DepositValue>{depositsCount}</DepositValue>
+          </DepositItem>
+          <DepositItem>
+            <DepositTitle>Размер депозитов</DepositTitle>
+            <DepositValue>
+              {depositsAmount.toLocaleString("ru-RU", {
+                maximumFractionDigits: 1,
+              })}
+            </DepositValue>
+          </DepositItem>
+        </Deposites>
+      </CardDeposites>
     </>
   );
 };

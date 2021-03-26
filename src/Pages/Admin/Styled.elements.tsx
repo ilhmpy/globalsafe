@@ -16,15 +16,22 @@ export const Wrapper = styled.div`
   }
 `;
 
-export const Content = styled.div<{ mtbig?: boolean }>`
+type ContentProps = {
+  mtbig?: boolean;
+  widthCont?: boolean;
+};
+
+export const Content = styled.div<ContentProps>`
   flex-grow: 1;
+  transition: 0.3s;
   margin: ${(props) => (props.mtbig ? "60px auto 40px" : "30px auto 40px")};
-  padding: 0 40px 0;
+  padding: 0 35px 0;
+  padding-left: ${(props) => (props.widthCont ? "278px" : "91px")};
   @media (max-width: 1200px) {
-    margin-left: 60px;
+    padding-left: 91px;
   }
   @media (max-width: 992px) {
-    margin-left: 0px;
+    padding-left: 35px;
   }
   @media (max-width: 768px) {
     padding: 0 20px 0;
