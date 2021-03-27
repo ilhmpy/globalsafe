@@ -63,8 +63,10 @@ const Row = ({ data }: any) => {
                 : data.paymentAmountView
               : "-"}
           </Styled.Text>
-          {data.paymentAmountView && (
+          {data.paymentAmountView ? (
             <Styled.Text>{Balance[data.deposit.asset]}</Styled.Text>
+          ) : (
+            <Styled.Text></Styled.Text>
           )}
         </Styled.TD>
         <Styled.TD>
@@ -99,7 +101,7 @@ export const Tables = ({ list }: any) => {
             <Styled.TH>Название</Styled.TH>
             <Styled.TH>Описание</Styled.TH>
             <Styled.TH>Депозит</Styled.TH>
-            <Styled.TH>Пл. выплата</Styled.TH>
+            <Styled.TH>К выплате</Styled.TH>
             <Styled.TH>
               <p>Дата следующей выплаты</p>
               <span>Дата след. выплаты</span>
