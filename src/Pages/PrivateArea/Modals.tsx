@@ -75,47 +75,61 @@ export const ModalDividends: FC<DividendsProps> = ({ onClose, data, open }) => {
   return (
     <Modal onClose={onClose} width={280}>
       <Styled.ModalDividends onClick={handleContainerClick}>
-        <Styled.PayCardBlock>
-          <Styled.PayText wbold>Начисление дивидендов</Styled.PayText>
-          <Styled.PayText>
-            {moment(data.date).format("DD MMMM YYYY")}г.
-          </Styled.PayText>
-          <Styled.Hr />
-        </Styled.PayCardBlock>
-        <Styled.PayCardBlock>
-          <Styled.PayText small>Название</Styled.PayText>
-          <Styled.PayText>{data.userDeposit.deposit.name}</Styled.PayText>
-        </Styled.PayCardBlock>
-        <Styled.PayCardBlock>
-          <Styled.PayText small>Дата открытия</Styled.PayText>
-          <Styled.PayText>
-            {moment(data.userDeposit.creationDate).format("DD/MM/YYYY")}
-          </Styled.PayText>
-        </Styled.PayCardBlock>
-        <Styled.PayCardBlock>
-          <Styled.PayText small>Сумма депозита</Styled.PayText>
-          <Styled.PayText>{data.userDeposit.amountView}</Styled.PayText>
-        </Styled.PayCardBlock>
-        <Styled.PayCardBlock>
-          <Styled.PayText small>Дата следующей выплаты</Styled.PayText>
-          <Styled.PayText>
-            {moment(data.userDeposit.paymentDate).format("DD/MM/YYYY")}
-          </Styled.PayText>
-        </Styled.PayCardBlock>
-        <Styled.PayCardBlock>
-          <Styled.PayText small>Сумма выплаты</Styled.PayText>
-          <Styled.PayText>{data.userDeposit.baseAmountView}</Styled.PayText>
-        </Styled.PayCardBlock>
-        {/* <Styled.PayCardBlock>
-          <Styled.PayText small>Всего выплачено</Styled.PayText>
-          <Styled.PayText>{data.userDeposit.baseAmountView}</Styled.PayText>
-        </Styled.PayCardBlock> */}
-        <Styled.PayCardBlock>
-          <Styled.PayText small>Процент выплаты</Styled.PayText>
-          <Styled.PayText>
-            {((data.balance / data.userDeposit.baseAmount) * 100).toFixed(2)}%
-          </Styled.PayText>
-        </Styled.PayCardBlock>
+        {data.userDeposit ? (
+          <>
+            <Styled.PayCardBlock>
+              <Styled.PayText wbold>Начисление дивидендов</Styled.PayText>
+              <Styled.PayText>
+                {moment(data.date).format("DD MMMM YYYY")}г.
+              </Styled.PayText>
+              <Styled.Hr />
+            </Styled.PayCardBlock>
+            <Styled.PayCardBlock>
+              <Styled.PayText small>Название</Styled.PayText>
+              <Styled.PayText>{data.userDeposit.deposit.name}</Styled.PayText>
+            </Styled.PayCardBlock>
+            <Styled.PayCardBlock>
+              <Styled.PayText small>Дата открытия</Styled.PayText>
+              <Styled.PayText>
+                {moment(data.userDeposit.creationDate).format("DD/MM/YYYY")}
+              </Styled.PayText>
+            </Styled.PayCardBlock>
+            <Styled.PayCardBlock>
+              <Styled.PayText small>Сумма депозита</Styled.PayText>
+              <Styled.PayText>{data.userDeposit.amountView}</Styled.PayText>
+            </Styled.PayCardBlock>
+            <Styled.PayCardBlock>
+              <Styled.PayText small>Дата следующей выплаты</Styled.PayText>
+              <Styled.PayText>
+                {moment(data.userDeposit.paymentDate).format("DD/MM/YYYY")}
+              </Styled.PayText>
+            </Styled.PayCardBlock>
+            <Styled.PayCardBlock>
+              <Styled.PayText small>Сумма выплаты</Styled.PayText>
+              <Styled.PayText>
+                {(data.balance / 100000).toLocaleString("ru-RU", {
+                  maximumFractionDigits: 5,
+                })}
+              </Styled.PayText>
+            </Styled.PayCardBlock>
+            <Styled.PayCardBlock>
+              <Styled.PayText small>Процент выплаты</Styled.PayText>
+              <Styled.PayText>
+                {(
+                  (data.userDeposit.baseAmount / data.userDeposit.amount) *
+                  100
+                ).toFixed(2)}
+                %
+              </Styled.PayText>
+            </Styled.PayCardBlock>
+          </>
+        ) : (
+          <>
+            <Styled.PayCardBlock>
+              <Styled.PayText>Нет данных</Styled.PayText>
+            </Styled.PayCardBlock>
+          </>
+        )}
       </Styled.ModalDividends>
     </Modal>
   );
