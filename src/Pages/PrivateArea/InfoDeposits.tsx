@@ -148,6 +148,8 @@ export const InfoDeposits = () => {
     }
   }, [hubConnection]);
 
+  console.log("list", list);
+
   useEffect(() => {
     if (hubConnection) {
       hubConnection

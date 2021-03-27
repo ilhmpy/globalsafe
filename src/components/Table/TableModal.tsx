@@ -88,12 +88,12 @@ export const InfoBlock = ({ data }: any) => {
           </LI>
           <LI>
             <Text>Всего выплачено</Text>
-            <Text>{data.baseAmountView}&nbsp; CWD</Text>
+            <Text>{data.payedAmountView}&nbsp; CWD</Text>
           </LI>
           <LI>
             <Text>Процент выплаты</Text>
             <Text>
-              {((data.baseAmountView / data.amountView) * 100).toFixed(2)} %
+              {((data.payedAmountView / data.amountView) * 100).toFixed(2)} %
             </Text>
           </LI>
           <LI></LI>
