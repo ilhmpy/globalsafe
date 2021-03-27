@@ -87,6 +87,7 @@ export const Info = () => {
   const [count, setCount] = useState(true);
   const [num, setNum] = useState(20);
   const [loading, setLoading] = useState(true);
+  const [loadDeposit, setLoadDeposit] = useState(false);
   const inputRef = useRef<any>(null);
 
   const yearSelected = () => {
@@ -136,10 +137,10 @@ export const Info = () => {
   };
 
   useEffect(() => {
-    if (withdrawValue) {
+    if (withdrawValue || addDepositValue) {
       inputRef.current.focus();
     }
-  }, [withdrawValue]);
+  }, [withdrawValue, addDepositValue]);
 
   const hubConnection = appContext.hubConnection;
 
@@ -401,10 +402,16 @@ export const Info = () => {
   const openNewDeposit = () => {
     setAddDeposit(false);
     if (hubConnection && depositSelect !== null) {
+      setLoadDeposit(true);
       hubConnection
-        .invoke("CreateUserDeposit", addDepositValue, depositSelect.id)
+        .invoke(
+          "CreateUserDeposit",
+          +addDepositValue * 100000,
+          depositSelect.safeId
+        )
         .then((res) => {
-          // console.log("CreateUserDeposit", res);
+          console.log("CreateUserDeposit", res);
+          setLoadDeposit(false);
           if (res === 1) {
             setWithdraw(false);
             setWithdrawValue("");
@@ -416,6 +423,8 @@ export const Info = () => {
           }
         })
         .catch((err: Error) => {
+          console.log(err);
+          setLoadDeposit(false);
           setWithdraw(false);
           setWithdrawValue("");
           alert("Ошибка", "Депозит не создан", "danger");
@@ -520,6 +529,11 @@ export const Info = () => {
         </Container>
 
         <>
+          {loadDeposit && (
+            <Styled.Loader>
+              <Loading />
+            </Styled.Loader>
+          )}
           <Container>
             <Card>
               <Styled.Deposit>

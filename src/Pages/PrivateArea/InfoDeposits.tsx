@@ -17,12 +17,10 @@ import { Button } from "../../components/Button/Button";
 import { AppContext } from "../../context/HubContext";
 import { AmountContext } from "../../context/AmountContext";
 import { Tables } from "../../components/Table/Table";
-import { TestChart } from "../../components/Charts/Test";
 import { CSSTransition } from "react-transition-group";
 import useWindowSize from "../../hooks/useWindowSize";
 import { Collection, RootList } from "../../types/info";
 import { Modal } from "../../components/Modal/Modal";
-import { ReactComponent as Left } from "../../assets/svg/arrowLeftModal.svg";
 import moment from "moment";
 import "moment/locale/ru";
 import { ModalRangeInput } from "../../components/UI/DayPicker";
@@ -32,8 +30,6 @@ import { RootDeposits, DepositsCollection } from "../../types/info";
 import ReactNotification, { store } from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 import { DepositListModal } from "./Modals";
-import InfiniteScroll from "react-infinite-scroller";
-import { Scrollbars } from "react-custom-scrollbars";
 import { Loading } from "../../components/UI/Loading";
 moment.locale("ru");
 
@@ -50,9 +46,6 @@ type Deposit = {
 export const InfoDeposits = () => {
   const [active, setActive] = useState(0);
   const [activeDeposite, setActiveDeposite] = useState(0);
-  const [card, setCard] = useState(0);
-  const [card2, setCard2] = useState(0);
-  const [activMob, setActiveMob] = useState(0);
   const [list, setList] = useState<Collection[]>([]);
   const [nextDate, setNextDate] = useState<null | Date>(null);
   const [balanceLog, setBalanceLog] = useState<Deposit | null>(null);
@@ -83,10 +76,9 @@ export const InfoDeposits = () => {
   const user = appContext.user;
   const balance = appContext.balance;
   const amountContext = useContext(AmountContext);
-  const { totalPayed, depositTotal } = amountContext;
   const [count, setCount] = useState(true);
   const [num, setNum] = useState(20);
-  const [loading, setLoading] = useState(true);
+  const [loadDeposit, setLoadDeposit] = useState(false);
   const inputRef = useRef<any>(null);
 
   const yearSelected = () => {
@@ -136,10 +128,10 @@ export const InfoDeposits = () => {
   };
 
   useEffect(() => {
-    if (withdrawValue) {
+    if (withdrawValue || addDepositValue) {
       inputRef.current.focus();
     }
-  }, [withdrawValue]);
+  }, [withdrawValue, addDepositValue]);
 
   const hubConnection = appContext.hubConnection;
 
@@ -182,104 +174,6 @@ export const InfoDeposits = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke(
-          "GetBalanceLog",
-          1,
-          balanceLogs,
-          openDate.from || new Date("2021-02-09T00:47:45"),
-          openDate.to || new Date(),
-          0,
-          30
-        )
-        .then((res: any) => {
-          setLoading(false);
-          setNum(20);
-          function getFormatedDate(dateStr: Date) {
-            let date = moment(dateStr).format("DD MMMM YYYY");
-            return date;
-          }
-          if (res.collection.length) {
-            let result: any = {};
-            res.collection.forEach((item: any) => {
-              const d = getFormatedDate(item.operationDate);
-
-              const obj = {
-                id: item.referenceSafeId,
-                operationKind: item.operationKind,
-                balance: item.balanceDelta,
-              };
-
-              if (result[d]) {
-                result[d].push(obj);
-              } else {
-                result[d] = [obj];
-              }
-            });
-            setBalanceLog(result);
-          } else {
-            setBalanceLog(null);
-          }
-        })
-        .catch((err: Error) => {
-          setLoading(false);
-          console.log(err);
-        });
-    }
-  }, [hubConnection, openDate, balanceLogs]);
-
-  const myLoad = () => {
-    if (hubConnection) {
-      setCount(false);
-      hubConnection
-        .invoke(
-          "GetBalanceLog",
-          1,
-          balanceLogs,
-          openDate.from,
-          openDate.to,
-          num,
-          30
-        )
-        .then((res) => {
-          setLoading(false);
-          if (res.collection.length) {
-            // console.log("loadMoreItems", res);
-
-            if (res.collection.length) {
-              let result: any = {};
-              res.collection.forEach((item: any) => {
-                const d = moment(item.operationDate).format("DD MMMM YYYY");
-                const obj = {
-                  id: item.referenceSafeId,
-                  operationKind: item.operationKind,
-                  balance: item.balanceDelta,
-                };
-
-                if (result[d]) {
-                  result[d].push(obj);
-                } else {
-                  result[d] = [obj];
-                }
-              });
-              setBalanceLog(Object.assign(balanceLog, result));
-            } else {
-              setBalanceLog(null);
-            }
-
-            setCount(true);
-            setNum(num + 20);
-          }
-        })
-        .catch((err: Error) => {
-          setLoading(false);
-          console.log(err);
-        });
-    }
-  };
-
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection
         .invoke("GetActiveDepositsCount")
         .then((res: any) => {
           setActiveDeposite(res);
@@ -299,25 +193,6 @@ export const InfoDeposits = () => {
     }
   }, [hubConnection]);
 
-  const handleClick = (id: number) => {
-    if (id !== active) {
-      setActive(id);
-    }
-  };
-
-  const handleBalance = (id: number) => {
-    if (id !== depositTabs) {
-      setDepositTabs(id);
-      if (id === 0) {
-        setBalanceLogs([0, 1, 2, 3, 4, 5, 6, 7, 8]);
-      } else if (id === 1) {
-        setBalanceLogs([1, 7, 8]);
-      } else if (id === 2) {
-        setBalanceLogs([2]);
-      }
-    }
-  };
-
   if (user === null) {
     return null;
   }
@@ -325,20 +200,6 @@ export const InfoDeposits = () => {
   if (user === false) {
     return <Redirect to="/" />;
   }
-
-  const operation = (id: number) => {
-    if (id === 6) {
-      return "Открытие депозита";
-    } else if (id === 7) {
-      return "Начисление дивидендов";
-    } else if (id === 8) {
-      return "Закрытие депозита";
-    } else if (id === 2) {
-      return "Вывод баланса";
-    } else if (id === 1) {
-      return "Пополнение баланса";
-    }
-  };
 
   const onClose = () => {
     setOpen(false);
@@ -401,10 +262,16 @@ export const InfoDeposits = () => {
   const openNewDeposit = () => {
     setAddDeposit(false);
     if (hubConnection && depositSelect !== null) {
+      setLoadDeposit(true);
       hubConnection
-        .invoke("CreateUserDeposit", addDepositValue, depositSelect.id)
+        .invoke(
+          "CreateUserDeposit",
+          +addDepositValue * 100000,
+          depositSelect.safeId
+        )
         .then((res) => {
-          // console.log("CreateUserDeposit", res);
+          console.log("CreateUserDeposit", res);
+          setLoadDeposit(false);
           if (res === 1) {
             setWithdraw(false);
             setWithdrawValue("");
@@ -416,6 +283,8 @@ export const InfoDeposits = () => {
           }
         })
         .catch((err: Error) => {
+          console.log(err);
+          setLoadDeposit(false);
           setWithdraw(false);
           setWithdrawValue("");
           alert("Ошибка", "Депозит не создан", "danger");
@@ -432,20 +301,6 @@ export const InfoDeposits = () => {
     setDepositListModal(true);
   };
 
-  const onHandleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedYear(e.target.value);
-    let start: any = moment(
-      `${selectedMonth}.${e.target.value}`,
-      "M.YYYY"
-    ).startOf("month");
-
-    let end: any = moment(`${selectedMonth}.${e.target.value}`, "M.YYYY").endOf(
-      "month"
-    );
-    setOpenDate({ from: start._d, to: end._d });
-    onClose();
-  };
-
   const minOffset = 0;
   const maxOffset = 10;
   const thisYear = new Date().getFullYear();
@@ -456,25 +311,6 @@ export const InfoDeposits = () => {
     const year = thisYear - i;
     options.push(<option value={year}>{year}</option>);
   }
-
-  const onHandleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedMonth(e.target.value);
-    let start: any = moment(
-      `${e.target.value}.${selectedYear}`,
-      "M.YYYY"
-    ).startOf("month");
-    let end: any = moment(`${e.target.value}.${selectedYear}`, "M.YYYY").endOf(
-      "month"
-    );
-
-    setOpenDate({ from: start._d, to: end._d });
-    onClose();
-  };
-
-  const allTime = () => {
-    setOpenDate({ from: new Date("2021-02-09T00:47:45"), to: new Date() });
-    onClose();
-  };
 
   return (
     <>
@@ -519,6 +355,11 @@ export const InfoDeposits = () => {
           </Card>
         </Container>
         <>
+          {loadDeposit && (
+            <Styled.Loader>
+              <Loading />
+            </Styled.Loader>
+          )}
           <Container>
             <Card>
               <Tables list={list} />

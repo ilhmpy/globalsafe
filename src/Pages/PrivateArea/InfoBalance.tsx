@@ -109,9 +109,6 @@ const BalanceTable: FC<BalanceTableProps> = ({ balanceLog }) => {
 };
 
 export const InfoBalance = () => {
-  const [active, setActive] = useState(0);
-  const [activeDeposite, setActiveDeposite] = useState(0);
-
   const [balanceLog, setBalanceLog] = useState<Deposit | null>(null);
   const [depositTabs, setDepositTabs] = useState(0);
   const [balanceLogs, setBalanceLogs] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8]);
@@ -145,6 +142,8 @@ export const InfoBalance = () => {
   const [addBalance, setAddBalance] = useState(false);
   const [balanceValue, setBalanceValue] = useState("");
   const [loadDeposit, setLoadDeposit] = useState(false);
+  const [totalDeposit, setTotalDeposit] = useState(0);
+  const [depositList, setDepositList] = useState<any>([]);
   const inputRef = useRef<any>(null);
 
   const yearSelected = () => {
@@ -159,7 +158,7 @@ export const InfoBalance = () => {
     onClose();
   };
 
-  console.log("balanceLog", balanceLog);
+  // console.log("balanceLog", balanceLog);
 
   const monthSelected = () => {
     let currentMonth = moment().format("MMYYYY");
@@ -230,6 +229,7 @@ export const InfoBalance = () => {
           20
         )
         .then((res: any) => {
+          setTotalDeposit(res.totalRecords);
           console.log("res", res);
           setLoading(false);
           function getFormatedDate(dateStr: Date) {
@@ -237,6 +237,7 @@ export const InfoBalance = () => {
             return date;
           }
           if (res.collection.length) {
+            setDepositList(res.collection);
             let result: any = {};
             res.collection.forEach((item: any) => {
               const d = getFormatedDate(item.operationDate);
@@ -268,8 +269,8 @@ export const InfoBalance = () => {
   }, [hubConnection, openDate, balanceLogs]);
 
   const myLoad = () => {
-    if (hubConnection) {
-      setCount(false);
+    setCount(false);
+    if (hubConnection && depositList.length < totalDeposit) {
       hubConnection
         .invoke(
           "GetUserDepositsCharges",
@@ -282,9 +283,8 @@ export const InfoBalance = () => {
         .then((res) => {
           setLoading(false);
           if (res.collection.length) {
-            // console.log("loadMoreItems", res);
-
             if (res.collection.length) {
+              setDepositList([...depositList, res.collection]);
               let result: any = {};
               res.collection.forEach((item: any) => {
                 const d = moment(item.operationDate).format("DD MMMM YYYY");
@@ -373,20 +373,6 @@ export const InfoBalance = () => {
   if (user === false) {
     return <Redirect to="/" />;
   }
-
-  const operation = (id: number) => {
-    if (id === 6) {
-      return "Открытие депозита";
-    } else if (id === 7) {
-      return "Начисление дивидендов";
-    } else if (id === 8) {
-      return "Закрытие депозита";
-    } else if (id === 2) {
-      return "Вывод баланса";
-    } else if (id === 1) {
-      return "Пополнение баланса";
-    }
-  };
 
   const onClose = () => {
     setOpen(false);
