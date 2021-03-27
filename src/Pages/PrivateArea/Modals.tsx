@@ -96,7 +96,7 @@ export const ModalDividends: FC<DividendsProps> = ({ onClose, data, open }) => {
             </Styled.PayCardBlock>
             <Styled.PayCardBlock>
               <Styled.PayText small>Сумма депозита</Styled.PayText>
-              <Styled.PayText>{data.userDeposit.amountView}</Styled.PayText>
+              <Styled.PayText>{data.userDeposit.baseAmountView}</Styled.PayText>
             </Styled.PayCardBlock>
             <Styled.PayCardBlock>
               <Styled.PayText small>Дата следующей выплаты</Styled.PayText>
@@ -115,9 +115,12 @@ export const ModalDividends: FC<DividendsProps> = ({ onClose, data, open }) => {
             <Styled.PayCardBlock>
               <Styled.PayText small>Процент выплаты</Styled.PayText>
               <Styled.PayText>
-                {((data.balance / data.userDeposit.baseAmount) * 100).toFixed(
-                  2
-                )}
+                {(
+                  (data.balance / data.userDeposit.baseAmount) *
+                  100
+                ).toLocaleString("ru-RU", {
+                  maximumFractionDigits: 2,
+                })}
                 %
               </Styled.PayText>
             </Styled.PayCardBlock>
