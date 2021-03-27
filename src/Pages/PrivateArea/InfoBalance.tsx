@@ -231,6 +231,7 @@ export const InfoBalance = () => {
         .then((res: any) => {
           setTotalDeposit(res.totalRecords);
           console.log("res", res);
+          setNum(20);
           setLoading(false);
           function getFormatedDate(dateStr: Date) {
             let date = moment(dateStr).format("DD MMMM YYYY");
