@@ -98,7 +98,9 @@ const BalanceTable: FC<BalanceTableProps> = ({ balanceLog }) => {
               : balanceLog.operationKind !== 6
               ? "+"
               : "-"}{" "}
-            {(balanceLog.balance / 100000).toFixed(5).toLocaleString()}
+            {(balanceLog.balance / 100000).toLocaleString("ru-RU", {
+              maximumFractionDigits: 5,
+            })}
           </Styled.DataListSum>
         </Styled.DataListItem>
       </div>
@@ -157,7 +159,7 @@ export const InfoBalance = () => {
     onClose();
   };
 
-  // console.log("balanceLog", balanceLog);
+  console.log("balanceLog", balanceLog);
 
   const monthSelected = () => {
     let currentMonth = moment().format("MMYYYY");
@@ -194,10 +196,10 @@ export const InfoBalance = () => {
   };
 
   useEffect(() => {
-    if (withdrawValue) {
+    if (withdrawValue || balanceValue || addDepositValue) {
       inputRef.current.focus();
     }
-  }, [withdrawValue]);
+  }, [withdrawValue, balanceValue, addDepositValue]);
 
   const hubConnection = appContext.hubConnection;
 
@@ -206,7 +208,7 @@ export const InfoBalance = () => {
       hubConnection
         .invoke<RootDeposits>("GetDeposits", 0, 10)
         .then((res) => {
-          console.log("GetDeposits 111", res);
+          console.log("GetDeposits 11", res);
           if (res.collection.length) {
             console.log("GetDeposits 111", res);
             setDepositsList(res.collection);

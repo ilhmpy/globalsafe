@@ -104,12 +104,12 @@ export const ModalDividends: FC<DividendsProps> = ({ onClose, data, open }) => {
         </Styled.PayCardBlock>
         <Styled.PayCardBlock>
           <Styled.PayText small>Сумма выплаты</Styled.PayText>
-          <Styled.PayText>
-            {data.userDeposit.paymentAmountView
-              ? data.userDeposit.paymentAmountView
-              : 0}
-          </Styled.PayText>
+          <Styled.PayText>{data.userDeposit.baseAmountView}</Styled.PayText>
         </Styled.PayCardBlock>
+        {/* <Styled.PayCardBlock>
+          <Styled.PayText small>Всего выплачено</Styled.PayText>
+          <Styled.PayText>{data.userDeposit.baseAmountView}</Styled.PayText>
+        </Styled.PayCardBlock> */}
         <Styled.PayCardBlock>
           <Styled.PayText small>Процент выплаты</Styled.PayText>
           <Styled.PayText>

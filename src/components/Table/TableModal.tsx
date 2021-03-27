@@ -74,7 +74,7 @@ export const InfoBlock = ({ data }: any) => {
             <Text>{data.baseAmountView}&nbsp; CWD</Text>
           </LI>
           <LI>
-            <Text>Планируемая выплата</Text>
+            <Text>К выплате</Text>
             <Text>
               {data.paymentAmountView
                 ? data.paymentAmountView.toString().length > 15
