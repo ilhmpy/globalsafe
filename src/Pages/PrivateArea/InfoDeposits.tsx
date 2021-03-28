@@ -31,6 +31,8 @@ import ReactNotification, { store } from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 import { DepositListModal } from "./Modals";
 import { Loading } from "../../components/UI/Loading";
+import { Scrollbars } from "react-custom-scrollbars";
+import InfiniteScroll from "react-infinite-scroller";
 moment.locale("ru");
 
 type Obj = {
@@ -79,6 +81,8 @@ export const InfoDeposits = () => {
   const [count, setCount] = useState(true);
   const [num, setNum] = useState(20);
   const [loadDeposit, setLoadDeposit] = useState(false);
+  const [totalList, setTotalList] = useState(0);
+  const [loading, setLoading] = useState(true);
   const inputRef = useRef<any>(null);
 
   const yearSelected = () => {
@@ -148,19 +152,41 @@ export const InfoDeposits = () => {
     }
   }, [hubConnection]);
 
-  console.log("list", list);
+  // console.log("list", list);
 
   useEffect(() => {
     if (hubConnection) {
       hubConnection
         .invoke<RootList>("GetUserDeposits", [1, 2, 3, 4, 5, 6], 0, 20)
         .then((res) => {
-          console.log("GetUserDeposits", res);
+          // console.log("GetUserDeposits", res);
+          setLoading(false);
           setList(res.collection);
+          setTotalList(res.totalRecords);
+        })
+        .catch((err: Error) => {
+          setLoading(false);
+          console.log(err);
+        });
+    }
+  }, [hubConnection]);
+
+  const myLoad = () => {
+    setCount(false);
+    if (hubConnection && list.length < totalList) {
+      hubConnection
+        .invoke<RootList>("GetUserDeposits", [1, 2, 3, 4, 5, 6], num, 20)
+        .then((res) => {
+          // console.log("GetUserDeposits", res);
+          if (res.collection.length) {
+            setList([...list, ...res.collection]);
+            setCount(true);
+            setNum(num + 20);
+          }
         })
         .catch((err: Error) => console.log(err));
     }
-  }, [hubConnection]);
+  };
 
   useEffect(() => {
     if (hubConnection) {
@@ -364,7 +390,21 @@ export const InfoDeposits = () => {
           )}
           <Container>
             <Card>
-              <Tables list={list} />
+              <Scrollbars style={{ height: "500px" }}>
+                <InfiniteScroll
+                  pageStart={10}
+                  loadMore={myLoad}
+                  hasMore={count}
+                  useWindow={false}
+                  loader={
+                    <div className="loader" key={0}>
+                      Loading ...
+                    </div>
+                  }
+                >
+                  <Tables list={list} />
+                </InfiniteScroll>
+              </Scrollbars>
             </Card>
           </Container>
 

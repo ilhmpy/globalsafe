@@ -69,7 +69,6 @@ const BalanceTable: FC<BalanceTableProps> = ({ balanceLog }) => {
   };
 
   const dividentModal = (id: number) => {
-    console.log("id", id);
     if (id === 7) {
       setDivModal(true);
     }
@@ -207,9 +206,9 @@ export const InfoBalance = () => {
       hubConnection
         .invoke<RootDeposits>("GetDeposits", 0, 10)
         .then((res) => {
-          console.log("GetDeposits 11", res);
+          // console.log("GetDeposits 11", res);
           if (res.collection.length) {
-            console.log("GetDeposits 111", res);
+            // console.log("GetDeposits 111", res);
             setDepositsList(res.collection);
           }
         })
@@ -230,7 +229,7 @@ export const InfoBalance = () => {
         )
         .then((res: any) => {
           setTotalDeposit(res.totalRecords);
-          console.log("res", res);
+          // console.log("res", res);
           setNum(20);
           setLoading(false);
           function getFormatedDate(dateStr: Date) {
@@ -331,7 +330,7 @@ export const InfoBalance = () => {
           30
         )
         .then((res: any) => {
-          console.log("GetBalanceLog", res);
+          // console.log("GetBalanceLog", res);
         })
         .catch((err: Error) => console.log(err));
     }
@@ -444,7 +443,7 @@ export const InfoBalance = () => {
           depositSelect.safeId
         )
         .then((res) => {
-          console.log("CreateUserDeposit", res);
+          // console.log("CreateUserDeposit", res);
           setLoadDeposit(false);
           if (res === 1) {
             setWithdraw(false);
