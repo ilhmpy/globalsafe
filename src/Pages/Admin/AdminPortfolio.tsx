@@ -79,6 +79,9 @@ export const AdminPortfolio = () => {
   const [numMGCWD, setNumMGCWD] = useState(20);
   const [numDIAMOND, setNumDIAMOND] = useState(20);
   const [loading, setLoading] = useState(true);
+  const [totalGCWD, setTotalGCWD] = useState(0);
+  const [totalMGCWD, setTotalMGCWD] = useState(0);
+  const [totalDIAMOND, setTotalDIAMOND] = useState(0);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const logOut = appContext.logOut;
@@ -89,8 +92,8 @@ export const AdminPortfolio = () => {
   const header = sizes < 992;
 
   const myLoadGCWD = () => {
-    if (hubConnection) {
-      setCountGCWD(false);
+    setCountGCWD(false);
+    if (hubConnection && basketGCWD.length < totalGCWD) {
       hubConnection
         .invoke<RootPortfolio>("GetBaskets", 3, numGCWD, 20)
         .then((res) => {
@@ -105,8 +108,8 @@ export const AdminPortfolio = () => {
   };
 
   const myLoadMGCWD = () => {
-    if (hubConnection) {
-      setCountMGCWD(false);
+    setCountMGCWD(false);
+    if (hubConnection && basketMGCWD.length < totalMGCWD) {
       hubConnection
         .invoke<RootPortfolio>("GetBaskets", 2, numMGCWD, 20)
         .then((res) => {
@@ -121,8 +124,8 @@ export const AdminPortfolio = () => {
   };
 
   const myLoadDIAMOND = () => {
-    if (hubConnection) {
-      setCountDIAMOND(false);
+    setCountDIAMOND(false);
+    if (hubConnection && basketDIAMOND.length < totalDIAMOND) {
       hubConnection
         .invoke<RootPortfolio>("GetBaskets", 4, numDIAMOND, 20)
         .then((res) => {
@@ -161,9 +164,12 @@ export const AdminPortfolio = () => {
         .then((res) => {
           setLoading(false);
           setBasketGCWD(res.collection);
-          // setNumGCWD(20);
+          setTotalGCWD(res.totalRecords);
         })
-        .catch((err: Error) => console.log(err));
+        .catch((err: Error) => {
+          setLoading(false);
+          console.log(err);
+        });
     }
   }, [hubConnection]);
 
@@ -174,7 +180,7 @@ export const AdminPortfolio = () => {
         .then((res) => {
           setLoading(false);
           setBasketMGCWD(res.collection);
-          // setNumMGCWD(20);
+          setTotalMGCWD(res.totalRecords);
         })
         .catch((err: Error) => {
           setLoading(false);
@@ -190,9 +196,12 @@ export const AdminPortfolio = () => {
         .then((res) => {
           setLoading(false);
           setBasketDIAMOND(res.collection);
-          // setNumDIAMOND(20);
+          setTotalDIAMOND(res.totalRecords);
         })
-        .catch((err: Error) => console.log(err));
+        .catch((err: Error) => {
+          setLoading(false);
+          console.log(err);
+        });
     }
   }, [hubConnection]);
 
@@ -202,10 +211,6 @@ export const AdminPortfolio = () => {
 
   return (
     <>
-      {/* {header && <Header admPanel />}
-      <Styled.Wrapper>
-        <SideNavbar />
-        <Styled.Content> */}
       <Styled.HeadBlock>
         <UpTitle small>Портфель</UpTitle>
         <Styled.UserName>
@@ -339,7 +344,7 @@ export const AdminPortfolio = () => {
             {basketGCWD.length ? (
               <Scrollbars style={{ height: "500px" }}>
                 <InfiniteScroll
-                  pageStart={0}
+                  pageStart={10}
                   loadMore={myLoadGCWD}
                   hasMore={countGCWD}
                   useWindow={false}
@@ -377,7 +382,7 @@ export const AdminPortfolio = () => {
             {basketMGCWD.length ? (
               <Scrollbars style={{ height: "500px" }}>
                 <InfiniteScroll
-                  pageStart={0}
+                  pageStart={10}
                   loadMore={myLoadMGCWD}
                   hasMore={countMGCWD}
                   useWindow={false}
@@ -413,7 +418,7 @@ export const AdminPortfolio = () => {
             {basketDIAMOND.length ? (
               <Scrollbars style={{ height: "500px" }}>
                 <InfiniteScroll
-                  pageStart={0}
+                  pageStart={20}
                   loadMore={myLoadDIAMOND}
                   hasMore={countDIAMOND}
                   useWindow={false}

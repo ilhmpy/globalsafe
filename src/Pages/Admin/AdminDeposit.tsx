@@ -88,6 +88,7 @@ export const AdminDeposit = () => {
   );
   const [loading, setLoading] = useState(true);
   const [depositsList, setDepositsList] = useState<PaymentsCollection[]>([]);
+  const [totalList, setTotalList] = useState(0);
   const [checkList, setCheckList] = useState<any>([]);
   const [name, setName] = useState("");
   const [openDate, setOpenDate] = useState<OpenDate>({
@@ -101,9 +102,9 @@ export const AdminDeposit = () => {
   const [count, setCount] = useState(true);
   const [num, setNum] = useState(20);
 
-  const myLoad = (...arg: any) => {
-    if (hubConnection) {
-      setCount(false);
+  const myLoad = () => {
+    setCount(false);
+    if (hubConnection && depositsList.length < totalList) {
       hubConnection
         .invoke<RootPayments>(
           "GetUsersDeposits",
@@ -138,11 +139,6 @@ export const AdminDeposit = () => {
   const admin = appContext.isAdmin;
   const sizes = useWindowSize();
   const size = sizes < 768;
-  const header = sizes < 992;
-
-  const filterClick = (id: number) => {
-    console.log("click", id);
-  };
 
   const arrSizeBig = 10;
   const arrSizeMob = 4;
@@ -197,7 +193,6 @@ export const AdminDeposit = () => {
         .invoke<DepositStats[]>("GetUsersDepositsStats")
         .then((res) => {
           setStatsDeposit(res);
-          console.log("GetUsersDepositsStats", res);
         })
         .catch((err: Error) => console.log(err));
     }
@@ -208,7 +203,6 @@ export const AdminDeposit = () => {
       hubConnection
         .invoke<ListDeposits>("GetDeposits", 0, 40)
         .then((res) => {
-          console.log("GetDeposits", res);
           setListDeposits(res.collection);
         })
         .catch((err: Error) => console.log(err));
@@ -232,7 +226,7 @@ export const AdminDeposit = () => {
           20
         )
         .then((res) => {
-          // setNum(20);
+          setTotalList(res.totalRecords);
           setLoading(false);
           setDepositsList(res.collection);
         })
@@ -260,7 +254,9 @@ export const AdminDeposit = () => {
           20
         )
         .then((res) => {
-          // setNum(20);
+          setDepositsList([]);
+          setLoading(false);
+          setNum(20);
           setDepositsList(res.collection);
         })
         .catch((err: Error) => console.log(err));
@@ -273,10 +269,6 @@ export const AdminDeposit = () => {
 
   return (
     <>
-      {/* {header && <Header admPanel />}
-      <Styled.Wrapper>
-        <SideNavbar />
-        <Styled.Content> */}
       <Styled.HeadBlock>
         <UpTitle small>Выплаты</UpTitle>
         <Styled.UserName>

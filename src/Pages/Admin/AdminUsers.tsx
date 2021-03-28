@@ -134,6 +134,7 @@ export const AdminUsers = () => {
   const [count, setCount] = useState(true);
   const [num, setNum] = useState(20);
   const [loading, setLoading] = useState(true);
+  const [totalUsers, seTotalUsers] = useState(0);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const admin = appContext.isAdmin;
@@ -154,6 +155,7 @@ export const AdminUsers = () => {
         .then((res) => {
           setLoading(false);
           setNum(20);
+          seTotalUsers(res.totalRecords);
           setListDeposits(res.collection);
         })
         .catch((err: Error) => {
@@ -175,8 +177,10 @@ export const AdminUsers = () => {
           20
         )
         .then((res) => {
+          setListDeposits([]);
           setLoading(false);
           setNum(20);
+          seTotalUsers(res.totalRecords);
           setListDeposits(res.collection);
         })
         .catch((err: Error) => {
@@ -187,8 +191,8 @@ export const AdminUsers = () => {
   };
 
   const myLoad = () => {
-    if (hubConnection) {
-      setCount(false);
+    setCount(false);
+    if (hubConnection && listDeposits.length < totalUsers) {
       hubConnection
         .invoke<RootUsers>(
           "GetUsers",
@@ -209,9 +213,6 @@ export const AdminUsers = () => {
         .catch((err: Error) => console.log(err));
     }
   };
-
-  const sizes = useWindowSize();
-  const size = sizes < 992;
 
   const lockAccount = (id: string) => {
     if (hubConnection) {
@@ -241,10 +242,6 @@ export const AdminUsers = () => {
 
   return (
     <>
-      {/* {size && <Header admPanel />}
-      <Styled.Wrapper>
-        <SideNavbar />
-        <Styled.Content> */}
       <Styled.HeadBlock>
         <UpTitle small>Пользователи</UpTitle>
         <Styled.UserName>
@@ -252,17 +249,12 @@ export const AdminUsers = () => {
           <Exit onClick={logOut} />
         </Styled.UserName>
       </Styled.HeadBlock>
-
       <Styled.FilterBlock>
         <Styled.SelectContainer>
           <Styled.SelectWrap>
             <Styled.Label>Пользователь</Styled.Label>
             <Input value={name} onChange={(e) => setName(e.target.value)} />
           </Styled.SelectWrap>
-          {/* <Styled.SelectWrap>
-                <Styled.Label>Название программы</Styled.Label>
-                <Input />
-              </Styled.SelectWrap> */}
           <Styled.InputsWrap>
             <TestInput
               setOpenDate={setOpenDate}
