@@ -411,15 +411,9 @@ export const Info = () => {
         .then((res) => {
           console.log("CreateUserDeposit", res);
           setLoadDeposit(false);
-          if (res === 1) {
-            setWithdraw(false);
-            setWithdrawValue("");
-            alert("Успешно", "Депозит успешно создан", "success");
-          } else {
-            setWithdraw(false);
-            setWithdrawValue("");
-            alert("Ошибка", "Депозит не создан", "danger");
-          }
+          setWithdraw(false);
+          setWithdrawValue("");
+          alert("Успешно", "Депозит успешно создан", "success");
         })
         .catch((err: Error) => {
           console.log(err);
