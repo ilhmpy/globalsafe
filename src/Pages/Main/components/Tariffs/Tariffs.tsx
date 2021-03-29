@@ -64,6 +64,7 @@ export const Tariffs = () => {
     setOldLink(str);
     const val: any = /\d{3,}/g.exec(str);
     setMin(val[0]);
+    setValue(val[0].toString());
   };
 
   useEffect(() => {
@@ -83,6 +84,10 @@ export const Tariffs = () => {
     }
   };
 
+  const toLink = () => {
+    window.open(link);
+  };
+
   const colors = (item: CollectionListDeposits) => {
     switch (item.name) {
       case "Программа START":
@@ -91,7 +96,9 @@ export const Tariffs = () => {
             green
             onClick={() =>
               handleClick(
-                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
+                `https://cwd.global/shopping/payment?to_name=${
+                  item.account
+                }&amount=${item.minAmount / 100000}`,
                 500
               )
             }
@@ -99,14 +106,15 @@ export const Tariffs = () => {
             Хочу Start
           </Button>
         );
-        break;
       case "Программа ЖИЛФОНД":
         return (
           <Button
             purple
             onClick={() =>
               handleClick(
-                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
+                `https://cwd.global/shopping/payment?to_name=${
+                  item.account
+                }&amount=${item.minAmount / 100000}`,
                 500
               )
             }
@@ -114,14 +122,15 @@ export const Tariffs = () => {
             Хочу ЖИЛФОНД
           </Button>
         );
-        break;
       case "Программа START 30000+":
         return (
           <Button
             pink
             onClick={() =>
               handleClick(
-                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
+                `https://cwd.global/shopping/payment?to_name=${
+                  item.account
+                }&amount=${item.minAmount / 100000}`,
                 500
               )
             }
@@ -129,14 +138,15 @@ export const Tariffs = () => {
             Хочу START 30000+
           </Button>
         );
-        break;
       case "АВТОБОНУС 30/70":
         return (
           <Button
             yellow
             onClick={() =>
               handleClick(
-                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
+                `https://cwd.global/shopping/payment?to_name=${
+                  item.account
+                }&amount=${item.minAmount / 100000}`,
                 500
               )
             }
@@ -144,14 +154,15 @@ export const Tariffs = () => {
             Хочу АВТОБОНУС
           </Button>
         );
-        break;
       case "Программа EXPERT":
         return (
           <Button
             blue
             onClick={() =>
               handleClick(
-                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
+                `https://cwd.global/shopping/payment?to_name=${
+                  item.account
+                }&amount=${item.minAmount / 100000}`,
                 500
               )
             }
@@ -159,14 +170,15 @@ export const Tariffs = () => {
             Хочу EXPERT
           </Button>
         );
-        break;
       case "АВТОБОНУС 40/60":
         return (
           <Button
             yellow
             onClick={() =>
               handleClick(
-                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
+                `https://cwd.global/shopping/payment?to_name=${
+                  item.account
+                }&amount=${item.minAmount / 100000}`,
                 500
               )
             }
@@ -174,14 +186,15 @@ export const Tariffs = () => {
             Хочу АВТОБОНУС
           </Button>
         );
-        break;
       case "Программа INFINITY":
         return (
           <Button
             danger
             onClick={() =>
               handleClick(
-                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
+                `https://cwd.global/shopping/payment?to_name=${
+                  item.account
+                }&amount=${item.minAmount / 100000}`,
                 500
               )
             }
@@ -189,7 +202,6 @@ export const Tariffs = () => {
             Хочу INFINITY
           </Button>
         );
-        break;
     }
   };
 
@@ -213,12 +225,17 @@ export const Tariffs = () => {
             <ModalTitle>Размер депозита</ModalTitle>
             <Input
               onChange={onChange}
-              placeholder={min.toString()}
+              // placeholder={min.toString()}
               type="number"
               ref={inputRef}
               value={value}
             />
-            <ModalButton href={link} danger>
+            <ModalButton
+              as="button"
+              onClick={toLink}
+              danger
+              disabled={+value < min}
+            >
               ОК
             </ModalButton>
           </ModalBlock>

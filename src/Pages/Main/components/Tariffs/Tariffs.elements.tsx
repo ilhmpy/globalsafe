@@ -114,7 +114,7 @@ export const ModalBlock = styled.div`
 `;
 
 export const ModalButton = styled(Button)`
-  max-width: 100%;
+  min-width: 100%;
 `;
 
 export const ModalTitle = styled.h4`
