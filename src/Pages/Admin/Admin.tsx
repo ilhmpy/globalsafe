@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import {
   AdminMain,
@@ -11,12 +11,16 @@ import * as Styled from "./Styled.elements";
 import { SideNavbar } from "../../components/SideNav";
 import useWindowSize from "../../hooks/useWindowSize";
 import { Header } from "../../components/Header/Header";
+import { AppContext } from "../../context/HubContext";
+import { Loading } from "../../components/UI/Loading";
+import { Redirect } from "react-router-dom";
 
 export const Admin = () => {
   const [navWidth, setNavWidth] = useState(false);
   const sizes = useWindowSize();
   const size = sizes < 1200;
-  const header = sizes < 992;
+  const appContext = useContext(AppContext);
+  const admin = appContext.isAdmin;
 
   useEffect(() => {
     if (sizes !== 0 && size) {
@@ -32,9 +36,23 @@ export const Admin = () => {
     // }
   };
 
+  if (admin === null) {
+    return (
+      <Styled.Loader>
+        <Loading />
+      </Styled.Loader>
+    );
+  }
+
+  if (admin === false) {
+    return <Redirect to="/" />;
+  }
+
   return (
     <Styled.Wrapper>
-      {header && <Header admPanel />}
+      <Styled.HeaderWrap>
+        <Header admPanel />
+      </Styled.HeaderWrap>
       <SideNavbar navShow={navShow} navWidth={navWidth} />
       <Styled.Content widthCont={!navWidth}>
         <Switch>

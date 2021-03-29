@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext, FC } from "react";
 import * as Styled from "./Styled.elements";
 import styled, { css } from "styled-components/macro";
-import { SideNavbar } from "../../components/SideNav";
 import { Card } from "../../globalStyles";
 import { UpTitle } from "../../components/UI/UpTitle";
 import { ReactComponent as Exit } from "../../assets/svg/exit.svg";
@@ -22,11 +21,7 @@ import {
   ListDeposits,
   CollectionListDeposits,
 } from "../../types/deposits";
-import {
-  RootPayments,
-  PaymentsCollection,
-  CollectionCharges,
-} from "../../types/payments";
+import { RootPayments, PaymentsCollection } from "../../types/payments";
 import moment from "moment";
 import InfiniteScroll from "react-infinite-scroller";
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
@@ -36,9 +31,7 @@ import "swiper/components/pagination/pagination.scss";
 import "swiper/components/scrollbar/scrollbar.scss";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { ModalDeposit } from "./AdminPay/Payments";
-import { Header } from "../../components/Header/Header";
 import { Loading } from "../../components/UI/Loading";
-import { Redirect } from "react-router-dom";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 type PayProps = {
@@ -88,6 +81,7 @@ export const AdminDeposit = () => {
   );
   const [loading, setLoading] = useState(true);
   const [depositsList, setDepositsList] = useState<PaymentsCollection[]>([]);
+  const [totalList, setTotalList] = useState(0);
   const [checkList, setCheckList] = useState<any>([]);
   const [name, setName] = useState("");
   const [openDate, setOpenDate] = useState<OpenDate>({
@@ -101,9 +95,9 @@ export const AdminDeposit = () => {
   const [count, setCount] = useState(true);
   const [num, setNum] = useState(20);
 
-  const myLoad = (...arg: any) => {
-    if (hubConnection) {
-      setCount(false);
+  const myLoad = () => {
+    setCount(false);
+    if (hubConnection && depositsList.length < totalList) {
       hubConnection
         .invoke<RootPayments>(
           "GetUsersDeposits",
@@ -135,14 +129,10 @@ export const AdminDeposit = () => {
   const hubConnection = appContext.hubConnection;
   const logOut = appContext.logOut;
   const user = appContext.user;
+  const load = appContext.loading;
   const admin = appContext.isAdmin;
   const sizes = useWindowSize();
   const size = sizes < 768;
-  const header = sizes < 992;
-
-  const filterClick = (id: number) => {
-    console.log("click", id);
-  };
 
   const arrSizeBig = 10;
   const arrSizeMob = 4;
@@ -197,7 +187,6 @@ export const AdminDeposit = () => {
         .invoke<DepositStats[]>("GetUsersDepositsStats")
         .then((res) => {
           setStatsDeposit(res);
-          console.log("GetUsersDepositsStats", res);
         })
         .catch((err: Error) => console.log(err));
     }
@@ -208,7 +197,6 @@ export const AdminDeposit = () => {
       hubConnection
         .invoke<ListDeposits>("GetDeposits", 0, 40)
         .then((res) => {
-          console.log("GetDeposits", res);
           setListDeposits(res.collection);
         })
         .catch((err: Error) => console.log(err));
@@ -232,7 +220,7 @@ export const AdminDeposit = () => {
           20
         )
         .then((res) => {
-          // setNum(20);
+          setTotalList(res.totalRecords);
           setLoading(false);
           setDepositsList(res.collection);
         })
@@ -260,23 +248,17 @@ export const AdminDeposit = () => {
           20
         )
         .then((res) => {
-          // setNum(20);
+          setDepositsList([]);
+          setLoading(false);
+          setNum(20);
           setDepositsList(res.collection);
         })
         .catch((err: Error) => console.log(err));
     }
   };
 
-  // if (admin === false) {
-  //   return <Redirect to="/" />;
-  // }
-
   return (
     <>
-      {/* {header && <Header admPanel />}
-      <Styled.Wrapper>
-        <SideNavbar />
-        <Styled.Content> */}
       <Styled.HeadBlock>
         <UpTitle small>Выплаты</UpTitle>
         <Styled.UserName>

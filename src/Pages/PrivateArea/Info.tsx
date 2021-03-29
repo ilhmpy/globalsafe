@@ -162,7 +162,6 @@ export const Info = () => {
       hubConnection
         .invoke<RootList>("GetUserDeposits", [1, 2, 3, 4, 5, 6], 0, 20)
         .then((res) => {
-          console.log("GetUserDeposits", res);
           setList(res.collection);
         })
         .catch((err: Error) => console.log(err));

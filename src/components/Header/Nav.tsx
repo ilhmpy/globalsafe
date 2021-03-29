@@ -15,7 +15,7 @@ type Props = {
   user: null | false | string;
   logOut: () => void;
   location: string;
-  admin: boolean;
+  admin: boolean | null;
 };
 
 export const Nav: FC<Props> = ({
