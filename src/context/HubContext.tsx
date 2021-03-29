@@ -57,6 +57,11 @@ export const HubProvider: FC = ({ children }) => {
 
   useEffect(() => {
     if (hubConnection) {
+      hubConnection.on("BalanceUpdate", (data) => {
+        if (data.balances[0]) {
+          setBalance(data.balances[0].volume);
+        }
+      });
       hubConnection
         .invoke("GetSigned")
         .then((res) => {
