@@ -240,6 +240,7 @@ export const InfoButtons = styled.div`
   width: 180px;
   ${Button} {
     margin-bottom: 15px;
+    min-width: 133px;
   }
   @media (max-width: 992px) {
     width: 130px;
