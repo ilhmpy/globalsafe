@@ -11,6 +11,8 @@ type Props = {
   pink?: boolean;
   purple?: boolean;
   yellow?: boolean;
+  aqua?: boolean;
+  avocado?: boolean;
   mb?: boolean;
 };
 
@@ -50,6 +52,7 @@ export const Button = styled.a<Props>`
       background: #FF416E;
       color: #fff;
       border-color: #FF416E;
+      min-width: 165px;
       &:hover,
       &:focus{
         outline: none;
@@ -80,14 +83,40 @@ export const Button = styled.a<Props>`
       `;
     } else if (props.green) {
       return `
-      background-color: #bcd476;
+      background-color: #bcd576;
       color: #fff;
-      border-color: #bcd476;
+      border-color: #bcd576;
       min-width: 165px;
       &:hover{
         border-color: rgba(188, 212, 118, 0.7);
         box-shadow: 0px 4px 10px #bcd476;
         background-color: rgba(188, 212, 118, 0.7);
+      }
+     `;
+    } else if (props.avocado) {
+      return `
+      background-color: #78EBD6;
+      color: #fff;
+      border-color: #78EBD6;
+      box-shadow: 0px 20px 30px -10px rgba(167, 140, 242, 0.3);
+      min-width: 165px;
+      &:hover{
+        border-color: rgba(120,235,214, 0.7);
+        box-shadow: 0px 4px 10px #78EBD6;
+        background-color: rgba(120,235,214, 0.7);
+      }
+     `;
+    } else if (props.aqua) {
+      return `
+      background-color: #84DDF9;;
+      color: #fff;
+      border-color: #84DDF9;;
+      box-shadow: 0px 20px 30px -10px rgba(242, 140, 232, 0.3);
+      min-width: 165px;
+      &:hover{
+        border-color: rgba(132,221,249, 0.7);
+        box-shadow: 0px 4px 10px #84DDF9;;
+        background-color: rgba(132,221,249, 0.7);
       }
      `;
     } else if (props.greenOutline) {
@@ -126,14 +155,14 @@ export const Button = styled.a<Props>`
       `;
     } else if (props.pink) {
       return `
-      background-color: #ec87e2;
+      background-color: #F28CE8;
       color: #fff;
-      border-color: #ec87e2;
+      border-color: #F28CE8;
       min-width: 165px;
       &:hover{
-        box-shadow: 0px 4px 10px #ec87e2;
-        border-color: rgba(236, 135, 226, .7);
-        background-color: rgba(236, 135, 226, .7);
+        box-shadow: 0px 4px 10px #F28CE8;
+        border-color: rgba(242,140,232, .7);
+        background-color: rgba(242,140,232, .7);
       }
       `;
     } else if (props.purple) {

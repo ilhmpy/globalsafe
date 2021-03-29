@@ -41,7 +41,6 @@ export const AdminMain = () => {
   const hubConnection = appContext.hubConnection;
   const logOut = appContext.logOut;
   const user = appContext.user;
-  const admin = appContext.isAdmin;
 
   const [openDate, setOpenDate] = useState<OpenDate>({
     from: backDays._d,
@@ -109,7 +108,6 @@ export const AdminMain = () => {
       hubConnection
         .invoke<number>("GetUserDepositsAmount", selectedDay)
         .then((res) => {
-          console.log("GetUserDepositsAmount", res);
           setDepositsAmount(res / 100000);
         })
         .catch((e) => console.log(e));
@@ -127,19 +125,15 @@ export const AdminMain = () => {
     }
   }, [hubConnection, selectedDay]);
 
-  // if (admin === false) {
-  //   return <Redirect to="/" />;
-  // }
-
-  const sumFormat = (value: number) => {
-    if (value >= 1000000) {
-      return (value / 1000000).toFixed(1) + "M";
-    } else if (value >= 1000 && value < 1000000) {
-      return (value / 1000).toFixed(1) + "k";
-    } else {
-      return value;
-    }
-  };
+  // const sumFormat = (value: number) => {
+  //   if (value >= 1000000) {
+  //     return (value / 1000000).toFixed(1) + "M";
+  //   } else if (value >= 1000 && value < 1000000) {
+  //     return (value / 1000).toFixed(1) + "k";
+  //   } else {
+  //     return value;
+  //   }
+  // };
 
   return (
     <>

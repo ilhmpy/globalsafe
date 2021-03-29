@@ -3,6 +3,28 @@ import { UpTitle } from "../../components/UI/UpTitle";
 import { Card } from "../../globalStyles";
 import { Button } from "../../components/Button/Button";
 
+export const Loader = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: block;
+  z-index: 99999;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
+
+export const HeaderWrap = styled.div`
+  display: none;
+  @media (max-width: 992px) {
+    display: block;
+  }
+`;
+
 export const Wrapper = styled.div`
   display: flex;
   flex-flow: row nowrap;

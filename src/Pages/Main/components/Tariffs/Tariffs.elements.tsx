@@ -72,7 +72,7 @@ export const SwiperContainer = styled(Container)`
     margin: 0px auto 35px;
     width: 100%;
     max-width: 340px;
-    min-height: 390px;
+    min-height: 280px;
   }
   .swiper-pagination-bullet {
     display: inline-block;

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext, FC } from "react";
 import * as Styled from "./Styled.elements";
 import styled, { css } from "styled-components/macro";
-import { SideNavbar } from "../../components/SideNav";
 import { Card } from "../../globalStyles";
 import { UpTitle } from "../../components/UI/UpTitle";
 import { ReactComponent as Exit } from "../../assets/svg/exit.svg";
@@ -22,11 +21,7 @@ import {
   ListDeposits,
   CollectionListDeposits,
 } from "../../types/deposits";
-import {
-  RootPayments,
-  PaymentsCollection,
-  CollectionCharges,
-} from "../../types/payments";
+import { RootPayments, PaymentsCollection } from "../../types/payments";
 import moment from "moment";
 import InfiniteScroll from "react-infinite-scroller";
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
@@ -36,9 +31,7 @@ import "swiper/components/pagination/pagination.scss";
 import "swiper/components/scrollbar/scrollbar.scss";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { ModalDeposit } from "./AdminPay/Payments";
-import { Header } from "../../components/Header/Header";
 import { Loading } from "../../components/UI/Loading";
-import { Redirect } from "react-router-dom";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 type PayProps = {
@@ -136,6 +129,7 @@ export const AdminDeposit = () => {
   const hubConnection = appContext.hubConnection;
   const logOut = appContext.logOut;
   const user = appContext.user;
+  const load = appContext.loading;
   const admin = appContext.isAdmin;
   const sizes = useWindowSize();
   const size = sizes < 768;
@@ -262,10 +256,6 @@ export const AdminDeposit = () => {
         .catch((err: Error) => console.log(err));
     }
   };
-
-  // if (admin === false) {
-  //   return <Redirect to="/" />;
-  // }
 
   return (
     <>

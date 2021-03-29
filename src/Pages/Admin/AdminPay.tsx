@@ -165,7 +165,6 @@ export const AdminPay = () => {
         )
         .then((res) => {
           setLoading(false);
-          console.log("useEffect", res);
           setTotalDeposits(res.totalRecords);
           setDepositList(res.collection);
           // setNum(20);
@@ -176,8 +175,6 @@ export const AdminPay = () => {
         });
     }
   }, [hubConnection]);
-
-  console.log("depositList", depositList);
 
   useEffect(() => {
     if (hubConnection) {
@@ -233,7 +230,6 @@ export const AdminPay = () => {
   const loadMoreItems = () => {
     setCount(false);
     if (hubConnection && depositList.length < totalDeposits) {
-      console.log("loadMoreItems responce");
       hubConnection
         .invoke<RootPayments>(
           "GetUsersDeposits",
@@ -250,7 +246,6 @@ export const AdminPay = () => {
         )
         .then((res) => {
           if (res.collection.length) {
-            console.log("loadMoreItems", res);
             setDepositList([...depositList, ...res.collection]);
             setCount(true);
             setNum(num + 20);
@@ -313,11 +308,7 @@ export const AdminPay = () => {
 
   return (
     <>
-      {/* {size && <Header admPanel />}
-      <Styled.Wrapper> */}
       <ReactNotification />
-      {/* <SideNavbar />
-        <Styled.Content> */}
       <Styled.HeadBlock>
         <SelfUpTitle small>Выплаты</SelfUpTitle>
         <Styled.UserName>

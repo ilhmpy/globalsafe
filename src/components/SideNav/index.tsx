@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, FC } from "react";
 import styled from "styled-components/macro";
-import { ReactComponent as Logo } from "../../assets/svg/logo.svg";
+import logo from "../../assets/svg/logo.svg";
 import { ReactComponent as DashBoard } from "../../assets/svg/dashboard.svg";
 import { ReactComponent as Peppa } from "../../assets/svg/peppa.svg";
 import { ReactComponent as Wallet } from "../../assets/svg/wallet.svg";
@@ -46,7 +46,9 @@ export const SideNavbar: FC<Props> = ({ navWidth, navShow }) => {
           <span></span>
         </Burger>
         <Link to="/">
-          <LogoBrand />
+          <LogoBrand>
+            <img src={logo} alt="" />
+          </LogoBrand>
         </Link>
       </NavHead>
       <SideInner>
@@ -140,8 +142,9 @@ const Burger = styled.div`
   }
 `;
 
-const LogoBrand = styled(Logo)`
+const LogoBrand = styled.div`
   width: 163px;
+  flex: none;
   margin-left: 20px;
 `;
 
