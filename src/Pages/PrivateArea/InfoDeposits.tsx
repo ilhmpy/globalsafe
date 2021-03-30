@@ -334,6 +334,8 @@ export const InfoDeposits = () => {
     options.push(<option value={year}>{year}</option>);
   }
 
+  // console.log("withdrawValue", withdrawValue);
+
   return (
     <>
       <Header />
@@ -448,6 +450,7 @@ export const InfoDeposits = () => {
                   onChange={(e) => setWithdrawValue(e.target.value)}
                   placeholder="Введите сумму"
                   type="number"
+                  step="any"
                   ref={inputRef}
                   value={withdrawValue}
                 />
