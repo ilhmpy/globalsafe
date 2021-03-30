@@ -42,8 +42,7 @@ export const Tariffs = () => {
   );
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
-  const history = useHistory();
-  const inputRef = useRef<any>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (hubConnection) {
@@ -63,15 +62,15 @@ export const Tariffs = () => {
     setLink(str);
     setOldLink(str);
     const val: any = /\d{3,}/g.exec(str);
-    setMin(val[0]);
-    setValue(val[0].toString());
+    setMin(val[0] / 100000);
+    setValue((val[0] / 100000).toString());
   };
 
   useEffect(() => {
-    if (value) {
+    if (inputRef && inputRef.current && value) {
       inputRef.current.focus();
     }
-  }, [value]);
+  }, [value, inputRef]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const id = e.target.value;
@@ -96,9 +95,7 @@ export const Tariffs = () => {
             green
             onClick={() =>
               handleClick(
-                `https://cwd.global/shopping/payment?to_name=${
-                  item.account
-                }&amount=${item.minAmount / 100000}`,
+                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
                 500
               )
             }
@@ -112,9 +109,7 @@ export const Tariffs = () => {
             purple
             onClick={() =>
               handleClick(
-                `https://cwd.global/shopping/payment?to_name=${
-                  item.account
-                }&amount=${item.minAmount / 100000}`,
+                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
                 500
               )
             }
@@ -128,9 +123,7 @@ export const Tariffs = () => {
             pink
             onClick={() =>
               handleClick(
-                `https://cwd.global/shopping/payment?to_name=${
-                  item.account
-                }&amount=${item.minAmount / 100000}`,
+                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
                 500
               )
             }
@@ -144,9 +137,7 @@ export const Tariffs = () => {
             yellow
             onClick={() =>
               handleClick(
-                `https://cwd.global/shopping/payment?to_name=${
-                  item.account
-                }&amount=${item.minAmount / 100000}`,
+                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
                 500
               )
             }
@@ -160,9 +151,7 @@ export const Tariffs = () => {
             blue
             onClick={() =>
               handleClick(
-                `https://cwd.global/shopping/payment?to_name=${
-                  item.account
-                }&amount=${item.minAmount / 100000}`,
+                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
                 500
               )
             }
@@ -176,9 +165,7 @@ export const Tariffs = () => {
             yellow
             onClick={() =>
               handleClick(
-                `https://cwd.global/shopping/payment?to_name=${
-                  item.account
-                }&amount=${item.minAmount / 100000}`,
+                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
                 500
               )
             }
@@ -192,9 +179,7 @@ export const Tariffs = () => {
             danger
             onClick={() =>
               handleClick(
-                `https://cwd.global/shopping/payment?to_name=${
-                  item.account
-                }&amount=${item.minAmount / 100000}`,
+                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
                 500
               )
             }
