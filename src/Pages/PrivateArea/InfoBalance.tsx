@@ -443,7 +443,7 @@ export const InfoBalance = () => {
           depositSelect.safeId
         )
         .then((res) => {
-          // console.log("CreateUserDeposit", res);
+          console.log("CreateUserDeposit", res);
           setLoadDeposit(false);
           setWithdraw(false);
           setWithdrawValue("");
@@ -694,6 +694,7 @@ export const InfoBalance = () => {
                   onChange={(e) => setWithdrawValue(e.target.value)}
                   placeholder="Введите сумму"
                   type="number"
+                  step="any"
                   ref={inputRef}
                   value={withdrawValue}
                 />

@@ -923,6 +923,7 @@ export const Info = () => {
                 <Input
                   onChange={(e) => setWithdrawValue(e.target.value)}
                   placeholder="Введите сумму"
+                  step="any"
                   type="number"
                   ref={inputRef}
                   value={withdrawValue}
