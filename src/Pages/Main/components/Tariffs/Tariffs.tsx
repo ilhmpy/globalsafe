@@ -28,6 +28,7 @@ import {
   ListDeposits,
   CollectionListDeposits,
 } from "../../../../types/deposits";
+import { useTranslation } from "react-i18next";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
@@ -42,15 +43,14 @@ export const Tariffs = () => {
   );
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
-  const history = useHistory();
-  const inputRef = useRef<any>(null);
+  const { t } = useTranslation();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (hubConnection) {
       hubConnection
         .invoke<ListDeposits>("GetDeposits", 0, 40)
         .then((res) => {
-          console.log("GetDeposits", res);
           setListDeposits(res.collection);
         })
         .catch((err: Error) => console.log(err));
@@ -63,15 +63,15 @@ export const Tariffs = () => {
     setLink(str);
     setOldLink(str);
     const val: any = /\d{3,}/g.exec(str);
-    setMin(val[0]);
-    setValue(val[0].toString());
+    setMin(val[0] / 100000);
+    setValue((val[0] / 100000).toString());
   };
 
   useEffect(() => {
-    if (value) {
+    if (inputRef && inputRef.current && value) {
       inputRef.current.focus();
     }
-  }, [value]);
+  }, [value, inputRef]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const id = e.target.value;
@@ -96,14 +96,12 @@ export const Tariffs = () => {
             green
             onClick={() =>
               handleClick(
-                `https://cwd.global/shopping/payment?to_name=${
-                  item.account
-                }&amount=${item.minAmount / 100000}`,
+                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
                 500
               )
             }
           >
-            Хочу Start
+            {t("tariffs.buttons.start")}
           </Button>
         );
       case "Программа ЖИЛФОНД":
@@ -112,14 +110,12 @@ export const Tariffs = () => {
             purple
             onClick={() =>
               handleClick(
-                `https://cwd.global/shopping/payment?to_name=${
-                  item.account
-                }&amount=${item.minAmount / 100000}`,
+                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
                 500
               )
             }
           >
-            Хочу ЖИЛФОНД
+            {t("tariffs.buttons.housing")}
           </Button>
         );
       case "Программа START 30000+":
@@ -128,14 +124,12 @@ export const Tariffs = () => {
             pink
             onClick={() =>
               handleClick(
-                `https://cwd.global/shopping/payment?to_name=${
-                  item.account
-                }&amount=${item.minAmount / 100000}`,
+                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
                 500
               )
             }
           >
-            Хочу START 30000+
+            {t("tariffs.buttons.start30000")}
           </Button>
         );
       case "АВТОБОНУС 30/70":
@@ -144,14 +138,12 @@ export const Tariffs = () => {
             yellow
             onClick={() =>
               handleClick(
-                `https://cwd.global/shopping/payment?to_name=${
-                  item.account
-                }&amount=${item.minAmount / 100000}`,
+                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
                 500
               )
             }
           >
-            Хочу АВТОБОНУС
+            {t("tariffs.buttons.autobonus")}
           </Button>
         );
       case "Программа EXPERT":
@@ -160,14 +152,12 @@ export const Tariffs = () => {
             blue
             onClick={() =>
               handleClick(
-                `https://cwd.global/shopping/payment?to_name=${
-                  item.account
-                }&amount=${item.minAmount / 100000}`,
+                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
                 500
               )
             }
           >
-            Хочу EXPERT
+            {t("tariffs.buttons.expert")}
           </Button>
         );
       case "АВТОБОНУС 40/60":
@@ -176,14 +166,12 @@ export const Tariffs = () => {
             yellow
             onClick={() =>
               handleClick(
-                `https://cwd.global/shopping/payment?to_name=${
-                  item.account
-                }&amount=${item.minAmount / 100000}`,
+                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
                 500
               )
             }
           >
-            Хочу АВТОБОНУС
+            {t("tariffs.buttons.autobonus")}
           </Button>
         );
       case "Программа INFINITY":
@@ -192,14 +180,12 @@ export const Tariffs = () => {
             danger
             onClick={() =>
               handleClick(
-                `https://cwd.global/shopping/payment?to_name=${
-                  item.account
-                }&amount=${item.minAmount / 100000}`,
+                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
                 500
               )
             }
           >
-            Хочу INFINITY
+            {t("tariffs.buttons.infinity")}
           </Button>
         );
     }
@@ -208,21 +194,18 @@ export const Tariffs = () => {
   return (
     <div>
       <Container id="tariffs">
-        <UpTitle small>Тарифы</UpTitle>
+        <UpTitle small>{t("tariffs.uptitle")}</UpTitle>
       </Container>
       <Container>
-        <H1>Для Вас !</H1>
+        <H1>{t("tariffs.H1")}</H1>
       </Container>
       <DescContainer>
-        <p>
-          Партнерка для контрактов START, EXPERT, INFINITY: 5% c первой линии;
-          2% со второй линии; 1% с третьей линиии
-        </p>
+        <p>{t("tariffs.desc")}</p>
       </DescContainer>
       {isNormalOpen && (
         <Modal onClose={() => setIsNormalOpen(false)}>
           <ModalBlock>
-            <ModalTitle>Размер депозита</ModalTitle>
+            <ModalTitle>{t("tariffs.depositSize")}</ModalTitle>
             <Input
               onChange={onChange}
               // placeholder={min.toString()}
@@ -236,7 +219,7 @@ export const Tariffs = () => {
               danger
               disabled={+value < min}
             >
-              ОК
+              {t("tariffs.ok")}
             </ModalButton>
           </ModalBlock>
         </Modal>

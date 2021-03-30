@@ -6,8 +6,7 @@ import {
   StyledLink,
   LinkButton,
 } from "./Header.elements";
-import { Link } from "react-router-dom";
-import { HashLink } from "react-router-hash-link";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   onClose: () => void;
@@ -26,44 +25,50 @@ export const Nav: FC<Props> = ({
   location,
   admin,
 }: Props) => {
+  const { t } = useTranslation();
+
   return (
     <HeaderNav>
       <List>
         <ListItem mob>
           {location === "/" ? (
-            <LinkButton onClick={handleClick}>Личный кабинет</LinkButton>
+            <LinkButton onClick={handleClick}>
+              {t("headerButton.personalArea")}
+            </LinkButton>
           ) : user ? (
-            <LinkButton onClick={logOut}>Выйти</LinkButton>
+            <LinkButton onClick={logOut}>{t("headerButton.logout")}</LinkButton>
           ) : (
-            <LinkButton onClick={handleClick}>Личный кабинет</LinkButton>
+            <LinkButton onClick={handleClick}>
+              {t("headerButton.personalArea")}
+            </LinkButton>
           )}
         </ListItem>
         {admin && (
           <ListItem mob>
             <StyledLink smooth to="/admin" onClick={onClose}>
-              Админка
+              {t("headerButton.admin")}
             </StyledLink>
           </ListItem>
         )}
 
         <ListItem>
           <StyledLink smooth to="/#banner" onClick={onClose}>
-            Емко и по-делу
+            {t("header.item1")}
           </StyledLink>
         </ListItem>
         <ListItem>
           <StyledLink to="/#tariffs" smooth onClick={onClose}>
-            Тарифы
+            {t("header.item2")}
           </StyledLink>
         </ListItem>
         <ListItem>
           <StyledLink to="/#about" smooth onClick={onClose}>
-            О нас
+            {t("header.item3")}
           </StyledLink>
         </ListItem>
         <ListItem>
           <StyledLink to="/#contact" smooth onClick={onClose}>
-            Контакты
+            {t("header.item4")}
           </StyledLink>
         </ListItem>
       </List>

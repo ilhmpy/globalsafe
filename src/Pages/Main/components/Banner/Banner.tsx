@@ -6,22 +6,22 @@ import { Button } from "../../../../components/Button/Button";
 import { ReactComponent as Arrow } from "../../../../assets/svg/arrow.svg";
 import { ReactComponent as Scroll } from "../../../../assets/svg/scroll.svg";
 import { H1 } from "../../../../components/UI/MainStyled";
+import { useTranslation } from "react-i18next";
 
 export const Banner = () => {
+  const { t } = useTranslation();
   return (
     <>
       <Container id="banner">
-        <UpTitle small>Емко и по-делу</UpTitle>
+        <UpTitle small>{t("banner.uptitle")}</UpTitle>
       </Container>
       <Container>
-        <H1>Приумножайте правильно!</H1>
+        <H1>{t("banner.H1")}</H1>
       </Container>
       <Container>
         <TextBlock>
           <p>
-            <span>GlobalSafe</span> - Это современный Криптофонд для управления
-            вашими средствами и их приумножения под контролем наших лучших
-            специалистов!!
+            <span>{t("banner.brand")}</span> - {t("banner.desc")}
           </p>
         </TextBlock>
       </Container>
@@ -61,8 +61,6 @@ const TextBlock = styled.div`
     margin-bottom: calc(40px + 38 * ((100vw - 320px) / 740));
     font-size: calc(12px + 4 * ((100vw - 320px) / 740));
     line-height: calc(18px + 10 * ((100vw - 320px) / 740));
-}
-
   }
 `;
 
