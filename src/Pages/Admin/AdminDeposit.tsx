@@ -32,6 +32,7 @@ import "swiper/components/scrollbar/scrollbar.scss";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { ModalDeposit } from "./AdminPay/Payments";
 import { Loading } from "../../components/UI/Loading";
+import { useTranslation } from "react-i18next";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 type PayProps = {
@@ -94,6 +95,7 @@ export const AdminDeposit = () => {
   });
   const [count, setCount] = useState(true);
   const [num, setNum] = useState(20);
+  const { t } = useTranslation();
 
   const myLoad = () => {
     setCount(false);
@@ -129,8 +131,6 @@ export const AdminDeposit = () => {
   const hubConnection = appContext.hubConnection;
   const logOut = appContext.logOut;
   const user = appContext.user;
-  const load = appContext.loading;
-  const admin = appContext.isAdmin;
   const sizes = useWindowSize();
   const size = sizes < 768;
 
@@ -260,13 +260,13 @@ export const AdminDeposit = () => {
   return (
     <>
       <Styled.HeadBlock>
-        <UpTitle small>Выплаты</UpTitle>
+        <UpTitle small>{t("adminDeposit.uptitle")}</UpTitle>
         <Styled.UserName>
           <span>{user}</span>
           <Exit onClick={logOut} />
         </Styled.UserName>
       </Styled.HeadBlock>
-      <Styled.TitleHead>Активные депозиты</Styled.TitleHead>
+      <Styled.TitleHead>{t("adminDeposit.headTitle")}</Styled.TitleHead>
       <div>
         <DepositWrap>
           {!size && (
@@ -369,11 +369,11 @@ export const AdminDeposit = () => {
       <Styled.FilterBlock>
         <Styled.SelectContainer>
           <Styled.SelectWrap>
-            <Styled.Label>Пользователь</Styled.Label>
+            <Styled.Label>{t("adminDeposit.labelUser")}</Styled.Label>
             <Input value={name} onChange={(e) => setName(e.target.value)} />
           </Styled.SelectWrap>
           <Styled.SelectWrap>
-            <Styled.Label>Название программы</Styled.Label>
+            <Styled.Label>{t("adminDeposit.labelProgram")}</Styled.Label>
             <Select
               checkList={checkList}
               setCheckList={setCheckList}
@@ -385,31 +385,31 @@ export const AdminDeposit = () => {
               <TestInput
                 setOpenDate={setOpenDate}
                 openDate={openDate}
-                label="Дата открытия"
+                label={t("adminDeposit.labelOpen")}
               />
             </InputsWrapItem>
             <TestInput
               setOpenDate={setCloseDate}
               openDate={closeDate}
-              label="Дата след.выплаты"
+              label={t("adminDeposit.labelDate")}
             />
           </Styled.InputsWrap>
 
           <Button danger onClick={submit}>
-            Применить
+            {t("adminDeposit.btnApply")}
           </Button>
         </Styled.SelectContainer>
       </Styled.FilterBlock>
       <Card>
         <PaymentsTable>
           <TableHead>
-            <TableHeadItem>Пользователь</TableHeadItem>
-            <TableHeadItem>Название</TableHeadItem>
-            <TableHeadItem>Дата открытия</TableHeadItem>
-            <TableHeadItem>Дата закрытия</TableHeadItem>
-            <TableHeadItem>Сумма депозита</TableHeadItem>
-            <TableHeadItem>Дата след. выплаты</TableHeadItem>
-            <TableHeadItem>Выплачено</TableHeadItem>
+            <TableHeadItem>{t("adminDeposit.table.user")}</TableHeadItem>
+            <TableHeadItem>{t("adminDeposit.table.name")}</TableHeadItem>
+            <TableHeadItem>{t("adminDeposit.table.openDate")}</TableHeadItem>
+            <TableHeadItem>{t("adminDeposit.table.closeDate")}</TableHeadItem>
+            <TableHeadItem>{t("adminDeposit.table.sum")}</TableHeadItem>
+            <TableHeadItem>{t("adminDeposit.table.nextDate")}</TableHeadItem>
+            <TableHeadItem>{t("adminDeposit.table.paid")}</TableHeadItem>
             <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
             {/* <FilterMenu filterClick={filterClick} /> */}
           </TableHead>
@@ -434,15 +434,10 @@ export const AdminDeposit = () => {
           ) : loading ? (
             <Loading />
           ) : (
-            <NotFound>Данные не обнаружены.</NotFound>
+            <NotFound>{t("notFound")}</NotFound>
           )}
         </PaymentsTable>
-        {/* <NotFound>
-            Данные не обнаружены. Попробуйте изменить параметры поиска.
-          </NotFound> */}
       </Card>
-      {/* </Styled.Content>
-      </Styled.Wrapper> */}
     </>
   );
 };

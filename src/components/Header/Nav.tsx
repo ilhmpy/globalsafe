@@ -36,7 +36,7 @@ export const Nav: FC<Props> = ({
               {t("headerButton.personalArea")}
             </LinkButton>
           ) : user ? (
-            <LinkButton onClick={logOut}>{t("headerButton.logout")}</LinkButton>
+            <LinkButton onClick={logOut}>{t("logout")}</LinkButton>
           ) : (
             <LinkButton onClick={handleClick}>
               {t("headerButton.personalArea")}

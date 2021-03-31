@@ -18,14 +18,13 @@ import {
   ListDeposits,
   CollectionListDeposits,
 } from "../../types/deposits";
-import { Header } from "../../components/Header/Header";
 import { RootUsers, CollectionUsers } from "../../types/users";
 import { Loading } from "../../components/UI/Loading";
 import { Scrollbars } from "react-custom-scrollbars";
 import InfiniteScroll from "react-infinite-scroller";
 import { ModalUsers } from "./AdminPay/Payments";
 import { CSSTransition } from "react-transition-group";
-import { Redirect } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import moment from "moment";
 import { LockButton, UnLockButton } from "../../components/UI/RoundButton";
 
@@ -41,6 +40,7 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
       moment(data.lockoutEnd).valueOf() >= moment.utc().valueOf()
   );
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
 
   const onClose = () => {
     setOpen(false);
@@ -106,7 +106,7 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
                 unLocked(e, data.safeId);
               }}
             >
-              Разблокировать
+              {t("adminUsers.table.unlock")}
             </Button>
           ) : (
             <Button
@@ -115,7 +115,7 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
                 locked(e, data.safeId);
               }}
             >
-              Заблокировать
+              {t("adminUsers.table.lock")}
             </Button>
           )}
         </TableBodyItem>
@@ -137,9 +137,9 @@ export const AdminUsers = () => {
   const [totalUsers, seTotalUsers] = useState(0);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
-  const admin = appContext.isAdmin;
   const logOut = appContext.logOut;
   const user = appContext.user;
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (hubConnection) {
@@ -243,7 +243,7 @@ export const AdminUsers = () => {
   return (
     <>
       <Styled.HeadBlock>
-        <UpTitle small>Пользователи</UpTitle>
+        <UpTitle small>{t("adminUsers.uptitle")}</UpTitle>
         <Styled.UserName>
           <span>{user}</span>
           <Exit onClick={logOut} />
@@ -252,30 +252,30 @@ export const AdminUsers = () => {
       <Styled.FilterBlock>
         <Styled.SelectContainer>
           <Styled.SelectWrap>
-            <Styled.Label>Пользователь</Styled.Label>
+            <Styled.Label>{t("adminUsers.labelUser")}</Styled.Label>
             <Input value={name} onChange={(e) => setName(e.target.value)} />
           </Styled.SelectWrap>
           <Styled.InputsWrap>
             <TestInput
               setOpenDate={setOpenDate}
               openDate={openDate}
-              label="Дата создания"
+              label={t("adminUsers.labelCreate")}
             />
           </Styled.InputsWrap>
 
           <Button danger onClick={submit}>
-            Применить
+            {t("adminUsers.apply")}
           </Button>
         </Styled.SelectContainer>
       </Styled.FilterBlock>
       <Card>
         <PaymentsTable>
           <TableHead>
-            <TableHeadItem>Пользователь</TableHeadItem>
-            <TableHeadItem>Баланс</TableHeadItem>
-            <TableHeadItem>Роль</TableHeadItem>
-            <TableHeadItem>Дата создания</TableHeadItem>
-            <TableHeadItem>Язык</TableHeadItem>
+            <TableHeadItem>{t("adminUsers.table.user")}</TableHeadItem>
+            <TableHeadItem>{t("adminUsers.table.balans")}</TableHeadItem>
+            <TableHeadItem>{t("adminUsers.table.role")}</TableHeadItem>
+            <TableHeadItem>{t("adminUsers.table.dataCreate")}</TableHeadItem>
+            <TableHeadItem>{t("adminUsers.table.lang")}</TableHeadItem>
             <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
           </TableHead>
           {listDeposits.length ? (
@@ -304,14 +304,10 @@ export const AdminUsers = () => {
           ) : loading ? (
             <Loading />
           ) : (
-            <NotFound>
-              Данные не обнаружены. Попробуйте изменить параметры поиска.
-            </NotFound>
+            <NotFound>{t("notFound")}</NotFound>
           )}
         </PaymentsTable>
       </Card>
-      {/* </Styled.Content>
-      </Styled.Wrapper> */}
     </>
   );
 };
@@ -324,14 +320,6 @@ const NotFound = styled.div`
   letter-spacing: 0.1px;
   min-height: 250px;
   color: #0e0d3d;
-`;
-
-const InputsWrapItem = styled.div`
-  margin-right: 10px;
-  width: 100%;
-  @media (max-width: 576px) {
-    margin-right: 0px;
-  }
 `;
 
 const Input = styled.input`

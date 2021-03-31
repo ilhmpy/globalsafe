@@ -5,7 +5,6 @@ import { Card, Container, ContainerRow } from "../../globalStyles";
 import { UpTitle } from "../../components/UI/UpTitle";
 import { Redirect } from "react-router-dom";
 import { Button } from "../../components/Button/Button";
-import { Doughnut } from "react-chartjs-2";
 import { Tabs, Tab } from "../../components/UI/Tabs";
 import { AppContext } from "../../context/HubContext";
 import { RoundChart } from "../../components/Charts/Chart";
@@ -13,6 +12,7 @@ import { Tables } from "../../components/Table/Table";
 import { InfoBlock } from "../../components/Table/TableModal";
 import { RouteComponentProps, useLocation, Link } from "react-router-dom";
 import { ReactComponent as Left } from "../../assets/svg/left.svg";
+import { useTranslation } from "react-i18next";
 
 type PropsMatch = {
   slug: string;
@@ -27,7 +27,7 @@ export const OnePage = ({ match }: RouteComponentProps<PropsMatch>) => {
   const hubConnection = appContext.hubConnection;
   const location = useLocation();
   const safeId = match.params.slug;
-  // console.log("safeId", safeId);
+  const { t } = useTranslation();
   useEffect(() => {
     if (hubConnection) {
       hubConnection
@@ -40,14 +40,6 @@ export const OnePage = ({ match }: RouteComponentProps<PropsMatch>) => {
   }, [hubConnection]);
 
   const data = list.filter((item: any) => item.safeId === safeId);
-
-  // console.log("data", data);
-
-  const handleClick = (id: number) => {
-    if (id !== active) {
-      setActive(id);
-    }
-  };
 
   if (user === null) {
     return null;
@@ -62,7 +54,7 @@ export const OnePage = ({ match }: RouteComponentProps<PropsMatch>) => {
       <Header />
       <Styled.Page>
         <Container>
-          <UpTitle>Личный кабинет</UpTitle>
+          <UpTitle>{t("privateArea.uptitle")}</UpTitle>
         </Container>
         <Container>
           <Card>
@@ -74,90 +66,12 @@ export const OnePage = ({ match }: RouteComponentProps<PropsMatch>) => {
               </InfoButtons> */}
             </Styled.InfoWrap>
             <Tabs>
-              {/* <Tab active={active === 0}>Информация</Tab> */}
-              <Tab onClick={() => handleClick(1)} active={active === 1}>
-                Депозиты
-              </Tab>
-              {/* <Tab onClick={() => handleClick(2)} active={active === 2}>
-                Баланс
-              </Tab> */}
+              <Tab active={active === 1}>{t("privateArea.tabs.tab2")}</Tab>
             </Tabs>
           </Card>
         </Container>
 
         <>
-          <Styled.Content active={active === 0}>
-            <Container>
-              <Card>
-                <Styled.Deposit>
-                  <Styled.DepositItem>
-                    <Styled.DepositName>Открытые депозиты</Styled.DepositName>
-                    <Styled.DepositValue>5</Styled.DepositValue>
-                  </Styled.DepositItem>
-                  <Styled.DepositItem>
-                    <Styled.DepositName>Сумма в депозитах</Styled.DepositName>
-                    <Styled.DepositValue>120 000</Styled.DepositValue>
-                  </Styled.DepositItem>
-                  <Styled.DepositItem>
-                    <Styled.DepositName>
-                      Планируемая доходность
-                    </Styled.DepositName>
-                    <Styled.DepositValue>230 000</Styled.DepositValue>
-                  </Styled.DepositItem>
-                </Styled.Deposit>
-              </Card>
-            </Container>
-            <ContainerRow>
-              <Styled.Half>
-                <Styled.HalfHead>
-                  <Styled.HalfTitle>Выплаты</Styled.HalfTitle>
-                  <Styled.HalfTabs>
-                    <Styled.HalfTab
-                      onClick={() => setCard(0)}
-                      card={card === 0}
-                    >
-                      %
-                    </Styled.HalfTab>
-                    <Styled.HalfTab>/</Styled.HalfTab>
-                    <Styled.HalfTab
-                      onClick={() => setCard(1)}
-                      card={card === 1}
-                    >
-                      CWD
-                    </Styled.HalfTab>
-                  </Styled.HalfTabs>
-                </Styled.HalfHead>
-                <Styled.HalfContent card={card === 0}>
-                  {/* <Doughnut options={opt} data={data} /> */}
-                  <RoundChart />
-                </Styled.HalfContent>
-                <Styled.HalfContent card={card === 1}>Card2</Styled.HalfContent>
-              </Styled.Half>
-
-              <Styled.Half>
-                <Styled.HalfHead>
-                  <Styled.HalfTitle>Выплаты</Styled.HalfTitle>
-                  <Styled.HalfTabs>
-                    <Styled.HalfTab
-                      onClick={() => setCard(2)}
-                      card={card === 2}
-                    >
-                      %
-                    </Styled.HalfTab>
-                    <Styled.HalfTab>/</Styled.HalfTab>
-                    <Styled.HalfTab
-                      onClick={() => setCard(3)}
-                      card={card === 3}
-                    >
-                      CWD
-                    </Styled.HalfTab>
-                  </Styled.HalfTabs>
-                </Styled.HalfHead>
-                <Styled.HalfContent card={card === 2}>Card3</Styled.HalfContent>
-                <Styled.HalfContent card={card === 3}>Card4</Styled.HalfContent>
-              </Styled.Half>
-            </ContainerRow>
-          </Styled.Content>
           <Styled.Content active={active === 1}>
             <Container>
               <Styled.Back to="/deposits">

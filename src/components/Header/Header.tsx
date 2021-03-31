@@ -14,6 +14,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import styled from "styled-components/macro";
 import { AppContext } from "../../context/HubContext";
 import { NavAdmin } from "./NavAdmin";
+import { useTranslation } from "react-i18next";
 
 export const Header: FC<{ admPanel?: boolean }> = ({ admPanel }) => {
   const [header, setHeader] = useState(false);
@@ -24,6 +25,7 @@ export const Header: FC<{ admPanel?: boolean }> = ({ admPanel }) => {
   const admin = appContext.isAdmin;
   let history = useHistory();
   let location = useLocation();
+  const { t } = useTranslation();
 
   function handleClick() {
     if (!user) {
@@ -81,16 +83,20 @@ export const Header: FC<{ admPanel?: boolean }> = ({ admPanel }) => {
           </HeaderMenu>
           {admin && (
             <Button danger onClick={toAdmin}>
-              Админка
+              {t("headerButton.admin")}
             </Button>
           )}
           {location.pathname === "/" ? (
-            <Button onClick={handleClick}>Личный кабинет</Button>
+            <Button onClick={handleClick}>
+              {t("headerButton.personalArea")}
+            </Button>
           ) : user ? (
-            <Button onClick={logOut}>Выйти</Button>
+            <Button onClick={logOut}>{t("logout")}</Button>
           ) : (
             <>
-              <Button onClick={handleClick}>Личный кабинет</Button>
+              <Button onClick={handleClick}>
+                {t("headerButton.personalArea")}
+              </Button>
             </>
           )}
         </HeaderInner>

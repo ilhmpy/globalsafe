@@ -9,7 +9,7 @@ import { ReactComponent as Briefcase } from "../../assets/svg/briefcase.svg";
 import { ReactComponent as Exit } from "../../assets/svg/exit.svg";
 import { NavLink, Link } from "react-router-dom";
 import { AppContext } from "../../context/HubContext";
-import useWindowSize from "../../hooks/useWindowSize";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   navWidth: boolean;
@@ -17,25 +17,9 @@ type Props = {
 };
 
 export const SideNavbar: FC<Props> = ({ navWidth, navShow }) => {
-  // const [navWidth, setNavWidth] = useState(false);
-  const sizes = useWindowSize();
-  const size = sizes < 1200;
   const appContext = useContext(AppContext);
   const logOut = appContext.logOut;
-
-  // useEffect(() => {
-  //   if (sizes !== 0 && size) {
-  //     setNavWidth(true);
-  //   }
-  // }, [sizes]);
-
-  // const navShow = (e: React.MouseEvent) => {
-  //   e.preventDefault();
-  //   setNavWidth(!navWidth);
-  //   // if (!size) {
-  //   //   setNavWidth(!navWidth);
-  //   // }
-  // };
+  const { t } = useTranslation();
 
   return (
     <SideNav small={navWidth}>
@@ -56,37 +40,37 @@ export const SideNavbar: FC<Props> = ({ navWidth, navShow }) => {
           <Li>
             <StyledLink to="/admin" exact>
               <DashBoard />
-              <Text>Главный экран</Text>
+              <Text>{t("sideNav.mainScreen")}</Text>
             </StyledLink>
           </Li>
           <Li>
             <StyledLink to="/admin/deposit">
               <Peppa />
-              <Text>Депозиты</Text>
+              <Text>{t("sideNav.deposits")}</Text>
             </StyledLink>
           </Li>
           <Li>
             <StyledLink to="/admin/payments">
               <Wallet />
-              <Text>Выплаты</Text>
+              <Text>{t("sideNav.pay")}</Text>
             </StyledLink>
           </Li>
           <Li>
             <StyledLink to="/admin/users">
               <Users />
-              <Text>Пользователи</Text>
+              <Text>{t("sideNav.users")}</Text>
             </StyledLink>
           </Li>
           <Li>
             <StyledLink to="/admin/portfolio">
               <Briefcase />
-              <Text>Портфель</Text>
+              <Text>{t("sideNav.portfolio")}</Text>
             </StyledLink>
           </Li>
         </Ul>
         <Logout onClick={logOut}>
           <Exit />
-          <Text>Выйти</Text>
+          <Text>{t("logout")}</Text>
         </Logout>
       </SideInner>
     </SideNav>

@@ -35,13 +35,11 @@ import {
   PaymentsListPay,
 } from "./AdminPay/DepositList";
 import moment from "moment";
-import { Header } from "../../components/Header/Header";
-import { Redirect } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export const AdminPay = () => {
   const [active, setActive] = useState(0);
   const sizes = useWindowSize();
-  const size = sizes < 992;
   const [show, setShow] = useState(false);
   const [sum, setSum] = useState<number[] | null>(null);
   const [depositList, setDepositList] = useState<any>([]);
@@ -49,7 +47,6 @@ export const AdminPay = () => {
   const hubConnection = appContext.hubConnection;
   const logOut = appContext.logOut;
   const user = appContext.user;
-  const admin = appContext.isAdmin;
   const amountContext = useContext(AmountContext);
   const [totalDeposits, setTotalDeposits] = useState(0);
   const [totalPayDeposits, setTotalPayDeposits] = useState(0);
@@ -67,6 +64,7 @@ export const AdminPay = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [dataModal, setDataModal] = useState<PaymentsCollection | any>({});
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
 
   const getPaymentsOverview = () => {
     if (hubConnection) {
@@ -107,13 +105,11 @@ export const AdminPay = () => {
       hubConnection
         .invoke("ConfirmDepositPayment", id)
         .then((res) => {
-          // alert("Успешно", "Выполнено", "success");
           console.log("ConfirmDepositPayment", res);
           getPaymentsOverview();
         })
         .catch((err: Error) => {
           console.log(err);
-          // alert("Ошибка", "Произошла ошибка", "danger");
         });
     }
   };
@@ -302,15 +298,11 @@ export const AdminPay = () => {
     }
   };
 
-  // if (admin === false) {
-  //   return <Redirect to="/" />;
-  // }
-
   return (
     <>
       <ReactNotification />
       <Styled.HeadBlock>
-        <SelfUpTitle small>Выплаты</SelfUpTitle>
+        <SelfUpTitle small>{t("adminPay.uptitle")}</SelfUpTitle>
         <Styled.UserName>
           <span>{user}</span>
           <Exit onClick={logOut} />
@@ -321,7 +313,7 @@ export const AdminPay = () => {
         <Styled.PayList>
           <Styled.PayItem>
             <Styled.PayItemHead mb>
-              <SelfUpTitle small>К выплате</SelfUpTitle>
+              <SelfUpTitle small>{t("adminPay.title1")}</SelfUpTitle>
             </Styled.PayItemHead>
             <Styled.Radial bg={"rgba(255, 65, 110, 0.2)"}>
               <span>
@@ -332,7 +324,7 @@ export const AdminPay = () => {
           </Styled.PayItem>
           <Styled.PayItem>
             <Styled.PayItemHead mb>
-              <SelfUpTitle small>Выплачено</SelfUpTitle>
+              <SelfUpTitle small>{t("adminPay.title2")}</SelfUpTitle>
             </Styled.PayItemHead>
 
             <Styled.Radial bg={"rgba(188, 212, 118, 0.2)"}>
@@ -348,7 +340,7 @@ export const AdminPay = () => {
           </Styled.PayItem>
           <Styled.PayItem>
             <Styled.PayItemHead mb>
-              <SelfUpTitle small>На согласовании</SelfUpTitle>
+              <SelfUpTitle small>{t("adminPay.title3")}</SelfUpTitle>
               {/* {sizes > 768 && <CalendarInput />} */}
             </Styled.PayItemHead>
             <Styled.Radial bg={"rgba(109, 185, 255, 0.2)"}>
@@ -368,13 +360,13 @@ export const AdminPay = () => {
       <Card>
         <Tabs>
           <PayTab onClick={() => handleClick(0)} active={active === 0}>
-            На согласовании
+            {t("adminPay.title3")}
           </PayTab>
           <Tab onClick={() => handleClick(1)} active={active === 1}>
-            Выплачено
+            {t("adminPay.title2")}
           </Tab>
           <Tab onClick={() => handleClick(2)} active={active === 2}>
-            К выплате
+            {t("adminPay.title1")}
           </Tab>
         </Tabs>
       </Card>
@@ -382,7 +374,7 @@ export const AdminPay = () => {
       {active === 0 && (
         <ButtonWrap>
           <Button dangerOutline mb onClick={paymentsConfirm}>
-            Согласовать все
+            {t("adminPay.confirmButton")}
           </Button>
         </ButtonWrap>
       )}
@@ -391,13 +383,13 @@ export const AdminPay = () => {
         <Card>
           <PaymentsTable>
             <TableHead>
-              <TableHeadItem>Пользователь</TableHeadItem>
-              <TableHeadItem>Название</TableHeadItem>
-              <TableHeadItem>% доходности</TableHeadItem>
-              <TableHeadItem>Дата выплаты</TableHeadItem>
-              <TableHeadItem>Доходность по программе</TableHeadItem>
-              <TableHeadItem>Сумма вклада</TableHeadItem>
-              <TableHeadItem>Сумма выплаты</TableHeadItem>
+              <TableHeadItem>{t("adminPay.table.user")}</TableHeadItem>
+              <TableHeadItem>{t("adminPay.table.name")}</TableHeadItem>
+              <TableHeadItem>{t("adminPay.table.procent")}</TableHeadItem>
+              <TableHeadItem>{t("adminPay.table.datePay")}</TableHeadItem>
+              <TableHeadItem>{t("adminPay.table.profit")}</TableHeadItem>
+              <TableHeadItem>{t("adminPay.table.contribution")}</TableHeadItem>
+              <TableHeadItem>{t("adminPay.table.payments")}</TableHeadItem>
               <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
             </TableHead>
             {depositList.length ? (
@@ -426,9 +418,7 @@ export const AdminPay = () => {
             ) : loading ? (
               <Loading />
             ) : (
-              <NotFound>
-                Данные не обнаружены. Попробуйте изменить параметры поиска.
-              </NotFound>
+              <NotFound>{t("notFound")}</NotFound>
             )}
           </PaymentsTable>
         </Card>
@@ -438,12 +428,20 @@ export const AdminPay = () => {
         <Card>
           <PaymentsTable>
             <TableHead>
-              <TableHeadItemPaid>Пользователь</TableHeadItemPaid>
-              <TableHeadItemPaid>Название</TableHeadItemPaid>
-              <TableHeadItemPaid>Дата выплаты</TableHeadItemPaid>
-              <TableHeadItemPaid>Категория</TableHeadItemPaid>
-              <TableHeadItemPaid>Сумма вклада</TableHeadItemPaid>
-              <TableHeadItemPaid>Сумма выплаты</TableHeadItemPaid>
+              <TableHeadItemPaid>{t("adminPay.table.user")}</TableHeadItemPaid>
+              <TableHeadItemPaid>{t("adminPay.table.name")}</TableHeadItemPaid>
+              <TableHeadItemPaid>
+                {t("adminPay.table.datePay")}
+              </TableHeadItemPaid>
+              <TableHeadItemPaid>
+                {t("adminPay.table.category")}
+              </TableHeadItemPaid>
+              <TableHeadItemPaid>
+                {t("adminPay.table.contribution")}
+              </TableHeadItemPaid>
+              <TableHeadItemPaid>
+                {t("adminPay.table.payments")}
+              </TableHeadItemPaid>
               <TableHeadItemPaid>{/* <Filter /> */}</TableHeadItemPaid>
             </TableHead>
             {depositPayList.length ? (
@@ -467,9 +465,7 @@ export const AdminPay = () => {
             ) : loading ? (
               <Loading />
             ) : (
-              <NotFound>
-                Данные не обнаружены. Попробуйте изменить параметры поиска.
-              </NotFound>
+              <NotFound>{t("notFound")}</NotFound>
             )}
           </PaymentsTable>
         </Card>
@@ -479,12 +475,20 @@ export const AdminPay = () => {
         <Card>
           <PaymentsTable>
             <TableHead>
-              <TableHeadItemPaid>Пользователь</TableHeadItemPaid>
-              <TableHeadItemPaid>Название</TableHeadItemPaid>
-              <TableHeadItemPaid>Дата выплаты</TableHeadItemPaid>
-              <TableHeadItemPaid>Категория</TableHeadItemPaid>
-              <TableHeadItemPaid>Сумма вклада</TableHeadItemPaid>
-              <TableHeadItemPaid>Сумма выплаты</TableHeadItemPaid>
+              <TableHeadItemPaid>{t("adminPay.table.user")}</TableHeadItemPaid>
+              <TableHeadItemPaid>{t("adminPay.table.name")}</TableHeadItemPaid>
+              <TableHeadItemPaid>
+                {t("adminPay.table.datePay")}
+              </TableHeadItemPaid>
+              <TableHeadItemPaid>
+                {t("adminPay.table.category")}
+              </TableHeadItemPaid>
+              <TableHeadItemPaid>
+                {t("adminPay.table.contribution")}
+              </TableHeadItemPaid>
+              <TableHeadItemPaid>
+                {t("adminPay.table.payments")}
+              </TableHeadItemPaid>
               <TableHeadItemPaid>{/* <Filter /> */}</TableHeadItemPaid>
             </TableHead>
             {paymentsList.length ? (
@@ -508,15 +512,11 @@ export const AdminPay = () => {
             ) : loading ? (
               <Loading />
             ) : (
-              <NotFound>
-                Данные не обнаружены. Попробуйте изменить параметры поиска.
-              </NotFound>
+              <NotFound>{t("notFound")}</NotFound>
             )}
           </PaymentsTable>
         </Card>
       </Content>
-      {/* </Styled.Content>
-      </Styled.Wrapper> */}
     </>
   );
 };

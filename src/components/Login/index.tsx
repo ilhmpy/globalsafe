@@ -6,6 +6,7 @@ import { Input } from "../../components/UI/Input";
 import { AppContext } from "../../context/HubContext";
 import { useHistory } from "react-router-dom";
 import { CSSTransition } from "react-transition-group";
+import { useTranslation } from "react-i18next";
 
 export const LoginComponent = () => {
   const [error, setError] = useState(true);
@@ -19,6 +20,7 @@ export const LoginComponent = () => {
   const logIn = appContext.login;
   const admin = appContext.isAdmin;
   const history = useHistory();
+  const { t } = useTranslation();
 
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError(true);
@@ -37,12 +39,12 @@ export const LoginComponent = () => {
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("submit", value);
+    // console.log("submit", value);
     if (hubConnection) {
       hubConnection
         .invoke("CheckAccount", value)
         .then((res: boolean) => {
-          console.log("res", res);
+          // console.log("res", res);
           if (res) {
             setError(true);
             loginSubmit();
@@ -60,7 +62,7 @@ export const LoginComponent = () => {
       hubConnection
         .invoke("SignIn", { login: value, password: password, signInMethod: 3 })
         .then((res: any) => {
-          console.log("res", res);
+          // console.log("res", res);
           if (res.token !== null) {
             logIn(res.token);
             setWhere(true);
@@ -73,14 +75,14 @@ export const LoginComponent = () => {
     }
   };
 
-  console.log("value", value, password);
+  // console.log("value", value, password);
 
   const loginSubmit = () => {
     if (hubConnection) {
       hubConnection
         .invoke("SendAuthCode", value)
         .then((res: boolean) => {
-          console.log("res", res);
+          // console.log("res", res);
           setError(true);
           setLogin(true);
         })
@@ -107,7 +109,7 @@ export const LoginComponent = () => {
           unmountOnExit
         >
           <FormBlock>
-            <H4>Куда войти?</H4>
+            <H4>{t("login.where")}</H4>
 
             <Submit
               mb
@@ -115,7 +117,7 @@ export const LoginComponent = () => {
               onClick={() => history.push("/info")}
               dangerOutline
             >
-              Личный кабинет
+              {t("headerButton.personalArea")}
             </Submit>
             <Submit
               as="button"
@@ -123,7 +125,7 @@ export const LoginComponent = () => {
               danger
               disabled={!admin}
             >
-              Админка
+              {t("headerButton.admin")}
             </Submit>
           </FormBlock>
         </CSSTransition>
@@ -134,25 +136,27 @@ export const LoginComponent = () => {
           unmountOnExit
         >
           <FormBlock onSubmit={onSubmitCode}>
-            <H4>Войти в аккаунт</H4>
+            <H4>{t("login.signIn")}</H4>
             <Input
               value={password}
               name="password"
-              placeholder="Введите код"
+              placeholder={t("login.code")}
               onChange={onChangeNumber}
               autoComplete="new-password"
             />
             {!error && (
-              <StyledInlineErrorMessage>Код не верный</StyledInlineErrorMessage>
+              <StyledInlineErrorMessage>
+                {t("login.incorrectCode")}
+              </StyledInlineErrorMessage>
             )}
             <Submit as="button" danger type="submit" disabled={password === ""}>
-              Войти
+              {t("logout")}
             </Submit>
             <LinkTo
               href={`https://cwd.global/account/${value}`}
               target="_blank"
             >
-              Перейти в активность
+              {t("login.goTo")}
             </LinkTo>
           </FormBlock>
         </CSSTransition>
@@ -164,21 +168,21 @@ export const LoginComponent = () => {
           unmountOnExit
         >
           <FormBlock onSubmit={onSubmit}>
-            <H4>Войти в аккаунт</H4>
+            <H4>{t("login.signIn")}</H4>
             <Input
               value={value}
               name="login"
-              placeholder="Введите логин"
+              placeholder={t("login.login")}
               onChange={onChangeValue}
               autoComplete="off"
             />
             {!error && (
               <StyledInlineErrorMessage>
-                Логин не верный
+                {t("login.incorrectLogin")}
               </StyledInlineErrorMessage>
             )}
             <Submit as="button" danger type="submit" disabled={value === ""}>
-              Получить код
+              {t("login.getCode")}
             </Submit>
           </FormBlock>
         </CSSTransition>

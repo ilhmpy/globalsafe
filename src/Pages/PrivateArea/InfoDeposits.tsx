@@ -33,6 +33,7 @@ import { DepositListModal } from "./Modals";
 import { Loading } from "../../components/UI/Loading";
 import { Scrollbars } from "react-custom-scrollbars";
 import InfiniteScroll from "react-infinite-scroller";
+import { useTranslation } from "react-i18next";
 moment.locale("ru");
 
 type Obj = {
@@ -83,6 +84,7 @@ export const InfoDeposits = () => {
   const [loadDeposit, setLoadDeposit] = useState(false);
   const [totalList, setTotalList] = useState(0);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
   const inputRef = useRef<any>(null);
 
   const yearSelected = () => {
@@ -93,7 +95,7 @@ export const InfoDeposits = () => {
       from: yearStart._d,
       to: yearEnd._d,
     });
-    setSelected(`За ${moment().format("YYYY")}`);
+    setSelected(`${t("privateArea.at")} ${moment().format("YYYY")}`);
     onClose();
   };
 
@@ -107,7 +109,7 @@ export const InfoDeposits = () => {
       from: currentMonthStart._d,
       to: currentMonthEnd._d,
     });
-    setSelected(`За ${moment().format("MMMM YYYY")}`);
+    setSelected(`${t("privateArea.at")} ${moment().format("MMMM YYYY")}`);
     onClose();
   };
 
@@ -127,7 +129,7 @@ export const InfoDeposits = () => {
       from: new Date("2019-01-01T00:47:45"),
       to: new Date(),
     });
-    setSelected("За все время");
+    setSelected(t("privateArea.allTime"));
     onClose();
   };
 
@@ -152,14 +154,11 @@ export const InfoDeposits = () => {
     }
   }, [hubConnection]);
 
-  // console.log("list", list);
-
   useEffect(() => {
     if (hubConnection) {
       hubConnection
         .invoke<RootList>("GetUserDeposits", [1, 2, 3, 4, 5, 6], 0, 20)
         .then((res) => {
-          // console.log("GetUserDeposits", res);
           setLoading(false);
           setList(res.collection);
           setTotalList(res.totalRecords);
@@ -177,7 +176,6 @@ export const InfoDeposits = () => {
       hubConnection
         .invoke<RootList>("GetUserDeposits", [1, 2, 3, 4, 5, 6], num, 20)
         .then((res) => {
-          // console.log("GetUserDeposits", res);
           if (res.collection.length) {
             setList([...list, ...res.collection]);
             setCount(true);
@@ -210,16 +208,16 @@ export const InfoDeposits = () => {
     }
   }, [hubConnection]);
 
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection
-        .invoke("GetBalanceOperationSum", 1, [0, 1, 2, 3, 4, 5, 6, 7, 8])
-        .then((res: any) => {
-          // console.log("GetBalanceOperationSum", res);
-        })
-        .catch((err: Error) => console.log(err));
-    }
-  }, [hubConnection]);
+  // useEffect(() => {
+  //   if (hubConnection) {
+  //     hubConnection
+  //       .invoke("GetBalanceOperationSum", 1, [0, 1, 2, 3, 4, 5, 6, 7, 8])
+  //       .then((res: any) => {
+  //         // console.log("GetBalanceOperationSum", res);
+  //       })
+  //       .catch((err: Error) => console.log(err));
+  //   }
+  // }, [hubConnection]);
 
   if (user === null) {
     return null;
@@ -261,17 +259,17 @@ export const InfoDeposits = () => {
           if (res === 1) {
             setWithdraw(false);
             setWithdrawValue("");
-            alert("Успешно", "Средства успешно переведены", "success");
+            alert(t("alert.success"), t("alert.successMsg"), "success");
           } else {
             setWithdraw(false);
             setWithdrawValue("");
-            alert("Ошибка", "Ошибка вывода", "danger");
+            alert(t("alert.error"), t("alert.errorMsg"), "danger");
           }
         })
         .catch((err: Error) => {
           setWithdraw(false);
           setWithdrawValue("");
-          alert("Ошибка", "Ошибка вывода", "danger");
+          alert(t("alert.error"), t("alert.errorMsg"), "danger");
         });
     }
   };
@@ -302,14 +300,14 @@ export const InfoDeposits = () => {
           setLoadDeposit(false);
           setWithdraw(false);
           setWithdrawValue("");
-          alert("Успешно", "Депозит успешно создан", "success");
+          alert(t("alert.success"), t("alert.depositMsg"), "success");
         })
         .catch((err: Error) => {
           console.log(err);
           setLoadDeposit(false);
           setWithdraw(false);
           setWithdrawValue("");
-          alert("Ошибка", "Депозит не создан", "danger");
+          alert(t("alert.error"), t("alert.depositErrorMsg"), "danger");
         })
         .finally(() => {
           setDepositSelect(null);
@@ -334,14 +332,12 @@ export const InfoDeposits = () => {
     options.push(<option value={year}>{year}</option>);
   }
 
-  // console.log("withdrawValue", withdrawValue);
-
   return (
     <>
       <Header />
       <Styled.Page>
         <Container>
-          <UpTitle>Личный кабинет</UpTitle>
+          <UpTitle>{t("privateArea.uptitle")}</UpTitle>
         </Container>
         <ReactNotification />
         <Container>
@@ -350,7 +346,9 @@ export const InfoDeposits = () => {
               <Styled.UserBlock>
                 <Styled.InfoTitle>{user}</Styled.InfoTitle>
                 <Styled.BalanceItem>
-                  <Styled.BalanceItemName>Баланс</Styled.BalanceItemName>
+                  <Styled.BalanceItemName>
+                    {t("privateArea.balance")}
+                  </Styled.BalanceItemName>
                   <Styled.BalanceItemValue pink>
                     {balance ? (balance / 100000).toLocaleString() : "0"}
                   </Styled.BalanceItemValue>
@@ -358,22 +356,22 @@ export const InfoDeposits = () => {
               </Styled.UserBlock>
               <Styled.InfoButtons>
                 <Button dangerOutline onClick={() => setAddDeposit(true)}>
-                  Новый депозит
+                  {t("privateArea.newDeposit")}
                 </Button>
                 <Button danger onClick={() => setWithdraw(true)}>
-                  Вывести средства
+                  {t("privateArea.withdraw")}
                 </Button>
               </Styled.InfoButtons>
             </Styled.InfoWrap>
             <Tabs>
               <Styled.NavTabs to="/info">
-                <div>Информация</div>{" "}
+                <div>{t("privateArea.tabs.tab1")}</div>{" "}
               </Styled.NavTabs>
               <Styled.NavTabs to="/deposits">
-                <div>Депозиты</div>{" "}
+                <div>{t("privateArea.tabs.tab2")}</div>{" "}
               </Styled.NavTabs>
               <Styled.NavTabs to="/balance">
-                <div>Баланс</div>{" "}
+                <div>{t("privateArea.tabs.tab3")}</div>{" "}
               </Styled.NavTabs>
             </Tabs>
           </Card>
@@ -414,15 +412,21 @@ export const InfoDeposits = () => {
               <Modal onClose={onClose}>
                 <Styled.ModalContent>
                   {/* <Arrow onClick={onClose} /> */}
-                  <Styled.ModalTitle>Выберите период</Styled.ModalTitle>
+                  <Styled.ModalTitle>
+                    {t("privateArea.selectPeriod")}
+                  </Styled.ModalTitle>
                   <Styled.ModalItem>
-                    <Styled.DateTitle>Этот месяц</Styled.DateTitle>
+                    <Styled.DateTitle>
+                      {t("privateArea.thisMonth")}
+                    </Styled.DateTitle>
                     <Styled.DateText onClick={monthSelected}>
                       {moment().format("MMMM YYYY")}
                     </Styled.DateText>
                   </Styled.ModalItem>
                   <Styled.ModalItem>
-                    <Styled.DateTitle>Этот год</Styled.DateTitle>
+                    <Styled.DateTitle>
+                      {t("privateArea.thisYear")}
+                    </Styled.DateTitle>
                     <Styled.DateText onClick={yearSelected}>
                       {moment().format("YYYY")}
                     </Styled.DateText>
@@ -430,7 +434,7 @@ export const InfoDeposits = () => {
                   <Styled.ModalItem>
                     <Styled.DateTitle></Styled.DateTitle>
                     <Styled.DateText onClick={allDate}>
-                      За все время
+                      {t("privateArea.allTime")}
                     </Styled.DateText>
                   </Styled.ModalItem>
                 </Styled.ModalContent>
@@ -445,10 +449,12 @@ export const InfoDeposits = () => {
           {withdraw && (
             <Modal onClose={() => setWithdraw(false)}>
               <Styled.ModalBlock>
-                <Styled.ModalTitle>Вывести средства</Styled.ModalTitle>
+                <Styled.ModalTitle>
+                  {t("privateArea.withdraw")}
+                </Styled.ModalTitle>
                 <Input
                   onChange={(e) => setWithdrawValue(e.target.value)}
-                  placeholder="Введите сумму"
+                  placeholder={t("privateArea.amountEnter")}
                   type="number"
                   step="any"
                   ref={inputRef}
@@ -460,7 +466,7 @@ export const InfoDeposits = () => {
                   onClick={withdrawBalance}
                   danger
                 >
-                  Вывести средства
+                  {t("privateArea.withdraw")}
                 </Styled.ModalButton>
               </Styled.ModalBlock>
             </Modal>
@@ -473,7 +479,9 @@ export const InfoDeposits = () => {
           >
             <Styled.ModalDepositsWrap>
               <Modal width={540} onClose={() => setAddDeposit(false)}>
-                <Styled.ModalTitle mt>Добавить депозит</Styled.ModalTitle>
+                <Styled.ModalTitle mt>
+                  {t("privateArea.addDeposit")}
+                </Styled.ModalTitle>
                 <Styled.ModalDeposits>
                   <div>
                     <Styled.ModalButton
@@ -482,14 +490,16 @@ export const InfoDeposits = () => {
                       onClick={handleDepositModal}
                       dangerOutline
                     >
-                      {depositSelect ? depositSelect.name : "Выберите депозит"}{" "}
+                      {depositSelect
+                        ? depositSelect.name
+                        : t("privateArea.choiseDeposite")}{" "}
                       <Styled.IconRotate rights>
                         <Styled.ModalBack />
                       </Styled.IconRotate>
                     </Styled.ModalButton>
                     <Input
                       onChange={(e) => setAddDepositValue(e.target.value)}
-                      placeholder="Введите сумму"
+                      placeholder={t("privateArea.amountEnter")}
                       type="number"
                       ref={inputRef}
                       value={addDepositValue}
@@ -500,7 +510,7 @@ export const InfoDeposits = () => {
                       onClick={openNewDeposit}
                       danger
                     >
-                      Добавить
+                      {t("privateArea.add")}
                     </Styled.ModalButton>
                   </div>
                   {depositSelect ? (

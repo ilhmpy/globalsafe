@@ -7,7 +7,7 @@ import moment from "moment";
 import "moment/locale/ru";
 import { Balance } from "../../types/balance";
 import { useHistory } from "react-router-dom";
-
+import { useTranslation } from "react-i18next";
 import { TableModal } from "./TableModal";
 import { FilterMenu } from "../FilterMenu/FilterMenu";
 moment.locale("ru");
@@ -84,13 +84,12 @@ const Row = ({ data }: any) => {
 
 export const Tables = ({ list }: any) => {
   const [num, setNum] = useState(5);
-
+  const { t } = useTranslation();
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const filterClick = (id: number) => {
     console.log("click", id);
   };
-  // console.log("list", list);
 
   return (
     <Styled.TableWrap>
@@ -98,13 +97,13 @@ export const Tables = ({ list }: any) => {
       <Styled.Table>
         <thead style={{ position: "relative" }}>
           <Styled.TR>
-            <Styled.TH>Название</Styled.TH>
-            <Styled.TH>Описание</Styled.TH>
-            <Styled.TH>Депозит</Styled.TH>
-            <Styled.TH>К выплате</Styled.TH>
+            <Styled.TH>{t("privateArea.name")}</Styled.TH>
+            <Styled.TH>{t("privateArea.desc")}</Styled.TH>
+            <Styled.TH>{t("privateArea.deposit")}</Styled.TH>
+            <Styled.TH>{t("privateArea.toPay")}</Styled.TH>
             <Styled.TH>
-              <p>Дата следующей выплаты</p>
-              <span>Дата след. выплаты</span>
+              <p>{t("privateArea.nextDate")}</p>
+              <span>{t("adminPay.table.nextDate")}</span>
               {/* <Styled.StyledFilter /> */}
             </Styled.TH>
           </Styled.TR>

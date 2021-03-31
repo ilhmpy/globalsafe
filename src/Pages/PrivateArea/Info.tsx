@@ -32,9 +32,8 @@ import { RootDeposits, DepositsCollection } from "../../types/info";
 import ReactNotification, { store } from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 import { DepositListModal } from "./Modals";
-import InfiniteScroll from "react-infinite-scroller";
-import { Scrollbars } from "react-custom-scrollbars";
 import { Loading } from "../../components/UI/Loading";
+import { useTranslation } from "react-i18next";
 moment.locale("ru");
 
 type Obj = {
@@ -89,6 +88,7 @@ export const Info = () => {
   const [loading, setLoading] = useState(true);
   const [loadDeposit, setLoadDeposit] = useState(false);
   const inputRef = useRef<any>(null);
+  const { t } = useTranslation();
 
   const yearSelected = () => {
     let year = moment().format("YYYY");
@@ -98,7 +98,7 @@ export const Info = () => {
       from: yearStart._d,
       to: yearEnd._d,
     });
-    setSelected(`За ${moment().format("YYYY")}`);
+    setSelected(`${t("privateArea.at")} ${moment().format("YYYY")}`);
     onClose();
   };
 
@@ -112,7 +112,7 @@ export const Info = () => {
       from: currentMonthStart._d,
       to: currentMonthEnd._d,
     });
-    setSelected(`За ${moment().format("MMMM YYYY")}`);
+    setSelected(`${t("privateArea.at")} ${moment().format("MMMM YYYY")}`);
     onClose();
   };
 
@@ -132,7 +132,7 @@ export const Info = () => {
       from: new Date("2019-01-01T00:47:45"),
       to: new Date(),
     });
-    setSelected("За все время");
+    setSelected(t("privateArea.allTime"));
     onClose();
   };
 
@@ -288,35 +288,35 @@ export const Info = () => {
     }
   }, [hubConnection]);
 
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection
-        .invoke("GetBalanceOperationSum", 1, [0, 1, 2, 3, 4, 5, 6, 7, 8])
-        .then((res: any) => {
-          // console.log("GetBalanceOperationSum", res);
-        })
-        .catch((err: Error) => console.log(err));
-    }
-  }, [hubConnection]);
+  // useEffect(() => {
+  //   if (hubConnection) {
+  //     hubConnection
+  //       .invoke("GetBalanceOperationSum", 1, [0, 1, 2, 3, 4, 5, 6, 7, 8])
+  //       .then((res: any) => {
+  //         // console.log("GetBalanceOperationSum", res);
+  //       })
+  //       .catch((err: Error) => console.log(err));
+  //   }
+  // }, [hubConnection]);
 
-  const handleClick = (id: number) => {
-    if (id !== active) {
-      setActive(id);
-    }
-  };
+  // const handleClick = (id: number) => {
+  //   if (id !== active) {
+  //     setActive(id);
+  //   }
+  // };
 
-  const handleBalance = (id: number) => {
-    if (id !== depositTabs) {
-      setDepositTabs(id);
-      if (id === 0) {
-        setBalanceLogs([0, 1, 2, 3, 4, 5, 6, 7, 8]);
-      } else if (id === 1) {
-        setBalanceLogs([1, 7, 8]);
-      } else if (id === 2) {
-        setBalanceLogs([2]);
-      }
-    }
-  };
+  // const handleBalance = (id: number) => {
+  //   if (id !== depositTabs) {
+  //     setDepositTabs(id);
+  //     if (id === 0) {
+  //       setBalanceLogs([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+  //     } else if (id === 1) {
+  //       setBalanceLogs([1, 7, 8]);
+  //     } else if (id === 2) {
+  //       setBalanceLogs([2]);
+  //     }
+  //   }
+  // };
 
   if (user === null) {
     return null;
@@ -326,19 +326,19 @@ export const Info = () => {
     return <Redirect to="/" />;
   }
 
-  const operation = (id: number) => {
-    if (id === 6) {
-      return "Открытие депозита";
-    } else if (id === 7) {
-      return "Начисление дивидендов";
-    } else if (id === 8) {
-      return "Закрытие депозита";
-    } else if (id === 2) {
-      return "Вывод баланса";
-    } else if (id === 1) {
-      return "Пополнение баланса";
-    }
-  };
+  // const operation = (id: number) => {
+  //   if (id === 6) {
+  //     return "Открытие депозита";
+  //   } else if (id === 7) {
+  //     return "Начисление дивидендов";
+  //   } else if (id === 8) {
+  //     return "Закрытие депозита";
+  //   } else if (id === 2) {
+  //     return "Вывод баланса";
+  //   } else if (id === 1) {
+  //     return "Пополнение баланса";
+  //   }
+  // };
 
   const onClose = () => {
     setOpen(false);
@@ -372,17 +372,17 @@ export const Info = () => {
           if (res === 1) {
             setWithdraw(false);
             setWithdrawValue("");
-            alert("Успешно", "Средства успешно переведены", "success");
+            alert(t("alert.success"), t("alert.successMsg"), "success");
           } else {
             setWithdraw(false);
             setWithdrawValue("");
-            alert("Ошибка", "Ошибка вывода", "danger");
+            alert(t("alert.error"), t("alert.errorMsg"), "danger");
           }
         })
         .catch((err: Error) => {
           setWithdraw(false);
           setWithdrawValue("");
-          alert("Ошибка", "Ошибка вывода", "danger");
+          alert(t("alert.error"), t("alert.errorMsg"), "danger");
         });
     }
   };
@@ -409,18 +409,18 @@ export const Info = () => {
           depositSelect.safeId
         )
         .then((res) => {
-          console.log("CreateUserDeposit", res);
+          // console.log("CreateUserDeposit", res);
           setLoadDeposit(false);
           setWithdraw(false);
           setWithdrawValue("");
-          alert("Успешно", "Депозит успешно создан", "success");
+          alert(t("alert.success"), t("alert.depositMsg"), "success");
         })
         .catch((err: Error) => {
           console.log(err);
           setLoadDeposit(false);
           setWithdraw(false);
           setWithdrawValue("");
-          alert("Ошибка", "Депозит не создан", "danger");
+          alert(t("alert.error"), t("alert.depositErrorMsg"), "danger");
         })
         .finally(() => {
           setDepositSelect(null);
@@ -434,19 +434,19 @@ export const Info = () => {
     setDepositListModal(true);
   };
 
-  const onHandleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedYear(e.target.value);
-    let start: any = moment(
-      `${selectedMonth}.${e.target.value}`,
-      "M.YYYY"
-    ).startOf("month");
+  // const onHandleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  //   setSelectedYear(e.target.value);
+  //   let start: any = moment(
+  //     `${selectedMonth}.${e.target.value}`,
+  //     "M.YYYY"
+  //   ).startOf("month");
 
-    let end: any = moment(`${selectedMonth}.${e.target.value}`, "M.YYYY").endOf(
-      "month"
-    );
-    setOpenDate({ from: start._d, to: end._d });
-    onClose();
-  };
+  //   let end: any = moment(`${selectedMonth}.${e.target.value}`, "M.YYYY").endOf(
+  //     "month"
+  //   );
+  //   setOpenDate({ from: start._d, to: end._d });
+  //   onClose();
+  // };
 
   const minOffset = 0;
   const maxOffset = 10;
@@ -459,31 +459,31 @@ export const Info = () => {
     options.push(<option value={year}>{year}</option>);
   }
 
-  const onHandleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedMonth(e.target.value);
-    let start: any = moment(
-      `${e.target.value}.${selectedYear}`,
-      "M.YYYY"
-    ).startOf("month");
-    let end: any = moment(`${e.target.value}.${selectedYear}`, "M.YYYY").endOf(
-      "month"
-    );
+  // const onHandleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  //   setSelectedMonth(e.target.value);
+  //   let start: any = moment(
+  //     `${e.target.value}.${selectedYear}`,
+  //     "M.YYYY"
+  //   ).startOf("month");
+  //   let end: any = moment(`${e.target.value}.${selectedYear}`, "M.YYYY").endOf(
+  //     "month"
+  //   );
 
-    setOpenDate({ from: start._d, to: end._d });
-    onClose();
-  };
+  //   setOpenDate({ from: start._d, to: end._d });
+  //   onClose();
+  // };
 
-  const allTime = () => {
-    setOpenDate({ from: new Date("2021-02-09T00:47:45"), to: new Date() });
-    onClose();
-  };
+  // const allTime = () => {
+  //   setOpenDate({ from: new Date("2021-02-09T00:47:45"), to: new Date() });
+  //   onClose();
+  // };
 
   return (
     <>
       <Header />
       <Styled.Page>
         <Container>
-          <UpTitle>Личный кабинет</UpTitle>
+          <UpTitle>{t("privateArea.uptitle")}</UpTitle>
         </Container>
         <ReactNotification />
         <Container>
@@ -492,7 +492,9 @@ export const Info = () => {
               <Styled.UserBlock>
                 <Styled.InfoTitle>{user}</Styled.InfoTitle>
                 <Styled.BalanceItem>
-                  <Styled.BalanceItemName>Баланс</Styled.BalanceItemName>
+                  <Styled.BalanceItemName>
+                    {t("privateArea.balance")}
+                  </Styled.BalanceItemName>
                   <Styled.BalanceItemValue pink>
                     {balance ? (balance / 100000).toLocaleString() : "0"}
                   </Styled.BalanceItemValue>
@@ -500,22 +502,22 @@ export const Info = () => {
               </Styled.UserBlock>
               <Styled.InfoButtons>
                 <Button dangerOutline onClick={() => setAddDeposit(true)}>
-                  Новый депозит
+                  {t("privateArea.newDeposit")}
                 </Button>
                 <Button danger onClick={() => setWithdraw(true)}>
-                  Вывести средства
+                  {t("privateArea.withdraw")}
                 </Button>
               </Styled.InfoButtons>
             </Styled.InfoWrap>
             <Tabs>
               <Styled.NavTabs to="/info">
-                <div>Информация</div>{" "}
+                <div>{t("privateArea.tabs.tab1")}</div>{" "}
               </Styled.NavTabs>
               <Styled.NavTabs to="/deposits">
-                <div>Депозиты</div>{" "}
+                <div>{t("privateArea.tabs.tab2")}</div>{" "}
               </Styled.NavTabs>
               <Styled.NavTabs to="/balance">
-                <div>Баланс</div>{" "}
+                <div>{t("privateArea.tabs.tab3")}</div>{" "}
               </Styled.NavTabs>
             </Tabs>
           </Card>
@@ -531,19 +533,25 @@ export const Info = () => {
             <Card>
               <Styled.Deposit>
                 <Styled.DepositItem>
-                  <Styled.DepositName>Открытые депозиты</Styled.DepositName>
+                  <Styled.DepositName>
+                    {t("privateArea.openDeposits")}
+                  </Styled.DepositName>
                   <Styled.DepositValue>
                     {activeDeposite ? activeDeposite : "-"}
                   </Styled.DepositValue>
                 </Styled.DepositItem>
                 <Styled.DepositItem>
-                  <Styled.DepositName>Сумма в депозитах</Styled.DepositName>
+                  <Styled.DepositName>
+                    {t("privateArea.sumDeposits")}
+                  </Styled.DepositName>
                   <Styled.DepositValue>
                     {(depositTotal / 100000).toLocaleString()}
                   </Styled.DepositValue>
                 </Styled.DepositItem>
                 <Styled.DepositItem>
-                  <Styled.DepositName>Всего выплачено</Styled.DepositName>
+                  <Styled.DepositName>
+                    {t("privateArea.allPay")}
+                  </Styled.DepositName>
                   <Styled.DepositValue>
                     {(totalPayed / 100000).toLocaleString()}
                   </Styled.DepositValue>
@@ -555,7 +563,7 @@ export const Info = () => {
             <Styled.ContainerRow>
               <Styled.Half>
                 <Styled.HalfHead>
-                  <Styled.HalfTitle>Выплаты</Styled.HalfTitle>
+                  <Styled.HalfTitle>{t("privateArea.pay")}</Styled.HalfTitle>
                   <Styled.HalfTabs>
                     <Styled.HalfTab
                       onClick={() => setCard(0)}
@@ -594,7 +602,7 @@ export const Info = () => {
                     />
                   </CSSTransition>
                   <Styled.NextPay>
-                    Следующая выплата:{" "}
+                    {t("privateArea.nextPay")}:{" "}
                     <Styled.Date>
                       {nextDate ? moment(nextDate).format("DD MMMM YYYY") : "-"}
                     </Styled.Date>
@@ -621,7 +629,7 @@ export const Info = () => {
                     />
                   </CSSTransition>
                   <Styled.NextPay>
-                    Следующая выплата:{" "}
+                    {t("privateArea.nextPay")}:{" "}
                     <Styled.Date>
                       {nextDate ? moment(nextDate).format("DD MMMM YYYY") : "-"}
                     </Styled.Date>
@@ -631,7 +639,7 @@ export const Info = () => {
 
               <Styled.Half>
                 <Styled.HalfHead>
-                  <Styled.HalfTitle>Поступления</Styled.HalfTitle>
+                  <Styled.HalfTitle>{t("privateArea.take")}</Styled.HalfTitle>
                   <Styled.HalfTabs>
                     <Styled.HalfTab
                       onClick={() => setCard2(0)}
@@ -703,13 +711,13 @@ export const Info = () => {
                     onClick={() => setActiveMob(0)}
                     card={activMob === 0}
                   >
-                    Выплаты
+                    {t("privateArea.pay")}
                   </Styled.MobHalfTab>
                   <Styled.MobHalfTab
                     onClick={() => setActiveMob(1)}
                     card={activMob === 1}
                   >
-                    Поступления
+                    {t("privateArea.take")}
                   </Styled.MobHalfTab>
                 </Styled.HalfTabs>
                 <Styled.Content active={activMob === 0}>
@@ -785,7 +793,7 @@ export const Info = () => {
                         </CSSTransition>
                       </Styled.HalfContent>
                       <Styled.NextPay>
-                        Следующая выплата:{" "}
+                        {t("privateArea.nextPay")}:{" "}
                         <Styled.Date>
                           {nextDate
                             ? moment(nextDate).format("DD MMMM YYYY")
@@ -888,15 +896,21 @@ export const Info = () => {
               <Modal onClose={onClose}>
                 <Styled.ModalContent>
                   {/* <Arrow onClick={onClose} /> */}
-                  <Styled.ModalTitle>Выберите период</Styled.ModalTitle>
+                  <Styled.ModalTitle>
+                    {t("privateArea.selectPeriod")}
+                  </Styled.ModalTitle>
                   <Styled.ModalItem>
-                    <Styled.DateTitle>Этот месяц</Styled.DateTitle>
+                    <Styled.DateTitle>
+                      {t("privateArea.thisMonth")}
+                    </Styled.DateTitle>
                     <Styled.DateText onClick={monthSelected}>
                       {moment().format("MMMM YYYY")}
                     </Styled.DateText>
                   </Styled.ModalItem>
                   <Styled.ModalItem>
-                    <Styled.DateTitle>Этот год</Styled.DateTitle>
+                    <Styled.DateTitle>
+                      {t("privateArea.thisYear")}
+                    </Styled.DateTitle>
                     <Styled.DateText onClick={yearSelected}>
                       {moment().format("YYYY")}
                     </Styled.DateText>
@@ -904,7 +918,7 @@ export const Info = () => {
                   <Styled.ModalItem>
                     <Styled.DateTitle></Styled.DateTitle>
                     <Styled.DateText onClick={allDate}>
-                      За все время
+                      {t("privateArea.allTime")}
                     </Styled.DateText>
                   </Styled.ModalItem>
                 </Styled.ModalContent>
@@ -919,10 +933,12 @@ export const Info = () => {
           {withdraw && (
             <Modal onClose={() => setWithdraw(false)}>
               <Styled.ModalBlock>
-                <Styled.ModalTitle>Вывести средства</Styled.ModalTitle>
+                <Styled.ModalTitle>
+                  {t("privateArea.withdraw")}
+                </Styled.ModalTitle>
                 <Input
                   onChange={(e) => setWithdrawValue(e.target.value)}
-                  placeholder="Введите сумму"
+                  placeholder={t("privateArea.amountEnter")}
                   step="any"
                   type="number"
                   ref={inputRef}
@@ -934,7 +950,7 @@ export const Info = () => {
                   onClick={withdrawBalance}
                   danger
                 >
-                  Вывести средства
+                  {t("privateArea.withdraw")}
                 </Styled.ModalButton>
               </Styled.ModalBlock>
             </Modal>
@@ -947,7 +963,9 @@ export const Info = () => {
           >
             <Styled.ModalDepositsWrap>
               <Modal width={540} onClose={() => setAddDeposit(false)}>
-                <Styled.ModalTitle mt>Добавить депозит</Styled.ModalTitle>
+                <Styled.ModalTitle mt>
+                  {t("privateArea.addDeposit")}
+                </Styled.ModalTitle>
                 <Styled.ModalDeposits>
                   <div>
                     <Styled.ModalButton
@@ -956,14 +974,16 @@ export const Info = () => {
                       onClick={handleDepositModal}
                       dangerOutline
                     >
-                      {depositSelect ? depositSelect.name : "Выберите депозит"}{" "}
+                      {depositSelect
+                        ? depositSelect.name
+                        : t("privateArea.choiseDeposite")}{" "}
                       <Styled.IconRotate rights>
                         <Styled.ModalBack />
                       </Styled.IconRotate>
                     </Styled.ModalButton>
                     <Input
                       onChange={(e) => setAddDepositValue(e.target.value)}
-                      placeholder="Введите сумму"
+                      placeholder={t("privateArea.amountEnter")}
                       type="number"
                       ref={inputRef}
                       value={addDepositValue}
@@ -974,7 +994,7 @@ export const Info = () => {
                       onClick={openNewDeposit}
                       danger
                     >
-                      Добавить
+                      {t("privateArea.add")}
                     </Styled.ModalButton>
                   </div>
                   {depositSelect ? (

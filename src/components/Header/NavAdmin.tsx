@@ -6,42 +6,44 @@ import {
   StyledLink,
   LinkButton,
 } from "./Header.elements";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   onClose: () => void;
 };
 
 export const NavAdmin: FC<Props> = ({ onClose }) => {
+  const { t } = useTranslation();
   return (
     <List>
       <ListItem>
         <StyledLink smooth to="/admin" onClick={onClose}>
-          Главный экран
+          {t("sideNav.mainScreen")}
         </StyledLink>
       </ListItem>
       <ListItem>
         <StyledLink smooth to="/admin/deposit" onClick={onClose}>
-          Депозиты
+          {t("sideNav.deposits")}
         </StyledLink>
       </ListItem>
       <ListItem>
         <StyledLink smooth to="/admin/payments" onClick={onClose}>
-          Выплаты
+          {t("sideNav.pay")}
         </StyledLink>
       </ListItem>
       <ListItem>
         <StyledLink smooth to="/admin/users" onClick={onClose}>
-          Пользователи
+          {t("sideNav.users")}
         </StyledLink>
       </ListItem>
       <ListItem>
         <StyledLink smooth to="/admin/portfolio" onClick={onClose}>
-          Портфель
+          {t("sideNav.portfolio")}
         </StyledLink>
       </ListItem>
       <ListItem>
         <StyledLink smooth to="/" onClick={onClose}>
-          На главную
+          {t("sideNav.toHome")}
         </StyledLink>
       </ListItem>
     </List>

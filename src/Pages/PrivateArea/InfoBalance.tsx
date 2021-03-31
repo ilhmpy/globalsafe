@@ -36,6 +36,7 @@ import { DepositListModal, ModalDividends } from "./Modals";
 import InfiniteScroll from "react-infinite-scroller";
 import { Scrollbars } from "react-custom-scrollbars";
 import { Loading } from "../../components/UI/Loading";
+import { useTranslation } from "react-i18next";
 moment.locale("ru");
 
 type Obj = {
@@ -54,17 +55,19 @@ type BalanceTableProps = {
 
 const BalanceTable: FC<BalanceTableProps> = ({ balanceLog }) => {
   const [divModal, setDivModal] = useState(false);
+  const { t } = useTranslation();
+
   const operation = (id: number) => {
     if (id === 6) {
-      return "Открытие депозита";
+      return t("operation.open");
     } else if (id === 7) {
-      return "Начисление дивидендов";
+      return t("operation.divedents");
     } else if (id === 8) {
-      return "Закрытие депозита";
+      return t("operation.close");
     } else if (id === 2) {
-      return "Вывод баланса";
+      return t("operation.withdraw");
     } else if (id === 1) {
-      return "Пополнение баланса";
+      return t("operation.add");
     }
   };
 
@@ -144,6 +147,7 @@ export const InfoBalance = () => {
   const [totalDeposit, setTotalDeposit] = useState(0);
   const [depositList, setDepositList] = useState<any>([]);
   const inputRef = useRef<any>(null);
+  const { t } = useTranslation();
 
   const yearSelected = () => {
     let year = moment().format("YYYY");
@@ -153,11 +157,9 @@ export const InfoBalance = () => {
       from: yearStart._d,
       to: yearEnd._d,
     });
-    setSelected(`За ${moment().format("YYYY")}`);
+    setSelected(`${t("privateArea.at")} ${moment().format("YYYY")}`);
     onClose();
   };
-
-  // console.log("balanceLog", balanceLog);
 
   const monthSelected = () => {
     let currentMonth = moment().format("MMYYYY");
@@ -169,7 +171,7 @@ export const InfoBalance = () => {
       from: currentMonthStart._d,
       to: currentMonthEnd._d,
     });
-    setSelected(`За ${moment().format("MMMM YYYY")}`);
+    setSelected(`${t("privateArea.at")} ${moment().format("MMMM YYYY")}`);
     onClose();
   };
 
@@ -189,7 +191,7 @@ export const InfoBalance = () => {
       from: new Date("2019-01-01T00:47:45"),
       to: new Date(),
     });
-    setSelected("За все время");
+    setSelected(t("privateArea.allTime"));
     onClose();
   };
 
@@ -206,9 +208,7 @@ export const InfoBalance = () => {
       hubConnection
         .invoke<RootDeposits>("GetDeposits", 0, 10)
         .then((res) => {
-          // console.log("GetDeposits 11", res);
           if (res.collection.length) {
-            // console.log("GetDeposits 111", res);
             setDepositsList(res.collection);
           }
         })
@@ -229,7 +229,6 @@ export const InfoBalance = () => {
         )
         .then((res: any) => {
           setTotalDeposit(res.totalRecords);
-          // console.log("res", res);
           setNum(20);
           setLoading(false);
           function getFormatedDate(dateStr: Date) {
@@ -317,35 +316,35 @@ export const InfoBalance = () => {
     }
   };
 
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection
-        .invoke(
-          "GetBalanceLog",
-          1,
-          balanceLogs,
-          openDate.from || new Date("2021-02-09T00:47:45"),
-          openDate.to || new Date(),
-          num,
-          30
-        )
-        .then((res: any) => {
-          // console.log("GetBalanceLog", res);
-        })
-        .catch((err: Error) => console.log(err));
-    }
-  }, [hubConnection, balanceLogs, openDate]);
+  // useEffect(() => {
+  //   if (hubConnection) {
+  //     hubConnection
+  //       .invoke(
+  //         "GetBalanceLog",
+  //         1,
+  //         balanceLogs,
+  //         openDate.from || new Date("2021-02-09T00:47:45"),
+  //         openDate.to || new Date(),
+  //         num,
+  //         30
+  //       )
+  //       .then((res: any) => {
+  //         // console.log("GetBalanceLog", res);
+  //       })
+  //       .catch((err: Error) => console.log(err));
+  //   }
+  // }, [hubConnection, balanceLogs, openDate]);
 
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection
-        .invoke("GetBalanceOperationSum", 1, [0, 1, 2, 3, 4, 5, 6, 7, 8])
-        .then((res: any) => {
-          // console.log("GetBalanceOperationSum", res);
-        })
-        .catch((err: Error) => console.log(err));
-    }
-  }, [hubConnection]);
+  // useEffect(() => {
+  //   if (hubConnection) {
+  //     hubConnection
+  //       .invoke("GetBalanceOperationSum", 1, [0, 1, 2, 3, 4, 5, 6, 7, 8])
+  //       .then((res: any) => {
+  //         // console.log("GetBalanceOperationSum", res);
+  //       })
+  //       .catch((err: Error) => console.log(err));
+  //   }
+  // }, [hubConnection]);
 
   // const handleClick = (id: number) => {
   //   if (id !== active) {
@@ -406,17 +405,17 @@ export const InfoBalance = () => {
           if (res === 1) {
             setWithdraw(false);
             setWithdrawValue("");
-            alert("Успешно", "Средства успешно переведены", "success");
+            alert(t("alert.success"), t("alert.successMsg"), "success");
           } else {
             setWithdraw(false);
             setWithdrawValue("");
-            alert("Ошибка", "Ошибка вывода", "danger");
+            alert(t("alert.error"), t("alert.errorMsg"), "danger");
           }
         })
         .catch((err: Error) => {
           setWithdraw(false);
           setWithdrawValue("");
-          alert("Ошибка", "Ошибка вывода", "danger");
+          alert(t("alert.error"), t("alert.errorMsg"), "danger");
         });
     }
   };
@@ -447,14 +446,14 @@ export const InfoBalance = () => {
           setLoadDeposit(false);
           setWithdraw(false);
           setWithdrawValue("");
-          alert("Успешно", "Депозит успешно создан", "success");
+          alert(t("alert.success"), t("alert.depositMsg"), "success");
         })
         .catch((err: Error) => {
           console.log(err);
           setLoadDeposit(false);
           setWithdraw(false);
           setWithdrawValue("");
-          alert("Ошибка", "Депозит не создан", "danger");
+          alert(t("alert.error"), t("alert.depositErrorMsg"), "danger");
         })
         .finally(() => {
           setDepositSelect(null);
@@ -496,7 +495,7 @@ export const InfoBalance = () => {
       <Header />
       <Styled.Page>
         <Container>
-          <UpTitle>Личный кабинет</UpTitle>
+          <UpTitle>{t("privateArea.uptitle")}</UpTitle>
         </Container>
         <ReactNotification />
 
@@ -506,7 +505,9 @@ export const InfoBalance = () => {
               <Styled.UserBlock>
                 <Styled.InfoTitle>{user}</Styled.InfoTitle>
                 <Styled.BalanceItem>
-                  <Styled.BalanceItemName>Баланс</Styled.BalanceItemName>
+                  <Styled.BalanceItemName>
+                    {t("privateArea.balance")}
+                  </Styled.BalanceItemName>
                   <Styled.BalanceItemValue pink>
                     {balance ? (balance / 100000).toLocaleString() : "0"}
                   </Styled.BalanceItemValue>
@@ -514,22 +515,22 @@ export const InfoBalance = () => {
               </Styled.UserBlock>
               <Styled.InfoButtons>
                 <Button dangerOutline onClick={() => setAddDeposit(true)}>
-                  Новый депозит
+                  {t("privateArea.newDeposit")}
                 </Button>
                 <Button danger onClick={() => setWithdraw(true)}>
-                  Вывести средства
+                  {t("privateArea.withdraw")}
                 </Button>
               </Styled.InfoButtons>
             </Styled.InfoWrap>
             <Tabs>
               <Styled.NavTabs to="/info">
-                <div>Информация</div>{" "}
+                <div>{t("privateArea.tabs.tab1")}</div>{" "}
               </Styled.NavTabs>
               <Styled.NavTabs to="/deposits">
-                <div>Депозиты</div>{" "}
+                <div>{t("privateArea.tabs.tab2")}</div>{" "}
               </Styled.NavTabs>
               <Styled.NavTabs to="/balance">
-                <div>Баланс</div>{" "}
+                <div>{t("privateArea.tabs.tab3")}</div>{" "}
               </Styled.NavTabs>
             </Tabs>
           </Card>
@@ -544,25 +545,31 @@ export const InfoBalance = () => {
           <Container>
             <Styled.BalanceWrap>
               <Styled.TopUpButton blue onClick={() => setAddBalance(true)}>
-                Пополнить баланс
+                {t("privateArea.topUpBalance")}
               </Styled.TopUpButton>
               <Styled.BalanceList>
                 <Styled.BalanceItem>
-                  <Styled.BalanceItemName>Баланс</Styled.BalanceItemName>
+                  <Styled.BalanceItemName>
+                    {t("privateArea.balance")}
+                  </Styled.BalanceItemName>
                   <Styled.BalanceItemValue pink>
                     {balance ? (balance / 100000).toLocaleString() : "0"}
                   </Styled.BalanceItemValue>
                 </Styled.BalanceItem>
 
                 <Styled.BalanceItem>
-                  <Styled.BalanceItemName>Поступления</Styled.BalanceItemName>
+                  <Styled.BalanceItemName>
+                    {t("privateArea.take")}
+                  </Styled.BalanceItemName>
                   <Styled.BalanceItemValue pink>
                     {(depositTotal / 100000).toLocaleString()}
                   </Styled.BalanceItemValue>
                 </Styled.BalanceItem>
 
                 <Styled.BalanceItem>
-                  <Styled.BalanceItemName>Выводы</Styled.BalanceItemName>
+                  <Styled.BalanceItemName>
+                    {t("privateArea.findings")}
+                  </Styled.BalanceItemName>
                   <Styled.BalanceItemValue>
                     {(totalPayed / 100000).toLocaleString()}
                   </Styled.BalanceItemValue>
@@ -582,19 +589,19 @@ export const InfoBalance = () => {
                   onClick={() => handleBalance(0)}
                   active={depositTabs === 0}
                 >
-                  Все операции
+                  {t("privateArea.allOperation")}
                 </Styled.BalanceTabItem>
                 <Styled.BalanceTabItem
                   onClick={() => handleBalance(1)}
                   active={depositTabs === 1}
                 >
-                  Поступления
+                  {t("privateArea.take")}
                 </Styled.BalanceTabItem>
                 <Styled.BalanceTabItem
                   onClick={() => handleBalance(2)}
                   active={depositTabs === 2}
                 >
-                  Выводы
+                  {t("privateArea.findings")}
                 </Styled.BalanceTabItem>
               </Styled.BalanceTabHead>
             </Card>
@@ -606,8 +613,12 @@ export const InfoBalance = () => {
                 <Styled.DataList>
                   <Styled.DataListHead>
                     <Styled.DataListItem>
-                      <Styled.DataListName>Название</Styled.DataListName>
-                      <Styled.DataListName>Сумма</Styled.DataListName>
+                      <Styled.DataListName>
+                        {t("privateArea.name")}
+                      </Styled.DataListName>
+                      <Styled.DataListName>
+                        {t("privateArea.sum")}
+                      </Styled.DataListName>
                     </Styled.DataListItem>
                   </Styled.DataListHead>
                   {balanceLog ? (
@@ -638,10 +649,7 @@ export const InfoBalance = () => {
                   ) : loading ? (
                     <Loading />
                   ) : (
-                    <Styled.NotFound>
-                      Данные не обнаружены. Попробуйте изменить параметры
-                      поиска.
-                    </Styled.NotFound>
+                    <Styled.NotFound>{t("notFound")}</Styled.NotFound>
                   )}
                 </Styled.DataList>
               </Styled.DataListWrap>
@@ -658,15 +666,21 @@ export const InfoBalance = () => {
               <Modal onClose={onClose}>
                 <Styled.ModalContent>
                   {/* <Arrow onClick={onClose} /> */}
-                  <Styled.ModalTitle>Выберите период</Styled.ModalTitle>
+                  <Styled.ModalTitle>
+                    {t("privateArea.selectPeriod")}
+                  </Styled.ModalTitle>
                   <Styled.ModalItem>
-                    <Styled.DateTitle>Этот месяц</Styled.DateTitle>
+                    <Styled.DateTitle>
+                      {t("privateArea.thisMonth")}
+                    </Styled.DateTitle>
                     <Styled.DateText onClick={monthSelected}>
                       {moment().format("MMMM YYYY")}
                     </Styled.DateText>
                   </Styled.ModalItem>
                   <Styled.ModalItem>
-                    <Styled.DateTitle>Этот год</Styled.DateTitle>
+                    <Styled.DateTitle>
+                      {t("privateArea.thisYear")}
+                    </Styled.DateTitle>
                     <Styled.DateText onClick={yearSelected}>
                       {moment().format("YYYY")}
                     </Styled.DateText>
@@ -674,7 +688,7 @@ export const InfoBalance = () => {
                   <Styled.ModalItem>
                     <Styled.DateTitle></Styled.DateTitle>
                     <Styled.DateText onClick={allDate}>
-                      За все время
+                      {t("privateArea.allTime")}
                     </Styled.DateText>
                   </Styled.ModalItem>
                 </Styled.ModalContent>
@@ -689,10 +703,12 @@ export const InfoBalance = () => {
           {withdraw && (
             <Modal onClose={() => setWithdraw(false)}>
               <Styled.ModalBlock>
-                <Styled.ModalTitle>Вывести средства</Styled.ModalTitle>
+                <Styled.ModalTitle>
+                  {t("privateArea.withdraw")}
+                </Styled.ModalTitle>
                 <Input
                   onChange={(e) => setWithdrawValue(e.target.value)}
-                  placeholder="Введите сумму"
+                  placeholder={t("privateArea.amountEnter")}
                   type="number"
                   step="any"
                   ref={inputRef}
@@ -704,7 +720,7 @@ export const InfoBalance = () => {
                   onClick={withdrawBalance}
                   danger
                 >
-                  Вывести средства
+                  {t("privateArea.withdraw")}
                 </Styled.ModalButton>
               </Styled.ModalBlock>
             </Modal>
@@ -717,10 +733,12 @@ export const InfoBalance = () => {
           >
             <Modal onClose={() => setAddBalance(false)}>
               <Styled.ModalBlock>
-                <Styled.ModalTitle>Пополнить баланс</Styled.ModalTitle>
+                <Styled.ModalTitle>
+                  {t("privateArea.topUpBalance")}
+                </Styled.ModalTitle>
                 <Input
                   onChange={(e) => setBalanceValue(e.target.value)}
-                  placeholder="Введите сумму"
+                  placeholder={t("privateArea.amountEnter")}
                   type="number"
                   ref={inputRef}
                   value={balanceValue}
@@ -731,7 +749,7 @@ export const InfoBalance = () => {
                   onClick={getTopUp}
                   danger
                 >
-                  Пополнить
+                  {t("privateArea.topUp")}
                 </Styled.ModalButton>
               </Styled.ModalBlock>
             </Modal>
@@ -744,7 +762,9 @@ export const InfoBalance = () => {
           >
             <Styled.ModalDepositsWrap>
               <Modal width={540} onClose={() => setAddDeposit(false)}>
-                <Styled.ModalTitle mt>Добавить депозит</Styled.ModalTitle>
+                <Styled.ModalTitle mt>
+                  {t("privateArea.addDeposit")}
+                </Styled.ModalTitle>
                 <Styled.ModalDeposits>
                   <div>
                     <Styled.ModalButton
@@ -753,14 +773,16 @@ export const InfoBalance = () => {
                       onClick={handleDepositModal}
                       dangerOutline
                     >
-                      {depositSelect ? depositSelect.name : "Выберите депозит"}{" "}
+                      {depositSelect
+                        ? depositSelect.name
+                        : t("privateArea.choiseDeposite")}{" "}
                       <Styled.IconRotate rights>
                         <Styled.ModalBack />
                       </Styled.IconRotate>
                     </Styled.ModalButton>
                     <Input
                       onChange={(e) => setAddDepositValue(e.target.value)}
-                      placeholder="Введите сумму"
+                      placeholder={t("privateArea.amountEnter")}
                       type="number"
                       ref={inputRef}
                       value={addDepositValue}
@@ -771,7 +793,7 @@ export const InfoBalance = () => {
                       onClick={openNewDeposit}
                       danger
                     >
-                      Добавить
+                      {t("privateArea.add")}
                     </Styled.ModalButton>
                   </div>
                   {depositSelect ? (

@@ -7,48 +7,46 @@ import styled from "styled-components/macro";
 import img1 from "../../../../assets/img/img1.jpg";
 import img2 from "../../../../assets/img/img2.jpg";
 import img3 from "../../../../assets/img/img3.jpg";
+import { useTranslation } from "react-i18next";
 
 export const About = () => {
+  const { t } = useTranslation();
   return (
     <Page>
       <Container id="about">
-        <UpTitle>О нас</UpTitle>
+        <UpTitle>{t("about.uptitle")}</UpTitle>
       </Container>
       <Container>
-        <H1>В деталях</H1>
+        <H1>{t("about.H1")}</H1>
       </Container>
       <BlockContainer>
         <BlockItem>
           <Img src={img1} alt="" />
           <BlockInner>
-            <BlockTitle>Максим</BlockTitle>
-            <BlockSubtitle>Учредитель</BlockSubtitle>
+            <BlockTitle>{t("about.name1")}</BlockTitle>
+            <BlockSubtitle>{t("about.position")}</BlockSubtitle>
           </BlockInner>
         </BlockItem>
 
         <BlockItem>
           <Img src={img2} alt="" />
           <BlockInner>
-            <BlockTitle>Светлана</BlockTitle>
-            <BlockSubtitle>Учредитель</BlockSubtitle>
+            <BlockTitle>{t("about.name2")}</BlockTitle>
+            <BlockSubtitle>{t("about.position")}</BlockSubtitle>
           </BlockInner>
         </BlockItem>
 
         <BlockItem>
           <Img src={img3} alt="" />
           <BlockInner>
-            <BlockTitle>Ирина</BlockTitle>
-            <BlockSubtitle>Учредитель</BlockSubtitle>
+            <BlockTitle>{t("about.name3")}</BlockTitle>
+            <BlockSubtitle>{t("about.position")}</BlockSubtitle>
           </BlockInner>
         </BlockItem>
       </BlockContainer>
       <Container>
         <Text>
-          <span>Global Safe</span> - это продукт, который создан специально для
-          тех, кто не готов постоянно следить за котировками на бирже и
-          самостоятельно работать на ней. Опытные трейдеры Фонда берут на себя
-          заботы по приумножению ваших сбережений и инвестируют в самые
-          высокодоходные активы платформы.
+          <span>{t("about.brand")}</span> - {t("about.desc")}
         </Text>
       </Container>
     </Page>

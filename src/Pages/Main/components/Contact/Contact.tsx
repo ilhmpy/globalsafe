@@ -4,41 +4,43 @@ import { Container } from "../../../../globalStyles";
 import { H1 } from "../../../../components/UI/MainStyled";
 import { Page } from "../../../../components/UI/Page";
 import { UpTitle } from "../../../../components/UI/UpTitle";
+import { useTranslation } from "react-i18next";
 
 export const Contact = () => {
+  const { t } = useTranslation();
   return (
     <Page>
       <Container id="contact">
-        <UpTitle>Контакты</UpTitle>
+        <UpTitle>{t("contacts.uptitle")}</UpTitle>
       </Container>
       <Container>
-        <H1>Для связи</H1>
+        <H1>{t("contacts.H1")}</H1>
       </Container>
       <BlockContainer>
         <BlockItem>
           <SiteLink>https://www.globalsafe.me</SiteLink>
-          <p>Сайт</p>
+          <p>{t("contacts.site")}</p>
         </BlockItem>
         <BlockItem>
           <LinkBlock>
             <Link as="a" href="https://t.me/irinaganina3110">
               @irinaganina3110
             </Link>
-            <span>Ирина Ганина</span>
+            <span>{t("contacts.irinaganina3110")}</span>
           </LinkBlock>
 
           <LinkBlock>
             <Link as="a" href="https://t.me/smansurskaya">
               @smansurskaya
             </Link>
-            <span>Светлана Мансурская</span>
+            <span>{t("contacts.smansurskaya")}</span>
           </LinkBlock>
 
           <LinkBlock>
             <Link as="a" href="https://t.me/sporttanets8">
               @sporttanets8
             </Link>
-            <span>Максим Спортанец</span>
+            <span>{t("contacts.sporttanets8")}</span>
           </LinkBlock>
         </BlockItem>
       </BlockContainer>
