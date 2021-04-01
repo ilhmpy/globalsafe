@@ -57,7 +57,8 @@ export const Info = () => {
     from: new Date("2019-01-01T00:47:45"),
     to: new Date(),
   });
-  const [selected, setSelected] = useState("За все время");
+  const { t, i18n } = useTranslation();
+  const [selected, setSelected] = useState<any>(t("privateArea.allTime"));
   const sizes = useWindowSize();
   const size = sizes < 992;
   const appContext = useContext(AppContext);
@@ -70,7 +71,6 @@ export const Info = () => {
   const [loading, setLoading] = useState(true);
   const [loadDeposit, setLoadDeposit] = useState(false);
   const inputRef = useRef<any>(null);
-  const { t, i18n } = useTranslation();
 
   const yearSelected = () => {
     let year = moment().format("YYYY");

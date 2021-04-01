@@ -186,6 +186,7 @@ export const AdminDeposit = () => {
       hubConnection
         .invoke<DepositStats[]>("GetUsersDepositsStats")
         .then((res) => {
+          console.log("res", res);
           setStatsDeposit(res);
         })
         .catch((err: Error) => console.log(err));
@@ -195,7 +196,7 @@ export const AdminDeposit = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<ListDeposits>("GetDeposits", 0, 40)
+        .invoke<ListDeposits>("GetDeposits", 1, 0, 40)
         .then((res) => {
           setListDeposits(res.collection);
         })
