@@ -195,7 +195,7 @@ export const AdminDeposit = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<ListDeposits>("GetDeposits", 0, 40)
+        .invoke<ListDeposits>("GetDeposits", 1, 0, 40)
         .then((res) => {
           setListDeposits(res.collection);
         })
