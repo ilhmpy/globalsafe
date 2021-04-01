@@ -25,7 +25,7 @@ export const Header: FC<{ admPanel?: boolean }> = ({ admPanel }) => {
   const admin = appContext.isAdmin;
   let history = useHistory();
   let location = useLocation();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   function handleClick() {
     if (!user) {
@@ -55,7 +55,7 @@ export const Header: FC<{ admPanel?: boolean }> = ({ admPanel }) => {
   const toAdmin = () => {
     history.push("/admin");
   };
-
+  const lang = localStorage.getItem("i18nextLng") || "ru";
   return (
     <HeaderWrap header={header}>
       <Container>
@@ -81,6 +81,21 @@ export const Header: FC<{ admPanel?: boolean }> = ({ admPanel }) => {
               />
             )}
           </HeaderMenu>
+          {lang === "ru" ? (
+            <div
+              style={{ cursor: "pointer" }}
+              onClick={() => i18n.changeLanguage("en")}
+            >
+              en
+            </div>
+          ) : (
+            <div
+              style={{ cursor: "pointer" }}
+              onClick={() => i18n.changeLanguage("ru")}
+            >
+              ru
+            </div>
+          )}
           {admin && (
             <Button danger onClick={toAdmin}>
               {t("headerButton.admin")}

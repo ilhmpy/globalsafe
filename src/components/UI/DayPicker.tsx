@@ -1,16 +1,14 @@
-import React, { useState, useRef, FC } from "react";
+import React, { useState, useRef, FC, useContext } from "react";
 import styled, { css } from "styled-components/macro";
 import { ReactComponent as Right } from "../../assets/svg/monthRight.svg";
 import { ReactComponent as Left } from "../../assets/svg/monthLeft.svg";
 import DayPicker, { DateUtils } from "react-day-picker";
-import DayPickerInput from "react-day-picker/DayPickerInput";
 import useOnClickOutside from "../../hooks/useOutsideHook";
 import { CSSTransition } from "react-transition-group";
 import { OpenDate } from "../../types/dates";
 import moment from "moment";
-import "moment/locale/ru";
 import "react-day-picker/lib/style.css";
-moment.locale("ru");
+import { useTranslation } from "react-i18next";
 
 function Navbar({
   nextMonth,
@@ -31,8 +29,9 @@ function Navbar({
     </div>
   );
 }
-
+const lang = localStorage.getItem("i18nextLng") || "ru";
 const WEEKDAYS_SHORT = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
+const WEEKDAYS_SHORT_ENG = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 
 const MONTHS = [
   "Январь",
@@ -49,6 +48,21 @@ const MONTHS = [
   "Декабрь",
 ];
 
+const MONTHS_ENG = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
 const WEEKDAYS_LONG = [
   "Воскресенье",
   "Понедельник",
@@ -58,33 +72,6 @@ const WEEKDAYS_LONG = [
   "Пятница",
   "Суббота",
 ];
-
-export const InputDay = () => {
-  const [show, setShow] = useState(false);
-  const handleContainerClick = (e: React.MouseEvent) => {
-    if (e.currentTarget === e.target) {
-      setShow(false);
-    }
-  };
-  return (
-    <div>
-      <DateSelect onClick={() => setShow(true)}>
-        <Input type="text" placeholder="pfdnhf" readOnly />
-      </DateSelect>
-      {show && (
-        <div onClick={handleContainerClick}>
-          <CustomDatePicker
-            months={MONTHS}
-            firstDayOfWeek={1}
-            weekdaysLong={WEEKDAYS_LONG}
-            weekdaysShort={WEEKDAYS_SHORT}
-            navbarElement={<Navbar />}
-          />
-        </div>
-      )}
-    </div>
-  );
-};
 
 const CustomDatePickers = styled(DayPicker)`
   background: #ffffff;
@@ -173,80 +160,14 @@ export const Calendar: FC<{
 
   return (
     <CustomDatePickers
-      months={MONTHS}
-      firstDayOfWeek={1}
+      months={lang === "en" ? MONTHS_ENG : MONTHS}
+      firstDayOfWeek={lang === "en" ? 0 : 1}
       weekdaysLong={WEEKDAYS_LONG}
-      weekdaysShort={WEEKDAYS_SHORT}
+      weekdaysShort={lang === "en" ? WEEKDAYS_SHORT_ENG : WEEKDAYS_SHORT}
       navbarElement={<Navbar />}
       selectedDays={selectedDay}
       onDayClick={handleDayClick}
     />
-  );
-};
-
-const NewInput = (props: any) => {
-  const { value, onFocus, onBlur } = props;
-  return (
-    <MyComp>
-      {value ? moment(new Date(value)).format("DD MMMM YYYY") : "Завтра"}
-      <input ref={props.ref} onClick={onFocus} onBlur={onBlur} />
-    </MyComp>
-  );
-};
-
-export const CalendarInput = () => {
-  return (
-    <InputCustom>
-      <DayPickerInput
-        component={React.forwardRef((props, ref) => (
-          <NewInput {...props} innerRef={ref} />
-        ))}
-        onDayChange={(day: any) => console.log(day)}
-        dayPickerProps={{
-          firstDayOfWeek: 1,
-          months: MONTHS,
-          weekdaysShort: WEEKDAYS_SHORT,
-          navbarElement: <Navbar />,
-        }}
-      />
-    </InputCustom>
-  );
-};
-
-export const ModalInput = (props: any) => {
-  const { value, onFocus, onBlur, selectedDays } = props;
-  // console.log("props", props.day);
-  return (
-    <ModalComp>
-      {props.day ? moment(new Date(props.day)).format("DD MMMM YYYY") : ""}
-      <input ref={props.ref} onClick={onFocus} />
-    </ModalComp>
-  );
-};
-
-export const ModalCalendarInput: FC<{
-  left?: boolean;
-  handleDayClick: (day: any) => void;
-  day: any;
-}> = ({ left, handleDayClick, day }) => {
-  const [selectedDay, setSelectedDay] = useState<any>(day);
-  return (
-    <ModalInputCustom left={left}>
-      <DayPickerInput
-        component={React.forwardRef((props, ref) => (
-          <ModalInput {...props} day={selectedDay} innerRef={ref} />
-        ))}
-        onDayChange={(day: any) => console.log(day)}
-        dayPickerProps={{
-          firstDayOfWeek: 1,
-          months: MONTHS,
-          weekdaysShort: WEEKDAYS_SHORT,
-          navbarElement: <Navbar />,
-          onDayClick: handleDayClick,
-          selectedDays: selectedDay,
-        }}
-      />
-    </ModalInputCustom>
   );
 };
 
@@ -286,31 +207,24 @@ export const ModalRangeInput: FC<{
   };
 
   const modifiers = { start: selfDate.from, end: selfDate.to };
-
+  const { t } = useTranslation();
   return (
     <>
       <DatePickerContainer ref={ref}>
         <CalendarWrap onClick={() => setShowOpen(!showOpen)}>
-          <Period>Указать период...</Period>
-          {/* <Period>
-            {selfDate.from
-              ? moment(selfDate.from).format("DD.MM.YY") +
-                " " +
-                moment(selfDate.to).format("DD.MM.YY")
-              : "Указать период..."}
-          </Period> */}
+          <Period>{t("period")}...</Period>
         </CalendarWrap>
         {showOpen && (
           <CustomDatePicker
             selectedDays={[selfDate.from, selfDate]}
-            months={MONTHS}
+            months={lang === "en" ? MONTHS_ENG : MONTHS}
             onDayClick={handleDayClick}
             firstDayOfWeek={1}
-            todayButton="Готово"
+            todayButton={t("ready")}
             onTodayButtonClick={handleChange}
             modifiers={modifiers}
             weekdaysLong={WEEKDAYS_LONG}
-            weekdaysShort={WEEKDAYS_SHORT}
+            weekdaysShort={lang === "en" ? WEEKDAYS_SHORT_ENG : WEEKDAYS_SHORT}
             navbarElement={<Navbar />}
           />
         )}
@@ -330,7 +244,6 @@ export const TestInput: FC<{
     from: undefined,
     to: undefined,
   });
-
   const ref = useRef(null);
 
   const handleClickOutside = () => {
@@ -375,13 +288,13 @@ export const TestInput: FC<{
         {showOpen && (
           <CustomDatePicker
             selectedDays={[selfDate.from, selfDate]}
-            months={MONTHS}
+            months={lang === "en" ? MONTHS_ENG : MONTHS}
             onDayClick={handleDayClick}
             firstDayOfWeek={1}
             onTodayButtonClick={handleChange}
             modifiers={modifiers}
             weekdaysLong={WEEKDAYS_LONG}
-            weekdaysShort={WEEKDAYS_SHORT}
+            weekdaysShort={lang === "en" ? WEEKDAYS_SHORT_ENG : WEEKDAYS_SHORT}
             navbarElement={<Navbar />}
           />
         )}
@@ -407,12 +320,11 @@ export const MainAdminInput: FC<{
   const handleClickOutside = () => {
     setShowOpen(false);
   };
-
+  const { t } = useTranslation();
   useOnClickOutside(ref, handleClickOutside);
 
   const handleDayClick = (day: Date) => {
     const range = DateUtils.addDayToRange(day, selfDate);
-    console.log("range", range);
     setSelfDate({ from: range.from, to: range.to });
     if (range.from && range.to) {
       setOpenDate({ from: range.from, to: range.to });
@@ -427,9 +339,6 @@ export const MainAdminInput: FC<{
   };
 
   const modifiers = { start: selfDate.from, end: selfDate.to };
-
-  // console.log("start", start._d);
-  // console.log("end", end._d);
   return (
     <>
       <AdminInputsContainer ref={ref}>
@@ -449,7 +358,9 @@ export const MainAdminInput: FC<{
                 </span>
               </>
             ) : (
-              <span>За {label}</span>
+              <span>
+                {t("privateArea.at")} {label}
+              </span>
             )}
           </DateInput>
         </BoxInput>
@@ -462,14 +373,14 @@ export const MainAdminInput: FC<{
         >
           <CustomDatePicker
             selectedDays={[selfDate.from, selfDate]}
-            months={MONTHS}
+            months={lang === "en" ? MONTHS_ENG : MONTHS}
             onDayClick={handleDayClick}
             firstDayOfWeek={1}
             onTodayButtonClick={handleChange}
-            todayButton="Готово"
+            todayButton={t("ready")}
             modifiers={modifiers}
             weekdaysLong={WEEKDAYS_LONG}
-            weekdaysShort={WEEKDAYS_SHORT}
+            weekdaysShort={lang === "en" ? WEEKDAYS_SHORT_ENG : WEEKDAYS_SHORT}
             navbarElement={<Navbar />}
           />
         </CSSTransition>
@@ -497,18 +408,6 @@ const Period = styled.div`
 const flex = css`
   display: flex;
   align-items: flex-end;
-`;
-
-const CalendarLabel = styled.div`
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 16px;
-  color: #515172;
-  padding-right: 10px;
-`;
-
-const CalendarItem = styled.div`
-  ${flex}
 `;
 
 const CalendarWrap = styled.div`
@@ -544,128 +443,6 @@ const MyComp = styled.label`
       border: 0;
       outline: 0;
     }
-  }
-`;
-
-const ModalComp = styled(MyComp)`
-  border: none;
-  width: 130px;
-  border-radius: 0;
-  border-bottom: 1px solid rgba(66, 139, 202, 0.2);
-  padding: 4px 0;
-  @media (max-width: 768px) {
-    width: 90px;
-  }
-`;
-
-const InputCustom = styled.div`
-  .DayPickerInput-Overlay {
-    right: 0;
-    left: auto;
-    @media (max-width: 768px) {
-      right: -15px;
-    }
-  }
-  .DayPicker-Caption,
-  .DayPicker-Caption > div {
-    text-align: center;
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 21px;
-    letter-spacing: 0.1px;
-    color: #0e0d3d;
-    font-family: "Roboto", sans-serif;
-  }
-  .DayPicker-Caption {
-    margin-bottom: 13px;
-    margin-top: 9px;
-  }
-  .DayPicker-Day {
-    color: #0e0d3d;
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 24px;
-    padding: 4px 7px;
-    width: 48px;
-    height: 48px;
-    margin: 5px;
-    &:focus {
-      outline: none;
-    }
-    @media (max-width: 576px) {
-      width: 32px;
-      height: 32px;
-      margin: 0px;
-      padding: 5px 0px;
-    }
-  }
-  .DayPicker-Day--selected:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside) {
-    background: #ff416e;
-    color: #fff;
-  }
-
-  .Selectable
-    .DayPicker-Day--selected:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside) {
-    background: #f0f8ff !important;
-    color: #4a90e2;
-  }
-  .DayPicker-Day--today {
-    color: #d0021b;
-    font-weight: 700;
-  }
-  .DayPicker-Weekday {
-    font-size: 12px;
-    line-height: 15px;
-    text-align: center;
-    letter-spacing: 0.4px;
-    color: #515172;
-    padding: 0 16px;
-    @media (max-width: 992px) {
-      padding: 0 9px;
-    }
-  }
-  .DayPicker-Weekdays {
-    display: table-caption;
-    margin-bottom: 15px;
-  }
-  .DayPicker-Months:focus,
-  .DayPicker-Month:focus,
-  .DayPicker:focus,
-  .DayPicker-wrapper:focus {
-    outline: none;
-  }
-`;
-
-const ModalInputCustom = styled(InputCustom)<{ left?: boolean }>`
-  .DayPickerInput-Overlay {
-    right: ${(props) => (props.left ? "auto" : "0")};
-    left: ${(props) => (props.left ? "-16px" : "auto")};
-    bottom: 100%;
-    z-index: 10000;
-    @media (max-width: 768px) {
-      right: -15px;
-    }
-  }
-`;
-
-const DateSelect = styled.div`
-  display: flex;
-  flex: 1;
-  align-items: center;
-  padding: 16px;
-`;
-
-const Input = styled.input`
-  color: #4a4a4a;
-  font-size: 16px;
-  line-height: 20px;
-  width: 65%;
-  cursor: inherit;
-  text-overflow: clip;
-  white-space: nowrap;
-
-  ::placeholder {
-    color: #a0b0b9;
   }
 `;
 

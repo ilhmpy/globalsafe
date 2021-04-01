@@ -1,22 +1,9 @@
-import React, {
-  useState,
-  MouseEvent,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-} from "react";
-import { Header } from "../../components/Header/Header";
-import styled, { css } from "styled-components/macro";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import * as Styled from "./Styles.elements";
-import { Tabs, Tab } from "../../components/UI/Tabs";
 import { Card, Container } from "../../globalStyles";
-import { UpTitle } from "../../components/UI/UpTitle";
 import { Redirect } from "react-router-dom";
-import { Button } from "../../components/Button/Button";
 import { AppContext } from "../../context/HubContext";
 import { AmountContext } from "../../context/AmountContext";
-import { Tables } from "../../components/Table/Table";
 import { TestChart } from "../../components/Charts/Test";
 import { CSSTransition } from "react-transition-group";
 import useWindowSize from "../../hooks/useWindowSize";
@@ -24,17 +11,13 @@ import { Collection, RootList } from "../../types/info";
 import { Modal } from "../../components/Modal/Modal";
 import { ReactComponent as Left } from "../../assets/svg/arrowLeftModal.svg";
 import moment from "moment";
-import "moment/locale/ru";
 import { ModalRangeInput } from "../../components/UI/DayPicker";
 import { Input } from "../../components/UI/Input";
 import { OpenDate } from "../../types/dates";
 import { RootDeposits, DepositsCollection } from "../../types/info";
-import ReactNotification, { store } from "react-notifications-component";
-import "react-notifications-component/dist/theme.css";
 import { DepositListModal } from "./Modals";
 import { Loading } from "../../components/UI/Loading";
 import { useTranslation } from "react-i18next";
-moment.locale("ru");
 
 type Obj = {
   id: string;
@@ -47,7 +30,6 @@ type Deposit = {
 };
 
 export const Info = () => {
-  const [active, setActive] = useState(0);
   const [activeDeposite, setActiveDeposite] = useState(0);
   const [card, setCard] = useState(0);
   const [card2, setCard2] = useState(0);
@@ -88,7 +70,7 @@ export const Info = () => {
   const [loading, setLoading] = useState(true);
   const [loadDeposit, setLoadDeposit] = useState(false);
   const inputRef = useRef<any>(null);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const yearSelected = () => {
     let year = moment().format("YYYY");
@@ -288,36 +270,6 @@ export const Info = () => {
     }
   }, [hubConnection]);
 
-  // useEffect(() => {
-  //   if (hubConnection) {
-  //     hubConnection
-  //       .invoke("GetBalanceOperationSum", 1, [0, 1, 2, 3, 4, 5, 6, 7, 8])
-  //       .then((res: any) => {
-  //         // console.log("GetBalanceOperationSum", res);
-  //       })
-  //       .catch((err: Error) => console.log(err));
-  //   }
-  // }, [hubConnection]);
-
-  // const handleClick = (id: number) => {
-  //   if (id !== active) {
-  //     setActive(id);
-  //   }
-  // };
-
-  // const handleBalance = (id: number) => {
-  //   if (id !== depositTabs) {
-  //     setDepositTabs(id);
-  //     if (id === 0) {
-  //       setBalanceLogs([0, 1, 2, 3, 4, 5, 6, 7, 8]);
-  //     } else if (id === 1) {
-  //       setBalanceLogs([1, 7, 8]);
-  //     } else if (id === 2) {
-  //       setBalanceLogs([2]);
-  //     }
-  //   }
-  // };
-
   if (user === null) {
     return null;
   }
@@ -326,65 +278,8 @@ export const Info = () => {
     return <Redirect to="/" />;
   }
 
-  // const operation = (id: number) => {
-  //   if (id === 6) {
-  //     return "Открытие депозита";
-  //   } else if (id === 7) {
-  //     return "Начисление дивидендов";
-  //   } else if (id === 8) {
-  //     return "Закрытие депозита";
-  //   } else if (id === 2) {
-  //     return "Вывод баланса";
-  //   } else if (id === 1) {
-  //     return "Пополнение баланса";
-  //   }
-  // };
-
   const onClose = () => {
     setOpen(false);
-  };
-
-  const alert = (
-    title: string,
-    message: string,
-    type: "success" | "default" | "warning" | "info" | "danger"
-  ) => {
-    store.addNotification({
-      title: title,
-      message: message,
-      type: type,
-      insert: "top",
-      container: "top-right",
-      animationIn: ["animate__animated", "animate__fadeIn"],
-      animationOut: ["animate__animated", "animate__fadeOut"],
-      dismiss: {
-        duration: 5000,
-      },
-    });
-  };
-
-  const withdrawBalance = () => {
-    if (hubConnection) {
-      hubConnection
-        .invoke("Withdraw", 1, +withdrawValue * 100000)
-        .then((res) => {
-          // console.log("Withdraw", res);
-          if (res === 1) {
-            setWithdraw(false);
-            setWithdrawValue("");
-            alert(t("alert.success"), t("alert.successMsg"), "success");
-          } else {
-            setWithdraw(false);
-            setWithdrawValue("");
-            alert(t("alert.error"), t("alert.errorMsg"), "danger");
-          }
-        })
-        .catch((err: Error) => {
-          setWithdraw(false);
-          setWithdrawValue("");
-          alert(t("alert.error"), t("alert.errorMsg"), "danger");
-        });
-    }
   };
 
   const handleBackModal = () => {
@@ -398,55 +293,10 @@ export const Info = () => {
     setAddDepositValue((item.minAmount / 100000).toString());
   };
 
-  const openNewDeposit = () => {
-    setAddDeposit(false);
-    if (hubConnection && depositSelect !== null) {
-      setLoadDeposit(true);
-      hubConnection
-        .invoke(
-          "CreateUserDeposit",
-          +addDepositValue * 100000,
-          depositSelect.safeId
-        )
-        .then((res) => {
-          // console.log("CreateUserDeposit", res);
-          setLoadDeposit(false);
-          setWithdraw(false);
-          setWithdrawValue("");
-          alert(t("alert.success"), t("alert.depositMsg"), "success");
-        })
-        .catch((err: Error) => {
-          console.log(err);
-          setLoadDeposit(false);
-          setWithdraw(false);
-          setWithdrawValue("");
-          alert(t("alert.error"), t("alert.depositErrorMsg"), "danger");
-        })
-        .finally(() => {
-          setDepositSelect(null);
-          setAddDepositValue("");
-        });
-    }
-  };
-
   const handleDepositModal = () => {
     setAddDeposit(false);
     setDepositListModal(true);
   };
-
-  // const onHandleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  //   setSelectedYear(e.target.value);
-  //   let start: any = moment(
-  //     `${selectedMonth}.${e.target.value}`,
-  //     "M.YYYY"
-  //   ).startOf("month");
-
-  //   let end: any = moment(`${selectedMonth}.${e.target.value}`, "M.YYYY").endOf(
-  //     "month"
-  //   );
-  //   setOpenDate({ from: start._d, to: end._d });
-  //   onClose();
-  // };
 
   const minOffset = 0;
   const maxOffset = 10;
@@ -459,564 +309,397 @@ export const Info = () => {
     options.push(<option value={year}>{year}</option>);
   }
 
-  // const onHandleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  //   setSelectedMonth(e.target.value);
-  //   let start: any = moment(
-  //     `${e.target.value}.${selectedYear}`,
-  //     "M.YYYY"
-  //   ).startOf("month");
-  //   let end: any = moment(`${e.target.value}.${selectedYear}`, "M.YYYY").endOf(
-  //     "month"
-  //   );
-
-  //   setOpenDate({ from: start._d, to: end._d });
-  //   onClose();
-  // };
-
-  // const allTime = () => {
-  //   setOpenDate({ from: new Date("2021-02-09T00:47:45"), to: new Date() });
-  //   onClose();
-  // };
-
   return (
     <>
-      <Header />
-      <Styled.Page>
-        <Container>
-          <UpTitle>{t("privateArea.uptitle")}</UpTitle>
-        </Container>
-        <ReactNotification />
+      <>
+        {loadDeposit && (
+          <Styled.Loader>
+            <Loading />
+          </Styled.Loader>
+        )}
         <Container>
           <Card>
-            <Styled.InfoWrap>
-              <Styled.UserBlock>
-                <Styled.InfoTitle>{user}</Styled.InfoTitle>
-                <Styled.BalanceItem>
-                  <Styled.BalanceItemName>
-                    {t("privateArea.balance")}
-                  </Styled.BalanceItemName>
-                  <Styled.BalanceItemValue pink>
-                    {balance ? (balance / 100000).toLocaleString() : "0"}
-                  </Styled.BalanceItemValue>
-                </Styled.BalanceItem>
-              </Styled.UserBlock>
-              <Styled.InfoButtons>
-                <Button dangerOutline onClick={() => setAddDeposit(true)}>
-                  {t("privateArea.newDeposit")}
-                </Button>
-                <Button danger onClick={() => setWithdraw(true)}>
-                  {t("privateArea.withdraw")}
-                </Button>
-              </Styled.InfoButtons>
-            </Styled.InfoWrap>
-            <Tabs>
-              <Styled.NavTabs to="/info">
-                <div>{t("privateArea.tabs.tab1")}</div>{" "}
-              </Styled.NavTabs>
-              <Styled.NavTabs to="/deposits">
-                <div>{t("privateArea.tabs.tab2")}</div>{" "}
-              </Styled.NavTabs>
-              <Styled.NavTabs to="/balance">
-                <div>{t("privateArea.tabs.tab3")}</div>{" "}
-              </Styled.NavTabs>
-            </Tabs>
+            <Styled.Deposit>
+              <Styled.DepositItem>
+                <Styled.DepositName>
+                  {t("privateArea.openDeposits")}
+                </Styled.DepositName>
+                <Styled.DepositValue>
+                  {activeDeposite ? activeDeposite : "-"}
+                </Styled.DepositValue>
+              </Styled.DepositItem>
+              <Styled.DepositItem>
+                <Styled.DepositName>
+                  {t("privateArea.sumDeposits")}
+                </Styled.DepositName>
+                <Styled.DepositValue>
+                  {(depositTotal / 100000).toLocaleString()}
+                </Styled.DepositValue>
+              </Styled.DepositItem>
+              <Styled.DepositItem>
+                <Styled.DepositName>
+                  {t("privateArea.allPay")}
+                </Styled.DepositName>
+                <Styled.DepositValue>
+                  {(totalPayed / 100000).toLocaleString()}
+                </Styled.DepositValue>
+              </Styled.DepositItem>
+            </Styled.Deposit>
           </Card>
         </Container>
+        {!size && (
+          <Styled.ContainerRow>
+            <Styled.Half>
+              <Styled.HalfHead>
+                <Styled.HalfTitle>{t("privateArea.pay")}</Styled.HalfTitle>
+                <Styled.HalfTabs>
+                  <Styled.HalfTab onClick={() => setCard(0)} card={card === 0}>
+                    %
+                  </Styled.HalfTab>
+                  <Styled.HalfTab>/</Styled.HalfTab>
+                  <Styled.HalfTab onClick={() => setCard(1)} card={card === 1}>
+                    CWD
+                  </Styled.HalfTab>
+                </Styled.HalfTabs>
+              </Styled.HalfHead>
+              <Styled.HalfContent card={card === 0}>
+                <CSSTransition
+                  in={card === 0}
+                  timeout={300}
+                  classNames="chart"
+                  unmountOnExit
+                >
+                  <TestChart
+                    percent
+                    labels={
+                      list.length ? list.map((i: any) => i.deposit.name) : [""]
+                    }
+                    series={
+                      list.length
+                        ? list.map((i: any) => i.payedAmountView)
+                        : [""]
+                    }
+                  />
+                </CSSTransition>
+                <Styled.NextPay>
+                  {t("privateArea.nextPay")}:{" "}
+                  <Styled.Date>
+                    {nextDate ? moment(nextDate).format("DD MMMM YYYY") : "-"}
+                  </Styled.Date>
+                </Styled.NextPay>
+              </Styled.HalfContent>
+              <Styled.HalfContent card={card === 1}>
+                <CSSTransition
+                  in={card === 1}
+                  timeout={300}
+                  classNames="chart"
+                  unmountOnExit
+                >
+                  <TestChart
+                    labels={
+                      list.length ? list.map((i: any) => i.deposit.name) : [""]
+                    }
+                    series={
+                      list.length
+                        ? list.map((i: any) => i.payedAmountView)
+                        : [""]
+                    }
+                  />
+                </CSSTransition>
+                <Styled.NextPay>
+                  {t("privateArea.nextPay")}:{" "}
+                  <Styled.Date>
+                    {nextDate ? moment(nextDate).format("DD MMMM YYYY") : "-"}
+                  </Styled.Date>
+                </Styled.NextPay>
+              </Styled.HalfContent>
+            </Styled.Half>
 
-        <>
-          {loadDeposit && (
-            <Styled.Loader>
-              <Loading />
-            </Styled.Loader>
-          )}
+            <Styled.Half>
+              <Styled.HalfHead>
+                <Styled.HalfTitle>{t("privateArea.take")}</Styled.HalfTitle>
+                <Styled.HalfTabs>
+                  <Styled.HalfTab
+                    onClick={() => setCard2(0)}
+                    card={card2 === 0}
+                  >
+                    %
+                  </Styled.HalfTab>
+                  <Styled.HalfTab>/</Styled.HalfTab>
+                  <Styled.HalfTab
+                    onClick={() => setCard2(1)}
+                    card={card2 === 1}
+                  >
+                    CWD
+                  </Styled.HalfTab>
+                </Styled.HalfTabs>
+              </Styled.HalfHead>
+              <Styled.HalfContent card={card2 === 0}>
+                <CSSTransition
+                  in={card2 === 0}
+                  timeout={300}
+                  classNames="chart"
+                  unmountOnExit
+                >
+                  <TestChart
+                    percent
+                    labels={
+                      list.length ? list.map((i: any) => i.deposit.name) : [""]
+                    }
+                    series={
+                      list.length
+                        ? list.map((i: any) => i.baseAmountView)
+                        : [""]
+                    }
+                  />
+                </CSSTransition>
+              </Styled.HalfContent>
+              <Styled.HalfContent card={card2 === 1}>
+                <CSSTransition
+                  in={card2 === 1}
+                  timeout={300}
+                  classNames="chart"
+                  unmountOnExit
+                >
+                  <TestChart
+                    labels={
+                      list.length ? list.map((i: any) => i.deposit.name) : [""]
+                    }
+                    series={
+                      list.length
+                        ? list.map((i: any) => i.baseAmountView)
+                        : [""]
+                    }
+                  />
+                </CSSTransition>
+              </Styled.HalfContent>
+            </Styled.Half>
+          </Styled.ContainerRow>
+        )}
+
+        {size && (
           <Container>
             <Card>
-              <Styled.Deposit>
-                <Styled.DepositItem>
-                  <Styled.DepositName>
-                    {t("privateArea.openDeposits")}
-                  </Styled.DepositName>
-                  <Styled.DepositValue>
-                    {activeDeposite ? activeDeposite : "-"}
-                  </Styled.DepositValue>
-                </Styled.DepositItem>
-                <Styled.DepositItem>
-                  <Styled.DepositName>
-                    {t("privateArea.sumDeposits")}
-                  </Styled.DepositName>
-                  <Styled.DepositValue>
-                    {(depositTotal / 100000).toLocaleString()}
-                  </Styled.DepositValue>
-                </Styled.DepositItem>
-                <Styled.DepositItem>
-                  <Styled.DepositName>
-                    {t("privateArea.allPay")}
-                  </Styled.DepositName>
-                  <Styled.DepositValue>
-                    {(totalPayed / 100000).toLocaleString()}
-                  </Styled.DepositValue>
-                </Styled.DepositItem>
-              </Styled.Deposit>
+              <Styled.HalfTabs>
+                <Styled.MobHalfTab
+                  onClick={() => setActiveMob(0)}
+                  card={activMob === 0}
+                >
+                  {t("privateArea.pay")}
+                </Styled.MobHalfTab>
+                <Styled.MobHalfTab
+                  onClick={() => setActiveMob(1)}
+                  card={activMob === 1}
+                >
+                  {t("privateArea.take")}
+                </Styled.MobHalfTab>
+              </Styled.HalfTabs>
+              <Styled.Content active={activMob === 0}>
+                <CSSTransition
+                  in={activMob === 0}
+                  timeout={300}
+                  classNames="chart"
+                  unmountOnExit
+                >
+                  <>
+                    <Styled.HalfTabs>
+                      <Styled.HalfTab
+                        onClick={() => setCard(0)}
+                        card={card === 0}
+                      >
+                        %
+                      </Styled.HalfTab>
+                      <Styled.HalfTab>/</Styled.HalfTab>
+                      <Styled.HalfTab
+                        onClick={() => setCard(1)}
+                        card={card === 1}
+                      >
+                        CWD
+                      </Styled.HalfTab>
+                    </Styled.HalfTabs>
+                    <Styled.HalfContent card={card === 0}>
+                      <CSSTransition
+                        in={card === 0}
+                        timeout={300}
+                        classNames="chart"
+                        unmountOnExit
+                      >
+                        <TestChart
+                          percent
+                          mobHeight={list.length ? 150 : 0}
+                          labels={
+                            list.length
+                              ? list.map((i: any) => i.deposit.name)
+                              : [""]
+                          }
+                          series={
+                            list.length
+                              ? list.map((i: any) => i.payedAmountView)
+                              : [""]
+                          }
+                        />
+                      </CSSTransition>
+                      <Styled.NextPay>
+                        <Styled.Date></Styled.Date>
+                      </Styled.NextPay>
+                    </Styled.HalfContent>
+
+                    <Styled.HalfContent card={card === 1}>
+                      <CSSTransition
+                        in={card === 1}
+                        timeout={300}
+                        classNames="chart"
+                        unmountOnExit
+                      >
+                        <TestChart
+                          mobHeight={list.length ? 150 : 0}
+                          labels={
+                            list.length
+                              ? list.map((i: any) => i.deposit.name)
+                              : [""]
+                          }
+                          series={
+                            list.length
+                              ? list.map((i: any) => i.payedAmountView)
+                              : [""]
+                          }
+                        />
+                      </CSSTransition>
+                    </Styled.HalfContent>
+                    <Styled.NextPay>
+                      {t("privateArea.nextPay")}:{" "}
+                      <Styled.Date>
+                        {nextDate
+                          ? moment(nextDate).format("DD MMMM YYYY")
+                          : "-"}
+                      </Styled.Date>
+                    </Styled.NextPay>
+                  </>
+                </CSSTransition>
+              </Styled.Content>
+              <Styled.Content active={activMob === 1}>
+                <CSSTransition
+                  in={activMob === 1}
+                  timeout={300}
+                  classNames="chart"
+                  unmountOnExit
+                >
+                  <>
+                    <Styled.HalfTabs>
+                      <Styled.HalfTab
+                        onClick={() => setCard2(0)}
+                        card={card2 === 0}
+                      >
+                        %
+                      </Styled.HalfTab>
+                      <Styled.HalfTab>/</Styled.HalfTab>
+                      <Styled.HalfTab
+                        onClick={() => setCard2(1)}
+                        card={card2 === 1}
+                      >
+                        CWD
+                      </Styled.HalfTab>
+                    </Styled.HalfTabs>
+
+                    <Styled.HalfContent card={card2 === 0}>
+                      <CSSTransition
+                        in={card2 === 0}
+                        timeout={300}
+                        classNames="chart"
+                        unmountOnExit
+                      >
+                        <TestChart
+                          percent
+                          mobHeight={list.length ? 150 : 0}
+                          labels={
+                            list.length
+                              ? list.map((i: any) => i.deposit.name)
+                              : [""]
+                          }
+                          series={
+                            list.length
+                              ? list.map((i: any) => i.baseAmountView)
+                              : [""]
+                          }
+                        />
+                      </CSSTransition>
+                      <Styled.NextPay>
+                        <Styled.Date></Styled.Date>
+                      </Styled.NextPay>
+                    </Styled.HalfContent>
+
+                    <Styled.HalfContent card={card2 === 1}>
+                      <CSSTransition
+                        in={card2 === 1}
+                        timeout={300}
+                        classNames="chart"
+                        unmountOnExit
+                      >
+                        <TestChart
+                          mobHeight={list.length ? 150 : 0}
+                          labels={
+                            list.length
+                              ? list.map((i: any) => i.deposit.name)
+                              : [""]
+                          }
+                          series={
+                            list.length
+                              ? list.map((i: any) => i.baseAmountView)
+                              : [""]
+                          }
+                        />
+                      </CSSTransition>
+                      <Styled.NextPay>
+                        <Styled.Date></Styled.Date>
+                      </Styled.NextPay>
+                    </Styled.HalfContent>
+                  </>
+                </CSSTransition>
+              </Styled.Content>
             </Card>
           </Container>
-          {!size && (
-            <Styled.ContainerRow>
-              <Styled.Half>
-                <Styled.HalfHead>
-                  <Styled.HalfTitle>{t("privateArea.pay")}</Styled.HalfTitle>
-                  <Styled.HalfTabs>
-                    <Styled.HalfTab
-                      onClick={() => setCard(0)}
-                      card={card === 0}
-                    >
-                      %
-                    </Styled.HalfTab>
-                    <Styled.HalfTab>/</Styled.HalfTab>
-                    <Styled.HalfTab
-                      onClick={() => setCard(1)}
-                      card={card === 1}
-                    >
-                      CWD
-                    </Styled.HalfTab>
-                  </Styled.HalfTabs>
-                </Styled.HalfHead>
-                <Styled.HalfContent card={card === 0}>
-                  <CSSTransition
-                    in={card === 0}
-                    timeout={300}
-                    classNames="chart"
-                    unmountOnExit
-                  >
-                    <TestChart
-                      percent
-                      labels={
-                        list.length
-                          ? list.map((i: any) => i.deposit.name)
-                          : [""]
-                      }
-                      series={
-                        list.length
-                          ? list.map((i: any) => i.payedAmountView)
-                          : [""]
-                      }
-                    />
-                  </CSSTransition>
-                  <Styled.NextPay>
-                    {t("privateArea.nextPay")}:{" "}
-                    <Styled.Date>
-                      {nextDate ? moment(nextDate).format("DD MMMM YYYY") : "-"}
-                    </Styled.Date>
-                  </Styled.NextPay>
-                </Styled.HalfContent>
-                <Styled.HalfContent card={card === 1}>
-                  <CSSTransition
-                    in={card === 1}
-                    timeout={300}
-                    classNames="chart"
-                    unmountOnExit
-                  >
-                    <TestChart
-                      labels={
-                        list.length
-                          ? list.map((i: any) => i.deposit.name)
-                          : [""]
-                      }
-                      series={
-                        list.length
-                          ? list.map((i: any) => i.payedAmountView)
-                          : [""]
-                      }
-                    />
-                  </CSSTransition>
-                  <Styled.NextPay>
-                    {t("privateArea.nextPay")}:{" "}
-                    <Styled.Date>
-                      {nextDate ? moment(nextDate).format("DD MMMM YYYY") : "-"}
-                    </Styled.Date>
-                  </Styled.NextPay>
-                </Styled.HalfContent>
-              </Styled.Half>
+        )}
 
-              <Styled.Half>
-                <Styled.HalfHead>
-                  <Styled.HalfTitle>{t("privateArea.take")}</Styled.HalfTitle>
-                  <Styled.HalfTabs>
-                    <Styled.HalfTab
-                      onClick={() => setCard2(0)}
-                      card={card2 === 0}
-                    >
-                      %
-                    </Styled.HalfTab>
-                    <Styled.HalfTab>/</Styled.HalfTab>
-                    <Styled.HalfTab
-                      onClick={() => setCard2(1)}
-                      card={card2 === 1}
-                    >
-                      CWD
-                    </Styled.HalfTab>
-                  </Styled.HalfTabs>
-                </Styled.HalfHead>
-                <Styled.HalfContent card={card2 === 0}>
-                  <CSSTransition
-                    in={card2 === 0}
-                    timeout={300}
-                    classNames="chart"
-                    unmountOnExit
-                  >
-                    <TestChart
-                      percent
-                      labels={
-                        list.length
-                          ? list.map((i: any) => i.deposit.name)
-                          : [""]
-                      }
-                      series={
-                        list.length
-                          ? list.map((i: any) => i.baseAmountView)
-                          : [""]
-                      }
-                    />
-                  </CSSTransition>
-                </Styled.HalfContent>
-                <Styled.HalfContent card={card2 === 1}>
-                  <CSSTransition
-                    in={card2 === 1}
-                    timeout={300}
-                    classNames="chart"
-                    unmountOnExit
-                  >
-                    <TestChart
-                      labels={
-                        list.length
-                          ? list.map((i: any) => i.deposit.name)
-                          : [""]
-                      }
-                      series={
-                        list.length
-                          ? list.map((i: any) => i.baseAmountView)
-                          : [""]
-                      }
-                    />
-                  </CSSTransition>
-                </Styled.HalfContent>
-              </Styled.Half>
-            </Styled.ContainerRow>
-          )}
-
-          {size && (
-            <Container>
-              <Card>
-                <Styled.HalfTabs>
-                  <Styled.MobHalfTab
-                    onClick={() => setActiveMob(0)}
-                    card={activMob === 0}
-                  >
-                    {t("privateArea.pay")}
-                  </Styled.MobHalfTab>
-                  <Styled.MobHalfTab
-                    onClick={() => setActiveMob(1)}
-                    card={activMob === 1}
-                  >
-                    {t("privateArea.take")}
-                  </Styled.MobHalfTab>
-                </Styled.HalfTabs>
-                <Styled.Content active={activMob === 0}>
-                  <CSSTransition
-                    in={activMob === 0}
-                    timeout={300}
-                    classNames="chart"
-                    unmountOnExit
-                  >
-                    <>
-                      <Styled.HalfTabs>
-                        <Styled.HalfTab
-                          onClick={() => setCard(0)}
-                          card={card === 0}
-                        >
-                          %
-                        </Styled.HalfTab>
-                        <Styled.HalfTab>/</Styled.HalfTab>
-                        <Styled.HalfTab
-                          onClick={() => setCard(1)}
-                          card={card === 1}
-                        >
-                          CWD
-                        </Styled.HalfTab>
-                      </Styled.HalfTabs>
-                      <Styled.HalfContent card={card === 0}>
-                        <CSSTransition
-                          in={card === 0}
-                          timeout={300}
-                          classNames="chart"
-                          unmountOnExit
-                        >
-                          <TestChart
-                            percent
-                            mobHeight={list.length ? 150 : 0}
-                            labels={
-                              list.length
-                                ? list.map((i: any) => i.deposit.name)
-                                : [""]
-                            }
-                            series={
-                              list.length
-                                ? list.map((i: any) => i.payedAmountView)
-                                : [""]
-                            }
-                          />
-                        </CSSTransition>
-                        <Styled.NextPay>
-                          <Styled.Date></Styled.Date>
-                        </Styled.NextPay>
-                      </Styled.HalfContent>
-
-                      <Styled.HalfContent card={card === 1}>
-                        <CSSTransition
-                          in={card === 1}
-                          timeout={300}
-                          classNames="chart"
-                          unmountOnExit
-                        >
-                          <TestChart
-                            mobHeight={list.length ? 150 : 0}
-                            labels={
-                              list.length
-                                ? list.map((i: any) => i.deposit.name)
-                                : [""]
-                            }
-                            series={
-                              list.length
-                                ? list.map((i: any) => i.payedAmountView)
-                                : [""]
-                            }
-                          />
-                        </CSSTransition>
-                      </Styled.HalfContent>
-                      <Styled.NextPay>
-                        {t("privateArea.nextPay")}:{" "}
-                        <Styled.Date>
-                          {nextDate
-                            ? moment(nextDate).format("DD MMMM YYYY")
-                            : "-"}
-                        </Styled.Date>
-                      </Styled.NextPay>
-                    </>
-                  </CSSTransition>
-                </Styled.Content>
-                <Styled.Content active={activMob === 1}>
-                  <CSSTransition
-                    in={activMob === 1}
-                    timeout={300}
-                    classNames="chart"
-                    unmountOnExit
-                  >
-                    <>
-                      <Styled.HalfTabs>
-                        <Styled.HalfTab
-                          onClick={() => setCard2(0)}
-                          card={card2 === 0}
-                        >
-                          %
-                        </Styled.HalfTab>
-                        <Styled.HalfTab>/</Styled.HalfTab>
-                        <Styled.HalfTab
-                          onClick={() => setCard2(1)}
-                          card={card2 === 1}
-                        >
-                          CWD
-                        </Styled.HalfTab>
-                      </Styled.HalfTabs>
-
-                      <Styled.HalfContent card={card2 === 0}>
-                        <CSSTransition
-                          in={card2 === 0}
-                          timeout={300}
-                          classNames="chart"
-                          unmountOnExit
-                        >
-                          <TestChart
-                            percent
-                            mobHeight={list.length ? 150 : 0}
-                            labels={
-                              list.length
-                                ? list.map((i: any) => i.deposit.name)
-                                : [""]
-                            }
-                            series={
-                              list.length
-                                ? list.map((i: any) => i.baseAmountView)
-                                : [""]
-                            }
-                          />
-                        </CSSTransition>
-                        <Styled.NextPay>
-                          <Styled.Date></Styled.Date>
-                        </Styled.NextPay>
-                      </Styled.HalfContent>
-
-                      <Styled.HalfContent card={card2 === 1}>
-                        <CSSTransition
-                          in={card2 === 1}
-                          timeout={300}
-                          classNames="chart"
-                          unmountOnExit
-                        >
-                          <TestChart
-                            mobHeight={list.length ? 150 : 0}
-                            labels={
-                              list.length
-                                ? list.map((i: any) => i.deposit.name)
-                                : [""]
-                            }
-                            series={
-                              list.length
-                                ? list.map((i: any) => i.baseAmountView)
-                                : [""]
-                            }
-                          />
-                        </CSSTransition>
-                        <Styled.NextPay>
-                          <Styled.Date></Styled.Date>
-                        </Styled.NextPay>
-                      </Styled.HalfContent>
-                    </>
-                  </CSSTransition>
-                </Styled.Content>
-              </Card>
-            </Container>
-          )}
-
-          <CSSTransition
-            in={open}
-            timeout={300}
-            classNames="modal"
-            unmountOnExit
-          >
-            <Styled.ModalWrap>
-              <Modal onClose={onClose}>
-                <Styled.ModalContent>
-                  {/* <Arrow onClick={onClose} /> */}
-                  <Styled.ModalTitle>
-                    {t("privateArea.selectPeriod")}
-                  </Styled.ModalTitle>
-                  <Styled.ModalItem>
-                    <Styled.DateTitle>
-                      {t("privateArea.thisMonth")}
-                    </Styled.DateTitle>
-                    <Styled.DateText onClick={monthSelected}>
-                      {moment().format("MMMM YYYY")}
-                    </Styled.DateText>
-                  </Styled.ModalItem>
-                  <Styled.ModalItem>
-                    <Styled.DateTitle>
-                      {t("privateArea.thisYear")}
-                    </Styled.DateTitle>
-                    <Styled.DateText onClick={yearSelected}>
-                      {moment().format("YYYY")}
-                    </Styled.DateText>
-                  </Styled.ModalItem>
-                  <Styled.ModalItem>
-                    <Styled.DateTitle></Styled.DateTitle>
-                    <Styled.DateText onClick={allDate}>
-                      {t("privateArea.allTime")}
-                    </Styled.DateText>
-                  </Styled.ModalItem>
-                </Styled.ModalContent>
-                <ModalRangeInput
-                  onClose={onClose}
-                  openDate={openDate}
-                  setOpenDate={rangeDate}
-                />
-              </Modal>
-            </Styled.ModalWrap>
-          </CSSTransition>
-          {withdraw && (
-            <Modal onClose={() => setWithdraw(false)}>
-              <Styled.ModalBlock>
+        <CSSTransition in={open} timeout={300} classNames="modal" unmountOnExit>
+          <Styled.ModalWrap>
+            <Modal onClose={onClose}>
+              <Styled.ModalContent>
+                {/* <Arrow onClick={onClose} /> */}
                 <Styled.ModalTitle>
-                  {t("privateArea.withdraw")}
+                  {t("privateArea.selectPeriod")}
                 </Styled.ModalTitle>
-                <Input
-                  onChange={(e) => setWithdrawValue(e.target.value)}
-                  placeholder={t("privateArea.amountEnter")}
-                  step="any"
-                  type="number"
-                  ref={inputRef}
-                  value={withdrawValue}
-                />
-                <Styled.ModalButton
-                  as="button"
-                  disabled={!withdrawValue}
-                  onClick={withdrawBalance}
-                  danger
-                >
-                  {t("privateArea.withdraw")}
-                </Styled.ModalButton>
-              </Styled.ModalBlock>
+                <Styled.ModalItem>
+                  <Styled.DateTitle>
+                    {t("privateArea.thisMonth")}
+                  </Styled.DateTitle>
+                  <Styled.DateText onClick={monthSelected}>
+                    {moment().format("MMMM YYYY")}
+                  </Styled.DateText>
+                </Styled.ModalItem>
+                <Styled.ModalItem>
+                  <Styled.DateTitle>
+                    {t("privateArea.thisYear")}
+                  </Styled.DateTitle>
+                  <Styled.DateText onClick={yearSelected}>
+                    {moment().format("YYYY")}
+                  </Styled.DateText>
+                </Styled.ModalItem>
+                <Styled.ModalItem>
+                  <Styled.DateTitle></Styled.DateTitle>
+                  <Styled.DateText onClick={allDate}>
+                    {t("privateArea.allTime")}
+                  </Styled.DateText>
+                </Styled.ModalItem>
+              </Styled.ModalContent>
+              <ModalRangeInput
+                onClose={onClose}
+                openDate={openDate}
+                setOpenDate={rangeDate}
+              />
             </Modal>
-          )}
-          <CSSTransition
-            in={addDeposit && !depositListModal}
-            timeout={300}
-            classNames="modal"
-            unmountOnExit
-          >
-            <Styled.ModalDepositsWrap>
-              <Modal width={540} onClose={() => setAddDeposit(false)}>
-                <Styled.ModalTitle mt>
-                  {t("privateArea.addDeposit")}
-                </Styled.ModalTitle>
-                <Styled.ModalDeposits>
-                  <div>
-                    <Styled.ModalButton
-                      mb
-                      as="button"
-                      onClick={handleDepositModal}
-                      dangerOutline
-                    >
-                      {depositSelect
-                        ? depositSelect.name
-                        : t("privateArea.choiseDeposite")}{" "}
-                      <Styled.IconRotate rights>
-                        <Styled.ModalBack />
-                      </Styled.IconRotate>
-                    </Styled.ModalButton>
-                    <Input
-                      onChange={(e) => setAddDepositValue(e.target.value)}
-                      placeholder={t("privateArea.amountEnter")}
-                      type="number"
-                      ref={inputRef}
-                      value={addDepositValue}
-                    />
-                    <Styled.ModalButton
-                      as="button"
-                      disabled={!addDepositValue}
-                      onClick={openNewDeposit}
-                      danger
-                    >
-                      {t("privateArea.add")}
-                    </Styled.ModalButton>
-                  </div>
-                  {depositSelect ? (
-                    <Styled.Conditions>
-                      {depositSelect.description}
-                    </Styled.Conditions>
-                  ) : (
-                    ""
-                  )}
-                </Styled.ModalDeposits>
-              </Modal>
-            </Styled.ModalDepositsWrap>
-          </CSSTransition>
-          <DepositListModal
-            depositListModal={depositListModal}
-            setDepositListModal={setDepositListModal}
-            handleBackModal={handleBackModal}
-            depositsList={depositsList}
-            selectDeposit={selectDeposit}
-          />
-        </>
-      </Styled.Page>
+          </Styled.ModalWrap>
+        </CSSTransition>
+      </>
     </>
   );
 };

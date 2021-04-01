@@ -51,42 +51,19 @@ export const OnePage = ({ match }: RouteComponentProps<PropsMatch>) => {
 
   return (
     <>
-      <Header />
-      <Styled.Page>
+      <Styled.Content active={active === 1}>
         <Container>
-          <UpTitle>{t("privateArea.uptitle")}</UpTitle>
+          <Styled.Back to="/info/deposits">
+            <Styled.LeftIcon />
+            Назад к списку
+          </Styled.Back>
         </Container>
         <Container>
           <Card>
-            <Styled.InfoWrap>
-              <Styled.InfoTitle>{user}</Styled.InfoTitle>
-              {/* <InfoButtons>
-                <Button dangerOutline>Новый депозит</Button>
-                <Button danger>Вывести деньги</Button>
-              </InfoButtons> */}
-            </Styled.InfoWrap>
-            <Tabs>
-              <Tab active={active === 1}>{t("privateArea.tabs.tab2")}</Tab>
-            </Tabs>
+            <InfoBlock data={data[0]} />
           </Card>
         </Container>
-
-        <>
-          <Styled.Content active={active === 1}>
-            <Container>
-              <Styled.Back to="/deposits">
-                <Styled.LeftIcon />
-                Назад к списку
-              </Styled.Back>
-            </Container>
-            <Container>
-              <Card>
-                <InfoBlock data={data[0]} />
-              </Card>
-            </Container>
-          </Styled.Content>
-        </>
-      </Styled.Page>
+      </Styled.Content>
     </>
   );
 };

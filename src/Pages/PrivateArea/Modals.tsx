@@ -5,8 +5,6 @@ import { Modal } from "../../components/Modal/Modal";
 import { DepositsCollection } from "../../types/info";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
-import "moment/locale/ru";
-moment.locale("ru");
 
 type Props = {
   depositListModal: boolean;

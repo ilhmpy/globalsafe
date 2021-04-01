@@ -10,7 +10,6 @@ import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { TableModal } from "./TableModal";
 import { FilterMenu } from "../FilterMenu/FilterMenu";
-moment.locale("ru");
 
 const Row = ({ data }: any) => {
   const [open, setOpen] = useState<boolean | string>(false);
@@ -21,7 +20,7 @@ const Row = ({ data }: any) => {
 
   const onClick = (id: string) => {
     if (window.innerWidth < 992) {
-      history.push(`deposits/${id}`);
+      history.push(`/info/deposits/${id}`);
     } else {
       setOpen(data.safeId);
     }

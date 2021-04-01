@@ -5,8 +5,6 @@ import moment from "moment";
 import { Name, NameData } from "./Table.styled";
 import { Balance } from "../../types/balance";
 import { useTranslation } from "react-i18next";
-import "moment/locale/ru";
-moment.locale("ru");
 
 type Props = {
   data: any;

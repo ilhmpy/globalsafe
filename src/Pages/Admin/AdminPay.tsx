@@ -341,7 +341,6 @@ export const AdminPay = () => {
           <Styled.PayItem>
             <Styled.PayItemHead mb>
               <SelfUpTitle small>{t("adminPay.title3")}</SelfUpTitle>
-              {/* {sizes > 768 && <CalendarInput />} */}
             </Styled.PayItemHead>
             <Styled.Radial bg={"rgba(109, 185, 255, 0.2)"}>
               <span>
