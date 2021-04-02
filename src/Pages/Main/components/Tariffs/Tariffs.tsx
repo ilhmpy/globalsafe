@@ -87,9 +87,9 @@ export const Tariffs = () => {
     window.open(link);
   };
 
-  const colors = (item: CollectionListDeposits) => {
-    switch (item.name) {
-      case "Программа START":
+  const colors = (item: CollectionListDeposits, id: number) => {
+    switch (id) {
+      case 0:
         return (
           <Button
             green
@@ -100,52 +100,10 @@ export const Tariffs = () => {
               )
             }
           >
-            Хочу Start
+            {item.name}
           </Button>
         );
-      case "Программа ЖИЛФОНД":
-        return (
-          <Button
-            purple
-            onClick={() =>
-              handleClick(
-                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
-                500
-              )
-            }
-          >
-            Хочу ЖИЛФОНД
-          </Button>
-        );
-      case "Программа START 30000+":
-        return (
-          <Button
-            pink
-            onClick={() =>
-              handleClick(
-                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
-                500
-              )
-            }
-          >
-            Хочу START 30000+
-          </Button>
-        );
-      case "АВТОБОНУС 30/70":
-        return (
-          <Button
-            yellow
-            onClick={() =>
-              handleClick(
-                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
-                500
-              )
-            }
-          >
-            Хочу АВТОБОНУС
-          </Button>
-        );
-      case "Программа EXPERT":
+      case 1:
         return (
           <Button
             blue
@@ -156,24 +114,10 @@ export const Tariffs = () => {
               )
             }
           >
-            Хочу EXPERT
+            {item.name}
           </Button>
         );
-      case "АВТОБОНУС 40/60":
-        return (
-          <Button
-            yellow
-            onClick={() =>
-              handleClick(
-                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
-                500
-              )
-            }
-          >
-            Хочу АВТОБОНУС
-          </Button>
-        );
-      case "Программа INFINITY":
+      case 2:
         return (
           <Button
             danger
@@ -184,7 +128,79 @@ export const Tariffs = () => {
               )
             }
           >
-            Хочу INFINITY
+            {item.name}
+          </Button>
+        );
+      case 3:
+        return (
+          <Button
+            pink
+            onClick={() =>
+              handleClick(
+                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
+                500
+              )
+            }
+          >
+            {item.name}
+          </Button>
+        );
+      case 4:
+        return (
+          <Button
+            purple
+            onClick={() =>
+              handleClick(
+                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
+                500
+              )
+            }
+          >
+            {item.name}
+          </Button>
+        );
+
+      case 5:
+        return (
+          <Button
+            yellow
+            onClick={() =>
+              handleClick(
+                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
+                500
+              )
+            }
+          >
+            {item.name}
+          </Button>
+        );
+
+      case 6:
+        return (
+          <Button
+            yellow
+            onClick={() =>
+              handleClick(
+                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
+                500
+              )
+            }
+          >
+            {item.name}
+          </Button>
+        );
+      default:
+        return (
+          <Button
+            green
+            onClick={() =>
+              handleClick(
+                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
+                500
+              )
+            }
+          >
+            {item.name}
           </Button>
         );
     }
@@ -227,13 +243,13 @@ export const Tariffs = () => {
         </Modal>
       )}
       <BlockContainers>
-        {listDeposits.map((item) => (
+        {listDeposits.map((item, idx) => (
           <BlockItem key={item.safeId}>
             <BlockTitle>{item.name}</BlockTitle>
             <div className="item__subtitle">
               <Text>{item.description}</Text>
             </div>
-            {colors(item)}
+            {colors(item, idx)}
           </BlockItem>
         ))}
       </BlockContainers>
@@ -244,14 +260,14 @@ export const Tariffs = () => {
           loop
           pagination={{ clickable: true }}
         >
-          {listDeposits.map((item) => (
+          {listDeposits.map((item, idx) => (
             <SwiperSlide key={item.safeId}>
               <BlockItem>
                 <BlockTitle>{item.name}</BlockTitle>
                 <div className="item__subtitle">
                   <Text>{item.description}</Text>
                 </div>
-                {colors(item)}
+                {colors(item, idx)}
               </BlockItem>
             </SwiperSlide>
           ))}
