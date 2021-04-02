@@ -62,8 +62,8 @@ export const Tariffs = () => {
     setLink(str);
     setOldLink(str);
     const val: any = /\d{3,}/g.exec(str);
-    setMin(val[0] / 100000);
-    setValue((val[0] / 100000).toString());
+    setMin(val ? val[0] : 1);
+    setValue(val ? val[0] : 1);
   };
 
   useEffect(() => {
@@ -95,7 +95,9 @@ export const Tariffs = () => {
             green
             onClick={() =>
               handleClick(
-                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
+                `https://cwd.global/shopping/payment?to_name=${
+                  item.account
+                }&amount=${item.minAmount / 100000}`,
                 500
               )
             }
@@ -109,7 +111,9 @@ export const Tariffs = () => {
             blue
             onClick={() =>
               handleClick(
-                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
+                `https://cwd.global/shopping/payment?to_name=${
+                  item.account
+                }&amount=${item.minAmount / 100000}`,
                 500
               )
             }
@@ -123,7 +127,9 @@ export const Tariffs = () => {
             danger
             onClick={() =>
               handleClick(
-                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
+                `https://cwd.global/shopping/payment?to_name=${
+                  item.account
+                }&amount=${item.minAmount / 100000}`,
                 500
               )
             }
@@ -137,7 +143,9 @@ export const Tariffs = () => {
             pink
             onClick={() =>
               handleClick(
-                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
+                `https://cwd.global/shopping/payment?to_name=${
+                  item.account
+                }&amount=${item.minAmount / 100000}`,
                 500
               )
             }
@@ -151,7 +159,9 @@ export const Tariffs = () => {
             purple
             onClick={() =>
               handleClick(
-                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
+                `https://cwd.global/shopping/payment?to_name=${
+                  item.account
+                }&amount=${item.minAmount / 100000}`,
                 500
               )
             }
@@ -166,7 +176,9 @@ export const Tariffs = () => {
             yellow
             onClick={() =>
               handleClick(
-                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
+                `https://cwd.global/shopping/payment?to_name=${
+                  item.account
+                }&amount=${item.minAmount / 100000}`,
                 500
               )
             }
@@ -181,7 +193,9 @@ export const Tariffs = () => {
             yellow
             onClick={() =>
               handleClick(
-                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
+                `https://cwd.global/shopping/payment?to_name=${
+                  item.account
+                }&amount=${item.minAmount / 100000}`,
                 500
               )
             }
@@ -195,7 +209,9 @@ export const Tariffs = () => {
             green
             onClick={() =>
               handleClick(
-                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
+                `https://cwd.global/shopping/payment?to_name=${
+                  item.account
+                }&amount=${item.minAmount / 100000}`,
                 500
               )
             }
