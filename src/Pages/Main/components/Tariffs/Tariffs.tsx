@@ -59,11 +59,15 @@ export const Tariffs = () => {
   const handleClick = (str: string, num: number) => {
     setIsNormalOpen(true);
     setValue("");
-    setLink(str);
-    setOldLink(str);
+    // setLink(str);
+    const newLink = `https://cwd.global/shopping/payment?to_name=${str}&amount=${
+      num / 100000
+    }`;
+    setLink(newLink);
+    setOldLink(`https://cwd.global/shopping/payment?to_name=${str}&amount=`);
     const val: any = /\d{3,}/g.exec(str);
-    setMin(val ? val[0] : 1);
-    setValue(val ? val[0] : 1);
+    setMin(num / 100000);
+    setValue((num / 100000).toString());
   };
 
   useEffect(() => {
@@ -93,14 +97,7 @@ export const Tariffs = () => {
         return (
           <Button
             green
-            onClick={() =>
-              handleClick(
-                `https://cwd.global/shopping/payment?to_name=${
-                  item.account
-                }&amount=${item.minAmount / 100000}`,
-                500
-              )
-            }
+            onClick={() => handleClick(item.account, item.minAmount)}
           >
             {item.name}
           </Button>
@@ -109,14 +106,7 @@ export const Tariffs = () => {
         return (
           <Button
             blue
-            onClick={() =>
-              handleClick(
-                `https://cwd.global/shopping/payment?to_name=${
-                  item.account
-                }&amount=${item.minAmount / 100000}`,
-                500
-              )
-            }
+            onClick={() => handleClick(item.account, item.minAmount)}
           >
             {item.name}
           </Button>
@@ -125,14 +115,7 @@ export const Tariffs = () => {
         return (
           <Button
             danger
-            onClick={() =>
-              handleClick(
-                `https://cwd.global/shopping/payment?to_name=${
-                  item.account
-                }&amount=${item.minAmount / 100000}`,
-                500
-              )
-            }
+            onClick={() => handleClick(item.account, item.minAmount)}
           >
             {item.name}
           </Button>
@@ -141,14 +124,7 @@ export const Tariffs = () => {
         return (
           <Button
             pink
-            onClick={() =>
-              handleClick(
-                `https://cwd.global/shopping/payment?to_name=${
-                  item.account
-                }&amount=${item.minAmount / 100000}`,
-                500
-              )
-            }
+            onClick={() => handleClick(item.account, item.minAmount)}
           >
             {item.name}
           </Button>
@@ -157,14 +133,7 @@ export const Tariffs = () => {
         return (
           <Button
             purple
-            onClick={() =>
-              handleClick(
-                `https://cwd.global/shopping/payment?to_name=${
-                  item.account
-                }&amount=${item.minAmount / 100000}`,
-                500
-              )
-            }
+            onClick={() => handleClick(item.account, item.minAmount)}
           >
             {item.name}
           </Button>
@@ -174,14 +143,7 @@ export const Tariffs = () => {
         return (
           <Button
             yellow
-            onClick={() =>
-              handleClick(
-                `https://cwd.global/shopping/payment?to_name=${
-                  item.account
-                }&amount=${item.minAmount / 100000}`,
-                500
-              )
-            }
+            onClick={() => handleClick(item.account, item.minAmount)}
           >
             {item.name}
           </Button>
@@ -191,14 +153,7 @@ export const Tariffs = () => {
         return (
           <Button
             yellow
-            onClick={() =>
-              handleClick(
-                `https://cwd.global/shopping/payment?to_name=${
-                  item.account
-                }&amount=${item.minAmount / 100000}`,
-                500
-              )
-            }
+            onClick={() => handleClick(item.account, item.minAmount)}
           >
             {item.name}
           </Button>
@@ -207,14 +162,7 @@ export const Tariffs = () => {
         return (
           <Button
             green
-            onClick={() =>
-              handleClick(
-                `https://cwd.global/shopping/payment?to_name=${
-                  item.account
-                }&amount=${item.minAmount / 100000}`,
-                500
-              )
-            }
+            onClick={() => handleClick(item.account, item.minAmount)}
           >
             {item.name}
           </Button>
