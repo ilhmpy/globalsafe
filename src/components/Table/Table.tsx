@@ -26,7 +26,7 @@ const Row = ({ data }: any) => {
       setOpen(data.safeId);
     }
   };
-
+  // console.log("data", data);
   return (
     <>
       <Styled.TR
@@ -49,7 +49,9 @@ const Row = ({ data }: any) => {
           </Styled.NameData>
         </Styled.TD>
         <Styled.TD>
-          <Styled.Text>{data.deposit.description}</Styled.Text>
+          <Styled.Text
+            dangerouslySetInnerHTML={{ __html: data.deposit.description }}
+          />
         </Styled.TD>
         <Styled.TD>
           <Styled.Text>{data.amountView}</Styled.Text>
