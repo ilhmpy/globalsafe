@@ -49,7 +49,9 @@ export const InfoBlock = ({ data }: any) => {
           </LI>
           <LI>
             <Text>Описание</Text>
-            <Text>{data.deposit.description}</Text>
+            <Text
+              dangerouslySetInnerHTML={{ __html: data.deposit.description }}
+            />
           </LI>
           <LI>
             <Text>Дата завершения депозита</Text>
@@ -115,6 +117,9 @@ const Text = styled.p<{ bold?: boolean }>`
   margin-bottom: 4px;
   letter-spacing: 0.1px;
   color: ${(props) => (props.bold ? "#515172" : "rgba(86, 101, 127, 0.6)")};
+  p {
+    padding-bottom: 3px;
+  }
 `;
 
 const LI = styled.li`
