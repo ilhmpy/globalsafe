@@ -6,5 +6,6 @@ export enum Balance {
     DIAMOND,
     CROWDBTC,
     CWDBONUS,
-    CARBONE
+    CARBONE,
+    BRONZE
 }
