@@ -45,27 +45,33 @@ export const Tariffs = () => {
   const hubConnection = appContext.hubConnection;
   const { t } = useTranslation();
   const inputRef = useRef<HTMLInputElement>(null);
+  const lang = localStorage.getItem("i18nextLng") || "ru";
+  const languale = lang === "ru" ? 1 : 0;
 
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<ListDeposits>("GetDeposits", 1, 0, 40)
+        .invoke<ListDeposits>("GetDeposits", languale, 0, 40)
         .then((res) => {
-          console.log("res", res);
+          console.log("GetDeposits", res);
           setListDeposits(res.collection);
         })
         .catch((err: Error) => console.log(err));
     }
-  }, [hubConnection]);
+  }, [hubConnection, languale]);
 
   const handleClick = (str: string, num: number) => {
     setIsNormalOpen(true);
     setValue("");
-    setLink(str);
-    setOldLink(str);
+    // setLink(str);
+    const newLink = `https://cwd.global/shopping/payment?to_name=${str}&amount=${
+      num / 100000
+    }`;
+    setLink(newLink);
+    setOldLink(`https://cwd.global/shopping/payment?to_name=${str}&amount=`);
     const val: any = /\d{3,}/g.exec(str);
-    setMin(val[0] / 100000);
-    setValue((val[0] / 100000).toString());
+    setMin(num / 100000);
+    setValue((num / 100000).toString());
   };
 
   useEffect(() => {
@@ -89,104 +95,80 @@ export const Tariffs = () => {
     window.open(link);
   };
 
-  const colors = (item: CollectionListDeposits) => {
-    switch (item.name) {
-      case "Программа START":
+  const colors = (item: CollectionListDeposits, id: number) => {
+    switch (id) {
+      case 0:
         return (
           <Button
             green
-            onClick={() =>
-              handleClick(
-                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
-                500
-              )
-            }
+            onClick={() => handleClick(item.account, item.minAmount)}
           >
-            {t("tariffs.buttons.start")}
+            {item.name}
           </Button>
         );
-      case "Программа ЖИЛФОНД":
-        return (
-          <Button
-            purple
-            onClick={() =>
-              handleClick(
-                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
-                500
-              )
-            }
-          >
-            {t("tariffs.buttons.housing")}
-          </Button>
-        );
-      case "Программа START 30000+":
-        return (
-          <Button
-            pink
-            onClick={() =>
-              handleClick(
-                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
-                500
-              )
-            }
-          >
-            {t("tariffs.buttons.start30000")}
-          </Button>
-        );
-      case "АВТОБОНУС 30/70":
-        return (
-          <Button
-            yellow
-            onClick={() =>
-              handleClick(
-                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
-                500
-              )
-            }
-          >
-            {t("tariffs.buttons.autobonus")}
-          </Button>
-        );
-      case "Программа EXPERT":
+      case 1:
         return (
           <Button
             blue
-            onClick={() =>
-              handleClick(
-                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
-                500
-              )
-            }
+            onClick={() => handleClick(item.account, item.minAmount)}
           >
-            {t("tariffs.buttons.expert")}
+            {item.name}
           </Button>
         );
-      case "АВТОБОНУС 40/60":
-        return (
-          <Button
-            yellow
-            onClick={() =>
-              handleClick(
-                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
-                500
-              )
-            }
-          >
-            {t("tariffs.buttons.autobonus")}
-          </Button>
-        );
-      case "Программа INFINITY":
+      case 2:
         return (
           <Button
             danger
-            onClick={() =>
-              handleClick(
-                `https://cwd.global/shopping/payment?to_name=${item.account}&amount=${item.minAmount}`,
-                500
-              )
-            }
+            onClick={() => handleClick(item.account, item.minAmount)}
           >
-            {t("tariffs.buttons.infinity")}
+            {item.name}
+          </Button>
+        );
+      case 3:
+        return (
+          <Button
+            pink
+            onClick={() => handleClick(item.account, item.minAmount)}
+          >
+            {item.name}
+          </Button>
+        );
+      case 4:
+        return (
+          <Button
+            purple
+            onClick={() => handleClick(item.account, item.minAmount)}
+          >
+            {item.name}
+          </Button>
+        );
+
+      case 5:
+        return (
+          <Button
+            yellow
+            onClick={() => handleClick(item.account, item.minAmount)}
+          >
+            {item.name}
+          </Button>
+        );
+
+      case 6:
+        return (
+          <Button
+            yellow
+            onClick={() => handleClick(item.account, item.minAmount)}
+          >
+            {item.name}
+          </Button>
+        );
+      default:
+        return (
+          <Button
+            green
+            onClick={() => handleClick(item.account, item.minAmount)}
+          >
+            {item.name}
           </Button>
         );
     }
@@ -226,13 +208,15 @@ export const Tariffs = () => {
         </Modal>
       )}
       <BlockContainers>
-        {listDeposits.map((item) => (
+        {listDeposits.map((item, idx) => (
           <BlockItem key={item.safeId}>
             <BlockTitle>{item.name}</BlockTitle>
             <div className="item__subtitle">
-              <Text>{item.description}</Text>
+              <Text dangerouslySetInnerHTML={{ __html: item.description }} />
+
+              {/* </Text> */}
             </div>
-            {colors(item)}
+            {colors(item, idx)}
           </BlockItem>
         ))}
       </BlockContainers>
@@ -243,14 +227,16 @@ export const Tariffs = () => {
           loop
           pagination={{ clickable: true }}
         >
-          {listDeposits.map((item) => (
+          {listDeposits.map((item, idx) => (
             <SwiperSlide key={item.safeId}>
               <BlockItem>
                 <BlockTitle>{item.name}</BlockTitle>
                 <div className="item__subtitle">
-                  <Text>{item.description}</Text>
+                  <Text
+                    dangerouslySetInnerHTML={{ __html: item.description }}
+                  />
                 </div>
-                {colors(item)}
+                {colors(item, idx)}
               </BlockItem>
             </SwiperSlide>
           ))}

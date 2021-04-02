@@ -61,6 +61,9 @@ export const Text = styled.p`
   letter-spacing: normal;
   line-height: normal;
   margin-bottom: 15px;
+  p {
+    padding-bottom: 10px;
+  }
 `;
 
 export const SwiperContainer = styled(Container)`

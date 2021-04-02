@@ -13,6 +13,8 @@ export const InfoDeposits = () => {
   const [num, setNum] = useState(20);
   const [totalList, setTotalList] = useState(0);
   const hubConnection = appContext.hubConnection;
+  const lang = localStorage.getItem("i18nextLng") || "ru";
+  const languale = lang === "ru" ? 1 : 0;
 
   useEffect(() => {
     if (hubConnection) {
@@ -26,7 +28,7 @@ export const InfoDeposits = () => {
           console.log(err);
         });
     }
-  }, [hubConnection]);
+  }, [hubConnection, languale]);
 
   const myLoad = () => {
     setCount(false);

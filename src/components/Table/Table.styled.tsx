@@ -84,6 +84,9 @@ export const Text = styled.div`
   line-height: 16px;
   letter-spacing: 0.1px;
   color: #515172;
+  p {
+    padding-bottom: 3px;
+  }
 `;
 
 export const TableWrap = styled.div`

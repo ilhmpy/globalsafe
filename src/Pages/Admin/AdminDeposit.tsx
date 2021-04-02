@@ -282,7 +282,11 @@ export const AdminDeposit = () => {
                     <SwiperInner>
                       {!size &&
                         i.map((item: DepositStats, idx: number) => {
-                          const color = colors(item.depositName);
+                          const color =
+                            "#" +
+                            Math.floor(Math.random() * 16777215)
+                              .toString(16)
+                              .padStart(6, "0");
 
                           return (
                             <DepositItem key={idx}>
@@ -328,7 +332,11 @@ export const AdminDeposit = () => {
                     <SwiperSlide key={idx}>
                       <DepositItemWrap>
                         {i.map((item: DepositStats, idx: number) => {
-                          const color = colors(item.depositName);
+                          const color =
+                            "#" +
+                            Math.floor(Math.random() * 16777215)
+                              .toString(16)
+                              .padStart(6, "0");
                           return (
                             <DepositItemInner key={idx}>
                               <DepositItem>
@@ -657,14 +665,24 @@ const HalfRound = styled.div`
 const RadialWrap = styled.div`
   display: flex;
   width: 100%;
+  height: 122px;
+  position: relative;
+  @media (max-width: 768px) {
+    height: auto;
+  }
 `;
 
 const DepositItem = styled.div`
   width: 192px;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   margin: 0 12px 20px;
+  min-height: 170px;
   @media (max-width: 768px) {
     width: 99px;
+    min-height: 112px;
   }
   ${UpTitle} {
     margin-bottom: 0;

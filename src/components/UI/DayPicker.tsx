@@ -33,6 +33,8 @@ const lang = localStorage.getItem("i18nextLng") || "ru";
 const WEEKDAYS_SHORT = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
 const WEEKDAYS_SHORT_ENG = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 
+console.log("lang", lang);
+
 const MONTHS = [
   "Январь",
   "Февраль",
@@ -157,7 +159,7 @@ export const Calendar: FC<{
   const handleDayClick = (day: any, { selected }: any) => {
     setSelectedDay(selected ? undefined : day);
   };
-
+  const lang = localStorage.getItem("i18nextLng") || "ru";
   return (
     <CustomDatePickers
       months={lang === "en" ? MONTHS_ENG : MONTHS}
@@ -205,7 +207,7 @@ export const ModalRangeInput: FC<{
       onClose();
     }
   };
-
+  const lang = localStorage.getItem("i18nextLng") || "ru";
   const modifiers = { start: selfDate.from, end: selfDate.to };
   const { t } = useTranslation();
   return (
@@ -267,7 +269,7 @@ export const TestInput: FC<{
       });
     }
   };
-
+  const lang = localStorage.getItem("i18nextLng") || "ru";
   const modifiers = { start: selfDate.from, end: selfDate.to };
 
   return (
@@ -337,7 +339,7 @@ export const MainAdminInput: FC<{
     }
     setShowOpen(false);
   };
-
+  const lang = localStorage.getItem("i18nextLng") || "ru";
   const modifiers = { start: selfDate.from, end: selfDate.to };
   return (
     <>

@@ -20,8 +20,9 @@ const availableLanguages = ["en", "ru"];
 //     moment.locale("en");
 //   }
 // });
+const lang = localStorage.getItem("i18nextLng") || "ru";
 
-if (window.navigator.language !== "en") {
+if (lang !== "en") {
   moment.locale("ru");
 } else {
   moment.locale("en");

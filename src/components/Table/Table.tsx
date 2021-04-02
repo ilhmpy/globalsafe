@@ -48,7 +48,9 @@ const Row = ({ data }: any) => {
           </Styled.NameData>
         </Styled.TD>
         <Styled.TD>
-          <Styled.Text>{data.deposit.description}</Styled.Text>
+          <Styled.Text
+            dangerouslySetInnerHTML={{ __html: data.deposit.description }}
+          />
         </Styled.TD>
         <Styled.TD>
           <Styled.Text>{data.amountView}</Styled.Text>

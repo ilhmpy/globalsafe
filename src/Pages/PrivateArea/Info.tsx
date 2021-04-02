@@ -129,19 +129,6 @@ export const Info = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<RootDeposits>("GetDeposits", 0, 10)
-        .then((res) => {
-          if (res.collection.length) {
-            setDepositsList(res.collection);
-          }
-        })
-        .catch((err: Error) => console.log(err));
-    }
-  }, [hubConnection]);
-
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection
         .invoke<RootList>("GetUserDeposits", [1, 2, 3, 4, 5, 6], 0, 20)
         .then((res) => {
           setList(res.collection);

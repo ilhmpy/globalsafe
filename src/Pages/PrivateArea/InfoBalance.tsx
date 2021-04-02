@@ -110,6 +110,8 @@ export const InfoBalance = () => {
   const [depositList, setDepositList] = useState<any>([]);
   const inputRef = useRef<any>(null);
   const { t } = useTranslation();
+  const lang = localStorage.getItem("i18nextLng") || "ru";
+  const languale = lang === "ru" ? 1 : 0;
 
   const yearSelected = () => {
     let year = moment().format("YYYY");
@@ -166,6 +168,7 @@ export const InfoBalance = () => {
   const hubConnection = appContext.hubConnection;
 
   useEffect(() => {
+    setBalanceLog(null);
     if (hubConnection) {
       hubConnection
         .invoke(
@@ -214,7 +217,7 @@ export const InfoBalance = () => {
           console.log(err);
         });
     }
-  }, [hubConnection, openDate, balanceLogs]);
+  }, [hubConnection, openDate, balanceLogs, languale]);
 
   const myLoad = () => {
     setCount(false);

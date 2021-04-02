@@ -32,6 +32,8 @@ import { Info } from "./Info";
 import { InfoBalance } from "./InfoBalance";
 import { InfoDeposits } from "./InfoDeposits";
 import { OnePage } from "./OnePage";
+import moment from "moment";
+import "moment/locale/ru";
 
 export const InfoMain = () => {
   const [addDeposit, setAddDeposit] = useState(false);
@@ -52,7 +54,9 @@ export const InfoMain = () => {
   const hubConnection = appContext.hubConnection;
   const { t, i18n } = useTranslation();
   const inputRef = useRef<any>(null);
-
+  const lang = localStorage.getItem("i18nextLng") || "ru";
+  const languale = lang === "ru" ? 1 : 0;
+  moment.locale(lang);
   const handleDepositModal = () => {
     setAddDeposit(false);
     setDepositListModal(true);
@@ -121,7 +125,7 @@ export const InfoMain = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<RootDeposits>("GetDeposits", 0, 10)
+        .invoke<RootDeposits>("GetDeposits", languale, 0, 10)
         .then((res) => {
           if (res.collection.length) {
             setDepositsList(res.collection);
@@ -129,7 +133,7 @@ export const InfoMain = () => {
         })
         .catch((err: Error) => console.log(err));
     }
-  }, [hubConnection]);
+  }, [hubConnection, languale]);
 
   const withdrawBalance = () => {
     if (hubConnection) {
@@ -275,9 +279,11 @@ export const InfoMain = () => {
                     </Styled.ModalButton>
                   </div>
                   {depositSelect ? (
-                    <Styled.Conditions>
-                      {depositSelect.description}
-                    </Styled.Conditions>
+                    <Styled.Conditions
+                      dangerouslySetInnerHTML={{
+                        __html: depositSelect.description,
+                      }}
+                    />
                   ) : (
                     ""
                   )}

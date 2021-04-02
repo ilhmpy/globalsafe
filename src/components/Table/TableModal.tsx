@@ -49,7 +49,9 @@ export const InfoBlock = ({ data }: any) => {
           </LI>
           <LI>
             <Text>{t("privateArea.desc")}</Text>
-            <Text>{data.deposit.description}</Text>
+            <Text
+              dangerouslySetInnerHTML={{ __html: data.deposit.description }}
+            />
           </LI>
           <LI>
             <Text>{t("privateArea.dateEnd")}</Text>
