@@ -211,9 +211,9 @@ export const Tariffs = () => {
           <BlockItem key={item.safeId}>
             <BlockTitle>{item.name}</BlockTitle>
             <div className="item__subtitle">
-              <Text>
-                <p dangerouslySetInnerHTML={{ __html: item.description }} />
-              </Text>
+              <Text dangerouslySetInnerHTML={{ __html: item.description }} />
+
+              {/* </Text> */}
             </div>
             {colors(item, idx)}
           </BlockItem>
