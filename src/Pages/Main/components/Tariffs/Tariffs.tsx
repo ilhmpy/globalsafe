@@ -62,8 +62,8 @@ export const Tariffs = () => {
     setLink(str);
     setOldLink(str);
     const val: any = /\d{3,}/g.exec(str);
-    setMin(val[0]);
-    setValue(val[0]);
+    setMin(val ? val[0] : 1);
+    setValue(val ? val[0] : 1);
   };
 
   useEffect(() => {
