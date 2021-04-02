@@ -52,7 +52,7 @@ export const BlockItem = styled.div`
   }
 `;
 
-export const Text = styled.p`
+export const Text = styled.div`
   color: #0e0d3d;
   font-size: 14px;
   font-weight: 400;
