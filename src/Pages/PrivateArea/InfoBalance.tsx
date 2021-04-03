@@ -447,7 +447,11 @@ export const InfoBalance = () => {
           setLoadDeposit(false);
           setWithdraw(false);
           setWithdrawValue("");
-          alert("Успешно", "Депозит успешно создан", "success");
+          if (res === true) {
+            alert("Успешно", "Депозит успешно создан", "success");
+          } else {
+            alert("Ошибка", "Депозит не создан", "danger");
+          }
         })
         .catch((err: Error) => {
           console.log(err);
