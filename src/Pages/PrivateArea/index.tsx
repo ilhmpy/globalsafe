@@ -106,7 +106,11 @@ export const InfoMain = () => {
           setLoadDeposit(false);
           setWithdraw(false);
           setWithdrawValue("");
-          alert(t("alert.success"), t("alert.depositMsg"), "success");
+          if (res) {
+            alert(t("alert.success"), t("alert.depositMsg"), "success");
+          } else {
+            alert(t("alert.error"), t("alert.depositErrorMsg"), "danger");
+          }
         })
         .catch((err: Error) => {
           console.log(err);
