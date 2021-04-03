@@ -95,7 +95,10 @@ export const InfoBalance = () => {
     from: new Date("2019-01-01T00:47:45"),
     to: new Date(),
   });
-  const [selected, setSelected] = useState("За все время");
+  const { t } = useTranslation();
+  const [selected, setSelected] = useState<string | never>(
+    t("privateArea.allTime")
+  );
   const appContext = useContext(AppContext);
   const balance = appContext.balance;
   const amountContext = useContext(AmountContext);
@@ -109,7 +112,7 @@ export const InfoBalance = () => {
   const [totalDeposit, setTotalDeposit] = useState(0);
   const [depositList, setDepositList] = useState<any>([]);
   const inputRef = useRef<any>(null);
-  const { t } = useTranslation();
+
   const lang = localStorage.getItem("i18nextLng") || "ru";
   const languale = lang === "ru" ? 1 : 0;
 
@@ -158,6 +161,14 @@ export const InfoBalance = () => {
     setSelected(t("privateArea.allTime"));
     onClose();
   };
+
+  useEffect(() => {
+    if (selected === t("privateArea.allTime")) {
+      setSelected(t("privateArea.allTime"));
+    } else {
+      monthSelected();
+    }
+  }, [languale]);
 
   useEffect(() => {
     if (balanceValue) {
@@ -296,12 +307,16 @@ export const InfoBalance = () => {
     options.push(<option value={year}>{year}</option>);
   }
 
+  const linkOpen = (res: any) => {
+    window.location.assign(res);
+  };
+
   const getTopUp = () => {
     if (hubConnection) {
       hubConnection
         .invoke("GetTopUpUrl", +balanceValue * 100000)
         .then((res: any) => {
-          window.open(res);
+          linkOpen(res);
         })
         .catch((err: Error) => console.log(err));
     }

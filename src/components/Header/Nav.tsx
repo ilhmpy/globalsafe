@@ -5,8 +5,11 @@ import {
   ListItem,
   StyledLink,
   LinkButton,
+  Languale,
 } from "./Header.elements";
 import { useTranslation } from "react-i18next";
+import usa from "../../assets/svg/usa.svg";
+import ru from "../../assets/svg/russia.svg";
 
 type Props = {
   onClose: () => void;
@@ -15,6 +18,7 @@ type Props = {
   logOut: () => void;
   location: string;
   admin: boolean | null;
+  lang: string;
 };
 
 export const Nav: FC<Props> = ({
@@ -24,8 +28,9 @@ export const Nav: FC<Props> = ({
   logOut,
   location,
   admin,
+  lang,
 }: Props) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   return (
     <HeaderNav>
@@ -70,6 +75,19 @@ export const Nav: FC<Props> = ({
           <StyledLink to="/#contact" smooth onClick={onClose}>
             {t("header.item4")}
           </StyledLink>
+        </ListItem>
+        <ListItem>
+          {lang === "ru" ? (
+            <Languale onClick={() => i18n.changeLanguage("en")}>
+              en
+              <img src={usa} alt="en" />
+            </Languale>
+          ) : (
+            <Languale onClick={() => i18n.changeLanguage("ru")}>
+              ru
+              <img src={ru} alt="ru" />
+            </Languale>
+          )}
         </ListItem>
       </List>
     </HeaderNav>

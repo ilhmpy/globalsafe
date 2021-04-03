@@ -129,7 +129,7 @@ export const InfoMain = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<RootDeposits>("GetDeposits", languale, 0, 10)
+        .invoke<RootDeposits>("GetDeposits", languale, 0, 20)
         .then((res) => {
           if (res.collection.length) {
             setDepositsList(res.collection);

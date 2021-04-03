@@ -3,6 +3,27 @@ import styled from "styled-components/macro";
 import { Button } from "../Button/Button";
 import { HashLink } from "react-router-hash-link";
 
+export const Languale = styled.div`
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+  color: #0e0d3d;
+  margin-right: 10px;
+  cursor: pointer;
+  @media (max-width: 1100px) {
+    display: none;
+  }
+  img {
+    margin-left: 6px;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    border: 1px solid #0e0d3d;
+  }
+`;
+
 export const HeaderWrap = styled.header<{ header?: boolean }>`
   width: 100%;
   margin: 0 auto;
@@ -28,7 +49,7 @@ export const HeaderInner = styled.div`
   justify-content: space-between;
   width: 100%;
   position: relative;
-  @media (max-width: 992px) {
+  @media (max-width: 1100px) {
     ${Button} {
       display: none;
     }
@@ -42,7 +63,7 @@ export const HeaderLogo = styled.a`
 `;
 
 export const HeaderMenu = styled.div<{ open?: boolean }>`
-  @media (max-width: 992px) {
+  @media (max-width: 1100px) {
     position: fixed;
     background: #fff;
     width: 100%;
@@ -68,7 +89,7 @@ export const MenuBtn = styled.span<{ open?: boolean }>`
   cursor: pointer;
   z-index: 5;
   display: none;
-  @media (max-width: 992px) {
+  @media (max-width: 1100px) {
     display: block;
   }
   span {
@@ -102,7 +123,7 @@ export const List = styled.ul`
   list-style: none;
   display: flex;
   align-items: center;
-  @media (max-width: 992px) {
+  @media (max-width: 1100px) {
     flex-direction: column;
     align-items: flex-start;
     padding-top: 90px;
@@ -114,12 +135,24 @@ export const ListItem = styled.li<{ mob?: boolean }>`
   padding: 0px 30px;
   display: ${(props) => props.mob && "none"};
   position: relative;
-
-  @media (max-width: 992px) {
+  ${Languale} {
+    display: none;
+  }
+  &:last-child {
+    display: none;
+  }
+  @media (max-width: 1100px) {
+    &:last-child {
+      display: block;
+    }
     display: ${(props) => props.mob && "block"};
     width: 100%;
     padding: 20px 0px;
     border-top: 1px solid rgba(81, 81, 114, 0.2);
+    ${Languale} {
+      display: flex;
+      cursor: initial;
+    }
   }
 `;
 

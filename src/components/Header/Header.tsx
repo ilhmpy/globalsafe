@@ -7,6 +7,7 @@ import {
   HeaderInner,
   HeaderLogo,
   HeaderMenu,
+  Languale,
 } from "./Header.elements";
 import { Button } from "../Button/Button";
 import { Nav } from "./Nav";
@@ -14,6 +15,8 @@ import { useHistory, useLocation } from "react-router-dom";
 import styled from "styled-components/macro";
 import { AppContext } from "../../context/HubContext";
 import { NavAdmin } from "./NavAdmin";
+import usa from "../../assets/svg/usa.svg";
+import ru from "../../assets/svg/russia.svg";
 import { useTranslation } from "react-i18next";
 
 export const Header: FC<{ admPanel?: boolean }> = ({ admPanel }) => {
@@ -78,23 +81,20 @@ export const Header: FC<{ admPanel?: boolean }> = ({ admPanel }) => {
                 logOut={logOut}
                 location={location.pathname}
                 admin={admin}
+                lang={lang}
               />
             )}
           </HeaderMenu>
           {lang === "ru" ? (
-            <div
-              style={{ cursor: "pointer" }}
-              onClick={() => i18n.changeLanguage("en")}
-            >
+            <Languale onClick={() => i18n.changeLanguage("en")}>
               en
-            </div>
+              <img src={usa} alt="en" />
+            </Languale>
           ) : (
-            <div
-              style={{ cursor: "pointer" }}
-              onClick={() => i18n.changeLanguage("ru")}
-            >
+            <Languale onClick={() => i18n.changeLanguage("ru")}>
               ru
-            </div>
+              <img src={ru} alt="ru" />
+            </Languale>
           )}
           {admin && (
             <Button danger onClick={toAdmin}>
