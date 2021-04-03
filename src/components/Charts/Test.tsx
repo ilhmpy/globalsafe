@@ -154,9 +154,6 @@ const ChartWrap = styled.div`
   .apexcharts-legend-series {
     width: 125px;
     text-align: right;
-    @media (max-width: 992px) {
-      width: auto;
-    }
   }
 `;
 

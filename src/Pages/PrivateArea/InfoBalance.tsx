@@ -483,13 +483,16 @@ export const InfoBalance = () => {
     options.push(<option value={year}>{year}</option>);
   }
 
+  const linkOpen = (res: any) => {
+    window.location.assign(res);
+  };
+
   const getTopUp = () => {
     if (hubConnection) {
       hubConnection
         .invoke("GetTopUpUrl", +balanceValue * 100000)
         .then((res: any) => {
-          // console.log("GetTopUpUrl", res);
-          window.open(res);
+          linkOpen(res);
         })
         .catch((err: Error) => console.log(err));
     }
