@@ -120,6 +120,7 @@ export const AdminPay = () => {
 
   useEffect(() => {
     if (hubConnection) {
+      setPaymentsList([]);
       hubConnection
         .invoke<RootPayments>(
           "GetUsersDeposits",
@@ -138,17 +139,18 @@ export const AdminPay = () => {
           setLoading(false);
           setTotalPayments(res.totalRecords);
           setPaymentsList(res.collection);
-          // setNumPayments(20);
+          setNumPayments(20);
         })
         .catch((err: Error) => {
           setLoading(false);
           console.log(err);
         });
     }
-  }, [hubConnection]);
+  }, [hubConnection, active]);
 
   useEffect(() => {
     if (hubConnection) {
+      setDepositList([]);
       hubConnection
         .invoke<RootPayments>(
           "GetUsersDeposits",
@@ -167,17 +169,18 @@ export const AdminPay = () => {
           setLoading(false);
           setTotalDeposits(res.totalRecords);
           setDepositList(res.collection);
-          // setNum(20);
+          setNum(20);
         })
         .catch((err: Error) => {
           setLoading(false);
           console.log(err);
         });
     }
-  }, [hubConnection]);
+  }, [hubConnection, active]);
 
   useEffect(() => {
     if (hubConnection) {
+      setDepositPayList([]);
       hubConnection
         .invoke<RootCharges>("GetDepositsCharges", [7, 8], 0, 20)
         .then((res) => {
@@ -185,7 +188,7 @@ export const AdminPay = () => {
           if (res.collection.length) {
             setTotalPayDeposits(res.totalRecords);
             setDepositPayList(res.collection);
-            // setPayNum(20);
+            setPayNum(20);
           }
         })
         .catch((err: Error) => {
@@ -193,7 +196,7 @@ export const AdminPay = () => {
           console.log(err);
         });
     }
-  }, [hubConnection]);
+  }, [hubConnection, active]);
 
   useEffect(() => {
     getPaymentsOverview();
@@ -301,10 +304,6 @@ export const AdminPay = () => {
         });
     }
   };
-
-  // if (admin === false) {
-  //   return <Redirect to="/" />;
-  // }
 
   return (
     <>
@@ -426,9 +425,7 @@ export const AdminPay = () => {
             ) : loading ? (
               <Loading />
             ) : (
-              <NotFound>
-                Данные не обнаружены. Попробуйте изменить параметры поиска.
-              </NotFound>
+              <NotFound>Данные не обнаружены.</NotFound>
             )}
           </PaymentsTable>
         </Card>
@@ -467,9 +464,7 @@ export const AdminPay = () => {
             ) : loading ? (
               <Loading />
             ) : (
-              <NotFound>
-                Данные не обнаружены. Попробуйте изменить параметры поиска.
-              </NotFound>
+              <NotFound>Данные не обнаружены.</NotFound>
             )}
           </PaymentsTable>
         </Card>
@@ -508,15 +503,11 @@ export const AdminPay = () => {
             ) : loading ? (
               <Loading />
             ) : (
-              <NotFound>
-                Данные не обнаружены. Попробуйте изменить параметры поиска.
-              </NotFound>
+              <NotFound>Данные не обнаружены.</NotFound>
             )}
           </PaymentsTable>
         </Card>
       </Content>
-      {/* </Styled.Content>
-      </Styled.Wrapper> */}
     </>
   );
 };

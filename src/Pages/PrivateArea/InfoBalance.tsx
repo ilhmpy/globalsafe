@@ -36,6 +36,7 @@ import { DepositListModal, ModalDividends } from "./Modals";
 import InfiniteScroll from "react-infinite-scroller";
 import { Scrollbars } from "react-custom-scrollbars";
 import { Loading } from "../../components/UI/Loading";
+import { StackedColumn } from "../../components/Charts/StackedColumn";
 moment.locale("ru");
 
 type Obj = {
@@ -229,7 +230,7 @@ export const InfoBalance = () => {
         )
         .then((res: any) => {
           setTotalDeposit(res.totalRecords);
-          // console.log("res", res);
+          console.log("res depos", res);
           setNum(20);
           setLoading(false);
           function getFormatedDate(dateStr: Date) {
@@ -497,7 +498,7 @@ export const InfoBalance = () => {
         .catch((err: Error) => console.log(err));
     }
   };
-
+  console.log("balanceLog", balanceLog ? balanceLog : null);
   return (
     <>
       <Header />
@@ -548,6 +549,7 @@ export const InfoBalance = () => {
               <Loading />
             </Styled.Loader>
           )}
+
           <Container>
             <Styled.BalanceWrap>
               <Styled.TopUpButton blue onClick={() => setAddBalance(true)}>
@@ -606,9 +608,13 @@ export const InfoBalance = () => {
               </Styled.BalanceTabHead>
             </Card>
           </Container>
-
+          <Styled.ContainerChart>
+            <Styled.InnerChart>
+              {balanceLog && <StackedColumn values={balanceLog} />}
+            </Styled.InnerChart>
+          </Styled.ContainerChart>
           <Container>
-            <Card>
+            <Styled.InnerTable>
               <Styled.DataListWrap>
                 <Styled.DataList>
                   <Styled.DataListHead>
@@ -645,14 +651,11 @@ export const InfoBalance = () => {
                   ) : loading ? (
                     <Loading />
                   ) : (
-                    <Styled.NotFound>
-                      Данные не обнаружены. Попробуйте изменить параметры
-                      поиска.
-                    </Styled.NotFound>
+                    <Styled.NotFound>Данные не обнаружены.</Styled.NotFound>
                   )}
                 </Styled.DataList>
               </Styled.DataListWrap>
-            </Card>
+            </Styled.InnerTable>
           </Container>
 
           <CSSTransition
