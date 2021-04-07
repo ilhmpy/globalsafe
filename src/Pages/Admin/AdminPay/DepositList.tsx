@@ -15,12 +15,14 @@ type ListProps = {
   data: PaymentsCollection;
   adjustPay: (id: string, val: number) => void;
   confirmPay: (id: string) => void;
+  idx: number;
 };
 
 export const DepositList: FC<ListProps> = ({
   data,
   adjustPay,
   confirmPay,
+  idx,
 }: ListProps) => {
   const [value, setValue] = useState(
     (data.payAmount / 100000).toFixed(0).toString()
@@ -33,7 +35,7 @@ export const DepositList: FC<ListProps> = ({
   const sizes = useWindowSize();
   const size = sizes < 992;
   const field = sizes > 576;
-
+  // console.log("data", data);
   const elemref = useRef<any>(null);
 
   const handleClickOutside = () => {
@@ -106,6 +108,7 @@ export const DepositList: FC<ListProps> = ({
         />
       </CSSTransition>
       <TableBody onClick={modalOpen}>
+        <TableBodyItem dis={disabled}>{idx + 1}</TableBodyItem>
         <TableBodyItem dis={disabled} title={data.userName}>
           {data.userName}
         </TableBodyItem>
@@ -134,8 +137,12 @@ export const DepositList: FC<ListProps> = ({
           {data.deposit.paymentRatio * 100}%
         </TableBodyItem>
         <TableBodyItem dis={disabled}>
+          {moment(data.creationDate).format("DD/MM/YYYY")}
+        </TableBodyItem>
+        <TableBodyItem dis={disabled}>
           {data.baseAmountView.toLocaleString()}
         </TableBodyItem>
+
         <TableBodyItem dis={disabled}>
           {field ? (
             <InputWrap
@@ -313,8 +320,13 @@ const TableHeadItem = styled.li`
   letter-spacing: 0.1px;
   color: rgba(81, 81, 114, 0.6);
   width: 100%;
-
   &:nth-child(1) {
+    max-width: 30px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  &:nth-child(2) {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -323,40 +335,46 @@ const TableHeadItem = styled.li`
       display: none;
     }
   }
-  &:nth-child(2) {
-    max-width: 110px;
-  }
   &:nth-child(3) {
-    max-width: 110px;
-    @media (max-width: 992px) {
-      display: none;
-    }
+    max-width: 94px;
   }
   &:nth-child(4) {
-    max-width: 95px;
-    @media (max-width: 768px) {
+    max-width: 110px;
+    @media (max-width: 992px) {
       display: none;
     }
   }
   &:nth-child(5) {
-    max-width: 170px;
-    @media (max-width: 992px) {
+    max-width: 85px;
+    @media (max-width: 1100px) {
       display: none;
     }
   }
   &:nth-child(6) {
-    max-width: 100px;
-    @media (max-width: 576px) {
+    max-width: 85px;
+    @media (max-width: 992px) {
       display: none;
     }
   }
   &:nth-child(7) {
+    max-width: 100px;
+    @media (max-width: 1100px) {
+      display: none;
+    }
+  }
+  &:nth-child(8) {
+    max-width: 75px;
+    @media (max-width: 576px) {
+      display: none;
+    }
+  }
+  &:nth-child(9) {
     max-width: 110px;
     @media (max-width: 576px) {
       max-width: 80px;
     }
   }
-  &:nth-child(8) {
+  &:nth-child(10) {
     max-width: 120px;
     text-align: right;
     @media (max-width: 992px) {
@@ -383,6 +401,15 @@ const TableBodyItemCss = css`
 `;
 
 const TableHeadItemPaid = styled(TableHeadItem)`
+  &:nth-child(1) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 97px;
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
   &:nth-child(2) {
     max-width: 170px;
     @media (max-width: 576px) {

@@ -680,6 +680,8 @@ const CustomDatePicker = styled(DayPicker)`
     background: #fff;
     box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
+  }
+  @media (max-width: 768px) {
     width: 100%;
   }
   .DayPicker-Caption,
@@ -818,8 +820,10 @@ const RangeInputs = styled.div`
       top: 100%;
       right: 40px;
     }
-    @media (max-width: 576px) {
+    @media (max-width: 768px) {
       right: 0px;
+    }
+    @media (max-width: 576px) {
       top: calc(100% - 12px);
     }
   }

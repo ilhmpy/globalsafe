@@ -16,8 +16,7 @@ const ListItems = ({ data, addList }: any) => {
     <>
       {data.map((item: any) => (
         <Styled.Li key={item.id}>
-          <Styled.LabelContainer>
-            <span>{item.label}</span>
+          <Styled.LabelContainer st>
             <Styled.CheckboxInput
               type="checkbox"
               name={item.label}
@@ -25,6 +24,7 @@ const ListItems = ({ data, addList }: any) => {
               onChange={(e) => addList(e, item.id)}
             />
             <Styled.CheckboxIcon />
+            <span>{item.label}</span>
           </Styled.LabelContainer>
         </Styled.Li>
       ))}
@@ -52,7 +52,6 @@ export const Select: FC<Props> = ({
   checkList,
 }: Props) => {
   const [show, setShow] = useState(false);
-  // const [checkList, setCheckList] = useState<any>([]);
   const [list, setList] = useState<Arr[]>([]);
 
   useEffect(() => {
@@ -117,9 +116,7 @@ export const Select: FC<Props> = ({
           </Styled.Arrow>
         </Styled.CustomSelect>
         <Styled.List rotat={show}>
-          <Styled.Li>
-            <span onClick={resetList}>сбросить</span>
-          </Styled.Li>
+          <Styled.Li></Styled.Li>
           <ListItems data={list} addList={addList} />
         </Styled.List>
       </Styled.Container>

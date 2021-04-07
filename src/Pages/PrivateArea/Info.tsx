@@ -81,6 +81,7 @@ export const Info = () => {
   const size = sizes < 992;
   const appContext = useContext(AppContext);
   const user = appContext.user;
+  const balanceList = appContext.balanceList;
   const balance = appContext.balance;
   const amountContext = useContext(AmountContext);
   const { totalPayed, depositTotal } = amountContext;
@@ -147,7 +148,7 @@ export const Info = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<RootDeposits>("GetDeposits", 1, 0, 10)
+        .invoke<RootDeposits>("GetDeposits", 1, false, 0, 10)
         .then((res) => {
           if (res.collection.length) {
             setDepositsList(res.collection);
@@ -477,10 +478,9 @@ export const Info = () => {
     onClose();
   };
 
-  const allTime = () => {
-    setOpenDate({ from: new Date("2021-02-09T00:47:45"), to: new Date() });
-    onClose();
-  };
+  const balanceAsset = balanceList?.some(
+    (item) => item.balanceKind === depositSelect?.depositKind
+  );
 
   return (
     <>
@@ -974,7 +974,7 @@ export const Info = () => {
                     />
                     <Styled.ModalButton
                       as="button"
-                      disabled={!addDepositValue}
+                      disabled={!balanceAsset || !addDepositValue}
                       onClick={openNewDeposit}
                       danger
                     >
@@ -983,7 +983,19 @@ export const Info = () => {
                   </div>
                   {depositSelect ? (
                     <Styled.Conditions>
-                      {depositSelect.description}
+                      <p
+                        dangerouslySetInnerHTML={{
+                          __html: depositSelect.description,
+                        }}
+                      />
+                      {!balanceAsset && (
+                        <Styled.ToLink
+                          target="_blank"
+                          href={`https://cwd.global/shopping/payment?to_name=${depositSelect.account}&amount=${depositSelect.minAmount}`}
+                        >
+                          Приобрести
+                        </Styled.ToLink>
+                      )}
                     </Styled.Conditions>
                   ) : (
                     ""
