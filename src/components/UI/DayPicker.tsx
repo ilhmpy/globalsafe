@@ -412,6 +412,18 @@ const flex = css`
   align-items: flex-end;
 `;
 
+const CalendarLabel = styled.div`
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 16px;
+  color: #515172;
+  padding-right: 10px;
+`;
+
+const CalendarItem = styled.div`
+  ${flex}
+`;
+
 const CalendarWrap = styled.div`
   ${flex};
   width: 100%;
@@ -448,6 +460,128 @@ const MyComp = styled.label`
   }
 `;
 
+const ModalComp = styled(MyComp)`
+  border: none;
+  width: 130px;
+  border-radius: 0;
+  border-bottom: 1px solid rgba(66, 139, 202, 0.2);
+  padding: 4px 0;
+  @media (max-width: 768px) {
+    width: 90px;
+  }
+`;
+
+const InputCustom = styled.div`
+  .DayPickerInput-Overlay {
+    right: 0;
+    left: auto;
+    @media (max-width: 768px) {
+      right: -15px;
+    }
+  }
+  .DayPicker-Caption,
+  .DayPicker-Caption > div {
+    text-align: center;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 21px;
+    letter-spacing: 0.1px;
+    color: #0e0d3d;
+    font-family: "Roboto", sans-serif;
+  }
+  .DayPicker-Caption {
+    margin-bottom: 13px;
+    margin-top: 9px;
+  }
+  .DayPicker-Day {
+    color: #0e0d3d;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 24px;
+    padding: 4px 7px;
+    width: 48px;
+    height: 48px;
+    margin: 5px;
+    &:focus {
+      outline: none;
+    }
+    @media (max-width: 576px) {
+      width: 32px;
+      height: 32px;
+      margin: 0px;
+      padding: 5px 0px;
+    }
+  }
+  .DayPicker-Day--selected:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside) {
+    background: #ff416e;
+    color: #fff;
+  }
+
+  .Selectable
+    .DayPicker-Day--selected:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside) {
+    background: #f0f8ff !important;
+    color: #4a90e2;
+  }
+  .DayPicker-Day--today {
+    color: #d0021b;
+    font-weight: 700;
+  }
+  .DayPicker-Weekday {
+    font-size: 12px;
+    line-height: 15px;
+    text-align: center;
+    letter-spacing: 0.4px;
+    color: #515172;
+    padding: 0 16px;
+    @media (max-width: 992px) {
+      padding: 0 9px;
+    }
+  }
+  .DayPicker-Weekdays {
+    display: table-caption;
+    margin-bottom: 15px;
+  }
+  .DayPicker-Months:focus,
+  .DayPicker-Month:focus,
+  .DayPicker:focus,
+  .DayPicker-wrapper:focus {
+    outline: none;
+  }
+`;
+
+const ModalInputCustom = styled(InputCustom)<{ left?: boolean }>`
+  .DayPickerInput-Overlay {
+    right: ${(props) => (props.left ? "auto" : "0")};
+    left: ${(props) => (props.left ? "-16px" : "auto")};
+    bottom: 100%;
+    z-index: 10000;
+    @media (max-width: 768px) {
+      right: -15px;
+    }
+  }
+`;
+
+const DateSelect = styled.div`
+  display: flex;
+  flex: 1;
+  align-items: center;
+  padding: 16px;
+`;
+
+const Input = styled.input`
+  color: #4a4a4a;
+  font-size: 16px;
+  line-height: 20px;
+  width: 65%;
+  cursor: inherit;
+  text-overflow: clip;
+  white-space: nowrap;
+
+  ::placeholder {
+    color: #a0b0b9;
+  }
+`;
+
 const CustomDatePicker = styled(DayPicker)`
   background: #ffffff;
   border: 1px solid #e5e5e5;
@@ -459,6 +593,8 @@ const CustomDatePicker = styled(DayPicker)`
     background: #fff;
     box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
+  }
+  @media (max-width: 768px) {
     width: 100%;
   }
   .DayPicker-Caption,
@@ -597,8 +733,10 @@ const RangeInputs = styled.div`
       top: 100%;
       right: 40px;
     }
-    @media (max-width: 576px) {
+    @media (max-width: 768px) {
       right: 0px;
+    }
+    @media (max-width: 576px) {
       top: calc(100% - 12px);
     }
   }

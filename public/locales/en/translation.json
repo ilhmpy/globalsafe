@@ -24,15 +24,15 @@
         "getCode": "To get the code"
     },
     "banner":{
-        "uptitle": "Capacious",
-        "H1": "Multiply correctly!",
-        "brand": "GlobalSafe",
-        "desc": "This is a modern Crypto Fund for managing your funds and increasing them under the control of our best specialists !!"
+        "uptitle": "About fund ",
+        "H1": "Multiply your funds wisely!",
+        "brand": "Global safe",
+        "desc": "is a modern crypto fund which investing and managing your funds, under the control of our best specialists!"
     },
     "tariffs":{
-        "uptitle": "Rates",
-        "H1": "For you !",
-        "desc": "Affiliate program for START, EXPERT, INFINITY contracts: 5% from the first line; 2% from the second line; 1% from the third line",
+        "uptitle": "Our tariffs",
+        "H1": "Just for you!",
+        "desc": "Partnership for contracts START, EXPERT and INFINITY: 5% from the first line; 2% second line and 1% third line ",
         "depositSize": "Deposit amount",
         "ok": "ОК",
         "buttons":{
@@ -46,15 +46,15 @@
     },
     "contacts":{
         "uptitle": "Contacts",
-        "H1": "For communication",
+        "H1": "In touch with us ",
         "site": "Website",
-        "irinaganina3110": "Irina Ganina",
+        "irinaganina3110": "Irina Gabon’s",
         "smansurskaya": "Svetlana Mansurskaya",
-        "sporttanets8": "Maxim Sportanets"
+        "sporttanets8": "Maksim Sportanets"
     },
     "about":{
         "uptitle": "About us",
-        "H1": "In detail",
+        "H1": "Our founders",
         "name1": "Maksim",
         "name2": "Svetlana",
         "name3": "Irina",
@@ -76,7 +76,7 @@
         "labelUser": "User",
         "labelProgram": "The name of the program",
         "labelOpen": "Opening date",
-        "labelDate": "Date of next payment",
+        "labelDate": "Close date",
         "btnApply": "Apply",
         "table":{
             "user": "User",
@@ -139,6 +139,7 @@
             "desc": "Program description",
             "category": "Category",
             "nextDate":"Date next payments",
+            "openDate":"Opening date",
             "paid":"Paid out",
             "amount":"Current number of",
             "cost":"Unit cost"

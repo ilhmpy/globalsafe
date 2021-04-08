@@ -9,11 +9,8 @@ import { ReactComponent as Filter } from "../../assets/svg/filter.svg";
 import { Tab, Content } from "../../components/UI/Tabs";
 import { AppContext } from "../../context/HubContext";
 import { AmountContext } from "../../context/AmountContext";
-// import { InfiniteLoader, AutoSizer, List } from "react-virtualized";
-// import { FixedSizeList as List } from "react-window";
-// import AutoSizer from "react-virtualized-auto-sizer";
-// import InfiniteLoader from "react-window-infinite-loader";
-// import "react-virtualized/styles.css";
+import { Select } from "../../components/Select/Select2";
+import { TestInput } from "../../components/UI/DayPicker";
 import { Button } from "../../components/Button/Button";
 import useWindowSize from "../../hooks/useWindowSize";
 import {
@@ -22,6 +19,11 @@ import {
   RootCharges,
   CollectionCharges,
 } from "../../types/payments";
+import {
+  DepositStats,
+  ListDeposits,
+  CollectionListDeposits,
+} from "../../types/deposits";
 import ReactNotification, { store } from "react-notifications-component";
 import InfiniteScroll from "react-infinite-scroller";
 import "react-notifications-component/dist/theme.css";
@@ -34,6 +36,7 @@ import {
   PaymentsList,
   PaymentsListPay,
 } from "./AdminPay/DepositList";
+import { OpenDate } from "../../types/dates";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 
@@ -64,6 +67,15 @@ export const AdminPay = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [dataModal, setDataModal] = useState<PaymentsCollection | any>({});
   const [loading, setLoading] = useState(true);
+  const [openDate, setOpenDate] = useState<OpenDate>({
+    from: undefined,
+    to: undefined,
+  });
+  const [checkList, setCheckList] = useState<any>([]);
+  const [name, setName] = useState("");
+  const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>(
+    []
+  );
   const { t } = useTranslation();
 
   const getPaymentsOverview = () => {
@@ -77,11 +89,35 @@ export const AdminPay = () => {
     }
   };
 
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection
+        .invoke<ListDeposits>("GetDeposits", 1, false, 0, 40)
+        .then((res) => {
+          setListDeposits(res.collection);
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  }, [hubConnection]);
+
+  const namesProgram = checkList.map((i: any) => i.label);
+  const idProgram = listDeposits.filter((i) => namesProgram.includes(i.name));
+  const searchSafeID = idProgram.map((i) => i.safeId);
+
   const myLoad = () => {
     setNext(false);
     if (hubConnection && depositPayList.length < totalPayDeposits) {
       hubConnection
-        .invoke<RootCharges>("GetDepositsCharges", [7, 8], numPay, 20)
+        .invoke<RootCharges>(
+          "GetDepositsCharges",
+          name ? name : null,
+          openDate.from ? openDate.from : null,
+          openDate.to ? openDate.to : null,
+          searchSafeID.length ? searchSafeID : null,
+          [7, 8],
+          numPay,
+          20
+        )
         .then((res) => {
           if (res.collection.length) {
             // console.log("myLoad", res);
@@ -141,7 +177,7 @@ export const AdminPay = () => {
           console.log(err);
         });
     }
-  }, [hubConnection]);
+  }, [hubConnection, active]);
 
   useEffect(() => {
     if (hubConnection) {
@@ -170,18 +206,28 @@ export const AdminPay = () => {
           console.log(err);
         });
     }
-  }, [hubConnection]);
+  }, [hubConnection, active]);
 
   useEffect(() => {
     if (hubConnection) {
+      setDepositPayList([]);
       hubConnection
-        .invoke<RootCharges>("GetDepositsCharges", [7, 8], 0, 20)
+        .invoke<RootCharges>(
+          "GetDepositsCharges",
+          name ? name : null,
+          openDate.from ? openDate.from : null,
+          openDate.to ? openDate.to : null,
+          searchSafeID.length ? searchSafeID : null,
+          [7, 8],
+          0,
+          20
+        )
         .then((res) => {
           setLoading(false);
           if (res.collection.length) {
             setTotalPayDeposits(res.totalRecords);
             setDepositPayList(res.collection);
-            // setPayNum(20);
+            setPayNum(20);
           }
         })
         .catch((err: Error) => {
@@ -189,7 +235,7 @@ export const AdminPay = () => {
           console.log(err);
         });
     }
-  }, [hubConnection]);
+  }, [hubConnection, active]);
 
   useEffect(() => {
     getPaymentsOverview();
@@ -298,6 +344,36 @@ export const AdminPay = () => {
     }
   };
 
+  const submit = () => {
+    if (hubConnection) {
+      setDepositPayList([]);
+      hubConnection
+        .invoke<RootCharges>(
+          "GetDepositsCharges",
+          name ? name : null,
+          openDate.from ? openDate.from : null,
+          openDate.to ? openDate.to : null,
+          searchSafeID.length ? searchSafeID : null,
+          [7, 8],
+          0,
+          20
+        )
+        .then((res) => {
+          console.log("res", res);
+          setLoading(false);
+          if (res.collection.length) {
+            setTotalPayDeposits(res.totalRecords);
+            setDepositPayList(res.collection);
+            setPayNum(20);
+          }
+        })
+        .catch((err: Error) => {
+          setLoading(false);
+          console.log(err);
+        });
+    }
+  };
+
   return (
     <>
       <ReactNotification />
@@ -382,11 +458,13 @@ export const AdminPay = () => {
         <Card>
           <PaymentsTable>
             <TableHead>
+              <TableHeadItem>№</TableHeadItem>
               <TableHeadItem>{t("adminPay.table.user")}</TableHeadItem>
               <TableHeadItem>{t("adminPay.table.name")}</TableHeadItem>
               <TableHeadItem>{t("adminPay.table.procent")}</TableHeadItem>
               <TableHeadItem>{t("adminPay.table.datePay")}</TableHeadItem>
               <TableHeadItem>{t("adminPay.table.profit")}</TableHeadItem>
+              <TableHeadItem>{t("adminPay.table.openDate")}</TableHeadItem>
               <TableHeadItem>{t("adminPay.table.contribution")}</TableHeadItem>
               <TableHeadItem>{t("adminPay.table.payments")}</TableHeadItem>
               <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
@@ -404,8 +482,9 @@ export const AdminPay = () => {
                     </div>
                   }
                 >
-                  {depositList.map((item: PaymentsCollection) => (
+                  {depositList.map((item: PaymentsCollection, idx: number) => (
                     <DepositList
+                      idx={idx}
                       key={item.safeId}
                       data={item}
                       adjustPay={adjustPay}
@@ -424,6 +503,36 @@ export const AdminPay = () => {
       </Content>
 
       <Content active={active === 1}>
+        <Styled.FilterBlock>
+          <Styled.SelectContainer>
+            <Styled.SelectWrap>
+              <Styled.Label>Пользователь</Styled.Label>
+              <Styled.Input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </Styled.SelectWrap>
+            <Styled.InputsCalendarWrap>
+              <TestInput
+                setOpenDate={setOpenDate}
+                openDate={openDate}
+                label="Дата"
+              />
+            </Styled.InputsCalendarWrap>
+            <Styled.SelectWrap>
+              <Styled.Label>Депозит</Styled.Label>
+              <Select
+                checkList={checkList}
+                setCheckList={setCheckList}
+                values={listDeposits.map((item) => item.name)}
+              />
+            </Styled.SelectWrap>
+
+            <Button danger onClick={submit}>
+              Применить
+            </Button>
+          </Styled.SelectContainer>
+        </Styled.FilterBlock>
         <Card>
           <PaymentsTable>
             <TableHead>
@@ -546,6 +655,9 @@ const PayTab = styled(Tab)`
   @media (max-width: 768px) {
     width: 110px !important;
   }
+  @media (max-width: 576px) {
+    width: 100px !important;
+  }
 `;
 
 const PaymentsTable = styled.div`
@@ -569,8 +681,13 @@ const TableHeadItem = styled.li`
   letter-spacing: 0.1px;
   color: rgba(81, 81, 114, 0.6);
   width: 100%;
-
   &:nth-child(1) {
+    max-width: 30px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  &:nth-child(2) {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -579,40 +696,46 @@ const TableHeadItem = styled.li`
       display: none;
     }
   }
-  &:nth-child(2) {
-    max-width: 110px;
-  }
   &:nth-child(3) {
-    max-width: 110px;
-    @media (max-width: 992px) {
-      display: none;
-    }
+    max-width: 94px;
   }
   &:nth-child(4) {
-    max-width: 95px;
-    @media (max-width: 768px) {
+    max-width: 110px;
+    @media (max-width: 992px) {
       display: none;
     }
   }
   &:nth-child(5) {
-    max-width: 170px;
-    @media (max-width: 992px) {
+    max-width: 90px;
+    @media (max-width: 1100px) {
       display: none;
     }
   }
   &:nth-child(6) {
-    max-width: 100px;
-    @media (max-width: 576px) {
+    max-width: 85px;
+    @media (max-width: 992px) {
       display: none;
     }
   }
   &:nth-child(7) {
+    max-width: 100px;
+    @media (max-width: 1100px) {
+      display: none;
+    }
+  }
+  &:nth-child(8) {
+    max-width: 84px;
+    @media (max-width: 576px) {
+      display: none;
+    }
+  }
+  &:nth-child(9) {
     max-width: 110px;
     @media (max-width: 576px) {
       max-width: 80px;
     }
   }
-  &:nth-child(8) {
+  &:nth-child(10) {
     max-width: 120px;
     text-align: right;
     @media (max-width: 992px) {
@@ -625,6 +748,15 @@ const TableHeadItem = styled.li`
 `;
 
 const TableHeadItemPaid = styled(TableHeadItem)`
+  &:nth-child(1) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 97px;
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
   &:nth-child(2) {
     max-width: 170px;
     @media (max-width: 576px) {
@@ -673,7 +805,7 @@ const Tabs = styled.div`
     &:nth-child(2) {
       width: 90px;
       @media (max-width: 768px) {
-        width: 70px;
+        width: 80px;
       }
     }
   }

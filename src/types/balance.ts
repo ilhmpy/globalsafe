@@ -8,3 +8,8 @@ export enum Balance {
     CWDBONUS,
     CARBONE
 }
+
+export type BalanceList = {
+    balanceKind: number;
+    volume: number;
+}

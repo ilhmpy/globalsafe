@@ -3,6 +3,7 @@ import * as signalR from "@microsoft/signalr";
 import { API_URL } from "../constantes/api";
 import useLocalStorage from "../hooks/useLocalStorage";
 import { useHistory } from "react-router-dom";
+import { BalanceList } from "../types/balance";
 type Nulable<T> = T | null;
 
 type Context = {
@@ -13,6 +14,7 @@ type Context = {
   loading: boolean;
   balance: null | number;
   isAdmin: boolean | null;
+  balanceList: BalanceList[] | null;
 };
 
 export const AppContext = React.createContext<Context>({
@@ -23,6 +25,7 @@ export const AppContext = React.createContext<Context>({
   loading: true,
   balance: null,
   isAdmin: null,
+  balanceList: null,
 });
 
 export const HubProvider: FC = ({ children }) => {
@@ -34,6 +37,7 @@ export const HubProvider: FC = ({ children }) => {
   const [balance, setBalance] = useState<null | number>(null);
   const [isAdmin, setIsAdmin] = useState<null | boolean>(null);
   const [myToken, setMyToken] = useLocalStorage("token");
+  const [balanceList, setBalanceList] = useState<BalanceList[] | null>(null);
   const history = useHistory();
 
   useEffect(() => {
@@ -65,11 +69,16 @@ export const HubProvider: FC = ({ children }) => {
       hubConnection
         .invoke("GetSigned")
         .then((res) => {
-          // console.log("GetSigned", res);
+          console.log("GetSigned", res);
           setUser(res.name);
           setLoading(false);
           if (res.balances[0]) {
             setBalance(res.balances[0].volume);
+            const balanceList = res.balances.map((item: any) => ({
+              balanceKind: item.balanceKind,
+              volume: item.volume,
+            }));
+            setBalanceList(balanceList);
           }
           if (res.roles.length && res.roles[0].name === "administrator") {
             setIsAdmin(true);
@@ -103,7 +112,16 @@ export const HubProvider: FC = ({ children }) => {
 
   return (
     <AppContext.Provider
-      value={{ hubConnection, user, logOut, loading, login, balance, isAdmin }}
+      value={{
+        hubConnection,
+        user,
+        logOut,
+        loading,
+        login,
+        balance,
+        isAdmin,
+        balanceList,
+      }}
     >
       {children}
     </AppContext.Provider>

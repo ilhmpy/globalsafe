@@ -14,6 +14,7 @@ import InfiniteScroll from "react-infinite-scroller";
 import { Scrollbars } from "react-custom-scrollbars";
 import { Loading } from "../../components/UI/Loading";
 import { useTranslation } from "react-i18next";
+import { StackedColumn } from "../../components/Charts/StackedColumn";
 
 type Obj = {
   id: string;
@@ -393,9 +394,13 @@ export const InfoBalance = () => {
           </Styled.BalanceTabHead>
         </Card>
       </Container>
-
+      <Styled.ContainerChart>
+        <Styled.InnerChart>
+          {balanceLog && <StackedColumn values={balanceLog} />}
+        </Styled.InnerChart>
+      </Styled.ContainerChart>
       <Container>
-        <Card>
+        <Styled.InnerTable>
           <Styled.DataListWrap>
             <Styled.DataList>
               <Styled.DataListHead>
@@ -439,7 +444,7 @@ export const InfoBalance = () => {
               )}
             </Styled.DataList>
           </Styled.DataListWrap>
-        </Card>
+        </Styled.InnerTable>
       </Container>
 
       <CSSTransition in={open} timeout={300} classNames="modal" unmountOnExit>

@@ -52,6 +52,7 @@ export const InfoMain = () => {
   const user = appContext.user;
   const balance = appContext.balance;
   const hubConnection = appContext.hubConnection;
+  const balanceList = appContext.balanceList;
   const { t, i18n } = useTranslation();
   const inputRef = useRef<any>(null);
   const lang = localStorage.getItem("i18nextLng") || "ru";
@@ -129,7 +130,7 @@ export const InfoMain = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<RootDeposits>("GetDeposits", languale, 0, 20)
+        .invoke<RootDeposits>("GetDeposits", languale, false, 0, 40)
         .then((res) => {
           if (res.collection.length) {
             setDepositsList(res.collection);
@@ -155,6 +156,10 @@ export const InfoMain = () => {
         });
     }
   };
+
+  const balanceAsset = balanceList?.some(
+    (item) => item.balanceKind === depositSelect?.depositKind
+  );
 
   if (user === null) {
     return null;
@@ -275,19 +280,29 @@ export const InfoMain = () => {
                     />
                     <Styled.ModalButton
                       as="button"
-                      disabled={!addDepositValue}
+                      disabled={!balanceAsset || !addDepositValue}
                       onClick={openNewDeposit}
                       danger
                     >
-                      {t("privateArea.add")}
+                      Добавить
                     </Styled.ModalButton>
                   </div>
                   {depositSelect ? (
-                    <Styled.Conditions
-                      dangerouslySetInnerHTML={{
-                        __html: depositSelect.description,
-                      }}
-                    />
+                    <Styled.Conditions>
+                      <p
+                        dangerouslySetInnerHTML={{
+                          __html: depositSelect.description,
+                        }}
+                      />
+                      {!balanceAsset && (
+                        <Styled.ToLink
+                          target="_blank"
+                          href={`https://cwd.global/shopping/payment?to_name=${depositSelect.account}&amount=${depositSelect.minAmount}`}
+                        >
+                          Приобрести
+                        </Styled.ToLink>
+                      )}
+                    </Styled.Conditions>
                   ) : (
                     ""
                   )}

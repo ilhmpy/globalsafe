@@ -153,34 +153,6 @@ export const AdminDeposit = () => {
     );
   }
 
-  const colors = (name: string) => {
-    switch (name) {
-      case "Программа ЖИЛФОНД":
-        return "#A78CF2";
-        break;
-      case "Программа START":
-        return "#BCD576";
-        break;
-      case "Программа START 30000+":
-        return "#F28CE8";
-        break;
-      case "АВТОБОНУС 30/70":
-        return "#FFB23E";
-        break;
-      case "Программа EXPERT":
-        return "#6DB9FF";
-        break;
-      case "АВТОБОНУС 40/60":
-        return "#FFB23E";
-        break;
-      case "Программа INFINITY":
-        return "#FF416E";
-        break;
-      default:
-        return "#6DB9FF";
-    }
-  };
-
   useEffect(() => {
     if (hubConnection) {
       hubConnection
@@ -196,7 +168,7 @@ export const AdminDeposit = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<ListDeposits>("GetDeposits", 1, 0, 40)
+        .invoke<ListDeposits>("GetDeposits", 1, false, 0, 40)
         .then((res) => {
           setListDeposits(res.collection);
         })

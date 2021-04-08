@@ -51,7 +51,7 @@ export const Tariffs = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<ListDeposits>("GetDeposits", languale, 0, 40)
+        .invoke<ListDeposits>("GetDeposits", languale, true, 0, 40)
         .then((res) => {
           console.log("GetDeposits", res);
           setListDeposits(res.collection);
@@ -213,8 +213,6 @@ export const Tariffs = () => {
             <BlockTitle>{item.name}</BlockTitle>
             <div className="item__subtitle">
               <Text dangerouslySetInnerHTML={{ __html: item.description }} />
-
-              {/* </Text> */}
             </div>
             {colors(item, idx)}
           </BlockItem>
