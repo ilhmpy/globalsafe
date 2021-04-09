@@ -1,20 +1,20 @@
-import React, { useState, useRef, FC, useEffect } from "react";
+import React, { useState, useRef, FC, useEffect, ReactNode } from "react";
 import * as Styled from "./Select.elements";
 import { ReactComponent as Icon } from "../../assets/svg/selectArrow.svg";
 import useOnClickOutside from "../../hooks/useOutsideHook";
-
-// const data = [
-//   { id: 1, label: "Account 1", checked: false },
-//   { id: 2, label: "Account 2", checked: false },
-//   { id: 3, label: "Account 3", checked: false },
-//   { id: 4, label: "Account 4", checked: false },
-//   { id: 5, label: "Account 5", checked: false },
-// ];
+import { CollectionListDeposits } from "../../types/deposits";
+import { Scrollbars } from "react-custom-scrollbars";
 
 const ListItems = ({ data, addList }: any) => {
+  const [active, setActive] = useState(-1);
+  const selectFold = (foldNum: any) => {
+    const current = active === foldNum ? -1 : foldNum;
+    setActive(current);
+  };
+
   return (
     <>
-      {data.map((item: any) => (
+      {data.map((item: any, i: number) => (
         <Styled.Li key={item.id}>
           <Styled.LabelContainer st>
             <Styled.CheckboxInput
@@ -25,7 +25,21 @@ const ListItems = ({ data, addList }: any) => {
             />
             <Styled.CheckboxIcon />
             <span>{item.label}</span>
+            <Styled.Ratio>{(item.ratio * 100).toFixed(0)} %</Styled.Ratio>
           </Styled.LabelContainer>
+          <Styled.Fold
+            className={`fold_trigger ${active === i ? "open" : ""}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              selectFold(i);
+            }}
+          >
+            подробнее
+          </Styled.Fold>
+          <Styled.FoldContent
+            open={active === i}
+            dangerouslySetInnerHTML={{ __html: item.desc }}
+          />
         </Styled.Li>
       ))}
     </>
@@ -34,7 +48,7 @@ const ListItems = ({ data, addList }: any) => {
 
 type Props = {
   placeholder?: string;
-  values?: string[];
+  values?: CollectionListDeposits[];
   checkList: any;
   setCheckList: (str: any) => void;
 };
@@ -59,8 +73,11 @@ export const Select: FC<Props> = ({
     if (values && list.length === 0) {
       let arr = values!.map((i) => ({
         id: id++,
-        label: i,
+        label: i.name,
+        desc: i.description,
+        safeId: i.safeId,
         checked: false,
+        ratio: i.paymentRatio,
       }));
       setList(arr);
     }
@@ -73,13 +90,6 @@ export const Select: FC<Props> = ({
   };
 
   useOnClickOutside(ref, handleClickOutside);
-
-  const resetList = () => {
-    setCheckList([]);
-    const newList = list;
-    const arr = newList.map((item) => item && { ...item, checked: false });
-    setList(arr);
-  };
 
   const addList = (e: any, id: number) => {
     const { checked, name } = e.target;
@@ -116,8 +126,10 @@ export const Select: FC<Props> = ({
           </Styled.Arrow>
         </Styled.CustomSelect>
         <Styled.List rotat={show}>
-          <Styled.Li></Styled.Li>
-          <ListItems data={list} addList={addList} />
+          <Scrollbars style={{ height: "440px" }}>
+            <Styled.Li></Styled.Li>
+            <ListItems data={list} addList={addList} />
+          </Scrollbars>
         </Styled.List>
       </Styled.Container>
     </>

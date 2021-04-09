@@ -94,12 +94,13 @@ export const AdminPay = () => {
       hubConnection
         .invoke<ListDeposits>("GetDeposits", 1, false, 0, 40)
         .then((res) => {
+          console.log("GetDeposits", res);
           setListDeposits(res.collection);
         })
         .catch((err: Error) => console.log(err));
     }
   }, [hubConnection]);
-
+  console.log("checkList", checkList);
   const namesProgram = checkList.map((i: any) => i.label);
   const idProgram = listDeposits.filter((i) => namesProgram.includes(i.name));
   const searchSafeID = idProgram.map((i) => i.safeId);
@@ -524,7 +525,7 @@ export const AdminPay = () => {
               <Select
                 checkList={checkList}
                 setCheckList={setCheckList}
-                values={listDeposits.map((item) => item.name)}
+                values={listDeposits}
               />
             </Styled.SelectWrap>
 

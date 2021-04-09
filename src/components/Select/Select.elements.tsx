@@ -77,6 +77,7 @@ export const Li = styled.li`
   line-height: 16px;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   justify-content: space-between;
   letter-spacing: 0.1px;
   color: #515172;
@@ -154,4 +155,37 @@ export const LabelContainer = styled.label<{ st?: boolean }>`
           `;
     }
   }}
+`;
+
+export const Ratio = styled.div`
+  margin-left: 8px;
+`;
+
+export const Accordion = styled.div`
+  width: 100%;
+  padding: 1rem 2rem;
+  display: flex;
+  flex-direction: column;
+  border-radius: 10%;
+  overflow-y: auto;
+`;
+
+export const Fold = styled.div`
+  cursor: pointer;
+  text-align: right;
+  width: 100%;
+  padding-top: 3px;
+  border: none;
+  outline: none;
+  background: none;
+  cursor: pointer;
+  color: rgba(109, 185, 255, 1);
+`;
+
+export const FoldContent = styled.div<{ open?: boolean }>`
+  max-height: ${(props) => (props.open ? "400px" : "0")};
+  width: 100%;
+  padding-top: 5px;
+  overflow: hidden;
+  transition: max-height 300ms ease;
 `;
