@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+﻿import React, { FC } from "react";
 import styled from "styled-components/macro";
 import { Button } from "../../../components/Button/Button";
 import { Card } from "../../../globalStyles";
@@ -6,7 +6,7 @@ import { PaymentsCollection, CollectionCharges } from "../../../types/payments";
 import { CollectionPortfolio } from "../../../types/portfolio";
 import { InputWrap } from "./InputWrap";
 import { CollectionUsers } from "../../../types/users";
-
+import { useTranslation } from "react-i18next";
 import moment from "moment";
 
 type ListProps = {
@@ -39,6 +39,7 @@ export const ModalPay: FC<ListProps> = ({
       onClose();
     }
   };
+  const { t } = useTranslation();
   return (
     <Container>
       <Center onClick={handleContainerClick}>
@@ -47,16 +48,16 @@ export const ModalPay: FC<ListProps> = ({
             <PayName>{data.deposit.name}</PayName>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>Описание программы</PayText>
+            <PayText small>{t("adminPay.table.desc")}</PayText>
             <PayText>{data.deposit.description}</PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>Пользователь</PayText>
+            <PayText small>{t("adminPay.table.user")}</PayText>
             <PayText>{data.userName}</PayText>
           </PayCardBlock>
           {data.state !== 5 && (
             <PayCardBlock>
-              <PayText small>% доходности</PayText>
+              <PayText small>{t("adminPay.table.procent")}</PayText>
               {/* <PayText></PayText> */}
               <InputWrap
                 paymentsAdjust={paymentsAdjust}
@@ -72,7 +73,7 @@ export const ModalPay: FC<ListProps> = ({
             </PayCardBlock>
           )}
           <PayCardBlock>
-            <PayText small>Дата выплаты</PayText>
+            <PayText small>{t("adminPay.table.datePay")}</PayText>
             <PayText>
               {data.paymentDate
                 ? moment(data.paymentDate).format("DD/MM/YYYY")
@@ -80,20 +81,16 @@ export const ModalPay: FC<ListProps> = ({
             </PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>Дата открытия депозита</PayText>
-            <PayText>{moment(data.creationDate).format("DD/MM/YYYY")}</PayText>
-          </PayCardBlock>
-          <PayCardBlock>
-            <PayText small>Доходность по программе</PayText>
+            <PayText small>{t("adminPay.table.profit")}</PayText>
             <PayText>{data.deposit.paymentRatio * 100}%</PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>Сумма вклада</PayText>
+            <PayText small>{t("adminPay.table.contribution")}</PayText>
             <PayText>{data.baseAmountView.toLocaleString()}</PayText>
           </PayCardBlock>
           {data.state !== 5 && (
             <PayCardBlock>
-              <PayText small>Сумма выплаты</PayText>
+              <PayText small>{t("adminPay.table.payments")}</PayText>
               <InputWrap
                 paymentsAdjust={paymentsAdjust}
                 done={disabled}
@@ -110,7 +107,7 @@ export const ModalPay: FC<ListProps> = ({
                 dangerOutline
                 onClick={() => paymentsConfirm(data.safeId)}
               >
-                Подтвердить
+                {t("depositList.confirm")}
               </Button>
             </PayCardBlock>
           )}
@@ -131,6 +128,7 @@ export const ModalPaid: FC<PaidProps> = ({ data, onClose }: PaidProps) => {
       onClose();
     }
   };
+  const { t } = useTranslation();
   return (
     <Container>
       <Center onClick={handleContainerClick}>
@@ -139,25 +137,27 @@ export const ModalPaid: FC<PaidProps> = ({ data, onClose }: PaidProps) => {
             <PayName>{data.deposit.name}</PayName>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>Пользователь</PayText>
+            <PayText small>{t("adminPay.table.user")}</PayText>
             <PayText>{data.userName}</PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>Дата выплаты</PayText>
+            <PayText small>{t("adminPay.table.datePay")}</PayText>
             <PayText>{moment(data.paymentDate).format("DD/MM/YYYY")}</PayText>
           </PayCardBlock>
           <PayCardBlock>
             <PayText small>Категория</PayText>
             <PayText>
-              {data.state === 4 ? "Закрытие вклада" : "Начисление дивидендов"}
+              {data.state === 4
+                ? t("depositList.depositClose")
+                : t("depositList.dividents")}
             </PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>Сумма вклада</PayText>
+            <PayText small>{t("adminPay.table.contribution")}</PayText>
             <PayText>{data.baseAmountView.toLocaleString()}</PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>Сумма выплаты</PayText>
+            <PayText small>{t("adminPay.table.payments")}</PayText>
             <PayText>{data.paymentAmountView}</PayText>
           </PayCardBlock>
           <PayCardBlock></PayCardBlock>
@@ -173,6 +173,7 @@ export const ModalDeposit: FC<PaidProps> = ({ data, onClose }: PaidProps) => {
       onClose();
     }
   };
+  const { t } = useTranslation();
   return (
     <Container>
       <Center onClick={handleContainerClick}>
@@ -186,15 +187,15 @@ export const ModalDeposit: FC<PaidProps> = ({ data, onClose }: PaidProps) => {
             </PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>Пользователь</PayText>
+            <PayText small>{t("adminPay.table.user")}</PayText>
             <PayText>{data.userName}</PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>Дата следующей выплаты</PayText>
+            <PayText small>{t("adminPay.table.nextDate")}</PayText>
             <PayText>{moment(data.paymentDate).format("DD/MM/YYYY")}</PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>Выплачено</PayText>
+            <PayText small>{t("adminPay.table.paid")}</PayText>
             <PayText>{data.payedAmountView}</PayText>
           </PayCardBlock>
           <PayCardBlock></PayCardBlock>
@@ -215,6 +216,7 @@ export const ModalPayList: FC<Prop> = ({ data, onClose }: Prop) => {
       onClose();
     }
   };
+  const { t } = useTranslation();
   return (
     <Container>
       <Center onClick={handleContainerClick}>
@@ -223,31 +225,31 @@ export const ModalPayList: FC<Prop> = ({ data, onClose }: Prop) => {
             <PayName>{data.userDeposit.deposit.name}</PayName>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>Пользователь</PayText>
+            <PayText small>{t("adminPay.table.user")}</PayText>
             <PayText>{data.account}</PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>Дата выплаты</PayText>
+            <PayText small>{t("adminPay.table.datePay")}</PayText>
             <PayText>
               {moment(data.userDeposit.prevPayment).format("DD/MM/YYYY")}
             </PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>Категория</PayText>
+            <PayText small>{t("adminPay.table.category")}</PayText>
             <PayText>
               {data.userDeposit.state === 4
-                ? "Закрытие вклада"
-                : "Начисление дивидендов"}
+                ? t("depositList.depositClose")
+                : t("depositList.dividents")}
             </PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>Сумма вклада</PayText>
+            <PayText small>{t("adminPay.table.contribution")}</PayText>
             <PayText>
               {data.userDeposit.baseAmountView.toLocaleString()}
             </PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>Сумма выплаты</PayText>
+            <PayText small>{t("adminPay.table.payments")}</PayText>
             <PayText>
               {(data.amount / 100000).toFixed(2).toLocaleString()}
             </PayText>
@@ -268,26 +270,27 @@ export const ModalPortfolio: FC<{
       onClose();
     }
   };
+  const { t } = useTranslation();
   return (
     <Container>
       <Center onClick={handleContainerClick}>
         <PayCard>
           <PayCardBlock>
-            <PayText small>Дата покупки</PayText>
+            <PayText small>{t("adminPortfolio.table.date")}</PayText>
             <PayText>{moment(data.creationDate).format("DD/MM/YYYY")}</PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>Первичное количество</PayText>
+            <PayText small>{t("adminPortfolio.table.count")}</PayText>
             <PayText>{data.initialVolume}</PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>Стоимость за единицу, CWD</PayText>
+            <PayText small>{t("adminPortfolio.table.cost")}, CWD</PayText>
             <PayText>
               {(data.unitPrice / 100000).toFixed(2).toLocaleString()}
             </PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>Текущее количество</PayText>
+            <PayText small>{t("adminPortfolio.table.amount")}</PayText>
             <PayText>{data.volume}</PayText>
           </PayCardBlock>
         </PayCard>
@@ -308,16 +311,17 @@ export const ModalUsers: FC<{
       onClose();
     }
   };
+  const { t } = useTranslation();
   return (
     <Container>
       <Center onClick={handleContainerClick}>
         <PayCard>
           <PayCardBlock>
-            <PayText small>Пользователь</PayText>
+            <PayText small>{t("adminPay.table.user")}</PayText>
             <PayText>{data.name}</PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>Баланс</PayText>
+            <PayText small>{t("adminUsers.table.balans")}</PayText>
             <PayText>
               {data.balances.length
                 ? (data.balances[0].volume / 100000).toLocaleString()
@@ -325,25 +329,25 @@ export const ModalUsers: FC<{
             </PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>Роль</PayText>
+            <PayText small>{t("adminUsers.table.role")}</PayText>
             <PayText>{data.roles.length ? data.roles[0].name : "-"}</PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>Дата создания</PayText>
+            <PayText small>{t("adminUsers.table.dataCreate")}</PayText>
             <PayText>{moment(data.creationDate).format("DD/MM/YYYY")}</PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>Язык</PayText>
-            <PayText>Русский</PayText>
+            <PayText small>{t("adminUsers.table.lang")}</PayText>
+            <PayText>{t("adminUsers.table.rus")}</PayText>
           </PayCardBlock>
           <PayCardBlock>
             {lock ? (
               <Button greenOutline onClick={(e) => unLocked(e, data.safeId)}>
-                Разблокировать
+                {t("adminUsers.table.unlock")}
               </Button>
             ) : (
               <Button dangerOutline onClick={(e) => locked(e, data.safeId)}>
-                Заблокировать
+                {t("adminUsers.table.lock")}
               </Button>
             )}
           </PayCardBlock>
@@ -384,7 +388,6 @@ const PayCard = styled(Card)`
   justify-content: center;
   position: relative;
   margin: 50px auto;
-  /* margin-bottom: 40px; */
   background: #fafafa;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
@@ -428,21 +431,6 @@ const PayName = styled.div`
   line-height: 16px;
   letter-spacing: 0.1px;
   color: #515172;
-`;
-
-const PayInput = styled.input`
-  border: none;
-  font-size: 14px;
-  width: 100%;
-  line-height: 16px;
-  letter-spacing: 0.1px;
-  color: #515172;
-  padding-right: 10px;
-  border-bottom: 1px solid rgba(81, 81, 114, 0.2);
-  &:focus {
-    outline: none;
-    border-bottom: 1px solid rgba(81, 81, 114, 0.8);
-  }
 `;
 
 const PayText = styled.p<{ small?: boolean }>`

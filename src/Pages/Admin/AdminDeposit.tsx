@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, FC } from "react";
+﻿import React, { useState, useEffect, useContext, FC } from "react";
 import * as Styled from "./Styled.elements";
 import styled, { css } from "styled-components/macro";
 import { Card } from "../../globalStyles";
@@ -32,6 +32,7 @@ import "swiper/components/scrollbar/scrollbar.scss";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { ModalDeposit } from "./AdminPay/Payments";
 import { Loading } from "../../components/UI/Loading";
+import { useTranslation } from "react-i18next";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 type PayProps = {
@@ -94,6 +95,7 @@ export const AdminDeposit = () => {
   });
   const [count, setCount] = useState(true);
   const [num, setNum] = useState(20);
+  const { t } = useTranslation();
 
   const myLoad = () => {
     setCount(false);
@@ -129,8 +131,6 @@ export const AdminDeposit = () => {
   const hubConnection = appContext.hubConnection;
   const logOut = appContext.logOut;
   const user = appContext.user;
-  const load = appContext.loading;
-  const admin = appContext.isAdmin;
   const sizes = useWindowSize();
   const size = sizes < 768;
 
@@ -153,39 +153,12 @@ export const AdminDeposit = () => {
     );
   }
 
-  const colors = (name: string) => {
-    switch (name) {
-      case "Программа ЖИЛФОНД":
-        return "#A78CF2";
-        break;
-      case "Программа START":
-        return "#BCD576";
-        break;
-      case "Программа START 30000+":
-        return "#F28CE8";
-        break;
-      case "АВТОБОНУС 30/70":
-        return "#FFB23E";
-        break;
-      case "Программа EXPERT":
-        return "#6DB9FF";
-        break;
-      case "АВТОБОНУС 40/60":
-        return "#FFB23E";
-        break;
-      case "Программа INFINITY":
-        return "#FF416E";
-        break;
-      default:
-        return "#6DB9FF";
-    }
-  };
-
   useEffect(() => {
     if (hubConnection) {
       hubConnection
         .invoke<DepositStats[]>("GetUsersDepositsStats")
         .then((res) => {
+          console.log("res", res);
           setStatsDeposit(res);
         })
         .catch((err: Error) => console.log(err));
@@ -195,9 +168,8 @@ export const AdminDeposit = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<ListDeposits>("GetDeposits", 1, true, 0, 40)
+        .invoke<ListDeposits>("GetDeposits", 1, false, 0, 40)
         .then((res) => {
-          console.log("res", res);
           setListDeposits(res.collection);
         })
         .catch((err: Error) => console.log(err));
@@ -261,13 +233,13 @@ export const AdminDeposit = () => {
   return (
     <>
       <Styled.HeadBlock>
-        <UpTitle small>Выплаты</UpTitle>
+        <UpTitle small>{t("adminDeposit.uptitle")}</UpTitle>
         <Styled.UserName>
           <span>{user}</span>
           <Exit onClick={logOut} />
         </Styled.UserName>
       </Styled.HeadBlock>
-      <Styled.TitleHead>Активные депозиты</Styled.TitleHead>
+      <Styled.TitleHead>{t("adminDeposit.headTitle")}</Styled.TitleHead>
       <div>
         <DepositWrap>
           {!size && (
@@ -378,14 +350,11 @@ export const AdminDeposit = () => {
       <Styled.FilterBlock>
         <Styled.SelectContainer>
           <Styled.SelectWrap>
-            <Styled.Label>Пользователь</Styled.Label>
-            <Styled.Input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
+            <Styled.Label>{t("adminDeposit.labelUser")}</Styled.Label>
+            <Input value={name} onChange={(e) => setName(e.target.value)} />
           </Styled.SelectWrap>
           <Styled.SelectWrap>
-            <Styled.Label>Название программы</Styled.Label>
+            <Styled.Label>{t("adminDeposit.labelProgram")}</Styled.Label>
             <Select
               checkList={checkList}
               setCheckList={setCheckList}
@@ -393,37 +362,35 @@ export const AdminDeposit = () => {
             />
           </Styled.SelectWrap>
           <Styled.InputsWrap>
-            <Styled.InputsWrapItem>
+            <InputsWrapItem>
               <TestInput
                 setOpenDate={setOpenDate}
                 openDate={openDate}
-                label="Дата открытия"
+                label={t("adminDeposit.labelOpen")}
               />
-            </Styled.InputsWrapItem>
-            <Styled.InputsWrapItem>
-              <TestInput
-                setOpenDate={setCloseDate}
-                openDate={closeDate}
-                label="Дата след.выплаты"
-              />
-            </Styled.InputsWrapItem>
+            </InputsWrapItem>
+            <TestInput
+              setOpenDate={setCloseDate}
+              openDate={closeDate}
+              label={t("adminDeposit.labelDate")}
+            />
           </Styled.InputsWrap>
 
           <Button danger onClick={submit}>
-            Применить
+            {t("adminDeposit.btnApply")}
           </Button>
         </Styled.SelectContainer>
       </Styled.FilterBlock>
       <Card>
         <PaymentsTable>
           <TableHead>
-            <TableHeadItem>Пользователь</TableHeadItem>
-            <TableHeadItem>Название</TableHeadItem>
-            <TableHeadItem>Дата открытия</TableHeadItem>
-            <TableHeadItem>Дата закрытия</TableHeadItem>
-            <TableHeadItem>Сумма депозита</TableHeadItem>
-            <TableHeadItem>Дата след. выплаты</TableHeadItem>
-            <TableHeadItem>Выплачено</TableHeadItem>
+            <TableHeadItem>{t("adminDeposit.table.user")}</TableHeadItem>
+            <TableHeadItem>{t("adminDeposit.table.name")}</TableHeadItem>
+            <TableHeadItem>{t("adminDeposit.table.openDate")}</TableHeadItem>
+            <TableHeadItem>{t("adminDeposit.table.closeDate")}</TableHeadItem>
+            <TableHeadItem>{t("adminDeposit.table.sum")}</TableHeadItem>
+            <TableHeadItem>{t("adminDeposit.table.nextDate")}</TableHeadItem>
+            <TableHeadItem>{t("adminDeposit.table.paid")}</TableHeadItem>
             <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
             {/* <FilterMenu filterClick={filterClick} /> */}
           </TableHead>
@@ -448,18 +415,38 @@ export const AdminDeposit = () => {
           ) : loading ? (
             <Loading />
           ) : (
-            <NotFound>Данные не обнаружены.</NotFound>
+            <NotFound>{t("notFound")}</NotFound>
           )}
         </PaymentsTable>
-        {/* <NotFound>
-            Данные не обнаружены. Попробуйте изменить параметры поиска.
-          </NotFound> */}
       </Card>
-      {/* </Styled.Content>
-      </Styled.Wrapper> */}
     </>
   );
 };
+
+const InputsWrapItem = styled.div`
+  margin-right: 10px;
+  width: 100%;
+  @media (max-width: 576px) {
+    margin-right: 0px;
+  }
+`;
+
+const Input = styled.input`
+  width: 100%;
+  border: 1px solid rgba(86, 101, 127, 0.3);
+  box-sizing: border-box;
+  border-radius: 2px;
+  min-height: 40px;
+  padding: 8px;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 21px;
+  letter-spacing: 0.1px;
+  color: #515172;
+  &:focus {
+    outline: none;
+  }
+`;
 
 const NotFound = styled.div`
   font-weight: normal;

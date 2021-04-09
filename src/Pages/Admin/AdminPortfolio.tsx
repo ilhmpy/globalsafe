@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext, FC, useRef } from "react";
 import * as Styled from "./Styled.elements";
 import styled, { css } from "styled-components/macro";
-import { SideNavbar } from "../../components/SideNav";
 import { Card } from "../../globalStyles";
 import { UpTitle } from "../../components/UI/UpTitle";
 import { ReactComponent as Exit } from "../../assets/svg/exit.svg";
@@ -10,24 +9,21 @@ import { Select } from "../../components/Select/Select";
 import { TestInput } from "../../components/UI/DayPicker";
 import { Button } from "../../components/Button/Button";
 import { Checkbox } from "../../components/UI/Checkbox";
-import useWindowSize from "../../hooks/useWindowSize";
 import { TestChart } from "../../components/Charts/Test";
 import { CSSTransition } from "react-transition-group";
 import { Tab, Content } from "../../components/UI/Tabs";
 import { AppContext } from "../../context/HubContext";
-import { Header } from "../../components/Header/Header";
+import { useTranslation } from "react-i18next";
 import {
   Portfolio,
   RootPortfolio,
   CollectionPortfolio,
 } from "../../types/portfolio";
-import { Balance } from "../../types/balance";
 import moment from "moment";
 import InfiniteScroll from "react-infinite-scroller";
 import { Scrollbars } from "react-custom-scrollbars";
 import { ModalPortfolio } from "./AdminPay/Payments";
 import { Loading } from "../../components/UI/Loading";
-import { Redirect } from "react-router-dom";
 
 const TableList: FC<{ data: CollectionPortfolio }> = ({ data }) => {
   const [open, setOpen] = useState(false);
@@ -85,11 +81,8 @@ export const AdminPortfolio = () => {
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const logOut = appContext.logOut;
-  const admin = appContext.isAdmin;
   const user = appContext.user;
-  const scrollGCWD = useRef<any>(null);
-  const sizes = useWindowSize();
-  const header = sizes < 992;
+  const { t } = useTranslation();
 
   const myLoadGCWD = () => {
     setCountGCWD(false);
@@ -205,14 +198,10 @@ export const AdminPortfolio = () => {
     }
   }, [hubConnection]);
 
-  // if (admin === false) {
-  //   return <Redirect to="/" />;
-  // }
-
   return (
     <>
       <Styled.HeadBlock>
-        <UpTitle small>Портфель</UpTitle>
+        <UpTitle small>{t("adminPortfolio.uptitle")}</UpTitle>
         <Styled.UserName>
           <span>{user}</span>
           <Exit onClick={logOut} />
@@ -242,7 +231,6 @@ export const AdminPortfolio = () => {
           <Styled.PayItem>
             <Styled.PayItemHead mb>
               <UpTitle small>DIAMOND</UpTitle>
-              {/* {sizes > 768 && <CalendarInput />} */}
             </Styled.PayItemHead>
             <Styled.Radial bg={"rgba(109, 185, 255, 0.2)"}>
               <span>{basket.MGCWD}</span>
@@ -335,10 +323,12 @@ export const AdminPortfolio = () => {
         <CardTable>
           <PaymentsTable>
             <TableHead>
-              <TableHeadItem>Дата покупки</TableHeadItem>
-              <TableHeadItem>Первичное количество</TableHeadItem>
-              <TableHeadItem>Стоимость за единицу, CWD</TableHeadItem>
-              <TableHeadItem>Текущее количество</TableHeadItem>
+              <TableHeadItem>{t("adminPortfolio.table.date")}</TableHeadItem>
+              <TableHeadItem>{t("adminPortfolio.table.count")}</TableHeadItem>
+              <TableHeadItem>
+                {t("adminPortfolio.table.cost")}, CWD
+              </TableHeadItem>
+              <TableHeadItem>{t("adminPortfolio.table.amount")}</TableHeadItem>
               <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
             </TableHead>
             {basketGCWD.length ? (
@@ -362,9 +352,7 @@ export const AdminPortfolio = () => {
             ) : loading ? (
               <Loading />
             ) : (
-              <Styled.NotFound>
-                Данные не обнаружены. Попробуйте изменить параметры поиска.
-              </Styled.NotFound>
+              <Styled.NotFound>{t("notFound")}</Styled.NotFound>
             )}
           </PaymentsTable>
         </CardTable>
@@ -373,10 +361,12 @@ export const AdminPortfolio = () => {
         <CardTable>
           <PaymentsTable>
             <TableHead>
-              <TableHeadItem>Дата покупки</TableHeadItem>
-              <TableHeadItem>Первичное количество</TableHeadItem>
-              <TableHeadItem>Стоимость за единицу, CWD</TableHeadItem>
-              <TableHeadItem>Текущее количество</TableHeadItem>
+              <TableHeadItem>{t("adminPortfolio.table.date")}</TableHeadItem>
+              <TableHeadItem>{t("adminPortfolio.table.count")}</TableHeadItem>
+              <TableHeadItem>
+                {t("adminPortfolio.table.cost")}, CWD
+              </TableHeadItem>
+              <TableHeadItem>{t("adminPortfolio.table.amount")}</TableHeadItem>
               <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
             </TableHead>
             {basketMGCWD.length ? (
@@ -398,9 +388,7 @@ export const AdminPortfolio = () => {
                 </InfiniteScroll>
               </Scrollbars>
             ) : (
-              <Styled.NotFound>
-                Данные не обнаружены. Попробуйте изменить параметры поиска.
-              </Styled.NotFound>
+              <Styled.NotFound>{t("notFound")}</Styled.NotFound>
             )}
           </PaymentsTable>
         </CardTable>
@@ -409,10 +397,12 @@ export const AdminPortfolio = () => {
         <CardTable>
           <PaymentsTable>
             <TableHead>
-              <TableHeadItem>Дата покупки</TableHeadItem>
-              <TableHeadItem>Первичное количество</TableHeadItem>
-              <TableHeadItem>Стоимость за единицу, CWD</TableHeadItem>
-              <TableHeadItem>Текущее количество</TableHeadItem>
+              <TableHeadItem>{t("adminPortfolio.table.date")}</TableHeadItem>
+              <TableHeadItem>{t("adminPortfolio.table.count")}</TableHeadItem>
+              <TableHeadItem>
+                {t("adminPortfolio.table.cost")}, CWD
+              </TableHeadItem>
+              <TableHeadItem>{t("adminPortfolio.table.amount")}</TableHeadItem>
               <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
             </TableHead>
             {basketDIAMOND.length ? (
@@ -434,15 +424,11 @@ export const AdminPortfolio = () => {
                 </InfiniteScroll>
               </Scrollbars>
             ) : (
-              <Styled.NotFound>
-                Данные не обнаружены. Попробуйте изменить параметры поиска.
-              </Styled.NotFound>
+              <Styled.NotFound>{t("notFound")}</Styled.NotFound>
             )}
           </PaymentsTable>
         </CardTable>
       </Content>
-      {/* </Styled.Content>
-      </Styled.Wrapper> */}
     </>
   );
 };

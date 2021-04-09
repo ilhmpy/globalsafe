@@ -7,6 +7,7 @@ import {
   HeaderInner,
   HeaderLogo,
   HeaderMenu,
+  Languale,
 } from "./Header.elements";
 import { Button } from "../Button/Button";
 import { Nav } from "./Nav";
@@ -14,6 +15,9 @@ import { useHistory, useLocation } from "react-router-dom";
 import styled from "styled-components/macro";
 import { AppContext } from "../../context/HubContext";
 import { NavAdmin } from "./NavAdmin";
+import usa from "../../assets/svg/usa.svg";
+import ru from "../../assets/svg/russia.svg";
+import { useTranslation } from "react-i18next";
 
 export const Header: FC<{ admPanel?: boolean }> = ({ admPanel }) => {
   const [header, setHeader] = useState(false);
@@ -24,6 +28,7 @@ export const Header: FC<{ admPanel?: boolean }> = ({ admPanel }) => {
   const admin = appContext.isAdmin;
   let history = useHistory();
   let location = useLocation();
+  const { t, i18n } = useTranslation();
 
   function handleClick() {
     if (!user) {
@@ -53,7 +58,7 @@ export const Header: FC<{ admPanel?: boolean }> = ({ admPanel }) => {
   const toAdmin = () => {
     history.push("/admin");
   };
-
+  const lang = localStorage.getItem("i18nextLng") || "ru";
   return (
     <HeaderWrap header={header}>
       <Container>
@@ -76,21 +81,37 @@ export const Header: FC<{ admPanel?: boolean }> = ({ admPanel }) => {
                 logOut={logOut}
                 location={location.pathname}
                 admin={admin}
+                lang={lang}
               />
             )}
           </HeaderMenu>
+          {lang === "ru" ? (
+            <Languale onClick={() => i18n.changeLanguage("en")}>
+              en
+              <img src={usa} alt="en" />
+            </Languale>
+          ) : (
+            <Languale onClick={() => i18n.changeLanguage("ru")}>
+              ru
+              <img src={ru} alt="ru" />
+            </Languale>
+          )}
           {admin && (
             <Button danger onClick={toAdmin}>
-              Админка
+              {t("headerButton.admin")}
             </Button>
           )}
           {location.pathname === "/" ? (
-            <Button onClick={handleClick}>Личный кабинет</Button>
+            <Button onClick={handleClick}>
+              {t("headerButton.personalArea")}
+            </Button>
           ) : user ? (
-            <Button onClick={logOut}>Выйти</Button>
+            <Button onClick={logOut}>{t("logout")}</Button>
           ) : (
             <>
-              <Button onClick={handleClick}>Личный кабинет</Button>
+              <Button onClick={handleClick}>
+                {t("headerButton.personalArea")}
+              </Button>
             </>
           )}
         </HeaderInner>

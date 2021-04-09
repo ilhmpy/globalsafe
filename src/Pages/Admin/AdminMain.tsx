@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import * as Styled from "./Styled.elements";
 import styled, { css } from "styled-components/macro";
-import { SideNavbar } from "../../components/SideNav";
 import { Card } from "../../globalStyles";
 import {
   ColumnChart,
@@ -13,14 +12,12 @@ import { UpTitle } from "../../components/UI/UpTitle";
 import "react-day-picker/lib/style.css";
 import { ReactComponent as Exit } from "../../assets/svg/exit.svg";
 import { Calendar, MainAdminInput } from "../../components/UI/DayPicker";
-import { Header } from "../../components/Header/Header";
-import useWindowSize from "../../hooks/useWindowSize";
 import { OpenDate } from "../../types/dates";
 import { AppContext } from "../../context/HubContext";
 import moment from "moment";
 import { CSSTransition } from "react-transition-group";
 import { PaymentsStat } from "../../types/main";
-import { Redirect } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export const AdminMain = () => {
   let currentMonth = moment().format("MMYYYY");
@@ -63,8 +60,7 @@ export const AdminMain = () => {
   const [depositsCount, setDepositsCount] = useState(0);
   const [depositsAmount, setDepositsAmount] = useState(0);
   const [card, setCard] = useState(0);
-  const sizes = useWindowSize();
-  const size = sizes < 992;
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (hubConnection) {
@@ -138,7 +134,7 @@ export const AdminMain = () => {
   return (
     <>
       <Styled.HeadBlock>
-        <UpTitle small>Главный экран</UpTitle>
+        <UpTitle small>{t("adminMain.uptitle")}</UpTitle>
         <Styled.UserName>
           <span>{user}</span>
           <Exit onClick={logOut} />
@@ -148,12 +144,11 @@ export const AdminMain = () => {
         <MainChartsContainer>
           <ChartItem>
             <ChartItemHead>
-              <ChartItemTitle small>Новые депозиты</ChartItemTitle>
-
+              <ChartItemTitle small>{t("adminMain.headTitle")}</ChartItemTitle>
               <MainAdminInput
                 setOpenDate={setDepositsDate}
                 openDate={depositsDate}
-                label={"30 дней"}
+                label={t("adminMain.dayLabel")}
               />
             </ChartItemHead>
             <TabsChart>
@@ -214,11 +209,13 @@ export const AdminMain = () => {
           </ChartItem>
           <ChartItem>
             <ChartItemHead>
-              <ChartItemTitle small>Выплаты</ChartItemTitle>
+              <ChartItemTitle small>
+                {t("adminMain.chartTitle1")}
+              </ChartItemTitle>
               <MainAdminInput
                 setOpenDate={setOpenDate}
                 openDate={openDate}
-                label={"30 дней"}
+                label={t("adminMain.dayLabel")}
               />
             </ChartItemHead>
             <ColumnChartTwo
@@ -236,11 +233,13 @@ export const AdminMain = () => {
           </ChartItem>
           <ChartItem>
             <ChartItemHead>
-              <ChartItemTitleLast small>Доходность фонда</ChartItemTitleLast>
+              <ChartItemTitleLast small>
+                {t("adminMain.chartTitle2")}
+              </ChartItemTitleLast>
               <MainAdminInput
                 setOpenDate={setStatDate}
                 openDate={statDate}
-                label={"30 дней"}
+                label={t("adminMain.dayLabel")}
               />
             </ChartItemHead>
             <ColumnChartThree
@@ -262,11 +261,11 @@ export const AdminMain = () => {
         <Calendar selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
         <Deposites>
           <DepositItem>
-            <DepositTitle>Количество депозитов</DepositTitle>
+            <DepositTitle>{t("adminMain.depositsCount")}</DepositTitle>
             <DepositValue>{depositsCount}</DepositValue>
           </DepositItem>
           <DepositItem>
-            <DepositTitle>Размер депозитов</DepositTitle>
+            <DepositTitle>{t("adminMain.depositsAmount")}</DepositTitle>
             <DepositValue>
               {depositsAmount.toLocaleString("ru-RU", {
                 maximumFractionDigits: 1,

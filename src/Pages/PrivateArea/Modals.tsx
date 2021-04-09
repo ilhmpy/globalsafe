@@ -4,8 +4,7 @@ import { CSSTransition } from "react-transition-group";
 import { Modal } from "../../components/Modal/Modal";
 import { DepositsCollection } from "../../types/info";
 import moment from "moment";
-import "moment/locale/ru";
-moment.locale("ru");
+import { useTranslation } from "react-i18next";
 
 type Props = {
   depositListModal: boolean;
@@ -22,6 +21,7 @@ export const DepositListModal: FC<Props> = ({
   depositsList,
   selectDeposit,
 }) => {
+  const { t } = useTranslation();
   return (
     <CSSTransition
       in={depositListModal}
@@ -31,12 +31,18 @@ export const DepositListModal: FC<Props> = ({
     >
       <Modal onClose={() => setDepositListModal(false)}>
         <Styled.ModalBack onClick={handleBackModal} />
-        <Styled.ModalTitle>Добавить депозит</Styled.ModalTitle>
+        <Styled.ModalTitle>{t("privateArea.addDeposit")}</Styled.ModalTitle>
         <Styled.ModalList>
           <Styled.ModalListItem>
-            <Styled.ModalListText head>Название</Styled.ModalListText>
-            <Styled.ModalListText head>Мин. платеж</Styled.ModalListText>
-            <Styled.ModalListText head>Срок вклада</Styled.ModalListText>
+            <Styled.ModalListText head>
+              {t("privateArea.name")}
+            </Styled.ModalListText>
+            <Styled.ModalListText head>
+              {t("privateArea.minPay")}
+            </Styled.ModalListText>
+            <Styled.ModalListText head>
+              {t("privateArea.depositTerm")}
+            </Styled.ModalListText>
           </Styled.ModalListItem>
           {depositsList
             ? depositsList.map((item) => (
@@ -49,7 +55,7 @@ export const DepositListModal: FC<Props> = ({
                     {(item.minAmount / 100000).toLocaleString()}
                   </Styled.ModalListText>
                   <Styled.ModalListText>
-                    {item.duration} дн
+                    {item.duration} {t("privateArea.day")}
                   </Styled.ModalListText>
                 </Styled.ModalListItem>
               ))
@@ -72,40 +78,47 @@ export const ModalDividends: FC<DividendsProps> = ({ onClose, data, open }) => {
       onClose();
     }
   };
+  const { t } = useTranslation();
   return (
     <Modal onClose={onClose} width={280}>
       <Styled.ModalDividends onClick={handleContainerClick}>
         {data.userDeposit ? (
           <>
             <Styled.PayCardBlock>
-              <Styled.PayText wbold>Начисление дивидендов</Styled.PayText>
+              <Styled.PayText wbold>
+                {t("privateArea.dividents")}
+              </Styled.PayText>
               <Styled.PayText>
                 {moment(data.date).format("DD MMMM YYYY")}г.
               </Styled.PayText>
               <Styled.Hr />
             </Styled.PayCardBlock>
             <Styled.PayCardBlock>
-              <Styled.PayText small>Название</Styled.PayText>
+              <Styled.PayText small>{t("privateArea.name")}</Styled.PayText>
               <Styled.PayText>{data.userDeposit.deposit.name}</Styled.PayText>
             </Styled.PayCardBlock>
             <Styled.PayCardBlock>
-              <Styled.PayText small>Дата открытия</Styled.PayText>
+              <Styled.PayText small>{t("privateArea.dateOpen")}</Styled.PayText>
               <Styled.PayText>
                 {moment(data.userDeposit.creationDate).format("DD/MM/YYYY")}
               </Styled.PayText>
             </Styled.PayCardBlock>
             <Styled.PayCardBlock>
-              <Styled.PayText small>Сумма депозита</Styled.PayText>
+              <Styled.PayText small>
+                {t("privateArea.sumDeposit")}
+              </Styled.PayText>
               <Styled.PayText>{data.userDeposit.baseAmountView}</Styled.PayText>
             </Styled.PayCardBlock>
             <Styled.PayCardBlock>
-              <Styled.PayText small>Дата следующей выплаты</Styled.PayText>
+              <Styled.PayText small>{t("privateArea.nextDate")}</Styled.PayText>
               <Styled.PayText>
                 {moment(data.userDeposit.paymentDate).format("DD/MM/YYYY")}
               </Styled.PayText>
             </Styled.PayCardBlock>
             <Styled.PayCardBlock>
-              <Styled.PayText small>Сумма выплаты</Styled.PayText>
+              <Styled.PayText small>
+                {t("privateArea.amountPay")}
+              </Styled.PayText>
               <Styled.PayText>
                 {(data.balance / 100000).toLocaleString("ru-RU", {
                   maximumFractionDigits: 5,
@@ -113,7 +126,7 @@ export const ModalDividends: FC<DividendsProps> = ({ onClose, data, open }) => {
               </Styled.PayText>
             </Styled.PayCardBlock>
             <Styled.PayCardBlock>
-              <Styled.PayText small>Процент выплаты</Styled.PayText>
+              <Styled.PayText small>{t("privateArea.procent")}</Styled.PayText>
               <Styled.PayText>
                 {(
                   (data.balance / data.userDeposit.baseAmount) *
@@ -128,7 +141,7 @@ export const ModalDividends: FC<DividendsProps> = ({ onClose, data, open }) => {
         ) : (
           <>
             <Styled.PayCardBlock>
-              <Styled.PayText>Нет данных</Styled.PayText>
+              <Styled.PayText>{t("privateArea.notData")}</Styled.PayText>
             </Styled.PayCardBlock>
           </>
         )}

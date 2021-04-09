@@ -1,43 +1,20 @@
-import React, {
-  useState,
-  MouseEvent,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  FC,
-} from "react";
-import { Header } from "../../components/Header/Header";
-import styled, { css } from "styled-components/macro";
+﻿import React, { useState, useContext, useEffect, useRef, FC } from "react";
 import * as Styled from "./Styles.elements";
-import { Tabs, Tab } from "../../components/UI/Tabs";
 import { Card, Container } from "../../globalStyles";
-import { UpTitle } from "../../components/UI/UpTitle";
-import { Redirect } from "react-router-dom";
-import { Button } from "../../components/Button/Button";
 import { AppContext } from "../../context/HubContext";
 import { AmountContext } from "../../context/AmountContext";
-import { Tables } from "../../components/Table/Table";
-import { TestChart } from "../../components/Charts/Test";
 import { CSSTransition } from "react-transition-group";
-import useWindowSize from "../../hooks/useWindowSize";
-import { Collection, RootList } from "../../types/info";
 import { Modal } from "../../components/Modal/Modal";
-import { ReactComponent as Left } from "../../assets/svg/arrowLeftModal.svg";
 import moment from "moment";
-import "moment/locale/ru";
 import { ModalRangeInput } from "../../components/UI/DayPicker";
 import { Input } from "../../components/UI/Input";
 import { OpenDate } from "../../types/dates";
-import { RootDeposits, DepositsCollection } from "../../types/info";
-import ReactNotification, { store } from "react-notifications-component";
-import "react-notifications-component/dist/theme.css";
-import { DepositListModal, ModalDividends } from "./Modals";
+import { ModalDividends } from "./Modals";
 import InfiniteScroll from "react-infinite-scroller";
 import { Scrollbars } from "react-custom-scrollbars";
 import { Loading } from "../../components/UI/Loading";
+import { useTranslation } from "react-i18next";
 import { StackedColumn } from "../../components/Charts/StackedColumn";
-moment.locale("ru");
 
 type Obj = {
   id: string;
@@ -55,17 +32,19 @@ type BalanceTableProps = {
 
 const BalanceTable: FC<BalanceTableProps> = ({ balanceLog }) => {
   const [divModal, setDivModal] = useState(false);
+  const { t } = useTranslation();
+
   const operation = (id: number) => {
     if (id === 6) {
-      return "Открытие депозита";
+      return t("operation.open");
     } else if (id === 7) {
-      return "Начисление дивидендов";
+      return t("operation.divedents");
     } else if (id === 8) {
-      return "Закрытие депозита";
+      return t("operation.close");
     } else if (id === 2) {
-      return "Вывод баланса";
+      return t("operation.withdraw");
     } else if (id === 1) {
-      return "Пополнение баланса";
+      return t("operation.add");
     }
   };
 
@@ -113,29 +92,17 @@ export const InfoBalance = () => {
   const [depositTabs, setDepositTabs] = useState(0);
   const [balanceLogs, setBalanceLogs] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8]);
   const [open, setOpen] = useState(false);
-  const [withdraw, setWithdraw] = useState(false);
-  const [addDeposit, setAddDeposit] = useState(false);
-  const [withdrawValue, setWithdrawValue] = useState("");
-  const [addDepositValue, setAddDepositValue] = useState("");
-  const [depositListModal, setDepositListModal] = useState(false);
-  const [selectedYear, setSelectedYear] = useState<any>("2021");
-  const [selectedMonth, setSelectedMonth] = useState<any>("3");
-  const [depositSelect, setDepositSelect] = useState<null | DepositsCollection>(
-    null
-  );
-  const [depositsList, setDepositsList] = useState<DepositsCollection[] | null>(
-    null
-  );
   const [openDate, setOpenDate] = useState<OpenDate>({
     from: new Date("2019-01-01T00:47:45"),
     to: new Date(),
   });
-  const [selected, setSelected] = useState("За все время");
+  const { t } = useTranslation();
+  const [selected, setSelected] = useState<string | never>(
+    t("privateArea.allTime")
+  );
   const appContext = useContext(AppContext);
-  const user = appContext.user;
   const balance = appContext.balance;
   const amountContext = useContext(AmountContext);
-  const balanceList = appContext.balanceList;
   const { totalPayed, depositTotal } = amountContext;
   const [count, setCount] = useState(true);
   const [num, setNum] = useState(20);
@@ -147,6 +114,9 @@ export const InfoBalance = () => {
   const [depositList, setDepositList] = useState<any>([]);
   const inputRef = useRef<any>(null);
 
+  const lang = localStorage.getItem("i18nextLng") || "ru";
+  const languale = lang === "ru" ? 1 : 0;
+
   const yearSelected = () => {
     let year = moment().format("YYYY");
     let yearStart: any = moment(year, "YYYY").startOf("month");
@@ -155,11 +125,9 @@ export const InfoBalance = () => {
       from: yearStart._d,
       to: yearEnd._d,
     });
-    setSelected(`За ${moment().format("YYYY")}`);
+    setSelected(`${t("privateArea.at")} ${moment().format("YYYY")}`);
     onClose();
   };
-
-  // console.log("balanceLog", balanceLog);
 
   const monthSelected = () => {
     let currentMonth = moment().format("MMYYYY");
@@ -171,7 +139,7 @@ export const InfoBalance = () => {
       from: currentMonthStart._d,
       to: currentMonthEnd._d,
     });
-    setSelected(`За ${moment().format("MMMM YYYY")}`);
+    setSelected(`${t("privateArea.at")} ${moment().format("MMMM YYYY")}`);
     onClose();
   };
 
@@ -191,34 +159,28 @@ export const InfoBalance = () => {
       from: new Date("2019-01-01T00:47:45"),
       to: new Date(),
     });
-    setSelected("За все время");
+    setSelected(t("privateArea.allTime"));
     onClose();
   };
 
   useEffect(() => {
-    if (withdrawValue || balanceValue || addDepositValue) {
+    if (selected === t("privateArea.allTime")) {
+      setSelected(t("privateArea.allTime"));
+    } else {
+      monthSelected();
+    }
+  }, [languale]);
+
+  useEffect(() => {
+    if (balanceValue) {
       inputRef.current.focus();
     }
-  }, [withdrawValue, balanceValue, addDepositValue]);
+  }, [balanceValue]);
 
   const hubConnection = appContext.hubConnection;
 
   useEffect(() => {
-    if (hubConnection) {
-      hubConnection
-        .invoke<RootDeposits>("GetDeposits", 1, false, 0, 10)
-        .then((res) => {
-          // console.log("GetDeposits 11", res);
-          if (res.collection.length) {
-            // console.log("GetDeposits 111", res);
-            setDepositsList(res.collection);
-          }
-        })
-        .catch((err: Error) => console.log(err));
-    }
-  }, [hubConnection]);
-
-  useEffect(() => {
+    setBalanceLog(null);
     if (hubConnection) {
       hubConnection
         .invoke(
@@ -231,7 +193,6 @@ export const InfoBalance = () => {
         )
         .then((res: any) => {
           setTotalDeposit(res.totalRecords);
-          console.log("res depos", res);
           setNum(20);
           setLoading(false);
           function getFormatedDate(dateStr: Date) {
@@ -268,7 +229,7 @@ export const InfoBalance = () => {
           console.log(err);
         });
     }
-  }, [hubConnection, openDate, balanceLogs]);
+  }, [hubConnection, openDate, balanceLogs, languale]);
 
   const myLoad = () => {
     setCount(false);
@@ -319,42 +280,6 @@ export const InfoBalance = () => {
     }
   };
 
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection
-        .invoke(
-          "GetBalanceLog",
-          1,
-          balanceLogs,
-          openDate.from || new Date("2021-02-09T00:47:45"),
-          openDate.to || new Date(),
-          num,
-          30
-        )
-        .then((res: any) => {
-          // console.log("GetBalanceLog", res);
-        })
-        .catch((err: Error) => console.log(err));
-    }
-  }, [hubConnection, balanceLogs, openDate]);
-
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection
-        .invoke("GetBalanceOperationSum", 1, [0, 1, 2, 3, 4, 5, 6, 7, 8])
-        .then((res: any) => {
-          // console.log("GetBalanceOperationSum", res);
-        })
-        .catch((err: Error) => console.log(err));
-    }
-  }, [hubConnection]);
-
-  // const handleClick = (id: number) => {
-  //   if (id !== active) {
-  //     setActive(id);
-  //   }
-  // };
-
   const handleBalance = (id: number) => {
     if (id !== depositTabs) {
       setDepositTabs(id);
@@ -368,110 +293,8 @@ export const InfoBalance = () => {
     }
   };
 
-  if (user === null) {
-    return null;
-  }
-
-  if (user === false) {
-    return <Redirect to="/" />;
-  }
-
   const onClose = () => {
     setOpen(false);
-  };
-
-  const alert = (
-    title: string,
-    message: string,
-    type: "success" | "default" | "warning" | "info" | "danger"
-  ) => {
-    store.addNotification({
-      title: title,
-      message: message,
-      type: type,
-      insert: "top",
-      container: "top-right",
-      animationIn: ["animate__animated", "animate__fadeIn"],
-      animationOut: ["animate__animated", "animate__fadeOut"],
-      dismiss: {
-        duration: 5000,
-      },
-    });
-  };
-
-  const withdrawBalance = () => {
-    if (hubConnection) {
-      hubConnection
-        .invoke("Withdraw", 1, +withdrawValue * 100000)
-        .then((res) => {
-          // console.log("Withdraw", res);
-          if (res === 1) {
-            setWithdraw(false);
-            setWithdrawValue("");
-            alert("Успешно", "Средства успешно переведены", "success");
-          } else {
-            setWithdraw(false);
-            setWithdrawValue("");
-            alert("Ошибка", "Ошибка вывода", "danger");
-          }
-        })
-        .catch((err: Error) => {
-          setWithdraw(false);
-          setWithdrawValue("");
-          alert("Ошибка", "Ошибка вывода", "danger");
-        });
-    }
-  };
-
-  const handleBackModal = () => {
-    setAddDeposit(true);
-    setDepositListModal(false);
-  };
-
-  const selectDeposit = (item: DepositsCollection) => {
-    handleBackModal();
-    setDepositSelect(item);
-    setAddDepositValue((item.minAmount / 100000).toString());
-  };
-
-  const openNewDeposit = () => {
-    setAddDeposit(false);
-    if (hubConnection && depositSelect !== null) {
-      setLoadDeposit(true);
-      hubConnection
-        .invoke(
-          "CreateUserDeposit",
-          +addDepositValue * 100000,
-          depositSelect.safeId
-        )
-        .then((res) => {
-          console.log("CreateUserDeposit", res);
-          setLoadDeposit(false);
-          setWithdraw(false);
-          setWithdrawValue("");
-          if (res === true) {
-            alert("Успешно", "Депозит успешно создан", "success");
-          } else {
-            alert("Ошибка", "Депозит не создан", "danger");
-          }
-        })
-        .catch((err: Error) => {
-          console.log(err);
-          setLoadDeposit(false);
-          setWithdraw(false);
-          setWithdrawValue("");
-          alert("Ошибка", "Депозит не создан", "danger");
-        })
-        .finally(() => {
-          setDepositSelect(null);
-          setAddDepositValue("");
-        });
-    }
-  };
-
-  const handleDepositModal = () => {
-    setAddDeposit(false);
-    setDepositListModal(true);
   };
 
   const minOffset = 0;
@@ -499,326 +322,197 @@ export const InfoBalance = () => {
         .catch((err: Error) => console.log(err));
     }
   };
-  const balanceAsset = balanceList?.some(
-    (item) => item.balanceKind === depositSelect?.depositKind
-  );
+
   return (
     <>
-      <Header />
-      <Styled.Page>
-        <Container>
-          <UpTitle>Личный кабинет</UpTitle>
-        </Container>
-        <ReactNotification />
+      {loadDeposit && (
+        <Styled.Loader>
+          <Loading />
+        </Styled.Loader>
+      )}
+      <Container>
+        <Styled.BalanceWrap>
+          <Styled.TopUpButton blue onClick={() => setAddBalance(true)}>
+            {t("privateArea.topUpBalance")}
+          </Styled.TopUpButton>
+          <Styled.BalanceList>
+            <Styled.BalanceItem>
+              <Styled.BalanceItemName>
+                {t("privateArea.balance")}
+              </Styled.BalanceItemName>
+              <Styled.BalanceItemValue pink>
+                {balance ? (balance / 100000).toLocaleString() : "0"}
+              </Styled.BalanceItemValue>
+            </Styled.BalanceItem>
 
-        <Container>
-          <Card>
-            <Styled.InfoWrap>
-              <Styled.UserBlock>
-                <Styled.InfoTitle>{user}</Styled.InfoTitle>
-                <Styled.BalanceItem>
-                  <Styled.BalanceItemName>Баланс</Styled.BalanceItemName>
-                  <Styled.BalanceItemValue pink>
-                    {balance ? (balance / 100000).toLocaleString() : "0"}
-                  </Styled.BalanceItemValue>
-                </Styled.BalanceItem>
-              </Styled.UserBlock>
-              <Styled.InfoButtons>
-                <Button dangerOutline onClick={() => setAddDeposit(true)}>
-                  Новый депозит
-                </Button>
-                <Button danger onClick={() => setWithdraw(true)}>
-                  Вывести средства
-                </Button>
-              </Styled.InfoButtons>
-            </Styled.InfoWrap>
-            <Tabs>
-              <Styled.NavTabs to="/info">
-                <div>Информация</div>{" "}
-              </Styled.NavTabs>
-              <Styled.NavTabs to="/deposits">
-                <div>Депозиты</div>{" "}
-              </Styled.NavTabs>
-              <Styled.NavTabs to="/balance">
-                <div>Баланс</div>{" "}
-              </Styled.NavTabs>
-            </Tabs>
-          </Card>
-        </Container>
+            <Styled.BalanceItem>
+              <Styled.BalanceItemName>
+                {t("privateArea.take")}
+              </Styled.BalanceItemName>
+              <Styled.BalanceItemValue pink>
+                {(depositTotal / 100000).toLocaleString()}
+              </Styled.BalanceItemValue>
+            </Styled.BalanceItem>
 
-        <>
-          {loadDeposit && (
-            <Styled.Loader>
-              <Loading />
-            </Styled.Loader>
-          )}
+            <Styled.BalanceItem>
+              <Styled.BalanceItemName>
+                {t("privateArea.findings")}
+              </Styled.BalanceItemName>
+              <Styled.BalanceItemValue>
+                {(totalPayed / 100000).toLocaleString()}
+              </Styled.BalanceItemValue>
+            </Styled.BalanceItem>
+          </Styled.BalanceList>
 
-          <Container>
-            <Styled.BalanceWrap>
-              <Styled.TopUpButton blue onClick={() => setAddBalance(true)}>
-                Пополнить баланс
-              </Styled.TopUpButton>
-              <Styled.BalanceList>
-                <Styled.BalanceItem>
-                  <Styled.BalanceItemName>Баланс</Styled.BalanceItemName>
-                  <Styled.BalanceItemValue pink>
-                    {balance ? (balance / 100000).toLocaleString() : "0"}
-                  </Styled.BalanceItemValue>
-                </Styled.BalanceItem>
+          <Styled.DateButton onClick={() => setOpen(true)}>
+            <span>{selected}</span>
+          </Styled.DateButton>
+        </Styled.BalanceWrap>
+      </Container>
 
-                <Styled.BalanceItem>
-                  <Styled.BalanceItemName>Поступления</Styled.BalanceItemName>
-                  <Styled.BalanceItemValue pink>
-                    {(depositTotal / 100000).toLocaleString()}
-                  </Styled.BalanceItemValue>
-                </Styled.BalanceItem>
+      <Container>
+        <Card>
+          <Styled.BalanceTabHead>
+            <Styled.BalanceTabItem
+              onClick={() => handleBalance(0)}
+              active={depositTabs === 0}
+            >
+              {t("privateArea.allOperation")}
+            </Styled.BalanceTabItem>
+            <Styled.BalanceTabItem
+              onClick={() => handleBalance(1)}
+              active={depositTabs === 1}
+            >
+              {t("privateArea.take")}
+            </Styled.BalanceTabItem>
+            <Styled.BalanceTabItem
+              onClick={() => handleBalance(2)}
+              active={depositTabs === 2}
+            >
+              {t("privateArea.findings")}
+            </Styled.BalanceTabItem>
+          </Styled.BalanceTabHead>
+        </Card>
+      </Container>
+      <Styled.ContainerChart>
+        <Styled.InnerChart>
+          {balanceLog && <StackedColumn values={balanceLog} />}
+        </Styled.InnerChart>
+      </Styled.ContainerChart>
+      <Container>
+        <Styled.InnerTable>
+          <Styled.DataListWrap>
+            <Styled.DataList>
+              <Styled.DataListHead>
+                <Styled.DataListItem>
+                  <Styled.DataListName>
+                    {t("privateArea.name")}
+                  </Styled.DataListName>
+                  <Styled.DataListName>
+                    {t("privateArea.sum")}
+                  </Styled.DataListName>
+                </Styled.DataListItem>
+              </Styled.DataListHead>
+              {balanceLog ? (
+                <Scrollbars style={{ height: "500px" }}>
+                  <InfiniteScroll
+                    pageStart={0}
+                    loadMore={myLoad}
+                    hasMore={count}
+                    useWindow={false}
+                    loader={
+                      <div className="loader" key={0}>
+                        Loading ...
+                      </div>
+                    }
+                  >
+                    {Object.keys(balanceLog).map((key) => (
+                      <div key={key}>
+                        <Styled.DataListDate>{key}</Styled.DataListDate>
 
-                <Styled.BalanceItem>
-                  <Styled.BalanceItemName>Выводы</Styled.BalanceItemName>
-                  <Styled.BalanceItemValue>
-                    {(totalPayed / 100000).toLocaleString()}
-                  </Styled.BalanceItemValue>
-                </Styled.BalanceItem>
-              </Styled.BalanceList>
-
-              <Styled.DateButton onClick={() => setOpen(true)}>
-                <span>{selected}</span>
-              </Styled.DateButton>
-            </Styled.BalanceWrap>
-          </Container>
-
-          <Container>
-            <Card>
-              <Styled.BalanceTabHead>
-                <Styled.BalanceTabItem
-                  onClick={() => handleBalance(0)}
-                  active={depositTabs === 0}
-                >
-                  Все операции
-                </Styled.BalanceTabItem>
-                <Styled.BalanceTabItem
-                  onClick={() => handleBalance(1)}
-                  active={depositTabs === 1}
-                >
-                  Поступления
-                </Styled.BalanceTabItem>
-                <Styled.BalanceTabItem
-                  onClick={() => handleBalance(2)}
-                  active={depositTabs === 2}
-                >
-                  Выводы
-                </Styled.BalanceTabItem>
-              </Styled.BalanceTabHead>
-            </Card>
-          </Container>
-          <Styled.ContainerChart>
-            <Styled.InnerChart>
-              {balanceLog && <StackedColumn values={balanceLog} />}
-            </Styled.InnerChart>
-          </Styled.ContainerChart>
-          <Container>
-            <Styled.InnerTable>
-              <Styled.DataListWrap>
-                <Styled.DataList>
-                  <Styled.DataListHead>
-                    <Styled.DataListItem>
-                      <Styled.DataListName>Название</Styled.DataListName>
-                      <Styled.DataListName>Сумма</Styled.DataListName>
-                    </Styled.DataListItem>
-                  </Styled.DataListHead>
-                  {balanceLog ? (
-                    <Scrollbars style={{ height: "500px" }}>
-                      <InfiniteScroll
-                        pageStart={0}
-                        loadMore={myLoad}
-                        hasMore={count}
-                        useWindow={false}
-                        loader={
-                          <div className="loader" key={0}>
-                            Loading ...
-                          </div>
-                        }
-                      >
-                        {/* <BalanceTable balanceLog={balanceLog} /> */}
-                        {Object.keys(balanceLog).map((key) => (
-                          <div key={key}>
-                            <Styled.DataListDate>{key}</Styled.DataListDate>
-
-                            {balanceLog[key].map((item, idx) => (
-                              <BalanceTable key={item.id} balanceLog={item} />
-                            ))}
-                          </div>
+                        {balanceLog[key].map((item, idx) => (
+                          <BalanceTable key={item.id} balanceLog={item} />
                         ))}
-                      </InfiniteScroll>
-                    </Scrollbars>
-                  ) : loading ? (
-                    <Loading />
-                  ) : (
-                    <Styled.NotFound>Данные не обнаружены.</Styled.NotFound>
-                  )}
-                </Styled.DataList>
-              </Styled.DataListWrap>
-            </Styled.InnerTable>
-          </Container>
+                      </div>
+                    ))}
+                  </InfiniteScroll>
+                </Scrollbars>
+              ) : loading ? (
+                <Loading />
+              ) : (
+                <Styled.NotFound>{t("notFound")}</Styled.NotFound>
+              )}
+            </Styled.DataList>
+          </Styled.DataListWrap>
+        </Styled.InnerTable>
+      </Container>
 
-          <CSSTransition
-            in={open}
-            timeout={300}
-            classNames="modal"
-            unmountOnExit
-          >
-            <Styled.ModalWrap>
-              <Modal onClose={onClose}>
-                <Styled.ModalContent>
-                  {/* <Arrow onClick={onClose} /> */}
-                  <Styled.ModalTitle>Выберите период</Styled.ModalTitle>
-                  <Styled.ModalItem>
-                    <Styled.DateTitle>Этот месяц</Styled.DateTitle>
-                    <Styled.DateText onClick={monthSelected}>
-                      {moment().format("MMMM YYYY")}
-                    </Styled.DateText>
-                  </Styled.ModalItem>
-                  <Styled.ModalItem>
-                    <Styled.DateTitle>Этот год</Styled.DateTitle>
-                    <Styled.DateText onClick={yearSelected}>
-                      {moment().format("YYYY")}
-                    </Styled.DateText>
-                  </Styled.ModalItem>
-                  <Styled.ModalItem>
-                    <Styled.DateTitle></Styled.DateTitle>
-                    <Styled.DateText onClick={allDate}>
-                      За все время
-                    </Styled.DateText>
-                  </Styled.ModalItem>
-                </Styled.ModalContent>
-                <ModalRangeInput
-                  onClose={onClose}
-                  openDate={openDate}
-                  setOpenDate={rangeDate}
-                />
-              </Modal>
-            </Styled.ModalWrap>
-          </CSSTransition>
-          {withdraw && (
-            <Modal onClose={() => setWithdraw(false)}>
-              <Styled.ModalBlock>
-                <Styled.ModalTitle>Вывести средства</Styled.ModalTitle>
-                <Input
-                  onChange={(e) => setWithdrawValue(e.target.value)}
-                  placeholder="Введите сумму"
-                  type="number"
-                  step="any"
-                  ref={inputRef}
-                  value={withdrawValue}
-                />
-                <Styled.ModalButton
-                  as="button"
-                  disabled={!withdrawValue}
-                  onClick={withdrawBalance}
-                  danger
-                >
-                  Вывести средства
-                </Styled.ModalButton>
-              </Styled.ModalBlock>
-            </Modal>
-          )}
-          <CSSTransition
-            in={addBalance}
-            timeout={300}
-            classNames="modal"
-            unmountOnExit
-          >
-            <Modal onClose={() => setAddBalance(false)}>
-              <Styled.ModalBlock>
-                <Styled.ModalTitle>Пополнить баланс</Styled.ModalTitle>
-                <Input
-                  onChange={(e) => setBalanceValue(e.target.value)}
-                  placeholder="Введите сумму"
-                  type="number"
-                  ref={inputRef}
-                  value={balanceValue}
-                />
-                <Styled.ModalButton
-                  as="button"
-                  disabled={!balanceValue}
-                  onClick={getTopUp}
-                  danger
-                >
-                  Пополнить
-                </Styled.ModalButton>
-              </Styled.ModalBlock>
-            </Modal>
-          </CSSTransition>
-          <CSSTransition
-            in={addDeposit && !depositListModal}
-            timeout={300}
-            classNames="modal"
-            unmountOnExit
-          >
-            <Styled.ModalDepositsWrap>
-              <Modal width={540} onClose={() => setAddDeposit(false)}>
-                <Styled.ModalTitle mt>Добавить депозит</Styled.ModalTitle>
-                <Styled.ModalDeposits>
-                  <div>
-                    <Styled.ModalButton
-                      mb
-                      as="button"
-                      onClick={handleDepositModal}
-                      dangerOutline
-                    >
-                      {depositSelect ? depositSelect.name : "Выберите депозит"}{" "}
-                      <Styled.IconRotate rights>
-                        <Styled.ModalBack />
-                      </Styled.IconRotate>
-                    </Styled.ModalButton>
-                    <Input
-                      onChange={(e) => setAddDepositValue(e.target.value)}
-                      placeholder="Введите сумму"
-                      type="number"
-                      ref={inputRef}
-                      value={addDepositValue}
-                    />
-                    <Styled.ModalButton
-                      as="button"
-                      disabled={!balanceAsset || !addDepositValue}
-                      onClick={openNewDeposit}
-                      danger
-                    >
-                      Добавить
-                    </Styled.ModalButton>
-                  </div>
-                  {depositSelect ? (
-                    <Styled.Conditions>
-                      <p
-                        dangerouslySetInnerHTML={{
-                          __html: depositSelect.description,
-                        }}
-                      />
-                      {!balanceAsset && (
-                        <Styled.ToLink
-                          target="_blank"
-                          href={`https://cwd.global/shopping/payment?to_name=${depositSelect.account}&amount=${depositSelect.minAmount}`}
-                        >
-                          Приобрести
-                        </Styled.ToLink>
-                      )}
-                    </Styled.Conditions>
-                  ) : (
-                    ""
-                  )}
-                </Styled.ModalDeposits>
-              </Modal>
-            </Styled.ModalDepositsWrap>
-          </CSSTransition>
-          <DepositListModal
-            depositListModal={depositListModal}
-            setDepositListModal={setDepositListModal}
-            handleBackModal={handleBackModal}
-            depositsList={depositsList}
-            selectDeposit={selectDeposit}
-          />
-        </>
-      </Styled.Page>
+      <CSSTransition in={open} timeout={300} classNames="modal" unmountOnExit>
+        <Styled.ModalWrap>
+          <Modal onClose={onClose}>
+            <Styled.ModalContent>
+              <Styled.ModalTitle>
+                {t("privateArea.selectPeriod")}
+              </Styled.ModalTitle>
+              <Styled.ModalItem>
+                <Styled.DateTitle>
+                  {t("privateArea.thisMonth")}
+                </Styled.DateTitle>
+                <Styled.DateText onClick={monthSelected}>
+                  {moment().format("MMMM YYYY")}
+                </Styled.DateText>
+              </Styled.ModalItem>
+              <Styled.ModalItem>
+                <Styled.DateTitle>{t("privateArea.thisYear")}</Styled.DateTitle>
+                <Styled.DateText onClick={yearSelected}>
+                  {moment().format("YYYY")}
+                </Styled.DateText>
+              </Styled.ModalItem>
+              <Styled.ModalItem>
+                <Styled.DateTitle></Styled.DateTitle>
+                <Styled.DateText onClick={allDate}>
+                  {t("privateArea.allTime")}
+                </Styled.DateText>
+              </Styled.ModalItem>
+            </Styled.ModalContent>
+            <ModalRangeInput
+              onClose={onClose}
+              openDate={openDate}
+              setOpenDate={rangeDate}
+            />
+          </Modal>
+        </Styled.ModalWrap>
+      </CSSTransition>
+
+      <CSSTransition
+        in={addBalance}
+        timeout={300}
+        classNames="modal"
+        unmountOnExit
+      >
+        <Modal onClose={() => setAddBalance(false)}>
+          <Styled.ModalBlock>
+            <Styled.ModalTitle>
+              {t("privateArea.topUpBalance")}
+            </Styled.ModalTitle>
+            <Input
+              onChange={(e) => setBalanceValue(e.target.value)}
+              placeholder={t("privateArea.amountEnter")}
+              type="number"
+              ref={inputRef}
+              value={balanceValue}
+            />
+            <Styled.ModalButton
+              as="button"
+              disabled={!balanceValue}
+              onClick={getTopUp}
+              danger
+            >
+              {t("privateArea.topUp")}
+            </Styled.ModalButton>
+          </Styled.ModalBlock>
+        </Modal>
+      </CSSTransition>
     </>
   );
 };

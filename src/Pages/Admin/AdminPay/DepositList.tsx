@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext, useEffect, FC } from "react";
+﻿import React, { useState, useRef, useContext, useEffect, FC } from "react";
 import { ReactComponent as Pen } from "../../../assets/svg/pen.svg";
 import { Checkbox } from "../../../components/UI/Checkbox";
 import { PaymentsCollection, CollectionCharges } from "../../../types/payments";
@@ -10,6 +10,7 @@ import { InputWrap } from "./InputWrap";
 import styled, { css } from "styled-components/macro";
 import useOnClickOutside from "../../../hooks/useOutsideHook";
 import moment from "moment";
+import { useTranslation } from "react-i18next";
 
 type ListProps = {
   data: PaymentsCollection;
@@ -35,7 +36,8 @@ export const DepositList: FC<ListProps> = ({
   const sizes = useWindowSize();
   const size = sizes < 992;
   const field = sizes > 576;
-  // console.log("data", data);
+  const { t } = useTranslation();
+
   const elemref = useRef<any>(null);
 
   const handleClickOutside = () => {
@@ -52,7 +54,7 @@ export const DepositList: FC<ListProps> = ({
     } else {
       setValue(e.target.value);
       const proc = ((+e.target.value / data.baseAmountView) * 100).toFixed(0);
-      console.log("proc", proc);
+      // console.log("proc", proc);
       setProcent(proc.toString());
     }
   };
@@ -76,7 +78,7 @@ export const DepositList: FC<ListProps> = ({
   };
 
   const onHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("onHandleChange", e.target.value);
+    // console.log("onHandleChange", e.target.value);
     if (+e.target.value <= 0) {
       setValue("");
       setProcent("");
@@ -142,7 +144,6 @@ export const DepositList: FC<ListProps> = ({
         <TableBodyItem dis={disabled}>
           {data.baseAmountView.toLocaleString()}
         </TableBodyItem>
-
         <TableBodyItem dis={disabled}>
           {field ? (
             <InputWrap
@@ -167,7 +168,7 @@ export const DepositList: FC<ListProps> = ({
             />
           ) : disabled ? (
             <Button greenOutline style={disabled && { color: "#c4c4c4" }}>
-              Подтверждено
+              {t("depositList.confirmed")}
             </Button>
           ) : (
             <Button
@@ -177,7 +178,7 @@ export const DepositList: FC<ListProps> = ({
                 paymentsConfirm(data.safeId);
               }}
             >
-              Подтвердить
+              {t("depositList.confirm")}
             </Button>
           )}
         </TableBodyItem>
@@ -192,6 +193,7 @@ type PayProps = {
 
 export const PaymentsList: FC<PayProps> = ({ data }: PayProps) => {
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
 
   const onClose = () => {
     setOpen(false);
@@ -213,7 +215,9 @@ export const PaymentsList: FC<PayProps> = ({ data }: PayProps) => {
           {moment(data.paymentDate).format("DD/MM/YYYY")}
         </TableBodyItemPaid>
         <TableBodyItemPaid>
-          {data.state === 4 ? "Закрытие вклада" : "Начисление дивидендов"}
+          {data.state === 4
+            ? t("depositList.depositClose")
+            : t("depositList.dividents")}
         </TableBodyItemPaid>
         <TableBodyItemPaid>
           {data.baseAmountView.toLocaleString()}
@@ -267,6 +271,7 @@ type Prop = {
 
 export const PaymentsListPay: FC<Prop> = ({ data }: Prop) => {
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
 
   const onClose = () => {
     setOpen(false);
@@ -289,8 +294,8 @@ export const PaymentsListPay: FC<Prop> = ({ data }: Prop) => {
         </TableBodyItemPaid>
         <TableBodyItemPaid>
           {data.userDeposit.state === 4
-            ? "Закрытие вклада"
-            : "Начисление дивидендов"}
+            ? t("depositList.depositClose")
+            : t("depositList.dividents")}
         </TableBodyItemPaid>
         <TableBodyItemPaid>
           {data.userDeposit.baseAmountView.toLocaleString()}

@@ -1,0 +1,216 @@
+{
+    "header": {
+      "item1": "Capacious",
+      "item2": "Rates",
+      "item3": "About us",
+      "item4": "Contacts"
+    },
+    "period":"Specify period",
+    "ready": "Done",
+    "logout": "Log Out",
+    "notFound": "No data found. Try changing your search parameters.",
+    "headerButton":{
+        "admin": "Admin",
+        "personalArea": "Personal Area"
+    },
+    "login": {
+        "where": "Where to enter?",
+        "signIn": "Sign In",
+        "code": "Enter a code",
+        "incorrectCode": "The code is not correct",
+        "goTo": "Go to Activity",
+        "login": "Enter login", 
+        "incorrectLogin": "Login is not correct",
+        "getCode": "To get the code"
+    },
+    "banner":{
+        "uptitle": "About fund ",
+        "H1": "Multiply your funds wisely!",
+        "brand": "Global safe",
+        "desc": "is a modern crypto fund which investing and managing your funds, under the control of our best specialists!"
+    },
+    "tariffs":{
+        "uptitle": "Our tariffs",
+        "H1": "Just for you!",
+        "desc": "Partnership for contracts START, EXPERT and INFINITY: 5% from the first line; 2% second line and 1% third line ",
+        "depositSize": "Deposit amount",
+        "ok": "ОК",
+        "buttons":{
+            "start": "Want Start",
+            "housing": "Want ЖИЛФОНД",
+            "start30000": "Want START 30000+",
+            "autobonus": "Want АВТОБОНУС",
+            "expert": "Want EXPERT",
+            "infinity": "Want INFINITY"
+        }
+    },
+    "contacts":{
+        "uptitle": "Contacts",
+        "H1": "In touch with us ",
+        "site": "Website",
+        "irinaganina3110": "Irina Gabon’s",
+        "smansurskaya": "Svetlana Mansurskaya",
+        "sporttanets8": "Maksim Sportanets"
+    },
+    "about":{
+        "uptitle": "About us",
+        "H1": "Our founders",
+        "name1": "Maksim",
+        "name2": "Svetlana",
+        "name3": "Irina",
+        "position": "Founder",
+        "brand": "Global Safe",
+        "desc": "This is a product created specifically for those who are not ready to constantly monitor the quotes on the exchange and work on it independently. Experienced traders of the Fund take care of increasing your savings and invest in the most highly profitable platform assets."
+    },
+    "sideNav":{
+        "mainScreen": "Main screen",
+        "deposits": "Deposits",
+        "pay": "Payouts",
+        "users": "Members",
+        "portfolio": "Portfolio",
+        "toHome": "To the main"
+    },
+    "adminDeposit":{
+        "uptitle": "Payouts",
+        "headTitle": "Active deposits",
+        "labelUser": "User",
+        "labelProgram": "The name of the program",
+        "labelOpen": "Opening date",
+        "labelDate": "Close date",
+        "btnApply": "Apply",
+        "table":{
+            "user": "User",
+            "name": "Name",
+            "openDate": "Opening date",
+            "closeDate": "Closing date",
+            "sum": "Deposit amount",
+            "nextDate": "Date next payments",
+            "paid": "Paid out"
+        }
+    },
+    "adminMain":{
+        "uptitle": "Main screen",
+        "headTitle": "New deposits",
+        "dayLabel": "30 days",
+        "chartTitle1": "Payouts",
+        "chartTitle2": "Fund performance",
+        "depositsCount": "Number of deposits",
+        "depositsAmount": "Deposits"
+    },
+    "adminPortfolio":{
+        "uptitle": "Portfolio",
+        "table":{
+            "date": "Purchase date",
+            "count": "Primary quantity",
+            "cost": "Unit cost",
+            "amount": "Current number of"
+        }
+    },
+    "adminUsers":{
+        "uptitle": "Members",
+        "labelUser": "User",
+        "labelCreate": "Date of creation",
+        "apply": "Apply",
+        "table": {
+            "unlock": "Unblock",
+            "lock": "Block",
+            "user": "User",
+            "balans": "Balance",
+            "role": "Role",
+            "dataCreate": "Date of creation",
+            "lang": "Lang",
+            "rus": "Russian"
+        }
+    },
+    "adminPay":{
+        "uptitle": "Payouts",
+        "title1": "To payoff",
+        "title2": "Paid out",
+        "title3": "On approval",
+        "confirmButton": "Agree all",
+        "table":{
+            "user":"User",
+            "name": "Name",
+            "procent": "% profitability",
+            "datePay": "Payout date",
+            "profit": "Program yield",
+            "contribution": "Deposit amount",
+            "payments": "Payout amount",
+            "desc": "Program description",
+            "category": "Category",
+            "nextDate":"Date next payments",
+            "openDate":"Opening date",
+            "paid":"Paid out",
+            "amount":"Current number of",
+            "cost":"Unit cost"
+        }
+    },
+    "depositList":{
+        "confirmed": "Confirmed",
+        "confirm": "Confirm",
+        "depositClose": "Closing a deposit",
+        "dividents": "Accrual of dividends"
+    },
+    "privateArea":{
+        "at": "Behind",
+        "allTime": "For all the time",
+        "uptitle": "Personal Area",
+        "balance": "Balance",
+        "newDeposit": "New deposit",
+        "withdraw": "Withdraw funds",
+        "tabs":{
+            "tab1": "Information",
+            "tab2": "Deposits",
+            "tab3": "Balance"
+        },
+        "name": "Name",
+        "pay":"Payouts",
+        "sum": "Amount",
+        "desc": "Description",
+        "deposit": "Deposit",
+        "toPay": "To payoff",
+        "take": "Receipts",
+        "findings": "Findings",
+        "openDeposits": "Open deposits",
+        "sumDeposits": "Amount in deposits",
+        "sumDeposit": "Deposit amount",
+        "allPay": "Total paid",
+        "nextPay": "Next payout",
+        "selectPeriod": "Select period",
+        "thisMonth": "This month",
+        "thisYear": "This year",
+        "amountEnter": "Enter the amount",
+        "addDeposit": "Add deposit",
+        "choiseDeposite": "Select deposit",
+        "add": "Add to",
+        "topUpBalance": "Top up balance",
+        "allOperation": "All operations",
+        "topUp": "Top up",
+        "minPay": "Min. payment",
+        "depositTerm": "Deposit term",
+        "day": "day",
+        "dividents": "Accrual of dividends",
+        "dateOpen": "Opening date",
+        "nextDate":"Date of next payment",
+        "amountPay": "Payout amount",
+        "procent": "Payout percentage",
+        "notData": "No data",
+        "dateEnd": "Deposit completion date",
+        "contrAmount": "Contribution amount"
+    },
+    "alert": {
+        "success": "Successfully",
+        "successMsg": "Funds transferred successfully",
+        "error": "Error",
+        "errorMsg": "Output error",
+        "depositMsg": "Deposit created successfully",
+        "depositErrorMsg": "No deposit created"
+    },
+    "operation":{
+       "open": "Opening a deposit",
+       "divedents": "Accrual of dividends",
+       "close": "Closing a deposit",
+       "withdraw": "Balance withdrawal",
+       "add": "Balance replenishment" 
+    }
+}

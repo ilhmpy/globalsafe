@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useContext } from "react";
+﻿import React, { useState, useRef, useEffect, useContext } from "react";
 import { Container } from "../../../../globalStyles";
 import { H1 } from "../../../../components/UI/MainStyled";
 import { UpTitle } from "../../../../components/UI/UpTitle";
@@ -28,6 +28,7 @@ import {
   ListDeposits,
   CollectionListDeposits,
 } from "../../../../types/deposits";
+import { useTranslation } from "react-i18next";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
@@ -42,19 +43,22 @@ export const Tariffs = () => {
   );
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
+  const { t } = useTranslation();
   const inputRef = useRef<HTMLInputElement>(null);
+  const lang = localStorage.getItem("i18nextLng") || "ru";
+  const languale = lang === "ru" ? 1 : 0;
 
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<ListDeposits>("GetDeposits", 1, true, 0, 40)
+        .invoke<ListDeposits>("GetDeposits", languale, true, 0, 40)
         .then((res) => {
           console.log("GetDeposits", res);
           setListDeposits(res.collection);
         })
         .catch((err: Error) => console.log(err));
     }
-  }, [hubConnection]);
+  }, [hubConnection, languale]);
 
   const handleClick = (str: string, num: number) => {
     setIsNormalOpen(true);
@@ -173,21 +177,18 @@ export const Tariffs = () => {
   return (
     <div>
       <Container id="tariffs">
-        <UpTitle small>Тарифы</UpTitle>
+        <UpTitle small>{t("tariffs.uptitle")}</UpTitle>
       </Container>
       <Container>
-        <H1>Для Вас !</H1>
+        <H1>{t("tariffs.H1")}</H1>
       </Container>
       <DescContainer>
-        <p>
-          Партнерка для контрактов START, EXPERT, INFINITY: 5% c первой линии;
-          2% со второй линии; 1% с третьей линиии
-        </p>
+        <p>{t("tariffs.desc")}</p>
       </DescContainer>
       {isNormalOpen && (
         <Modal onClose={() => setIsNormalOpen(false)}>
           <ModalBlock>
-            <ModalTitle>Размер депозита</ModalTitle>
+            <ModalTitle>{t("tariffs.depositSize")}</ModalTitle>
             <Input
               onChange={onChange}
               // placeholder={min.toString()}
@@ -201,7 +202,7 @@ export const Tariffs = () => {
               danger
               disabled={+value < min}
             >
-              ОК
+              {t("tariffs.ok")}
             </ModalButton>
           </ModalBlock>
         </Modal>
@@ -212,8 +213,6 @@ export const Tariffs = () => {
             <BlockTitle>{item.name}</BlockTitle>
             <div className="item__subtitle">
               <Text dangerouslySetInnerHTML={{ __html: item.description }} />
-
-              {/* </Text> */}
             </div>
             {colors(item, idx)}
           </BlockItem>

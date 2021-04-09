@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+﻿import React, { useState, useContext, useEffect } from "react";
 import * as Styled from "./Styled.elements";
 import styled, { css } from "styled-components/macro";
 import { SideNavbar } from "../../components/SideNav";
@@ -9,12 +9,8 @@ import { ReactComponent as Filter } from "../../assets/svg/filter.svg";
 import { Tab, Content } from "../../components/UI/Tabs";
 import { AppContext } from "../../context/HubContext";
 import { AmountContext } from "../../context/AmountContext";
-// import { InfiniteLoader, AutoSizer, List } from "react-virtualized";
-// import { FixedSizeList as List } from "react-window";
-// import AutoSizer from "react-virtualized-auto-sizer";
-// import InfiniteLoader from "react-window-infinite-loader";
-// import "react-virtualized/styles.css";
 import { Select } from "../../components/Select/Select2";
+import { TestInput } from "../../components/UI/DayPicker";
 import { Button } from "../../components/Button/Button";
 import useWindowSize from "../../hooks/useWindowSize";
 import {
@@ -23,6 +19,11 @@ import {
   RootCharges,
   CollectionCharges,
 } from "../../types/payments";
+import {
+  DepositStats,
+  ListDeposits,
+  CollectionListDeposits,
+} from "../../types/deposits";
 import ReactNotification, { store } from "react-notifications-component";
 import InfiniteScroll from "react-infinite-scroller";
 import "react-notifications-component/dist/theme.css";
@@ -35,19 +36,13 @@ import {
   PaymentsList,
   PaymentsListPay,
 } from "./AdminPay/DepositList";
-import {
-  DepositStats,
-  ListDeposits,
-  CollectionListDeposits,
-} from "../../types/deposits";
-import moment from "moment";
-import { Header } from "../../components/Header/Header";
-import { Redirect } from "react-router-dom";
-import { TestInput } from "../../components/UI/DayPicker";
 import { OpenDate } from "../../types/dates";
+import moment from "moment";
+import { useTranslation } from "react-i18next";
 
 export const AdminPay = () => {
   const [active, setActive] = useState(0);
+  const sizes = useWindowSize();
   const [show, setShow] = useState(false);
   const [sum, setSum] = useState<number[] | null>(null);
   const [depositList, setDepositList] = useState<any>([]);
@@ -55,7 +50,6 @@ export const AdminPay = () => {
   const hubConnection = appContext.hubConnection;
   const logOut = appContext.logOut;
   const user = appContext.user;
-  const admin = appContext.isAdmin;
   const amountContext = useContext(AmountContext);
   const [totalDeposits, setTotalDeposits] = useState(0);
   const [totalPayDeposits, setTotalPayDeposits] = useState(0);
@@ -73,28 +67,16 @@ export const AdminPay = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [dataModal, setDataModal] = useState<PaymentsCollection | any>({});
   const [loading, setLoading] = useState(true);
+  const [openDate, setOpenDate] = useState<OpenDate>({
+    from: undefined,
+    to: undefined,
+  });
   const [checkList, setCheckList] = useState<any>([]);
   const [name, setName] = useState("");
   const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>(
     []
   );
-
-  const [openDate, setOpenDate] = useState<OpenDate>({
-    from: undefined,
-    to: undefined,
-  });
-
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection
-        .invoke<ListDeposits>("GetDeposits", 1, false, 0, 40)
-        .then((res) => {
-          console.log("GetDeposits", res);
-          setListDeposits(res.collection);
-        })
-        .catch((err: Error) => console.log(err));
-    }
-  }, [hubConnection]);
+  const { t } = useTranslation();
 
   const getPaymentsOverview = () => {
     if (hubConnection) {
@@ -106,6 +88,17 @@ export const AdminPay = () => {
         .catch((err: Error) => console.log(err));
     }
   };
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection
+        .invoke<ListDeposits>("GetDeposits", 1, false, 0, 40)
+        .then((res) => {
+          setListDeposits(res.collection);
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  }, [hubConnection]);
 
   const namesProgram = checkList.map((i: any) => i.label);
   const idProgram = listDeposits.filter((i) => namesProgram.includes(i.name));
@@ -148,20 +141,17 @@ export const AdminPay = () => {
       hubConnection
         .invoke("ConfirmDepositPayment", id)
         .then((res) => {
-          // alert("Успешно", "Выполнено", "success");
           console.log("ConfirmDepositPayment", res);
           getPaymentsOverview();
         })
         .catch((err: Error) => {
           console.log(err);
-          // alert("Ошибка", "Произошла ошибка", "danger");
         });
     }
   };
 
   useEffect(() => {
     if (hubConnection) {
-      setPaymentsList([]);
       hubConnection
         .invoke<RootPayments>(
           "GetUsersDeposits",
@@ -180,7 +170,7 @@ export const AdminPay = () => {
           setLoading(false);
           setTotalPayments(res.totalRecords);
           setPaymentsList(res.collection);
-          setNumPayments(20);
+          // setNumPayments(20);
         })
         .catch((err: Error) => {
           setLoading(false);
@@ -191,7 +181,6 @@ export const AdminPay = () => {
 
   useEffect(() => {
     if (hubConnection) {
-      setDepositList([]);
       hubConnection
         .invoke<RootPayments>(
           "GetUsersDeposits",
@@ -210,7 +199,7 @@ export const AdminPay = () => {
           setLoading(false);
           setTotalDeposits(res.totalRecords);
           setDepositList(res.collection);
-          setNum(20);
+          // setNum(20);
         })
         .catch((err: Error) => {
           setLoading(false);
@@ -234,7 +223,6 @@ export const AdminPay = () => {
           20
         )
         .then((res) => {
-          console.log("res", res);
           setLoading(false);
           if (res.collection.length) {
             setTotalPayDeposits(res.totalRecords);
@@ -390,7 +378,7 @@ export const AdminPay = () => {
     <>
       <ReactNotification />
       <Styled.HeadBlock>
-        <SelfUpTitle small>Выплаты</SelfUpTitle>
+        <SelfUpTitle small>{t("adminPay.uptitle")}</SelfUpTitle>
         <Styled.UserName>
           <span>{user}</span>
           <Exit onClick={logOut} />
@@ -401,7 +389,7 @@ export const AdminPay = () => {
         <Styled.PayList>
           <Styled.PayItem>
             <Styled.PayItemHead mb>
-              <SelfUpTitle small>К выплате</SelfUpTitle>
+              <SelfUpTitle small>{t("adminPay.title1")}</SelfUpTitle>
             </Styled.PayItemHead>
             <Styled.Radial bg={"rgba(255, 65, 110, 0.2)"}>
               <span>
@@ -412,7 +400,7 @@ export const AdminPay = () => {
           </Styled.PayItem>
           <Styled.PayItem>
             <Styled.PayItemHead mb>
-              <SelfUpTitle small>Выплачено</SelfUpTitle>
+              <SelfUpTitle small>{t("adminPay.title2")}</SelfUpTitle>
             </Styled.PayItemHead>
 
             <Styled.Radial bg={"rgba(188, 212, 118, 0.2)"}>
@@ -428,8 +416,7 @@ export const AdminPay = () => {
           </Styled.PayItem>
           <Styled.PayItem>
             <Styled.PayItemHead mb>
-              <SelfUpTitle small>На согласовании</SelfUpTitle>
-              {/* {sizes > 768 && <CalendarInput />} */}
+              <SelfUpTitle small>{t("adminPay.title3")}</SelfUpTitle>
             </Styled.PayItemHead>
             <Styled.Radial bg={"rgba(109, 185, 255, 0.2)"}>
               <span>
@@ -448,13 +435,13 @@ export const AdminPay = () => {
       <Card>
         <Tabs>
           <PayTab onClick={() => handleClick(0)} active={active === 0}>
-            На согласовании
+            {t("adminPay.title3")}
           </PayTab>
           <Tab onClick={() => handleClick(1)} active={active === 1}>
-            Выплачено
+            {t("adminPay.title2")}
           </Tab>
           <Tab onClick={() => handleClick(2)} active={active === 2}>
-            К выплате
+            {t("adminPay.title1")}
           </Tab>
         </Tabs>
       </Card>
@@ -462,7 +449,7 @@ export const AdminPay = () => {
       {active === 0 && (
         <ButtonWrap>
           <Button dangerOutline mb onClick={paymentsConfirm}>
-            Согласовать все
+            {t("adminPay.confirmButton")}
           </Button>
         </ButtonWrap>
       )}
@@ -472,14 +459,14 @@ export const AdminPay = () => {
           <PaymentsTable>
             <TableHead>
               <TableHeadItem>№</TableHeadItem>
-              <TableHeadItem>Пользователь</TableHeadItem>
-              <TableHeadItem>Название</TableHeadItem>
-              <TableHeadItem>% доходности</TableHeadItem>
-              <TableHeadItem>Дата выплаты</TableHeadItem>
-              <TableHeadItem>Доходность по программе</TableHeadItem>
-              <TableHeadItem>Дата открытия депозита</TableHeadItem>
-              <TableHeadItem>Сумма вклада</TableHeadItem>
-              <TableHeadItem>Сумма выплаты</TableHeadItem>
+              <TableHeadItem>{t("adminPay.table.user")}</TableHeadItem>
+              <TableHeadItem>{t("adminPay.table.name")}</TableHeadItem>
+              <TableHeadItem>{t("adminPay.table.procent")}</TableHeadItem>
+              <TableHeadItem>{t("adminPay.table.datePay")}</TableHeadItem>
+              <TableHeadItem>{t("adminPay.table.profit")}</TableHeadItem>
+              <TableHeadItem>{t("adminPay.table.openDate")}</TableHeadItem>
+              <TableHeadItem>{t("adminPay.table.contribution")}</TableHeadItem>
+              <TableHeadItem>{t("adminPay.table.payments")}</TableHeadItem>
               <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
             </TableHead>
             {depositList.length ? (
@@ -509,7 +496,7 @@ export const AdminPay = () => {
             ) : loading ? (
               <Loading />
             ) : (
-              <NotFound>Данные не обнаружены.</NotFound>
+              <NotFound>{t("notFound")}</NotFound>
             )}
           </PaymentsTable>
         </Card>
@@ -549,12 +536,20 @@ export const AdminPay = () => {
         <Card>
           <PaymentsTable>
             <TableHead>
-              <TableHeadItemPaid>Пользователь</TableHeadItemPaid>
-              <TableHeadItemPaid>Название</TableHeadItemPaid>
-              <TableHeadItemPaid>Дата выплаты</TableHeadItemPaid>
-              <TableHeadItemPaid>Категория</TableHeadItemPaid>
-              <TableHeadItemPaid>Сумма вклада</TableHeadItemPaid>
-              <TableHeadItemPaid>Сумма выплаты</TableHeadItemPaid>
+              <TableHeadItemPaid>{t("adminPay.table.user")}</TableHeadItemPaid>
+              <TableHeadItemPaid>{t("adminPay.table.name")}</TableHeadItemPaid>
+              <TableHeadItemPaid>
+                {t("adminPay.table.datePay")}
+              </TableHeadItemPaid>
+              <TableHeadItemPaid>
+                {t("adminPay.table.category")}
+              </TableHeadItemPaid>
+              <TableHeadItemPaid>
+                {t("adminPay.table.contribution")}
+              </TableHeadItemPaid>
+              <TableHeadItemPaid>
+                {t("adminPay.table.payments")}
+              </TableHeadItemPaid>
               <TableHeadItemPaid>{/* <Filter /> */}</TableHeadItemPaid>
             </TableHead>
             {depositPayList.length ? (
@@ -578,7 +573,7 @@ export const AdminPay = () => {
             ) : loading ? (
               <Loading />
             ) : (
-              <NotFound>Данные не обнаружены.</NotFound>
+              <NotFound>{t("notFound")}</NotFound>
             )}
           </PaymentsTable>
         </Card>
@@ -588,12 +583,20 @@ export const AdminPay = () => {
         <Card>
           <PaymentsTable>
             <TableHead>
-              <TableHeadItemPaid>Пользователь</TableHeadItemPaid>
-              <TableHeadItemPaid>Название</TableHeadItemPaid>
-              <TableHeadItemPaid>Дата выплаты</TableHeadItemPaid>
-              <TableHeadItemPaid>Категория</TableHeadItemPaid>
-              <TableHeadItemPaid>Сумма вклада</TableHeadItemPaid>
-              <TableHeadItemPaid>Сумма выплаты</TableHeadItemPaid>
+              <TableHeadItemPaid>{t("adminPay.table.user")}</TableHeadItemPaid>
+              <TableHeadItemPaid>{t("adminPay.table.name")}</TableHeadItemPaid>
+              <TableHeadItemPaid>
+                {t("adminPay.table.datePay")}
+              </TableHeadItemPaid>
+              <TableHeadItemPaid>
+                {t("adminPay.table.category")}
+              </TableHeadItemPaid>
+              <TableHeadItemPaid>
+                {t("adminPay.table.contribution")}
+              </TableHeadItemPaid>
+              <TableHeadItemPaid>
+                {t("adminPay.table.payments")}
+              </TableHeadItemPaid>
               <TableHeadItemPaid>{/* <Filter /> */}</TableHeadItemPaid>
             </TableHead>
             {paymentsList.length ? (
@@ -617,7 +620,7 @@ export const AdminPay = () => {
             ) : loading ? (
               <Loading />
             ) : (
-              <NotFound>Данные не обнаружены.</NotFound>
+              <NotFound>{t("notFound")}</NotFound>
             )}
           </PaymentsTable>
         </Card>

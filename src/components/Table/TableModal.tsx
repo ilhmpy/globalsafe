@@ -1,11 +1,10 @@
-import React from "react";
+﻿import React from "react";
 import styled from "styled-components/macro";
 import { Modal } from "../Modal/Modal";
 import moment from "moment";
 import { Name, NameData } from "./Table.styled";
 import { Balance } from "../../types/balance";
-import "moment/locale/ru";
-moment.locale("ru");
+import { useTranslation } from "react-i18next";
 
 type Props = {
   data: any;
@@ -26,6 +25,7 @@ export const TableModal = ({ onClose, open, data }: Props) => {
 };
 
 export const InfoBlock = ({ data }: any) => {
+  const { t } = useTranslation();
   return (
     <>
       {data && (
@@ -48,17 +48,17 @@ export const InfoBlock = ({ data }: any) => {
             <Hr />
           </LI>
           <LI>
-            <Text>Описание</Text>
+            <Text>{t("privateArea.desc")}</Text>
             <Text
               dangerouslySetInnerHTML={{ __html: data.deposit.description }}
             />
           </LI>
           <LI>
-            <Text>Дата завершения депозита</Text>
+            <Text>{t("privateArea.dateEnd")}</Text>
             <Text>{moment(data.endDate).format("DD MMMM YYYY")}</Text>
           </LI>
           <LI>
-            <Text>Дата следующей выплаты</Text>
+            <Text>{t("privateArea.nextDate")}</Text>
             <Text>
               {data.paymentDate
                 ? moment(data.paymentDate).format("DD MMMM YYYY")
@@ -66,17 +66,17 @@ export const InfoBlock = ({ data }: any) => {
             </Text>
           </LI>
           <LI>
-            <Text>Сумма депозита</Text>
+            <Text>{t("privateArea.sumDeposit")}</Text>
             <Text>
               {data.amountView}&nbsp; {Balance[data.deposit.asset]}
             </Text>
           </LI>
           <LI>
-            <Text>Сумма взноса</Text>
+            <Text>{t("privateArea.contrAmount")}</Text>
             <Text>{data.baseAmountView}&nbsp; CWD</Text>
           </LI>
           <LI>
-            <Text>К выплате</Text>
+            <Text>{t("privateArea.toPay")}</Text>
             <Text>
               {data.paymentAmountView
                 ? data.paymentAmountView.toString().length > 15
@@ -89,11 +89,11 @@ export const InfoBlock = ({ data }: any) => {
             )}
           </LI>
           <LI>
-            <Text>Всего выплачено</Text>
+            <Text>{t("privateArea.allPay")}</Text>
             <Text>{data.payedAmountView}&nbsp; CWD</Text>
           </LI>
           <LI>
-            <Text>Процент выплаты</Text>
+            <Text>{t("privateArea.procent")}</Text>
             <Text>
               {((data.payedAmountView / data.amountView) * 100).toFixed(2)} %
             </Text>
@@ -117,9 +117,6 @@ const Text = styled.p<{ bold?: boolean }>`
   margin-bottom: 4px;
   letter-spacing: 0.1px;
   color: ${(props) => (props.bold ? "#515172" : "rgba(86, 101, 127, 0.6)")};
-  p {
-    padding-bottom: 3px;
-  }
 `;
 
 const LI = styled.li`

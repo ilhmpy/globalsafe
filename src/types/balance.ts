@@ -1,4 +1,4 @@
-export enum Balance {
+﻿export enum Balance {
     Na,
     CWD,
     MGCWD,
@@ -6,10 +6,8 @@ export enum Balance {
     DIAMOND,
     CROWDBTC,
     CWDBONUS,
-    CARBONE,
-    BRONZE
+    CARBONE
 }
-
 
 export type BalanceList = {
     balanceKind: number;

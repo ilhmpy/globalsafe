@@ -1,4 +1,4 @@
-import React, {
+﻿import React, {
   useState,
   MouseEvent,
   useContext,
@@ -6,8 +6,14 @@ import React, {
   useMemo,
   useRef,
 } from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Switch,
+  Redirect,
+} from "react-router-dom";
 import { Header } from "../../components/Header/Header";
-import styled, { css } from "styled-components/macro";
 import * as Styled from "./Styles.elements";
 import { CSSTransition } from "react-transition-group";
 import { Modal } from "../../components/Modal/Modal";
@@ -18,8 +24,18 @@ import { AppContext } from "../../context/HubContext";
 import ReactNotification, { store } from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 import { DepositListModal } from "./Modals";
+import { Tabs, Tab } from "../../components/UI/Tabs";
+import { Card, Container } from "../../globalStyles";
+import { UpTitle } from "../../components/UI/UpTitle";
+import { useTranslation } from "react-i18next";
+import { Info } from "./Info";
+import { InfoBalance } from "./InfoBalance";
+import { InfoDeposits } from "./InfoDeposits";
+import { OnePage } from "./OnePage";
+import moment from "moment";
+import "moment/locale/ru";
 
-export const Info = () => {
+export const InfoMain = () => {
   const [addDeposit, setAddDeposit] = useState(false);
   const [depositListModal, setDepositListModal] = useState(false);
   const [addDepositValue, setAddDepositValue] = useState("");
@@ -33,9 +49,15 @@ export const Info = () => {
   const [loadDeposit, setLoadDeposit] = useState(false);
   const [withdrawValue, setWithdrawValue] = useState("");
   const appContext = useContext(AppContext);
+  const user = appContext.user;
+  const balance = appContext.balance;
   const hubConnection = appContext.hubConnection;
+  const balanceList = appContext.balanceList;
+  const { t, i18n } = useTranslation();
   const inputRef = useRef<any>(null);
-
+  const lang = localStorage.getItem("i18nextLng") || "ru";
+  const languale = lang === "ru" ? 1 : 0;
+  moment.locale(lang);
   const handleDepositModal = () => {
     setAddDeposit(false);
     setDepositListModal(true);
@@ -82,14 +104,13 @@ export const Info = () => {
           depositSelect.safeId
         )
         .then((res) => {
-          console.log("CreateUserDeposit", res);
           setLoadDeposit(false);
           setWithdraw(false);
           setWithdrawValue("");
-          if (res === true) {
-            alert("Успешно", "Депозит успешно создан", "success");
+          if (res) {
+            alert(t("alert.success"), t("alert.depositMsg"), "success");
           } else {
-            alert("Ошибка", "Депозит не создан", "danger");
+            alert(t("alert.error"), t("alert.depositErrorMsg"), "danger");
           }
         })
         .catch((err: Error) => {
@@ -97,7 +118,7 @@ export const Info = () => {
           setLoadDeposit(false);
           setWithdraw(false);
           setWithdrawValue("");
-          alert("Ошибка", "Депозит не создан", "danger");
+          alert(t("alert.error"), t("alert.depositErrorMsg"), "danger");
         })
         .finally(() => {
           setDepositSelect(null);
@@ -109,122 +130,195 @@ export const Info = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<RootDeposits>("GetDeposits", 1, false, 0, 10)
+        .invoke<RootDeposits>("GetDeposits", languale, false, 0, 40)
         .then((res) => {
-          console.log("res", res);
           if (res.collection.length) {
             setDepositsList(res.collection);
           }
         })
         .catch((err: Error) => console.log(err));
     }
-  }, [hubConnection]);
+  }, [hubConnection, languale]);
 
   const withdrawBalance = () => {
     if (hubConnection) {
       hubConnection
         .invoke("Withdraw", 1, +withdrawValue * 100000)
         .then((res) => {
-          // console.log("Withdraw", res);
-          if (res === 1) {
-            setWithdraw(false);
-            setWithdrawValue("");
-            alert("Успешно", "Средства успешно переведены", "success");
-          } else {
-            setWithdraw(false);
-            setWithdrawValue("");
-            alert("Ошибка", "Ошибка вывода", "danger");
-          }
+          setWithdraw(false);
+          setWithdrawValue("");
+          alert(t("alert.success"), t("alert.successMsg"), "success");
         })
         .catch((err: Error) => {
           setWithdraw(false);
           setWithdrawValue("");
-          alert("Ошибка", "Ошибка вывода", "danger");
+          alert(t("alert.error"), t("alert.errorMsg"), "danger");
         });
     }
   };
 
+  const balanceAsset = balanceList?.some(
+    (item) => item.balanceKind === depositSelect?.depositKind
+  );
+
+  if (user === null) {
+    return null;
+  }
+
+  if (user === false) {
+    return <Redirect to="/" />;
+  }
+
   return (
-    <div>
-      {withdraw && (
-        <Modal onClose={() => setWithdraw(false)}>
-          <Styled.ModalBlock>
-            <Styled.ModalTitle>Вывести средства</Styled.ModalTitle>
-            <Input
-              onChange={(e) => setWithdrawValue(e.target.value)}
-              placeholder="Введите сумму"
-              type="number"
-              step="any"
-              ref={inputRef}
-              value={withdrawValue}
-            />
-            <Styled.ModalButton
-              as="button"
-              disabled={!withdrawValue}
-              onClick={withdrawBalance}
-              danger
-            >
-              Вывести средства
-            </Styled.ModalButton>
-          </Styled.ModalBlock>
-        </Modal>
-      )}
-      <CSSTransition
-        in={addDeposit && !depositListModal}
-        timeout={300}
-        classNames="modal"
-        unmountOnExit
-      >
-        <Styled.ModalDepositsWrap>
-          <Modal width={540} onClose={() => setAddDeposit(false)}>
-            <Styled.ModalTitle mt>Добавить депозит</Styled.ModalTitle>
-            <Styled.ModalDeposits>
-              <div>
-                <Styled.ModalButton
-                  mb
-                  as="button"
-                  onClick={handleDepositModal}
-                  dangerOutline
-                >
-                  {depositSelect ? depositSelect.name : "Выберите депозит"}{" "}
-                  <Styled.IconRotate rights>
-                    <Styled.ModalBack />
-                  </Styled.IconRotate>
-                </Styled.ModalButton>
+    <>
+      <Header />
+      <Styled.Page>
+        <Container>
+          <UpTitle>{t("privateArea.uptitle")}</UpTitle>
+        </Container>
+        <ReactNotification />
+        <Container>
+          <Card>
+            <Styled.InfoWrap>
+              <Styled.UserBlock>
+                <Styled.InfoTitle>{user}</Styled.InfoTitle>
+                <Styled.BalanceItem>
+                  <Styled.BalanceItemName>
+                    {t("privateArea.balance")}
+                  </Styled.BalanceItemName>
+                  <Styled.BalanceItemValue pink>
+                    {balance ? (balance / 100000).toLocaleString() : "0"}
+                  </Styled.BalanceItemValue>
+                </Styled.BalanceItem>
+              </Styled.UserBlock>
+              <Styled.InfoButtons>
+                <Button dangerOutline onClick={() => setAddDeposit(true)}>
+                  {t("privateArea.newDeposit")}
+                </Button>
+                <Button danger onClick={() => setWithdraw(true)}>
+                  {t("privateArea.withdraw")}
+                </Button>
+              </Styled.InfoButtons>
+            </Styled.InfoWrap>
+            <Tabs>
+              <Styled.NavTabs to="/info" exact>
+                <div>{t("privateArea.tabs.tab1")}</div>{" "}
+              </Styled.NavTabs>
+              <Styled.NavTabs to="/info/deposits">
+                <div>{t("privateArea.tabs.tab2")}</div>{" "}
+              </Styled.NavTabs>
+              <Styled.NavTabs to="/info/balance">
+                <div>{t("privateArea.tabs.tab3")}</div>{" "}
+              </Styled.NavTabs>
+            </Tabs>
+          </Card>
+        </Container>
+        <Switch>
+          <Route path="/info" component={Info} exact />
+          <Route path="/info/deposits" component={InfoDeposits} exact />
+          <Route path="/info/balance" component={InfoBalance} exact />
+          <Route path="/info/deposits/:slug" component={OnePage} />
+        </Switch>
+        <div>
+          {withdraw && (
+            <Modal onClose={() => setWithdraw(false)}>
+              <Styled.ModalBlock>
+                <Styled.ModalTitle>
+                  {t("privateArea.withdraw")}
+                </Styled.ModalTitle>
                 <Input
-                  onChange={(e) => setAddDepositValue(e.target.value)}
-                  placeholder="Введите сумму"
+                  onChange={(e) => setWithdrawValue(e.target.value)}
+                  placeholder={t("privateArea.amountEnter")}
+                  step="any"
                   type="number"
                   ref={inputRef}
-                  value={addDepositValue}
+                  value={withdrawValue}
                 />
                 <Styled.ModalButton
                   as="button"
-                  disabled={!addDepositValue}
-                  onClick={openNewDeposit}
+                  disabled={!withdrawValue}
+                  onClick={withdrawBalance}
                   danger
                 >
-                  Добавить
+                  {t("privateArea.withdraw")}
                 </Styled.ModalButton>
-              </div>
-              {depositSelect ? (
-                <Styled.Conditions>
-                  {depositSelect.description}
-                </Styled.Conditions>
-              ) : (
-                ""
-              )}
-            </Styled.ModalDeposits>
-          </Modal>
-        </Styled.ModalDepositsWrap>
-      </CSSTransition>
-      <DepositListModal
-        depositListModal={depositListModal}
-        setDepositListModal={setDepositListModal}
-        handleBackModal={handleBackModal}
-        depositsList={depositsList}
-        selectDeposit={selectDeposit}
-      />
-    </div>
+              </Styled.ModalBlock>
+            </Modal>
+          )}
+          <CSSTransition
+            in={addDeposit && !depositListModal}
+            timeout={300}
+            classNames="modal"
+            unmountOnExit
+          >
+            <Styled.ModalDepositsWrap>
+              <Modal width={540} onClose={() => setAddDeposit(false)}>
+                <Styled.ModalTitle mt>
+                  {t("privateArea.addDeposit")}
+                </Styled.ModalTitle>
+                <Styled.ModalDeposits>
+                  <div>
+                    <Styled.ModalButton
+                      mb
+                      as="button"
+                      onClick={handleDepositModal}
+                      dangerOutline
+                    >
+                      {depositSelect
+                        ? depositSelect.name
+                        : t("privateArea.choiseDeposite")}{" "}
+                      <Styled.IconRotate rights>
+                        <Styled.ModalBack />
+                      </Styled.IconRotate>
+                    </Styled.ModalButton>
+                    <Input
+                      onChange={(e) => setAddDepositValue(e.target.value)}
+                      placeholder={t("privateArea.amountEnter")}
+                      type="number"
+                      ref={inputRef}
+                      value={addDepositValue}
+                    />
+                    <Styled.ModalButton
+                      as="button"
+                      disabled={!balanceAsset || !addDepositValue}
+                      onClick={openNewDeposit}
+                      danger
+                    >
+                      Добавить
+                    </Styled.ModalButton>
+                  </div>
+                  {depositSelect ? (
+                    <Styled.Conditions>
+                      <p
+                        dangerouslySetInnerHTML={{
+                          __html: depositSelect.description,
+                        }}
+                      />
+                      {!balanceAsset && (
+                        <Styled.ToLink
+                          target="_blank"
+                          href={`https://cwd.global/shopping/payment?to_name=${depositSelect.account}&amount=${depositSelect.minAmount}`}
+                        >
+                          Приобрести
+                        </Styled.ToLink>
+                      )}
+                    </Styled.Conditions>
+                  ) : (
+                    ""
+                  )}
+                </Styled.ModalDeposits>
+              </Modal>
+            </Styled.ModalDepositsWrap>
+          </CSSTransition>
+          <DepositListModal
+            depositListModal={depositListModal}
+            setDepositListModal={setDepositListModal}
+            handleBackModal={handleBackModal}
+            depositsList={depositsList}
+            selectDeposit={selectDeposit}
+          />
+        </div>
+      </Styled.Page>
+    </>
   );
 };

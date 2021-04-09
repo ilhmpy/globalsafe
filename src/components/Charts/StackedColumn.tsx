@@ -1,5 +1,4 @@
-import React, { FC } from "react";
-import Chart from "react-apexcharts";
+﻿import React, { FC } from "react";
 import {
   BarChart,
   Bar,
@@ -89,14 +88,13 @@ export const StackedColumn: FC<{ values: any }> = ({ values }) => {
   });
 
   const DataFormater = (number: number) => {
-    if (number > 1000000000) {
-      return (number / 1000000000).toString() + "B";
-    } else if (number > 1000000) {
-      return (number / 1000000).toString() + "M";
-    } else if (number > 1000) {
-      return (number / 1000).toString() + "K";
+    const value = number / 100000;
+    if (value >= 1000000) {
+      return (value / 1000000).toString() + "M";
+    } else if (value >= 1000 && value < 1000000) {
+      return (value / 1000).toString() + "k";
     } else {
-      return number.toString();
+      return value.toString();
     }
   };
 

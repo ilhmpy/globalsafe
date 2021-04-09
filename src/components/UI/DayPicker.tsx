@@ -1,16 +1,14 @@
-import React, { useState, useRef, FC } from "react";
+import React, { useState, useRef, FC, useContext } from "react";
 import styled, { css } from "styled-components/macro";
 import { ReactComponent as Right } from "../../assets/svg/monthRight.svg";
 import { ReactComponent as Left } from "../../assets/svg/monthLeft.svg";
 import DayPicker, { DateUtils } from "react-day-picker";
-import DayPickerInput from "react-day-picker/DayPickerInput";
 import useOnClickOutside from "../../hooks/useOutsideHook";
 import { CSSTransition } from "react-transition-group";
 import { OpenDate } from "../../types/dates";
 import moment from "moment";
-import "moment/locale/ru";
 import "react-day-picker/lib/style.css";
-moment.locale("ru");
+import { useTranslation } from "react-i18next";
 
 function Navbar({
   nextMonth,
@@ -31,8 +29,11 @@ function Navbar({
     </div>
   );
 }
-
+const lang = localStorage.getItem("i18nextLng") || "ru";
 const WEEKDAYS_SHORT = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
+const WEEKDAYS_SHORT_ENG = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+
+console.log("lang", lang);
 
 const MONTHS = [
   "Январь",
@@ -49,6 +50,21 @@ const MONTHS = [
   "Декабрь",
 ];
 
+const MONTHS_ENG = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
 const WEEKDAYS_LONG = [
   "Воскресенье",
   "Понедельник",
@@ -58,33 +74,6 @@ const WEEKDAYS_LONG = [
   "Пятница",
   "Суббота",
 ];
-
-export const InputDay = () => {
-  const [show, setShow] = useState(false);
-  const handleContainerClick = (e: React.MouseEvent) => {
-    if (e.currentTarget === e.target) {
-      setShow(false);
-    }
-  };
-  return (
-    <div>
-      <DateSelect onClick={() => setShow(true)}>
-        <Input type="text" placeholder="pfdnhf" readOnly />
-      </DateSelect>
-      {show && (
-        <div onClick={handleContainerClick}>
-          <CustomDatePicker
-            months={MONTHS}
-            firstDayOfWeek={1}
-            weekdaysLong={WEEKDAYS_LONG}
-            weekdaysShort={WEEKDAYS_SHORT}
-            navbarElement={<Navbar />}
-          />
-        </div>
-      )}
-    </div>
-  );
-};
 
 const CustomDatePickers = styled(DayPicker)`
   background: #ffffff;
@@ -170,83 +159,17 @@ export const Calendar: FC<{
   const handleDayClick = (day: any, { selected }: any) => {
     setSelectedDay(selected ? undefined : day);
   };
-
+  const lang = localStorage.getItem("i18nextLng") || "ru";
   return (
     <CustomDatePickers
-      months={MONTHS}
-      firstDayOfWeek={1}
+      months={lang === "en" ? MONTHS_ENG : MONTHS}
+      firstDayOfWeek={lang === "en" ? 0 : 1}
       weekdaysLong={WEEKDAYS_LONG}
-      weekdaysShort={WEEKDAYS_SHORT}
+      weekdaysShort={lang === "en" ? WEEKDAYS_SHORT_ENG : WEEKDAYS_SHORT}
       navbarElement={<Navbar />}
       selectedDays={selectedDay}
       onDayClick={handleDayClick}
     />
-  );
-};
-
-const NewInput = (props: any) => {
-  const { value, onFocus, onBlur } = props;
-  return (
-    <MyComp>
-      {value ? moment(new Date(value)).format("DD MMMM YYYY") : "Завтра"}
-      <input ref={props.ref} onClick={onFocus} onBlur={onBlur} />
-    </MyComp>
-  );
-};
-
-export const CalendarInput = () => {
-  return (
-    <InputCustom>
-      <DayPickerInput
-        component={React.forwardRef((props, ref) => (
-          <NewInput {...props} innerRef={ref} />
-        ))}
-        onDayChange={(day: any) => console.log(day)}
-        dayPickerProps={{
-          firstDayOfWeek: 1,
-          months: MONTHS,
-          weekdaysShort: WEEKDAYS_SHORT,
-          navbarElement: <Navbar />,
-        }}
-      />
-    </InputCustom>
-  );
-};
-
-export const ModalInput = (props: any) => {
-  const { value, onFocus, onBlur, selectedDays } = props;
-  // console.log("props", props.day);
-  return (
-    <ModalComp>
-      {props.day ? moment(new Date(props.day)).format("DD MMMM YYYY") : ""}
-      <input ref={props.ref} onClick={onFocus} />
-    </ModalComp>
-  );
-};
-
-export const ModalCalendarInput: FC<{
-  left?: boolean;
-  handleDayClick: (day: any) => void;
-  day: any;
-}> = ({ left, handleDayClick, day }) => {
-  const [selectedDay, setSelectedDay] = useState<any>(day);
-  return (
-    <ModalInputCustom left={left}>
-      <DayPickerInput
-        component={React.forwardRef((props, ref) => (
-          <ModalInput {...props} day={selectedDay} innerRef={ref} />
-        ))}
-        onDayChange={(day: any) => console.log(day)}
-        dayPickerProps={{
-          firstDayOfWeek: 1,
-          months: MONTHS,
-          weekdaysShort: WEEKDAYS_SHORT,
-          navbarElement: <Navbar />,
-          onDayClick: handleDayClick,
-          selectedDays: selectedDay,
-        }}
-      />
-    </ModalInputCustom>
   );
 };
 
@@ -284,33 +207,26 @@ export const ModalRangeInput: FC<{
       onClose();
     }
   };
-
+  const lang = localStorage.getItem("i18nextLng") || "ru";
   const modifiers = { start: selfDate.from, end: selfDate.to };
-
+  const { t } = useTranslation();
   return (
     <>
       <DatePickerContainer ref={ref}>
         <CalendarWrap onClick={() => setShowOpen(!showOpen)}>
-          <Period>Указать период...</Period>
-          {/* <Period>
-            {selfDate.from
-              ? moment(selfDate.from).format("DD.MM.YY") +
-                " " +
-                moment(selfDate.to).format("DD.MM.YY")
-              : "Указать период..."}
-          </Period> */}
+          <Period>{t("period")}...</Period>
         </CalendarWrap>
         {showOpen && (
           <CustomDatePicker
             selectedDays={[selfDate.from, selfDate]}
-            months={MONTHS}
+            months={lang === "en" ? MONTHS_ENG : MONTHS}
             onDayClick={handleDayClick}
             firstDayOfWeek={1}
-            todayButton="Готово"
+            todayButton={t("ready")}
             onTodayButtonClick={handleChange}
             modifiers={modifiers}
             weekdaysLong={WEEKDAYS_LONG}
-            weekdaysShort={WEEKDAYS_SHORT}
+            weekdaysShort={lang === "en" ? WEEKDAYS_SHORT_ENG : WEEKDAYS_SHORT}
             navbarElement={<Navbar />}
           />
         )}
@@ -330,7 +246,6 @@ export const TestInput: FC<{
     from: undefined,
     to: undefined,
   });
-
   const ref = useRef(null);
 
   const handleClickOutside = () => {
@@ -354,7 +269,7 @@ export const TestInput: FC<{
       });
     }
   };
-
+  const lang = localStorage.getItem("i18nextLng") || "ru";
   const modifiers = { start: selfDate.from, end: selfDate.to };
 
   return (
@@ -375,13 +290,13 @@ export const TestInput: FC<{
         {showOpen && (
           <CustomDatePicker
             selectedDays={[selfDate.from, selfDate]}
-            months={MONTHS}
+            months={lang === "en" ? MONTHS_ENG : MONTHS}
             onDayClick={handleDayClick}
             firstDayOfWeek={1}
             onTodayButtonClick={handleChange}
             modifiers={modifiers}
             weekdaysLong={WEEKDAYS_LONG}
-            weekdaysShort={WEEKDAYS_SHORT}
+            weekdaysShort={lang === "en" ? WEEKDAYS_SHORT_ENG : WEEKDAYS_SHORT}
             navbarElement={<Navbar />}
           />
         )}
@@ -407,12 +322,11 @@ export const MainAdminInput: FC<{
   const handleClickOutside = () => {
     setShowOpen(false);
   };
-
+  const { t } = useTranslation();
   useOnClickOutside(ref, handleClickOutside);
 
   const handleDayClick = (day: Date) => {
     const range = DateUtils.addDayToRange(day, selfDate);
-    console.log("range", range);
     setSelfDate({ from: range.from, to: range.to });
     if (range.from && range.to) {
       setOpenDate({ from: range.from, to: range.to });
@@ -425,11 +339,8 @@ export const MainAdminInput: FC<{
     }
     setShowOpen(false);
   };
-
+  const lang = localStorage.getItem("i18nextLng") || "ru";
   const modifiers = { start: selfDate.from, end: selfDate.to };
-
-  // console.log("start", start._d);
-  // console.log("end", end._d);
   return (
     <>
       <AdminInputsContainer ref={ref}>
@@ -449,7 +360,9 @@ export const MainAdminInput: FC<{
                 </span>
               </>
             ) : (
-              <span>За {label}</span>
+              <span>
+                {t("privateArea.at")} {label}
+              </span>
             )}
           </DateInput>
         </BoxInput>
@@ -462,14 +375,14 @@ export const MainAdminInput: FC<{
         >
           <CustomDatePicker
             selectedDays={[selfDate.from, selfDate]}
-            months={MONTHS}
+            months={lang === "en" ? MONTHS_ENG : MONTHS}
             onDayClick={handleDayClick}
             firstDayOfWeek={1}
             onTodayButtonClick={handleChange}
-            todayButton="Готово"
+            todayButton={t("ready")}
             modifiers={modifiers}
             weekdaysLong={WEEKDAYS_LONG}
-            weekdaysShort={WEEKDAYS_SHORT}
+            weekdaysShort={lang === "en" ? WEEKDAYS_SHORT_ENG : WEEKDAYS_SHORT}
             navbarElement={<Navbar />}
           />
         </CSSTransition>
