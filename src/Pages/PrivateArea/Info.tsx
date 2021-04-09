@@ -58,7 +58,7 @@ export const Info = () => {
     to: new Date(),
   });
   const { t, i18n } = useTranslation();
-  const [selected, setSelected] = useState<any>(t("privateArea.allTime"));
+
   const sizes = useWindowSize();
   const size = sizes < 992;
   const appContext = useContext(AppContext);
@@ -66,57 +66,8 @@ export const Info = () => {
   const balance = appContext.balance;
   const amountContext = useContext(AmountContext);
   const { totalPayed, depositTotal } = amountContext;
-  const [count, setCount] = useState(true);
-  const [num, setNum] = useState(20);
-  const [loading, setLoading] = useState(true);
   const [loadDeposit, setLoadDeposit] = useState(false);
   const inputRef = useRef<any>(null);
-
-  const yearSelected = () => {
-    let year = moment().format("YYYY");
-    let yearStart: any = moment(year, "YYYY").startOf("month");
-    let yearEnd: any = moment(year, "YYYY").endOf("year");
-    setOpenDate({
-      from: yearStart._d,
-      to: yearEnd._d,
-    });
-    setSelected(`${t("privateArea.at")} ${moment().format("YYYY")}`);
-    onClose();
-  };
-
-  const monthSelected = () => {
-    let currentMonth = moment().format("MMYYYY");
-    let currentMonthStart: any = moment(currentMonth, "M.YYYY").startOf(
-      "month"
-    );
-    let currentMonthEnd: any = moment(currentMonth, "M.YYYY").endOf("month");
-    setOpenDate({
-      from: currentMonthStart._d,
-      to: currentMonthEnd._d,
-    });
-    setSelected(`${t("privateArea.at")} ${moment().format("MMMM YYYY")}`);
-    onClose();
-  };
-
-  const rangeDate = (from: Date, to: Date) => {
-    setOpenDate({
-      from: from,
-      to: to,
-    });
-    setSelected(
-      `${moment(from).format("DD.MM.YY")} - ${moment(to).format("DD.MM.YY")}`
-    );
-    onClose();
-  };
-
-  const allDate = () => {
-    setOpenDate({
-      from: new Date("2019-01-01T00:47:45"),
-      to: new Date(),
-    });
-    setSelected(t("privateArea.allTime"));
-    onClose();
-  };
 
   useEffect(() => {
     if (withdrawValue || addDepositValue) {
@@ -129,7 +80,7 @@ export const Info = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<RootList>("GetUserDeposits", [1, 2, 3, 4, 5, 6], 0, 20)
+        .invoke<RootList>("GetUserDeposits", [1, 2, 3, 4, 5, 6, 7, 8], 0, 20)
         .then((res) => {
           setList(res.collection);
         })
@@ -147,104 +98,6 @@ export const Info = () => {
         .catch((err: Error) => console.log(err));
     }
   }, [hubConnection]);
-
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection
-        .invoke(
-          "GetBalanceLog",
-          1,
-          balanceLogs,
-          openDate.from || new Date("2021-02-09T00:47:45"),
-          openDate.to || new Date(),
-          0,
-          30
-        )
-        .then((res: any) => {
-          setLoading(false);
-          setNum(20);
-          function getFormatedDate(dateStr: Date) {
-            let date = moment(dateStr).format("DD MMMM YYYY");
-            return date;
-          }
-          if (res.collection.length) {
-            let result: any = {};
-            res.collection.forEach((item: any) => {
-              const d = getFormatedDate(item.operationDate);
-
-              const obj = {
-                id: item.referenceSafeId,
-                operationKind: item.operationKind,
-                balance: item.balanceDelta,
-              };
-
-              if (result[d]) {
-                result[d].push(obj);
-              } else {
-                result[d] = [obj];
-              }
-            });
-            setBalanceLog(result);
-          } else {
-            setBalanceLog(null);
-          }
-        })
-        .catch((err: Error) => {
-          setLoading(false);
-          console.log(err);
-        });
-    }
-  }, [hubConnection, openDate, balanceLogs]);
-
-  const myLoad = () => {
-    if (hubConnection) {
-      setCount(false);
-      hubConnection
-        .invoke(
-          "GetBalanceLog",
-          1,
-          balanceLogs,
-          openDate.from,
-          openDate.to,
-          num,
-          30
-        )
-        .then((res) => {
-          setLoading(false);
-          if (res.collection.length) {
-            // console.log("loadMoreItems", res);
-
-            if (res.collection.length) {
-              let result: any = {};
-              res.collection.forEach((item: any) => {
-                const d = moment(item.operationDate).format("DD MMMM YYYY");
-                const obj = {
-                  id: item.referenceSafeId,
-                  operationKind: item.operationKind,
-                  balance: item.balanceDelta,
-                };
-
-                if (result[d]) {
-                  result[d].push(obj);
-                } else {
-                  result[d] = [obj];
-                }
-              });
-              setBalanceLog(Object.assign(balanceLog, result));
-            } else {
-              setBalanceLog(null);
-            }
-
-            setCount(true);
-            setNum(num + 20);
-          }
-        })
-        .catch((err: Error) => {
-          setLoading(false);
-          console.log(err);
-        });
-    }
-  };
 
   useEffect(() => {
     if (hubConnection) {
@@ -268,33 +121,6 @@ export const Info = () => {
   const onClose = () => {
     setOpen(false);
   };
-
-  const handleBackModal = () => {
-    setAddDeposit(true);
-    setDepositListModal(false);
-  };
-
-  const selectDeposit = (item: DepositsCollection) => {
-    handleBackModal();
-    setDepositSelect(item);
-    setAddDepositValue((item.minAmount / 100000).toString());
-  };
-
-  const handleDepositModal = () => {
-    setAddDeposit(false);
-    setDepositListModal(true);
-  };
-
-  const minOffset = 0;
-  const maxOffset = 10;
-  const thisYear = new Date().getFullYear();
-  const thisMonth = moment.months();
-  const options = [];
-
-  for (let i = minOffset; i <= maxOffset; i++) {
-    const year = thisYear - i;
-    options.push(<option value={year}>{year}</option>);
-  }
 
   return (
     <>
@@ -646,46 +472,6 @@ export const Info = () => {
             </Card>
           </Container>
         )}
-
-        <CSSTransition in={open} timeout={300} classNames="modal" unmountOnExit>
-          <Styled.ModalWrap>
-            <Modal onClose={onClose}>
-              <Styled.ModalContent>
-                {/* <Arrow onClick={onClose} /> */}
-                <Styled.ModalTitle>
-                  {t("privateArea.selectPeriod")}
-                </Styled.ModalTitle>
-                <Styled.ModalItem>
-                  <Styled.DateTitle>
-                    {t("privateArea.thisMonth")}
-                  </Styled.DateTitle>
-                  <Styled.DateText onClick={monthSelected}>
-                    {moment().format("MMMM YYYY")}
-                  </Styled.DateText>
-                </Styled.ModalItem>
-                <Styled.ModalItem>
-                  <Styled.DateTitle>
-                    {t("privateArea.thisYear")}
-                  </Styled.DateTitle>
-                  <Styled.DateText onClick={yearSelected}>
-                    {moment().format("YYYY")}
-                  </Styled.DateText>
-                </Styled.ModalItem>
-                <Styled.ModalItem>
-                  <Styled.DateTitle></Styled.DateTitle>
-                  <Styled.DateText onClick={allDate}>
-                    {t("privateArea.allTime")}
-                  </Styled.DateText>
-                </Styled.ModalItem>
-              </Styled.ModalContent>
-              <ModalRangeInput
-                onClose={onClose}
-                openDate={openDate}
-                setOpenDate={rangeDate}
-              />
-            </Modal>
-          </Styled.ModalWrap>
-        </CSSTransition>
       </>
     </>
   );

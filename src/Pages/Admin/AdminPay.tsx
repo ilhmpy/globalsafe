@@ -506,7 +506,7 @@ export const AdminPay = () => {
         <Styled.FilterBlock>
           <Styled.SelectContainer>
             <Styled.SelectWrap>
-              <Styled.Label>Пользователь</Styled.Label>
+              <Styled.Label>{t("adminPay.filter.user")}</Styled.Label>
               <Styled.Input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -516,11 +516,11 @@ export const AdminPay = () => {
               <TestInput
                 setOpenDate={setOpenDate}
                 openDate={openDate}
-                label="Дата"
+                label={t("adminPay.filter.date")}
               />
             </Styled.InputsCalendarWrap>
             <Styled.SelectWrap>
-              <Styled.Label>Депозит</Styled.Label>
+              <Styled.Label>{t("adminPay.filter.deposit")}</Styled.Label>
               <Select
                 checkList={checkList}
                 setCheckList={setCheckList}
@@ -529,7 +529,7 @@ export const AdminPay = () => {
             </Styled.SelectWrap>
 
             <Button danger onClick={submit}>
-              Применить
+              {t("adminUsers.apply")}
             </Button>
           </Styled.SelectContainer>
         </Styled.FilterBlock>
