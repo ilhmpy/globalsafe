@@ -6,6 +6,36 @@ import { Card, Container } from "../../globalStyles";
 import { ReactComponent as BackIcon } from "../../assets/svg/arrowLeftModal.svg";
 import { NavLink } from "react-router-dom";
 
+export const ToLink = styled.a`
+  color: #ff416e;
+  font-weight: 500;
+  font-size: 14px;
+  text-align: center;
+  width: 100%;
+`;
+
+export const InnerChart = styled(Card)`
+  margin-bottom: 0;
+  border-radius: 20px 20px 0 0;
+  @media (max-width: 768px) {
+    margin-bottom: 20px;
+    background: transparent;
+    box-shadow: none;
+  }
+`;
+
+export const InnerTable = styled(Card)`
+  margin-bottom: 0;
+  border-radius: 0 0 20px 20px;
+  @media (max-width: 768px) {
+    border-radius: 20px;
+  }
+`;
+
+export const ContainerChart = styled(Container)`
+  height: 164px;
+`;
+
 export const Loader = styled.div`
   position: fixed;
   top: 0;
@@ -695,6 +725,9 @@ export const Conditions = styled.div`
   color: #56657f;
   max-width: 200px;
   width: 100%;
+  p {
+    margin-bottom: 10px;
+  }
   @media (max-width: 576px) {
     max-width: 100%;
     margin-top: 40px;

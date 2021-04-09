@@ -47,7 +47,7 @@ export const Tariffs = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<ListDeposits>("GetDeposits", 1, 0, 40)
+        .invoke<ListDeposits>("GetDeposits", 1, true, 0, 40)
         .then((res) => {
           console.log("GetDeposits", res);
           setListDeposits(res.collection);

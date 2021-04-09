@@ -9,3 +9,9 @@ export enum Balance {
     CARBONE,
     BRONZE
 }
+
+
+export type BalanceList = {
+    balanceKind: number;
+    volume: number;
+}

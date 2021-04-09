@@ -3,6 +3,31 @@ import { UpTitle } from "../../components/UI/UpTitle";
 import { Card } from "../../globalStyles";
 import { Button } from "../../components/Button/Button";
 
+export const InputsWrapItem = styled.div`
+  margin-right: 10px;
+  width: 100%;
+  @media (max-width: 576px) {
+    margin-right: 0px;
+  }
+`;
+
+export const Input = styled.input`
+  width: 100%;
+  border: 1px solid rgba(86, 101, 127, 0.3);
+  box-sizing: border-box;
+  border-radius: 2px;
+  min-height: 40px;
+  padding: 8px;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 21px;
+  letter-spacing: 0.1px;
+  color: #515172;
+  &:focus {
+    outline: none;
+  }
+`;
+
 export const Loader = styled.div`
   position: fixed;
   top: 0;
@@ -235,6 +260,22 @@ export const SelectWrap = styled.div`
   }
 `;
 
+export const InputsCalendarWrap = styled.div`
+  max-width: 133px;
+  width: 100%;
+  margin: 20px 10px;
+  @media (max-width: 992px) {
+    max-width: 75%;
+  }
+  @media (max-width: 768px) {
+    max-width: 100%;
+    margin: 12px 10px;
+  }
+  @media (max-width: 576px) {
+    margin: 12px 0px;
+  }
+`;
+
 export const Label = styled.span`
   font-weight: normal;
   font-size: 14px;
@@ -247,7 +288,7 @@ export const Label = styled.span`
 export const InputsWrap = styled.div`
   display: flex;
   align-items: center;
-  @media (max-width: 576px) {
+  @media (max-width: 768px) {
     flex-wrap: wrap;
     width: 100%;
   }

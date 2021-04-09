@@ -195,8 +195,9 @@ export const AdminDeposit = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<ListDeposits>("GetDeposits", 1, 0, 40)
+        .invoke<ListDeposits>("GetDeposits", 1, true, 0, 40)
         .then((res) => {
+          console.log("res", res);
           setListDeposits(res.collection);
         })
         .catch((err: Error) => console.log(err));
@@ -378,7 +379,10 @@ export const AdminDeposit = () => {
         <Styled.SelectContainer>
           <Styled.SelectWrap>
             <Styled.Label>Пользователь</Styled.Label>
-            <Input value={name} onChange={(e) => setName(e.target.value)} />
+            <Styled.Input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
           </Styled.SelectWrap>
           <Styled.SelectWrap>
             <Styled.Label>Название программы</Styled.Label>
@@ -389,18 +393,20 @@ export const AdminDeposit = () => {
             />
           </Styled.SelectWrap>
           <Styled.InputsWrap>
-            <InputsWrapItem>
+            <Styled.InputsWrapItem>
               <TestInput
                 setOpenDate={setOpenDate}
                 openDate={openDate}
                 label="Дата открытия"
               />
-            </InputsWrapItem>
-            <TestInput
-              setOpenDate={setCloseDate}
-              openDate={closeDate}
-              label="Дата след.выплаты"
-            />
+            </Styled.InputsWrapItem>
+            <Styled.InputsWrapItem>
+              <TestInput
+                setOpenDate={setCloseDate}
+                openDate={closeDate}
+                label="Дата след.выплаты"
+              />
+            </Styled.InputsWrapItem>
           </Styled.InputsWrap>
 
           <Button danger onClick={submit}>
@@ -454,31 +460,6 @@ export const AdminDeposit = () => {
     </>
   );
 };
-
-const InputsWrapItem = styled.div`
-  margin-right: 10px;
-  width: 100%;
-  @media (max-width: 576px) {
-    margin-right: 0px;
-  }
-`;
-
-const Input = styled.input`
-  width: 100%;
-  border: 1px solid rgba(86, 101, 127, 0.3);
-  box-sizing: border-box;
-  border-radius: 2px;
-  min-height: 40px;
-  padding: 8px;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 21px;
-  letter-spacing: 0.1px;
-  color: #515172;
-  &:focus {
-    outline: none;
-  }
-`;
 
 const NotFound = styled.div`
   font-weight: normal;

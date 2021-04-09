@@ -78,6 +78,7 @@ export const InfoDeposits = () => {
   const user = appContext.user;
   const balance = appContext.balance;
   const amountContext = useContext(AmountContext);
+  const balanceList = appContext.balanceList;
   const [count, setCount] = useState(true);
   const [num, setNum] = useState(20);
   const [loadDeposit, setLoadDeposit] = useState(false);
@@ -142,7 +143,7 @@ export const InfoDeposits = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<RootDeposits>("GetDeposits", 1, 0, 10)
+        .invoke<RootDeposits>("GetDeposits", 1, false, 0, 10)
         .then((res) => {
           console.log("res", res);
           if (res.collection.length) {
@@ -339,7 +340,9 @@ export const InfoDeposits = () => {
     options.push(<option value={year}>{year}</option>);
   }
 
-  // console.log("withdrawValue", withdrawValue);
+  const balanceAsset = balanceList?.some(
+    (item) => item.balanceKind === depositSelect?.depositKind
+  );
 
   return (
     <>
@@ -501,7 +504,7 @@ export const InfoDeposits = () => {
                     />
                     <Styled.ModalButton
                       as="button"
-                      disabled={!addDepositValue}
+                      disabled={!balanceAsset || !addDepositValue}
                       onClick={openNewDeposit}
                       danger
                     >
@@ -510,7 +513,19 @@ export const InfoDeposits = () => {
                   </div>
                   {depositSelect ? (
                     <Styled.Conditions>
-                      {depositSelect.description}
+                      <p
+                        dangerouslySetInnerHTML={{
+                          __html: depositSelect.description,
+                        }}
+                      />
+                      {!balanceAsset && (
+                        <Styled.ToLink
+                          target="_blank"
+                          href={`https://cwd.global/shopping/payment?to_name=${depositSelect.account}&amount=${depositSelect.minAmount}`}
+                        >
+                          Приобрести
+                        </Styled.ToLink>
+                      )}
                     </Styled.Conditions>
                   ) : (
                     ""

@@ -80,6 +80,10 @@ export const ModalPay: FC<ListProps> = ({
             </PayText>
           </PayCardBlock>
           <PayCardBlock>
+            <PayText small>Дата открытия депозита</PayText>
+            <PayText>{moment(data.creationDate).format("DD/MM/YYYY")}</PayText>
+          </PayCardBlock>
+          <PayCardBlock>
             <PayText small>Доходность по программе</PayText>
             <PayText>{data.deposit.paymentRatio * 100}%</PayText>
           </PayCardBlock>

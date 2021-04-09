@@ -36,6 +36,7 @@ import { DepositListModal, ModalDividends } from "./Modals";
 import InfiniteScroll from "react-infinite-scroller";
 import { Scrollbars } from "react-custom-scrollbars";
 import { Loading } from "../../components/UI/Loading";
+import { StackedColumn } from "../../components/Charts/StackedColumn";
 moment.locale("ru");
 
 type Obj = {
@@ -134,6 +135,7 @@ export const InfoBalance = () => {
   const user = appContext.user;
   const balance = appContext.balance;
   const amountContext = useContext(AmountContext);
+  const balanceList = appContext.balanceList;
   const { totalPayed, depositTotal } = amountContext;
   const [count, setCount] = useState(true);
   const [num, setNum] = useState(20);
@@ -204,7 +206,7 @@ export const InfoBalance = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<RootDeposits>("GetDeposits", 1, 0, 10)
+        .invoke<RootDeposits>("GetDeposits", 1, false, 0, 10)
         .then((res) => {
           // console.log("GetDeposits 11", res);
           if (res.collection.length) {
@@ -229,7 +231,7 @@ export const InfoBalance = () => {
         )
         .then((res: any) => {
           setTotalDeposit(res.totalRecords);
-          // console.log("res", res);
+          console.log("res depos", res);
           setNum(20);
           setLoading(false);
           function getFormatedDate(dateStr: Date) {
@@ -497,7 +499,9 @@ export const InfoBalance = () => {
         .catch((err: Error) => console.log(err));
     }
   };
-
+  const balanceAsset = balanceList?.some(
+    (item) => item.balanceKind === depositSelect?.depositKind
+  );
   return (
     <>
       <Header />
@@ -548,6 +552,7 @@ export const InfoBalance = () => {
               <Loading />
             </Styled.Loader>
           )}
+
           <Container>
             <Styled.BalanceWrap>
               <Styled.TopUpButton blue onClick={() => setAddBalance(true)}>
@@ -606,9 +611,13 @@ export const InfoBalance = () => {
               </Styled.BalanceTabHead>
             </Card>
           </Container>
-
+          <Styled.ContainerChart>
+            <Styled.InnerChart>
+              {balanceLog && <StackedColumn values={balanceLog} />}
+            </Styled.InnerChart>
+          </Styled.ContainerChart>
           <Container>
-            <Card>
+            <Styled.InnerTable>
               <Styled.DataListWrap>
                 <Styled.DataList>
                   <Styled.DataListHead>
@@ -645,14 +654,11 @@ export const InfoBalance = () => {
                   ) : loading ? (
                     <Loading />
                   ) : (
-                    <Styled.NotFound>
-                      Данные не обнаружены. Попробуйте изменить параметры
-                      поиска.
-                    </Styled.NotFound>
+                    <Styled.NotFound>Данные не обнаружены.</Styled.NotFound>
                   )}
                 </Styled.DataList>
               </Styled.DataListWrap>
-            </Card>
+            </Styled.InnerTable>
           </Container>
 
           <CSSTransition
@@ -774,7 +780,7 @@ export const InfoBalance = () => {
                     />
                     <Styled.ModalButton
                       as="button"
-                      disabled={!addDepositValue}
+                      disabled={!balanceAsset || !addDepositValue}
                       onClick={openNewDeposit}
                       danger
                     >
@@ -783,7 +789,19 @@ export const InfoBalance = () => {
                   </div>
                   {depositSelect ? (
                     <Styled.Conditions>
-                      {depositSelect.description}
+                      <p
+                        dangerouslySetInnerHTML={{
+                          __html: depositSelect.description,
+                        }}
+                      />
+                      {!balanceAsset && (
+                        <Styled.ToLink
+                          target="_blank"
+                          href={`https://cwd.global/shopping/payment?to_name=${depositSelect.account}&amount=${depositSelect.minAmount}`}
+                        >
+                          Приобрести
+                        </Styled.ToLink>
+                      )}
                     </Styled.Conditions>
                   ) : (
                     ""
