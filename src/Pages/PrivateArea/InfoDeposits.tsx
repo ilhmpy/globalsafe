@@ -19,7 +19,7 @@ export const InfoDeposits = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<RootList>("GetUserDeposits", [1, 2, 3, 4, 5, 6], 0, 20)
+        .invoke<RootList>("GetUserDeposits", [1, 2, 3, 4, 5, 6, 7, 8], 0, 20)
         .then((res) => {
           setList(res.collection);
           setTotalList(res.totalRecords);
@@ -34,7 +34,7 @@ export const InfoDeposits = () => {
     setCount(false);
     if (hubConnection && list.length < totalList) {
       hubConnection
-        .invoke<RootList>("GetUserDeposits", [1, 2, 3, 4, 5, 6], num, 20)
+        .invoke<RootList>("GetUserDeposits", [1, 2, 3, 4, 5, 6, 7, 8], num, 20)
         .then((res) => {
           if (res.collection.length) {
             setList([...list, ...res.collection]);

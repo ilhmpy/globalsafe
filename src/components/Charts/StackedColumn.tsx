@@ -106,16 +106,22 @@ export const StackedColumn: FC<{ values: any }> = ({ values }) => {
     }, {})
   );
 
+  const arrayReverseObj = (obj: any) =>
+    Object.keys(obj)
+      .sort()
+      .reverse()
+      .map((key) => ({ ...obj[key], key }));
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <BarChart
         width={500}
         height={165}
-        data={datas}
+        data={arrayReverseObj(datas)}
         margin={{
           top: 20,
           right: 20,
-          left: 0,
+          left: -20,
           bottom: 5,
         }}
       >

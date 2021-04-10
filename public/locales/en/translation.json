@@ -143,6 +143,11 @@
             "paid":"Paid out",
             "amount":"Current number of",
             "cost":"Unit cost"
+        },
+        "filter":{
+            "user": "User",
+            "date": "Date",
+            "deposit": "Deposit"
         }
     },
     "depositList":{

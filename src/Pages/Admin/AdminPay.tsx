@@ -94,12 +94,13 @@ export const AdminPay = () => {
       hubConnection
         .invoke<ListDeposits>("GetDeposits", 1, false, 0, 40)
         .then((res) => {
+          console.log("GetDeposits", res);
           setListDeposits(res.collection);
         })
         .catch((err: Error) => console.log(err));
     }
   }, [hubConnection]);
-
+  console.log("checkList", checkList);
   const namesProgram = checkList.map((i: any) => i.label);
   const idProgram = listDeposits.filter((i) => namesProgram.includes(i.name));
   const searchSafeID = idProgram.map((i) => i.safeId);
@@ -506,7 +507,7 @@ export const AdminPay = () => {
         <Styled.FilterBlock>
           <Styled.SelectContainer>
             <Styled.SelectWrap>
-              <Styled.Label>Пользователь</Styled.Label>
+              <Styled.Label>{t("adminPay.filter.user")}</Styled.Label>
               <Styled.Input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -516,20 +517,20 @@ export const AdminPay = () => {
               <TestInput
                 setOpenDate={setOpenDate}
                 openDate={openDate}
-                label="Дата"
+                label={t("adminPay.filter.date")}
               />
             </Styled.InputsCalendarWrap>
             <Styled.SelectWrap>
-              <Styled.Label>Депозит</Styled.Label>
+              <Styled.Label>{t("adminPay.filter.deposit")}</Styled.Label>
               <Select
                 checkList={checkList}
                 setCheckList={setCheckList}
-                values={listDeposits.map((item) => item.name)}
+                values={listDeposits}
               />
             </Styled.SelectWrap>
 
             <Button danger onClick={submit}>
-              Применить
+              {t("adminUsers.apply")}
             </Button>
           </Styled.SelectContainer>
         </Styled.FilterBlock>
