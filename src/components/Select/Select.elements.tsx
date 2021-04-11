@@ -159,6 +159,7 @@ export const LabelContainer = styled.label<{ st?: boolean }>`
 
 export const Ratio = styled.div`
   margin-left: 8px;
+  white-space: nowrap;
 `;
 
 export const Accordion = styled.div`

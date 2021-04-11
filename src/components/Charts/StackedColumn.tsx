@@ -12,6 +12,7 @@ import {
 } from "recharts";
 import styled from "styled-components/macro";
 import moment from "moment";
+import { Balance } from "../../types/balance";
 
 const operation = (id: number) => {
   if (id === 6) {
@@ -27,20 +28,23 @@ const operation = (id: number) => {
   }
 };
 
-const operationValue = (id: number, value: number) => {
+const operationValue = (id: number, value: number, type: number) => {
   const val = (value / 100000).toLocaleString("ru-RU", {
     maximumFractionDigits: 5,
   });
+  console.log("type", type);
+  const bal = Balance[type];
+
   if (id === 6) {
-    return <Text>{`- ${val}`}</Text>;
+    return <Text>{`- ${val} ${bal}`}</Text>;
   } else if (id === 7) {
-    return <Text red>{`+ ${val}`}</Text>;
+    return <Text red>{`+ ${val} ${bal}`}</Text>;
   } else if (id === 8) {
-    return <Text>{` ${val}`}</Text>;
+    return <Text>{` ${val} ${bal}`}</Text>;
   } else if (id === 2) {
-    return <Text red>{`- ${val}`}</Text>;
+    return <Text red>{`- ${val} ${bal}`}</Text>;
   } else if (id === 1) {
-    return <Text red>{`+ ${val}`}</Text>;
+    return <Text red>{`+ ${val} ${bal}`}</Text>;
   }
 };
 
@@ -52,7 +56,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
         {payload.map((i: any, idx: number) => (
           <TextWrap key={idx}>
             <Text>{operation(+i.name)}</Text>
-            {operationValue(+i.name, i.value)}
+            {operationValue(+i.name, i.value, i.payload.type)}
           </TextWrap>
         ))}
       </TooltipBlock>
@@ -83,10 +87,6 @@ const Text = styled.div<{ red?: boolean }>`
 `;
 
 export const StackedColumn: FC<{ values: any }> = ({ values }) => {
-  let abc = Object.keys(values).map((key, idx) => {
-    return values[key].map((item: any) => ({ name: item.balance }));
-  });
-
   const DataFormater = (number: number) => {
     const value = number / 100000;
     if (value >= 1000000) {
@@ -98,13 +98,47 @@ export const StackedColumn: FC<{ values: any }> = ({ values }) => {
     }
   };
 
-  const datas = Object.values(values).map((item: any) =>
-    item.reduce((a: any, b: any) => {
+  let data: any = [];
+
+  Object.values(values).map((item: any) => data.push(...item));
+
+  const newDatas = data.map((item: any) => ({
+    [item.operationKind + [item.type]]:
+      item.balance < 0 ? item.balance * -1 : item.balance,
+    date: moment(item.date).format("DD MMMM YYYY"),
+    type: item.type,
+  }));
+
+  // const datas = newDatas.map((item: any) => ({
+  //   [item.operationKind]: item.balance < 0 ? item.balance * -1 : item.balance,
+  //   date: moment(item.date).format("DD MMMM YYYY"),
+  //   type: item.type,
+  // }));
+
+  const colors = (id: number) => {
+    if (id === 6) {
+      return "#6DB9FF";
+    } else if (id === 7) {
+      return "rgba(188,212,118,.5)";
+    } else if (id === 2) {
+      return "rgba(81,81,114,.5)";
+    } else if (id === 1) {
+      return "#A78CF2";
+    } else if (id === 8) {
+      return "#FFCCFF";
+    }
+  };
+
+  const data1 = Object.values(values).map((item: any) => {
+    return item.reduce((a: any, b: any) => {
       a[b.operationKind] = b.balance < 0 ? b.balance * -1 : b.balance;
+      a["operationKind"] = b.operationKind;
       a["date"] = moment(b.date).format("DD MMMM YYYY");
+      a["type"] = b.type;
+      a["color"] = colors(b.operationKind);
       return a;
-    }, {})
-  );
+    }, {});
+  });
 
   const arrayReverseObj = (obj: any) =>
     Object.keys(obj)
@@ -117,7 +151,7 @@ export const StackedColumn: FC<{ values: any }> = ({ values }) => {
       <BarChart
         width={500}
         height={165}
-        data={arrayReverseObj(datas)}
+        data={data1}
         margin={{
           top: 20,
           right: 20,
@@ -125,9 +159,18 @@ export const StackedColumn: FC<{ values: any }> = ({ values }) => {
           bottom: 5,
         }}
       >
-        <XAxis tick={{ fontSize: 10 }} />
+        {/* <XAxis tick={{ fontSize: 10 }} /> */}
         <YAxis tickFormatter={DataFormater} tick={{ fontSize: 10 }} />
         <Tooltip content={<CustomTooltip />} />
+        {/* {data1.map((i: any, idx: number) => (
+          <Bar
+            key={idx}
+            dataKey={Object.keys(i)[0]}
+            stackId="a"
+            fill={i.color}
+          />
+        ))} */}
+        <Bar dataKey="6" stackId="a" fill="#6DB9FF" />
         <Bar dataKey="6" stackId="a" fill="#6DB9FF" />
         <Bar dataKey="7" stackId="a" fill="rgba(188,212,118,.5)" />
         <Bar dataKey="2" stackId="a" fill="rgba(81,81,114,.5)" />

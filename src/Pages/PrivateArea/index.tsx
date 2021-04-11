@@ -34,6 +34,8 @@ import { InfoDeposits } from "./InfoDeposits";
 import { OnePage } from "./OnePage";
 import moment from "moment";
 import "moment/locale/ru";
+import { Balance } from "../../types/balance";
+import { TestTolltips, Tooltip } from "../../components/Tooltips/Tooltips";
 
 export const InfoMain = () => {
   const [addDeposit, setAddDeposit] = useState(false);
@@ -47,6 +49,9 @@ export const InfoMain = () => {
   );
   const [withdraw, setWithdraw] = useState(false);
   const [loadDeposit, setLoadDeposit] = useState(false);
+  const [condition, setContition] = useState(false);
+  const [depositSuccess, setDepositSuccess] = useState(false);
+  const [depositError, setDepositError] = useState(false);
   const [withdrawValue, setWithdrawValue] = useState("");
   const appContext = useContext(AppContext);
   const user = appContext.user;
@@ -60,6 +65,7 @@ export const InfoMain = () => {
   moment.locale(lang);
   const handleDepositModal = () => {
     setAddDeposit(false);
+    setDepositSuccess(false);
     setDepositListModal(true);
   };
 
@@ -108,9 +114,11 @@ export const InfoMain = () => {
           setWithdraw(false);
           setWithdrawValue("");
           if (res) {
-            alert(t("alert.success"), t("alert.depositMsg"), "success");
+            setDepositSuccess(true);
+            // alert(t("alert.success"), t("alert.depositMsg"), "success");
           } else {
-            alert(t("alert.error"), t("alert.depositErrorMsg"), "danger");
+            setDepositError(true);
+            // alert(t("alert.error"), t("alert.depositErrorMsg"), "danger");
           }
         })
         .catch((err: Error) => {
@@ -118,7 +126,8 @@ export const InfoMain = () => {
           setLoadDeposit(false);
           setWithdraw(false);
           setWithdrawValue("");
-          alert(t("alert.error"), t("alert.depositErrorMsg"), "danger");
+          setDepositError(true);
+          // alert(t("alert.error"), t("alert.depositErrorMsg"), "danger");
         })
         .finally(() => {
           setDepositSelect(null);
@@ -159,8 +168,17 @@ export const InfoMain = () => {
   };
 
   const balanceAsset = balanceList?.some(
-    (item) => item.balanceKind === depositSelect?.depositKind
+    (item) => item.balanceKind === depositSelect?.asset
   );
+
+  const balanseType = balanceList?.filter(
+    (i) => i.balanceKind === depositSelect?.asset
+  );
+
+  const asset =
+    balanseType && depositSelect && balanseType.length
+      ? balanseType[0].volume >= depositSelect?.minAmount
+      : false;
 
   if (user === null) {
     return null;
@@ -201,6 +219,11 @@ export const InfoMain = () => {
                 </Button>
               </Styled.InfoButtons>
             </Styled.InfoWrap>
+            <Styled.SmallButtonsWrap>
+              <Styled.SmallButton danger>1 FUTURE4</Styled.SmallButton>
+              <Styled.SmallButton blue>1 FUTURE5</Styled.SmallButton>
+              <Styled.SmallButton green>1 FUTURE6</Styled.SmallButton>
+            </Styled.SmallButtonsWrap>
             <Tabs>
               <Styled.NavTabs to="/info" exact>
                 <div>{t("privateArea.tabs.tab1")}</div>{" "}
@@ -220,6 +243,37 @@ export const InfoMain = () => {
           <Route path="/info/balance" component={InfoBalance} exact />
           <Route path="/info/deposits/:slug" component={OnePage} />
         </Switch>
+        <CSSTransition
+          in={depositSuccess}
+          timeout={0}
+          classNames="modal"
+          unmountOnExit
+        >
+          <Modal width={540} onClose={() => setDepositSuccess(false)}>
+            <Styled.ModalBlock>
+              <Styled.ModalTitle>Депозит успешно создан</Styled.ModalTitle>
+              <Styled.ModalButton onClick={handleDepositModal} danger>
+                Перейти к списку
+              </Styled.ModalButton>
+            </Styled.ModalBlock>
+          </Modal>
+        </CSSTransition>
+        <CSSTransition
+          in={depositError}
+          timeout={0}
+          classNames="modal"
+          unmountOnExit
+        >
+          <Modal width={540} onClose={() => setDepositError(false)}>
+            <Styled.ModalBlockWide>
+              <Styled.ModalTitle>Депозит не создан</Styled.ModalTitle>
+              <p>
+                Средства не будут списаны с лицевого счета. Обратитесь к
+                администратору.
+              </p>
+            </Styled.ModalBlockWide>
+          </Modal>
+        </CSSTransition>
         <div>
           {withdraw && (
             <Modal onClose={() => setWithdraw(false)}>
@@ -246,6 +300,26 @@ export const InfoMain = () => {
               </Styled.ModalBlock>
             </Modal>
           )}
+          <CSSTransition
+            in={condition}
+            timeout={0}
+            classNames="modal"
+            unmountOnExit
+          >
+            <Modal width={540} onClose={() => setContition(false)}>
+              <Styled.Conditions open>
+                {depositSelect ? (
+                  <p
+                    dangerouslySetInnerHTML={{
+                      __html: depositSelect.description,
+                    }}
+                  />
+                ) : (
+                  ""
+                )}
+              </Styled.Conditions>
+            </Modal>
+          </CSSTransition>
           <CSSTransition
             in={addDeposit && !depositListModal}
             timeout={300}
@@ -287,8 +361,32 @@ export const InfoMain = () => {
                     >
                       Добавить
                     </Styled.ModalButton>
+                    {depositSelect ? (
+                      <>
+                        <Styled.Program onClick={() => setContition(true)}>
+                          Условия программы
+                        </Styled.Program>
+                      </>
+                    ) : (
+                      <br />
+                    )}
+                    {depositSelect && !asset ? (
+                      <Styled.Warning>
+                        Для активации депозита необходимо{" "}
+                        {depositSelect.minAmount / 100000}{" "}
+                        {Balance[depositSelect.asset]}
+                      </Styled.Warning>
+                    ) : null}
+                    {depositSelect && asset ? (
+                      <Styled.Warning>
+                        При активации депозита будет списано{" "}
+                        {depositSelect.minAmount / 100000}{" "}
+                        {Balance[depositSelect.asset]}
+                      </Styled.Warning>
+                    ) : null}
+                    <Styled.ModalButton blue>Перевести</Styled.ModalButton>
                   </div>
-                  {depositSelect ? (
+                  {/* {depositSelect ? (
                     <Styled.Conditions>
                       <p
                         dangerouslySetInnerHTML={{
@@ -306,7 +404,7 @@ export const InfoMain = () => {
                     </Styled.Conditions>
                   ) : (
                     ""
-                  )}
+                  )} */}
                 </Styled.ModalDeposits>
               </Modal>
             </Styled.ModalDepositsWrap>
