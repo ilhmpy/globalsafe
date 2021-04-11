@@ -119,6 +119,16 @@ input[type=number] {
 }
 
 
+.tooltip-body {
+  position: fixed;
+  padding: 8px;
+  background: #333;
+  color: white;
+  box-shadow: 2px 2px 3px rgba(0 ,0, 0, 0.3);
+  text-align: center;
+  font-size: 16px;
+}
+
 .modal-enter {
   opacity: 0;
   transform: scale(0.9);

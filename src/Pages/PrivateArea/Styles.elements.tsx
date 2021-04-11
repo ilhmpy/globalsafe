@@ -238,11 +238,11 @@ export const Page = styled.div`
 `;
 
 export const InfoWrap = styled.div`
-  padding: 30px 90px 15px;
+  padding: 30px 90px 0px;
   display: flex;
   align-items: flex-start;
   @media (max-width: 992px) {
-    padding: 20px;
+    padding: 20px 20px 0px;
   }
 `;
 
@@ -606,6 +606,10 @@ export const ModalBlock = styled.div`
   padding: 50px 10px;
 `;
 
+export const ModalBlockWide = styled(ModalBlock)`
+  max-width: 380px;
+`;
+
 export const ModalWrap = styled.div`
   @media (max-width: 768px) {
     .close {
@@ -684,7 +688,13 @@ export const DateText = styled.p<{ red?: boolean }>`
 export const ModalList = styled.ul`
   list-style: none;
   width: 100%;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
+`;
+
+export const ModalListButton = styled(Button)`
+  margin-left: auto;
+  margin-right: auto;
+  width: 180px;
 `;
 
 export const ModalListText = styled.div<{ head?: boolean }>`
@@ -716,14 +726,43 @@ export const ModalListItem = styled.li`
   }
 `;
 
-export const Conditions = styled.div`
+export const Program = styled.div`
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 16px;
+  text-align: center;
+  margin: 15px 0 20px;
+  letter-spacing: 0.1px;
+  color: #515172;
+  cursor: pointer;
+  transition: 0.3s;
+  &:hover {
+    color: #ff416e;
+  }
+  @media (max-width: 992px) {
+    cursor: initial;
+  }
+`;
+
+export const Warning = styled.div`
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+  letter-spacing: 0.1px;
+  color: #ff416e;
+  text-align: left;
+  margin-bottom: 15px;
+`;
+
+export const Conditions = styled.div<{ open?: boolean }>`
   font-weight: normal;
   font-size: 14px;
   line-height: 16px;
   letter-spacing: 0.1px;
-  padding-left: 40px;
   color: #56657f;
-  max-width: 200px;
+  overflow: hidden;
+  max-height: ${(props) => (props.open ? "auto" : "0")};
+  transition: max-heihgt 0.3s;
   width: 100%;
   p {
     margin-bottom: 10px;
@@ -740,7 +779,10 @@ export const Conditions = styled.div`
 export const ModalDeposits = styled.div`
   display: flex;
   justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
   padding-bottom: 40px;
+  width: 200px;
   @media (max-width: 576px) {
     flex-wrap: wrap;
   }
@@ -748,4 +790,40 @@ export const ModalDeposits = styled.div`
 
 export const ModalDepositsWrap = styled.div`
   width: 540px;
+`;
+
+type ButtonSmall = {
+  blue?: boolean;
+  danger?: boolean;
+  green?: boolean;
+};
+
+export const SmallButton = styled.a<{ color: string }>`
+  border-radius: 24px;
+  font-weight: normal;
+  font-size: 10px;
+  line-height: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #ffffff;
+  padding: 4px 10px;
+  transition: 0.3s;
+  background: ${(props) => props.color};
+  /* cursor: pointer; */
+`;
+
+export const SmallButtonsWrap = styled.div`
+  display: flex;
+  align-items: center;
+  padding-left: 90px;
+  @media (max-width: 992px) {
+    padding-left: 20px;
+  }
+  padding-bottom: 5px;
+  ${SmallButton} {
+    margin-right: 7px;
+    width: 73px;
+  }
 `;

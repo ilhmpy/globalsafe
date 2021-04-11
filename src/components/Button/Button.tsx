@@ -140,6 +140,10 @@ export const Button = styled.a<Props>`
         border-color: rgba(109, 185, 255, 0.7);
         background-color:rgba(109, 185, 255, 0.7);
       }
+      &:active,
+      &:focus{
+        background:rgba(109, 185, 255, 0.7) !important;
+      }
       `;
     } else if (props.red) {
       return `

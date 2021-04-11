@@ -92,7 +92,7 @@ export const AdminPay = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<ListDeposits>("GetDeposits", 1, false, 0, 40)
+        .invoke<ListDeposits>("GetAllPublicDeposits", 1, false, 0, 40)
         .then((res) => {
           console.log("GetDeposits", res);
           setListDeposits(res.collection);
@@ -100,7 +100,7 @@ export const AdminPay = () => {
         .catch((err: Error) => console.log(err));
     }
   }, [hubConnection]);
-  console.log("checkList", checkList);
+
   const namesProgram = checkList.map((i: any) => i.label);
   const idProgram = listDeposits.filter((i) => namesProgram.includes(i.name));
   const searchSafeID = idProgram.map((i) => i.safeId);

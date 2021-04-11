@@ -112,6 +112,7 @@ export const InfoBalance = () => {
   const [loadDeposit, setLoadDeposit] = useState(false);
   const [totalDeposit, setTotalDeposit] = useState(0);
   const [depositList, setDepositList] = useState<any>([]);
+  const [chartList, setChartList] = useState<any>({});
   const inputRef = useRef<any>(null);
 
   const lang = localStorage.getItem("i18nextLng") || "ru";
@@ -279,6 +280,49 @@ export const InfoBalance = () => {
         });
     }
   };
+  // console.log("balance", balanceLog);
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection
+        .invoke("GetBalanceStats", openDate.from, openDate.to, balanceLogs, [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+        ])
+        .then((res) => {
+          // console.log("responce", res);
+          let result: any = {};
+          for (let key in res) {
+            if (res[key].length > 0) {
+              const newArr = res[key].map((i: any) => ({
+                operationKind: i[0],
+                type: i[1],
+                balance: i[2],
+                date: key,
+              }));
+              const d = moment(key).format("DD MMMM YYYY");
+              if (result[d]) {
+                result[d].push(...newArr);
+              } else {
+                result[d] = [...newArr];
+              }
+            }
+          }
+          setChartList(result);
+        })
+        .catch((err: Error) => {
+          console.log(err);
+        });
+    }
+  }, [hubConnection, openDate, balanceLogs]);
 
   const handleBalance = (id: number) => {
     if (id !== depositTabs) {
@@ -396,7 +440,7 @@ export const InfoBalance = () => {
       </Container>
       <Styled.ContainerChart>
         <Styled.InnerChart>
-          {balanceLog && <StackedColumn values={balanceLog} />}
+          {chartList && <StackedColumn values={chartList} />}
         </Styled.InnerChart>
       </Styled.ContainerChart>
       <Container>

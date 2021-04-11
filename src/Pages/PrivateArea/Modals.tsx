@@ -5,6 +5,7 @@ import { Modal } from "../../components/Modal/Modal";
 import { DepositsCollection } from "../../types/info";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
+import { Button } from "../../components/Button/Button";
 
 type Props = {
   depositListModal: boolean;
@@ -61,6 +62,12 @@ export const DepositListModal: FC<Props> = ({
               ))
             : ""}
         </Styled.ModalList>
+        <Styled.ModalListButton
+          onClick={() => setDepositListModal(false)}
+          danger
+        >
+          Понятно
+        </Styled.ModalListButton>
       </Modal>
     </CSSTransition>
   );

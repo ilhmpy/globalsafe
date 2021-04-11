@@ -6,7 +6,11 @@
     DIAMOND,
     CROWDBTC,
     CWDBONUS,
-    CARBONE
+    CARBONE,
+    BRONZE,
+    FUTURE4,
+    FUTURE5,
+    FUTURE6,
 }
 
 export type BalanceList = {
