@@ -53,6 +53,7 @@ export const InfoMain = () => {
   const [depositSuccess, setDepositSuccess] = useState(false);
   const [depositError, setDepositError] = useState(false);
   const [withdrawValue, setWithdrawValue] = useState("");
+  const [account, setAccount] = useState("");
   const appContext = useContext(AppContext);
   const user = appContext.user;
   const balance = appContext.balance;
@@ -139,9 +140,17 @@ export const InfoMain = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
+        .invoke("GetTopUpAccount")
+        .then((res) => setAccount(res))
+        .catch((e) => console.log(e));
+    }
+  }, [hubConnection]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection
         .invoke<RootDeposits>("GetDeposits", languale, false, 0, 40)
         .then((res) => {
-          // console.log("res dep", res);
           if (res.collection.length) {
             setDepositsList(res.collection);
           }
@@ -167,17 +176,21 @@ export const InfoMain = () => {
     }
   };
 
-  const balanceAsset = balanceList?.some(
-    (item) => item.balanceKind === depositSelect?.asset
-  );
+  const balanceAsset =
+    depositSelect && depositSelect?.priceKind !== null
+      ? balanceList?.some(
+          (item) => item.balanceKind === depositSelect?.priceKind
+        )
+      : true;
 
-  const balanseType = balanceList?.filter(
-    (i) => i.balanceKind === depositSelect?.asset
-  );
+  const balanseType =
+    depositSelect && depositSelect?.priceKind !== null
+      ? balanceList?.filter((i) => i.balanceKind === depositSelect?.priceKind)
+      : balanceList?.filter((i) => i.balanceKind === 1);
 
   const asset =
     balanseType && depositSelect && balanseType.length
-      ? balanseType[0].volume >= depositSelect?.minAmount
+      ? balanseType[0].volume >= depositSelect?.minAmount / 100000
       : false;
 
   const balanceChips = balanceList?.filter((item) => item.balanceKind !== 1);
@@ -185,7 +198,7 @@ export const InfoMain = () => {
   if (user === null) {
     return null;
   }
-
+  console.log("balanceAsset", balanceAsset);
   if (user === false) {
     return <Redirect to="/" />;
   }
@@ -211,6 +224,30 @@ export const InfoMain = () => {
                     {balance ? (balance / 100000).toLocaleString() : "0"}
                   </Styled.BalanceItemValue>
                 </Styled.BalanceItem>
+                <Styled.SmallButtonsWrapDesc>
+                  <Styled.SmallButtonsWrap>
+                    {balanceChips &&
+                      balanceChips.map((i, idx) => {
+                        let color = "#6DB9FF";
+                        if (i.balanceKind === 9) {
+                          color = "#FF416E";
+                        } else if (i.balanceKind === 10) {
+                          color = "#6DB9FF";
+                        } else if (i.balanceKind === 11) {
+                          color = "#BCD476";
+                        } else {
+                          color = "#6DB9FF";
+                        }
+
+                        return (
+                          <Styled.SmallButton color={color} key={idx}>
+                            <span>{i.volume}</span>&nbsp;
+                            {Balance[i.balanceKind]}
+                          </Styled.SmallButton>
+                        );
+                      })}
+                  </Styled.SmallButtonsWrap>
+                </Styled.SmallButtonsWrapDesc>
               </Styled.UserBlock>
               <Styled.InfoButtons>
                 <Button dangerOutline onClick={() => setAddDeposit(true)}>
@@ -221,27 +258,30 @@ export const InfoMain = () => {
                 </Button>
               </Styled.InfoButtons>
             </Styled.InfoWrap>
-            <Styled.SmallButtonsWrap>
-              {balanceChips &&
-                balanceChips.map((i) => {
-                  let color = "#6DB9FF";
-                  if (i.balanceKind === 9) {
-                    color = "#FF416E";
-                  } else if (i.balanceKind === 10) {
-                    color = "#6DB9FF";
-                  } else if (i.balanceKind === 11) {
-                    color = "#BCD476";
-                  } else {
-                    color = "#6DB9FF";
-                  }
+            <Styled.SmallButtonsWrapMob>
+              <Styled.SmallButtonsWrap>
+                {balanceChips &&
+                  balanceChips.map((i, idx) => {
+                    let color = "#6DB9FF";
+                    if (i.balanceKind === 9) {
+                      color = "#FF416E";
+                    } else if (i.balanceKind === 10) {
+                      color = "#6DB9FF";
+                    } else if (i.balanceKind === 11) {
+                      color = "#BCD476";
+                    } else {
+                      color = "#6DB9FF";
+                    }
 
-                  return (
-                    <Styled.SmallButton color={color}>
-                      {Balance[i.balanceKind]}
-                    </Styled.SmallButton>
-                  );
-                })}
-            </Styled.SmallButtonsWrap>
+                    return (
+                      <Styled.SmallButton color={color} key={idx}>
+                        <span>{i.volume}</span>&nbsp;
+                        {Balance[i.balanceKind]}
+                      </Styled.SmallButton>
+                    );
+                  })}
+              </Styled.SmallButtonsWrap>
+            </Styled.SmallButtonsWrapMob>
             <Tabs>
               <Styled.NavTabs to="/info" exact>
                 <div>{t("privateArea.tabs.tab1")}</div>{" "}
@@ -373,7 +413,7 @@ export const InfoMain = () => {
                     />
                     <Styled.ModalButton
                       as="button"
-                      disabled={!balanceAsset || !addDepositValue}
+                      disabled={!asset || !addDepositValue}
                       onClick={openNewDeposit}
                       danger
                     >
@@ -389,26 +429,33 @@ export const InfoMain = () => {
                       <br />
                     )}
                     {depositSelect && !asset ? (
-                      <Styled.Warning>
-                        Для активации депозита необходимо{" "}
-                        {depositSelect.minAmount / 100000}{" "}
-                        {Balance[depositSelect.asset]}
-                      </Styled.Warning>
+                      <>
+                        <Styled.Warning>
+                          Для активации депозита необходимо{" "}
+                          {depositSelect.minAmount / 100000}{" "}
+                          {depositSelect.priceKind
+                            ? Balance[depositSelect.priceKind]
+                            : "CWD"}
+                          , переведите средства на аккаунт <bdi>{account}</bdi>
+                        </Styled.Warning>
+                        <Styled.ModalButton
+                          blue
+                          href={`https://cwd.global/account/${user}/portfolio`}
+                          target="_blank"
+                        >
+                          Перевести
+                        </Styled.ModalButton>
+                      </>
                     ) : null}
                     {depositSelect && asset ? (
                       <Styled.Warning>
                         При активации депозита будет списано{" "}
                         {depositSelect.minAmount / 100000}{" "}
-                        {Balance[depositSelect.asset]}
+                        {depositSelect.priceKind
+                          ? Balance[depositSelect.priceKind]
+                          : "CWD"}
                       </Styled.Warning>
                     ) : null}
-                    <Styled.ModalButton
-                      blue
-                      href={`https://cwd.global/account/${user}/portfolio`}
-                      target="_blank"
-                    >
-                      Перевести
-                    </Styled.ModalButton>
                   </div>
                   {/* {depositSelect ? (
                     <Styled.Conditions>

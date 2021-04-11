@@ -14,6 +14,7 @@ import InfiniteScroll from "react-infinite-scroller";
 import { Scrollbars } from "react-custom-scrollbars";
 import { Loading } from "../../components/UI/Loading";
 import { useTranslation } from "react-i18next";
+import { Balance } from "../../types/balance";
 import { StackedColumn } from "../../components/Charts/StackedColumn";
 
 type Obj = {
@@ -47,7 +48,7 @@ const BalanceTable: FC<BalanceTableProps> = ({ balanceLog }) => {
       return t("operation.add");
     }
   };
-
+  console.log("balanceLog m", balanceLog);
   const dividentModal = (id: number) => {
     if (id === 7) {
       setDivModal(true);
@@ -80,6 +81,8 @@ const BalanceTable: FC<BalanceTableProps> = ({ balanceLog }) => {
             {(balanceLog.balance / 100000).toLocaleString("ru-RU", {
               maximumFractionDigits: 5,
             })}
+            &nbsp;
+            {Balance[balanceLog.asset]}
           </Styled.DataListSum>
         </Styled.DataListItem>
       </div>
@@ -193,6 +196,7 @@ export const InfoBalance = () => {
           20
         )
         .then((res: any) => {
+          console.log("GetUserDepositsCharges", res);
           setTotalDeposit(res.totalRecords);
           setNum(20);
           setLoading(false);
@@ -212,6 +216,7 @@ export const InfoBalance = () => {
                 balance: item.amount,
                 date: item.operationDate,
                 userDeposit: item.userDeposit,
+                asset: item.userDeposit ? item.userDeposit.deposit.asset : 1,
               };
 
               if (result[d]) {
@@ -298,22 +303,20 @@ export const InfoBalance = () => {
           10,
         ])
         .then((res) => {
-          // console.log("responce", res);
+          console.log("responce", res);
           let result: any = {};
           for (let key in res) {
-            if (res[key].length > 0) {
-              const newArr = res[key].map((i: any) => ({
-                operationKind: i[0],
-                type: i[1],
-                balance: i[2],
-                date: key,
-              }));
-              const d = moment(key).format("DD MMMM YYYY");
-              if (result[d]) {
-                result[d].push(...newArr);
-              } else {
-                result[d] = [...newArr];
-              }
+            const newArr = res[key].map((i: any) => ({
+              operationKind: i[0],
+              type: i[1],
+              balance: i[2],
+              date: key,
+            }));
+            const d = moment(key).format("DD MMMM YYYY");
+            if (result[d]) {
+              result[d].push(...newArr);
+            } else {
+              result[d] = [...newArr];
             }
           }
           setChartList(result);

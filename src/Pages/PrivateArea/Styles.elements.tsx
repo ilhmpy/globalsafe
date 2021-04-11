@@ -752,6 +752,9 @@ export const Warning = styled.div`
   color: #ff416e;
   text-align: left;
   margin-bottom: 15px;
+  bdi {
+    color: #6db9ff;
+  }
 `;
 
 export const Conditions = styled.div<{ open?: boolean }>`
@@ -792,12 +795,6 @@ export const ModalDepositsWrap = styled.div`
   width: 540px;
 `;
 
-type ButtonSmall = {
-  blue?: boolean;
-  danger?: boolean;
-  green?: boolean;
-};
-
 export const SmallButton = styled.a<{ color: string }>`
   border-radius: 24px;
   font-weight: normal;
@@ -811,19 +808,36 @@ export const SmallButton = styled.a<{ color: string }>`
   padding: 4px 10px;
   transition: 0.3s;
   background: ${(props) => props.color};
-  /* cursor: pointer; */
 `;
 
 export const SmallButtonsWrap = styled.div`
   display: flex;
   align-items: center;
-  padding-left: 90px;
+  padding-left: 0px;
   @media (max-width: 992px) {
-    padding-left: 20px;
+    padding-left: 0px;
+    flex-wrap: wrap;
   }
   padding-bottom: 5px;
   ${SmallButton} {
     margin-right: 7px;
-    width: 73px;
+    min-width: 73px;
+  }
+`;
+
+export const SmallButtonsWrapDesc = styled.div`
+  display: block;
+  @media (max-width: 576px) {
+    display: none;
+  }
+`;
+
+export const SmallButtonsWrapMob = styled.div`
+  display: none;
+  @media (max-width: 576px) {
+    display: block;
+    ${SmallButtonsWrap} {
+      padding-left: 20px;
+    }
   }
 `;

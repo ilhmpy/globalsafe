@@ -51,6 +51,7 @@ export interface DepositsCollection {
     account: string;
     asset: number;
     depositKind: number;
+    priceKind: number;
 }
 
 export interface RootDeposits {
