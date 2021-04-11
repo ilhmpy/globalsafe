@@ -141,7 +141,7 @@ export const InfoMain = () => {
       hubConnection
         .invoke<RootDeposits>("GetDeposits", languale, false, 0, 40)
         .then((res) => {
-          console.log("res dep", res);
+          // console.log("res dep", res);
           if (res.collection.length) {
             setDepositsList(res.collection);
           }
@@ -179,6 +179,8 @@ export const InfoMain = () => {
     balanseType && depositSelect && balanseType.length
       ? balanseType[0].volume >= depositSelect?.minAmount
       : false;
+
+  const balanceChips = balanceList?.filter((item) => item.balanceKind !== 1);
 
   if (user === null) {
     return null;
@@ -220,9 +222,25 @@ export const InfoMain = () => {
               </Styled.InfoButtons>
             </Styled.InfoWrap>
             <Styled.SmallButtonsWrap>
-              <Styled.SmallButton danger>1 FUTURE4</Styled.SmallButton>
-              <Styled.SmallButton blue>1 FUTURE5</Styled.SmallButton>
-              <Styled.SmallButton green>1 FUTURE6</Styled.SmallButton>
+              {balanceChips &&
+                balanceChips.map((i) => {
+                  let color = "#6DB9FF";
+                  if (i.balanceKind === 9) {
+                    color = "#FF416E";
+                  } else if (i.balanceKind === 10) {
+                    color = "#6DB9FF";
+                  } else if (i.balanceKind === 11) {
+                    color = "#BCD476";
+                  } else {
+                    color = "#6DB9FF";
+                  }
+
+                  return (
+                    <Styled.SmallButton color={color}>
+                      {Balance[i.balanceKind]}
+                    </Styled.SmallButton>
+                  );
+                })}
             </Styled.SmallButtonsWrap>
             <Tabs>
               <Styled.NavTabs to="/info" exact>
@@ -384,7 +402,13 @@ export const InfoMain = () => {
                         {Balance[depositSelect.asset]}
                       </Styled.Warning>
                     ) : null}
-                    <Styled.ModalButton blue>Перевести</Styled.ModalButton>
+                    <Styled.ModalButton
+                      blue
+                      href={`https://cwd.global/account/${user}/portfolio`}
+                      target="_blank"
+                    >
+                      Перевести
+                    </Styled.ModalButton>
                   </div>
                   {/* {depositSelect ? (
                     <Styled.Conditions>

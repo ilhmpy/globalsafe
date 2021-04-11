@@ -798,47 +798,20 @@ type ButtonSmall = {
   green?: boolean;
 };
 
-export const SmallButton = styled.a<ButtonSmall>`
+export const SmallButton = styled.a<{ color: string }>`
   border-radius: 24px;
   font-weight: normal;
   font-size: 10px;
   line-height: 12px;
   display: flex;
   align-items: center;
+  justify-content: center;
   text-align: center;
   color: #ffffff;
   padding: 4px 10px;
   transition: 0.3s;
-  cursor: pointer;
-  ${(props) => {
-    if (props.blue) {
-      return `
-        background: #6DB9FF;
-        &:hover{
-          background: rgba(109,185,255,.7)
-        }
-      `;
-    } else if (props.danger) {
-      return `
-      background: #FF416E;
-      &:hover{
-          background: rgba(255,65,110,.7)
-        }
-      `;
-    } else if (props.green) {
-      return `
-      background: #BCD476;
-      &:hover{
-          background: rgba(188,212,118,.7)
-        }
-      `;
-    } else {
-      return `background: #6DB9FF;
-      &:hover{
-          background: rgba(109,185,255,.7)
-        }`;
-    }
-  }}
+  background: ${(props) => props.color};
+  /* cursor: pointer; */
 `;
 
 export const SmallButtonsWrap = styled.div`
