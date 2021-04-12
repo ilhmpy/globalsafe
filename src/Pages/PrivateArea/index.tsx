@@ -36,6 +36,7 @@ import moment from "moment";
 import "moment/locale/ru";
 import { Balance } from "../../types/balance";
 import { TestTolltips, Tooltip } from "../../components/Tooltips/Tooltips";
+import { ReactComponent as Copy } from "../../assets/svg/copy.svg";
 
 export const InfoMain = () => {
   const [addDeposit, setAddDeposit] = useState(false);
@@ -190,7 +191,8 @@ export const InfoMain = () => {
 
   const asset =
     balanseType && depositSelect && balanseType.length
-      ? balanseType[0].volume >= depositSelect?.minAmount / 100000
+      ? balanseType[0].volume >= depositSelect?.minAmount / 100000 ||
+        balanseType[0].volume >= depositSelect?.price
       : false;
 
   const balanceChips = balanceList?.filter((item) => item.balanceKind !== 1);
@@ -202,7 +204,10 @@ export const InfoMain = () => {
   if (user === false) {
     return <Redirect to="/" />;
   }
-
+  const copy = (text: string) => {
+    alert(t("copy.copy"), t("copy.text"), "success");
+    navigator.clipboard.writeText(text);
+  };
   return (
     <>
       <Header />
@@ -434,6 +439,11 @@ export const InfoMain = () => {
                             ? Balance[depositSelect.priceKind]
                             : "CWD"}
                           , {t("depositSelect.transfer")} <bdi>{account}</bdi>
+                          <Styled.SmallRoundButton
+                            onClick={() => copy(account)}
+                          >
+                            <Copy />
+                          </Styled.SmallRoundButton>
                         </Styled.Warning>
                         <Styled.ModalButton
                           blue

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { UpTitle } from "../../../../components/UI/UpTitle";
 import { Container } from "../../../../globalStyles";
 import styled, { keyframes } from "styled-components/macro";
@@ -10,6 +10,19 @@ import { useTranslation } from "react-i18next";
 
 export const Banner = () => {
   const { t } = useTranslation();
+  const [scroll, setScroll] = useState(true);
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 400) {
+        setScroll(false);
+      } else {
+        setScroll(true);
+      }
+    };
+    handleScroll();
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
   return (
     <>
       <Container id="banner">
@@ -30,9 +43,7 @@ export const Banner = () => {
           Попробуйте бесплатно <ArrowIcon />
         </ButtonIcon>
       </Container> */}
-      <ScrollContainer>
-        <ScrollIcon />
-      </ScrollContainer>
+      <ScrollContainer>{scroll && <ScrollIcon />}</ScrollContainer>
     </>
   );
 };

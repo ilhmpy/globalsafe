@@ -235,5 +235,9 @@
        "close": "Closing a deposit",
        "withdraw": "Balance withdrawal",
        "add": "Balance replenishment" 
+    },
+    "copy":{
+        "copy": "Copied",
+        "text": "To clipboard"
     }
 }
