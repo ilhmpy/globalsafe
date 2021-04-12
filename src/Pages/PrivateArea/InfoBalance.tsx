@@ -81,7 +81,7 @@ const BalanceTable: FC<BalanceTableProps> = ({ balanceLog }) => {
             {(balanceLog.balance / 100000).toLocaleString("ru-RU", {
               maximumFractionDigits: 5,
             })}
-            &nbsp;
+            <br />
             {balanceLog.asset ? Balance[balanceLog.asset] : "CWD"}
           </Styled.DataListSum>
         </Styled.DataListItem>
@@ -199,6 +199,7 @@ export const InfoBalance = () => {
           20
         )
         .then((res: any) => {
+          console.log("GetUserDepositsCharges", res);
           setTotalDeposit(res.totalRecords);
           setNum(20);
           setLoading(false);
@@ -218,7 +219,7 @@ export const InfoBalance = () => {
                 balance: item.amount,
                 date: item.operationDate,
                 userDeposit: item.userDeposit,
-                asset: item.userDeposit ? item.userDeposit.deposit.asset : 1,
+                asset: item.balanceKind,
               };
 
               if (result[d]) {
@@ -238,6 +239,8 @@ export const InfoBalance = () => {
         });
     }
   }, [hubConnection, openDate, balanceLogs, languale]);
+
+  // console.log("balanceLog", balanceLog);
 
   const myLoad = () => {
     setCount(false);

@@ -1,7 +1,7 @@
 import React from "react";
 import { UpTitle } from "../../../../components/UI/UpTitle";
 import { Container } from "../../../../globalStyles";
-import styled from "styled-components/macro";
+import styled, { keyframes } from "styled-components/macro";
 import { Button } from "../../../../components/Button/Button";
 import { ReactComponent as Arrow } from "../../../../assets/svg/arrow.svg";
 import { ReactComponent as Scroll } from "../../../../assets/svg/scroll.svg";
@@ -31,11 +31,26 @@ export const Banner = () => {
         </ButtonIcon>
       </Container> */}
       <ScrollContainer>
-        <Scroll />
+        <ScrollIcon />
       </ScrollContainer>
     </>
   );
 };
+
+const move = keyframes`
+0% {
+    transform: translate(0%,-3px);
+    opacity: 1;
+  }
+  50% {
+    /* transform: translate(0%,2px); */
+    /* opacity: 1; */
+  }
+  100% {
+    transform: translate(0%,6px);
+    opacity: 0;
+  }
+`;
 
 const ButtonIcon = styled(Button)`
   max-width: 252px;
@@ -61,6 +76,17 @@ const TextBlock = styled.div`
     margin-bottom: calc(40px + 38 * ((100vw - 320px) / 740));
     font-size: calc(12px + 4 * ((100vw - 320px) / 740));
     line-height: calc(18px + 10 * ((100vw - 320px) / 740));
+  }
+`;
+
+const ScrollIconWrap = styled.div``;
+
+const ScrollIcon = styled(Scroll)`
+  .scroll {
+    /* animation-name: ${move};
+    animation-duration: 2s;
+    animation-iteration-count: infinite; */
+    animation: ${move} 2s linear infinite;
   }
 `;
 
