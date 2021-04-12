@@ -13,7 +13,7 @@ export const Banner = () => {
   const [scroll, setScroll] = useState(true);
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 400) {
+      if (window.scrollY > 100) {
         setScroll(false);
       } else {
         setScroll(true);
