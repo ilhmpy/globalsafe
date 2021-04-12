@@ -842,3 +842,19 @@ export const SmallButtonsWrapMob = styled.div`
     }
   }
 `;
+
+export const SmallRoundButton = styled.div`
+  height: 20px;
+  width: 20px;
+  margin-left: 5px;
+  display: inline-block;
+  border-radius: 50%;
+  padding: 2px;
+  /* border: 1px solid #333; */
+  background-color: #fff;
+  text-align: center;
+  cursor: pointer;
+  &:hover path {
+    fill: #6db9ff;
+  }
+`;
