@@ -85,7 +85,7 @@
             "closeDate": "Closing date",
             "sum": "Deposit amount",
             "nextDate": "Date next payments",
-            "paid": "Paid out"
+            "paid": "Paid"
         }
     },
     "adminMain":{
@@ -124,23 +124,23 @@
     },
     "adminPay":{
         "uptitle": "Payouts",
-        "title1": "To payoff",
-        "title2": "Paid out",
+        "title1": "To pay",
+        "title2": "Paid",
         "title3": "On approval",
-        "confirmButton": "Agree all",
+        "confirmButton": "Confirm all",
         "table":{
             "user":"User",
             "name": "Name",
-            "procent": "% profitability",
+            "procent": "% profit",
             "datePay": "Payout date",
             "profit": "Program yield",
             "contribution": "Deposit amount",
-            "payments": "Payout amount",
+            "payments": "Payout volume",
             "desc": "Program description",
             "category": "Category",
             "nextDate":"Date next payments",
             "openDate":"Opening date",
-            "paid":"Paid out",
+            "paid":"Paid",
             "amount":"Current number of",
             "cost":"Unit cost"
         },
@@ -155,6 +155,22 @@
         "confirm": "Confirm",
         "depositClose": "Closing a deposit",
         "dividents": "Accrual of dividends"
+    },
+    "depositSelect":{
+        "forActive": "To activate the deposit, you need",
+        "transfer": "transfer funds to your account",
+        "transferButton": "Transfer",
+        "balanceOff": "Upon activation, the deposit will be debited",
+        "condition": "Program conditions",
+        "add": "Add"
+    },
+    "depositSuccess":{
+        "title": "Deposit created successfully",
+        "button": "Go to the list"
+    },
+    "depositError":{
+        "title": "No deposit created",
+        "desc": "Funds will not be debited from your personal account. Please contact your administrator."
     },
     "privateArea":{
         "at": "Behind",
@@ -173,7 +189,7 @@
         "sum": "Amount",
         "desc": "Description",
         "deposit": "Deposit",
-        "toPay": "To payoff",
+        "toPay": "To pay",
         "take": "Receipts",
         "findings": "Findings",
         "openDeposits": "Open deposits",
@@ -197,7 +213,7 @@
         "dividents": "Accrual of dividends",
         "dateOpen": "Opening date",
         "nextDate":"Date of next payment",
-        "amountPay": "Payout amount",
+        "amountPay": "Payout volume",
         "procent": "Payout percentage",
         "notData": "No data",
         "dateEnd": "Deposit completion date",

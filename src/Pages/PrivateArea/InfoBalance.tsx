@@ -48,7 +48,7 @@ const BalanceTable: FC<BalanceTableProps> = ({ balanceLog }) => {
       return t("operation.add");
     }
   };
-  console.log("balanceLog m", balanceLog);
+
   const dividentModal = (id: number) => {
     if (id === 7) {
       setDivModal(true);
@@ -82,7 +82,7 @@ const BalanceTable: FC<BalanceTableProps> = ({ balanceLog }) => {
               maximumFractionDigits: 5,
             })}
             &nbsp;
-            {Balance[balanceLog.asset]}
+            {balanceLog.asset ? Balance[balanceLog.asset] : "CWD"}
           </Styled.DataListSum>
         </Styled.DataListItem>
       </div>
@@ -96,7 +96,7 @@ export const InfoBalance = () => {
   const [balanceLogs, setBalanceLogs] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8]);
   const [open, setOpen] = useState(false);
   const [openDate, setOpenDate] = useState<OpenDate>({
-    from: new Date("2019-01-01T00:47:45"),
+    from: new Date("2020-12-02T00:47:45"),
     to: new Date(),
   });
   const { t } = useTranslation();
@@ -160,7 +160,7 @@ export const InfoBalance = () => {
 
   const allDate = () => {
     setOpenDate({
-      from: new Date("2019-01-01T00:47:45"),
+      from: new Date("2020-12-02T00:47:45"),
       to: new Date(),
     });
     setSelected(t("privateArea.allTime"));
@@ -168,8 +168,11 @@ export const InfoBalance = () => {
   };
 
   useEffect(() => {
-    if (selected === t("privateArea.allTime")) {
+    console.log("selected", selected);
+    console.log("privateArea.allTime", t("privateArea.allTime"));
+    if (selected === "За все время" || selected === "For all the time") {
       setSelected(t("privateArea.allTime"));
+      allDate();
     } else {
       monthSelected();
     }
@@ -190,13 +193,12 @@ export const InfoBalance = () => {
         .invoke(
           "GetUserDepositsCharges",
           balanceLogs,
-          openDate.from || new Date("2021-02-09T00:47:45"),
+          openDate.from || new Date("2020-12-02T00:47:45"),
           openDate.to || new Date(),
           0,
           20
         )
         .then((res: any) => {
-          console.log("GetUserDepositsCharges", res);
           setTotalDeposit(res.totalRecords);
           setNum(20);
           setLoading(false);
@@ -306,12 +308,23 @@ export const InfoBalance = () => {
           console.log("responce", res);
           let result: any = {};
           for (let key in res) {
-            const newArr = res[key].map((i: any) => ({
-              operationKind: i[0],
-              type: i[1],
-              balance: i[2],
-              date: key,
-            }));
+            const newArr =
+              res[key].length > 0
+                ? res[key].map((i: any) => ({
+                    operationKind: i[0],
+                    type: i[1],
+                    balance: i[2],
+                    date: key,
+                  }))
+                : [
+                    {
+                      date: key,
+                      operationKind: 0,
+                      type: null,
+                      balance: 0,
+                    },
+                  ];
+
             const d = moment(key).format("DD MMMM YYYY");
             if (result[d]) {
               result[d].push(...newArr);
@@ -325,7 +338,7 @@ export const InfoBalance = () => {
           console.log(err);
         });
     }
-  }, [hubConnection, openDate, balanceLogs]);
+  }, [hubConnection, openDate, balanceLogs, languale]);
 
   const handleBalance = (id: number) => {
     if (id !== depositTabs) {

@@ -198,7 +198,7 @@ export const InfoMain = () => {
   if (user === null) {
     return null;
   }
-  console.log("balanceAsset", balanceAsset);
+  console.log("depositSelect", depositSelect);
   if (user === false) {
     return <Redirect to="/" />;
   }
@@ -309,9 +309,9 @@ export const InfoMain = () => {
         >
           <Modal width={540} onClose={() => setDepositSuccess(false)}>
             <Styled.ModalBlock>
-              <Styled.ModalTitle>Депозит успешно создан</Styled.ModalTitle>
+              <Styled.ModalTitle>{t("depositSuccess.title")}</Styled.ModalTitle>
               <Styled.ModalButton onClick={handleDepositModal} danger>
-                Перейти к списку
+                {t("depositSuccess.button")}
               </Styled.ModalButton>
             </Styled.ModalBlock>
           </Modal>
@@ -324,11 +324,8 @@ export const InfoMain = () => {
         >
           <Modal width={540} onClose={() => setDepositError(false)}>
             <Styled.ModalBlockWide>
-              <Styled.ModalTitle>Депозит не создан</Styled.ModalTitle>
-              <p>
-                Средства не будут списаны с лицевого счета. Обратитесь к
-                администратору.
-              </p>
+              <Styled.ModalTitle>{t("depositError.title")}</Styled.ModalTitle>
+              <p>{t("depositError.desc")}</p>
             </Styled.ModalBlockWide>
           </Modal>
         </CSSTransition>
@@ -417,12 +414,12 @@ export const InfoMain = () => {
                       onClick={openNewDeposit}
                       danger
                     >
-                      Добавить
+                      {t("depositSelect.add")}
                     </Styled.ModalButton>
                     {depositSelect ? (
                       <>
                         <Styled.Program onClick={() => setContition(true)}>
-                          Условия программы
+                          {t("depositSelect.condition")}
                         </Styled.Program>
                       </>
                     ) : (
@@ -431,26 +428,25 @@ export const InfoMain = () => {
                     {depositSelect && !asset ? (
                       <>
                         <Styled.Warning>
-                          Для активации депозита необходимо{" "}
-                          {depositSelect.minAmount / 100000}{" "}
+                          {t("depositSelect.forActive")}
+                          {depositSelect.price}
                           {depositSelect.priceKind
                             ? Balance[depositSelect.priceKind]
                             : "CWD"}
-                          , переведите средства на аккаунт <bdi>{account}</bdi>
+                          , {t("depositSelect.transfer")} <bdi>{account}</bdi>
                         </Styled.Warning>
                         <Styled.ModalButton
                           blue
                           href={`https://cwd.global/account/${user}/portfolio`}
                           target="_blank"
                         >
-                          Перевести
+                          {t("depositSelect.transferButton")}
                         </Styled.ModalButton>
                       </>
                     ) : null}
-                    {depositSelect && asset ? (
+                    {depositSelect && depositSelect.priceKind && asset ? (
                       <Styled.Warning>
-                        При активации депозита будет списано{" "}
-                        {depositSelect.minAmount / 100000}{" "}
+                        {t("depositSelect.forActive")} {depositSelect.price}{" "}
                         {depositSelect.priceKind
                           ? Balance[depositSelect.priceKind]
                           : "CWD"}
