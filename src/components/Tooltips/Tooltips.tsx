@@ -14,12 +14,12 @@ export const Tooltip = (props: any) => {
     if (el && el.current) {
       const dimensions = el.current.getBoundingClientRect();
 
-      styles.left = dimensions.left + dimensions.width / 2 - width / 2;
-      styles.left = Math.max(space, styles.left);
-      styles.left = Math.min(
-        styles.left,
-        document.body.clientWidth - width - space
-      );
+      styles.left = dimensions.left - width / 3;
+      // styles.left = Math.max(space, styles.left);
+      // styles.left = Math.min(
+      //   styles.left,
+      //   document.body.clientWidth - width - space
+      // );
       if (dimensions.top < window.innerHeight / 2) {
         styles.top = dimensions.top + dimensions.height + space;
       } else {
@@ -35,7 +35,7 @@ export const Tooltip = (props: any) => {
   };
 
   return (
-    <span
+    <div
       onMouseOver={showTooltip}
       onMouseOut={hideTooltip}
       className="tooltip-trigger-text"
@@ -46,11 +46,11 @@ export const Tooltip = (props: any) => {
       {visible && (
         <Portal>
           <div className="tooltip-body" style={style}>
-            {props.text}
+            <div dangerouslySetInnerHTML={{ __html: props.text }} />
           </div>
         </Portal>
       )}
-    </span>
+    </div>
   );
 };
 

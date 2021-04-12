@@ -423,9 +423,11 @@ export const InfoMain = () => {
                     </Styled.ModalButton>
                     {depositSelect ? (
                       <>
-                        <Styled.Program onClick={() => setContition(true)}>
-                          {t("depositSelect.condition")}
-                        </Styled.Program>
+                        <Tooltip text={depositSelect.description}>
+                          <Styled.Program onClick={() => setContition(true)}>
+                            {t("depositSelect.condition")}
+                          </Styled.Program>
+                        </Tooltip>
                       </>
                     ) : (
                       <br />

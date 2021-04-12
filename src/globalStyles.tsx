@@ -127,6 +127,10 @@ input[type=number] {
   box-shadow: 2px 2px 3px rgba(0 ,0, 0, 0.3);
   text-align: center;
   font-size: 16px;
+  display: block;
+  left: 0;
+  max-width: 400px;
+  z-index: 99999;
 }
 
 .modal-enter {
