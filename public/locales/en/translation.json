@@ -158,6 +158,8 @@
     },
     "depositSelect":{
         "forActive": "To activate the deposit, you need",
+        "willActiv": "Upon activation, the deposit will be debited",
+        "bill": "from your globalsafe account",
         "transfer": "transfer funds to your account",
         "transferButton": "Transfer",
         "balanceOff": "Upon activation, the deposit will be debited",
@@ -191,7 +193,7 @@
         "deposit": "Deposit",
         "toPay": "To pay",
         "take": "Receipts",
-        "findings": "Findings",
+        "findings": "Withdraws",
         "openDeposits": "Open deposits",
         "sumDeposits": "Amount in deposits",
         "sumDeposit": "Deposit amount",

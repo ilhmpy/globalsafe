@@ -428,7 +428,7 @@ export const InfoMain = () => {
                     {depositSelect && !asset ? (
                       <>
                         <Styled.Warning>
-                          {t("depositSelect.forActive")}
+                          {t("depositSelect.forActive")}&nbsp;
                           {depositSelect.price}
                           {depositSelect.priceKind
                             ? Balance[depositSelect.priceKind]
@@ -446,10 +446,13 @@ export const InfoMain = () => {
                     ) : null}
                     {depositSelect && depositSelect.priceKind && asset ? (
                       <Styled.Warning>
-                        {t("depositSelect.forActive")} {depositSelect.price}{" "}
+                        {t("depositSelect.willActiv")}&nbsp;{" "}
+                        {depositSelect.price}{" "}
                         {depositSelect.priceKind
                           ? Balance[depositSelect.priceKind]
                           : "CWD"}
+                        <br />
+                        {t("depositSelect.bill")}
                       </Styled.Warning>
                     ) : null}
                   </div>

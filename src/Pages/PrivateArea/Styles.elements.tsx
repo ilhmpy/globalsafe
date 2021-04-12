@@ -577,6 +577,7 @@ export const DataListSum = styled.div<{ plus?: boolean }>`
   color: ${(props) => (props.plus ? "#FF416E" : "#515172")};
   white-space: nowrap;
   padding-left: 20px;
+  text-align: right;
 `;
 
 export const DataListDate = styled.div`
