@@ -117,7 +117,9 @@ input[type=number] {
   transform-origin: 50% 50%;
   transition: all 300ms ease-in;
 }
-
+.notifications-component{
+  z-index: 999999;
+}
 
 .tooltip-body {
   position: fixed;

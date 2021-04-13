@@ -281,6 +281,19 @@ export const PaymentsListPay: FC<Prop> = ({ data }: Prop) => {
     e.stopPropagation();
     setOpen(true);
   };
+  const operation = (id: number) => {
+    if (id === 6) {
+      return t("operation.open");
+    } else if (id === 7) {
+      return t("operation.divedents");
+    } else if (id === 8) {
+      return t("operation.close");
+    } else if (id === 2) {
+      return t("operation.withdraw");
+    } else if (id === 1) {
+      return t("operation.add");
+    }
+  };
   return (
     <div>
       <CSSTransition in={open} timeout={300} classNames="modal" unmountOnExit>
@@ -293,9 +306,10 @@ export const PaymentsListPay: FC<Prop> = ({ data }: Prop) => {
           {moment(data.userDeposit.prevPayment).format("DD/MM/YYYY")}
         </TableBodyItemPaid>
         <TableBodyItemPaid>
-          {data.userDeposit.state === 4
-            ? t("depositList.depositClose")
-            : t("depositList.dividents")}
+          {operation(data.operationKind)}
+          {/* {data.userDeposit.state === 4 
+            ? t("depositList.depositClose") 
+            : t("depositList.dividents")} */}
         </TableBodyItemPaid>
         <TableBodyItemPaid>
           {data.userDeposit.baseAmountView.toLocaleString()}

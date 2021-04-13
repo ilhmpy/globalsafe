@@ -147,7 +147,7 @@ export const StackedColumn: FC<{ values: any }> = ({ values }) => {
           bottom: 5,
         }}
       >
-        <XAxis tick={{ fontSize: 0 }} tickLine={false} />
+        <XAxis tick={{ fontSize: 0 }} tickLine={true} />
         <YAxis tickFormatter={DataFormater} tick={{ fontSize: 10 }} />
         <Tooltip content={<CustomTooltip />} />
 
