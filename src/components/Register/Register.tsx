@@ -4,16 +4,17 @@ import { Container, Card } from "../../globalStyles";
 import styled from "styled-components/macro";
 import { Input } from "../../components/UI/Input";
 import { AppContext } from "../../context/HubContext";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import { CSSTransition } from "react-transition-group";
 import { useTranslation } from "react-i18next";
 
-export const LoginComponent = () => {
+export const RegisterComponent = () => {
   const [error, setError] = useState(true);
   const [login, setLogin] = useState(false);
   const [password, setPassword] = useState("");
   const [value, setValue] = useState("");
   const [where, setWhere] = useState(false);
+  const [cwdAccount, setCwdAccount] = useState(false);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const user = appContext.user;
@@ -37,20 +38,18 @@ export const LoginComponent = () => {
     setPassword(e.target.value);
   };
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // console.log("submit", value);
+  const onSubmit = () => {
     if (hubConnection) {
       hubConnection
         .invoke("CheckAccount", value)
         .then((res: boolean) => {
-          // console.log("res", res);
           if (res) {
             setError(true);
             loginSubmit();
           } else {
-            setError(false);
-            setValue("");
+            createAccount();
+            // setError(false);
+            // setValue("");
           }
         })
         .catch((err: Error) => console.log(err));
@@ -95,8 +94,43 @@ export const LoginComponent = () => {
   const onSubmitCode = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     singIn();
-    // setWhere(true);
-    // setLogin(false);
+  };
+
+  const createAccount = () => {
+    if (hubConnection) {
+      hubConnection
+        .invoke("CreateAccount", value, 1)
+        .then((res: boolean) => {
+          setError(true);
+          loginSubmit();
+        })
+        .catch((err: Error) => {
+          setError(false);
+          console.log(err);
+        });
+    }
+  };
+
+  const checkCwdAccount = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (hubConnection) {
+      hubConnection
+        .invoke("CheckCwdAccount", value)
+        .then((res: boolean) => {
+          if (res) {
+            setError(true);
+            setCwdAccount(true);
+            onSubmit();
+          } else {
+            setError(false);
+            setCwdAccount(false);
+          }
+        })
+        .catch((err: Error) => {
+          setError(false);
+          console.log(err);
+        });
+    }
   };
 
   return (
@@ -136,7 +170,7 @@ export const LoginComponent = () => {
           unmountOnExit
         >
           <FormBlock onSubmit={onSubmitCode}>
-            <H4>{t("login.signIn")}</H4>
+            <H4>{t("headerButton.register")}</H4>
             <Input
               value={password}
               name="password"
@@ -167,8 +201,8 @@ export const LoginComponent = () => {
           classNames="alert"
           unmountOnExit
         >
-          <FormBlock onSubmit={onSubmit}>
-            <H4>{t("login.signIn")}</H4>
+          <FormBlock onSubmit={checkCwdAccount}>
+            <H4>{t("headerButton.register")}</H4>
             <Input
               value={value}
               name="login"
@@ -184,7 +218,7 @@ export const LoginComponent = () => {
             <Submit as="button" danger type="submit" disabled={value === ""}>
               {t("login.getCode")}
             </Submit>
-            <LinkToPage to="/register">{t("headerButton.register")}</LinkToPage>
+            <LinkToPage to="/login">{t("login.in")}</LinkToPage>
           </FormBlock>
         </CSSTransition>
       </CardContainer>
