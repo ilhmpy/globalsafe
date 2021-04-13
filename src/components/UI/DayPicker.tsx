@@ -247,7 +247,7 @@ export const TestInput: FC<{
     to: undefined,
   });
   const ref = useRef(null);
-
+  const { t } = useTranslation();
   const handleClickOutside = () => {
     setShowOpen(false);
   };
@@ -263,12 +263,19 @@ export const TestInput: FC<{
   const handleChange = () => {
     if (selfDate.from && selfDate.to) {
       setOpenDate({ from: selfDate.from, to: selfDate.to });
-      setSelfDate({
-        from: undefined,
-        to: undefined,
-      });
     }
+    setShowOpen(false);
   };
+
+  const reset = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setOpenDate({ from: undefined, to: undefined });
+    setSelfDate({
+      from: undefined,
+      to: undefined,
+    });
+  };
+
   const lang = localStorage.getItem("i18nextLng") || "ru";
   const modifiers = { start: selfDate.from, end: selfDate.to };
 
@@ -284,6 +291,7 @@ export const TestInput: FC<{
             <span>
               {selfDate.to ? `-${moment(selfDate.to).format("DD.MM.YY")} ` : ""}
             </span>
+            {selfDate.from && <Close onClick={reset}>&times;</Close>}
           </DateInput>
         </BoxInput>
 
@@ -294,6 +302,7 @@ export const TestInput: FC<{
             onDayClick={handleDayClick}
             firstDayOfWeek={1}
             onTodayButtonClick={handleChange}
+            todayButton={t("ready")}
             modifiers={modifiers}
             weekdaysLong={WEEKDAYS_LONG}
             weekdaysShort={lang === "en" ? WEEKDAYS_SHORT_ENG : WEEKDAYS_SHORT}
@@ -739,14 +748,28 @@ const RangeInputs = styled.div`
     @media (max-width: 576px) {
       top: calc(100% - 12px);
     }
+    .DayPicker-Footer {
+      border-top: 1px solid rgba(66, 139, 202, 0.2);
+    }
+    .DayPicker-TodayButton:focus {
+      outline: none;
+    }
   }
+`;
+
+const Close = styled.div`
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  cursor: pointer;
+  margin-top: -11px;
 `;
 
 const DateInput = styled.div`
   border: 1px solid rgba(86, 101, 127, 0.3);
   box-sizing: border-box;
   border-radius: 2px;
-  width: 133px;
+  width: 142px;
   height: 40px;
   font-weight: normal;
   font-size: 14px;
@@ -756,6 +779,7 @@ const DateInput = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
   @media (max-width: 576px) {
     width: 100%;
     margin-bottom: 12px;

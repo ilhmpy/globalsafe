@@ -11,9 +11,11 @@
     "notFound": "No data found. Try changing your search parameters.",
     "headerButton":{
         "admin": "Admin",
-        "personalArea": "Personal Area"
+        "personalArea": "Personal Area",
+        "register": "Register"
     },
     "login": {
+        "in": "Sing In",
         "where": "Where to enter?",
         "signIn": "Sign In",
         "code": "Enter a code",
