@@ -33,6 +33,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { ModalDeposit } from "./AdminPay/Payments";
 import { Loading } from "../../components/UI/Loading";
 import { useTranslation } from "react-i18next";
+import { Rounds } from "./AdminPay/Rounds";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 type PayProps = {
@@ -240,112 +241,7 @@ export const AdminDeposit = () => {
         </Styled.UserName>
       </Styled.HeadBlock>
       <Styled.TitleHead>{t("adminDeposit.headTitle")}</Styled.TitleHead>
-      <div>
-        <DepositWrap>
-          {!size && (
-            <DepositInner>
-              <Swiper
-                spaceBetween={10}
-                slidesPerView={1}
-                pagination={{ clickable: true }}
-              >
-                {newArrayBig.map((i, idx) => (
-                  <SwiperSlide key={idx} style={{ maxWidth: 1130 }}>
-                    <SwiperInner>
-                      {!size &&
-                        i.map((item: DepositStats, idx: number) => {
-                          const color =
-                            "#" +
-                            Math.floor(Math.random() * 16777215)
-                              .toString(16)
-                              .padStart(6, "0");
-
-                          return (
-                            <DepositItem key={idx}>
-                              <Styled.PayItemHead mb>
-                                <UpTitle small>{item.depositName}</UpTitle>
-                              </Styled.PayItemHead>
-                              <RadialWrap>
-                                <HalfRound>
-                                  <span>{item.count}</span>
-                                  <HalfRoundBorder
-                                    width={size ? "47" : "90"}
-                                    height={size ? "63" : "123"}
-                                    color={color}
-                                  />
-                                </HalfRound>
-                                <Styled.Radial bg={color}>
-                                  <span>
-                                    {(item.amount / 100000)
-                                      .toFixed(1)
-                                      .toLocaleString()}
-                                  </span>
-                                  <span>CWD</span>
-                                </Styled.Radial>
-                              </RadialWrap>
-                            </DepositItem>
-                          );
-                        })}
-                    </SwiperInner>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-            </DepositInner>
-          )}
-          {size && (
-            <MySwiperContainer>
-              <Swiper
-                spaceBetween={50}
-                slidesPerView={1}
-                pagination={{ clickable: true }}
-              >
-                {newArrayMob.map((i, idx) => {
-                  return (
-                    <SwiperSlide key={idx}>
-                      <DepositItemWrap>
-                        {i.map((item: DepositStats, idx: number) => {
-                          const color =
-                            "#" +
-                            Math.floor(Math.random() * 16777215)
-                              .toString(16)
-                              .padStart(6, "0");
-                          return (
-                            <DepositItemInner key={idx}>
-                              <DepositItem>
-                                <Styled.PayItemHead mb>
-                                  <UpTitle small>{item.depositName}</UpTitle>
-                                </Styled.PayItemHead>
-                                <RadialWrap>
-                                  <HalfRound>
-                                    <span>{item.count}</span>
-                                    <HalfRoundBorder
-                                      width={"47"}
-                                      height={"63"}
-                                      color={color}
-                                    />
-                                  </HalfRound>
-                                  <Styled.Radial bg={color}>
-                                    <span>
-                                      {(item.amount / 100000)
-                                        .toFixed(1)
-                                        .toLocaleString()}
-                                    </span>
-                                    <span>CWD</span>
-                                  </Styled.Radial>
-                                </RadialWrap>
-                              </DepositItem>
-                            </DepositItemInner>
-                          );
-                        })}
-                      </DepositItemWrap>
-                    </SwiperSlide>
-                  );
-                })}
-              </Swiper>
-            </MySwiperContainer>
-          )}
-        </DepositWrap>
-      </div>
+      <Rounds />
 
       <Styled.FilterBlock>
         <Styled.SelectContainer>
