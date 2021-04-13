@@ -150,7 +150,7 @@ export const LoginComponent = () => {
               </StyledInlineErrorMessage>
             )}
             <Submit as="button" danger type="submit" disabled={password === ""}>
-              {t("logout")}
+              {t("login.in")}
             </Submit>
             <LinkTo
               href={`https://cwd.global/account/${value}`}
