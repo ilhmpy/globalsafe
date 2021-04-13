@@ -29,14 +29,21 @@ type PayProps = {
   data: PaymentsCollection;
 };
 
+type Pokedex = {
+  depositName: string;
+  count: number;
+  amount: number;
+  colors: string;
+};
+
 export const Rounds = () => {
   const [statsDeposit, setStatsDeposit] = useState<DepositStats[]>([]);
   const sizes = useWindowSize();
   const size = sizes < 768;
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
-  const [bigArr, setBigArr] = useState<any>([]);
-  const [smallArr, setSmallArr] = useState<any>([]);
+  const [bigArr, setBigArr] = useState<Pokedex[]>([]);
+  const [smallArr, setSmallArr] = useState<Pokedex[]>([]);
   const arrSizeBig = 10;
   const arrSizeMob = 4;
 
@@ -73,6 +80,7 @@ export const Rounds = () => {
     }
     setSmallArr(newArrayMob);
   }, [statsDeposit]);
+
   useEffect(() => {
     stats();
   }, [stats]);
@@ -82,7 +90,6 @@ export const Rounds = () => {
       hubConnection
         .invoke<DepositStats[]>("GetUsersDepositsStats")
         .then((res) => {
-          console.log("res", res);
           setStatsDeposit(res);
         })
         .catch((err: Error) => console.log(err));
@@ -152,7 +159,7 @@ export const Rounds = () => {
                 return (
                   <SwiperSlide key={idx}>
                     <DepositItemWrap>
-                      {i.map((item: DepositStats, idx: number) => {
+                      {i.map((item: any, idx: number) => {
                         const color =
                           "#" +
                           Math.floor(Math.random() * 16777215)
@@ -170,10 +177,10 @@ export const Rounds = () => {
                                   <HalfRoundBorder
                                     width={"47"}
                                     height={"63"}
-                                    color={color}
+                                    color={item.colors}
                                   />
                                 </HalfRound>
-                                <Styled.Radial bg={color}>
+                                <Styled.Radial bg={item.colors}>
                                   <span>
                                     {(item.amount / 100000)
                                       .toFixed(1)
