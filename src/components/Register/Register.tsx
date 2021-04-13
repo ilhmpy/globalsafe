@@ -43,6 +43,7 @@ export const RegisterComponent = () => {
       hubConnection
         .invoke("CheckAccount", value)
         .then((res: boolean) => {
+          console.log("CheckAccount", res);
           if (res) {
             setError(true);
             loginSubmit();
@@ -117,6 +118,7 @@ export const RegisterComponent = () => {
       hubConnection
         .invoke("CheckCwdAccount", value)
         .then((res: boolean) => {
+          console.log("CheckCwdAccount", res);
           if (res) {
             setError(true);
             setCwdAccount(true);
@@ -184,7 +186,7 @@ export const RegisterComponent = () => {
               </StyledInlineErrorMessage>
             )}
             <Submit as="button" danger type="submit" disabled={password === ""}>
-              {t("logout")}
+              {t("login.in")}
             </Submit>
             <LinkTo
               href={`https://cwd.global/account/${value}`}
