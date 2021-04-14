@@ -63,7 +63,12 @@ export const InputWrap: FC<{
           onKeyDown={onKeyDown}
         />
       ) : (
-        <Text dis={done}>
+        <Text
+          dis={done}
+          title={
+            +val > 0 ? Number(val).toFixed(1) : Number(placeholder).toFixed(1)
+          }
+        >
           {+val > 0 ? Number(val).toFixed(1) : Number(placeholder).toFixed(1)}
         </Text>
       )}
@@ -80,6 +85,9 @@ export const InputWrap: FC<{
 const Text = styled.div<{ dis?: boolean }>`
   color: ${(props) => (props.dis ? "#c4c4c4" : "#515172")};
   width: 75px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   margin-right: 6px;
   font-size: 14px;
 `;

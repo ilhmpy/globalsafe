@@ -265,11 +265,13 @@ export const AdminDeposit = () => {
                 label={t("adminDeposit.labelOpen")}
               />
             </InputsWrapItem>
-            <TestInput
-              setOpenDate={setCloseDate}
-              openDate={closeDate}
-              label={t("adminDeposit.labelDate")}
-            />
+            <InputsWrapItem>
+              <TestInput
+                setOpenDate={setCloseDate}
+                openDate={closeDate}
+                label={t("adminDeposit.labelDate")}
+              />
+            </InputsWrapItem>
           </Styled.InputsWrap>
 
           <Button danger onClick={submit}>
