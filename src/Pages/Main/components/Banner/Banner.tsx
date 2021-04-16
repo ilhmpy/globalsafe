@@ -7,6 +7,8 @@ import { ReactComponent as Arrow } from "../../../../assets/svg/arrow.svg";
 import { ReactComponent as Scroll } from "../../../../assets/svg/scroll.svg";
 import { H1 } from "../../../../components/UI/MainStyled";
 import { useTranslation } from "react-i18next";
+import { CurrencyValues } from "../../../../components/CurrencyValues";
+import { Payments } from "../Payments/Payments";
 
 export const Banner = () => {
   const { t } = useTranslation();
@@ -44,6 +46,8 @@ export const Banner = () => {
         </ButtonIcon>
       </Container> */}
       <ScrollContainer>{scroll && <ScrollIcon />}</ScrollContainer>
+      <CurrencyValues />
+      <Payments />
     </>
   );
 };
@@ -94,9 +98,6 @@ const ScrollIconWrap = styled.div``;
 
 const ScrollIcon = styled(Scroll)`
   .scroll {
-    /* animation-name: ${move};
-    animation-duration: 2s;
-    animation-iteration-count: infinite; */
     animation: ${move} 2s linear infinite;
   }
 `;

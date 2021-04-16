@@ -192,8 +192,8 @@ export const ContainerRow = styled(Container)`
   flex-wrap: wrap;
 `;
 
-export const Card = styled.div`
-  background: #fff;
+export const Card = styled.div<{ alfa?: boolean }>`
+  background: ${(props) => (props.alfa ? "rgba(255, 255, 255, 0.4)" : "#fff")};
   width: 100%;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
