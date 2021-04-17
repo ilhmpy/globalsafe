@@ -1,43 +1,202 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext, FC } from "react";
 import Chart from "react-apexcharts";
 import styled from "styled-components/macro";
 import moment from "moment";
 import { Container, Card } from "../../globalStyles";
-import lineRed from "../../assets/svg/lineRed.svg";
-import lineBlue from "../../assets/svg/lineBlue.svg";
-import lineGreen from "../../assets/svg/lineGreen.svg";
+import greenBg from "../../assets/svg/greenBack.svg";
+import redBg from "../../assets/svg/redBack.svg";
+import { AppContext } from "../../context/HubContext";
+import { RootChange, Collection } from "../../types/currency";
+import { CSSTransition } from "react-transition-group";
 
 export const CurrencyValues = () => {
+  const appContext = useContext(AppContext);
+  const hubConnection = appContext.hubConnection;
   const [active, setActive] = useState(0);
+  const [listDIAMOND, setListDIAMOND] = useState<Collection[]>([]);
+  const [listMGCWD, setListMGCWD] = useState<Collection[]>([]);
+  const [listGCWD, setListGCWD] = useState<Collection[]>([]);
+
+  useEffect(() => {
+    const dateFrom: any = moment().subtract(7, "days");
+    if (hubConnection) {
+      hubConnection
+        .invoke<RootChange>("GetMarket", 4, dateFrom._d, new Date(), 0, 40)
+        .then((res) => {
+          setListDIAMOND(res.collection);
+        })
+        .catch((e) => console.log(e));
+    }
+  }, [hubConnection]);
+
+  useEffect(() => {
+    const dateFrom: any = moment().subtract(7, "days");
+    if (hubConnection) {
+      hubConnection
+        .invoke<RootChange>("GetMarket", 3, dateFrom._d, new Date(), 0, 40)
+        .then((res) => {
+          setListMGCWD(res.collection);
+          console.log("GetMarket", res);
+        })
+        .catch((e) => console.log(e));
+    }
+  }, [hubConnection]);
+
+  useEffect(() => {
+    const dateFrom: any = moment().subtract(7, "days");
+    if (hubConnection) {
+      hubConnection
+        .invoke<RootChange>("GetMarket", 2, dateFrom._d, new Date(), 0, 40)
+        .then((res) => {
+          setListGCWD(res.collection);
+          console.log("GetMarket", res);
+        })
+        .catch((e) => console.log(e));
+    }
+  }, [hubConnection]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection.on("MarketNotification", (data) => {
+        console.log("MarketNotification", data);
+        if (data.assetKind === 2) {
+          setListGCWD([data, ...listGCWD]);
+        } else if (data.assetKind === 3) {
+          setListMGCWD([data, ...listMGCWD]);
+        } else {
+          setListDIAMOND([data, ...listDIAMOND]);
+        }
+      });
+    }
+  }, [hubConnection]);
+
+  const changeValue = (data: Collection[]) => {
+    const currValue = data[0].latestBid;
+    const prevValue = data[1].latestBid;
+
+    const value = ((currValue - prevValue) / currValue) * 100;
+    if (value > 0) {
+      return <ChartItemChange>{value.toFixed(2)} &nbsp;%</ChartItemChange>;
+    } else {
+      return <ChartItemChange red>{value.toFixed(2)}&nbsp;%</ChartItemChange>;
+    }
+  };
+
   return (
     <div>
       <Container>
         <Wrapper>
           <ChartItems>
-            <ChartItem alfa>
+            <ChartItem alfa onClick={() => setActive(0)} active={active === 0}>
               <ChartItemInner>
-                <ChartItemName>GCWD</ChartItemName>
-                <ChartItemValue red>707.39 CWD</ChartItemValue>
+                <ChartItemHead>
+                  <ChartItemName>GCWD</ChartItemName>
+                  {listGCWD.length && changeValue(listGCWD)}
+                </ChartItemHead>
+
+                <ChartItemValue>
+                  {listGCWD.length &&
+                    (listGCWD[0].latestBid / 100000).toLocaleString("ru-RU", {
+                      maximumFractionDigits: 2,
+                    })}{" "}
+                  CWD
+                </ChartItemValue>
               </ChartItemInner>
-              <img src={lineBlue} alt="" />
             </ChartItem>
-            <ChartItem alfa>
+            <ChartItem alfa onClick={() => setActive(1)} active={active === 1}>
               <ChartItemInner>
-                <ChartItemName>MGCWD</ChartItemName>
-                <ChartItemValue blue>437.39 CWD</ChartItemValue>
+                <ChartItemHead>
+                  <ChartItemName>MGCWD</ChartItemName>
+                  {listMGCWD.length && changeValue(listMGCWD)}
+                </ChartItemHead>
+                <ChartItemValue>
+                  {listMGCWD.length &&
+                    (listMGCWD[0].latestBid / 100000).toLocaleString("ru-RU", {
+                      maximumFractionDigits: 2,
+                    })}{" "}
+                  CWD
+                </ChartItemValue>
               </ChartItemInner>
-              <img src={lineRed} alt="" />
             </ChartItem>
-            <ChartItem alfa>
+            <ChartItem
+              alfa
+              red
+              onClick={() => setActive(2)}
+              active={active === 2}
+            >
               <ChartItemInner>
-                <ChartItemName>DIAMOND</ChartItemName>
-                <ChartItemValue green>489.21 CWD</ChartItemValue>
+                <ChartItemHead>
+                  <ChartItemName>DIAMOND</ChartItemName>
+                  {listDIAMOND.length && changeValue(listDIAMOND)}
+                </ChartItemHead>
+                <ChartItemValue>
+                  {listDIAMOND.length &&
+                    (listDIAMOND[0].latestBid / 100).toLocaleString("ru-RU", {
+                      maximumFractionDigits: 2,
+                    })}{" "}
+                  CWD
+                </ChartItemValue>
               </ChartItemInner>
-              <img src={lineGreen} alt="" />
             </ChartItem>
           </ChartItems>
           <Charts alfa>
-            <ApexChart />
+            <CSSTransition
+              in={active === 0}
+              timeout={0}
+              classNames="modal"
+              unmountOnExit
+            >
+              <>
+                <ApexChart values={listGCWD.map((i) => i.latestBid / 100)} />
+                <DescChart>
+                  <span>Сегодня</span>
+                  <span>
+                    {listGCWD.length &&
+                      moment(listGCWD[listGCWD.length - 1].date).format(
+                        "MMMM `DD"
+                      )}
+                  </span>
+                </DescChart>
+              </>
+            </CSSTransition>
+            <CSSTransition
+              in={active === 1}
+              timeout={0}
+              classNames="modal"
+              unmountOnExit
+            >
+              <>
+                <ApexChart values={listMGCWD.map((i) => i.latestBid / 100)} />
+                <DescChart>
+                  <span>Сегодня</span>
+                  <span>
+                    {listMGCWD.length &&
+                      moment(listMGCWD[listMGCWD.length - 1].date).format(
+                        "MMMM `DD"
+                      )}
+                  </span>
+                </DescChart>
+              </>
+            </CSSTransition>
+            <CSSTransition
+              in={active === 2}
+              timeout={0}
+              classNames="modal"
+              unmountOnExit
+            >
+              <>
+                <ApexChart values={listDIAMOND.map((i) => i.latestBid / 100)} />
+                <DescChart>
+                  <span>Сегодня</span>
+                  <span>
+                    {listDIAMOND.length &&
+                      moment(listDIAMOND[listDIAMOND.length - 1].date).format(
+                        "MMMM `DD"
+                      )}
+                  </span>
+                </DescChart>
+              </>
+            </CSSTransition>
           </Charts>
         </Wrapper>
       </Container>
@@ -45,17 +204,36 @@ export const CurrencyValues = () => {
   );
 };
 
-const ApexChart = () => {
+type ChartProps = {
+  values: number[];
+};
+
+const ApexChart: FC<ChartProps> = ({ values }) => {
   const data = {
     series: [
       {
-        name: "STOCK ABC",
-        data: ["12", "18"],
+        data: values,
       },
     ],
     options: {
       chart: {
         type: "area",
+        animations: {
+          enabled: true,
+          easing: "easeinout",
+          speed: 350,
+          animateGradually: {
+            enabled: true,
+            delay: 500,
+          },
+          dynamicAnimation: {
+            enabled: true,
+            speed: 850,
+          },
+        },
+        labels: {
+          show: false,
+        },
         zoom: {
           enabled: false,
         },
@@ -71,8 +249,14 @@ const ApexChart = () => {
         curve: "smooth",
         width: 2,
       },
-      labels: ["Сегодня", "18"],
+      labels: [""],
       xaxis: {
+        tooltip: {
+          enabled: false,
+        },
+        labels: {
+          show: false,
+        },
         type: "category",
         axisBorder: {
           show: false,
@@ -82,6 +266,10 @@ const ApexChart = () => {
         },
       },
       yaxis: {
+        show: false,
+        tooltip: {
+          enabled: false,
+        },
         labels: {
           show: false,
         },
@@ -90,14 +278,15 @@ const ApexChart = () => {
         show: false,
       },
       legend: {
-        horizontalAlign: "center",
+        show: false,
       },
       tooltip: {
         custom: function ({ series, seriesIndex, dataPointIndex, w }: any) {
           return `
-          <div class="column-toltip">
-          <div class="column-toltip-light">fgh21</div>
-            <div class="column-toltip-bold">dfhdfgh</div>
+          <div class="currency-toltip">
+            <div >${w.globals.stackedSeriesTotals[
+              dataPointIndex
+            ].toLocaleString()} CWD</div>
           </div>
           `;
         },
@@ -127,6 +316,22 @@ const ApexChart = () => {
   );
 };
 
+const DescChart = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: absolute;
+  bottom: 20px;
+  left: 65px;
+  right: 12px;
+  span {
+    color: rgba(81, 81, 114, 0.6);
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 21px;
+  }
+`;
+
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
@@ -138,15 +343,44 @@ const Wrapper = styled.div`
 `;
 
 const Charts = styled(Card)`
-  padding: 10px 36px;
+  padding: 10px 20px;
   height: 300px;
   max-width: 700px;
+  position: relative;
   width: 100%;
   border: 1px solid #ffffff;
   @media (max-width: 768px) {
     max-width: 100%;
     height: auto;
     padding: 6px 0px;
+  }
+`;
+
+const ChartItemHead = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const ChartItemChange = styled.div<{ red?: boolean }>`
+  position: relative;
+  margin-left: 40px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+  color: ${(props) => (props.red ? " #FF416E" : "#BCD476")};
+  &:before {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: -20px;
+    top: 50%;
+    margin-top: -4px;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    border-top: 6px solid ${(props) => (props.red ? " #FF416E" : "#BCD476")};
+    transform: ${(props) => (props.red ? "rotate(0)" : "rotate(180deg)")};
   }
 `;
 
@@ -160,17 +394,25 @@ const ChartItems = styled.div`
   }
 `;
 
-const ChartItemInner = styled.div``;
+const ChartItemInner = styled.div`
+  width: 100%;
+`;
 
-const ChartItem = styled(Card)`
+const ChartItem = styled(Card)<{ red?: boolean; active?: boolean }>`
   text-align: left;
   margin: 0 auto;
   padding: 6px 18px;
   margin-bottom: 20px;
   display: flex;
-  border: 1px solid #ffffff;
+  border: 1px solid ${(props) => (props.active ? "#FF416E" : "#ffffff")};
   justify-content: space-between;
   align-items: center;
+  background: ${(props) => (props.red ? `url(${redBg})` : `url(${greenBg})`)};
+  background-repeat: no-repeat;
+  /* background-size: cover; */
+  background-origin: content-box;
+  cursor: pointer;
+  transition: border 0.2s;
 `;
 
 const ChartItemName = styled.div`
@@ -191,28 +433,11 @@ const ChartItemValue = styled.div<Colors>`
   font-weight: 500;
   font-size: 36px;
   line-height: 42px;
-  color: #ff416e;
+  color: #515172;
+  opacity: 1;
+  transition: opacity 0.5s ease-in;
   @media (max-width: 768px) {
     font-size: 24px;
     line-height: 28px;
   }
-  ${(props) => {
-    if (props.blue) {
-      return `
-            color:rgba(109, 185, 255, 1);
-          `;
-    }
-    if (props.red) {
-      return `
-            color:rgba(255, 65, 110, 1);
-          `;
-    }
-    if (props.green) {
-      return `
-            color:rgba(188, 212, 118, 1);
-          `;
-    } else {
-      return `color:rgba(109, 185, 255, 1);`;
-    }
-  }}
 `;

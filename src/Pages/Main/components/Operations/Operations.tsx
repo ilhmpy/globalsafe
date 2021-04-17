@@ -1,11 +1,29 @@
-import React from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Page } from "../../../../components/UI/Page";
 import { H1 } from "../../../../components/UI/MainStyled";
 import { Card, Container } from "../../../../globalStyles";
 import styled from "styled-components/macro";
 import { Button } from "../../../../components/Button/Button";
+import { AppContext } from "../../../../context/HubContext";
 
 export const Operations = () => {
+  const appContext = useContext(AppContext);
+  const hubConnection = appContext.hubConnection;
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection.on("OperationNotification", (data) =>
+        console.log("OperationNotification", data)
+      );
+      hubConnection
+        .invoke("GetOperationsNotifications", [4], 0, 30)
+        .then((res) => {
+          console.log("GetOperationsNotifications", res);
+        })
+        .catch((e) => console.log(e));
+    }
+  }, [hubConnection]);
+
   return (
     <Page>
       <Container>
