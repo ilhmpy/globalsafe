@@ -7,13 +7,15 @@ import { ReactComponent as Arrow } from "../../../../assets/svg/arrow.svg";
 import { ReactComponent as Scroll } from "../../../../assets/svg/scroll.svg";
 import { H1 } from "../../../../components/UI/MainStyled";
 import { useTranslation } from "react-i18next";
+import { CurrencyValues } from "../../../../components/CurrencyValues";
+import { Payments } from "../Payments/Payments";
 
 export const Banner = () => {
   const { t } = useTranslation();
   const [scroll, setScroll] = useState(true);
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 100) {
+      if (window.scrollY > 800) {
         setScroll(false);
       } else {
         setScroll(true);
@@ -43,6 +45,8 @@ export const Banner = () => {
           Попробуйте бесплатно <ArrowIcon />
         </ButtonIcon>
       </Container> */}
+      <CurrencyValues />
+      <Payments />
       <ScrollContainer>{scroll && <ScrollIcon />}</ScrollContainer>
     </>
   );
@@ -94,16 +98,13 @@ const ScrollIconWrap = styled.div``;
 
 const ScrollIcon = styled(Scroll)`
   .scroll {
-    /* animation-name: ${move};
-    animation-duration: 2s;
-    animation-iteration-count: infinite; */
     animation: ${move} 2s linear infinite;
   }
 `;
 
 const ScrollContainer = styled(Container)`
-  padding-top: 140px;
-  padding-bottom: 140px;
+  padding-top: 60px;
+  padding-bottom: 60px;
   @media (max-width: 1060px) {
     display: none;
   }

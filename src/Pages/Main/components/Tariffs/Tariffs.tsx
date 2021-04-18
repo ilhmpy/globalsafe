@@ -29,6 +29,7 @@ import {
   CollectionListDeposits,
 } from "../../../../types/deposits";
 import { useTranslation } from "react-i18next";
+import { Page } from "../../../../components/UI/Page";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
@@ -175,7 +176,7 @@ export const Tariffs = () => {
   };
 
   return (
-    <div>
+    <Page>
       <Container id="tariffs">
         <UpTitle small>{t("tariffs.uptitle")}</UpTitle>
       </Container>
@@ -240,6 +241,6 @@ export const Tariffs = () => {
           ))}
         </Swiper>
       </SwiperContainer>
-    </div>
+    </Page>
   );
 };

@@ -84,6 +84,13 @@ a{
   text-align: center;
   color: #0E0D3D;
 }
+.currency-toltip{
+  padding: 6px;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 14px;
+  color: #515172;
+}
 #chart1 .apexcharts-tooltip,
 #chart2 .apexcharts-tooltip{
   background: rgba(255, 255, 255, 1);
@@ -192,8 +199,8 @@ export const ContainerRow = styled(Container)`
   flex-wrap: wrap;
 `;
 
-export const Card = styled.div`
-  background: #fff;
+export const Card = styled.div<{ alfa?: boolean }>`
+  background: ${(props) => (props.alfa ? "rgba(255, 255, 255, 0.4)" : "#fff")};
   width: 100%;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
   border-radius: 10px;

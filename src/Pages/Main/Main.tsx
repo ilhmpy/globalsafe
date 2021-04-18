@@ -7,6 +7,7 @@ import { Tariffs } from "./components/Tariffs/Tariffs";
 import { About } from "./components/About/About";
 import { Footer } from "../../components/Footer/Footer";
 import { Contact } from "./components/Contact/Contact";
+import { Operations } from "./components/Operations/Operations";
 
 export const Main = () => {
   return (
@@ -14,6 +15,7 @@ export const Main = () => {
       <Header />
       <MainPage>
         <Banner />
+        <Operations />
         <Tariffs />
         <About />
         <Contact />

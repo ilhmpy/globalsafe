@@ -736,12 +736,12 @@ const RangeInputs = styled.div`
   ${CustomDatePicker} {
     position: absolute;
     top: 30px;
-    right: -30px;
+    right: -125px;
     z-index: 9999;
     @media (max-width: 992px) {
       top: 100%;
       right: auto;
-      left: 40px;
+      left: 0px;
     }
     @media (max-width: 768px) {
       right: 0px;

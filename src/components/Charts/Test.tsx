@@ -672,23 +672,43 @@ export const ColumnChartTwo: FC<PropsColumn> = ({ date, value }) => {
   );
 };
 
-export const RadialBar = () => {
+type RadialProps = {
+  values: number;
+  color: string;
+  height?: number;
+};
+
+export const RadialBar: FC<RadialProps> = ({ values, color, height = 210 }) => {
   const data = {
-    series: [10000000000000],
+    series: [values],
     options: {
       chart: {
         height: 350,
         type: "radialBar",
       },
-      colors: ["rgba(188, 212, 118, .2)"],
+      colors: [color],
       plotOptions: {
         radialBar: {
           hollow: {
             size: "70%",
+            background: "transparent",
+          },
+          dataLabels: {
+            show: false,
+            name: {
+              show: true,
+              fontSize: "18px",
+              fontFamily: "Roboto, sans-serif",
+              fontWeight: 600,
+              color: "#0E0D3D",
+              offsetY: -20,
+            },
           },
         },
       },
-      labels: ["Cricket"],
+      stroke: {
+        lineCap: "round",
+      },
     },
   };
 
@@ -698,7 +718,7 @@ export const RadialBar = () => {
         options={data.options}
         series={data.series}
         type="radialBar"
-        height={145}
+        height={height}
       />
     </div>
   );

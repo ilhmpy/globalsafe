@@ -148,6 +148,12 @@ export const InfoMain = () => {
   }, [hubConnection]);
 
   useEffect(() => {
+    if (withdrawValue || addDepositValue) {
+      inputRef.current.focus();
+    }
+  }, [withdrawValue, addDepositValue]);
+
+  useEffect(() => {
     if (hubConnection) {
       hubConnection
         .invoke<RootDeposits>("GetDeposits", languale, false, 0, 40)

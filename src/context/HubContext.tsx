@@ -62,8 +62,12 @@ export const HubProvider: FC = ({ children }) => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection.on("BalanceUpdate", (data) => {
+        console.log("BalanceUpdate", data);
         if (data.balances[0]) {
-          setBalance(data.balances[0].volume);
+          const newArr = data.balances.filter(
+            (item: any) => item.balanceKind === 1
+          );
+          setBalance(newArr[0].volume);
         }
       });
       hubConnection
@@ -73,7 +77,10 @@ export const HubProvider: FC = ({ children }) => {
           setUser(res.name);
           setLoading(false);
           if (res.balances[0]) {
-            setBalance(res.balances[0].volume);
+            const newArr = res.balances.filter(
+              (item: any) => item.balanceKind === 1
+            );
+            setBalance(newArr[0].volume);
             const balanceList = res.balances.map((item: any) => ({
               balanceKind: item.balanceKind,
               volume: item.volume,
