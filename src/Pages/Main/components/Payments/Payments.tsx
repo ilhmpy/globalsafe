@@ -1,5 +1,5 @@
-import React, { useEffect, useContext, useState, useCallback } from "react";
-import { H1 } from "../../../../components/UI/MainStyled";
+import React, { useEffect, useContext, useState, useCallback, FC } from "react";
+import { H2 } from "../../../../components/UI/MainStyled";
 import { Card, Container } from "../../../../globalStyles";
 import styled from "styled-components/macro";
 import { RadialBar } from "../../../../components/Charts/Test";
@@ -14,13 +14,75 @@ import { RootPayDeposit, PayDeposit, Pokedex } from "../../../../types/payouts";
 import { ReactComponent as Refresh } from "../../../../assets/svg/refresh.svg";
 import moment from "moment";
 import { Page } from "../../../../components/UI/Page";
+import { Modal } from "../../../../components/Modal/Modal";
+import { CSSTransition } from "react-transition-group";
+import { Button } from "../../../../components/Button/Button";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
+
+const RadialComponent: FC<{ data: Pokedex }> = ({ data }) => {
+  const [show, setShow] = useState(false);
+  const onClose = () => {
+    setShow(false);
+  };
+
+  return (
+    <div>
+      {show && (
+        <Modal width={1060} onClose={onClose}>
+          <ModalContainer>
+            <ProgramCard>
+              <BlockTitle>{data.deposit.name}</BlockTitle>
+              <div className="item__subtitle">
+                <Text
+                  dangerouslySetInnerHTML={{ __html: data.deposit.description }}
+                />
+              </div>
+              <ModalButton blue>{data.deposit.name}</ModalButton>
+            </ProgramCard>
+            <RadialModalItem>
+              <RadialBar
+                height={230}
+                values={60}
+                color={data.colors}
+                size="60%"
+              />
+              <RoundInside>
+                <RoundInsideName>{data.deposit.name}</RoundInsideName>
+                <RoundInsideDate>
+                  {moment(data.date).format("DD.MM.YYYY")}
+                </RoundInsideDate>
+                <RoundInsideProcent>
+                  {(data.procent * 100).toFixed(0)}
+                  <Proc>%</Proc>
+                </RoundInsideProcent>
+              </RoundInside>
+            </RadialModalItem>
+          </ModalContainer>
+        </Modal>
+      )}
+      <RadialItem onClick={() => setShow(true)}>
+        <RadialBar values={data.procent * 100} color={data.colors} />
+        <RoundInside>
+          <RoundInsideName>{data.depositName}</RoundInsideName>
+          <RoundInsideDate>
+            {moment(data.date).format("DD.MM.YYYY")}
+          </RoundInsideDate>
+          <RoundInsideProcent>
+            {(data.procent * 100).toFixed(0)}
+            <Proc>%</Proc>
+          </RoundInsideProcent>
+        </RoundInside>
+      </RadialItem>
+    </div>
+  );
+};
 
 export const Payments = () => {
   const [statsDeposit, setStatsDeposit] = useState<RootPayDeposit[]>([]);
   const [bigArr, setBigArr] = useState<any>([]);
   const [smallArr, setSmallArr] = useState<any>([]);
+
   const arrSizeBig = 10;
   const arrSizeMob = 4;
   const appContext = useContext(AppContext);
@@ -36,8 +98,9 @@ export const Payments = () => {
       return {
         depositName: i.deposit.name,
         date: i.depositCreationDate,
-        procent: i.deposit.paymentRatio,
+        procent: i.profit,
         colors: color,
+        deposit: i.deposit,
       };
     });
 
@@ -65,90 +128,85 @@ export const Payments = () => {
   }, [stats]);
 
   useEffect(() => {
+    reset();
+  }, [hubConnection]);
+
+  const reset = () => {
     if (hubConnection) {
       hubConnection
         .invoke<RootPayDeposit[]>("GetDayPayouts")
         .then((res) => {
+          console.log("GetDayPayouts", res);
           setStatsDeposit(res);
-          // console.log("res", res);
         })
         .catch((e) => console.log(e));
     }
-  }, [hubConnection]);
+  };
 
   return (
     <Page>
       <Container>
-        <H1>Текущие выплаты</H1>
+        <H2>Текущие выплаты</H2>
       </Container>
+
       <Container>
-        <SwiperContainer>
-          <Swiper
-            spaceBetween={10}
-            slidesPerView={1}
-            pagination={{ clickable: true }}
-          >
-            {bigArr.map((i: any, idx: number) => (
-              <SwiperSlide key={idx} style={{ maxWidth: 1130 }}>
-                <RadialWrap>
-                  {i.map((item: Pokedex, idx: number) => (
-                    <RadialItem key={idx}>
-                      <RadialBar
-                        values={item.procent * 100}
-                        color={item.colors}
-                      />
-                      <RoundInside>
-                        <RoundInsideName>{item.depositName}</RoundInsideName>
-                        <RoundInsideDate>
-                          {moment(item.date).format("DD.MM.YYYY")}
-                        </RoundInsideDate>
-                        <RoundInsideProcent>
-                          {item.procent * 100}
-                          <span>%</span>
-                        </RoundInsideProcent>
-                      </RoundInside>
-                    </RadialItem>
-                  ))}
-                </RadialWrap>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-          <OnDate>
-            на 16.04.2021 <Refresh />
-          </OnDate>
-        </SwiperContainer>
+        {statsDeposit.length && (
+          <SwiperContainer>
+            <Swiper
+              spaceBetween={10}
+              slidesPerView={1}
+              pagination={{ clickable: true }}
+            >
+              {bigArr.map((i: any, idx: number) => (
+                <SwiperSlide key={idx} style={{ maxWidth: 1130 }}>
+                  <RadialWrap>
+                    {i.map((item: Pokedex, idx: number) => (
+                      <RadialComponent key={idx} data={item} />
+                    ))}
+                  </RadialWrap>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+            <OnDate>
+              на {moment(statsDeposit[0].payoutDate).format("DD.MM.YYYY")}{" "}
+              <Refresh onClick={reset} />
+            </OnDate>
+          </SwiperContainer>
+        )}
         <SwiperContainerMob>
-          <Swiper
-            spaceBetween={10}
-            slidesPerView={1}
-            pagination={{ clickable: true }}
-          >
-            {smallArr.map((i: any, idx: number) => (
-              <SwiperSlide key={idx}>
-                <RadialWrap>
-                  {i.map((item: Pokedex, idx: number) => (
-                    <RadialItem key={idx}>
-                      <RadialBar
-                        height={170}
-                        values={item.procent * 100}
-                        color={item.colors}
-                      />
-                      <RoundInside>
-                        <RoundInsideName>{item.depositName}</RoundInsideName>
-                        <RoundInsideDate>
-                          {moment(item.date).format("DD.MM.YYYY")}
-                        </RoundInsideDate>
-                        <RoundInsideProcent>
-                          {item.procent * 100}
-                          <span>%</span>
-                        </RoundInsideProcent>
-                      </RoundInside>
-                    </RadialItem>
-                  ))}
-                </RadialWrap>
-              </SwiperSlide>
-            ))}
-          </Swiper>
+          {statsDeposit.length && (
+            <Swiper
+              spaceBetween={10}
+              slidesPerView={1}
+              pagination={{ clickable: true }}
+            >
+              {smallArr.map((i: any, idx: number) => (
+                <SwiperSlide key={idx}>
+                  <RadialWrap>
+                    {i.map((item: Pokedex, idx: number) => (
+                      <RadialItem key={idx}>
+                        <RadialBar
+                          height={170}
+                          values={item.procent * 100}
+                          color={item.colors}
+                        />
+                        <RoundInside>
+                          <RoundInsideName>{item.depositName}</RoundInsideName>
+                          <RoundInsideDate>
+                            {moment(item.date).format("DD.MM.YYYY")}
+                          </RoundInsideDate>
+                          <RoundInsideProcent>
+                            {(item.procent * 100).toFixed(0)}
+                            <Proc>%</Proc>
+                          </RoundInsideProcent>
+                        </RoundInside>
+                      </RadialItem>
+                    ))}
+                  </RadialWrap>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          )}
         </SwiperContainerMob>
         {/* <SwiperContainerMob>
           <Swiper
@@ -166,7 +224,7 @@ export const Payments = () => {
                       <RoundInsideDate>12.04.2021</RoundInsideDate>
                       <RoundInsideProcent>
                         54
-                        <span>%</span>
+                        <Proc>%</Proc>
                       </RoundInsideProcent>
                     </RoundInside>
                   </RadialItem>
@@ -179,6 +237,40 @@ export const Payments = () => {
     </Page>
   );
 };
+
+const Text = styled.div`
+  color: #0e0d3d;
+  font-size: 14px;
+  font-weight: 400;
+  font-style: normal;
+  text-align: center;
+  letter-spacing: normal;
+  line-height: normal;
+  margin-bottom: 15px;
+  p {
+    padding-bottom: 10px;
+  }
+`;
+
+const ModalButton = styled(Button)`
+  min-width: 100%;
+`;
+
+const ModalContainer = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+  padding: 40px 120px;
+  @media (max-width: 992px) {
+    padding: 40px 60px;
+  }
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+`;
 
 const SwiperContainer = styled(Card)`
   position: relative;
@@ -288,10 +380,52 @@ const RoundInsideProcent = styled.div`
   font-size: 38px;
   line-height: 21px;
   color: #ff416e;
-  span {
-    font-size: 16px;
-  }
   @media (max-width: 768px) {
     font-size: 32px;
   }
+`;
+
+const RadialModalItem = styled.div`
+  width: 220px;
+  flex: none;
+  position: relative;
+  ${RoundInside} {
+    top: 39px;
+    left: 43px;
+    @media (max-width: 768px) {
+      top: 59px;
+      left: 55px;
+      width: 95px;
+      height: 95px;
+    }
+  }
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+export const BlockTitle = styled.div`
+  color: #0e0d3d;
+  font-size: 18px;
+  font-weight: 900;
+  font-style: normal;
+  letter-spacing: normal;
+  line-height: normal;
+  text-align: center;
+  margin-bottom: 20px;
+`;
+
+const Proc = styled.div`
+  display: inline-block;
+  font-size: 16px;
+`;
+
+const ProgramCard = styled.div`
+  border: 1px solid #6db9ff;
+  box-sizing: border-box;
+  max-width: 340px;
+  width: 100%;
+  backdrop-filter: blur(4px);
+  border-radius: 20px;
+  padding: 40px 20px;
 `;

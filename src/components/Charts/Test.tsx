@@ -676,9 +676,15 @@ type RadialProps = {
   values: number;
   color: string;
   height?: number;
+  size?: string;
 };
 
-export const RadialBar: FC<RadialProps> = ({ values, color, height = 210 }) => {
+export const RadialBar: FC<RadialProps> = ({
+  values,
+  color,
+  height = 210,
+  size = "70%",
+}) => {
   const data = {
     series: [values],
     options: {
@@ -690,7 +696,7 @@ export const RadialBar: FC<RadialProps> = ({ values, color, height = 210 }) => {
       plotOptions: {
         radialBar: {
           hollow: {
-            size: "70%",
+            size: size,
             background: "transparent",
           },
           dataLabels: {

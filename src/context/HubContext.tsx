@@ -63,7 +63,7 @@ export const HubProvider: FC = ({ children }) => {
     if (hubConnection) {
       hubConnection.on("BalanceUpdate", (data) => {
         console.log("BalanceUpdate", data);
-        if (data.balances[0]) {
+        if (data.balances) {
           const newArr = data.balances.filter(
             (item: any) => item.balanceKind === 1
           );
@@ -76,7 +76,7 @@ export const HubProvider: FC = ({ children }) => {
           console.log("GetSigned", res);
           setUser(res.name);
           setLoading(false);
-          if (res.balances[0]) {
+          if (res.balances) {
             const newArr = res.balances.filter(
               (item: any) => item.balanceKind === 1
             );
