@@ -14,6 +14,7 @@ import { RootPayDeposit, PayDeposit, Pokedex } from "../../../../types/payouts";
 import { ReactComponent as Refresh } from "../../../../assets/svg/refresh.svg";
 import moment from "moment";
 import { Page } from "../../../../components/UI/Page";
+
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
 export const Payments = () => {
@@ -69,11 +70,12 @@ export const Payments = () => {
         .invoke<RootPayDeposit[]>("GetDayPayouts")
         .then((res) => {
           setStatsDeposit(res);
-          console.log("res", res);
+          // console.log("res", res);
         })
         .catch((e) => console.log(e));
     }
   }, [hubConnection]);
+
   return (
     <Page>
       <Container>

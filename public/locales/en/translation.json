@@ -236,7 +236,8 @@
        "divedents": "Accrual of dividends",
        "close": "Closing a deposit",
        "withdraw": "Balance withdrawal",
-       "add": "Balance replenishment" 
+       "add": "Balance replenishment",
+       "rollback": "Transaction failure" 
     },
     "copy":{
         "copy": "Copied",

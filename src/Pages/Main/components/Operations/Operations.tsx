@@ -5,24 +5,62 @@ import { Card, Container } from "../../../../globalStyles";
 import styled from "styled-components/macro";
 import { Button } from "../../../../components/Button/Button";
 import { AppContext } from "../../../../context/HubContext";
+import { useTranslation } from "react-i18next";
+import { RootOperations, Collection } from "../../../../types/operations";
+import moment from "moment";
 
 export const Operations = () => {
+  const [notifyList, setNotifyList] = useState<Collection[]>([]);
+  const [num, setNum] = useState(0);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
 
   useEffect(() => {
     if (hubConnection) {
-      hubConnection.on("OperationNotification", (data) =>
-        console.log("OperationNotification", data)
-      );
+      hubConnection.on("OperationNotification", (data) => {
+        console.log("OperationNotification", data);
+        setNotifyList([data, ...notifyList]);
+      });
       hubConnection
-        .invoke("GetOperationsNotifications", [4], 0, 30)
+        .invoke<RootOperations>(
+          "GetOperationsNotifications",
+          [1, 2, 3, 4, 5, 6, 7, 8],
+          num,
+          5
+        )
         .then((res) => {
           console.log("GetOperationsNotifications", res);
+          setNotifyList([...notifyList, ...res.collection]);
         })
         .catch((e) => console.log(e));
     }
-  }, [hubConnection]);
+  }, [hubConnection, num]);
+
+  const { t } = useTranslation();
+
+  const operation = (id: number) => {
+    if (id === 6) {
+      return t("operation.open");
+    } else if (id === 7) {
+      return t("operation.divedents");
+    } else if (id === 8) {
+      return t("operation.close");
+    } else if (id === 2) {
+      return t("operation.withdraw");
+    } else if (id === 1) {
+      return t("operation.add");
+    } else if (id === 3) {
+      return "Сбой транзакции";
+    } else if (id === 4) {
+      return "Регулировка баланса промо";
+    } else if (id === 5) {
+      return "Партнерские сборы";
+    }
+  };
+
+  const add = () => {
+    setNum(num + 5);
+  };
 
   return (
     <Page>
@@ -35,42 +73,33 @@ export const Operations = () => {
           <TableItemHead>Тип операции</TableItemHead>
           <TableItemHead>Сумма операции</TableItemHead>
         </TableList>
-        <TableList card>
-          <TableItem>10.04.2021</TableItem>
-          <TableItem>
-            <Text>
-              открытие депозита по программе &nbsp;<span>INFINITY</span>
-            </Text>
-          </TableItem>
-          <TableItem>
-            <Value>2 000 CWD</Value>
-          </TableItem>
-        </TableList>
-        <TableList card>
-          <TableItem>10.04.2021</TableItem>
-          <TableItem>
-            <Text>
-              открытие депозита по программе &nbsp;<span>INFINITY</span>
-            </Text>
-          </TableItem>
-          <TableItem>
-            <Value>2 000 CWD</Value>
-          </TableItem>
-        </TableList>
-        {/* <TableList card>
-          <TableItem>10.04.2021</TableItem>
-          <TableItem>
-            <Text>
-              открытие депозита по программе &nbsp;<span>INFINITY</span>
-            </Text>
-          </TableItem>
-          <TableItem>
-            <Value>
-              2 000 <span>CWD</span>
-            </Value>
-          </TableItem>
-        </TableList> */}
-        <Button dangerOutline>Показать еще</Button>
+        {notifyList.length &&
+          notifyList.map((item, idx) => (
+            <TableList card key={item.date.toString() + idx}>
+              <TableItem>{moment(item.date).format("DD.MM.YYYY")}</TableItem>
+              <TableItem>
+                {item.depositName ? (
+                  <Text>
+                    {operation(item.operationKind)} по программе &nbsp;
+                    <span>{item.depositName}</span>
+                  </Text>
+                ) : (
+                  <Text>{operation(item.operationKind)}</Text>
+                )}
+              </TableItem>
+              <TableItem>
+                <Value>
+                  {(item.amount / 100000).toLocaleString("ru-RU", {
+                    maximumFractionDigits: 2,
+                  })}{" "}
+                  CWD
+                </Value>
+              </TableItem>
+            </TableList>
+          ))}
+        <Button dangerOutline onClick={add}>
+          Показать еще
+        </Button>
       </TableContainer>
     </Page>
   );

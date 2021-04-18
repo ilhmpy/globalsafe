@@ -15,7 +15,7 @@ export const Banner = () => {
   const [scroll, setScroll] = useState(true);
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 100) {
+      if (window.scrollY > 800) {
         setScroll(false);
       } else {
         setScroll(true);
@@ -45,9 +45,9 @@ export const Banner = () => {
           Попробуйте бесплатно <ArrowIcon />
         </ButtonIcon>
       </Container> */}
-      <ScrollContainer>{scroll && <ScrollIcon />}</ScrollContainer>
       <CurrencyValues />
       <Payments />
+      <ScrollContainer>{scroll && <ScrollIcon />}</ScrollContainer>
     </>
   );
 };
@@ -103,8 +103,8 @@ const ScrollIcon = styled(Scroll)`
 `;
 
 const ScrollContainer = styled(Container)`
-  padding-top: 140px;
-  padding-bottom: 140px;
+  padding-top: 60px;
+  padding-bottom: 60px;
   @media (max-width: 1060px) {
     display: none;
   }

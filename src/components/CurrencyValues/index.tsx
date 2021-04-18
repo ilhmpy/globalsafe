@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext, FC } from "react";
 import Chart from "react-apexcharts";
-import styled from "styled-components/macro";
+import styled, { keyframes } from "styled-components/macro";
 import moment from "moment";
 import { Container, Card } from "../../globalStyles";
 import greenBg from "../../assets/svg/greenBack.svg";
@@ -87,57 +87,87 @@ export const CurrencyValues = () => {
       <Container>
         <Wrapper>
           <ChartItems>
-            <ChartItem alfa onClick={() => setActive(0)} active={active === 0}>
-              <ChartItemInner>
-                <ChartItemHead>
-                  <ChartItemName>GCWD</ChartItemName>
-                  {listGCWD.length && changeValue(listGCWD)}
-                </ChartItemHead>
-
-                <ChartItemValue>
-                  {listGCWD.length &&
-                    (listGCWD[0].latestBid / 100000).toLocaleString("ru-RU", {
+            {listGCWD.length && (
+              <ChartItem
+                red={listGCWD[0].latestBid < listGCWD[1].latestBid}
+                alfa
+                onClick={() => setActive(0)}
+                active={active === 0}
+              >
+                <ChartItemInner>
+                  <ChartItemHead>
+                    <ChartItemName>GCWD</ChartItemName>
+                    {listGCWD.length && changeValue(listGCWD)}
+                  </ChartItemHead>
+                  <ChartItemValue
+                    green={listGCWD[0].latestBid > listGCWD[1].latestBid}
+                  >
+                    {(listGCWD[0].latestBid / 100000).toLocaleString("ru-RU", {
                       maximumFractionDigits: 2,
                     })}{" "}
-                  CWD
-                </ChartItemValue>
-              </ChartItemInner>
-            </ChartItem>
-            <ChartItem alfa onClick={() => setActive(1)} active={active === 1}>
-              <ChartItemInner>
-                <ChartItemHead>
-                  <ChartItemName>MGCWD</ChartItemName>
-                  {listMGCWD.length && changeValue(listMGCWD)}
-                </ChartItemHead>
-                <ChartItemValue>
-                  {listMGCWD.length &&
-                    (listMGCWD[0].latestBid / 100000).toLocaleString("ru-RU", {
-                      maximumFractionDigits: 2,
-                    })}{" "}
-                  CWD
-                </ChartItemValue>
-              </ChartItemInner>
-            </ChartItem>
-            <ChartItem
-              alfa
-              red
-              onClick={() => setActive(2)}
-              active={active === 2}
-            >
-              <ChartItemInner>
-                <ChartItemHead>
-                  <ChartItemName>DIAMOND</ChartItemName>
-                  {listDIAMOND.length && changeValue(listDIAMOND)}
-                </ChartItemHead>
-                <ChartItemValue>
-                  {listDIAMOND.length &&
-                    (listDIAMOND[0].latestBid / 100).toLocaleString("ru-RU", {
-                      maximumFractionDigits: 2,
-                    })}{" "}
-                  CWD
-                </ChartItemValue>
-              </ChartItemInner>
-            </ChartItem>
+                    CWD
+                  </ChartItemValue>
+                </ChartItemInner>
+              </ChartItem>
+            )}
+            {listGCWD.length && (
+              <ChartItem
+                alfa
+                onClick={() => setActive(1)}
+                active={active === 1}
+                red={listMGCWD[0].latestBid < listMGCWD[1].latestBid}
+              >
+                <ChartItemInner>
+                  <ChartItemHead>
+                    <ChartItemName>MGCWD</ChartItemName>
+                    {listMGCWD.length && changeValue(listMGCWD)}
+                  </ChartItemHead>
+                  {listMGCWD.length && (
+                    <ChartItemValue
+                      green={listMGCWD[0].latestBid > listMGCWD[1].latestBid}
+                    >
+                      {(listMGCWD[0].latestBid / 100000).toLocaleString(
+                        "ru-RU",
+                        {
+                          maximumFractionDigits: 2,
+                        }
+                      )}{" "}
+                      CWD
+                    </ChartItemValue>
+                  )}
+                </ChartItemInner>
+              </ChartItem>
+            )}
+            {listGCWD.length && (
+              <ChartItem
+                alfa
+                red={listDIAMOND[0].latestBid < listDIAMOND[1].latestBid}
+                onClick={() => setActive(2)}
+                active={active === 2}
+              >
+                <ChartItemInner>
+                  <ChartItemHead>
+                    <ChartItemName>DIAMOND</ChartItemName>
+                    {listDIAMOND.length && changeValue(listDIAMOND)}
+                  </ChartItemHead>
+                  {listDIAMOND.length && (
+                    <ChartItemValue
+                      green={
+                        listDIAMOND[0].latestBid > listDIAMOND[1].latestBid
+                      }
+                    >
+                      {(listDIAMOND[0].latestBid / 100).toLocaleString(
+                        "ru-RU",
+                        {
+                          maximumFractionDigits: 2,
+                        }
+                      )}{" "}
+                      CWD
+                    </ChartItemValue>
+                  )}
+                </ChartItemInner>
+              </ChartItem>
+            )}
           </ChartItems>
           <Charts alfa>
             <CSSTransition
@@ -421,19 +451,29 @@ const ChartItemName = styled.div`
   margin-bottom: 10px;
   line-height: 21px;
   color: #515172;
+  z-index: 99;
 `;
 
-type Colors = {
-  blue?: boolean;
-  red?: boolean;
-  green?: boolean;
-};
+const BgGreen = keyframes`
+  0% { background: #c2f2c2; }
+  50% { background: #c2f2c2 }
+  100% { background: transparent }
+`;
 
-const ChartItemValue = styled.div<Colors>`
+const BgRed = keyframes`
+  0% { background: #fcdede; }
+  50% { background: #fcdede }
+  100% { background: transparent }
+`;
+
+const ChartItemValue = styled.div<{ green?: boolean }>`
   font-weight: 500;
   font-size: 36px;
   line-height: 42px;
   color: #515172;
+  animation: ${(props) => (props.green ? BgGreen : BgRed)} 0.5s linear;
+  display: inline-block;
+  padding: 0 5px;
   opacity: 1;
   transition: opacity 0.5s ease-in;
   @media (max-width: 768px) {
