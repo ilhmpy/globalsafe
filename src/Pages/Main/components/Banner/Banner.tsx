@@ -40,11 +40,11 @@ export const Banner = () => {
           </p>
         </TextBlock>
       </Container>
-      {/* <Container>
+      <Container>
         <ButtonIcon danger>
-          Попробуйте бесплатно <ArrowIcon />
+          Перейти к программам <ArrowIcon />
         </ButtonIcon>
-      </Container> */}
+      </Container>
       <CurrencyValues />
       <Payments />
       <ScrollContainer>{scroll && <ScrollIcon />}</ScrollContainer>

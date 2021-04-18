@@ -29,4 +29,5 @@ export interface Pokedex  {
     date: Date;
     procent:number;
     colors:string;
+    deposit: PayDeposit;
 }

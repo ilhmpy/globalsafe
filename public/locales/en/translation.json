@@ -236,7 +236,7 @@
        "divedents": "Accrual of dividends",
        "close": "Closing a deposit",
        "withdraw": "Balance withdrawal",
-       "add": "Balance replenishment",
+       "add": "GLOBALSAFE balance top-up",
        "rollback": "Transaction failure" 
     },
     "copy":{
