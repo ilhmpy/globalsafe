@@ -32,7 +32,7 @@ export const Operations = () => {
         )
         .then((res) => {
           console.log("GetOperationsNotifications", res);
-          setNotifyList([...notifyList, ...res.collection]);
+          setNotifyList((notifyList) => [...notifyList, ...res.collection]);
         })
         .catch((e) => console.log(e));
     }
