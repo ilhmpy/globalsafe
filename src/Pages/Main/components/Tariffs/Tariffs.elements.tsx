@@ -41,6 +41,7 @@ export const BlockItem = styled.div`
   height: auto;
   background-color: rgba(255, 255, 255, 0.4);
   border: 1px solid #ffffff;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   border-radius: 20px;
   padding-top: 40px;
   padding-bottom: 40px;

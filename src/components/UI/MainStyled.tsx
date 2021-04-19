@@ -22,4 +22,7 @@ export const H2 = styled.h2`
   @media (max-width: 1060px) {
     font-size: calc(26px + 60 * ((100vw - 320px) / 740));
   }
+  @media (max-width: 576px) {
+    margin-bottom: 10px;
+  }
 `;

@@ -41,7 +41,7 @@ export const Banner = () => {
       </Container>
       <Container>
         <ButtonIcon danger>
-          Перейти к программам <ArrowIcon />
+          {t("banner.toProgramm")} <ArrowIcon />
         </ButtonIcon>
       </Container>
       <CurrencyValues />

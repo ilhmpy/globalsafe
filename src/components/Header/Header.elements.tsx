@@ -1,7 +1,7 @@
 import { Link } from "react-scroll";
 import styled from "styled-components/macro";
 import { Button } from "../Button/Button";
-import { HashLink } from "react-router-hash-link";
+import { NavHashLink } from "react-router-hash-link";
 
 export const Languale = styled.div`
   display: flex;
@@ -158,7 +158,7 @@ export const ListItem = styled.li<{ mob?: boolean }>`
 
 const activeclassname = "active";
 
-export const StyledLink = styled(HashLink).attrs({ activeclassname })`
+export const StyledLink = styled(NavHashLink).attrs({ activeclassname })`
   &.${activeclassname} {
     color: red;
   }

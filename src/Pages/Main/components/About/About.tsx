@@ -12,8 +12,8 @@ import { useTranslation } from "react-i18next";
 export const About = () => {
   const { t } = useTranslation();
   return (
-    <Page>
-      <Container id="about">
+    <Page id="about">
+      <Container>
         <UpTitle>{t("about.uptitle")}</UpTitle>
       </Container>
       <Container>
@@ -55,7 +55,7 @@ export const About = () => {
 
 const BlockContainer = styled(Container)`
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   @media (max-width: 768px) {
     flex-wrap: wrap;
   }

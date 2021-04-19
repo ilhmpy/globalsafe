@@ -3,6 +3,7 @@ import * as signalR from "@microsoft/signalr";
 import { API_URL } from "../constantes/api";
 import useLocalStorage from "../hooks/useLocalStorage";
 import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { BalanceList } from "../types/balance";
 type Nulable<T> = T | null;
 
@@ -39,6 +40,7 @@ export const HubProvider: FC = ({ children }) => {
   const [myToken, setMyToken] = useLocalStorage("token");
   const [balanceList, setBalanceList] = useState<BalanceList[] | null>(null);
   const history = useHistory();
+  const { i18n } = useTranslation();
 
   useEffect(() => {
     const hubConnection = new signalR.HubConnectionBuilder()
@@ -81,6 +83,8 @@ export const HubProvider: FC = ({ children }) => {
               (item: any) => item.balanceKind === 1
             );
             setBalance(newArr[0].volume);
+
+            i18n.changeLanguage(res.languageCode === 1 ? "ru" : "en");
             const balanceList = res.balances.map((item: any) => ({
               balanceKind: item.balanceKind,
               volume: item.volume,

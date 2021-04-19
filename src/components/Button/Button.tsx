@@ -144,6 +144,11 @@ export const Button = styled.a<Props>`
       &:focus{
         background:rgba(109, 185, 255, 0.7) !important;
       }
+      &:disabled{
+        background: #ccc;
+        border-color: #ccc;
+        box-shadow: none;
+      }
       `;
     } else if (props.red) {
       return `
