@@ -38,20 +38,17 @@ const RadialComponent: FC<{ data: Pokedex }> = ({ data }) => {
                   dangerouslySetInnerHTML={{ __html: data.deposit.description }}
                 />
               </div>
-              <ModalButton blue>{data.deposit.name}</ModalButton>
+              <Button blue>{data.deposit.name}</Button>
             </ProgramCard>
             <RadialModalItem>
               <RadialBar
-                height={230}
+                height={300}
                 values={60}
                 color={data.colors}
                 size="60%"
               />
               <RoundInside>
                 <RoundInsideName>{data.deposit.name}</RoundInsideName>
-                <RoundInsideDate>
-                  {moment(data.date).format("DD.MM.YYYY")}
-                </RoundInsideDate>
                 <RoundInsideProcent>
                   {(data.procent * 100).toFixed(0)}
                   <Proc>%</Proc>
@@ -208,31 +205,6 @@ export const Payments = () => {
             </Swiper>
           )}
         </SwiperContainerMob>
-        {/* <SwiperContainerMob>
-          <Swiper
-            spaceBetween={10}
-            slidesPerView={1}
-            pagination={{ clickable: true }}
-          >
-            <SwiperSlide>
-              <RadialWrap>
-                {[1, 2, 3, 4].map((item, idx: number) => (
-                  <RadialItem key={idx}>
-                    <RadialBar height={170} values={78} color="#333" />
-                    <RoundInside>
-                      <RoundInsideName>start</RoundInsideName>
-                      <RoundInsideDate>12.04.2021</RoundInsideDate>
-                      <RoundInsideProcent>
-                        54
-                        <Proc>%</Proc>
-                      </RoundInsideProcent>
-                    </RoundInside>
-                  </RadialItem>
-                ))}
-              </RadialWrap>
-            </SwiperSlide>
-          </Swiper>
-        </SwiperContainerMob> */}
       </Container>
     </Page>
   );
@@ -243,7 +215,7 @@ const Text = styled.div`
   font-size: 14px;
   font-weight: 400;
   font-style: normal;
-  text-align: center;
+  text-align: left;
   letter-spacing: normal;
   line-height: normal;
   margin-bottom: 15px;
@@ -386,18 +358,25 @@ const RoundInsideProcent = styled.div`
 `;
 
 const RadialModalItem = styled.div`
-  width: 220px;
+  width: 300px;
   flex: none;
   position: relative;
   ${RoundInside} {
-    top: 39px;
-    left: 43px;
-    @media (max-width: 768px) {
+    top: 64px;
+    left: 76px;
+    /* @media (max-width: 768px) {
       top: 59px;
       left: 55px;
-      width: 95px;
-      height: 95px;
-    }
+    } */
+  }
+  ${RoundInsideName} {
+    font-weight: 500;
+    font-size: 36px;
+    line-height: 40px;
+  }
+  ${RoundInsideProcent} {
+    font-size: 52px;
+    line-height: 48px;
   }
   @media (max-width: 768px) {
     display: none;
@@ -411,7 +390,7 @@ export const BlockTitle = styled.div`
   font-style: normal;
   letter-spacing: normal;
   line-height: normal;
-  text-align: center;
+  text-align: left;
   margin-bottom: 20px;
 `;
 
@@ -421,7 +400,7 @@ const Proc = styled.div`
 `;
 
 const ProgramCard = styled.div`
-  border: 1px solid #6db9ff;
+  /* border: 1px solid #6db9ff; */
   box-sizing: border-box;
   max-width: 340px;
   width: 100%;

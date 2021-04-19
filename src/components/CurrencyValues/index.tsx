@@ -49,7 +49,7 @@ export const CurrencyValues = () => {
       hubConnection
         .invoke<RootChange>(
           "GetMarket",
-          3,
+          2,
           dateFrom._d,
           new Date(),
           numMGCWD,
@@ -71,7 +71,7 @@ export const CurrencyValues = () => {
       hubConnection
         .invoke<RootChange>(
           "GetMarket",
-          2,
+          3,
           dateFrom._d,
           new Date(),
           numGCWD,
@@ -151,7 +151,7 @@ export const CurrencyValues = () => {
                 <ChartBg>
                   <ApexChart
                     height={75}
-                    values={listMGCWD.map((i) => i.latestBid / 100).reverse()}
+                    values={listMGCWD.map((i) => i.latestBid / 100)}
                     gradientColor={["#6DB9FF", "rgba(109, 185, 255, 0.4)"]}
                   />
                 </ChartBg>
@@ -181,7 +181,7 @@ export const CurrencyValues = () => {
                 <ChartBg>
                   <ApexChart
                     height={75}
-                    values={listGCWD.map((i) => i.latestBid / 100).reverse()}
+                    values={listGCWD.map((i) => i.latestBid / 100)}
                     gradientColor={["#FF416E", "rgba(255, 255, 255, 0.4)"]}
                   />
                 </ChartBg>
@@ -218,7 +218,7 @@ export const CurrencyValues = () => {
                 <ChartBg>
                   <ApexChart
                     height={75}
-                    values={listDIAMOND.map((i) => i.latestBid / 100).reverse()}
+                    values={listDIAMOND.map((i) => i.latestBid / 100)}
                     gradientColor={["#BCD476", "rgba(188, 212, 118, 0.4)"]}
                   />
                 </ChartBg>
@@ -234,7 +234,7 @@ export const CurrencyValues = () => {
             >
               <>
                 <ApexChart
-                  values={listGCWD.map((i) => i.latestBid / 100).reverse()}
+                  values={listGCWD.map((i) => i.latestBid / 100)}
                   gradientColor={["#FF416E", "rgba(255, 255, 255, 0.4)"]}
                 />
                 {/* <DescChart>
@@ -259,7 +259,7 @@ export const CurrencyValues = () => {
             >
               <>
                 <ApexChart
-                  values={listMGCWD.map((i) => i.latestBid / 100).reverse()}
+                  values={listMGCWD.map((i) => i.latestBid / 100)}
                   gradientColor={["#6DB9FF", "rgba(109, 185, 255, 0.4)"]}
                 />
                 {/* <DescChart>
@@ -284,7 +284,7 @@ export const CurrencyValues = () => {
             >
               <>
                 <ApexChart
-                  values={listDIAMOND.map((i) => i.latestBid / 100).reverse()}
+                  values={listDIAMOND.map((i) => i.latestBid / 100)}
                   gradientColor={["#BCD476", "rgba(188, 212, 118, 0.4)"]}
                 />
                 {/* <DescChart>
