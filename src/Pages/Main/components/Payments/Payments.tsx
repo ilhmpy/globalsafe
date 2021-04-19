@@ -1,7 +1,14 @@
-import React, { useEffect, useContext, useState, useCallback, FC } from "react";
+import React, {
+  useEffect,
+  useContext,
+  useState,
+  useCallback,
+  FC,
+  useRef,
+} from "react";
 import { H2 } from "../../../../components/UI/MainStyled";
 import { Card, Container } from "../../../../globalStyles";
-import styled from "styled-components/macro";
+import styled, { keyframes } from "styled-components/macro";
 import { RadialBar } from "../../../../components/Charts/Test";
 import { AppContext } from "../../../../context/HubContext";
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
@@ -17,17 +24,94 @@ import { Page } from "../../../../components/UI/Page";
 import { Modal } from "../../../../components/Modal/Modal";
 import { CSSTransition } from "react-transition-group";
 import { Button } from "../../../../components/Button/Button";
+import {
+  DescContainer,
+  BlockContainers,
+  BlockItem,
+  ModalBlock,
+  ModalTitle,
+} from "../Tariffs/Tariffs.elements";
+import { useTranslation } from "react-i18next";
+import { Input } from "../../../../components/UI/Input";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
-const RadialComponent: FC<{ data: Pokedex }> = ({ data }) => {
+const RadialComponent: FC<{ data: Pokedex; height: number }> = ({
+  data,
+  height,
+}) => {
   const [show, setShow] = useState(false);
+  const [isNormalOpen, setIsNormalOpen] = useState(false);
+  const [oldLink, setOldLink] = useState("");
+  const [link, setLink] = useState("");
+  const [min, setMin] = useState(500);
+  const [value, setValue] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+  const { t } = useTranslation();
   const onClose = () => {
     setShow(false);
   };
 
+  const handleClick = (str: string, num: number) => {
+    setIsNormalOpen(true);
+    onClose();
+    setValue("");
+    // setLink(str);
+    const newLink = `https://cwd.global/shopping/payment?to_name=${str}&amount=${
+      num / 100000
+    }`;
+    setLink(newLink);
+    setOldLink(`https://cwd.global/shopping/payment?to_name=${str}&amount=`);
+    const val: any = /\d{3,}/g.exec(str);
+    setMin(num / 100000);
+    setValue((num / 100000).toString());
+  };
+
+  useEffect(() => {
+    if (inputRef && inputRef.current && value) {
+      inputRef.current.focus();
+    }
+  }, [value, inputRef]);
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const id = e.target.value;
+    setValue(id);
+    const newLink = oldLink.replace(/\d{3,}/g, "");
+    if (id === "") {
+      setLink(newLink + min);
+    } else {
+      setLink(newLink + id);
+    }
+  };
+
+  const toLink = () => {
+    window.open(link);
+  };
+
   return (
     <div>
+      {isNormalOpen && (
+        <Modal zIndex="999999" onClose={() => setIsNormalOpen(false)}>
+          <ModalBlock>
+            <ModalTitle>{t("tariffs.depositSize")}</ModalTitle>
+            <Input
+              onChange={onChange}
+              // placeholder={min.toString()}
+              type="number"
+              ref={inputRef}
+              value={value}
+            />
+            <ModalButton
+              as="button"
+              onClick={toLink}
+              danger
+              disabled={+value < min}
+            >
+              {t("tariffs.ok")}
+            </ModalButton>
+          </ModalBlock>
+        </Modal>
+      )}
       {show && (
         <Modal width={1060} onClose={onClose}>
           <ModalContainer>
@@ -38,7 +122,14 @@ const RadialComponent: FC<{ data: Pokedex }> = ({ data }) => {
                   dangerouslySetInnerHTML={{ __html: data.deposit.description }}
                 />
               </div>
-              <Button blue>{data.deposit.name}</Button>
+              <Button
+                blue
+                onClick={() =>
+                  handleClick(data.deposit.account, data.deposit.minAmount)
+                }
+              >
+                {t("payments.open")}
+              </Button>
             </ProgramCard>
             <RadialModalItem>
               <RadialBar
@@ -59,7 +150,11 @@ const RadialComponent: FC<{ data: Pokedex }> = ({ data }) => {
         </Modal>
       )}
       <RadialItem onClick={() => setShow(true)}>
-        <RadialBar values={data.procent * 100} color={data.colors} />
+        <RadialBar
+          height={height}
+          values={data.procent * 100}
+          color={data.colors}
+        />
         <RoundInside>
           <RoundInsideName>{data.depositName}</RoundInsideName>
           <RoundInsideDate>
@@ -84,6 +179,7 @@ export const Payments = () => {
   const arrSizeMob = 4;
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
+  const { t } = useTranslation();
 
   const stats = useCallback(() => {
     const newStats = statsDeposit.map((i) => {
@@ -158,7 +254,7 @@ export const Payments = () => {
                 <SwiperSlide key={idx} style={{ maxWidth: 1130 }}>
                   <RadialWrap>
                     {i.map((item: Pokedex, idx: number) => (
-                      <RadialComponent key={idx} data={item} />
+                      <RadialComponent height={210} key={idx} data={item} />
                     ))}
                   </RadialWrap>
                 </SwiperSlide>
@@ -181,23 +277,24 @@ export const Payments = () => {
                 <SwiperSlide key={idx}>
                   <RadialWrap>
                     {i.map((item: Pokedex, idx: number) => (
-                      <RadialItem key={idx}>
-                        <RadialBar
-                          height={170}
-                          values={item.procent * 100}
-                          color={item.colors}
-                        />
-                        <RoundInside>
-                          <RoundInsideName>{item.depositName}</RoundInsideName>
-                          <RoundInsideDate>
-                            {moment(item.date).format("DD.MM.YYYY")}
-                          </RoundInsideDate>
-                          <RoundInsideProcent>
-                            {(item.procent * 100).toFixed(0)}
-                            <Proc>%</Proc>
-                          </RoundInsideProcent>
-                        </RoundInside>
-                      </RadialItem>
+                      <RadialComponent height={170} key={idx} data={item} />
+                      // <RadialItem key={idx}>
+                      //   <RadialBar
+                      //     height={170}
+                      //     values={item.procent * 100}
+                      //     color={item.colors}
+                      //   />
+                      //   <RoundInside>
+                      //     <RoundInsideName>{item.depositName}</RoundInsideName>
+                      //     <RoundInsideDate>
+                      //       {moment(item.date).format("DD.MM.YYYY")}
+                      //     </RoundInsideDate>
+                      //     <RoundInsideProcent>
+                      //       {(item.procent * 100).toFixed(0)}
+                      //       <Proc>%</Proc>
+                      //     </RoundInsideProcent>
+                      //   </RoundInside>
+                      // </RadialItem>
                     ))}
                   </RadialWrap>
                 </SwiperSlide>
@@ -222,6 +319,9 @@ const Text = styled.div`
   p {
     padding-bottom: 10px;
   }
+  @media (max-width: 768px) {
+    text-align: center;
+  }
 `;
 
 const ModalButton = styled(Button)`
@@ -240,7 +340,7 @@ const ModalContainer = styled.div`
   @media (max-width: 768px) {
     flex-wrap: wrap;
     justify-content: center;
-    padding: 40px 20px;
+    padding: 20px;
   }
 `;
 
@@ -262,6 +362,10 @@ const SwiperContainerMob = styled(Card)`
   }
 `;
 
+const Move = keyframes`
+100% { transform: rotate(360deg); }
+`;
+
 const OnDate = styled.div`
   position: absolute;
   bottom: 25px;
@@ -272,6 +376,9 @@ const OnDate = styled.div`
   color: rgba(86, 101, 127, 0.6);
   cursor: pointer;
   z-index: 99999;
+  svg {
+    animation: ${Move} 4s linear infinite;
+  }
   @media (max-width: 768px) {
     display: none;
   }
@@ -362,24 +469,35 @@ const RadialModalItem = styled.div`
   flex: none;
   position: relative;
   ${RoundInside} {
-    top: 64px;
-    left: 76px;
-    /* @media (max-width: 768px) {
-      top: 59px;
-      left: 55px;
-    } */
+    top: 50%;
+    left: 50%;
+    margin-left: -72px;
+    margin-top: -66px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    @media (max-width: 768px) {
+      width: 125px;
+      height: 125px;
+      margin-left: -63px;
+    }
   }
   ${RoundInsideName} {
     font-weight: 500;
     font-size: 36px;
     line-height: 40px;
+    @media (max-width: 768px) {
+      max-width: 100%;
+      padding-top: 23px;
+    }
   }
   ${RoundInsideProcent} {
     font-size: 52px;
     line-height: 48px;
   }
   @media (max-width: 768px) {
-    display: none;
+    width: 280px;
   }
 `;
 
@@ -392,6 +510,9 @@ export const BlockTitle = styled.div`
   line-height: normal;
   text-align: left;
   margin-bottom: 20px;
+  @media (max-width: 768px) {
+    text-align: center;
+  }
 `;
 
 const Proc = styled.div`
@@ -407,4 +528,11 @@ const ProgramCard = styled.div`
   backdrop-filter: blur(4px);
   border-radius: 20px;
   padding: 40px 20px;
+  @media (max-width: 768px) {
+    padding: 15px 20px;
+    ${Button} {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
 `;
