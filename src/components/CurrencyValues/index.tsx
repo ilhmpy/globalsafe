@@ -8,6 +8,7 @@ import redBg from "../../assets/svg/redBack.svg";
 import { AppContext } from "../../context/HubContext";
 import { RootChange, Collection } from "../../types/currency";
 import { CSSTransition } from "react-transition-group";
+import useWindowSize from "../../hooks/useWindowSize";
 
 export const CurrencyValues = () => {
   const appContext = useContext(AppContext);
@@ -19,6 +20,8 @@ export const CurrencyValues = () => {
   const [numDIAMOND, setNumDIAMOND] = useState<number>(0);
   const [numMGCWD, setNumMGCWD] = useState(0);
   const [numGCWD, setNumGCWD] = useState(0);
+  const size = useWindowSize();
+  const mob = size < 768;
 
   useEffect(() => {
     const dateFrom: any = moment().subtract(7, "days");
@@ -139,6 +142,45 @@ export const CurrencyValues = () => {
         <Wrapper>
           <ChartItems>
             <ChartItem
+              plchldr={!listGCWD.length}
+              red={
+                !!listGCWD.length &&
+                listGCWD[0].latestBid < listGCWD[1].latestBid
+              }
+              alfa
+              onClick={() => setActive(0)}
+              active={active === 0}
+            >
+              {listGCWD.length && (
+                <>
+                  <ChartItemInner>
+                    <ChartItemHead>
+                      <ChartItemName>GCWD</ChartItemName>
+                      {listGCWD.length && changeValue(listGCWD)}
+                    </ChartItemHead>
+                    <ChartItemValue
+                      green={listGCWD[0].latestBid > listGCWD[1].latestBid}
+                    >
+                      {(listGCWD[0].latestBid / 100000).toLocaleString(
+                        "ru-RU",
+                        {
+                          maximumFractionDigits: 2,
+                        }
+                      )}{" "}
+                      CWD
+                    </ChartItemValue>
+                  </ChartItemInner>
+                  <ChartBg>
+                    <ApexChart
+                      height={75}
+                      values={listGCWD.slice(-20).map((i) => i.latestBid / 100)}
+                      gradientColor={redOrGreen(listGCWD)}
+                    />
+                  </ChartBg>
+                </>
+              )}
+            </ChartItem>
+            <ChartItem
               plchldr={!listMGCWD.length}
               alfa
               onClick={() => setActive(1)}
@@ -181,47 +223,6 @@ export const CurrencyValues = () => {
                 </>
               )}
             </ChartItem>
-
-            <ChartItem
-              plchldr={!listGCWD.length}
-              red={
-                !!listGCWD.length &&
-                listGCWD[0].latestBid < listGCWD[1].latestBid
-              }
-              alfa
-              onClick={() => setActive(0)}
-              active={active === 0}
-            >
-              {listGCWD.length && (
-                <>
-                  <ChartItemInner>
-                    <ChartItemHead>
-                      <ChartItemName>GCWD</ChartItemName>
-                      {listGCWD.length && changeValue(listGCWD)}
-                    </ChartItemHead>
-                    <ChartItemValue
-                      green={listGCWD[0].latestBid > listGCWD[1].latestBid}
-                    >
-                      {(listGCWD[0].latestBid / 100000).toLocaleString(
-                        "ru-RU",
-                        {
-                          maximumFractionDigits: 2,
-                        }
-                      )}{" "}
-                      CWD
-                    </ChartItemValue>
-                  </ChartItemInner>
-                  <ChartBg>
-                    <ApexChart
-                      height={75}
-                      values={listGCWD.slice(-20).map((i) => i.latestBid / 100)}
-                      gradientColor={redOrGreen(listGCWD)}
-                    />
-                  </ChartBg>
-                </>
-              )}
-            </ChartItem>
-
             <ChartItem
               plchldr={!listDIAMOND.length}
               alfa
@@ -280,16 +281,20 @@ export const CurrencyValues = () => {
               classNames="modal"
               unmountOnExit
             >
-              <>
+              <ChartsWrapper>
                 {listGCWD.length ? (
-                  <ApexChart
-                    values={listGCWD.map((i) => i.latestBid / 100)}
-                    gradientColor={redOrGreen(listGCWD)}
-                  />
+                  <>
+                    <NameCWD>GCWD</NameCWD>
+                    <ApexChart
+                      height={mob ? 170 : 280}
+                      values={listGCWD.map((i) => i.latestBid / 100)}
+                      gradientColor={redOrGreen(listGCWD)}
+                    />
+                  </>
                 ) : (
                   ""
                 )}
-              </>
+              </ChartsWrapper>
             </CSSTransition>
             <CSSTransition
               in={active === 1}
@@ -297,16 +302,20 @@ export const CurrencyValues = () => {
               classNames="modal"
               unmountOnExit
             >
-              <>
+              <ChartsWrapper>
                 {listMGCWD.length ? (
-                  <ApexChart
-                    values={listMGCWD.map((i) => i.latestBid / 100)}
-                    gradientColor={redOrGreen(listMGCWD)}
-                  />
+                  <>
+                    <NameCWD>MGCWD</NameCWD>
+                    <ApexChart
+                      height={mob ? 170 : 280}
+                      values={listMGCWD.map((i) => i.latestBid / 100)}
+                      gradientColor={redOrGreen(listMGCWD)}
+                    />
+                  </>
                 ) : (
                   ""
                 )}
-              </>
+              </ChartsWrapper>
             </CSSTransition>
             <CSSTransition
               in={active === 2}
@@ -314,16 +323,20 @@ export const CurrencyValues = () => {
               classNames="modal"
               unmountOnExit
             >
-              <>
+              <ChartsWrapper>
                 {listDIAMOND.length ? (
-                  <ApexChart
-                    values={listDIAMOND.map((i) => i.latestBid / 100)}
-                    gradientColor={redOrGreen(listDIAMOND)}
-                  />
+                  <>
+                    <NameCWD>DIAMOND</NameCWD>
+                    <ApexChart
+                      height={mob ? 170 : 280}
+                      values={listDIAMOND.map((i) => i.latestBid / 100)}
+                      gradientColor={redOrGreen(listDIAMOND)}
+                    />
+                  </>
                 ) : (
                   ""
                 )}
-              </>
+              </ChartsWrapper>
             </CSSTransition>
           </Charts>
         </Wrapper>
@@ -445,22 +458,6 @@ const ApexChart: FC<ChartProps> = ({ values, gradientColor, height = 280 }) => {
     </div>
   );
 };
-
-const DescChart = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: absolute;
-  bottom: 20px;
-  left: 65px;
-  right: 12px;
-  span {
-    color: rgba(81, 81, 114, 0.6);
-    font-weight: normal;
-    font-size: 18px;
-    line-height: 21px;
-  }
-`;
 
 const Wrapper = styled.div`
   display: flex;
@@ -585,14 +582,29 @@ const Charts = styled(Card)<{ plchldr?: boolean }>`
   border: 1px solid #ffffff;
   @media (max-width: 768px) {
     max-width: 100%;
-    height: auto;
+    height: 180px;
     padding: 6px 0px;
+    order: -1;
   }
   ${(props) => {
     if (props.plchldr) {
       return MyChartCss;
     }
   }}
+`;
+
+const ChartsWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  position: relative;
+`;
+
+const NameCWD = styled.div`
+  position: absolute;
+  left: 20px;
+  top: 15px;
+  font-size: 16px;
+  text-transform: uppercase;
 `;
 
 const ChartItem = styled(Card)<{
@@ -609,13 +621,13 @@ const ChartItem = styled(Card)<{
   border: 1px solid ${(props) => (props.active ? "#FF416E" : "#ffffff")};
   justify-content: space-between;
   align-items: center;
-  /* background: ${(props) =>
-    props.red ? `url(${redBg})` : `url(${greenBg})`}; */
   background-repeat: no-repeat;
-  /* background-size: cover; */
   background-origin: content-box;
   cursor: pointer;
   transition: border 0.2s;
+  @media (max-width: 992px) {
+    cursor: initial;
+  }
   ${(props) => {
     if (props.plchldr) {
       return MyCss;

@@ -29,12 +29,13 @@
         "uptitle": "About fund ",
         "H1": "Multiply your funds wisely!",
         "brand": "Global safe",
-        "desc": "is a modern crypto fund which investing and managing your funds, under the control of our best specialists!"
+        "desc": "is a modern crypto fund which investing and managing your funds, under the control of our best specialists!",
+        "toProgramm": "Go to programs"
     },
     "tariffs":{
         "uptitle": "Our tariffs",
         "H1": "Just for you!",
-        "desc": "Partnership for contracts START, EXPERT and INFINITY: 5% from the first line; 2% second line and 1% third line ",
+        "desc": "Partner Program START, EXPERT and INFINITY: 5% from the first line; 2% second line and 1% third line ",
         "depositSize": "Deposit amount",
         "ok": "ОК",
         "buttons":{
@@ -47,7 +48,9 @@
         }
     },
     "payments":{
-        "open": "Open deposit"
+        "open": "Open deposit",
+        "currPay": "Current payments",
+        "on": "on"
     },
     "contacts":{
         "uptitle": "Contacts",
@@ -240,7 +243,16 @@
        "close": "Closing a deposit",
        "withdraw": "Balance withdrawal",
        "add": "GLOBALSAFE balance top-up",
-       "rollback": "Transaction failure" 
+       "rollback": "Transaction failure",
+       "partners": "Affiliate fees",
+       "failed": "Failed transaction", 
+       "balance": "Balance adjustment promo",
+       "last": "Recent transactions",
+       "date": "Date",
+       "type": "Type of transaction",
+       "sum": "Transaction amount",
+       "byProgramm": "by program",
+       "showMore": "Show more"
     },
     "copy":{
         "copy": "Copied",

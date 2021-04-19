@@ -27,16 +27,16 @@ export const Operations = () => {
         .invoke<RootOperations>(
           "GetOperationsNotifications",
           [2, 4, 5, 6, 7, 8],
-          num,
+          0,
           5
         )
         .then((res) => {
           console.log("GetOperationsNotifications", res);
-          setNotifyList((notifyList) => [...notifyList, ...res.collection]);
+          setNotifyList(res.collection);
         })
         .catch((e) => console.log(e));
     }
-  }, [hubConnection, num]);
+  }, [hubConnection]);
 
   const { t } = useTranslation();
 
@@ -52,29 +52,41 @@ export const Operations = () => {
     } else if (id === 1) {
       return t("operation.add");
     } else if (id === 3) {
-      return "Сбой транзакции";
+      return t("operation.failed");
     } else if (id === 4) {
-      return "Регулировка баланса промо";
+      return t("operation.balance");
     } else if (id === 5) {
-      return "Партнерские сборы";
+      return t("operation.partners");
     }
   };
 
   const add = () => {
-    setNum(num + 5);
+    if (hubConnection) {
+      hubConnection
+        .invoke<RootOperations>(
+          "GetOperationsNotifications",
+          [2, 4, 5, 6, 7, 8],
+          5,
+          5
+        )
+        .then((res) => {
+          setNotifyList((notifyList) => [...notifyList, ...res.collection]);
+        })
+        .catch((e) => console.log(e));
+    }
     setShow(false);
   };
 
   return (
     <Page>
       <Container>
-        <H2>Последние операции</H2>
+        <H2>{t("operation.last")}</H2>
       </Container>
       <TableContainer>
-        <TableList>
-          <TableItemHead>Дата</TableItemHead>
-          <TableItemHead>Тип операции</TableItemHead>
-          <TableItemHead>Сумма операции</TableItemHead>
+        <TableList dn>
+          <TableItemHead>{t("operation.date")}</TableItemHead>
+          <TableItemHead>{t("operation.type")}</TableItemHead>
+          <TableItemHead>{t("operation.sum")}</TableItemHead>
         </TableList>
         <TransitionGroup>
           {notifyList.length &&
@@ -91,8 +103,9 @@ export const Operations = () => {
                   <TableItem>
                     {item.depositName ? (
                       <Text>
-                        {operation(item.operationKind)} по программе &nbsp;
-                        <span>{item.depositName}</span>
+                        {operation(item.operationKind)}{" "}
+                        {t("operation.byProgramm")}
+                        <span>&nbsp;{item.depositName}</span>
                       </Text>
                     ) : (
                       <Text>{operation(item.operationKind)}</Text>
@@ -112,7 +125,7 @@ export const Operations = () => {
         </TransitionGroup>
         {show && (
           <Button dangerOutline onClick={add}>
-            Показать еще
+            {t("operation.showMore")}
           </Button>
         )}
       </TableContainer>
@@ -129,7 +142,7 @@ const TableContainer = styled(Container)`
   }
 `;
 
-const TableList = styled.ul<{ card?: boolean }>`
+const TableList = styled.ul<{ card?: boolean; dn?: boolean }>`
   list-style: none;
   display: flex;
   align-items: center;
@@ -142,6 +155,12 @@ const TableList = styled.ul<{ card?: boolean }>`
   }
   @media (max-width: 768px) {
     padding: 10px 5px;
+  }
+  @media (max-width: 576px) {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    padding: 10px 15px;
+    display: ${(props) => (props.dn ? "none" : "flex")};
   }
   ${(props) => {
     if (props.card) {
@@ -166,22 +185,37 @@ const TableItem = styled.li`
     font-size: 14px;
     line-height: 16px;
   }
+  @media (max-width: 576px) {
+    padding-bottom: 5px;
+  }
+  @media (max-width: 576px) {
+    text-align: left;
+  }
   &:nth-child(1) {
     max-width: 150px;
     @media (max-width: 576px) {
-      max-width: 77px;
+      max-width: 100%;
     }
   }
   &:nth-child(2) {
     max-width: 470px;
+    @media (max-width: 576px) {
+      max-width: 100%;
+    }
   }
   &:nth-child(3) {
     max-width: 240px;
+    @media (max-width: 576px) {
+      max-width: 100%;
+    }
   }
 `;
 
 const TableItemHead = styled(TableItem)`
   color: rgba(81, 81, 114, 0.8);
+  @media (max-width: 576px) {
+    display: none;
+  }
 `;
 
 const Value = styled.div`
@@ -200,7 +234,7 @@ const Value = styled.div`
   @media (max-width: 576px) {
     flex-wrap: wrap;
     text-align: right;
-    justify-content: flex-end;
+    justify-content: flex-start;
     span {
       display: block;
       width: 100%;

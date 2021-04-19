@@ -17,32 +17,32 @@ export const NavAdmin: FC<Props> = ({ onClose }) => {
   return (
     <List>
       <ListItem>
-        <StyledLink smooth to="/admin" onClick={onClose}>
+        <StyledLink to="/admin" onClick={onClose}>
           {t("sideNav.mainScreen")}
         </StyledLink>
       </ListItem>
       <ListItem>
-        <StyledLink smooth to="/admin/deposit" onClick={onClose}>
+        <StyledLink to="/admin/deposit" onClick={onClose}>
           {t("sideNav.deposits")}
         </StyledLink>
       </ListItem>
       <ListItem>
-        <StyledLink smooth to="/admin/payments" onClick={onClose}>
+        <StyledLink to="/admin/payments" onClick={onClose}>
           {t("sideNav.pay")}
         </StyledLink>
       </ListItem>
       <ListItem>
-        <StyledLink smooth to="/admin/users" onClick={onClose}>
+        <StyledLink to="/admin/users" onClick={onClose}>
           {t("sideNav.users")}
         </StyledLink>
       </ListItem>
       <ListItem>
-        <StyledLink smooth to="/admin/portfolio" onClick={onClose}>
+        <StyledLink to="/admin/portfolio" onClick={onClose}>
           {t("sideNav.portfolio")}
         </StyledLink>
       </ListItem>
       <ListItem>
-        <StyledLink smooth to="/" onClick={onClose}>
+        <StyledLink to="/" onClick={onClose}>
           {t("sideNav.toHome")}
         </StyledLink>
       </ListItem>

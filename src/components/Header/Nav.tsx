@@ -50,29 +50,29 @@ export const Nav: FC<Props> = ({
         </ListItem>
         {admin && (
           <ListItem mob>
-            <StyledLink smooth to="/admin" onClick={onClose}>
+            <StyledLink to="/admin" onClick={onClose}>
               {t("headerButton.admin")}
             </StyledLink>
           </ListItem>
         )}
 
         <ListItem>
-          <StyledLink smooth to="/#banner" onClick={onClose}>
+          <StyledLink to="/#banner" onClick={onClose}>
             {t("header.item1")}
           </StyledLink>
         </ListItem>
         <ListItem>
-          <StyledLink to="/#tariffs" smooth onClick={onClose}>
+          <StyledLink to="/#tariffs" onClick={onClose}>
             {t("header.item2")}
           </StyledLink>
         </ListItem>
         <ListItem>
-          <StyledLink to="/#about" smooth onClick={onClose}>
+          <StyledLink to="/#about" onClick={onClose}>
             {t("header.item3")}
           </StyledLink>
         </ListItem>
         <ListItem>
-          <StyledLink to="/#contact" smooth onClick={onClose}>
+          <StyledLink to="/#contact" onClick={onClose}>
             {t("header.item4")}
           </StyledLink>
         </ListItem>

@@ -56,7 +56,6 @@ const RadialComponent: FC<{ data: Pokedex; height: number }> = ({
     setIsNormalOpen(true);
     onClose();
     setValue("");
-    // setLink(str);
     const newLink = `https://cwd.global/shopping/payment?to_name=${str}&amount=${
       num / 100000
     }`;
@@ -123,6 +122,8 @@ const RadialComponent: FC<{ data: Pokedex; height: number }> = ({
                 />
               </div>
               <Button
+                as="button"
+                disabled={!data.deposit.isActive}
                 blue
                 onClick={() =>
                   handleClick(data.deposit.account, data.deposit.minAmount)
@@ -134,14 +135,14 @@ const RadialComponent: FC<{ data: Pokedex; height: number }> = ({
             <RadialModalItem>
               <RadialBar
                 height={300}
-                values={60}
-                color={data.colors}
+                values={Number((data.procent * 100).toFixed(0))}
+                color={data.deposit.isActive ? data.colors : "#ccc"}
                 size="60%"
               />
               <RoundInside>
                 <RoundInsideName>{data.deposit.name}</RoundInsideName>
                 <RoundInsideProcent>
-                  {(data.procent * 100).toFixed(0)}
+                  {(data.procent * 100).toFixed(2)}
                   <Proc>%</Proc>
                 </RoundInsideProcent>
               </RoundInside>
@@ -153,7 +154,7 @@ const RadialComponent: FC<{ data: Pokedex; height: number }> = ({
         <RadialBar
           height={height}
           values={data.procent * 100}
-          color={data.colors}
+          color={data.deposit.isActive ? data.colors : "#ccc"}
         />
         <RoundInside>
           <RoundInsideName>{data.depositName}</RoundInsideName>
@@ -161,7 +162,7 @@ const RadialComponent: FC<{ data: Pokedex; height: number }> = ({
             {moment(data.date).format("DD.MM.YYYY")}
           </RoundInsideDate>
           <RoundInsideProcent>
-            {(data.procent * 100).toFixed(0)}
+            {(data.procent * 100).toFixed(2)}
             <Proc>%</Proc>
           </RoundInsideProcent>
         </RoundInside>
@@ -174,7 +175,7 @@ export const Payments = () => {
   const [statsDeposit, setStatsDeposit] = useState<RootPayDeposit[]>([]);
   const [bigArr, setBigArr] = useState<any>([]);
   const [smallArr, setSmallArr] = useState<any>([]);
-
+  const [loadReset, setLoadReset] = useState(false);
   const arrSizeBig = 10;
   const arrSizeMob = 4;
   const appContext = useContext(AppContext);
@@ -226,25 +227,30 @@ export const Payments = () => {
 
   const reset = () => {
     if (hubConnection) {
+      setLoadReset(true);
       hubConnection
         .invoke<RootPayDeposit[]>("GetDayPayouts")
         .then((res) => {
           console.log("GetDayPayouts", res);
           setStatsDeposit(res);
+          setLoadReset(false);
         })
-        .catch((e) => console.log(e));
+        .catch((e) => {
+          setLoadReset(false);
+          console.log(e);
+        });
     }
   };
 
   return (
     <Page>
       <Container>
-        <H2>Текущие выплаты</H2>
+        <H2>{t("payments.currPay")}</H2>
       </Container>
 
       <Container>
         {statsDeposit.length && (
-          <SwiperContainer>
+          <SwiperContainer alfa>
             <Swiper
               spaceBetween={10}
               slidesPerView={1}
@@ -260,13 +266,14 @@ export const Payments = () => {
                 </SwiperSlide>
               ))}
             </Swiper>
-            <OnDate>
-              на {moment(statsDeposit[0].payoutDate).format("DD.MM.YYYY")}{" "}
+            <OnDate rtt={loadReset}>
+              {t("payments.on")}{" "}
+              {moment(statsDeposit[0].payoutDate).format("DD.MM.YYYY")}{" "}
               <Refresh onClick={reset} />
             </OnDate>
           </SwiperContainer>
         )}
-        <SwiperContainerMob>
+        <SwiperContainerMob alfa>
           {statsDeposit.length && (
             <Swiper
               spaceBetween={10}
@@ -278,23 +285,6 @@ export const Payments = () => {
                   <RadialWrap>
                     {i.map((item: Pokedex, idx: number) => (
                       <RadialComponent height={170} key={idx} data={item} />
-                      // <RadialItem key={idx}>
-                      //   <RadialBar
-                      //     height={170}
-                      //     values={item.procent * 100}
-                      //     color={item.colors}
-                      //   />
-                      //   <RoundInside>
-                      //     <RoundInsideName>{item.depositName}</RoundInsideName>
-                      //     <RoundInsideDate>
-                      //       {moment(item.date).format("DD.MM.YYYY")}
-                      //     </RoundInsideDate>
-                      //     <RoundInsideProcent>
-                      //       {(item.procent * 100).toFixed(0)}
-                      //       <Proc>%</Proc>
-                      //     </RoundInsideProcent>
-                      //   </RoundInside>
-                      // </RadialItem>
                     ))}
                   </RadialWrap>
                 </SwiperSlide>
@@ -366,7 +356,7 @@ const Move = keyframes`
 100% { transform: rotate(360deg); }
 `;
 
-const OnDate = styled.div`
+const OnDate = styled.div<{ rtt?: boolean }>`
   position: absolute;
   bottom: 25px;
   right: 25px;
@@ -377,7 +367,7 @@ const OnDate = styled.div`
   cursor: pointer;
   z-index: 99999;
   svg {
-    animation: ${Move} 4s linear infinite;
+    animation: ${(props) => props.rtt && Move} 4s linear infinite;
   }
   @media (max-width: 768px) {
     display: none;
@@ -456,22 +446,22 @@ const RoundInsideDate = styled.div`
 const RoundInsideProcent = styled.div`
   text-align: center;
   font-weight: 900;
-  font-size: 38px;
+  font-size: 28px;
   line-height: 21px;
   color: #ff416e;
   @media (max-width: 768px) {
-    font-size: 32px;
+    font-size: 26px;
   }
 `;
 
 const RadialModalItem = styled.div`
-  width: 300px;
+  width: 280px;
   flex: none;
   position: relative;
   ${RoundInside} {
     top: 50%;
     left: 50%;
-    margin-left: -72px;
+    margin-left: -60px;
     margin-top: -66px;
     display: flex;
     align-items: center;
@@ -493,7 +483,7 @@ const RadialModalItem = styled.div`
     }
   }
   ${RoundInsideProcent} {
-    font-size: 52px;
+    font-size: 38px;
     line-height: 48px;
   }
   @media (max-width: 768px) {

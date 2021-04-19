@@ -176,8 +176,8 @@ export const Tariffs = () => {
   };
 
   return (
-    <Page>
-      <Container id="tariffs">
+    <Page id="tariffs">
+      <Container>
         <UpTitle small>{t("tariffs.uptitle")}</UpTitle>
       </Container>
       <Container>

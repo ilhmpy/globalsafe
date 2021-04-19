@@ -8,6 +8,7 @@ const GlobalStyle = createGlobalStyle`
 }
 html{
   min-height: 100vh;
+  /* scroll-behavior: smooth; */
 }
 body{
     font-family: 'Roboto', sans-serif;
@@ -234,7 +235,8 @@ export const Card = styled.div<{ alfa?: boolean }>`
   background: ${(props) => (props.alfa ? "rgba(255, 255, 255, 0.4)" : "#fff")};
   width: 100%;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
-  border-radius: 10px;
+  border-radius: 20px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 `;
 
