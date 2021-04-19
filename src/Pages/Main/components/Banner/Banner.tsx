@@ -8,6 +8,7 @@ import { ReactComponent as Scroll } from "../../../../assets/svg/scroll.svg";
 import { H1 } from "../../../../components/UI/MainStyled";
 import { useTranslation } from "react-i18next";
 import { CurrencyValues } from "../../../../components/CurrencyValues";
+import { Link } from "react-scroll";
 
 export const Banner = () => {
   const { t } = useTranslation();
@@ -41,7 +42,15 @@ export const Banner = () => {
       </Container>
       <Container>
         <ButtonIcon danger>
-          {t("banner.toProgramm")} <ArrowIcon />
+          <Link
+            to="tariffs"
+            spy={true}
+            smooth={true}
+            offset={-50}
+            duration={500}
+          >
+            {t("banner.toProgramm")} <ArrowIcon />
+          </Link>
         </ButtonIcon>
       </Container>
       <CurrencyValues />
