@@ -192,6 +192,19 @@ input[type=number] {
     opacity: 0;
     transition: opacity 500ms ease-in;
 }
+
+@keyframes flickerAnimation {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.6;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
 `;
 
 export const Container = styled.div`

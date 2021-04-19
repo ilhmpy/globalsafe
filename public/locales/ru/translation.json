@@ -46,6 +46,9 @@
             "infinity": "Хочу INFINITY"
         }
     },
+    "payments":{
+        "open": "Открыть депозит"
+    },
     "contacts":{
         "uptitle": "Контакты",
         "H1": "Для связи",

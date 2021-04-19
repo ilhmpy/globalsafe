@@ -46,6 +46,9 @@
             "infinity": "Want INFINITY"
         }
     },
+    "payments":{
+        "open": "Open deposit"
+    },
     "contacts":{
         "uptitle": "Contacts",
         "H1": "In touch with us ",

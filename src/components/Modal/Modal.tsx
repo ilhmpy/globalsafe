@@ -5,9 +5,15 @@ import { Portal } from "../Portal/Portal";
 type ModalProps = {
   onClose: () => void;
   width?: number;
+  zIndex?: string;
 };
 
-export const Modal: React.FC<ModalProps> = ({ children, onClose, width }) => {
+export const Modal: React.FC<ModalProps> = ({
+  children,
+  onClose,
+  width,
+  zIndex = "99999",
+}) => {
   const handleContainerClick = (e: React.MouseEvent) => {
     if (e.currentTarget === e.target) {
       onClose();
@@ -16,7 +22,7 @@ export const Modal: React.FC<ModalProps> = ({ children, onClose, width }) => {
 
   return (
     <Portal>
-      <ModalContainer>
+      <ModalContainer zIndex={zIndex}>
         <Center onClick={handleContainerClick}>
           <ModalComponent width={width}>
             <span className="close" onClick={onClose}>
@@ -44,7 +50,7 @@ const Center = styled.div`
   align-items: center;
 `;
 
-const ModalContainer = styled.div`
+const ModalContainer = styled.div<{ zIndex: string }>`
   position: fixed;
   top: 0;
   left: 0;
@@ -52,7 +58,7 @@ const ModalContainer = styled.div`
   height: 100%;
   background-color: rgba(0, 0, 0, 0.2);
   display: block;
-  z-index: 99999;
+  z-index: ${(props) => props.zIndex};
   overflow: auto;
 `;
 

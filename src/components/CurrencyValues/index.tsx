@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext, FC } from "react";
 import Chart from "react-apexcharts";
-import styled, { keyframes } from "styled-components/macro";
+import styled, { keyframes, css } from "styled-components/macro";
 import moment from "moment";
 import { Container, Card } from "../../globalStyles";
 import greenBg from "../../assets/svg/greenBack.svg";
@@ -91,29 +91,45 @@ export const CurrencyValues = () => {
     if (hubConnection) {
       hubConnection.on("MarketNotification", (data) => {
         console.log("MarketNotification", data);
-        if (data.assetKind === 2) {
-          setListGCWD((listGCWD) => [data, ...listGCWD]);
-        } else if (data.assetKind === 3) {
-          setListMGCWD((listMGCWD) => [data, ...listMGCWD]);
+        if (data.assetKind === 3) {
+          setListGCWD((listGCWD) => [...listGCWD, data]);
+        } else if (data.assetKind === 2) {
+          setListMGCWD((listMGCWD) => [...listMGCWD, data]);
         } else {
-          setListDIAMOND((listDIAMOND) => [data, ...listDIAMOND]);
+          setListDIAMOND((listDIAMOND) => [...listDIAMOND, data]);
         }
       });
     }
   }, [hubConnection]);
 
   const changeValue = (data: Collection[]) => {
-    const currValue = data[0].latestBid;
+    const currValue = data[data.length - 1].latestBid;
     const prevValue = data[1].latestBid;
     const filterPrevValues = data.filter(
       (item) => item.latestBid !== currValue
     );
     const value =
-      ((currValue - filterPrevValues[0].latestBid) / currValue) * 100;
+      ((currValue - filterPrevValues[filterPrevValues.length - 1].latestBid) /
+        currValue) *
+      100;
     if (value > 0) {
       return <ChartItemChange>{value.toFixed(2)} &nbsp;%</ChartItemChange>;
     } else {
       return <ChartItemChange red>{value.toFixed(2)}&nbsp;%</ChartItemChange>;
+    }
+  };
+
+  const redOrGreen = (data: Collection[]) => {
+    const currValue = data[data.length - 1].latestBid;
+    const filterPrevValues = data.filter(
+      (item) => item.latestBid !== currValue
+    );
+    const value =
+      currValue > filterPrevValues[filterPrevValues.length - 1].latestBid;
+    if (value) {
+      return ["#BCD476", "rgba(188, 212, 118, 0.4)"];
+    } else {
+      return ["#FF416E", "rgba(255, 255, 255, 0.4)"];
     }
   };
 
@@ -122,23 +138,71 @@ export const CurrencyValues = () => {
       <Container>
         <Wrapper>
           <ChartItems>
-            {listMGCWD.length && (
-              <ChartItem
-                alfa
-                onClick={() => setActive(1)}
-                active={active === 1}
-                red={listMGCWD[0].latestBid < listMGCWD[1].latestBid}
-              >
-                <ChartItemInner>
-                  <ChartItemHead>
-                    <ChartItemName>MGCWD</ChartItemName>
-                    {listMGCWD.length && changeValue(listMGCWD)}
-                  </ChartItemHead>
-                  {listMGCWD.length && (
+            <ChartItem
+              plchldr={!listMGCWD.length}
+              alfa
+              onClick={() => setActive(1)}
+              active={active === 1}
+              red={
+                !!listMGCWD.length &&
+                listMGCWD[0].latestBid < listMGCWD[1].latestBid
+              }
+            >
+              {listMGCWD.length && (
+                <>
+                  <ChartItemInner>
+                    <ChartItemHead>
+                      <ChartItemName>MGCWD</ChartItemName>
+                      {listMGCWD.length && changeValue(listMGCWD)}
+                    </ChartItemHead>
+                    {listMGCWD.length && (
+                      <ChartItemValue
+                        green={listMGCWD[0].latestBid > listMGCWD[1].latestBid}
+                      >
+                        {(listMGCWD[0].latestBid / 100000).toLocaleString(
+                          "ru-RU",
+                          {
+                            maximumFractionDigits: 2,
+                          }
+                        )}{" "}
+                        CWD
+                      </ChartItemValue>
+                    )}
+                  </ChartItemInner>
+                  <ChartBg>
+                    <ApexChart
+                      height={75}
+                      values={listMGCWD
+                        .slice(-20)
+                        .map((i) => i.latestBid / 100)}
+                      gradientColor={redOrGreen(listMGCWD)}
+                    />
+                  </ChartBg>
+                </>
+              )}
+            </ChartItem>
+
+            <ChartItem
+              plchldr={!listGCWD.length}
+              red={
+                !!listGCWD.length &&
+                listGCWD[0].latestBid < listGCWD[1].latestBid
+              }
+              alfa
+              onClick={() => setActive(0)}
+              active={active === 0}
+            >
+              {listGCWD.length && (
+                <>
+                  <ChartItemInner>
+                    <ChartItemHead>
+                      <ChartItemName>GCWD</ChartItemName>
+                      {listGCWD.length && changeValue(listGCWD)}
+                    </ChartItemHead>
                     <ChartItemValue
-                      green={listMGCWD[0].latestBid > listMGCWD[1].latestBid}
+                      green={listGCWD[0].latestBid > listGCWD[1].latestBid}
                     >
-                      {(listMGCWD[0].latestBid / 100000).toLocaleString(
+                      {(listGCWD[0].latestBid / 100000).toLocaleString(
                         "ru-RU",
                         {
                           maximumFractionDigits: 2,
@@ -146,86 +210,70 @@ export const CurrencyValues = () => {
                       )}{" "}
                       CWD
                     </ChartItemValue>
-                  )}
-                </ChartItemInner>
-                <ChartBg>
-                  <ApexChart
-                    height={75}
-                    values={listMGCWD.map((i) => i.latestBid / 100)}
-                    gradientColor={["#6DB9FF", "rgba(109, 185, 255, 0.4)"]}
-                  />
-                </ChartBg>
-              </ChartItem>
-            )}
-            {listGCWD.length && (
-              <ChartItem
-                red={listGCWD[0].latestBid < listGCWD[1].latestBid}
-                alfa
-                onClick={() => setActive(0)}
-                active={active === 0}
-              >
-                <ChartItemInner>
-                  <ChartItemHead>
-                    <ChartItemName>GCWD</ChartItemName>
-                    {listGCWD.length && changeValue(listGCWD)}
-                  </ChartItemHead>
-                  <ChartItemValue
-                    green={listGCWD[0].latestBid > listGCWD[1].latestBid}
-                  >
-                    {(listGCWD[0].latestBid / 100000).toLocaleString("ru-RU", {
-                      maximumFractionDigits: 2,
-                    })}{" "}
-                    CWD
-                  </ChartItemValue>
-                </ChartItemInner>
-                <ChartBg>
-                  <ApexChart
-                    height={75}
-                    values={listGCWD.map((i) => i.latestBid / 100)}
-                    gradientColor={["#FF416E", "rgba(255, 255, 255, 0.4)"]}
-                  />
-                </ChartBg>
-              </ChartItem>
-            )}
-            {listDIAMOND.length && (
-              <ChartItem
-                alfa
-                red={listDIAMOND[0].latestBid < listDIAMOND[1].latestBid}
-                onClick={() => setActive(2)}
-                active={active === 2}
-              >
-                <ChartItemInner>
-                  <ChartItemHead>
-                    <ChartItemName>DIAMOND</ChartItemName>
-                    {listDIAMOND.length && changeValue(listDIAMOND)}
-                  </ChartItemHead>
-                  {listDIAMOND.length && (
-                    <ChartItemValue
-                      green={
-                        listDIAMOND[0].latestBid > listDIAMOND[1].latestBid
-                      }
-                    >
-                      {(listDIAMOND[0].latestBid / 100).toLocaleString(
-                        "ru-RU",
-                        {
-                          maximumFractionDigits: 2,
+                  </ChartItemInner>
+                  <ChartBg>
+                    <ApexChart
+                      height={75}
+                      values={listGCWD.slice(-20).map((i) => i.latestBid / 100)}
+                      gradientColor={redOrGreen(listGCWD)}
+                    />
+                  </ChartBg>
+                </>
+              )}
+            </ChartItem>
+
+            <ChartItem
+              plchldr={!listDIAMOND.length}
+              alfa
+              red={
+                !!listDIAMOND.length &&
+                listDIAMOND[0].latestBid < listDIAMOND[1].latestBid
+              }
+              onClick={() => setActive(2)}
+              active={active === 2}
+            >
+              {listDIAMOND.length && (
+                <>
+                  <ChartItemInner>
+                    <ChartItemHead>
+                      <ChartItemName>DIAMOND</ChartItemName>
+                      {listDIAMOND.length && changeValue(listDIAMOND)}
+                    </ChartItemHead>
+                    {listDIAMOND.length && (
+                      <ChartItemValue
+                        green={
+                          listDIAMOND[0].latestBid > listDIAMOND[1].latestBid
                         }
-                      )}{" "}
-                      CWD
-                    </ChartItemValue>
-                  )}
-                </ChartItemInner>
-                <ChartBg>
-                  <ApexChart
-                    height={75}
-                    values={listDIAMOND.map((i) => i.latestBid / 100)}
-                    gradientColor={["#BCD476", "rgba(188, 212, 118, 0.4)"]}
-                  />
-                </ChartBg>
-              </ChartItem>
-            )}
+                      >
+                        {(listDIAMOND[0].latestBid / 100).toLocaleString(
+                          "ru-RU",
+                          {
+                            maximumFractionDigits: 2,
+                          }
+                        )}{" "}
+                        CWD
+                      </ChartItemValue>
+                    )}
+                  </ChartItemInner>
+                  <ChartBg>
+                    <ApexChart
+                      height={75}
+                      values={listDIAMOND
+                        .slice(-20)
+                        .map((i) => i.latestBid / 100)}
+                      gradientColor={redOrGreen(listDIAMOND)}
+                    />
+                  </ChartBg>
+                </>
+              )}
+            </ChartItem>
           </ChartItems>
-          <Charts alfa>
+          <Charts
+            alfa
+            plchldr={
+              !listGCWD.length && !listMGCWD.length && !listDIAMOND.length
+            }
+          >
             <CSSTransition
               in={active === 0}
               timeout={0}
@@ -233,22 +281,14 @@ export const CurrencyValues = () => {
               unmountOnExit
             >
               <>
-                <ApexChart
-                  values={listGCWD.map((i) => i.latestBid / 100)}
-                  gradientColor={["#FF416E", "rgba(255, 255, 255, 0.4)"]}
-                />
-                {/* <DescChart>
-                  <span>
-                    {listGCWD.length &&
-                      moment(listGCWD[0].date).format("MMMM `DD")}
-                  </span>
-                  <span>
-                    {listGCWD.length &&
-                      moment(listGCWD[listGCWD.length - 1].date).format(
-                        "MMMM `DD"
-                      )}
-                  </span>
-                </DescChart> */}
+                {listGCWD.length ? (
+                  <ApexChart
+                    values={listGCWD.map((i) => i.latestBid / 100)}
+                    gradientColor={redOrGreen(listGCWD)}
+                  />
+                ) : (
+                  ""
+                )}
               </>
             </CSSTransition>
             <CSSTransition
@@ -258,22 +298,14 @@ export const CurrencyValues = () => {
               unmountOnExit
             >
               <>
-                <ApexChart
-                  values={listMGCWD.map((i) => i.latestBid / 100)}
-                  gradientColor={["#6DB9FF", "rgba(109, 185, 255, 0.4)"]}
-                />
-                {/* <DescChart>
-                  <span>
-                    {listMGCWD.length &&
-                      moment(listMGCWD[0].date).format("MMMM `DD")}
-                  </span>
-                  <span>
-                    {listMGCWD.length &&
-                      moment(listMGCWD[listMGCWD.length - 1].date).format(
-                        "MMMM `DD"
-                      )}
-                  </span>
-                </DescChart> */}
+                {listMGCWD.length ? (
+                  <ApexChart
+                    values={listMGCWD.map((i) => i.latestBid / 100)}
+                    gradientColor={redOrGreen(listMGCWD)}
+                  />
+                ) : (
+                  ""
+                )}
               </>
             </CSSTransition>
             <CSSTransition
@@ -283,22 +315,14 @@ export const CurrencyValues = () => {
               unmountOnExit
             >
               <>
-                <ApexChart
-                  values={listDIAMOND.map((i) => i.latestBid / 100)}
-                  gradientColor={["#BCD476", "rgba(188, 212, 118, 0.4)"]}
-                />
-                {/* <DescChart>
-                  <span>
-                    {listDIAMOND.length &&
-                      moment(listDIAMOND[0].date).format("MMMM `DD")}
-                  </span>
-                  <span>
-                    {listDIAMOND.length &&
-                      moment(listDIAMOND[listDIAMOND.length - 1].date).format(
-                        "MMMM `DD"
-                      )}
-                  </span>
-                </DescChart> */}
+                {listDIAMOND.length ? (
+                  <ApexChart
+                    values={listDIAMOND.map((i) => i.latestBid / 100)}
+                    gradientColor={redOrGreen(listDIAMOND)}
+                  />
+                ) : (
+                  ""
+                )}
               </>
             </CSSTransition>
           </Charts>
@@ -330,7 +354,7 @@ const ApexChart: FC<ChartProps> = ({ values, gradientColor, height = 280 }) => {
           speed: 150,
           animateGradually: {
             enabled: true,
-            delay: 500,
+            delay: 100,
           },
           dynamicAnimation: {
             enabled: true,
@@ -448,20 +472,6 @@ const Wrapper = styled.div`
   }
 `;
 
-const Charts = styled(Card)`
-  padding: 10px 20px;
-  height: 300px;
-  max-width: 700px;
-  position: relative;
-  width: 100%;
-  border: 1px solid #ffffff;
-  @media (max-width: 768px) {
-    max-width: 100%;
-    height: auto;
-    padding: 6px 0px;
-  }
-`;
-
 const ChartItemHead = styled.div`
   display: flex;
   justify-content: space-between;
@@ -506,13 +516,90 @@ const ChartItemInner = styled.div`
 
 const ChartBg = styled.div`
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 15px;
   right: 0;
   z-index: -1;
+  width: 100px;
 `;
 
-const ChartItem = styled(Card)<{ red?: boolean; active?: boolean }>`
+const Move = keyframes`
+0% {opacity: 1;};
+50% {opacity: .6;};
+100% {opacity: 1;};
+`;
+
+const Stay = keyframes`
+100% {opacity: 1;};
+`;
+
+const MyCss = css`
+  position: relative;
+  width: 100%;
+  border-radius: 5px;
+  opacity: 1;
+  visibility: hidden;
+  overflow: hidden;
+  content: "&nbsp;";
+  color: transparent;
+  height: 87px;
+  &:after {
+    position: absolute;
+    content: "";
+    height: 100%;
+    width: 100%;
+    visibility: visible;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.075);
+    animation: ${Move} 1.5s infinite;
+  }
+`;
+
+const MyChartCss = css`
+  position: relative;
+  border-radius: 5px;
+  opacity: 1;
+  visibility: hidden;
+  overflow: hidden;
+  content: "&nbsp;";
+  color: transparent;
+  /* height: 300px; */
+  &:after {
+    position: absolute;
+    content: "";
+    height: 100%;
+    width: 100%;
+    visibility: visible;
+    left: 0;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.075);
+    animation: ${Move} 1.5s infinite;
+  }
+`;
+
+const Charts = styled(Card)<{ plchldr?: boolean }>`
+  padding: 10px 20px;
+  height: 300px;
+  max-width: 700px;
+  position: relative;
+  width: 100%;
+  border: 1px solid #ffffff;
+  @media (max-width: 768px) {
+    max-width: 100%;
+    height: auto;
+    padding: 6px 0px;
+  }
+  ${(props) => {
+    if (props.plchldr) {
+      return MyChartCss;
+    }
+  }}
+`;
+
+const ChartItem = styled(Card)<{
+  red?: boolean;
+  active?: boolean;
+  plchldr?: boolean;
+}>`
   text-align: left;
   margin: 0 auto;
   padding: 6px 18px;
@@ -529,6 +616,11 @@ const ChartItem = styled(Card)<{ red?: boolean; active?: boolean }>`
   background-origin: content-box;
   cursor: pointer;
   transition: border 0.2s;
+  ${(props) => {
+    if (props.plchldr) {
+      return MyCss;
+    }
+  }}
 `;
 
 const ChartItemName = styled.div`

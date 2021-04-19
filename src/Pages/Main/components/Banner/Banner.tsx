@@ -8,23 +8,22 @@ import { ReactComponent as Scroll } from "../../../../assets/svg/scroll.svg";
 import { H1 } from "../../../../components/UI/MainStyled";
 import { useTranslation } from "react-i18next";
 import { CurrencyValues } from "../../../../components/CurrencyValues";
-import { Payments } from "../Payments/Payments";
 
 export const Banner = () => {
   const { t } = useTranslation();
-  const [scroll, setScroll] = useState(true);
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 800) {
-        setScroll(false);
-      } else {
-        setScroll(true);
-      }
-    };
-    handleScroll();
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  // const [scroll, setScroll] = useState(true);
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     if (window.scrollY > 800) {
+  //       setScroll(false);
+  //     } else {
+  //       setScroll(true);
+  //     }
+  //   };
+  //   handleScroll();
+  //   window.addEventListener("scroll", handleScroll);
+  //   return () => window.removeEventListener("scroll", handleScroll);
+  // }, []);
   return (
     <>
       <Container id="banner">
@@ -46,8 +45,7 @@ export const Banner = () => {
         </ButtonIcon>
       </Container>
       <CurrencyValues />
-      <Payments />
-      <ScrollContainer>{scroll && <ScrollIcon />}</ScrollContainer>
+      {/* <ScrollContainer>{scroll && <ScrollIcon />}</ScrollContainer> */}
     </>
   );
 };

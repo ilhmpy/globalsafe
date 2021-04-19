@@ -8,6 +8,7 @@ import { About } from "./components/About/About";
 import { Footer } from "../../components/Footer/Footer";
 import { Contact } from "./components/Contact/Contact";
 import { Operations } from "./components/Operations/Operations";
+import { Payments } from "./components/Payments/Payments";
 
 export const Main = () => {
   return (
@@ -15,6 +16,7 @@ export const Main = () => {
       <Header />
       <MainPage>
         <Banner />
+        <Payments />
         <Operations />
         <Tariffs />
         <About />
