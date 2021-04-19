@@ -145,7 +145,8 @@ export const CurrencyValues = () => {
               plchldr={!listGCWD.length}
               red={
                 !!listGCWD.length &&
-                listGCWD[0].latestBid < listGCWD[1].latestBid
+                listGCWD[listGCWD.length - 1].latestBid <
+                  listGCWD[listGCWD.length - 2].latestBid
               }
               alfa
               onClick={() => setActive(0)}
@@ -159,14 +160,16 @@ export const CurrencyValues = () => {
                       {listGCWD.length && changeValue(listGCWD)}
                     </ChartItemHead>
                     <ChartItemValue
-                      green={listGCWD[0].latestBid > listGCWD[1].latestBid}
+                      green={
+                        listGCWD[listGCWD.length - 1].latestBid >
+                        listGCWD[listGCWD.length - 2].latestBid
+                      }
                     >
-                      {(listGCWD[0].latestBid / 100000).toLocaleString(
-                        "ru-RU",
-                        {
-                          maximumFractionDigits: 2,
-                        }
-                      )}{" "}
+                      {(
+                        listGCWD[listGCWD.length - 1].latestBid / 100000
+                      ).toLocaleString("ru-RU", {
+                        maximumFractionDigits: 2,
+                      })}{" "}
                       CWD
                     </ChartItemValue>
                   </ChartItemInner>
@@ -187,7 +190,8 @@ export const CurrencyValues = () => {
               active={active === 1}
               red={
                 !!listMGCWD.length &&
-                listMGCWD[0].latestBid < listMGCWD[1].latestBid
+                listMGCWD[listMGCWD.length - 1].latestBid <
+                  listMGCWD[listMGCWD.length - 2].latestBid
               }
             >
               {listMGCWD.length && (
@@ -199,14 +203,16 @@ export const CurrencyValues = () => {
                     </ChartItemHead>
                     {listMGCWD.length && (
                       <ChartItemValue
-                        green={listMGCWD[0].latestBid > listMGCWD[1].latestBid}
+                        green={
+                          listMGCWD[listMGCWD.length - 1].latestBid >
+                          listMGCWD[listMGCWD.length - 2].latestBid
+                        }
                       >
-                        {(listMGCWD[0].latestBid / 100000).toLocaleString(
-                          "ru-RU",
-                          {
-                            maximumFractionDigits: 2,
-                          }
-                        )}{" "}
+                        {(
+                          listMGCWD[listMGCWD.length - 1].latestBid / 100000
+                        ).toLocaleString("ru-RU", {
+                          maximumFractionDigits: 2,
+                        })}{" "}
                         CWD
                       </ChartItemValue>
                     )}
@@ -228,7 +234,8 @@ export const CurrencyValues = () => {
               alfa
               red={
                 !!listDIAMOND.length &&
-                listDIAMOND[0].latestBid < listDIAMOND[1].latestBid
+                listDIAMOND[listDIAMOND.length - 1].latestBid <
+                  listDIAMOND[listDIAMOND.length - 2].latestBid
               }
               onClick={() => setActive(2)}
               active={active === 2}
@@ -243,15 +250,15 @@ export const CurrencyValues = () => {
                     {listDIAMOND.length && (
                       <ChartItemValue
                         green={
-                          listDIAMOND[0].latestBid > listDIAMOND[1].latestBid
+                          listDIAMOND[listDIAMOND.length - 1].latestBid >
+                          listDIAMOND[listDIAMOND.length - 2].latestBid
                         }
                       >
-                        {(listDIAMOND[0].latestBid / 100).toLocaleString(
-                          "ru-RU",
-                          {
-                            maximumFractionDigits: 2,
-                          }
-                        )}{" "}
+                        {(
+                          listDIAMOND[listDIAMOND.length - 1].latestBid / 100
+                        ).toLocaleString("ru-RU", {
+                          maximumFractionDigits: 2,
+                        })}{" "}
                         CWD
                       </ChartItemValue>
                     )}
