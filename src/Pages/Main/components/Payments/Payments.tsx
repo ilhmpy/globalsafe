@@ -250,48 +250,56 @@ export const Payments = () => {
 
       <Container>
         {statsDeposit.length && (
-          <SwiperContainer alfa>
-            <Swiper
-              spaceBetween={10}
-              slidesPerView={1}
-              pagination={{ clickable: true }}
-            >
-              {bigArr.map((i: any, idx: number) => (
-                <SwiperSlide key={idx} style={{ maxWidth: 1130 }}>
-                  <RadialWrap>
-                    {i.map((item: Pokedex, idx: number) => (
-                      <RadialComponent height={210} key={idx} data={item} />
-                    ))}
-                  </RadialWrap>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-            <OnDate rtt={loadReset}>
-              {t("payments.on")}{" "}
-              {moment(statsDeposit[0].payoutDate).format("DD.MM.YYYY")}{" "}
-              <Refresh onClick={reset} />
-            </OnDate>
-          </SwiperContainer>
+          <>
+            <SwiperContainer alfa>
+              <Swiper
+                spaceBetween={10}
+                slidesPerView={1}
+                pagination={{ clickable: true }}
+              >
+                {bigArr.map((i: any, idx: number) => (
+                  <SwiperSlide key={idx} style={{ maxWidth: 1130 }}>
+                    <RadialWrap>
+                      {i.map((item: Pokedex, idx: number) => (
+                        <RadialComponent height={210} key={idx} data={item} />
+                      ))}
+                    </RadialWrap>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+              <OnDate rtt={loadReset}>
+                {t("payments.on")}{" "}
+                {moment(statsDeposit[0].payoutDate).format("DD.MM.YYYY")}{" "}
+                <Refresh onClick={reset} />
+              </OnDate>
+            </SwiperContainer>
+
+            <SwiperContainerMob alfa>
+              {statsDeposit.length && (
+                <Swiper
+                  spaceBetween={10}
+                  slidesPerView={1}
+                  pagination={{ clickable: true }}
+                >
+                  {smallArr.map((i: any, idx: number) => (
+                    <SwiperSlide key={idx}>
+                      <RadialWrap>
+                        {i.map((item: Pokedex, idx: number) => (
+                          <RadialComponent height={170} key={idx} data={item} />
+                        ))}
+                      </RadialWrap>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              )}
+              <OnDate rtt={loadReset}>
+                {t("payments.on")}{" "}
+                {moment(statsDeposit[0].payoutDate).format("DD.MM.YYYY")}{" "}
+                <Refresh onClick={reset} />
+              </OnDate>
+            </SwiperContainerMob>
+          </>
         )}
-        <SwiperContainerMob alfa>
-          {statsDeposit.length && (
-            <Swiper
-              spaceBetween={10}
-              slidesPerView={1}
-              pagination={{ clickable: true }}
-            >
-              {smallArr.map((i: any, idx: number) => (
-                <SwiperSlide key={idx}>
-                  <RadialWrap>
-                    {i.map((item: Pokedex, idx: number) => (
-                      <RadialComponent height={170} key={idx} data={item} />
-                    ))}
-                  </RadialWrap>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          )}
-        </SwiperContainerMob>
       </Container>
     </Page>
   );
@@ -336,6 +344,7 @@ const ModalContainer = styled.div`
 
 const SwiperContainer = styled(Card)`
   position: relative;
+  padding-bottom: 10px;
   @media (max-width: 768px) {
     display: none;
   }
@@ -343,9 +352,10 @@ const SwiperContainer = styled(Card)`
 
 const SwiperContainerMob = styled(Card)`
   display: none;
+  position: relative;
   @media (max-width: 768px) {
     display: block;
-    padding-bottom: 30px;
+    padding-bottom: 40px;
     .swiper-container {
       padding-bottom: 20px;
     }
@@ -370,7 +380,10 @@ const OnDate = styled.div<{ rtt?: boolean }>`
     animation: ${(props) => props.rtt && Move} 4s linear infinite;
   }
   @media (max-width: 768px) {
-    display: none;
+    right: 0;
+    left: 0%;
+    text-align: center;
+    bottom: 15px;
   }
 `;
 

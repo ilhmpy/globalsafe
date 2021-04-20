@@ -60,7 +60,7 @@ export const HubProvider: FC = ({ children }) => {
       })
       .catch();
   }, [myToken]);
-
+  // console.log("balanceList", balanceList);
   useEffect(() => {
     if (hubConnection) {
       hubConnection.on("BalanceUpdate", (data) => {
