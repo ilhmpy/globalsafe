@@ -65,11 +65,18 @@ export const HubProvider: FC = ({ children }) => {
     if (hubConnection) {
       hubConnection.on("BalanceUpdate", (data) => {
         console.log("BalanceUpdate", data);
-        if (data.balances) {
-          const newArr = data.balances.filter(
-            (item: any) => item.balanceKind === 1
+        if (balanceList) {
+          const idx = balanceList.findIndex(
+            (item) => item.balanceKind === data.balanceKind
           );
-          setBalance(newArr[0].volume);
+          setBalanceList([
+            ...balanceList.slice(0, idx),
+            data,
+            ...balanceList.slice(idx + 1),
+          ]);
+        }
+        if (data.balanceKind === 1) {
+          setBalance(data.volume);
         }
       });
       hubConnection
@@ -89,7 +96,7 @@ export const HubProvider: FC = ({ children }) => {
               balanceKind: item.balanceKind,
               volume: item.volume,
             }));
-            setBalanceList(balanceList);
+            setBalanceList(res.balances);
           }
           if (res.roles.length && res.roles[0].name === "administrator") {
             setIsAdmin(true);

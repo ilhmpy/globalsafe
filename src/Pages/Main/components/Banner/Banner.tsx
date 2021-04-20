@@ -41,7 +41,7 @@ export const Banner = () => {
         </TextBlock>
       </Container>
       <Container>
-        <ButtonIcon danger>
+        <ButtonIcon as="button" danger>
           <Link
             to="tariffs"
             spy={true}

@@ -135,7 +135,7 @@ export const CurrencyValues = () => {
       return ["#FF416E", "rgba(255, 255, 255, 0.4)"];
     }
   };
-
+  // console.log("listGCWD", listGCWD);
   return (
     <div>
       <Container>
