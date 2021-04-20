@@ -65,6 +65,7 @@ export const InfoMain = () => {
   const lang = localStorage.getItem("i18nextLng") || "ru";
   const languale = lang === "ru" ? 1 : 0;
   moment.locale(lang);
+
   const handleDepositModal = () => {
     setAddDeposit(false);
     setDepositSuccess(false);
