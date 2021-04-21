@@ -370,7 +370,7 @@ const ApexChart: FC<ChartProps> = ({ values, gradientColor, height = 280 }) => {
         type: "area",
         animations: {
           enabled: true,
-          easing: "easeinout",
+          easing: "linear",
           speed: 150,
           animateGradually: {
             enabled: true,
@@ -389,6 +389,9 @@ const ApexChart: FC<ChartProps> = ({ values, gradientColor, height = 280 }) => {
         },
         toolbar: {
           show: false,
+        },
+        noData: {
+          text: "Loading...",
         },
       },
       colors: [gradientColor[0]],

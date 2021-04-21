@@ -132,7 +132,12 @@ const RadialComponent: FC<{ data: Pokedex; height: number }> = ({
                 {t("payments.open")}
               </Button>
             </ProgramCard>
-            <RadialModalItem>
+            <RadialModalItem
+              small={
+                data.deposit.name.split(" ")[0].length > 6 &&
+                data.deposit.name.split(" ").length > 1
+              }
+            >
               <RadialBar
                 height={300}
                 values={Number((data.procent * 100).toFixed(0))}
@@ -157,7 +162,14 @@ const RadialComponent: FC<{ data: Pokedex; height: number }> = ({
           color={data.deposit.isActive ? data.colors : "#ccc"}
         />
         <RoundInside>
-          <RoundInsideName>{data.depositName}</RoundInsideName>
+          <RoundInsideName
+            small={
+              data.deposit.name.split(" ")[0].length > 6 &&
+              data.deposit.name.split(" ").length > 1
+            }
+          >
+            {data.depositName}
+          </RoundInsideName>
           <RoundInsideDate>
             {moment(data.date).format("DD.MM.YYYY")}
           </RoundInsideDate>
@@ -345,6 +357,9 @@ const ModalContainer = styled.div`
 const SwiperContainer = styled(Card)`
   position: relative;
   padding-bottom: 10px;
+  .swiper-pagination-bullet:only-child {
+    visibility: hidden;
+  }
   @media (max-width: 768px) {
     display: none;
   }
@@ -353,6 +368,9 @@ const SwiperContainer = styled(Card)`
 const SwiperContainerMob = styled(Card)`
   display: none;
   position: relative;
+  .swiper-pagination-bullet:only-child {
+    visibility: hidden;
+  }
   @media (max-width: 768px) {
     display: block;
     padding-bottom: 40px;
@@ -426,15 +444,17 @@ const RoundInside = styled.div`
   }
 `;
 
-const RoundInsideName = styled.div`
+const RoundInsideName = styled.div<{ small?: boolean }>`
   text-align: center;
   font-weight: 500;
-  font-size: 18px;
-  line-height: 21px;
+  font-size: ${(props) => (props.small ? "16px" : "18px")};
+  line-height: ${(props) => (props.small ? "18px" : "21px")};
   text-transform: uppercase;
   color: #0e0d3d;
   padding-top: 26px;
   padding-bottom: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
   @media (max-width: 768px) {
     font-size: 14px;
     max-width: 85px;
@@ -467,7 +487,7 @@ const RoundInsideProcent = styled.div`
   }
 `;
 
-const RadialModalItem = styled.div`
+const RadialModalItem = styled.div<{ small?: boolean }>`
   width: 280px;
   flex: none;
   position: relative;
@@ -488,8 +508,8 @@ const RadialModalItem = styled.div`
   }
   ${RoundInsideName} {
     font-weight: 500;
-    font-size: 36px;
-    line-height: 40px;
+    font-size: ${(props) => (props.small ? "18px" : "36px")};
+    line-height: ${(props) => (props.small ? "28px" : "40px")};
     @media (max-width: 768px) {
       max-width: 100%;
       padding-top: 23px;

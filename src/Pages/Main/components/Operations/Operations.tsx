@@ -31,7 +31,7 @@ export const Operations = () => {
           5
         )
         .then((res) => {
-          console.log("GetOperationsNotifications", res);
+          // console.log("GetOperationsNotifications", res);
           setNotifyList(res.collection);
         })
         .catch((e) => console.log(e));

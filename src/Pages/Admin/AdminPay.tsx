@@ -94,7 +94,7 @@ export const AdminPay = () => {
       hubConnection
         .invoke<ListDeposits>("GetAllPublicDeposits", 1, false, 0, 40)
         .then((res) => {
-          console.log("GetDeposits", res);
+          // console.log("GetDeposits", res);
           setListDeposits(res.collection);
         })
         .catch((err: Error) => console.log(err));
