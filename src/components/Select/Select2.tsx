@@ -4,6 +4,7 @@ import { ReactComponent as Icon } from "../../assets/svg/selectArrow.svg";
 import useOnClickOutside from "../../hooks/useOutsideHook";
 import { CollectionListDeposits } from "../../types/deposits";
 import { Scrollbars } from "react-custom-scrollbars";
+import { useTranslation } from "react-i18next";
 
 const ListItems = ({ data, addList }: any) => {
   const [active, setActive] = useState(-1);
@@ -11,6 +12,7 @@ const ListItems = ({ data, addList }: any) => {
     const current = active === foldNum ? -1 : foldNum;
     setActive(current);
   };
+  const { t } = useTranslation();
 
   return (
     <>
@@ -34,7 +36,7 @@ const ListItems = ({ data, addList }: any) => {
               selectFold(i);
             }}
           >
-            подробнее
+            {t("more")}
           </Styled.Fold>
           <Styled.FoldContent
             open={active === i}
