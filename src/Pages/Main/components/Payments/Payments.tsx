@@ -409,6 +409,7 @@ const RadialWrap = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
   @media (max-width: 992px) {
     flex-wrap: wrap;
   }
