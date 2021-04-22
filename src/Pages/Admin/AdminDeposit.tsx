@@ -159,7 +159,7 @@ export const AdminDeposit = () => {
       hubConnection
         .invoke<DepositStats[]>("GetUsersDepositsStats")
         .then((res) => {
-          console.log("res", res);
+          // console.log("res", res);
           setStatsDeposit(res);
         })
         .catch((err: Error) => console.log(err));
@@ -194,6 +194,7 @@ export const AdminDeposit = () => {
           20
         )
         .then((res) => {
+          console.log("GetUsersDeposits", res);
           setTotalList(res.totalRecords);
           setLoading(false);
           setDepositsList(res.collection);
@@ -435,8 +436,8 @@ const TableHeadItem = styled.li`
   }
   &:nth-child(5) {
     max-width: 110px;
-    @media (max-width: 992px) {
-      display: none;
+    @media (max-width: 576px) {
+      text-align: center;
     }
   }
   &:nth-child(6) {
@@ -448,7 +449,8 @@ const TableHeadItem = styled.li`
   &:nth-child(7) {
     max-width: 110px;
     @media (max-width: 576px) {
-      max-width: 80px;
+      display: none;
+      text-align: center;
     }
   }
   &:nth-child(8) {

@@ -12,6 +12,7 @@ import {
   Link,
   Switch,
   Redirect,
+  useHistory,
 } from "react-router-dom";
 import { Header } from "../../components/Header/Header";
 import * as Styled from "./Styles.elements";
@@ -62,6 +63,7 @@ export const InfoMain = () => {
   const balanceList = appContext.balanceList;
   const { t, i18n } = useTranslation();
   const inputRef = useRef<any>(null);
+  const history = useHistory();
   const lang = localStorage.getItem("i18nextLng") || "ru";
   const languale = lang === "ru" ? 1 : 0;
   moment.locale(lang);
@@ -215,6 +217,13 @@ export const InfoMain = () => {
     alert(t("copy.copy"), t("copy.text"), "success");
     navigator.clipboard.writeText(text);
   };
+
+  const toDeposit = () => {
+    setAddDeposit(false);
+    setDepositSuccess(false);
+    history.push("/info/deposits");
+  };
+
   return (
     <>
       <Header />
@@ -322,7 +331,7 @@ export const InfoMain = () => {
           <Modal width={540} onClose={() => setDepositSuccess(false)}>
             <Styled.ModalBlock>
               <Styled.ModalTitle>{t("depositSuccess.title")}</Styled.ModalTitle>
-              <Styled.ModalButton onClick={handleDepositModal} danger>
+              <Styled.ModalButton onClick={toDeposit} danger>
                 {t("depositSuccess.button")}
               </Styled.ModalButton>
             </Styled.ModalBlock>
