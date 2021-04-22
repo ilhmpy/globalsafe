@@ -173,7 +173,7 @@ export const Accordion = styled.div`
 
 export const Fold = styled.div`
   cursor: pointer;
-  text-align: right;
+  text-align: left;
   width: 100%;
   padding-top: 3px;
   border: none;

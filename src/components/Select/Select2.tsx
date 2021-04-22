@@ -4,6 +4,7 @@ import { ReactComponent as Icon } from "../../assets/svg/selectArrow.svg";
 import useOnClickOutside from "../../hooks/useOutsideHook";
 import { CollectionListDeposits } from "../../types/deposits";
 import { Scrollbars } from "react-custom-scrollbars";
+import { useTranslation } from "react-i18next";
 
 const ListItems = ({ data, addList }: any) => {
   const [active, setActive] = useState(-1);
@@ -11,6 +12,7 @@ const ListItems = ({ data, addList }: any) => {
     const current = active === foldNum ? -1 : foldNum;
     setActive(current);
   };
+  const { t } = useTranslation();
 
   return (
     <>
@@ -21,7 +23,7 @@ const ListItems = ({ data, addList }: any) => {
               type="checkbox"
               name={item.label}
               checked={item.checked}
-              onChange={(e) => addList(e, item.id)}
+              onChange={(e) => addList(e, item.safeId)}
             />
             <Styled.CheckboxIcon />
             <span>{item.label}</span>
@@ -34,7 +36,7 @@ const ListItems = ({ data, addList }: any) => {
               selectFold(i);
             }}
           >
-            подробнее
+            {t("more")}
           </Styled.Fold>
           <Styled.FoldContent
             open={active === i}
@@ -93,16 +95,17 @@ export const Select: FC<Props> = ({
 
   const addList = (e: any, id: number) => {
     const { checked, name } = e.target;
-    const arr = list.map((item) =>
-      item.label === name ? { ...item, checked: checked } : item
+
+    const arr = list.map((item: any) =>
+      item.safeId === id ? { ...item, checked: checked } : item
     );
     setList(arr);
-    const value = list.filter((i) => i.id === id)[0];
-    const isValue = checkList.findIndex((i: any) => i.id === id);
+    const value = list.filter((i: any) => i.safeId === id)[0];
+    const isValue = checkList.findIndex((i: any) => i.safeId === id);
     if (isValue === -1) {
       setCheckList([...checkList, value]);
     } else {
-      const value = checkList.filter((i: any) => i.id !== id);
+      const value = checkList.filter((i: any) => i.safeId !== id);
       setCheckList(value);
     }
   };
