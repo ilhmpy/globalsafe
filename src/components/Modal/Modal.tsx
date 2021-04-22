@@ -68,14 +68,14 @@ const ModalComponent = styled.div<{ width?: number }>`
   justify-content: center;
   margin: 50px auto;
   cursor: auto;
-  background: #fafafa;
+  background: ${(props) => props.theme.modal};
   border-radius: 10px;
   padding: 1rem;
   max-width: ${(props) => (props.width ? props.width + "px" : "400px")};
   width: 100%;
   position: relative;
   span {
-    color: #333;
+    color: ${(props) => props.theme.text3};
     position: absolute;
     right: 20px;
     top: 15px;
@@ -83,7 +83,7 @@ const ModalComponent = styled.div<{ width?: number }>`
     z-index: 9999;
     font-size: 18px;
     &:hover {
-      color: #000;
+      color: ${(props) => props.theme.text3Hover};
     }
   }
 `;

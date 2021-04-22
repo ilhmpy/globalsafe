@@ -87,6 +87,14 @@ const RadialComponent: FC<{ data: Pokedex; height: number }> = ({
     window.open(link);
   };
 
+  useEffect(() => {
+    if (show) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+  }, [show]);
+
   return (
     <div>
       {isNormalOpen && (
@@ -121,7 +129,7 @@ const RadialComponent: FC<{ data: Pokedex; height: number }> = ({
                   dangerouslySetInnerHTML={{ __html: data.deposit.description }}
                 />
               </div>
-              <Button
+              <ModalButton
                 as="button"
                 disabled={!data.deposit.isActive}
                 blue
@@ -130,7 +138,7 @@ const RadialComponent: FC<{ data: Pokedex; height: number }> = ({
                 }
               >
                 {t("payments.open")}
-              </Button>
+              </ModalButton>
             </ProgramCard>
             <RadialModalItem
               small={
@@ -141,7 +149,7 @@ const RadialComponent: FC<{ data: Pokedex; height: number }> = ({
               <RadialBar
                 height={300}
                 values={Number((data.procent * 100).toFixed(0))}
-                color={data.deposit.isActive ? data.colors : "#ccc"}
+                color={data.deposit.isActive ? data.colors : "#666"}
                 size="60%"
               />
               <RoundInside>
@@ -159,7 +167,7 @@ const RadialComponent: FC<{ data: Pokedex; height: number }> = ({
         <RadialBar
           height={height}
           values={data.procent * 100}
-          color={data.deposit.isActive ? data.colors : "#ccc"}
+          color={data.deposit.isActive ? data.colors : "#666"}
         />
         <RoundInside>
           <RoundInsideName
@@ -317,8 +325,15 @@ export const Payments = () => {
   );
 };
 
+const ModalButton = styled(Button)`
+  &:disabled {
+    background: ${(props) => props.theme.bbdis};
+    border-color: ${(props) => props.theme.bbdis};
+    box-shadow: none;
+  }
+`;
+
 const Text = styled.div`
-  color: #0e0d3d;
   font-size: 14px;
   font-weight: 400;
   font-style: normal;
@@ -332,10 +347,6 @@ const Text = styled.div`
   @media (max-width: 768px) {
     text-align: center;
   }
-`;
-
-const ModalButton = styled(Button)`
-  min-width: 100%;
 `;
 
 const ModalContainer = styled.div`
@@ -391,7 +402,7 @@ const OnDate = styled.div<{ rtt?: boolean }>`
   text-align: right;
   font-size: 14px;
   line-height: 116.69%;
-  color: rgba(86, 101, 127, 0.6);
+  color: ${(props) => props.theme.text};
   cursor: pointer;
   z-index: 99999;
   svg {
@@ -451,7 +462,6 @@ const RoundInsideName = styled.div<{ small?: boolean }>`
   font-size: ${(props) => (props.small ? "16px" : "18px")};
   line-height: ${(props) => (props.small ? "18px" : "21px")};
   text-transform: uppercase;
-  color: #0e0d3d;
   padding-top: 26px;
   padding-bottom: 4px;
   overflow: hidden;
@@ -470,7 +480,7 @@ const RoundInsideDate = styled.div`
   line-height: 116.69%;
   text-align: center;
   text-transform: uppercase;
-  color: rgba(86, 101, 127, 0.6);
+  color: ${(props) => props.theme.text};
   padding-bottom: 10px;
   @media (max-width: 768px) {
     font-size: 12px;
@@ -526,7 +536,6 @@ const RadialModalItem = styled.div<{ small?: boolean }>`
 `;
 
 export const BlockTitle = styled.div`
-  color: #0e0d3d;
   font-size: 18px;
   font-weight: 900;
   font-style: normal;

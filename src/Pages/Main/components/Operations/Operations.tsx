@@ -150,6 +150,12 @@ const TableList = styled.ul<{ card?: boolean; dn?: boolean }>`
   justify-content: space-between;
   padding: 10px 50px;
   margin-bottom: 18px;
+  background: ${(props) =>
+    props.card ? props.theme.card.backgroundAlfa : "transparent"};
+  box-shadow: ${(props) =>
+    props.card ? "0px 1px 3px rgba(0, 0, 0, 0.25)" : "none"};
+  border-radius: 20px;
+  border: ${(props) => (props.card ? props.theme.card.border : "none")};
   @media (max-width: 992px) {
     padding: 10px 15px;
   }
@@ -165,9 +171,10 @@ const TableList = styled.ul<{ card?: boolean; dn?: boolean }>`
   ${(props) => {
     if (props.card) {
       return `
-            background: rgba(255, 255, 255, .8);
+            background: ${({ theme }: any) => theme.card.backgroundAlfa};
             box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
             border-radius: 20px;
+            border: ${({ theme }: any) => theme.card.border};
           `;
     }
   }}
@@ -179,7 +186,7 @@ const TableItem = styled.li`
   font-size: 18px;
   line-height: 21px;
   width: 100%;
-  color: #515172;
+  color: ${(props) => props.theme.text2};
   padding-right: 10px;
   @media (max-width: 768px) {
     font-size: 14px;
@@ -212,7 +219,7 @@ const TableItem = styled.li`
 `;
 
 const TableItemHead = styled(TableItem)`
-  color: rgba(81, 81, 114, 0.8);
+  color: ${(props) => props.theme.text2};
   @media (max-width: 576px) {
     display: none;
   }
@@ -247,7 +254,7 @@ const Text = styled.div`
   font-size: 20px;
   line-height: 23px;
   letter-spacing: 0.1px;
-  color: #515172;
+  color: ${(props) => props.theme.text2};
   span {
     color: rgba(255, 65, 110, 1);
   }

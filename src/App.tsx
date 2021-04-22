@@ -7,23 +7,27 @@ import { HubProvider } from "./context/HubContext";
 import { Admin } from "./Pages/Admin";
 import { AmountProvider } from "./context/AmountContext";
 import { InfoMain } from "./Pages/PrivateArea";
+import { ThemeProvider } from "styled-components";
+import { lightTheme, darkTheme } from "./theme/theme";
 
 function App() {
   return (
     <Router>
       <HubProvider>
         <AmountProvider>
-          <div className="App">
-            <GlobalStyle />
-            <Switch>
-              <Route path="/" component={Main} exact />
-              <Route path="/admin" component={Admin} />
-              <Route path="/info" component={InfoMain} />
-              <Route path="/login" component={Authentication} />
-              <Route path="/register" component={Register} />
-              <Route component={Main} />
-            </Switch>
-          </div>
+          <ThemeProvider theme={darkTheme}>
+            <div className="App">
+              <GlobalStyle />
+              <Switch>
+                <Route path="/" component={Main} exact />
+                <Route path="/admin" component={Admin} />
+                <Route path="/info" component={InfoMain} />
+                <Route path="/login" component={Authentication} />
+                <Route path="/register" component={Register} />
+                <Route component={Main} />
+              </Switch>
+            </div>
+          </ThemeProvider>
         </AmountProvider>
       </HubProvider>
     </Router>

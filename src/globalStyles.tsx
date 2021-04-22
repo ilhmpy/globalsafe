@@ -14,15 +14,11 @@ body{
     font-family: 'Roboto', sans-serif;
     font-size: 16px;
     line-height: 1.25;
-    color: #0E0D3D;
+    color:${(props) => props.theme.text};
     position: relative;
     font-weight: 400;
     background: #E5E5E5;
-    background: linear-gradient(
-      0deg
-      , rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)), linear-gradient( 
-      82.3deg
-      , #effff9 3.67%, #f3f9ff 22.57%, #fffdf0 44.98%, #fff0f0 73%, #f0f0ff 95.88% ), #ffffff;
+    background:${(props) => props.theme.body} ;
           background-repeat: no-repeat;
       height: 100%;
 } 
@@ -85,12 +81,24 @@ a{
   text-align: center;
   color: #0E0D3D;
 }
+
+.apexcharts-tooltip.apexcharts-theme-light {
+  border: none !important;
+  background: none;
+}
+
 .currency-toltip{
+  background: ${(props) => props.theme.card.background};
   padding: 6px;
   font-weight: normal;
+  border: none !important;
+  box-shadow: none;
   font-size: 12px;
+  border-color: rgba(0, 0, 0, 0);
+  fill: none;
+  outline: none;
   line-height: 14px;
-  color: #515172;
+  color: ${(props) => props.theme.text2};
 }
 #chart1 .apexcharts-tooltip,
 #chart2 .apexcharts-tooltip{
@@ -232,12 +240,14 @@ export const ContainerRow = styled(Container)`
 `;
 
 export const Card = styled.div<{ alfa?: boolean }>`
-  background: ${(props) => (props.alfa ? "rgba(255, 255, 255, 0.4)" : "#fff")};
+  background: ${(props) =>
+    props.alfa ? props.theme.card.backgroundAlfa : props.theme.card.background};
   width: 100%;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
   border-radius: 20px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
+  border: ${(props) => props.theme.card.border};
 `;
 
 export default GlobalStyle;

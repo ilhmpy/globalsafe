@@ -66,7 +66,6 @@ const BlockItem = styled.div`
     width: 100%;
   }
   p {
-    color: #0e0d3d;
     font-size: 14px;
     font-weight: 400;
     font-style: normal;
@@ -77,7 +76,6 @@ const BlockItem = styled.div`
 `;
 
 const SiteLink = styled.div`
-  color: #0e0d3d;
   font-size: 18px;
   font-weight: 900;
   font-style: normal;
@@ -95,7 +93,6 @@ const LinkBlock = styled.div`
   display: flex;
   flex-direction: column;
   span {
-    color: #0e0d3d;
     font-size: 14px;
     font-weight: 400;
     font-style: normal;
@@ -105,5 +102,5 @@ const LinkBlock = styled.div`
 `;
 
 const Link = styled(SiteLink)`
-  color: #00e;
+  color: ${(props) => props.theme.link};
 `;

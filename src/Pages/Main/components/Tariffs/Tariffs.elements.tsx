@@ -3,7 +3,6 @@ import styled from "styled-components/macro";
 import { Container } from "../../../../globalStyles";
 
 export const BlockTitle = styled.div`
-  color: #0e0d3d;
   font-size: 18px;
   font-weight: 900;
   font-style: normal;
@@ -39,8 +38,8 @@ export const BlockItem = styled.div`
   align-items: center;
   margin: 20px 10px;
   height: auto;
-  background-color: rgba(255, 255, 255, 0.4);
-  border: 1px solid #ffffff;
+  background-color: ${(props) => props.theme.card.backgroundAlfa};
+  border: 1px solid ${(props) => props.theme.card.border};
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   border-radius: 20px;
   padding-top: 40px;
@@ -54,7 +53,6 @@ export const BlockItem = styled.div`
 `;
 
 export const Text = styled.p`
-  color: #0e0d3d;
   font-size: 14px;
   font-weight: 400;
   font-style: normal;
@@ -104,7 +102,7 @@ export const ModalBlock = styled.div`
   margin: 0 auto;
   padding: 50px 10px;
   span {
-    color: #333;
+    color: ${(props) => props.theme.text3};
     position: absolute;
     right: 20px;
     top: 20px;
@@ -125,7 +123,6 @@ export const ModalTitle = styled.h4`
   font-weight: 500;
   font-size: 24px;
   line-height: 28px;
-  color: #0e0d3d;
   text-align: center;
   margin-bottom: 20px;
 `;

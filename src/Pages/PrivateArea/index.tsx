@@ -159,6 +159,7 @@ export const InfoMain = () => {
       hubConnection
         .invoke<RootDeposits>("GetDeposits", languale, false, 0, 40)
         .then((res) => {
+          console.log("GetDeposits", res);
           if (res.collection.length) {
             setDepositsList(res.collection);
           }

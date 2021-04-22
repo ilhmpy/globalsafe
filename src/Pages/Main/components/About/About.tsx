@@ -96,7 +96,6 @@ const Img = styled.img`
 `;
 
 const BlockTitle = styled.h4`
-  color: #0e0d3d;
   font-size: 18px;
   font-weight: 900;
   font-style: normal;
@@ -106,7 +105,6 @@ const BlockTitle = styled.h4`
 `;
 
 const BlockSubtitle = styled.p`
-  color: #0e0d3d;
   font-size: 14px;
   font-weight: 400;
   font-style: normal;
@@ -120,7 +118,6 @@ const Text = styled.p`
   text-align: left;
   margin-top: 41px;
   margin-bottom: 41px;
-  color: #0e0d3d;
   font-size: 14px;
   font-weight: 400;
   font-style: normal;

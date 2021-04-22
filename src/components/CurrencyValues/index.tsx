@@ -426,6 +426,9 @@ const ApexChart: FC<ChartProps> = ({ values, gradientColor, height = 280 }) => {
         labels: {
           show: false,
         },
+        crosshairs: {
+          show: false,
+        },
       },
       grid: {
         show: false,
@@ -525,7 +528,7 @@ const ChartBg = styled.div`
   position: absolute;
   top: 15px;
   right: 0;
-  z-index: -1;
+  z-index: 0;
   width: 100px;
 `;
 
@@ -589,7 +592,7 @@ const Charts = styled(Card)<{ plchldr?: boolean }>`
   max-width: 700px;
   position: relative;
   width: 100%;
-  border: 1px solid #ffffff;
+  border: 1px solid ${(props) => props.theme.card.background};
   @media (max-width: 768px) {
     max-width: 100%;
     height: 180px;
@@ -628,7 +631,8 @@ const ChartItem = styled(Card)<{
   position: relative;
   margin-bottom: 20px;
   display: flex;
-  border: 1px solid ${(props) => (props.active ? "#FF416E" : "#ffffff")};
+  border: 1px solid
+    ${(props) => (props.active ? "#FF416E" : props.theme.card.background)};
   justify-content: space-between;
   align-items: center;
   background-repeat: no-repeat;
@@ -650,7 +654,7 @@ const ChartItemName = styled.div`
   font-size: 18px;
   margin-bottom: 10px;
   line-height: 21px;
-  color: #515172;
+  color: ${(props) => props.theme.text2};
   z-index: 99;
 `;
 
@@ -670,7 +674,7 @@ const ChartItemValue = styled.div<{ green?: boolean }>`
   font-weight: 500;
   font-size: 36px;
   line-height: 42px;
-  color: #515172;
+  color: ${(props) => props.theme.text2};
   animation: ${(props) => (props.green ? BgGreen : BgRed)} 0.5s linear;
   display: inline-block;
   padding: 0 5px;

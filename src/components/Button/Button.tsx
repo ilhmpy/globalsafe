@@ -27,7 +27,7 @@ export const Button = styled.a<Props>`
   justify-content: center;
   text-align: center;
   border: 1px solid;
-  border-color: #0e0d3d;
+  border-color: ${(props) => props.theme.buttonBorder};
   box-sizing: border-box;
   border-radius: 24px;
   margin-bottom: ${(props) => (props.mb ? "20px" : "0")};
@@ -37,8 +37,8 @@ export const Button = styled.a<Props>`
   -moz-appearance: none;
   appearance: none;
   &:hover {
-    box-shadow: 0px 4px 10px #0e0d3d;
-    border-color: #0e0d3d;
+    box-shadow: 0px 4px 10px ${(props) => props.theme.buttonBorder};
+    border-color: ${(props) => props.theme.buttonBorder};
   }
   &:focus,
   &:active {
@@ -74,7 +74,7 @@ export const Button = styled.a<Props>`
     } else if (props.dangerOutline) {
       return `
       background: transparent;
-      color: rgba(14, 13, 61, 1);
+      color:  ${(props: any) => props.theme.text};
       border-color: #FF416E;
       &:hover{
         box-shadow: 0px 4px 10px #FF416E;
