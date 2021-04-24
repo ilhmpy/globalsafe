@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useContext } from "react";
 import {
   HeaderNav,
   List,
@@ -11,6 +11,7 @@ import {
 import { useTranslation } from "react-i18next";
 import usa from "../../assets/svg/usa.svg";
 import ru from "../../assets/svg/russia.svg";
+import { ThemeContext } from "../../context/ThemeContext";
 
 type Props = {
   onClose: () => void;
@@ -32,7 +33,8 @@ export const Nav: FC<Props> = ({
   lang,
 }: Props) => {
   const { t, i18n } = useTranslation();
-
+  const themeContext = useContext(ThemeContext);
+  const swithTheme = themeContext.toggleTheme;
   return (
     <HeaderNav>
       <List>
@@ -91,7 +93,7 @@ export const Nav: FC<Props> = ({
           )}
         </ListItem>
         <ListItem>
-          <SwitchTheme></SwitchTheme>
+          <SwitchTheme onClick={swithTheme}></SwitchTheme>
         </ListItem>
       </List>
     </HeaderNav>
