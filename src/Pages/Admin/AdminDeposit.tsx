@@ -159,7 +159,7 @@ export const AdminDeposit = () => {
       hubConnection
         .invoke<DepositStats[]>("GetUsersDepositsStats")
         .then((res) => {
-          console.log("res", res);
+          // console.log("res", res);
           setStatsDeposit(res);
         })
         .catch((err: Error) => console.log(err));
@@ -244,6 +244,7 @@ export const AdminDeposit = () => {
       <Rounds />
 
       <Styled.FilterBlock>
+        <FilterName>{t("adminDeposit.filter")}</FilterName>
         <Styled.SelectContainer>
           <Styled.SelectWrap>
             <Styled.Label>{t("adminDeposit.labelUser")}</Styled.Label>
@@ -321,6 +322,17 @@ export const AdminDeposit = () => {
   );
 };
 
+const FilterName = styled.div`
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 21px;
+  letter-spacing: 0.1px;
+  margin-left: 10px;
+  @media (max-width: 576px) {
+    margin-left: 0px;
+  }
+`;
+
 const InputsWrapItem = styled.div`
   margin-right: 10px;
   width: 100%;
@@ -337,10 +349,11 @@ const Input = styled.input`
   min-height: 40px;
   padding: 8px;
   font-weight: normal;
+  background: transparent;
   font-size: 14px;
   line-height: 21px;
   letter-spacing: 0.1px;
-  color: #515172;
+  color: ${(props) => props.theme.text2};
   &:focus {
     outline: none;
   }
@@ -407,7 +420,7 @@ const TableHeadItem = styled.li`
   font-size: 12px;
   line-height: 14px;
   letter-spacing: 0.1px;
-  color: rgba(81, 81, 114, 0.6);
+  color: ${(props) => props.theme.thHead};
   width: 100%;
   white-space: nowrap;
   overflow: hidden;
@@ -435,8 +448,8 @@ const TableHeadItem = styled.li`
   }
   &:nth-child(5) {
     max-width: 110px;
-    @media (max-width: 992px) {
-      display: none;
+    @media (max-width: 576px) {
+      text-align: center;
     }
   }
   &:nth-child(6) {
@@ -448,7 +461,8 @@ const TableHeadItem = styled.li`
   &:nth-child(7) {
     max-width: 110px;
     @media (max-width: 576px) {
-      max-width: 80px;
+      display: none;
+      text-align: center;
     }
   }
   &:nth-child(8) {
@@ -476,7 +490,7 @@ const TableBodyItemCss = css`
   font-weight: normal;
   font-size: 14px;
   line-height: 16px;
-  color: #515172;
+  color: ${(props) => props.theme.text2};
 `;
 
 const TableBodyItem = styled(TableHeadItem)`
@@ -598,7 +612,7 @@ const DepositItem = styled.div`
       bottom: 0;
       position: absolute;
       z-index: 50;
-      background: #fff;
+      /* background: #fff; */
     }
   }
 `;

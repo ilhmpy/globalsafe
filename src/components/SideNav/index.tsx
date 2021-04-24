@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext, FC } from "react";
 import styled from "styled-components/macro";
 import logo from "../../assets/svg/logo.svg";
+import logoWhite from "../../assets/svg/logoWhite.svg";
 import { ReactComponent as DashBoard } from "../../assets/svg/dashboard.svg";
 import { ReactComponent as Peppa } from "../../assets/svg/peppa.svg";
 import { ReactComponent as Wallet } from "../../assets/svg/wallet.svg";
@@ -9,6 +10,7 @@ import { ReactComponent as Briefcase } from "../../assets/svg/briefcase.svg";
 import { ReactComponent as Exit } from "../../assets/svg/exit.svg";
 import { NavLink, Link } from "react-router-dom";
 import { AppContext } from "../../context/HubContext";
+import { ThemeContext } from "../../context/ThemeContext";
 import { useTranslation } from "react-i18next";
 
 type Props = {
@@ -18,6 +20,8 @@ type Props = {
 
 export const SideNavbar: FC<Props> = ({ navWidth, navShow }) => {
   const appContext = useContext(AppContext);
+  const themeContext = useContext(ThemeContext);
+  const theme = themeContext.theme;
   const logOut = appContext.logOut;
   const { t } = useTranslation();
 
@@ -31,7 +35,11 @@ export const SideNavbar: FC<Props> = ({ navWidth, navShow }) => {
         </Burger>
         <Link to="/">
           <LogoBrand>
-            <img src={logo} alt="" />
+            {theme === "light" ? (
+              <img src={logo} alt="" />
+            ) : (
+              <img src={logoWhite} alt="" />
+            )}
           </LogoBrand>
         </Link>
       </NavHead>
@@ -95,7 +103,7 @@ const SideNav = styled.div<{ small: boolean }>`
   height: 100vh;
   position: fixed;
   flex: none;
-  background: #fff;
+  background: ${(props) => props.theme.card.backgroundAlfa};
   transition: 0.3s;
   @media (max-width: 1200px) {
     z-index: 9999;
@@ -152,7 +160,7 @@ const Text = styled.p`
   line-height: 21px;
   letter-spacing: 0.1px;
   padding-left: 15px;
-  color: #515172;
+  color: ${(props) => props.theme.text};
   transition: all 0.3s;
 `;
 
@@ -185,6 +193,9 @@ const StyledLink = styled(NavLink).attrs({ activeclassname })`
   }
   svg {
     flex: none;
+  }
+  svg path {
+    stroke: ${(props) => props.theme.text};
   }
   &:hover {
     transition: all 0.3s;
@@ -221,5 +232,8 @@ const Logout = styled.div`
     width: 24px;
     height: 24px;
     flex: none;
+    path {
+      stroke: ${(props) => props.theme.text};
+    }
   }
 `;

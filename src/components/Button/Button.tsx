@@ -122,7 +122,7 @@ export const Button = styled.a<Props>`
     } else if (props.greenOutline) {
       return `
         background: transparent;
-        color: rgba(14, 13, 61, 1);
+        color:  ${(props: any) => props.theme.text};
         border-color: #BCD476;
         &:hover{
         border-color: rgba(188,212,118, 0.7);

@@ -1,6 +1,7 @@
-import React, { FC } from "react";
+import React, { FC, useContext } from "react";
 import Chart from "react-apexcharts";
 import styled from "styled-components/macro";
+import { ThemeContext } from "../../context/ThemeContext";
 import moment from "moment";
 
 type Props = {
@@ -18,6 +19,11 @@ export const TestChart: FC<Props> = ({
   mobHeight = 400,
   mobLegend = 240,
 }: Props) => {
+  const themeContext = useContext(ThemeContext);
+  const theme = themeContext.theme;
+
+  const color = theme === "light" ? "#fff" : "#000";
+
   const data = {
     series: series,
     options: {
@@ -135,6 +141,14 @@ export const TestChart: FC<Props> = ({
           },
         },
       ],
+      stroke: {
+        show: true,
+        curve: "smooth",
+        lineCap: "butt",
+        colors: [color],
+        width: 2,
+        dashArray: 1,
+      },
     },
   };
 
@@ -154,9 +168,6 @@ const ChartWrap = styled.div`
   .apexcharts-legend-series {
     width: 125px;
     text-align: right;
-    @media (max-width: 992px) {
-      width: auto;
-    }
   }
 `;
 
@@ -166,6 +177,10 @@ type PropsColumn = {
 };
 
 export const ColumnChart: FC<PropsColumn> = ({ date, value }) => {
+  const themeContext = useContext(ThemeContext);
+  const theme = themeContext.theme;
+  const color = theme === "light" ? "#222" : "#fff";
+
   const data = {
     series: [
       {
@@ -213,9 +228,9 @@ export const ColumnChart: FC<PropsColumn> = ({ date, value }) => {
         },
       },
       yaxis: {
-        fillColor: "#B3F7CA",
+        fillColor: "#fff",
         labels: {
-          background: "#775DD0",
+          background: "#fff",
           formatter: function (value: any) {
             if (value >= 1000000) {
               return (value / 1000000).toFixed(1) + "M";
@@ -226,7 +241,7 @@ export const ColumnChart: FC<PropsColumn> = ({ date, value }) => {
             }
           },
           style: {
-            colors: [],
+            colors: [color],
             fontSize: "10px",
             fontFamily: "Roboto, sans-serif",
             fontWeight: 400,
@@ -292,6 +307,10 @@ export const ColumnChartCwd: FC<PropsColumn> = ({
   date = [""],
   value = [""],
 }) => {
+  const themeContext = useContext(ThemeContext);
+  const theme = themeContext.theme;
+  const color = theme === "light" ? "#222" : "#fff";
+
   const data = {
     series: [
       {
@@ -351,7 +370,7 @@ export const ColumnChartCwd: FC<PropsColumn> = ({
             }
           },
           style: {
-            colors: [],
+            colors: [color],
             fontSize: "10px",
             fontFamily: "Roboto, sans-serif",
             fontWeight: 400,
@@ -368,7 +387,7 @@ export const ColumnChartCwd: FC<PropsColumn> = ({
           ).format("DD MMMM YYYY")}</div>
             <div class="column-toltip-bold">${w.globals.stackedSeriesTotals[
               dataPointIndex
-            ].toLocaleString()}</div>
+            ].toLocaleString()} CWD</div>
           </div>
           `;
         },
@@ -414,6 +433,10 @@ export const ColumnChartCwd: FC<PropsColumn> = ({
 };
 
 export const ColumnChartThree: FC<PropsColumn> = ({ date, value }) => {
+  const themeContext = useContext(ThemeContext);
+  const theme = themeContext.theme;
+  const color = theme === "light" ? "#222" : "#fff";
+
   const data = {
     series: [
       {
@@ -514,7 +537,7 @@ export const ColumnChartThree: FC<PropsColumn> = ({ date, value }) => {
             }
           },
           style: {
-            colors: [],
+            colors: [color],
             fontSize: "10px",
             fontFamily: "Roboto, sans-serif",
             fontWeight: 400,
@@ -538,6 +561,10 @@ export const ColumnChartThree: FC<PropsColumn> = ({ date, value }) => {
 };
 
 export const ColumnChartTwo: FC<PropsColumn> = ({ date, value }) => {
+  const themeContext = useContext(ThemeContext);
+  const theme = themeContext.theme;
+  const color = theme === "light" ? "#222" : "#fff";
+
   const data = {
     series: [
       {
@@ -594,20 +621,8 @@ export const ColumnChartTwo: FC<PropsColumn> = ({ date, value }) => {
       yaxis: {
         show: true,
         showAlways: true,
-        showForNullSeries: true,
-        seriesName: undefined,
-        opposite: false,
-        reversed: false,
-        logarithmic: false,
-        tickAmount: 6,
-        forceNiceScale: false,
-        floating: false,
-        decimalsInFloat: undefined,
         labels: {
           show: true,
-          offsetX: 0,
-          offsetY: 0,
-          rotate: 0,
           formatter: function (value: any) {
             if (value >= 1000000) {
               return (value / 1000000).toFixed(1) + "M";
@@ -617,20 +632,26 @@ export const ColumnChartTwo: FC<PropsColumn> = ({ date, value }) => {
               return value;
             }
           },
+          style: {
+            colors: [color],
+            fontSize: "10px",
+            fontFamily: "Roboto, sans-serif",
+            fontWeight: 400,
+            cssClass: "apexcharts-yaxis-label",
+          },
         },
       },
       tooltip: {
         custom: function ({ series, seriesIndex, dataPointIndex, w }: any) {
-          // console.log("series", seriesIndex);
-          // console.log("w", w);
           return `
           <div class="column-toltip">
           <div class="column-toltip-light">${moment(
             w.globals.labels[dataPointIndex]
           ).format("DD MMMM YYYY")}</div>
-            <div class="column-toltip-bold">${w.globals.stackedSeriesTotals[
-              dataPointIndex
-            ].toLocaleString()} CWD</div>
+            <div class="column-toltip-bold">${
+              w.globals.stackedSeriesTotals[dataPointIndex].toLocaleString() +
+              "CWD"
+            } </div>
           </div>
           `;
         },
@@ -711,6 +732,22 @@ export const RadialBar: FC<RadialProps> = ({
               fontWeight: 600,
               color: "#0E0D3D",
               offsetY: -20,
+            },
+          },
+          track: {
+            show: true,
+            startAngle: undefined,
+            endAngle: undefined,
+            background: "#f2f2f2",
+            strokeWidth: "97%",
+            opacity: 1,
+            margin: 5,
+            dropShadow: {
+              enabled: false,
+              top: 0,
+              left: 0,
+              blur: 3,
+              opacity: 0.5,
             },
           },
         },

@@ -6,16 +6,15 @@ import { Main } from "./Pages/Main/Main";
 import { HubProvider } from "./context/HubContext";
 import { Admin } from "./Pages/Admin";
 import { AmountProvider } from "./context/AmountContext";
+import { ThemesProvider } from "./context/ThemeContext";
 import { InfoMain } from "./Pages/PrivateArea";
-import { ThemeProvider } from "styled-components";
-import { lightTheme, darkTheme } from "./theme/theme";
 
 function App() {
   return (
     <Router>
       <HubProvider>
         <AmountProvider>
-          <ThemeProvider theme={darkTheme}>
+          <ThemesProvider>
             <div className="App">
               <GlobalStyle />
               <Switch>
@@ -27,7 +26,7 @@ function App() {
                 <Route component={Main} />
               </Switch>
             </div>
-          </ThemeProvider>
+          </ThemesProvider>
         </AmountProvider>
       </HubProvider>
     </Router>

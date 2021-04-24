@@ -3,6 +3,20 @@ import styled from "styled-components/macro";
 import { Button } from "../Button/Button";
 import { NavHashLink } from "react-router-hash-link";
 
+export const SwitchTheme = styled.div`
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: ${(props) => props.theme.switch};
+  cursor: pointer;
+`;
+
+export const AdminButton = styled(Button)`
+  min-width: 110px;
+  max-width: 110px;
+  padding: 12px 0px;
+`;
+
 export const Languale = styled.div`
   display: flex;
   align-items: center;
@@ -43,6 +57,9 @@ export const HeaderInner = styled.div`
   position: relative;
   @media (max-width: 1100px) {
     ${Button} {
+      display: none;
+    }
+    ${SwitchTheme} {
       display: none;
     }
   }
@@ -126,7 +143,7 @@ export const List = styled.ul`
 `;
 
 export const ListItem = styled.li<{ mob?: boolean }>`
-  padding: 0px 30px;
+  padding: 0px 24px;
   display: ${(props) => props.mob && "none"};
   position: relative;
   ${Languale} {
@@ -145,6 +162,10 @@ export const ListItem = styled.li<{ mob?: boolean }>`
     border-top: 1px solid ${(props) => props.theme.listBorder};
     ${Languale} {
       display: flex;
+      cursor: initial;
+    }
+    ${SwitchTheme} {
+      display: block;
       cursor: initial;
     }
   }

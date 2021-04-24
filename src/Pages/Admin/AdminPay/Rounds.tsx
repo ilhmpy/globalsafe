@@ -404,7 +404,7 @@ const HalfRound = styled.div`
     text-align: center;
     display: block;
     width: 63px;
-    color: #000000;
+    color: ${(props) => props.theme.text};
     @media (max-width: 768px) {
       font-size: 10px;
       line-height: 16px;
@@ -463,7 +463,7 @@ const DepositItem = styled.div`
       font-size: 16px;
       line-height: 20px;
       text-align: right;
-      color: #000000;
+      color: ${(props) => props.theme.text};
       @media (max-width: 768px) {
         font-size: 9px;
         line-height: 14px;
@@ -482,7 +482,6 @@ const DepositItem = styled.div`
       bottom: 0;
       position: absolute;
       z-index: 50;
-      background: #fff;
     }
   }
 `;

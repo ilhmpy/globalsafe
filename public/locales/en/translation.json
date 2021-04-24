@@ -87,6 +87,7 @@
         "labelOpen": "Opening date",
         "labelDate": "Close date",
         "btnApply": "Apply",
+        "filter": "Filter",
         "table":{
             "user": "User",
             "name": "Name",

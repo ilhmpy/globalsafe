@@ -8,6 +8,7 @@ import { ReactComponent as Exit } from "../../assets/svg/exit.svg";
 import { ReactComponent as Filter } from "../../assets/svg/filter.svg";
 import { Tab, Content } from "../../components/UI/Tabs";
 import { AppContext } from "../../context/HubContext";
+import { ThemeContext } from "../../context/ThemeContext";
 import { AmountContext } from "../../context/AmountContext";
 import { Select } from "../../components/Select/Select2";
 import { TestInput } from "../../components/UI/DayPicker";
@@ -47,6 +48,8 @@ export const AdminPay = () => {
   const [sum, setSum] = useState<number[] | null>(null);
   const [depositList, setDepositList] = useState<any>([]);
   const appContext = useContext(AppContext);
+  const themeContext = useContext(ThemeContext);
+  const theme = themeContext.theme;
   const hubConnection = appContext.hubConnection;
   const logOut = appContext.logOut;
   const user = appContext.user;
@@ -394,7 +397,13 @@ export const AdminPay = () => {
             <Styled.PayItemHead mb>
               <SelfUpTitle small>{t("adminPay.title1")}</SelfUpTitle>
             </Styled.PayItemHead>
-            <Styled.Radial bg={"rgba(255, 65, 110, 0.2)"}>
+            <Styled.Radial
+              bg={
+                theme === "light"
+                  ? "rgba(255, 65, 110, 0.2)"
+                  : "rgba(255, 65, 110, 1)"
+              }
+            >
               <span>
                 {sum ? (sum[2] / 100000).toLocaleString("ru-RU") : "-"}
               </span>
@@ -406,7 +415,13 @@ export const AdminPay = () => {
               <SelfUpTitle small>{t("adminPay.title2")}</SelfUpTitle>
             </Styled.PayItemHead>
 
-            <Styled.Radial bg={"rgba(188, 212, 118, 0.2)"}>
+            <Styled.Radial
+              bg={
+                theme === "light"
+                  ? "rgba(188, 212, 118, 0.2)"
+                  : "rgba(188, 212, 118, 1)"
+              }
+            >
               <span>
                 {sum
                   ? (sum[0] / 100000).toLocaleString("ru-RU", {
@@ -421,7 +436,13 @@ export const AdminPay = () => {
             <Styled.PayItemHead mb>
               <SelfUpTitle small>{t("adminPay.title3")}</SelfUpTitle>
             </Styled.PayItemHead>
-            <Styled.Radial bg={"rgba(109, 185, 255, 0.2)"}>
+            <Styled.Radial
+              bg={
+                theme === "light"
+                  ? "rgba(109, 185, 255, 0.2)"
+                  : "rgba(109, 185, 255, 1)"
+              }
+            >
               <span>
                 {sum
                   ? (sum[1] / 100000).toLocaleString("ru-RU", {
@@ -507,6 +528,7 @@ export const AdminPay = () => {
 
       <Content active={active === 1}>
         <Styled.FilterBlock>
+          <FilterName>{t("adminDeposit.filter")}</FilterName>
           <Styled.SelectContainer>
             <Styled.SelectWrap>
               <Styled.Label>{t("adminPay.filter.user")}</Styled.Label>
@@ -632,6 +654,17 @@ export const AdminPay = () => {
   );
 };
 
+const FilterName = styled.div`
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 21px;
+  letter-spacing: 0.1px;
+  margin-left: 10px;
+  @media (max-width: 576px) {
+    margin-left: 0px;
+  }
+`;
+
 const SelfUpTitle = styled(UpTitle)`
   @media (max-width: 768px) {
     &:before {
@@ -647,7 +680,6 @@ const NotFound = styled.div`
   padding: 30px;
   letter-spacing: 0.1px;
   min-height: 250px;
-  color: #0e0d3d;
 `;
 
 const PayTab = styled(Tab)`
@@ -682,7 +714,7 @@ const TableHeadItem = styled.li`
   font-size: 12px;
   line-height: 14px;
   letter-spacing: 0.1px;
-  color: rgba(81, 81, 114, 0.6);
+  color: ${(props) => props.theme.thHead};
   width: 100%;
   &:nth-child(1) {
     max-width: 30px;
@@ -794,7 +826,7 @@ const TableBodyItemCss = css`
   font-weight: normal;
   font-size: 14px;
   line-height: 16px;
-  color: #515172;
+  color: ${(props) => props.theme.text2};
 `;
 
 const TableBodyItemPaid = styled(TableHeadItemPaid)`

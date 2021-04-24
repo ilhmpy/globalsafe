@@ -6,6 +6,7 @@ import {
   StyledLink,
   LinkButton,
   Languale,
+  SwitchTheme,
 } from "./Header.elements";
 import { useTranslation } from "react-i18next";
 import usa from "../../assets/svg/usa.svg";
@@ -88,6 +89,9 @@ export const Nav: FC<Props> = ({
               <img src={ru} alt="ru" />
             </Languale>
           )}
+        </ListItem>
+        <ListItem>
+          <SwitchTheme></SwitchTheme>
         </ListItem>
       </List>
     </HeaderNav>

@@ -21,8 +21,9 @@ export const Input = styled.input`
   font-weight: normal;
   font-size: 14px;
   line-height: 21px;
+  background: transparent;
   letter-spacing: 0.1px;
-  color: #515172;
+  color: ${(props) => props.theme.text2};
   &:focus {
     outline: none;
   }
@@ -95,7 +96,6 @@ export const UserName = styled.div`
     font-size: 14px;
     line-height: 16px;
     text-align: right;
-    color: #0e0d3d;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -121,7 +121,6 @@ export const TitleHead = styled.div`
   font-size: 18px;
   line-height: 21px;
   letter-spacing: 0.1px;
-  color: #0e0d3d;
   margin-right: auto;
   margin-bottom: 15px;
   @media (max-width: 992px) {
@@ -202,7 +201,7 @@ export const Radial = styled.div<{ bg: string }>`
     font-size: 16px;
     line-height: 20px;
     text-align: center;
-    color: #000000;
+    color: ${(props) => props.theme.text};
   }
   @media (max-width: 576px) {
     width: 63px;
@@ -281,7 +280,7 @@ export const Label = styled.span`
   font-size: 14px;
   line-height: 21px;
   letter-spacing: 0.1px;
-  color: rgba(86, 101, 127, 0.6);
+  color: ${(props) => props.theme.depositHead};
   margin-bottom: 5px;
 `;
 

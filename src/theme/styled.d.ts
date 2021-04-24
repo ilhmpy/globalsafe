@@ -15,6 +15,14 @@ declare module 'styled-components' {
     header:string;
     listBorder: string;
     bbdis: string;
+    cdis:string;
+    depositHead:string;
+    nextPay: string;
+    thHead: string;
+    topUpButton: string;
+    topUpColor: string;
+    switch:string;
+    inputBg:string;
     card: {
       background: string;
       backgroundAlfa: string;

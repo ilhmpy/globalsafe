@@ -5,7 +5,7 @@ export const Placeholder = styled.div`
   font-size: 14px;
   line-height: 21px;
   letter-spacing: 0.1px;
-  color: rgba(86, 101, 127, 0.6);
+  color: ${(props) => props.theme.depositHead};
 `;
 
 export const MobileFilter = () => {
@@ -18,7 +18,7 @@ export const InputItem = styled.div`
     font-size: 14px;
     line-height: 21px;
     letter-spacing: 0.1px;
-    color: #515172;
+    color: ${(props) => props.theme.text2};
     white-space: nowrap;
   }
   display: inline-block;
@@ -61,7 +61,7 @@ export const List = styled.ul<{ rotat?: boolean }>`
   left: 0;
   right: 0;
   width: 100%;
-  background: #ffffff;
+  background: ${(props) => props.theme.card.backgroundAlfa};
   z-index: 9999;
   border: ${(props) => (props.rotat ? "1px" : "0")} solid
     rgba(86, 101, 127, 0.3);
@@ -80,7 +80,7 @@ export const Li = styled.li`
   flex-wrap: wrap;
   justify-content: space-between;
   letter-spacing: 0.1px;
-  color: #515172;
+  color: ${(props) => props.theme.text2};
   padding: 6px 20px;
   &:first-child {
     span {
@@ -132,10 +132,10 @@ export const CheckboxInput = styled.input`
   position: absolute;
   width: 0;
   &:checked ~ ${CheckboxIcon}:after {
-    border-color: #515172;
+    border-color: ${(props) => props.theme.text2};
   }
   &:checked ~ ${CheckboxIcon} {
-    border-color: #515172;
+    border-color: ${(props) => props.theme.text2};
   }
 `;
 

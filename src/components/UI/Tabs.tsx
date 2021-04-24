@@ -2,7 +2,7 @@ import styled from "styled-components/macro";
 
 export const Tabs = styled.div`
   overflow: hidden;
-  background: #fff;
+  background: ${(props) => props.theme.card.background};
   padding-left: 90px;
   border-top: 1px solid rgba(196, 196, 196, 0.2);
   border-radius: 0 0 20px 20px;
@@ -23,7 +23,7 @@ export const Tab = styled.button<{ active: boolean }>`
   line-height: 16px;
   padding: 12px 0;
   width: 120px;
-  color: #0e0d3d;
+  color: ${(props) => props.theme.text};
   text-align: left;
   background: transparent;
   @media (max-width: 992px) {
@@ -36,9 +36,6 @@ export const Tab = styled.button<{ active: boolean }>`
     &:last-child {
       padding-right: 0px;
     }
-  }
-  &:hover {
-    background-color: white;
   }
   &:before {
     content: "";

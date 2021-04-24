@@ -83,7 +83,7 @@ export const InputWrap: FC<{
 };
 
 const Text = styled.div<{ dis?: boolean }>`
-  color: ${(props) => (props.dis ? "#c4c4c4" : "#515172")};
+  color: ${(props) => (props.dis ? "#c4c4c4" : props.theme.text2)};
   width: 75px;
   white-space: nowrap;
   overflow: hidden;
@@ -103,10 +103,10 @@ const InputIcon = styled.div<{ dis?: boolean }>`
     cursor: pointer;
     path {
       transition: 0.3s;
-      fill: ${(props) => (props.dis ? "#C4C4C4" : "#000")};
+      fill: ${(props) => (props.dis ? "#C4C4C4" : props.theme.text2)};
     }
     &:hover path {
-      fill: ${(props) => (props.dis ? "#C4C4C4" : "#000")};
+      fill: ${(props) => (props.dis ? "#C4C4C4" : props.theme.text2)};
     }
     @media (max-width: 576px) {
       display: none;
@@ -120,14 +120,16 @@ const Input = styled.input<{ dis?: boolean }>`
   width: 75px;
   margin-right: 6px;
   position: relative;
+  background: ${(props) => props.theme.card.background};
+  color: ${(props) => props.theme.text};
   &:disabled {
-    background: #fff;
+    background: ${(props) => props.theme.card.background};
   }
   &::placeholder {
-    color: ${(props) => (props.dis ? "#c4c4c4" : "#515172")};
+    color: ${(props) => (props.dis ? "#c4c4c4" : props.theme.text2)};
   }
   &:focus {
-    background: #fff0f0;
+    background: ${(props) => props.theme.inputBg};
     border: 1px solid #56657f;
     box-sizing: border-box;
     border-radius: 9px;

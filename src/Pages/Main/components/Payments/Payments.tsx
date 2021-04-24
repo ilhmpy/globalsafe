@@ -320,7 +320,7 @@ export const Payments = () => {
             </SwiperContainerMob>
           </>
         )}
-      </Container>
+      </Container> 
     </Page>
   );
 };

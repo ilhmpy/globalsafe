@@ -308,7 +308,7 @@ export const InfoBalance = () => {
           10,
         ])
         .then((res) => {
-          console.log("responce", res);
+          // console.log("responce", res);
           let result: any = {};
           for (let key in res) {
             const newArr =

@@ -31,8 +31,12 @@ a{
 .chart-toltip{
   display: flex;
   flex-direction: column;
-  background: #FFFFFF;
+  background: ${(props) => props.theme.card.background};
+  color: ${(props) => props.theme.text2};
   // box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.235536);
+  border: none;
+  outline: none;
+  fill: none;
   border-radius: 8px;
   padding: 8px 8px 2px;
   position: relative;
@@ -49,18 +53,18 @@ a{
   font-weight: normal;
   font-size: 16px;
   line-height: 14px;
-  color: rgba(0, 0, 0, 0.4);
+  color: ${(props) => props.theme.text2};
 }
 .chart-tottip-bold{
   font-weight: 500;
   font-size: 20px;
   line-height: 24px;
-  color: #0E0D3D;
+  color: ${(props) => props.theme.text};
   padding-bottom: 2px;
 }
 
 .column-toltip{
-  background: #fff !important;
+  background: ${(props) => props.theme.card.background} !important;
   border-color: rgba(0, 0, 0, 0);
   box-shadow: none;
   padding: 20px;
@@ -72,14 +76,20 @@ a{
   font-size: 10px;
   line-height: 12px;
   text-align: center;
-  color: #515172;
+  color: ${(props) => props.theme.text2};
 }
 .column-toltip-bold{
   font-weight: bold;
   font-size: 10px;
   line-height: 12px;
   text-align: center;
-  color: #0E0D3D;
+  color: ${(props) => props.theme.text3};
+}
+
+.apexcharts-datalabels-group text,
+.apexcharts-legend-text{
+  fill: ${(props) => props.theme.text};
+  color: ${(props) => props.theme.text} !important;
 }
 
 .apexcharts-tooltip.apexcharts-theme-light {

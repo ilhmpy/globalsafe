@@ -121,16 +121,6 @@ export const AdminMain = () => {
     }
   }, [hubConnection, selectedDay]);
 
-  // const sumFormat = (value: number) => {
-  //   if (value >= 1000000) {
-  //     return (value / 1000000).toFixed(1) + "M";
-  //   } else if (value >= 1000 && value < 1000000) {
-  //     return (value / 1000).toFixed(1) + "k";
-  //   } else {
-  //     return value;
-  //   }
-  // };
-
   return (
     <>
       <Styled.HeadBlock>
@@ -307,7 +297,7 @@ const TabsItem = styled.div<{ active?: boolean }>`
   text-transform: uppercase;
   line-height: 14px;
   cursor: pointer;
-  color: ${(props) => (props.active ? "#0e0d3d" : "rgba(14,13,61,.2)")};
+  color: ${(props) => (props.active ? props.theme.text : props.theme.nextPay)};
 `;
 
 const CardAdmin = styled(Card)`
@@ -338,7 +328,6 @@ const ChartItem = styled.div`
   @media (max-width: 768px) {
     max-width: 100%;
     flex: none;
-    background: #fff;
     box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
     margin-bottom: 20px;
@@ -433,7 +422,7 @@ const DepositTitle = styled.div`
   font-size: 36px;
   line-height: 42px;
   text-align: center;
-  color: #0e0d3d;
+  color: ${(props) => props.theme.text};
   @media (max-width: 1150px) {
     font-size: 32px;
     line-height: 38px;
@@ -476,8 +465,9 @@ const CardDeposites = styled(Card)`
   justify-content: space-between;
   @media (max-width: 992px) {
     flex-wrap: wrap;
-    background: transparent;
-    box-shadow: none;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
     min-height: auto;
   }
 `;

@@ -13,6 +13,7 @@ import { TestChart } from "../../components/Charts/Test";
 import { CSSTransition } from "react-transition-group";
 import { Tab, Content } from "../../components/UI/Tabs";
 import { AppContext } from "../../context/HubContext";
+import { ThemeContext } from "../../context/ThemeContext";
 import { useTranslation } from "react-i18next";
 import {
   Portfolio,
@@ -79,6 +80,8 @@ export const AdminPortfolio = () => {
   const [totalMGCWD, setTotalMGCWD] = useState(0);
   const [totalDIAMOND, setTotalDIAMOND] = useState(0);
   const appContext = useContext(AppContext);
+  const themeContext = useContext(ThemeContext);
+  const theme = themeContext.theme;
   const hubConnection = appContext.hubConnection;
   const logOut = appContext.logOut;
   const user = appContext.user;
@@ -213,7 +216,13 @@ export const AdminPortfolio = () => {
             <Styled.PayItemHead mb>
               <UpTitle small>GCWD</UpTitle>
             </Styled.PayItemHead>
-            <Styled.Radial bg={"rgba(255, 65, 110, 0.2)"}>
+            <Styled.Radial
+              bg={
+                theme === "light"
+                  ? "rgba(255, 65, 110, 0.2)"
+                  : "rgba(255, 65, 110, 1)"
+              }
+            >
               <span>{basket.GCWD}</span>
               <span></span>
             </Styled.Radial>
@@ -223,7 +232,13 @@ export const AdminPortfolio = () => {
               <UpTitle small>MGCWD</UpTitle>
             </Styled.PayItemHead>
 
-            <Styled.Radial bg={"rgba(188, 212, 118, 0.2)"}>
+            <Styled.Radial
+              bg={
+                theme === "light"
+                  ? "rgba(188, 212, 118, 0.2)"
+                  : "rgba(188, 212, 118, 1)"
+              }
+            >
               <span>{basket.MGCWD}</span>
               <span></span>
             </Styled.Radial>
@@ -232,7 +247,13 @@ export const AdminPortfolio = () => {
             <Styled.PayItemHead mb>
               <UpTitle small>DIAMOND</UpTitle>
             </Styled.PayItemHead>
-            <Styled.Radial bg={"rgba(109, 185, 255, 0.2)"}>
+            <Styled.Radial
+              bg={
+                theme === "light"
+                  ? "rgba(109, 185, 255, 0.2)"
+                  : "rgba(109, 185, 255, 1)"
+              }
+            >
               <span>{basket.MGCWD}</span>
               <span></span>
             </Styled.Radial>
@@ -458,7 +479,7 @@ const TableHeadItem = styled.li`
   font-size: 12px;
   line-height: 14px;
   letter-spacing: 0.1px;
-  color: rgba(81, 81, 114, 0.6);
+  color: ${(props) => props.theme.thHead};
   width: 100%;
   @media (max-width: 992px) {
     padding-right: 5px;
@@ -514,7 +535,7 @@ const TableBodyItemCss = css`
   font-weight: normal;
   font-size: 14px;
   line-height: 16px;
-  color: #515172;
+  color: ${(props) => props.theme.text2};
 `;
 
 const TableBodyItem = styled(TableHeadItem)`
@@ -622,7 +643,6 @@ const HalfTitle = styled.span`
   font-weight: 500;
   font-size: 20px;
   line-height: 23px;
-  color: #0e0d3d;
   padding-right: 110px;
   @media (max-width: 576px) {
     display: none;
@@ -638,7 +658,6 @@ const HalfTab = styled.span<{ card?: boolean }>`
   font-weight: ${(props) => (props.card ? "600" : "400")};
   font-size: 20px;
   line-height: 14px;
-  color: #0e0d3d;
   cursor: pointer;
   padding: 0 5px;
   text-decoration: uppercase;

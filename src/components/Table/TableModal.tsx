@@ -116,14 +116,15 @@ const Text = styled.p<{ bold?: boolean }>`
   line-height: 16px;
   margin-bottom: 4px;
   letter-spacing: 0.1px;
-  color: ${(props) => (props.bold ? "#515172" : "rgba(86, 101, 127, 0.6)")};
+  color: ${(props) =>
+    props.bold ? props.theme.text2 : props.theme.depositHead};
 `;
 
 const LI = styled.li`
   margin-bottom: 20px;
 
   ${Text}:last-child {
-    color: #515172;
+    color: ${(props) => props.theme.text2};
   }
 `;
 
