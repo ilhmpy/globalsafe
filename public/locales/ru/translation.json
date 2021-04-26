@@ -5,6 +5,8 @@
       "item3": "О нас",
       "item4": "Контакты"
     },
+    "themeDark": "Темная тема",
+    "themeLight": "Светлая тема",
     "period":"Указать период",
     "ready": "Готово",
     "logout": "Выйти",
@@ -105,7 +107,9 @@
         "chartTitle1": "Выплаты",
         "chartTitle2": "Доходность фонда",
         "depositsCount": "Количество депозитов",
-        "depositsAmount": "Размер депозитов"
+        "depositsAmount": "Размер депозитов",
+        "openDeposit": "Открытые депозиты",
+        "closeDeposit": "Депозиты к закрытию"
     },
     "adminPortfolio":{
         "uptitle": "Портфель",
@@ -191,6 +195,8 @@
         "balance": "Баланс",
         "newDeposit": "Новый депозит",
         "withdraw": "Вывести средства",
+        "prevPay": "Предыдущая выплата",
+        "procentPrevPay": "Процент предыдущей выплаты",
         "tabs":{
             "tab1": "Информация",
             "tab2": "Депозиты",

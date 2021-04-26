@@ -82,8 +82,8 @@ const Arrows = styled.div`
 `;
 
 const CustomDatePickers = styled(DayPicker)`
-  background: ${(props) => props.theme.card.backgroundAlfa};
-  border: ${(props) => props.theme.card.border};
+  background: ${(props) => props.theme.card.background};
+  border: 1px solid ${(props) => props.theme.border};
   box-sizing: border-box;
   border-radius: 4px;
   margin: 30px;
@@ -121,7 +121,7 @@ const CustomDatePickers = styled(DayPicker)`
     &:focus {
       outline: none;
     }
-    &:hover {
+    &:hover:not(.DayPicker-Day--selected) {
       background: ${(props) => props.theme.card.background} !important;
     }
     @media (max-width: 576px) {
@@ -134,12 +134,6 @@ const CustomDatePickers = styled(DayPicker)`
   .DayPicker-Day--selected:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside) {
     background: #ff416e;
     color: #fff;
-  }
-
-  .DayPicker-Day--selected:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside) {
-    background-color: ${(props) => props.theme.card.background} !important;
-    border-radius: 0;
-    color: #4a90e2;
   }
 
   .DayPicker-Day--today {
@@ -621,8 +615,8 @@ const Input = styled.input`
 `;
 
 const CustomDatePicker = styled(DayPicker)`
-  background: ${(props) => props.theme.card.backgroundAlfa};
-  border: ${(props) => props.theme.card.border};
+  background: ${(props) => props.theme.card.background};
+  border: 1px solid ${(props) => props.theme.border};
   box-sizing: border-box;
   border-radius: 4px;
   margin: 30px;

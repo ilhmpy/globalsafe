@@ -30,6 +30,7 @@ export const lightTheme = {
     topUpButton: '#6db9ff',
     topUpColor: '#fff',
     switch: '#333',
+    border: '#E5E5E5',
     card: {
       background: '#fff',
       backgroundAlfa: 'rgba(255, 255, 255, 0.4)',
@@ -59,6 +60,7 @@ export const lightTheme = {
     topUpButton:'transparent',
     topUpColor: '#6db9ff',
     switch: '#fff',
+    border: '#000',
     card: {
       background: '#212121',
       backgroundAlfa: 'rgba(33, 33, 33, 1)',

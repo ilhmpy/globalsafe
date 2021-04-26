@@ -21,6 +21,7 @@ export const InfoDeposits = () => {
       hubConnection
         .invoke<RootList>("GetUserDeposits", [1, 2, 3, 4, 5, 6, 7, 8], 0, 20)
         .then((res) => {
+          console.log("GetUserDeposits", res);
           setList(res.collection);
           setTotalList(res.totalRecords);
         })

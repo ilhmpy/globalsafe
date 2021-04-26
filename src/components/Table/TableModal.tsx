@@ -90,7 +90,32 @@ export const InfoBlock = ({ data }: any) => {
           </LI>
           <LI>
             <Text>{t("privateArea.allPay")}</Text>
-            <Text>{data.payedAmountView}&nbsp; CWD</Text>
+            <Text>
+              {data.payedAmountView.toLocaleString("ru-RU", {
+                maximumFractionDigits: 2,
+              })}
+              &nbsp; CWD
+            </Text>
+          </LI>
+          <LI>
+            <Text>{t("privateArea.prevPay")}</Text>
+            <Text>
+              {data.prevPayedAmountView.toLocaleString("ru-RU", {
+                maximumFractionDigits: 2,
+              })}
+              &nbsp; CWD
+            </Text>
+          </LI>
+          <LI>
+            <Text>{t("privateArea.procentPrevPay")}</Text>
+            <Text>
+              {data.prevPayedAmountView
+                ? ((data.prevPayedAmountView / data.amountView) * 100).toFixed(
+                    2
+                  )
+                : 0}{" "}
+              %
+            </Text>
           </LI>
           <LI>
             <Text>{t("privateArea.procent")}</Text>

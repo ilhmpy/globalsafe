@@ -29,6 +29,7 @@ export interface Collection {
     paymentAmountView?: any;
     state: number;
     deposit: Deposit;
+    prevPayedAmountView: number;
 }
 
 export interface RootList {

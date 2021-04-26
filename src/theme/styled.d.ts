@@ -23,6 +23,7 @@ declare module 'styled-components' {
     topUpColor: string;
     switch:string;
     inputBg:string;
+    border:string;
     card: {
       background: string;
       backgroundAlfa: string;

@@ -8,6 +8,8 @@ import { ReactComponent as Wallet } from "../../assets/svg/wallet.svg";
 import { ReactComponent as Users } from "../../assets/svg/users.svg";
 import { ReactComponent as Briefcase } from "../../assets/svg/briefcase.svg";
 import { ReactComponent as Exit } from "../../assets/svg/exit.svg";
+import { ReactComponent as DarkTheme } from "../../assets/svg/theme.svg";
+import { ReactComponent as LightTheme } from "../../assets/svg/themeLight.svg";
 import { NavLink, Link } from "react-router-dom";
 import { AppContext } from "../../context/HubContext";
 import { ThemeContext } from "../../context/ThemeContext";
@@ -22,6 +24,7 @@ export const SideNavbar: FC<Props> = ({ navWidth, navShow }) => {
   const appContext = useContext(AppContext);
   const themeContext = useContext(ThemeContext);
   const theme = themeContext.theme;
+  const swithTheme = themeContext.toggleTheme;
   const logOut = appContext.logOut;
   const { t } = useTranslation();
 
@@ -76,10 +79,16 @@ export const SideNavbar: FC<Props> = ({ navWidth, navShow }) => {
             </StyledLink>
           </Li>
         </Ul>
-        <Logout onClick={logOut}>
-          <Exit />
-          <Text>{t("logout")}</Text>
-        </Logout>
+        <div>
+          <Theme onClick={swithTheme}>
+            <DarkTheme />
+            <Text>{theme === "light" ? t("themeDark") : t("themeLight")}</Text>
+          </Theme>
+          <Logout onClick={logOut}>
+            <Exit />
+            <Text>{t("logout")}</Text>
+          </Logout>
+        </div>
       </SideInner>
     </SideNav>
   );
@@ -225,9 +234,7 @@ const Logout = styled.div`
   white-space: nowrap;
   align-items: center;
   padding: 11px 20px;
-  @media (max-width: 1200px) {
-    margin-top: 200px;
-  }
+
   svg {
     width: 24px;
     height: 24px;
@@ -235,5 +242,11 @@ const Logout = styled.div`
     path {
       stroke: ${(props) => props.theme.text};
     }
+  }
+`;
+
+const Theme = styled(Logout)`
+  @media (max-width: 1200px) {
+    margin-top: 200px;
   }
 `;
