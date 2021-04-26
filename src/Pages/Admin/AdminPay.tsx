@@ -107,7 +107,7 @@ export const AdminPay = () => {
   const namesProgram = checkList.map((i: any) => i.label);
   const idProgram = listDeposits.filter((i) => namesProgram.includes(i.name));
   const searchSafeID = idProgram.map((i) => i.safeId);
-
+  const backDays: any = moment().subtract(30, "days");
   const myLoad = () => {
     setNext(false);
     if (hubConnection && depositPayList.length < totalPayDeposits) {
@@ -115,8 +115,8 @@ export const AdminPay = () => {
         .invoke<RootCharges>(
           "GetDepositsCharges",
           name ? name : null,
-          openDate.from ? openDate.from : null,
-          openDate.to ? openDate.to : null,
+          openDate.from ? openDate.from : backDays._d,
+          openDate.to ? openDate.to : new Date(),
           searchSafeID.length ? searchSafeID : null,
           [7, 8],
           numPay,
@@ -221,8 +221,8 @@ export const AdminPay = () => {
         .invoke<RootCharges>(
           "GetDepositsCharges",
           name ? name : null,
-          openDate.from ? openDate.from : null,
-          openDate.to ? openDate.to : null,
+          openDate.from ? openDate.from : backDays._d,
+          openDate.to ? openDate.to : new Date(),
           searchSafeID.length ? searchSafeID : null,
           [7, 8],
           0,
@@ -357,8 +357,8 @@ export const AdminPay = () => {
         .invoke<RootCharges>(
           "GetDepositsCharges",
           name ? name : null,
-          openDate.from ? openDate.from : null,
-          openDate.to ? openDate.to : null,
+          openDate.from ? openDate.from : backDays._d,
+          openDate.to ? openDate.to : new Date(),
           searchSafeID.length ? searchSafeID : null,
           [7, 8],
           0,

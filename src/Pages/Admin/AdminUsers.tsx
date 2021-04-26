@@ -140,6 +140,7 @@ export const AdminUsers = () => {
   const logOut = appContext.logOut;
   const user = appContext.user;
   const { t } = useTranslation();
+  const backDays: any = moment().subtract(30, "days");
 
   useEffect(() => {
     if (hubConnection) {
@@ -147,8 +148,8 @@ export const AdminUsers = () => {
         .invoke<RootUsers>(
           "GetUsers",
           name || null,
-          openDate.from || null,
-          openDate.to || null,
+          openDate.from ? openDate.from : backDays._d,
+          openDate.to ? openDate.to : new Date(),
           0,
           20
         )
@@ -171,8 +172,8 @@ export const AdminUsers = () => {
         .invoke<RootUsers>(
           "GetUsers",
           name || null,
-          openDate.from || null,
-          openDate.to || null,
+          openDate.from ? openDate.from : backDays._d,
+          openDate.to ? openDate.to : new Date(),
           0,
           20
         )
@@ -197,8 +198,8 @@ export const AdminUsers = () => {
         .invoke<RootUsers>(
           "GetUsers",
           name || null,
-          openDate.from || null,
-          openDate.to || null,
+          openDate.from ? openDate.from : backDays._d,
+          openDate.to ? openDate.to : new Date(),
           num,
           20
         )

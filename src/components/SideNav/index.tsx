@@ -103,7 +103,7 @@ const SideNav = styled.div<{ small: boolean }>`
   height: 100vh;
   position: fixed;
   flex: none;
-  background: ${(props) => props.theme.card.backgroundAlfa};
+  background: ${(props) => props.theme.card.background};
   transition: 0.3s;
   @media (max-width: 1200px) {
     z-index: 9999;
@@ -195,7 +195,7 @@ const StyledLink = styled(NavLink).attrs({ activeclassname })`
     flex: none;
   }
   svg path {
-    stroke: ${(props) => props.theme.text};
+    stroke: ${(props) => props.theme.text2};
   }
   &:hover {
     transition: all 0.3s;

@@ -251,7 +251,7 @@ export const Payments = () => {
       hubConnection
         .invoke<RootPayDeposit[]>("GetDayPayouts")
         .then((res) => {
-          // console.log("GetDayPayouts", res);
+          console.log("GetDayPayouts", JSON.stringify(res));
           setStatsDeposit(res);
           setLoadReset(false);
         })
@@ -320,7 +320,7 @@ export const Payments = () => {
             </SwiperContainerMob>
           </>
         )}
-      </Container> 
+      </Container>
     </Page>
   );
 };
@@ -368,6 +368,7 @@ const ModalContainer = styled.div`
 const SwiperContainer = styled(Card)`
   position: relative;
   padding-bottom: 10px;
+  width: 100%;
   .swiper-pagination-bullet:only-child {
     visibility: hidden;
   }
@@ -430,7 +431,7 @@ const RadialItem = styled.div`
   position: relative;
   width: 150px;
   height: 188px;
-  margin: 30px 40px;
+  margin: 30px 20px;
   @media (max-width: 992px) {
     margin: 15px;
   }
