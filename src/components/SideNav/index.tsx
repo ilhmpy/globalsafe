@@ -14,6 +14,9 @@ import { NavLink, Link } from "react-router-dom";
 import { AppContext } from "../../context/HubContext";
 import { ThemeContext } from "../../context/ThemeContext";
 import { useTranslation } from "react-i18next";
+import usa from "../../assets/svg/usa.svg";
+import ru from "../../assets/svg/russia.svg";
+import { Languale } from "../Header/Header.elements";
 
 type Props = {
   navWidth: boolean;
@@ -26,7 +29,8 @@ export const SideNavbar: FC<Props> = ({ navWidth, navShow }) => {
   const theme = themeContext.theme;
   const swithTheme = themeContext.toggleTheme;
   const logOut = appContext.logOut;
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lang = localStorage.getItem("i18nextLng") || "ru";
 
   return (
     <SideNav small={navWidth}>
@@ -81,12 +85,42 @@ export const SideNavbar: FC<Props> = ({ navWidth, navShow }) => {
         </Ul>
         <div>
           <Theme onClick={swithTheme}>
-            <DarkTheme />
-            <Text>{theme === "light" ? t("themeDark") : t("themeLight")}</Text>
+            {theme === "light" ? (
+              <>
+                <DarkTheme />
+                <Text>{t("themeDark")}</Text>
+              </>
+            ) : (
+              <>
+                <LightTheme />
+                <Text>{t("themeLight")}</Text>
+              </>
+            )}
           </Theme>
           <Logout onClick={logOut}>
             <Exit />
             <Text>{t("logout")}</Text>
+            {lang === "ru" ? (
+              <Languale
+                onClick={(e) => {
+                  e.stopPropagation();
+                  i18n.changeLanguage("en");
+                }}
+              >
+                en
+                <img src={usa} alt="en" />
+              </Languale>
+            ) : (
+              <Languale
+                onClick={(e) => {
+                  e.stopPropagation();
+                  i18n.changeLanguage("ru");
+                }}
+              >
+                ru
+                <img src={ru} alt="ru" />
+              </Languale>
+            )}
           </Logout>
         </div>
       </SideInner>
@@ -234,7 +268,6 @@ const Logout = styled.div`
   white-space: nowrap;
   align-items: center;
   padding: 11px 20px;
-
   svg {
     width: 24px;
     height: 24px;
@@ -243,9 +276,17 @@ const Logout = styled.div`
       stroke: ${(props) => props.theme.text};
     }
   }
+  ${Languale} {
+    margin-left: auto;
+  }
 `;
 
-const Theme = styled(Logout)`
+const Theme = styled.div`
+  display: flex;
+  cursor: pointer;
+  white-space: nowrap;
+  align-items: center;
+  padding: 11px 20px;
   @media (max-width: 1200px) {
     margin-top: 200px;
   }

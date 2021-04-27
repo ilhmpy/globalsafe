@@ -21,6 +21,7 @@ type ListProps = {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onClose: () => void;
   paymentsConfirm: (id: string) => void;
+  unConfirmPay: (id: string) => void;
 };
 
 export const ModalPay: FC<ListProps> = ({
@@ -33,6 +34,7 @@ export const ModalPay: FC<ListProps> = ({
   onChange,
   onClose,
   paymentsConfirm,
+  unConfirmPay,
 }: ListProps) => {
   const handleContainerClick = (e: React.MouseEvent) => {
     if (e.currentTarget === e.target) {
@@ -101,16 +103,25 @@ export const ModalPay: FC<ListProps> = ({
               <Hr />
             </PayCardBlock>
           )}
-          {data.state !== 5 && (
-            <PayCardBlock>
+          <PayCardBlock>
+            {!disabled ? (
               <Button
                 dangerOutline
                 onClick={() => paymentsConfirm(data.safeId)}
               >
                 {t("depositList.confirm")}
               </Button>
-            </PayCardBlock>
-          )}
+            ) : (
+              <Button
+                greenOutline
+                onClick={() => {
+                  unConfirmPay(data.safeId);
+                }}
+              >
+                {t("depositList.confirmed")}
+              </Button>
+            )}
+          </PayCardBlock>
         </PayCard>
       </Center>
     </Container>

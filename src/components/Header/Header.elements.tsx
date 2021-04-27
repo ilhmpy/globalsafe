@@ -2,12 +2,13 @@ import { Link } from "react-scroll";
 import styled from "styled-components/macro";
 import { Button } from "../Button/Button";
 import { NavHashLink } from "react-router-hash-link";
+import { ReactComponent as DarkTheme } from "../../assets/svg/theme.svg";
 
 export const SwitchTheme = styled.div`
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: ${(props) => props.theme.switch};
+  /* background: ${(props) => props.theme.switch}; */
   cursor: pointer;
 `;
 
