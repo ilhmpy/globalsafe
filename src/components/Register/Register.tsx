@@ -234,7 +234,7 @@ const LinkToPage = styled(Link)`
   line-height: 16px;
   margin-top: 20px;
   text-align: center;
-  color: #0e0d3d;
+  color: ${(props) => props.theme.text};
 `;
 
 const LinkTo = styled.a`
@@ -243,7 +243,7 @@ const LinkTo = styled.a`
   line-height: 14px;
   text-align: center;
   text-decoration-line: underline;
-  color: #515172;
+  color: ${(props) => props.theme.text2};
 `;
 
 const H4 = styled.h4`
@@ -265,6 +265,7 @@ const FormBlock = styled.form`
 const Submit = styled(Button)<{ mb?: boolean }>`
   max-width: 100%;
   margin-bottom: ${(props) => (props.mb ? "20px" : "0")};
+  color: ${(props) => props.theme.text};
 `;
 
 const CardContainer = styled(Card)`

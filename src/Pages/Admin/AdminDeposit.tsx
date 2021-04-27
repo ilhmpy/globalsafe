@@ -7,7 +7,7 @@ import { ReactComponent as Exit } from "../../assets/svg/exit.svg";
 import { ReactComponent as Filter } from "../../assets/svg/filter.svg";
 import { HalfRoundBorder } from "../../components/UI/HalfRound";
 import useWindowSize from "../../hooks/useWindowSize";
-import { Select } from "../../components/Select/Select";
+import { Select } from "../../components/Select/Select2";
 import { TestInput } from "../../components/UI/DayPicker";
 import { Button } from "../../components/Button/Button";
 import { AppContext } from "../../context/HubContext";
@@ -77,7 +77,6 @@ const AdminDepositList: FC<PayProps> = ({ data }: PayProps) => {
 };
 
 export const AdminDeposit = () => {
-  const [statsDeposit, setStatsDeposit] = useState<DepositStats[]>([]);
   const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>(
     []
   );
@@ -97,6 +96,7 @@ export const AdminDeposit = () => {
   const [count, setCount] = useState(true);
   const [num, setNum] = useState(20);
   const { t } = useTranslation();
+  const backDays: any = moment().subtract(30, "days");
 
   const myLoad = () => {
     setCount(false);
@@ -107,8 +107,8 @@ export const AdminDeposit = () => {
           [1, 2, 3, 4, 5, 6],
           name || null,
           namesProgram.length ? namesProgram : null,
-          openDate.from || null,
-          openDate.to || null,
+          openDate.from ? openDate.from : backDays._d,
+          openDate.to ? openDate.to : new Date(),
           closeDate.from || null,
           closeDate.to || null,
           null,
@@ -132,39 +132,6 @@ export const AdminDeposit = () => {
   const hubConnection = appContext.hubConnection;
   const logOut = appContext.logOut;
   const user = appContext.user;
-  const sizes = useWindowSize();
-  const size = sizes < 768;
-
-  const arrSizeBig = 10;
-  const arrSizeMob = 4;
-
-  const newArrayBig: any[] = [];
-  for (let i = 0; i < Math.ceil(statsDeposit.length / arrSizeBig); i++) {
-    newArrayBig[i] = statsDeposit.slice(
-      i * arrSizeBig,
-      i * arrSizeBig + arrSizeBig
-    );
-  }
-
-  const newArrayMob: any[] = [];
-  for (let i = 0; i < Math.ceil(statsDeposit.length / arrSizeMob); i++) {
-    newArrayMob[i] = statsDeposit.slice(
-      i * arrSizeMob,
-      i * arrSizeMob + arrSizeMob
-    );
-  }
-
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection
-        .invoke<DepositStats[]>("GetUsersDepositsStats")
-        .then((res) => {
-          // console.log("res", res);
-          setStatsDeposit(res);
-        })
-        .catch((err: Error) => console.log(err));
-    }
-  }, [hubConnection]);
 
   useEffect(() => {
     if (hubConnection) {
@@ -185,8 +152,8 @@ export const AdminDeposit = () => {
           [1, 2, 3, 4, 5, 6],
           null,
           null,
-          null,
-          null,
+          backDays._d,
+          new Date(),
           null,
           null,
           null,
@@ -194,7 +161,6 @@ export const AdminDeposit = () => {
           20
         )
         .then((res) => {
-          console.log("GetUsersDeposits", res);
           setTotalList(res.totalRecords);
           setLoading(false);
           setDepositsList(res.collection);
@@ -245,6 +211,7 @@ export const AdminDeposit = () => {
       <Rounds />
 
       <Styled.FilterBlock>
+        <FilterName>{t("adminDeposit.filter")}</FilterName>
         <Styled.SelectContainer>
           <Styled.SelectWrap>
             <Styled.Label>{t("adminDeposit.labelUser")}</Styled.Label>
@@ -255,7 +222,7 @@ export const AdminDeposit = () => {
             <Select
               checkList={checkList}
               setCheckList={setCheckList}
-              values={listDeposits.map((item) => item.name)}
+              values={listDeposits}
             />
           </Styled.SelectWrap>
           <Styled.InputsWrap>
@@ -322,6 +289,17 @@ export const AdminDeposit = () => {
   );
 };
 
+const FilterName = styled.div`
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 21px;
+  letter-spacing: 0.1px;
+  margin-left: 10px;
+  @media (max-width: 576px) {
+    margin-left: 0px;
+  }
+`;
+
 const InputsWrapItem = styled.div`
   margin-right: 10px;
   width: 100%;
@@ -338,10 +316,11 @@ const Input = styled.input`
   min-height: 40px;
   padding: 8px;
   font-weight: normal;
+  background: transparent;
   font-size: 14px;
   line-height: 21px;
   letter-spacing: 0.1px;
-  color: #515172;
+  color: ${(props) => props.theme.text2};
   &:focus {
     outline: none;
   }
@@ -408,7 +387,7 @@ const TableHeadItem = styled.li`
   font-size: 12px;
   line-height: 14px;
   letter-spacing: 0.1px;
-  color: rgba(81, 81, 114, 0.6);
+  color: ${(props) => props.theme.thHead};
   width: 100%;
   white-space: nowrap;
   overflow: hidden;
@@ -478,7 +457,7 @@ const TableBodyItemCss = css`
   font-weight: normal;
   font-size: 14px;
   line-height: 16px;
-  color: #515172;
+  color: ${(props) => props.theme.text2};
 `;
 
 const TableBodyItem = styled(TableHeadItem)`
@@ -600,7 +579,7 @@ const DepositItem = styled.div`
       bottom: 0;
       position: absolute;
       z-index: 50;
-      background: #fff;
+      /* background: #fff; */
     }
   }
 `;

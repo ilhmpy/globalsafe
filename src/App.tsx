@@ -6,6 +6,7 @@ import { Main } from "./Pages/Main/Main";
 import { HubProvider } from "./context/HubContext";
 import { Admin } from "./Pages/Admin";
 import { AmountProvider } from "./context/AmountContext";
+import { ThemesProvider } from "./context/ThemeContext";
 import { InfoMain } from "./Pages/PrivateArea";
 
 function App() {
@@ -13,17 +14,19 @@ function App() {
     <Router>
       <HubProvider>
         <AmountProvider>
-          <div className="App">
-            <GlobalStyle />
-            <Switch>
-              <Route path="/" component={Main} exact />
-              <Route path="/admin" component={Admin} />
-              <Route path="/info" component={InfoMain} />
-              <Route path="/login" component={Authentication} />
-              <Route path="/register" component={Register} />
-              <Route component={Main} />
-            </Switch>
-          </div>
+          <ThemesProvider>
+            <div className="App">
+              <GlobalStyle />
+              <Switch>
+                <Route path="/" component={Main} exact />
+                <Route path="/admin" component={Admin} />
+                <Route path="/info" component={InfoMain} />
+                <Route path="/login" component={Authentication} />
+                <Route path="/register" component={Register} />
+                <Route component={Main} />
+              </Switch>
+            </div>
+          </ThemesProvider>
         </AmountProvider>
       </HubProvider>
     </Router>

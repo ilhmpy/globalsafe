@@ -16,7 +16,7 @@ import { Balance } from "../../types/balance";
 import { useTranslation } from "react-i18next";
 
 const TooltipBlock = styled.div`
-  background: #fff;
+  background: ${(props) => props.theme.card.background};
   padding: 5px;
   border-radius: 5px;
 `;
@@ -33,7 +33,7 @@ const Date = styled.div`
 const Text = styled.div<{ red?: boolean }>`
   font-size: 11px;
   padding-bottom: 2px;
-  color: ${(props) => (props.red ? "#FF416E" : "#222")};
+  color: ${(props) => (props.red ? "#FF416E" : props.theme.text)};
 `;
 
 export const StackedColumn: FC<{ values: any }> = ({ values }) => {

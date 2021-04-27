@@ -337,7 +337,7 @@ const TableHeadItem = styled.li`
   font-size: 12px;
   line-height: 14px;
   letter-spacing: 0.1px;
-  color: rgba(81, 81, 114, 0.6);
+  color: ${(props) => props.theme.thHead};
   width: 100%;
   &:nth-child(1) {
     max-width: 30px;
@@ -457,10 +457,10 @@ const TableHeadItemPaid = styled(TableHeadItem)`
 
 const TableBodyItem = styled(TableHeadItem)<{ dis?: boolean }>`
   ${TableBodyItemCss}
-  color: ${(props) => (props.dis ? "#C4C4C4" : "#515172")};
+  color: ${(props) => (props.dis ? "#C4C4C4" : props.theme.text2)};
 `;
 
 const TableBodyItemPaid = styled(TableHeadItemPaid)`
   ${TableBodyItemCss}
-  color:#515172;
+  color:${(props) => props.theme.text2};
 `;

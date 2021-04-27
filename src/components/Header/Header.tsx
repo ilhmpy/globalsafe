@@ -8,12 +8,15 @@ import {
   HeaderLogo,
   HeaderMenu,
   Languale,
+  SwitchTheme,
+  AdminButton,
 } from "./Header.elements";
 import { Button } from "../Button/Button";
 import { Nav } from "./Nav";
 import { useHistory, useLocation } from "react-router-dom";
 import styled from "styled-components/macro";
 import { AppContext } from "../../context/HubContext";
+import { ThemeContext } from "../../context/ThemeContext";
 import { NavAdmin } from "./NavAdmin";
 import usa from "../../assets/svg/usa.svg";
 import ru from "../../assets/svg/russia.svg";
@@ -23,6 +26,8 @@ export const Header: FC<{ admPanel?: boolean }> = ({ admPanel }) => {
   const [header, setHeader] = useState(false);
   const [open, setOpen] = useState(false);
   const appContext = useContext(AppContext);
+  const themeContext = useContext(ThemeContext);
+  const swithTheme = themeContext.toggleTheme;
   const user = appContext.user;
   const logOut = appContext.logOut;
   const admin = appContext.isAdmin;
@@ -50,6 +55,14 @@ export const Header: FC<{ admPanel?: boolean }> = ({ admPanel }) => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+  }, [open]);
 
   const onClose = () => {
     setOpen(false);
@@ -85,6 +98,7 @@ export const Header: FC<{ admPanel?: boolean }> = ({ admPanel }) => {
               />
             )}
           </HeaderMenu>
+          <SwitchTheme onClick={swithTheme}></SwitchTheme>
           {lang === "ru" ? (
             <Languale onClick={() => i18n.changeLanguage("en")}>
               en
@@ -97,9 +111,9 @@ export const Header: FC<{ admPanel?: boolean }> = ({ admPanel }) => {
             </Languale>
           )}
           {admin && (
-            <Button danger onClick={toAdmin}>
+            <AdminButton danger onClick={toAdmin}>
               {t("headerButton.admin")}
-            </Button>
+            </AdminButton>
           )}
           {location.pathname === "/" ? (
             <Button onClick={handleClick}>

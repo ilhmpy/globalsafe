@@ -53,6 +53,11 @@ export const Loader = styled.div`
 
 export const TopUpButton = styled(Button)`
   margin-right: auto;
+  background: ${(props) => props.theme.topUpButton};
+  color: ${(props) => props.theme.topUpColor};
+  &:hover {
+    background: ${(props) => props.theme.topUpButton};
+  }
   @media (max-width: 992px) {
     margin-left: auto;
   }
@@ -72,7 +77,7 @@ export const PayText = styled.p<{ small?: boolean; wbold?: boolean }>`
   font-size: ${(props) => (props.small ? "12px" : "14px")};
   line-height: ${(props) => (props.small ? "21px" : "16px")};
   letter-spacing: 0.1px;
-  color: ${(props) => (props.small ? "rgba(81, 81, 114, 0.6)" : "#515172")};
+  color: ${(props) => (props.small ? props.theme.thHead : props.theme.text2)};
 `;
 
 export const PayCardBlock = styled.div`
@@ -111,21 +116,17 @@ const activeclassname = "active";
 
 export const NavTabs = styled(NavLink).attrs({ activeclassname })`
   display: inline-block;
-  &:hover {
-    background-color: white;
-  }
   div {
     border: none;
     outline: none;
-
     cursor: pointer;
     position: relative;
     font-weight: 400;
     font-size: 14px;
     line-height: 16px;
+    color: ${(props) => props.theme.text};
     padding: 12px 0;
     width: 120px;
-    color: #0e0d3d;
     text-align: left;
     background: transparent;
     position: relative;
@@ -175,6 +176,10 @@ export const Select = styled.select`
 export const ModalBack = styled(BackIcon)`
   width: 16px;
   height: 16px;
+  path {
+    fill: ${(props) => props.theme.text};
+    fill-opacity: 1;
+  }
 `;
 
 export const DateButton = styled(Button)`
@@ -185,6 +190,7 @@ export const IconRotate = styled.div<{ rights?: boolean }>`
   width: 16px;
   height: 16px;
   margin-left: 10px;
+
   transform: ${(props) => (props.rights ? "rotate(180deg)" : "rotate(0deg)")};
 `;
 
@@ -192,7 +198,6 @@ export const Date = styled.div`
   font-weight: bold;
   font-size: 18px;
   line-height: 21px;
-  color: #0e0d3d;
   margin-left: 19px;
   @media (max-width: 768px) {
     width: 100%;
@@ -208,7 +213,7 @@ export const NextPay = styled.div`
   font-weight: 500;
   font-size: 14px;
   line-height: 16px;
-  color: rgba(14, 13, 61, 0.5);
+  color: ${(props) => props.theme.nextPay};
   @media (max-width: 768px) {
     flex-wrap: wrap;
     justify-content: flex-start;
@@ -221,7 +226,7 @@ export const NextPay = styled.div`
 export const Back = styled(Link)`
   margin-right: auto;
   margin-bottom: 20px;
-  color: #515172;
+  color: ${(props) => props.theme.text2};
   font-weight: 500;
   font-size: 14px;
   line-height: 16px;
@@ -229,7 +234,10 @@ export const Back = styled(Link)`
 
 export const LeftIcon = styled(Left)`
   margin-right: 12px;
-  fill: #515172;
+  fill: ${(props) => props.theme.text};
+  path {
+    stroke: ${(props) => props.theme.text};
+  }
 `;
 
 export const Page = styled.div`
@@ -252,7 +260,6 @@ export const InfoTitle = styled.h4`
   font-weight: 500;
   font-size: 18px;
   line-height: 21px;
-  color: #0e0d3d;
   margin-bottom: 20px;
   white-space: nowrap;
   overflow: hidden;
@@ -302,7 +309,6 @@ export const DepositName = styled.h4`
   font-size: 20px;
   line-height: 23px;
   text-align: center;
-  color: #0e0d3d;
   margin-bottom: 20px;
 `;
 
@@ -333,7 +339,6 @@ export const HalfTitle = styled.span`
   font-weight: 500;
   font-size: 20px;
   line-height: 23px;
-  color: #0e0d3d;
   padding-right: 110px;
 `;
 
@@ -346,7 +351,6 @@ export const HalfTab = styled.span<{ card?: boolean }>`
   font-weight: ${(props) => (props.card ? "600" : "400")};
   font-size: 20px;
   line-height: 14px;
-  color: #0e0d3d;
   cursor: pointer;
   padding: 0 5px;
   text-decoration: uppercase;
@@ -413,7 +417,6 @@ export const Li = styled.li<{ color?: string }>`
   font-weight: normal;
   font-size: 18px;
   line-height: 24px;
-  color: #0e0d3d;
   position: relative;
   padding-left: 40px;
   padding-bottom: 12px;
@@ -450,7 +453,6 @@ export const BalanceItemName = styled.p`
   font-weight: normal;
   font-size: 14px;
   line-height: 16px;
-  color: #0e0d3d;
   margin-bottom: 5px;
   @media (max-width: 992px) {
     font-size: 14px;
@@ -462,7 +464,7 @@ export const BalanceItemValue = styled.p<{ pink?: boolean }>`
   font-weight: 500;
   font-size: 24px;
   line-height: 28px;
-  color: ${(props) => (props.pink ? "#FF416E" : "#0E0D3D")};
+  color: ${(props) => (props.pink ? "#FF416E" : props.theme.text)};
   @media (max-width: 992px) {
     font-size: 18px;
     line-height: 21px;
@@ -507,7 +509,7 @@ export const BalanceTabItem = styled.div<{ active?: boolean }>`
   line-height: 16px;
   padding-right: 30px;
   cursor: pointer;
-  color: ${(props) => (props.active ? "#FF416E" : "#000000")};
+  color: ${(props) => (props.active ? "#FF416E" : props.theme.text)};
   @media (max-width: 768px) {
     padding-right: 5px;
   }
@@ -557,7 +559,7 @@ export const DataListName = styled.span`
   display: flex;
   align-items: center;
   letter-spacing: 0.1px;
-  color: #515172;
+  color: ${(props) => props.theme.text2};
 `;
 
 export const DataListHead = styled.div`
@@ -566,7 +568,7 @@ export const DataListHead = styled.div`
     font-size: 12px;
     line-height: 14px;
     letter-spacing: 0.1px;
-    color: rgba(81, 81, 114, 0.6);
+    color: ${(props) => props.theme.thHead};
   }
   ${DataListItem} {
     padding-bottom: 9px;
@@ -574,7 +576,7 @@ export const DataListHead = styled.div`
 `;
 
 export const DataListSum = styled.div<{ plus?: boolean }>`
-  color: ${(props) => (props.plus ? "#FF416E" : "#515172")};
+  color: ${(props) => (props.plus ? "#FF416E" : props.theme.text2)};
   white-space: nowrap;
   padding-left: 20px;
   text-align: right;
@@ -582,12 +584,11 @@ export const DataListSum = styled.div<{ plus?: boolean }>`
 
 export const DataListDate = styled.div`
   margin: 10px auto;
-  color: #0e0d3d;
   font-weight: normal;
   font-size: 12px;
   line-height: 14px;
   padding: 10px 6px;
-  background: #ffffff;
+  background: transparent;
   width: 125px;
   text-align: center;
   border: 1px solid #ff416e;
@@ -596,8 +597,13 @@ export const DataListDate = styled.div`
 
 export const ModalButton = styled(Button)<{ mb?: boolean }>`
   max-width: 100%;
+  color: ${(props) => props.theme.text};
   width: 100%;
   margin-bottom: ${(props) => (props.mb ? "20px" : "0")};
+  &:disabled {
+    color: ${(props) => props.theme.cdis};
+    background: ${(props) => props.theme.bbdis};
+  }
 `;
 
 export const ModalBlock = styled.div`
@@ -632,7 +638,6 @@ export const NotFound = styled.div`
   padding: 30px;
   letter-spacing: 0.1px;
   min-height: 250px;
-  color: #0e0d3d;
 `;
 
 export const ModalContent = styled.div`
@@ -645,7 +650,6 @@ export const ModalTitle = styled.h3<{ mt?: boolean }>`
   font-size: 24px;
   line-height: 28px;
   text-align: center;
-  color: #0e0d3d;
   padding-bottom: 15px;
   margin-top: ${(props) => (props.mt ? "40px" : 0)};
   @media (max-width: 768px) {
@@ -663,7 +667,7 @@ export const DateTitle = styled.p`
   font-weight: normal;
   font-size: 14px;
   line-height: 16px;
-  color: #515172;
+  color: ${(props) => props.theme.text2};
   opacity: 0.4;
   text-align: center;
   padding-bottom: 5px;
@@ -674,7 +678,7 @@ export const DateText = styled.p<{ red?: boolean }>`
   font-weight: normal;
   font-size: 18px;
   line-height: 21px;
-  color: ${(props) => (props.red ? "#FF416E" : "#515172")};
+  color: ${(props) => (props.red ? "#FF416E" : props.theme.text2)};
   text-align: center;
   transition: 0.3s;
   cursor: pointer;
@@ -705,7 +709,8 @@ export const ModalListText = styled.div<{ head?: boolean }>`
   line-height: 16px;
   letter-spacing: 0.1px;
   padding-right: 5px;
-  color: ${(props) => (props.head ? "rgba(86, 101, 127, 0.6)" : "#515172")};
+  color: ${(props) =>
+    props.head ? props.theme.depositHead : props.theme.text2};
 `;
 
 export const ModalListItem = styled.li`
@@ -734,7 +739,7 @@ export const Program = styled.div`
   text-align: center;
   margin: 15px 0 20px;
   letter-spacing: 0.1px;
-  color: #515172;
+  color: ${(props) => props.theme.text2};
   cursor: pointer;
   transition: 0.3s;
   &:hover {

@@ -388,7 +388,7 @@ const PayCard = styled(Card)`
   justify-content: center;
   position: relative;
   margin: 50px auto;
-  background: #fafafa;
+  background: ${(props) => props.theme.card.background};
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
 `;
@@ -430,7 +430,7 @@ const PayName = styled.div`
   font-size: 14px;
   line-height: 16px;
   letter-spacing: 0.1px;
-  color: #515172;
+  color: ${(props) => props.theme.text2};
 `;
 
 const PayText = styled.p<{ small?: boolean }>`
@@ -438,5 +438,5 @@ const PayText = styled.p<{ small?: boolean }>`
   font-size: ${(props) => (props.small ? "12px" : "14px")};
   line-height: ${(props) => (props.small ? "21px" : "16px")};
   letter-spacing: 0.1px;
-  color: ${(props) => (props.small ? "rgba(81, 81, 114, 0.6)" : "#515172")};
+  color: ${(props) => (props.small ? props.theme.thHead : props.theme.text2)};
 `;

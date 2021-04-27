@@ -4,7 +4,7 @@ export const UpTitle = styled.div<{ small?: boolean }>`
   font-weight: 500;
   font-size: ${(props) => (props.small ? "14px" : "18px")};
   line-height: ${(props) => (props.small ? "16px" : "21px")};
-  color: #0e0d3d;
+  /* color: #0e0d3d; */
   margin-bottom: 30px;
   margin-right: auto;
   &:before {

@@ -23,10 +23,10 @@ function Navbar({
   const next = months[nextMonth.getMonth()];
 
   return (
-    <div className={className}>
+    <Arrows>
       <ArrowLeft onClick={() => onPreviousClick()} />
       <ArrowRight onClick={() => onNextClick()} />
-    </div>
+    </Arrows>
   );
 }
 const lang = localStorage.getItem("i18nextLng") || "ru";
@@ -75,15 +75,20 @@ const WEEKDAYS_LONG = [
   "Суббота",
 ];
 
+const Arrows = styled.div`
+  svg path {
+    fill: ${(props) => props.theme.text3Hover};
+  }
+`;
+
 const CustomDatePickers = styled(DayPicker)`
-  background: #ffffff;
-  border: 1px solid #e5e5e5;
+  background: ${(props) => props.theme.card.background};
+  border: 1px solid ${(props) => props.theme.border};
   box-sizing: border-box;
   border-radius: 4px;
   margin: 30px;
   @media (max-width: 992px) {
     margin: 0 auto 20px;
-    background: #fff;
     box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
     width: 100%;
@@ -101,9 +106,11 @@ const CustomDatePickers = styled(DayPicker)`
   .DayPicker-Caption {
     margin-bottom: 13px;
     margin-top: 9px;
+    div {
+      color: ${(props) => props.theme.text};
+    }
   }
   .DayPicker-Day {
-    color: #0e0d3d;
     font-weight: normal;
     font-size: 16px;
     line-height: 24px;
@@ -113,6 +120,9 @@ const CustomDatePickers = styled(DayPicker)`
     margin: 5px;
     &:focus {
       outline: none;
+    }
+    &:hover:not(.DayPicker-Day--selected) {
+      background: ${(props) => props.theme.card.background} !important;
     }
     @media (max-width: 576px) {
       width: 32px;
@@ -125,6 +135,7 @@ const CustomDatePickers = styled(DayPicker)`
     background: #ff416e;
     color: #fff;
   }
+
   .DayPicker-Day--today {
     color: #d0021b;
     font-weight: 700;
@@ -134,7 +145,7 @@ const CustomDatePickers = styled(DayPicker)`
     line-height: 15px;
     text-align: center;
     letter-spacing: 0.4px;
-    color: #515172;
+    color: ${(props) => props.theme.text2};
     padding: 0 16px;
     @media (max-width: 992px) {
       padding: 0 9px;
@@ -404,7 +415,7 @@ const Period = styled.div`
   font-weight: normal;
   font-size: 18px;
   line-height: 21px;
-  color: #515172;
+  color: ${(props) => props.theme.text2};
   text-align: center;
   padding: 15px 5px 5px;
   cursor: pointer;
@@ -535,6 +546,18 @@ const InputCustom = styled.div`
     color: #d0021b;
     font-weight: 700;
   }
+  .DayPicker-Day--selected:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside) {
+    background-color: ${(props) => props.theme.card.background} !important;
+    border-radius: 0;
+    color: #4a90e2;
+  }
+  .DayPicker:not(.DayPicker--interactionDisabled)
+    .DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside):hover {
+    background: ${(props) => props.theme.card.background} !important;
+  }
+  .DayPicker .DayPicker-Day:hover {
+    background: ${(props) => props.theme.card.background} !important;
+  }
   .DayPicker-Weekday {
     font-size: 12px;
     line-height: 15px;
@@ -592,14 +615,13 @@ const Input = styled.input`
 `;
 
 const CustomDatePicker = styled(DayPicker)`
-  background: #ffffff;
-  border: 1px solid #e5e5e5;
+  background: ${(props) => props.theme.card.background};
+  border: 1px solid ${(props) => props.theme.border};
   box-sizing: border-box;
   border-radius: 4px;
   margin: 30px;
   @media (max-width: 992px) {
     margin: 0 auto 20px;
-    background: #fff;
     box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
   }
@@ -613,15 +635,16 @@ const CustomDatePicker = styled(DayPicker)`
     font-size: 14px;
     line-height: 21px;
     letter-spacing: 0.1px;
-    color: #0e0d3d;
     font-family: "Roboto", sans-serif;
   }
   .DayPicker-Caption {
     margin-bottom: 13px;
     margin-top: 9px;
+    div {
+      color: ${(props) => props.theme.text};
+    }
   }
   .DayPicker-Day {
-    color: #0e0d3d;
     font-weight: normal;
     font-size: 16px;
     line-height: 24px;
@@ -631,6 +654,9 @@ const CustomDatePicker = styled(DayPicker)`
     margin: 5px;
     &:focus {
       outline: none;
+    }
+    &:hover {
+      background: ${(props) => props.theme.card.background} !important;
     }
     @media (max-width: 576px) {
       width: 32px;
@@ -645,9 +671,16 @@ const CustomDatePicker = styled(DayPicker)`
   }
 
   .DayPicker-Day--selected:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside) {
-    background-color: #f0f8ff !important;
+    background-color: ${(props) => props.theme.card.background} !important;
     border-radius: 0;
     color: #4a90e2;
+  }
+  .DayPicker:not(.DayPicker--interactionDisabled)
+    .DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside):hover {
+    background: ${(props) => props.theme.card.background} !important;
+  }
+  .DayPicker .DayPicker-Day:hover {
+    background: ${(props) => props.theme.card.background} !important;
   }
   .DayPicker-Day--today {
     color: #d0021b;
@@ -658,8 +691,10 @@ const CustomDatePicker = styled(DayPicker)`
     line-height: 15px;
     text-align: center;
     letter-spacing: 0.4px;
-    color: #515172;
+    color: ${(props) => props.theme.text2};
     padding: 0 16px;
+    abbr {
+    }
     @media (max-width: 992px) {
       padding: 0 9px;
     }
@@ -685,7 +720,6 @@ const CustomDatePicker = styled(DayPicker)`
     width: 100%;
     text-align: center;
     color: #ff416e;
-    background: #fff;
     padding: 10px;
   }
 `;
@@ -777,7 +811,7 @@ const DateInput = styled.div`
   font-size: 14px;
   line-height: 21px;
   letter-spacing: 0.1px;
-  color: #515172;
+  color: ${(props) => props.theme.text2};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -837,7 +871,7 @@ const DateLabel = styled.div`
   font-size: 14px;
   line-height: 21px;
   letter-spacing: 0.1px;
-  color: rgba(86, 101, 127, 0.6);
+  color: ${(props) => props.theme.depositHead};
 `;
 
 const icon = css`

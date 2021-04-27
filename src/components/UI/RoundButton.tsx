@@ -9,12 +9,27 @@ export const RoundButton = styled.div`
   height: 24px;
   background-color: #bcd476;
   border-radius: 50%;
-  background-image: url(${icon});
+  /* background-image: url(${icon}); */
   display: block;
   cursor: pointer;
   background-repeat: no-repeat;
   background-position: center;
   background-size: 11px;
+  position: relative;
+  &:after {
+    border-color: ${(props) => props.theme.inputBg};
+    border-style: solid;
+    border-width: 0 1px 1px 0;
+    content: "";
+    height: 9px;
+    left: 10px;
+    position: absolute;
+    top: 6px;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(39deg);
+    width: 5px;
+  }
 `;
 
 export const LockButton = styled.button`

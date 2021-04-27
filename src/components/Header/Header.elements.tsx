@@ -3,13 +3,26 @@ import styled from "styled-components/macro";
 import { Button } from "../Button/Button";
 import { NavHashLink } from "react-router-hash-link";
 
+export const SwitchTheme = styled.div`
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: ${(props) => props.theme.switch};
+  cursor: pointer;
+`;
+
+export const AdminButton = styled(Button)`
+  min-width: 110px;
+  max-width: 110px;
+  padding: 12px 0px;
+`;
+
 export const Languale = styled.div`
   display: flex;
   align-items: center;
   font-weight: 500;
   font-size: 14px;
   line-height: 16px;
-  color: #0e0d3d;
   margin-right: 10px;
   cursor: pointer;
   @media (max-width: 1100px) {
@@ -33,14 +46,7 @@ export const HeaderWrap = styled.header<{ header?: boolean }>`
   z-index: 9999;
   padding: 28px 0;
   transition: all 0.3s ease 0s;
-  background: ${(props) =>
-    props.header
-      ? `linear-gradient(
-  0deg
-  , rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)), linear-gradient( 
-  82.3deg
-  , #effff9 3.67%, #f3f9ff 22.57%, #fffdf0 44.98%, #fff0f0 73%, #f0f0ff 95.88% ), #ffffff`
-      : "transparent"};
+  background: ${(props) => (props.header ? props.theme.header : "transparent")};
 `;
 
 export const HeaderInner = styled.div`
@@ -53,6 +59,9 @@ export const HeaderInner = styled.div`
     ${Button} {
       display: none;
     }
+    ${SwitchTheme} {
+      display: none;
+    }
   }
 `;
 
@@ -60,19 +69,21 @@ export const HeaderLogo = styled.a`
   text-decoration: none;
   cursor: pointer;
   z-index: 5;
+  .logo {
+    fill: ${(props) => props.theme.text};
+  }
 `;
 
 export const HeaderMenu = styled.div<{ open?: boolean }>`
   @media (max-width: 1100px) {
     position: fixed;
-    background: #fff;
+    background: ${(props) => props.theme.modal};
     width: 100%;
     height: 100%;
     left: ${(props) => (props.open ? "0" : "-100%")};
     top: 0;
     padding: 0 50px;
     overflow: auto;
-    background: #fff;
     z-index: 4;
     -webkit-transition: all 0.3s ease 0s;
     -o-transition: all 0.3s ease 0s;
@@ -132,7 +143,7 @@ export const List = styled.ul`
 `;
 
 export const ListItem = styled.li<{ mob?: boolean }>`
-  padding: 0px 30px;
+  padding: 0px 24px;
   display: ${(props) => props.mob && "none"};
   position: relative;
   ${Languale} {
@@ -148,9 +159,13 @@ export const ListItem = styled.li<{ mob?: boolean }>`
     display: ${(props) => props.mob && "block"};
     width: 100%;
     padding: 20px 0px;
-    border-top: 1px solid rgba(81, 81, 114, 0.2);
+    border-top: 1px solid ${(props) => props.theme.listBorder};
     ${Languale} {
       display: flex;
+      cursor: initial;
+    }
+    ${SwitchTheme} {
+      display: block;
       cursor: initial;
     }
   }
@@ -162,10 +177,10 @@ export const StyledLink = styled(NavHashLink).attrs({ activeclassname })`
   &.${activeclassname} {
     color: red;
   }
+  color: ${(props) => props.theme.text};
   font-weight: 500;
   font-size: 14px;
   line-height: 16px;
-  color: #0e0d3d;
   cursor: pointer;
   transition: all 0.3s ease 0s;
   &:hover {
@@ -177,5 +192,4 @@ export const LinkButton = styled.div`
   font-weight: 500;
   font-size: 12px;
   line-height: 14px;
-  color: #0e0d3d;
 `;

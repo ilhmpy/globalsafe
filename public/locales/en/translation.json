@@ -1,10 +1,12 @@
 {
     "header": {
-      "item1": "Capacious",
-      "item2": "Rates",
+      "item1": "About fund",
+      "item2": "Our tariffs",
       "item3": "About us",
       "item4": "Contacts"
     },
+    "themeDark": "Dark theme",
+    "themeLight": "Light theme",
     "period":"Specify period",
     "ready": "Done",
     "logout": "Log Out",
@@ -87,6 +89,7 @@
         "labelOpen": "Opening date",
         "labelDate": "Close date",
         "btnApply": "Apply",
+        "filter": "Filter",
         "table":{
             "user": "User",
             "name": "Name",
@@ -104,7 +107,9 @@
         "chartTitle1": "Payouts",
         "chartTitle2": "Fund performance",
         "depositsCount": "Number of deposits",
-        "depositsAmount": "Deposits"
+        "depositsAmount": "Deposits",
+        "openDeposit": "Open deposits",
+        "closeDeposit": "Closing deposits"
     },
     "adminPortfolio":{
         "uptitle": "Portfolio",
@@ -190,6 +195,8 @@
         "balance": "Balance",
         "newDeposit": "New deposit",
         "withdraw": "Withdraw funds",
+        "prevPay": "Previous payout",
+        "procentPrevPay": "Percentage of the previous payment",
         "tabs":{
             "tab1": "Information",
             "tab2": "Deposits",

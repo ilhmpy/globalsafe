@@ -140,6 +140,7 @@ export const AdminUsers = () => {
   const logOut = appContext.logOut;
   const user = appContext.user;
   const { t } = useTranslation();
+  const backDays: any = moment().subtract(30, "days");
 
   useEffect(() => {
     if (hubConnection) {
@@ -147,8 +148,8 @@ export const AdminUsers = () => {
         .invoke<RootUsers>(
           "GetUsers",
           name || null,
-          openDate.from || null,
-          openDate.to || null,
+          openDate.from ? openDate.from : backDays._d,
+          openDate.to ? openDate.to : new Date(),
           0,
           20
         )
@@ -171,8 +172,8 @@ export const AdminUsers = () => {
         .invoke<RootUsers>(
           "GetUsers",
           name || null,
-          openDate.from || null,
-          openDate.to || null,
+          openDate.from ? openDate.from : backDays._d,
+          openDate.to ? openDate.to : new Date(),
           0,
           20
         )
@@ -197,8 +198,8 @@ export const AdminUsers = () => {
         .invoke<RootUsers>(
           "GetUsers",
           name || null,
-          openDate.from || null,
-          openDate.to || null,
+          openDate.from ? openDate.from : backDays._d,
+          openDate.to ? openDate.to : new Date(),
           num,
           20
         )
@@ -319,7 +320,6 @@ const NotFound = styled.div`
   padding: 30px;
   letter-spacing: 0.1px;
   min-height: 250px;
-  color: #0e0d3d;
 `;
 
 const Input = styled.input`
@@ -333,7 +333,8 @@ const Input = styled.input`
   font-size: 14px;
   line-height: 21px;
   letter-spacing: 0.1px;
-  color: #515172;
+  background: transparent;
+  color: ${(props) => props.theme.text2};
   &:focus {
     outline: none;
   }
@@ -358,7 +359,7 @@ const TableHeadItem = styled.li`
   font-size: 12px;
   line-height: 14px;
   letter-spacing: 0.1px;
-  color: rgba(81, 81, 114, 0.6);
+  color: ${(props) => props.theme.thHead};
   width: 100%;
   &:nth-child(1) {
     max-width: 97px;
@@ -418,7 +419,7 @@ const TableBodyItemCss = css`
   font-weight: normal;
   font-size: 14px;
   line-height: 16px;
-  color: #515172;
+  color: ${(props) => props.theme.text2};
 `;
 
 const TableBodyItem = styled(TableHeadItem)`

@@ -10,10 +10,11 @@ export const Input = styled.input`
   width: 100%;
   line-height: 16px;
   text-align: center;
-  color: rgba(14, 13, 61, 1);
+  background: transparent;
+  color: ${(props) => props.theme.text};
   margin-bottom: 20px;
   &::placeholder {
-    color: rgba(14, 13, 61, 0.5);
+    color: ${(props) => props.theme.text2};
   }
   &:focus {
     border-color: #007eff;
@@ -29,6 +30,7 @@ export const MyInput = styled(Field)`
   border-radius: 24px;
   font-size: 14px;
   padding: 12px 10px;
+  background: transparent;
   width: 100%;
   line-height: 16px;
   text-align: center;

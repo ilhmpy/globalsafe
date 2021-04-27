@@ -14,7 +14,7 @@ export const NameData = styled.div<{ green?: boolean }>`
   font-weight: normal;
   font-size: 12px;
   letter-spacing: 0.1px;
-  color: ${(props) => (props.green ? "#c9da99" : "#515172")};
+  color: ${(props) => (props.green ? "#c9da99" : props.theme.text2)};
   display: flex;
   align-items: center;
   @media (max-width: 992px) {
@@ -28,7 +28,7 @@ export const TH = styled.th`
   font-size: 12px;
   line-height: 14px;
   letter-spacing: 0.1px;
-  color: rgba(81, 81, 114, 0.6);
+  color: ${(props) => props.theme.thHead};
   padding: 10px 0;
   &:nth-child(1) {
     width: 188px;
@@ -83,7 +83,7 @@ export const Text = styled.div`
   font-size: 14px;
   line-height: 16px;
   letter-spacing: 0.1px;
-  color: #515172;
+  color: ${(props) => props.theme.text2};
   p {
     padding-bottom: 3px;
   }

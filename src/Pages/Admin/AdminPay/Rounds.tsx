@@ -95,6 +95,7 @@ export const Rounds = () => {
         .catch((err: Error) => console.log(err));
     }
   }, [hubConnection]);
+
   return (
     <div>
       <DepositWrap>
@@ -110,12 +111,6 @@ export const Rounds = () => {
                   <SwiperInner>
                     {!size &&
                       i.map((item: any, idx: number) => {
-                        const color =
-                          "#" +
-                          Math.floor(Math.random() * 16777215)
-                            .toString(16)
-                            .padStart(6, "0");
-
                         return (
                           <DepositItem key={idx}>
                             <Styled.PayItemHead mb>
@@ -160,11 +155,6 @@ export const Rounds = () => {
                   <SwiperSlide key={idx}>
                     <DepositItemWrap>
                       {i.map((item: any, idx: number) => {
-                        const color =
-                          "#" +
-                          Math.floor(Math.random() * 16777215)
-                            .toString(16)
-                            .padStart(6, "0");
                         return (
                           <DepositItemInner key={idx}>
                             <DepositItem>
@@ -205,44 +195,10 @@ export const Rounds = () => {
   );
 };
 
-const InputsWrapItem = styled.div`
-  margin-right: 10px;
-  width: 100%;
-  @media (max-width: 576px) {
-    margin-right: 0px;
-  }
-`;
-
-const Input = styled.input`
-  width: 100%;
-  border: 1px solid rgba(86, 101, 127, 0.3);
-  box-sizing: border-box;
-  border-radius: 2px;
-  min-height: 40px;
-  padding: 8px;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 21px;
-  letter-spacing: 0.1px;
-  color: #515172;
-  &:focus {
-    outline: none;
-  }
-`;
-
-const NotFound = styled.div`
-  font-weight: normal;
-  font-size: 12px;
-  line-height: 21px;
-  padding: 30px;
-  letter-spacing: 0.1px;
-  min-height: 250px;
-  color: #0e0d3d;
-`;
-
 const DepositInner = styled.div`
   margin: 0 auto;
   min-width: 0;
+  max-width: 1100px;
   @media (max-width: 1470px) {
     max-width: 930px;
   }
@@ -404,7 +360,7 @@ const HalfRound = styled.div`
     text-align: center;
     display: block;
     width: 63px;
-    color: #000000;
+    color: ${(props) => props.theme.text};
     @media (max-width: 768px) {
       font-size: 10px;
       line-height: 16px;
@@ -463,7 +419,7 @@ const DepositItem = styled.div`
       font-size: 16px;
       line-height: 20px;
       text-align: right;
-      color: #000000;
+      color: ${(props) => props.theme.text};
       @media (max-width: 768px) {
         font-size: 9px;
         line-height: 14px;
@@ -482,7 +438,6 @@ const DepositItem = styled.div`
       bottom: 0;
       position: absolute;
       z-index: 50;
-      background: #fff;
     }
   }
 `;

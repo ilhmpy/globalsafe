@@ -14,7 +14,7 @@ const Text = styled.p`
   width: 100%;
   margin-top: 170px;
   margin-bottom: 40px;
-  color: #000000;
+  color: ${(props) => props.theme.text};
   font-size: 14px;
   font-weight: 300;
   font-style: normal;
