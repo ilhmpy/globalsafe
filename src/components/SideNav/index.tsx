@@ -287,6 +287,9 @@ const Theme = styled.div`
   white-space: nowrap;
   align-items: center;
   padding: 11px 20px;
+  svg {
+    flex: none;
+  }
   @media (max-width: 1200px) {
     margin-top: 200px;
   }

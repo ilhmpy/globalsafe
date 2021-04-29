@@ -226,7 +226,7 @@ input[type=number] {
 
 `;
 
-export const Container = styled.div`
+export const Container = styled.div<{ pNone?: boolean }>`
   z-index: 1;
   width: 100%;
   max-width: 1080px;
@@ -237,8 +237,8 @@ export const Container = styled.div`
   display: flex;
   justify-content: space-around;
   @media screen and (max-width: 992px) {
-    padding-right: 20px;
-    padding-left: 20px;
+    padding-right: ${(props) => (props.pNone ? "0" : "20px")};
+    padding-left: ${(props) => (props.pNone ? "0" : "20px")};
   }
 `;
 

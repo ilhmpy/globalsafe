@@ -6,6 +6,7 @@ import {
   AdminDeposit,
   AdminUsers,
   AdminPortfolio,
+  AdminUserOnePage,
 } from "./";
 import * as Styled from "./Styled.elements";
 import { SideNavbar } from "../../components/SideNav";
@@ -59,7 +60,8 @@ export const Admin = () => {
           <Route path="/admin" component={AdminMain} exact />
           <Route path="/admin/payments" component={AdminPay} />
           <Route path="/admin/deposit" component={AdminDeposit} />
-          <Route path="/admin/users" component={AdminUsers} />
+          <Route path="/admin/users" component={AdminUsers} exact />
+          <Route path="/admin/users/:slug" component={AdminUserOnePage} />
           <Route path="/admin/portfolio" component={AdminPortfolio} />
           <Route path="/" component={AdminMain} exact />
         </Switch>

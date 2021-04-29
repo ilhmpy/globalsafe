@@ -216,6 +216,7 @@ export const AdminPay = () => {
           20
         )
         .then((res) => {
+          console.log("GetUsersDeposits", res);
           setLoading(false);
           setTotalDeposits(res.totalRecords);
           setDepositList(res.collection);
@@ -243,6 +244,7 @@ export const AdminPay = () => {
           20
         )
         .then((res) => {
+          console.log("GetDepositsCharges", res);
           setLoading(false);
           if (res.collection.length) {
             setTotalPayDeposits(res.totalRecords);
