@@ -14,10 +14,11 @@ import { Button } from "../../components/Button/Button";
 import { AppContext } from "../../context/HubContext";
 import { OpenDate } from "../../types/dates";
 import {
-  DepositStats,
-  ListDeposits,
-  CollectionListDeposits,
-} from "../../types/deposits";
+  RootPayments,
+  PaymentsCollection,
+  RootCharges,
+  CollectionCharges,
+} from "../../types/payments";
 import { RootUsers, CollectionUsers } from "../../types/users";
 import { Loading } from "../../components/UI/Loading";
 import { Scrollbars } from "react-custom-scrollbars";
@@ -26,6 +27,7 @@ import { ModalUsers } from "./AdminPay/Payments";
 import { CSSTransition } from "react-transition-group";
 import { useTranslation } from "react-i18next";
 import moment from "moment";
+import { useHistory } from "react-router-dom";
 import { LockButton, UnLockButton } from "../../components/UI/RoundButton";
 
 type PropsTable = {
@@ -40,31 +42,81 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
       moment(data.lockoutEnd).valueOf() >= moment.utc().valueOf()
   );
   const [open, setOpen] = useState(false);
+  const [dataOne, setDataOne] = useState<CollectionCharges[]>([]);
+  const [dataTwo, setDataTwo] = useState<PaymentsCollection[]>([]);
+  const appContext = useContext(AppContext);
+  const hubConnection = appContext.hubConnection;
   const { t } = useTranslation();
-
+  const history = useHistory();
   const onClose = () => {
     setOpen(false);
   };
 
+  const dataOneFetch = () => {};
+
+  const onClick = () => {
+    if (window.innerWidth < 992) {
+      history.push(`/admin/users/${data.name}`);
+    } else {
+      setOpen(true);
+    }
+  };
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection
+        .invoke<RootCharges>(
+          "GetDepositsCharges",
+          data.name,
+          null,
+          null,
+          null,
+          [7, 8],
+          0,
+          20
+        )
+        .then((res) => {
+          console.log("GetDepositsCharges 11", res);
+          setDataOne(res.collection);
+        })
+        .catch((err: Error) => {
+          console.log(err);
+        });
+    }
+  }, [hubConnection, data]);
+
   const modalOpen = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setOpen(true);
+    onClick();
   };
   const sizes = useWindowSize();
   const size = sizes < 992;
 
   const locked = (e: any, id: string) => {
-    e.preventDefault();
     e.stopPropagation();
     setLock(true);
     lockAccount(id);
   };
 
   const unLocked = (e: any, id: string) => {
-    e.preventDefault();
     e.stopPropagation();
     setLock(false);
     unLockAccount(id);
+  };
+
+  const adjustBalanceAsync = (
+    userSafeId: string,
+    delta: number,
+    safeOperationId: string
+  ) => {
+    if (hubConnection) {
+      hubConnection
+        .invoke("AdjustBalanceAsync", userSafeId, delta, safeOperationId)
+        .then((res) => {
+          console.log("AdjustBalanceAsync", res);
+        })
+        .catch((e) => console.log(e));
+    }
   };
 
   return (
@@ -76,6 +128,8 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
           lock={lock}
           unLocked={unLocked}
           locked={locked}
+          dataOne={dataOne}
+          adjustBalanceAsync={adjustBalanceAsync}
         />
       </CSSTransition>
       <TableBody onClick={modalOpen}>
@@ -154,6 +208,7 @@ export const AdminUsers = () => {
           20
         )
         .then((res) => {
+          console.log("GetUsers", res);
           setLoading(false);
           setNum(20);
           seTotalUsers(res.totalRecords);

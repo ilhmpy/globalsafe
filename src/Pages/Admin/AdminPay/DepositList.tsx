@@ -11,11 +11,13 @@ import styled, { css } from "styled-components/macro";
 import useOnClickOutside from "../../../hooks/useOutsideHook";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
+import { RoundButton } from "../../../components/UI/RoundButton";
 
 type ListProps = {
   data: PaymentsCollection;
   adjustPay: (id: string, val: number) => void;
   confirmPay: (id: string) => void;
+  unConfirmPay: (id: string) => void;
   idx: number;
 };
 
@@ -23,6 +25,7 @@ export const DepositList: FC<ListProps> = ({
   data,
   adjustPay,
   confirmPay,
+  unConfirmPay,
   idx,
 }: ListProps) => {
   const [value, setValue] = useState(
@@ -71,9 +74,23 @@ export const DepositList: FC<ListProps> = ({
     }
   };
 
+  const paymentsConfirmCheckbox = (id: string) => {
+    if (disabled) {
+      paymentsUnConfirm(id);
+    } else {
+      paymentsConfirm(id);
+    }
+  };
+
   const paymentsConfirm = (id: string) => {
     setDone(true);
     confirmPay(id);
+    onClose();
+  };
+
+  const paymentsUnConfirm = (id: string) => {
+    setDone(false);
+    unConfirmPay(id);
     onClose();
   };
 
@@ -107,6 +124,7 @@ export const DepositList: FC<ListProps> = ({
           onHandleChange={onHandleChange}
           onChange={onChange}
           paymentsConfirm={paymentsConfirm}
+          unConfirmPay={paymentsUnConfirm}
         />
       </CSSTransition>
       <TableBody onClick={modalOpen}>
@@ -159,15 +177,21 @@ export const DepositList: FC<ListProps> = ({
         </TableBodyItem>
         <TableBodyItem>
           {size ? (
-            <Checkbox
-              checked={disabled}
-              onChange={(e) => {
+            <RoundButton
+              dis={disabled}
+              onClick={(e) => {
                 e.stopPropagation();
-                paymentsConfirm(data.safeId);
+                paymentsConfirmCheckbox(data.safeId);
               }}
             />
           ) : disabled ? (
-            <Button greenOutline style={disabled && { color: "#c4c4c4" }}>
+            <Button
+              greenOutline
+              onClick={(e) => {
+                e.stopPropagation();
+                paymentsUnConfirm(data.safeId);
+              }}
+            >
               {t("depositList.confirmed")}
             </Button>
           ) : (

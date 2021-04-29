@@ -165,7 +165,7 @@
         }
     },
     "depositList":{
-        "confirmed": "Confirmed",
+        "confirmed": "Cancel",
         "confirm": "Confirm",
         "depositClose": "Closing a deposit",
         "dividents": "Accrual of dividends"

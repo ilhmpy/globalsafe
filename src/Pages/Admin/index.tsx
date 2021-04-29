@@ -5,6 +5,7 @@ import { AdminDeposit } from "./AdminDeposit";
 import { AdminUsers } from "./AdminUsers";
 import { AdminPortfolio } from "./AdminPortfolio";
 import { Admin } from "./Admin";
+import { AdminUserOnePage } from "./AdminUserOnePage";
 
 export {
   AdminMain,
@@ -14,4 +15,5 @@ export {
   AdminUsers,
   AdminPortfolio,
   Admin,
+  AdminUserOnePage,
 };

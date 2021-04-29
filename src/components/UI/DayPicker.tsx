@@ -100,7 +100,7 @@ const CustomDatePickers = styled(DayPicker)`
     font-size: 14px;
     line-height: 21px;
     letter-spacing: 0.1px;
-    color: #0e0d3d;
+    color: ${(props) => props.theme.text};
     font-family: "Roboto", sans-serif;
   }
   .DayPicker-Caption {
@@ -547,17 +547,17 @@ const InputCustom = styled.div`
     font-weight: 700;
   }
   .DayPicker-Day--selected:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside) {
-    background-color: ${(props) => props.theme.card.background} !important;
+    background-color: #f0f8ff !important;
     border-radius: 0;
     color: #4a90e2;
   }
-  .DayPicker:not(.DayPicker--interactionDisabled)
+  /* .DayPicker:not(.DayPicker--interactionDisabled)
     .DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside):hover {
     background: ${(props) => props.theme.card.background} !important;
   }
   .DayPicker .DayPicker-Day:hover {
     background: ${(props) => props.theme.card.background} !important;
-  }
+  } */
   .DayPicker-Weekday {
     font-size: 12px;
     line-height: 15px;
@@ -655,7 +655,7 @@ const CustomDatePicker = styled(DayPicker)`
     &:focus {
       outline: none;
     }
-    &:hover {
+    &:hover:not(.DayPicker-Day--selected) {
       background: ${(props) => props.theme.card.background} !important;
     }
     @media (max-width: 576px) {
@@ -671,17 +671,17 @@ const CustomDatePicker = styled(DayPicker)`
   }
 
   .DayPicker-Day--selected:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside) {
-    background-color: ${(props) => props.theme.card.background} !important;
+    background-color: #f0f8ff !important;
     border-radius: 0;
     color: #4a90e2;
   }
-  .DayPicker:not(.DayPicker--interactionDisabled)
+  /* .DayPicker:not(.DayPicker--interactionDisabled)
     .DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside):hover {
-    background: ${(props) => props.theme.card.background} !important;
+    background: #f0f8ff !important;
   }
   .DayPicker .DayPicker-Day:hover {
     background: ${(props) => props.theme.card.background} !important;
-  }
+  } */
   .DayPicker-Day--today {
     color: #d0021b;
     font-weight: 700;

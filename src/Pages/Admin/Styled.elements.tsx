@@ -2,6 +2,25 @@ import styled from "styled-components/macro";
 import { UpTitle } from "../../components/UI/UpTitle";
 import { Card } from "../../globalStyles";
 import { Button } from "../../components/Button/Button";
+import { ReactComponent as Left } from "../../assets/svg/left.svg";
+import { Link } from "react-router-dom";
+
+export const Back = styled(Link)`
+  margin-right: auto;
+  margin-bottom: 20px;
+  color: ${(props) => props.theme.text2};
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+`;
+
+export const LeftIcon = styled(Left)`
+  margin-right: 12px;
+  fill: ${(props) => props.theme.text};
+  path {
+    stroke: ${(props) => props.theme.text};
+  }
+`;
 
 export const InputsWrapItem = styled.div`
   margin-right: 10px;

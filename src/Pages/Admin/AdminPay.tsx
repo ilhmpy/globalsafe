@@ -154,6 +154,20 @@ export const AdminPay = () => {
     }
   };
 
+  const unConfirmPay = (id: string) => {
+    if (hubConnection) {
+      hubConnection
+        .invoke("UnconfirmDepositPayment", id)
+        .then((res) => {
+          console.log("UnconfirmDepositPayment", res);
+          getPaymentsOverview();
+        })
+        .catch((err: Error) => {
+          console.log(err);
+        });
+    }
+  };
+
   useEffect(() => {
     if (hubConnection) {
       setPaymentsList([]);
@@ -202,6 +216,7 @@ export const AdminPay = () => {
           20
         )
         .then((res) => {
+          console.log("GetUsersDeposits", res);
           setLoading(false);
           setTotalDeposits(res.totalRecords);
           setDepositList(res.collection);
@@ -229,6 +244,7 @@ export const AdminPay = () => {
           20
         )
         .then((res) => {
+          console.log("GetDepositsCharges", res);
           setLoading(false);
           if (res.collection.length) {
             setTotalPayDeposits(res.totalRecords);
@@ -365,7 +381,7 @@ export const AdminPay = () => {
           20
         )
         .then((res) => {
-          console.log("res", res);
+          // console.log("res", res);
           setLoading(false);
           if (res.collection.length) {
             setTotalPayDeposits(res.totalRecords);
@@ -513,6 +529,7 @@ export const AdminPay = () => {
                       data={item}
                       adjustPay={adjustPay}
                       confirmPay={confirmPay}
+                      unConfirmPay={unConfirmPay}
                     />
                   ))}
                 </InfiniteScroll>

@@ -15,6 +15,7 @@ export interface CollectionUsers {
     roles: any[];
     languageCode: number;
     balances: any[];
+    endDate: Date;
 }
 
 export interface RootUsers {

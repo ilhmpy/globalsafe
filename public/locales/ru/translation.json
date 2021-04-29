@@ -165,7 +165,7 @@
         }
     },
     "depositList":{
-        "confirmed": "Подтверждено",
+        "confirmed": "Отменить",
         "confirm": "Подтвердить",
         "depositClose": "Закрытие вклада",
         "dividents": "Начисление дивидендов"

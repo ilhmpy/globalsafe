@@ -21,6 +21,8 @@ import { NavAdmin } from "./NavAdmin";
 import usa from "../../assets/svg/usa.svg";
 import ru from "../../assets/svg/russia.svg";
 import { useTranslation } from "react-i18next";
+import { ReactComponent as DarkTheme } from "../../assets/svg/theme.svg";
+import { ReactComponent as LightTheme } from "../../assets/svg/themeLight.svg";
 
 export const Header: FC<{ admPanel?: boolean }> = ({ admPanel }) => {
   const [header, setHeader] = useState(false);
@@ -28,6 +30,7 @@ export const Header: FC<{ admPanel?: boolean }> = ({ admPanel }) => {
   const appContext = useContext(AppContext);
   const themeContext = useContext(ThemeContext);
   const swithTheme = themeContext.toggleTheme;
+  const theme = themeContext.theme;
   const user = appContext.user;
   const logOut = appContext.logOut;
   const admin = appContext.isAdmin;
@@ -98,7 +101,9 @@ export const Header: FC<{ admPanel?: boolean }> = ({ admPanel }) => {
               />
             )}
           </HeaderMenu>
-          <SwitchTheme onClick={swithTheme}></SwitchTheme>
+          <SwitchTheme onClick={swithTheme}>
+            {theme === "light" ? <DarkTheme /> : <LightTheme />}
+          </SwitchTheme>
           {lang === "ru" ? (
             <Languale onClick={() => i18n.changeLanguage("en")}>
               en
