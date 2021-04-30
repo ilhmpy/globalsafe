@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, useEffect } from "react";
 import styled from "styled-components/macro";
 import { Button } from "../../../components/Button/Button";
 import { Card } from "../../../globalStyles";
@@ -511,6 +511,17 @@ export const ModalUsersContent: FC<{
   setActive,
   dataTwo,
 }) => {
+  const [height, setHeight] = useState(0);
+
+  useEffect(() => {
+    function handleResize() {
+      setHeight(window.innerHeight);
+    }
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const arr1: any = {};
   dataTwo.map((item) => {
     dataOne.map((j) => {
@@ -600,14 +611,17 @@ export const ModalUsersContent: FC<{
                 <PayCardBlock>
                   <PayText small>{t("adminUsers.modal.paySum")}</PayText>
                   <PayText>
-                    {dataTwo[0].payedAmountView.toLocaleString("ru-RU", {
-                      maximumFractionDigits: 3,
-                    })}
-                    {/* {(
-                      dataOne.reduce((a, b) => a + b.amount, 0) / 100000
-                    ).toLocaleString("ru-RU", {
+                    {/* {dataTwo[0].payedAmountView.toLocaleString("ru-RU", {
                       maximumFractionDigits: 3,
                     })} */}
+                    {(
+                      dataOne.reduce(
+                        (a, b) => a + b.userDeposit.payedAmount,
+                        0
+                      ) / 100000
+                    ).toLocaleString("ru-RU", {
+                      maximumFractionDigits: 3,
+                    })}
                   </PayText>
                 </PayCardBlock>
                 {dataOne.length && dataOne[0].userDeposit ? (
@@ -663,7 +677,7 @@ export const ModalUsersContent: FC<{
           classNames="modal"
           unmountOnExit
         >
-          <Scrollbars style={{ height: "840px" }}>
+          <Scrollbars style={{ height: height < 900 ? "550px" : "750px" }}>
             <PayCardWrapper>
               {dataTwo.length
                 ? dataTwo.map((item) => (
@@ -905,7 +919,7 @@ const PayCard = styled(Card)<{
   flex-direction: column;
   justify-content: center;
   position: relative;
-  margin: 50px auto;
+  margin: 0px auto;
   @media (max-width: 992px) {
     margin: ${(props) => (props.mNone ? "0px auto" : "50px auto")};
     max-width: ${(props) => (props.wide ? "100%" : "280px")};
@@ -916,7 +930,7 @@ const PayCard = styled(Card)<{
 `;
 
 const PayCardWrapper = styled.div`
-  max-height: 876px;
+  max-height: 650px;
   height: 100%;
 `;
 
