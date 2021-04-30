@@ -66,10 +66,22 @@ export const InputWrap: FC<{
         <Text
           dis={done}
           title={
-            +val > 0 ? Number(val).toFixed(1) : Number(placeholder).toFixed(1)
+            +val > 0
+              ? Number(val).toLocaleString("ru-RU", {
+                  maximumFractionDigits: 5,
+                })
+              : Number(placeholder).toLocaleString("ru-RU", {
+                  maximumFractionDigits: 5,
+                })
           }
         >
-          {+val > 0 ? Number(val).toFixed(1) : Number(placeholder).toFixed(1)}
+          {+val > 0
+            ? Number(val).toLocaleString("ru-RU", {
+                maximumFractionDigits: 5,
+              })
+            : Number(placeholder).toLocaleString("ru-RU", {
+                maximumFractionDigits: 5,
+              })}
         </Text>
       )}
       {showCheck && !done ? (

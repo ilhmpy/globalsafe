@@ -52,8 +52,6 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
     setOpen(false);
   };
 
-  const dataOneFetch = () => {};
-
   const onClick = () => {
     if (window.innerWidth < 992) {
       history.push(`/admin/users/${data.name}`);
@@ -71,12 +69,13 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
           null,
           null,
           null,
-          [7, 8],
+          null,
+          [7],
           0,
-          20
+          80
         )
         .then((res) => {
-          console.log("GetDepositsCharges 11", res);
+          // console.log("GetDepositsCharges 11", res);
           setDataOne(res.collection);
         })
         .catch((err: Error) => {
@@ -84,6 +83,32 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
         });
     }
   }, [hubConnection, data]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection
+        .invoke<RootPayments>(
+          "GetUsersDeposits",
+          [1, 2, 3, 4, 5, 6],
+          data.name,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          0,
+          80
+        )
+        .then((res) => {
+          setDataTwo(res.collection);
+          // console.log("GetUsersDeposits 22", res);
+        })
+        .catch((err: Error) => {
+          console.log(err);
+        });
+    }
+  }, [hubConnection]);
 
   const modalOpen = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -129,6 +154,7 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
           unLocked={unLocked}
           locked={locked}
           dataOne={dataOne}
+          dataTwo={dataTwo}
           adjustBalanceAsync={adjustBalanceAsync}
         />
       </CSSTransition>
@@ -202,8 +228,8 @@ export const AdminUsers = () => {
         .invoke<RootUsers>(
           "GetUsers",
           name || null,
-          openDate.from ? openDate.from : backDays._d,
-          openDate.to ? openDate.to : new Date(),
+          openDate.from ? openDate.from : null,
+          openDate.to ? openDate.to : null,
           0,
           20
         )
@@ -253,12 +279,13 @@ export const AdminUsers = () => {
         .invoke<RootUsers>(
           "GetUsers",
           name || null,
-          openDate.from ? openDate.from : backDays._d,
-          openDate.to ? openDate.to : new Date(),
+          openDate.from ? openDate.from : null,
+          openDate.to ? openDate.to : null,
           num,
           20
         )
         .then((res) => {
+          console.log("load user", res);
           if (res.collection.length) {
             setLoading(false);
             setListDeposits([...listDeposits, ...res.collection]);
@@ -337,7 +364,7 @@ export const AdminUsers = () => {
           {listDeposits.length ? (
             <Scrollbars style={{ height: "500px" }}>
               <InfiniteScroll
-                pageStart={0}
+                pageStart={10}
                 loadMore={myLoad}
                 hasMore={count}
                 useWindow={false}

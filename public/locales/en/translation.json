@@ -265,5 +265,17 @@
     "copy":{
         "copy": "Copied",
         "text": "To clipboard"
-    }
+    },
+    "chip":{
+        "pay": "Payment required",
+        "open": "Open",
+        "noWork": "Not work",
+        "return": "Returned",
+        "confirm": "Confirmation required" 
+    },
+    "usersTabs":{
+        "mainInfo": "General Information",
+        "deposits": "Deposits"
+    },
+    "backTo": "Back to list"
 }

@@ -154,7 +154,10 @@ export const DepositList: FC<ListProps> = ({
             : "-"}
         </TableBodyItem>
         <TableBodyItem dis={disabled}>
-          {data.deposit.paymentRatio * 100}%
+          {(data.deposit.paymentRatio * 100).toLocaleString("ru-RU", {
+            maximumFractionDigits: 2,
+          })}
+          %
         </TableBodyItem>
         <TableBodyItem dis={disabled}>
           {moment(data.creationDate).format("DD/MM/YYYY")}

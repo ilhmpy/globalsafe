@@ -28,6 +28,7 @@ export const AdminUserOnePage = ({
   const [active, setActive] = useState(0);
   const [dataOne, setDataOne] = useState<CollectionCharges[]>([]);
   const [data, setData] = useState<CollectionUsers[]>([]);
+  const [dataTwo, setDataTwo] = useState<PaymentsCollection[]>([]);
   console.log("data", data);
   const [lock, setLock] = useState(false);
   const appContext = useContext(AppContext);
@@ -37,7 +38,7 @@ export const AdminUserOnePage = ({
   const location = useLocation();
   const safeId = match.params.slug;
   const { t } = useTranslation();
-  console.log("safeId", safeId);
+
   const handleClick = (id: number) => {
     if (id !== active) {
       setActive(id);
@@ -98,7 +99,6 @@ export const AdminUserOnePage = ({
       hubConnection
         .invoke<RootUsers>("GetUsers", safeId, null, null, 0, 1)
         .then((res) => {
-          console.log("GetUsers", res);
           if (res.collection.length) {
             setData(res.collection);
             setLock(
@@ -124,13 +124,38 @@ export const AdminUserOnePage = ({
           null,
           null,
           null,
-          [7, 8],
+          null,
+          [7],
           0,
-          20
+          80
         )
         .then((res) => {
-          console.log("GetDepositsCharges one", res);
           setDataOne(res.collection);
+        })
+        .catch((err: Error) => {
+          console.log(err);
+        });
+    }
+  }, [hubConnection]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection
+        .invoke<RootPayments>(
+          "GetUsersDeposits",
+          [1, 2, 3, 4, 5, 6],
+          safeId,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          0,
+          80
+        )
+        .then((res) => {
+          setDataTwo(res.collection);
         })
         .catch((err: Error) => {
           console.log(err);
@@ -141,27 +166,27 @@ export const AdminUserOnePage = ({
   return (
     <>
       <Styled.HeadBlock>
-        <UpTitle small>Пользователи</UpTitle>
+        <UpTitle small>{t("sideNav.users")}</UpTitle>
         <Styled.UserName>
           <span>{user}</span>
           <Exit onClick={logOut} />
         </Styled.UserName>
       </Styled.HeadBlock>
-      <Styled.TitleHead>Пользователи</Styled.TitleHead>
+      <Styled.TitleHead>{t("sideNav.users")}</Styled.TitleHead>
       <Container pNone>
         <Styled.Back to="/admin/users">
           <Styled.LeftIcon />
-          Назад к списку
+          {t("backTo")}
         </Styled.Back>
       </Container>
       <Container pNone>
         <Card>
           <SelfTabs>
             <Tab onClick={() => handleClick(0)} active={active === 0}>
-              Общая информация
+              {t("usersTabs.mainInfo")}
             </Tab>
             <Tab onClick={() => handleClick(1)} active={active === 1}>
-              Депозиты
+              {t("usersTabs.deposits")}
             </Tab>
           </SelfTabs>
         </Card>
@@ -177,6 +202,7 @@ export const AdminUserOnePage = ({
             lock={lock}
             active={active}
             setActive={setActive}
+            dataTwo={dataTwo}
           />
         )}
       </Container>
