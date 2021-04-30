@@ -55,7 +55,7 @@ export const OnePage = ({ match }: RouteComponentProps<PropsMatch>) => {
         <Container>
           <Styled.Back to="/info/deposits">
             <Styled.LeftIcon />
-            Назад к списку
+            {t("backTo")}
           </Styled.Back>
         </Container>
         <Container>

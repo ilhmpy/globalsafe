@@ -134,6 +134,16 @@
             "dataCreate": "Date of creation",
             "lang": "Lang",
             "rus": "Russian"
+        },
+        "modal":{
+            "paySum": "Amount of payments",
+            "payAmount": "Payment amount",
+            "prevDate": "Date of previous payment",
+            "nextDate": "Date of next payment",
+            "contrAmount": "Contribution amount",
+            "totalDeposit": "Total return on the deposit",
+            "revenue": "Revenue",
+            "payments": "Payments"
         }
     },
     "adminPay":{
