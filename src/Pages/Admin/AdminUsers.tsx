@@ -8,7 +8,7 @@ import { ReactComponent as Exit } from "../../assets/svg/exit.svg";
 import { ReactComponent as Filter } from "../../assets/svg/filter.svg";
 import { Select } from "../../components/Select/Select";
 import useWindowSize from "../../hooks/useWindowSize";
-import { TestInput } from "../../components/UI/DayPicker";
+import { TestInput, MainAdminInput } from "../../components/UI/DayPicker";
 import { Button } from "../../components/Button/Button";
 // import { Checkbox } from "../../components/UI/Checkbox";
 import { AppContext } from "../../context/HubContext";
@@ -144,6 +144,10 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
     }
   };
 
+  const balance = data.balances
+    ? data.balances.filter((item) => item.balanceKind === 1)
+    : null;
+
   return (
     <div>
       <CSSTransition in={open} timeout={300} classNames="modal" unmountOnExit>
@@ -161,8 +165,10 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
       <TableBody onClick={modalOpen}>
         <TableBodyItem>{data.name}</TableBodyItem>
         <TableBodyItem>
-          {data.balances.length
-            ? (data.balances[0].volume / 100000).toLocaleString()
+          {balance?.length
+            ? (balance[0].volume / 100000).toLocaleString("ru-RU", {
+                maximumFractionDigits: 2,
+              })
             : "-"}
         </TableBodyItem>
         <TableBodyItem>
@@ -234,7 +240,7 @@ export const AdminUsers = () => {
           20
         )
         .then((res) => {
-          console.log("GetUsers", res);
+          // console.log("GetUsers", res);
           setLoading(false);
           setNum(20);
           seTotalUsers(res.totalRecords);
@@ -253,8 +259,8 @@ export const AdminUsers = () => {
         .invoke<RootUsers>(
           "GetUsers",
           name || null,
-          openDate.from ? openDate.from : backDays._d,
-          openDate.to ? openDate.to : new Date(),
+          openDate.from ? openDate.from : null,
+          openDate.to ? openDate.to : null,
           0,
           20
         )
@@ -339,11 +345,13 @@ export const AdminUsers = () => {
             <Input value={name} onChange={(e) => setName(e.target.value)} />
           </Styled.SelectWrap>
           <Styled.InputsWrap>
-            <TestInput
-              setOpenDate={setOpenDate}
-              openDate={openDate}
-              label={t("adminUsers.labelCreate")}
-            />
+            <InputsWrapItem>
+              <TestInput
+                setOpenDate={setOpenDate}
+                openDate={openDate}
+                label={t("adminUsers.labelCreate")}
+              />
+            </InputsWrapItem>
           </Styled.InputsWrap>
 
           <Button danger onClick={submit}>
@@ -394,6 +402,14 @@ export const AdminUsers = () => {
     </>
   );
 };
+
+const InputsWrapItem = styled.div`
+  margin-right: 10px;
+  width: 100%;
+  @media (max-width: 576px) {
+    margin-right: 0px;
+  }
+`;
 
 const NotFound = styled.div`
   font-weight: normal;

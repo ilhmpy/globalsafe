@@ -31,6 +31,7 @@ export const lightTheme = {
     topUpColor: '#fff',
     switch: '#333',
     border: '#E5E5E5',
+    range: '#f0f8ff',
     card: {
       background: '#fff',
       backgroundAlfa: 'rgba(255, 255, 255, 0.4)',
@@ -42,7 +43,7 @@ export const lightTheme = {
     body: 'rgba(48,48,48,1)',
     text: '#FFF',
     toggleBorder: '#6B8096',
-    buttonBorder: '#FF416E',
+    buttonBorder: '#FF416E', 
     text2: '#E2E2E2',
     text3: '#fff',
     text3Hover: '#fff',
@@ -61,6 +62,7 @@ export const lightTheme = {
     topUpColor: '#6db9ff',
     switch: '#fff',
     border: '#000',
+    range: 'rgba(226, 226, 226, .2)',
     card: {
       background: '#212121',
       backgroundAlfa: 'rgba(33, 33, 33, 1)',

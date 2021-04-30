@@ -543,6 +543,10 @@ export const ModalUsersContent: FC<{
     }
   };
 
+  const balance = data.balances
+    ? data.balances.filter((item) => item.balanceKind === 1)
+    : null;
+
   return (
     <>
       <PayCard smallPad wide mNone>
@@ -570,8 +574,10 @@ export const ModalUsersContent: FC<{
             <PayCardBlock>
               <PayText small>{t("adminUsers.table.balans")}</PayText>
               <PayText>
-                {data.balances.length
-                  ? (data.balances[0].volume / 100000).toLocaleString()
+                {balance?.length
+                  ? (balance[0].volume / 100000).toLocaleString("ru-RU", {
+                      maximumFractionDigits: 2,
+                    })
                   : "-"}
               </PayText>
             </PayCardBlock>
@@ -594,11 +600,14 @@ export const ModalUsersContent: FC<{
                 <PayCardBlock>
                   <PayText small>{t("adminUsers.modal.paySum")}</PayText>
                   <PayText>
-                    {(
+                    {dataTwo[0].payedAmountView.toLocaleString("ru-RU", {
+                      maximumFractionDigits: 3,
+                    })}
+                    {/* {(
                       dataOne.reduce((a, b) => a + b.amount, 0) / 100000
                     ).toLocaleString("ru-RU", {
                       maximumFractionDigits: 3,
-                    })}
+                    })} */}
                   </PayText>
                 </PayCardBlock>
                 {dataOne.length && dataOne[0].userDeposit ? (
@@ -776,7 +785,7 @@ const Chip = styled.div<{ need?: boolean }>`
   padding: 3px 5px;
   display: block;
   float: right;
-  color: #fff;
+  color: ${(props) => props.theme.cdis};
   border-radius: 24px;
   background: ${(props) => (props.need ? "#FFB23E" : "#FF416E")};
 `;
@@ -801,7 +810,7 @@ const AccordeonHead = styled.div<{ open?: boolean }>`
   font-size: 14px;
   line-height: 14px;
   letter-spacing: 0.1px;
-  color: #56657f;
+  color: ${(props) => props.theme.depositHead};
   cursor: pointer;
   margin-bottom: 10px;
   display: flex;
@@ -859,6 +868,9 @@ const Center = styled.div`
   display: flex;
   align-items: center;
   transition: height 300ms linear;
+  &::-webkit-scrollbar {
+    width: 0 !important;
+  }
 `;
 
 const Hr = styled.hr`
@@ -875,6 +887,9 @@ const Container = styled.div`
   display: block;
   z-index: 99999;
   overflow: auto;
+  &::-webkit-scrollbar {
+    width: 0 !important;
+  }
 `;
 
 const PayCard = styled(Card)<{
@@ -926,11 +941,11 @@ const PayCardBlock = styled.div`
     }
   }
   input {
-    background: #fafafa;
+    background: ${(props) => props.theme.card.background};
     &:focus {
       padding: 0;
       border: 0;
-      background: #fafafa;
+      background: ${(props) => props.theme.card.background};
       font-size: 14px;
       line-height: 16px;
     }
@@ -966,5 +981,5 @@ const PayDate = styled.div`
   font-size: 12px;
   line-height: 21px;
   letter-spacing: 0.1px;
-  color: #515172;
+  color: ${(props) => props.theme.text2};
 `;

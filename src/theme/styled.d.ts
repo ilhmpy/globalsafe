@@ -1,7 +1,7 @@
 import 'styled-components';
 
 declare module 'styled-components' {
-  export interface DefaultTheme {
+  export interface DefaultTheme { 
     body: string;
     text: string;
     text2: string;
@@ -24,6 +24,7 @@ declare module 'styled-components' {
     switch:string;
     inputBg:string;
     border:string;
+    range: string;
     card: {
       background: string;
       backgroundAlfa: string;
