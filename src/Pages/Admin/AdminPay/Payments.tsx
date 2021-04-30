@@ -328,6 +328,8 @@ const AccordeonList: FC<{
   ) => void;
 }> = ({ arr1, data, adjustBalanceAsync }) => {
   const [activeFold, setActiveFold] = useState(false);
+  const { t } = useTranslation();
+
   return (
     <>
       {arr1[data.safeId] ? (
@@ -337,7 +339,7 @@ const AccordeonList: FC<{
               open={activeFold}
               onClick={() => setActiveFold(!activeFold)}
             >
-              Выплаты <Icon />
+              {t("adminUsers.modal.payments")} <Icon />
             </AccordeonHead>
           </PayCardInner>
           {arr1[data.safeId].map((j: CollectionCharges) => (
@@ -446,7 +448,7 @@ const ModalUsersList: FC<{
       <AccordeonContent open={activeFold}>
         <PayCardInner>
           <PayCardBlock>
-            <PayText small>Дата выплат</PayText>
+            <PayText small>{t("adminUsers.modal.paySum")}</PayText>
             <PayText>
               {moment(dataOne.userDeposit.paymentDate).format("DD/MM/YYYY")}
             </PayText>
@@ -456,7 +458,7 @@ const ModalUsersList: FC<{
             <PayText>{operation(dataOne.operationKind)}</PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>Сумма выплаты</PayText>
+            <PayText small>{t("adminUsers.modal.payAmount")}</PayText>
             <InputWrap
               paymentsAdjust={paymentsAdjust}
               done={disabled}
@@ -466,7 +468,7 @@ const ModalUsersList: FC<{
             />
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>Доход %</PayText>
+            <PayText small>{t("adminUsers.modal.revenue")} %</PayText>
             <InputWrap
               paymentsAdjust={paymentsAdjust}
               done={disabled}
@@ -541,16 +543,20 @@ export const ModalUsersContent: FC<{
     }
   };
 
+  const balance = data.balances
+    ? data.balances.filter((item) => item.balanceKind === 1)
+    : null;
+
   return (
     <>
       <PayCard smallPad wide mNone>
         <PayCardInner>
           <PayTabs>
             <PayTab active={active === 0} onClick={() => setActive(0)}>
-              Общая информация
+              {t("usersTabs.mainInfo")}
             </PayTab>
             <PayTab active={active === 1} onClick={() => setActive(1)}>
-              Депозиты
+              {t("usersTabs.deposits")}
             </PayTab>
           </PayTabs>
         </PayCardInner>
@@ -568,8 +574,10 @@ export const ModalUsersContent: FC<{
             <PayCardBlock>
               <PayText small>{t("adminUsers.table.balans")}</PayText>
               <PayText>
-                {data.balances.length
-                  ? (data.balances[0].volume / 100000).toLocaleString()
+                {balance?.length
+                  ? (balance[0].volume / 100000).toLocaleString("ru-RU", {
+                      maximumFractionDigits: 2,
+                    })
                   : "-"}
               </PayText>
             </PayCardBlock>
@@ -590,18 +598,21 @@ export const ModalUsersContent: FC<{
             {dataOne.length ? (
               <>
                 <PayCardBlock>
-                  <PayText small>Сумма выплат</PayText>
+                  <PayText small>{t("adminUsers.modal.paySum")}</PayText>
                   <PayText>
-                    {(
+                    {dataTwo[0].payedAmountView.toLocaleString("ru-RU", {
+                      maximumFractionDigits: 3,
+                    })}
+                    {/* {(
                       dataOne.reduce((a, b) => a + b.amount, 0) / 100000
                     ).toLocaleString("ru-RU", {
                       maximumFractionDigits: 3,
-                    })}
+                    })} */}
                   </PayText>
                 </PayCardBlock>
                 {dataOne.length && dataOne[0].userDeposit ? (
                   <PayCardBlock>
-                    <PayText small>Дата предыдущей выплаты</PayText>
+                    <PayText small>{t("adminUsers.modal.prevDate")}</PayText>
                     <PayText>
                       {moment(
                         dataOne.reduce((a, b) =>
@@ -616,7 +627,7 @@ export const ModalUsersContent: FC<{
                   ""
                 )}
                 <PayCardBlock>
-                  <PayText small>Дата следующей выплаты</PayText>
+                  <PayText small>{t("adminUsers.modal.nextDate")}</PayText>
                   <PayText>
                     {moment(
                       dataOne.reduce((a, b) =>
@@ -672,15 +683,21 @@ export const ModalUsersContent: FC<{
                           </PayDate>
                         </PayCardBlock>
                         <PayCardBlock>
-                          <PayText small>Сумма взноса</PayText>
+                          <PayText small>
+                            {t("adminUsers.modal.contrAmount")}
+                          </PayText>
                           <PayText>{item.baseAmountView}</PayText>
                         </PayCardBlock>
                         <PayCardBlock>
-                          <PayText small>Сумма выплат</PayText>
+                          <PayText small>
+                            {t("adminUsers.modal.paySum")}
+                          </PayText>
                           <PayText>{item.payedAmountView}</PayText>
                         </PayCardBlock>
                         <PayCardBlock>
-                          <PayText small>Суммарный доход по депозиту</PayText>
+                          <PayText small>
+                            {t("adminUsers.modal.totalDeposit")}
+                          </PayText>
                           <PayText>
                             {(
                               (item.payedAmountView / item.baseAmountView) *
@@ -768,8 +785,7 @@ const Chip = styled.div<{ need?: boolean }>`
   padding: 3px 5px;
   display: block;
   float: right;
-  color: #fff;
-  /* margin-right: -10px; */
+  color: ${(props) => props.theme.cdis};
   border-radius: 24px;
   background: ${(props) => (props.need ? "#FFB23E" : "#FF416E")};
 `;
@@ -794,7 +810,7 @@ const AccordeonHead = styled.div<{ open?: boolean }>`
   font-size: 14px;
   line-height: 14px;
   letter-spacing: 0.1px;
-  color: #56657f;
+  color: ${(props) => props.theme.depositHead};
   cursor: pointer;
   margin-bottom: 10px;
   display: flex;
@@ -852,6 +868,9 @@ const Center = styled.div`
   display: flex;
   align-items: center;
   transition: height 300ms linear;
+  &::-webkit-scrollbar {
+    width: 0 !important;
+  }
 `;
 
 const Hr = styled.hr`
@@ -868,6 +887,9 @@ const Container = styled.div`
   display: block;
   z-index: 99999;
   overflow: auto;
+  &::-webkit-scrollbar {
+    width: 0 !important;
+  }
 `;
 
 const PayCard = styled(Card)<{
@@ -919,11 +941,11 @@ const PayCardBlock = styled.div`
     }
   }
   input {
-    background: #fafafa;
+    background: ${(props) => props.theme.card.background};
     &:focus {
       padding: 0;
       border: 0;
-      background: #fafafa;
+      background: ${(props) => props.theme.card.background};
       font-size: 14px;
       line-height: 16px;
     }
@@ -959,5 +981,5 @@ const PayDate = styled.div`
   font-size: 12px;
   line-height: 21px;
   letter-spacing: 0.1px;
-  color: #515172;
+  color: ${(props) => props.theme.text2};
 `;

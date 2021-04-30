@@ -29,7 +29,6 @@ export const AdminUserOnePage = ({
   const [dataOne, setDataOne] = useState<CollectionCharges[]>([]);
   const [data, setData] = useState<CollectionUsers[]>([]);
   const [dataTwo, setDataTwo] = useState<PaymentsCollection[]>([]);
-  console.log("data", data);
   const [lock, setLock] = useState(false);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;

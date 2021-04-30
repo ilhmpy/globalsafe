@@ -118,6 +118,7 @@ export const AdminPay = () => {
           openDate.from ? openDate.from : backDays._d,
           openDate.to ? openDate.to : new Date(),
           searchSafeID.length ? searchSafeID : null,
+          null,
           [7, 8],
           numPay,
           20
@@ -239,12 +240,13 @@ export const AdminPay = () => {
           openDate.from ? openDate.from : backDays._d,
           openDate.to ? openDate.to : new Date(),
           searchSafeID.length ? searchSafeID : null,
+          null,
           [7, 8],
           0,
           20
         )
         .then((res) => {
-          console.log("GetDepositsCharges", res);
+          // console.log("GetDepositsCharges", res);
           setLoading(false);
           if (res.collection.length) {
             setTotalPayDeposits(res.totalRecords);
@@ -376,6 +378,7 @@ export const AdminPay = () => {
           openDate.from ? openDate.from : backDays._d,
           openDate.to ? openDate.to : new Date(),
           searchSafeID.length ? searchSafeID : null,
+          null,
           [7, 8],
           0,
           20

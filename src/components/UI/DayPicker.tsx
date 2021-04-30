@@ -539,17 +539,17 @@ const InputCustom = styled.div`
 
   .Selectable
     .DayPicker-Day--selected:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside) {
-    background: #f0f8ff !important;
-    color: #4a90e2;
+    background: ${(props) => props.theme.range} !important;
+    /* color: #4a90e2; */
   }
   .DayPicker-Day--today {
     color: #d0021b;
     font-weight: 700;
   }
   .DayPicker-Day--selected:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside) {
-    background-color: #f0f8ff !important;
+    background-color: ${(props) => props.theme.range} !important;
     border-radius: 0;
-    color: #4a90e2;
+    /* color: #4a90e2; */
   }
   /* .DayPicker:not(.DayPicker--interactionDisabled)
     .DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside):hover {
@@ -624,6 +624,7 @@ const CustomDatePicker = styled(DayPicker)`
     margin: 0 auto 20px;
     box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
+    width: 355px;
   }
   @media (max-width: 768px) {
     width: 100%;
@@ -671,9 +672,9 @@ const CustomDatePicker = styled(DayPicker)`
   }
 
   .DayPicker-Day--selected:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside) {
-    background-color: #f0f8ff !important;
+    background-color: ${(props) => props.theme.range} !important;
     border-radius: 0;
-    color: #4a90e2;
+    /* color: #4a90e2; */
   }
   /* .DayPicker:not(.DayPicker--interactionDisabled)
     .DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside):hover {
