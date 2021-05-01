@@ -19,8 +19,12 @@ body{
     font-weight: 400;
     background: #E5E5E5;
     background:${(props) => props.theme.body} ;
-          background-repeat: no-repeat;
-      height: 100%;
+    background-repeat: no-repeat;
+    height: 100%;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+  display: none;
+}
 } 
 img{
     max-width: 100%;  

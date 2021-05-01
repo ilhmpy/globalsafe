@@ -8,6 +8,7 @@ import { Admin } from "./Pages/Admin";
 import { AmountProvider } from "./context/AmountContext";
 import { ThemesProvider } from "./context/ThemeContext";
 import { InfoMain } from "./Pages/PrivateArea";
+import { Scrollbars } from "react-custom-scrollbars";
 
 function App() {
   return (
@@ -15,6 +16,8 @@ function App() {
       <HubProvider>
         <AmountProvider>
           <ThemesProvider>
+            {/* <div style={{ height: "100vh" }}>
+              <Scrollbars style={{ height: "100%", width: "100%" }}> */}
             <div className="App">
               <GlobalStyle />
               <Switch>
@@ -25,6 +28,8 @@ function App() {
                 <Route path="/register" component={Register} />
                 <Route component={Main} />
               </Switch>
+              {/* </div>
+              </Scrollbars> */}
             </div>
           </ThemesProvider>
         </AmountProvider>
