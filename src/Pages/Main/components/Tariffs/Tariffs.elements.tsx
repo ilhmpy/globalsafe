@@ -19,6 +19,15 @@ export const DescContainer = styled(Container)`
     font-weight: 400;
     font-style: normal;
   }
+  span {
+    text-transform: uppercase;
+  }
+`;
+
+export const DescContainerInner = styled(DescContainer)`
+  p {
+    padding-left: 6px;
+  }
 `;
 
 export const BlockContainers = styled(Container)`

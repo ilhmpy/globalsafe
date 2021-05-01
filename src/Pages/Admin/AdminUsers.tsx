@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, FC } from "react";
+import React, { useState, useEffect, useContext, FC, useCallback } from "react";
 import * as Styled from "./Styled.elements";
 import styled, { css } from "styled-components/macro";
 import { SideNavbar } from "../../components/SideNav";
@@ -60,7 +60,7 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
     }
   };
 
-  useEffect(() => {
+  const getDepositsCharges = useCallback(() => {
     if (hubConnection) {
       hubConnection
         .invoke<RootCharges>(
@@ -82,9 +82,9 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
           console.log(err);
         });
     }
-  }, [hubConnection, data]);
+  }, [hubConnection]);
 
-  useEffect(() => {
+  const getUsersDeposits = useCallback(() => {
     if (hubConnection) {
       hubConnection
         .invoke<RootPayments>(
@@ -109,6 +109,11 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
         });
     }
   }, [hubConnection]);
+
+  useEffect(() => {
+    getDepositsCharges();
+    getUsersDeposits();
+  }, [getDepositsCharges, getUsersDeposits]);
 
   const modalOpen = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -139,6 +144,8 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
         .invoke("AdjustBalanceAsync", userSafeId, delta, safeOperationId)
         .then((res) => {
           console.log("AdjustBalanceAsync", res);
+          getDepositsCharges();
+          getUsersDeposits();
         })
         .catch((e) => console.log(e));
     }
