@@ -202,6 +202,7 @@ export const AdminUserOnePage = ({
             active={active}
             setActive={setActive}
             dataTwo={dataTwo}
+            wide={true}
           />
         )}
       </Container>

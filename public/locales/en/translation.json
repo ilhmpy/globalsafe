@@ -38,7 +38,11 @@
     "tariffs":{
         "uptitle": "Our tariffs",
         "H1": "Just for you!",
+        "subHead": "Partner Program",
         "desc": "Partner Program START, EXPERT and INFINITY: 5% from the first line; 2% second line and 1% third line ",
+        "start": "Line 1 - 4%, Line 2 - 1,6, Line 3 - 0,8%",
+        "expert": "Line 1 - 5%, Line 2 - 2%, Line 3 - 1%, Line 4 - 1%, Line 5 - 1%",
+        "infinity": "Line 1 - 5%, Line 2 - 2%, Line 3 - 1%, Line 4 - 1%, Line 5 - 1%, Line 6 - 1%, Line 7 - 1%, Line 8 - 1%",
         "depositSize": "Deposit amount",
         "ok": "ОК",
         "buttons":{

@@ -1,4 +1,4 @@
-﻿import React, { FC, useState } from "react";
+﻿import React, { FC, useState, useEffect } from "react";
 import styled from "styled-components/macro";
 import { Button } from "../../../components/Button/Button";
 import { Card } from "../../../globalStyles";
@@ -326,7 +326,8 @@ const AccordeonList: FC<{
     delta: number,
     safeOperationId: string
   ) => void;
-}> = ({ arr1, data, adjustBalanceAsync }) => {
+  dataUpdate: (safeId: string, childId: string, value: string) => void;
+}> = ({ arr1, data, adjustBalanceAsync, dataUpdate }) => {
   const [activeFold, setActiveFold] = useState(false);
   const { t } = useTranslation();
 
@@ -347,7 +348,9 @@ const AccordeonList: FC<{
               activeFold={activeFold}
               adjustBalanceAsync={adjustBalanceAsync}
               key={j.safeId}
+              safeId={data.safeId}
               dataOne={j}
+              dataUpdate={dataUpdate}
             />
           ))}
         </Accordeon>
@@ -366,7 +369,9 @@ const ModalUsersList: FC<{
     safeOperationId: string
   ) => void;
   activeFold: boolean;
-}> = ({ dataOne, adjustBalanceAsync, activeFold }) => {
+  dataUpdate: (safeId: string, childId: string, value: string) => void;
+  safeId: string;
+}> = ({ dataOne, adjustBalanceAsync, activeFold, dataUpdate, safeId }) => {
   const [value, setValue] = useState(
     (dataOne.amount / 100000).toFixed(4).toString()
   );
@@ -381,10 +386,12 @@ const ModalUsersList: FC<{
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation();
+
     if (+e.target.value <= 0) {
       setValue("");
       setProcent("");
     } else {
+      dataUpdate(safeId, dataOne.safeId, e.target.value);
       setValue(e.target.value);
       const proc = (
         (+e.target.value / dataOne.userDeposit.baseAmountView) *
@@ -405,6 +412,7 @@ const ModalUsersList: FC<{
         100
       ).toFixed(2);
       setValue(values.toString());
+      dataUpdate(safeId, dataOne.safeId, values.toString());
     }
   };
 
@@ -500,6 +508,7 @@ export const ModalUsersContent: FC<{
   active: number;
   setActive: (active: number) => void;
   dataTwo: PaymentsCollection[];
+  wide?: boolean;
 }> = ({
   data,
   dataOne,
@@ -510,7 +519,20 @@ export const ModalUsersContent: FC<{
   active,
   setActive,
   dataTwo,
+  wide = false,
 }) => {
+  const [height, setHeight] = useState(0);
+  const [selfData, setSelfData] = useState<any>({});
+
+  useEffect(() => {
+    function handleResize() {
+      setHeight(window.innerHeight);
+    }
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const arr1: any = {};
   dataTwo.map((item) => {
     dataOne.map((j) => {
@@ -523,6 +545,10 @@ export const ModalUsersContent: FC<{
       }
     });
   });
+
+  useEffect(() => {
+    setSelfData(arr1);
+  }, []);
 
   const { t } = useTranslation();
 
@@ -547,9 +573,26 @@ export const ModalUsersContent: FC<{
     ? data.balances.filter((item) => item.balanceKind === 1)
     : null;
 
+  const dateTwoSelf = Object.assign({}, arr1);
+
+  const dataUpdate = (id: string, childId: string, value: string) => {
+    const parent: CollectionCharges[] = arr1[id];
+    const idx = parent.findIndex((item) => item.safeId === childId);
+    if (idx !== -1) {
+      const item = { ...arr1[id][idx], amount: +value };
+      const newArr = [
+        ...arr1[id].slice(0, idx),
+        item,
+        ...arr1[id].slice(idx + 1),
+      ];
+      dateTwoSelf[id] = newArr;
+    }
+    // arr1[id]
+  };
+
   return (
     <>
-      <PayCard smallPad wide mNone>
+      <PayCard smallPad wide={wide} mNone>
         <PayCardInner>
           <PayTabs>
             <PayTab active={active === 0} onClick={() => setActive(0)}>
@@ -600,14 +643,17 @@ export const ModalUsersContent: FC<{
                 <PayCardBlock>
                   <PayText small>{t("adminUsers.modal.paySum")}</PayText>
                   <PayText>
-                    {dataTwo[0].payedAmountView.toLocaleString("ru-RU", {
-                      maximumFractionDigits: 3,
-                    })}
-                    {/* {(
-                      dataOne.reduce((a, b) => a + b.amount, 0) / 100000
-                    ).toLocaleString("ru-RU", {
+                    {/* {dataTwo[0].payedAmountView.toLocaleString("ru-RU", {
                       maximumFractionDigits: 3,
                     })} */}
+                    {(
+                      dataOne.reduce(
+                        (a, b) => a + b.userDeposit.payedAmount,
+                        0
+                      ) / 100000
+                    ).toLocaleString("ru-RU", {
+                      maximumFractionDigits: 3,
+                    })}
                   </PayText>
                 </PayCardBlock>
                 {dataOne.length && dataOne[0].userDeposit ? (
@@ -663,7 +709,7 @@ export const ModalUsersContent: FC<{
           classNames="modal"
           unmountOnExit
         >
-          <Scrollbars style={{ height: "840px" }}>
+          <Scrollbars style={{ height: height < 900 ? "550px" : "750px" }}>
             <PayCardWrapper>
               {dataTwo.length
                 ? dataTwo.map((item) => (
@@ -692,7 +738,15 @@ export const ModalUsersContent: FC<{
                           <PayText small>
                             {t("adminUsers.modal.paySum")}
                           </PayText>
-                          <PayText>{item.payedAmountView}</PayText>
+                          <PayText>
+                            {/* {selfData[item.safeId] &&
+                              selfData[item.safeId][0].userDeposit
+                                .payedAmountView}
+                            <br /> */}
+                            {item.payedAmountView.toLocaleString("ru-RU", {
+                              maximumFractionDigits: 4,
+                            })}
+                          </PayText>
                         </PayCardBlock>
                         <PayCardBlock>
                           <PayText small>
@@ -712,6 +766,7 @@ export const ModalUsersContent: FC<{
                           adjustBalanceAsync={adjustBalanceAsync}
                           arr1={arr1}
                           data={item}
+                          dataUpdate={dataUpdate}
                         />
                       ) : (
                         ""
@@ -905,7 +960,7 @@ const PayCard = styled(Card)<{
   flex-direction: column;
   justify-content: center;
   position: relative;
-  margin: 50px auto;
+  margin: 0px auto;
   @media (max-width: 992px) {
     margin: ${(props) => (props.mNone ? "0px auto" : "50px auto")};
     max-width: ${(props) => (props.wide ? "100%" : "280px")};
@@ -916,7 +971,7 @@ const PayCard = styled(Card)<{
 `;
 
 const PayCardWrapper = styled.div`
-  max-height: 876px;
+  max-height: 650px;
   height: 100%;
 `;
 

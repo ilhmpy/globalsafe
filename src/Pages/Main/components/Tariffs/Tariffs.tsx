@@ -6,6 +6,7 @@ import { Button } from "../../../../components/Button/Button";
 import {
   BlockTitle,
   DescContainer,
+  DescContainerInner,
   BlockContainers,
   BlockItem,
   Text,
@@ -184,8 +185,24 @@ export const Tariffs = () => {
         <H1>{t("tariffs.H1")}</H1>
       </Container>
       <DescContainer>
-        <p>{t("tariffs.desc")}</p>
+        {/* <p>{t("tariffs.desc")}</p> */}
+        <p>{t("tariffs.subHead")}</p>
       </DescContainer>
+      <DescContainerInner>
+        <p>
+          <span>START</span>: {t("tariffs.start")}
+        </p>
+      </DescContainerInner>
+      <DescContainerInner>
+        <p>
+          <span>Expert</span>: {t("tariffs.expert")}
+        </p>
+      </DescContainerInner>
+      <DescContainerInner>
+        <p>
+          <span>Infinity</span>: {t("tariffs.infinity")}
+        </p>
+      </DescContainerInner>
       {isNormalOpen && (
         <Modal onClose={() => setIsNormalOpen(false)}>
           <ModalBlock>

@@ -125,6 +125,9 @@ export const UserName = styled.div`
   }
   svg {
     display: none;
+    path {
+      stroke: ${(props) => props.theme.text};
+    }
     @media (max-width: 992px) {
       display: block;
       margin-left: 14px;
