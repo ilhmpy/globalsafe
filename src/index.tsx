@@ -5,6 +5,7 @@ import "react-app-polyfill/ie11";
 import "react-app-polyfill/stable";
 import "./i18n/i18n";
 import { Loader } from "./components/Loader/Loader";
+import * as serviceWorker from "./serviceWorker";
 
 ReactDOM.render(
   <Suspense fallback={<Loader />}>
@@ -12,3 +13,5 @@ ReactDOM.render(
   </Suspense>,
   document.getElementById("root")
 );
+
+serviceWorker.register();
