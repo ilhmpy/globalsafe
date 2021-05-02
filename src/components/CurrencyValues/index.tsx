@@ -136,13 +136,16 @@ export const CurrencyValues = () => {
     }
   };
   // console.log("listGCWD", listGCWD);
+
+  const disabled = listGCWD.length && listMGCWD.length && listDIAMOND.length;
+
   return (
     <div>
       <Container>
         <Wrapper>
           <ChartItems>
             <ChartItem
-              plchldr={!listGCWD.length}
+              plchldr={!disabled}
               red={
                 !!listGCWD.length &&
                 listGCWD[listGCWD.length - 1].latestBid <
@@ -152,12 +155,12 @@ export const CurrencyValues = () => {
               onClick={() => setActive(0)}
               active={active === 0}
             >
-              {listGCWD.length && (
+              {!!disabled && (
                 <>
                   <ChartItemInner>
                     <ChartItemHead>
                       <ChartItemName>GCWD</ChartItemName>
-                      {listGCWD.length && changeValue(listGCWD)}
+                      {!!disabled && changeValue(listGCWD)}
                     </ChartItemHead>
                     <ChartItemValue
                       green={
@@ -184,7 +187,7 @@ export const CurrencyValues = () => {
               )}
             </ChartItem>
             <ChartItem
-              plchldr={!listMGCWD.length}
+              plchldr={!disabled}
               alfa
               onClick={() => setActive(1)}
               active={active === 1}
@@ -194,12 +197,12 @@ export const CurrencyValues = () => {
                   listMGCWD[listMGCWD.length - 2].latestBid
               }
             >
-              {listMGCWD.length && (
+              {!!disabled && (
                 <>
                   <ChartItemInner>
                     <ChartItemHead>
                       <ChartItemName>MGCWD</ChartItemName>
-                      {listMGCWD.length && changeValue(listMGCWD)}
+                      {!!disabled && changeValue(listMGCWD)}
                     </ChartItemHead>
                     {listMGCWD.length && (
                       <ChartItemValue
@@ -230,7 +233,7 @@ export const CurrencyValues = () => {
               )}
             </ChartItem>
             <ChartItem
-              plchldr={!listDIAMOND.length}
+              plchldr={!disabled}
               alfa
               red={
                 !!listDIAMOND.length &&
@@ -240,7 +243,7 @@ export const CurrencyValues = () => {
               onClick={() => setActive(2)}
               active={active === 2}
             >
-              {listDIAMOND.length && (
+              {!!disabled && (
                 <>
                   <ChartItemInner>
                     <ChartItemHead>
@@ -276,12 +279,7 @@ export const CurrencyValues = () => {
               )}
             </ChartItem>
           </ChartItems>
-          <Charts
-            alfa
-            plchldr={
-              !listGCWD.length && !listMGCWD.length && !listDIAMOND.length
-            }
-          >
+          <Charts alfa plchldr={!disabled}>
             <CSSTransition
               in={active === 0}
               timeout={0}
@@ -289,7 +287,7 @@ export const CurrencyValues = () => {
               unmountOnExit
             >
               <ChartsWrapper>
-                {listGCWD.length ? (
+                {disabled ? (
                   <>
                     <NameCWD>GCWD</NameCWD>
                     <ApexChart
@@ -310,7 +308,7 @@ export const CurrencyValues = () => {
               unmountOnExit
             >
               <ChartsWrapper>
-                {listMGCWD.length ? (
+                {disabled ? (
                   <>
                     <NameCWD>MGCWD</NameCWD>
                     <ApexChart
@@ -331,7 +329,7 @@ export const CurrencyValues = () => {
               unmountOnExit
             >
               <ChartsWrapper>
-                {listDIAMOND.length ? (
+                {disabled ? (
                   <>
                     <NameCWD>DIAMOND</NameCWD>
                     <ApexChart

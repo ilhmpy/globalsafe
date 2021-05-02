@@ -89,7 +89,7 @@ export const Header: FC<{ admPanel?: boolean }> = ({ admPanel }) => {
           </MenuBtn>
           <HeaderMenu open={open}>
             {admPanel ? (
-              <NavAdmin onClose={onClose} />
+              <NavAdmin lang={lang} onClose={onClose} />
             ) : (
               <Nav
                 onClose={onClose}

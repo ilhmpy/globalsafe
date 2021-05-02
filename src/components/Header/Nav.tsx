@@ -7,11 +7,14 @@ import {
   LinkButton,
   Languale,
   SwitchTheme,
+  Text,
 } from "./Header.elements";
 import { useTranslation } from "react-i18next";
 import usa from "../../assets/svg/usa.svg";
 import ru from "../../assets/svg/russia.svg";
 import { ThemeContext } from "../../context/ThemeContext";
+import { ReactComponent as DarkTheme } from "../../assets/svg/theme.svg";
+import { ReactComponent as LightTheme } from "../../assets/svg/themeLight.svg";
 
 type Props = {
   onClose: () => void;
@@ -35,6 +38,8 @@ export const Nav: FC<Props> = ({
   const { t, i18n } = useTranslation();
   const themeContext = useContext(ThemeContext);
   const swithTheme = themeContext.toggleTheme;
+  const theme = themeContext.theme;
+
   return (
     <HeaderNav>
       <List>
@@ -93,7 +98,19 @@ export const Nav: FC<Props> = ({
           )}
         </ListItem>
         <ListItem>
-          <SwitchTheme onClick={swithTheme}></SwitchTheme>
+          <SwitchTheme onClick={swithTheme}>
+            {theme === "light" ? (
+              <div>
+                <DarkTheme />
+                <Text>{t("themeDark")}</Text>
+              </div>
+            ) : (
+              <div>
+                <LightTheme />
+                <Text>{t("themeLight")}</Text>
+              </div>
+            )}
+          </SwitchTheme>
         </ListItem>
       </List>
     </HeaderNav>
