@@ -105,7 +105,6 @@ export const InfoMain = () => {
   };
 
   const openNewDeposit = () => {
-    setAddDeposit(false);
     if (hubConnection && depositSelect !== null) {
       setLoadDeposit(true);
       hubConnection
@@ -137,6 +136,7 @@ export const InfoMain = () => {
         .finally(() => {
           setDepositSelect(null);
           setAddDepositValue("");
+          setAddDeposit(false);
         });
     }
   };
