@@ -184,7 +184,7 @@ export const LoginComponent = () => {
             <Submit as="button" danger type="submit" disabled={value === ""}>
               {t("login.getCode")}
             </Submit>
-            <LinkToPage to="/register">{t("headerButton.register")}</LinkToPage>
+            {/* <LinkToPage to="/register">{t("headerButton.register")}</LinkToPage> */}
           </FormBlock>
         </CSSTransition>
       </CardContainer>
