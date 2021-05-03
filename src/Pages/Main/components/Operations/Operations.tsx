@@ -18,10 +18,12 @@ export const Operations = () => {
   const hubConnection = appContext.hubConnection;
 
   useEffect(() => {
+    let clean = false;
+
     if (hubConnection) {
       hubConnection.on("OperationNotification", (data) => {
         console.log("OperationNotification", data);
-        setNotifyList((notifyList) => [data, ...notifyList]);
+        !clean && setNotifyList((notifyList) => [data, ...notifyList]);
       });
       hubConnection
         .invoke<RootOperations>(
@@ -32,10 +34,13 @@ export const Operations = () => {
         )
         .then((res) => {
           // console.log("GetOperationsNotifications", res);
-          setNotifyList(res.collection);
+          !clean && setNotifyList(res.collection);
         })
         .catch((e) => console.log(e));
     }
+    return () => {
+      clean = true;
+    };
   }, [hubConnection]);
 
   const { t } = useTranslation();

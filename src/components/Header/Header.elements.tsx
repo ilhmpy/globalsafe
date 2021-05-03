@@ -4,12 +4,34 @@ import { Button } from "../Button/Button";
 import { NavHashLink } from "react-router-hash-link";
 import { ReactComponent as DarkTheme } from "../../assets/svg/theme.svg";
 
+export const Text = styled.p`
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 21px;
+  letter-spacing: 0.1px;
+  padding-left: 15px;
+  color: ${(props) => props.theme.text};
+  transition: all 0.3s;
+`;
+
 export const SwitchTheme = styled.div`
   width: 28px;
   height: 28px;
+
   border-radius: 50%;
   /* background: ${(props) => props.theme.switch}; */
   cursor: pointer;
+  @media (max-width: 1100px) {
+    width: 100%;
+    div {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      svg {
+        flex: none;
+      }
+    }
+  }
 `;
 
 export const AdminButton = styled(Button)`
@@ -25,6 +47,7 @@ export const Languale = styled.div`
   font-size: 14px;
   line-height: 16px;
   margin-right: 10px;
+  color: ${(props) => props.theme.text};
   cursor: pointer;
   @media (max-width: 1100px) {
     display: none;
@@ -76,7 +99,13 @@ export const HeaderLogo = styled.a`
 `;
 
 export const HeaderMenu = styled.div<{ open?: boolean }>`
+  ${SwitchTheme} {
+    display: none;
+  }
   @media (max-width: 1100px) {
+    ${SwitchTheme} {
+      display: block;
+    }
     position: fixed;
     background: ${(props) => props.theme.modal};
     width: 100%;
@@ -193,4 +222,5 @@ export const LinkButton = styled.div`
   font-weight: 500;
   font-size: 12px;
   line-height: 14px;
+  color: ${(props) => props.theme.text};
 `;
