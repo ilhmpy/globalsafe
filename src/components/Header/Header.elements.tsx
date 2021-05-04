@@ -5,7 +5,7 @@ import { NavHashLink } from "react-router-hash-link";
 import { ReactComponent as DarkTheme } from "../../assets/svg/theme.svg";
 
 export const Text = styled.p`
-  font-weight: normal;
+  font-weight: 500;
   font-size: 14px;
   line-height: 21px;
   letter-spacing: 0.1px;
@@ -220,7 +220,7 @@ export const StyledLink = styled(NavHashLink).attrs({ activeclassname })`
 
 export const LinkButton = styled.div`
   font-weight: 500;
-  font-size: 12px;
-  line-height: 14px;
+  font-size: 14px;
+  line-height: 16px;
   color: ${(props) => props.theme.text};
 `;
