@@ -63,7 +63,7 @@ export const Button = styled.a<Props>`
       &:disabled {
         background: rgba(14, 13, 61, .2);
         box-shadow: none;
-        color: #fff ;
+        color: #fff;
         border-color: rgba(14, 13, 61, .1);
         outline: none;
       }
@@ -72,7 +72,7 @@ export const Button = styled.a<Props>`
       }
       `;
     } else if (props.dangerOutline) {
-      return `
+      return ` 
       background: transparent;
       color:  ${(props: any) => props.theme.text};
       border-color: #FF416E;
