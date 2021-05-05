@@ -75,7 +75,9 @@
         "name3": "Irina",
         "position": "Founder",
         "brand": "Global Safe",
-        "desc": "This is a product created specifically for those who are not ready to constantly monitor the quotes on the exchange and work on it independently. Experienced traders of the Fund take care of increasing your savings and invest in the most highly profitable platform assets."
+        "desc": "This is a product created specifically for those who are not ready to constantly monitor the quotes on the exchange and work on it independently. Experienced traders of the Fund take care of increasing your savings and invest in the most highly profitable platform assets.",
+        "desc1": "Successful in his field.",
+        "desc2": "More than 150 completed projects"
     },
     "sideNav":{
         "mainScreen": "Main screen",
