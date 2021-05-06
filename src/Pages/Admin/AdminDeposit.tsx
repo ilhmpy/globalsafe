@@ -97,6 +97,14 @@ export const AdminDeposit = () => {
   const [num, setNum] = useState(20);
   const { t } = useTranslation();
   const backDays: any = moment().subtract(30, "days");
+  const namesProgram = checkList.map((i: any) => i.label);
+  const idProgram = listDeposits.filter((i) => namesProgram.includes(i.name));
+  const searchSafeID = idProgram.map((i) => i.safeId);
+
+  const appContext = useContext(AppContext);
+  const hubConnection = appContext.hubConnection;
+  const logOut = appContext.logOut;
+  const user = appContext.user;
 
   const myLoad = () => {
     setCount(false);
@@ -106,7 +114,7 @@ export const AdminDeposit = () => {
           "GetUsersDeposits",
           [1, 2, 3, 4, 5, 6],
           name || null,
-          namesProgram.length ? namesProgram : null,
+          searchSafeID.length ? searchSafeID : null,
           openDate.from ? openDate.from : backDays._d,
           openDate.to ? openDate.to : new Date(),
           closeDate.from || null,
@@ -126,15 +134,6 @@ export const AdminDeposit = () => {
         .catch((err: Error) => console.log(err));
     }
   };
-
-  const namesProgram = checkList.map((i: any) => i.label);
-  const idProgram = listDeposits.filter((i) => namesProgram.includes(i.name));
-  const searchSafeID = idProgram.map((i) => i.safeId);
-
-  const appContext = useContext(AppContext);
-  const hubConnection = appContext.hubConnection;
-  const logOut = appContext.logOut;
-  const user = appContext.user;
 
   useEffect(() => {
     if (hubConnection) {
@@ -266,7 +265,7 @@ export const AdminDeposit = () => {
           {depositsList.length ? (
             <Scrollbars style={{ height: "500px" }}>
               <InfiniteScroll
-                pageStart={0}
+                pageStart={10}
                 loadMore={myLoad}
                 hasMore={count}
                 useWindow={false}
