@@ -24,7 +24,7 @@ export const lightTheme = {
     gradient: 'linear-gradient(#39598A, #79D7ED)',
     bbdis: "#ccc",
     cdis: '#fff',
-    nextPay: 'rgba(14, 13, 61, 0.5)',
+    nextPay: 'rgba(14, 13, 61, 0.6)',
     depositHead: 'rgba(86, 101, 127, 0.6)',
     thHead: 'rgba(81, 81, 114, 0.6)',
     topUpButton: '#6db9ff',
