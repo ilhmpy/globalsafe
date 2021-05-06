@@ -113,12 +113,12 @@ export const AdminDeposit = () => {
         .invoke<RootPayments>(
           "GetUsersDeposits",
           [1, 2, 3, 4, 5, 6],
-          name || null,
+          name ? name : null,
           searchSafeID.length ? searchSafeID : null,
-          openDate.from ? openDate.from : backDays._d,
-          openDate.to ? openDate.to : new Date(),
-          closeDate.from || null,
-          closeDate.to || null,
+          openDate.from ? openDate.from : null,
+          openDate.to ? openDate.to : null,
+          closeDate.from ? closeDate.from : null,
+          closeDate.to ? closeDate.from : null,
           null,
           num,
           20
@@ -153,7 +153,7 @@ export const AdminDeposit = () => {
           "GetUsersDeposits",
           [1, 2, 3, 4, 5, 6],
           null,
-          null,
+          searchSafeID.length ? searchSafeID : null,
           backDays._d,
           new Date(),
           null,
@@ -192,6 +192,7 @@ export const AdminDeposit = () => {
         )
         .then((res) => {
           setDepositsList([]);
+          setTotalList(res.totalRecords);
           setLoading(false);
           setNum(20);
           setDepositsList(res.collection);
@@ -265,7 +266,7 @@ export const AdminDeposit = () => {
           {depositsList.length ? (
             <Scrollbars style={{ height: "500px" }}>
               <InfiniteScroll
-                pageStart={10}
+                pageStart={0}
                 loadMore={myLoad}
                 hasMore={count}
                 useWindow={false}
