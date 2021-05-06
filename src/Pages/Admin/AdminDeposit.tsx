@@ -128,6 +128,9 @@ export const AdminDeposit = () => {
   };
 
   const namesProgram = checkList.map((i: any) => i.label);
+  const idProgram = listDeposits.filter((i) => namesProgram.includes(i.name));
+  const searchSafeID = idProgram.map((i) => i.safeId);
+
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const logOut = appContext.logOut;
@@ -179,7 +182,7 @@ export const AdminDeposit = () => {
           "GetUsersDeposits",
           [1, 2, 3, 4, 5, 6],
           name ? name : null,
-          namesProgram.length ? namesProgram : null,
+          searchSafeID.length ? searchSafeID : null,
           openDate.from ? openDate.from : null,
           openDate.to ? openDate.to : null,
           closeDate.from ? closeDate.from : null,

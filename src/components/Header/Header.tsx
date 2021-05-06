@@ -55,7 +55,7 @@ export const Header: FC<{ admPanel?: boolean }> = ({ admPanel }) => {
       }
     };
     handleScroll();
-    console.log("scroll", window.scrollY);
+
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
