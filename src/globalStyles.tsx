@@ -198,6 +198,23 @@ input[type=number] {
   transition: 300ms;
 }
 
+.filter-enter {
+    opacity: 0;
+    /* transform: translate(0px, -20px); */
+}
+.filter-enter-active {
+    opacity: 1;
+    /* transform: translate(0px, 0px); */
+    transition: all 300ms ease-in;
+}
+.filter-exit {
+    opacity: 1;
+}
+.filter-exit-active {
+    opacity: 0;
+    transition: opacity 300ms ease-in;
+}
+
 
 .item-enter {
     opacity: 0;

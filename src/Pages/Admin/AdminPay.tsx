@@ -74,6 +74,7 @@ export const AdminPay = () => {
     from: undefined,
     to: undefined,
   });
+  const [openFilter, setOpenFilter] = useState(false);
   const [checkList, setCheckList] = useState<any>([]);
   const [name, setName] = useState("");
   const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>(
@@ -548,35 +549,48 @@ export const AdminPay = () => {
 
       <Content active={active === 1}>
         <Styled.FilterBlock>
-          <FilterName>{t("adminDeposit.filter")}</FilterName>
-          <Styled.SelectContainer>
-            <Styled.SelectWrap>
-              <Styled.Label>{t("adminPay.filter.user")}</Styled.Label>
-              <Styled.Input
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </Styled.SelectWrap>
-            <Styled.InputsCalendarWrap>
-              <TestInput
-                setOpenDate={setOpenDate}
-                openDate={openDate}
-                label={t("adminPay.filter.date")}
-              />
-            </Styled.InputsCalendarWrap>
-            <Styled.SelectWrap>
-              <Styled.Label>{t("adminPay.filter.deposit")}</Styled.Label>
-              <Select
-                checkList={checkList}
-                setCheckList={setCheckList}
-                values={listDeposits}
-              />
-            </Styled.SelectWrap>
-
-            <Button danger onClick={submit}>
-              {t("adminUsers.apply")}
-            </Button>
-          </Styled.SelectContainer>
+          <Styled.FilterHeader>
+            <FilterName>{t("adminDeposit.filter")}</FilterName>
+            <Styled.ShowHide onClick={() => setOpenFilter(!openFilter)}>
+              {openFilter ? t("hide") : t("show")}
+            </Styled.ShowHide>
+          </Styled.FilterHeader>
+          <CSSTransition
+            in={openFilter}
+            timeout={200}
+            classNames="filter"
+            unmountOnExit
+          >
+            <Styled.SelectContainer>
+              <Styled.SelectContainerInnerPaid>
+                <Styled.SelectWrap style={{ minWidth: 263 }}>
+                  <Styled.Label>{t("adminPay.filter.user")}</Styled.Label>
+                  <Styled.Input
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </Styled.SelectWrap>
+                <Styled.SelectWrap input>
+                  <TestInput
+                    setOpenDate={setOpenDate}
+                    openDate={openDate}
+                    label={t("adminPay.filter.date")}
+                  />
+                </Styled.SelectWrap>
+                <Styled.SelectWrap style={{ minWidth: 263 }}>
+                  <Styled.Label>{t("adminPay.filter.deposit")}</Styled.Label>
+                  <Select
+                    checkList={checkList}
+                    setCheckList={setCheckList}
+                    values={listDeposits}
+                  />
+                </Styled.SelectWrap>
+              </Styled.SelectContainerInnerPaid>
+              <Button danger onClick={submit}>
+                {t("adminUsers.apply")}
+              </Button>
+            </Styled.SelectContainer>
+          </CSSTransition>
         </Styled.FilterBlock>
         <Card>
           <PaymentsTable>
@@ -827,7 +841,7 @@ const TableHeadItemPaid = styled(TableHeadItem)`
   &:nth-child(6) {
     max-width: 100px;
     text-align: left;
-    @media (max-width: 576px) {
+    @media (max-width: 992px) {
       display: block;
       text-align: center;
     }

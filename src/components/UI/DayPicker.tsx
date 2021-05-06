@@ -804,7 +804,7 @@ const DateInput = styled.div`
   border: 1px solid rgba(86, 101, 127, 0.3);
   box-sizing: border-box;
   border-radius: 2px;
-  width: 142px;
+  width: 152px;
   height: 40px;
   font-weight: normal;
   font-size: 14px;
@@ -870,6 +870,12 @@ const DateLabel = styled.div`
   font-size: 14px;
   line-height: 21px;
   letter-spacing: 0.1px;
+  position: absolute;
+  left: 6px;
+  padding: 0 3px;
+  top: -12px;
+  z-index: 9;
+  background: ${(props) => props.theme.card.background};
   color: ${(props) => props.theme.depositHead};
 `;
 

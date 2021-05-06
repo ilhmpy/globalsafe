@@ -471,7 +471,7 @@ const TableHeadItemPaid = styled(TableHeadItem)`
   &:nth-child(6) {
     max-width: 100px;
 
-    @media (max-width: 576px) {
+    @media (max-width: 992px) {
       display: block;
       text-align: center;
     }

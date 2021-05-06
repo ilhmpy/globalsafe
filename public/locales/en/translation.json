@@ -17,6 +17,8 @@
         "register": "Register"
     },
     "more": "more",
+    "show": "show",
+    "hide": "hide",
     "login": {
         "in": "Sing In",
         "where": "Where to enter?",
