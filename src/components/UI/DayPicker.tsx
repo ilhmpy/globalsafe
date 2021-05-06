@@ -33,8 +33,6 @@ const lang = localStorage.getItem("i18nextLng") || "ru";
 const WEEKDAYS_SHORT = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
 const WEEKDAYS_SHORT_ENG = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 
-console.log("lang", lang);
-
 const MONTHS = [
   "Январь",
   "Февраль",
@@ -540,7 +538,7 @@ const InputCustom = styled.div`
   .Selectable
     .DayPicker-Day--selected:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside) {
     background: ${(props) => props.theme.range} !important;
-    /* color: #4a90e2; */
+    color: ${(props) => props.theme.switch};
   }
   .DayPicker-Day--today {
     color: #d0021b;
@@ -549,7 +547,7 @@ const InputCustom = styled.div`
   .DayPicker-Day--selected:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside) {
     background-color: ${(props) => props.theme.range} !important;
     border-radius: 0;
-    /* color: #4a90e2; */
+    color: ${(props) => props.theme.switch};
   }
   /* .DayPicker:not(.DayPicker--interactionDisabled)
     .DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside):hover {
@@ -674,7 +672,7 @@ const CustomDatePicker = styled(DayPicker)`
   .DayPicker-Day--selected:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside) {
     background-color: ${(props) => props.theme.range} !important;
     border-radius: 0;
-    /* color: #4a90e2; */
+    color: ${(props) => props.theme.switch};
   }
   /* .DayPicker:not(.DayPicker--interactionDisabled)
     .DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside):hover {

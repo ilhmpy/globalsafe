@@ -22,7 +22,7 @@ type Config = {
   onSuccess?: (registration: ServiceWorkerRegistration) => void;
   onUpdate?: (registration: ServiceWorkerRegistration) => void;
 };
-console.log('PUBLIC_URL', `${process.env.PUBLIC_URL}/service-worker.js`)
+
 export function register(config?: Config) {
   if ('serviceWorker' in navigator) {
     // The URL constructor is available in all browsers that support SW.
