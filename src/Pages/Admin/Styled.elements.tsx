@@ -322,13 +322,14 @@ export const Label = styled.span`
   color: ${(props) => props.theme.depositHead};
   margin-bottom: 1px;
   position: absolute;
-  left: 27px;
-  padding: 0 4px;
+  left: 7px;
+  padding: 0 10px;
   top: -12px;
   z-index: 9;
   background: ${(props) => props.theme.card.background};
   @media (max-width: 768px) {
     left: 10px;
+    padding: 0 4px;
   }
 `;
 

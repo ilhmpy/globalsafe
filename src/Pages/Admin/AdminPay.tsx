@@ -74,9 +74,16 @@ export const AdminPay = () => {
     from: undefined,
     to: undefined,
   });
+  const [openDateApproval, setOpenDateApproval] = useState<OpenDate>({
+    from: undefined,
+    to: undefined,
+  });
   const [openFilter, setOpenFilter] = useState(false);
+  const [openFilterOne, setOpenFilterOne] = useState(false);
   const [checkList, setCheckList] = useState<any>([]);
+  const [checkListApproval, setCheckListApproval] = useState<any>([]);
   const [name, setName] = useState("");
+  const [nameApproval, setNameApproval] = useState("");
   const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>(
     []
   );
@@ -105,10 +112,17 @@ export const AdminPay = () => {
     }
   }, [hubConnection]);
 
-  const namesProgram = checkList.map((i: any) => i.label);
-  const idProgram = listDeposits.filter((i) => namesProgram.includes(i.name));
+  const namesProgram = checkList.map((i: any) => i.safeId);
+  const idProgram = listDeposits.filter((i) => namesProgram.includes(i.safeId));
   const searchSafeID = idProgram.map((i) => i.safeId);
   const backDays: any = moment().subtract(30, "days");
+
+  const namesProgramApproval = checkListApproval.map((i: any) => i.safeId);
+  const idProgramApproval = listDeposits.filter((i) =>
+    namesProgramApproval.includes(i.safeId)
+  );
+  const searchSafeIDApproval = idProgramApproval.map((i) => i.safeId);
+
   const myLoad = () => {
     setNext(false);
     if (hubConnection && depositPayList.length < totalPayDeposits) {
@@ -218,7 +232,6 @@ export const AdminPay = () => {
           20
         )
         .then((res) => {
-          console.log("GetUsersDeposits", res);
           setLoading(false);
           setTotalDeposits(res.totalRecords);
           setDepositList(res.collection);
@@ -400,6 +413,34 @@ export const AdminPay = () => {
     }
   };
 
+  const submitApproval = () => {
+    if (hubConnection) {
+      hubConnection
+        .invoke<RootPayments>(
+          "GetUsersDeposits",
+          [5, 6],
+          nameApproval ? nameApproval : null,
+          searchSafeIDApproval.length ? searchSafeIDApproval : null,
+          openDateApproval.from ? openDateApproval.from : null,
+          openDateApproval.to ? openDateApproval.to : null,
+          null,
+          null,
+          null,
+          0,
+          20
+        )
+        .then((res) => {
+          setDepositList([]);
+          if (res.collection.length) {
+            setDepositList(res.collection);
+            setTotalDeposits(res.totalRecords);
+            setNum(20);
+          }
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  };
+
   return (
     <>
       <ReactNotification />
@@ -499,6 +540,50 @@ export const AdminPay = () => {
       )}
 
       <Content active={active === 0}>
+        <Styled.FilterBlock>
+          <Styled.FilterHeader>
+            <FilterName>{t("adminDeposit.filter")}</FilterName>
+            <Styled.ShowHide onClick={() => setOpenFilterOne(!openFilterOne)}>
+              {openFilterOne ? t("hide") : t("show")}
+            </Styled.ShowHide>
+          </Styled.FilterHeader>
+          <CSSTransition
+            in={openFilterOne}
+            timeout={200}
+            classNames="filter"
+            unmountOnExit
+          >
+            <Styled.SelectContainer>
+              <Styled.SelectContainerInnerPaid>
+                <Styled.SelectWrap style={{ minWidth: 263 }}>
+                  <Styled.Label>{t("adminPay.filter.user")}</Styled.Label>
+                  <Styled.Input
+                    value={nameApproval}
+                    onChange={(e) => setNameApproval(e.target.value)}
+                  />
+                </Styled.SelectWrap>
+                <Styled.SelectWrap input>
+                  <TestInput
+                    setOpenDate={setOpenDateApproval}
+                    openDate={openDateApproval}
+                    label={t("adminPay.filter.date")}
+                  />
+                </Styled.SelectWrap>
+                <Styled.SelectWrap style={{ minWidth: 263 }}>
+                  <Styled.Label>{t("adminPay.filter.deposit")}</Styled.Label>
+                  <Select
+                    checkList={checkListApproval}
+                    setCheckList={setCheckListApproval}
+                    values={listDeposits}
+                  />
+                </Styled.SelectWrap>
+              </Styled.SelectContainerInnerPaid>
+              <Button danger onClick={submitApproval}>
+                {t("adminUsers.apply")}
+              </Button>
+            </Styled.SelectContainer>
+          </CSSTransition>
+        </Styled.FilterBlock>
         <Card>
           <PaymentsTable>
             <TableHead>
