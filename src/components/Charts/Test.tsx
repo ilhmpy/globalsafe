@@ -129,11 +129,11 @@ export const TestChart: FC<Props> = ({
           options: {
             chart: {
               // width: 500,
-              height: 800,
+              height: 460,
             },
             legend: {
               width: mobLegend,
-              height: mobHeight,
+              height: 150,
               // show: false,
               horizontalAlign: "center",
               position: "bottom",
