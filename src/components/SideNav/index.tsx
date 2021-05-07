@@ -133,10 +133,10 @@ const SideInner = styled.div`
   flex-direction: column;
   justify-content: space-between;
   height: calc(100% - 80px);
-  @media (max-width: 1200px) {
+  /* @media (max-width: 1200px) {
     height: calc(100%);
     justify-content: flex-start;
-  }
+  } */
 `;
 
 const SideNav = styled.div<{ small: boolean }>`
@@ -289,8 +289,5 @@ const Theme = styled.div`
   padding: 11px 20px;
   svg {
     flex: none;
-  }
-  @media (max-width: 1200px) {
-    margin-top: 200px;
   }
 `;
