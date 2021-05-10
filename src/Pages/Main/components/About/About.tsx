@@ -41,8 +41,8 @@ export const About = () => {
               {t("about.name3")} <Styled.Dot /> {t("about.position")}
             </Styled.BlockTitle>
             <Styled.BlockSubtitle>
-              {t("about.desc1")}
-              <br /> {t("about.desc2")}
+              {/* {t("about.desc1")}
+              <br /> {t("about.desc2")} */}
             </Styled.BlockSubtitle>
           </Styled.BlockInner>
         </Styled.BlockItem>
@@ -51,11 +51,13 @@ export const About = () => {
           <Styled.Img src={img2} alt="" />
           <Styled.BlockInner mod>
             <Styled.BlockTitle>
-              {t("about.name1")} <Styled.Dot /> {t("about.position")}
+              {t("about.name1")}
+              <Styled.Dot />
+              <br /> {t("about.position1")}
             </Styled.BlockTitle>
             <Styled.BlockSubtitle>
-              {t("about.desc1")}
-              <br /> {t("about.desc2")}
+              {t("about.self1")}
+              <br /> {t("about.impement")}
             </Styled.BlockSubtitle>
           </Styled.BlockInner>
         </Styled.BlockItem>
@@ -67,8 +69,8 @@ export const About = () => {
               {t("about.name2")} <Styled.Dot /> {t("about.position")}
             </Styled.BlockTitle>
             <Styled.BlockSubtitle>
-              {t("about.desc1")}
-              <br /> {t("about.desc2")}
+              {/* {t("about.desc1")}
+              <br /> {t("about.desc2")} */}
             </Styled.BlockSubtitle>
           </Styled.BlockInner>
         </Styled.BlockItem>

@@ -22,7 +22,7 @@ export const TestChart: FC<Props> = ({
   const themeContext = useContext(ThemeContext);
   const theme = themeContext.theme;
 
-  const color = theme === "light" ? "#fff" : "#000";
+  const colors = theme === "light" ? "#fff" : "#000";
 
   const data = {
     series: series,
@@ -145,7 +145,7 @@ export const TestChart: FC<Props> = ({
         show: true,
         curve: "smooth",
         lineCap: "butt",
-        colors: [color],
+        colors: [colors],
         width: 2,
         dashArray: 1,
       },

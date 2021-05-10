@@ -39,7 +39,7 @@ export const BlockInner = styled.div<{ mod?: boolean }>`
     width: ${(props) => (props.mod ? "370px" : "327px")};
     position: absolute;
     left: ${(props) => (props.mod ? "-46px" : "95px")};
-    top: -41px;
+    top: ${(props) => (props.mod ? "-30px" : "-71px")};
     height: 160px;
     background: ${(props) =>
       props.mod ? `url(${borderTwo})` : `url(${border})`};
