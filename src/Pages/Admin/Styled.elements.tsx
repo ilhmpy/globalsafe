@@ -238,18 +238,31 @@ export const Radial = styled.div<{ bg: string }>`
 
 export const FilterBlock = styled(Card)`
   padding: 30px;
+  transition: 0.3s;
   @media (max-width: 768px) {
     padding: 20px;
+  }
+`;
+
+export const FilterName = styled.div`
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 21px;
+  letter-spacing: 0.1px;
+  margin-left: 10px;
+  @media (max-width: 576px) {
+    margin-left: 0px;
   }
 `;
 
 export const SelectContainer = styled.div`
   display: flex;
   align-items: center;
-  /* justify-content: space-between; */
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: 10px;
   ${Button} {
-    margin-top: 14px;
-    margin-left: 20px;
+    /* margin-left: 20px; */
     height: 40px;
     @media (max-width: 992px) {
       width: 100%;
@@ -263,14 +276,18 @@ export const SelectContainer = styled.div`
     flex-wrap: wrap;
     justify-content: flex-start;
   }
+  @media (max-width: 576px) {
+    justify-content: center;
+  }
 `;
 
-export const SelectWrap = styled.div`
-  max-width: 280px;
+export const SelectWrap = styled.div<{ input?: boolean }>`
+  max-width: ${(props) => (props.input ? "153px" : "280px")};
   width: 100%;
-  margin: 20px 10px;
+  margin: 20px 20px 20px 0;
+  position: relative;
   @media (max-width: 992px) {
-    max-width: 45%;
+    max-width: ${(props) => (props.input ? "153px" : "45%")};
   }
   @media (max-width: 768px) {
     max-width: 100%;
@@ -303,7 +320,60 @@ export const Label = styled.span`
   line-height: 21px;
   letter-spacing: 0.1px;
   color: ${(props) => props.theme.depositHead};
-  margin-bottom: 5px;
+  margin-bottom: 1px;
+  position: absolute;
+  left: 7px;
+  padding: 0 10px;
+  top: -12px;
+  z-index: 9;
+  background: ${(props) => props.theme.card.background};
+  @media (max-width: 768px) {
+    left: 10px;
+    padding: 0 4px;
+  }
+`;
+
+export const SelectContainerInner = styled.div`
+  display: flex;
+  align-items: center;
+  @media (max-width: 1100px) {
+    flex-wrap: wrap;
+  }
+`;
+
+export const SelectContainerInnerUsers = styled.div`
+  display: flex;
+  align-items: center;
+  @media (max-width: 700px) {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+`;
+
+export const SelectContainerInnerPaid = styled.div`
+  display: flex;
+  align-items: center;
+  @media (max-width: 850px) {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+`;
+
+export const FilterHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+export const ShowHide = styled.div`
+  margin-left: auto;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 16px;
+  cursor: pointer;
+  @media (max-width: 768px) {
+    cursor: initial;
+  }
 `;
 
 export const InputsWrap = styled.div`

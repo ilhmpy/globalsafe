@@ -202,6 +202,9 @@ export const Payments = () => {
   const hubConnection = appContext.hubConnection;
   const { t } = useTranslation();
 
+  const lang = localStorage.getItem("i18nextLng") || "ru";
+  const languale = lang === "ru" ? 1 : 0;
+
   const stats = useCallback(() => {
     const newStats = statsDeposit.map((i) => {
       const color =
@@ -243,14 +246,15 @@ export const Payments = () => {
 
   useEffect(() => {
     reset();
-  }, [hubConnection]);
+  }, [hubConnection, languale]);
 
   const reset = () => {
     if (hubConnection) {
       setLoadReset(true);
       hubConnection
-        .invoke<RootPayDeposit[]>("GetDayPayouts")
+        .invoke<RootPayDeposit[]>("GetDayPayouts", languale)
         .then((res) => {
+          console.log("res", res);
           setStatsDeposit(res);
           setLoadReset(false);
         })
@@ -263,12 +267,16 @@ export const Payments = () => {
 
   return (
     <Page>
-      <Container>
-        <H2>{t("payments.currPay")}</H2>
-      </Container>
+      {statsDeposit.length ? (
+        <Container>
+          <H2>{t("payments.currPay")}</H2>
+        </Container>
+      ) : (
+        ""
+      )}
 
       <Container>
-        {statsDeposit.length && (
+        {statsDeposit.length ? (
           <>
             <SwiperContainer alfa>
               <Swiper
@@ -318,6 +326,8 @@ export const Payments = () => {
               </OnDate>
             </SwiperContainerMob>
           </>
+        ) : (
+          ""
         )}
       </Container>
     </Page>

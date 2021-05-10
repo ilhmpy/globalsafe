@@ -228,6 +228,7 @@ export const AdminUsers = () => {
   const [num, setNum] = useState(20);
   const [loading, setLoading] = useState(true);
   const [totalUsers, seTotalUsers] = useState(0);
+  const [open, setOpen] = useState(false);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const logOut = appContext.logOut;
@@ -346,25 +347,37 @@ export const AdminUsers = () => {
         </Styled.UserName>
       </Styled.HeadBlock>
       <Styled.FilterBlock>
-        <Styled.SelectContainer>
-          <Styled.SelectWrap>
-            <Styled.Label>{t("adminUsers.labelUser")}</Styled.Label>
-            <Input value={name} onChange={(e) => setName(e.target.value)} />
-          </Styled.SelectWrap>
-          <Styled.InputsWrap>
-            <InputsWrapItem>
-              <TestInput
-                setOpenDate={setOpenDate}
-                openDate={openDate}
-                label={t("adminUsers.labelCreate")}
-              />
-            </InputsWrapItem>
-          </Styled.InputsWrap>
-
-          <Button danger onClick={submit}>
-            {t("adminUsers.apply")}
-          </Button>
-        </Styled.SelectContainer>
+        <Styled.FilterHeader>
+          <Styled.FilterName>{t("adminDeposit.filter")}</Styled.FilterName>
+          <Styled.ShowHide onClick={() => setOpen(!open)}>
+            {open ? t("hide") : t("show")}
+          </Styled.ShowHide>
+        </Styled.FilterHeader>
+        <CSSTransition
+          in={open}
+          timeout={200}
+          classNames="filter"
+          unmountOnExit
+        >
+          <Styled.SelectContainer>
+            <Styled.SelectContainerInnerUsers>
+              <Styled.SelectWrap style={{ minWidth: 280 }}>
+                <Styled.Label>{t("adminUsers.labelUser")}</Styled.Label>
+                <Input value={name} onChange={(e) => setName(e.target.value)} />
+              </Styled.SelectWrap>
+              <Styled.SelectWrap input>
+                <TestInput
+                  setOpenDate={setOpenDate}
+                  openDate={openDate}
+                  label={t("adminUsers.labelCreate")}
+                />
+              </Styled.SelectWrap>
+            </Styled.SelectContainerInnerUsers>
+            <Button danger onClick={submit}>
+              {t("adminUsers.apply")}
+            </Button>
+          </Styled.SelectContainer>
+        </CSSTransition>
       </Styled.FilterBlock>
       <Card>
         <PaymentsTable>

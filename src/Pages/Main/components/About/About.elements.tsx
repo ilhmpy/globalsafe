@@ -39,7 +39,7 @@ export const BlockInner = styled.div<{ mod?: boolean }>`
     width: ${(props) => (props.mod ? "370px" : "327px")};
     position: absolute;
     left: ${(props) => (props.mod ? "-46px" : "95px")};
-    top: -41px;
+    top: ${(props) => (props.mod ? "-30px" : "-39px")};
     height: 160px;
     background: ${(props) =>
       props.mod ? `url(${borderTwo})` : `url(${border})`};
@@ -75,7 +75,7 @@ export const BlockTitle = styled.h4`
   font-style: normal;
   letter-spacing: normal;
   line-height: normal;
-  margin-bottom: 25px;
+  margin-bottom: 12px;
   @media (max-width: 576px) {
     font-size: 14px;
     margin-bottom: 10px;

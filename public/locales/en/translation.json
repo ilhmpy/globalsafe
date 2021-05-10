@@ -17,6 +17,8 @@
         "register": "Register"
     },
     "more": "more",
+    "show": "show",
+    "hide": "hide",
     "login": {
         "in": "Sing In",
         "where": "Where to enter?",
@@ -77,7 +79,16 @@
         "brand": "Global Safe",
         "desc": "This is a product created specifically for those who are not ready to constantly monitor the quotes on the exchange and work on it independently. Experienced traders of the Fund take care of increasing your savings and invest in the most highly profitable platform assets.",
         "desc1": "Successful in his field.",
-        "desc2": "More than 150 completed projects"
+        "desc2": "More than 150 completed projects",
+        "position1": "Investor founder of the fund",
+        "self1": "Personal BRAND",
+        "impement": "Implemented 3 large-scale projects",
+        "fond": "Fund",
+        "top": "Top Leader",
+        "investor": "Investor",
+        "founder": "Co-founder and founder",
+        "crypto": "CryptoFund",
+        "apostol": "Apostle and Top Leader"
     },
     "sideNav":{
         "mainScreen": "Main screen",

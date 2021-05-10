@@ -38,11 +38,15 @@ export const About = () => {
           <Styled.Img src={img1} alt="" />
           <Styled.BlockInner>
             <Styled.BlockTitle>
-              {t("about.name3")} <Styled.Dot /> {t("about.position")}
+              {t("about.name3")} <Styled.Dot /> {t("about.position")} <br />{" "}
+              {t("about.fond")}
+              GLOBALSafe
             </Styled.BlockTitle>
             <Styled.BlockSubtitle>
-              {t("about.desc1")}
-              <br /> {t("about.desc2")}
+              {t("about.top")} <br />
+              {t("about.investor")}
+              {/* {t("about.desc1")}
+              <br /> {t("about.desc2")} */}
             </Styled.BlockSubtitle>
           </Styled.BlockInner>
         </Styled.BlockItem>
@@ -51,11 +55,13 @@ export const About = () => {
           <Styled.Img src={img2} alt="" />
           <Styled.BlockInner mod>
             <Styled.BlockTitle>
-              {t("about.name1")} <Styled.Dot /> {t("about.position")}
+              {t("about.name1")}
+              <Styled.Dot />
+              <br /> {t("about.position1")}
             </Styled.BlockTitle>
             <Styled.BlockSubtitle>
-              {t("about.desc1")}
-              <br /> {t("about.desc2")}
+              {t("about.self1")}
+              <br /> {t("about.impement")}
             </Styled.BlockSubtitle>
           </Styled.BlockInner>
         </Styled.BlockItem>
@@ -64,11 +70,15 @@ export const About = () => {
           <Styled.Img src={img3} alt="" />
           <Styled.BlockInner>
             <Styled.BlockTitle>
-              {t("about.name2")} <Styled.Dot /> {t("about.position")}
+              {t("about.name2")} <Styled.Dot /> {t("about.founder")}
+              <br /> {t("about.crypto")} GLOBALSafe
             </Styled.BlockTitle>
             <Styled.BlockSubtitle>
-              {t("about.desc1")}
-              <br /> {t("about.desc2")}
+              {t("about.investor")}
+              <br />
+              {t("about.apostol")} CWD Global
+              {/* {t("about.desc1")}
+              <br /> {t("about.desc2")} */}
             </Styled.BlockSubtitle>
           </Styled.BlockInner>
         </Styled.BlockItem>
