@@ -69,20 +69,21 @@ export const Img = styled.img`
   }
 `;
 
-export const BlockTitle = styled.h4`
+export const BlockTitle = styled.h4<{ pad?: boolean }>`
   font-size: 18px;
   font-weight: 900;
   font-style: normal;
   letter-spacing: normal;
   line-height: normal;
   margin-bottom: 12px;
+  padding-left: ${(props) => (props.pad ? "20px" : "0")};
   @media (max-width: 576px) {
     font-size: 14px;
     margin-bottom: 10px;
   }
 `;
 
-export const BlockSubtitle = styled.p`
+export const BlockSubtitle = styled.p<{ pad?: boolean }>`
   font-size: 14px;
   font-weight: 400;
   font-style: normal;
@@ -90,6 +91,7 @@ export const BlockSubtitle = styled.p`
   line-height: normal;
   text-align: center;
   max-width: 240px;
+  padding-left: ${(props) => (props.pad ? "20px" : "0")};
   color: ${(props) => props.theme.nextPay};
 `;
 
