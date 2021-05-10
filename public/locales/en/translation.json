@@ -82,7 +82,13 @@
         "desc2": "More than 150 completed projects",
         "position1": "Investor founder of the fund",
         "self1": "Personal BRAND",
-        "impement": "Implemented 3 large-scale projects"
+        "impement": "Implemented 3 large-scale projects",
+        "fond": "Fund",
+        "top": "Top Leader",
+        "investor": "Investor",
+        "founder": "Co-founder and founder",
+        "crypto": "CryptoFund",
+        "apostol": "Apostle and Top Leader"
     },
     "sideNav":{
         "mainScreen": "Main screen",

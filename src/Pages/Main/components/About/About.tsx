@@ -38,9 +38,13 @@ export const About = () => {
           <Styled.Img src={img1} alt="" />
           <Styled.BlockInner>
             <Styled.BlockTitle>
-              {t("about.name3")} <Styled.Dot /> {t("about.position")}
+              {t("about.name3")} <Styled.Dot /> {t("about.position")} <br />{" "}
+              {t("about.fond")}
+              GLOBALSafe
             </Styled.BlockTitle>
             <Styled.BlockSubtitle>
+              {t("about.top")} <br />
+              {t("about.investor")}
               {/* {t("about.desc1")}
               <br /> {t("about.desc2")} */}
             </Styled.BlockSubtitle>
@@ -66,9 +70,13 @@ export const About = () => {
           <Styled.Img src={img3} alt="" />
           <Styled.BlockInner>
             <Styled.BlockTitle>
-              {t("about.name2")} <Styled.Dot /> {t("about.position")}
+              {t("about.name2")} <Styled.Dot /> {t("about.founder")}
+              <br /> {t("about.crypto")} GLOBALSafe
             </Styled.BlockTitle>
             <Styled.BlockSubtitle>
+              {t("about.investor")}
+              <br />
+              {t("about.apostol")} CWD Global
               {/* {t("about.desc1")}
               <br /> {t("about.desc2")} */}
             </Styled.BlockSubtitle>
