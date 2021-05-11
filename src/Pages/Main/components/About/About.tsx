@@ -35,14 +35,14 @@ export const About = () => {
 
       <Styled.BlockContainer>
         <Styled.BlockItem>
-          <Styled.Img src={img1} alt="" />
+          <Styled.Img src={img3} alt="" />
           <Styled.BlockInner>
-            <Styled.BlockTitle>
+            <Styled.BlockTitle pad>
               {t("about.name3")} <Styled.Dot /> {t("about.position")} <br />{" "}
               {t("about.fond")}
               GLOBALSafe
             </Styled.BlockTitle>
-            <Styled.BlockSubtitle>
+            <Styled.BlockSubtitle pad>
               {t("about.top")} <br />
               {t("about.investor")}
               {/* {t("about.desc1")}
@@ -67,7 +67,7 @@ export const About = () => {
         </Styled.BlockItem>
 
         <Styled.BlockItem>
-          <Styled.Img src={img3} alt="" />
+          <Styled.Img src={img1} alt="" />
           <Styled.BlockInner>
             <Styled.BlockTitle>
               {t("about.name2")} <Styled.Dot /> {t("about.founder")}
