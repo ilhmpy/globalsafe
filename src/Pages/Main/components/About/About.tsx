@@ -35,7 +35,7 @@ export const About = () => {
 
       <Styled.BlockContainer>
         <Styled.BlockItem>
-          <Styled.Img src={img1} alt="" />
+          <Styled.Img src={img3} alt="" />
           <Styled.BlockInner>
             <Styled.BlockTitle pad>
               {t("about.name3")} <Styled.Dot /> {t("about.position")} <br />{" "}
@@ -67,7 +67,7 @@ export const About = () => {
         </Styled.BlockItem>
 
         <Styled.BlockItem>
-          <Styled.Img src={img3} alt="" />
+          <Styled.Img src={img1} alt="" />
           <Styled.BlockInner>
             <Styled.BlockTitle>
               {t("about.name2")} <Styled.Dot /> {t("about.founder")}
