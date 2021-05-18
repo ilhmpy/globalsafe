@@ -21,8 +21,6 @@ export const Timer: FC<{
     setDeadline(mins);
     setState("0");
   }, [last]);
-  console.log("state", state);
-  // console.log("deadline", deadline)
 
   useEffect(() => {
     if (deadline < 1) {
@@ -51,7 +49,7 @@ export const Timer: FC<{
           type="submit"
           disabled={value === "" || state !== null}
         >
-          {t("login.getCode")}
+          {t("login.in")}
         </Submit>
       ) : (
         <Submit as="button" danger type="submit" disabled>

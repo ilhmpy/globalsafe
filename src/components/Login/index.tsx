@@ -53,7 +53,7 @@ export const LoginComponent = () => {
             loginSubmit();
           } else {
             setError(false);
-            localStorage.setItem("time", moment.utc().toString());
+
             setValue("");
           }
         })
@@ -72,6 +72,7 @@ export const LoginComponent = () => {
             setWhere(true);
             setLogin(false);
           } else {
+            localStorage.setItem("time", moment.utc().toString());
             setError(false);
           }
         })
@@ -153,9 +154,10 @@ export const LoginComponent = () => {
                 {t("login.incorrectCode")}
               </StyledInlineErrorMessage>
             )}
-            <Submit as="button" danger type="submit" disabled={password === ""}>
+            {/* <Submit as="button" danger type="submit" disabled={password === ""}>
               {t("login.in")}
-            </Submit>
+            </Submit> */}
+            <Timer state={state} setState={setState} value={password} />
             <LinkTo
               href={`https://cwd.global/account/${value}`}
               target="_blank"
@@ -185,8 +187,7 @@ export const LoginComponent = () => {
                 {t("login.incorrectLogin")}
               </StyledInlineErrorMessage>
             )}
-
-            {/* <Submit
+            <Submit
               as="button"
               danger
               type="submit"
@@ -194,12 +195,14 @@ export const LoginComponent = () => {
             >
               {t("login.getCode")}
             </Submit>
+
+            {/* 
             {state !== null && (
               <Submit as="button" danger disabled>
                 <Timer state={state} setState={setState} />
               </Submit>
             )} */}
-            <Timer state={state} setState={setState} value={value} />
+            {/* <Timer state={state} setState={setState} value={value} /> */}
             {/* <LinkToPage to="/register">{t("headerButton.register")}</LinkToPage> */}
           </FormBlock>
         </CSSTransition>
