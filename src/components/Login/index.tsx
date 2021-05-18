@@ -7,6 +7,8 @@ import { AppContext } from "../../context/HubContext";
 import { Link, useHistory } from "react-router-dom";
 import { CSSTransition } from "react-transition-group";
 import { useTranslation } from "react-i18next";
+import { Timer } from "./Timer";
+import moment from "moment";
 
 export const LoginComponent = () => {
   const [error, setError] = useState(true);
@@ -14,6 +16,7 @@ export const LoginComponent = () => {
   const [password, setPassword] = useState("");
   const [value, setValue] = useState("");
   const [where, setWhere] = useState(false);
+  const [state, setState] = useState<null | string>(null);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const user = appContext.user;
@@ -50,6 +53,7 @@ export const LoginComponent = () => {
             loginSubmit();
           } else {
             setError(false);
+            localStorage.setItem("time", moment.utc().toString());
             setValue("");
           }
         })
@@ -181,9 +185,21 @@ export const LoginComponent = () => {
                 {t("login.incorrectLogin")}
               </StyledInlineErrorMessage>
             )}
-            <Submit as="button" danger type="submit" disabled={value === ""}>
+
+            {/* <Submit
+              as="button"
+              danger
+              type="submit"
+              disabled={value === "" || state !== null}
+            >
               {t("login.getCode")}
             </Submit>
+            {state !== null && (
+              <Submit as="button" danger disabled>
+                <Timer state={state} setState={setState} />
+              </Submit>
+            )} */}
+            <Timer state={state} setState={setState} value={value} />
             {/* <LinkToPage to="/register">{t("headerButton.register")}</LinkToPage> */}
           </FormBlock>
         </CSSTransition>
@@ -225,7 +241,7 @@ const FormBlock = styled.form`
   flex-direction: column;
 `;
 
-const Submit = styled(Button)<{ mb?: boolean }>`
+export const Submit = styled(Button)<{ mb?: boolean }>`
   max-width: 100%;
   margin-bottom: ${(props) => (props.mb ? "20px" : "0")};
   color: ${(props) => props.theme.text};
