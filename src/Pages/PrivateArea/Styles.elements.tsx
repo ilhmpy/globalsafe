@@ -44,7 +44,7 @@ export const Loader = styled.div`
   height: 100%;
   background-color: rgba(0, 0, 0, 0.2);
   display: block;
-  z-index: 99999;
+  z-index: 9999999;
   overflow: auto;
   display: flex;
   flex-direction: column;

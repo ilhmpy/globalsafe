@@ -38,19 +38,19 @@ import "moment/locale/ru";
 import { Balance } from "../../types/balance";
 import { TestTolltips, Tooltip } from "../../components/Tooltips/Tooltips";
 import { ReactComponent as Copy } from "../../assets/svg/copy.svg";
+import { Loading } from "../../components/UI/Loading";
 
 export const InfoMain = () => {
   const [addDeposit, setAddDeposit] = useState(false);
   const [depositListModal, setDepositListModal] = useState(false);
   const [addDepositValue, setAddDepositValue] = useState("");
-  const [depositSelect, setDepositSelect] = useState<null | DepositsCollection>(
-    null
-  );
-  const [depositsList, setDepositsList] = useState<DepositsCollection[] | null>(
-    null
-  );
+  const [depositSelect, setDepositSelect] =
+    useState<null | DepositsCollection>(null);
+  const [depositsList, setDepositsList] =
+    useState<DepositsCollection[] | null>(null);
   const [withdraw, setWithdraw] = useState(false);
   const [loadDeposit, setLoadDeposit] = useState(false);
+  const [withdrawValueLoad, setWithdrawValueLoad] = useState(false);
   const [condition, setContition] = useState(false);
   const [depositSuccess, setDepositSuccess] = useState(false);
   const [depositError, setDepositError] = useState(false);
@@ -172,17 +172,20 @@ export const InfoMain = () => {
 
   const withdrawBalance = () => {
     if (hubConnection) {
+      setWithdrawValueLoad(true);
       hubConnection
         .invoke("Withdraw", 1, +withdrawValue * 100000)
         .then((res) => {
           setWithdraw(false);
           setWithdrawValue("");
           alert(t("alert.success"), t("alert.successMsg"), "success");
+          setWithdrawValueLoad(false);
         })
         .catch((err: Error) => {
           setWithdraw(false);
           setWithdrawValue("");
           alert(t("alert.error"), t("alert.errorMsg"), "danger");
+          setWithdrawValueLoad(false);
         });
     }
   };
@@ -227,6 +230,11 @@ export const InfoMain = () => {
 
   return (
     <>
+      {withdrawValueLoad && (
+        <Styled.Loader>
+          <Loading />
+        </Styled.Loader>
+      )}
       <Header />
       <Styled.Page>
         <Container>
