@@ -26,6 +26,8 @@ export const Timer: FC<{
     }
   }, [last, tryCode]);
   console.log("state", state);
+  const lang = localStorage.getItem("i18nextLng") || "ru";
+  const languale = lang === "ru" ? 1 : 0;
   useEffect(() => {
     if (deadline < 1) {
       setState(null);
@@ -34,7 +36,13 @@ export const Timer: FC<{
 
     let timer = setTimeout(() => {
       let durations = moment.duration(deadline, "seconds");
-      let formatted = durations.format("d[дн] h[ч] m[мин] s[с]");
+      let formatted;
+      if (languale === 1) {
+        formatted = durations.format("d[дн] h[ч] m[мин] s[с]");
+      } else {
+        formatted = durations.format("d[d] h[H] m[m] s[s]");
+      }
+
       setState(formatted);
       setDeadline(deadline - 1);
     }, 1000);
