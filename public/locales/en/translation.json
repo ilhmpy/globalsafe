@@ -28,7 +28,9 @@
         "goTo": "Go to Activity",
         "login": "Enter login", 
         "incorrectLogin": "Login is not correct",
-        "getCode": "To get the code"
+        "getCode": "To get the code",
+        "repeat": "request the code again",
+        "over": "through"
     },
     "banner":{
         "uptitle": "About fund ",

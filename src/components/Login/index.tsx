@@ -17,6 +17,7 @@ export const LoginComponent = () => {
   const [value, setValue] = useState("");
   const [where, setWhere] = useState(false);
   const [state, setState] = useState<null | string>(null);
+  const [tryCode, setTryCode] = useState(0);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const user = appContext.user;
@@ -40,7 +41,7 @@ export const LoginComponent = () => {
     setPassword(e.target.value);
   };
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = (e: React.FormEvent<HTMLFormElement> | React.MouseEvent) => {
     e.preventDefault();
     // console.log("submit", value);
     if (hubConnection) {
@@ -49,11 +50,11 @@ export const LoginComponent = () => {
         .then((res: boolean) => {
           // console.log("res", res);
           if (res) {
+            setTryCode(0);
             setError(true);
             loginSubmit();
           } else {
             setError(false);
-
             setValue("");
           }
         })
@@ -71,8 +72,10 @@ export const LoginComponent = () => {
             logIn(res.token);
             setWhere(true);
             setLogin(false);
+            setTryCode(0);
           } else {
-            localStorage.setItem("time", moment.utc().toString());
+            setTryCode((tryCode) => tryCode + 1);
+            localStorage.setItem("time", moment().toISOString());
             setError(false);
           }
         })
@@ -80,7 +83,7 @@ export const LoginComponent = () => {
     }
   };
 
-  // console.log("value", value, password);
+  console.log("value", value);
 
   const loginSubmit = () => {
     if (hubConnection) {
@@ -157,7 +160,24 @@ export const LoginComponent = () => {
             {/* <Submit as="button" danger type="submit" disabled={password === ""}>
               {t("login.in")}
             </Submit> */}
-            <Timer state={state} setState={setState} value={password} />
+            <Timer
+              tryCode={tryCode}
+              setTryCode={setTryCode}
+              state={state}
+              setState={setState}
+              value={password}
+            />
+            {tryCode > 2 && (
+              <Submit
+                style={{ marginTop: 15 }}
+                danger
+                as="button"
+                onClick={onSubmit}
+                disabled={state !== null}
+              >
+                {t("login.repeat")} {state && t("login.over") + " " + state}
+              </Submit>
+            )}
             <LinkTo
               href={`https://cwd.global/account/${value}`}
               target="_blank"

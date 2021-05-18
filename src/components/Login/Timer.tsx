@@ -8,20 +8,24 @@ export const Timer: FC<{
   state: null | string;
   setState: (state: null | string) => void;
   value: string;
-}> = ({ state, setState, value }) => {
+  setTryCode: (num: number) => void;
+  tryCode: number;
+}> = ({ state, setState, value, tryCode }) => {
   const last = localStorage.getItem("time");
   const [deadline, setDeadline] = useState<number>(0);
   const { t } = useTranslation();
   useEffect(() => {
-    const day = moment.utc().valueOf();
-    const day1 = last
-      ? moment.utc(last).valueOf() + 1 * 60000
-      : moment.utc().valueOf();
-    const mins = (day1 - day) / 1000;
-    setDeadline(mins);
-    setState("0");
-  }, [last]);
-
+    if (tryCode > 2) {
+      const day = moment.utc().valueOf();
+      const day1 = last
+        ? moment.utc(last).valueOf() + 1 * 60000
+        : moment.utc().valueOf();
+      const mins = (day1 - day) / 1000;
+      setDeadline(mins);
+      setState("0");
+    }
+  }, [last, tryCode]);
+  console.log("state", state);
   useEffect(() => {
     if (deadline < 1) {
       setState(null);
