@@ -44,7 +44,7 @@ export const LoginComponent = () => {
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement> | React.MouseEvent) => {
     e.preventDefault();
-    // console.log("submit", value);
+    console.log("submit", value);
     if (hubConnection) {
       hubConnection
         .invoke("CheckAccount", value.toLowerCase())
@@ -146,7 +146,7 @@ export const LoginComponent = () => {
         >
           <FormBlock onSubmit={onSubmitCode}>
             <H4>{t("login.signIn")}</H4>
-            <Input
+            <SelfInput
               value={password}
               name="password"
               placeholder={t("login.code")}
@@ -174,7 +174,7 @@ export const LoginComponent = () => {
                   as="button"
                   danger
                   type="submit"
-                  disabled={value === "" || state !== null}
+                  disabled={password === "" || state !== null}
                 >
                   {t("login.in")}
                 </Submit>
@@ -202,7 +202,7 @@ export const LoginComponent = () => {
         >
           <FormBlock onSubmit={onSubmit}>
             <H4>{t("login.signIn")}</H4>
-            <Input
+            <SelfInput
               value={value}
               name="login"
               placeholder={t("login.login")}
@@ -258,6 +258,10 @@ export const LoginComponent = () => {
   );
 };
 
+const SelfInput = styled(Input)`
+  margin-bottom: 30px;
+`;
+
 const RepeatCode = styled.button`
   cursor: pointer;
   appearance: none;
@@ -265,7 +269,7 @@ const RepeatCode = styled.button`
   outline: none;
   box-shadow: none;
   background: transparent;
-  font-weight: 500;
+  font-weight: bold;
   font-size: 12px;
   line-height: 14px;
   text-align: center;
@@ -308,7 +312,7 @@ const H4 = styled.h4`
   font-weight: 500;
   font-size: 24px;
   line-height: 28px;
-  margin-bottom: 20px;
+  margin-bottom: 23px;
 `;
 
 const FormBlock = styled.form`
@@ -316,6 +320,7 @@ const FormBlock = styled.form`
   width: 200px;
   display: flex;
   flex-direction: column;
+  position: relative;
 `;
 
 export const Submit = styled(Button)<{ mb?: boolean }>`
@@ -325,21 +330,28 @@ export const Submit = styled(Button)<{ mb?: boolean }>`
 `;
 
 const CardContainer = styled(Card)`
-  padding-top: 160px;
-  padding-bottom: 160px;
+  /* padding-top: 160px;
+  padding-bottom: 160px; */
   display: flex;
+  align-items: center;
   position: relative;
+  height: 482px;
   @media (max-width: 992px) {
-    padding-top: 125px;
-    padding-bottom: 125px;
+    /* padding-top: 125px;
+    padding-bottom: 125px; */
+    height: 410px;
   }
 `;
 
 export const StyledInlineErrorMessage = styled.div`
   color: #ff416e;
   display: block;
-  font-size: 14px;
-  line-height: 16px;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 14px;
+  position: absolute;
+  width: 100%;
+  top: 98px;
   white-space: pre-line;
   margin-bottom: 15px;
   text-align: center;
