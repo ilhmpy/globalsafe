@@ -363,7 +363,10 @@ export const AdminUsers = () => {
             <Styled.SelectContainerInnerUsers>
               <Styled.SelectWrap style={{ minWidth: 280 }}>
                 <Styled.Label>{t("adminUsers.labelUser")}</Styled.Label>
-                <Input value={name} onChange={(e) => setName(e.target.value)} />
+                <Input
+                  value={name}
+                  onChange={(e) => setName(e.target.value.toLowerCase())}
+                />
               </Styled.SelectWrap>
               <Styled.SelectWrap input>
                 <TestInput
