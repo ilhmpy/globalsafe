@@ -231,7 +231,10 @@ export const AdminDeposit = () => {
             <Styled.SelectContainerInner>
               <Styled.SelectWrap>
                 <Styled.Label>{t("adminDeposit.labelUser")}</Styled.Label>
-                <Input value={name} onChange={(e) => setName(e.target.value)} />
+                <Input
+                  value={name}
+                  onChange={(e) => setName(e.target.value.toLowerCase())}
+                />
               </Styled.SelectWrap>
               <Styled.SelectWrap style={{ minWidth: 233 }}>
                 <Styled.Label>{t("adminDeposit.labelProgram")}</Styled.Label>

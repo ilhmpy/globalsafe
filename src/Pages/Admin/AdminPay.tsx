@@ -558,7 +558,9 @@ export const AdminPay = () => {
                   <Styled.Label>{t("adminPay.filter.user")}</Styled.Label>
                   <Styled.Input
                     value={nameApproval}
-                    onChange={(e) => setNameApproval(e.target.value)}
+                    onChange={(e) =>
+                      setNameApproval(e.target.value.toLowerCase())
+                    }
                   />
                 </Styled.SelectWrap>
                 <Styled.SelectWrap input>
@@ -651,7 +653,7 @@ export const AdminPay = () => {
                   <Styled.Label>{t("adminPay.filter.user")}</Styled.Label>
                   <Styled.Input
                     value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    onChange={(e) => setName(e.target.value.toLowerCase())}
                   />
                 </Styled.SelectWrap>
                 <Styled.SelectWrap input>

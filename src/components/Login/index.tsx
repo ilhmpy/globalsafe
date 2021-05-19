@@ -60,7 +60,7 @@ export const LoginComponent = () => {
 
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError(true);
-    setValue(e.target.value);
+    setValue(e.target.value.toLowerCase());
   };
   useEffect(() => {
     if (user) {
@@ -78,7 +78,7 @@ export const LoginComponent = () => {
     console.log("submit", value);
     if (hubConnection) {
       hubConnection
-        .invoke("CheckAccount", value.toLowerCase())
+        .invoke("CheckAccount", value)
         .then((res: boolean) => {
           if (res) {
             setTryCode(0);
@@ -115,8 +115,6 @@ export const LoginComponent = () => {
         .catch((err: Error) => setError(false));
     }
   };
-
-  // console.log("value", value);
 
   const loginSubmit = () => {
     if (hubConnection) {
@@ -224,9 +222,31 @@ export const LoginComponent = () => {
                 {t("login.incorrectLogin")}
               </StyledInlineErrorMessage>
             )}
-            <Submit as="button" danger type="submit" disabled={value === ""}>
+            {/* <Submit as="button" danger type="submit" disabled={value === ""}>
               {t("login.getCode")}
-            </Submit>
+            </Submit> */}
+
+            <Timer
+              last={localStorage.getItem("timeRepeat") || ""}
+              setTryCode={setTryCode}
+              state={stateRepeat}
+              setState={setStateRepeat}
+            >
+              {stateRepeat === null ? (
+                <Submit
+                  as="button"
+                  danger
+                  type="submit"
+                  disabled={value === ""}
+                >
+                  {t("login.getCode")}
+                </Submit>
+              ) : (
+                <Submit as="button" danger type="submit" disabled>
+                  {stateRepeat}
+                </Submit>
+              )}
+            </Timer>
           </FormBlock>
         </CSSTransition>
 
