@@ -2,7 +2,6 @@
 import * as Styled from "./Styles.elements";
 import { Card, Container } from "../../globalStyles";
 import { AppContext } from "../../context/HubContext";
-import { AmountContext } from "../../context/AmountContext";
 import { CSSTransition } from "react-transition-group";
 import { Modal } from "../../components/Modal/Modal";
 import moment from "moment";
@@ -104,9 +103,10 @@ export const InfoBalance = () => {
     t("privateArea.allTime")
   );
   const appContext = useContext(AppContext);
+  const hubConnection = appContext.hubConnection;
   const balance = appContext.balance;
-  const amountContext = useContext(AmountContext);
-  const { totalPayed, depositTotal } = amountContext;
+  const [depositTotal, setDepositTotal] = useState(0);
+  const [totalPayed, setTotalPayed] = useState(0);
   const [count, setCount] = useState(true);
   const [num, setNum] = useState(20);
   const [loading, setLoading] = useState(true);
@@ -117,6 +117,28 @@ export const InfoBalance = () => {
   const [depositList, setDepositList] = useState<any>([]);
   const [chartList, setChartList] = useState<any>({});
   const inputRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection
+        .invoke("GetTotalPayedAmount")
+        .then((res) => {
+          setTotalPayed(res);
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  }, [hubConnection]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection
+        .invoke("GetTotalDepositsAmount")
+        .then((res) => {
+          setDepositTotal(res);
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  }, [hubConnection]);
 
   const lang = localStorage.getItem("i18nextLng") || "ru";
   const languale = lang === "ru" ? 1 : 0;
@@ -183,8 +205,6 @@ export const InfoBalance = () => {
       inputRef.current.focus();
     }
   }, [balanceValue]);
-
-  const hubConnection = appContext.hubConnection;
 
   useEffect(() => {
     setBalanceLog(null);
@@ -294,19 +314,13 @@ export const InfoBalance = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke("GetBalanceStats", openDate.from, openDate.to, balanceLogs, [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9,
-          10,
-        ])
+        .invoke(
+          "GetBalanceStats",
+          openDate.from,
+          openDate.to,
+          balanceLogs,
+          [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        )
         .then((res) => {
           // console.log("responce", res);
           let result: any = {};

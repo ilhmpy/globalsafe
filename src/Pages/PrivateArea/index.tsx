@@ -230,11 +230,12 @@ export const InfoMain = () => {
 
   return (
     <>
-      {withdrawValueLoad && (
-        <Styled.Loader>
-          <Loading />
-        </Styled.Loader>
-      )}
+      {withdrawValueLoad ||
+        (loadDeposit && (
+          <Styled.Loader>
+            <Loading />
+          </Styled.Loader>
+        ))}
       <Header />
       <Styled.Page>
         <Container>

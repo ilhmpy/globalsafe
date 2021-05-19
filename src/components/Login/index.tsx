@@ -46,7 +46,7 @@ export const LoginComponent = () => {
     // console.log("submit", value);
     if (hubConnection) {
       hubConnection
-        .invoke("CheckAccount", value)
+        .invoke("CheckAccount", value.toLowerCase())
         .then((res: boolean) => {
           // console.log("res", res);
           if (res) {
@@ -168,15 +168,9 @@ export const LoginComponent = () => {
               value={password}
             />
             {tryCode > 2 && (
-              <Submit
-                style={{ marginTop: 15 }}
-                danger
-                as="button"
-                onClick={onSubmit}
-                disabled={state !== null}
-              >
+              <RepeatCode onClick={onSubmit} disabled={state !== null}>
                 {t("login.repeat")} {state && t("login.over") + " " + state}
-              </Submit>
+              </RepeatCode>
             )}
             <LinkTo
               href={`https://cwd.global/account/${value}`}
@@ -230,6 +224,20 @@ export const LoginComponent = () => {
     </Container>
   );
 };
+
+const RepeatCode = styled.button`
+  margin-top: 15px;
+  cursor: pointer;
+  appearance: none;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  background: transparent;
+  font-size: 14px;
+  @media (max-width: 768px) {
+    cursor: initial;
+  }
+`;
 
 const LinkToPage = styled(Link)`
   font-weight: 500;

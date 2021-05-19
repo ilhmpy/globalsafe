@@ -5,10 +5,10 @@ export const Page = styled.div`
   @media (max-width: 992px) {
     margin-top: 75px;
   }
-  @media (max-width: 768px) {
-    margin-top: 50px;
-  }
-  @media (max-width: 576px) {
+  /* @media (max-width: 768px) {
+    margin-top: 60px;
+  } */
+  /* @media (max-width: 576px) {
     margin-top: 30px;
-  }
+  } */
 `;

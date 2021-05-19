@@ -65,7 +65,7 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
       hubConnection
         .invoke<RootCharges>(
           "GetDepositsCharges",
-          data.name,
+          data.name.toLowerCase(),
           null,
           null,
           null,
@@ -90,7 +90,7 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
         .invoke<RootPayments>(
           "GetUsersDeposits",
           [1, 2, 3, 4, 5, 6],
-          data.name,
+          data.name.toLowerCase(),
           null,
           null,
           null,
@@ -241,7 +241,7 @@ export const AdminUsers = () => {
       hubConnection
         .invoke<RootUsers>(
           "GetUsers",
-          name || null,
+          name.toLowerCase() || null,
           openDate.from ? openDate.from : null,
           openDate.to ? openDate.to : null,
           0,
@@ -266,7 +266,7 @@ export const AdminUsers = () => {
       hubConnection
         .invoke<RootUsers>(
           "GetUsers",
-          name || null,
+          name.toLowerCase() || null,
           openDate.from ? openDate.from : null,
           openDate.to ? openDate.to : null,
           0,
@@ -292,7 +292,7 @@ export const AdminUsers = () => {
       hubConnection
         .invoke<RootUsers>(
           "GetUsers",
-          name || null,
+          name.toLowerCase() || null,
           openDate.from ? openDate.from : null,
           openDate.to ? openDate.to : null,
           num,
