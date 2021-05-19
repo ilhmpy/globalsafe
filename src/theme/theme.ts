@@ -14,6 +14,7 @@ export const lightTheme = {
     toggleBorder: '#FFF',
     buttonBorder: '#0E0D3D',
     inputBg: '#fff',
+    repeatCode: "#212121",
     header: `linear-gradient(
       0deg
       , rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)), linear-gradient( 
@@ -62,6 +63,7 @@ export const lightTheme = {
     topUpColor: '#6db9ff',
     switch: '#fff',
     border: '#000',
+    repeatCode: "#fff",
     range: 'rgba(226, 226, 226, .2)',
     card: {
       background: '#212121',
