@@ -167,11 +167,7 @@ export const LoginComponent = () => {
               setState={setState}
               value={password}
             />
-            {tryCode > 2 && (
-              <RepeatCode onClick={onSubmit} disabled={state !== null}>
-                {t("login.repeat")} {state && t("login.over") + " " + state}
-              </RepeatCode>
-            )}
+
             <LinkTo
               href={`https://cwd.global/account/${value}`}
               target="_blank"
@@ -220,20 +216,34 @@ export const LoginComponent = () => {
             {/* <LinkToPage to="/register">{t("headerButton.register")}</LinkToPage> */}
           </FormBlock>
         </CSSTransition>
+        {tryCode > 2 && (
+          <RepeatCode onClick={onSubmit} disabled={state !== null}>
+            {t("login.repeat")} {state && t("login.over") + " " + state}
+          </RepeatCode>
+        )}
       </CardContainer>
     </Container>
   );
 };
 
 const RepeatCode = styled.button`
-  margin-top: 15px;
   cursor: pointer;
   appearance: none;
   border: none;
   outline: none;
   box-shadow: none;
   background: transparent;
-  font-size: 14px;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 14px;
+  text-align: center;
+  text-decoration-line: underline;
+  position: absolute;
+  bottom: 40px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  color: ${(props) => props.theme.repeatCode};
   @media (max-width: 768px) {
     cursor: initial;
   }
@@ -282,6 +292,7 @@ const CardContainer = styled(Card)`
   padding-top: 160px;
   padding-bottom: 160px;
   display: flex;
+  position: relative;
   @media (max-width: 992px) {
     padding-top: 125px;
     padding-bottom: 125px;

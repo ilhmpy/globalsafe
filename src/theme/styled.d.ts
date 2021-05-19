@@ -25,6 +25,7 @@ declare module 'styled-components' {
     inputBg:string;
     border:string;
     range: string;
+    repeatCode: string;
     card: {
       background: string;
       backgroundAlfa: string;
