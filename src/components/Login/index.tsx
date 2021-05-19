@@ -238,19 +238,21 @@ export const LoginComponent = () => {
             {t("login.repeat")} {state && t("login.over") + " " + state}
           </RepeatCode>
         )} */}
-        <Timer
-          last={localStorage.getItem("timeRepeat") || null}
-          tryCode={tryCode}
-          setTryCode={setTryCode}
-          state={stateRepeat}
-          setState={setStateRepeat}
-          value={password}
-        >
-          <RepeatCode onClick={onSubmit} disabled={stateRepeat !== null}>
-            {t("login.repeat")}{" "}
-            {stateRepeat && t("login.over") + " " + stateRepeat}
-          </RepeatCode>
-        </Timer>
+        {login && !user && !where && (
+          <Timer
+            last={localStorage.getItem("timeRepeat") || null}
+            tryCode={tryCode}
+            setTryCode={setTryCode}
+            state={stateRepeat}
+            setState={setStateRepeat}
+            value={password}
+          >
+            <RepeatCode onClick={onSubmit} disabled={stateRepeat !== null}>
+              {t("login.repeat")}{" "}
+              {stateRepeat && t("login.over") + " " + stateRepeat}
+            </RepeatCode>
+          </Timer>
+        )}
       </CardContainer>
     </Container>
   );
@@ -269,9 +271,13 @@ const RepeatCode = styled.button`
   text-align: center;
   text-decoration-line: underline;
   position: absolute;
+  left: 0px;
+  right: 0px;
+  width: 100%;
   bottom: 40px;
-  left: 0;
-  right: 0;
+  /* display: flex;
+  align-items: center;
+  justify-content: center; */
   margin: 0 auto;
   color: ${(props) => props.theme.repeatCode};
   @media (max-width: 768px) {
