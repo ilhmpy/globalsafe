@@ -31,7 +31,7 @@ export const Timer: FC<{
   const lang = localStorage.getItem("i18nextLng") || "ru";
   const languale = lang === "ru" ? 1 : 0;
   useEffect(() => {
-    if (deadline < 1) {
+    if (deadline < 0) {
       setState(null);
       return;
     }
