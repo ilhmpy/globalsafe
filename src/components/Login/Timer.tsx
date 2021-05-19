@@ -1,4 +1,4 @@
-import React, { useEffect, useState, FC } from "react";
+import React, { useEffect, useState, FC, ReactNode } from "react";
 import moment from "moment";
 import "moment-duration-format";
 import { useTranslation } from "react-i18next";
@@ -8,20 +8,24 @@ export const Timer: FC<{
   state: null | string;
   setState: (state: null | string) => void;
   value: string;
+  last: string | null;
   setTryCode: (num: number) => void;
   tryCode: number;
-}> = ({ state, setState, value, tryCode }) => {
-  const last = localStorage.getItem("time");
+  children: ReactNode;
+}> = ({ state, setState, value, tryCode, last, children }) => {
+  // const last = localStorage.getItem("time");
   const [deadline, setDeadline] = useState<number>(0);
   const { t } = useTranslation();
   useEffect(() => {
-    const day = moment.utc().valueOf();
-    const day1 = last
-      ? moment.utc(last).valueOf() + 1 * 60000
-      : moment.utc().valueOf();
-    const mins = (day1 - day) / 1000;
-    setDeadline(mins);
-    setState("0");
+    if (last) {
+      const day = moment.utc().valueOf();
+      const day1 = last
+        ? moment.utc(last).valueOf() + 1 * 60000
+        : moment.utc().valueOf();
+      const mins = (day1 - day) / 1000;
+      setDeadline(mins);
+      setState("0");
+    }
   }, [last, tryCode]);
   console.log("state", state);
   const lang = localStorage.getItem("i18nextLng") || "ru";
@@ -50,22 +54,5 @@ export const Timer: FC<{
     };
   }, [state, last, deadline]);
 
-  return (
-    <>
-      {state === null ? (
-        <Submit
-          as="button"
-          danger
-          type="submit"
-          disabled={value === "" || state !== null}
-        >
-          {t("login.in")}
-        </Submit>
-      ) : (
-        <Submit as="button" danger type="submit" disabled>
-          {state}
-        </Submit>
-      )}
-    </>
-  );
+  return <>{children}</>;
 };
