@@ -66,6 +66,7 @@ export const Button = styled.a<Props>`
         color: #fff;
         border-color: rgba(14, 13, 61, .1);
         outline: none;
+        cursor: initial;
       }
       @media (max-width: 768px){
         font-weight: 400;
@@ -200,6 +201,9 @@ export const Button = styled.a<Props>`
       `;
     }
   }}
+  &:disabled {
+    cursor: initial;
+  }
   @media (max-width: 992px) {
     padding-left: 3px;
     padding-right: 3px;

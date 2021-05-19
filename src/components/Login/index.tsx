@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, FC } from "react";
 import { Button } from "../../components/Button/Button";
 import { Container, Card } from "../../globalStyles";
 import styled from "styled-components/macro";
@@ -10,13 +10,44 @@ import { useTranslation } from "react-i18next";
 import { Timer } from "./Timer";
 import moment from "moment";
 
+const TimerButton: FC<{
+  password: string;
+  tryCode: number;
+  setTryCode: (num: number) => void;
+}> = ({ password, tryCode, setTryCode }) => {
+  const [state, setState] = useState<null | string>(null);
+  const { t } = useTranslation();
+  return (
+    <Timer
+      last={tryCode > 2 ? localStorage.getItem("time") : ""}
+      setTryCode={setTryCode}
+      state={state}
+      setState={setState}
+    >
+      {state === null ? (
+        <Submit
+          as="button"
+          danger
+          type="submit"
+          disabled={password === "" || state !== null}
+        >
+          {t("login.in")}
+        </Submit>
+      ) : (
+        <Submit as="button" danger type="submit" disabled>
+          {state}
+        </Submit>
+      )}
+    </Timer>
+  );
+};
+
 export const LoginComponent = () => {
   const [error, setError] = useState(true);
   const [login, setLogin] = useState(false);
   const [password, setPassword] = useState("");
   const [value, setValue] = useState("");
   const [where, setWhere] = useState(false);
-  const [state, setState] = useState<null | string>(null);
   const [stateRepeat, setStateRepeat] = useState<null | string>(null);
   const [tryCode, setTryCode] = useState(0);
   const appContext = useContext(AppContext);
@@ -51,7 +82,7 @@ export const LoginComponent = () => {
         .then((res: boolean) => {
           if (res) {
             setTryCode(0);
-            setStateRepeat("0");
+            setStateRepeat("-");
             localStorage.setItem("timeRepeat", moment().toISOString());
             setError(true);
             loginSubmit();
@@ -70,14 +101,14 @@ export const LoginComponent = () => {
         .invoke("SignIn", { login: value, password: password, signInMethod: 3 })
         .then((res: any) => {
           // console.log("res", res);
+          setTryCode((tryCode) => tryCode + 1);
+          localStorage.setItem("time", moment().toISOString());
           if (res.token !== null) {
             logIn(res.token);
             setWhere(true);
             setLogin(false);
             setTryCode(0);
           } else {
-            setTryCode((tryCode) => tryCode + 1);
-            localStorage.setItem("time", moment().toISOString());
             setError(false);
           }
         })
@@ -85,7 +116,7 @@ export const LoginComponent = () => {
     }
   };
 
-  console.log("value", value);
+  // console.log("value", value);
 
   const loginSubmit = () => {
     if (hubConnection) {
@@ -120,7 +151,6 @@ export const LoginComponent = () => {
         >
           <FormBlock>
             <H4>{t("login.where")}</H4>
-
             <Submit
               mb
               as="button"
@@ -159,32 +189,11 @@ export const LoginComponent = () => {
                 {t("login.incorrectCode")}
               </StyledInlineErrorMessage>
             )}
-            {/* <Submit as="button" danger type="submit" disabled={password === ""}>
-              {t("login.in")}
-            </Submit> */}
-            <Timer
-              last={tryCode > 2 ? localStorage.getItem("time") : ""}
+            <TimerButton
               tryCode={tryCode}
               setTryCode={setTryCode}
-              state={state}
-              setState={setState}
-              value={password}
-            >
-              {state === null ? (
-                <Submit
-                  as="button"
-                  danger
-                  type="submit"
-                  disabled={password === "" || state !== null}
-                >
-                  {t("login.in")}
-                </Submit>
-              ) : (
-                <Submit as="button" danger type="submit" disabled>
-                  {state}
-                </Submit>
-              )}
-            </Timer>
+              password={password}
+            />
 
             <LinkTo
               href={`https://cwd.global/account/${value}`}
@@ -215,38 +224,17 @@ export const LoginComponent = () => {
                 {t("login.incorrectLogin")}
               </StyledInlineErrorMessage>
             )}
-            <Submit
-              as="button"
-              danger
-              type="submit"
-              disabled={value === "" || state !== null}
-            >
+            <Submit as="button" danger type="submit" disabled={value === ""}>
               {t("login.getCode")}
             </Submit>
-
-            {/* 
-            {state !== null && (
-              <Submit as="button" danger disabled>
-                <Timer state={state} setState={setState} />
-              </Submit>
-            )} */}
-            {/* <Timer state={state} setState={setState} value={value} /> */}
-            {/* <LinkToPage to="/register">{t("headerButton.register")}</LinkToPage> */}
           </FormBlock>
         </CSSTransition>
-        {/* {tryCode > 2 && (
-          <RepeatCode onClick={onSubmit} disabled={state !== null}>
-            {t("login.repeat")} {state && t("login.over") + " " + state}
-          </RepeatCode>
-        )} */}
 
         <Timer
           last={localStorage.getItem("timeRepeat") || ""}
-          tryCode={tryCode}
           setTryCode={setTryCode}
           state={stateRepeat}
           setState={setStateRepeat}
-          value={password}
         >
           <RepeatCode
             op={login && !user && !where}
@@ -291,6 +279,9 @@ const RepeatCode = styled.button<{ op?: boolean }>`
   justify-content: center; */
   margin: 0 auto;
   color: ${(props) => props.theme.repeatCode};
+  &:disabled {
+    cursor: initial;
+  }
   @media (max-width: 768px) {
     cursor: initial;
   }
