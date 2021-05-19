@@ -17,6 +17,7 @@ export const LoginComponent = () => {
   const [value, setValue] = useState("");
   const [where, setWhere] = useState(false);
   const [state, setState] = useState<null | string>(null);
+  const [stateRepeat, setStateRepeat] = useState<null | string>(null);
   const [tryCode, setTryCode] = useState(0);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
@@ -48,7 +49,7 @@ export const LoginComponent = () => {
       hubConnection
         .invoke("CheckAccount", value.toLowerCase())
         .then((res: boolean) => {
-          // console.log("res", res);
+          localStorage.setItem("timeRepeat", moment().toISOString());
           if (res) {
             setTryCode(0);
             setError(true);
@@ -161,12 +162,28 @@ export const LoginComponent = () => {
               {t("login.in")}
             </Submit> */}
             <Timer
+              last={tryCode > 2 ? localStorage.getItem("time") : ""}
               tryCode={tryCode}
               setTryCode={setTryCode}
               state={state}
               setState={setState}
               value={password}
-            />
+            >
+              {state === null ? (
+                <Submit
+                  as="button"
+                  danger
+                  type="submit"
+                  disabled={value === "" || state !== null}
+                >
+                  {t("login.in")}
+                </Submit>
+              ) : (
+                <Submit as="button" danger type="submit" disabled>
+                  {state}
+                </Submit>
+              )}
+            </Timer>
 
             <LinkTo
               href={`https://cwd.global/account/${value}`}
@@ -216,11 +233,24 @@ export const LoginComponent = () => {
             {/* <LinkToPage to="/register">{t("headerButton.register")}</LinkToPage> */}
           </FormBlock>
         </CSSTransition>
-        {tryCode > 2 && (
+        {/* {tryCode > 2 && (
           <RepeatCode onClick={onSubmit} disabled={state !== null}>
             {t("login.repeat")} {state && t("login.over") + " " + state}
           </RepeatCode>
-        )}
+        )} */}
+        <Timer
+          last={localStorage.getItem("timeRepeat") || null}
+          tryCode={tryCode}
+          setTryCode={setTryCode}
+          state={stateRepeat}
+          setState={setStateRepeat}
+          value={password}
+        >
+          <RepeatCode onClick={onSubmit} disabled={stateRepeat !== null}>
+            {t("login.repeat")}{" "}
+            {stateRepeat && t("login.over") + " " + stateRepeat}
+          </RepeatCode>
+        </Timer>
       </CardContainer>
     </Container>
   );
