@@ -15,15 +15,13 @@ export const Timer: FC<{
   const [deadline, setDeadline] = useState<number>(0);
   const { t } = useTranslation();
   useEffect(() => {
-    if (tryCode > 2) {
-      const day = moment.utc().valueOf();
-      const day1 = last
-        ? moment.utc(last).valueOf() + 1 * 60000
-        : moment.utc().valueOf();
-      const mins = (day1 - day) / 1000;
-      setDeadline(mins);
-      setState("0");
-    }
+    const day = moment.utc().valueOf();
+    const day1 = last
+      ? moment.utc(last).valueOf() + 1 * 60000
+      : moment.utc().valueOf();
+    const mins = (day1 - day) / 1000;
+    setDeadline(mins);
+    setState("0");
   }, [last, tryCode]);
   console.log("state", state);
   const lang = localStorage.getItem("i18nextLng") || "ru";

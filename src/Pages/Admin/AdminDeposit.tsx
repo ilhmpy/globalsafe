@@ -114,7 +114,7 @@ export const AdminDeposit = () => {
         .invoke<RootPayments>(
           "GetUsersDeposits",
           [1, 2, 3, 4, 5, 6],
-          name ? name : null,
+          name ? name.toLowerCase() : null,
           searchSafeID.length ? searchSafeID : null,
           openDate.from ? openDate.from : null,
           openDate.to ? openDate.to : null,
@@ -181,7 +181,7 @@ export const AdminDeposit = () => {
         .invoke<RootPayments>(
           "GetUsersDeposits",
           [1, 2, 3, 4, 5, 6],
-          name ? name : null,
+          name ? name.toLowerCase() : null,
           searchSafeID.length ? searchSafeID : null,
           openDate.from ? openDate.from : null,
           openDate.to ? openDate.to : null,

@@ -156,7 +156,12 @@ export const TestChart: FC<Props> = ({
     <div className="app">
       <div className="row">
         <ChartWrap>
-          <Chart options={data.options} series={data.series} type="donut" />
+          <Chart
+            options={data.options}
+            series={data.series}
+            type="donut"
+            ac-chart="'donut'"
+          />
         </ChartWrap>
       </div>
     </div>

@@ -3,7 +3,6 @@ import * as Styled from "./Styles.elements";
 import { Card, Container } from "../../globalStyles";
 import { Redirect } from "react-router-dom";
 import { AppContext } from "../../context/HubContext";
-import { AmountContext } from "../../context/AmountContext";
 import { TestChart } from "../../components/Charts/Test";
 import { CSSTransition } from "react-transition-group";
 import useWindowSize from "../../hooks/useWindowSize";
@@ -47,12 +46,12 @@ export const Info = () => {
   const [depositListModal, setDepositListModal] = useState(false);
   const [selectedYear, setSelectedYear] = useState<any>("2021");
   const [selectedMonth, setSelectedMonth] = useState<any>("3");
-  const [depositSelect, setDepositSelect] = useState<null | DepositsCollection>(
-    null
-  );
-  const [depositsList, setDepositsList] = useState<DepositsCollection[] | null>(
-    null
-  );
+  const [depositTotal, setDepositTotal] = useState(0);
+  const [totalPayed, setTotalPayed] = useState(0);
+  const [depositSelect, setDepositSelect] =
+    useState<null | DepositsCollection>(null);
+  const [depositsList, setDepositsList] =
+    useState<DepositsCollection[] | null>(null);
   const [openDate, setOpenDate] = useState<OpenDate>({
     from: new Date("2019-01-01T00:47:45"),
     to: new Date(),
@@ -64,18 +63,37 @@ export const Info = () => {
   const appContext = useContext(AppContext);
   const user = appContext.user;
   const balance = appContext.balance;
-  const amountContext = useContext(AmountContext);
-  const { totalPayed, depositTotal } = amountContext;
+  const hubConnection = appContext.hubConnection;
   const [loadDeposit, setLoadDeposit] = useState(false);
   const inputRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection
+        .invoke("GetTotalPayedAmount")
+        .then((res) => {
+          setTotalPayed(res);
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  }, [hubConnection]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection
+        .invoke("GetTotalDepositsAmount")
+        .then((res) => {
+          setDepositTotal(res);
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  }, [hubConnection]);
 
   useEffect(() => {
     if (withdrawValue || addDepositValue) {
       inputRef.current.focus();
     }
   }, [withdrawValue, addDepositValue]);
-
-  const hubConnection = appContext.hubConnection;
 
   useEffect(() => {
     if (hubConnection) {

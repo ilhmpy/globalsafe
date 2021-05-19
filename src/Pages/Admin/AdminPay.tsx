@@ -9,7 +9,6 @@ import { ReactComponent as Filter } from "../../assets/svg/filter.svg";
 import { Tab, Content } from "../../components/UI/Tabs";
 import { AppContext } from "../../context/HubContext";
 import { ThemeContext } from "../../context/ThemeContext";
-import { AmountContext } from "../../context/AmountContext";
 import { Select } from "../../components/Select/Select2";
 import { TestInput } from "../../components/UI/DayPicker";
 import { Button } from "../../components/Button/Button";
@@ -53,7 +52,7 @@ export const AdminPay = () => {
   const hubConnection = appContext.hubConnection;
   const logOut = appContext.logOut;
   const user = appContext.user;
-  const amountContext = useContext(AmountContext);
+
   const [totalDeposits, setTotalDeposits] = useState(0);
   const [totalPayDeposits, setTotalPayDeposits] = useState(0);
   const [depositPayList, setDepositPayList] = useState<any>([]);
@@ -66,7 +65,7 @@ export const AdminPay = () => {
   const [num, setNum] = useState(20);
   const [numPay, setPayNum] = useState(20);
   const [next, setNext] = useState(true);
-  const { totalPayed, depositTotal } = amountContext;
+
   const [open, setOpen] = useState<boolean>(false);
   const [dataModal, setDataModal] = useState<PaymentsCollection | any>({});
   const [loading, setLoading] = useState(true);
@@ -129,7 +128,7 @@ export const AdminPay = () => {
       hubConnection
         .invoke<RootCharges>(
           "GetDepositsCharges",
-          name ? name : null,
+          name ? name.toLowerCase() : null,
           openDate.from ? openDate.from : backDays._d,
           openDate.to ? openDate.to : new Date(),
           searchSafeID.length ? searchSafeID : null,
@@ -250,7 +249,7 @@ export const AdminPay = () => {
       hubConnection
         .invoke<RootCharges>(
           "GetDepositsCharges",
-          name ? name : null,
+          name ? name.toLowerCase() : null,
           openDate.from ? openDate.from : backDays._d,
           openDate.to ? openDate.to : new Date(),
           searchSafeID.length ? searchSafeID : null,
@@ -388,7 +387,7 @@ export const AdminPay = () => {
       hubConnection
         .invoke<RootCharges>(
           "GetDepositsCharges",
-          name ? name : null,
+          name ? name.toLowerCase() : null,
           openDate.from ? openDate.from : backDays._d,
           openDate.to ? openDate.to : new Date(),
           searchSafeID.length ? searchSafeID : null,
@@ -419,7 +418,7 @@ export const AdminPay = () => {
         .invoke<RootPayments>(
           "GetUsersDeposits",
           [5, 6],
-          nameApproval ? nameApproval : null,
+          nameApproval ? nameApproval.toLowerCase() : null,
           searchSafeIDApproval.length ? searchSafeIDApproval : null,
           openDateApproval.from ? openDateApproval.from : null,
           openDateApproval.to ? openDateApproval.to : null,
