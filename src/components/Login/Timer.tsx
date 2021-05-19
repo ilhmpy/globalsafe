@@ -7,12 +7,10 @@ import { Submit } from ".";
 export const Timer: FC<{
   state: null | string;
   setState: (state: null | string) => void;
-  value: string;
   last: string | null;
   setTryCode: (num: number) => void;
-  tryCode: number;
   children: ReactNode;
-}> = ({ state, setState, value, tryCode, last, children }) => {
+}> = ({ state, setState, last, children }) => {
   // const last = localStorage.getItem("time");
   const [deadline, setDeadline] = useState<number>(0);
   const { t } = useTranslation();
@@ -24,9 +22,9 @@ export const Timer: FC<{
         : moment.utc().valueOf();
       const mins = (day1 - day) / 1000;
       setDeadline(mins);
-      setState("0");
+      setState("-");
     }
-  }, [last, tryCode]);
+  }, [last]);
   // console.log("state", state);
   const lang = localStorage.getItem("i18nextLng") || "ru";
   const languale = lang === "ru" ? 1 : 0;
