@@ -49,9 +49,10 @@ export const LoginComponent = () => {
       hubConnection
         .invoke("CheckAccount", value.toLowerCase())
         .then((res: boolean) => {
-          localStorage.setItem("timeRepeat", moment().toISOString());
           if (res) {
             setTryCode(0);
+            setStateRepeat("0");
+            localStorage.setItem("timeRepeat", moment().toISOString());
             setError(true);
             loginSubmit();
           } else {
@@ -238,21 +239,26 @@ export const LoginComponent = () => {
             {t("login.repeat")} {state && t("login.over") + " " + state}
           </RepeatCode>
         )} */}
-        {login && !user && !where && (
-          <Timer
-            last={localStorage.getItem("timeRepeat") || null}
-            tryCode={tryCode}
-            setTryCode={setTryCode}
-            state={stateRepeat}
-            setState={setStateRepeat}
-            value={password}
+
+        <Timer
+          last={localStorage.getItem("timeRepeat") || ""}
+          tryCode={tryCode}
+          setTryCode={setTryCode}
+          state={stateRepeat}
+          setState={setStateRepeat}
+          value={password}
+        >
+          <RepeatCode
+            op={login && !user && !where}
+            onClick={onSubmit}
+            disabled={stateRepeat !== null}
           >
-            <RepeatCode onClick={onSubmit} disabled={stateRepeat !== null}>
+            <>
               {t("login.repeat")}{" "}
               {stateRepeat && t("login.over") + " " + stateRepeat}
-            </RepeatCode>
-          </Timer>
-        )}
+            </>
+          </RepeatCode>
+        </Timer>
       </CardContainer>
     </Container>
   );
@@ -262,7 +268,8 @@ const SelfInput = styled(Input)`
   margin-bottom: 30px;
 `;
 
-const RepeatCode = styled.button`
+const RepeatCode = styled.button<{ op?: boolean }>`
+  opacity: ${(props) => (props.op ? "1" : "0")};
   cursor: pointer;
   appearance: none;
   border: none;
