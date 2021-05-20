@@ -541,7 +541,7 @@ export const AdminPay = () => {
       <Content active={active === 0}>
         <Styled.FilterBlock>
           <Styled.FilterHeader>
-            <FilterName>{t("adminDeposit.filter")}</FilterName>
+            <Styled.FilterName>{t("adminDeposit.filter")}</Styled.FilterName>
             <Styled.ShowHide onClick={() => setOpenFilterOne(!openFilterOne)}>
               {openFilterOne ? t("hide") : t("show")}
             </Styled.ShowHide>
@@ -636,7 +636,7 @@ export const AdminPay = () => {
       <Content active={active === 1}>
         <Styled.FilterBlock>
           <Styled.FilterHeader>
-            <FilterName>{t("adminDeposit.filter")}</FilterName>
+            <Styled.FilterName>{t("adminDeposit.filter")}</Styled.FilterName>
             <Styled.ShowHide onClick={() => setOpenFilter(!openFilter)}>
               {openFilter ? t("hide") : t("show")}
             </Styled.ShowHide>
@@ -773,17 +773,6 @@ export const AdminPay = () => {
     </>
   );
 };
-
-const FilterName = styled.div`
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 21px;
-  letter-spacing: 0.1px;
-  margin-left: 10px;
-  @media (max-width: 576px) {
-    margin-left: 0px;
-  }
-`;
 
 const SelfUpTitle = styled(UpTitle)`
   @media (max-width: 768px) {

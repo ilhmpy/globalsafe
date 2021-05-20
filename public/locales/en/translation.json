@@ -98,7 +98,8 @@
         "pay": "Payouts",
         "users": "Members",
         "portfolio": "Portfolio",
-        "toHome": "To the main"
+        "toHome": "To the main",
+        "lottery": "Lottery"
     },
     "adminDeposit":{
         "uptitle": "Payouts",

@@ -98,7 +98,8 @@
         "pay": "Выплаты",
         "users": "Пользователи",
         "portfolio": "Портфель",
-        "toHome": "На главную"
+        "toHome": "На главную",
+        "lottery": "Розыгрыши"
     },
     "adminDeposit":{
         "uptitle": "Выплаты",
