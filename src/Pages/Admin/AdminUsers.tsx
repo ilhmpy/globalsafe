@@ -382,7 +382,7 @@ export const AdminUsers = () => {
           </Styled.SelectContainer>
         </CSSTransition>
       </Styled.FilterBlock>
-      <Card>
+      <Card smallBorder>
         <PaymentsTable>
           <TableHead>
             <TableHeadItem>{t("adminUsers.table.user")}</TableHeadItem>

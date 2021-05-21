@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import * as Styled from "./Styled.elements";
 import styled, { css } from "styled-components/macro";
-import { SideNavbar } from "../../components/SideNav";
 import { Card } from "../../globalStyles";
 import { UpTitle } from "../../components/UI/UpTitle";
 import { ReactComponent as Exit } from "../../assets/svg/exit.svg";
@@ -313,10 +312,10 @@ export const AdminPay = () => {
         .invoke<RootPayments>(
           "GetUsersDeposits",
           [5, 6],
-          null,
-          null,
-          null,
-          null,
+          nameApproval ? nameApproval.toLowerCase() : null,
+          searchSafeIDApproval.length ? searchSafeIDApproval : null,
+          openDateApproval.from ? openDateApproval.from : null,
+          openDateApproval.to ? openDateApproval.to : null,
           null,
           null,
           null,

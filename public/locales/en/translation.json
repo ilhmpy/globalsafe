@@ -307,5 +307,28 @@
         "mainInfo": "General Information",
         "deposits": "Deposits"
     },
-    "backTo": "Back to list"
+    "backTo": "Back to list",
+    "win": {
+        "one": "Money prize",
+        "two": "Affiliate contract",
+        "three": "Private deposit access"
+    },
+    "lotteryTable": {
+        "date": "Date",
+        "typeWin": "Win type",
+        "sumWin": "Winning amount",
+        "winners": "Winners",
+        "status": "Status",
+        "done": "Done",
+        "error": "Error"
+    },
+    "writting":{
+        "startDate": "Start date",
+        "repeat": "Repeat",
+        "next": "Next",
+        "cancel": "Cancel the draw"
+    },
+    "newLottery": "New draw",
+    "write": "Schedule",
+    "winner": "Winner"
 }

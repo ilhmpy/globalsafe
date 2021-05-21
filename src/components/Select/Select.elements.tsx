@@ -190,3 +190,89 @@ export const FoldContent = styled.div<{ open?: boolean }>`
   overflow: hidden;
   transition: max-height 300ms ease;
 `;
+
+export const SelectList = styled.ul`
+  list-style: none;
+  background: #f8f8f8;
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 55px;
+  z-index: 999;
+`;
+
+export const ListItem = styled.li<{ active?: boolean }>`
+  transition: 0.3s;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: ${(props) => (props.active ? "#f0f4f8" : "#fff")};
+  cursor: pointer;
+  &:focus,
+  &:hover {
+    background: #f0f4f8;
+    border-radius: 0px 0px 4px 4px;
+  }
+`;
+
+export const Text = styled.div`
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+`;
+
+export const Value = styled.div`
+  color: rgba(38, 50, 56, 0.5);
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+`;
+
+export const DropDownContainer = styled.div`
+  width: 100%;
+  position: relative;
+`;
+
+export const DropDownHeader = styled.div`
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  position: relative;
+  height: 40px;
+  font-size: 14px;
+  line-height: 21px;
+  letter-spacing: 0.25px;
+  padding: 8px;
+  width: 100%;
+  transition: 200ms ease-in-out;
+  span {
+    &::after,
+    &::before {
+      position: absolute;
+      transition: 200ms ease-in-out;
+    }
+    &::before {
+      content: attr(data-label);
+      left: 16px;
+      top: 0;
+      bottom: 0;
+      margin: auto;
+      pointer-events: none;
+      height: 18px;
+      transform: translateY(-16px);
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 21px;
+      letter-spacing: 0.1px;
+      position: absolute;
+      left: 12px;
+      padding: 0 10px;
+      top: -12px;
+      z-index: 9;
+      background: ${(props) => props.theme.card.background};
+      color: ${(props) => props.theme.depositHead};
+    }
+  }
+`;

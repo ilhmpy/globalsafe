@@ -322,7 +322,7 @@ export const InfoBalance = () => {
           [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         )
         .then((res) => {
-          // console.log("responce", res);
+          console.log("responce", res);
           let result: any = {};
           for (let key in res) {
             const newArr =

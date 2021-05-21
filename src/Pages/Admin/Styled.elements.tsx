@@ -5,6 +5,77 @@ import { Button } from "../../components/Button/Button";
 import { ReactComponent as Left } from "../../assets/svg/left.svg";
 import { Link } from "react-router-dom";
 
+export const Table = styled.table`
+  border-collapse: collapse;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  table-layout: fixed;
+`;
+
+export const Tr = styled.tr`
+  background-color: transparent;
+  border-bottom: 1px solid #ddd;
+  padding: 15px;
+  @media (max-width: 600px) {
+    border-bottom: 3px solid #ddd;
+    display: block;
+    margin-bottom: 0.625em;
+  }
+`;
+
+export const Th = styled.th`
+  padding: 15px 5px;
+  text-align: left;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 14px;
+  letter-spacing: 0.1px;
+  color: rgba(81, 81, 114, 0.6);
+`;
+
+export const Thead = styled.thead`
+  @media (max-width: 600px) {
+    border: none;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+`;
+
+export const DataListDate = styled.span`
+  margin: 10px auto;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 14px;
+  display: inline-block;
+  padding: 10px 6px;
+  background: transparent;
+  width: 125px;
+  text-align: center;
+  border: 1px solid #ff416e;
+  border-radius: 24px;
+`;
+
+export const WritingBlock = styled.div`
+  width: 100%;
+`;
+
+export const WritingTitle = styled.div`
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 21px;
+  letter-spacing: 0.1px;
+  margin-bottom: 24px;
+  @media (max-width: 768px) {
+    text-align: center;
+  }
+`;
+
 export const Back = styled(Link)`
   margin-right: auto;
   margin-bottom: 20px;
@@ -239,6 +310,7 @@ export const Radial = styled.div<{ bg: string }>`
 export const FilterBlock = styled(Card)`
   padding: 30px;
   transition: 0.3s;
+  border-radius: 10px;
   @media (max-width: 768px) {
     padding: 20px;
   }
@@ -249,7 +321,6 @@ export const FilterName = styled.div`
   font-size: 18px;
   line-height: 21px;
   letter-spacing: 0.1px;
-  margin-left: 10px;
   @media (max-width: 576px) {
     margin-left: 0px;
   }
@@ -260,7 +331,8 @@ export const SelectContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  margin-top: 10px;
+  margin-top: 4px;
+  margin-bottom: 15px;
   ${Button} {
     /* margin-left: 20px; */
     height: 40px;
@@ -281,6 +353,10 @@ export const SelectContainer = styled.div`
   }
 `;
 
+export const SelectContainerLottery = styled(SelectContainer)`
+  justify-content: flex-start;
+`;
+
 export const SelectWrap = styled.div<{ input?: boolean }>`
   max-width: ${(props) => (props.input ? "153px" : "280px")};
   width: 100%;
@@ -291,6 +367,18 @@ export const SelectWrap = styled.div<{ input?: boolean }>`
   }
   @media (max-width: 768px) {
     max-width: 100%;
+    margin: 12px 10px;
+  }
+  @media (max-width: 576px) {
+    margin: 12px 0px;
+  }
+`;
+
+export const SliderWrap = styled.div`
+  min-width: 265px;
+  margin: 20px 20px 20px 0;
+  @media (max-width: 768px) {
+    min-width: 100%;
     margin: 12px 10px;
   }
   @media (max-width: 576px) {
@@ -359,10 +447,20 @@ export const SelectContainerInnerPaid = styled.div`
   }
 `;
 
+export const SliderContainerInner = styled.div`
+  display: flex;
+  align-items: center;
+  @media (max-width: 1286px) {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+`;
+
 export const FilterHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 15px;
 `;
 
 export const ShowHide = styled.div`
@@ -427,4 +525,12 @@ export const NotFound = styled.div`
   letter-spacing: 0.1px;
   min-height: 250px;
   color: #0e0d3d;
+`;
+
+export const LotteryTable = styled.div`
+  width: 100%;
+  padding: 30px;
+  @media (max-width: 768px) {
+    padding: 20px;
+  }
 `;

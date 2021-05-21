@@ -254,7 +254,7 @@ export const AdminPortfolio = () => {
                   : "rgba(109, 185, 255, 1)"
               }
             >
-              <span>{basket.MGCWD}</span>
+              <span>{basket.DIAMOND}</span>
               <span></span>
             </Styled.Radial>
           </Styled.PayItem>
