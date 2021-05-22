@@ -5,6 +5,7 @@ import { Card } from "../../globalStyles";
 import { CSSTransition } from "react-transition-group";
 import { useTranslation } from "react-i18next";
 import InfiniteScroll from "react-infinite-scroller";
+// import InfiniteScroll from "react-infinite-scroll-component";
 import { Scrollbars } from "react-custom-scrollbars";
 import { Loading } from "../../components/UI/Loading";
 import { AppContext } from "../../context/HubContext";
@@ -54,9 +55,8 @@ export const AdminLottery = () => {
   const { t } = useTranslation();
   const lang = localStorage.getItem("i18nextLng") || "ru";
   const languale = lang === "ru" ? 1 : 0;
-
   const list = [t("win.one"), t("win.two"), t("win.three")];
-
+  moment.locale(lang);
   const drawListEdited = (item: CollectionGetDraw) => {
     const key = drawList.findIndex((i) => i.safeId === item.safeId);
     setDrawList([...drawList.slice(0, key), item, ...drawList.slice(key + 1)]);
@@ -67,7 +67,6 @@ export const AdminLottery = () => {
       hubConnection
         .invoke<RootGetDraw>("GetDraws", [1], 0, 20)
         .then((res) => {
-          console.log("GetDraws", res);
           setDrawList(res.collection);
         })
         .catch((e) => console.log(e));
@@ -75,52 +74,13 @@ export const AdminLottery = () => {
   }, [hubConnection]);
 
   useEffect(() => {
-    if (hubConnection) {
-      setLotteryList(null);
-      setLotteryArrList([]);
-      hubConnection
-        .invoke<RootLottery>(
-          "GetAllPrizes",
-          name ? name : null,
-          openDate.from ? openDate.from : null,
-          openDate.to ? openDate.to : null,
-          checkList.length ? checkList.map((i: any) => i.id) : null,
-          0,
-          20
-        )
-        .then((res) => {
-          console.log("res", res);
-          setTotalLottery(res.totalRecords);
-          setLoading(false);
-          setNum(20);
-          if (res.collection.length) {
-            setLotteryArrList(res.collection);
-
-            let result: LotteryTable = {};
-            for (let key in res.collection) {
-              const newArr = res.collection[key];
-              const d = moment(res.collection[key].drawLog.drawDate).format(
-                "DD MMMM YYYY"
-              );
-              if (result[d]) {
-                result[d].push(newArr);
-              } else {
-                result[d] = [newArr];
-              }
-              setLotteryList(result);
-            }
-          } else {
-            setLotteryList(null);
-          }
-        })
-        .catch((e) => console.log(e));
-    }
-  }, [hubConnection, languale]);
+    submit();
+  }, [hubConnection, languale, openDate]);
 
   const submit = () => {
+    setLotteryList(null);
+    setLotteryArrList([]);
     if (hubConnection) {
-      setLotteryList(null);
-      setLotteryArrList([]);
       hubConnection
         .invoke<RootLottery>(
           "GetAllPrizes",
@@ -132,26 +92,27 @@ export const AdminLottery = () => {
           20
         )
         .then((res) => {
-          console.log("res", res);
           setTotalLottery(res.totalRecords);
           setLoading(false);
           setNum(20);
+          const getFormatedDate = (dateStr: Date) => {
+            let date = moment(dateStr).format("DD MMMM YYYY");
+            return date;
+          };
           if (res.collection.length) {
             setLotteryArrList(res.collection);
 
             let result: LotteryTable = {};
             for (let key in res.collection) {
               const newArr = res.collection[key];
-              const d = moment(res.collection[key].drawLog.drawDate).format(
-                "DD MMMM YYYY"
-              );
+              const d = getFormatedDate(res.collection[key].drawLog.drawDate);
               if (result[d]) {
                 result[d].push(newArr);
               } else {
                 result[d] = [newArr];
               }
-              setLotteryList(result);
             }
+            setLotteryList(result);
           } else {
             setLotteryList(null);
           }
@@ -159,8 +120,6 @@ export const AdminLottery = () => {
         .catch((e) => console.log(e));
     }
   };
-
-  // console.log("lotteryArrList", lotteryArrList);
 
   const myLoad = () => {
     setCount(false);
@@ -176,7 +135,6 @@ export const AdminLottery = () => {
           20
         )
         .then((res) => {
-          // console.log("res load", res);
           setLoading(false);
           if (res.collection.length) {
             if (res.collection.length) {
@@ -193,7 +151,7 @@ export const AdminLottery = () => {
                   result[d] = [newArr];
                 }
               }
-              setLotteryList(Object.assign(lotteryList, result));
+              setLotteryList({ ...lotteryList, ...result });
             } else {
               setLotteryList(null);
             }
@@ -213,14 +171,11 @@ export const AdminLottery = () => {
       hubConnection
         .invoke("CreateDraw", moment.utc(startDate), sliderValue)
         .then((res) => {
-          console.log("CreateDraw", res);
           setDrawList([res, ...drawList]);
         })
         .catch((e) => console.log(e));
     }
   };
-
-  console.log("lotteryList ", lotteryList);
 
   return (
     <div>
@@ -334,7 +289,7 @@ export const AdminLottery = () => {
             </Styled.SelectContainer>
           </CSSTransition>
         </Styled.FilterBlock>
-        <Card style={{ height: "600px" }} smallBorder>
+        <Card smallBorder>
           <Styled.LotteryTable>
             <>
               <Styled.Table>
@@ -359,7 +314,7 @@ export const AdminLottery = () => {
               {lotteryList ? (
                 <Scrollbars style={{ height: "500px" }}>
                   <InfiniteScroll
-                    pageStart={20}
+                    pageStart={10}
                     loadMore={myLoad}
                     hasMore={count}
                     useWindow={false}
@@ -371,7 +326,7 @@ export const AdminLottery = () => {
                   >
                     <Styled.Table>
                       {Object.keys(lotteryList).map((key, idx) => (
-                        <tbody key={idx}>
+                        <tbody key={key + idx}>
                           <Styled.Tr
                             style={{
                               textAlign: "center",

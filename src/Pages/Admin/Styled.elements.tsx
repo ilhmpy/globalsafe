@@ -15,10 +15,10 @@ export const Table = styled.table`
 
 export const Tr = styled.tr`
   background-color: transparent;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid rgba(66, 139, 202, 0.2);
   padding: 15px;
   @media (max-width: 600px) {
-    border-bottom: 3px solid #ddd;
+    border-bottom: 3px solid rgba(66, 139, 202, 0.2);
     display: block;
     margin-bottom: 0.625em;
   }
@@ -31,7 +31,7 @@ export const Th = styled.th`
   font-size: 12px;
   line-height: 14px;
   letter-spacing: 0.1px;
-  color: rgba(81, 81, 114, 0.6);
+  color: ${(props) => props.theme.thHead};
 `;
 
 export const Thead = styled.thead`

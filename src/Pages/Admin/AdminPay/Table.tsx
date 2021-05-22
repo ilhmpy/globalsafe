@@ -48,10 +48,10 @@ export const LotteryTable: FC<{ data: CollectionLottery }> = ({ data }) => {
 
 const Tr = styled.tr`
   background-color: transparent;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid rgba(66, 139, 202, 0.2);
   padding: 15px;
   @media (max-width: 600px) {
-    border-bottom: 3px solid #ddd;
+    border-bottom: 3px solid rgba(66, 139, 202, 0.2);
     display: block;
     margin-bottom: 0.625em;
   }
@@ -64,7 +64,7 @@ const Td = styled.td`
   font-size: 14px;
   line-height: 16px;
   letter-spacing: 0.1px;
-  color: #56657f;
+  color: ${(props) => props.theme.text2};
   @media (max-width: 600px) {
     display: block;
     text-align: left;
@@ -75,7 +75,7 @@ const Td = styled.td`
       font-size: 12px;
       line-height: 21px;
       letter-spacing: 0.1px;
-      color: rgba(81, 81, 114, 0.6);
+      color: ${(props) => props.theme.thHead};
       width: 100%;
     }
   }

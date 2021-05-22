@@ -2,7 +2,7 @@ import React, { useState, FC } from "react";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import styled from "styled-components/macro";
-import el from "date-fns/locale/ru";
+import { enGB, ru } from "date-fns/locale";
 
 type Props = {
   label: string;
@@ -11,6 +11,8 @@ type Props = {
 };
 
 export const DateInput: FC<Props> = ({ label, startDate, setStartDate }) => {
+  const lang = localStorage.getItem("i18nextLng") || "ru";
+  const el = lang === "ru" ? ru : enGB;
   registerLocale("el", el);
   return (
     <DateContainer>
@@ -39,6 +41,7 @@ const Label = styled.div`
   padding: 0 10px;
   top: -11px;
   z-index: 9;
+  user-select: none;
   background: ${(props) => props.theme.card.background};
   color: ${(props) => props.theme.depositHead};
 `;
@@ -83,6 +86,8 @@ const DateContainer = styled.div`
     input {
       border: none;
       outline: none;
+      color: ${(props) => props.theme.text};
+      background: transparent;
     }
   }
   .react-datepicker__close-icon::after {
