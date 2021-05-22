@@ -20,7 +20,7 @@ export const lightTheme = {
       , rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)), linear-gradient( 
       82.3deg
       , #effff9 3.67%, #f3f9ff 22.57%, #fffdf0 44.98%, #fff0f0 73%, #f0f0ff 95.88% ), #ffffff`,
-    listBorder: 'rgba(81, 81, 114, 0.2)',
+    listBorder: 'rgba(81, 81, 114, 0.2)', 
     link: '#00e',
     gradient: 'linear-gradient(#39598A, #79D7ED)',
     bbdis: "#ccc",
