@@ -1970,7 +1970,7 @@ type Props = {
   setWinName: (name: string | null) => void;
 };
 
-export const Slots: FC<Props> = ({ drawResult, winNumber, setWinName }) => {
+export const Slots: FC<Props> = ({ drawResult, setWinName }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [inputValue, setInputValue] = useState("0");
   const [deg, setDeg] = useState(0);
@@ -1980,15 +1980,16 @@ export const Slots: FC<Props> = ({ drawResult, winNumber, setWinName }) => {
   useEffect(() => {
     if (drawResult) {
       const win = drawResult[2].findIndex((i) => i.name === drawResult[3].name);
+      console.log("win", win);
       setTimeout(() => {
         setSelectedIndex(win);
         setDeg((deg) => deg - deg + -win * slotAngle + 2160);
       }, 2000);
 
       setTimeout(() => {
-        setWinName(drawResult[3].name);
+        // setWinName(drawResult[3].name);
         setRed(true);
-      }, 5000);
+      }, 7000);
     }
   }, [drawResult]);
 
