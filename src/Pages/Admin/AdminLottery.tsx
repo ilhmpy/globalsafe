@@ -33,8 +33,8 @@ type LotteryTable = {
 };
 
 export const AdminLottery = () => {
-  const [openFilter, setOpenFilter] = useState(true);
-  const [openFilterOne, setOpenFilterOne] = useState(true);
+  const [openFilter, setOpenFilter] = useState(false);
+  const [openFilterOne, setOpenFilterOne] = useState(false);
   const [name, setName] = useState("");
   const [checkList, setCheckList] = useState<any>([]);
   const [openDate, setOpenDate] = useState<OpenDate>({

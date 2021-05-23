@@ -330,5 +330,16 @@
     },
     "newLottery": "New draw",
     "write": "Schedule",
-    "winner": "Winner"
+    "winner": "Winner",
+    "timerStart": "Draw start in",
+    "congrat": "Congratulations",
+    "youWon": "You won",
+    "moneyTransfer": "Funds are credited to your account",
+    "ifQuestion": "If you have any questions about the prize, please contact administration",
+    "well": "Ok",
+    "everyone": "Everyone",
+    "every": "Every", 
+    "hour": "hour",
+    "hours": "hours",
+    "hourss": "hours"
 }

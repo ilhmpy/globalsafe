@@ -13,14 +13,24 @@ import { Timer } from "./components/Lottery/Timer";
 import { AppContext } from "../../context/HubContext";
 import { RootClock } from "../../types/clock";
 import { ModalLottery } from "./components/Lottery/Modal";
+import { ModalCongrats } from "./components/Lottery/ModalCongrats";
 import { Prize, Winner, Users } from "../../types/drawResult";
 
 export const Main = () => {
   const [clock, setClock] = useState<RootClock | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [showModalCongrats, setShowModalCongrats] = useState(false);
   const [showTimer, setShowTimer] = useState(true);
   const [drawResult, setDrawResult] =
     useState<[Prize[], Prize, Users[], Winner] | null>(null);
+
+  const [result, setResult] = useState<Prize | null>(null);
+  const [winName, setWinName] = useState<string | null>(null);
+
+  const winnerResult = (res: Prize) => {
+    setResult(res);
+    console.log("result", result);
+  };
 
   const closeTimer = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -34,7 +44,21 @@ export const Main = () => {
   };
 
   const onCloseModal = () => {
+    setResult(null);
     setShowModal(false);
+  };
+
+  const onCloseModalCongrats = () => {
+    setShowModalCongrats(false);
+    setDrawResult(null);
+    setWinName(null);
+    setResult(null);
+  };
+
+  const onShowModalCongrats = () => {
+    setDrawResult(null);
+    setShowModal(false);
+    setShowModalCongrats(true);
   };
 
   const appContext = useContext(AppContext);
@@ -72,6 +96,18 @@ export const Main = () => {
             drawResult={drawResult}
             onCloseModal={onCloseModal}
             clock={clock}
+            onShowModalCongrats={onShowModalCongrats}
+            winnerResult={winnerResult}
+            result={result}
+            setWinName={setWinName}
+          />
+        )}
+        {showModalCongrats && (
+          <ModalCongrats
+            result={result}
+            name={winName}
+            drawResult={drawResult}
+            onCloseModalCongrats={onCloseModalCongrats}
           />
         )}
         <Banner />
@@ -101,6 +137,7 @@ const TimerPopup = styled.div`
   cursor: pointer;
   right: 30px;
   top: 45px;
+  z-index: 99999;
   @media (max-width: 768px) {
     margin-top: 0px;
   }

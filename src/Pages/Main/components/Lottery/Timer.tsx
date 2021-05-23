@@ -2,6 +2,7 @@ import React, { useEffect, useState, FC, useContext } from "react";
 import * as Styled from "./Lottery.elements";
 import { AppContext } from "../../../../context/HubContext";
 import moment from "moment";
+import { useTranslation } from "react-i18next";
 import "moment-duration-format";
 import { RootClock } from "../../../../types/clock";
 
@@ -19,10 +20,10 @@ export const Timer: FC<Props> = ({
 }) => {
   const [state, setState] = useState<null | string>(null);
   const [deadline, setDeadline] = useState(-1);
-
   const [clock, setClock] = useState<RootClock | null>(null);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (hubConnection) {
@@ -38,13 +39,10 @@ export const Timer: FC<Props> = ({
 
   useEffect(() => {
     if (clock) {
-      console.log("deadline", deadline);
       setDeadline((clock.totalSeconds *= -1));
       setState("0");
     }
   }, [last, clock]);
-
-  // console.log("deadline", deadline);
 
   useEffect(() => {
     if (deadline < 1) {
@@ -67,7 +65,7 @@ export const Timer: FC<Props> = ({
   return (
     <Styled.TimerContainer>
       {icon && <Styled.CloseIcon onClick={closeTimer} />}
-      <Styled.TimerTitle>Старт розыгрыша через</Styled.TimerTitle>
+      <Styled.TimerTitle>{t("timerStart")}</Styled.TimerTitle>
       <Styled.TimerValue nodata={clock === null || state === "0"}>
         {state}
       </Styled.TimerValue>

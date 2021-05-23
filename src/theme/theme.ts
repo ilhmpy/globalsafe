@@ -7,7 +7,7 @@ export const lightTheme = {
     82.3deg
     , #effff9 3.67%, #f3f9ff 22.57%, #fffdf0 44.98%, #fff0f0 73%, #f0f0ff 95.88% ), #ffffff`,
     text: '#0E0D3D',
-    text2: '#515172', 
+    text2: '#515172',  
     text3: '#333',
     text3Hover: '#000',
     modal: '#fff',
@@ -33,6 +33,7 @@ export const lightTheme = {
     switch: '#333',
     border: '#E5E5E5',
     range: '#f0f8ff',
+    slot: '#9d9d9d',
     card: {
       background: '#fff',
       backgroundAlfa: 'rgba(255, 255, 255, 0.4)',
@@ -65,6 +66,7 @@ export const lightTheme = {
     border: '#000',
     repeatCode: "#fff",
     range: 'rgba(226, 226, 226, .2)',
+    slot: '#fff',
     card: {
       background: '#212121',
       backgroundAlfa: 'rgba(33, 33, 33, 1)',

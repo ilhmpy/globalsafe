@@ -1,17 +1,27 @@
 import styled, { css, keyframes } from "styled-components/macro";
 import { ReactComponent as Close } from "../../../../assets/svg/close.svg";
+import { Card } from "../../../../globalStyles";
+import { Button } from "../../../../components/Button/Button";
 
 export const CloseIcon = styled(Close)`
   position: absolute;
   cursor: pointer;
   right: 18px;
   top: 18px;
+  color: ${(props) => props.theme.text3};
+
+  path {
+    fill: ${(props) => props.theme.text3};
+    &:hover {
+      fill: ${(props) => props.theme.text3Hover};
+    }
+  }
 `;
 
 export const TimerContainer = styled.div`
   position: relative;
   margin: 40px auto;
-  background: rgba(255, 255, 255, 0.9);
+  background: ${(props) => props.theme.card.backgroundAlfa};
   border: 1px solid rgba(86, 101, 127, 0.05);
   box-sizing: border-box;
   border-radius: 20px;
@@ -29,7 +39,7 @@ export const TimerTitle = styled.div`
   display: flex;
   align-items: center;
   letter-spacing: 0.1px;
-  color: #515172;
+  color: ${(props) => props.theme.text2};
   margin-bottom: 10px;
 `;
 
@@ -99,6 +109,7 @@ export const Present = styled.div`
   font-size: 36px;
   line-height: 42px;
   color: #ff416e;
+  text-align: center;
   svg {
     margin-right: 10px;
   }
@@ -182,7 +193,7 @@ export const ContainerItem = styled.div`
 `;
 
 export const Inside = styled.div<{ red?: boolean }>`
-  background: #fff;
+  background: ${(props) => props.theme.card.background};
   color: ${(props) => (props.red ? "#FF416E" : "#9D9D9D")};
   font-size: 21px;
   line-height: 25px;
@@ -199,7 +210,7 @@ export const SlotCenter = styled.div`
 `;
 
 export const Box = styled.div`
-  background: #ffffff;
+  background: ${(props) => props.theme.card.background};
   border: 1px solid rgba(86, 101, 127, 0.05);
   box-sizing: border-box;
   border-radius: 20px;
@@ -219,7 +230,7 @@ export const SlotTitle = styled.div`
   display: flex;
   align-items: center;
   letter-spacing: 0.1px;
-  color: #515172;
+  color: ${(props) => props.theme.text2};
   margin-bottom: 40px;
 `;
 
@@ -229,7 +240,7 @@ export const Wrapper = styled.div`
   height: 180px;
   position: relative;
   @media (max-width: 576px) {
-    width: 300px;
+    width: 260px;
   }
 `;
 
@@ -241,9 +252,74 @@ export const Drum = styled.div`
   position: relative;
   perspective: 0;
   transform-origin: 50% 50%;
-  transition: 5s;
+  transition: transform-origin 5s;
   transform-style: preserve-3d;
   @media (max-width: 576px) {
-    width: 300px;
+    width: 260px;
   }
+`;
+
+export const WinContainer = styled(Card)`
+  max-width: 540px;
+  padding: 40px;
+  @media (max-width: 992px) {
+    margin: 0 auto;
+  }
+  @media (max-width: 576px) {
+    padding: 20px 10px;
+  }
+`;
+
+export const WinTitle = styled.div<{ sub?: boolean }>`
+  font-weight: ${(props) => (props.sub ? 400 : 500)};
+  font-size: 36px;
+  line-height: 42px;
+  margin-bottom: ${(props) => (props.sub ? "17px" : "8px")};
+  text-align: center;
+  letter-spacing: 0.1px;
+  color: ${(props) => (props.sub ? props.theme.text2 : "#FF416E")};
+  @media (max-width: 576px) {
+    font-size: 28px;
+    line-height: 32px;
+  }
+`;
+
+export const WinDesc = styled.p`
+  color: ${(props) => props.theme.thHead};
+  letter-spacing: 0.1px;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 21px;
+`;
+
+export const WinBrand = styled.p`
+  text-transform: uppercase;
+  color: #ff416e;
+  font-size: 18px;
+  line-height: 21px;
+`;
+
+export const ModalCongratsWrap = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  position: relative;
+  width: 100%;
+  padding: 40px 50px;
+  @media (max-width: 992px) {
+    flex-direction: column;
+    padding: 20px 10px;
+    justify-content: center;
+  }
+`;
+
+export const BrandImg = styled.div`
+  width: 97px;
+  margin: 0 80px 0 20px;
+  @media (max-width: 992px) {
+    margin-bottom: 15px;
+  }
+`;
+
+export const ModalButton = styled(Button)`
+  margin: 37px auto 0;
 `;

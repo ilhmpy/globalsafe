@@ -1,14 +1,16 @@
 import React, { FC } from "react";
 import styled from "styled-components/macro";
+import { useTranslation } from "react-i18next";
 
 export const FakeInput: FC<{ label: string; hours: number }> = ({
   label = "place",
   hours,
 }) => {
+  const { t } = useTranslation();
   const wordDecline = (num: number) => {
     let result;
-    const ever = ["Каждый", "Каждые"];
-    const expressions = ["час", "часа", "часов"];
+    const ever = [t("everyone"), t("every")];
+    const expressions = [t("hour"), t("hours"), t("hourss")];
     let count = num % 100;
     if (count >= 5 && count <= 20) {
       result = ever[1] + " " + num + " " + expressions[2];
@@ -34,7 +36,7 @@ export const FakeInput: FC<{ label: string; hours: number }> = ({
 };
 
 export const InputContainer = styled.div`
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(86, 101, 127, 0.3);
   border-radius: 4px;
   position: relative;
   height: 40px;

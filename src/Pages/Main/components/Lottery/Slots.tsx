@@ -2,73 +2,7 @@ import React, { useState, FC, useEffect } from "react";
 import styled from "styled-components/macro";
 import * as Styled from "./Lottery.elements";
 import { Prize, Winner, Users } from "../../../../types/drawResult";
-
-// const arr = [
-//   "Петров0",
-//   "Смирнов1",
-//   "Петухов2",
-//   "Смирнов3",
-//   "Петухов4",
-//   "Кошкин5",
-//   "Иванов Артем6",
-//   "Мышкин7",
-//   "Петров8",
-//   "Кошкин9",
-//   "Мышкин10",
-//   "Иванов Артем11",
-//   "Мышкин12",
-//   "Кошкин13",
-//   "Петров14",
-//   "Петухов15",
-//   "Смирнов16",
-//   "Иванов Артем17",
-//   "Петров18",
-//   "Смирнов19",
-//   "Петухов20",
-//   "Смирнов21",
-//   "Петухов22",
-//   "Кошкин23",
-//   "Иванов Артем24",
-//   "Мышкин25",
-//   "Петров26",
-//   "Кошкин27",
-//   "Мышкин28",
-//   "Иванов Артем29",
-//   "Мышкин30",
-//   "Кошкин31",
-//   "Петров32",
-//   "Петухов33",
-//   "Смирнов34",
-//   "Иванов Артем35",
-//   "Петухов36",
-//   "Смирнов37",
-//   "Петухов38",
-//   "Кошкин39",
-//   "Иванов Артем40",
-//   "Мышкин41",
-//   "Петров42",
-//   "Кошкин43",
-//   "Мышкин44",
-//   "Иванов Артем45",
-//   "Мышкин46",
-//   "Кошкин47",
-//   "Петров48",
-//   "Петухов49",
-//   "Смирнов50",
-//   "Иванов Артем51",
-//   "Иванов Артем52",
-//   "Мышкин53",
-//   "Петров54",
-//   "Кошкин55",
-//   "Мышкин56",
-//   "Иванов Артем57",
-//   "Мышкин58",
-//   "Кошкин59",
-//   "Петров60",
-//   "Петухов61",
-//   "Смирнов62",
-//   "Иванов Артем63",
-// ];
+import { useTranslation } from "react-i18next";
 
 const arr = [
   {
@@ -2033,35 +1967,28 @@ const slotAngle = 360 / arr.length;
 type Props = {
   drawResult: [Prize[], Prize, Users[], Winner] | null;
   winNumber: number;
+  setWinName: (name: string | null) => void;
 };
 
-export const Slots: FC<Props> = ({ drawResult, winNumber }) => {
+export const Slots: FC<Props> = ({ drawResult, winNumber, setWinName }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [inputValue, setInputValue] = useState("0");
   const [deg, setDeg] = useState(0);
   const [red, setRed] = useState(false);
-
-  console.log(arr.findIndex((i) => i.name === winner.name));
-  console.log(arr[selectedIndex]);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (drawResult) {
       const win = drawResult[2].findIndex((i) => i.name === drawResult[3].name);
       setTimeout(() => {
-        setSelectedIndex(8);
+        setSelectedIndex(win);
         setDeg((deg) => deg - deg + -win * slotAngle + 2160);
       }, 2000);
-      console.log("winner", win);
 
-      setTimeout(() => setRed(true), 7000);
-    } else {
-      const win = arr.findIndex((i) => i.name === winner.name);
-
-      console.log("winner", win);
-      setSelectedIndex(win);
-
-      setDeg((deg) => deg - deg + -win * slotAngle + 2160);
-      setTimeout(() => setRed(true), 7000);
+      setTimeout(() => {
+        setWinName(drawResult[3].name);
+        setRed(true);
+      }, 5000);
     }
   }, [drawResult]);
 
@@ -2086,12 +2013,12 @@ export const Slots: FC<Props> = ({ drawResult, winNumber }) => {
         <button>Winner</button>
       </form> */}
       <Styled.Box>
-        <Styled.SlotTitle>Победитель</Styled.SlotTitle>
+        <Styled.SlotTitle>{t("winner")}</Styled.SlotTitle>
         <Styled.Wrapper>
           <Styled.Drum style={{ transform: `rotateX(${deg}deg)` }}>
             {drawResult
               ? drawResult[2].map((s, i) => (
-                  <Slot key={i} i={i} onClick={() => setSelectedIndex(i)}>
+                  <Slot key={i} i={i}>
                     <Styled.Inside red={red && i === selectedIndex}>
                       {s.name}
                     </Styled.Inside>
@@ -2110,7 +2037,7 @@ const Slot = styled.div<{ i: number }>`
   font-weight: normal;
   font-size: 21px;
   line-height: 25px;
-  color: #9d9d9d;
+  color: ${(props) => props.theme.slot};
   mix-blend-mode: normal;
   text-align: center;
   height: 100%;

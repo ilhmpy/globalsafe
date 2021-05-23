@@ -8,9 +8,15 @@ import { Prize, Winner, Users } from "../../../../types/drawResult";
 type Props = {
   drawResult: [Prize[], Prize, Users[], Winner] | null;
   winNumber?: number;
+  winnerResult: (res: Prize) => void;
+  onShowModalCongrats: () => void;
 };
 
-export const Wheel: FC<Props> = ({ drawResult }) => {
+export const Wheel: FC<Props> = ({
+  drawResult,
+  winnerResult,
+  onShowModalCongrats,
+}) => {
   const [deg, setDeg] = useState(0);
   const [radius, setRadius] = useState(75);
   const [angle, setAngle] = useState(0);
@@ -99,9 +105,7 @@ export const Wheel: FC<Props> = ({ drawResult }) => {
     setDeg((deg) => deg + Math.floor(5000 + Math.random() * 5000));
   };
 
-  let easy = 3;
   const reset = () => {
-    easy = 0;
     setRotate(0);
   };
 
@@ -112,6 +116,16 @@ export const Wheel: FC<Props> = ({ drawResult }) => {
       const win = drawResult[1].kind;
       const key = win === 0 ? 2 : win === 1 ? 1 : win === 2 ? 4 : 5;
       let newPosition = segment * key - Math.random() * segment;
+
+      setTimeout(() => {
+        winnerResult(drawResult[1]);
+      }, 5000);
+
+      setTimeout(() => {
+        onShowModalCongrats();
+        setRotate(0);
+      }, 12000);
+
       setTimeout(() => {
         setPrevRotate(newPosition);
         setRotate(-newPosition + 2160);
@@ -120,7 +134,6 @@ export const Wheel: FC<Props> = ({ drawResult }) => {
   }, [drawResult]);
 
   const test = () => {
-    easy = 3;
     setEaseOut((easy) => easy + 2);
     const segment = 360 / list.length;
     // let position = 1500 + Math.round(Math.random() * 1500);
