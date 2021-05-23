@@ -1,7 +1,6 @@
 ﻿import React, { useState, useContext, useEffect } from "react";
 import * as Styled from "./Styled.elements";
 import styled, { css } from "styled-components/macro";
-import { SideNavbar } from "../../components/SideNav";
 import { Card } from "../../globalStyles";
 import { UpTitle } from "../../components/UI/UpTitle";
 import { ReactComponent as Exit } from "../../assets/svg/exit.svg";
@@ -313,10 +312,10 @@ export const AdminPay = () => {
         .invoke<RootPayments>(
           "GetUsersDeposits",
           [5, 6],
-          null,
-          null,
-          null,
-          null,
+          nameApproval ? nameApproval.toLowerCase() : null,
+          searchSafeIDApproval.length ? searchSafeIDApproval : null,
+          openDateApproval.from ? openDateApproval.from : null,
+          openDateApproval.to ? openDateApproval.to : null,
           null,
           null,
           null,
@@ -541,7 +540,7 @@ export const AdminPay = () => {
       <Content active={active === 0}>
         <Styled.FilterBlock>
           <Styled.FilterHeader>
-            <FilterName>{t("adminDeposit.filter")}</FilterName>
+            <Styled.FilterName>{t("adminDeposit.filter")}</Styled.FilterName>
             <Styled.ShowHide onClick={() => setOpenFilterOne(!openFilterOne)}>
               {openFilterOne ? t("hide") : t("show")}
             </Styled.ShowHide>
@@ -636,7 +635,7 @@ export const AdminPay = () => {
       <Content active={active === 1}>
         <Styled.FilterBlock>
           <Styled.FilterHeader>
-            <FilterName>{t("adminDeposit.filter")}</FilterName>
+            <Styled.FilterName>{t("adminDeposit.filter")}</Styled.FilterName>
             <Styled.ShowHide onClick={() => setOpenFilter(!openFilter)}>
               {openFilter ? t("hide") : t("show")}
             </Styled.ShowHide>
@@ -773,17 +772,6 @@ export const AdminPay = () => {
     </>
   );
 };
-
-const FilterName = styled.div`
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 21px;
-  letter-spacing: 0.1px;
-  margin-left: 10px;
-  @media (max-width: 576px) {
-    margin-left: 0px;
-  }
-`;
 
 const SelfUpTitle = styled(UpTitle)`
   @media (max-width: 768px) {

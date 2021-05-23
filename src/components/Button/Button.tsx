@@ -74,6 +74,7 @@ export const Button = styled.a<Props>`
       `;
     } else if (props.dangerOutline) {
       return ` 
+      padding: 12px 10px;
       background: transparent;
       color:  ${(props: any) => props.theme.text};
       border-color: #FF416E;

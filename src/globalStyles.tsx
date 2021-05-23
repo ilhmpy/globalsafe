@@ -270,12 +270,12 @@ export const ContainerRow = styled(Container)`
   flex-wrap: wrap;
 `;
 
-export const Card = styled.div<{ alfa?: boolean }>`
+export const Card = styled.div<{ alfa?: boolean; smallBorder?: boolean }>`
   background: ${(props) =>
     props.alfa ? props.theme.card.backgroundAlfa : props.theme.card.background};
   width: 100%;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
-  border-radius: 20px;
+  border-radius: ${(props) => (props.smallBorder ? "10px" : "20px")};
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
   border: ${(props) => props.theme.card.border};

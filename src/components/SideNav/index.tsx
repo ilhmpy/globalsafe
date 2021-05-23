@@ -10,6 +10,7 @@ import { ReactComponent as Briefcase } from "../../assets/svg/briefcase.svg";
 import { ReactComponent as Exit } from "../../assets/svg/exit.svg";
 import { ReactComponent as DarkTheme } from "../../assets/svg/theme.svg";
 import { ReactComponent as LightTheme } from "../../assets/svg/themeLight.svg";
+import { ReactComponent as Lottery } from "../../assets/svg/lottery.svg";
 import { NavLink, Link } from "react-router-dom";
 import { AppContext } from "../../context/HubContext";
 import { ThemeContext } from "../../context/ThemeContext";
@@ -80,6 +81,12 @@ export const SideNavbar: FC<Props> = ({ navWidth, navShow }) => {
             <StyledLink to="/admin/portfolio">
               <Briefcase />
               <Text>{t("sideNav.portfolio")}</Text>
+            </StyledLink>
+          </Li>
+          <Li>
+            <StyledLink to="/admin/lottery">
+              <Lottery />
+              <Text>{t("sideNav.lottery")}</Text>
             </StyledLink>
           </Li>
         </Ul>

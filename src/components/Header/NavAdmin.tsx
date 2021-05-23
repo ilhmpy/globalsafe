@@ -55,6 +55,11 @@ export const NavAdmin: FC<Props> = ({ onClose, lang }) => {
         </StyledLink>
       </ListItem>
       <ListItem>
+        <StyledLink to="/admin/lottery" onClick={onClose}>
+          {t("sideNav.lottery")}
+        </StyledLink>
+      </ListItem>
+      <ListItem>
         <StyledLink to="/" onClick={onClose}>
           {t("sideNav.toHome")}
         </StyledLink>

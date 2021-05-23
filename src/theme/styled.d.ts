@@ -26,6 +26,7 @@ declare module 'styled-components' {
     border:string;
     range: string;
     repeatCode: string;
+    slot: string;
     card: {
       background: string;
       backgroundAlfa: string;
