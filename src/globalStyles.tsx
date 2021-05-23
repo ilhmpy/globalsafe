@@ -233,6 +233,21 @@ input[type=number] {
     transition: opacity 500ms ease-in;
 }
 
+.present-enter {
+    opacity: 0;
+}
+.present-enter-active {
+    opacity: 1;
+    transition: all 10000ms ease-in-out;
+}
+.present-exit {
+    opacity: 1;
+}
+.present-exit-active {
+    opacity: 0;
+    transition: opacity 10ms ease-in;
+}
+
 @keyframes flickerAnimation {
     0% {
         opacity: 1;

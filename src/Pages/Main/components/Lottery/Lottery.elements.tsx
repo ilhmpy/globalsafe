@@ -252,7 +252,7 @@ export const Drum = styled.div`
   position: relative;
   perspective: 0;
   transform-origin: 50% 50%;
-  transition: transform-origin 5s;
+  transition: 5s;
   transform-style: preserve-3d;
   @media (max-width: 576px) {
     width: 260px;

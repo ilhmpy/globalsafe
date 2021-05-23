@@ -4,6 +4,10 @@ import arrow from "../../../../assets/svg/arrowWheel.svg";
 import center from "../../../../assets/svg/center.svg";
 import * as Styled from "./Lottery.elements";
 import { Prize, Winner, Users } from "../../../../types/drawResult";
+import { Balance } from "../../../../types/balance";
+import { ReactComponent as PresentIcon } from "../../../../assets/svg/present.svg";
+import { useTranslation } from "react-i18next";
+import { CSSTransition } from "react-transition-group";
 
 type Props = {
   drawResult: [Prize[], Prize, Users[], Winner] | null;
@@ -12,11 +16,7 @@ type Props = {
   onShowModalCongrats: () => void;
 };
 
-export const Wheel: FC<Props> = ({
-  drawResult,
-  winnerResult,
-  onShowModalCongrats,
-}) => {
+export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
   const [deg, setDeg] = useState(0);
   const [radius, setRadius] = useState(75);
   const [angle, setAngle] = useState(0);
@@ -28,7 +28,8 @@ export const Wheel: FC<Props> = ({
   const [result, setResult] = useState<number | null>(null);
   const [spinning, setSpinning] = useState(false);
   const [prevRotate, setPrevRotate] = useState(0);
-
+  const [show, setShow] = useState(false);
+  const { t } = useTranslation();
   // let spin = Math.floor(Math.random() * 900) + 500;
   // let netRotation = ((spin % 360) * Math.PI) / 180;
   // console.log("netRotation", netRotation)
@@ -37,12 +38,12 @@ export const Wheel: FC<Props> = ({
 
   // list = ["document = 1 0", "euro1", "euro2", "procent = 2  3", "euro3", "euro4"]
 
-  useEffect(() => {
-    const numOptions = list.length;
-    const arcSize = (2 * Math.PI) / numOptions;
-    setAngle(arcSize);
-    topPosition(numOptions, arcSize);
-  }, []);
+  // useEffect(() => {
+  //   const numOptions = list.length;
+  //   const arcSize = (2 * Math.PI) / numOptions;
+  //   setAngle(arcSize);
+  //   topPosition(numOptions, arcSize);
+  // }, []);
 
   // console.log("angle", angle);
 
@@ -111,27 +112,32 @@ export const Wheel: FC<Props> = ({
 
   useEffect(() => {
     if (drawResult) {
-      setEaseOut((easy) => easy + 2);
+      const numOptions = list.length;
+      const arcSize = (2 * Math.PI) / numOptions;
+      setAngle(arcSize);
+      topPosition(numOptions, arcSize);
+      // setEaseOut((easy) => easy + 2);
       const segment = 360 / list.length;
       const win = drawResult[1].kind;
       const key = win === 0 ? 2 : win === 1 ? 1 : win === 2 ? 4 : 5;
       let newPosition = segment * key - Math.random() * segment;
 
-      setTimeout(() => {
-        winnerResult(drawResult[1]);
-      }, 5000);
-
-      setTimeout(() => {
-        onShowModalCongrats();
-        setRotate(0);
-      }, 12000);
+      // setTimeout(() => {
+      //   winnerResult(drawResult[1]);
+      // }, 5000);
 
       setTimeout(() => {
         setPrevRotate(newPosition);
         setRotate(-newPosition + 2160);
+        setShow(true);
       }, 2000);
+
+      setTimeout(() => {
+        onShowModalCongrats();
+        setRotate(0);
+      }, 10000);
     }
-  }, [drawResult]);
+  }, []);
 
   const test = () => {
     setEaseOut((easy) => easy + 2);
@@ -148,6 +154,27 @@ export const Wheel: FC<Props> = ({
   return (
     <>
       {/* <button onClick={test}>test</button> */}
+      <CSSTransition
+        in={show}
+        timeout={10000}
+        classNames="present"
+        unmountOnExit
+      >
+        {drawResult && (
+          <Styled.Present>
+            <PresentIcon />
+            {drawResult[1].kind === 0
+              ? (drawResult[1].volume / 100000).toLocaleString("ru-RU", {
+                  maximumFractionDigits: 5,
+                })
+              : drawResult[1].kind === 1
+              ? t("win.two")
+              : drawResult[1].volume}
+            &nbsp;
+            {drawResult[1].volume ? Balance[drawResult[1].balanceKind] : ""}
+          </Styled.Present>
+        )}
+      </CSSTransition>
       <Styled.WheelWrap>
         <Styled.WheelContainer onClick={onHandleClick}>
           <Styled.Wheel

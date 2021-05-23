@@ -1,4 +1,4 @@
-import React, { useState, FC } from "react";
+import React, { useState, FC, useEffect } from "react";
 import { Modal } from "../../../../components/Modal/Modal";
 import { ReactComponent as PresentIcon } from "../../../../assets/svg/present.svg";
 import * as Styled from "./Lottery.elements";
@@ -41,33 +41,13 @@ export const ModalLottery: FC<Props> = ({
   setWinName,
 }) => {
   const { t } = useTranslation();
+
+  console.log("render modal");
   return (
     <div>
       <Modal width={1100} onClose={onCloseModal}>
         <Styled.Container>
           <Styled.ContainerItem>
-            {result && (
-              <CSSTransition
-                in={!!result}
-                timeout={200}
-                classNames="modal"
-                unmountOnExit
-              >
-                <Styled.Present>
-                  <PresentIcon />
-                  {result.kind === 0
-                    ? (result.volume / 100000).toLocaleString("ru-RU", {
-                        maximumFractionDigits: 5,
-                      })
-                    : result.kind === 1
-                    ? t("win.two")
-                    : result.volume}
-                  &nbsp;
-                  {result.volume ? Balance[result.balanceKind] : ""}
-                </Styled.Present>
-              </CSSTransition>
-            )}
-
             <Wheel
               drawResult={drawResult}
               winnerResult={winnerResult}
