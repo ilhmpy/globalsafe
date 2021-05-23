@@ -341,5 +341,10 @@
     "every": "Every", 
     "hour": "hour",
     "hours": "hours",
-    "hourss": "hours"
+    "hourss": "hours",
+    "create": "Create",
+    "historyLottery": "Draw history",
+    "draws": "Draws",
+    "newDraw": "Start of a new drawing in",
+    "goDraw": "Go to"
 }

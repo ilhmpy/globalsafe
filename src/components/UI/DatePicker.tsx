@@ -72,7 +72,7 @@ const DateContainer = styled.div`
     box-sizing: border-box;
     border-radius: 2px;
     padding: 8px;
-    width: 184px;
+    width: 100%;
     height: 40px;
     font-weight: normal;
     font-size: 14px;

@@ -154,13 +154,13 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
   return (
     <>
       {/* <button onClick={test}>test</button> */}
-      <CSSTransition
-        in={show}
-        timeout={10000}
-        classNames="present"
-        unmountOnExit
-      >
-        {drawResult && (
+      {drawResult && (
+        <CSSTransition
+          in={show && !!drawResult}
+          timeout={10000}
+          classNames="present"
+          unmountOnExit
+        >
           <Styled.Present>
             <PresentIcon />
             {drawResult[1].kind === 0
@@ -173,8 +173,8 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
             &nbsp;
             {drawResult[1].volume ? Balance[drawResult[1].balanceKind] : ""}
           </Styled.Present>
-        )}
-      </CSSTransition>
+        </CSSTransition>
+      )}
       <Styled.WheelWrap>
         <Styled.WheelContainer onClick={onHandleClick}>
           <Styled.Wheel

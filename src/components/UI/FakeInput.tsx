@@ -44,6 +44,7 @@ export const InputContainer = styled.div`
   line-height: 21px;
   letter-spacing: 0.25px;
   padding: 8px;
+  min-width: 150px;
   width: 100%;
   transition: 200ms ease-in-out;
   span {

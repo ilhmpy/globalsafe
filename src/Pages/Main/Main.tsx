@@ -15,6 +15,7 @@ import { RootClock } from "../../types/clock";
 import { ModalLottery } from "./components/Lottery/Modal";
 import { ModalCongrats } from "./components/Lottery/ModalCongrats";
 import { Prize, Winner, Users } from "../../types/drawResult";
+import { DrawHistory } from "./components/DrawHistory/DrawHistory";
 
 let fakeData = [
   [
@@ -2102,7 +2103,7 @@ export const Main = () => {
         .catch((e) => console.log(e));
     }
   }, [hubConnection]);
-  console.log("render main");
+
   const testResult = () => {
     setDrawResult(fakeData);
     setShowModal(true);
@@ -2142,6 +2143,7 @@ export const Main = () => {
         <Payments />
         <Operations />
         <Tariffs />
+        <DrawHistory />
         <About />
         <Contact />
         <Footer />

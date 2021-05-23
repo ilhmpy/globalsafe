@@ -24,6 +24,13 @@ export const Tr = styled.tr`
   }
 `;
 
+export const HrWritting = styled.hr`
+  background: rgba(196, 196, 196, 0.3);
+  margin-bottom: 15px;
+  height: 1px;
+  border: none;
+`;
+
 export const Th = styled.th`
   padding: 15px 5px;
   text-align: left;
@@ -355,6 +362,7 @@ export const SelectContainer = styled.div`
 
 export const SelectContainerLottery = styled(SelectContainer)`
   justify-content: flex-start;
+  padding-top: 10px;
 `;
 
 export const SelectWrap = styled.div<{ input?: boolean }>`
@@ -367,7 +375,7 @@ export const SelectWrap = styled.div<{ input?: boolean }>`
   }
   @media (max-width: 768px) {
     max-width: 100%;
-    margin: 12px 10px;
+    margin: 12px 20px 12px 0;
   }
   @media (max-width: 576px) {
     margin: 12px 0px;
@@ -377,12 +385,16 @@ export const SelectWrap = styled.div<{ input?: boolean }>`
 export const SliderWrap = styled.div`
   min-width: 265px;
   margin: 20px 20px 20px 0;
+  @media (max-width: 834px) {
+    width: 46%;
+  }
   @media (max-width: 768px) {
-    min-width: 100%;
-    margin: 12px 10px;
+    width: 100%;
+    margin: 12px 0px;
   }
   @media (max-width: 576px) {
-    margin: 12px 0px;
+    margin: 12px 0px 20px;
+    min-width: 240px;
   }
 `;
 
@@ -450,7 +462,7 @@ export const SelectContainerInnerPaid = styled.div`
 export const SliderContainerInner = styled.div`
   display: flex;
   align-items: center;
-  @media (max-width: 1286px) {
+  @media (max-width: 1100px) {
     flex-wrap: wrap;
     width: 100%;
   }
@@ -532,5 +544,19 @@ export const LotteryTable = styled.div`
   padding: 30px;
   @media (max-width: 768px) {
     padding: 20px;
+  }
+`;
+
+export const InputLottery = styled.div<{ mrn?: boolean }>`
+  width: ${(props) => (props.mrn ? "165px" : "185px")};
+  margin-right: ${(props) => (props.mrn ? "0" : "20px")};
+  margin-bottom: 15px;
+  @media (max-width: 834px) {
+    width: 46%;
+  }
+  @media (max-width: 600px) {
+    width: 100%;
+    margin-right: 0px;
+    margin-bottom: 20px;
   }
 `;

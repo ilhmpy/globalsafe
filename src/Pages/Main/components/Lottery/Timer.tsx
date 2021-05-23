@@ -26,15 +26,19 @@ export const Timer: FC<Props> = ({
   const { t } = useTranslation();
 
   useEffect(() => {
+    let clean = false;
     if (hubConnection) {
       hubConnection
         .invoke<RootClock>("GetNextDraw")
         .then((res) => {
           console.log("GetNextDraw", res);
-          setClock(res);
+          !clean && setClock(res);
         })
         .catch((e) => console.log(e));
     }
+    return () => {
+      clean = true;
+    };
   }, [hubConnection]);
 
   useEffect(() => {
