@@ -37,15 +37,15 @@ export const DrawHistory: FC<Props> = ({ setShowModal }) => {
     if (hubConnection) {
       hubConnection.on("DrawResult", (data) => {
         console.log("DrawResult", data);
-        const arrList = data.map((item: any) => ({
+        const arrList = {
           name: data[3].name,
           kind: data[1].kind,
           date: data[4],
           volume: data[1].kind,
           balanceKind: data[1].balanceKind,
-        }));
+        };
         console.log("arrList", arrList);
-        !clean && setNotifyList([...arrList[0], ...notifyList]);
+        !clean && setNotifyList([arrList, ...notifyList]);
       });
       hubConnection
         .invoke<RootLottery>("GetPrizes", 0, 5)

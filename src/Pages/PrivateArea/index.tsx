@@ -213,7 +213,7 @@ export const InfoMain = () => {
   if (user === null) {
     return null;
   }
-  console.log("depositSelect", depositSelect);
+  console.log("balanceChips", balanceChips);
   if (user === false) {
     return <Redirect to="/" />;
   }
