@@ -270,6 +270,8 @@ export const InfoMain = () => {
                           color = "#6DB9FF";
                         } else if (i.balanceKind === 11) {
                           color = "#BCD476";
+                        } else if (i.balanceKind === 12) {
+                          color = "#A78CF2";
                         } else {
                           color = "#6DB9FF";
                         }
