@@ -2095,16 +2095,7 @@ export const Main = () => {
       hubConnection.on("DrawResult", (data) => {
         console.log("DrawResult", data);
         setDrawResult(data);
-        const arrList = data.map((item: any) => ({
-          name: data[3].name,
-          kind: data[1].kind,
-          date: data[4],
-          volume: data[1].kind,
-          balanceKind: data[1].balanceKind,
-        }));
-        setNotifyList([...arrList, ...notifyList]);
       });
-
       hubConnection
         .invoke<RootClock>("GetNextDraw")
         .then((res) => {
@@ -2158,11 +2149,7 @@ export const Main = () => {
         <Payments />
         <Operations />
         <Tariffs />
-        <DrawHistory
-          setShowModal={setShowModal}
-          notifyList={notifyList}
-          setNotifyList={setNotifyList}
-        />
+        <DrawHistory setShowModal={setShowModal} />
         <About />
         <Contact />
         <Footer />

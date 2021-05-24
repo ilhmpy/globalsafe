@@ -22,16 +22,10 @@ import { isTemplateHead } from "typescript";
 
 type Props = {
   setShowModal: (val: boolean) => void;
-  setNotifyList: (notifyList: ArrList[]) => void;
-  notifyList: ArrList[];
 };
 
-export const DrawHistory: FC<Props> = ({
-  setShowModal,
-  notifyList,
-  setNotifyList,
-}) => {
-  // const [notifyList, setNotifyList] = useState<ArrList[]>([]);
+export const DrawHistory: FC<Props> = ({ setShowModal }) => {
+  const [notifyList, setNotifyList] = useState<ArrList[]>([]);
   const [num, setNum] = useState(0);
   const [show, setShow] = useState(true);
   const appContext = useContext(AppContext);
@@ -41,9 +35,17 @@ export const DrawHistory: FC<Props> = ({
     let clean = false;
 
     if (hubConnection) {
-      //   hubConnection.on("DrawResult", (data) => {
-      //     !clean && setNotifyList((notifyList) => [data, ...notifyList]);
-      //   });
+      hubConnection.on("DrawResult", (data) => {
+        console.log("DrawResult", data);
+        const arrList = data.map((item: any) => ({
+          name: data[3].name,
+          kind: data[1].kind,
+          date: data[4],
+          volume: data[1].kind,
+          balanceKind: data[1].balanceKind,
+        }));
+        !clean && setNotifyList([...arrList, ...notifyList]);
+      });
       hubConnection
         .invoke<RootLottery>("GetPrizes", 0, 5)
         .then((res) => {
