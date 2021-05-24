@@ -79,11 +79,9 @@ export const DrawHistory: FC<Props> = ({ setShowModal }) => {
       </Container>
 
       <Container>
-        <TimerHistoryContainer alfa>
+        <TimerHistoryContainer alfa onClick={() => setShowModal(true)}>
           <Timer icon={false} timerHistory />
-          <Button danger onClick={() => setShowModal(true)}>
-            {t("goDraw")}
-          </Button>
+          <Button danger>{t("goDraw")}</Button>
         </TimerHistoryContainer>
       </Container>
 
@@ -259,13 +257,13 @@ const TableItem = styled.li`
     max-width: 200px;
     @media (max-width: 576px) {
       max-width: 100%;
+      display: none;
     }
   }
   &:nth-child(3) {
     max-width: 200px;
     @media (max-width: 576px) {
       max-width: 100%;
-      display: none;
     }
   }
   &:nth-child(4) {

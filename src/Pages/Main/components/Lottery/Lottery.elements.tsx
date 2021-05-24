@@ -25,6 +25,7 @@ export const TimerContainer = styled.div`
   border: 1px solid rgba(86, 101, 127, 0.05);
   box-sizing: border-box;
   border-radius: 20px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   padding: 24px;
   width: 340px;
   @media (max-width: 768px) {
@@ -223,6 +224,7 @@ export const Box = styled.div`
   background: ${(props) => props.theme.card.background};
   border: 1px solid rgba(86, 101, 127, 0.05);
   box-sizing: border-box;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   border-radius: 20px;
   padding: 20px;
   display: flex;
