@@ -2100,7 +2100,7 @@ export const Main = () => {
           kind: data[1].kind,
           date: data[4],
           volume: data[1].kind,
-          balanceKind: data[4],
+          balanceKind: data[1].balanceKind,
         }));
         setNotifyList([...arrList, ...notifyList]);
       });
