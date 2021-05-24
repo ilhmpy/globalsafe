@@ -7,7 +7,7 @@ export const SliderWrap = styled.div`
     height: 10px;
     background: #ff416e;
     border: none;
-    margin-top: -5.5px;
+    margin-top: -4.5px;
   }
   .rc-slider-track {
     background: #ff416e;

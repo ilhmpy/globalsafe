@@ -10,7 +10,7 @@ export const SliderComponent: FC<{
   return (
     <Styled.SliderWrap>
       <Slider
-        dots
+        // dots
         step={1}
         min={0}
         max={168}

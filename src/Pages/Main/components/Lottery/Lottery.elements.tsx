@@ -41,6 +41,11 @@ export const TimerTitle = styled.div`
   letter-spacing: 0.1px;
   color: ${(props) => props.theme.text2};
   margin-bottom: 10px;
+  @media (max-width: 576px) {
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 16px;
+  }
 `;
 
 const Move = keyframes`
@@ -90,6 +95,11 @@ export const TimerValue = styled.div<{ nodata?: boolean }>`
       return MyCss;
     }
   }}
+  @media (max-width: 576px) {
+    font-weight: normal;
+    font-size: 25px;
+    line-height: 29px;
+  }
 `;
 
 export const WheelWrap = styled.div`
@@ -322,4 +332,40 @@ export const BrandImg = styled.div`
 
 export const ModalButton = styled(Button)`
   margin: 37px auto 0;
+`;
+
+export const TimerHistoryInner = styled.div`
+  margin-right: 188px;
+  @media (max-width: 768px) {
+    margin-right: 0px;
+  }
+`;
+
+export const TimerHistoryValue = styled.div<{ nodata?: boolean }>`
+  font-weight: 500;
+  font-size: 36px;
+  line-height: 42px;
+  letter-spacing: 0.1px;
+  color: #ff416e;
+  ${(props) => {
+    if (props.nodata) {
+      return MyCss;
+    }
+  }}
+  @media (max-width: 576px) {
+    font-size: 25px;
+    line-height: 29px;
+  }
+`;
+
+export const TimerHisroryTitle = styled.div`
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 21px;
+  letter-spacing: 0.1px;
+  margin-bottom: 10px;
+  @media (max-width: 576px) {
+    font-size: 14px;
+    line-height: 17px;
+  }
 `;

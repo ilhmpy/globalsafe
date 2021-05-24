@@ -49,6 +49,7 @@ export const AdminLottery = () => {
   const [num, setNum] = useState(20);
   const [sliderValue, setSliderValue] = useState(79);
   const [startDate, setStartDate] = useState<Date | null>(null);
+  const [nextDate, setNextDate] = useState<Date | null>(null);
   const [drawList, setDrawList] = useState<CollectionGetDraw[]>([]);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
@@ -92,6 +93,7 @@ export const AdminLottery = () => {
           20
         )
         .then((res) => {
+          // console.log("res", res);
           setTotalLottery(res.totalRecords);
           setLoading(false);
           setNum(20);
@@ -164,10 +166,14 @@ export const AdminLottery = () => {
   };
   const onAfterChange = (value: any) => {
     setSliderValue(value);
+    if (startDate) {
+      const time: any = moment(startDate).add(sliderValue, "hours");
+      setNextDate(time._d);
+    }
   };
 
   const createNewLottery = () => {
-    if (hubConnection) {
+    if (hubConnection && startDate !== null) {
       hubConnection
         .invoke("CreateDraw", moment.utc(startDate), sliderValue)
         .then((res) => {
@@ -177,12 +183,20 @@ export const AdminLottery = () => {
     }
   };
 
+  const dateChange = (startDate: Date | null) => {
+    if (startDate) {
+      const time: any = moment(startDate).add(sliderValue, "hours");
+      setNextDate(time._d);
+      setStartDate(startDate);
+    }
+  };
+
   return (
     <div>
       <div>
         <Styled.FilterBlock>
           <Styled.FilterHeader>
-            <Styled.FilterName>{t("newLottery")}</Styled.FilterName>
+            <Styled.FilterName>{t("write")}</Styled.FilterName>
             <Styled.ShowHide onClick={() => setOpenFilter(!openFilter)}>
               {openFilter ? t("hide") : t("show")}
             </Styled.ShowHide>
@@ -195,40 +209,42 @@ export const AdminLottery = () => {
           >
             <>
               <Styled.SelectContainerLottery>
-                <Styled.SliderContainerInner>
-                  <Styled.SelectWrap>
-                    <DateInput
-                      startDate={startDate}
-                      setStartDate={setStartDate}
-                      label={t("writting.startDate")}
-                    />
-                  </Styled.SelectWrap>
-                  <Styled.SelectWrap style={{ minWidth: 180 }}>
-                    <FakeInput
-                      hours={sliderValue}
-                      label={t("writting.repeat")}
-                    />
-                  </Styled.SelectWrap>
-                  <Styled.SliderWrap>
-                    <SliderComponent
-                      value={sliderValue}
-                      onAfterChange={onAfterChange}
-                    />
-                  </Styled.SliderWrap>
-                  <Styled.SelectWrap>
-                    <DateInput
-                      startDate={startDate}
-                      setStartDate={setStartDate}
-                      label={t("writting.next")}
-                    />
-                  </Styled.SelectWrap>
-                </Styled.SliderContainerInner>
-                <Button danger onClick={createNewLottery}>
-                  {t("adminUsers.apply")}
-                </Button>
+                <Styled.InputLottery>
+                  <DateInput
+                    startDate={startDate}
+                    setStartDate={dateChange}
+                    label={t("writting.startDate")}
+                  />
+                </Styled.InputLottery>
+                <Styled.InputLottery>
+                  <FakeInput hours={sliderValue} label={t("writting.repeat")} />
+                </Styled.InputLottery>
+                <Styled.SliderWrap>
+                  <SliderComponent
+                    value={sliderValue}
+                    onAfterChange={onAfterChange}
+                  />
+                </Styled.SliderWrap>
+                <Styled.InputLottery>
+                  <DateInput
+                    startDate={nextDate}
+                    setStartDate={setNextDate}
+                    label={t("writting.next")}
+                  />
+                </Styled.InputLottery>
+                <Styled.InputLottery mrn>
+                  <Button
+                    as="button"
+                    disabled={startDate === null}
+                    danger
+                    onClick={createNewLottery}
+                  >
+                    {t("create")}
+                  </Button>
+                </Styled.InputLottery>
               </Styled.SelectContainerLottery>
+              <Styled.HrWritting />
               <Styled.WritingBlock>
-                <Styled.WritingTitle>{t("write")}</Styled.WritingTitle>
                 <Scrollbars style={{ height: "250px" }}>
                   {drawList.length
                     ? drawList.map((item) => (

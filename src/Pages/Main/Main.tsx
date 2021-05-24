@@ -15,6 +15,7 @@ import { RootClock } from "../../types/clock";
 import { ModalLottery } from "./components/Lottery/Modal";
 import { ModalCongrats } from "./components/Lottery/ModalCongrats";
 import { Prize, Winner, Users } from "../../types/drawResult";
+import { DrawHistory } from "./components/DrawHistory/DrawHistory";
 
 let fakeData = [
   [
@@ -2102,7 +2103,7 @@ export const Main = () => {
         .catch((e) => console.log(e));
     }
   }, [hubConnection]);
-  console.log("render main");
+
   const testResult = () => {
     setDrawResult(fakeData);
     setShowModal(true);
@@ -2111,13 +2112,13 @@ export const Main = () => {
   return (
     <div>
       <Header />
-      {showTimer && (
-        <TimerPopup onClick={onShowModal}>
-          <Timer closeTimer={closeTimer} icon={true} clock={clock} />
-        </TimerPopup>
-      )}
 
       <MainPage>
+        {showTimer && (
+          <TimerPopup onClick={onShowModal}>
+            <Timer closeTimer={closeTimer} icon={true} clock={clock} />
+          </TimerPopup>
+        )}
         {/* <button onClick={testResult}>tejdsf</button> */}
         {showModal && (
           <ModalLottery
@@ -2142,6 +2143,7 @@ export const Main = () => {
         <Payments />
         <Operations />
         <Tariffs />
+        <DrawHistory setShowModal={setShowModal} />
         <About />
         <Contact />
         <Footer />
@@ -2152,22 +2154,23 @@ export const Main = () => {
 
 const MainPage = styled(Page)`
   margin-top: 200px;
-  @media (max-width: 1060px) {
+  /* @media (max-width: 1060px) {
     margin-top: 140px;
-  }
+  } */
   @media (max-width: 768px) {
-    margin-top: 100px;
+    margin-top: 210px;
   }
 `;
 
 const TimerPopup = styled.div`
-  position: fixed;
+  position: absolute;
   cursor: pointer;
   right: 30px;
-  top: 45px;
+  top: 0px;
   z-index: 99999;
+  margin-top: -160px;
   @media (max-width: 768px) {
-    margin-top: 0px;
+    margin-top: -180px;
   }
   @media (max-width: 576px) {
     right: 10px;

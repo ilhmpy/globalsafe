@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { CollectionLottery } from "../../../types/lottery";
 import { useTranslation } from "react-i18next";
 import moment from "moment";
+import { Balance } from "../../../types/balance";
 
 export const LotteryTable: FC<{ data: CollectionLottery }> = ({ data }) => {
   const { t } = useTranslation();
@@ -27,12 +28,15 @@ export const LotteryTable: FC<{ data: CollectionLottery }> = ({ data }) => {
         {typeWin(data.definition.kind)}
       </Td>
       <Td data-label={t("lotteryTable.sumWin")}>
-        {data.definition.volume
+        {data.definition.kind === 0
           ? (data.definition.volume / 100000).toLocaleString("ru-RU", {
-              maximumFractionDigits: 6,
+              maximumFractionDigits: 5,
             })
-          : "-"}{" "}
-        {data.definition.volume ? "CWD" : ""}
+          : data.definition.kind === 1
+          ? t("win.two")
+          : data.definition.volume}
+        &nbsp;
+        {data.definition.volume ? Balance[data.definition.balanceKind] : ""}
       </Td>
       <Td data-label={t("lotteryTable.winners")}>{data.userName}</Td>
       <Td data-label={t("lotteryTable.status")}>

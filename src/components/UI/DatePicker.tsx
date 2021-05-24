@@ -8,9 +8,17 @@ type Props = {
   label: string;
   startDate: Date | null;
   setStartDate: (startDate: Date | null) => void;
+  readOnly?: boolean;
+  placeholderText?: string;
 };
 
-export const DateInput: FC<Props> = ({ label, startDate, setStartDate }) => {
+export const DateInput: FC<Props> = ({
+  label,
+  startDate,
+  setStartDate,
+  readOnly = false,
+  placeholderText,
+}) => {
   const lang = localStorage.getItem("i18nextLng") || "ru";
   const el = lang === "ru" ? ru : enGB;
   registerLocale("el", el);
@@ -26,6 +34,8 @@ export const DateInput: FC<Props> = ({ label, startDate, setStartDate }) => {
         dateFormat="d MMMM yyyy, HH:mm "
         timeFormat="HH:mm"
         timeIntervals={30}
+        placeholderText={placeholderText}
+        readOnly={readOnly}
       />
     </DateContainer>
   );
@@ -72,7 +82,7 @@ const DateContainer = styled.div`
     box-sizing: border-box;
     border-radius: 2px;
     padding: 8px;
-    width: 184px;
+    width: 100%;
     height: 40px;
     font-weight: normal;
     font-size: 14px;

@@ -67,34 +67,36 @@ export const Writing: FC<Props> = ({ data, drawListEdited }) => {
     <>
       {data.state !== 2 ? (
         <Styled.SelectContainerLottery>
-          <Styled.SliderContainerInner>
-            <Styled.SelectWrap>
-              <DateInput
-                startDate={startDate}
-                setStartDate={setStartDate}
-                label={t("writting.startDate")}
-              />
-            </Styled.SelectWrap>
-            <Styled.SelectWrap style={{ minWidth: 180 }}>
-              <FakeInput hours={sliderValue} label={t("writting.repeat")} />
-            </Styled.SelectWrap>
-            <Styled.SliderWrap>
-              <SliderComponent
-                value={sliderValue}
-                onAfterChange={onAfterChange}
-              />
-            </Styled.SliderWrap>
-            <Styled.SelectWrap>
-              <DateInput
-                startDate={endDate}
-                setStartDate={changeDate}
-                label={t("writting.next")}
-              />
-            </Styled.SelectWrap>
-          </Styled.SliderContainerInner>
-          <Button dangerOutline onClick={cancelLottery}>
-            {t("writting.cancel")}
-          </Button>
+          {/* <Styled.SliderContainerInner> */}
+          <Styled.InputLottery>
+            <DateInput
+              startDate={startDate}
+              setStartDate={setStartDate}
+              label={t("writting.startDate")}
+            />
+          </Styled.InputLottery>
+          <Styled.InputLottery>
+            <FakeInput hours={sliderValue} label={t("writting.repeat")} />
+          </Styled.InputLottery>
+          <Styled.SliderWrap>
+            <SliderComponent
+              value={sliderValue}
+              onAfterChange={onAfterChange}
+            />
+          </Styled.SliderWrap>
+          <Styled.InputLottery>
+            <DateInput
+              startDate={endDate}
+              setStartDate={changeDate}
+              label={t("writting.next")}
+            />
+          </Styled.InputLottery>
+          {/* </Styled.SliderContainerInner> */}
+          <Styled.InputLottery mrn>
+            <Button dangerOutline onClick={cancelLottery}>
+              {t("writting.cancel")}
+            </Button>
+          </Styled.InputLottery>
         </Styled.SelectContainerLottery>
       ) : (
         ""

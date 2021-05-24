@@ -42,7 +42,6 @@ export const ModalLottery: FC<Props> = ({
 }) => {
   const { t } = useTranslation();
 
-  console.log("render modal");
   return (
     <div>
       <Modal width={1100} onClose={onCloseModal}>
