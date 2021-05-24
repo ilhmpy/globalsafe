@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, FC } from "react";
 import { Page } from "../../../../components/UI/Page";
 import { H2 } from "../../../../components/UI/MainStyled";
 import { Card, Container } from "../../../../globalStyles";
@@ -12,8 +12,13 @@ import moment from "moment";
 import { CollectionLottery, RootLottery } from "../../../../types/lottery";
 import { UpTitle } from "../../../../components/UI/UpTitle";
 import { Balance } from "../../../../types/balance";
+import { Timer } from "../Lottery/Timer";
 
-export const DrawHistory = () => {
+type Props = {
+  setShowModal: (val: boolean) => void;
+};
+
+export const DrawHistory: FC<Props> = ({ setShowModal }) => {
   const [notifyList, setNotifyList] = useState<CollectionLottery[]>([]);
   const [num, setNum] = useState(0);
   const [show, setShow] = useState(true);
@@ -75,11 +80,10 @@ export const DrawHistory = () => {
 
       <Container>
         <TimerHistoryContainer alfa>
-          <TimerHistoryInner>
-            <TimerHisroryTitle>{t("newDraw")}</TimerHisroryTitle>
-            <TimerHistoryValue>2 дн 20 ч 32 мин</TimerHistoryValue>
-          </TimerHistoryInner>
-          <Button danger>{t("goDraw")}</Button>
+          <Timer icon={false} timerHistory />
+          <Button danger onClick={() => setShowModal(true)}>
+            {t("goDraw")}
+          </Button>
         </TimerHistoryContainer>
       </Container>
 
@@ -100,24 +104,24 @@ export const DrawHistory = () => {
                   </TableItem>
                   <TableItem>{typeWin(item.definition.kind)}</TableItem>
                   <TableItem>
-                    <Value>
-                      {item.definition.kind === 0
-                        ? (item.definition.volume / 100000).toLocaleString(
-                            "ru-RU",
-                            {
-                              maximumFractionDigits: 5,
-                            }
-                          )
-                        : item.definition.kind === 1
-                        ? t("win.two")
-                        : item.definition.volume}
-                      &nbsp;
-                      {item.definition.volume
-                        ? Balance[item.definition.balanceKind]
-                        : ""}
-                    </Value>
+                    {item.definition.kind === 0
+                      ? (item.definition.volume / 100000).toLocaleString(
+                          "ru-RU",
+                          {
+                            maximumFractionDigits: 5,
+                          }
+                        )
+                      : item.definition.kind === 1
+                      ? t("win.two")
+                      : item.definition.volume}
+                    &nbsp;
+                    {item.definition.volume
+                      ? Balance[item.definition.balanceKind]
+                      : "-"}
                   </TableItem>
-                  <TableItem>{item.userName}</TableItem>
+                  <TableItem>
+                    <Value>{item.userName}</Value>
+                  </TableItem>
                 </TableList>
               </CSSTransition>
             ))}
@@ -145,6 +149,7 @@ const TimerHistoryContainer = styled(Card)`
   }
   @media (max-width: 768px) {
     justify-content: center;
+    padding: 20px;
   }
 `;
 
@@ -260,6 +265,7 @@ const TableItem = styled.li`
     max-width: 200px;
     @media (max-width: 576px) {
       max-width: 100%;
+      display: none;
     }
   }
   &:nth-child(4) {

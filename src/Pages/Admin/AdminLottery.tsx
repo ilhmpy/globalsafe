@@ -49,6 +49,7 @@ export const AdminLottery = () => {
   const [num, setNum] = useState(20);
   const [sliderValue, setSliderValue] = useState(79);
   const [startDate, setStartDate] = useState<Date | null>(null);
+  const [nextDate, setNextDate] = useState<Date | null>(null);
   const [drawList, setDrawList] = useState<CollectionGetDraw[]>([]);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
@@ -92,7 +93,7 @@ export const AdminLottery = () => {
           20
         )
         .then((res) => {
-          console.log("res", res);
+          // console.log("res", res);
           setTotalLottery(res.totalRecords);
           setLoading(false);
           setNum(20);
@@ -165,6 +166,10 @@ export const AdminLottery = () => {
   };
   const onAfterChange = (value: any) => {
     setSliderValue(value);
+    if (startDate) {
+      const time: any = moment(startDate).add(sliderValue, "hours");
+      setNextDate(time._d);
+    }
   };
 
   const createNewLottery = () => {
@@ -175,6 +180,14 @@ export const AdminLottery = () => {
           setDrawList([res, ...drawList]);
         })
         .catch((e) => console.log(e));
+    }
+  };
+
+  const dateChange = (startDate: Date | null) => {
+    if (startDate) {
+      const time: any = moment(startDate).add(sliderValue, "hours");
+      setNextDate(time._d);
+      setStartDate(startDate);
     }
   };
 
@@ -199,7 +212,7 @@ export const AdminLottery = () => {
                 <Styled.InputLottery>
                   <DateInput
                     startDate={startDate}
-                    setStartDate={setStartDate}
+                    setStartDate={dateChange}
                     label={t("writting.startDate")}
                   />
                 </Styled.InputLottery>
@@ -214,8 +227,8 @@ export const AdminLottery = () => {
                 </Styled.SliderWrap>
                 <Styled.InputLottery>
                   <DateInput
-                    startDate={startDate}
-                    setStartDate={setStartDate}
+                    startDate={nextDate}
+                    setStartDate={setNextDate}
                     label={t("writting.next")}
                   />
                 </Styled.InputLottery>
