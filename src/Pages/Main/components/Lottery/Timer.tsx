@@ -64,9 +64,9 @@ export const Timer: FC<Props> = ({
       let durations = moment.duration(deadline, "seconds");
       let formatted;
       if (languale === 1) {
-        formatted = durations.format("d[дн] h[ч] m[мин]");
+        formatted = durations.format("d[ дн] h[ ч] m[ мин]");
       } else {
-        formatted = durations.format("d[d] h[H] m[m]");
+        formatted = durations.format("d[ d] h[ H] m[ m]");
       }
       setState(formatted);
       setDeadline(deadline - 1);

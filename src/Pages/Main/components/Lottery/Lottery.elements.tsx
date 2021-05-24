@@ -146,7 +146,7 @@ export const WheelContainer = styled.div`
 
 export const Wheel = styled.div`
   width: 100%;
-  /* transition: all 10s ease-out; */
+  transition: all 10s cubic-bezier(0.4, 0.09, 0, 1);
   img {
     transition: none;
     transform: rotate(17deg);
@@ -296,7 +296,7 @@ export const WinTitle = styled.div<{ sub?: boolean }>`
   }
 `;
 
-export const WinDesc = styled.p`
+export const WinDesc = styled.div`
   color: ${(props) => props.theme.thHead};
   letter-spacing: 0.1px;
   font-weight: normal;

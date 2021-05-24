@@ -1978,19 +1978,24 @@ export const Slots: FC<Props> = ({ drawResult, setWinName }) => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    if (drawResult) {
+    let timer1: any;
+    let timer2: any;
+    if (!!drawResult) {
       const win = drawResult[2].findIndex((i) => i.name === drawResult[3].name);
-      console.log("win", win);
-      setTimeout(() => {
+      timer1 = setTimeout(() => {
         setSelectedIndex(win);
         setDeg((deg) => deg - deg + -win * slotAngle + 2160);
-      }, 2000);
+      }, 12000);
 
-      setTimeout(() => {
+      timer2 = setTimeout(() => {
         // setWinName(drawResult[3].name);
         setRed(true);
-      }, 7000);
+      }, 17000);
     }
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
   }, [drawResult]);
 
   return (

@@ -55,7 +55,28 @@ export const ModalLottery: FC<Props> = ({
           </Styled.ContainerItem>
 
           <Styled.ContainerItem>
-            {drawResult ? (
+            <CSSTransition
+              in={!!drawResult}
+              timeout={10000}
+              classNames="present"
+              unmountOnExit
+            >
+              <Slots
+                setWinName={setWinName}
+                winNumber={90}
+                drawResult={drawResult}
+              />
+            </CSSTransition>
+
+            <CSSTransition
+              in={!drawResult}
+              timeout={1000}
+              classNames="present"
+              unmountOnExit
+            >
+              <Timer icon={false} clock={clock} />
+            </CSSTransition>
+            {/* {drawResult ? (
               <Slots
                 setWinName={setWinName}
                 winNumber={90}
@@ -63,7 +84,7 @@ export const ModalLottery: FC<Props> = ({
               />
             ) : (
               <Timer icon={false} clock={clock} />
-            )}
+            )} */}
           </Styled.ContainerItem>
         </Styled.Container>
         {/* 

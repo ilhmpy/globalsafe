@@ -9,17 +9,23 @@ import { useTranslation } from "react-i18next";
 import { RootOperations, Collection } from "../../../../types/operations";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import moment from "moment";
-import { CollectionLottery, RootLottery } from "../../../../types/lottery";
+import {
+  CollectionLottery,
+  RootLottery,
+  ArrList,
+} from "../../../../types/lottery";
 import { UpTitle } from "../../../../components/UI/UpTitle";
 import { Balance } from "../../../../types/balance";
 import { Timer } from "../Lottery/Timer";
+import { Item } from "../../../../components/FilterMenu/Styled.elements";
+import { isTemplateHead } from "typescript";
 
 type Props = {
   setShowModal: (val: boolean) => void;
 };
 
 export const DrawHistory: FC<Props> = ({ setShowModal }) => {
-  const [notifyList, setNotifyList] = useState<CollectionLottery[]>([]);
+  const [notifyList, setNotifyList] = useState<ArrList[]>([]);
   const [num, setNum] = useState(0);
   const [show, setShow] = useState(true);
   const appContext = useContext(AppContext);
@@ -29,14 +35,29 @@ export const DrawHistory: FC<Props> = ({ setShowModal }) => {
     let clean = false;
 
     if (hubConnection) {
-      //   hubConnection.on("DrawResult", (data) => {
-      //     !clean && setNotifyList((notifyList) => [data, ...notifyList]);
-      //   });
+      hubConnection.on("DrawResult", (data) => {
+        console.log("DrawResult", data);
+        const arrList = data.map((item: any) => ({
+          name: data[3].name,
+          kind: data[1].kind,
+          date: data[4],
+          volume: data[1].kind,
+          balanceKind: data[1].balanceKind,
+        }));
+        !clean && setNotifyList([...arrList, ...notifyList]);
+      });
       hubConnection
         .invoke<RootLottery>("GetPrizes", 0, 5)
         .then((res) => {
           console.log("GetPrizes", res);
-          !clean && setNotifyList(res.collection);
+          const arrList = res.collection.map((item) => ({
+            name: item.userName,
+            kind: item.definition.kind,
+            date: item.drawLog.drawDate,
+            volume: item.definition.volume,
+            balanceKind: item.definition.balanceKind,
+          }));
+          !clean && setNotifyList(arrList);
         })
         .catch((e) => console.log(e));
     }
@@ -62,7 +83,14 @@ export const DrawHistory: FC<Props> = ({ setShowModal }) => {
       hubConnection
         .invoke<RootLottery>("GetPrizes", 5, 5)
         .then((res) => {
-          setNotifyList((notifyList) => [...notifyList, ...res.collection]);
+          const arrList = res.collection.map((item) => ({
+            name: item.userName,
+            kind: item.definition.kind,
+            date: item.drawLog.drawDate,
+            volume: item.definition.volume,
+            balanceKind: item.definition.balanceKind,
+          }));
+          setNotifyList([...notifyList, ...arrList]);
         })
         .catch((e) => console.log(e));
     }
@@ -98,27 +126,22 @@ export const DrawHistory: FC<Props> = ({ setShowModal }) => {
               <CSSTransition key={idx} timeout={500} classNames="item">
                 <TableList card>
                   <TableItem>
-                    {moment(item.drawLog.drawDate).format("DD.MM.YYYY")}
+                    {moment(item.date).format("DD.MM.YYYY")}
                   </TableItem>
-                  <TableItem>{typeWin(item.definition.kind)}</TableItem>
+                  <TableItem>{typeWin(item.kind)}</TableItem>
                   <TableItem>
-                    {item.definition.kind === 0
-                      ? (item.definition.volume / 100000).toLocaleString(
-                          "ru-RU",
-                          {
-                            maximumFractionDigits: 5,
-                          }
-                        )
-                      : item.definition.kind === 1
+                    {item.kind === 0
+                      ? (item.volume / 100000).toLocaleString("ru-RU", {
+                          maximumFractionDigits: 5,
+                        })
+                      : Item.kind === 1
                       ? t("win.two")
-                      : item.definition.volume}
+                      : item.volume}
                     &nbsp;
-                    {item.definition.volume
-                      ? Balance[item.definition.balanceKind]
-                      : "-"}
+                    {item.volume ? Balance[item.balanceKind] : "-"}
                   </TableItem>
                   <TableItem>
-                    <Value>{item.userName}</Value>
+                    <Value>{item.name}</Value>
                   </TableItem>
                 </TableList>
               </CSSTransition>

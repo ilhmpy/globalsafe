@@ -16,6 +16,9 @@ import { ModalLottery } from "./components/Lottery/Modal";
 import { ModalCongrats } from "./components/Lottery/ModalCongrats";
 import { Prize, Winner, Users } from "../../types/drawResult";
 import { DrawHistory } from "./components/DrawHistory/DrawHistory";
+import { CSSTransition } from "react-transition-group";
+import { ArrList } from "../../types/lottery";
+import Modal, { ModalProvider } from "styled-react-modal";
 
 let fakeData = [
   [
@@ -2045,6 +2048,7 @@ export const Main = () => {
 
   const [result, setResult] = useState<Prize | null>(null);
   const [winName, setWinName] = useState<string | null>(null);
+  const [notifyList, setNotifyList] = useState<ArrList[]>([]);
 
   const winnerResult = (res: Prize) => {
     setResult(res);
@@ -2059,6 +2063,7 @@ export const Main = () => {
   const onShowModal = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowModal(true);
+    setShowModalCongrats(false);
     setShowTimer(false);
   };
 
@@ -2071,7 +2076,6 @@ export const Main = () => {
     setShowModalCongrats(false);
     setDrawResult(null);
     setWinName(null);
-
     setResult(null);
   };
 
@@ -2090,8 +2094,6 @@ export const Main = () => {
     if (hubConnection) {
       hubConnection.on("DrawResult", (data) => {
         console.log("DrawResult", data);
-        setShowModal(true);
-        setShowTimer(false);
         setDrawResult(data);
       });
       hubConnection
@@ -2120,25 +2122,29 @@ export const Main = () => {
           </TimerPopup>
         )}
         {/* <button onClick={testResult}>tejdsf</button> */}
-        {showModal && (
-          <ModalLottery
-            drawResult={drawResult}
-            onCloseModal={onCloseModal}
-            clock={clock}
-            onShowModalCongrats={onShowModalCongrats}
-            winnerResult={winnerResult}
-            result={result}
-            setWinName={setWinName}
-          />
-        )}
-        {showModalCongrats && (
-          <ModalCongrats
-            result={result}
-            name={winName}
-            drawResult={drawResult}
-            onCloseModalCongrats={onCloseModalCongrats}
-          />
-        )}
+
+        <ModalProvider>
+          <Modal isOpen={showModal}>
+            <ModalLottery
+              drawResult={drawResult}
+              onCloseModal={onCloseModal}
+              clock={clock}
+              onShowModalCongrats={onShowModalCongrats}
+              winnerResult={winnerResult}
+              result={result}
+              setWinName={setWinName}
+            />
+          </Modal>
+
+          <Modal isOpen={showModalCongrats}>
+            <ModalCongrats
+              result={result}
+              name={winName}
+              drawResult={drawResult}
+              onCloseModalCongrats={onCloseModalCongrats}
+            />
+          </Modal>
+        </ModalProvider>
         <Banner />
         <Payments />
         <Operations />
@@ -2167,7 +2173,6 @@ const TimerPopup = styled.div`
   cursor: pointer;
   right: 30px;
   top: 0px;
-  z-index: 99999;
   margin-top: -160px;
   @media (max-width: 768px) {
     margin-top: -180px;

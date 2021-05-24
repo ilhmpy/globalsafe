@@ -238,7 +238,7 @@ input[type=number] {
 }
 .present-enter-active {
     opacity: 1;
-    transition: all 10000ms ease-in-out;
+    transition: all 2000ms ease-in-out;
 }
 .present-exit {
     opacity: 1;
@@ -246,6 +246,22 @@ input[type=number] {
 .present-exit-active {
     opacity: 0;
     transition: opacity 10ms ease-in;
+}
+
+
+.fade-enter {
+  opacity: 0.01;
+}
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity 1000ms ease-in;
+}
+.fade-exit {
+  opacity: 0;
+}
+.fade-exit-active {
+  opacity: 0;
+  transition: none;
 }
 
 @keyframes flickerAnimation {
