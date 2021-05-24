@@ -15,7 +15,7 @@ export const SliderComponent: FC<{
         min={0}
         max={168}
         defaultValue={value}
-        onAfterChange={onAfterChange}
+        onChange={onAfterChange}
       />
     </Styled.SliderWrap>
   );
