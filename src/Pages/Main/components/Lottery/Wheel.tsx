@@ -111,33 +111,36 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
   };
 
   useEffect(() => {
-    if (drawResult) {
+    let timer1: any;
+    let timer2: any;
+    let timer3: any;
+    if (!!drawResult) {
       const numOptions = list.length;
       const arcSize = (2 * Math.PI) / numOptions;
       setAngle(arcSize);
       topPosition(numOptions, arcSize);
-      // setEaseOut((easy) => easy + 2);
       const segment = 360 / list.length;
       const win = drawResult[1].kind;
       const key = win === 0 ? 2 : win === 1 ? 1 : win === 2 ? 4 : 5;
       let newPosition = segment * key - Math.random() * segment;
 
-      // setTimeout(() => {
-      //   winnerResult(drawResult[1]);
-      // }, 5000);
-
-      setTimeout(() => {
+      timer1 = setTimeout(() => {
         setPrevRotate(newPosition);
-        setRotate(-newPosition + 2160);
-        setShow(true);
+        setRotate(-newPosition + 3240);
       }, 2000);
-
-      setTimeout(() => {
+      timer3 = setTimeout(() => {
+        setShow(true);
+      }, 11000);
+      timer2 = setTimeout(() => {
         onShowModalCongrats();
-        setRotate(0);
-      }, 10000);
+      }, 20000);
     }
-  }, []);
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      clearTimeout(timer3);
+    };
+  }, [drawResult]);
 
   const test = () => {
     setEaseOut((easy) => easy + 2);
@@ -146,7 +149,7 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
     const key = 5;
     let newPosition = segment * key - Math.random() * segment;
     setPrevRotate(newPosition);
-    setRotate(-newPosition + 2160);
+    setRotate(-newPosition + 2880);
 
     console.log("newPosition", newPosition);
   };
@@ -180,7 +183,6 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
           <Styled.Wheel
             style={{
               WebkitTransform: `rotate(${rotate}deg)`,
-              WebkitTransition: `-webkit-transform ${easeOut}s ease-in-out`,
               position: "relative",
             }}
           >

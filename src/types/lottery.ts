@@ -45,3 +45,10 @@ export interface RootGetDraw {
     collection: CollectionGetDraw[];
 }
 
+export interface ArrList {
+    name: string;
+    kind: number;
+    date: Date;
+    volume: any;
+    balanceKind: number
+}
