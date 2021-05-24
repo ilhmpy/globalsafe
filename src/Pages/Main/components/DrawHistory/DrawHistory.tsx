@@ -45,7 +45,7 @@ export const DrawHistory: FC<Props> = ({ setShowModal }) => {
           balanceKind: data[1].balanceKind,
         }));
         console.log("arrList", arrList);
-        !clean && setNotifyList([...arrList, ...notifyList]);
+        !clean && setNotifyList([...arrList[0], ...notifyList]);
       });
       hubConnection
         .invoke<RootLottery>("GetPrizes", 0, 5)
