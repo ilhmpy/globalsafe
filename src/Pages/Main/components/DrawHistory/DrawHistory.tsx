@@ -44,6 +44,7 @@ export const DrawHistory: FC<Props> = ({ setShowModal }) => {
           volume: data[1].kind,
           balanceKind: data[1].balanceKind,
         }));
+        console.log("arrList", arrList);
         !clean && setNotifyList([...arrList, ...notifyList]);
       });
       hubConnection
