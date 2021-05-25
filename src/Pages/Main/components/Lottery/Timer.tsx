@@ -32,8 +32,7 @@ export const Timer: FC<Props> = ({
   const languale = lang === "ru" ? 1 : 0;
 
   useEffect(() => {
-    let clean = false;
-    if (hubConnection && !clean) {
+    if (hubConnection) {
       hubConnection
         .invoke<RootClock>("GetNextDraw")
         .then((res) => {
@@ -41,9 +40,6 @@ export const Timer: FC<Props> = ({
         })
         .catch((e) => console.log(e));
     }
-    return () => {
-      clean = true;
-    };
   }, [hubConnection]);
 
   const repeat = () => {
@@ -58,19 +54,14 @@ export const Timer: FC<Props> = ({
   };
 
   useEffect(() => {
-    let clean = false;
-    if (clock && !clean) {
-      setDeadline((clock.totalSeconds *= -1));
+    if (clock) {
+      setDeadline(Math.floor((clock.totalSeconds *= -1) + 60));
       setState("0");
     }
-    return () => {
-      clean = true;
-    };
   }, [clock]);
 
   useEffect(() => {
-    let clean = false;
-    if (deadline < 1 && !clean) {
+    if (deadline < 1) {
       setState(null);
       repeat();
       return;
@@ -90,7 +81,6 @@ export const Timer: FC<Props> = ({
 
     return () => {
       clearTimeout(timer);
-      clean = true;
     };
   }, [state, deadline]);
 

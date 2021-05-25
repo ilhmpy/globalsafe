@@ -19,6 +19,10 @@ import { DrawHistory } from "./components/DrawHistory/DrawHistory";
 import { CSSTransition } from "react-transition-group";
 import { ArrList } from "../../types/lottery";
 import Modal, { ModalProvider } from "styled-react-modal";
+import ReactNotification, { store } from "react-notifications-component";
+import "react-notifications-component/dist/theme.css";
+import { useTranslation } from "react-i18next";
+import { Balance } from "../../types/balance";
 
 let fakeData = [
   [
@@ -2043,12 +2047,34 @@ export const Main = () => {
   const [showModalCongrats, setShowModalCongrats] = useState(false);
   const [showTimer, setShowTimer] = useState(true);
   // const [drawResult, setDrawResult] =
-  //   useState<[Prize[], Prize, Users[], Winner] | null>(null);
+  //   useState<[Prize[], Prize, Users[], Winner, string] | null>(null);
   const [drawResult, setDrawResult] = useState<any | null>(null);
 
   const [result, setResult] = useState<Prize | null>(null);
   const [winName, setWinName] = useState<string | null>(null);
   const [notifyList, setNotifyList] = useState<ArrList[]>([]);
+  const { t } = useTranslation();
+
+  const alert = (
+    title: string,
+    message: string,
+    type: "success" | "default" | "warning" | "info" | "danger"
+  ) => {
+    store.addNotification({
+      title: title,
+      message: message,
+      type: type,
+      insert: "top",
+      container: "top-right",
+      animationIn: ["animate__animated", "animate__fadeIn"],
+      animationOut: ["animate__animated", "animate__fadeOut"],
+      dismiss: {
+        duration: 10000,
+      },
+    });
+  };
+
+  // alert(t("winner") {name},  t("alert.depositMsg"), "success");
 
   const winnerResult = (res: Prize) => {
     setResult(res);
@@ -2085,6 +2111,7 @@ export const Main = () => {
     setDrawResult(null);
     setShowModal(false);
     setShowModalCongrats(true);
+    console.log("onShowModalCongrats");
   };
 
   const onOpenModal = () => {
@@ -2092,15 +2119,33 @@ export const Main = () => {
     setDrawResult(null);
   };
 
+  const winner = (drawResult: any) => {
+    let val =
+      drawResult[1].kind === 0
+        ? (drawResult[1].volume / 100000).toLocaleString("ru-RU", {
+            maximumFractionDigits: 5,
+          })
+        : drawResult[1].kind === 1
+        ? t("win.two")
+        : drawResult[1].volume + " " + " " + drawResult[1].volume
+        ? Balance[drawResult[1].balanceKind]
+        : "";
+    alert(t("winner") + " " + " " + drawResult[3].name, val, "success");
+  };
+
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
 
   useEffect(() => {
     let clean = false;
+    let timer: any;
     if (hubConnection) {
       hubConnection.on("DrawResult", (data) => {
         console.log("DrawResult", data);
         !clean && setDrawResult(data);
+        timer = setTimeout(() => {
+          winner(data);
+        }, 25000);
       });
       hubConnection
         .invoke<RootClock>("GetNextDraw")
@@ -2123,7 +2168,9 @@ export const Main = () => {
   return (
     <div>
       <Header />
-
+      <Notify>
+        <ReactNotification />
+      </Notify>
       <MainPage>
         {showTimer && (
           <TimerPopup onClick={onShowModal}>
@@ -2131,17 +2178,6 @@ export const Main = () => {
           </TimerPopup>
         )}
         {/* <button onClick={testResult}>tejdsf</button> */}
-        {/* {showModal && (
-          <ModalLottery
-            drawResult={drawResult}
-            onCloseModal={onCloseModal}
-            clock={clock}
-            onShowModalCongrats={onShowModalCongrats}
-            winnerResult={winnerResult}
-            result={result}
-            setWinName={setWinName}
-          />
-        )} */}
 
         <ModalProvider>
           <Modal isOpen={showModal}>
@@ -2177,6 +2213,20 @@ export const Main = () => {
     </div>
   );
 };
+
+const Notify = styled.div`
+  .notification__title {
+    font-family: "Roboto", sans-serif;
+    font-size: 26px;
+  }
+  .notification__item {
+    border-radius: 20px;
+  }
+  .notification__message {
+    font-family: "Roboto", sans-serif;
+    font-size: 22px;
+  }
+`;
 
 const MainPage = styled(Page)`
   margin-top: 200px;
