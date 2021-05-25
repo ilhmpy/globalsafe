@@ -2087,6 +2087,11 @@ export const Main = () => {
     setShowModalCongrats(true);
   };
 
+  const onOpenModal = () => {
+    setShowModal(true);
+    setDrawResult(null);
+  };
+
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
 
@@ -2149,7 +2154,7 @@ export const Main = () => {
         <Payments />
         <Operations />
         <Tariffs />
-        <DrawHistory setShowModal={setShowModal} />
+        <DrawHistory onOpenModal={onOpenModal} />
         <About />
         <Contact />
         <Footer />

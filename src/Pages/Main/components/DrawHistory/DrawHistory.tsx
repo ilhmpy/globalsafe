@@ -21,10 +21,10 @@ import { Item } from "../../../../components/FilterMenu/Styled.elements";
 import { isTemplateHead } from "typescript";
 
 type Props = {
-  setShowModal: (val: boolean) => void;
+  onOpenModal: () => void;
 };
 
-export const DrawHistory: FC<Props> = ({ setShowModal }) => {
+export const DrawHistory: FC<Props> = ({ onOpenModal }) => {
   const [notifyList, setNotifyList] = useState<ArrList[]>([]);
   const [num, setNum] = useState(0);
   const [show, setShow] = useState(true);
@@ -33,7 +33,6 @@ export const DrawHistory: FC<Props> = ({ setShowModal }) => {
 
   useEffect(() => {
     let clean = false;
-
     if (hubConnection) {
       hubConnection.on("DrawResult", (data) => {
         console.log("DrawResult", data);
@@ -41,11 +40,11 @@ export const DrawHistory: FC<Props> = ({ setShowModal }) => {
           name: data[3].name,
           kind: data[1].kind,
           date: data[4],
-          volume: data[1].kind,
+          volume: data[1].volume,
           balanceKind: data[1].balanceKind,
         };
         console.log("arrList", arrList);
-        !clean && setNotifyList([arrList, ...notifyList]);
+        setNotifyList([arrList, ...notifyList]);
       });
       hubConnection
         .invoke<RootLottery>("GetPrizes", 0, 5)
@@ -66,6 +65,8 @@ export const DrawHistory: FC<Props> = ({ setShowModal }) => {
       clean = true;
     };
   }, [hubConnection]);
+
+  console.log("notifyList", notifyList);
 
   const { t } = useTranslation();
 
@@ -108,7 +109,7 @@ export const DrawHistory: FC<Props> = ({ setShowModal }) => {
       </Container>
 
       <Container>
-        <TimerHistoryContainer alfa onClick={() => setShowModal(true)}>
+        <TimerHistoryContainer alfa onClick={onOpenModal}>
           <Timer icon={false} timerHistory />
           <Button danger>{t("goDraw")}</Button>
         </TimerHistoryContainer>
@@ -164,6 +165,7 @@ const TimerHistoryContainer = styled(Card)`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 30px;
   ${Button} {
     @media (max-width: 768px) {
       display: none;

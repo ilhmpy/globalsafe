@@ -9,7 +9,6 @@ export const CloseIcon = styled(Close)`
   right: 18px;
   top: 18px;
   color: ${(props) => props.theme.text3};
-
   path {
     fill: ${(props) => props.theme.text3};
     &:hover {

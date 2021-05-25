@@ -37,7 +37,6 @@ export const Timer: FC<Props> = ({
       hubConnection
         .invoke<RootClock>("GetNextDraw")
         .then((res) => {
-          console.log("GetNextDraw", res);
           !clean && setClock(res);
         })
         .catch((e) => console.log(e));
@@ -52,7 +51,6 @@ export const Timer: FC<Props> = ({
       hubConnection
         .invoke<RootClock>("GetNextDraw")
         .then((res) => {
-          console.log("GetNextDraw", res);
           setClock(res);
         })
         .catch((e) => console.log(e));
@@ -88,7 +86,7 @@ export const Timer: FC<Props> = ({
     return () => {
       clearTimeout(timer);
     };
-  }, [state, last, deadline]);
+  }, [state, deadline]);
 
   return (
     <>
