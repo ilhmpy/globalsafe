@@ -264,6 +264,24 @@ input[type=number] {
   transition: none;
 }
 
+.modals-enter {
+  opacity: 0;
+  transform: scale(0.9);
+}
+.modals-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 3000ms, transform 300ms;
+}
+.modals-exit {
+  opacity: 1;
+}
+.modals-exit-active {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 3000ms, transform 3000ms;
+}
+
 @keyframes flickerAnimation {
     0% {
         opacity: 1;

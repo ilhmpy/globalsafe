@@ -3,6 +3,7 @@ import styled from "styled-components/macro";
 import * as Styled from "./Lottery.elements";
 import { Prize, Winner, Users } from "../../../../types/drawResult";
 import { useTranslation } from "react-i18next";
+import { CSSTransition } from "react-transition-group";
 
 const arr = [
   {
@@ -2018,6 +2019,7 @@ export const Slots: FC<Props> = ({ drawResult, setWinName }) => {
         />
         <button>Winner</button>
       </form> */}
+
       <Styled.Box>
         <Styled.SlotTitle>{t("winner")}</Styled.SlotTitle>
         <Styled.Wrapper>
