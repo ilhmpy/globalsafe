@@ -37,15 +37,57 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
   const list = ["document", "euro1", "euro2", "procent", "euro3", "euro4"];
 
   // list = ["document = 1 0", "euro1", "euro2", "procent = 2  3", "euro3", "euro4"]
-
-  // useEffect(() => {
-  //   const numOptions = list.length;
-  //   const arcSize = (2 * Math.PI) / numOptions;
-  //   setAngle(arcSize);
-  //   topPosition(numOptions, arcSize);
-  // }, []);
-
-  // console.log("angle", angle);
+  // list = [drawResult[1][0], drawResult[1][3], drawResult[1][4], drawResult[1][1], drawResult[1][2], drawResult[1][5]]
+  let fakeArr = [
+    {
+      id: 322559577302237185,
+      safeId: "322559577302237185", //1
+      kind: 2,
+      isActive: true,
+      balanceKind: 9,
+      volume: 1,
+    },
+    {
+      id: 322559860770078721,
+      safeId: "322559860770078721", //3
+      kind: 1,
+      isActive: true,
+      balanceKind: null,
+      volume: null,
+    },
+    {
+      id: 322558885812502529,
+      safeId: "322558885812502529",
+      kind: 0,
+      isActive: true,
+      balanceKind: 1,
+      volume: 6000000,
+    },
+    {
+      id: 322558847157796865,
+      safeId: "322558847157796865",
+      kind: 0,
+      isActive: true,
+      balanceKind: 1,
+      volume: 4000000,
+    },
+    {
+      id: 322558902992371713,
+      safeId: "322558902992371713",
+      kind: 0,
+      isActive: true,
+      balanceKind: 1,
+      volume: 8000000,
+    },
+    {
+      id: 322558567984922625,
+      safeId: "322558567984922625",
+      kind: 0,
+      isActive: true,
+      balanceKind: 1,
+      volume: 2000000,
+    },
+  ];
 
   const topPosition = (num: number, angle: number) => {
     let topSpot: null | number = null;
@@ -115,6 +157,15 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
     let timer2: any;
     let timer3: any;
     if (!!drawResult) {
+      const prizes = [
+        drawResult[0][0],
+        drawResult[0][3],
+        drawResult[0][4],
+        drawResult[0][1],
+        drawResult[0][2],
+        drawResult[0][5],
+      ];
+      const keyWin = prizes.findIndex((i) => i.safeId === drawResult[1].safeId);
       const numOptions = list.length;
       const arcSize = (2 * Math.PI) / numOptions;
       setAngle(arcSize);
@@ -122,7 +173,7 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
       const segment = 360 / list.length;
       const win = drawResult[1].kind;
       const key = win === 0 ? 2 : win === 1 ? 1 : win === 2 ? 4 : 5;
-      let newPosition = segment * key - Math.random() * segment;
+      let newPosition = segment * (keyWin + 1) - Math.random() * segment;
 
       timer1 = setTimeout(() => {
         setPrevRotate(newPosition);
@@ -130,7 +181,7 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
       }, 2000);
       timer3 = setTimeout(() => {
         setShow(true);
-      }, 11000);
+      }, 12000);
       timer2 = setTimeout(() => {
         onShowModalCongrats();
       }, 20000);

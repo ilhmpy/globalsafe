@@ -30,7 +30,7 @@ export const ModalCongrats: FC<Props> = ({
           {result && name ? (
             <Styled.WinContainer>
               <Styled.WinTitle>
-                {t("congrat")}&nbsp;{name}
+                {t("congrat")}&nbsp;<div>{name}</div>
               </Styled.WinTitle>
               <Styled.WinTitle sub>
                 {t("youWon")}{" "}

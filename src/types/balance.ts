@@ -11,6 +11,7 @@
     FUTURE4,
     FUTURE5,
     FUTURE6,
+    GLOBALSAFE
 }
 
 export type BalanceList = {

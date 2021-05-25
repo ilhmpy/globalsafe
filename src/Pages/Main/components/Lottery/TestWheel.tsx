@@ -1,28 +1,51 @@
 import React, { useState, useEffect, useRef } from "react";
 
 const list = {
-  "116208": "Jerry's Subs and Pizza",
-  "66271": "Starbucks",
-  "5518": "Ireland's Four Courts",
-  "392360": "Five Guys",
-  "2210952": "Uptown Cafe",
-  "207306": "Corner Bakery Courthouse",
-  "41457": "Delhi Dhaba",
-  "101161": "TNR Cafe",
-  "257424": "Afghan Kabob House",
-  "512060": "The Perfect Pita",
-  "66244": "California Tortilla",
-  "352867": "Pho 75 - Rosslyn",
-  "22493": "Ragtime",
-  "268052": "Subway",
-  "5665": "Summers Restaurant & Sports Bar",
-  "129724": "Cosi",
-  "42599": "Ray's Hell Burger",
+  "116208": "Document",
+  "66271": "Euro",
+  "5518": "Euro",
+  "392360": "Procent",
+  "2210952": "Euro",
+  "207306": "Euro",
 };
 
 export const TestWheel = () => {
   const [state, setState] = useState();
   const ref = useRef<HTMLCanvasElement>(null);
+
+  const wheel = {
+    timerHandle: 0,
+    timerDelay: 33,
+    angleCurrent: 0,
+    angleDelta: 0,
+    size: 290,
+    canvasContext: null,
+    colors: [
+      "#ffff00",
+      "#ffc700",
+      "#ff9100",
+      "#ff6301",
+      "#ff0000",
+      "#c6037e",
+      "#713697",
+      "#444ea1",
+      "#2772b2",
+      "#0297ba",
+      "#008e5b",
+      "#8ac819",
+    ],
+    segments: [],
+    seg_colors: [],
+    maxSpeed: Math.PI / 16,
+    upTime: 1000,
+    // How long to spin up for (in ms)
+    downTime: 17000,
+    // How long to slow down for (in ms)
+    spinStart: 0,
+    frames: 0,
+    centerX: 300,
+    centerY: 300,
+  };
 
   return (
     <div>

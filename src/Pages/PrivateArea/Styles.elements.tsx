@@ -827,6 +827,7 @@ export const SmallButtonsWrap = styled.div`
   padding-bottom: 5px;
   ${SmallButton} {
     margin-right: 7px;
+    margin-bottom: 8px;
     min-width: 73px;
   }
 `;

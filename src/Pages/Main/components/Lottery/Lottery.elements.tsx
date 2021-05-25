@@ -9,7 +9,6 @@ export const CloseIcon = styled(Close)`
   right: 18px;
   top: 18px;
   color: ${(props) => props.theme.text3};
-
   path {
     fill: ${(props) => props.theme.text3};
     &:hover {
@@ -337,7 +336,7 @@ export const ModalButton = styled(Button)`
 `;
 
 export const TimerHistoryInner = styled.div`
-  margin-right: 188px;
+  margin-right: 80px;
   @media (max-width: 768px) {
     margin-right: 0px;
   }
