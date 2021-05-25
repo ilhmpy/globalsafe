@@ -2131,7 +2131,7 @@ export const Main = () => {
           </TimerPopup>
         )}
         {/* <button onClick={testResult}>tejdsf</button> */}
-        {showModal && (
+        {/* {showModal && (
           <ModalLottery
             drawResult={drawResult}
             onCloseModal={onCloseModal}
@@ -2141,10 +2141,10 @@ export const Main = () => {
             result={result}
             setWinName={setWinName}
           />
-        )}
+        )} */}
 
         <ModalProvider>
-          {/* <Modal isOpen={showModal}>
+          <Modal isOpen={showModal}>
             <ModalLottery
               drawResult={drawResult}
               onCloseModal={onCloseModal}
@@ -2154,7 +2154,7 @@ export const Main = () => {
               result={result}
               setWinName={setWinName}
             />
-          </Modal> */}
+          </Modal>
 
           <Modal isOpen={showModalCongrats}>
             <ModalCongrats

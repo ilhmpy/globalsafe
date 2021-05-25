@@ -2022,20 +2022,27 @@ export const Slots: FC<Props> = ({ drawResult, setWinName }) => {
 
       <Styled.Box>
         <Styled.SlotTitle>{t("winner")}</Styled.SlotTitle>
-        <Styled.Wrapper>
-          <Styled.Drum style={{ transform: `rotateX(${deg}deg)` }}>
-            {drawResult
-              ? drawResult[2].map((s, i) => (
-                  <Slot key={i} i={i}>
-                    <Styled.Inside red={red && i === selectedIndex}>
-                      {s.name}
-                    </Styled.Inside>
-                  </Slot>
-                ))
-              : ""}
-          </Styled.Drum>
-          <Styled.SlotCenter />
-        </Styled.Wrapper>
+        <CSSTransition
+          in={selectedIndex !== 0}
+          timeout={3000}
+          classNames="modals"
+          unmountOnExit
+        >
+          <Styled.Wrapper>
+            <Styled.Drum style={{ transform: `rotateX(${deg}deg)` }}>
+              {drawResult
+                ? drawResult[2].map((s, i) => (
+                    <Slot key={i} i={i}>
+                      <Styled.Inside red={red && i === selectedIndex}>
+                        {s.name}
+                      </Styled.Inside>
+                    </Slot>
+                  ))
+                : ""}
+            </Styled.Drum>
+            <Styled.SlotCenter />
+          </Styled.Wrapper>
+        </CSSTransition>
       </Styled.Box>
     </>
   );
