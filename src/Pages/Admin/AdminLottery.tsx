@@ -76,7 +76,7 @@ export const AdminLottery = () => {
 
   useEffect(() => {
     submit();
-  }, [hubConnection, languale, openDate]);
+  }, [hubConnection, languale]);
 
   const submit = () => {
     setLotteryList(null);
@@ -124,6 +124,7 @@ export const AdminLottery = () => {
   };
 
   const myLoad = () => {
+    console.log("myLoad");
     setCount(false);
     if (hubConnection && lotteryArrList.length < totalLottery) {
       hubConnection
@@ -132,16 +133,16 @@ export const AdminLottery = () => {
           name ? name : null,
           openDate.from ? openDate.from : null,
           openDate.to ? openDate.to : null,
-          null,
+          checkList.length ? checkList.map((i: any) => i.id) : null,
           num,
           20
         )
         .then((res) => {
           setLoading(false);
           if (res.collection.length) {
-            if (res.collection.length) {
+            if (res.collection.length && lotteryList) {
               setLotteryArrList([...lotteryArrList, ...res.collection]);
-              let result: LotteryTable = {};
+              let result: LotteryTable = { ...lotteryList };
               for (let key in res.collection) {
                 const newArr = res.collection[key];
                 const d = moment(res.collection[key].drawLog.drawDate).format(
@@ -153,12 +154,12 @@ export const AdminLottery = () => {
                   result[d] = [newArr];
                 }
               }
-              setLotteryList({ ...lotteryList, ...result });
+              setLotteryList(result);
+              setCount(true);
+              setNum(num + 20);
             } else {
               setLotteryList(null);
             }
-            setCount(true);
-            setNum(num + 20);
           }
         })
         .catch((e) => console.log(e));
@@ -190,6 +191,8 @@ export const AdminLottery = () => {
       setStartDate(startDate);
     }
   };
+
+  console.log("lotteryList", lotteryList);
 
   return (
     <div>
@@ -330,7 +333,7 @@ export const AdminLottery = () => {
               {lotteryList ? (
                 <Scrollbars style={{ height: "500px" }}>
                   <InfiniteScroll
-                    pageStart={10}
+                    pageStart={20}
                     loadMore={myLoad}
                     hasMore={count}
                     useWindow={false}
@@ -342,7 +345,7 @@ export const AdminLottery = () => {
                   >
                     <Styled.Table>
                       {Object.keys(lotteryList).map((key, idx) => (
-                        <tbody key={key + idx}>
+                        <tbody key={key}>
                           <Styled.Tr
                             style={{
                               textAlign: "center",

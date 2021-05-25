@@ -106,7 +106,7 @@ export const WheelWrap = styled.div`
   padding-top: 40px;
 `;
 
-export const Present = styled.div`
+export const Present = styled.div<{ show?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -119,7 +119,11 @@ export const Present = styled.div`
   font-size: 36px;
   line-height: 42px;
   color: #ff416e;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
+  transition: 0.3s ease-in-out;
+  opacity: ${(props) => (props.show ? "1" : "0")};
   text-align: center;
+  margin-top: 15px;
   svg {
     margin-right: 10px;
   }
@@ -185,8 +189,7 @@ export const Container = styled.div`
   /* background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0) 100%),
     linear-gradient(113.23deg, #ffffff 25.61%, #f3f4f5 60.51%); */
   max-width: 1060px;
-  margin: 40px auto;
-  padding: 13px 0px 28px;
+  margin: 0px auto 44px;
   height: 470px;
   @media (max-width: 992px) {
     height: auto;
@@ -196,6 +199,27 @@ export const Container = styled.div`
 export const ContainerItem = styled.div`
   width: 400px;
   margin: 0 30px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  .modals-enter {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  .modals-enter-active {
+    opacity: 1;
+    transform: translateX(0);
+    transition: opacity 3000ms, transform 300ms;
+  }
+  .modals-exit {
+    opacity: 1;
+  }
+  .modals-exit-active {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 3000ms, transform 3000ms;
+  }
   @media (max-width: 576px) {
     max-width: 260px;
     margin: 0 15px;
@@ -230,6 +254,8 @@ export const Box = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  margin-top: 20px;
+  height: 100%;
   max-width: 460px;
   width: 100%;
 `;
@@ -242,13 +268,14 @@ export const SlotTitle = styled.div`
   align-items: center;
   letter-spacing: 0.1px;
   color: ${(props) => props.theme.text2};
-  margin-bottom: 40px;
+  margin-bottom: 60px;
 `;
 
 export const Wrapper = styled.div`
   overflow: hidden;
   width: 320px;
   height: 180px;
+  margin-bottom: 40px;
   position: relative;
   @media (max-width: 576px) {
     width: 260px;
@@ -299,6 +326,7 @@ export const WinDesc = styled.div`
   color: ${(props) => props.theme.thHead};
   letter-spacing: 0.1px;
   font-weight: normal;
+  text-align: center;
   font-size: 18px;
   line-height: 21px;
 `;

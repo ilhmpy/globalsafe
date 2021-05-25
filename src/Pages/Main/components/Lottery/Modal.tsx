@@ -9,7 +9,7 @@ import { RootClock } from "../../../../types/clock";
 import { Prize, Winner, Users } from "../../../../types/drawResult";
 import { Balance } from "../../../../types/balance";
 import { Card } from "../../../../globalStyles";
-import { CSSTransition } from "react-transition-group";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { useTranslation } from "react-i18next";
 
 type Props = {
@@ -43,40 +43,40 @@ export const ModalLottery: FC<Props> = ({
   const { t } = useTranslation();
 
   return (
-    <div>
-      <Modal width={1100} onClose={onCloseModal}>
-        <Styled.Container>
-          <Styled.ContainerItem>
-            <Wheel
+    <Modal width={1100} onClose={onCloseModal}>
+      <Styled.Container>
+        <Styled.ContainerItem>
+          <Wheel
+            drawResult={drawResult}
+            winnerResult={winnerResult}
+            onShowModalCongrats={onShowModalCongrats}
+          />
+        </Styled.ContainerItem>
+
+        <Styled.ContainerItem>
+          <CSSTransition
+            in={!!drawResult}
+            timeout={3000}
+            classNames="modals"
+            unmountOnExit
+          >
+            <Slots
+              setWinName={setWinName}
+              winNumber={90}
               drawResult={drawResult}
-              winnerResult={winnerResult}
-              onShowModalCongrats={onShowModalCongrats}
             />
-          </Styled.ContainerItem>
+          </CSSTransition>
 
-          <Styled.ContainerItem>
-            <CSSTransition
-              in={!!drawResult}
-              timeout={10000}
-              classNames="present"
-              unmountOnExit
-            >
-              <Slots
-                setWinName={setWinName}
-                winNumber={90}
-                drawResult={drawResult}
-              />
-            </CSSTransition>
-
-            <CSSTransition
-              in={!drawResult}
-              timeout={1000}
-              classNames="present"
-              unmountOnExit
-            >
-              <Timer icon={false} clock={clock} />
-            </CSSTransition>
-            {/* {drawResult ? (
+          <CSSTransition
+            in={drawResult === null}
+            timeout={3000}
+            classNames="modals"
+            unmountOnExit
+            mountOnEnter
+          >
+            <Timer icon={false} clock={clock} />
+          </CSSTransition>
+          {/* {drawResult ? (
               <Slots
                 setWinName={setWinName}
                 winNumber={90}
@@ -85,9 +85,10 @@ export const ModalLottery: FC<Props> = ({
             ) : (
               <Timer icon={false} clock={clock} />
             )} */}
-          </Styled.ContainerItem>
-        </Styled.Container>
-        {/* 
+        </Styled.ContainerItem>
+      </Styled.Container>
+
+      {/* 
         {drawResult ? (
           <Styled.WinContainer>
             <Styled.WinTitle>Поздравляем {drawResult[3].name}</Styled.WinTitle>
@@ -116,7 +117,6 @@ export const ModalLottery: FC<Props> = ({
         ) : (
           ""
         )} */}
-      </Modal>
-    </div>
+    </Modal>
   );
 };

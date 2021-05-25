@@ -8,6 +8,10 @@ import { Balance } from "../../../../types/balance";
 import { ReactComponent as PresentIcon } from "../../../../assets/svg/present.svg";
 import { useTranslation } from "react-i18next";
 import { CSSTransition } from "react-transition-group";
+import styled from "styled-components";
+import doc from "../../../../assets/svg/document.svg";
+import euro from "../../../../assets/svg/euro.svg";
+import proc from "../../../../assets/svg/proc.svg";
 
 type Props = {
   drawResult: [Prize[], Prize, Users[], Winner] | null;
@@ -207,29 +211,27 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
 
   return (
     <>
-      {/* <button onClick={test}>test</button> */}
       {drawResult && (
-        <CSSTransition
-          in={show && !!drawResult}
-          timeout={10000}
-          classNames="present"
-          unmountOnExit
-        >
-          <Styled.Present>
-            <PresentIcon />
-            {drawResult[1].kind === 0
-              ? (drawResult[1].volume / 100000).toLocaleString("ru-RU", {
-                  maximumFractionDigits: 5,
-                })
-              : drawResult[1].kind === 1
-              ? t("win.two")
-              : drawResult[1].volume}
-            &nbsp;
-            {drawResult[1].volume ? Balance[drawResult[1].balanceKind] : ""}
-          </Styled.Present>
-        </CSSTransition>
+        // <CSSTransition
+        //   in={show && !!drawResult}
+        //   timeout={10000}
+        //   classNames="present"
+        // >
+        <Styled.Present show={show && !!drawResult}>
+          <PresentIcon />
+          {drawResult[1].kind === 0
+            ? (drawResult[1].volume / 100000).toLocaleString("ru-RU", {
+                maximumFractionDigits: 5,
+              })
+            : drawResult[1].kind === 1
+            ? t("win.two")
+            : drawResult[1].volume}
+          &nbsp;
+          {drawResult[1].volume ? Balance[drawResult[1].balanceKind] : ""}
+        </Styled.Present>
+        // </CSSTransition>
       )}
-      <Styled.WheelWrap>
+      {/* <Styled.WheelWrap>
         <Styled.WheelContainer onClick={onHandleClick}>
           <Styled.Wheel
             style={{
@@ -246,7 +248,301 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
             <img src={center} alt="" />
           </Styled.Center>
         </Styled.WheelContainer>
-      </Styled.WheelWrap>
+      </Styled.WheelWrap> */}
+
+      <WheelContainer>
+        <WheelContainerInner>
+          <WheelImg>
+            <section
+              className="chart"
+              style={{
+                WebkitTransform: `rotate(${rotate}deg)`,
+                position: "relative",
+              }}
+            >
+              <Img1 src={doc} alt="" />
+              <Img2 src={euro} alt="" />
+              <Img3 src={euro} alt="" />
+              <Img4 src={proc} alt="" />
+              <Img5 src={euro} alt="" />
+              <Img6 src={euro} alt="" />
+              <div className="triangle" style={{ transform: "rotate(0deg)" }}>
+                <div
+                  className="circle"
+                  style={{
+                    background:
+                      "radial-gradient(circle farthest-corner, rgba(255, 145, 0, 1) 3.76%, rgba(255, 182, 85, 1) 100%)",
+                  }}
+                ></div>
+              </div>
+              <div
+                className="triangle"
+                style={{ transform: "rotate(-60deg), position: 'relative'" }}
+              >
+                <div
+                  className="circle"
+                  style={{
+                    background:
+                      "radial-gradient( circle farthest-corner, rgba(197, 0, 72, 1) 0%, rgba(224, 43, 106, 1) 47.98%, rgba(255, 94, 147, 1) 100%)",
+                    position: "relative",
+                  }}
+                ></div>
+              </div>
+              <div
+                className="triangle"
+                style={{ transform: "rotate(-120deg)" }}
+              >
+                <div
+                  className="circle"
+                  style={{
+                    background:
+                      "radial-gradient( circle farthest-corner, rgba(122, 244, 171, 1) 3.76%, rgba(201, 206, 126, 1) 100%)",
+                  }}
+                ></div>
+              </div>
+              <div
+                className="triangle"
+                style={{ transform: "rotate(-180deg)" }}
+              >
+                <div
+                  className="circle"
+                  style={{
+                    background:
+                      "radial-gradient( circle farthest-corner, rgba(122, 244, 171, 1) 3.76%, rgba(201, 206, 126, 1) 100%)",
+                  }}
+                ></div>
+              </div>
+              <div
+                className="triangle"
+                style={{ transform: "rotate(-180deg)" }}
+              >
+                <div
+                  className="circle"
+                  style={{
+                    background:
+                      "radial-gradient( circle farthest-corner, rgba(9, 86, 198, 1) 3.76%, rgba(9, 91, 200, 1) 13.58%, rgba(9, 104, 207, 1) 24.66%, rgba(8, 127, 219, 1) 36.35%, rgba(7, 158, 235, 1) 48.38%, rgba(7, 169, 240, 1) 51.96%, rgba(30, 177, 242, 1) 55.27%, rgba(66, 190, 245, 1) 61.22%, rgba(95, 201, 248, 1) 67.51%, rgba(118, 210, 250, 1) 74.15%, rgba(134, 215, 251, 1) 81.3%, rgba(144, 219, 252, 1) 89.32%, rgba(147, 220, 252, 1) 100%)",
+                  }}
+                ></div>
+              </div>
+              <div
+                className="triangle"
+                style={{ transform: "rotate(-240deg)" }}
+              >
+                <div
+                  className="circle"
+                  style={{
+                    background:
+                      "radial-gradient(circle farthest-corner, rgba(43, 56, 148, 1) 3.76%, rgba(128, 120, 191, 1) 100%)",
+                  }}
+                ></div>
+              </div>
+              <div
+                className="triangle"
+                style={{ transform: "rotate(-300deg)" }}
+              >
+                <div
+                  className="circle"
+                  style={{
+                    background:
+                      "radial-gradient( circle farthest-corner, rgba(197, 0, 72, 1) 0%, rgba(104, 100, 181, 1) 100%)",
+                  }}
+                ></div>
+              </div>
+            </section>
+            <Center>
+              <img src={center} alt="" />
+            </Center>
+          </WheelImg>
+        </WheelContainerInner>
+        <Arrow>
+          <img src={arrow} alt="" />
+        </Arrow>
+      </WheelContainer>
     </>
   );
 };
+
+const Arrow = styled.div`
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  margin-left: -15px;
+  width: 33px;
+  height: 93px;
+`;
+
+const Center = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 170px;
+  height: 170px;
+  margin-top: -85px;
+  margin-left: -85px;
+  transform: rotate(-30deg);
+  &:before {
+    content: "";
+    border: 12px solid #fff;
+    border-radius: 50%;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: -11px;
+    left: -12px;
+  }
+  @media (max-width: 576px) {
+    width: 120px;
+    height: 120px;
+    margin-top: -60px;
+    margin-left: -60px;
+  }
+`;
+
+const Img = styled.img`
+  z-index: 99999;
+  position: absolute;
+  width: 60px;
+  @media (max-width: 576px) {
+    width: 40px;
+  }
+`;
+
+const Img1 = styled(Img)`
+  top: 17px;
+  left: 158px;
+  transform: rotate(0deg);
+  @media (max-width: 576px) {
+    top: 5px;
+    left: 107px;
+  }
+`;
+
+const Img2 = styled(Img)`
+  top: 91px;
+  left: 267px;
+  transform: rotate(-12deg);
+  @media (max-width: 576px) {
+    top: 63px;
+    left: 190px;
+  }
+`;
+
+const Img3 = styled(Img)`
+  top: 228px;
+  left: 264px;
+  transform: rotate(48deg);
+  @media (max-width: 576px) {
+    top: 161px;
+    left: 188px;
+  }
+`;
+
+const Img4 = styled(Img)`
+  top: 290px;
+  left: 145px;
+  transform: rotate(-10deg);
+  @media (max-width: 576px) {
+    top: 208px;
+    left: 102px;
+  }
+`;
+
+const Img5 = styled(Img)`
+  top: 222px;
+  left: 31px;
+  transform: rotate(169deg);
+  @media (max-width: 576px) {
+    top: 161px;
+    left: 19px;
+  }
+`;
+
+const Img6 = styled(Img)`
+  top: 85px;
+  left: 33px;
+  transform: rotate(-132deg);
+  @media (max-width: 576px) {
+    top: 62px;
+    left: 16px;
+  }
+`;
+
+const WheelContainer = styled.div`
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  position: relative;
+  margin: 24px auto 0;
+  @media (max-width: 576px) {
+    width: 250px;
+    height: 250px;
+  }
+`;
+
+const WheelContainerInner = styled(WheelContainer)`
+  overflow: hidden;
+`;
+
+const WheelImg = styled.div`
+  width: 360px;
+  height: 360px;
+  @media (max-width: 576px) {
+    width: 250px;
+    height: 250px;
+  }
+  border-radius: 50%;
+  border: 1px solid #333;
+  transform: rotate(30deg);
+  background: radial-gradient(
+    circle farthest-corner,
+    rgba(255, 145, 0, 1) 3.76%,
+    rgba(255, 182, 85, 1) 100%
+  );
+  overflow: hidden;
+  .chart {
+    transition: all 10s cubic-bezier(0.4, 0.09, 0, 1);
+  }
+  .circle {
+    height: 100%;
+    width: 100%;
+    /* background: silver; */
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    transform-origin: center bottom;
+    img {
+      z-index: 9999;
+    }
+  }
+
+  .triangle {
+    height: 100%;
+    width: 100%;
+    position: relative;
+    transform-origin: center bottom;
+    overflow: hidden;
+  }
+
+  .triangle .circle {
+    transform: rotate(120deg);
+  }
+
+  .chart {
+    position: relative;
+    height: auto;
+    overflow: hidden; /* .triangle выходят за пределы */
+  }
+
+  .chart:before {
+    content: "";
+    display: block;
+    padding-top: 100%;
+  }
+
+  .chart .triangle {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 50%;
+    height: 50%;
+  }
+`;

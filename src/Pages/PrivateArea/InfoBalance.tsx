@@ -279,7 +279,7 @@ export const InfoBalance = () => {
           if (res.collection.length) {
             if (res.collection.length) {
               setDepositList([...depositList, res.collection]);
-              let result: any = {};
+              let result: any = { ...balanceLog };
               res.collection.forEach((item: any) => {
                 const d = moment(item.operationDate).format("DD MMMM YYYY");
                 const obj = {
@@ -296,7 +296,7 @@ export const InfoBalance = () => {
                   result[d] = [obj];
                 }
               });
-              setBalanceLog(Object.assign(balanceLog, result));
+              setBalanceLog(result);
             } else {
               setBalanceLog(null);
             }
