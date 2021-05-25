@@ -72,12 +72,12 @@ let fakeData = [
     },
   ],
   {
-    id: 322558902992371700,
-    safeId: "322558902992371713",
-    kind: 0,
+    id: 322559860770078700,
+    safeId: "322559860770078721",
+    kind: 1,
     isActive: true,
-    balanceKind: 1,
-    volume: 8000000,
+    balanceKind: null,
+    volume: null,
   },
   [
     {
@@ -2022,7 +2022,7 @@ let fakeData = [
     safeId: "293028430188904448",
     email: "",
     isEmailConfirmed: false,
-    name: "emmi-kar",
+    name: "popova-anna2708",
     phoneNumber: null,
     isPhoneNumberConfirmed: false,
     isLockedout: true,

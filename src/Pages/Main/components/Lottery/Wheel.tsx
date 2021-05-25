@@ -165,9 +165,7 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
         drawResult[0][2],
         drawResult[0][5],
       ];
-      const keyWin = drawResult[0].findIndex(
-        (i) => i.safeId === drawResult[1].safeId
-      );
+      const keyWin = prizes.findIndex((i) => i.safeId === drawResult[1].safeId);
       const numOptions = list.length;
       const arcSize = (2 * Math.PI) / numOptions;
       setAngle(arcSize);
@@ -183,9 +181,9 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
       }, 2000);
       timer3 = setTimeout(() => {
         setShow(true);
-      }, 11000);
+      }, 12000);
       timer2 = setTimeout(() => {
-        // onShowModalCongrats();
+        onShowModalCongrats();
       }, 20000);
     }
     return () => {

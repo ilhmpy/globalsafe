@@ -58,10 +58,14 @@ export const Timer: FC<Props> = ({
   };
 
   useEffect(() => {
-    if (clock) {
+    let clean = false;
+    if (clock && !clean) {
       setDeadline((clock.totalSeconds *= -1));
       setState("0");
     }
+    return () => {
+      clean = true;
+    };
   }, [clock]);
 
   useEffect(() => {
