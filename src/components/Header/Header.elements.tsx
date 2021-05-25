@@ -173,7 +173,7 @@ export const List = styled.ul`
 `;
 
 export const ListItem = styled.li<{ mob?: boolean }>`
-  padding: 0px 24px;
+  padding: 0px 12px;
   display: ${(props) => props.mob && "none"};
   position: relative;
   ${Languale} {

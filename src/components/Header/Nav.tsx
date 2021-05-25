@@ -85,6 +85,11 @@ export const Nav: FC<Props> = ({
           </StyledLink>
         </ListItem>
         <ListItem>
+          <StyledLink to="/#lottery" onClick={onClose}>
+            {t("sideNav.lottery")}
+          </StyledLink>
+        </ListItem>
+        <ListItem>
           {lang === "ru" ? (
             <Languale onClick={() => i18n.changeLanguage("en")}>
               en
