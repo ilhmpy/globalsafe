@@ -163,7 +163,7 @@ const TimerHistoryContainer = styled(Card)`
   padding: 20px 45px;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   ${Button} {
     @media (max-width: 768px) {
       display: none;
@@ -172,37 +172,6 @@ const TimerHistoryContainer = styled(Card)`
   @media (max-width: 768px) {
     justify-content: center;
     padding: 20px;
-  }
-`;
-
-const TimerHistoryInner = styled.div`
-  margin-right: 188px;
-  @media (max-width: 768px) {
-    margin-right: 0px;
-  }
-`;
-
-const TimerHistoryValue = styled.div`
-  font-weight: 500;
-  font-size: 36px;
-  line-height: 42px;
-  letter-spacing: 0.1px;
-  color: #ff416e;
-  @media (max-width: 576px) {
-    font-size: 25px;
-    line-height: 29px;
-  }
-`;
-
-const TimerHisroryTitle = styled.div`
-  font-weight: normal;
-  font-size: 18px;
-  line-height: 21px;
-  letter-spacing: 0.1px;
-  margin-bottom: 10px;
-  @media (max-width: 576px) {
-    font-size: 14px;
-    line-height: 17px;
   }
 `;
 
