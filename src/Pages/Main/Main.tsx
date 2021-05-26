@@ -2090,7 +2090,7 @@ export const Main = () => {
     e.stopPropagation();
     setShowModal(true);
     setShowModalCongrats(false);
-    setShowTimer(false);
+    // setShowTimer(false);
   };
 
   const onCloseModal = () => {
