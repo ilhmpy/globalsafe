@@ -2161,7 +2161,7 @@ export const Main = () => {
           </TimerPopup>
         )}
         {/* <button onClick={test}>tejdsf</button> */}
-        <button onClick={testResult}>tejdsf</button>
+        {/* <button onClick={testResult}>tejdsf</button> */}
 
         {/* <CSSTransition
           in={showModal}
