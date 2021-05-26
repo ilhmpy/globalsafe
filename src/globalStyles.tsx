@@ -147,6 +147,23 @@ input[type=number] {
   transform-origin: 50% 50%;
   transition: all 300ms ease-in;
 }
+
+.alerts-enter {
+  opacity: 0;
+}
+.alerts-enter-active {
+  opacity: 1;
+  transition: opacity 300ms;
+}
+.alerts-exit {
+  opacity: 1;
+}
+.alerts-exit-active {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 300ms, transform 300ms;
+}
+
 .notifications-component{
   z-index: 999999;
 }

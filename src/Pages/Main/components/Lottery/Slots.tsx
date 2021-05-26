@@ -2006,7 +2006,7 @@ export const Slots: FC<Props> = ({ drawResult, setWinName }) => {
 
   return (
     <>
-      <CSSTransition in={show} timeout={5000} classNames="alert" unmountOnExit>
+      <CSSTransition in={show === true} timeout={300} classNames="alert">
         <Styled.Box>
           <Styled.SlotTitle>{t("winner")}</Styled.SlotTitle>
 

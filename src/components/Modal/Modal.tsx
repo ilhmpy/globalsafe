@@ -50,6 +50,7 @@ const Center = styled.div`
   margin: 1.75rem auto;
   display: flex;
   align-items: center;
+  transition: 0.3s;
 `;
 
 const ModalContainer = styled.div<{ zIndex: string }>`
@@ -60,6 +61,7 @@ const ModalContainer = styled.div<{ zIndex: string }>`
   height: 100%;
   background-color: rgba(0, 0, 0, 0.2);
   display: block;
+  transition: 0.3s;
   z-index: ${(props) => props.zIndex};
   overflow: auto;
 `;

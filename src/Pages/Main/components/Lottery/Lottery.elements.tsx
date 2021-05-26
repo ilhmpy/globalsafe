@@ -26,6 +26,7 @@ export const TimerContainer = styled.div`
   border-radius: 20px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   padding: 24px;
+  text-align: center;
   width: 340px;
   @media (max-width: 768px) {
     width: 300px;
@@ -38,6 +39,7 @@ export const TimerTitle = styled.div`
   line-height: 21px;
   display: flex;
   align-items: center;
+  justify-content: center;
   letter-spacing: 0.1px;
   color: ${(props) => props.theme.text2};
   margin-bottom: 10px;
@@ -88,6 +90,7 @@ export const TimerValue = styled.div<{ nodata?: boolean }>`
   height: 42px;
   display: flex;
   align-items: center;
+  justify-content: center;
   letter-spacing: 0.1px;
   color: #ff416e;
   ${(props) => {
@@ -106,7 +109,7 @@ export const WheelWrap = styled.div`
   padding-top: 40px;
 `;
 
-export const Present = styled.div<{ show?: boolean }>`
+export const Present = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -121,9 +124,7 @@ export const Present = styled.div<{ show?: boolean }>`
   color: #ff416e;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
   transition: 0.3s ease-in-out;
-  opacity: ${(props) => (props.show ? "1" : "0")};
   text-align: center;
-  margin-top: 15px;
   svg {
     margin-right: 10px;
   }
@@ -134,6 +135,10 @@ export const Present = styled.div<{ show?: boolean }>`
     border: none;
     padding: 16px 45px;
   }
+`;
+
+export const PresentInner = styled.div<{ show?: boolean }>`
+  opacity: ${(props) => (props.show ? "1" : "0")};
 `;
 
 export const WheelContainer = styled.div`
@@ -196,10 +201,11 @@ export const Container = styled.div`
   /* background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0) 100%),
     linear-gradient(113.23deg, #ffffff 25.61%, #f3f4f5 60.51%); */
   max-width: 1060px;
-  margin: 0px auto 44px;
-  height: 470px;
-  @media (max-width: 992px) {
+  margin: 0px auto 10px;
+  height: 500px;
+  @media (max-width: 1070px) {
     height: auto;
+    min-height: 330px;
   }
   @media (max-width: 950px) {
     margin: 0px auto 25px;
@@ -207,7 +213,7 @@ export const Container = styled.div`
 `;
 
 export const ContainerItem = styled.div`
-  width: 400px;
+  width: 460px;
   margin: 0 30px;
   height: 100%;
   display: flex;
@@ -247,6 +253,9 @@ export const ContainerItem = styled.div`
   @media (max-width: 576px) {
     max-width: 260px;
     margin: 0 10px;
+    ${TimerContainer} {
+      width: 250px;
+    }
   }
 `;
 
@@ -283,7 +292,7 @@ export const Box = styled.div<{ sh?: boolean }>`
   max-width: 460px;
   width: 100%;
   transition: 3s ease-in;
-  @media (max-width: 950px) {
+  @media (max-width: 1070px) {
     margin-top: 60px;
   }
 `;
@@ -435,5 +444,18 @@ export const TimerHisroryTitle = styled.div`
   @media (max-width: 576px) {
     font-size: 14px;
     line-height: 17px;
+  }
+`;
+
+export const BrandImgAbs = styled(BrandImg)`
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  @media (max-width: 768px) {
+    top: 13px;
+    left: 0;
+    text-align: center;
+    right: 0;
+    width: 100%;
   }
 `;
