@@ -27,14 +27,6 @@ import { Balance } from "../../types/balance";
 let fakeData = [
   [
     {
-      id: 322559577302237200,
-      safeId: "322559577302237185",
-      kind: 2,
-      isActive: true,
-      balanceKind: 9,
-      volume: 1,
-    },
-    {
       id: 322559860770078700,
       safeId: "322559860770078721",
       kind: 1,
@@ -74,14 +66,22 @@ let fakeData = [
       balanceKind: 1,
       volume: 2000000,
     },
+    {
+      id: 322559577302237200,
+      safeId: "322559577302237185",
+      kind: 2,
+      isActive: true,
+      balanceKind: 12,
+      volume: 1,
+    },
   ],
   {
-    id: 322559860770078700,
-    safeId: "322559860770078721",
-    kind: 1,
+    id: 322559577302237200,
+    safeId: "322559577302237185",
+    kind: 2,
     isActive: true,
-    balanceKind: null,
-    volume: null,
+    balanceKind: 12,
+    volume: 1,
   },
   [
     {
@@ -2058,24 +2058,6 @@ export const Main = () => {
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
 
-  // useEffect(() => {
-  //   let cancel = false;
-  //   if (hubConnection && !cancel) {
-  //     hubConnection.on("DrawCountdown", (data) => {
-  //       setClock(data.totalSeconds);
-  //     });
-  //     hubConnection
-  //       .invoke<RootClock>("GetNextDraw")
-  //       .then((res) => {
-  //         setClock(res.totalSeconds);
-  //       })
-  //       .catch((e) => console.log(e));
-  //   }
-  //   return () => {
-  //     cancel = true;
-  //   };
-  // }, [hubConnection]);
-
   const winnerResult = (res: Prize) => {
     setResult(res);
     console.log("result", result);
@@ -2090,7 +2072,6 @@ export const Main = () => {
     e.stopPropagation();
     setShowModal(true);
     setShowModalCongrats(false);
-    // setShowTimer(false);
   };
 
   const onCloseModal = () => {
@@ -2149,8 +2130,12 @@ export const Main = () => {
           </TimerPopup>
         )}
         {/* <button onClick={testResult}>tejdsf</button> */}
-        {/* 
-        {showModal && (
+        <CSSTransition
+          in={showModal}
+          timeout={300}
+          classNames="filter"
+          unmountOnExit
+        >
           <ModalLottery
             drawResult={drawResult}
             onCloseModal={onCloseModal}
@@ -2158,13 +2143,24 @@ export const Main = () => {
             onShowModalCongrats={onShowModalCongrats}
             winnerResult={winnerResult}
             result={result}
+            setWinName={setWinName}
             testResult={testResult}
+          />
+        </CSSTransition>
+        {/* {showModal && (
+          <ModalLottery
+            drawResult={drawResult}
+            onCloseModal={onCloseModal}
+            clock={clock}
+            onShowModalCongrats={onShowModalCongrats}
+            winnerResult={winnerResult}
+            result={result}
             setWinName={setWinName}
           />
         )} */}
 
         <ModalProvider>
-          <Modal isOpen={showModal}>
+          {/* <Modal isOpen={showModal}>
             <ModalLottery
               drawResult={drawResult}
               onCloseModal={onCloseModal}
@@ -2174,17 +2170,38 @@ export const Main = () => {
               result={result}
               setWinName={setWinName}
             />
-          </Modal>
+          </Modal> */}
 
-          <Modal isOpen={showModalCongrats}>
+          {/* <Modal isOpen={showModalCongrats}>
             <ModalCongrats
               result={result}
               name={winName}
               drawResult={drawResult}
               onCloseModalCongrats={onCloseModalCongrats}
             />
-          </Modal>
+          </Modal> */}
         </ModalProvider>
+        <CSSTransition
+          in={showModalCongrats}
+          timeout={30}
+          classNames="filter"
+          unmountOnExit
+        >
+          <ModalCongrats
+            result={result}
+            name={winName}
+            drawResult={drawResult}
+            onCloseModalCongrats={onCloseModalCongrats}
+          />
+        </CSSTransition>
+        {/* {showModalCongrats && (
+          <ModalCongrats
+            result={result}
+            name={winName}
+            drawResult={drawResult}
+            onCloseModalCongrats={onCloseModalCongrats}
+          />
+        )} */}
         <Banner />
         <Payments />
         <Operations />

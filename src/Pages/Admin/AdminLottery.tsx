@@ -68,6 +68,7 @@ export const AdminLottery = () => {
       hubConnection
         .invoke<RootGetDraw>("GetDraws", [1], 0, 20)
         .then((res) => {
+          console.log("GetDraws", res);
           setDrawList(res.collection);
         })
         .catch((e) => console.log(e));

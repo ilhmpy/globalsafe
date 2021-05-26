@@ -212,7 +212,7 @@ input[type=number] {
 }
 .filter-exit-active {
     opacity: 0;
-    transition: opacity 300ms ease-in;
+    transition: opacity 300ms ease-in-out;
 }
 
 
@@ -266,20 +266,20 @@ input[type=number] {
 
 .modals-enter {
   opacity: 0;
-  transform: scale(0.9);
+  /* transform: scale(0.9); */
 }
 .modals-enter-active {
   opacity: 1;
-  transform: translateX(0);
-  transition: opacity 3000ms, transform 300ms;
+  /* transform: translateX(0); */
+  transition: all 300ms;
 }
 .modals-exit {
   opacity: 1;
 }
 .modals-exit-active {
   opacity: 0;
-  transform: scale(0.9);
-  transition: opacity 3000ms, transform 3000ms;
+  /* transform: scale(0.9); */
+  transition: all 300ms;
 }
 
 @keyframes flickerAnimation {

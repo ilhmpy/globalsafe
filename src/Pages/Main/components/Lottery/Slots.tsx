@@ -1982,8 +1982,11 @@ export const Slots: FC<Props> = ({ drawResult, setWinName }) => {
   useEffect(() => {
     let timer1: any;
     let timer2: any;
+
     if (!!drawResult) {
-      setShow(true);
+      if (!show) {
+        setShow(true);
+      }
       const win = drawResult[2].findIndex((i) => i.name === drawResult[3].name);
       timer1 = setTimeout(() => {
         setSelectedIndex(win);
@@ -2003,25 +2006,7 @@ export const Slots: FC<Props> = ({ drawResult, setWinName }) => {
 
   return (
     <>
-      {/* <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          if (selectedIndex !== +inputValue) setRed(false);
-          setSelectedIndex(Number(inputValue));
-          setDeg((deg) => deg - deg + -(Number(inputValue) * slotAngle + 2160));
-          setTimeout(() => setRed(true), 5000);
-        }}
-      >
-        <input
-          value={inputValue}
-          type="number"
-          min={0}
-          max={arr.length - 1}
-          onChange={(e) => setInputValue(e.currentTarget.value)}
-        />
-        <button>Winner</button>
-      </form> */}
-      <CSSTransition in={show} timeout={3000} classNames="modals" unmountOnExit>
+      <CSSTransition in={show} timeout={5000} classNames="alert" unmountOnExit>
         <Styled.Box>
           <Styled.SlotTitle>{t("winner")}</Styled.SlotTitle>
 
