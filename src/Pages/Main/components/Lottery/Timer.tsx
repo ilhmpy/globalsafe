@@ -34,6 +34,9 @@ export const Timer: FC<Props> = ({
   useEffect(() => {
     let cancel = false;
     if (hubConnection && !cancel) {
+      hubConnection.on("DrawCountdown", (data) => {
+        setDeadline(data.totalSeconds);
+      });
       hubConnection
         .invoke<RootClock>("GetNextDraw")
         .then((res) => {
@@ -61,12 +64,12 @@ export const Timer: FC<Props> = ({
     }
   };
 
-  useEffect(() => {
-    let timer = setInterval(() => repeat(), 60000 * 1);
-    return () => {
-      clearInterval(timer);
-    };
-  }, []);
+  // useEffect(() => {
+  //   let timer = setInterval(() => repeat(), 60000 * 1);
+  //   return () => {
+  //     clearInterval(timer);
+  //   };
+  // }, []);
 
   useEffect(() => {
     let cancel = false;
@@ -78,12 +81,10 @@ export const Timer: FC<Props> = ({
 
     let timer = setInterval(() => {
       let durations = moment.duration(deadline, "seconds");
-      let formatted;
-      if (languale === 1) {
-        formatted = durations.format("d[ дн] h[ ч] m[ мин] s[ c]");
-      } else {
-        formatted = durations.format("d[ d] h[ H] m[ m] s[ s]");
-      }
+      let formatted = durations.format("h:mm:ss", {
+        trim: false,
+      });
+
       !cancel && setState(formatted);
       !cancel && setDeadline(deadline - 1);
     }, 1000);

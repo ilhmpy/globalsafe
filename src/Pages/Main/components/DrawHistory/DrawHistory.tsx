@@ -36,15 +36,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal }) => {
     if (hubConnection) {
       hubConnection.on("DrawResult", (data) => {
         console.log("DrawResult history", data);
-        const arrList = {
-          name: data[3].name,
-          kind: data[1].kind,
-          date: data[4],
-          volume: data[1].volume,
-          balanceKind: data[1].balanceKind,
-        };
-        console.log("arrList", arrList);
-        !clean && setNotifyList((notifyList) => [arrList, ...notifyList]);
+        !clean && repeat();
       });
       hubConnection
         .invoke<RootLottery>("GetPrizes", 0, 5)
@@ -65,6 +57,25 @@ export const DrawHistory: FC<Props> = ({ onOpenModal }) => {
       clean = true;
     };
   }, [hubConnection]);
+
+  const repeat = () => {
+    if (hubConnection) {
+      hubConnection
+        .invoke<RootLottery>("GetPrizes", 0, 5)
+        .then((res) => {
+          console.log("GetPrizes res", res);
+          const arrList = res.collection.map((item) => ({
+            name: item.userName,
+            kind: item.definition.kind,
+            date: item.drawLog.drawDate,
+            volume: item.definition.volume,
+            balanceKind: item.definition.balanceKind,
+          }));
+          setNotifyList(arrList);
+        })
+        .catch((e) => console.log(e));
+    }
+  };
 
   const { t } = useTranslation();
 
