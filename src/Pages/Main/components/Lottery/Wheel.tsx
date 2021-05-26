@@ -26,7 +26,7 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
   const [angle, setAngle] = useState(0);
   const [top, setTop] = useState(0);
   const [easeOut, setEaseOut] = useState(2);
-  const [rotate, setRotate] = useState(0);
+  const [rotate, setRotate] = useState(20);
   const [offset, setOffset] = useState(0);
   const [net, setNet] = useState(0);
   const [result, setResult] = useState<number | null>(null);
@@ -42,6 +42,7 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
 
   // list = ["document = 1 0", "euro1", "euro2", "procent = 2  3", "euro3", "euro4"]
   // list = [drawResult[1][0], drawResult[1][3], drawResult[1][4], drawResult[1][1], drawResult[1][2], drawResult[1][5]]
+
   let fakeArr = [
     {
       id: 322559577302237185,
@@ -169,7 +170,9 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
         drawResult[0][2],
         drawResult[0][5],
       ];
-      const keyWin = prizes.findIndex((i) => i.safeId === drawResult[1].safeId);
+      const keyWin = drawResult[0].findIndex(
+        (i) => i.safeId === drawResult[1].safeId
+      );
       const numOptions = list.length;
       const arcSize = (2 * Math.PI) / numOptions;
       setAngle(arcSize);
@@ -260,12 +263,78 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
                 position: "relative",
               }}
             >
-              <Img1 src={doc} alt="" />
+              {drawResult ? (
+                <>
+                  <Img1
+                    src={
+                      drawResult[0][0].kind === 1
+                        ? doc
+                        : drawResult[0][0].kind === 2
+                        ? proc
+                        : euro
+                    }
+                    alt=""
+                  />
+                  <Img2
+                    src={
+                      drawResult[0][1].kind === 1
+                        ? doc
+                        : drawResult[0][1].kind === 2
+                        ? proc
+                        : euro
+                    }
+                    alt=""
+                  />
+                  <Img3
+                    src={
+                      drawResult[0][2].kind === 1
+                        ? doc
+                        : drawResult[0][2].kind === 2
+                        ? proc
+                        : euro
+                    }
+                    alt=""
+                  />
+                  <Img4
+                    src={
+                      drawResult[0][3].kind === 1
+                        ? doc
+                        : drawResult[0][3].kind === 2
+                        ? proc
+                        : euro
+                    }
+                    alt=""
+                  />
+                  <Img5
+                    src={
+                      drawResult[0][4].kind === 1
+                        ? doc
+                        : drawResult[0][4].kind === 2
+                        ? proc
+                        : euro
+                    }
+                    alt=""
+                  />
+                  <Img6
+                    src={
+                      drawResult[0][5].kind === 1
+                        ? doc
+                        : drawResult[0][5].kind === 2
+                        ? proc
+                        : euro
+                    }
+                    alt=""
+                  />
+                </>
+              ) : (
+                ""
+              )}
+              {/* <Img1 src={doc} alt="" />
               <Img2 src={euro} alt="" />
               <Img3 src={euro} alt="" />
               <Img4 src={proc} alt="" />
               <Img5 src={euro} alt="" />
-              <Img6 src={euro} alt="" />
+              <Img6 src={euro} alt="" /> */}
               <div className="triangle" style={{ transform: "rotate(0deg)" }}>
                 <div
                   className="circle"
@@ -440,7 +509,7 @@ const Img3 = styled(Img)`
 const Img4 = styled(Img)`
   top: 290px;
   left: 145px;
-  transform: rotate(-10deg);
+  transform: rotate(110deg);
   @media (max-width: 576px) {
     top: 208px;
     left: 102px;

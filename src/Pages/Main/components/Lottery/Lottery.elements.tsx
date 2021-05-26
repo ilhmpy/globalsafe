@@ -215,20 +215,34 @@ export const ContainerItem = styled.div`
   justify-content: center;
   .modals-enter {
     opacity: 0;
-    transform: scale(0.9);
+    /* transform: scale(0.9); */
   }
   .modals-enter-active {
     opacity: 1;
-    transform: translateX(0);
-    transition: opacity 3000ms, transform 300ms;
+    /* transform: translateX(0); */
+    transition: all 300ms linear;
   }
   .modals-exit {
     opacity: 1;
   }
   .modals-exit-active {
     opacity: 0;
-    transform: scale(0.9);
-    transition: opacity 3000ms, transform 3000ms;
+    /* transform: scale(0.9); */
+    transition: all 300ms linear;
+  }
+  .alert-enter {
+    opacity: 0;
+  }
+  .alert-enter-active {
+    opacity: 1;
+    transition: opacity 5000ms;
+  }
+  .alert-exit {
+    opacity: 1;
+  }
+  .alert-exit-active {
+    opacity: 0;
+    transition: opacity 5000ms;
   }
   @media (max-width: 576px) {
     max-width: 260px;
@@ -253,7 +267,7 @@ export const SlotCenter = styled.div`
   z-index: 999;
 `;
 
-export const Box = styled.div`
+export const Box = styled.div<{ sh?: boolean }>`
   background: ${(props) => props.theme.card.background};
   border: 1px solid rgba(86, 101, 127, 0.05);
   box-sizing: border-box;
@@ -268,6 +282,7 @@ export const Box = styled.div`
   height: 100%;
   max-width: 460px;
   width: 100%;
+  transition: 3s ease-in;
   @media (max-width: 950px) {
     margin-top: 60px;
   }

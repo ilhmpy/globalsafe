@@ -17,10 +17,10 @@ type Props = {
 export const Writing: FC<Props> = ({ data, drawListEdited }) => {
   const [sliderValue, setSliderValue] = useState(data.delay || 0);
   const [startDate, setStartDate] = useState<Date | null>(
-    data.startDate ? new Date(data.startDate) : null
+    data.startDate ? new Date(data.startDate + "Z") : null
   );
   const [endDate, setEndDate] = useState<Date | null>(
-    data.nextDraw ? new Date(data.nextDraw) : null
+    data.nextDraw ? new Date(data.nextDraw + "Z") : null
   );
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
