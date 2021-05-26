@@ -13,7 +13,7 @@ import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { useTranslation } from "react-i18next";
 
 type Props = {
-  clock: RootClock | null;
+  clock: number | null;
   onCloseModal: () => void;
   drawResult: [Prize[], Prize, Users[], Winner] | null;
   onShowModalCongrats: () => void;
@@ -43,7 +43,7 @@ export const ModalLottery: FC<Props> = ({
   const { t } = useTranslation();
 
   return (
-    <Modal width={1100} onClose={onCloseModal}>
+    <Modal width={1100} onClose={onCloseModal} mobMarg>
       <Styled.Container>
         <Styled.ContainerItem>
           <Wheel
@@ -60,11 +60,13 @@ export const ModalLottery: FC<Props> = ({
             classNames="modals"
             unmountOnExit
           >
-            <Slots
-              setWinName={setWinName}
-              winNumber={90}
-              drawResult={drawResult}
-            />
+            <>
+              <Slots
+                setWinName={setWinName}
+                winNumber={90}
+                drawResult={drawResult}
+              />
+            </>
           </CSSTransition>
 
           <CSSTransition

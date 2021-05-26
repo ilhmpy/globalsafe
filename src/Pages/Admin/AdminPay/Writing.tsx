@@ -51,6 +51,8 @@ export const Writing: FC<Props> = ({ data, drawListEdited }) => {
 
   const onAfterChange = (value: number) => {
     setSliderValue(value);
+    const time: any = moment(startDate).add(sliderValue, "hours");
+    setEndDate(time._d);
     modyfyDrawState(value, null, null);
   };
 
@@ -73,6 +75,7 @@ export const Writing: FC<Props> = ({ data, drawListEdited }) => {
               startDate={startDate}
               setStartDate={setStartDate}
               label={t("writting.startDate")}
+              readOnly
             />
           </Styled.InputLottery>
           <Styled.InputLottery>

@@ -2042,7 +2042,7 @@ let fakeData = [
 ];
 
 export const Main = () => {
-  const [clock, setClock] = useState<RootClock | null>(null);
+  const [clock, setClock] = useState<number | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [showModalCongrats, setShowModalCongrats] = useState(false);
   const [showTimer, setShowTimer] = useState(true);
@@ -2055,26 +2055,26 @@ export const Main = () => {
   const [notifyList, setNotifyList] = useState<ArrList[]>([]);
   const { t } = useTranslation();
 
-  const alert = (
-    title: string,
-    message: string,
-    type: "success" | "default" | "warning" | "info" | "danger"
-  ) => {
-    store.addNotification({
-      title: title,
-      message: message,
-      type: type,
-      insert: "top",
-      container: "top-right",
-      animationIn: ["animate__animated", "animate__fadeIn"],
-      animationOut: ["animate__animated", "animate__fadeOut"],
-      dismiss: {
-        duration: 10000,
-      },
-    });
-  };
+  const appContext = useContext(AppContext);
+  const hubConnection = appContext.hubConnection;
 
-  // alert(t("winner") {name},  t("alert.depositMsg"), "success");
+  // useEffect(() => {
+  //   let cancel = false;
+  //   if (hubConnection && !cancel) {
+  //     hubConnection.on("DrawCountdown", (data) => {
+  //       setClock(data.totalSeconds);
+  //     });
+  //     hubConnection
+  //       .invoke<RootClock>("GetNextDraw")
+  //       .then((res) => {
+  //         setClock(res.totalSeconds);
+  //       })
+  //       .catch((e) => console.log(e));
+  //   }
+  //   return () => {
+  //     cancel = true;
+  //   };
+  // }, [hubConnection]);
 
   const winnerResult = (res: Prize) => {
     setResult(res);
@@ -2103,6 +2103,7 @@ export const Main = () => {
     setDrawResult(null);
     setWinName(null);
     setResult(null);
+    setShowTimer(true);
   };
 
   const onShowModalCongrats = () => {
@@ -2119,23 +2120,6 @@ export const Main = () => {
     setDrawResult(null);
   };
 
-  const winner = (drawResult: any) => {
-    let val =
-      drawResult[1].kind === 0
-        ? (drawResult[1].volume / 100000).toLocaleString("ru-RU", {
-            maximumFractionDigits: 5,
-          })
-        : drawResult[1].kind === 1
-        ? t("win.two")
-        : drawResult[1].volume + " " + " " + drawResult[1].volume
-        ? Balance[drawResult[1].balanceKind]
-        : "";
-    alert(t("winner") + " " + " " + drawResult[3].name, val, "success");
-  };
-
-  const appContext = useContext(AppContext);
-  const hubConnection = appContext.hubConnection;
-
   useEffect(() => {
     let clean = false;
 
@@ -2144,13 +2128,6 @@ export const Main = () => {
         console.log("DrawResult", data);
         !clean && setDrawResult(data);
       });
-      hubConnection
-        .invoke<RootClock>("GetNextDraw")
-        .then((res) => {
-          console.log("GetNextDraw", res);
-          !clean && setClock(res);
-        })
-        .catch((e) => console.log(e));
     }
     return () => {
       clean = true;
@@ -2165,9 +2142,6 @@ export const Main = () => {
   return (
     <div>
       <Header />
-      <Notify>
-        <ReactNotification />
-      </Notify>
       <MainPage>
         {showTimer && (
           <TimerPopup onClick={onShowModal}>
@@ -2175,7 +2149,7 @@ export const Main = () => {
           </TimerPopup>
         )}
         {/* <button onClick={testResult}>tejdsf</button> */}
-
+        {/* 
         {showModal && (
           <ModalLottery
             drawResult={drawResult}
@@ -2184,12 +2158,13 @@ export const Main = () => {
             onShowModalCongrats={onShowModalCongrats}
             winnerResult={winnerResult}
             result={result}
+            testResult={testResult}
             setWinName={setWinName}
           />
-        )}
+        )} */}
 
         <ModalProvider>
-          {/* <Modal isOpen={showModal}>
+          <Modal isOpen={showModal}>
             <ModalLottery
               drawResult={drawResult}
               onCloseModal={onCloseModal}
@@ -2199,7 +2174,7 @@ export const Main = () => {
               result={result}
               setWinName={setWinName}
             />
-          </Modal> */}
+          </Modal>
 
           <Modal isOpen={showModalCongrats}>
             <ModalCongrats
@@ -2214,7 +2189,7 @@ export const Main = () => {
         <Payments />
         <Operations />
         <Tariffs />
-        <DrawHistory onOpenModal={onOpenModal} />
+        <DrawHistory onOpenModal={onOpenModal} clock={clock} />
         <About />
         <Contact />
         <Footer />
@@ -2222,20 +2197,6 @@ export const Main = () => {
     </div>
   );
 };
-
-const Notify = styled.div`
-  .notification__title {
-    font-family: "Roboto", sans-serif;
-    font-size: 26px;
-  }
-  .notification__item {
-    border-radius: 20px;
-  }
-  .notification__message {
-    font-family: "Roboto", sans-serif;
-    font-size: 22px;
-  }
-`;
 
 const MainPage = styled(Page)`
   margin-top: 200px;

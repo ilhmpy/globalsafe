@@ -9,7 +9,7 @@ import { Button } from "../../../../components/Button/Button";
 
 type Props = {
   last?: string;
-  clock?: RootClock | null;
+  clock?: any;
   icon: boolean;
   closeTimer?: (e: React.MouseEvent) => void;
   timerHistory?: boolean;
@@ -64,24 +64,17 @@ export const Timer: FC<Props> = ({
     }
   };
 
-  // useEffect(() => {
-  //   let timer = setInterval(() => repeat(), 60000 * 1);
-  //   return () => {
-  //     clearInterval(timer);
-  //   };
-  // }, []);
-
   useEffect(() => {
     let cancel = false;
     if (deadline < 1 && !cancel) {
       setState(null);
-      repeat();
+      // repeat();
       return;
     }
 
     let timer = setInterval(() => {
       let durations = moment.duration(deadline, "seconds");
-      let formatted = durations.format("h:mm:ss", {
+      let formatted = durations.format("hh:mm:ss", {
         trim: false,
       });
 

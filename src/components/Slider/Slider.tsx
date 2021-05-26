@@ -12,7 +12,7 @@ export const SliderComponent: FC<{
       <Slider
         // dots
         step={1}
-        min={0}
+        min={1}
         max={168}
         defaultValue={value}
         onChange={onAfterChange}

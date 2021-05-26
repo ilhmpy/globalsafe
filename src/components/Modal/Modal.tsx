@@ -6,6 +6,7 @@ type ModalProps = {
   onClose: () => void;
   width?: number;
   zIndex?: string;
+  mobMarg?: boolean;
 };
 
 export const Modal: React.FC<ModalProps> = ({
@@ -13,6 +14,7 @@ export const Modal: React.FC<ModalProps> = ({
   onClose,
   width,
   zIndex = "99999",
+  mobMarg,
 }) => {
   const handleContainerClick = (e: React.MouseEvent) => {
     if (e.currentTarget === e.target) {
@@ -24,7 +26,7 @@ export const Modal: React.FC<ModalProps> = ({
     <Portal>
       <ModalContainer zIndex={zIndex}>
         <Center onClick={handleContainerClick}>
-          <ModalComponent width={width}>
+          <ModalComponent width={width} mobMarg={mobMarg}>
             <span className="close" onClick={onClose}>
               &times;
             </span>
@@ -62,7 +64,7 @@ const ModalContainer = styled.div<{ zIndex: string }>`
   overflow: auto;
 `;
 
-const ModalComponent = styled.div<{ width?: number }>`
+const ModalComponent = styled.div<{ width?: number; mobMarg?: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -85,5 +87,9 @@ const ModalComponent = styled.div<{ width?: number }>`
     &:hover {
       color: ${(props) => props.theme.text3Hover};
     }
+  }
+  @media (max-width: 768px) {
+    margin: ${(props) => (props.mobMarg ? "50px 20px" : "50px auto")};
+    padding: ${(props) => (props.mobMarg ? "0" : "1rem")};
   }
 `;

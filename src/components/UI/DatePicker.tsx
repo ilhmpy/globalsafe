@@ -33,7 +33,7 @@ export const DateInput: FC<Props> = ({
         showTimeSelect
         dateFormat="d MMMM yyyy, HH:mm "
         timeFormat="HH:mm"
-        timeIntervals={30}
+        timeIntervals={1}
         placeholderText={placeholderText}
         readOnly={readOnly}
       />
