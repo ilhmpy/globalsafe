@@ -66,8 +66,6 @@ export const DrawHistory: FC<Props> = ({ onOpenModal }) => {
     };
   }, [hubConnection]);
 
-  console.log("notifyList", notifyList);
-
   const { t } = useTranslation();
 
   const typeWin = (id: number) => {

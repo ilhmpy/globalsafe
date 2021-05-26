@@ -32,14 +32,20 @@ export const Timer: FC<Props> = ({
   const languale = lang === "ru" ? 1 : 0;
 
   useEffect(() => {
-    if (hubConnection) {
+    let cancel = false;
+    if (hubConnection && !cancel) {
       hubConnection
         .invoke<RootClock>("GetNextDraw")
         .then((res) => {
           setClock(res);
+          setDeadline(res.totalSeconds);
+          setState("0");
         })
         .catch((e) => console.log(e));
     }
+    return () => {
+      cancel = true;
+    };
   }, [hubConnection]);
 
   const repeat = () => {
@@ -47,6 +53,8 @@ export const Timer: FC<Props> = ({
       hubConnection
         .invoke<RootClock>("GetNextDraw")
         .then((res) => {
+          console.log("GetNextDraw repeat", res);
+          setDeadline(res.totalSeconds);
           setClock(res);
         })
         .catch((e) => console.log(e));
@@ -54,33 +62,35 @@ export const Timer: FC<Props> = ({
   };
 
   useEffect(() => {
-    if (clock) {
-      setDeadline(Math.floor((clock.totalSeconds *= -1) + 60));
-      setState("0");
-    }
-  }, [clock]);
+    let timer = setInterval(() => repeat(), 60000 * 6);
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
 
   useEffect(() => {
-    if (deadline < 1) {
+    let cancel = false;
+    if (deadline < 1 && !cancel) {
       setState(null);
       repeat();
       return;
     }
 
-    let timer = setTimeout(() => {
+    let timer = setInterval(() => {
       let durations = moment.duration(deadline, "seconds");
       let formatted;
       if (languale === 1) {
-        formatted = durations.format("d[ дн] h[ ч] m[ мин]");
+        formatted = durations.format("d[ дн] h[ ч] m[ мин] s[ c]");
       } else {
-        formatted = durations.format("d[ d] h[ H] m[ m]");
+        formatted = durations.format("d[ d] h[ H] m[ m] s[ s]");
       }
-      setState(formatted);
-      setDeadline(deadline - 1);
+      !cancel && setState(formatted);
+      !cancel && setDeadline(deadline - 1);
     }, 1000);
 
     return () => {
-      clearTimeout(timer);
+      clearInterval(timer);
+      cancel = true;
     };
   }, [state, deadline]);
 
