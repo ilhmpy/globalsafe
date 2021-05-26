@@ -22,7 +22,7 @@ export const ModalCongrats: FC<Props> = ({
   const { t } = useTranslation();
   return (
     <div>
-      <Modal width={1060} onClose={onCloseModalCongrats}>
+      <Modal width={1060} onClose={onCloseModalCongrats} mobMarg>
         <Styled.ModalCongratsWrap>
           <Styled.BrandImg>
             <img src={brand} alt="" />{" "}

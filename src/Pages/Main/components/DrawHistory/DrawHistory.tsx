@@ -22,9 +22,10 @@ import { isTemplateHead } from "typescript";
 
 type Props = {
   onOpenModal: () => void;
+  clock: number | null;
 };
 
-export const DrawHistory: FC<Props> = ({ onOpenModal }) => {
+export const DrawHistory: FC<Props> = ({ onOpenModal, clock }) => {
   const [notifyList, setNotifyList] = useState<ArrList[]>([]);
   const [num, setNum] = useState(0);
   const [show, setShow] = useState(true);
@@ -63,6 +64,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal }) => {
       hubConnection
         .invoke<RootLottery>("GetPrizes", 0, 5)
         .then((res) => {
+          setShow(true);
           console.log("GetPrizes res", res);
           const arrList = res.collection.map((item) => ({
             name: item.userName,
@@ -119,7 +121,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal }) => {
 
       <Container>
         <TimerHistoryContainer alfa onClick={onOpenModal}>
-          <Timer icon={false} timerHistory />
+          <Timer icon={false} timerHistory clock={clock} />
           <Button danger>{t("goDraw")}</Button>
         </TimerHistoryContainer>
       </Container>

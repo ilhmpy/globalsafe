@@ -1974,6 +1974,7 @@ type Props = {
 export const Slots: FC<Props> = ({ drawResult, setWinName }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [inputValue, setInputValue] = useState("0");
+  const [show, setShow] = useState(false);
   const [deg, setDeg] = useState(0);
   const [red, setRed] = useState(false);
   const { t } = useTranslation();
@@ -1982,6 +1983,7 @@ export const Slots: FC<Props> = ({ drawResult, setWinName }) => {
     let timer1: any;
     let timer2: any;
     if (!!drawResult) {
+      setShow(true);
       const win = drawResult[2].findIndex((i) => i.name === drawResult[3].name);
       timer1 = setTimeout(() => {
         setSelectedIndex(win);
@@ -2019,15 +2021,10 @@ export const Slots: FC<Props> = ({ drawResult, setWinName }) => {
         />
         <button>Winner</button>
       </form> */}
+      <CSSTransition in={show} timeout={3000} classNames="modals" unmountOnExit>
+        <Styled.Box>
+          <Styled.SlotTitle>{t("winner")}</Styled.SlotTitle>
 
-      <Styled.Box>
-        <Styled.SlotTitle>{t("winner")}</Styled.SlotTitle>
-        <CSSTransition
-          in={selectedIndex !== 0}
-          timeout={3000}
-          classNames="modals"
-          unmountOnExit
-        >
           <Styled.Wrapper>
             <Styled.Drum style={{ transform: `rotateX(${deg}deg)` }}>
               {drawResult
@@ -2042,8 +2039,8 @@ export const Slots: FC<Props> = ({ drawResult, setWinName }) => {
             </Styled.Drum>
             <Styled.SlotCenter />
           </Styled.Wrapper>
-        </CSSTransition>
-      </Styled.Box>
+        </Styled.Box>
+      </CSSTransition>
     </>
   );
 };

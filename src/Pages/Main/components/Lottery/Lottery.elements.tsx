@@ -127,6 +127,13 @@ export const Present = styled.div<{ show?: boolean }>`
   svg {
     margin-right: 10px;
   }
+  @media (max-width: 768px) {
+    font-size: 18px;
+    line-height: 21px;
+    box-shadow: none;
+    border: none;
+    padding: 16px 45px;
+  }
 `;
 
 export const WheelContainer = styled.div`
@@ -194,6 +201,9 @@ export const Container = styled.div`
   @media (max-width: 992px) {
     height: auto;
   }
+  @media (max-width: 950px) {
+    margin: 0px auto 25px;
+  }
 `;
 
 export const ContainerItem = styled.div`
@@ -222,7 +232,7 @@ export const ContainerItem = styled.div`
   }
   @media (max-width: 576px) {
     max-width: 260px;
-    margin: 0 15px;
+    margin: 0 10px;
   }
 `;
 
@@ -258,6 +268,9 @@ export const Box = styled.div`
   height: 100%;
   max-width: 460px;
   width: 100%;
+  @media (max-width: 950px) {
+    margin-top: 60px;
+  }
 `;
 
 export const SlotTitle = styled.div`
@@ -269,6 +282,9 @@ export const SlotTitle = styled.div`
   letter-spacing: 0.1px;
   color: ${(props) => props.theme.text2};
   margin-bottom: 60px;
+  @media (max-width: 950px) {
+    margin-bottom: 20px;
+  }
 `;
 
 export const Wrapper = styled.div`
@@ -305,6 +321,8 @@ export const WinContainer = styled(Card)`
   }
   @media (max-width: 576px) {
     padding: 20px 10px;
+    border: none;
+    box-shadow: none;
   }
 `;
 
@@ -317,8 +335,8 @@ export const WinTitle = styled.div<{ sub?: boolean }>`
   letter-spacing: 0.1px;
   color: ${(props) => (props.sub ? props.theme.text2 : "#FF416E")};
   @media (max-width: 576px) {
-    font-size: 28px;
-    line-height: 32px;
+    font-size: ${(props) => (props.sub ? "28px" : "16px")};
+    line-height: ${(props) => (props.sub ? "32px" : "19px")};
   }
 `;
 
@@ -355,7 +373,13 @@ export const BrandImg = styled.div`
   width: 97px;
   margin: 0 80px 0 20px;
   @media (max-width: 992px) {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 768px) {
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
   }
 `;
 
