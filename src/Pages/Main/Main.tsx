@@ -2138,14 +2138,11 @@ export const Main = () => {
 
   useEffect(() => {
     let clean = false;
-    let timer: any;
+
     if (hubConnection) {
       hubConnection.on("DrawResult", (data) => {
         console.log("DrawResult", data);
         !clean && setDrawResult(data);
-        timer = setTimeout(() => {
-          winner(data);
-        }, 25000);
       });
       hubConnection
         .invoke<RootClock>("GetNextDraw")
@@ -2179,8 +2176,20 @@ export const Main = () => {
         )}
         {/* <button onClick={testResult}>tejdsf</button> */}
 
+        {showModal && (
+          <ModalLottery
+            drawResult={drawResult}
+            onCloseModal={onCloseModal}
+            clock={clock}
+            onShowModalCongrats={onShowModalCongrats}
+            winnerResult={winnerResult}
+            result={result}
+            setWinName={setWinName}
+          />
+        )}
+
         <ModalProvider>
-          <Modal isOpen={showModal}>
+          {/* <Modal isOpen={showModal}>
             <ModalLottery
               drawResult={drawResult}
               onCloseModal={onCloseModal}
@@ -2190,7 +2199,7 @@ export const Main = () => {
               result={result}
               setWinName={setWinName}
             />
-          </Modal>
+          </Modal> */}
 
           <Modal isOpen={showModalCongrats}>
             <ModalCongrats
