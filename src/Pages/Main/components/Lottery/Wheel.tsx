@@ -220,17 +220,19 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
         //   timeout={10000}
         //   classNames="present"
         // >
-        <Styled.Present show={show && !!drawResult}>
-          <PresentIcon />
-          {drawResult[1].kind === 0
-            ? (drawResult[1].volume / 100000).toLocaleString("ru-RU", {
-                maximumFractionDigits: 5,
-              })
-            : drawResult[1].kind === 1
-            ? t("win.two")
-            : drawResult[1].volume}
-          &nbsp;
-          {drawResult[1].volume ? Balance[drawResult[1].balanceKind] : ""}
+        <Styled.Present>
+          <Styled.PresentInner show={show && !!drawResult}>
+            <PresentIcon />
+            {drawResult[1].kind === 0
+              ? (drawResult[1].volume / 100000).toLocaleString("ru-RU", {
+                  maximumFractionDigits: 5,
+                })
+              : drawResult[1].kind === 1
+              ? t("win.two")
+              : drawResult[1].volume}
+            &nbsp;
+            {drawResult[1].volume ? Balance[drawResult[1].balanceKind] : ""}
+          </Styled.PresentInner>
         </Styled.Present>
         // </CSSTransition>
       )}

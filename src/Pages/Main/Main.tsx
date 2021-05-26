@@ -16,7 +16,7 @@ import { ModalLottery } from "./components/Lottery/Modal";
 import { ModalCongrats } from "./components/Lottery/ModalCongrats";
 import { Prize, Winner, Users } from "../../types/drawResult";
 import { DrawHistory } from "./components/DrawHistory/DrawHistory";
-import { CSSTransition } from "react-transition-group";
+import { CSSTransition, Transition } from "react-transition-group";
 import { ArrList } from "../../types/lottery";
 import Modal, { ModalProvider } from "styled-react-modal";
 import ReactNotification, { store } from "react-notifications-component";
@@ -2075,16 +2075,16 @@ export const Main = () => {
   };
 
   const onCloseModal = () => {
-    setResult(null);
     setShowModal(false);
+    setResult(null);
   };
 
   const onCloseModalCongrats = () => {
     setShowModalCongrats(false);
-    setDrawResult(null);
     setWinName(null);
     setResult(null);
     setShowTimer(true);
+    setDrawResult(null);
   };
 
   const onShowModalCongrats = () => {
@@ -2120,22 +2120,57 @@ export const Main = () => {
     setShowModal(true);
   };
 
+  const [testModal, setTestModal] = useState(false);
+  const [testModal1, setTestModal1] = useState(false);
+
+  const test = () => {
+    setTestModal(true);
+  };
+
   return (
     <div>
       <Header />
+      {/* <CSSTransition
+        in={testModal}
+        timeout={300}
+        classNames="modal"
+        unmountOnExit
+        onEntered={() => setTestModal1(true)}
+      >
+        <ModalComponent>
+          <Center>
+            dfljdalknsdlvgknldjkgvnldvkjn sffs
+            <div>dfgdfdf</div>
+            <div>
+              <CSSTransition
+                in={testModal1}
+                unmountOnExit
+                timeout={500}
+                classNames="modal"
+              >
+                <div> INMDFNJSDBDMDNM</div>
+              </CSSTransition>
+            </div>
+          </Center>
+        </ModalComponent>
+      </CSSTransition> */}
       <MainPage>
         {showTimer && (
           <TimerPopup onClick={onShowModal}>
             <Timer closeTimer={closeTimer} icon={true} clock={clock} />
           </TimerPopup>
         )}
-        {/* <button onClick={testResult}>tejdsf</button> */}
-        <CSSTransition
+        {/* <button onClick={test}>tejdsf</button> */}
+        <button onClick={testResult}>tejdsf</button>
+
+        {/* <CSSTransition
           in={showModal}
           timeout={300}
-          classNames="filter"
+          classNames="alerts"
           unmountOnExit
-        >
+          mountOnEnter
+        > */}
+        {showModal && (
           <ModalLottery
             drawResult={drawResult}
             onCloseModal={onCloseModal}
@@ -2146,7 +2181,8 @@ export const Main = () => {
             setWinName={setWinName}
             testResult={testResult}
           />
-        </CSSTransition>
+        )}
+        {/* </CSSTransition> */}
         {/* {showModal && (
           <ModalLottery
             drawResult={drawResult}
@@ -2159,41 +2195,22 @@ export const Main = () => {
           />
         )} */}
 
-        <ModalProvider>
-          {/* <Modal isOpen={showModal}>
-            <ModalLottery
-              drawResult={drawResult}
-              onCloseModal={onCloseModal}
-              clock={clock}
-              onShowModalCongrats={onShowModalCongrats}
-              winnerResult={winnerResult}
-              result={result}
-              setWinName={setWinName}
-            />
-          </Modal> */}
-
-          {/* <Modal isOpen={showModalCongrats}>
-            <ModalCongrats
-              result={result}
-              name={winName}
-              drawResult={drawResult}
-              onCloseModalCongrats={onCloseModalCongrats}
-            />
-          </Modal> */}
-        </ModalProvider>
-        <CSSTransition
+        {/* <CSSTransition
           in={showModalCongrats}
-          timeout={30}
-          classNames="filter"
+          timeout={300}
+          classNames="alerts"
           unmountOnExit
-        >
+        > */}
+        {showModalCongrats && (
           <ModalCongrats
             result={result}
             name={winName}
             drawResult={drawResult}
             onCloseModalCongrats={onCloseModalCongrats}
           />
-        </CSSTransition>
+        )}
+        {/* </CSSTransition> */}
+
         {/* {showModalCongrats && (
           <ModalCongrats
             result={result}
@@ -2214,6 +2231,32 @@ export const Main = () => {
     </div>
   );
 };
+
+const ModalComponent = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: block;
+  z-index: 99999;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    width: 0 !important;
+  }
+`;
+
+const Center = styled.div`
+  min-height: calc(100% - 3.5rem);
+  margin: 1.75rem auto;
+  display: flex;
+  align-items: center;
+  transition: height 300ms linear;
+  &::-webkit-scrollbar {
+    width: 0 !important;
+  }
+`;
 
 const MainPage = styled(Page)`
   margin-top: 200px;

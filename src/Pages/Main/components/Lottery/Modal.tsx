@@ -11,6 +11,7 @@ import { Balance } from "../../../../types/balance";
 import { Card } from "../../../../globalStyles";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { useTranslation } from "react-i18next";
+import brand from "../../../../assets/svg/Gs.svg";
 
 type Props = {
   clock: number | null;
@@ -50,8 +51,8 @@ export const ModalLottery: FC<Props> = ({
         {/* <button onClick={testResult}>test</button> */}
         <CSSTransition
           in={!!drawResult}
-          timeout={3000}
-          classNames="modals"
+          timeout={300}
+          classNames="alert"
           unmountOnExit
         >
           <>
@@ -78,13 +79,16 @@ export const ModalLottery: FC<Props> = ({
         <Styled.ContainerItem>
           <CSSTransition
             in={!drawResult}
-            timeout={3000}
-            classNames="modals"
+            timeout={300}
+            classNames="alert"
             unmountOnExit
           >
-            <>
+            <div>
+              <Styled.BrandImgAbs>
+                <img src={brand} alt="" />{" "}
+              </Styled.BrandImgAbs>
               <Timer icon={false} clock={clock} />
-            </>
+            </div>
           </CSSTransition>
         </Styled.ContainerItem>
       </Styled.Container>
