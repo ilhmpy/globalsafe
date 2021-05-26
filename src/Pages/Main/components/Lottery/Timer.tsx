@@ -62,7 +62,7 @@ export const Timer: FC<Props> = ({
   };
 
   useEffect(() => {
-    let timer = setInterval(() => repeat(), 60000 * 6);
+    let timer = setInterval(() => repeat(), 60000 * 1);
     return () => {
       clearInterval(timer);
     };
