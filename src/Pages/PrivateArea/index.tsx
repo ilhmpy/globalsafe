@@ -213,7 +213,12 @@ export const InfoMain = () => {
   if (user === null) {
     return null;
   }
-  console.log("balanceChips", balanceChips);
+
+  const balanceFuture =
+    depositSelect &&
+    [9, 10, 11].includes(depositSelect.priceKind) &&
+    depositSelect.priceKind !== 1;
+
   if (user === false) {
     return <Redirect to="/" />;
   }
@@ -464,7 +469,7 @@ export const InfoMain = () => {
                     ) : (
                       <br />
                     )}
-                    {depositSelect && !asset ? (
+                    {depositSelect && !asset && balanceFuture ? (
                       <>
                         <Styled.Warning>
                           {t("depositSelect.forActive")}&nbsp;
@@ -489,6 +494,16 @@ export const InfoMain = () => {
                       </>
                     ) : null}
                     {depositSelect && depositSelect.priceKind && asset ? (
+                      <Styled.Warning>
+                        {t("depositSelect.willActiv")}&nbsp;{" "}
+                        {depositSelect.price}{" "}
+                        {depositSelect.priceKind
+                          ? Balance[depositSelect.priceKind]
+                          : "CWD"}
+                        <br />
+                        {t("depositSelect.bill")}
+                      </Styled.Warning>
+                    ) : depositSelect && depositSelect.priceKind > 11 ? (
                       <Styled.Warning>
                         {t("depositSelect.willActiv")}&nbsp;{" "}
                         {depositSelect.price}{" "}
