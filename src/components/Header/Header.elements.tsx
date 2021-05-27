@@ -93,6 +93,7 @@ export const HeaderLogo = styled.a`
   text-decoration: none;
   cursor: pointer;
   z-index: 5;
+  margin-top: 5px;
   .logo {
     fill: ${(props) => props.theme.text};
   }
