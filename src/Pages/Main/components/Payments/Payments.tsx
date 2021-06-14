@@ -414,7 +414,7 @@ const OnDate = styled.div<{ rtt?: boolean }>`
   line-height: 116.69%;
   color: ${(props) => props.theme.text};
   cursor: pointer;
-  z-index: 99999;
+  z-index: 1;
   svg {
     animation: ${(props) => props.rtt && Move} 4s linear infinite;
   }
