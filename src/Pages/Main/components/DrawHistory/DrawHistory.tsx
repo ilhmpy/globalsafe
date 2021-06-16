@@ -131,7 +131,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }) => {
           <TableItemHead>{t("lotteryTable.date")}</TableItemHead>
           <TableItemHead>{t("lotteryTable.typeWin")}</TableItemHead>
           <TableItemHead>{t("lotteryTable.sumWin")}</TableItemHead>
-          <TableItemHead>{t("lotteryTable.winners")}</TableItemHead>
+          <TableItemHead> {t("lotteryTable.winners")}</TableItemHead>
         </TableList>
         <TransitionGroup>
           {notifyList.length &&
@@ -154,7 +154,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }) => {
                     {item.volume ? Balance[item.balanceKind] : "-"}
                   </TableItem>
                   <TableItem>
-                    <Value>{item.name}</Value>
+                    <Value data-title={item.name} >{item.name}</Value>
                   </TableItem>
                 </TableList>
               </CSSTransition>
@@ -169,6 +169,9 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }) => {
     </Page>
   );
 };
+
+
+
 
 const TimerHistoryContainer = styled(Card)`
   width: 100%;
@@ -287,15 +290,41 @@ const TableItemHead = styled(TableItem)`
   }
 `;
 
+
+
 const Value = styled.div`
   font-weight: 500;
   font-size: 24px;
   line-height: 28px;
-  display: flex;
+  // display: flex;
   align-items: center;
   letter-spacing: 0.1px;
   text-transform: uppercase;
   color: #ff416e;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    &:hover{
+      cursor: pointer;
+    }
+
+    &:hover:after{
+      background: rgba(0,0,0,0.25);
+      box-shadow: 0 10зч 20px rgba(0,0,0,0.7);
+      color: #fff;
+      margin-top: -30px;
+      left:68%;
+      content: attr(data-title);
+      position: absolute;
+      z-index: 1;
+      padding-top: 1px;
+      padding-left: 25px;
+      padding-right: 25px;
+      border-radius:5px
+    }
+
+
   @media (max-width: 768px) {
     font-size: 14px;
     line-height: 16px;
