@@ -2259,12 +2259,12 @@ const Center = styled.div`
 `;
 
 const MainPage = styled(Page)`
-  margin-top: 200px;
+  //margin-top: 200px;
   /* @media (max-width: 1060px) {
     margin-top: 140px;
   } */
   @media (max-width: 768px) {
-    margin-top: 210px;
+    margin-top: 10px;
   }
 `;
 
@@ -2272,7 +2272,7 @@ const TimerPopup = styled.div`
   position: absolute;
   cursor: pointer;
   right: 30px;
-  top: 0px;
+  top: 230px;
   margin-top: -160px;
   @media (max-width: 768px) {
     margin-top: -180px;

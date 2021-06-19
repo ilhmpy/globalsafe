@@ -313,7 +313,12 @@ input[type=number] {
 
 `;
 
-export const Container = styled.div<{ pNone?: boolean }>`
+export const Container = styled.div<{ pNone?: boolean, bigMargin?: boolean}>`
+
+  padding-top: ${(props) => props.bigMargin ? "160px" : "115px"} ;
+	margin-top: ${(props) => props.bigMargin ? "-160px" : "-115px"};
+	-webkit-background-clip: content-box;
+	background-clip: content-box;
   z-index: 1;
   width: 100%;
   max-width: 1080px;
