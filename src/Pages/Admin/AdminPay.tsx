@@ -17,6 +17,7 @@ import {
   PaymentsCollection,
   RootCharges,
   CollectionCharges,
+  ConfirmAllDepositsPayment,
 } from "../../types/payments";
 import {
   DepositStats,
@@ -367,15 +368,29 @@ export const AdminPay = () => {
   };
 
   const paymentsConfirm = () => {
+    console.log(nameApproval);
+    console.log(openDateApproval);
+    console.log(checkListApproval);
     if (hubConnection) {
       hubConnection
-        .invoke("ConfirmAllDepositsPayment")
+        .invoke<ConfirmAllDepositsPayment>("ConfirmAllDepositsPayment",
+        nameApproval ? nameApproval : null,
+        openDateApproval.from ? openDateApproval.from: null,
+        openDateApproval.to ? openDateApproval.to: null,
+        checkListApproval.length ? checkListApproval.map((i: any) => i.id) : null,
+        12
+        )
         .then((res) => {
           alert("Успешно", "", "success");
+          console.log('ураррарарарара')
+          console.log("ConfirmAllDepositPayment", res);
           getPaymentsOverview();
+          
+          
         })
         .catch((err: Error) => {
           alert("Ошибка", "Произошла ошибка", "danger");
+          console.log(err)
         });
     }
   };
@@ -532,8 +547,15 @@ export const AdminPay = () => {
       {active === 0 && (
         <ButtonWrap>
           <Button dangerOutline mb onClick={paymentsConfirm}>
-            {t("adminPay.confirmButton")}
+            {t("adminPay.confirmButton")}!!!
+            
           </Button>
+          <Styled.Input
+                    value={nameApproval}
+                    onChange={(e) =>
+                      setNameApproval(e.target.value.toLowerCase())
+                    }
+          />
         </ButtonWrap>
       )}
 
@@ -579,7 +601,7 @@ export const AdminPay = () => {
                 </Styled.SelectWrap>
               </Styled.SelectContainerInnerPaid>
               <Button danger onClick={submitApproval}>
-                {t("adminUsers.apply")}
+                {t("adminUsers.apply")}???
               </Button>
             </Styled.SelectContainer>
           </CSSTransition>
