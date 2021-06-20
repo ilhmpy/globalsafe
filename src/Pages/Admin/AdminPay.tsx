@@ -375,7 +375,7 @@ export const AdminPay = () => {
       hubConnection
         .invoke<ConfirmAllDepositsPayment>("ConfirmAllDepositsPayment",
         nameApproval ? nameApproval : null,
-        openDateApproval.from ? openDateApproval.from: null,
+        openDateApproval.from ? openDateApproval.from: null, 
         openDateApproval.to ? openDateApproval.to: null,
         checkListApproval.length ? checkListApproval.map((i: any) => i.id) : null,
         12
