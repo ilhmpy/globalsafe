@@ -9,6 +9,7 @@ import { Tab, Content } from "../../components/UI/Tabs";
 import { AppContext } from "../../context/HubContext";
 import { ThemeContext } from "../../context/ThemeContext";
 import { Select } from "../../components/Select/Select2";
+import { Select as SelectOne } from "../../components/Select/Select";
 import { Select as SelectHas } from "../../components/Select/Select3";
 import { TestInput } from "../../components/UI/DayPicker";
 import { Button } from "../../components/Button/Button";
@@ -85,6 +86,7 @@ export const AdminPay = () => {
   const [name, setName] = useState("");
   const [nameApproval, setNameApproval] = useState("");
   const [selectedOption, setSelectedOption] = useState<null | string>(null);
+
   const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>(
     []
   );
@@ -123,12 +125,10 @@ export const AdminPay = () => {
     namesProgramApproval.includes(i.safeId)
   );
   const searchSafeIDApproval = idProgramApproval.map((i) => i.safeId);
-  const hasPayments =
-    selectedOption !== null
-      ? selectedOption === t("adminPay.filter.disagree")
-      : false
-      ? true
-      : null;
+
+  const depositState = checkList.length
+    ? checkList.map((i: any) => i.id)
+    : [5, 6];
 
   const myLoad = () => {
     setNext(false);
@@ -234,7 +234,7 @@ export const AdminPay = () => {
           null,
           null,
           null,
-          hasPayments,
+          null,
           0,
           20
         )
@@ -320,14 +320,14 @@ export const AdminPay = () => {
       hubConnection
         .invoke<RootPayments>(
           "GetUsersDeposits",
-          [5, 6],
+          depositState,
           nameApproval ? nameApproval.toLowerCase() : null,
           searchSafeIDApproval.length ? searchSafeIDApproval : null,
           openDateApproval.from ? openDateApproval.from : null,
           openDateApproval.to ? openDateApproval.to : null,
           null,
           null,
-          hasPayments,
+          null,
           num,
           20
         )
@@ -433,14 +433,14 @@ export const AdminPay = () => {
       hubConnection
         .invoke<RootPayments>(
           "GetUsersDeposits",
-          [5, 6],
+          depositState,
           nameApproval ? nameApproval.toLowerCase() : null,
           searchSafeIDApproval.length ? searchSafeIDApproval : null,
           openDateApproval.from ? openDateApproval.from : null,
           openDateApproval.to ? openDateApproval.to : null,
           null,
           null,
-          hasPayments, //
+          null, //
           0,
           20
         )
@@ -601,15 +601,25 @@ export const AdminPay = () => {
                   />
                 </Styled.SelectWrap>
                 <Styled.SelectWrap style={{ minWidth: 263 }}>
-                  {/* <Styled.Label>{t("adminPay.filter.deposit")}</Styled.Label> */}
-                  <SelectHas
+                  <Styled.Label>{t("adminPay.status")}</Styled.Label>
+                  {/* <SelectHas
                     selectedOption={selectedOption}
                     setSelectedOption={setSelectedOption}
                     options={[
                       t("adminPay.filter.disagree"),
                       t("adminPay.filter.agree"),
+                      "",
                     ]}
                     label={t("adminPay.status")}
+                  /> */}
+                  <SelectOne
+                    checkList={checkList}
+                    setCheckList={setCheckList}
+                    idx={5}
+                    values={[
+                      t("adminPay.filter.disagree"),
+                      t("adminPay.filter.agree"),
+                    ]}
                   />
                 </Styled.SelectWrap>
               </Styled.SelectContainerInnerPaid>

@@ -37,6 +37,7 @@ type Props = {
   values?: string[];
   checkList: any;
   setCheckList: (str: any) => void;
+  idx?: number;
 };
 
 type Arr = {
@@ -50,13 +51,14 @@ export const Select: FC<Props> = ({
   values,
   setCheckList,
   checkList,
+  idx,
 }: Props) => {
   const [show, setShow] = useState(false);
   // const [checkList, setCheckList] = useState<any>([]);
   const [list, setList] = useState<Arr[]>([]);
 
   useEffect(() => {
-    let id = 0;
+    let id = idx ? idx : 0;
     if (values && list.length === 0) {
       let arr = values!.map((i) => ({
         id: id++,
