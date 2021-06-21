@@ -193,13 +193,13 @@ export const FoldContent = styled.div<{ open?: boolean }>`
 
 export const SelectList = styled.ul`
   list-style: none;
-  background: #f8f8f8;
-  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.2);
+  background: ${(props) => props.theme.card.background};
+  border: 1px solid rgba(86, 101, 127, 0.3);
   border-radius: 4px;
   position: absolute;
   right: 0;
   left: 0;
-  top: 55px;
+  top: 40px;
   z-index: 999;
 `;
 
@@ -209,11 +209,11 @@ export const ListItem = styled.li<{ active?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: ${(props) => (props.active ? "#f0f4f8" : "#fff")};
+  background: ${(props) => props.theme.card.background};
   cursor: pointer;
   &:focus,
   &:hover {
-    background: #f0f4f8;
+    background: ${(props) => props.theme.card.backgroundAlfa};
     border-radius: 0px 0px 4px 4px;
   }
 `;
@@ -237,7 +237,7 @@ export const DropDownContainer = styled.div`
 `;
 
 export const DropDownHeader = styled.div`
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(81, 81, 114, 0.3);
   border-radius: 4px;
   position: relative;
   height: 40px;
@@ -245,8 +245,14 @@ export const DropDownHeader = styled.div`
   line-height: 21px;
   letter-spacing: 0.25px;
   padding: 8px;
+  position: relative;
   width: 100%;
   transition: 200ms ease-in-out;
+  ${Arrow} {
+    position: absolute;
+    right: 10px;
+    top: 8px;
+  }
   span {
     &::after,
     &::before {

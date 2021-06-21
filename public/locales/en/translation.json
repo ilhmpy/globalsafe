@@ -172,6 +172,8 @@
         "title2": "Paid",
         "title3": "On approval",
         "confirmButton": "Confirm all",
+        "procentPay": "% payouts",
+        "status": "Status",
         "table":{
             "user":"User",
             "name": "Name",
@@ -187,11 +189,14 @@
             "paid":"Paid",
             "amount":"Current number of",
             "cost":"Unit cost"
+            
         },
         "filter":{
             "user": "User",
             "date": "Date",
-            "deposit": "Deposit"
+            "deposit": "Deposit",
+            "agree": "Agreed",
+            "disagree": "Inconsistent"
         }
     },
     "depositList":{

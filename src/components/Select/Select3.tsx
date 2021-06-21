@@ -1,14 +1,23 @@
 import React, { ChangeEvent, useState, useRef, FC } from "react";
 import * as Styled from "./Select.elements";
+import { ReactComponent as Icon } from "../../assets/svg/selectArrow.svg";
 import useOnClickOutside from "../../hooks/useOutsideHook";
 
-export const Select: FC<{ options: string[]; label: string }> = ({
+type Props = {
+  options: string[];
+  label: string;
+  selectedOption: null | string;
+  setSelectedOption: (selectedOption: null | string) => void;
+};
+
+export const Select: FC<Props> = ({
   options,
   label,
+  selectedOption,
+  setSelectedOption,
 }) => {
   const [value, setValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(null);
   const [activeList, setActiveList] = useState(0);
 
   const ref = useRef(null);
@@ -50,8 +59,11 @@ export const Select: FC<{ options: string[]; label: string }> = ({
           onClick={toggling}
           onKeyDown={onKeyDown}
         >
-          {selectedOption || options[0]}
+          {selectedOption || ""}
           <span data-label={label}></span>
+          <Styled.Arrow rotat={isOpen}>
+            <Icon />
+          </Styled.Arrow>
         </Styled.DropDownHeader>
         {isOpen && (
           <Styled.SelectList>
