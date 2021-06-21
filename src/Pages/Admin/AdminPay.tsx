@@ -38,6 +38,7 @@ import {
 import { OpenDate } from "../../types/dates";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
+import { ProcentInput } from "../../components/UI/ProcentInput";
 
 export const AdminPay = () => {
   const [active, setActive] = useState(0);
@@ -64,7 +65,7 @@ export const AdminPay = () => {
   const [num, setNum] = useState(20);
   const [numPay, setPayNum] = useState(20);
   const [next, setNext] = useState(true);
-
+  const [procent, setProcent] = useState("");
   const [open, setOpen] = useState<boolean>(false);
   const [dataModal, setDataModal] = useState<PaymentsCollection | any>({});
   const [loading, setLoading] = useState(true);
@@ -369,8 +370,16 @@ export const AdminPay = () => {
   const paymentsConfirm = () => {
     if (hubConnection) {
       hubConnection
-        .invoke("ConfirmAllDepositsPayment")
+        .invoke(
+          "ConfirmAllDepositsPayment",
+          nameApproval ? nameApproval.toLowerCase() : null,
+          openDate.from ? openDate.from : backDays._d,
+          openDate.to ? openDate.to : new Date(),
+          searchSafeID.length ? searchSafeID : null,
+          procent ? +procent / 100 : null
+        )
         .then((res) => {
+          console.log("ConfirmAllDepositsPayment", res);
           alert("Успешно", "", "success");
           getPaymentsOverview();
         })
@@ -534,6 +543,12 @@ export const AdminPay = () => {
           <Button dangerOutline mb onClick={paymentsConfirm}>
             {t("adminPay.confirmButton")}
           </Button>
+          <ProcentInput
+            placeholder="0"
+            value={procent}
+            onChange={(e) => setProcent(e.target.value)}
+            label="% выплаты"
+          />
         </ButtonWrap>
       )}
 
@@ -978,10 +993,12 @@ const Tabs = styled.div`
 `;
 
 const ButtonWrap = styled.div`
+  display: flex;
   @media (max-width: 768px) {
-    ${Button} {
+    justify-content: center;
+    /* ${Button} {
       margin-left: auto;
       margin-right: auto;
-    }
+    } */
   }
 `;
