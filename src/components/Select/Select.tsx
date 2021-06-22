@@ -190,7 +190,7 @@ const List = styled.ul<{ rotat?: boolean }>`
   left: 0;
   right: 0;
   width: 100%;
-  background: ${(props) => props.theme.card.background};
+  background: ${(props) => props.theme.card.backgroundAlfa};
   z-index: 9999;
   border: ${(props) => (props.rotat ? "1px" : "0")} solid
     rgba(86, 101, 127, 0.3);
