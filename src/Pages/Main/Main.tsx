@@ -2058,6 +2058,11 @@ export const Main = () => {
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
 
+  useEffect(() => {
+    setShowModal(false);
+    setDrawResult(null);
+  },[])
+
   const winnerResult = (res: Prize) => {
     setResult(res);
     console.log("result", result);
@@ -2093,7 +2098,7 @@ export const Main = () => {
     setDrawResult(null);
     setShowModal(false);
     setShowModalCongrats(true);
-    console.log("onShowModalCongrats");
+
   };
 
   const onOpenModal = () => {
@@ -2106,7 +2111,6 @@ export const Main = () => {
 
     if (hubConnection) {
       hubConnection.on("DrawResult", (data) => {
-        console.log("DrawResult", data);
         !clean && setDrawResult(data);
       });
     }
@@ -2130,30 +2134,6 @@ export const Main = () => {
   return (
     <div>
       <Header />
-      {/* <CSSTransition
-        in={testModal}
-        timeout={300}
-        classNames="modal"
-        unmountOnExit
-        onEntered={() => setTestModal1(true)}
-      >
-        <ModalComponent>
-          <Center>
-            dfljdalknsdlvgknldjkgvnldvkjn sffs
-            <div>dfgdfdf</div>
-            <div>
-              <CSSTransition
-                in={testModal1}
-                unmountOnExit
-                timeout={500}
-                classNames="modal"
-              >
-                <div> INMDFNJSDBDMDNM</div>
-              </CSSTransition>
-            </div>
-          </Center>
-        </ModalComponent>
-      </CSSTransition> */}
       <MainPage>
         {showTimer && (
           <TimerPopup onClick={onShowModal}>
@@ -2163,13 +2143,6 @@ export const Main = () => {
         {/* <button onClick={test}>tejdsf</button> */}
         {/* <button onClick={testResult}>tejdsf</button> */}
 
-        {/* <CSSTransition
-          in={showModal}
-          timeout={300}
-          classNames="alerts"
-          unmountOnExit
-          mountOnEnter
-        > */}
         {showModal && (
           <ModalLottery
             drawResult={drawResult}
@@ -2182,25 +2155,7 @@ export const Main = () => {
             testResult={testResult}
           />
         )}
-        {/* </CSSTransition> */}
-        {/* {showModal && (
-          <ModalLottery
-            drawResult={drawResult}
-            onCloseModal={onCloseModal}
-            clock={clock}
-            onShowModalCongrats={onShowModalCongrats}
-            winnerResult={winnerResult}
-            result={result}
-            setWinName={setWinName}
-          />
-        )} */}
-
-        {/* <CSSTransition
-          in={showModalCongrats}
-          timeout={300}
-          classNames="alerts"
-          unmountOnExit
-        > */}
+      
         {showModalCongrats && (
           <ModalCongrats
             result={result}
@@ -2209,16 +2164,7 @@ export const Main = () => {
             onCloseModalCongrats={onCloseModalCongrats}
           />
         )}
-        {/* </CSSTransition> */}
 
-        {/* {showModalCongrats && (
-          <ModalCongrats
-            result={result}
-            name={winName}
-            drawResult={drawResult}
-            onCloseModalCongrats={onCloseModalCongrats}
-          />
-        )} */}
         <Banner />
         <Payments />
         <Operations />

@@ -9,6 +9,8 @@ import { Tab, Content } from "../../components/UI/Tabs";
 import { AppContext } from "../../context/HubContext";
 import { ThemeContext } from "../../context/ThemeContext";
 import { Select } from "../../components/Select/Select2";
+import { Select as SelectOne } from "../../components/Select/Select";
+import { Select as SelectHas } from "../../components/Select/Select3";
 import { TestInput } from "../../components/UI/DayPicker";
 import { Button } from "../../components/Button/Button";
 import useWindowSize from "../../hooks/useWindowSize";
@@ -38,6 +40,7 @@ import {
 import { OpenDate } from "../../types/dates";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
+import { ProcentInput } from "../../components/UI/ProcentInput";
 
 export const AdminPay = () => {
   const [active, setActive] = useState(0);
@@ -64,7 +67,7 @@ export const AdminPay = () => {
   const [num, setNum] = useState(20);
   const [numPay, setPayNum] = useState(20);
   const [next, setNext] = useState(true);
-
+  const [procent, setProcent] = useState("");
   const [open, setOpen] = useState<boolean>(false);
   const [dataModal, setDataModal] = useState<PaymentsCollection | any>({});
   const [loading, setLoading] = useState(true);
@@ -82,6 +85,8 @@ export const AdminPay = () => {
   const [checkListApproval, setCheckListApproval] = useState<any>([]);
   const [name, setName] = useState("");
   const [nameApproval, setNameApproval] = useState("");
+  const [selectedOption, setSelectedOption] = useState<null | string>(null);
+
   const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>(
     []
   );
@@ -120,6 +125,10 @@ export const AdminPay = () => {
     namesProgramApproval.includes(i.safeId)
   );
   const searchSafeIDApproval = idProgramApproval.map((i) => i.safeId);
+
+  const depositState = checkList.length
+    ? checkList.map((i: any) => i.id)
+    : [5, 6];
 
   const myLoad = () => {
     setNext(false);
@@ -311,7 +320,7 @@ export const AdminPay = () => {
       hubConnection
         .invoke<RootPayments>(
           "GetUsersDeposits",
-          [5, 6],
+          depositState,
           nameApproval ? nameApproval.toLowerCase() : null,
           searchSafeIDApproval.length ? searchSafeIDApproval : null,
           openDateApproval.from ? openDateApproval.from : null,
@@ -369,8 +378,16 @@ export const AdminPay = () => {
   const paymentsConfirm = () => {
     if (hubConnection) {
       hubConnection
-        .invoke("ConfirmAllDepositsPayment")
+        .invoke(
+          "ConfirmAllDepositsPayment",
+          nameApproval ? nameApproval.toLowerCase() : null,
+          openDate.from ? openDate.from : backDays._d,
+          openDate.to ? openDate.to : new Date(),
+          searchSafeID.length ? searchSafeID : null,
+          procent ? +procent / 100 : null
+        )
         .then((res) => {
+          console.log("ConfirmAllDepositsPayment", res);
           alert("Успешно", "", "success");
           getPaymentsOverview();
         })
@@ -416,14 +433,14 @@ export const AdminPay = () => {
       hubConnection
         .invoke<RootPayments>(
           "GetUsersDeposits",
-          [5, 6],
+          depositState,
           nameApproval ? nameApproval.toLowerCase() : null,
           searchSafeIDApproval.length ? searchSafeIDApproval : null,
           openDateApproval.from ? openDateApproval.from : null,
           openDateApproval.to ? openDateApproval.to : null,
           null,
           null,
-          null,
+          null, //
           0,
           20
         )
@@ -534,6 +551,12 @@ export const AdminPay = () => {
           <Button dangerOutline mb onClick={paymentsConfirm}>
             {t("adminPay.confirmButton")}
           </Button>
+          <ProcentInput
+            placeholder="0"
+            value={procent}
+            onChange={(e) => setProcent(e.target.value)}
+            label={t("adminPay.procentPay")}
+          />
         </ButtonWrap>
       )}
 
@@ -575,6 +598,28 @@ export const AdminPay = () => {
                     checkList={checkListApproval}
                     setCheckList={setCheckListApproval}
                     values={listDeposits}
+                  />
+                </Styled.SelectWrap>
+                <Styled.SelectWrap style={{ minWidth: 263 }}>
+                  <Styled.Label>{t("adminPay.status")}</Styled.Label>
+                  {/* <SelectHas
+                    selectedOption={selectedOption}
+                    setSelectedOption={setSelectedOption}
+                    options={[
+                      t("adminPay.filter.disagree"),
+                      t("adminPay.filter.agree"),
+                      "",
+                    ]}
+                    label={t("adminPay.status")}
+                  /> */}
+                  <SelectOne
+                    checkList={checkList}
+                    setCheckList={setCheckList}
+                    idx={5}
+                    values={[
+                      t("adminPay.filter.disagree"),
+                      t("adminPay.filter.agree"),
+                    ]}
                   />
                 </Styled.SelectWrap>
               </Styled.SelectContainerInnerPaid>
@@ -978,10 +1023,12 @@ const Tabs = styled.div`
 `;
 
 const ButtonWrap = styled.div`
+  display: flex;
   @media (max-width: 768px) {
-    ${Button} {
+    justify-content: center;
+    /* ${Button} {
       margin-left: auto;
       margin-right: auto;
-    }
+    } */
   }
 `;
