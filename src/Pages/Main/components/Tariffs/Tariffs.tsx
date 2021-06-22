@@ -85,9 +85,9 @@ export const Tariffs = () => {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const id = e.target.value;
     setValue(id);
-    const newLink = oldLink.replace(/\d{3,}/g, "");
+    const newLink = oldLink.replace(/\d{5,}/g, "");
     if (id === "") {
-      setLink(newLink + min);
+      setLink(newLink);
     } else {
       setLink(newLink + id);
     }
@@ -214,6 +214,7 @@ export const Tariffs = () => {
               ref={inputRef}
               value={value}
             />
+
             <ModalButton
               as="button"
               onClick={toLink}
