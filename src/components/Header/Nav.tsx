@@ -80,11 +80,6 @@ export const Nav: FC<Props> = ({
           </StyledLink>
         </ListItem>
         <ListItem>
-          <StyledLink to="/#contact" onClick={onClose}>
-            {t("header.item4")}
-          </StyledLink>
-        </ListItem>
-        <ListItem>
           <StyledLink to="/#lottery" onClick={onClose}>
             {t("sideNav.lottery")}
           </StyledLink>
