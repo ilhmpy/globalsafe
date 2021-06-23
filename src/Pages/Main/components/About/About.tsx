@@ -34,22 +34,23 @@ export const About = () => {
       </Container> */}
 
       <Styled.BlockContainer>
-        <Styled.BlockItem>
-          <Styled.Img src={img3} alt="" />
+      <Styled.BlockItem>
+          <Styled.Img src={img1} alt="" />
           <Styled.BlockInner>
-            <Styled.BlockTitle pad>
-              {t("about.name3")} <Styled.Dot /> {t("about.position")} <br />{" "}
-              {t("about.fond")}
-              GLOBALSafe
+            <Styled.BlockTitle>
+              {t("about.name2")} <Styled.Dot /> {t("about.founder")}
+              <br /> {t("about.crypto")} GLOBALSafe
             </Styled.BlockTitle>
-            <Styled.BlockSubtitle pad>
-              {t("about.top")} <br />
+            <Styled.BlockSubtitle>
               {t("about.investor")}
+              <br />
+              {t("about.apostol")} CWD Global
               {/* {t("about.desc1")}
               <br /> {t("about.desc2")} */}
             </Styled.BlockSubtitle>
           </Styled.BlockInner>
         </Styled.BlockItem>
+       
 
         <Styled.BlockItem>
           <Styled.Img src={img2} alt="" />
@@ -66,17 +67,18 @@ export const About = () => {
           </Styled.BlockInner>
         </Styled.BlockItem>
 
+
         <Styled.BlockItem>
-          <Styled.Img src={img1} alt="" />
+          <Styled.Img src={img3} alt="" />
           <Styled.BlockInner>
-            <Styled.BlockTitle>
-              {t("about.name2")} <Styled.Dot /> {t("about.founder")}
-              <br /> {t("about.crypto")} GLOBALSafe
+            <Styled.BlockTitle pad>
+              {t("about.name3")} <Styled.Dot /> {t("about.position")} <br />{" "}
+              {t("about.fond")}
+              GLOBALSafe
             </Styled.BlockTitle>
-            <Styled.BlockSubtitle>
+            <Styled.BlockSubtitle pad>
+              {t("about.top")} <br />
               {t("about.investor")}
-              <br />
-              {t("about.apostol")} CWD Global
               {/* {t("about.desc1")}
               <br /> {t("about.desc2")} */}
             </Styled.BlockSubtitle>
