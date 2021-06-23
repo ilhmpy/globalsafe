@@ -386,7 +386,11 @@ export const InfoBalance = () => {
   }
 
   const linkOpen = (res: any) => {
-    window.location.assign(res);
+    const link = document.createElement("a");
+    link.setAttribute("href", res);
+    link.setAttribute("target", "_blank");
+    link.setAttribute("referer", "noreferer");
+    link.click();
   };
 
   const getTopUp = () => {
