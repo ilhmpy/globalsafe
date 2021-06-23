@@ -145,6 +145,7 @@ const RadialComponent: FC<{ data: Pokedex; height: number }> = ({
                 data.deposit.name.split(" ")[0].length > 6 &&
                 data.deposit.name.split(" ").length > 1
               }
+              flex={true}
             >
               <RadialBar
                 height={300}
@@ -155,7 +156,7 @@ const RadialComponent: FC<{ data: Pokedex; height: number }> = ({
               <RoundInside>
                 <RoundInsideName>{data.deposit.name}</RoundInsideName>
                 <RoundInsideProcent>
-                  {(data.procent * 100).toFixed(2)}
+                  <RoundInsideItem>{(data.procent * 100).toFixed(2)}</RoundInsideItem>
                   <Proc>%</Proc>
                 </RoundInsideProcent>
               </RoundInside>
@@ -508,7 +509,7 @@ const RoundInsideProcent = styled.div`
   }
 `;
 
-const RadialModalItem = styled.div<{ small?: boolean }>`
+const RadialModalItem = styled.div<{ small?: boolean, flex?: boolean }>`
   width: 280px;
   flex: none;
   position: relative;
@@ -531,6 +532,7 @@ const RadialModalItem = styled.div<{ small?: boolean }>`
     font-weight: 500;
     font-size: ${(props) => (props.small ? "18px" : "36px")};
     line-height: ${(props) => (props.small ? "28px" : "40px")};
+    display: ${({ flex }) => flex != null && flex ? "none" : ""};
     @media (max-width: 768px) {
       max-width: 100%;
       padding-top: 23px;
@@ -539,6 +541,7 @@ const RadialModalItem = styled.div<{ small?: boolean }>`
   ${RoundInsideProcent} {
     font-size: 38px;
     line-height: 48px;
+    display: ${({ flex }) => flex != null && flex ? "flex" : "" };
   }
   @media (max-width: 768px) {
     width: 280px;
@@ -578,4 +581,8 @@ const ProgramCard = styled.div`
       margin-right: auto;
     }
   }
+`;
+
+const RoundInsideItem = styled.div`
+  width: 100%;
 `;
