@@ -30,9 +30,9 @@ export const Banner = () => {
           Попробуйте бесплатно <ArrowIcon />
         </ButtonIcon>
       </Container> */}
-      <ScrollContainer>
+      {/* <ScrollContainer>
         <Scroll />
-      </ScrollContainer>
+      </ScrollContainer> */}
     </>
   );
 };
