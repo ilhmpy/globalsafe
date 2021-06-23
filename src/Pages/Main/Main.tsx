@@ -6,7 +6,6 @@ import { Banner } from "./components/Banner/Banner";
 import { Tariffs } from "./components/Tariffs/Tariffs";
 import { About } from "./components/About/About";
 import { Footer } from "../../components/Footer/Footer";
-import { Contact } from "./components/Contact/Contact";
 import { Operations } from "./components/Operations/Operations";
 import { Payments } from "./components/Payments/Payments";
 import { Timer } from "./components/Lottery/Timer";
@@ -2155,7 +2154,7 @@ export const Main = () => {
             testResult={testResult}
           />
         )}
-      
+
         {showModalCongrats && (
           <ModalCongrats
             result={result}
@@ -2171,7 +2170,6 @@ export const Main = () => {
         <Tariffs />
         <DrawHistory onOpenModal={onOpenModal} clock={clock} />
         <About />
-        <Contact />
         <Footer />
       </MainPage>
     </div>
