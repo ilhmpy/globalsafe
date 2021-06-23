@@ -386,7 +386,7 @@ export const InfoBalance = () => {
   }
 
   const linkOpen = (res: any) => {
-    window.location.assign(res);
+    window.open(res);
   };
 
   const getTopUp = () => {
