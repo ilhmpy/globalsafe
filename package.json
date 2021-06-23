@@ -36,7 +36,7 @@
     "react-notifications-component": "^3.0.4",
     "react-router-dom": "^5.2.0",
     "react-router-hash-link": "^2.4.0",
-    "react-scripts": "4.0.2",
+    "react-scripts": "^4.0.2",
     "react-scroll": "^1.8.1",
     "react-transition-group": "^4.4.1",
     "react-virtualized": "^9.22.3",

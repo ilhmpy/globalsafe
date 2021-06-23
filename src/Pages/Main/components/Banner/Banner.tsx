@@ -1,78 +1,41 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { UpTitle } from "../../../../components/UI/UpTitle";
 import { Container } from "../../../../globalStyles";
-import styled, { keyframes } from "styled-components/macro";
+import styled from "styled-components/macro";
 import { Button } from "../../../../components/Button/Button";
 import { ReactComponent as Arrow } from "../../../../assets/svg/arrow.svg";
 import { ReactComponent as Scroll } from "../../../../assets/svg/scroll.svg";
 import { H1 } from "../../../../components/UI/MainStyled";
-import { useTranslation } from "react-i18next";
-import { CurrencyValues } from "../../../../components/CurrencyValues";
-import { Link } from "react-scroll";
 
 export const Banner = () => {
-  const { t } = useTranslation();
-  // const [scroll, setScroll] = useState(true);
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     if (window.scrollY > 800) {
-  //       setScroll(false);
-  //     } else {
-  //       setScroll(true);
-  //     }
-  //   };
-  //   handleScroll();
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => window.removeEventListener("scroll", handleScroll);
-  // }, []);
   return (
     <>
       <Container id="banner">
-        <UpTitle small>{t("banner.uptitle")}</UpTitle>
+        <UpTitle small>Емко и по-делу</UpTitle>
       </Container>
       <Container>
-        <H1>{t("banner.H1")}</H1>
+        <H1>Приумножайте правильно!</H1>
       </Container>
       <Container>
         <TextBlock>
           <p>
-            <span>{t("banner.brand")}</span> - {t("banner.desc")}
+            <span>GlobalSafe</span> - Это современный Криптофонд для управления
+            вашими средствами и их приумножения под контролем наших лучших
+            специалистов!
           </p>
         </TextBlock>
       </Container>
-      <Container>
-        <ButtonIcon as="button" danger>
-          <Link
-            to="tariffs"
-            spy={true}
-            smooth={true}
-            offset={-50}
-            duration={500}
-          >
-            {t("banner.toProgramm")} <ArrowIcon />
-          </Link>
+      {/* <Container>
+        <ButtonIcon danger>
+          Попробуйте бесплатно <ArrowIcon />
         </ButtonIcon>
-      </Container>
-      <CurrencyValues />
-      {/* <ScrollContainer>{scroll && <ScrollIcon />}</ScrollContainer> */}
+      </Container> */}
+      <ScrollContainer>
+        <Scroll />
+      </ScrollContainer>
     </>
   );
 };
-
-const move = keyframes`
-0% {
-    transform: translate(0%,-3px);
-    opacity: 1;
-  }
-  50% {
-    /* transform: translate(0%,2px); */
-    /* opacity: 1; */
-  }
-  100% {
-    transform: translate(0%,6px);
-    opacity: 0;
-  }
-`;
 
 const ButtonIcon = styled(Button)`
   max-width: 252px;
@@ -88,7 +51,7 @@ const ArrowIcon = styled(Arrow)`
 const TextBlock = styled.div`
   max-width: 622px;
   margin-right: auto;
-  color: ${(props) => props.theme.text2};
+  color: #515172;
   margin-bottom: 60px;
   line-height: 28px;
   span {
@@ -98,20 +61,14 @@ const TextBlock = styled.div`
     margin-bottom: calc(40px + 38 * ((100vw - 320px) / 740));
     font-size: calc(12px + 4 * ((100vw - 320px) / 740));
     line-height: calc(18px + 10 * ((100vw - 320px) / 740));
-  }
-`;
+}
 
-const ScrollIconWrap = styled.div``;
-
-const ScrollIcon = styled(Scroll)`
-  .scroll {
-    animation: ${move} 2s linear infinite;
   }
 `;
 
 const ScrollContainer = styled(Container)`
-  padding-top: 60px;
-  padding-bottom: 60px;
+  padding-top: 140px;
+  padding-bottom: 140px;
   @media (max-width: 1060px) {
     display: none;
   }
