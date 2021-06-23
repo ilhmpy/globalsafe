@@ -4,20 +4,32 @@ import styled from "styled-components/macro";
 
 export const Footer = () => {
   return (
-    <Container>
-      <Text>GLOBALSAFE © 2021</Text>
-    </Container>
+    <DIV>
+      <Container>
+        <Text>Поддержка пользователей в официальном <A href="https://t.me/joinchat/E_Acz5BKQnJlNTVi">телеграм канале</A></Text>
+        <Text>InvestFond © 2021</Text>
+      </Container>
+    </DIV>
   );
 };
 
-const Text = styled.p`
+export const Text = styled.p`
+  display: block;
+  font-size: .80em;
+  font-weight: 400;
+  line-height: 22px;
+
+`;
+
+export const A = styled.a`
+  color: #515172;
+  text-decoration: underline;
+`;
+
+export const DIV = styled.div`
   width: 100%;
-  margin-top: 170px;
-  margin-bottom: 40px;
-  color: ${(props) => props.theme.text};
-  font-size: 14px;
-  font-weight: 300;
-  font-style: normal;
-  letter-spacing: normal;
-  line-height: normal;
+  display: block;
+  & >* {
+    display: block;
+  }
 `;
