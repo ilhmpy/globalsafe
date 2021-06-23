@@ -34,7 +34,7 @@ const Container = styled.div`
   border: 1px solid #ff416e;
   border-radius: 24px;
   padding: 7px 12px 0;
-  height: 40px;
+  height: 42px;
   width: 115px;
   position: relative;
   margin-left: 25px;
