@@ -59,20 +59,26 @@ const InputWrap = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: flex-end;
+  position: relative;
 `;
 
 const Label = styled.span`
-  position: absolute;
   top: 0;
-  left: 6px;
+  left: 0px;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
   z-index: 9;
   padding: 0 6px;
-  right: 0;
   display: inline-block;
   margin: -14px auto 0;
   font-size: 12px;
   line-height: 14px;
   color: rgba(0, 0, 0, 0.6);
+  position: absolute;
+  text-align: center;
+  width: 76px;
+  background: #f2ede4;
 `;
 
 const Val = styled.span`
