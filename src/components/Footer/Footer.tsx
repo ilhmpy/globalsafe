@@ -18,7 +18,6 @@ export const Text = styled.p`
   font-size: .80em;
   font-weight: 400;
   line-height: 22px;
-
 `;
 
 export const A = styled.a`
