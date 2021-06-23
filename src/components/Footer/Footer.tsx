@@ -7,7 +7,7 @@ export const Footer = () => {
     <DIV>
       <Container>
         <Text>Поддержка пользователей в официальном <A href="https://t.me/joinchat/E_Acz5BKQnJlNTVi">телеграм канале</A></Text>
-        <Text>InvestFond © 2021</Text>
+        <Text>GLOBALSAFE © 2021</Text>
       </Container>
     </DIV>
   );
