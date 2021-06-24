@@ -1,7 +1,7 @@
-﻿import React, { useState, useRef, FC, useEffect } from "react";
-import styled from "styled-components/macro";
-import { ReactComponent as Icon } from "../../assets/svg/selectArrow.svg";
-import useOnClickOutside from "../../hooks/useOutsideHook";
+﻿import React, { FC, useEffect, useRef, useState } from 'react';
+import styled from 'styled-components/macro';
+import { ReactComponent as Icon } from '../../assets/svg/selectArrow.svg';
+import useOnClickOutside from '../../hooks/useOutsideHook';
 
 // const data = [
 //   { id: 1, label: "Account 1", checked: false },
@@ -87,7 +87,7 @@ export const Select: FC<Props> = ({
   const addList = (e: any, id: number) => {
     const { checked, name } = e.target;
     const arr = list.map((item) =>
-      item.label === name ? { ...item, checked: checked } : item
+      item.label === name ? { ...item, checked: checked } : item,
     );
     setList(arr);
     const value = list.filter((i) => i.id === id)[0];
@@ -108,9 +108,13 @@ export const Select: FC<Props> = ({
             {checkList.length === 0 && placeholder && (
               <Placeholder>{placeholder}</Placeholder>
             )}
-            {checkList.map((i: any) => (
+            {checkList.map((i: any, index: number) => (
               <InputItem key={i.id}>
-                <span>{i.label},&nbsp;</span>
+                <span>
+                  {index === 0 ? '' : ','}
+                  &nbsp;
+                  {i.label}
+                </span>
               </InputItem>
             ))}
           </InputWrap>
@@ -179,7 +183,7 @@ const Container = styled.div`
 
 const Arrow = styled.div<{ rotat?: boolean }>`
   margin-right: 0px;
-  transform: ${(props) => (props.rotat ? "rotate(0deg)" : "rotate(-90deg)")};
+  transform: ${(props) => (props.rotat ? 'rotate(0deg)' : 'rotate(-90deg)')};
   transition: 0.2s ease;
 `;
 
@@ -192,13 +196,13 @@ const List = styled.ul<{ rotat?: boolean }>`
   width: 100%;
   background: ${(props) => props.theme.card.background};
   z-index: 9999;
-  border: ${(props) => (props.rotat ? "1px" : "0")} solid
+  border: ${(props) => (props.rotat ? '1px' : '0')} solid
     rgba(86, 101, 127, 0.3);
   box-sizing: border-box;
   border-radius: 0px 0px 4px 4px;
   transition: height 0.2s ease;
   overflow: hidden;
-  height: ${(props) => (props.rotat ? "auto" : "0")};
+  height: ${(props) => (props.rotat ? 'auto' : '0')};
 `;
 
 const Li = styled.li`
@@ -240,7 +244,7 @@ const CheckboxIcon = styled.span`
     border-color: transparent;
     border-style: solid;
     border-width: 0 1px 1px 0;
-    content: "";
+    content: '';
     height: 7px;
     left: 4px;
     position: absolute;

@@ -1,39 +1,40 @@
-import React, { useEffect, useState, useContext } from "react";
-import { Page } from "../../../../components/UI/Page";
-import { H2 } from "../../../../components/UI/MainStyled";
-import { Card, Container } from "../../../../globalStyles";
-import styled from "styled-components/macro";
-import { Button } from "../../../../components/Button/Button";
-import { AppContext } from "../../../../context/HubContext";
-import { useTranslation } from "react-i18next";
-import { RootOperations, Collection } from "../../../../types/operations";
-import { CSSTransition, TransitionGroup } from "react-transition-group";
-import moment from "moment";
+import moment from 'moment';
+import React, { useContext, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import styled from 'styled-components/macro';
+import { Button } from '../../../../components/Button/Button';
+import { H2 } from '../../../../components/UI/MainStyled';
+import { Page } from '../../../../components/UI/Page';
+import { AppContext } from '../../../../context/HubContext';
+import { Container } from '../../../../globalStyles';
+import { Collection, RootOperations } from '../../../../types/operations';
 
 export const Operations = () => {
   const [notifyList, setNotifyList] = useState<Collection[]>([]);
   const [num, setNum] = useState(0);
   const [show, setShow] = useState(true);
   const appContext = useContext(AppContext);
+  console.log('Operations ~ appContext', appContext)
   const hubConnection = appContext.hubConnection;
 
   useEffect(() => {
     let clean = false;
 
     if (hubConnection) {
-      hubConnection.on("OperationNotification", (data) => {
-        console.log("OperationNotification", data);
+      hubConnection.on('OperationNotification', (data) => {
+        console.log('OperationNotification', data);
         !clean && setNotifyList((notifyList) => [data, ...notifyList]);
       });
       hubConnection
         .invoke<RootOperations>(
-          "GetOperationsNotifications",
+          'GetOperationsNotifications',
           [2, 4, 5, 6, 7, 8],
           0,
-          5
+          5,
         )
         .then((res) => {
-          // console.log("GetOperationsNotifications", res);
+          console.log('GetOperationsNotifications~~~~~~~~~~~~~`', res);
           !clean && setNotifyList(res.collection);
         })
         .catch((e) => console.log(e));
@@ -47,21 +48,21 @@ export const Operations = () => {
 
   const operation = (id: number) => {
     if (id === 6) {
-      return t("operation.open");
+      return t('operation.open');
     } else if (id === 7) {
-      return t("operation.divedents");
+      return t('operation.divedents');
     } else if (id === 8) {
-      return t("operation.close");
+      return t('operation.close');
     } else if (id === 2) {
-      return t("operation.withdraw");
+      return t('operation.withdraw');
     } else if (id === 1) {
-      return t("operation.add");
+      return t('operation.add');
     } else if (id === 3) {
-      return t("operation.failed");
+      return t('operation.failed');
     } else if (id === 4) {
-      return t("operation.balance");
+      return t('operation.balance');
     } else if (id === 5) {
-      return t("operation.partners");
+      return t('operation.partners');
     }
   };
 
@@ -69,10 +70,10 @@ export const Operations = () => {
     if (hubConnection) {
       hubConnection
         .invoke<RootOperations>(
-          "GetOperationsNotifications",
+          'GetOperationsNotifications',
           [2, 4, 5, 6, 7, 8],
           5,
-          5
+          5,
         )
         .then((res) => {
           setNotifyList((notifyList) => [...notifyList, ...res.collection]);
@@ -82,16 +83,18 @@ export const Operations = () => {
     setShow(false);
   };
 
+  console.log('~~~~~~~~~~~~~~', notifyList);
+
   return (
     <Page>
       <Container>
-        <H2>{t("operation.last")}</H2>
+        <H2>{t('operation.last')}</H2>
       </Container>
       <TableContainer>
         <TableList dn>
-          <TableItemHead>{t("operation.date")}</TableItemHead>
-          <TableItemHead>{t("operation.type")}</TableItemHead>
-          <TableItemHead>{t("operation.sum")}</TableItemHead>
+          <TableItemHead>{t('operation.date')}</TableItemHead>
+          <TableItemHead>{t('operation.type')}</TableItemHead>
+          <TableItemHead>{t('operation.sum')}</TableItemHead>
         </TableList>
         <TransitionGroup>
           {notifyList.length &&
@@ -99,17 +102,16 @@ export const Operations = () => {
               <CSSTransition
                 key={item.date.toString() + idx}
                 timeout={500}
-                classNames="item"
-              >
+                classNames="item">
                 <TableList card>
                   <TableItem>
-                    {moment(item.date).format("DD.MM.YYYY")}
+                    {moment(item.date).format('DD.MM.YYYY')}
                   </TableItem>
                   <TableItem>
                     {item.depositName ? (
                       <Text>
-                        {operation(item.operationKind)}{" "}
-                        {t("operation.byProgramm")}
+                        {operation(item.operationKind)}{' '}
+                        {t('operation.byProgramm')}
                         <span>&nbsp;{item.depositName}</span>
                       </Text>
                     ) : (
@@ -118,9 +120,9 @@ export const Operations = () => {
                   </TableItem>
                   <TableItem>
                     <Value>
-                      {(item.amount / 100000).toLocaleString("ru-RU", {
+                      {(item.amount / 100000).toLocaleString('ru-RU', {
                         maximumFractionDigits: 2,
-                      })}{" "}
+                      })}{' '}
                       CWD
                     </Value>
                   </TableItem>
@@ -130,7 +132,7 @@ export const Operations = () => {
         </TransitionGroup>
         {show && (
           <Button dangerOutline onClick={add}>
-            {t("operation.showMore")}
+            {t('operation.showMore')}
           </Button>
         )}
       </TableContainer>
@@ -156,11 +158,11 @@ const TableList = styled.ul<{ card?: boolean; dn?: boolean }>`
   padding: 10px 50px;
   margin-bottom: 18px;
   background: ${(props) =>
-    props.card ? props.theme.card.backgroundAlfa : "transparent"};
+    props.card ? props.theme.card.backgroundAlfa : 'transparent'};
   box-shadow: ${(props) =>
-    props.card ? "0px 1px 3px rgba(0, 0, 0, 0.25)" : "none"};
+    props.card ? '0px 1px 3px rgba(0, 0, 0, 0.25)' : 'none'};
   border-radius: 20px;
-  border: ${(props) => (props.card ? props.theme.card.border : "none")};
+  border: ${(props) => (props.card ? props.theme.card.border : 'none')};
   @media (max-width: 992px) {
     padding: 10px 15px;
   }
@@ -171,7 +173,7 @@ const TableList = styled.ul<{ card?: boolean; dn?: boolean }>`
     flex-wrap: wrap;
     justify-content: flex-start;
     padding: 10px 15px;
-    display: ${(props) => (props.dn ? "none" : "flex")};
+    display: ${(props) => (props.dn ? 'none' : 'flex')};
   }
   ${(props) => {
     if (props.card) {
