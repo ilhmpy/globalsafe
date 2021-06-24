@@ -1,23 +1,23 @@
-import React, { useState, useEffect, useContext, FC } from "react";
-import styled from "styled-components/macro";
-import logo from "../../assets/svg/logo.svg";
-import logoWhite from "../../assets/svg/logoWhite.svg";
-import { ReactComponent as DashBoard } from "../../assets/svg/dashboard.svg";
-import { ReactComponent as Peppa } from "../../assets/svg/peppa.svg";
-import { ReactComponent as Wallet } from "../../assets/svg/wallet.svg";
-import { ReactComponent as Users } from "../../assets/svg/users.svg";
-import { ReactComponent as Briefcase } from "../../assets/svg/briefcase.svg";
-import { ReactComponent as Exit } from "../../assets/svg/exit.svg";
-import { ReactComponent as DarkTheme } from "../../assets/svg/theme.svg";
-import { ReactComponent as LightTheme } from "../../assets/svg/themeLight.svg";
-import { ReactComponent as Lottery } from "../../assets/svg/lottery.svg";
-import { NavLink, Link } from "react-router-dom";
-import { AppContext } from "../../context/HubContext";
-import { ThemeContext } from "../../context/ThemeContext";
-import { useTranslation } from "react-i18next";
-import usa from "../../assets/svg/usa.svg";
-import ru from "../../assets/svg/russia.svg";
-import { Languale } from "../Header/Header.elements";
+import React, { FC, useContext } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link, NavLink } from 'react-router-dom';
+import styled from 'styled-components/macro';
+import { ReactComponent as Briefcase } from '../../assets/svg/briefcase.svg';
+import { ReactComponent as DashBoard } from '../../assets/svg/dashboard.svg';
+import { ReactComponent as Exit } from '../../assets/svg/exit.svg';
+import logo from '../../assets/svg/logo.svg';
+import logoWhite from '../../assets/svg/logoWhite.svg';
+import { ReactComponent as Lottery } from '../../assets/svg/lottery.svg';
+import { ReactComponent as Peppa } from '../../assets/svg/peppa.svg';
+import ru from '../../assets/svg/russia.svg';
+import { ReactComponent as DarkTheme } from '../../assets/svg/theme.svg';
+import { ReactComponent as LightTheme } from '../../assets/svg/themeLight.svg';
+import usa from '../../assets/svg/usa.svg';
+import { ReactComponent as Users } from '../../assets/svg/users.svg';
+import { ReactComponent as Wallet } from '../../assets/svg/wallet.svg';
+import { AppContext } from '../../context/HubContext';
+import { ThemeContext } from '../../context/ThemeContext';
+import { Languale } from '../Header/Header.elements';
 
 type Props = {
   navWidth: boolean;
@@ -31,7 +31,7 @@ export const SideNavbar: FC<Props> = ({ navWidth, navShow }) => {
   const swithTheme = themeContext.toggleTheme;
   const logOut = appContext.logOut;
   const { t, i18n } = useTranslation();
-  const lang = localStorage.getItem("i18nextLng") || "ru";
+  const lang = localStorage.getItem('i18nextLng') || 'ru';
 
   return (
     <SideNav small={navWidth}>
@@ -43,7 +43,7 @@ export const SideNavbar: FC<Props> = ({ navWidth, navShow }) => {
         </Burger>
         <Link to="/">
           <LogoBrand>
-            {theme === "light" ? (
+            {theme === 'light' ? (
               <img src={logo} alt="" />
             ) : (
               <img src={logoWhite} alt="" />
@@ -56,64 +56,63 @@ export const SideNavbar: FC<Props> = ({ navWidth, navShow }) => {
           <Li>
             <StyledLink to="/admin" exact>
               <DashBoard />
-              <Text>{t("sideNav.mainScreen")}</Text>
+              <Text>{t('sideNav.mainScreen')}</Text>
             </StyledLink>
           </Li>
           <Li>
             <StyledLink to="/admin/deposit">
               <Peppa />
-              <Text>{t("sideNav.deposits")}</Text>
+              <Text>{t('sideNav.deposits')}</Text>
             </StyledLink>
           </Li>
           <Li>
             <StyledLink to="/admin/payments">
               <Wallet />
-              <Text>{t("sideNav.pay")}</Text>
+              <Text>{t('sideNav.pay')}</Text>
             </StyledLink>
           </Li>
           <Li>
             <StyledLink to="/admin/users">
               <Users />
-              <Text>{t("sideNav.users")}</Text>
+              <Text>{t('sideNav.users')}</Text>
             </StyledLink>
           </Li>
           <Li>
             <StyledLink to="/admin/portfolio">
               <Briefcase />
-              <Text>{t("sideNav.portfolio")}</Text>
+              <Text>{t('sideNav.portfolio')}</Text>
             </StyledLink>
           </Li>
           <Li>
             <StyledLink to="/admin/lottery">
               <Lottery />
-              <Text>{t("sideNav.lottery")}</Text>
+              <Text>{t('sideNav.lottery')}</Text>
             </StyledLink>
           </Li>
         </Ul>
         <div>
           <Theme onClick={swithTheme}>
-            {theme === "light" ? (
+            {theme === 'light' ? (
               <>
                 <DarkTheme />
-                <Text>{t("themeDark")}</Text>
+                <Text>{t('themeDark')}</Text>
               </>
             ) : (
               <>
                 <LightTheme />
-                <Text>{t("themeLight")}</Text>
+                <Text>{t('themeLight')}</Text>
               </>
             )}
           </Theme>
           <Logout onClick={logOut}>
             <Exit />
-            <Text>{t("logout")}</Text>
-            {lang === "ru" ? (
+            <Text>{t('logout')}</Text>
+            {lang === 'ru' ? (
               <Languale
                 onClick={(e) => {
                   e.stopPropagation();
-                  i18n.changeLanguage("en");
-                }}
-              >
+                  i18n.changeLanguage('en');
+                }}>
                 EN
                 <img src={usa} alt="en" />
               </Languale>
@@ -121,9 +120,8 @@ export const SideNavbar: FC<Props> = ({ navWidth, navShow }) => {
               <Languale
                 onClick={(e) => {
                   e.stopPropagation();
-                  i18n.changeLanguage("ru");
-                }}
-              >
+                  i18n.changeLanguage('ru');
+                }}>
                 RU
                 <img src={ru} alt="ru" />
               </Languale>
@@ -147,7 +145,7 @@ const SideInner = styled.div`
 `;
 
 const SideNav = styled.div<{ small: boolean }>`
-  width: ${(props) => (props.small ? "56px" : "243px")};
+  width: ${(props) => (props.small ? '56px' : '243px')};
   min-height: 100vh;
   overflow: hidden;
   height: 100vh;
@@ -214,7 +212,7 @@ const Text = styled.p`
   transition: all 0.3s;
 `;
 
-const activeclassname = "active";
+const activeclassname = 'active';
 
 const StyledLink = styled(NavLink).attrs({ activeclassname })`
   display: flex;
@@ -232,7 +230,7 @@ const StyledLink = styled(NavLink).attrs({ activeclassname })`
       stroke: #ff416e;
     }
     &:after {
-      content: "";
+      content: '';
       position: absolute;
       height: 100%;
       width: 2px;
@@ -258,7 +256,7 @@ const StyledLink = styled(NavLink).attrs({ activeclassname })`
       transition: all 0.3s;
     }
     &:after {
-      content: "";
+      content: '';
       position: absolute;
       height: 100%;
       width: 2px;
