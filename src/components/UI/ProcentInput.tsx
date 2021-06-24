@@ -78,7 +78,7 @@ const Label = styled.span`
   position: absolute;
   text-align: center;
   width: 76px;
-  background: #f2ede4;
+  background: #f2eee4;
 `;
 
 const Val = styled.span`
