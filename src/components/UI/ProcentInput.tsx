@@ -74,11 +74,11 @@ const Label = styled.span`
   margin: -14px auto 0;
   font-size: 12px;
   line-height: 14px;
-  color: rgba(0, 0, 0, 0.6);
+  color: ${({ theme }) => theme.procentTextColor};
   position: absolute;
   text-align: center;
   width: 76px;
-  background: #f2eee4;
+  background: ${({ theme }) => theme.body};
 `;
 
 const Val = styled.span`
