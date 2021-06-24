@@ -1,13 +1,17 @@
-import React from "react";
-import { UpTitle } from "../../../../components/UI/UpTitle";
-import { Container } from "../../../../globalStyles";
-import styled from "styled-components/macro";
-import { Button } from "../../../../components/Button/Button";
-import { ReactComponent as Arrow } from "../../../../assets/svg/arrow.svg";
-import { ReactComponent as Scroll } from "../../../../assets/svg/scroll.svg";
-import { H1 } from "../../../../components/UI/MainStyled";
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-scroll';
+import styled from 'styled-components/macro';
+import { ReactComponent as Arrow } from '../../../../assets/svg/arrow.svg';
+import { Button } from '../../../../components/Button/Button';
+import { CurrencyValues } from '../../../../components/CurrencyValues';
+import { H1 } from '../../../../components/UI/MainStyled';
+import { UpTitle } from '../../../../components/UI/UpTitle';
+import { Container } from '../../../../globalStyles';
 
 export const Banner = () => {
+  const { t } = useTranslation();
+
   return (
     <>
       <Container id="banner">
@@ -25,6 +29,19 @@ export const Banner = () => {
           </p>
         </TextBlock>
       </Container>
+      <Container>
+        <ButtonIcon as="button" danger>
+          <Link
+            to="tariffs"
+            spy={true}
+            smooth={true}
+            offset={-50}
+            duration={500}>
+            {t('banner.toProgramm')} <ArrowIcon />
+          </Link>
+        </ButtonIcon>
+      </Container>
+      <CurrencyValues />
       {/* <Container>
         <ButtonIcon danger>
           Попробуйте бесплатно <ArrowIcon />
