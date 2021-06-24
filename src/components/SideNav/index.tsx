@@ -114,7 +114,7 @@ export const SideNavbar: FC<Props> = ({ navWidth, navShow }) => {
                   i18n.changeLanguage("en");
                 }}
               >
-                en
+                EN
                 <img src={usa} alt="en" />
               </Languale>
             ) : (
@@ -124,7 +124,7 @@ export const SideNavbar: FC<Props> = ({ navWidth, navShow }) => {
                   i18n.changeLanguage("ru");
                 }}
               >
-                ru
+                RU
                 <img src={ru} alt="ru" />
               </Languale>
             )}
