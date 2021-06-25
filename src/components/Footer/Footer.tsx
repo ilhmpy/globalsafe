@@ -1,12 +1,15 @@
 import React from "react";
 import { Container } from "../../globalStyles";
 import styled from "styled-components/macro";
+import { useTranslation } from 'react-i18next';
 
 export const Footer = () => {
+  const { t } = useTranslation();
+
   return (
     <DIV>
       <Container>
-        <Text>Поддержка пользователей в официальном <A href="https://t.me/joinchat/E_Acz5BKQnJlNTVi">телеграм канале</A></Text>
+        <Text>{t("footer.title")} <A href="https://t.me/joinchat/E_Acz5BKQnJlNTVi">{t("footer.link")}</A></Text>
         <Text>GLOBALSAFE © 2021</Text>
       </Container>
     </DIV>
