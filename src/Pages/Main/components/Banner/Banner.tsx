@@ -91,6 +91,9 @@ const TextBlock = styled.div`
   color: ${(props) => props.theme.text2};
   margin-bottom: 60px;
   line-height: 28px;
+  & >* {
+    font-weight: 300;
+  }
   span {
     font-weight: 500;
   }
