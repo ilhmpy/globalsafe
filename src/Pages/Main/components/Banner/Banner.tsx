@@ -70,6 +70,9 @@ const TextBlock = styled.div`
   color: ${({ theme }) => theme.descFund};
   margin-bottom: 60px;
   line-height: 28px;
+  & >* {
+    font-weight: 300;
+  }
   span {
     font-weight: 500;
   }
