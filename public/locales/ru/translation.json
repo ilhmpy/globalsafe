@@ -197,6 +197,13 @@
             "deposit": "Депозит",
             "agree": "Согласованые",
             "disagree": "Несогласованные"
+        },
+        "analitics":{
+            "data": "Дата",
+            "amount": "Количество",
+            "sum": "Сумма выплаты",
+            "payAnalitics": "Аналитика выплат",
+            "analitic": "Аналитика"
         }
     },
     "depositList":{

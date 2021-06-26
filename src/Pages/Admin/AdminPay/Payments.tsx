@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 import { CSSTransition } from "react-transition-group";
 import { ReactComponent as Icon } from "../../../assets/svg/selectArrow.svg";
 import { Scrollbars } from "react-custom-scrollbars";
+import { CollectionAnalitics } from "../../../types/analitics";
 import moment from "moment";
 
 type ListProps = {
@@ -178,6 +179,50 @@ export const ModalPaid: FC<PaidProps> = ({ data, onClose }: PaidProps) => {
           <PayCardBlock>
             <PayText small>{t("adminPay.table.payments")}</PayText>
             <PayText>{data.paymentAmountView}</PayText>
+          </PayCardBlock>
+          <PayCardBlock></PayCardBlock>
+        </PayCard>
+      </Center>
+    </Container>
+  );
+};
+
+type AnaliticProps = {
+  data: CollectionAnalitics;
+  onClose: () => void;
+};
+
+export const ModalAnalitic: FC<AnaliticProps> = ({ data, onClose }) => {
+  const handleContainerClick = (e: React.MouseEvent) => {
+    if (e.currentTarget === e.target) {
+      onClose();
+    }
+  };
+  const { t } = useTranslation();
+  return (
+    <Container>
+      <Center onClick={handleContainerClick}>
+        <PayCard>
+          <PayCardBlock>
+            <PayText small>{t("adminPay.table.name")}</PayText>
+            <PayName>{data.deposit.name}</PayName>
+          </PayCardBlock>
+
+          <PayCardBlock>
+            <PayText small>{t("adminPay.analitics.data")}</PayText>
+            <PayText>{moment(data.payoutDate).format("DD/MM/DDDD")}</PayText>
+          </PayCardBlock>
+          <PayCardBlock>
+            <PayText small>{t("adminPay.analitics.amount")}</PayText>
+            <PayText>{data.count}</PayText>
+          </PayCardBlock>
+          <PayCardBlock>
+            <PayText small>{t("adminPay.analitics.sum")}</PayText>
+            <PayText>
+              {(data.amount / 100000).toLocaleString("ru-RU", {
+                maximumFractionDigits: 2,
+              })}
+            </PayText>
           </PayCardBlock>
           <PayCardBlock></PayCardBlock>
         </PayCard>
