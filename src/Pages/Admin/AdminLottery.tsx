@@ -75,7 +75,7 @@ export const AdminLottery = () => {
 
   useEffect(() => {
     submit();
-  }, [hubConnection, languale, pageLength]);
+  }, [hubConnection, languale, pageLength, currentPage]);
 
   const submit = () => {
     setLotteryList(null);
@@ -88,12 +88,10 @@ export const AdminLottery = () => {
           openDate.from ? openDate.from : null,
           openDate.to ? openDate.to : null,
           checkList.length ? checkList.map((i: any) => i.id) : null,
-          0,
+          (currentPage - 1) * pageLength,
           pageLength,
         )
         .then((res) => {
-          console.log('.then ~~~~~~~~~~~~~~~~~res', res);
-          setCurrentPage(1);
           setTotalLottery(res.totalRecords);
           setLoading(false);
           setNum(20);
@@ -125,9 +123,6 @@ export const AdminLottery = () => {
 
   const myLoad = () => {
     console.log('myLoad');
-    console.log((currentPage - 1) * pageLength);
-    console.log(pageLength);
-
     setCount(false);
     if (hubConnection && lotteryArrList.length < totalLottery) {
       hubConnection
@@ -334,20 +329,9 @@ export const AdminLottery = () => {
               </Styled.Table>
               {lotteryList ? (
                 <Scrollbars style={{ height: '500px' }}>
-                  {/* <InfiniteScroll
-                    pageStart={20}
-                    loadMore={myLoad}
-                    hasMore={count}
-                    useWindow={false}
-                    loader={
-                      <div className="loader" key={0}>
-                        Loading ...
-                      </div>
-                    }> */}
                   <Styled.Table>
                     {Object.keys(lotteryList).map((key, idx) => (
                       <tbody key={key}>
-                        <pre>{key}</pre>
                         <Styled.Tr
                           style={{
                             textAlign: 'center',
@@ -357,18 +341,12 @@ export const AdminLottery = () => {
                             <Styled.DataListDate>{key}</Styled.DataListDate>
                           </td>
                         </Styled.Tr>
-                        {lotteryList[key]
-                          ?.slice(
-                            (currentPage - 1) * pageLength,
-                            currentPage * pageLength,
-                          )
-                          .map((item, idx) => (
-                            <LotteryTable key={item.safeId} data={item} />
-                          ))}
+                        {lotteryList[key].map((item, idx) => (
+                          <LotteryTable key={item.safeId} data={item} />
+                        ))}
                       </tbody>
                     ))}
                   </Styled.Table>
-                  {/* </InfiniteScroll> */}
                 </Scrollbars>
               ) : loading ? (
                 <Loading />
@@ -396,14 +374,13 @@ export const AdminLottery = () => {
           </Styled.Page>
           <Styled.Arrows>
             <Styled.ArrowRight
-              onClick={() =>
-                setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev))
-              }
+              onClick={() => {
+                setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev));
+              }}
             />
             <Styled.ArrowLeft
               onClick={() => {
                 setCurrentPage((prev) => prev + 1);
-                myLoad();
               }}
             />
           </Styled.Arrows>

@@ -29,7 +29,28 @@ export const PaginationSelect = styled.select`
   line-height: 16px;
   letter-spacing: 0.1px;
   color: ${(props) => props.theme.text2};
-  background-image: url(SelectVector) no-repeat right white;
+  background-image: url(SelectVector) 0 0 no-repeat;
+
+  appearance: none;
+  background-color: transparent;
+  border: none;
+  padding: 0 1em 0 0;
+  margin: 0;
+  /* width: 100%; */
+  font-family: inherit;
+  font-size: inherit;
+  cursor: inherit;
+  line-height: inherit;
+
+  background-image: linear-gradient(45deg, transparent 50%, #56657f 50%),
+    linear-gradient(135deg, #56657f 50%, transparent 50%),
+    linear-gradient(to right, white, white);
+  background-position: calc(100% - 6px) calc(1em + -6px),
+    calc(100% - -1px) calc(1em + -6px), 100% 0;
+
+  background-size: 7px 7px, 7px 7px, 7em 7em;
+  background-repeat: no-repeat;
+  width: 50px;
 `;
 
 export const ArrowLeft = styled.div`
