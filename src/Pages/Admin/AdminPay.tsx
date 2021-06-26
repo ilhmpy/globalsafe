@@ -43,7 +43,7 @@ export const AdminPay = () => {
   const [active, setActive] = useState(0);
   const sizes = useWindowSize();
   const [sum, setSum] = useState<number[] | null>(null);
-  const backDay: any = moment().subtract(30, "days").format();
+
   const appContext = useContext(AppContext);
   const themeContext = useContext(ThemeContext);
   const theme = themeContext.theme;
@@ -78,10 +78,10 @@ export const AdminPay = () => {
   const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>(
     []
   );
-
+  const backDay: any = moment().add(90, "days").format();
   const [depositsDate, setDepositsDate] = useState<OpenDate>({
-    from: backDay,
-    to: new Date(),
+    from: new Date(),
+    to: backDay,
   });
   const [stats, setStats] = useState<any[]>([]);
 
