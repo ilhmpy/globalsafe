@@ -26,7 +26,7 @@
         "code": "Enter a code",
         "incorrectCode": "The code is not correct",
         "goTo": "Go to Activity",
-        "login": "Enter login", 
+        "login": "Enter login",
         "incorrectLogin": "Login is not correct",
         "getCode": "To get the code",
         "repeat": "Request the code again",
@@ -189,7 +189,7 @@
             "paid":"Paid",
             "amount":"Current number of",
             "cost":"Unit cost"
-            
+
         },
         "filter":{
             "user": "User",
@@ -295,7 +295,7 @@
        "add": "GLOBALSAFE balance top-up",
        "rollback": "Transaction failure",
        "partners": "Affiliate fees",
-       "failed": "Failed transaction", 
+       "failed": "Failed transaction",
        "balance": "Balance adjustment promo",
        "last": "Recent transactions",
        "date": "Date",
@@ -313,7 +313,7 @@
         "open": "Open",
         "noWork": "Not work",
         "return": "Returned",
-        "confirm": "Confirmation required" 
+        "confirm": "Confirmation required"
     },
     "usersTabs":{
         "mainInfo": "General Information",
@@ -340,6 +340,10 @@
         "next": "Next",
         "cancel": "Cancel the draw"
     },
+    "footer": {
+      "title": "User support in official",
+      "link": "telegram channel"
+    },
     "newLottery": "New draw",
     "write": "Schedule",
     "winner": "Winner",
@@ -350,7 +354,7 @@
     "ifQuestion": "If you have any questions about the prize, please contact administration",
     "well": "Ok",
     "everyone": "Everyone",
-    "every": "Every", 
+    "every": "Every",
     "hour": "hour",
     "hours": "hours",
     "hourss": "hours",
@@ -358,5 +362,6 @@
     "historyLottery": "Draw history",
     "draws": "Draws",
     "newDraw": "Start of a new drawing in",
-    "goDraw": "Go to"
+    "goDraw": "Go to",
+    "depositsToClose": "Deposits to close" 
 }
