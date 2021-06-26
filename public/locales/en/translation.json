@@ -355,5 +355,6 @@
     "historyLottery": "Draw history",
     "draws": "Draws",
     "newDraw": "Start of a new drawing in",
-    "goDraw": "Go to"
+    "goDraw": "Go to",
+    "depositsToClose": "Deposits to close" 
 }

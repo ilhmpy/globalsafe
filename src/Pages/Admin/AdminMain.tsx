@@ -312,7 +312,7 @@ export const AdminMain = () => {
           <LastChartItem>
             <ChartItem>
               <ChartItemHead>
-                <ChartItemTitle small>Депозиты к закрытию</ChartItemTitle>
+                <ChartItemTitle small>{t("depositsToClose")}</ChartItemTitle>
                 <MainAdminInput
                   setOpenDate={setCloseDate}
                   openDate={closeDate}
