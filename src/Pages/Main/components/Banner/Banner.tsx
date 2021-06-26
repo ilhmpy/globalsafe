@@ -15,17 +15,16 @@ export const Banner = () => {
   return (
     <>
       <Container id="banner">
-        <UpTitle small>Емко и по-делу</UpTitle>
+        {/* <UpTitle small>Емко и по-делу</UpTitle> */}
+        <UpTitle small>{t('banner.uptitle')}</UpTitle>
       </Container>
       <Container>
-        <H1>Приумножайте правильно!</H1>
+        <H1>{t("banner.H1")}</H1>
       </Container>
       <Container>
         <TextBlock>
           <p>
-            <span>GlobalSafe</span> - Это современный Криптофонд для управления
-            вашими средствами и их приумножения под контролем наших лучших
-            специалистов!
+            <span>{t("banner.brand")}</span> - {t("banner.desc")}
           </p>
         </TextBlock>
       </Container>
