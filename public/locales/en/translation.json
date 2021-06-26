@@ -197,6 +197,13 @@
             "deposit": "Deposit",
             "agree": "Agreed",
             "disagree": "Inconsistent"
+        },
+        "analitics":{
+            "data": "Date",
+            "amount": "Amount",
+            "sum": "Payout amount",
+            "payAnalitics": "Payout analytics",
+            "analitic": "Analitic"
         }
     },
     "depositList":{

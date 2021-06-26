@@ -1,46 +1,49 @@
-﻿import moment from 'moment';
-import React, { useContext, useEffect, useState } from 'react';
-import { Scrollbars } from 'react-custom-scrollbars';
-import { useTranslation } from 'react-i18next';
-import InfiniteScroll from 'react-infinite-scroller';
-import ReactNotification, { store } from 'react-notifications-component';
-import 'react-notifications-component/dist/theme.css';
-import { CSSTransition } from 'react-transition-group';
-import styled, { css } from 'styled-components/macro';
-import { ReactComponent as Exit } from '../../assets/svg/exit.svg';
-import { Button } from '../../components/Button/Button';
-import { Select as SelectOne } from '../../components/Select/Select';
-import { Select } from '../../components/Select/Select2';
-import { TestInput } from '../../components/UI/DayPicker';
-import { Loading } from '../../components/UI/Loading';
-import { ProcentInput } from '../../components/UI/ProcentInput';
-import { Content, Tab } from '../../components/UI/Tabs';
-import { UpTitle } from '../../components/UI/UpTitle';
-import { AppContext } from '../../context/HubContext';
-import { ThemeContext } from '../../context/ThemeContext';
-import { Card } from '../../globalStyles';
-import useWindowSize from '../../hooks/useWindowSize';
-import { OpenDate } from '../../types/dates';
-import { CollectionListDeposits, ListDeposits } from '../../types/deposits';
+﻿import moment from "moment";
+import React, { useContext, useEffect, useState } from "react";
+import { Scrollbars } from "react-custom-scrollbars";
+import { useTranslation } from "react-i18next";
+import InfiniteScroll from "react-infinite-scroller";
+import ReactNotification, { store } from "react-notifications-component";
+import "react-notifications-component/dist/theme.css";
+import { CSSTransition } from "react-transition-group";
+import styled, { css } from "styled-components/macro";
+import { ReactComponent as Exit } from "../../assets/svg/exit.svg";
+import { Button } from "../../components/Button/Button";
+import { Select as SelectOne } from "../../components/Select/Select";
+import { Select } from "../../components/Select/Select2";
+import { TestInput } from "../../components/UI/DayPicker";
+import { Loading } from "../../components/UI/Loading";
+import { ProcentInput } from "../../components/UI/ProcentInput";
+import { Content, Tab } from "../../components/UI/Tabs";
+import { UpTitle } from "../../components/UI/UpTitle";
+import { AppContext } from "../../context/HubContext";
+import { ThemeContext } from "../../context/ThemeContext";
+import { Card } from "../../globalStyles";
+import useWindowSize from "../../hooks/useWindowSize";
+import { OpenDate } from "../../types/dates";
+import { CollectionListDeposits, ListDeposits } from "../../types/deposits";
 import {
   CollectionCharges,
   PaymentsCollection,
   RootCharges,
   RootPayments,
-} from '../../types/payments';
+} from "../../types/payments";
 import {
   DepositList,
   PaymentsList,
   PaymentsListPay,
-} from './AdminPay/DepositList';
-import * as Styled from './Styled.elements';
+} from "./AdminPay/DepositList";
+import { Calendar, MainAdminInput } from "../../components/UI/DayPicker";
+import * as Styled from "./Styled.elements";
+import { Approval } from "./AdminPayments/components/Approval/Approval";
+import { Analitics } from "./AdminPayments/components/Analitics/Analitics";
+import { Chart } from "./AdminPayments/components/Chart/Chart";
 
 export const AdminPay = () => {
   const [active, setActive] = useState(0);
   const sizes = useWindowSize();
-  const [show, setShow] = useState(false);
   const [sum, setSum] = useState<number[] | null>(null);
-  const [depositList, setDepositList] = useState<any>([]);
+  const backDay: any = moment().subtract(30, "days").format();
   const appContext = useContext(AppContext);
   const themeContext = useContext(ThemeContext);
   const theme = themeContext.theme;
@@ -53,42 +56,41 @@ export const AdminPay = () => {
   const [depositPayList, setDepositPayList] = useState<any>([]);
   const [paymentsList, setPaymentsList] = useState<any>([]);
   const [totalPayments, setTotalPayments] = useState(0);
-  const [count, setCount] = useState(true);
-  const [countPayments, setCountPayments] = useState(30);
+
   const [countPay, setPayCount] = useState(true);
   const [numPayments, setNumPayments] = useState(20);
-  const [num, setNum] = useState(20);
+
   const [numPay, setPayNum] = useState(20);
   const [next, setNext] = useState(true);
-  const [procent, setProcent] = useState('');
-  const [open, setOpen] = useState<boolean>(false);
-  const [dataModal, setDataModal] = useState<PaymentsCollection | any>({});
+  const [procent, setProcent] = useState("");
   const [loading, setLoading] = useState(true);
   const [openDate, setOpenDate] = useState<OpenDate>({
     from: undefined,
     to: undefined,
   });
-  const [openDateApproval, setOpenDateApproval] = useState<OpenDate>({
-    from: undefined,
-    to: undefined,
-  });
+
   const [openFilter, setOpenFilter] = useState(false);
-  const [openFilterOne, setOpenFilterOne] = useState(false);
+
   const [checkList, setCheckList] = useState<any>([]);
   const [checkListApproval, setCheckListApproval] = useState<any>([]);
-  const [name, setName] = useState('');
-  const [nameApproval, setNameApproval] = useState('');
-  const [selectedOption, setSelectedOption] = useState<null | string>(null);
-
+  const [name, setName] = useState("");
+  const [nameApproval, setNameApproval] = useState("");
   const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>(
-    [],
+    []
   );
+
+  const [depositsDate, setDepositsDate] = useState<OpenDate>({
+    from: backDay,
+    to: new Date(),
+  });
+  const [stats, setStats] = useState<any[]>([]);
+
   const { t } = useTranslation();
 
   const getPaymentsOverview = () => {
     if (hubConnection) {
       hubConnection
-        .invoke('GetPaymentsOverview')
+        .invoke("GetPaymentsOverview")
         .then((res) => {
           setSum(res);
         })
@@ -99,7 +101,7 @@ export const AdminPay = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<ListDeposits>('GetAllPublicDeposits', 1, false, 0, 40)
+        .invoke<ListDeposits>("GetAllPublicDeposits", 1, false, 0, 40)
         .then((res) => {
           // console.log("GetDeposits", res);
           setListDeposits(res.collection);
@@ -111,24 +113,19 @@ export const AdminPay = () => {
   const namesProgram = checkList.map((i: any) => i.safeId);
   const idProgram = listDeposits.filter((i) => namesProgram.includes(i.safeId));
   const searchSafeID = idProgram.map((i) => i.safeId);
-  const backDays: any = moment().subtract(30, 'days');
+  const backDays: any = moment().subtract(30, "days");
 
   const namesProgramApproval = checkListApproval.map((i: any) => i.safeId);
   const idProgramApproval = listDeposits.filter((i) =>
-    namesProgramApproval.includes(i.safeId),
+    namesProgramApproval.includes(i.safeId)
   );
-  const searchSafeIDApproval = idProgramApproval.map((i) => i.safeId);
-
-  const depositState = checkList.length
-    ? checkList.map((i: any) => i.id)
-    : [5, 6];
 
   const myLoad = () => {
     setNext(false);
     if (hubConnection && depositPayList.length < totalPayDeposits) {
       hubConnection
         .invoke<RootCharges>(
-          'GetDepositsCharges',
+          "GetDepositsCharges",
           name ? name.toLowerCase() : null,
           openDate.from ? openDate.from : backDays._d,
           openDate.to ? openDate.to : new Date(),
@@ -136,7 +133,7 @@ export const AdminPay = () => {
           null,
           [7, 8],
           numPay,
-          20,
+          20
         )
         .then((res) => {
           if (res.collection.length) {
@@ -159,9 +156,9 @@ export const AdminPay = () => {
   const confirmPay = (id: string) => {
     if (hubConnection) {
       hubConnection
-        .invoke('ConfirmDepositPayment', id)
+        .invoke("ConfirmDepositPayment", id)
         .then((res) => {
-          console.log('ConfirmDepositPayment', res);
+          console.log("ConfirmDepositPayment", res);
           getPaymentsOverview();
         })
         .catch((err: Error) => {
@@ -173,9 +170,9 @@ export const AdminPay = () => {
   const unConfirmPay = (id: string) => {
     if (hubConnection) {
       hubConnection
-        .invoke('UnconfirmDepositPayment', id)
+        .invoke("UnconfirmDepositPayment", id)
         .then((res) => {
-          console.log('UnconfirmDepositPayment', res);
+          console.log("UnconfirmDepositPayment", res);
           getPaymentsOverview();
         })
         .catch((err: Error) => {
@@ -189,7 +186,7 @@ export const AdminPay = () => {
       setPaymentsList([]);
       hubConnection
         .invoke<RootPayments>(
-          'GetUsersDeposits',
+          "GetUsersDeposits",
           [5],
           null,
           null,
@@ -199,7 +196,7 @@ export const AdminPay = () => {
           null,
           null,
           0,
-          20,
+          20
         )
         .then((res) => {
           setLoading(false);
@@ -216,40 +213,10 @@ export const AdminPay = () => {
 
   useEffect(() => {
     if (hubConnection) {
-      setDepositList([]);
-      hubConnection
-        .invoke<RootPayments>(
-          'GetUsersDeposits',
-          [5, 6],
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          0,
-          20,
-        )
-        .then((res) => {
-          setLoading(false);
-          setTotalDeposits(res.totalRecords);
-          setDepositList(res.collection);
-          setNum(20);
-        })
-        .catch((err: Error) => {
-          setLoading(false);
-          console.log(err);
-        });
-    }
-  }, [hubConnection, active]);
-
-  useEffect(() => {
-    if (hubConnection) {
       setDepositPayList([]);
       hubConnection
         .invoke<RootCharges>(
-          'GetDepositsCharges',
+          "GetDepositsCharges",
           name ? name.toLowerCase() : null,
           openDate.from ? openDate.from : backDays._d,
           openDate.to ? openDate.to : new Date(),
@@ -257,7 +224,7 @@ export const AdminPay = () => {
           null,
           [7, 8],
           0,
-          20,
+          20
         )
         .then((res) => {
           // console.log("GetDepositsCharges", res);
@@ -284,7 +251,7 @@ export const AdminPay = () => {
     if (hubConnection && paymentsList.length < totalPayments) {
       hubConnection
         .invoke<RootPayments>(
-          'GetUsersDeposits',
+          "GetUsersDeposits",
           [5],
           null,
           null,
@@ -294,7 +261,7 @@ export const AdminPay = () => {
           null,
           null,
           numPayments,
-          20,
+          20
         )
         .then((res) => {
           if (res.collection.length) {
@@ -307,47 +274,19 @@ export const AdminPay = () => {
     }
   };
 
-  const loadMoreItems = () => {
-    setCount(false);
-    if (hubConnection && depositList.length < totalDeposits) {
-      hubConnection
-        .invoke<RootPayments>(
-          'GetUsersDeposits',
-          depositState,
-          nameApproval ? nameApproval.toLowerCase() : null,
-          searchSafeIDApproval.length ? searchSafeIDApproval : null,
-          openDateApproval.from ? openDateApproval.from : null,
-          openDateApproval.to ? openDateApproval.to : null,
-          null,
-          null,
-          null,
-          num,
-          20,
-        )
-        .then((res) => {
-          if (res.collection.length) {
-            setDepositList([...depositList, ...res.collection]);
-            setCount(true);
-            setNum(num + 20);
-          }
-        })
-        .catch((err: Error) => console.log(err));
-    }
-  };
-
   const alert = (
     title: string,
     message: string,
-    type: 'success' | 'default' | 'warning' | 'info' | 'danger',
+    type: "success" | "default" | "warning" | "info" | "danger"
   ) => {
     store.addNotification({
       title: title,
       message: message,
       type: type,
-      insert: 'top',
-      container: 'top-right',
-      animationIn: ['animate__animated', 'animate__fadeIn'],
-      animationOut: ['animate__animated', 'animate__fadeOut'],
+      insert: "top",
+      container: "top-right",
+      animationIn: ["animate__animated", "animate__fadeIn"],
+      animationOut: ["animate__animated", "animate__fadeOut"],
       dismiss: {
         duration: 5000,
       },
@@ -357,13 +296,13 @@ export const AdminPay = () => {
   const adjustPay = (id: string, amount: number) => {
     if (hubConnection) {
       hubConnection
-        .invoke('AdjustDepositPayment', id, amount)
+        .invoke("AdjustDepositPayment", id, amount)
         .then((res) => {
           getPaymentsOverview();
-          alert('Успешно', 'Подтверждено', 'success');
+          alert("Успешно", "Подтверждено", "success");
         })
         .catch((err: Error) => {
-          alert('Ошибка', 'Произошла ошибка', 'danger');
+          alert("Ошибка", "Произошла ошибка", "danger");
         });
     }
   };
@@ -372,20 +311,20 @@ export const AdminPay = () => {
     if (hubConnection) {
       hubConnection
         .invoke(
-          'ConfirmAllDepositsPayment',
+          "ConfirmAllDepositsPayment",
           nameApproval ? nameApproval.toLowerCase() : null,
           openDate.from ? openDate.from : backDays._d,
           openDate.to ? openDate.to : new Date(),
           searchSafeID.length ? searchSafeID : null,
-          procent ? +procent / 100 : null,
+          procent ? +procent / 100 : null
         )
         .then((res) => {
-          console.log('ConfirmAllDepositsPayment', res);
-          alert('Успешно', '', 'success');
+          console.log("ConfirmAllDepositsPayment", res);
+          alert("Успешно", "", "success");
           getPaymentsOverview();
         })
         .catch((err: Error) => {
-          alert('Ошибка', 'Произошла ошибка', 'danger');
+          alert("Ошибка", "Произошла ошибка", "danger");
         });
     }
   };
@@ -395,7 +334,7 @@ export const AdminPay = () => {
       setDepositPayList([]);
       hubConnection
         .invoke<RootCharges>(
-          'GetDepositsCharges',
+          "GetDepositsCharges",
           name ? name.toLowerCase() : null,
           openDate.from ? openDate.from : backDays._d,
           openDate.to ? openDate.to : new Date(),
@@ -403,7 +342,7 @@ export const AdminPay = () => {
           null,
           [7, 8],
           0,
-          20,
+          20
         )
         .then((res) => {
           // console.log("res", res);
@@ -421,31 +360,22 @@ export const AdminPay = () => {
     }
   };
 
-  const submitApproval = () => {
+  useEffect(() => {
+    getPayoutsEstimateStats();
+  }, [depositsDate]);
+
+  const getPayoutsEstimateStats = () => {
     if (hubConnection) {
       hubConnection
-        .invoke<RootPayments>(
-          'GetUsersDeposits',
-          depositState,
-          nameApproval ? nameApproval.toLowerCase() : null,
-          searchSafeIDApproval.length ? searchSafeIDApproval : null,
-          openDateApproval.from ? openDateApproval.from : null,
-          openDateApproval.to ? openDateApproval.to : null,
-          null,
-          null,
-          null, //
-          0,
-          20,
+        .invoke(
+          "GetPayoutsEstimateStats",
+          depositsDate.from ? depositsDate.from : backDays,
+          depositsDate.to ? depositsDate.to : new Date()
         )
         .then((res) => {
-          setDepositList([]);
-          if (res.collection.length) {
-            setDepositList(res.collection);
-            setTotalDeposits(res.totalRecords);
-            setNum(20);
-          }
+          setStats(res);
         })
-        .catch((err: Error) => console.log(err));
+        .catch((e) => console.log(e));
     }
   };
 
@@ -453,236 +383,133 @@ export const AdminPay = () => {
     <>
       <ReactNotification />
       <Styled.HeadBlock>
-        <SelfUpTitle small>{t('adminPay.uptitle')}</SelfUpTitle>
+        <SelfUpTitle small>{t("adminPay.uptitle")}</SelfUpTitle>
         <Styled.UserName>
           <span>{user}</span>
           <Exit onClick={logOut} />
         </Styled.UserName>
       </Styled.HeadBlock>
+      {active === 3 && (
+        <Chart
+          depositsDate={depositsDate}
+          setDepositsDate={setDepositsDate}
+          stats={stats}
+        />
+      )}
+      {active !== 3 && (
+        <Card>
+          <Styled.PayList>
+            <Styled.PayItem>
+              <Styled.PayItemHead mb>
+                <SelfUpTitle small>{t("adminPay.title1")}</SelfUpTitle>
+              </Styled.PayItemHead>
+              <Styled.Radial
+                bg={
+                  theme === "light"
+                    ? "rgba(255, 65, 110, 0.2)"
+                    : "rgba(255, 65, 110, 1)"
+                }
+              >
+                <span>
+                  {sum ? (sum[2] / 100000).toLocaleString("ru-RU") : "-"}
+                </span>
+                <span>CWD</span>
+              </Styled.Radial>
+            </Styled.PayItem>
+            <Styled.PayItem>
+              <Styled.PayItemHead mb>
+                <SelfUpTitle small>{t("adminPay.title2")}</SelfUpTitle>
+              </Styled.PayItemHead>
 
-      <Card>
-        <Styled.PayList>
-          <Styled.PayItem>
-            <Styled.PayItemHead mb>
-              <SelfUpTitle small>{t('adminPay.title1')}</SelfUpTitle>
-            </Styled.PayItemHead>
-            <Styled.Radial
-              bg={
-                theme === 'light'
-                  ? 'rgba(255, 65, 110, 0.2)'
-                  : 'rgba(255, 65, 110, 1)'
-              }>
-              <span>
-                {sum ? (sum[2] / 100000).toLocaleString('ru-RU') : '-'}
-              </span>
-              <span>CWD</span>
-            </Styled.Radial>
-          </Styled.PayItem>
-          <Styled.PayItem>
-            <Styled.PayItemHead mb>
-              <SelfUpTitle small>{t('adminPay.title2')}</SelfUpTitle>
-            </Styled.PayItemHead>
-
-            <Styled.Radial
-              bg={
-                theme === 'light'
-                  ? 'rgba(188, 212, 118, 0.2)'
-                  : 'rgba(188, 212, 118, 1)'
-              }>
-              <span>
-                {sum
-                  ? (sum[0] / 100000).toLocaleString('ru-RU', {
-                      maximumFractionDigits: 0,
-                    })
-                  : '-'}
-              </span>
-              <span>CWD</span>
-            </Styled.Radial>
-          </Styled.PayItem>
-          <Styled.PayItem>
-            <Styled.PayItemHead mb>
-              <SelfUpTitle small>{t('adminPay.title3')}</SelfUpTitle>
-            </Styled.PayItemHead>
-            <Styled.Radial
-              bg={
-                theme === 'light'
-                  ? 'rgba(109, 185, 255, 0.2)'
-                  : 'rgba(109, 185, 255, 1)'
-              }>
-              <span>
-                {sum
-                  ? (sum[1] / 100000).toLocaleString('ru-RU', {
-                      maximumFractionDigits: 0,
-                    })
-                  : '-'}
-              </span>
-              <span>CWD</span>
-            </Styled.Radial>
-          </Styled.PayItem>
-          <Styled.PayItem></Styled.PayItem>
-        </Styled.PayList>
-      </Card>
+              <Styled.Radial
+                bg={
+                  theme === "light"
+                    ? "rgba(188, 212, 118, 0.2)"
+                    : "rgba(188, 212, 118, 1)"
+                }
+              >
+                <span>
+                  {sum
+                    ? (sum[0] / 100000).toLocaleString("ru-RU", {
+                        maximumFractionDigits: 0,
+                      })
+                    : "-"}
+                </span>
+                <span>CWD</span>
+              </Styled.Radial>
+            </Styled.PayItem>
+            <Styled.PayItem>
+              <Styled.PayItemHead mb>
+                <SelfUpTitle small>{t("adminPay.title3")}</SelfUpTitle>
+              </Styled.PayItemHead>
+              <Styled.Radial
+                bg={
+                  theme === "light"
+                    ? "rgba(109, 185, 255, 0.2)"
+                    : "rgba(109, 185, 255, 1)"
+                }
+              >
+                <span>
+                  {sum
+                    ? (sum[1] / 100000).toLocaleString("ru-RU", {
+                        maximumFractionDigits: 0,
+                      })
+                    : "-"}
+                </span>
+                <span>CWD</span>
+              </Styled.Radial>
+            </Styled.PayItem>
+            <Styled.PayItem></Styled.PayItem>
+          </Styled.PayList>
+        </Card>
+      )}
       <Card>
         <Tabs>
           <PayTab onClick={() => handleClick(0)} active={active === 0}>
-            {t('adminPay.title3')}
+            {t("adminPay.title3")}
           </PayTab>
           <Tab onClick={() => handleClick(1)} active={active === 1}>
-            {t('adminPay.title2')}
+            {t("adminPay.title2")}
           </Tab>
           <Tab onClick={() => handleClick(2)} active={active === 2}>
-            {t('adminPay.title1')}
+            {t("adminPay.title1")}
+          </Tab>
+          <Tab onClick={() => handleClick(3)} active={active === 3}>
+            {t("adminPay.analitics.analitic")}
           </Tab>
         </Tabs>
       </Card>
 
-      {active === 0 && (
-        <ButtonWrap>
-          <Button dangerOutline mb onClick={paymentsConfirm}>
-            {t('adminPay.confirmButton')}
-          </Button>
-          <ProcentInput
-            placeholder="0"
-            value={procent}
-            onChange={(e) => setProcent(e.target.value)}
-            label={t('adminPay.procentPay')}
-          />
-        </ButtonWrap>
-      )}
-
       <Content active={active === 0}>
-        <Styled.FilterBlock>
-          <Styled.FilterHeader>
-            <Styled.FilterName>{t('adminDeposit.filter')}</Styled.FilterName>
-            <Styled.ShowHide onClick={() => setOpenFilterOne(!openFilterOne)}>
-              {openFilterOne ? t('hide') : t('show')}
-            </Styled.ShowHide>
-          </Styled.FilterHeader>
-          <CSSTransition
-            in={openFilterOne}
-            timeout={200}
-            classNames="filter"
-            unmountOnExit>
-            <Styled.SelectContainer>
-              <Styled.SelectContainerInnerPaid>
-                <Styled.SelectWrap style={{ minWidth: 263 }}>
-                  <Styled.Label>{t('adminPay.filter.user')}</Styled.Label>
-                  <Styled.Input
-                    value={nameApproval}
-                    onChange={(e) =>
-                      setNameApproval(e.target.value.toLowerCase())
-                    }
-                  />
-                </Styled.SelectWrap>
-                <Styled.SelectWrap input>
-                  <TestInput
-                    setOpenDate={setOpenDateApproval}
-                    openDate={openDateApproval}
-                    label={t('adminPay.filter.date')}
-                  />
-                </Styled.SelectWrap>
-                <Styled.SelectWrap style={{ minWidth: 263 }}>
-                  <Styled.Label>{t('adminPay.filter.deposit')}</Styled.Label>
-                  <Select
-                    checkList={checkListApproval}
-                    setCheckList={setCheckListApproval}
-                    values={listDeposits}
-                  />
-                  <pre>{JSON.stringify(setCheckListApproval)}</pre>
-                </Styled.SelectWrap>
-                <Styled.SelectWrap style={{ minWidth: 263 }}>
-                  <Styled.Label>{t('adminPay.status')}</Styled.Label>
-                  {/* <SelectHas
-                    selectedOption={selectedOption}
-                    setSelectedOption={setSelectedOption}
-                    options={[
-                      t("adminPay.filter.disagree"),
-                      t("adminPay.filter.agree"),
-                      "",
-                    ]}
-                    label={t("adminPay.status")}
-                  /> */}
-                  <SelectOne
-                    checkList={checkList}
-                    setCheckList={setCheckList}
-                    idx={5}
-                    values={[
-                      t('adminPay.filter.disagree'),
-                      t('adminPay.filter.agree'),
-                    ]}
-                  />
-                </Styled.SelectWrap>
-              </Styled.SelectContainerInnerPaid>
-              <Button danger onClick={submitApproval}>
-                {t('adminUsers.apply')}
-              </Button>
-            </Styled.SelectContainer>
-          </CSSTransition>
-        </Styled.FilterBlock>
-        <Card>
-          <PaymentsTable>
-            <TableHead>
-              <TableHeadItem>№</TableHeadItem>
-              <TableHeadItem>{t('adminPay.table.user')}</TableHeadItem>
-              <TableHeadItem>{t('adminPay.table.name')}</TableHeadItem>
-              <TableHeadItem>{t('adminPay.table.procent')}</TableHeadItem>
-              <TableHeadItem>{t('adminPay.table.datePay')}</TableHeadItem>
-              <TableHeadItem>{t('adminPay.table.profit')}</TableHeadItem>
-              <TableHeadItem>{t('adminPay.table.openDate')}</TableHeadItem>
-              <TableHeadItem>{t('adminPay.table.contribution')}</TableHeadItem>
-              <TableHeadItem>{t('adminPay.table.payments')}</TableHeadItem>
-              <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
-            </TableHead>
-            {depositList.length ? (
-              <Scrollbars style={{ height: '500px' }}>
-                <InfiniteScroll
-                  pageStart={10}
-                  loadMore={loadMoreItems}
-                  hasMore={count}
-                  useWindow={false}
-                  loader={
-                    <div className="loader" key={0}>
-                      Loading ...
-                    </div>
-                  }>
-                  {depositList.map((item: PaymentsCollection, idx: number) => (
-                    <DepositList
-                      idx={idx}
-                      key={item.safeId}
-                      data={item}
-                      adjustPay={adjustPay}
-                      confirmPay={confirmPay}
-                      unConfirmPay={unConfirmPay}
-                    />
-                  ))}
-                </InfiniteScroll>
-              </Scrollbars>
-            ) : loading ? (
-              <Loading />
-            ) : (
-              <NotFound>{t('notFound')}</NotFound>
-            )}
-          </PaymentsTable>
-        </Card>
+        <Approval
+          paymentsConfirm={paymentsConfirm}
+          adjustPay={adjustPay}
+          confirmPay={confirmPay}
+          unConfirmPay={unConfirmPay}
+          listDeposits={listDeposits}
+          setProcent={setProcent}
+          procent={procent}
+        />
       </Content>
 
       <Content active={active === 1}>
         <Styled.FilterBlock>
           <Styled.FilterHeader>
-            <Styled.FilterName>{t('adminDeposit.filter')}</Styled.FilterName>
+            <Styled.FilterName>{t("adminDeposit.filter")}</Styled.FilterName>
             <Styled.ShowHide onClick={() => setOpenFilter(!openFilter)}>
-              {openFilter ? t('hide') : t('show')}
+              {openFilter ? t("hide") : t("show")}
             </Styled.ShowHide>
           </Styled.FilterHeader>
           <CSSTransition
             in={openFilter}
             timeout={200}
             classNames="filter"
-            unmountOnExit>
+            unmountOnExit
+          >
             <Styled.SelectContainer>
               <Styled.SelectContainerInnerPaid>
                 <Styled.SelectWrap style={{ minWidth: 263 }}>
-                  <Styled.Label>{t('adminPay.filter.user')}</Styled.Label>
+                  <Styled.Label>{t("adminPay.filter.user")}</Styled.Label>
                   <Styled.Input
                     value={name}
                     onChange={(e) => setName(e.target.value.toLowerCase())}
@@ -692,11 +519,11 @@ export const AdminPay = () => {
                   <TestInput
                     setOpenDate={setOpenDate}
                     openDate={openDate}
-                    label={t('adminPay.filter.date')}
+                    label={t("adminPay.filter.date")}
                   />
                 </Styled.SelectWrap>
                 <Styled.SelectWrap style={{ minWidth: 263 }}>
-                  <Styled.Label>{t('adminPay.filter.deposit')}</Styled.Label>
+                  <Styled.Label>{t("adminPay.filter.deposit")}</Styled.Label>
                   <Select
                     checkList={checkList}
                     setCheckList={setCheckList}
@@ -705,7 +532,7 @@ export const AdminPay = () => {
                 </Styled.SelectWrap>
               </Styled.SelectContainerInnerPaid>
               <Button danger onClick={submit}>
-                {t('adminUsers.apply')}
+                {t("adminUsers.apply")}
               </Button>
             </Styled.SelectContainer>
           </CSSTransition>
@@ -713,24 +540,24 @@ export const AdminPay = () => {
         <Card>
           <PaymentsTable>
             <TableHead>
-              <TableHeadItemPaid>{t('adminPay.table.user')}</TableHeadItemPaid>
-              <TableHeadItemPaid>{t('adminPay.table.name')}</TableHeadItemPaid>
+              <TableHeadItemPaid>{t("adminPay.table.user")}</TableHeadItemPaid>
+              <TableHeadItemPaid>{t("adminPay.table.name")}</TableHeadItemPaid>
               <TableHeadItemPaid>
-                {t('adminPay.table.datePay')}
+                {t("adminPay.table.datePay")}
               </TableHeadItemPaid>
               <TableHeadItemPaid>
-                {t('adminPay.table.category')}
+                {t("adminPay.table.category")}
               </TableHeadItemPaid>
               <TableHeadItemPaid>
-                {t('adminPay.table.contribution')}
+                {t("adminPay.table.contribution")}
               </TableHeadItemPaid>
               <TableHeadItemPaid>
-                {t('adminPay.table.payments')}
+                {t("adminPay.table.payments")}
               </TableHeadItemPaid>
               <TableHeadItemPaid>{/* <Filter /> */}</TableHeadItemPaid>
             </TableHead>
             {depositPayList.length ? (
-              <Scrollbars style={{ height: '500px' }}>
+              <Scrollbars style={{ height: "500px" }}>
                 <InfiniteScroll
                   pageStart={10}
                   loadMore={myLoad}
@@ -740,7 +567,8 @@ export const AdminPay = () => {
                     <div className="loader" key={0}>
                       Loading ...
                     </div>
-                  }>
+                  }
+                >
                   {depositPayList.map((item: CollectionCharges) => (
                     <PaymentsListPay key={item.safeId} data={item} />
                   ))}
@@ -749,7 +577,7 @@ export const AdminPay = () => {
             ) : loading ? (
               <Loading />
             ) : (
-              <NotFound>{t('notFound')}</NotFound>
+              <NotFound>{t("notFound")}</NotFound>
             )}
           </PaymentsTable>
         </Card>
@@ -759,24 +587,24 @@ export const AdminPay = () => {
         <Card>
           <PaymentsTable>
             <TableHead>
-              <TableHeadItemPaid>{t('adminPay.table.user')}</TableHeadItemPaid>
-              <TableHeadItemPaid>{t('adminPay.table.name')}</TableHeadItemPaid>
+              <TableHeadItemPaid>{t("adminPay.table.user")}</TableHeadItemPaid>
+              <TableHeadItemPaid>{t("adminPay.table.name")}</TableHeadItemPaid>
               <TableHeadItemPaid>
-                {t('adminPay.table.datePay')}
+                {t("adminPay.table.datePay")}
               </TableHeadItemPaid>
               <TableHeadItemPaid>
-                {t('adminPay.table.category')}
+                {t("adminPay.table.category")}
               </TableHeadItemPaid>
               <TableHeadItemPaid>
-                {t('adminPay.table.contribution')}
+                {t("adminPay.table.contribution")}
               </TableHeadItemPaid>
               <TableHeadItemPaid>
-                {t('adminPay.table.payments')}
+                {t("adminPay.table.payments")}
               </TableHeadItemPaid>
               <TableHeadItemPaid>{/* <Filter /> */}</TableHeadItemPaid>
             </TableHead>
             {paymentsList.length ? (
-              <Scrollbars style={{ height: '500px' }}>
+              <Scrollbars style={{ height: "500px" }}>
                 <InfiniteScroll
                   pageStart={10}
                   loadMore={loadMorePayments}
@@ -786,7 +614,8 @@ export const AdminPay = () => {
                     <div className="loader" key={0}>
                       Loading ...
                     </div>
-                  }>
+                  }
+                >
                   {paymentsList.map((item: PaymentsCollection) => (
                     <PaymentsList key={item.safeId} data={item} />
                   ))}
@@ -795,10 +624,14 @@ export const AdminPay = () => {
             ) : loading ? (
               <Loading />
             ) : (
-              <NotFound>{t('notFound')}</NotFound>
+              <NotFound>{t("notFound")}</NotFound>
             )}
           </PaymentsTable>
         </Card>
+      </Content>
+
+      <Content active={active === 3}>
+        {active === 3 ? <Analitics listDeposits={listDeposits} /> : null}
       </Content>
     </>
   );
@@ -957,26 +790,12 @@ const TableHeadItemPaid = styled(TableHeadItem)`
   }
 `;
 
-const TableBody = styled(TableHead)`
-  padding: 10px 10px 10px 0;
-`;
-
-const TableBodyItemCss = css`
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 16px;
-  color: ${(props) => props.theme.text2};
-`;
-
-const TableBodyItemPaid = styled(TableHeadItemPaid)`
-  ${TableBodyItemCss}
-`;
-
 const Tabs = styled.div`
   display: flex;
   padding: 12px 20px 0;
   ${Tab} {
-    &:nth-child(2) {
+    &:nth-child(2),
+    &:nth-child(3) {
       width: 90px;
       @media (max-width: 768px) {
         width: 80px;
@@ -992,6 +811,7 @@ const Tabs = styled.div`
   }
   @media (max-width: 768px) {
     padding: 0px 10px 0;
+    flex-wrap: wrap;
     ${Tab} {
       width: 80px;
       &:first-child {
@@ -1005,16 +825,5 @@ const Tabs = styled.div`
         }
       }
     }
-  }
-`;
-
-const ButtonWrap = styled.div`
-  display: flex;
-  @media (max-width: 768px) {
-    justify-content: center;
-    /* ${Button} {
-      margin-left: auto;
-      margin-right: auto;
-    } */
   }
 `;
