@@ -39,7 +39,7 @@ export const lightTheme = {
       backgroundAlfa: 'rgba(255, 255, 255, 0.4)',
       border: 'none'
     },
-    procentTextColor: "rgba(0, 0, 0, 0.6)",
+    descFund: "#515172"
   }
 
   export const darkTheme = {
@@ -73,5 +73,5 @@ export const lightTheme = {
       backgroundAlfa: 'rgba(33, 33, 33, 1)',
       border: '1px solid #000000'
     },
-    procentTextColor: "#fff",
+    descFund: "#fff",
   }

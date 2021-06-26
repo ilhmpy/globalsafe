@@ -67,7 +67,7 @@ const ArrowIcon = styled(Arrow)`
 const TextBlock = styled.div`
   max-width: 611px;
   margin-right: auto;
-  color: #515172;
+  color: ${({ theme }) => theme.descFund};
   margin-bottom: 60px;
   line-height: 28px;
   span {
