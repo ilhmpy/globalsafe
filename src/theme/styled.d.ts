@@ -1,7 +1,7 @@
 import 'styled-components';
 
 declare module 'styled-components' {
-  export interface DefaultTheme { 
+  export interface DefaultTheme {
     body: string;
     text: string;
     text2: string;
@@ -31,6 +31,7 @@ declare module 'styled-components' {
       background: string;
       backgroundAlfa: string;
       border: string;
-    }
+    },
+    procentTextColor: string;
   }
 }
