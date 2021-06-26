@@ -312,7 +312,7 @@ export const AdminMain = () => {
           <LastChartItem>
             <ChartItem>
               <ChartItemHead>
-                <ChartItemTitle small>{t("depositsToClose")}</ChartItemTitle>
+                <ChartItemTitle small>{t("adminMain.depositsToClose")}</ChartItemTitle>
                 <MainAdminInput
                   setOpenDate={setCloseDate}
                   openDate={closeDate}
@@ -601,6 +601,18 @@ const Round = styled.div<{ bg: string }>`
   } */
 `;
 
+const LastChartItem = styled.div`
+  width: 60%;
+  display: flex;
+  justify-content: center;
+  @media (max-width: 992px) {
+    width: 50%;
+  }
+  @media (max-width: 800px) {
+    width: 100%;
+  }
+`;
+
 const ChartInner = styled.div`
   width: 100%;
   padding-left: 30px;
@@ -799,19 +811,4 @@ const CardDeposites = styled(Card)`
     box-shadow: none !important;
     min-height: auto;
   }
-`;
-
-const LastChartItem = styled.div`
-    width: 60%;
-    display: flex;
-    justify-content: center;
-    ${ChartItem} {
-      max-width: 387px;
-    }
-    @media (max-width: 992px) {
-      width: 50%;
-    }
-    @media (max-width: 800px) {
-      width: 100%;
-    }
 `;

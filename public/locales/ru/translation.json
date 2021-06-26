@@ -129,7 +129,8 @@
         "depositsCount": "Количество депозитов",
         "depositsAmount": "Размер депозитов",
         "openDeposit": "Открытые депозиты",
-        "closeDeposit": "Депозиты к закрытию"
+        "closeDeposit": "Депозиты к закрытию",
+        "depositsToClose": "Депозиты к закрытию"
     },
     "adminPortfolio":{
         "uptitle": "Портфель",
@@ -350,6 +351,5 @@
     "historyLottery": "История розыгрышей",
     "draws": "Розыгрыши",
     "newDraw": "Старт нового розыгрыша через",
-    "goDraw": "Перейти",
-    "depositsToClose": "Депозиты к закрытию"
+    "goDraw": "Перейти"
 }
