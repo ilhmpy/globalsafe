@@ -30,8 +30,19 @@ export const A = styled.a`
 
 export const DIV = styled.div`
   width: 100%;
-  display: block;
+  display: flex;
+  align-items: center;
+  border-top: 1px solid #FFFFFF;
+
   & >* {
     display: block;
+  }
+
+  ${Container} {
+    padding-top: 30px;
+  }
+
+  ${Text}:nth-child(2) {
+    margin-bottom: 20px;
   }
 `;
