@@ -592,16 +592,6 @@ export const AdminPay = () => {
                 </Styled.SelectWrap>
                 <Styled.SelectWrap style={{ minWidth: 263 }}>
                   <Styled.Label>{t('adminPay.status')}</Styled.Label>
-                  {/* <SelectHas
-                    selectedOption={selectedOption}
-                    setSelectedOption={setSelectedOption}
-                    options={[
-                      t("adminPay.filter.disagree"),
-                      t("adminPay.filter.agree"),
-                      "",
-                    ]}
-                    label={t("adminPay.status")}
-                  /> */}
                   <SelectOne
                     checkList={checkList}
                     setCheckList={setCheckList}

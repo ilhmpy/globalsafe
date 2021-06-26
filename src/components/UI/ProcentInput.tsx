@@ -74,7 +74,7 @@ const Label = styled.span`
   margin: -14px auto 0;
   font-size: 12px;
   line-height: 14px;
-  color: ${({ theme }) => theme.procentTextColor};
+  color: rgba(0, 0, 0, 0.6);
   position: absolute;
   text-align: center;
   width: 76px;
