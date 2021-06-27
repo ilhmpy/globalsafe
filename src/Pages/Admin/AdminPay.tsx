@@ -2,18 +2,16 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Scrollbars } from "react-custom-scrollbars";
 import { useTranslation } from "react-i18next";
-import InfiniteScroll from "react-infinite-scroller";
 import ReactNotification, { store } from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 import { CSSTransition } from "react-transition-group";
-import styled, { css } from "styled-components/macro";
+import styled from "styled-components/macro";
 import { ReactComponent as Exit } from "../../assets/svg/exit.svg";
 import { Button } from "../../components/Button/Button";
 import { Select as SelectOne } from "../../components/Select/Select";
 import { Select } from "../../components/Select/Select2";
 import { TestInput } from "../../components/UI/DayPicker";
 import { Loading } from "../../components/UI/Loading";
-import { ProcentInput } from "../../components/UI/ProcentInput";
 import { Content, Tab } from "../../components/UI/Tabs";
 import { UpTitle } from "../../components/UI/UpTitle";
 import { AppContext } from "../../context/HubContext";
@@ -33,11 +31,11 @@ import {
   PaymentsList,
   PaymentsListPay,
 } from "./AdminPay/DepositList";
-import { Calendar, MainAdminInput } from "../../components/UI/DayPicker";
-import * as Styled from "./Styled.elements";
-import { Approval } from "./AdminPayments/components/Approval/Approval";
 import { Analitics } from "./AdminPayments/components/Analitics/Analitics";
+import { Approval } from "./AdminPayments/components/Approval/Approval";
 import { Chart } from "./AdminPayments/components/Chart/Chart";
+import { Pagination } from "./Pagination";
+import * as Styled from "./Styled.elements";
 
 export const AdminPay = () => {
   const [active, setActive] = useState(0);
@@ -52,7 +50,10 @@ export const AdminPay = () => {
   const user = appContext.user;
 
   const [totalDeposits, setTotalDeposits] = useState(0);
+  const [depositList, setDepositList] = useState<any>([]);
   const [totalPayDeposits, setTotalPayDeposits] = useState(0);
+  const [openFilterOne, setOpenFilterOne] = useState(false);
+
   const [depositPayList, setDepositPayList] = useState<any>([]);
   const [paymentsList, setPaymentsList] = useState<any>([]);
   const [totalPayments, setTotalPayments] = useState(0);
@@ -68,13 +69,26 @@ export const AdminPay = () => {
     from: undefined,
     to: undefined,
   });
+  const [openDateApproval, setOpenDateApproval] = useState<OpenDate>({
+    from: undefined,
+    to: undefined,
+  });
 
   const [openFilter, setOpenFilter] = useState(false);
+  const [num, setNum] = useState(20);
 
   const [checkList, setCheckList] = useState<any>([]);
   const [checkListApproval, setCheckListApproval] = useState<any>([]);
   const [name, setName] = useState("");
   const [nameApproval, setNameApproval] = useState("");
+  const [selectedOption, setSelectedOption] = useState<null | string>(null);
+  const [pageLength, setPageLength] = useState<number>(10);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageLengthPay, setPageLengthPay] = useState<number>(10);
+  const [currentPagePay, setCurrentPagePay] = useState<number>(1);
+  const [pageLengthDeposit, setPageLengthDeposit] = useState<number>(10);
+  const [currentPageDeposit, setCurrentPageDeposit] = useState<number>(1);
+
   const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>(
     []
   );
@@ -119,6 +133,10 @@ export const AdminPay = () => {
   const idProgramApproval = listDeposits.filter((i) =>
     namesProgramApproval.includes(i.safeId)
   );
+  const searchSafeIDApproval = idProgramApproval.map((i) => i.safeId);
+  const depositState = checkList.length
+    ? checkList.map((i: any) => i.id)
+    : [5, 6];
 
   const myLoad = () => {
     setNext(false);
@@ -183,6 +201,8 @@ export const AdminPay = () => {
 
   useEffect(() => {
     if (hubConnection) {
+      setLoading(true);
+
       setPaymentsList([]);
       hubConnection
         .invoke<RootPayments>(
@@ -195,24 +215,58 @@ export const AdminPay = () => {
           null,
           null,
           null,
-          0,
-          20
+          (currentPage - 1) * pageLength,
+          pageLength
         )
         .then((res) => {
-          setLoading(false);
           setTotalPayments(res.totalRecords);
           setPaymentsList(res.collection);
           setNumPayments(20);
+          setLoading(false);
         })
         .catch((err: Error) => {
           setLoading(false);
           console.log(err);
         });
     }
-  }, [hubConnection, active]);
+  }, [hubConnection, active, currentPage, pageLength]);
 
   useEffect(() => {
     if (hubConnection) {
+      setLoading(true);
+      setDepositList([]);
+      hubConnection
+        .invoke<RootPayments>(
+          "GetUsersDeposits",
+          [5, 6],
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          (currentPageDeposit - 1) * pageLengthDeposit,
+          pageLengthDeposit
+        )
+        .then((res) => {
+          setLoading(false);
+          setTotalDeposits(res.totalRecords);
+          setDepositList(res.collection);
+          setNum(20);
+          setLoading(false);
+        })
+        .catch((err: Error) => {
+          setLoading(false);
+          console.log(err);
+        });
+    }
+  }, [hubConnection, active, currentPageDeposit, pageLengthDeposit]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      setLoading(true);
+
       setDepositPayList([]);
       hubConnection
         .invoke<RootCharges>(
@@ -223,8 +277,8 @@ export const AdminPay = () => {
           searchSafeID.length ? searchSafeID : null,
           null,
           [7, 8],
-          0,
-          20
+          (currentPagePay - 1) * pageLengthPay,
+          pageLengthPay
         )
         .then((res) => {
           // console.log("GetDepositsCharges", res);
@@ -233,6 +287,7 @@ export const AdminPay = () => {
             setTotalPayDeposits(res.totalRecords);
             setDepositPayList(res.collection);
             setPayNum(20);
+            setLoading(false);
           }
         })
         .catch((err: Error) => {
@@ -240,39 +295,11 @@ export const AdminPay = () => {
           console.log(err);
         });
     }
-  }, [hubConnection, active]);
+  }, [hubConnection, active, currentPagePay, pageLengthPay]);
 
   useEffect(() => {
     getPaymentsOverview();
   }, [hubConnection]);
-
-  const loadMorePayments = () => {
-    setPayCount(false);
-    if (hubConnection && paymentsList.length < totalPayments) {
-      hubConnection
-        .invoke<RootPayments>(
-          "GetUsersDeposits",
-          [5],
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          numPayments,
-          20
-        )
-        .then((res) => {
-          if (res.collection.length) {
-            setPaymentsList([...paymentsList, ...res.collection]);
-            setNumPayments(numPayments + 20);
-            setPayCount(true);
-          }
-        })
-        .catch((err: Error) => console.log(err));
-    }
-  };
 
   const alert = (
     title: string,
@@ -300,28 +327,6 @@ export const AdminPay = () => {
         .then((res) => {
           getPaymentsOverview();
           alert("Успешно", "Подтверждено", "success");
-        })
-        .catch((err: Error) => {
-          alert("Ошибка", "Произошла ошибка", "danger");
-        });
-    }
-  };
-
-  const paymentsConfirm = () => {
-    if (hubConnection) {
-      hubConnection
-        .invoke(
-          "ConfirmAllDepositsPayment",
-          nameApproval ? nameApproval.toLowerCase() : null,
-          openDate.from ? openDate.from : backDays._d,
-          openDate.to ? openDate.to : new Date(),
-          searchSafeID.length ? searchSafeID : null,
-          procent ? +procent / 100 : null
-        )
-        .then((res) => {
-          console.log("ConfirmAllDepositsPayment", res);
-          alert("Успешно", "", "success");
-          getPaymentsOverview();
         })
         .catch((err: Error) => {
           alert("Ошибка", "Произошла ошибка", "danger");
@@ -376,6 +381,34 @@ export const AdminPay = () => {
           setStats(res);
         })
         .catch((e) => console.log(e));
+    }
+  };
+
+  const submitApproval = () => {
+    if (hubConnection) {
+      hubConnection
+        .invoke<RootPayments>(
+          "GetUsersDeposits",
+          depositState,
+          nameApproval ? nameApproval.toLowerCase() : null,
+          searchSafeIDApproval.length ? searchSafeIDApproval : null,
+          openDateApproval.from ? openDateApproval.from : null,
+          openDateApproval.to ? openDateApproval.to : null,
+          null,
+          null,
+          null, //
+          0,
+          20
+        )
+        .then((res) => {
+          setDepositList([]);
+          if (res.collection.length) {
+            setDepositList(res.collection);
+            setTotalDeposits(res.totalRecords);
+            setNum(20);
+          }
+        })
+        .catch((err: Error) => console.log(err));
     }
   };
 
@@ -482,7 +515,7 @@ export const AdminPay = () => {
 
       <Content active={active === 0}>
         <Approval
-          paymentsConfirm={paymentsConfirm}
+          getPaymentsOverview={getPaymentsOverview}
           adjustPay={adjustPay}
           confirmPay={confirmPay}
           unConfirmPay={unConfirmPay}
@@ -558,21 +591,9 @@ export const AdminPay = () => {
             </TableHead>
             {depositPayList.length ? (
               <Scrollbars style={{ height: "500px" }}>
-                <InfiniteScroll
-                  pageStart={10}
-                  loadMore={myLoad}
-                  hasMore={next}
-                  useWindow={false}
-                  loader={
-                    <div className="loader" key={0}>
-                      Loading ...
-                    </div>
-                  }
-                >
-                  {depositPayList.map((item: CollectionCharges) => (
-                    <PaymentsListPay key={item.safeId} data={item} />
-                  ))}
-                </InfiniteScroll>
+                {depositPayList.map((item: CollectionCharges) => (
+                  <PaymentsListPay key={item.safeId} data={item} />
+                ))}
               </Scrollbars>
             ) : loading ? (
               <Loading />
@@ -581,6 +602,14 @@ export const AdminPay = () => {
             )}
           </PaymentsTable>
         </Card>
+
+        <Pagination
+          pageLength={pageLengthPay}
+          setPageLength={setPageLengthPay}
+          currentPage={currentPagePay}
+          setCurrentPage={setCurrentPagePay}
+          totalLottery={totalDeposits}
+        />
       </Content>
 
       <Content active={active === 2}>
@@ -605,21 +634,9 @@ export const AdminPay = () => {
             </TableHead>
             {paymentsList.length ? (
               <Scrollbars style={{ height: "500px" }}>
-                <InfiniteScroll
-                  pageStart={10}
-                  loadMore={loadMorePayments}
-                  hasMore={countPay}
-                  useWindow={false}
-                  loader={
-                    <div className="loader" key={0}>
-                      Loading ...
-                    </div>
-                  }
-                >
-                  {paymentsList.map((item: PaymentsCollection) => (
-                    <PaymentsList key={item.safeId} data={item} />
-                  ))}
-                </InfiniteScroll>
+                {paymentsList.map((item: PaymentsCollection) => (
+                  <PaymentsList key={item.safeId} data={item} />
+                ))}
               </Scrollbars>
             ) : loading ? (
               <Loading />
@@ -628,6 +645,14 @@ export const AdminPay = () => {
             )}
           </PaymentsTable>
         </Card>
+
+        <Pagination
+          pageLength={pageLength}
+          setPageLength={setPageLength}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalLottery={totalPayments}
+        />
       </Content>
 
       <Content active={active === 3}>
