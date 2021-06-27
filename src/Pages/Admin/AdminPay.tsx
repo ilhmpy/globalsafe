@@ -561,106 +561,6 @@ export const AdminPay = () => {
       </Card>
 
       <Content active={active === 0}>
-        <Styled.FilterBlock>
-          <Styled.FilterHeader>
-            <Styled.FilterName>{t('adminDeposit.filter')}</Styled.FilterName>
-            <Styled.ShowHide onClick={() => setOpenFilterOne(!openFilterOne)}>
-              {openFilterOne ? t('hide') : t('show')}
-            </Styled.ShowHide>
-          </Styled.FilterHeader>
-          <CSSTransition
-            in={openFilterOne}
-            timeout={200}
-            classNames="filter"
-            unmountOnExit>
-            <Styled.SelectContainer>
-              <Styled.SelectContainerInnerPaid>
-                <Styled.SelectWrap style={{ minWidth: 263 }}>
-                  <Styled.Label>{t('adminPay.filter.user')}</Styled.Label>
-                  <Styled.Input
-                    value={nameApproval}
-                    onChange={(e) =>
-                      setNameApproval(e.target.value.toLowerCase())
-                    }
-                  />
-                </Styled.SelectWrap>
-                <Styled.SelectWrap input>
-                  <TestInput
-                    setOpenDate={setOpenDateApproval}
-                    openDate={openDateApproval}
-                    label={t('adminPay.filter.date')}
-                  />
-                </Styled.SelectWrap>
-                <Styled.SelectWrap style={{ minWidth: 263 }}>
-                  <Styled.Label>{t('adminPay.filter.deposit')}</Styled.Label>
-                  <Select
-                    checkList={checkListApproval}
-                    setCheckList={setCheckListApproval}
-                    values={listDeposits}
-                  />
-                  <pre>{JSON.stringify(setCheckListApproval)}</pre>
-                </Styled.SelectWrap>
-                <Styled.SelectWrap style={{ minWidth: 263 }}>
-                  <Styled.Label>{t('adminPay.status')}</Styled.Label>
-                  <SelectOne
-                    checkList={checkList}
-                    setCheckList={setCheckList}
-                    idx={5}
-                    values={[
-                      t('adminPay.filter.disagree'),
-                      t('adminPay.filter.agree'),
-                    ]}
-                  />
-                </Styled.SelectWrap>
-              </Styled.SelectContainerInnerPaid>
-              <Button danger onClick={submitApproval}>
-                {t('adminUsers.apply')}
-              </Button>
-            </Styled.SelectContainer>
-          </CSSTransition>
-        </Styled.FilterBlock>
-        <Card>
-          <PaymentsTable>
-            <TableHead>
-              <TableHeadItem>№</TableHeadItem>
-              <TableHeadItem>{t('adminPay.table.user')}</TableHeadItem>
-              <TableHeadItem>{t('adminPay.table.name')}</TableHeadItem>
-              <TableHeadItem>{t('adminPay.table.procent')}</TableHeadItem>
-              <TableHeadItem>{t('adminPay.table.datePay')}</TableHeadItem>
-              <TableHeadItem>{t('adminPay.table.profit')}</TableHeadItem>
-              <TableHeadItem>{t('adminPay.table.openDate')}</TableHeadItem>
-              <TableHeadItem>{t('adminPay.table.contribution')}</TableHeadItem>
-              <TableHeadItem>{t('adminPay.table.payments')}</TableHeadItem>
-              <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
-            </TableHead>
-            {depositList.length ? (
-              <Scrollbars style={{ height: '500px' }}>
-                {depositList.map((item: PaymentsCollection, idx: number) => (
-                  <DepositList
-                    idx={idx}
-                    key={item.safeId}
-                    data={item}
-                    adjustPay={adjustPay}
-                    confirmPay={confirmPay}
-                    unConfirmPay={unConfirmPay}
-                  />
-                ))}
-              </Scrollbars>
-            ) : loading ? (
-              <Loading />
-            ) : (
-              <NotFound>{t('notFound')}</NotFound>
-            )}
-          </PaymentsTable>
-        </Card>
-        <Pagination
-          pageLength={pageLengthDeposit}
-          setPageLength={setPageLengthDeposit}
-          currentPage={currentPageDeposit}
-          setCurrentPage={setCurrentPageDeposit}
-          totalLottery={totalPayDeposits}
-        />
-        
         <Approval
           paymentsConfirm={paymentsConfirm}
           adjustPay={adjustPay}
@@ -671,7 +571,7 @@ export const AdminPay = () => {
           procent={procent}
         />
       </Content>
-
+      
       <Content active={active === 1}>
         <Styled.FilterBlock>
           <Styled.FilterHeader>

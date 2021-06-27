@@ -1,38 +1,33 @@
-import React, { useContext, useEffect, useState, FC } from "react";
-import { Scrollbars } from "react-custom-scrollbars";
-import InfiniteScroll from "react-infinite-scroller";
-import { useTranslation } from "react-i18next";
-import { AppContext } from "../../../../../context/HubContext";
-import { Card } from "../../../../../globalStyles";
-import { TestInput } from "../../../../../components/UI/DayPicker";
-import { Select } from "../../../../../components/Select/Select2";
-import { Button } from "../../../../../components/Button/Button";
-import moment from "moment";
+import moment from 'moment';
+import React, { FC, useContext, useEffect, useState } from 'react';
+import { Scrollbars } from 'react-custom-scrollbars';
+import { useTranslation } from 'react-i18next';
+import { CSSTransition } from 'react-transition-group';
+import { Button } from '../../../../../components/Button/Button';
+import { Select } from '../../../../../components/Select/Select2';
+import { TestInput } from '../../../../../components/UI/DayPicker';
+import { Loading } from '../../../../../components/UI/Loading';
+import { AppContext } from '../../../../../context/HubContext';
+import { Card } from '../../../../../globalStyles';
+import {
+  CollectionAnalitics,
+  RootAnalitics,
+} from '../../../../../types/analitics';
+import { OpenDate } from '../../../../../types/dates';
+import { CollectionListDeposits } from '../../../../../types/deposits';
+import { ModalAnalitic } from '../../../AdminPay/Payments';
+import { Pagination } from '../../../Pagination';
 import {
   FilterBlock,
   FilterHeader,
-  ShowHide,
   FilterName,
-  SelectContainer,
-  SelectWrap,
-  SelectContainerInnerPaid,
   Label,
-  Input,
-} from "../../../Styled.elements";
-
-import { OpenDate } from "../../../../../types/dates";
-import {
-  CollectionListDeposits,
-  ListDeposits,
-} from "../../../../../types/deposits";
-import { Loading } from "../../../../../components/UI/Loading";
-import { CSSTransition } from "react-transition-group";
-import * as Styled from "./Styled.elements";
-import {
-  RootAnalitics,
-  CollectionAnalitics,
-} from "../../../../../types/analitics";
-import { ModalAnalitic } from "../../../AdminPay/Payments";
+  SelectContainer,
+  SelectContainerInnerPaid,
+  SelectWrap,
+  ShowHide,
+} from '../../../Styled.elements';
+import * as Styled from './Styled.elements';
 
 type Props = {
   listDeposits: CollectionListDeposits[];
@@ -51,6 +46,8 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
   const [num, setNum] = useState(20);
   const [totalList, setTotalList] = useState(0);
   const [open, setOpen] = useState<CollectionAnalitics | null>(null);
+  const [pageLength, setPageLength] = useState<number>(10);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
 
@@ -58,12 +55,12 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
     if (hubConnection) {
       hubConnection
         .invoke<RootAnalitics>(
-          "GetPayoutsEstimate",
+          'GetPayoutsEstimate',
           searchSafeID.length ? searchSafeID : null,
           openDate.from ? openDate.from : null,
           openDate.to ? openDate.to : null,
-          0,
-          20
+          (currentPage - 1) * pageLength,
+          pageLength,
         )
         .then((res) => {
           setLoading(false);
@@ -74,19 +71,19 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
           console.log(e);
         });
     }
-  }, [hubConnection]);
+  }, [currentPage, hubConnection, pageLength]);
 
   const myLoad = () => {
     setCount(false);
     if (hubConnection && list.length < totalList) {
       hubConnection
         .invoke<RootAnalitics>(
-          "GetPayoutsEstimate",
+          'GetPayoutsEstimate',
           searchSafeID.length ? searchSafeID : null,
           openDate.from ? openDate.from : null,
           openDate.to ? openDate.to : null,
           num,
-          20
+          20,
         )
         .then((res) => {
           if (res.collection.length) {
@@ -104,12 +101,12 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
     if (hubConnection) {
       hubConnection
         .invoke<RootAnalitics>(
-          "GetPayoutsEstimate",
+          'GetPayoutsEstimate',
           searchSafeID.length ? searchSafeID : null,
           openDate.from ? openDate.from : null,
           openDate.to ? openDate.to : null,
           0,
-          20
+          20,
         )
         .then((res) => {
           setList(res.collection);
@@ -136,21 +133,20 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
     <div>
       <FilterBlock>
         <FilterHeader>
-          <FilterName>{t("adminDeposit.filter")}</FilterName>
+          <FilterName>{t('adminDeposit.filter')}</FilterName>
           <ShowHide onClick={() => setOpenFilterOne(!openFilterOne)}>
-            {openFilterOne ? t("hide") : t("show")}
+            {openFilterOne ? t('hide') : t('show')}
           </ShowHide>
         </FilterHeader>
         <CSSTransition
           in={openFilterOne}
           timeout={200}
           classNames="filter"
-          unmountOnExit
-        >
+          unmountOnExit>
           <SelectContainer>
             <SelectContainerInnerPaid>
               <SelectWrap style={{ minWidth: 263 }}>
-                <Label>{t("adminPay.filter.deposit")}</Label>
+                <Label>{t('adminPay.filter.deposit')}</Label>
                 <Select
                   checkList={checkList}
                   setCheckList={setCheckList}
@@ -161,12 +157,12 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
                 <TestInput
                   setOpenDate={setOpenDate}
                   openDate={openDate}
-                  label={t("adminPay.filter.date")}
+                  label={t('adminPay.filter.date')}
                 />
               </SelectWrap>
             </SelectContainerInnerPaid>
             <Button danger onClick={submit}>
-              {t("adminUsers.apply")}
+              {t('adminUsers.apply')}
             </Button>
           </SelectContainer>
         </CSSTransition>
@@ -176,75 +172,66 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
           in={!!open}
           timeout={300}
           classNames="modal"
-          unmountOnExit
-        >
+          unmountOnExit>
           <>{open && <ModalAnalitic onClose={onClose} data={open} />}</>
         </CSSTransition>
         <Styled.PaymentsTable>
           <Styled.TableHead>
             <Styled.TableHeadItemPaid>№</Styled.TableHeadItemPaid>
             <Styled.TableHeadItemPaid>
-              {t("adminPay.table.name")}
+              {t('adminPay.table.name')}
             </Styled.TableHeadItemPaid>
             <Styled.TableHeadItemPaid>
-              {t("adminPay.analitics.data")}
+              {t('adminPay.analitics.data')}
             </Styled.TableHeadItemPaid>
             <Styled.TableHeadItemPaid>
-              {t("adminPay.analitics.amount")}
+              {t('adminPay.analitics.amount')}
             </Styled.TableHeadItemPaid>
             <Styled.TableHeadItemPaid>
-              {t("adminPay.analitics.sum")}
+              {t('adminPay.analitics.sum')}
             </Styled.TableHeadItemPaid>
             <Styled.TableHeadItemPaid>
               {/* <Filter /> */}
             </Styled.TableHeadItemPaid>
           </Styled.TableHead>
           {list.length ? (
-            <Scrollbars style={{ height: "500px" }}>
-              <InfiniteScroll
-                pageStart={10}
-                loadMore={myLoad}
-                hasMore={count}
-                useWindow={false}
-                loader={
-                  <div className="loader" key={0}>
-                    Loading ...
-                  </div>
-                }
-              >
-                {/* {list.map((item) => (
-                    <PaymentsList key={item.safeId} data={item} />
-                  ))} */}
-                {list.map((item, idx) => (
-                  <Styled.TableBody
-                    key={item.safeId}
-                    onClick={() => setOpen(item)}
-                  >
-                    <Styled.TableBodyItem>{idx + 1}</Styled.TableBodyItem>
-                    <Styled.TableBodyItem>
-                      {item.deposit.name}
-                    </Styled.TableBodyItem>
-                    <Styled.TableBodyItem>
-                      {moment(item.payoutDate).format("DD/MM/DDDD")}
-                    </Styled.TableBodyItem>
-                    <Styled.TableBodyItem>{item.count}</Styled.TableBodyItem>
-                    <Styled.TableBodyItem>
-                      {(item.amount / 100000).toLocaleString("ru-RU", {
-                        maximumFractionDigits: 2,
-                      })}
-                    </Styled.TableBodyItem>
-                    <Styled.TableBodyItem></Styled.TableBodyItem>
-                  </Styled.TableBody>
-                ))}
-              </InfiniteScroll>
+            <Scrollbars style={{ height: '500px' }}>
+              {list.map((item, idx) => (
+                <Styled.TableBody
+                  key={item.safeId}
+                  onClick={() => setOpen(item)}>
+                  <Styled.TableBodyItem>{idx + 1}</Styled.TableBodyItem>
+                  <Styled.TableBodyItem>
+                    {item.deposit.name}
+                  </Styled.TableBodyItem>
+                  <Styled.TableBodyItem>
+                    {moment(item.payoutDate).format('DD/MM/DDDD')}
+                  </Styled.TableBodyItem>
+                  <Styled.TableBodyItem>{item.count}</Styled.TableBodyItem>
+                  <Styled.TableBodyItem>
+                    {(item.amount / 100000).toLocaleString('ru-RU', {
+                      maximumFractionDigits: 2,
+                    })}
+                  </Styled.TableBodyItem>
+                  <Styled.TableBodyItem></Styled.TableBodyItem>
+                </Styled.TableBody>
+              ))}
             </Scrollbars>
           ) : loading ? (
             <Loading />
           ) : (
-            <Styled.NotFound>{t("notFound")}</Styled.NotFound>
+            <Styled.NotFound>{t('notFound')}</Styled.NotFound>
           )}
         </Styled.PaymentsTable>
       </Card>
+
+      <Pagination
+        pageLength={pageLength}
+        setPageLength={setPageLength}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        totalLottery={totalList}
+      />
     </div>
   );
 };
