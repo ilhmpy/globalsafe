@@ -16,7 +16,7 @@ export const Page = styled.div`
 
 export const Arrows = styled.div`
   display: flex;
-  gap: 50px;
+  gap: 30px;
 `;
 
 export const PaginationSelect = styled.select`
@@ -38,19 +38,18 @@ export const PaginationSelect = styled.select`
   margin: 0;
   /* width: 100%; */
   font-family: inherit;
-  font-size: inherit;
+  /* font-size: inherit; */
   cursor: inherit;
   line-height: inherit;
 
   background-image: linear-gradient(45deg, transparent 50%, #56657f 50%),
     linear-gradient(135deg, #56657f 50%, transparent 50%),
     linear-gradient(to right, white, white);
-  background-position: calc(100% - 6px) calc(1em + -6px),
-    calc(100% - -1px) calc(1em + -6px), 100% 0;
+  background-position: calc(100% - 10px) calc(1em + -4px),calc(100% - 5px) calc(1em + -4px),100% 0;
 
-  background-size: 7px 7px, 7px 7px, 7em 7em;
+  background-size: 5px 5px, 5px 5px, 5em 5em;
   background-repeat: no-repeat;
-  width: 50px;
+  width: 40px;
 `;
 
 export const ArrowLeft = styled.div`
@@ -69,7 +68,7 @@ export const Pagination = styled(Card)`
   height: 55px;
   display: flex;
   align-items: center;
-  gap: 60px;
+  gap: 45px;
   border-radius: 10px;
 `;
 

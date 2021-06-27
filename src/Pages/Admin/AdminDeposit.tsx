@@ -1,39 +1,30 @@
-﻿import React, { useState, useEffect, useContext, FC } from "react";
-import * as Styled from "./Styled.elements";
-import styled, { css } from "styled-components/macro";
-import { Card } from "../../globalStyles";
-import { UpTitle } from "../../components/UI/UpTitle";
-import { ReactComponent as Exit } from "../../assets/svg/exit.svg";
-import { ReactComponent as Filter } from "../../assets/svg/filter.svg";
-import { HalfRoundBorder } from "../../components/UI/HalfRound";
-import useWindowSize from "../../hooks/useWindowSize";
-import { Select } from "../../components/Select/Select2";
-import { TestInput } from "../../components/UI/DayPicker";
-import { Button } from "../../components/Button/Button";
-import { AppContext } from "../../context/HubContext";
-import { OpenDate } from "../../types/dates";
-import { FilterMenu } from "../../components/FilterMenu/FilterMenu";
-import { Scrollbars } from "react-custom-scrollbars";
-import { CSSTransition } from "react-transition-group";
+﻿import moment from 'moment';
+import React, { FC, useContext, useEffect, useState } from 'react';
+import { Scrollbars } from 'react-custom-scrollbars';
+import { useTranslation } from 'react-i18next';
+import { CSSTransition } from 'react-transition-group';
+import styled, { css } from 'styled-components/macro';
+import SwiperCore, { A11y, Navigation, Pagination, Scrollbar } from 'swiper';
+import 'swiper/components/navigation/navigation.scss';
+import 'swiper/components/pagination/pagination.scss';
+import 'swiper/components/scrollbar/scrollbar.scss';
+import 'swiper/swiper.scss';
+import { ReactComponent as Exit } from '../../assets/svg/exit.svg';
+import { Button } from '../../components/Button/Button';
+import { Select } from '../../components/Select/Select2';
+import { TestInput } from '../../components/UI/DayPicker';
+import { Loading } from '../../components/UI/Loading';
+import { UpTitle } from '../../components/UI/UpTitle';
+import { AppContext } from '../../context/HubContext';
+import { Card } from '../../globalStyles';
+import { OpenDate } from '../../types/dates';
 // import { AdminDepositList } from "./AdminPay/DepositList";
-import {
-  DepositStats,
-  ListDeposits,
-  CollectionListDeposits,
-} from "../../types/deposits";
-import { RootPayments, PaymentsCollection } from "../../types/payments";
-import moment from "moment";
-import InfiniteScroll from "react-infinite-scroller";
-import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
-import "swiper/swiper.scss";
-import "swiper/components/navigation/navigation.scss";
-import "swiper/components/pagination/pagination.scss";
-import "swiper/components/scrollbar/scrollbar.scss";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { ModalDeposit } from "./AdminPay/Payments";
-import { Loading } from "../../components/UI/Loading";
-import { useTranslation } from "react-i18next";
-import { Rounds } from "./AdminPay/Rounds";
+import { CollectionListDeposits, ListDeposits } from '../../types/deposits';
+import { PaymentsCollection, RootPayments } from '../../types/payments';
+import { ModalDeposit } from './AdminPay/Payments';
+import { Rounds } from './AdminPay/Rounds';
+import { Pagination as CustomPagination } from './Pagination';
+import * as Styled from './Styled.elements';
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 type PayProps = {
@@ -60,14 +51,14 @@ const AdminDepositList: FC<PayProps> = ({ data }: PayProps) => {
         <TableBodyItem>{data.userName}</TableBodyItem>
         <TableBodyItem>{data.deposit.name}</TableBodyItem>
         <TableBodyItem>
-          {moment(data.creationDate).format("DD/MM/YYYY")}
+          {moment(data.creationDate).format('DD/MM/YYYY')}
         </TableBodyItem>
         <TableBodyItem>
-          {moment(data.endDate).format("DD/MM/YYYY")}
+          {moment(data.endDate).format('DD/MM/YYYY')}
         </TableBodyItem>
-        <TableBodyItem>{data.amountView ? data.amountView : "-"}</TableBodyItem>
+        <TableBodyItem>{data.amountView ? data.amountView : '-'}</TableBodyItem>
         <TableBodyItem>
-          {moment(data.paymentDate).format("DD/MM/YYYY")}
+          {moment(data.paymentDate).format('DD/MM/YYYY')}
         </TableBodyItem>
         <TableBodyItem>{data.payedAmountView}</TableBodyItem>
         <TableBodyItem></TableBodyItem>
@@ -78,13 +69,13 @@ const AdminDepositList: FC<PayProps> = ({ data }: PayProps) => {
 
 export const AdminDeposit = () => {
   const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>(
-    []
+    [],
   );
   const [loading, setLoading] = useState(true);
   const [depositsList, setDepositsList] = useState<PaymentsCollection[]>([]);
   const [totalList, setTotalList] = useState(0);
   const [checkList, setCheckList] = useState<any>([]);
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
   const [openDate, setOpenDate] = useState<OpenDate>({
     from: undefined,
     to: undefined,
@@ -97,7 +88,7 @@ export const AdminDeposit = () => {
   const [num, setNum] = useState(20);
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
-  const backDays: any = moment().subtract(30, "days");
+  const backDays: any = moment().subtract(30, 'days');
   const namesProgram = checkList.map((i: any) => i.label);
   const idProgram = listDeposits.filter((i) => namesProgram.includes(i.name));
   const searchSafeID = idProgram.map((i) => i.safeId);
@@ -106,13 +97,15 @@ export const AdminDeposit = () => {
   const hubConnection = appContext.hubConnection;
   const logOut = appContext.logOut;
   const user = appContext.user;
+  const [pageLength, setPageLength] = useState<number>(10);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const myLoad = () => {
     setCount(false);
     if (hubConnection && depositsList.length < totalList) {
       hubConnection
         .invoke<RootPayments>(
-          "GetUsersDeposits",
+          'GetUsersDeposits',
           [1, 2, 3, 4, 5, 6],
           name ? name.toLowerCase() : null,
           searchSafeID.length ? searchSafeID : null,
@@ -122,7 +115,7 @@ export const AdminDeposit = () => {
           closeDate.to ? closeDate.from : null,
           null,
           num,
-          20
+          20,
         )
         .then((res) => {
           setLoading(false);
@@ -139,7 +132,7 @@ export const AdminDeposit = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<ListDeposits>("GetAllPublicDeposits", 1, false, 0, 40)
+        .invoke<ListDeposits>('GetAllPublicDeposits', 1, false, 0, 40)
         .then((res) => {
           setListDeposits(res.collection);
         })
@@ -151,7 +144,7 @@ export const AdminDeposit = () => {
     if (hubConnection) {
       hubConnection
         .invoke<RootPayments>(
-          "GetUsersDeposits",
+          'GetUsersDeposits',
           [1, 2, 3, 4, 5, 6],
           null,
           searchSafeID.length ? searchSafeID : null,
@@ -160,8 +153,8 @@ export const AdminDeposit = () => {
           null,
           null,
           null,
-          0,
-          20
+          (currentPage - 1) * pageLength,
+          pageLength,
         )
         .then((res) => {
           setTotalList(res.totalRecords);
@@ -173,13 +166,13 @@ export const AdminDeposit = () => {
           console.log(err);
         });
     }
-  }, [hubConnection]);
+  }, [currentPage, hubConnection, pageLength]);
 
   const submit = () => {
     if (hubConnection) {
       hubConnection
         .invoke<RootPayments>(
-          "GetUsersDeposits",
+          'GetUsersDeposits',
           [1, 2, 3, 4, 5, 6],
           name ? name.toLowerCase() : null,
           searchSafeID.length ? searchSafeID : null,
@@ -189,7 +182,7 @@ export const AdminDeposit = () => {
           closeDate.to ? closeDate.from : null,
           null,
           0,
-          20
+          20,
         )
         .then((res) => {
           setDepositsList([]);
@@ -205,39 +198,38 @@ export const AdminDeposit = () => {
   return (
     <>
       <Styled.HeadBlock>
-        <UpTitle small>{t("adminDeposit.uptitle")}</UpTitle>
+        <UpTitle small>{t('adminDeposit.uptitle')}</UpTitle>
         <Styled.UserName>
           <span>{user}</span>
           <Exit onClick={logOut} />
         </Styled.UserName>
       </Styled.HeadBlock>
-      <Styled.TitleHead>{t("adminDeposit.headTitle")}</Styled.TitleHead>
+      <Styled.TitleHead>{t('adminDeposit.headTitle')}</Styled.TitleHead>
       <Rounds />
 
       <Styled.FilterBlock>
         <Styled.FilterHeader>
-          <FilterName>{t("adminDeposit.filter")}</FilterName>
+          <FilterName>{t('adminDeposit.filter')}</FilterName>
           <Styled.ShowHide onClick={() => setOpen(!open)}>
-            {open ? t("hide") : t("show")}
+            {open ? t('hide') : t('show')}
           </Styled.ShowHide>
         </Styled.FilterHeader>
         <CSSTransition
           in={open}
           timeout={200}
           classNames="filter"
-          unmountOnExit
-        >
+          unmountOnExit>
           <Styled.SelectContainer>
             <Styled.SelectContainerInner>
               <Styled.SelectWrap>
-                <Styled.Label>{t("adminDeposit.labelUser")}</Styled.Label>
+                <Styled.Label>{t('adminDeposit.labelUser')}</Styled.Label>
                 <Input
                   value={name}
                   onChange={(e) => setName(e.target.value.toLowerCase())}
                 />
               </Styled.SelectWrap>
               <Styled.SelectWrap style={{ minWidth: 233 }}>
-                <Styled.Label>{t("adminDeposit.labelProgram")}</Styled.Label>
+                <Styled.Label>{t('adminDeposit.labelProgram')}</Styled.Label>
                 <Select
                   checkList={checkList}
                   setCheckList={setCheckList}
@@ -248,19 +240,19 @@ export const AdminDeposit = () => {
                 <TestInput
                   setOpenDate={setOpenDate}
                   openDate={openDate}
-                  label={t("adminDeposit.labelOpen")}
+                  label={t('adminDeposit.labelOpen')}
                 />
               </Styled.SelectWrap>
               <Styled.SelectWrap input>
                 <TestInput
                   setOpenDate={setCloseDate}
                   openDate={closeDate}
-                  label={t("adminDeposit.labelDate")}
+                  label={t('adminDeposit.labelDate')}
                 />
               </Styled.SelectWrap>
             </Styled.SelectContainerInner>
             <Button danger onClick={submit}>
-              {t("adminDeposit.btnApply")}
+              {t('adminDeposit.btnApply')}
             </Button>
           </Styled.SelectContainer>
         </CSSTransition>
@@ -268,41 +260,37 @@ export const AdminDeposit = () => {
       <Card>
         <PaymentsTable>
           <TableHead>
-            <TableHeadItem>{t("adminDeposit.table.user")}</TableHeadItem>
-            <TableHeadItem>{t("adminDeposit.table.name")}</TableHeadItem>
-            <TableHeadItem>{t("adminDeposit.table.openDate")}</TableHeadItem>
-            <TableHeadItem>{t("adminDeposit.table.closeDate")}</TableHeadItem>
-            <TableHeadItem>{t("adminDeposit.table.sum")}</TableHeadItem>
-            <TableHeadItem>{t("adminDeposit.table.nextDate")}</TableHeadItem>
-            <TableHeadItem>{t("adminDeposit.table.paid")}</TableHeadItem>
+            <TableHeadItem>{t('adminDeposit.table.user')}</TableHeadItem>
+            <TableHeadItem>{t('adminDeposit.table.name')}</TableHeadItem>
+            <TableHeadItem>{t('adminDeposit.table.openDate')}</TableHeadItem>
+            <TableHeadItem>{t('adminDeposit.table.closeDate')}</TableHeadItem>
+            <TableHeadItem>{t('adminDeposit.table.sum')}</TableHeadItem>
+            <TableHeadItem>{t('adminDeposit.table.nextDate')}</TableHeadItem>
+            <TableHeadItem>{t('adminDeposit.table.paid')}</TableHeadItem>
             <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
             {/* <FilterMenu filterClick={filterClick} /> */}
           </TableHead>
           {depositsList.length ? (
-            <Scrollbars style={{ height: "500px" }}>
-              <InfiniteScroll
-                pageStart={0}
-                loadMore={myLoad}
-                hasMore={count}
-                useWindow={false}
-                loader={
-                  <div className="loader" key={0}>
-                    Loading ...
-                  </div>
-                }
-              >
-                {depositsList.map((item) => (
-                  <AdminDepositList data={item} key={item.safeId} />
-                ))}
-              </InfiniteScroll>
+            <Scrollbars style={{ height: '500px' }}>
+              {depositsList.map((item) => (
+                <AdminDepositList data={item} key={item.safeId} />
+              ))}
             </Scrollbars>
           ) : loading ? (
             <Loading />
           ) : (
-            <NotFound>{t("notFound")}</NotFound>
+            <NotFound>{t('notFound')}</NotFound>
           )}
         </PaymentsTable>
       </Card>
+
+      <CustomPagination
+        pageLength={pageLength}
+        setPageLength={setPageLength}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        totalLottery={totalList}
+      />
     </>
   );
 };

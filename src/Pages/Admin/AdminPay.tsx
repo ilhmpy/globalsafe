@@ -2,7 +2,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTranslation } from 'react-i18next';
-import InfiniteScroll from 'react-infinite-scroller';
 import ReactNotification, { store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
 import { CSSTransition } from 'react-transition-group';
@@ -33,6 +32,7 @@ import {
   PaymentsList,
   PaymentsListPay,
 } from './AdminPay/DepositList';
+import { Pagination } from './Pagination';
 import * as Styled from './Styled.elements';
 
 export const AdminPay = () => {
@@ -79,6 +79,12 @@ export const AdminPay = () => {
   const [name, setName] = useState('');
   const [nameApproval, setNameApproval] = useState('');
   const [selectedOption, setSelectedOption] = useState<null | string>(null);
+  const [pageLength, setPageLength] = useState<number>(10);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageLengthPay, setPageLengthPay] = useState<number>(10);
+  const [currentPagePay, setCurrentPagePay] = useState<number>(1);
+  const [pageLengthDeposit, setPageLengthDeposit] = useState<number>(10);
+  const [currentPageDeposit, setCurrentPageDeposit] = useState<number>(1);
 
   const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>(
     [],
@@ -186,6 +192,8 @@ export const AdminPay = () => {
 
   useEffect(() => {
     if (hubConnection) {
+      setLoading(true);
+
       setPaymentsList([]);
       hubConnection
         .invoke<RootPayments>(
@@ -198,24 +206,25 @@ export const AdminPay = () => {
           null,
           null,
           null,
-          0,
-          20,
+          (currentPage - 1) * pageLength,
+          pageLength,
         )
         .then((res) => {
-          setLoading(false);
           setTotalPayments(res.totalRecords);
           setPaymentsList(res.collection);
           setNumPayments(20);
+          setLoading(false);
         })
         .catch((err: Error) => {
           setLoading(false);
           console.log(err);
         });
     }
-  }, [hubConnection, active]);
+  }, [hubConnection, active, currentPage, pageLength]);
 
   useEffect(() => {
     if (hubConnection) {
+      setLoading(true);
       setDepositList([]);
       hubConnection
         .invoke<RootPayments>(
@@ -228,24 +237,27 @@ export const AdminPay = () => {
           null,
           null,
           null,
-          0,
-          20,
+          (currentPageDeposit - 1) * pageLengthDeposit,
+          pageLengthDeposit,
         )
         .then((res) => {
           setLoading(false);
           setTotalDeposits(res.totalRecords);
           setDepositList(res.collection);
           setNum(20);
+          setLoading(false);
         })
         .catch((err: Error) => {
           setLoading(false);
           console.log(err);
         });
     }
-  }, [hubConnection, active]);
+  }, [hubConnection, active, currentPageDeposit, pageLengthDeposit]);
 
   useEffect(() => {
     if (hubConnection) {
+      setLoading(true);
+
       setDepositPayList([]);
       hubConnection
         .invoke<RootCharges>(
@@ -256,8 +268,8 @@ export const AdminPay = () => {
           searchSafeID.length ? searchSafeID : null,
           null,
           [7, 8],
-          0,
-          20,
+          (currentPagePay - 1) * pageLengthPay,
+          pageLengthPay,
         )
         .then((res) => {
           // console.log("GetDepositsCharges", res);
@@ -266,6 +278,7 @@ export const AdminPay = () => {
             setTotalPayDeposits(res.totalRecords);
             setDepositPayList(res.collection);
             setPayNum(20);
+            setLoading(false);
           }
         })
         .catch((err: Error) => {
@@ -273,7 +286,7 @@ export const AdminPay = () => {
           console.log(err);
         });
     }
-  }, [hubConnection, active]);
+  }, [hubConnection, active, currentPagePay, pageLengthPay]);
 
   useEffect(() => {
     getPaymentsOverview();
@@ -625,27 +638,16 @@ export const AdminPay = () => {
             </TableHead>
             {depositList.length ? (
               <Scrollbars style={{ height: '500px' }}>
-                <InfiniteScroll
-                  pageStart={10}
-                  loadMore={loadMoreItems}
-                  hasMore={count}
-                  useWindow={false}
-                  loader={
-                    <div className="loader" key={0}>
-                      Loading ...
-                    </div>
-                  }>
-                  {depositList.map((item: PaymentsCollection, idx: number) => (
-                    <DepositList
-                      idx={idx}
-                      key={item.safeId}
-                      data={item}
-                      adjustPay={adjustPay}
-                      confirmPay={confirmPay}
-                      unConfirmPay={unConfirmPay}
-                    />
-                  ))}
-                </InfiniteScroll>
+                {depositList.map((item: PaymentsCollection, idx: number) => (
+                  <DepositList
+                    idx={idx}
+                    key={item.safeId}
+                    data={item}
+                    adjustPay={adjustPay}
+                    confirmPay={confirmPay}
+                    unConfirmPay={unConfirmPay}
+                  />
+                ))}
               </Scrollbars>
             ) : loading ? (
               <Loading />
@@ -654,6 +656,14 @@ export const AdminPay = () => {
             )}
           </PaymentsTable>
         </Card>
+
+        <Pagination
+          pageLength={pageLengthDeposit}
+          setPageLength={setPageLengthDeposit}
+          currentPage={currentPageDeposit}
+          setCurrentPage={setCurrentPageDeposit}
+          totalLottery={totalPayDeposits}
+        />
       </Content>
 
       <Content active={active === 1}>
@@ -721,20 +731,9 @@ export const AdminPay = () => {
             </TableHead>
             {depositPayList.length ? (
               <Scrollbars style={{ height: '500px' }}>
-                <InfiniteScroll
-                  pageStart={10}
-                  loadMore={myLoad}
-                  hasMore={next}
-                  useWindow={false}
-                  loader={
-                    <div className="loader" key={0}>
-                      Loading ...
-                    </div>
-                  }>
-                  {depositPayList.map((item: CollectionCharges) => (
-                    <PaymentsListPay key={item.safeId} data={item} />
-                  ))}
-                </InfiniteScroll>
+                {depositPayList.map((item: CollectionCharges) => (
+                  <PaymentsListPay key={item.safeId} data={item} />
+                ))}
               </Scrollbars>
             ) : loading ? (
               <Loading />
@@ -743,6 +742,14 @@ export const AdminPay = () => {
             )}
           </PaymentsTable>
         </Card>
+
+        <Pagination
+          pageLength={pageLengthPay}
+          setPageLength={setPageLengthPay}
+          currentPage={currentPagePay}
+          setCurrentPage={setCurrentPagePay}
+          totalLottery={totalDeposits}
+        />
       </Content>
 
       <Content active={active === 2}>
@@ -767,20 +774,9 @@ export const AdminPay = () => {
             </TableHead>
             {paymentsList.length ? (
               <Scrollbars style={{ height: '500px' }}>
-                <InfiniteScroll
-                  pageStart={10}
-                  loadMore={loadMorePayments}
-                  hasMore={countPay}
-                  useWindow={false}
-                  loader={
-                    <div className="loader" key={0}>
-                      Loading ...
-                    </div>
-                  }>
-                  {paymentsList.map((item: PaymentsCollection) => (
-                    <PaymentsList key={item.safeId} data={item} />
-                  ))}
-                </InfiniteScroll>
+                {paymentsList.map((item: PaymentsCollection) => (
+                  <PaymentsList key={item.safeId} data={item} />
+                ))}
               </Scrollbars>
             ) : loading ? (
               <Loading />
@@ -789,6 +785,14 @@ export const AdminPay = () => {
             )}
           </PaymentsTable>
         </Card>
+
+        <Pagination
+          pageLength={pageLength}
+          setPageLength={setPageLength}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalLottery={totalPayments}
+        />
       </Content>
     </>
   );

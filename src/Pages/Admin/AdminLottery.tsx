@@ -1,6 +1,5 @@
 import moment from 'moment';
 import React, { useContext, useEffect, useState } from 'react';
-// import InfiniteScroll from "react-infinite-scroll-component";
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
@@ -22,6 +21,7 @@ import {
 } from '../../types/lottery';
 import { LotteryTable } from './AdminPay/Table';
 import { Writing } from './AdminPay/Writing';
+import { Pagination } from './Pagination';
 import * as Styled from './Styled.elements';
 
 type LotteryTable = {
@@ -78,6 +78,7 @@ export const AdminLottery = () => {
   }, [hubConnection, languale, pageLength, currentPage]);
 
   const submit = () => {
+    setLoading(true);
     setLotteryList(null);
     setLotteryArrList([]);
     if (hubConnection) {
@@ -116,6 +117,7 @@ export const AdminLottery = () => {
           } else {
             setLotteryList(null);
           }
+          setLoading(false);
         })
         .catch((e) => console.log(e));
     }
@@ -357,34 +359,13 @@ export const AdminLottery = () => {
           </Styled.LotteryTable>
         </Card>
 
-        <Styled.Pagination>
-          <Styled.Page>Элементов на странице:</Styled.Page>
-          <Styled.PaginationSelect
-            name="countRows"
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-              setPageLength(+e.target.value);
-            }}
-            value={pageLength}>
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="30">30</option>
-          </Styled.PaginationSelect>
-          <Styled.Page>
-            {`${currentPage} из ${Math.ceil(totalLottery / pageLength)}`}
-          </Styled.Page>
-          <Styled.Arrows>
-            <Styled.ArrowRight
-              onClick={() => {
-                setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev));
-              }}
-            />
-            <Styled.ArrowLeft
-              onClick={() => {
-                setCurrentPage((prev) => prev + 1);
-              }}
-            />
-          </Styled.Arrows>
-        </Styled.Pagination>
+        <Pagination
+          pageLength={pageLength}
+          setPageLength={setPageLength}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalLottery={totalLottery}
+        />
       </div>
     </div>
   );
