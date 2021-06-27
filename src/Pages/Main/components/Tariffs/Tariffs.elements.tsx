@@ -141,10 +141,17 @@ export const PartnerProgramContainer = styled.div`
   width: 90%;
   margin: 0 auto;
 
+  .swiper-pagination-bullets {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+  }
+
   .swiper-pagination-bullet {
     width: 7px;
     height: 7px;
-    background-color: #C4C4C4;
+    background: #C4C4C4;
     border-radius: 50%;
   }
 
@@ -152,13 +159,7 @@ export const PartnerProgramContainer = styled.div`
     width: 30px;
     height: 3px;
     border-radius: 4px;
-    background-color: #FF416E;
-  }
-
-  .swiper-pagination-bullets {
-    align-items: center;
-    display: flex;
-    justify-content: center;
+    background: #FF416E;
   }
 `;
 
@@ -232,6 +233,11 @@ export const PartnerProgramLine = styled.div`
     display: flex;
   }
 
+  @media only screen and (max-device-width: 1024px) {
+    &:last-child {
+      margin-bottom: 50px;
+    }
+  }
 `;
 
 export const PartnerProgramLineNumber = styled.header`
@@ -290,8 +296,7 @@ export const PartnerProgramPagination = styled.div`
   width: 100%;
   justify-content: center;
   align-items: center;
-  margin-bottom: 30px;
-  margin-top: 30px;
+  margin-top: 13px;
 `;
 
 export const PartnerProgramPaginationItem = styled.span<{ active?: boolean }>`

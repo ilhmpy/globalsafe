@@ -215,20 +215,6 @@ export const Tariffs = () => {
       <DescContainerInner>
         <PartnerProgramBlock phone={true}>
           <PartnerProgramContainer>
-           {/*
-            <PartnerProgramHeaderItem green={true}>start</PartnerProgramHeaderItem>
-            <PartnerProgramLine>
-              <PartnerProgramLineNumber>1 {t("line")}</PartnerProgramLineNumber>
-              <div className="inner">
-                <PartnerProgramLineItem>4%</PartnerProgramLineItem>
-              </div>
-            </PartnerProgramLine>
-            <PartnerProgramPagination>
-              <PartnerProgramPaginationItem active={true}></PartnerProgramPaginationItem>
-              <PartnerProgramPaginationItem></PartnerProgramPaginationItem>
-              <PartnerProgramPaginationItem></PartnerProgramPaginationItem>
-            </PartnerProgramPagination>
-            */}
             <Swiper
               spaceBetween={10}
               slidesPerView={1}
@@ -255,12 +241,8 @@ export const Tariffs = () => {
                   )
                 })
               }
-              <PartnerProgramPagination>
-                <PartnerProgramPaginationItem active={true}></PartnerProgramPaginationItem>
-                <PartnerProgramPaginationItem></PartnerProgramPaginationItem>
-                <PartnerProgramPaginationItem></PartnerProgramPaginationItem>
-              </PartnerProgramPagination>
             </Swiper>
+            <PartnerProgramPagination></PartnerProgramPagination>
           </PartnerProgramContainer>
         </PartnerProgramBlock>
       </DescContainerInner>
