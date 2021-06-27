@@ -60,6 +60,20 @@ export const Tariffs = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const lang = localStorage.getItem("i18nextLng") || "ru";
   const languale = lang === "ru" ? 1 : 0;
+  const [ programs, setPrograms ] = useState([
+    {
+      name: "start",
+      color: "#BCD476",
+    },
+    {
+      name: "expert",
+      color: "#6DB9FF",
+    },
+    {
+      name: "infinity",
+      color: "#FF416E"
+    }
+  ]);
 
   useEffect(() => {
     if (hubConnection) {
@@ -201,51 +215,10 @@ export const Tariffs = () => {
       <DescContainerInner>
         <PartnerProgramBlock phone={true}>
           <PartnerProgramContainer>
+           {/*
             <PartnerProgramHeaderItem green={true}>start</PartnerProgramHeaderItem>
             <PartnerProgramLine>
               <PartnerProgramLineNumber>1 {t("line")}</PartnerProgramLineNumber>
-              <div className="inner">
-                <PartnerProgramLineItem>4%</PartnerProgramLineItem>
-              </div>
-            </PartnerProgramLine>
-            <PartnerProgramLine>
-              <PartnerProgramLineNumber>2 {t("line")}</PartnerProgramLineNumber>
-              <div className="inner">
-                <PartnerProgramLineItem>4%</PartnerProgramLineItem>
-              </div>
-            </PartnerProgramLine>
-            <PartnerProgramLine>
-              <PartnerProgramLineNumber>3 {t("line")}</PartnerProgramLineNumber>
-              <div className="inner">
-                <PartnerProgramLineItem>4%</PartnerProgramLineItem>
-              </div>
-            </PartnerProgramLine>
-            <PartnerProgramLine>
-              <PartnerProgramLineNumber>4 {t("line")}</PartnerProgramLineNumber>
-              <div className="inner">
-                <PartnerProgramLineItem>4%</PartnerProgramLineItem>
-              </div>
-            </PartnerProgramLine>
-            <PartnerProgramLine>
-              <PartnerProgramLineNumber>5 {t("line")}</PartnerProgramLineNumber>
-              <div className="inner">
-                <PartnerProgramLineItem>4%</PartnerProgramLineItem>
-              </div>
-            </PartnerProgramLine>
-            <PartnerProgramLine>
-              <PartnerProgramLineNumber>6 {t("line")}</PartnerProgramLineNumber>
-              <div className="inner">
-                <PartnerProgramLineItem>4%</PartnerProgramLineItem>
-              </div>
-            </PartnerProgramLine>
-            <PartnerProgramLine>
-              <PartnerProgramLineNumber>7 {t("line")}</PartnerProgramLineNumber>
-              <div className="inner">
-                <PartnerProgramLineItem>4%</PartnerProgramLineItem>
-              </div>
-            </PartnerProgramLine>
-            <PartnerProgramLine>
-              <PartnerProgramLineNumber>8 {t("line")}</PartnerProgramLineNumber>
               <div className="inner">
                 <PartnerProgramLineItem>4%</PartnerProgramLineItem>
               </div>
@@ -255,6 +228,39 @@ export const Tariffs = () => {
               <PartnerProgramPaginationItem></PartnerProgramPaginationItem>
               <PartnerProgramPaginationItem></PartnerProgramPaginationItem>
             </PartnerProgramPagination>
+            */}
+            <Swiper
+              spaceBetween={10}
+              slidesPerView={1}
+              pagination={{ clickable: true }}
+            >
+              {
+                programs.map(( program: any ) => {
+                  return (
+                    <SwiperSlide key={programs.indexOf(program)}>
+                      <PartnerProgramHeaderItem color={program.color}>{program.name}</PartnerProgramHeaderItem>
+                      {
+                        [1, 2, 3, 4, 5, 6, 7, 8].map(id => {
+                          return (
+                            <PartnerProgramLine>
+                              <PartnerProgramLineNumber>{id} {t("line")}</PartnerProgramLineNumber>
+                              <div className="inner">
+                                <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                              </div>
+                            </PartnerProgramLine>
+                          )
+                       })
+                     }
+                    </SwiperSlide>
+                  )
+                })
+              }
+              <PartnerProgramPagination>
+                <PartnerProgramPaginationItem active={true}></PartnerProgramPaginationItem>
+                <PartnerProgramPaginationItem></PartnerProgramPaginationItem>
+                <PartnerProgramPaginationItem></PartnerProgramPaginationItem>
+              </PartnerProgramPagination>
+            </Swiper>
           </PartnerProgramContainer>
         </PartnerProgramBlock>
       </DescContainerInner>
