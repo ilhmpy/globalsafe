@@ -311,7 +311,7 @@ export const AdminPay = () => {
       message: message,
       type: type,
       insert: "top",
-      container: "top-right",
+      container: "center",
       animationIn: ["animate__animated", "animate__fadeIn"],
       animationOut: ["animate__animated", "animate__fadeOut"],
       dismiss: {

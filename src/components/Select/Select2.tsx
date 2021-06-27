@@ -1,10 +1,10 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
-import { Scrollbars } from 'react-custom-scrollbars';
-import { useTranslation } from 'react-i18next';
-import { ReactComponent as Icon } from '../../assets/svg/selectArrow.svg';
-import useOnClickOutside from '../../hooks/useOutsideHook';
-import { CollectionListDeposits } from '../../types/deposits';
-import * as Styled from './Select.elements';
+import React, { FC, useEffect, useRef, useState } from "react";
+import { Scrollbars } from "react-custom-scrollbars";
+import { useTranslation } from "react-i18next";
+import { ReactComponent as Icon } from "../../assets/svg/selectArrow.svg";
+import useOnClickOutside from "../../hooks/useOutsideHook";
+import { CollectionListDeposits } from "../../types/deposits";
+import * as Styled from "./Select.elements";
 
 const ListItems = ({ data, addList }: any) => {
   const [active, setActive] = useState(-1);
@@ -26,16 +26,20 @@ const ListItems = ({ data, addList }: any) => {
               onChange={(e) => addList(e, item.safeId)}
             />
             <Styled.CheckboxIcon />
-            <span>{item.label}</span>
-            <Styled.Ratio>{(item.ratio * 100).toFixed(0)} %</Styled.Ratio>
+            <span>
+              {item.label}
+              &nbsp;
+              {(item.ratio * 100).toFixed(0)} %
+            </span>
           </Styled.LabelContainer>
           <Styled.Fold
-            className={`fold_trigger ${active === i ? 'open' : ''}`}
+            className={`fold_trigger ${active === i ? "open" : ""}`}
             onClick={(e) => {
               e.stopPropagation();
               selectFold(i);
-            }}>
-            {t('more')}
+            }}
+          >
+            {t("more")}
           </Styled.Fold>
           <Styled.FoldContent
             open={active === i}
@@ -96,7 +100,7 @@ export const Select: FC<Props> = ({
     const { checked, name } = e.target;
 
     const arr = list.map((item: any) =>
-      item.safeId === id ? { ...item, checked: checked } : item,
+      item.safeId === id ? { ...item, checked: checked } : item
     );
     setList(arr);
     const value = list.filter((i: any) => i.safeId === id)[0];
@@ -120,7 +124,7 @@ export const Select: FC<Props> = ({
             {checkList.map((i: any, index: number) => (
               <Styled.InputItem key={i.id}>
                 <span>
-                  {index === 0 ? '' : ','}
+                  {index === 0 ? "" : ","}
                   &nbsp;
                   {i.label}
                 </span>
@@ -132,7 +136,7 @@ export const Select: FC<Props> = ({
           </Styled.Arrow>
         </Styled.CustomSelect>
         <Styled.List rotat={show}>
-          <Scrollbars style={{ height: '440px' }}>
+          <Scrollbars style={{ height: "440px" }}>
             <Styled.Li></Styled.Li>
             <ListItems data={list} addList={addList} />
           </Scrollbars>
