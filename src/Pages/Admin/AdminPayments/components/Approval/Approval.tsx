@@ -180,7 +180,7 @@ export const Approval: FC<Props> = ({
       message: message,
       type: type,
       insert: "top",
-      container: "top-left",
+      container: "center",
       animationIn: ["animate__animated", "animate__fadeIn"],
       animationOut: ["animate__animated", "animate__fadeOut"],
       dismiss: {
@@ -286,6 +286,7 @@ export const Approval: FC<Props> = ({
           </SelectContainer>
         </CSSTransition>
       </FilterBlock>
+
       <Card>
         <Styled.PaymentsTable>
           <Styled.TableHead>

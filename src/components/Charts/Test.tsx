@@ -795,7 +795,7 @@ export const ColumnChartAnalitic: FC<PropsColumn> = ({ date, value }) => {
           return `
           <div class="column-toltip">
           <div class="column-toltip-light">${moment(
-            w.globals.labels[dataPointIndex]
+            date[dataPointIndex]
           ).format("DD MMMM YYYY")}</div>
             <div class="column-toltip-bold">${
               w.globals.stackedSeriesTotals[dataPointIndex].toLocaleString() +
