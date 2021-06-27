@@ -2,9 +2,9 @@ import React, { FC } from "react";
 import { Card } from "../../../../../globalStyles";
 import * as Styled from "./Styled.elements";
 import { useTranslation } from "react-i18next";
-import { MainAdminInput } from "../../../../../components/UI/DayPicker";
+import { MainAnaliticInput } from "../../../../../components/UI/DayPicker";
 import { OpenDate } from "../../../../../types/dates";
-import { ColumnChartTwo } from "../../../../../components/Charts/Test";
+import { ColumnChartAnalitic } from "../../../../../components/Charts/Test";
 
 type Props = {
   stats: any[];
@@ -22,15 +22,15 @@ export const Chart: FC<Props> = ({ stats, setDepositsDate, depositsDate }) => {
           <Styled.ChartItemTitle small>
             {t("adminPay.analitics.payAnalitics")}
           </Styled.ChartItemTitle>
-          <MainAdminInput
+          <MainAnaliticInput
             setOpenDate={setDepositsDate}
             openDate={depositsDate}
-            label={t("adminMain.dayLabel")}
+            label={t("adminPay.analitics.label")}
           />
         </Styled.ChartItemHead>
       </Styled.DateBlock>
       <Styled.ColumnBlock>
-        <ColumnChartTwo
+        <ColumnChartAnalitic
           date={stats && stats.length ? stats.map((i) => i[0]) : [""]}
           value={stats && stats.length ? stats.map((i) => i[2] / 100000) : [0]}
         />

@@ -203,7 +203,8 @@
             "amount": "Amount",
             "sum": "Payout amount",
             "payAnalitics": "Payout analytics",
-            "analitic": "Analitic"
+            "analitic": "Analitic",
+            "label": "in 3 months"
         }
     },
     "depositList":{
