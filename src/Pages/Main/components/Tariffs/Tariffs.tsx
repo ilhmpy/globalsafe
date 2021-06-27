@@ -14,6 +14,15 @@ import {
   ModalBlock,
   ModalButton,
   ModalTitle,
+  PartnerProgramBlock,
+  PartnerProgramTitle,
+  PartnerProgramContainer,
+  PartnerProgramData,
+  PartnerProgramHeader,
+  PartnerProgramHeaderItem,
+  PartnerProgramLine,
+  PartnerProgramLineNumber,
+  PartnerProgramLineItem
 } from "./Tariffs.elements";
 import { Modal } from "../../../../components/Modal/Modal";
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
@@ -184,24 +193,101 @@ export const Tariffs = () => {
       <Container>
         <H1>{t("tariffs.H1")}</H1>
       </Container>
-      <DescContainer>
-        {/* <p>{t("tariffs.desc")}</p> */}
-        <p>{t("tariffs.subHead")}</p>
-      </DescContainer>
       <DescContainerInner>
-        <p>
-          <span>START</span>: {t("tariffs.start")}
-        </p>
-      </DescContainerInner>
-      <DescContainerInner>
-        <p>
-          <span>Expert</span>: {t("tariffs.expert")}
-        </p>
-      </DescContainerInner>
-      <DescContainerInner>
-        <p>
-          <span>Infinity</span>: {t("tariffs.infinity")}
-        </p>
+        <PartnerProgramBlock>
+          <PartnerProgramContainer>
+            <PartnerProgramTitle>{t("partnersTitle")}</PartnerProgramTitle>
+          </PartnerProgramContainer>
+          <PartnerProgramHeader>
+            <div>
+              <PartnerProgramHeaderItem green={true}>start</PartnerProgramHeaderItem>
+              <PartnerProgramHeaderItem blue={true}>expert</PartnerProgramHeaderItem>
+              <PartnerProgramHeaderItem red={true}>infinity</PartnerProgramHeaderItem>
+            </div>
+          </PartnerProgramHeader>
+          <PartnerProgramData>
+            <PartnerProgramLine>
+              <PartnerProgramContainer>
+                <PartnerProgramLineNumber>1 {t("line")}</PartnerProgramLineNumber>
+                <div className="inner">
+                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                </div>
+              </PartnerProgramContainer>
+            </PartnerProgramLine>
+            <PartnerProgramLine>
+              <PartnerProgramContainer>
+                <PartnerProgramLineNumber>2 {t("line")}</PartnerProgramLineNumber>
+                <div className="inner">
+                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                </div>
+              </PartnerProgramContainer>
+            </PartnerProgramLine>
+            <PartnerProgramLine>
+              <PartnerProgramContainer>
+                <PartnerProgramLineNumber>3 {t("line")}</PartnerProgramLineNumber>
+                <div className="inner">
+                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                </div>
+              </PartnerProgramContainer>
+            </PartnerProgramLine>
+            <PartnerProgramLine>
+              <PartnerProgramContainer>
+                <PartnerProgramLineNumber>4 {t("line")}</PartnerProgramLineNumber>
+                <div className="inner">
+                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                </div>
+              </PartnerProgramContainer>
+            </PartnerProgramLine>
+            <PartnerProgramLine>
+              <PartnerProgramContainer>
+                <PartnerProgramLineNumber>5 {t("line")}</PartnerProgramLineNumber>
+                <div className="inner">
+                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                </div>
+              </PartnerProgramContainer>
+            </PartnerProgramLine>
+            <PartnerProgramLine>
+              <PartnerProgramContainer>
+                <PartnerProgramLineNumber>6 {t("line")}</PartnerProgramLineNumber>
+                <div className="inner">
+                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                </div>
+              </PartnerProgramContainer>
+            </PartnerProgramLine>
+            <PartnerProgramLine>
+              <PartnerProgramContainer>
+                <PartnerProgramLineNumber>7 {t("line")}</PartnerProgramLineNumber>
+                <div className="inner">
+                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                </div>
+              </PartnerProgramContainer>
+            </PartnerProgramLine>
+            <PartnerProgramLine>
+              <PartnerProgramContainer>
+                <PartnerProgramLineNumber>8 {t("line")}</PartnerProgramLineNumber>
+                <div className="inner">
+                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                </div>
+              </PartnerProgramContainer>
+            </PartnerProgramLine>
+          </PartnerProgramData>
+        </PartnerProgramBlock>
       </DescContainerInner>
       {isNormalOpen && (
         <Modal onClose={() => setIsNormalOpen(false)}>

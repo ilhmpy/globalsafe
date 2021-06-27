@@ -135,3 +135,96 @@ export const ModalTitle = styled.h4`
   text-align: center;
   margin-bottom: 20px;
 `;
+
+export const PartnerProgramBlock = styled.div`
+  width: 100%;
+  border-radius: 20px;
+  background: ${({ theme }) => theme.partnerProgram.background};
+  color: ${({ theme }) => theme.partnerProgram.color};
+  padding-top: 26px;
+`;
+
+export const PartnerProgramContainer = styled.div`
+  width: 90%;
+  margin: 0 auto;
+`;
+
+export const PartnerProgramTitle = styled.h3`
+  font-size: 1.70em;
+  font-weight: 500;
+  margin-bottom: 20px;
+  color: ${({ theme }) => theme.partnerProgram.titleColor};
+`;
+
+export const PartnerProgramData = styled.div`
+  width: 100%;
+  display: block;
+`;
+
+export const PartnerProgramHeader = styled.header`
+  width: 100%;
+  & > div {
+    display: flex;
+    align-items: center;
+    padding-left: 181px;
+    margin-bottom: 25px;
+    padding-top: 25px;
+  }
+`;
+
+export const PartnerProgramHeaderItem = styled.h3<{ green?: boolean, red?: boolean, blue?: boolean }>`
+  color: ${({ green, red, blue }) => {
+    if (green) return "#BCD476";
+    if (blue) return "#6DB9FF";
+    if (red) return "#FF416E";
+  }};
+  text-transform: uppercase;
+  display: block;
+  margin-right: 5px;
+  width: 35%;
+  font-size: 1.30em;
+  font-weight: bold;
+`;
+
+
+export const PartnerProgramLine = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  min-height: 30px;
+  margin-bottom: 3px;
+
+  &:nth-child(2n) {
+    background: ${({ theme }) => theme.partnerProgram.nthItemBG};
+  }
+
+  & > div {
+    display: flex;
+  }
+
+  &:last-child {
+    margin-bottom: 30px;
+  }
+
+  .inner {
+    width: 100%;
+    display: flex;
+  }
+
+`;
+
+export const PartnerProgramLineNumber = styled.header`
+  width: 40%;
+  max-width: 126px;
+  color: ${({ theme }) => theme.partnerProgram.lineNumberColor};
+`;
+
+export const PartnerProgramLineItem = styled.div`
+  margin-right: 5px;
+  color: ${({ theme }) => theme.partnerProgram.lineItemColor};
+
+  &:nth-child(1),
+  &:nth-child(2) {
+    width: 35%;
+  }
+`;
