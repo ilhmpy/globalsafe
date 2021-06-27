@@ -224,6 +224,15 @@ export const ModalAnalitic: FC<AnaliticProps> = ({ data, onClose }) => {
               })}
             </PayText>
           </PayCardBlock>
+          <PayCardBlock>
+            <PayText small>{t("adminPay.table.profit")}</PayText>
+            <PayText>
+              {(data.deposit.paymentRatio * 100).toLocaleString("ru-RU", {
+                maximumFractionDigits: 2,
+              })}
+              %
+            </PayText>
+          </PayCardBlock>
           <PayCardBlock></PayCardBlock>
         </PayCard>
       </Center>

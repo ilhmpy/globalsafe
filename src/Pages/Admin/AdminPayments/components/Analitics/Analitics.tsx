@@ -69,6 +69,7 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
           setLoading(false);
           setList(res.collection);
           setTotalList(res.totalRecords);
+          console.log("list", res.collection);
         })
         .catch((e) => {
           console.log(e);
@@ -225,7 +226,7 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
                       {item.deposit.name}
                     </Styled.TableBodyItem>
                     <Styled.TableBodyItem>
-                      {moment(item.payoutDate).format("DD/MM/DDDD")}
+                      {moment(item.payoutDate).format("DD/MM/YYYY")}
                     </Styled.TableBodyItem>
                     <Styled.TableBodyItem>{item.count}</Styled.TableBodyItem>
                     <Styled.TableBodyItem>
