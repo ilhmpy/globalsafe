@@ -1,5 +1,6 @@
 import styled from "styled-components/macro";
 import React, { FC } from "react";
+import bord from "../../assets/svg/borderinput.svg";
 
 type Props = {
   label: string;
@@ -31,7 +32,8 @@ export const ProcentInput: FC<Props> = ({
 };
 
 const Container = styled.div`
-  border: 1px solid #ff416e;
+  /* border: 1px solid #ff416e; */
+  background: url(${bord}) no-repeat center;
   border-radius: 24px;
   padding: 7px 12px 0;
   height: 42px;
@@ -64,7 +66,7 @@ const InputWrap = styled.div`
 
 const Label = styled.span`
   top: 0;
-  left: 0px;
+  left: -3px;
   right: 0;
   margin-left: auto;
   margin-right: auto;
@@ -74,11 +76,10 @@ const Label = styled.span`
   margin: -14px auto 0;
   font-size: 12px;
   line-height: 14px;
-  color: rgba(0, 0, 0, 0.6);
+  color: ${(props) => props.theme.thHead};
   position: absolute;
   text-align: center;
   width: 76px;
-  background: ${({ theme }) => theme.body};
 `;
 
 const Val = styled.span`

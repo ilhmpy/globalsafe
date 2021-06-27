@@ -1,18 +1,17 @@
-﻿import moment from 'moment';
+import moment from 'moment';
 import React, { useContext, useEffect, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTranslation } from 'react-i18next';
 import ReactNotification, { store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
 import { CSSTransition } from 'react-transition-group';
-import styled, { css } from 'styled-components/macro';
+import styled from 'styled-components/macro';
 import { ReactComponent as Exit } from '../../assets/svg/exit.svg';
 import { Button } from '../../components/Button/Button';
 import { Select as SelectOne } from '../../components/Select/Select';
 import { Select } from '../../components/Select/Select2';
 import { TestInput } from '../../components/UI/DayPicker';
 import { Loading } from '../../components/UI/Loading';
-import { ProcentInput } from '../../components/UI/ProcentInput';
 import { Content, Tab } from '../../components/UI/Tabs';
 import { UpTitle } from '../../components/UI/UpTitle';
 import { AppContext } from '../../context/HubContext';
@@ -32,15 +31,17 @@ import {
   PaymentsList,
   PaymentsListPay,
 } from './AdminPay/DepositList';
+import { Analitics } from './AdminPayments/components/Analitics/Analitics';
+import { Approval } from './AdminPayments/components/Approval/Approval';
+import { Chart } from './AdminPayments/components/Chart/Chart';
 import { Pagination } from './Pagination';
 import * as Styled from './Styled.elements';
 
 export const AdminPay = () => {
   const [active, setActive] = useState(0);
   const sizes = useWindowSize();
-  const [show, setShow] = useState(false);
   const [sum, setSum] = useState<number[] | null>(null);
-  const [depositList, setDepositList] = useState<any>([]);
+
   const appContext = useContext(AppContext);
   const themeContext = useContext(ThemeContext);
   const theme = themeContext.theme;
@@ -49,20 +50,20 @@ export const AdminPay = () => {
   const user = appContext.user;
 
   const [totalDeposits, setTotalDeposits] = useState(0);
+  const [depositList, setDepositList] = useState<any>([]);
   const [totalPayDeposits, setTotalPayDeposits] = useState(0);
+  const [openFilterOne, setOpenFilterOne] = useState(false);
+
   const [depositPayList, setDepositPayList] = useState<any>([]);
   const [paymentsList, setPaymentsList] = useState<any>([]);
   const [totalPayments, setTotalPayments] = useState(0);
-  const [count, setCount] = useState(true);
-  const [countPayments, setCountPayments] = useState(30);
+
   const [countPay, setPayCount] = useState(true);
   const [numPayments, setNumPayments] = useState(20);
-  const [num, setNum] = useState(20);
+
   const [numPay, setPayNum] = useState(20);
   const [next, setNext] = useState(true);
   const [procent, setProcent] = useState('');
-  const [open, setOpen] = useState<boolean>(false);
-  const [dataModal, setDataModal] = useState<PaymentsCollection | any>({});
   const [loading, setLoading] = useState(true);
   const [openDate, setOpenDate] = useState<OpenDate>({
     from: undefined,
@@ -72,8 +73,10 @@ export const AdminPay = () => {
     from: undefined,
     to: undefined,
   });
+
   const [openFilter, setOpenFilter] = useState(false);
-  const [openFilterOne, setOpenFilterOne] = useState(false);
+  const [num, setNum] = useState(20);
+
   const [checkList, setCheckList] = useState<any>([]);
   const [checkListApproval, setCheckListApproval] = useState<any>([]);
   const [name, setName] = useState('');
@@ -89,6 +92,13 @@ export const AdminPay = () => {
   const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>(
     [],
   );
+  const backDay: any = moment().add(90, 'days').format();
+  const [depositsDate, setDepositsDate] = useState<OpenDate>({
+    from: new Date(),
+    to: backDay,
+  });
+  const [stats, setStats] = useState<any[]>([]);
+
   const { t } = useTranslation();
 
   const getPaymentsOverview = () => {
@@ -124,7 +134,6 @@ export const AdminPay = () => {
     namesProgramApproval.includes(i.safeId),
   );
   const searchSafeIDApproval = idProgramApproval.map((i) => i.safeId);
-
   const depositState = checkList.length
     ? checkList.map((i: any) => i.id)
     : [5, 6];
@@ -320,34 +329,6 @@ export const AdminPay = () => {
     }
   };
 
-  const loadMoreItems = () => {
-    setCount(false);
-    if (hubConnection && depositList.length < totalDeposits) {
-      hubConnection
-        .invoke<RootPayments>(
-          'GetUsersDeposits',
-          depositState,
-          nameApproval ? nameApproval.toLowerCase() : null,
-          searchSafeIDApproval.length ? searchSafeIDApproval : null,
-          openDateApproval.from ? openDateApproval.from : null,
-          openDateApproval.to ? openDateApproval.to : null,
-          null,
-          null,
-          null,
-          num,
-          20,
-        )
-        .then((res) => {
-          if (res.collection.length) {
-            setDepositList([...depositList, ...res.collection]);
-            setCount(true);
-            setNum(num + 20);
-          }
-        })
-        .catch((err: Error) => console.log(err));
-    }
-  };
-
   const alert = (
     title: string,
     message: string,
@@ -434,6 +415,25 @@ export const AdminPay = () => {
     }
   };
 
+  useEffect(() => {
+    getPayoutsEstimateStats();
+  }, [depositsDate]);
+
+  const getPayoutsEstimateStats = () => {
+    if (hubConnection) {
+      hubConnection
+        .invoke(
+          'GetPayoutsEstimateStats',
+          depositsDate.from ? depositsDate.from : backDays,
+          depositsDate.to ? depositsDate.to : new Date(),
+        )
+        .then((res) => {
+          setStats(res);
+        })
+        .catch((e) => console.log(e));
+    }
+  };
+
   const submitApproval = () => {
     if (hubConnection) {
       hubConnection
@@ -472,69 +472,77 @@ export const AdminPay = () => {
           <Exit onClick={logOut} />
         </Styled.UserName>
       </Styled.HeadBlock>
+      {active === 3 && (
+        <Chart
+          depositsDate={depositsDate}
+          setDepositsDate={setDepositsDate}
+          stats={stats}
+        />
+      )}
+      {active !== 3 && (
+        <Card>
+          <Styled.PayList>
+            <Styled.PayItem>
+              <Styled.PayItemHead mb>
+                <SelfUpTitle small>{t('adminPay.title1')}</SelfUpTitle>
+              </Styled.PayItemHead>
+              <Styled.Radial
+                bg={
+                  theme === 'light'
+                    ? 'rgba(255, 65, 110, 0.2)'
+                    : 'rgba(255, 65, 110, 1)'
+                }>
+                <span>
+                  {sum ? (sum[2] / 100000).toLocaleString('ru-RU') : '-'}
+                </span>
+                <span>CWD</span>
+              </Styled.Radial>
+            </Styled.PayItem>
+            <Styled.PayItem>
+              <Styled.PayItemHead mb>
+                <SelfUpTitle small>{t('adminPay.title2')}</SelfUpTitle>
+              </Styled.PayItemHead>
 
-      <Card>
-        <Styled.PayList>
-          <Styled.PayItem>
-            <Styled.PayItemHead mb>
-              <SelfUpTitle small>{t('adminPay.title1')}</SelfUpTitle>
-            </Styled.PayItemHead>
-            <Styled.Radial
-              bg={
-                theme === 'light'
-                  ? 'rgba(255, 65, 110, 0.2)'
-                  : 'rgba(255, 65, 110, 1)'
-              }>
-              <span>
-                {sum ? (sum[2] / 100000).toLocaleString('ru-RU') : '-'}
-              </span>
-              <span>CWD</span>
-            </Styled.Radial>
-          </Styled.PayItem>
-          <Styled.PayItem>
-            <Styled.PayItemHead mb>
-              <SelfUpTitle small>{t('adminPay.title2')}</SelfUpTitle>
-            </Styled.PayItemHead>
-
-            <Styled.Radial
-              bg={
-                theme === 'light'
-                  ? 'rgba(188, 212, 118, 0.2)'
-                  : 'rgba(188, 212, 118, 1)'
-              }>
-              <span>
-                {sum
-                  ? (sum[0] / 100000).toLocaleString('ru-RU', {
-                      maximumFractionDigits: 0,
-                    })
-                  : '-'}
-              </span>
-              <span>CWD</span>
-            </Styled.Radial>
-          </Styled.PayItem>
-          <Styled.PayItem>
-            <Styled.PayItemHead mb>
-              <SelfUpTitle small>{t('adminPay.title3')}</SelfUpTitle>
-            </Styled.PayItemHead>
-            <Styled.Radial
-              bg={
-                theme === 'light'
-                  ? 'rgba(109, 185, 255, 0.2)'
-                  : 'rgba(109, 185, 255, 1)'
-              }>
-              <span>
-                {sum
-                  ? (sum[1] / 100000).toLocaleString('ru-RU', {
-                      maximumFractionDigits: 0,
-                    })
-                  : '-'}
-              </span>
-              <span>CWD</span>
-            </Styled.Radial>
-          </Styled.PayItem>
-          <Styled.PayItem></Styled.PayItem>
-        </Styled.PayList>
-      </Card>
+              <Styled.Radial
+                bg={
+                  theme === 'light'
+                    ? 'rgba(188, 212, 118, 0.2)'
+                    : 'rgba(188, 212, 118, 1)'
+                }>
+                <span>
+                  {sum
+                    ? (sum[0] / 100000).toLocaleString('ru-RU', {
+                        maximumFractionDigits: 0,
+                      })
+                    : '-'}
+                </span>
+                <span>CWD</span>
+              </Styled.Radial>
+            </Styled.PayItem>
+            <Styled.PayItem>
+              <Styled.PayItemHead mb>
+                <SelfUpTitle small>{t('adminPay.title3')}</SelfUpTitle>
+              </Styled.PayItemHead>
+              <Styled.Radial
+                bg={
+                  theme === 'light'
+                    ? 'rgba(109, 185, 255, 0.2)'
+                    : 'rgba(109, 185, 255, 1)'
+                }>
+                <span>
+                  {sum
+                    ? (sum[1] / 100000).toLocaleString('ru-RU', {
+                        maximumFractionDigits: 0,
+                      })
+                    : '-'}
+                </span>
+                <span>CWD</span>
+              </Styled.Radial>
+            </Styled.PayItem>
+            <Styled.PayItem></Styled.PayItem>
+          </Styled.PayList>
+        </Card>
+      )}
       <Card>
         <Tabs>
           <PayTab onClick={() => handleClick(0)} active={active === 0}>
@@ -546,22 +554,11 @@ export const AdminPay = () => {
           <Tab onClick={() => handleClick(2)} active={active === 2}>
             {t('adminPay.title1')}
           </Tab>
+          <Tab onClick={() => handleClick(3)} active={active === 3}>
+            {t('adminPay.analitics.analitic')}
+          </Tab>
         </Tabs>
       </Card>
-
-      {active === 0 && (
-        <ButtonWrap>
-          <Button dangerOutline mb onClick={paymentsConfirm}>
-            {t('adminPay.confirmButton')}
-          </Button>
-          <ProcentInput
-            placeholder="0"
-            value={procent}
-            onChange={(e) => setProcent(e.target.value)}
-            label={t('adminPay.procentPay')}
-          />
-        </ButtonWrap>
-      )}
 
       <Content active={active === 0}>
         <Styled.FilterBlock>
@@ -656,13 +653,22 @@ export const AdminPay = () => {
             )}
           </PaymentsTable>
         </Card>
-
         <Pagination
           pageLength={pageLengthDeposit}
           setPageLength={setPageLengthDeposit}
           currentPage={currentPageDeposit}
           setCurrentPage={setCurrentPageDeposit}
           totalLottery={totalPayDeposits}
+        />
+        
+        <Approval
+          paymentsConfirm={paymentsConfirm}
+          adjustPay={adjustPay}
+          confirmPay={confirmPay}
+          unConfirmPay={unConfirmPay}
+          listDeposits={listDeposits}
+          setProcent={setProcent}
+          procent={procent}
         />
       </Content>
 
@@ -793,6 +799,10 @@ export const AdminPay = () => {
           setCurrentPage={setCurrentPage}
           totalLottery={totalPayments}
         />
+      </Content>
+
+      <Content active={active === 3}>
+        {active === 3 ? <Analitics listDeposits={listDeposits} /> : null}
       </Content>
     </>
   );
@@ -951,26 +961,12 @@ const TableHeadItemPaid = styled(TableHeadItem)`
   }
 `;
 
-const TableBody = styled(TableHead)`
-  padding: 10px 10px 10px 0;
-`;
-
-const TableBodyItemCss = css`
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 16px;
-  color: ${(props) => props.theme.text2};
-`;
-
-const TableBodyItemPaid = styled(TableHeadItemPaid)`
-  ${TableBodyItemCss}
-`;
-
 const Tabs = styled.div`
   display: flex;
   padding: 12px 20px 0;
   ${Tab} {
-    &:nth-child(2) {
+    &:nth-child(2),
+    &:nth-child(3) {
       width: 90px;
       @media (max-width: 768px) {
         width: 80px;
@@ -986,6 +982,7 @@ const Tabs = styled.div`
   }
   @media (max-width: 768px) {
     padding: 0px 10px 0;
+    flex-wrap: wrap;
     ${Tab} {
       width: 80px;
       &:first-child {
@@ -999,16 +996,5 @@ const Tabs = styled.div`
         }
       }
     }
-  }
-`;
-
-const ButtonWrap = styled.div`
-  display: flex;
-  @media (max-width: 768px) {
-    justify-content: center;
-    /* ${Button} {
-      margin-left: auto;
-      margin-right: auto;
-    } */
   }
 `;
