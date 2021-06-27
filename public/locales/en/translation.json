@@ -364,5 +364,7 @@
     "draws": "Draws",
     "newDraw": "Start of a new drawing in",
     "goDraw": "Go to",
-    "depositsToClose": "Deposits to close" 
+    "depositsToClose": "Deposits to close",
+    "line": "line",
+    "partnersTitle": "Partners programs"
 }

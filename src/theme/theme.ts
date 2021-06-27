@@ -40,7 +40,15 @@ export const lightTheme = {
       border: 'none'
     },
     descFund: "#515172",
-    procentTextColor: "",
+    partnerProgram: {
+      background: "rgba(255, 255, 255, 0.4)",
+      color: "#0E0D3D",
+      titleColor: "#0E0D3D",
+      lineItemColor: "#0E0D3D",
+      lineNumberColor: "#0E0D3D",
+      nthItemBG: "0",
+      titlePhoneColor: "#0E0D3D"
+    }
   }
 
   export const darkTheme = {
@@ -75,5 +83,13 @@ export const lightTheme = {
       border: '1px solid #000000'
     },
     descFund: "#fff",
-    procentTextColor: "",
+    partnerProgram: {
+      background: "rgba(33,33,33,1)",
+      color: "#fff",
+      titleColor: "#E2E2E2",
+      lineItemColor: "#E2E2E2",
+      lineNumberColor: "rgba(196, 196, 196, 0.6)",
+      nthItemBG: "rgba(196, 196, 196, 0.05)",
+      titlePhoneColor: "#fff",
+    },
   }

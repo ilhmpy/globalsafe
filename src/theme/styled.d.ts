@@ -32,7 +32,15 @@ declare module 'styled-components' {
       backgroundAlfa: string;
       border: string;
     },
-    descFund: string;
-    procentTextColor: string;
+    descFund: string,
+    partnerProgram: {
+      background: string;
+      color: string;
+      titleColor: string;
+      lineNumberColor: string;
+      lineItemColor: string;
+      nthItemBG: string;
+      titlePhoneColor: string;
+    }
   }
 }
