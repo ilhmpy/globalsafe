@@ -135,3 +135,187 @@ export const ModalTitle = styled.h4`
   text-align: center;
   margin-bottom: 20px;
 `;
+
+
+export const PartnerProgramContainer = styled.div`
+  width: 90%;
+  margin: 0 auto;
+
+  .swiper-pagination-bullets {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+  }
+
+  .swiper-pagination-bullet {
+    width: 7px;
+    height: 7px;
+    background: #C4C4C4;
+    border-radius: 50%;
+  }
+
+  .swiper-pagination-bullet-active {
+    width: 30px;
+    height: 3px;
+    border-radius: 4px;
+    background: #FF416E;
+  }
+`;
+
+export const PartnerProgramTitle = styled.h3<{ phone?: boolean }>`
+  font-size: 1.70em;
+  font-weight: 500;
+  margin-bottom: 20px;
+  color: ${({ theme }) => theme.partnerProgram.titleColor};
+  display: ${({ phone }) => phone != undefined ? "none" : "inline"};
+
+  @media only screen and (max-device-width: 480px) {
+    font-size: 1.50em;
+    display: ${({ phone }) => phone ? "inline" : "none"};
+    color: ${({ theme }) => theme.partnerProgram.titlePhoneColor};
+  }
+`;
+
+export const PartnerProgramData = styled.div`
+  width: 100%;
+  display: block;
+`;
+
+export const PartnerProgramHeader = styled.header`
+  width: 100%;
+  & > div {
+    display: flex;
+    align-items: center;
+    padding-left: 181px;
+    margin-bottom: 25px;
+    padding-top: 25px;
+  }
+`;
+
+export const PartnerProgramHeaderItem = styled.h3<{ green?: boolean, red?: boolean, blue?: boolean, color?: string }>`
+  color: ${({ green, red, blue, color }) => {
+    if (!color) {
+      if (green) return "#BCD476";
+      if (blue) return "#6DB9FF";
+      if (red) return "#FF416E";
+    } else return color;
+  }};
+  text-transform: uppercase;
+  display: block;
+  margin-right: 5px;
+  width: 35%;
+  font-size: 1.30em;
+  font-weight: bold;
+`;
+
+export const PartnerProgramLine = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  min-height: 30px;
+  margin-bottom: 3px;
+
+  &:nth-child(2n) {
+    background: ${({ theme }) => theme.partnerProgram.nthItemBG};
+  }
+
+  & > div {
+    display: flex;
+  }
+
+  &:last-child {
+    margin-bottom: 30px;
+  }
+
+  .inner {
+    width: 100%;
+    display: flex;
+  }
+
+  @media only screen and (max-device-width: 1024px) {
+    &:last-child {
+      margin-bottom: 50px;
+    }
+  }
+`;
+
+export const PartnerProgramLineNumber = styled.header`
+  width: 40%;
+  max-width: 126px;
+  color: ${({ theme }) => theme.partnerProgram.lineNumberColor};
+`;
+
+export const PartnerProgramLineItem = styled.div`
+  margin-right: 5px;
+  color: ${({ theme }) => theme.partnerProgram.lineItemColor};
+
+  &:nth-child(1),
+  &:nth-child(2) {
+    width: 35%;
+  }
+`;
+
+export const PartnerProgramBlock = styled.div<{ phone?: boolean }>`
+  width: 100%;
+  border-radius: 20px;
+  background: ${({ theme }) => theme.partnerProgram.background};
+  color: ${({ theme }) => theme.partnerProgram.color};
+  padding-top: 26px;
+  display: ${({ phone }) => phone ? "none" : "block"};
+
+  @media only screen and (max-device-width: 480px) {
+    margin-top: 20px;
+    padding-top: 20px;
+    display: ${({ phone }) => phone ? "block" : "none"};
+    border: 1px solid #000;
+    max-width: 280px;
+
+    ${PartnerProgramHeaderItem} {
+      float: right;
+      font-size: 1.50em;
+      margin-bottom: 15px;
+      margin-right: 43px;
+    }
+
+    ${PartnerProgramLine} {
+      margin-left: 19px;
+      &:nth-child(2n) {
+        background: 0;
+      }
+    }
+
+    ${PartnerProgramLineNumber} {
+      width: 64%;
+    }
+  }
+`;
+
+export const PartnerProgramPagination = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  margin-top: 13px;
+`;
+
+export const PartnerProgramPaginationItem = styled.span<{ active?: boolean }>`
+  margin-right: 5px;
+  display: block;
+
+  ${({ active }) => {
+    if (active) {
+      return `
+        width: 30px;
+        height: 3px;
+        border-radius: 4px;
+        background: #FF416E;
+      `;
+    } else return `
+        width: 7px;
+        height: 7px;
+        background: #C4C4C4;
+        border-radius: 50%;
+    `;
+  }}
+`;

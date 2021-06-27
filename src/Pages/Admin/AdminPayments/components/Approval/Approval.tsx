@@ -1,42 +1,36 @@
-import React, { useContext, useEffect, useState, FC } from "react";
+import React, { FC, useContext, useEffect, useState } from "react";
 import { Scrollbars } from "react-custom-scrollbars";
-import InfiniteScroll from "react-infinite-scroller";
 import { useTranslation } from "react-i18next";
-import { Content } from "../../../../../components/UI/Tabs";
+import { CSSTransition } from "react-transition-group";
+import { Button } from "../../../../../components/Button/Button";
+import { Select as SelectOne } from "../../../../../components/Select/Select";
+import { Select } from "../../../../../components/Select/Select2";
+import { TestInput } from "../../../../../components/UI/DayPicker";
+import { Loading } from "../../../../../components/UI/Loading";
+import { ProcentInput } from "../../../../../components/UI/ProcentInput";
 import { AppContext } from "../../../../../context/HubContext";
 import { Card } from "../../../../../globalStyles";
-import { TestInput } from "../../../../../components/UI/DayPicker";
-import { Select } from "../../../../../components/Select/Select2";
-import { Select as SelectOne } from "../../../../../components/Select/Select";
-import { Button } from "../../../../../components/Button/Button";
-import moment from "moment";
+import { OpenDate } from "../../../../../types/dates";
+import { CollectionListDeposits } from "../../../../../types/deposits";
 import {
-  CollectionCharges,
   PaymentsCollection,
-  RootCharges,
   RootPayments,
 } from "../../../../../types/payments";
-import {
-  DepositList,
-  PaymentsList,
-  PaymentsListPay,
-} from "../../../AdminPay/DepositList";
+import { DepositList } from "../../../AdminPay/DepositList";
+import { Pagination } from "../../../Pagination";
 import {
   FilterBlock,
   FilterHeader,
-  ShowHide,
   FilterName,
-  SelectContainer,
-  SelectWrap,
-  SelectContainerInnerPaid,
-  Label,
   Input,
+  Label,
+  SelectContainer,
+  SelectContainerInnerPaid,
+  SelectWrap,
+  ShowHide,
 } from "../../../Styled.elements";
-import { ProcentInput } from "../../../../../components/UI/ProcentInput";
-import { OpenDate } from "../../../../../types/dates";
-import { CollectionListDeposits } from "../../../../../types/deposits";
-import { Loading } from "../../../../../components/UI/Loading";
-import { CSSTransition } from "react-transition-group";
+import ReactNotification, { store } from "react-notifications-component";
+import "react-notifications-component/dist/theme.css";
 import * as Styled from "./Styled.elements";
 
 type Props = {
@@ -44,7 +38,7 @@ type Props = {
   confirmPay: (id: string) => void;
   unConfirmPay: (id: string) => void;
   listDeposits: CollectionListDeposits[];
-  paymentsConfirm: () => void;
+  getPaymentsOverview: () => void;
   procent: string;
   setProcent: (e: string) => void;
 };
@@ -54,7 +48,7 @@ export const Approval: FC<Props> = ({
   confirmPay,
   unConfirmPay,
   listDeposits,
-  paymentsConfirm,
+  getPaymentsOverview,
   setProcent,
   procent,
 }) => {
@@ -72,6 +66,9 @@ export const Approval: FC<Props> = ({
   });
   const [openFilterOne, setOpenFilterOne] = useState(false);
 
+  const [pageLength, setPageLength] = useState<number>(10);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const { t } = useTranslation();
@@ -88,6 +85,7 @@ export const Approval: FC<Props> = ({
 
   useEffect(() => {
     if (hubConnection) {
+      setLoading(true);
       setDepositList([]);
       hubConnection
         .invoke<RootPayments>(
@@ -100,21 +98,21 @@ export const Approval: FC<Props> = ({
           null,
           null,
           null,
-          0,
-          20
+          (currentPage - 1) * pageLength,
+          pageLength
         )
         .then((res) => {
-          setLoading(false);
           setTotalDeposits(res.totalRecords);
           setDepositList(res.collection);
           setNum(20);
+          setLoading(false);
         })
         .catch((err: Error) => {
           setLoading(false);
           console.log(err);
         });
     }
-  }, [hubConnection]);
+  }, [currentPage, hubConnection, pageLength]);
 
   const loadMoreItems = () => {
     setCount(false);
@@ -172,8 +170,50 @@ export const Approval: FC<Props> = ({
     }
   };
 
+  const alert = (
+    title: string,
+    message: string,
+    type: "success" | "default" | "warning" | "info" | "danger"
+  ) => {
+    store.addNotification({
+      title: title,
+      message: message,
+      type: type,
+      insert: "top",
+      container: "top-right",
+      animationIn: ["animate__animated", "animate__fadeIn"],
+      animationOut: ["animate__animated", "animate__fadeOut"],
+      dismiss: {
+        duration: 5000,
+      },
+    });
+  };
+
+  const paymentsConfirm = () => {
+    if (hubConnection) {
+      hubConnection
+        .invoke(
+          "ConfirmAllDepositsPayment",
+          nameApproval ? nameApproval.toLowerCase() : null,
+          openDateApproval.from ? openDateApproval.from : null,
+          openDateApproval.to ? openDateApproval.to : null,
+          searchSafeIDApproval.length ? searchSafeIDApproval : null,
+          procent ? +procent / 100 : null
+        )
+        .then((res) => {
+          console.log("ConfirmAllDepositsPayment", res);
+          // alert("Успешно", "", "success");
+          getPaymentsOverview();
+        })
+        .catch((err: Error) => {
+          // alert("Ошибка", "Произошла ошибка", "danger");
+        });
+    }
+  };
+
   return (
     <>
+      <ReactNotification />
       <Styled.ButtonWrap>
         <Button dangerOutline mb onClick={paymentsConfirm}>
           {t("adminPay.confirmButton")}
@@ -276,28 +316,16 @@ export const Approval: FC<Props> = ({
           </Styled.TableHead>
           {depositList.length ? (
             <Scrollbars style={{ height: "500px" }}>
-              <InfiniteScroll
-                pageStart={10}
-                loadMore={loadMoreItems}
-                hasMore={count}
-                useWindow={false}
-                loader={
-                  <div className="loader" key={0}>
-                    Loading ...
-                  </div>
-                }
-              >
-                {depositList.map((item: PaymentsCollection, idx: number) => (
-                  <DepositList
-                    idx={idx}
-                    key={item.safeId}
-                    data={item}
-                    adjustPay={adjustPay}
-                    confirmPay={confirmPay}
-                    unConfirmPay={unConfirmPay}
-                  />
-                ))}
-              </InfiniteScroll>
+              {depositList.map((item: PaymentsCollection, idx: number) => (
+                <DepositList
+                  idx={idx}
+                  key={item.safeId}
+                  data={item}
+                  adjustPay={adjustPay}
+                  confirmPay={confirmPay}
+                  unConfirmPay={unConfirmPay}
+                />
+              ))}
             </Scrollbars>
           ) : loading ? (
             <Loading />
@@ -306,6 +334,14 @@ export const Approval: FC<Props> = ({
           )}
         </Styled.PaymentsTable>
       </Card>
+
+      <Pagination
+        pageLength={pageLength}
+        setPageLength={setPageLength}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        totalLottery={totalDeposits}
+      />
     </>
   );
 };

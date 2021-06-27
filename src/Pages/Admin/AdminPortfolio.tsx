@@ -1,30 +1,25 @@
-import React, { useState, useEffect, useContext, FC, useRef } from "react";
-import * as Styled from "./Styled.elements";
-import styled, { css } from "styled-components/macro";
-import { Card } from "../../globalStyles";
-import { UpTitle } from "../../components/UI/UpTitle";
-import { ReactComponent as Exit } from "../../assets/svg/exit.svg";
-import { ReactComponent as Filter } from "../../assets/svg/filter.svg";
-import { Select } from "../../components/Select/Select";
-import { TestInput } from "../../components/UI/DayPicker";
-import { Button } from "../../components/Button/Button";
-import { Checkbox } from "../../components/UI/Checkbox";
-import { TestChart } from "../../components/Charts/Test";
-import { CSSTransition } from "react-transition-group";
-import { Tab, Content } from "../../components/UI/Tabs";
-import { AppContext } from "../../context/HubContext";
-import { ThemeContext } from "../../context/ThemeContext";
-import { useTranslation } from "react-i18next";
+import moment from 'moment';
+import React, { FC, useContext, useEffect, useState } from 'react';
+import { Scrollbars } from 'react-custom-scrollbars';
+import { useTranslation } from 'react-i18next';
+import { CSSTransition } from 'react-transition-group';
+import styled, { css } from 'styled-components/macro';
+import { ReactComponent as Exit } from '../../assets/svg/exit.svg';
+import { Button } from '../../components/Button/Button';
+import { Loading } from '../../components/UI/Loading';
+import { Content, Tab } from '../../components/UI/Tabs';
+import { UpTitle } from '../../components/UI/UpTitle';
+import { AppContext } from '../../context/HubContext';
+import { ThemeContext } from '../../context/ThemeContext';
+import { Card } from '../../globalStyles';
 import {
+  CollectionPortfolio,
   Portfolio,
   RootPortfolio,
-  CollectionPortfolio,
-} from "../../types/portfolio";
-import moment from "moment";
-import InfiniteScroll from "react-infinite-scroller";
-import { Scrollbars } from "react-custom-scrollbars";
-import { ModalPortfolio } from "./AdminPay/Payments";
-import { Loading } from "../../components/UI/Loading";
+} from '../../types/portfolio';
+import { ModalPortfolio } from './AdminPay/Payments';
+import { Pagination } from './Pagination';
+import * as Styled from './Styled.elements';
 
 const TableList: FC<{ data: CollectionPortfolio }> = ({ data }) => {
   const [open, setOpen] = useState(false);
@@ -45,7 +40,7 @@ const TableList: FC<{ data: CollectionPortfolio }> = ({ data }) => {
       </CSSTransition>
       <TableBody onClick={modalOpen}>
         <TableBodyItem>
-          {moment(data.creationDate).format("DD/MM/YYYY")}
+          {moment(data.creationDate).format('DD/MM/YYYY')}
         </TableBodyItem>
         <TableBodyItem>{data.initialVolume}</TableBodyItem>
         <TableBodyItem>
@@ -86,13 +81,28 @@ export const AdminPortfolio = () => {
   const logOut = appContext.logOut;
   const user = appContext.user;
   const { t } = useTranslation();
+  const [pageLengthGCWD, setPageLengthGCWD] = useState<number>(10);
+  const [currentPageGCWD, setCurrentPageGCWD] = useState<number>(1);
+  const [pageLengthMGCWD, setPageLengthMGCWD] = useState<number>(10);
+  const [currentPageMGCWD, setCurrentPageMGCWD] = useState<number>(1);
+  const [pageLengthDIAMOND, setPageLengthDIAMOND] = useState<number>(10);
+  const [currentPageDIAMOND, setCurrentPageDIAMOND] = useState<number>(1);
 
   const myLoadGCWD = () => {
+    console.log((currentPageGCWD - 1) * pageLengthGCWD);
+    console.log(pageLengthGCWD);
+
     setCountGCWD(false);
     if (hubConnection && basketGCWD.length < totalGCWD) {
       hubConnection
-        .invoke<RootPortfolio>("GetBaskets", 3, numGCWD, 20)
+        .invoke<RootPortfolio>(
+          'GetBaskets',
+          3,
+          (currentPageGCWD - 1) * pageLengthGCWD,
+          pageLengthGCWD,
+        )
         .then((res) => {
+          console.log('.then ~ res', res);
           if (res.collection.length) {
             setBasketGCWD([...basketGCWD, ...res.collection]);
             setCountGCWD(true);
@@ -107,7 +117,7 @@ export const AdminPortfolio = () => {
     setCountMGCWD(false);
     if (hubConnection && basketMGCWD.length < totalMGCWD) {
       hubConnection
-        .invoke<RootPortfolio>("GetBaskets", 2, numMGCWD, 20)
+        .invoke<RootPortfolio>('GetBaskets', 2, numMGCWD, 20)
         .then((res) => {
           if (res.collection.length) {
             setBasketMGCWD([...basketMGCWD, ...res.collection]);
@@ -123,7 +133,7 @@ export const AdminPortfolio = () => {
     setCountDIAMOND(false);
     if (hubConnection && basketDIAMOND.length < totalDIAMOND) {
       hubConnection
-        .invoke<RootPortfolio>("GetBaskets", 4, numDIAMOND, 20)
+        .invoke<RootPortfolio>('GetBaskets', 4, numDIAMOND, 20)
         .then((res) => {
           if (res.collection.length) {
             setLoading(false);
@@ -145,7 +155,7 @@ export const AdminPortfolio = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<Portfolio>("GetBasketsOverview")
+        .invoke<Portfolio>('GetBasketsOverview')
         .then((res) => {
           setBasket(res);
         })
@@ -156,7 +166,12 @@ export const AdminPortfolio = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<RootPortfolio>("GetBaskets", 3, 0, 20)
+        .invoke<RootPortfolio>(
+          'GetBaskets',
+          3,
+          (currentPageGCWD - 1) * pageLengthGCWD,
+          pageLengthGCWD,
+        )
         .then((res) => {
           setLoading(false);
           setBasketGCWD(res.collection);
@@ -167,12 +182,17 @@ export const AdminPortfolio = () => {
           console.log(err);
         });
     }
-  }, [hubConnection]);
+  }, [hubConnection, pageLengthGCWD, currentPageGCWD]);
 
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<RootPortfolio>("GetBaskets", 2, 0, 20)
+        .invoke<RootPortfolio>(
+          'GetBaskets',
+          2,
+          (currentPageMGCWD - 1) * pageLengthMGCWD,
+          pageLengthMGCWD,
+        )
         .then((res) => {
           setLoading(false);
           setBasketMGCWD(res.collection);
@@ -183,12 +203,17 @@ export const AdminPortfolio = () => {
           console.log(err);
         });
     }
-  }, [hubConnection]);
+  }, [hubConnection, pageLengthMGCWD, currentPageMGCWD]);
 
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<RootPortfolio>("GetBaskets", 4, 0, 20)
+        .invoke<RootPortfolio>(
+          'GetBaskets',
+          4,
+          (currentPageDIAMOND - 1) * pageLengthDIAMOND,
+          pageLengthDIAMOND,
+        )
         .then((res) => {
           setLoading(false);
           setBasketDIAMOND(res.collection);
@@ -199,12 +224,12 @@ export const AdminPortfolio = () => {
           console.log(err);
         });
     }
-  }, [hubConnection]);
+  }, [hubConnection, pageLengthDIAMOND, currentPageDIAMOND]);
 
   return (
     <>
       <Styled.HeadBlock>
-        <UpTitle small>{t("adminPortfolio.uptitle")}</UpTitle>
+        <UpTitle small>{t('adminPortfolio.uptitle')}</UpTitle>
         <Styled.UserName>
           <span>{user}</span>
           <Exit onClick={logOut} />
@@ -218,11 +243,10 @@ export const AdminPortfolio = () => {
             </Styled.PayItemHead>
             <Styled.Radial
               bg={
-                theme === "light"
-                  ? "rgba(255, 65, 110, 0.2)"
-                  : "rgba(255, 65, 110, 1)"
-              }
-            >
+                theme === 'light'
+                  ? 'rgba(255, 65, 110, 0.2)'
+                  : 'rgba(255, 65, 110, 1)'
+              }>
               <span>{basket.GCWD}</span>
               <span></span>
             </Styled.Radial>
@@ -234,11 +258,10 @@ export const AdminPortfolio = () => {
 
             <Styled.Radial
               bg={
-                theme === "light"
-                  ? "rgba(188, 212, 118, 0.2)"
-                  : "rgba(188, 212, 118, 1)"
-              }
-            >
+                theme === 'light'
+                  ? 'rgba(188, 212, 118, 0.2)'
+                  : 'rgba(188, 212, 118, 1)'
+              }>
               <span>{basket.MGCWD}</span>
               <span></span>
             </Styled.Radial>
@@ -249,60 +272,16 @@ export const AdminPortfolio = () => {
             </Styled.PayItemHead>
             <Styled.Radial
               bg={
-                theme === "light"
-                  ? "rgba(109, 185, 255, 0.2)"
-                  : "rgba(109, 185, 255, 1)"
-              }
-            >
+                theme === 'light'
+                  ? 'rgba(109, 185, 255, 0.2)'
+                  : 'rgba(109, 185, 255, 1)'
+              }>
               <span>{basket.DIAMOND}</span>
               <span></span>
             </Styled.Radial>
           </Styled.PayItem>
           <Styled.PayItem></Styled.PayItem>
         </Styled.PayList>
-        {/* <HalfHead>
-            <HalfTitle>Размер портфеля</HalfTitle>
-            <HalfTabs>
-              <HalfTab onClick={() => setCard(0)} card={card === 0}>
-                %
-              </HalfTab>
-              <HalfTab>/</HalfTab>
-              <HalfTab onClick={() => setCard(1)} card={card === 1}>
-                CWD
-              </HalfTab>
-            </HalfTabs>
-          </HalfHead>
-          <HalfContent card={card === 0}>
-            <CSSTransition
-              in={card === 0}
-              timeout={300}
-              classNames="chart"
-              unmountOnExit
-            >
-              <TestChart
-                percent
-                labels={Object.keys(basket)}
-                series={Object.values(basket)}
-                mobHeight={150}
-                mobLegend={120}
-              />
-            </CSSTransition>
-          </HalfContent>
-          <HalfContent card={card === 1}>
-            <CSSTransition
-              in={card === 1}
-              timeout={300}
-              classNames="chart"
-              unmountOnExit
-            >
-              <TestChart
-                labels={Object.keys(basket)}
-                series={Object.values(basket)}
-                mobHeight={150}
-                mobLegend={120}
-              />
-            </CSSTransition>
-          </HalfContent> */}
       </ChartContainer>
       <TabsCard>
         <Tabs>
@@ -317,138 +296,103 @@ export const AdminPortfolio = () => {
           </Tab>
         </Tabs>
       </TabsCard>
-      {/* <FilterWrap>
-          <FilterLeft>
-            <Styled.FilterBlock>
-              <Styled.SelectContainer>
-                <Styled.SelectWrap>
-                  <Styled.Label>Тип операции</Styled.Label>
-                  <Select /> 
-                </Styled.SelectWrap>
-                <Styled.InputsWrap>
-                  <TestInput label="Дата" /> 
-                </Styled.InputsWrap>
-                <Button danger>Применить</Button>
-              </Styled.SelectContainer>
-            </Styled.FilterBlock>
-          </FilterLeft>
-          <FilterRight>
-             <Select placeholder="Введите операцию" /> 
-            <ButtonWrap>
-              <Button danger>Добавить</Button>
-              <Button dangerOutline>Удалить</Button>
-            </ButtonWrap>
-          </FilterRight>
-        </FilterWrap> */}
       <Content active={active === 3}>
         <CardTable>
           <PaymentsTable>
             <TableHead>
-              <TableHeadItem>{t("adminPortfolio.table.date")}</TableHeadItem>
-              <TableHeadItem>{t("adminPortfolio.table.count")}</TableHeadItem>
+              <TableHeadItem>{t('adminPortfolio.table.date')}</TableHeadItem>
+              <TableHeadItem>{t('adminPortfolio.table.count')}</TableHeadItem>
               <TableHeadItem>
-                {t("adminPortfolio.table.cost")}, CWD
+                {t('adminPortfolio.table.cost')}, CWD
               </TableHeadItem>
-              <TableHeadItem>{t("adminPortfolio.table.amount")}</TableHeadItem>
+              <TableHeadItem>{t('adminPortfolio.table.amount')}</TableHeadItem>
               <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
             </TableHead>
             {basketGCWD.length ? (
-              <Scrollbars style={{ height: "500px" }}>
-                <InfiniteScroll
-                  pageStart={10}
-                  loadMore={myLoadGCWD}
-                  hasMore={countGCWD}
-                  useWindow={false}
-                  loader={
-                    <div className="loader" key={0}>
-                      Loading ...
-                    </div>
-                  }
-                >
-                  {basketGCWD.map((item, idx) => (
-                    <TableList key={item.safeId} data={item} />
-                  ))}
-                </InfiniteScroll>
+              <Scrollbars style={{ height: '500px' }}>
+                {basketGCWD.map((item, idx) => (
+                  <TableList key={item.safeId} data={item} />
+                ))}
               </Scrollbars>
             ) : loading ? (
               <Loading />
             ) : (
-              <Styled.NotFound>{t("notFound")}</Styled.NotFound>
+              <Styled.NotFound>{t('notFound')}</Styled.NotFound>
             )}
           </PaymentsTable>
         </CardTable>
+
+        <Pagination
+          pageLength={pageLengthGCWD}
+          setPageLength={setPageLengthGCWD}
+          currentPage={currentPageGCWD}
+          setCurrentPage={setCurrentPageGCWD}
+          totalLottery={totalGCWD}
+        />
       </Content>
       <Content active={active === 2}>
         <CardTable>
           <PaymentsTable>
             <TableHead>
-              <TableHeadItem>{t("adminPortfolio.table.date")}</TableHeadItem>
-              <TableHeadItem>{t("adminPortfolio.table.count")}</TableHeadItem>
+              <TableHeadItem>{t('adminPortfolio.table.date')}</TableHeadItem>
+              <TableHeadItem>{t('adminPortfolio.table.count')}</TableHeadItem>
               <TableHeadItem>
-                {t("adminPortfolio.table.cost")}, CWD
+                {t('adminPortfolio.table.cost')}, CWD
               </TableHeadItem>
-              <TableHeadItem>{t("adminPortfolio.table.amount")}</TableHeadItem>
+              <TableHeadItem>{t('adminPortfolio.table.amount')}</TableHeadItem>
               <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
             </TableHead>
             {basketMGCWD.length ? (
-              <Scrollbars style={{ height: "500px" }}>
-                <InfiniteScroll
-                  pageStart={10}
-                  loadMore={myLoadMGCWD}
-                  hasMore={countMGCWD}
-                  useWindow={false}
-                  loader={
-                    <div className="loader" key={0}>
-                      Loading ...
-                    </div>
-                  }
-                >
-                  {basketMGCWD.map((item, idx) => (
-                    <TableList key={item.safeId} data={item} />
-                  ))}
-                </InfiniteScroll>
+              <Scrollbars style={{ height: '500px' }}>
+                {basketMGCWD.map((item, idx) => (
+                  <TableList key={item.safeId} data={item} />
+                ))}
               </Scrollbars>
             ) : (
-              <Styled.NotFound>{t("notFound")}</Styled.NotFound>
+              <Styled.NotFound>{t('notFound')}</Styled.NotFound>
             )}
           </PaymentsTable>
         </CardTable>
+
+        <Pagination
+          pageLength={pageLengthMGCWD}
+          setPageLength={setPageLengthMGCWD}
+          currentPage={currentPageMGCWD}
+          setCurrentPage={setCurrentPageMGCWD}
+          totalLottery={totalMGCWD}
+        />
       </Content>
       <Content active={active === 4}>
         <CardTable>
           <PaymentsTable>
             <TableHead>
-              <TableHeadItem>{t("adminPortfolio.table.date")}</TableHeadItem>
-              <TableHeadItem>{t("adminPortfolio.table.count")}</TableHeadItem>
+              <TableHeadItem>{t('adminPortfolio.table.date')}</TableHeadItem>
+              <TableHeadItem>{t('adminPortfolio.table.count')}</TableHeadItem>
               <TableHeadItem>
-                {t("adminPortfolio.table.cost")}, CWD
+                {t('adminPortfolio.table.cost')}, CWD
               </TableHeadItem>
-              <TableHeadItem>{t("adminPortfolio.table.amount")}</TableHeadItem>
+              <TableHeadItem>{t('adminPortfolio.table.amount')}</TableHeadItem>
               <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
             </TableHead>
             {basketDIAMOND.length ? (
-              <Scrollbars style={{ height: "500px" }}>
-                <InfiniteScroll
-                  pageStart={20}
-                  loadMore={myLoadDIAMOND}
-                  hasMore={countDIAMOND}
-                  useWindow={false}
-                  loader={
-                    <div className="loader" key={0}>
-                      Loading ...
-                    </div>
-                  }
-                >
-                  {basketDIAMOND.map((item, idx) => (
-                    <TableList key={item.safeId} data={item} />
-                  ))}
-                </InfiniteScroll>
+              <Scrollbars style={{ height: '500px' }}>
+                {basketDIAMOND.map((item, idx) => (
+                  <TableList key={item.safeId} data={item} />
+                ))}
               </Scrollbars>
             ) : (
-              <Styled.NotFound>{t("notFound")}</Styled.NotFound>
+              <Styled.NotFound>{t('notFound')}</Styled.NotFound>
             )}
           </PaymentsTable>
         </CardTable>
+
+        <Pagination
+          pageLength={pageLengthDIAMOND}
+          setPageLength={setPageLengthDIAMOND}
+          currentPage={currentPageDIAMOND}
+          setCurrentPage={setCurrentPageDIAMOND}
+          totalLottery={totalDIAMOND}
+        />
       </Content>
     </>
   );
@@ -655,7 +599,7 @@ const HalfTabs = styled.div`
 `;
 
 const HalfTab = styled.span<{ card?: boolean }>`
-  font-weight: ${(props) => (props.card ? "600" : "400")};
+  font-weight: ${(props) => (props.card ? '600' : '400')};
   font-size: 20px;
   line-height: 14px;
   cursor: pointer;
@@ -665,7 +609,7 @@ const HalfTab = styled.span<{ card?: boolean }>`
 
 const MobHalfTab = styled(HalfTab)`
   border-bottom: ${(props) =>
-    props.card ? "1px solid #FF416E" : "1px solid #FFF"};
+    props.card ? '1px solid #FF416E' : '1px solid #FFF'};
   padding-bottom: 6px;
   padding-top: 20px;
   width: 50%;
@@ -673,7 +617,7 @@ const MobHalfTab = styled(HalfTab)`
 `;
 
 const HalfContent = styled.div<{ card: boolean }>`
-  ${(props) => (props.card ? "" : "display:none")};
+  ${(props) => (props.card ? '' : 'display:none')};
   width: 100%;
   max-width: 440px;
   margin: 0 auto;

@@ -203,7 +203,8 @@
             "amount": "Amount",
             "sum": "Payout amount",
             "payAnalitics": "Payout analytics",
-            "analitic": "Analitic"
+            "analitic": "Analitic",
+            "label": "in 3 months"
         }
     },
     "depositList":{
@@ -363,5 +364,7 @@
     "draws": "Draws",
     "newDraw": "Start of a new drawing in",
     "goDraw": "Go to",
-    "depositsToClose": "Deposits to close" 
+    "depositsToClose": "Deposits to close",
+    "line": "line",
+    "partnersTitle": "Partners programs"
 }
