@@ -364,6 +364,8 @@ export const AdminPay = () => {
 
   const paymentsConfirm = () => {
     if (hubConnection) {
+      console.log(procent);
+      
       hubConnection
         .invoke(
           'ConfirmAllDepositsPayment',
@@ -374,7 +376,7 @@ export const AdminPay = () => {
           procent ? +procent / 100 : null,
         )
         .then((res) => {
-          console.log('ConfirmAllDepositsPayment', res);
+          console.log('ConfirmAllDepositsPayment~~~~~~~', res);
           alert('Успешно', '', 'success');
           getPaymentsOverview();
         })

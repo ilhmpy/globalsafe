@@ -113,6 +113,7 @@ const CustomDatePickers = styled(DayPicker)`
     font-size: 16px;
     line-height: 24px;
     padding: 4px 7px;
+    min-width: 48px;
     width: 48px;
     height: 48px;
     margin: 5px;
@@ -519,6 +520,7 @@ const InputCustom = styled.div`
     padding: 4px 7px;
     width: 48px;
     height: 48px;
+    min-width: 48px;
     margin: 5px;
     &:focus {
       outline: none;
@@ -650,6 +652,7 @@ const CustomDatePicker = styled(DayPicker)`
     padding: 4px 7px;
     width: 48px;
     height: 48px;
+    min-width: 48px;
     margin: 5px;
     &:focus {
       outline: none;
