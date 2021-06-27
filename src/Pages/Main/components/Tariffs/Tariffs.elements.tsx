@@ -136,12 +136,18 @@ export const ModalTitle = styled.h4`
   margin-bottom: 20px;
 `;
 
-export const PartnerProgramBlock = styled.div`
+export const PartnerProgramBlock = styled.div<{ phone?: boolean }>`
   width: 100%;
   border-radius: 20px;
   background: ${({ theme }) => theme.partnerProgram.background};
   color: ${({ theme }) => theme.partnerProgram.color};
   padding-top: 26px;
+  display: ${({ phone }) => phone ? "none" : "block"};
+
+  @media only screen and (max-device-width: 480px) {
+    margin-top: 20px;
+    display: ${({ phone }) => phone ? "block" : "none"};
+  }
 `;
 
 export const PartnerProgramContainer = styled.div`
@@ -149,11 +155,18 @@ export const PartnerProgramContainer = styled.div`
   margin: 0 auto;
 `;
 
-export const PartnerProgramTitle = styled.h3`
+export const PartnerProgramTitle = styled.h3<{ phone?: boolean }>`
   font-size: 1.70em;
   font-weight: 500;
   margin-bottom: 20px;
   color: ${({ theme }) => theme.partnerProgram.titleColor};
+  display: ${({ phone }) => phone != undefined ? "none" : "inline"};
+
+  @media only screen and (max-device-width: 480px) {
+    font-size: 1.50em;
+    display: ${({ phone }) => phone ? "inline" : "none"};
+    color: ${({ theme }) => theme.partnerProgram.titlePhoneColor};
+  }
 `;
 
 export const PartnerProgramData = styled.div`

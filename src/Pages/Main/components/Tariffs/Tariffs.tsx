@@ -193,6 +193,14 @@ export const Tariffs = () => {
       <Container>
         <H1>{t("tariffs.H1")}</H1>
       </Container>
+      <PartnerProgramContainer>
+        <PartnerProgramTitle phone={true}>{t("partnersTitle")}</PartnerProgramTitle>
+      </PartnerProgramContainer>
+      <DescContainerInner>
+        <PartnerProgramBlock phone={true}>
+          
+        </PartnerProgramBlock>
+      </DescContainerInner>
       <DescContainerInner>
         <PartnerProgramBlock>
           <PartnerProgramContainer>

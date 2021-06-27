@@ -40,6 +40,7 @@ declare module 'styled-components' {
       lineNumberColor: string;
       lineItemColor: string;
       nthItemBG: string;
+      titlePhoneColor: string;
     }
   }
 }

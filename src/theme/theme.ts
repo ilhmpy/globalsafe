@@ -47,6 +47,7 @@ export const lightTheme = {
       lineItemColor: "#0E0D3D",
       lineNumberColor: "#0E0D3D",
       nthItemBG: "0",
+      titlePhoneColor: "#0E0D3D"
     }
   }
 
@@ -89,5 +90,6 @@ export const lightTheme = {
       lineItemColor: "#E2E2E2",
       lineNumberColor: "rgba(196, 196, 196, 0.6)",
       nthItemBG: "rgba(196, 196, 196, 0.05)",
+      titlePhoneColor: "#fff",
     },
   }
