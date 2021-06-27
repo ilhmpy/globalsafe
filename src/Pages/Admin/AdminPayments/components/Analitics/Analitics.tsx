@@ -1,22 +1,22 @@
-import moment from 'moment';
-import React, { FC, useContext, useEffect, useState } from 'react';
-import { Scrollbars } from 'react-custom-scrollbars';
-import { useTranslation } from 'react-i18next';
-import { CSSTransition } from 'react-transition-group';
-import { Button } from '../../../../../components/Button/Button';
-import { Select } from '../../../../../components/Select/Select2';
-import { TestInput } from '../../../../../components/UI/DayPicker';
-import { Loading } from '../../../../../components/UI/Loading';
-import { AppContext } from '../../../../../context/HubContext';
-import { Card } from '../../../../../globalStyles';
+import moment from "moment";
+import React, { FC, useContext, useEffect, useState } from "react";
+import { Scrollbars } from "react-custom-scrollbars";
+import { useTranslation } from "react-i18next";
+import { CSSTransition } from "react-transition-group";
+import { Button } from "../../../../../components/Button/Button";
+import { Select } from "../../../../../components/Select/Select2";
+import { TestInput } from "../../../../../components/UI/DayPicker";
+import { Loading } from "../../../../../components/UI/Loading";
+import { AppContext } from "../../../../../context/HubContext";
+import { Card } from "../../../../../globalStyles";
 import {
   CollectionAnalitics,
   RootAnalitics,
-} from '../../../../../types/analitics';
-import { OpenDate } from '../../../../../types/dates';
-import { CollectionListDeposits } from '../../../../../types/deposits';
-import { ModalAnalitic } from '../../../AdminPay/Payments';
-import { Pagination } from '../../../Pagination';
+} from "../../../../../types/analitics";
+import { OpenDate } from "../../../../../types/dates";
+import { CollectionListDeposits } from "../../../../../types/deposits";
+import { ModalAnalitic } from "../../../AdminPay/Payments";
+import { Pagination } from "../../../Pagination";
 import {
   FilterBlock,
   FilterHeader,
@@ -26,8 +26,8 @@ import {
   SelectContainerInnerPaid,
   SelectWrap,
   ShowHide,
-} from '../../../Styled.elements';
-import * as Styled from './Styled.elements';
+} from "../../../Styled.elements";
+import * as Styled from "./Styled.elements";
 
 type Props = {
   listDeposits: CollectionListDeposits[];
@@ -42,8 +42,6 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
   const [list, setList] = useState<CollectionAnalitics[]>([]);
   const [openFilterOne, setOpenFilterOne] = useState(false);
   const [checkList, setCheckList] = useState<any>([]);
-  const [count, setCount] = useState(true);
-  const [num, setNum] = useState(20);
   const [totalList, setTotalList] = useState(0);
   const [open, setOpen] = useState<CollectionAnalitics | null>(null);
   const [pageLength, setPageLength] = useState<number>(10);
@@ -55,17 +53,18 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
     if (hubConnection) {
       hubConnection
         .invoke<RootAnalitics>(
-          'GetPayoutsEstimate',
+          "GetPayoutsEstimate",
           searchSafeID.length ? searchSafeID : null,
           openDate.from ? openDate.from : null,
           openDate.to ? openDate.to : null,
           (currentPage - 1) * pageLength,
-          pageLength,
+          pageLength
         )
         .then((res) => {
           setLoading(false);
           setList(res.collection);
           setTotalList(res.totalRecords);
+          console.log("list", res.collection);
         })
         .catch((e) => {
           console.log(e);
@@ -73,45 +72,21 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
     }
   }, [currentPage, hubConnection, pageLength]);
 
-  const myLoad = () => {
-    setCount(false);
-    if (hubConnection && list.length < totalList) {
-      hubConnection
-        .invoke<RootAnalitics>(
-          'GetPayoutsEstimate',
-          searchSafeID.length ? searchSafeID : null,
-          openDate.from ? openDate.from : null,
-          openDate.to ? openDate.to : null,
-          num,
-          20,
-        )
-        .then((res) => {
-          if (res.collection.length) {
-            setList([...list, ...res.collection]);
-            setNum(num + 20);
-            setCount(true);
-          }
-        })
-        .catch((err: Error) => console.log(err));
-    }
-  };
-
   const submit = () => {
     setList([]);
     if (hubConnection) {
       hubConnection
         .invoke<RootAnalitics>(
-          'GetPayoutsEstimate',
+          "GetPayoutsEstimate",
           searchSafeID.length ? searchSafeID : null,
           openDate.from ? openDate.from : null,
           openDate.to ? openDate.to : null,
           0,
-          20,
+          20
         )
         .then((res) => {
           setList(res.collection);
           setTotalList(res.totalRecords);
-          setNum(20);
         })
         .catch((e) => {
           console.log(e);
@@ -133,20 +108,21 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
     <div>
       <FilterBlock>
         <FilterHeader>
-          <FilterName>{t('adminDeposit.filter')}</FilterName>
+          <FilterName>{t("adminDeposit.filter")}</FilterName>
           <ShowHide onClick={() => setOpenFilterOne(!openFilterOne)}>
-            {openFilterOne ? t('hide') : t('show')}
+            {openFilterOne ? t("hide") : t("show")}
           </ShowHide>
         </FilterHeader>
         <CSSTransition
           in={openFilterOne}
           timeout={200}
           classNames="filter"
-          unmountOnExit>
+          unmountOnExit
+        >
           <SelectContainer>
             <SelectContainerInnerPaid>
               <SelectWrap style={{ minWidth: 263 }}>
-                <Label>{t('adminPay.filter.deposit')}</Label>
+                <Label>{t("adminPay.filter.deposit")}</Label>
                 <Select
                   checkList={checkList}
                   setCheckList={setCheckList}
@@ -157,12 +133,12 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
                 <TestInput
                   setOpenDate={setOpenDate}
                   openDate={openDate}
-                  label={t('adminPay.filter.date')}
+                  label={t("adminPay.filter.date")}
                 />
               </SelectWrap>
             </SelectContainerInnerPaid>
             <Button danger onClick={submit}>
-              {t('adminUsers.apply')}
+              {t("adminUsers.apply")}
             </Button>
           </SelectContainer>
         </CSSTransition>
@@ -172,44 +148,46 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
           in={!!open}
           timeout={300}
           classNames="modal"
-          unmountOnExit>
+          unmountOnExit
+        >
           <>{open && <ModalAnalitic onClose={onClose} data={open} />}</>
         </CSSTransition>
         <Styled.PaymentsTable>
           <Styled.TableHead>
             <Styled.TableHeadItemPaid>№</Styled.TableHeadItemPaid>
             <Styled.TableHeadItemPaid>
-              {t('adminPay.table.name')}
+              {t("adminPay.table.name")}
             </Styled.TableHeadItemPaid>
             <Styled.TableHeadItemPaid>
-              {t('adminPay.analitics.data')}
+              {t("adminPay.analitics.data")}
             </Styled.TableHeadItemPaid>
             <Styled.TableHeadItemPaid>
-              {t('adminPay.analitics.amount')}
+              {t("adminPay.analitics.amount")}
             </Styled.TableHeadItemPaid>
             <Styled.TableHeadItemPaid>
-              {t('adminPay.analitics.sum')}
+              {t("adminPay.analitics.sum")}
             </Styled.TableHeadItemPaid>
             <Styled.TableHeadItemPaid>
               {/* <Filter /> */}
             </Styled.TableHeadItemPaid>
           </Styled.TableHead>
           {list.length ? (
-            <Scrollbars style={{ height: '500px' }}>
+            <Scrollbars style={{ height: "500px" }}>
               {list.map((item, idx) => (
                 <Styled.TableBody
                   key={item.safeId}
-                  onClick={() => setOpen(item)}>
+                  onClick={() => setOpen(item)}
+                >
                   <Styled.TableBodyItem>{idx + 1}</Styled.TableBodyItem>
                   <Styled.TableBodyItem>
                     {item.deposit.name}
                   </Styled.TableBodyItem>
                   <Styled.TableBodyItem>
-                    {moment(item.payoutDate).format('DD/MM/DDDD')}
+                    {moment(item.payoutDate).format("DD/MM/DDDD")}
                   </Styled.TableBodyItem>
                   <Styled.TableBodyItem>{item.count}</Styled.TableBodyItem>
                   <Styled.TableBodyItem>
-                    {(item.amount / 100000).toLocaleString('ru-RU', {
+                    {(item.amount / 100000).toLocaleString("ru-RU", {
                       maximumFractionDigits: 2,
                     })}
                   </Styled.TableBodyItem>
@@ -220,7 +198,7 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
           ) : loading ? (
             <Loading />
           ) : (
-            <Styled.NotFound>{t('notFound')}</Styled.NotFound>
+            <Styled.NotFound>{t("notFound")}</Styled.NotFound>
           )}
         </Styled.PaymentsTable>
       </Card>

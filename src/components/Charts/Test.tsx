@@ -629,7 +629,147 @@ export const ColumnChartTwo: FC<PropsColumn> = ({ date, value }) => {
         labels: {
           show: true,
           formatter: function (value: any) {
-            console.log("vl", isFinite(value));
+            if (!Number.isInteger(value)) {
+              return 0;
+            }
+            if (value >= 1000000) {
+              return (value / 1000000).toFixed(1) + "M";
+            } else if (value >= 1000 && value < 1000000) {
+              return (value / 1000).toFixed(1) + "k";
+            } else {
+              return value;
+            }
+          },
+          style: {
+            colors: [color],
+            fontSize: "10px",
+            fontFamily: "Roboto, sans-serif",
+            fontWeight: 400,
+            cssClass: "apexcharts-yaxis-label",
+          },
+        },
+      },
+      tooltip: {
+        custom: function ({ series, seriesIndex, dataPointIndex, w }: any) {
+          return `
+          <div class="column-toltip">
+          <div class="column-toltip-light">${moment(
+            w.globals.labels[dataPointIndex]
+          ).format("DD MMMM YYYY")}</div>
+            <div class="column-toltip-bold">${
+              w.globals.stackedSeriesTotals[dataPointIndex].toLocaleString() +
+              "CWD"
+            } </div>
+          </div>
+          `;
+        },
+        // enabled: false,
+        fixed: {
+          enabled: true,
+          position: "topLeft",
+          offsetY: 0,
+          offsetX: 110,
+        },
+      },
+      legend: {
+        horizontalAlign: "center",
+        offsetX: 0,
+        show: false,
+      },
+      grid: {
+        show: false,
+      },
+      plotOptions: {
+        bar: {
+          borderRadius: 6,
+          columnWidth: "45%",
+          distributed: false,
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+    },
+  };
+
+  return (
+    <div id="chart2" style={{ position: "relative" }}>
+      <Chart
+        options={data.options}
+        series={data.series}
+        type="bar"
+        height={287}
+      />
+    </div>
+  );
+};
+
+export const ColumnChartAnalitic: FC<PropsColumn> = ({ date, value }) => {
+  const themeContext = useContext(ThemeContext);
+  const theme = themeContext.theme;
+  const color = theme === "light" ? "#222" : "#fff";
+
+  const data = {
+    series: [
+      {
+        data: value,
+      },
+    ],
+
+    options: {
+      chart: {
+        height: 350,
+        type: "bar",
+        events: {
+          click: function (chart: any, w: any, e: any) {
+            // console.log(chart, w, e)
+          },
+        },
+        toolbar: {
+          show: false,
+        },
+      },
+      fill: {
+        colors: ["#BCD476"],
+      },
+      states: {
+        normal: {
+          filter: {
+            type: "none",
+            value: 0,
+          },
+        },
+        hover: {
+          filter: {
+            type: "darken",
+            value: 0.5,
+          },
+        },
+      },
+      xaxis: {
+        categories: date,
+        type: "datetime",
+        labels: {
+          show: true,
+          format: "dd/MM",
+          style: {
+            fontSize: "10px",
+          },
+          offsetY: -4,
+        },
+        axisBorder: {
+          show: false,
+        },
+        axisTicks: {
+          show: false,
+        },
+      },
+      yaxis: {
+        show: true,
+        showAlways: true,
+        labels: {
+          show: true,
+          formatter: function (value: any) {
             if (!Number.isInteger(value)) {
               return 0;
             }

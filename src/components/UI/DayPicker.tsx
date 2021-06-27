@@ -410,6 +410,104 @@ export const MainAdminInput: FC<{
   );
 };
 
+export const MainAnaliticInput: FC<{
+  label: string;
+  openDate: OpenDate;
+  setOpenDate: (openDate: OpenDate) => void;
+  onClose?: () => void;
+  pastDay?: boolean;
+}> = ({ openDate, setOpenDate, label, pastDay }) => {
+  const [showOpen, setShowOpen] = useState(false);
+  const [selfDate, setSelfDate] = useState<any>({
+    from: undefined,
+    to: undefined,
+  });
+
+  const ref = useRef(null);
+
+  const handleClickOutside = () => {
+    setShowOpen(false);
+  };
+  const { t } = useTranslation();
+  useOnClickOutside(ref, handleClickOutside);
+
+  const handleDayClick = (day: Date) => {
+    const range = DateUtils.addDayToRange(day, selfDate);
+    if (
+      range.from &&
+      range.from.valueOf() >= moment().hour(11).valueOf() &&
+      ((range.to && range.to >= new Date()) || range.to === undefined)
+    ) {
+      setSelfDate({ from: range.from, to: range.to });
+      if (range.from && range.to) {
+        setOpenDate({ from: range.from, to: range.to });
+      }
+    }
+  };
+
+  const handleChange = () => {
+    if (selfDate.from && selfDate.to) {
+      setOpenDate({ from: selfDate.from, to: selfDate.to });
+    }
+    setShowOpen(false);
+  };
+  const lang = localStorage.getItem("i18nextLng") || "ru";
+  const modifiers = { start: selfDate.from, end: selfDate.to };
+  return (
+    <>
+      <AdminInputsContainer ref={ref}>
+        <BoxInput onClick={() => setShowOpen(!showOpen)}>
+          <DateInput>
+            {selfDate.from && selfDate.to ? (
+              <>
+                <span>
+                  {selfDate.from
+                    ? moment(selfDate.from).format("DD.MM.YY")
+                    : ""}
+                </span>
+                <span>
+                  {selfDate.to
+                    ? `-${moment(selfDate.to).format("DD.MM.YY")} `
+                    : ""}
+                </span>
+              </>
+            ) : (
+              <span>
+                {t("privateArea.at")} {label}
+              </span>
+            )}
+          </DateInput>
+        </BoxInput>
+
+        <CSSTransition
+          in={showOpen}
+          timeout={300}
+          classNames="data"
+          unmountOnExit
+        >
+          <CustomDatePicker
+            selectedDays={[selfDate.from, selfDate]}
+            months={lang === "en" ? MONTHS_ENG : MONTHS}
+            onDayClick={handleDayClick}
+            firstDayOfWeek={1}
+            onTodayButtonClick={handleChange}
+            todayButton={t("ready")}
+            modifiers={modifiers}
+            weekdaysLong={WEEKDAYS_LONG}
+            weekdaysShort={lang === "en" ? WEEKDAYS_SHORT_ENG : WEEKDAYS_SHORT}
+            navbarElement={<Navbar />}
+            disabledDays={[
+              {
+                before: new Date(),
+              },
+            ]}
+          />
+        </CSSTransition>
+      </AdminInputsContainer>
+    </>
+  );
+};
+
 const Period = styled.div`
   font-weight: normal;
   font-size: 18px;
