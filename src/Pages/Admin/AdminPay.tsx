@@ -366,51 +366,20 @@ export const AdminPay = () => {
   };
 
   useEffect(() => {
-    getPayoutsEstimateStats();
-  }, [depositsDate]);
-
-  const getPayoutsEstimateStats = () => {
     if (hubConnection) {
       hubConnection
         .invoke(
           "GetPayoutsEstimateStats",
-          depositsDate.from ? depositsDate.from : backDays,
-          depositsDate.to ? depositsDate.to : new Date()
+          depositsDate.from ? depositsDate.from : new Date(),
+          depositsDate.to ? depositsDate.to : backDay
         )
         .then((res) => {
           setStats(res);
+          console.log("stats", res);
         })
         .catch((e) => console.log(e));
     }
-  };
-
-  const submitApproval = () => {
-    if (hubConnection) {
-      hubConnection
-        .invoke<RootPayments>(
-          "GetUsersDeposits",
-          depositState,
-          nameApproval ? nameApproval.toLowerCase() : null,
-          searchSafeIDApproval.length ? searchSafeIDApproval : null,
-          openDateApproval.from ? openDateApproval.from : null,
-          openDateApproval.to ? openDateApproval.to : null,
-          null,
-          null,
-          null, //
-          0,
-          20
-        )
-        .then((res) => {
-          setDepositList([]);
-          if (res.collection.length) {
-            setDepositList(res.collection);
-            setTotalDeposits(res.totalRecords);
-            setNum(20);
-          }
-        })
-        .catch((err: Error) => console.log(err));
-    }
-  };
+  }, [depositsDate, hubConnection]);
 
   return (
     <>

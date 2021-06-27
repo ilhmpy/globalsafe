@@ -213,7 +213,7 @@ export const ModalAnalitic: FC<AnaliticProps> = ({ data, onClose }) => {
           </PayCardBlock>
           <PayCardBlock>
             <PayText small>{t("adminPay.analitics.data")}</PayText>
-            <PayText>{moment(data.payoutDate).format("DD/MM/DDDD")}</PayText>
+            <PayText>{moment(data.payoutDate).format("DD/MM/YYYY")}</PayText>
           </PayCardBlock>
           <PayCardBlock>
             <PayText small>{t("adminPay.analitics.amount")}</PayText>
