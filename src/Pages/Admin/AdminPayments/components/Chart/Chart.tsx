@@ -31,7 +31,7 @@ export const Chart: FC<Props> = ({ stats, setDepositsDate, depositsDate }) => {
       </Styled.DateBlock>
       <Styled.ColumnBlock>
         <ColumnChartAnalitic
-          date={stats && stats.length ? stats.map((i) => i[0]) : [""]}
+          date={stats && stats.length ? stats.map((i) => i[0]) : [new Date()]}
           value={stats && stats.length ? stats.map((i) => i[2] / 100000) : [0]}
         />
       </Styled.ColumnBlock>

@@ -324,6 +324,104 @@ export const TestInput: FC<{
   );
 };
 
+export const TestInputAnalitic: FC<{
+  label: string;
+  openDate: OpenDate;
+  setOpenDate: (openDate: OpenDate) => void;
+  onClose?: () => void;
+}> = ({ label, openDate, setOpenDate }) => {
+  const [showOpen, setShowOpen] = useState(false);
+  const [selfDate, setSelfDate] = useState<any>({
+    from: undefined,
+    to: undefined,
+  });
+  const ref = useRef(null);
+  const { t } = useTranslation();
+  const handleClickOutside = () => {
+    setShowOpen(false);
+  };
+
+  useOnClickOutside(ref, handleClickOutside);
+
+  const handleDayClick = (day: Date) => {
+    const range = DateUtils.addDayToRange(day, selfDate);
+    if (
+      range.from &&
+      range.from.valueOf() >= moment().hour(11).valueOf() &&
+      ((range.to && range.to >= new Date()) || range.to === undefined)
+    ) {
+      setSelfDate({ from: range.from, to: range.to });
+      if (range.from && range.to) {
+        setOpenDate({ from: range.from, to: range.to });
+      }
+    }
+  };
+
+  // const handleDayClick = (day: Date) => {
+  //   const range = DateUtils.addDayToRange(day, selfDate);
+  //   setSelfDate({ from: range.from, to: range.to });
+  //   setOpenDate({ from: range.from, to: range.to });
+  // };
+
+  const handleChange = () => {
+    if (selfDate.from && selfDate.to) {
+      setOpenDate({ from: selfDate.from, to: selfDate.to });
+    }
+    setShowOpen(false);
+  };
+
+  const reset = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setOpenDate({ from: undefined, to: undefined });
+    setSelfDate({
+      from: undefined,
+      to: undefined,
+    });
+  };
+
+  const lang = localStorage.getItem("i18nextLng") || "ru";
+  const modifiers = { start: selfDate.from, end: selfDate.to };
+
+  return (
+    <>
+      <RangeInputs ref={ref}>
+        <BoxInput onClick={() => setShowOpen(!showOpen)}>
+          <DateLabel>{label}</DateLabel>
+          <DateInput>
+            <span>
+              {selfDate.from ? moment(selfDate.from).format("DD.MM.YY") : ""}
+            </span>
+            <span>
+              {selfDate.to ? `-${moment(selfDate.to).format("DD.MM.YY")} ` : ""}
+            </span>
+            {selfDate.from && <Close onClick={reset}>&times;</Close>}
+          </DateInput>
+        </BoxInput>
+
+        {showOpen && (
+          <CustomDatePicker
+            selectedDays={[selfDate.from, selfDate]}
+            months={lang === "en" ? MONTHS_ENG : MONTHS}
+            onDayClick={handleDayClick}
+            firstDayOfWeek={1}
+            onTodayButtonClick={handleChange}
+            todayButton={t("ready")}
+            modifiers={modifiers}
+            weekdaysLong={WEEKDAYS_LONG}
+            weekdaysShort={lang === "en" ? WEEKDAYS_SHORT_ENG : WEEKDAYS_SHORT}
+            navbarElement={<Navbar />}
+            disabledDays={[
+              {
+                before: new Date(),
+              },
+            ]}
+          />
+        )}
+      </RangeInputs>
+    </>
+  );
+};
+
 export const MainAdminInput: FC<{
   label: string;
   openDate: OpenDate;
@@ -453,6 +551,16 @@ export const MainAnaliticInput: FC<{
   };
   const lang = localStorage.getItem("i18nextLng") || "ru";
   const modifiers = { start: selfDate.from, end: selfDate.to };
+  const backDays: any = moment().add(90, "days");
+  const reset = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setOpenDate({ from: new Date(), to: backDays });
+    setSelfDate({
+      from: undefined,
+      to: undefined,
+    });
+  };
+
   return (
     <>
       <AdminInputsContainer ref={ref}>
@@ -470,6 +578,7 @@ export const MainAnaliticInput: FC<{
                     ? `-${moment(selfDate.to).format("DD.MM.YY")} `
                     : ""}
                 </span>
+                {selfDate.from && <Close onClick={reset}>&times;</Close>}
               </>
             ) : (
               <span>

@@ -180,7 +180,7 @@ export const Approval: FC<Props> = ({
       message: message,
       type: type,
       insert: "top",
-      container: "top-right",
+      container: "top-left",
       animationIn: ["animate__animated", "animate__fadeIn"],
       animationOut: ["animate__animated", "animate__fadeOut"],
       dismiss: {
@@ -202,11 +202,11 @@ export const Approval: FC<Props> = ({
         )
         .then((res) => {
           console.log("ConfirmAllDepositsPayment", res);
-          // alert("Успешно", "", "success");
+          alert("Успешно", "согласовано", "success");
           getPaymentsOverview();
         })
         .catch((err: Error) => {
-          // alert("Ошибка", "Произошла ошибка", "danger");
+          alert("Ошибка", "Произошла ошибка", "danger");
         });
     }
   };
@@ -214,6 +214,7 @@ export const Approval: FC<Props> = ({
   return (
     <>
       <ReactNotification />
+
       <Styled.ButtonWrap>
         <Button dangerOutline mb onClick={paymentsConfirm}>
           {t("adminPay.confirmButton")}
@@ -225,6 +226,7 @@ export const Approval: FC<Props> = ({
           label={t("adminPay.procentPay")}
         />
       </Styled.ButtonWrap>
+
       <FilterBlock>
         <FilterHeader>
           <FilterName>{t("adminDeposit.filter")}</FilterName>
