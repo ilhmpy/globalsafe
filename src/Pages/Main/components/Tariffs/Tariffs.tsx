@@ -22,7 +22,9 @@ import {
   PartnerProgramHeaderItem,
   PartnerProgramLine,
   PartnerProgramLineNumber,
-  PartnerProgramLineItem
+  PartnerProgramLineItem,
+  PartnerProgramPagination,
+  PartnerProgramPaginationItem,
 } from "./Tariffs.elements";
 import { Modal } from "../../../../components/Modal/Modal";
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
@@ -198,7 +200,62 @@ export const Tariffs = () => {
       </PartnerProgramContainer>
       <DescContainerInner>
         <PartnerProgramBlock phone={true}>
-          
+          <PartnerProgramContainer>
+            <PartnerProgramHeaderItem green={true}>start</PartnerProgramHeaderItem>
+            <PartnerProgramLine>
+              <PartnerProgramLineNumber>1 {t("line")}</PartnerProgramLineNumber>
+              <div className="inner">
+                <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+              </div>
+            </PartnerProgramLine>
+            <PartnerProgramLine>
+              <PartnerProgramLineNumber>2 {t("line")}</PartnerProgramLineNumber>
+              <div className="inner">
+                <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+              </div>
+            </PartnerProgramLine>
+            <PartnerProgramLine>
+              <PartnerProgramLineNumber>3 {t("line")}</PartnerProgramLineNumber>
+              <div className="inner">
+                <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+              </div>
+            </PartnerProgramLine>
+            <PartnerProgramLine>
+              <PartnerProgramLineNumber>4 {t("line")}</PartnerProgramLineNumber>
+              <div className="inner">
+                <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+              </div>
+            </PartnerProgramLine>
+            <PartnerProgramLine>
+              <PartnerProgramLineNumber>5 {t("line")}</PartnerProgramLineNumber>
+              <div className="inner">
+                <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+              </div>
+            </PartnerProgramLine>
+            <PartnerProgramLine>
+              <PartnerProgramLineNumber>6 {t("line")}</PartnerProgramLineNumber>
+              <div className="inner">
+                <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+              </div>
+            </PartnerProgramLine>
+            <PartnerProgramLine>
+              <PartnerProgramLineNumber>7 {t("line")}</PartnerProgramLineNumber>
+              <div className="inner">
+                <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+              </div>
+            </PartnerProgramLine>
+            <PartnerProgramLine>
+              <PartnerProgramLineNumber>8 {t("line")}</PartnerProgramLineNumber>
+              <div className="inner">
+                <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+              </div>
+            </PartnerProgramLine>
+            <PartnerProgramPagination>
+              <PartnerProgramPaginationItem active={true}></PartnerProgramPaginationItem>
+              <PartnerProgramPaginationItem></PartnerProgramPaginationItem>
+              <PartnerProgramPaginationItem></PartnerProgramPaginationItem>
+            </PartnerProgramPagination>
+          </PartnerProgramContainer>
         </PartnerProgramBlock>
       </DescContainerInner>
       <DescContainerInner>

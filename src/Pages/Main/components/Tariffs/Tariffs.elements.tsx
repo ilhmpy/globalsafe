@@ -136,19 +136,6 @@ export const ModalTitle = styled.h4`
   margin-bottom: 20px;
 `;
 
-export const PartnerProgramBlock = styled.div<{ phone?: boolean }>`
-  width: 100%;
-  border-radius: 20px;
-  background: ${({ theme }) => theme.partnerProgram.background};
-  color: ${({ theme }) => theme.partnerProgram.color};
-  padding-top: 26px;
-  display: ${({ phone }) => phone ? "none" : "block"};
-
-  @media only screen and (max-device-width: 480px) {
-    margin-top: 20px;
-    display: ${({ phone }) => phone ? "block" : "none"};
-  }
-`;
 
 export const PartnerProgramContainer = styled.div`
   width: 90%;
@@ -240,4 +227,69 @@ export const PartnerProgramLineItem = styled.div`
   &:nth-child(2) {
     width: 35%;
   }
+`;
+
+export const PartnerProgramBlock = styled.div<{ phone?: boolean }>`
+  width: 100%;
+  border-radius: 20px;
+  background: ${({ theme }) => theme.partnerProgram.background};
+  color: ${({ theme }) => theme.partnerProgram.color};
+  padding-top: 26px;
+  display: ${({ phone }) => phone ? "none" : "block"};
+
+  @media only screen and (max-device-width: 480px) {
+    margin-top: 20px;
+    padding-top: 20px;
+    display: ${({ phone }) => phone ? "block" : "none"};
+    border: 1px solid #000;
+    max-width: 280px;
+
+    ${PartnerProgramHeaderItem} {
+      float: right;
+      font-size: 1.50em;
+      margin-bottom: 15px;
+      margin-right: 43px;
+    }
+
+    ${PartnerProgramLine} {
+      margin-left: 19px;
+      &:nth-child(2n) {
+        background: 0;
+      }
+    }
+
+    ${PartnerProgramLineNumber} {
+      width: 64%;
+    }
+  }
+`;
+
+export const PartnerProgramPagination = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+  margin-top: 30px;
+`;
+
+export const PartnerProgramPaginationItem = styled.span<{ active?: boolean }>`
+  margin-right: 5px;
+  display: block;
+
+  ${({ active }) => {
+    if (active) {
+      return `
+        width: 30px;
+        height: 3px;
+        border-radius: 4px;
+        background: #FF416E;
+      `;
+    } else return `
+        width: 7px;
+        height: 7px;
+        background: #C4C4C4;
+        border-radius: 50%;
+    `;
+  }}
 `;
