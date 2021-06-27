@@ -1,32 +1,28 @@
-import React, { useState, useContext, useEffect } from "react";
-import * as Styled from "./Styled.elements";
-import styled, { css } from "styled-components/macro";
-import { Card } from "../../globalStyles";
-import { CSSTransition } from "react-transition-group";
-import { useTranslation } from "react-i18next";
-import InfiniteScroll from "react-infinite-scroller";
-// import InfiniteScroll from "react-infinite-scroll-component";
-import { Scrollbars } from "react-custom-scrollbars";
-import { Loading } from "../../components/UI/Loading";
-import { AppContext } from "../../context/HubContext";
-import { UpTitle } from "../../components/UI/UpTitle";
-import { Select } from "../../components/Select/Select";
-import { Select as SelectTwo } from "../../components/Select/Select2";
-import { TestInput } from "../../components/UI/DayPicker";
-import { Button } from "../../components/Button/Button";
-import { OpenDate } from "../../types/dates";
-import { DateInput } from "../../components/UI/DatePicker";
-import { SliderComponent } from "../../components/Slider/Slider";
-import { LotteryTable } from "./AdminPay/Table";
+import moment from 'moment';
+import React, { useContext, useEffect, useState } from 'react';
+import { Scrollbars } from 'react-custom-scrollbars';
+import { useTranslation } from 'react-i18next';
+import { CSSTransition } from 'react-transition-group';
+import { Button } from '../../components/Button/Button';
+import { Select } from '../../components/Select/Select';
+import { SliderComponent } from '../../components/Slider/Slider';
+import { DateInput } from '../../components/UI/DatePicker';
+import { TestInput } from '../../components/UI/DayPicker';
+import { FakeInput } from '../../components/UI/FakeInput';
+import { Loading } from '../../components/UI/Loading';
+import { AppContext } from '../../context/HubContext';
+import { Card } from '../../globalStyles';
+import { OpenDate } from '../../types/dates';
 import {
-  RootLottery,
+  CollectionGetDraw,
   CollectionLottery,
   RootGetDraw,
-  CollectionGetDraw,
-} from "../../types/lottery";
-import moment from "moment";
-import { FakeInput } from "../../components/UI/FakeInput";
-import { Writing } from "./AdminPay/Writing";
+  RootLottery,
+} from '../../types/lottery';
+import { LotteryTable } from './AdminPay/Table';
+import { Writing } from './AdminPay/Writing';
+import { Pagination } from './Pagination';
+import * as Styled from './Styled.elements';
 
 type LotteryTable = {
   [elemName: string]: CollectionLottery[];
@@ -35,7 +31,7 @@ type LotteryTable = {
 export const AdminLottery = () => {
   const [openFilter, setOpenFilter] = useState(false);
   const [openFilterOne, setOpenFilterOne] = useState(false);
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
   const [checkList, setCheckList] = useState<any>([]);
   const [openDate, setOpenDate] = useState<OpenDate>({
     from: undefined,
@@ -51,12 +47,14 @@ export const AdminLottery = () => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [nextDate, setNextDate] = useState<Date | null>(null);
   const [drawList, setDrawList] = useState<CollectionGetDraw[]>([]);
+  const [pageLength, setPageLength] = useState<number>(10);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const { t } = useTranslation();
-  const lang = localStorage.getItem("i18nextLng") || "ru";
-  const languale = lang === "ru" ? 1 : 0;
-  const list = [t("win.one"), t("win.two"), t("win.three")];
+  const lang = localStorage.getItem('i18nextLng') || 'ru';
+  const languale = lang === 'ru' ? 1 : 0;
+  const list = [t('win.one'), t('win.two'), t('win.three')];
   moment.locale(lang);
   const drawListEdited = (item: CollectionGetDraw) => {
     const key = drawList.findIndex((i) => i.safeId === item.safeId);
@@ -66,9 +64,9 @@ export const AdminLottery = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<RootGetDraw>("GetDraws", [1], 0, 20)
+        .invoke<RootGetDraw>('GetDraws', [1], 0, 20)
         .then((res) => {
-          console.log("GetDraws", res);
+          console.log('GetDraws', res);
           setDrawList(res.collection);
         })
         .catch((e) => console.log(e));
@@ -77,29 +75,29 @@ export const AdminLottery = () => {
 
   useEffect(() => {
     submit();
-  }, [hubConnection, languale]);
+  }, [hubConnection, languale, pageLength, currentPage]);
 
   const submit = () => {
+    setLoading(true);
     setLotteryList(null);
     setLotteryArrList([]);
     if (hubConnection) {
       hubConnection
         .invoke<RootLottery>(
-          "GetAllPrizes",
+          'GetAllPrizes',
           name ? name : null,
           openDate.from ? openDate.from : null,
           openDate.to ? openDate.to : null,
           checkList.length ? checkList.map((i: any) => i.id) : null,
-          0,
-          20
+          (currentPage - 1) * pageLength,
+          pageLength,
         )
         .then((res) => {
-          // console.log("res", res);
           setTotalLottery(res.totalRecords);
           setLoading(false);
           setNum(20);
           const getFormatedDate = (dateStr: Date) => {
-            let date = moment(dateStr).format("DD MMMM YYYY");
+            let date = moment(dateStr).format('DD MMMM YYYY');
             return date;
           };
           if (res.collection.length) {
@@ -119,26 +117,28 @@ export const AdminLottery = () => {
           } else {
             setLotteryList(null);
           }
+          setLoading(false);
         })
         .catch((e) => console.log(e));
     }
   };
 
   const myLoad = () => {
-    console.log("myLoad");
+    console.log('myLoad');
     setCount(false);
     if (hubConnection && lotteryArrList.length < totalLottery) {
       hubConnection
         .invoke<RootLottery>(
-          "GetAllPrizes",
+          'GetAllPrizes',
           name ? name : null,
           openDate.from ? openDate.from : null,
           openDate.to ? openDate.to : null,
           checkList.length ? checkList.map((i: any) => i.id) : null,
-          num,
-          20
+          (currentPage - 1) * pageLength,
+          pageLength,
         )
         .then((res) => {
+          console.log('.then ~~~~~~~~~~~~ res', res);
           setLoading(false);
           if (res.collection.length) {
             if (res.collection.length && lotteryList) {
@@ -147,7 +147,7 @@ export const AdminLottery = () => {
               for (let key in res.collection) {
                 const newArr = res.collection[key];
                 const d = moment(res.collection[key].drawLog.drawDate).format(
-                  "DD MMMM YYYY"
+                  'DD MMMM YYYY',
                 );
                 if (result[d]) {
                   result[d].push(newArr);
@@ -169,7 +169,7 @@ export const AdminLottery = () => {
   const onAfterChange = (value: any) => {
     setSliderValue(value);
     if (startDate) {
-      const time: any = moment(startDate).add(sliderValue, "hours");
+      const time: any = moment(startDate).add(sliderValue, 'hours');
       setNextDate(time._d);
     }
   };
@@ -177,7 +177,7 @@ export const AdminLottery = () => {
   const createNewLottery = () => {
     if (hubConnection && startDate !== null) {
       hubConnection
-        .invoke("CreateDraw", moment.utc(startDate), sliderValue)
+        .invoke('CreateDraw', moment.utc(startDate), sliderValue)
         .then((res) => {
           setDrawList([res, ...drawList]);
         })
@@ -187,41 +187,40 @@ export const AdminLottery = () => {
 
   const dateChange = (startDate: Date | null) => {
     if (startDate) {
-      const time: any = moment(startDate).add(sliderValue, "hours");
+      const time: any = moment(startDate).add(sliderValue, 'hours');
       setNextDate(time._d);
       setStartDate(startDate);
     }
   };
 
-  console.log("lotteryList", lotteryList);
+  console.log('lotteryList', lotteryList);
 
   return (
     <div>
       <div>
         <Styled.FilterBlock>
           <Styled.FilterHeader>
-            <Styled.FilterName>{t("write")}</Styled.FilterName>
+            <Styled.FilterName>{t('write')}</Styled.FilterName>
             <Styled.ShowHide onClick={() => setOpenFilter(!openFilter)}>
-              {openFilter ? t("hide") : t("show")}
+              {openFilter ? t('hide') : t('show')}
             </Styled.ShowHide>
           </Styled.FilterHeader>
           <CSSTransition
             in={openFilter}
             timeout={200}
             classNames="filter"
-            unmountOnExit
-          >
+            unmountOnExit>
             <>
               <Styled.SelectContainerLottery>
                 <Styled.InputLottery>
                   <DateInput
                     startDate={startDate}
                     setStartDate={dateChange}
-                    label={t("writting.startDate")}
+                    label={t('writting.startDate')}
                   />
                 </Styled.InputLottery>
                 <Styled.InputLottery>
-                  <FakeInput hours={sliderValue} label={t("writting.repeat")} />
+                  <FakeInput hours={sliderValue} label={t('writting.repeat')} />
                 </Styled.InputLottery>
                 <Styled.SliderWrap>
                   <SliderComponent
@@ -233,7 +232,7 @@ export const AdminLottery = () => {
                   <DateInput
                     startDate={nextDate}
                     setStartDate={setNextDate}
-                    label={t("writting.next")}
+                    label={t('writting.next')}
                   />
                 </Styled.InputLottery>
                 <Styled.InputLottery mrn>
@@ -241,15 +240,14 @@ export const AdminLottery = () => {
                     as="button"
                     disabled={startDate === null}
                     danger
-                    onClick={createNewLottery}
-                  >
-                    {t("create")}
+                    onClick={createNewLottery}>
+                    {t('create')}
                   </Button>
                 </Styled.InputLottery>
               </Styled.SelectContainerLottery>
               <Styled.HrWritting />
               <Styled.WritingBlock>
-                <Scrollbars style={{ height: "250px" }}>
+                <Scrollbars style={{ height: '250px' }}>
                   {drawList.length
                     ? drawList.map((item) => (
                         <Writing
@@ -258,7 +256,7 @@ export const AdminLottery = () => {
                           key={item.safeId}
                         />
                       ))
-                    : ""}
+                    : ''}
                 </Scrollbars>
               </Styled.WritingBlock>
             </>
@@ -267,21 +265,20 @@ export const AdminLottery = () => {
 
         <Styled.FilterBlock>
           <Styled.FilterHeader>
-            <Styled.FilterName>{t("adminDeposit.filter")}</Styled.FilterName>
+            <Styled.FilterName>{t('adminDeposit.filter')}</Styled.FilterName>
             <Styled.ShowHide onClick={() => setOpenFilterOne(!openFilterOne)}>
-              {openFilterOne ? t("hide") : t("show")}
+              {openFilterOne ? t('hide') : t('show')}
             </Styled.ShowHide>
           </Styled.FilterHeader>
           <CSSTransition
             in={openFilterOne}
             timeout={200}
             classNames="filter"
-            unmountOnExit
-          >
+            unmountOnExit>
             <Styled.SelectContainer>
               <Styled.SelectContainerInnerPaid>
                 <Styled.SelectWrap style={{ minWidth: 240 }}>
-                  <Styled.Label>{t("winner")}</Styled.Label>
+                  <Styled.Label>{t('winner')}</Styled.Label>
                   <Styled.Input
                     value={name}
                     onChange={(e) => setName(e.target.value.toLowerCase())}
@@ -291,11 +288,11 @@ export const AdminLottery = () => {
                   <TestInput
                     setOpenDate={setOpenDate}
                     openDate={openDate}
-                    label={t("adminPay.filter.date")}
+                    label={t('adminPay.filter.date')}
                   />
                 </Styled.SelectWrap>
                 <Styled.SelectWrap style={{ minWidth: 240 }}>
-                  <Styled.Label>{t("lotteryTable.typeWin")}</Styled.Label>
+                  <Styled.Label>{t('lotteryTable.typeWin')}</Styled.Label>
                   <Select
                     checkList={checkList}
                     setCheckList={setCheckList}
@@ -304,75 +301,71 @@ export const AdminLottery = () => {
                 </Styled.SelectWrap>
               </Styled.SelectContainerInnerPaid>
               <Button danger onClick={submit}>
-                {t("adminUsers.apply")}
+                {t('adminUsers.apply')}
               </Button>
             </Styled.SelectContainer>
           </CSSTransition>
         </Styled.FilterBlock>
+
         <Card smallBorder>
           <Styled.LotteryTable>
             <>
               <Styled.Table>
                 <Styled.Thead>
                   <Styled.Tr>
-                    <Styled.Th scope="col">{t("lotteryTable.date")}</Styled.Th>
+                    <Styled.Th scope="col">{t('lotteryTable.date')}</Styled.Th>
                     <Styled.Th scope="col">
-                      {t("lotteryTable.typeWin")}
+                      {t('lotteryTable.typeWin')}
                     </Styled.Th>
                     <Styled.Th scope="col">
-                      {t("lotteryTable.sumWin")}
+                      {t('lotteryTable.sumWin')}
                     </Styled.Th>
                     <Styled.Th scope="col">
-                      {t("lotteryTable.winners")}
+                      {t('lotteryTable.winners')}
                     </Styled.Th>
                     <Styled.Th scope="col">
-                      {t("lotteryTable.status")}
+                      {t('lotteryTable.status')}
                     </Styled.Th>
                   </Styled.Tr>
                 </Styled.Thead>
               </Styled.Table>
               {lotteryList ? (
-                <Scrollbars style={{ height: "500px" }}>
-                  <InfiniteScroll
-                    pageStart={20}
-                    loadMore={myLoad}
-                    hasMore={count}
-                    useWindow={false}
-                    loader={
-                      <div className="loader" key={0}>
-                        Loading ...
-                      </div>
-                    }
-                  >
-                    <Styled.Table>
-                      {Object.keys(lotteryList).map((key, idx) => (
-                        <tbody key={key}>
-                          <Styled.Tr
-                            style={{
-                              textAlign: "center",
-                              display: "table-row",
-                            }}
-                          >
-                            <td colSpan={5}>
-                              <Styled.DataListDate>{key}</Styled.DataListDate>
-                            </td>
-                          </Styled.Tr>
-                          {lotteryList[key].map((item, idx) => (
-                            <LotteryTable key={item.safeId} data={item} />
-                          ))}
-                        </tbody>
-                      ))}
-                    </Styled.Table>
-                  </InfiniteScroll>
+                <Scrollbars style={{ height: '500px' }}>
+                  <Styled.Table>
+                    {Object.keys(lotteryList).map((key, idx) => (
+                      <tbody key={key}>
+                        <Styled.Tr
+                          style={{
+                            textAlign: 'center',
+                            display: 'table-row',
+                          }}>
+                          <td colSpan={5}>
+                            <Styled.DataListDate>{key}</Styled.DataListDate>
+                          </td>
+                        </Styled.Tr>
+                        {lotteryList[key].map((item, idx) => (
+                          <LotteryTable key={item.safeId} data={item} />
+                        ))}
+                      </tbody>
+                    ))}
+                  </Styled.Table>
                 </Scrollbars>
               ) : loading ? (
                 <Loading />
               ) : (
-                <Styled.NotFound>{t("notFound")}</Styled.NotFound>
+                <Styled.NotFound>{t('notFound')}</Styled.NotFound>
               )}
             </>
           </Styled.LotteryTable>
         </Card>
+
+        <Pagination
+          pageLength={pageLength}
+          setPageLength={setPageLength}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalLottery={totalLottery}
+        />
       </div>
     </div>
   );

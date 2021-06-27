@@ -1,9 +1,76 @@
-import styled from "styled-components/macro";
-import { UpTitle } from "../../components/UI/UpTitle";
-import { Card } from "../../globalStyles";
-import { Button } from "../../components/Button/Button";
-import { ReactComponent as Left } from "../../assets/svg/left.svg";
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
+import styled from 'styled-components/macro';
+import Vector from '../../assets/img/Vector.png';
+import { ReactComponent as Left } from '../../assets/svg/left.svg';
+import { Button } from '../../components/Button/Button';
+import { UpTitle } from '../../components/UI/UpTitle';
+import { Card } from '../../globalStyles';
+
+export const Page = styled.div`
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 16px;
+  letter-spacing: 0.1px;
+  color: ${(props) => props.theme.text2};
+`;
+
+export const Arrows = styled.div`
+  display: flex;
+  gap: 30px;
+`;
+
+export const PaginationSelect = styled.select`
+  height: 30px;
+  border: none;
+  outline: none;
+
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 16px;
+  letter-spacing: 0.1px;
+  color: ${(props) => props.theme.text2};
+  background-image: url(SelectVector) 0 0 no-repeat;
+
+  appearance: none;
+  background-color: transparent;
+  border: none;
+  padding: 0 1em 0 0;
+  margin: 0;
+  /* width: 100%; */
+  font-family: inherit;
+  /* font-size: inherit; */
+  cursor: inherit;
+  line-height: inherit;
+
+  background-image: linear-gradient(45deg, transparent 50%, #56657f 50%),
+    linear-gradient(135deg, #56657f 50%, transparent 50%),
+    linear-gradient(to right, white, white);
+  background-position: calc(100% - 10px) calc(1em + -4px),calc(100% - 5px) calc(1em + -4px),100% 0;
+
+  background-size: 5px 5px, 5px 5px, 5em 5em;
+  background-repeat: no-repeat;
+  width: 40px;
+`;
+
+export const ArrowLeft = styled.div`
+  background: url(${Vector}) no-repeat center;
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+`;
+
+export const ArrowRight = styled(ArrowLeft)`
+  transform: rotateY(180deg);
+`;
+
+export const Pagination = styled(Card)`
+  padding: 0px 30px;
+  height: 55px;
+  display: flex;
+  align-items: center;
+  gap: 45px;
+  border-radius: 10px;
+`;
 
 export const Table = styled.table`
   border-collapse: collapse;
@@ -169,9 +236,9 @@ type ContentProps = {
 export const Content = styled.div<ContentProps>`
   flex-grow: 1;
   transition: 0.3s;
-  margin: ${(props) => (props.mtbig ? "60px auto 40px" : "30px auto 40px")};
+  margin: ${(props) => (props.mtbig ? '60px auto 40px' : '30px auto 40px')};
   padding: 0 35px 0;
-  padding-left: ${(props) => (props.widthCont ? "278px" : "91px")};
+  padding-left: ${(props) => (props.widthCont ? '278px' : '91px')};
   @media (max-width: 1200px) {
     padding-left: 91px;
   }
@@ -268,7 +335,7 @@ export const PayItemHead = styled.div<{ mb?: boolean }>`
   display: flex;
   text-align: right;
   justify-content: center;
-  margin: 0 auto ${(props) => (props.mb ? "12px" : "0")};
+  margin: 0 auto ${(props) => (props.mb ? '12px' : '0')};
   &:last-child() {
     margin-bottom: 12px;
   }
@@ -281,7 +348,7 @@ export const PayItemHead = styled.div<{ mb?: boolean }>`
     }
   } */
   @media (max-width: 768px) {
-    margin: 0 auto ${(props) => (props.mb ? "8px" : "0")};
+    margin: 0 auto ${(props) => (props.mb ? '8px' : '0')};
   }
 `;
 
@@ -366,12 +433,12 @@ export const SelectContainerLottery = styled(SelectContainer)`
 `;
 
 export const SelectWrap = styled.div<{ input?: boolean }>`
-  max-width: ${(props) => (props.input ? "153px" : "280px")};
+  max-width: ${(props) => (props.input ? '153px' : '280px')};
   width: 100%;
   margin: 20px 20px 20px 0;
   position: relative;
   @media (max-width: 992px) {
-    max-width: ${(props) => (props.input ? "153px" : "45%")};
+    max-width: ${(props) => (props.input ? '153px' : '45%')};
   }
   @media (max-width: 768px) {
     max-width: 100%;
@@ -548,8 +615,8 @@ export const LotteryTable = styled.div`
 `;
 
 export const InputLottery = styled.div<{ mrn?: boolean }>`
-  width: ${(props) => (props.mrn ? "165px" : "185px")};
-  margin-right: ${(props) => (props.mrn ? "0" : "20px")};
+  width: ${(props) => (props.mrn ? '165px' : '185px')};
+  margin-right: ${(props) => (props.mrn ? '0' : '20px')};
   margin-bottom: 15px;
   @media (max-width: 834px) {
     width: 46%;

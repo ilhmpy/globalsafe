@@ -1,34 +1,31 @@
-import React, { useState, useEffect, useContext, FC, useCallback } from "react";
-import * as Styled from "./Styled.elements";
-import styled, { css } from "styled-components/macro";
-import { SideNavbar } from "../../components/SideNav";
-import { Card } from "../../globalStyles";
-import { UpTitle } from "../../components/UI/UpTitle";
-import { ReactComponent as Exit } from "../../assets/svg/exit.svg";
-import { ReactComponent as Filter } from "../../assets/svg/filter.svg";
-import { Select } from "../../components/Select/Select";
-import useWindowSize from "../../hooks/useWindowSize";
-import { TestInput, MainAdminInput } from "../../components/UI/DayPicker";
-import { Button } from "../../components/Button/Button";
+import moment from 'moment';
+import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
+import { Scrollbars } from 'react-custom-scrollbars';
+import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
+import { CSSTransition } from 'react-transition-group';
+import styled, { css } from 'styled-components/macro';
+import { ReactComponent as Exit } from '../../assets/svg/exit.svg';
+import { Button } from '../../components/Button/Button';
+import { TestInput } from '../../components/UI/DayPicker';
+import { Loading } from '../../components/UI/Loading';
+import { LockButton, UnLockButton } from '../../components/UI/RoundButton';
+import { UpTitle } from '../../components/UI/UpTitle';
 // import { Checkbox } from "../../components/UI/Checkbox";
-import { AppContext } from "../../context/HubContext";
-import { OpenDate } from "../../types/dates";
+import { AppContext } from '../../context/HubContext';
+import { Card } from '../../globalStyles';
+import useWindowSize from '../../hooks/useWindowSize';
+import { OpenDate } from '../../types/dates';
 import {
-  RootPayments,
+  CollectionCharges,
   PaymentsCollection,
   RootCharges,
-  CollectionCharges,
-} from "../../types/payments";
-import { RootUsers, CollectionUsers } from "../../types/users";
-import { Loading } from "../../components/UI/Loading";
-import { Scrollbars } from "react-custom-scrollbars";
-import InfiniteScroll from "react-infinite-scroller";
-import { ModalUsers } from "./AdminPay/Payments";
-import { CSSTransition } from "react-transition-group";
-import { useTranslation } from "react-i18next";
-import moment from "moment";
-import { useHistory } from "react-router-dom";
-import { LockButton, UnLockButton } from "../../components/UI/RoundButton";
+  RootPayments,
+} from '../../types/payments';
+import { CollectionUsers, RootUsers } from '../../types/users';
+import { ModalUsers } from './AdminPay/Payments';
+import { Pagination } from './Pagination';
+import * as Styled from './Styled.elements';
 
 type PropsTable = {
   lockAccount: (id: string) => void;
@@ -39,7 +36,7 @@ type PropsTable = {
 const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
   const [lock, setLock] = useState(
     data.lockoutEnd &&
-      moment(data.lockoutEnd).valueOf() >= moment.utc().valueOf()
+      moment(data.lockoutEnd).valueOf() >= moment.utc().valueOf(),
   );
   const [open, setOpen] = useState(false);
   const [dataOne, setDataOne] = useState<CollectionCharges[]>([]);
@@ -64,7 +61,7 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
     if (hubConnection) {
       hubConnection
         .invoke<RootCharges>(
-          "GetDepositsCharges",
+          'GetDepositsCharges',
           data.name.toLowerCase(),
           null,
           null,
@@ -72,7 +69,7 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
           null,
           [7],
           0,
-          80
+          80,
         )
         .then((res) => {
           // console.log("GetDepositsCharges 11", res);
@@ -88,7 +85,7 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
     if (hubConnection) {
       hubConnection
         .invoke<RootPayments>(
-          "GetUsersDeposits",
+          'GetUsersDeposits',
           [1, 2, 3, 4, 5, 6],
           data.name.toLowerCase(),
           null,
@@ -98,7 +95,7 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
           null,
           null,
           0,
-          80
+          80,
         )
         .then((res) => {
           setDataTwo(res.collection);
@@ -137,13 +134,13 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
   const adjustBalanceAsync = (
     userSafeId: string,
     delta: number,
-    safeOperationId: string
+    safeOperationId: string,
   ) => {
     if (hubConnection) {
       hubConnection
-        .invoke("AdjustBalanceAsync", userSafeId, delta, safeOperationId)
+        .invoke('AdjustBalanceAsync', userSafeId, delta, safeOperationId)
         .then((res) => {
-          console.log("AdjustBalanceAsync", res);
+          console.log('AdjustBalanceAsync', res);
           getDepositsCharges();
           getUsersDeposits();
         })
@@ -173,16 +170,16 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
         <TableBodyItem>{data.name}</TableBodyItem>
         <TableBodyItem>
           {balance?.length
-            ? (balance[0].volume / 100000).toLocaleString("ru-RU", {
+            ? (balance[0].volume / 100000).toLocaleString('ru-RU', {
                 maximumFractionDigits: 2,
               })
-            : "-"}
+            : '-'}
         </TableBodyItem>
         <TableBodyItem>
-          {data.roles.length ? data.roles[0].name : "-"}
+          {data.roles.length ? data.roles[0].name : '-'}
         </TableBodyItem>
         <TableBodyItem>
-          {moment(data.creationDate).format("DD/MM/YYYY")}
+          {moment(data.creationDate).format('DD/MM/YYYY')}
         </TableBodyItem>
         <TableBodyItem>Русский</TableBodyItem>
         <TableBodyItem>
@@ -197,18 +194,16 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
               greenOutline
               onClick={(e) => {
                 unLocked(e, data.safeId);
-              }}
-            >
-              {t("adminUsers.table.unlock")}
+              }}>
+              {t('adminUsers.table.unlock')}
             </Button>
           ) : (
             <Button
               dangerOutline
               onClick={(e) => {
                 locked(e, data.safeId);
-              }}
-            >
-              {t("adminUsers.table.lock")}
+              }}>
+              {t('adminUsers.table.lock')}
             </Button>
           )}
         </TableBodyItem>
@@ -218,7 +213,7 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
 };
 
 export const AdminUsers = () => {
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
   const [openDate, setOpenDate] = useState<OpenDate>({
     from: undefined,
     to: undefined,
@@ -234,18 +229,21 @@ export const AdminUsers = () => {
   const logOut = appContext.logOut;
   const user = appContext.user;
   const { t } = useTranslation();
-  const backDays: any = moment().subtract(30, "days");
+  const backDays: any = moment().subtract(30, 'days');
+  const [pageLength, setPageLength] = useState<number>(10);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   useEffect(() => {
     if (hubConnection) {
+      setLoading(true);
       hubConnection
         .invoke<RootUsers>(
-          "GetUsers",
+          'GetUsers',
           name.toLowerCase() || null,
           openDate.from ? openDate.from : null,
           openDate.to ? openDate.to : null,
-          0,
-          20
+          (currentPage - 1) * pageLength,
+          pageLength,
         )
         .then((res) => {
           // console.log("GetUsers", res);
@@ -253,24 +251,25 @@ export const AdminUsers = () => {
           setNum(20);
           seTotalUsers(res.totalRecords);
           setListDeposits(res.collection);
+          setLoading(false);
         })
         .catch((err: Error) => {
           setLoading(false);
           console.log(err);
         });
     }
-  }, [hubConnection]);
+  }, [hubConnection, currentPage, pageLength]);
 
   const submit = () => {
     if (hubConnection) {
       hubConnection
         .invoke<RootUsers>(
-          "GetUsers",
+          'GetUsers',
           name.toLowerCase() || null,
           openDate.from ? openDate.from : null,
           openDate.to ? openDate.to : null,
           0,
-          20
+          20,
         )
         .then((res) => {
           setListDeposits([]);
@@ -291,15 +290,15 @@ export const AdminUsers = () => {
     if (hubConnection && listDeposits.length < totalUsers) {
       hubConnection
         .invoke<RootUsers>(
-          "GetUsers",
+          'GetUsers',
           name.toLowerCase() || null,
           openDate.from ? openDate.from : null,
           openDate.to ? openDate.to : null,
           num,
-          20
+          20,
         )
         .then((res) => {
-          console.log("load user", res);
+          console.log('load user', res);
           if (res.collection.length) {
             setLoading(false);
             setListDeposits([...listDeposits, ...res.collection]);
@@ -314,9 +313,9 @@ export const AdminUsers = () => {
   const lockAccount = (id: string) => {
     if (hubConnection) {
       hubConnection
-        .invoke("LockAccount", id)
+        .invoke('LockAccount', id)
         .then((res) => {
-          console.log("LockAccount", res);
+          console.log('LockAccount', res);
         })
         .catch((err: Error) => console.log(err));
     }
@@ -325,22 +324,18 @@ export const AdminUsers = () => {
   const unLockAccount = (id: string) => {
     if (hubConnection) {
       hubConnection
-        .invoke("UnlockAccount", id)
+        .invoke('UnlockAccount', id)
         .then((res) => {
-          console.log("UnlockAccount", res);
+          console.log('UnlockAccount', res);
         })
         .catch((err: Error) => console.log(err));
     }
   };
 
-  // if (admin === false) {
-  //   return <Redirect to="/" />;
-  // }
-
   return (
     <>
       <Styled.HeadBlock>
-        <UpTitle small>{t("adminUsers.uptitle")}</UpTitle>
+        <UpTitle small>{t('adminUsers.uptitle')}</UpTitle>
         <Styled.UserName>
           <span>{user}</span>
           <Exit onClick={logOut} />
@@ -348,21 +343,20 @@ export const AdminUsers = () => {
       </Styled.HeadBlock>
       <Styled.FilterBlock>
         <Styled.FilterHeader>
-          <Styled.FilterName>{t("adminDeposit.filter")}</Styled.FilterName>
+          <Styled.FilterName>{t('adminDeposit.filter')}</Styled.FilterName>
           <Styled.ShowHide onClick={() => setOpen(!open)}>
-            {open ? t("hide") : t("show")}
+            {open ? t('hide') : t('show')}
           </Styled.ShowHide>
         </Styled.FilterHeader>
         <CSSTransition
           in={open}
           timeout={200}
           classNames="filter"
-          unmountOnExit
-        >
+          unmountOnExit>
           <Styled.SelectContainer>
             <Styled.SelectContainerInnerUsers>
               <Styled.SelectWrap style={{ minWidth: 280 }}>
-                <Styled.Label>{t("adminUsers.labelUser")}</Styled.Label>
+                <Styled.Label>{t('adminUsers.labelUser')}</Styled.Label>
                 <Input
                   value={name}
                   onChange={(e) => setName(e.target.value.toLowerCase())}
@@ -372,12 +366,12 @@ export const AdminUsers = () => {
                 <TestInput
                   setOpenDate={setOpenDate}
                   openDate={openDate}
-                  label={t("adminUsers.labelCreate")}
+                  label={t('adminUsers.labelCreate')}
                 />
               </Styled.SelectWrap>
             </Styled.SelectContainerInnerUsers>
             <Button danger onClick={submit}>
-              {t("adminUsers.apply")}
+              {t('adminUsers.apply')}
             </Button>
           </Styled.SelectContainer>
         </CSSTransition>
@@ -385,43 +379,39 @@ export const AdminUsers = () => {
       <Card smallBorder>
         <PaymentsTable>
           <TableHead>
-            <TableHeadItem>{t("adminUsers.table.user")}</TableHeadItem>
-            <TableHeadItem>{t("adminUsers.table.balans")}</TableHeadItem>
-            <TableHeadItem>{t("adminUsers.table.role")}</TableHeadItem>
-            <TableHeadItem>{t("adminUsers.table.dataCreate")}</TableHeadItem>
-            <TableHeadItem>{t("adminUsers.table.lang")}</TableHeadItem>
+            <TableHeadItem>{t('adminUsers.table.user')}</TableHeadItem>
+            <TableHeadItem>{t('adminUsers.table.balans')}</TableHeadItem>
+            <TableHeadItem>{t('adminUsers.table.role')}</TableHeadItem>
+            <TableHeadItem>{t('adminUsers.table.dataCreate')}</TableHeadItem>
+            <TableHeadItem>{t('adminUsers.table.lang')}</TableHeadItem>
             <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
           </TableHead>
           {listDeposits.length ? (
-            <Scrollbars style={{ height: "500px" }}>
-              <InfiniteScroll
-                pageStart={10}
-                loadMore={myLoad}
-                hasMore={count}
-                useWindow={false}
-                loader={
-                  <div className="loader" key={0}>
-                    Loading ...
-                  </div>
-                }
-              >
-                {listDeposits.map((item) => (
-                  <UserTable
-                    data={item}
-                    key={item.safeId}
-                    unLockAccount={unLockAccount}
-                    lockAccount={lockAccount}
-                  />
-                ))}
-              </InfiniteScroll>
+            <Scrollbars style={{ height: '500px' }}>
+              {listDeposits.map((item) => (
+                <UserTable
+                  data={item}
+                  key={item.safeId}
+                  unLockAccount={unLockAccount}
+                  lockAccount={lockAccount}
+                />
+              ))}
             </Scrollbars>
           ) : loading ? (
             <Loading />
           ) : (
-            <NotFound>{t("notFound")}</NotFound>
+            <NotFound>{t('notFound')}</NotFound>
           )}
         </PaymentsTable>
       </Card>
+
+      <Pagination
+        pageLength={pageLength}
+        setPageLength={setPageLength}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        totalLottery={totalUsers}
+      />
     </>
   );
 };
