@@ -32,6 +32,7 @@ declare module 'styled-components' {
       backgroundAlfa: string;
       border: string;
     },
-    descFund: string,
+    descFund: string;
+    procentTextColor: string;
   }
 }
