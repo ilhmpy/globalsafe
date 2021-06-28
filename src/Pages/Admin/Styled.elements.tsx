@@ -6,17 +6,35 @@ import { Button } from '../../components/Button/Button';
 import { UpTitle } from '../../components/UI/UpTitle';
 import { Card } from '../../globalStyles';
 
+export const CountText = styled.div`
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 16px;
+  letter-spacing: 0.1px;
+  color: ${(props) => props.theme.text2};
+  @media (max-width: 600px) {
+    font-size: 13px;
+  }
+`;
+
 export const Page = styled.div`
   font-weight: normal;
   font-size: 14px;
   line-height: 16px;
   letter-spacing: 0.1px;
   color: ${(props) => props.theme.text2};
+  @media (max-width: 600px) {
+    font-size: 13px;
+    min-width: 70px;
+  }
 `;
 
 export const Arrows = styled.div`
   display: flex;
   gap: 30px;
+  @media (max-width: 600px) {
+    gap: 15px;
+  }
 `;
 
 export const PaginationSelect = styled.select`
@@ -24,32 +42,31 @@ export const PaginationSelect = styled.select`
   border: none;
   outline: none;
 
-  font-weight: normal;
   font-size: 14px;
-  line-height: 16px;
   letter-spacing: 0.1px;
   color: ${(props) => props.theme.text2};
-  background-image: url(SelectVector) 0 0 no-repeat;
 
   appearance: none;
-  background-color: transparent;
-  border: none;
-  padding: 0 1em 0 0;
-  margin: 0;
-  /* width: 100%; */
   font-family: inherit;
-  /* font-size: inherit; */
-  cursor: inherit;
+  cursor: pointer;
   line-height: inherit;
 
   background-image: linear-gradient(45deg, transparent 50%, #56657f 50%),
     linear-gradient(135deg, #56657f 50%, transparent 50%),
     linear-gradient(to right, white, white);
-  background-position: calc(100% - 10px) calc(1em + -4px),calc(100% - 5px) calc(1em + -4px),100% 0;
+  background-position: calc(100% - 10px) calc(1em + -4px),
+    calc(100% - 5px) calc(1em + -4px), 100% 0;
 
   background-size: 5px 5px, 5px 5px, 5em 5em;
   background-repeat: no-repeat;
   width: 40px;
+
+  @media (max-width: 600px) {
+    font-size: 13px;
+    background-position: calc(100% - 14px) calc(1em + -2px),
+      calc(100% - 9px) calc(1em + -2px), 100% 0;
+    width: 60px;
+  }
 `;
 
 export const ArrowLeft = styled.div`
@@ -70,6 +87,10 @@ export const Pagination = styled(Card)`
   align-items: center;
   gap: 45px;
   border-radius: 10px;
+  @media (max-width: 600px) {
+    gap: 15px;
+    justify-content: space-between;
+  }
 `;
 
 export const Table = styled.table`

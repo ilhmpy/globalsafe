@@ -18,7 +18,7 @@ export const Pagination: FC<PaginationPropsType> = ({
 }) => {
   return (
     <Styled.Pagination>
-      <Styled.Page>Элементов на странице:</Styled.Page>
+      <Styled.CountText>Элементов на странице:</Styled.CountText>
       <Styled.PaginationSelect
         name="countRows"
         onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
