@@ -102,6 +102,7 @@ export const AdminDeposit = () => {
 
   const myLoad = () => {
     setCount(false);
+    setLoading(true);
     if (hubConnection && depositsList.length < totalList) {
       hubConnection
         .invoke<RootPayments>(
@@ -114,16 +115,16 @@ export const AdminDeposit = () => {
           closeDate.from ? closeDate.from : null,
           closeDate.to ? closeDate.from : null,
           null,
-          num,
-          20,
+          (currentPage - 1) * pageLength,
+          pageLength,
         )
         .then((res) => {
-          setLoading(false);
           if (res.collection.length) {
-            setDepositsList([...depositsList, ...res.collection]);
+            setDepositsList([...res.collection]);
             setCount(true);
             setNum(num + 20);
           }
+          setLoading(false);
         })
         .catch((err: Error) => console.log(err));
     }
@@ -166,10 +167,15 @@ export const AdminDeposit = () => {
           console.log(err);
         });
     }
+  }, [hubConnection]);
+
+  useEffect(() => {
+    myLoad();
   }, [currentPage, hubConnection, pageLength]);
 
   const submit = () => {
     if (hubConnection) {
+      setCurrentPage(1);
       hubConnection
         .invoke<RootPayments>(
           'GetUsersDeposits',
@@ -181,8 +187,8 @@ export const AdminDeposit = () => {
           closeDate.from ? closeDate.from : null,
           closeDate.to ? closeDate.from : null,
           null,
-          0,
-          20,
+          (currentPage - 1) * pageLength,
+          pageLength,
         )
         .then((res) => {
           setDepositsList([]);
