@@ -262,21 +262,23 @@ export const AdminUsers = () => {
 
   const submit = () => {
     if (hubConnection) {
+      setLoading(true);
+      setCurrentPage(1);
       hubConnection
         .invoke<RootUsers>(
           'GetUsers',
           name.toLowerCase() || null,
           openDate.from ? openDate.from : null,
           openDate.to ? openDate.to : null,
-          0,
-          20,
+          (currentPage - 1) * pageLength,
+          pageLength,
         )
         .then((res) => {
           setListDeposits([]);
-          setLoading(false);
           setNum(20);
           seTotalUsers(res.totalRecords);
           setListDeposits(res.collection);
+          setLoading(false);
         })
         .catch((err: Error) => {
           setLoading(false);

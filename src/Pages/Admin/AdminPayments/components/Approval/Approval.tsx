@@ -1,23 +1,25 @@
-import React, { FC, useContext, useEffect, useState } from "react";
-import { Scrollbars } from "react-custom-scrollbars";
-import { useTranslation } from "react-i18next";
-import { CSSTransition } from "react-transition-group";
-import { Button } from "../../../../../components/Button/Button";
-import { Select as SelectOne } from "../../../../../components/Select/Select";
-import { Select } from "../../../../../components/Select/Select2";
-import { TestInput } from "../../../../../components/UI/DayPicker";
-import { Loading } from "../../../../../components/UI/Loading";
-import { ProcentInput } from "../../../../../components/UI/ProcentInput";
-import { AppContext } from "../../../../../context/HubContext";
-import { Card } from "../../../../../globalStyles";
-import { OpenDate } from "../../../../../types/dates";
-import { CollectionListDeposits } from "../../../../../types/deposits";
+import React, { FC, useContext, useEffect, useState } from 'react';
+import { Scrollbars } from 'react-custom-scrollbars';
+import { useTranslation } from 'react-i18next';
+import ReactNotification, { store } from 'react-notifications-component';
+import 'react-notifications-component/dist/theme.css';
+import { CSSTransition } from 'react-transition-group';
+import { Button } from '../../../../../components/Button/Button';
+import { Select as SelectOne } from '../../../../../components/Select/Select';
+import { Select } from '../../../../../components/Select/Select2';
+import { TestInput } from '../../../../../components/UI/DayPicker';
+import { Loading } from '../../../../../components/UI/Loading';
+import { ProcentInput } from '../../../../../components/UI/ProcentInput';
+import { AppContext } from '../../../../../context/HubContext';
+import { Card } from '../../../../../globalStyles';
+import { OpenDate } from '../../../../../types/dates';
+import { CollectionListDeposits } from '../../../../../types/deposits';
 import {
   PaymentsCollection,
   RootPayments,
-} from "../../../../../types/payments";
-import { DepositList } from "../../../AdminPay/DepositList";
-import { Pagination } from "../../../Pagination";
+} from '../../../../../types/payments';
+import { DepositList } from '../../../AdminPay/DepositList';
+import { Pagination } from '../../../Pagination';
 import {
   FilterBlock,
   FilterHeader,
@@ -28,10 +30,8 @@ import {
   SelectContainerInnerPaid,
   SelectWrap,
   ShowHide,
-} from "../../../Styled.elements";
-import ReactNotification, { store } from "react-notifications-component";
-import "react-notifications-component/dist/theme.css";
-import * as Styled from "./Styled.elements";
+} from '../../../Styled.elements';
+import * as Styled from './Styled.elements';
 
 type Props = {
   adjustPay: (id: string, val: number) => void;
@@ -56,7 +56,7 @@ export const Approval: FC<Props> = ({
   const [totalDeposits, setTotalDeposits] = useState(0);
   const [count, setCount] = useState(true);
   const [num, setNum] = useState(20);
-  const [nameApproval, setNameApproval] = useState("");
+  const [nameApproval, setNameApproval] = useState('');
   const [checkList, setCheckList] = useState<any>([]);
   const [loading, setLoading] = useState(true);
   const [checkListApproval, setCheckListApproval] = useState<any>([]);
@@ -79,7 +79,7 @@ export const Approval: FC<Props> = ({
 
   const namesProgramApproval = checkListApproval.map((i: any) => i.safeId);
   const idProgramApproval = listDeposits.filter((i) =>
-    namesProgramApproval.includes(i.safeId)
+    namesProgramApproval.includes(i.safeId),
   );
   const searchSafeIDApproval = idProgramApproval.map((i) => i.safeId);
 
@@ -89,7 +89,7 @@ export const Approval: FC<Props> = ({
       setDepositList([]);
       hubConnection
         .invoke<RootPayments>(
-          "GetUsersDeposits",
+          'GetUsersDeposits',
           [5, 6],
           null,
           null,
@@ -99,7 +99,7 @@ export const Approval: FC<Props> = ({
           null,
           null,
           (currentPage - 1) * pageLength,
-          pageLength
+          pageLength,
         )
         .then((res) => {
           setTotalDeposits(res.totalRecords);
@@ -112,14 +112,14 @@ export const Approval: FC<Props> = ({
           console.log(err);
         });
     }
-  }, [currentPage, hubConnection, pageLength]);
+  }, [hubConnection]);
 
   const loadMoreItems = () => {
     setCount(false);
     if (hubConnection && depositList.length < totalDeposits) {
       hubConnection
         .invoke<RootPayments>(
-          "GetUsersDeposits",
+          'GetUsersDeposits',
           depositState,
           nameApproval ? nameApproval.toLowerCase() : null,
           searchSafeIDApproval.length ? searchSafeIDApproval : null,
@@ -128,12 +128,12 @@ export const Approval: FC<Props> = ({
           null,
           null,
           null,
-          num,
-          20
+          (currentPage - 1) * pageLength,
+          pageLength,
         )
         .then((res) => {
           if (res.collection.length) {
-            setDepositList([...depositList, ...res.collection]);
+            setDepositList([...res.collection]);
             setCount(true);
             setNum(num + 20);
           }
@@ -142,11 +142,16 @@ export const Approval: FC<Props> = ({
     }
   };
 
+  useEffect(() => {
+    loadMoreItems();
+  }, [currentPage, hubConnection, pageLength]);
+
   const submitApproval = () => {
     if (hubConnection) {
+      setCurrentPage(1);
       hubConnection
         .invoke<RootPayments>(
-          "GetUsersDeposits",
+          'GetUsersDeposits',
           depositState,
           nameApproval ? nameApproval.toLowerCase() : null,
           searchSafeIDApproval.length ? searchSafeIDApproval : null,
@@ -155,8 +160,8 @@ export const Approval: FC<Props> = ({
           null,
           null,
           null, //
-          0,
-          20
+          (currentPage - 1) * pageLength,
+          pageLength,
         )
         .then((res) => {
           setDepositList([]);
@@ -173,16 +178,16 @@ export const Approval: FC<Props> = ({
   const alert = (
     title: string,
     message: string,
-    type: "success" | "default" | "warning" | "info" | "danger"
+    type: 'success' | 'default' | 'warning' | 'info' | 'danger',
   ) => {
     store.addNotification({
       title: title,
       message: message,
       type: type,
-      insert: "top",
-      container: "center",
-      animationIn: ["animate__animated", "animate__fadeIn"],
-      animationOut: ["animate__animated", "animate__fadeOut"],
+      insert: 'top',
+      container: 'center',
+      animationIn: ['animate__animated', 'animate__fadeIn'],
+      animationOut: ['animate__animated', 'animate__fadeOut'],
       dismiss: {
         duration: 5000,
       },
@@ -193,20 +198,20 @@ export const Approval: FC<Props> = ({
     if (hubConnection) {
       hubConnection
         .invoke(
-          "ConfirmAllDepositsPayment",
+          'ConfirmAllDepositsPayment',
           nameApproval ? nameApproval.toLowerCase() : null,
           openDateApproval.from ? openDateApproval.from : null,
           openDateApproval.to ? openDateApproval.to : null,
           searchSafeIDApproval.length ? searchSafeIDApproval : null,
-          procent ? +procent / 100 : null
+          procent ? +procent / 100 : null,
         )
         .then((res) => {
-          console.log("ConfirmAllDepositsPayment", res);
-          alert("Успешно", "согласовано", "success");
+          console.log('ConfirmAllDepositsPayment', res);
+          alert('Успешно', 'согласовано', 'success');
           getPaymentsOverview();
         })
         .catch((err: Error) => {
-          alert("Ошибка", "Произошла ошибка", "danger");
+          alert('Ошибка', 'Произошла ошибка', 'danger');
         });
     }
   };
@@ -217,33 +222,32 @@ export const Approval: FC<Props> = ({
 
       <Styled.ButtonWrap>
         <Button dangerOutline mb onClick={paymentsConfirm}>
-          {t("adminPay.confirmButton")}
+          {t('adminPay.confirmButton')}
         </Button>
         <ProcentInput
           placeholder="0"
           value={procent}
           onChange={(e) => setProcent(e.target.value)}
-          label={t("adminPay.procentPay")}
+          label={t('adminPay.procentPay')}
         />
       </Styled.ButtonWrap>
 
       <FilterBlock>
         <FilterHeader>
-          <FilterName>{t("adminDeposit.filter")}</FilterName>
+          <FilterName>{t('adminDeposit.filter')}</FilterName>
           <ShowHide onClick={() => setOpenFilterOne(!openFilterOne)}>
-            {openFilterOne ? t("hide") : t("show")}
+            {openFilterOne ? t('hide') : t('show')}
           </ShowHide>
         </FilterHeader>
         <CSSTransition
           in={openFilterOne}
           timeout={200}
           classNames="filter"
-          unmountOnExit
-        >
+          unmountOnExit>
           <SelectContainer>
             <SelectContainerInnerPaid>
               <SelectWrap style={{ minWidth: 263 }}>
-                <Label>{t("adminPay.filter.user")}</Label>
+                <Label>{t('adminPay.filter.user')}</Label>
                 <Input
                   value={nameApproval}
                   onChange={(e) =>
@@ -255,11 +259,11 @@ export const Approval: FC<Props> = ({
                 <TestInput
                   setOpenDate={setOpenDateApproval}
                   openDate={openDateApproval}
-                  label={t("adminPay.filter.date")}
+                  label={t('adminPay.filter.date')}
                 />
               </SelectWrap>
               <SelectWrap style={{ minWidth: 263 }}>
-                <Label>{t("adminPay.filter.deposit")}</Label>
+                <Label>{t('adminPay.filter.deposit')}</Label>
                 <Select
                   checkList={checkListApproval}
                   setCheckList={setCheckListApproval}
@@ -268,20 +272,20 @@ export const Approval: FC<Props> = ({
                 <pre>{JSON.stringify(setCheckListApproval)}</pre>
               </SelectWrap>
               <SelectWrap style={{ minWidth: 263 }}>
-                <Label>{t("adminPay.status")}</Label>
+                <Label>{t('adminPay.status')}</Label>
                 <SelectOne
                   checkList={checkList}
                   setCheckList={setCheckList}
                   idx={5}
                   values={[
-                    t("adminPay.filter.disagree"),
-                    t("adminPay.filter.agree"),
+                    t('adminPay.filter.disagree'),
+                    t('adminPay.filter.agree'),
                   ]}
                 />
               </SelectWrap>
             </SelectContainerInnerPaid>
             <Button danger onClick={submitApproval}>
-              {t("adminUsers.apply")}
+              {t('adminUsers.apply')}
             </Button>
           </SelectContainer>
         </CSSTransition>
@@ -292,33 +296,33 @@ export const Approval: FC<Props> = ({
           <Styled.TableHead>
             <Styled.TableHeadItem>№</Styled.TableHeadItem>
             <Styled.TableHeadItem>
-              {t("adminPay.table.user")}
+              {t('adminPay.table.user')}
             </Styled.TableHeadItem>
             <Styled.TableHeadItem>
-              {t("adminPay.table.name")}
+              {t('adminPay.table.name')}
             </Styled.TableHeadItem>
             <Styled.TableHeadItem>
-              {t("adminPay.table.procent")}
+              {t('adminPay.table.procent')}
             </Styled.TableHeadItem>
             <Styled.TableHeadItem>
-              {t("adminPay.table.datePay")}
+              {t('adminPay.table.datePay')}
             </Styled.TableHeadItem>
             <Styled.TableHeadItem>
-              {t("adminPay.table.profit")}
+              {t('adminPay.table.profit')}
             </Styled.TableHeadItem>
             <Styled.TableHeadItem>
-              {t("adminPay.table.openDate")}
+              {t('adminPay.table.openDate')}
             </Styled.TableHeadItem>
             <Styled.TableHeadItem>
-              {t("adminPay.table.contribution")}
+              {t('adminPay.table.contribution')}
             </Styled.TableHeadItem>
             <Styled.TableHeadItem>
-              {t("adminPay.table.payments")}
+              {t('adminPay.table.payments')}
             </Styled.TableHeadItem>
             <Styled.TableHeadItem>{/* <Filter /> */}</Styled.TableHeadItem>
           </Styled.TableHead>
           {depositList.length ? (
-            <Scrollbars style={{ height: "500px" }}>
+            <Scrollbars style={{ height: '500px' }}>
               {depositList.map((item: PaymentsCollection, idx: number) => (
                 <DepositList
                   idx={idx}
@@ -333,7 +337,7 @@ export const Approval: FC<Props> = ({
           ) : loading ? (
             <Loading />
           ) : (
-            <Styled.NotFound>{t("notFound")}</Styled.NotFound>
+            <Styled.NotFound>{t('notFound')}</Styled.NotFound>
           )}
         </Styled.PaymentsTable>
       </Card>
