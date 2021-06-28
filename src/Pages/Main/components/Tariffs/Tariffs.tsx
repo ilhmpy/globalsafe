@@ -64,14 +64,44 @@ export const Tariffs = () => {
     {
       name: "start",
       color: "#BCD476",
+      lines: [
+        { id: "1", count: "4%" },
+        { id: "2", count: "1,6%" },
+        { id: "3", count: "0,8%" },
+        { id: "4", count: "" },
+        { id: "5", count: "" },
+        { id: "6", count: "" },
+        { id: "7", count: "" },
+        { id: "8", count: "" },
+      ],
     },
     {
       name: "expert",
       color: "#6DB9FF",
+      lines: [
+        { id: "1", count: "4%" },
+        { id: "2", count: "1,6%" },
+        { id: "3", count: "0,8%" },
+        { id: "4", count: "4%" },
+        { id: "5", count: "1,6%" },
+        { id: "6", count: "" },
+        { id: "7", count: "" },
+        { id: "8", count: "" },
+      ],
     },
     {
       name: "infinity",
-      color: "#FF416E"
+      color: "#FF416E",
+      lines: [
+        { id: "1", count: "4%" },
+        { id: "2", count: "1,6%" },
+        { id: "3", count: "0,8%" },
+        { id: "4", count: "4%" },
+        { id: "5", count: "1,6%" },
+        { id: "6", count: "0,8%" },
+        { id: "7", count: "1,6%" },
+        { id: "8", count: "0,8%" },
+      ],
     }
   ]);
 
@@ -226,12 +256,13 @@ export const Tariffs = () => {
                     <SwiperSlide key={programs.indexOf(program)}>
                       <PartnerProgramHeaderItem color={program.color}>{program.name}</PartnerProgramHeaderItem>
                       {
-                        [1, 2, 3, 4, 5, 6, 7, 8].map(id => {
+                        program.lines.map(( line: any ) => {
+                          const { id, count } = line;
                           return (
                             <PartnerProgramLine>
                               <PartnerProgramLineNumber>{id} {t("line")}</PartnerProgramLineNumber>
                               <div className="inner">
-                                <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                                <PartnerProgramLineItem>{count}</PartnerProgramLineItem>
                               </div>
                             </PartnerProgramLine>
                           )
@@ -273,9 +304,9 @@ export const Tariffs = () => {
               <PartnerProgramContainer>
                 <PartnerProgramLineNumber>2 {t("line")}</PartnerProgramLineNumber>
                 <div className="inner">
-                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
-                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
-                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>1,6%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>1,6%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>1,6%</PartnerProgramLineItem>
                 </div>
               </PartnerProgramContainer>
             </PartnerProgramLine>
@@ -283,9 +314,9 @@ export const Tariffs = () => {
               <PartnerProgramContainer>
                 <PartnerProgramLineNumber>3 {t("line")}</PartnerProgramLineNumber>
                 <div className="inner">
-                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
-                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
-                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>0,8%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>0,8%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>0,8%</PartnerProgramLineItem>
                 </div>
               </PartnerProgramContainer>
             </PartnerProgramLine>
@@ -293,7 +324,7 @@ export const Tariffs = () => {
               <PartnerProgramContainer>
                 <PartnerProgramLineNumber>4 {t("line")}</PartnerProgramLineNumber>
                 <div className="inner">
-                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem></PartnerProgramLineItem>
                   <PartnerProgramLineItem>4%</PartnerProgramLineItem>
                   <PartnerProgramLineItem>4%</PartnerProgramLineItem>
                 </div>
@@ -303,9 +334,9 @@ export const Tariffs = () => {
               <PartnerProgramContainer>
                 <PartnerProgramLineNumber>5 {t("line")}</PartnerProgramLineNumber>
                 <div className="inner">
-                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
-                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
-                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem></PartnerProgramLineItem>
+                  <PartnerProgramLineItem>1,6%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>1,6%</PartnerProgramLineItem>
                 </div>
               </PartnerProgramContainer>
             </PartnerProgramLine>
@@ -313,9 +344,9 @@ export const Tariffs = () => {
               <PartnerProgramContainer>
                 <PartnerProgramLineNumber>6 {t("line")}</PartnerProgramLineNumber>
                 <div className="inner">
-                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
-                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
-                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem></PartnerProgramLineItem>
+                  <PartnerProgramLineItem></PartnerProgramLineItem>
+                  <PartnerProgramLineItem>0,8%</PartnerProgramLineItem>
                 </div>
               </PartnerProgramContainer>
             </PartnerProgramLine>
@@ -323,9 +354,9 @@ export const Tariffs = () => {
               <PartnerProgramContainer>
                 <PartnerProgramLineNumber>7 {t("line")}</PartnerProgramLineNumber>
                 <div className="inner">
-                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
-                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
-                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem></PartnerProgramLineItem>
+                  <PartnerProgramLineItem></PartnerProgramLineItem>
+                  <PartnerProgramLineItem>1,6%</PartnerProgramLineItem>
                 </div>
               </PartnerProgramContainer>
             </PartnerProgramLine>
@@ -333,9 +364,9 @@ export const Tariffs = () => {
               <PartnerProgramContainer>
                 <PartnerProgramLineNumber>8 {t("line")}</PartnerProgramLineNumber>
                 <div className="inner">
-                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
-                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
-                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem></PartnerProgramLineItem>
+                  <PartnerProgramLineItem></PartnerProgramLineItem>
+                  <PartnerProgramLineItem>0,8%</PartnerProgramLineItem>
                 </div>
               </PartnerProgramContainer>
             </PartnerProgramLine>
