@@ -9,21 +9,21 @@ declare module 'styled-components' {
     text3Hover: string;
     toggleBorder: string;
     gradient: string;
-    link:string;
-    buttonBorder:string;
+    link: string;
+    buttonBorder: string;
     modal: string;
-    header:string;
+    header: string;
     listBorder: string;
     bbdis: string;
-    cdis:string;
-    depositHead:string;
+    cdis: string;
+    depositHead: string;
     nextPay: string;
     thHead: string;
     topUpButton: string;
     topUpColor: string;
-    switch:string;
-    inputBg:string;
-    border:string;
+    switch: string;
+    inputBg: string;
+    border: string;
     range: string;
     repeatCode: string;
     slot: string;
@@ -31,8 +31,8 @@ declare module 'styled-components' {
       background: string;
       backgroundAlfa: string;
       border: string;
-    },
-    descFund: string,
+    };
+    descFund: string;
     partnerProgram: {
       background: string;
       color: string;
@@ -41,6 +41,9 @@ declare module 'styled-components' {
       lineItemColor: string;
       nthItemBG: string;
       titlePhoneColor: string;
-    }
+    };
+    pagination: {
+      selectCountBackgroundImage: string;
+    };
   }
 }
