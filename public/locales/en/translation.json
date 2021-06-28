@@ -129,7 +129,8 @@
         "depositsCount": "Number of deposits",
         "depositsAmount": "Deposits",
         "openDeposit": "Open deposits",
-        "closeDeposit": "Closing deposits"
+        "closeDeposit": "Closing deposits",
+        "depositsToClose": "Deposits to close"
     },
     "adminPortfolio":{
         "uptitle": "Portfolio",

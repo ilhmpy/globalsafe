@@ -605,6 +605,11 @@ const LastChartItem = styled.div`
   width: 60%;
   display: flex;
   justify-content: center;
+
+  ${ChartItem} {
+    max-width: 410px;
+  }
+
   @media (max-width: 992px) {
     width: 50%;
   }
