@@ -30,13 +30,14 @@ import {
   SelectContainerInnerPaid,
   SelectWrap,
   ShowHide,
-} from '../../../Styled.elements';
-import * as Styled from './Styled.elements';
+} from "../../../Styled.elements";
+import "react-notifications-component/dist/theme.css";
+import * as Styled from "./Styled.elements";
+import { SliderComponent } from "../../../../../components/Slider/Slider";
 
 type Props = {
   adjustPay: (id: string, val: number) => void;
-  confirmPay: (id: string) => void;
-  unConfirmPay: (id: string) => void;
+
   listDeposits: CollectionListDeposits[];
   getPaymentsOverview: () => void;
   procent: string;
@@ -45,14 +46,12 @@ type Props = {
 
 export const Approval: FC<Props> = ({
   adjustPay,
-  confirmPay,
-  unConfirmPay,
   listDeposits,
   getPaymentsOverview,
   setProcent,
   procent,
 }) => {
-  const [depositList, setDepositList] = useState<any>([]);
+  const [depositList, setDepositList] = useState<PaymentsCollection[]>([]);
   const [totalDeposits, setTotalDeposits] = useState(0);
   const [count, setCount] = useState(true);
   const [num, setNum] = useState(20);
@@ -83,7 +82,7 @@ export const Approval: FC<Props> = ({
   );
   const searchSafeIDApproval = idProgramApproval.map((i) => i.safeId);
 
-  useEffect(() => {
+  const deposites = () => {
     if (hubConnection) {
       setLoading(true);
       setDepositList([]);
@@ -112,7 +111,7 @@ export const Approval: FC<Props> = ({
           console.log(err);
         });
     }
-  }, [hubConnection]);
+  };
 
   const loadMoreItems = () => {
     setCount(false);
@@ -139,6 +138,59 @@ export const Approval: FC<Props> = ({
           }
         })
         .catch((err: Error) => console.log(err));
+    }
+  };
+
+  useEffect(() => {
+    deposites();
+  }, [hubConnection]);
+
+  const confirmPay = (id: string) => {
+    if (hubConnection) {
+      hubConnection
+        .invoke("ConfirmDepositPayment", id)
+        .then((res) => {
+          const key = depositList.findIndex((i) => i.safeId === id);
+
+          if (key !== -1) {
+            const item = depositList.filter((i) => i.safeId === id)[0];
+            setDepositList([
+              ...depositList.slice(0, key),
+              { ...item, state: 5 },
+              ...depositList.slice(key + 1),
+            ]);
+          }
+
+          console.log("ConfirmDepositPayment", res);
+          getPaymentsOverview();
+        })
+        .catch((err: Error) => {
+          console.log(err);
+        });
+    }
+  };
+
+  const unConfirmPay = (id: string) => {
+    if (hubConnection) {
+      hubConnection
+        .invoke("UnconfirmDepositPayment", id)
+        .then((res) => {
+          console.log("UnconfirmDepositPayment", res);
+          const key = depositList.findIndex((i) => i.safeId === id);
+
+          if (key !== -1) {
+            const item = depositList.filter((i) => i.safeId === id)[0];
+            setDepositList([
+              ...depositList.slice(0, key),
+              { ...item, state: 6 },
+              ...depositList.slice(key + 1),
+            ]);
+          }
+          getPaymentsOverview();
+        })
+        .catch((err: Error) => {
+          console.log(err);
+        });
     }
   };
 
@@ -209,6 +261,7 @@ export const Approval: FC<Props> = ({
           console.log('ConfirmAllDepositsPayment', res);
           alert('Успешно', 'согласовано', 'success');
           getPaymentsOverview();
+          submitApproval();
         })
         .catch((err: Error) => {
           alert('Ошибка', 'Произошла ошибка', 'danger');

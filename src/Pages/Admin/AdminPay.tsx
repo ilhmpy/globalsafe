@@ -132,32 +132,6 @@ export const AdminPay = () => {
     ? checkList.map((i: any) => i.id)
     : [5, 6];
 
-  const myLoad = () => {
-    setNext(false);
-    if (hubConnection && depositPayList.length < totalPayDeposits) {
-      hubConnection
-        .invoke<RootCharges>(
-          'GetDepositsCharges',
-          name ? name.toLowerCase() : null,
-          openDate.from ? openDate.from : backDays._d,
-          openDate.to ? openDate.to : new Date(),
-          searchSafeID.length ? searchSafeID : null,
-          null,
-          [7, 8],
-          numPay,
-          20,
-        )
-        .then((res) => {
-          if (res.collection.length) {
-            setDepositPayList([...depositPayList, ...res.collection]);
-            setPayNum(numPay + 20);
-            setNext(true);
-          }
-        })
-        .catch((err: Error) => console.log(err));
-    }
-  };
-
   const handleClick = (id: number) => {
     if (id !== active) {
       setActive(id);
@@ -474,8 +448,6 @@ export const AdminPay = () => {
         <Approval
           getPaymentsOverview={getPaymentsOverview}
           adjustPay={adjustPay}
-          confirmPay={confirmPay}
-          unConfirmPay={unConfirmPay}
           listDeposits={listDeposits}
           setProcent={setProcent}
           procent={procent}
