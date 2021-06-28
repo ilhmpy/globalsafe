@@ -1,30 +1,30 @@
-import React, { useState, useContext, useEffect } from "react";
-import * as Styled from "./Styled.elements";
-import styled, { css } from "styled-components/macro";
-import { Card } from "../../globalStyles";
+import moment from 'moment';
+import React, { useContext, useEffect, useState } from 'react';
+import 'react-day-picker/lib/style.css';
+import { useTranslation } from 'react-i18next';
+import { CSSTransition } from 'react-transition-group';
+import styled, { css } from 'styled-components/macro';
+import { ReactComponent as Exit } from '../../assets/svg/exit.svg';
 import {
   ColumnChart,
+  ColumnChartCwd,
   ColumnChartThree,
   ColumnChartTwo,
-  ColumnChartCwd,
-} from "../../components/Charts/Test";
-import { UpTitle } from "../../components/UI/UpTitle";
-import "react-day-picker/lib/style.css";
-import { ReactComponent as Exit } from "../../assets/svg/exit.svg";
-import { Calendar, MainAdminInput } from "../../components/UI/DayPicker";
-import { OpenDate } from "../../types/dates";
-import { AppContext } from "../../context/HubContext";
-import moment from "moment";
-import { CSSTransition } from "react-transition-group";
-import { PaymentsStat } from "../../types/main";
-import { useTranslation } from "react-i18next";
-import { HalfRoundBorder } from "../../components/UI/HalfRound";
-import useWindowSize from "../../hooks/useWindowSize";
+} from '../../components/Charts/Test';
+import { Calendar, MainAdminInput } from '../../components/UI/DayPicker';
+import { HalfRoundBorder } from '../../components/UI/HalfRound';
+import { UpTitle } from '../../components/UI/UpTitle';
+import { AppContext } from '../../context/HubContext';
+import { Card } from '../../globalStyles';
+import useWindowSize from '../../hooks/useWindowSize';
+import { OpenDate } from '../../types/dates';
+import { PaymentsStat } from '../../types/main';
+import * as Styled from './Styled.elements';
 
 export const AdminMain = () => {
-  let currentMonth = moment().format("MMYYYY");
-  let year = moment().format("YYYY");
-  let prevMonth = moment().subtract(1, "months").date(1).format("MMYYYY");
+  let currentMonth = moment().format('MMYYYY');
+  let year = moment().format('YYYY');
+  let prevMonth = moment().subtract(1, 'months').date(1).format('MMYYYY');
   // let currentMonthStart: any = moment(currentMonth, "M.YYYY").startOf("month");
   // let currentMonthEnd: any = moment(currentMonth, "M.YYYY").endOf("month");
 
@@ -34,7 +34,7 @@ export const AdminMain = () => {
   // let yearStart: any = moment(year, "YYYY").startOf("month");
   // let yearEnd: any = moment(year, "YYYY").endOf("year");
 
-  const backDays: any = moment().subtract(30, "days");
+  const backDays: any = moment().subtract(30, 'days');
   const sizes = useWindowSize();
   const size = sizes < 1240;
   const appContext = useContext(AppContext);
@@ -78,9 +78,9 @@ export const AdminMain = () => {
     if (hubConnection) {
       hubConnection
         .invoke<PaymentsStat>(
-          "GetDepositsCreationStat",
+          'GetDepositsCreationStat',
           depositsDate.from,
-          depositsDate.to
+          depositsDate.to,
         )
         .then((res) => {
           setDepositsCreationStat(res);
@@ -93,9 +93,9 @@ export const AdminMain = () => {
     if (hubConnection) {
       hubConnection
         .invoke<PaymentsStat>(
-          "GetDepositsClosingStat",
+          'GetDepositsClosingStat',
           closeDate.from,
-          closeDate.to
+          closeDate.to,
         )
         .then((res) => {
           setDepositsClosedStat(res);
@@ -107,7 +107,7 @@ export const AdminMain = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<PaymentsStat>("GetPaymentsStat", openDate.from, openDate.to)
+        .invoke<PaymentsStat>('GetPaymentsStat', openDate.from, openDate.to)
         .then((res) => {
           setPaymentsStat(res);
         })
@@ -118,7 +118,7 @@ export const AdminMain = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<PaymentsStat>("GetRevenueStat", statDate.from, statDate.to)
+        .invoke<PaymentsStat>('GetRevenueStat', statDate.from, statDate.to)
         .then((res) => {
           setRevenueStat(res);
         })
@@ -129,7 +129,7 @@ export const AdminMain = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<number>("GetUserDepositsAmount", selectedDay)
+        .invoke<number>('GetUserDepositsAmount', selectedDay)
         .then((res) => {
           setDepositsAmount(res / 100000);
         })
@@ -139,13 +139,13 @@ export const AdminMain = () => {
 
   const start: any = moment(new Date(selectedDay).setHours(0, 0, 0, 0)).utc();
   const end: any = moment(
-    new Date(selectedDay).setHours(23, 59, 59, 999)
+    new Date(selectedDay).setHours(23, 59, 59, 999),
   ).utc();
 
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<PaymentsStat>("GetDepositsClosingStat", start._d, end._d)
+        .invoke<PaymentsStat>('GetDepositsClosingStat', start._d, end._d)
         .then((res) => {
           setAmountClose(Object.values(res));
         })
@@ -156,7 +156,7 @@ export const AdminMain = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke("GetUserDepositsCount", selectedDay)
+        .invoke('GetUserDepositsCount', selectedDay)
         .then((res) => {
           setDepositsCount(res);
         })
@@ -167,7 +167,7 @@ export const AdminMain = () => {
   return (
     <>
       <Styled.HeadBlock>
-        <UpTitle small>{t("adminMain.uptitle")}</UpTitle>
+        <UpTitle small>{t('adminMain.uptitle')}</UpTitle>
         <Styled.UserName>
           <span>{user}</span>
           <Exit onClick={logOut} />
@@ -192,20 +192,20 @@ export const AdminMain = () => {
           </DepositItem> */}
           <RoundWrapeer>
             <RoundItem>
-              <ChartItemTitle>{t("adminMain.openDeposit")}</ChartItemTitle>
+              <ChartItemTitle>{t('adminMain.openDeposit')}</ChartItemTitle>
               <RoundItemInner>
                 <HalfRound>
                   <span>{depositsCount}</span>
                   <HalfRoundBorder
-                    width={size ? "180" : "200"}
-                    height={size ? "180" : "200"}
-                    color={"#FF416E"}
+                    width={size ? '180' : '200'}
+                    height={size ? '180' : '200'}
+                    color={'#FF416E'}
                   />
                 </HalfRound>
 
-                <Round bg={"#ff416e"}>
+                <Round bg={'#ff416e'}>
                   <span>
-                    {depositsAmount.toLocaleString("ru-RU", {
+                    {depositsAmount.toLocaleString('ru-RU', {
                       maximumFractionDigits: 0,
                     })}
                   </span>
@@ -214,21 +214,21 @@ export const AdminMain = () => {
               </RoundItemInner>
             </RoundItem>
             <RoundItem>
-              <ChartItemTitle>{t("adminMain.closeDeposit")}</ChartItemTitle>
+              <ChartItemTitle>{t('adminMain.closeDeposit')}</ChartItemTitle>
               <RoundItemInner>
                 <HalfRound>
                   <span>{amountClose.length && amountClose[0][0]}</span>
                   <HalfRoundBorder
-                    width={size ? "180" : "200"}
-                    height={size ? "180" : "200"}
-                    color={"#6DB9FF"}
+                    width={size ? '180' : '200'}
+                    height={size ? '180' : '200'}
+                    color={'#6DB9FF'}
                   />
                 </HalfRound>
 
-                <Round bg={"#6DB9FF"}>
+                <Round bg={'#6DB9FF'}>
                   <span>
                     {amountClose.length &&
-                      (amountClose[0][1] / 100000).toLocaleString("ru-RU", {
+                      (amountClose[0][1] / 100000).toLocaleString('ru-RU', {
                         maximumFractionDigits: 0,
                       })}
                   </span>
@@ -244,11 +244,11 @@ export const AdminMain = () => {
         <MainChartsContainer>
           <ChartItem>
             <ChartItemHead>
-              <ChartItemTitle small>{t("adminMain.headTitle")}</ChartItemTitle>
+              <ChartItemTitle small>{t('adminMain.headTitle')}</ChartItemTitle>
               <MainAdminInput
                 setOpenDate={setDepositsDate}
                 openDate={depositsDate}
-                label={t("adminMain.dayLabel")}
+                label={t('adminMain.dayLabel')}
               />
             </ChartItemHead>
             <ChartInner>
@@ -266,20 +266,19 @@ export const AdminMain = () => {
                   in={card === 0}
                   timeout={300}
                   classNames="chart"
-                  unmountOnExit
-                >
+                  unmountOnExit>
                   <ColumnChart
                     date={
                       Object.keys(depositsCreationStat).length
                         ? Object.keys(depositsCreationStat)
-                        : [""]
+                        : ['']
                     }
                     value={
                       Object.values(depositsCreationStat).length
                         ? Object.values(depositsCreationStat).map(
-                            (i: any) => i[0]
+                            (i: any) => i[0],
                           )
-                        : [""]
+                        : ['']
                     }
                   />
                 </CSSTransition>
@@ -289,20 +288,19 @@ export const AdminMain = () => {
                   in={card === 1}
                   timeout={300}
                   classNames="chart"
-                  unmountOnExit
-                >
+                  unmountOnExit>
                   <ColumnChartCwd
                     date={
                       Object.keys(depositsCreationStat).length
                         ? Object.keys(depositsCreationStat)
-                        : [""]
+                        : ['']
                     }
                     value={
                       Object.values(depositsCreationStat).length
                         ? Object.values(depositsCreationStat).map(
-                            (i: any) => i[1] / 100000
+                            (i: any) => i[1] / 100000,
                           )
-                        : [""]
+                        : ['']
                     }
                   />
                 </CSSTransition>
@@ -312,26 +310,26 @@ export const AdminMain = () => {
           <LastChartItem>
             <ChartItem>
               <ChartItemHead>
-                <ChartItemTitle small>{t("adminMain.depositsToClose")}</ChartItemTitle>
+                <ChartItemTitle small>
+                  {t('adminMain.depositsToClose')}
+                </ChartItemTitle>
                 <MainAdminInput
                   setOpenDate={setCloseDate}
                   openDate={closeDate}
-                  label={t("adminMain.dayLabel")}
+                  label={t('adminMain.dayLabel')}
                 />
               </ChartItemHead>
               <ChartInner>
                 <TabsChart>
                   <TabsItem
                     active={cardClosed === 0}
-                    onClick={() => setCardClosed(0)}
-                  >
+                    onClick={() => setCardClosed(0)}>
                     CNT
                   </TabsItem>
                   <TabsItem>/</TabsItem>
                   <TabsItem
                     active={cardClosed === 1}
-                    onClick={() => setCardClosed(1)}
-                  >
+                    onClick={() => setCardClosed(1)}>
                     CWD
                   </TabsItem>
                 </TabsChart>
@@ -340,20 +338,19 @@ export const AdminMain = () => {
                     in={cardClosed === 0}
                     timeout={300}
                     classNames="chart"
-                    unmountOnExit
-                  >
+                    unmountOnExit>
                     <ColumnChart
                       date={
                         Object.keys(depositsClosedStat).length
                           ? Object.keys(depositsClosedStat)
-                          : [""]
+                          : ['']
                       }
                       value={
                         Object.values(depositsClosedStat).length
                           ? Object.values(depositsClosedStat).map(
-                              (i: any) => i[0]
+                              (i: any) => i[0],
                             )
-                          : [""]
+                          : ['']
                       }
                     />
                   </CSSTransition>
@@ -363,20 +360,19 @@ export const AdminMain = () => {
                     in={cardClosed === 1}
                     timeout={300}
                     classNames="chart"
-                    unmountOnExit
-                  >
+                    unmountOnExit>
                     <ColumnChartCwd
                       date={
                         Object.keys(depositsClosedStat).length
                           ? Object.keys(depositsClosedStat)
-                          : [""]
+                          : ['']
                       }
                       value={
                         Object.values(depositsClosedStat).length
                           ? Object.values(depositsClosedStat).map(
-                              (i: any) => i[1] / 100000
+                              (i: any) => i[1] / 100000,
                             )
-                          : [""]
+                          : ['']
                       }
                     />
                   </CSSTransition>
@@ -392,24 +388,24 @@ export const AdminMain = () => {
           <ChartItem>
             <ChartItemHead>
               <ChartItemTitle small>
-                {t("adminMain.chartTitle1")}
+                {t('adminMain.chartTitle1')}
               </ChartItemTitle>
               <MainAdminInput
                 setOpenDate={setOpenDate}
                 openDate={openDate}
-                label={t("adminMain.dayLabel")}
+                label={t('adminMain.dayLabel')}
               />
             </ChartItemHead>
             <ColumnChartTwo
               date={
                 Object.keys(paymentsStat).length
                   ? Object.keys(paymentsStat)
-                  : [""]
+                  : ['']
               }
               value={
                 Object.values(paymentsStat).length
                   ? Object.values(paymentsStat).map((i) => i / 100000)
-                  : [""]
+                  : ['']
               }
             />
           </ChartItem>
@@ -417,24 +413,24 @@ export const AdminMain = () => {
             <ChartItem>
               <ChartItemHead>
                 <ChartItemTitleLast small>
-                  {t("adminMain.chartTitle2")}
+                  {t('adminMain.chartTitle2')}
                 </ChartItemTitleLast>
                 <MainAdminInput
                   setOpenDate={setStatDate}
                   openDate={statDate}
-                  label={t("adminMain.dayLabel")}
+                  label={t('adminMain.dayLabel')}
                 />
               </ChartItemHead>
               <ColumnChartThree
                 date={
                   Object.keys(revenueStat).length
                     ? Object.keys(revenueStat)
-                    : [""]
+                    : ['']
                 }
                 value={
                   Object.values(revenueStat).length
                     ? Object.values(revenueStat).map((i) => i / 100000)
-                    : [""]
+                    : ['']
                 }
               />
             </ChartItem>
@@ -601,10 +597,36 @@ const Round = styled.div<{ bg: string }>`
   } */
 `;
 
+const ChartItem = styled.div`
+  max-width: 350px;
+  width: 100%;
+  flex: 1;
+  @media (max-width: 992px) {
+    max-width: 330px;
+  }
+  @media (max-width: 800px) {
+    max-width: 100%;
+    flex: none;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    margin-bottom: 20px;
+    padding-right: 0;
+    background: ${(props) => props.theme.card.background};
+  }
+  @media (max-width: 340px) {
+    max-width: 280px;
+  }
+`;
+
 const LastChartItem = styled.div`
   width: 60%;
   display: flex;
   justify-content: center;
+
+  ${ChartItem} {
+    max-width: 410px;
+  }
+
   @media (max-width: 992px) {
     width: 50%;
   }
@@ -641,7 +663,7 @@ const TabsChart = styled.div`
 `;
 
 const TabsContent = styled.div<{ active?: boolean }>`
-  ${(props) => (props.active ? "" : "display:none")};
+  ${(props) => (props.active ? '' : 'display:none')};
 `;
 
 const TabsItem = styled.div<{ active?: boolean }>`
@@ -673,27 +695,6 @@ const MainChartsContainer = styled.div`
   @media (max-width: 800px) {
     flex-wrap: wrap;
     padding: 0;
-  }
-`;
-
-const ChartItem = styled.div`
-  max-width: 350px;
-  width: 100%;
-  flex: 1;
-  @media (max-width: 992px) {
-    max-width: 330px;
-  }
-  @media (max-width: 800px) {
-    max-width: 100%;
-    flex: none;
-    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
-    border-radius: 10px;
-    margin-bottom: 20px;
-    padding-right: 0;
-    background: ${(props) => props.theme.card.background};
-  }
-  @media (max-width: 340px) {
-    max-width: 280px;
   }
 `;
 

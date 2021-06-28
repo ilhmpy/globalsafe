@@ -1,370 +1,374 @@
 {
-    "header": {
-      "item1": "About fund",
-      "item2": "Our tariffs",
-      "item3": "About us",
-      "item4": "Contacts"
+  "header": {
+    "item1": "About fund",
+    "item2": "Our tariffs",
+    "item3": "About us",
+    "item4": "Contacts"
+  },
+  "themeDark": "Dark theme",
+  "themeLight": "Light theme",
+  "period": "Specify period",
+  "ready": "Done",
+  "logout": "Log Out",
+  "notFound": "No data found. Try changing your search parameters.",
+  "headerButton": {
+    "admin": "Admin",
+    "personalArea": "Personal Area",
+    "register": "Register"
+  },
+  "more": "more",
+  "show": "show",
+  "hide": "hide",
+  "login": {
+    "in": "Sing In",
+    "where": "Where to enter?",
+    "signIn": "Sign In",
+    "code": "Enter a code",
+    "incorrectCode": "The code is not correct",
+    "goTo": "Go to Activity",
+    "login": "Enter login",
+    "incorrectLogin": "Login is not correct",
+    "getCode": "To get the code",
+    "repeat": "Request the code again",
+    "over": "in"
+  },
+  "banner": {
+    "uptitle": "About fund ",
+    "H1": "Multiply your funds wisely!",
+    "brand": "Global safe",
+    "desc": "is a modern crypto fund which investing and managing your funds, under the control of our best specialists!",
+    "toProgramm": "Go to programs"
+  },
+  "tariffs": {
+    "uptitle": "Our tariffs",
+    "H1": "Just for you!",
+    "subHead": "Partner Program",
+    "desc": "Partner Program START, EXPERT and INFINITY: 5% from the first line; 2% second line and 1% third line ",
+    "start": "Line 1 - 4%, Line 2 - 1,6, Line 3 - 0,8%",
+    "expert": "Line 1 - 5%, Line 2 - 2%, Line 3 - 1%, Line 4 - 1%, Line 5 - 1%",
+    "infinity": "Line 1 - 5%, Line 2 - 2%, Line 3 - 1%, Line 4 - 1%, Line 5 - 1%, Line 6 - 1%, Line 7 - 1%, Line 8 - 1%",
+    "depositSize": "Deposit amount",
+    "ok": "ОК",
+    "buttons": {
+      "start": "Want Start",
+      "housing": "Want ЖИЛФОНД",
+      "start30000": "Want START 30000+",
+      "autobonus": "Want АВТОБОНУС",
+      "expert": "Want EXPERT",
+      "infinity": "Want INFINITY"
+    }
+  },
+  "payments": {
+    "open": "Open deposit",
+    "currPay": "Current payments",
+    "on": "on"
+  },
+  "contacts": {
+    "uptitle": "Contacts",
+    "H1": "In touch with us ",
+    "site": "Website",
+    "irinaganina3110": "Irina Gabon’s",
+    "smansurskaya": "Svetlana Mansurskaya",
+    "sporttanets8": "Maksim Sportanets"
+  },
+  "about": {
+    "uptitle": "About us",
+    "H1": "Our founders",
+    "name1": "Maksim",
+    "name2": "Svetlana",
+    "name3": "Irina",
+    "position": "Founder",
+    "brand": "Global Safe",
+    "desc": "This is a product created specifically for those who are not ready to constantly monitor the quotes on the exchange and work on it independently. Experienced traders of the Fund take care of increasing your savings and invest in the most highly profitable platform assets.",
+    "desc1": "Successful in his field.",
+    "desc2": "More than 150 completed projects",
+    "position1": "Investor founder of the fund",
+    "self1": "Personal BRAND",
+    "impement": "Implemented 3 large-scale projects",
+    "fond": "Fund",
+    "top": "Top Leader",
+    "investor": "Investor",
+    "founder": "Co-founder and founder",
+    "crypto": "CryptoFund",
+    "apostol": "Apostle and Top Leader"
+  },
+  "sideNav": {
+    "mainScreen": "Main screen",
+    "deposits": "Deposits",
+    "pay": "Payouts",
+    "users": "Members",
+    "portfolio": "Portfolio",
+    "toHome": "To the main",
+    "lottery": "Lottery"
+  },
+  "adminDeposit": {
+    "uptitle": "Payouts",
+    "headTitle": "Active deposits",
+    "labelUser": "User",
+    "labelProgram": "The name of the program",
+    "labelOpen": "Opening date",
+    "labelDate": "Close date",
+    "btnApply": "Apply",
+    "filter": "Filter",
+    "table": {
+      "user": "User",
+      "name": "Name",
+      "openDate": "Opening date",
+      "closeDate": "Closing date",
+      "sum": "Deposit amount",
+      "nextDate": "Date next payments",
+      "paid": "Paid"
+    }
+  },
+  "adminMain": {
+    "uptitle": "Main screen",
+    "headTitle": "New deposits",
+    "dayLabel": "30 days",
+    "chartTitle1": "Payouts",
+    "chartTitle2": "Fund performance",
+    "depositsCount": "Number of deposits",
+    "depositsAmount": "Deposits",
+    "openDeposit": "Open deposits",
+    "closeDeposit": "Closing deposits",
+    "depositsToClose": "Deposits to close"
+  },
+  "adminPortfolio": {
+    "uptitle": "Portfolio",
+    "table": {
+      "date": "Purchase date",
+      "count": "Primary quantity",
+      "cost": "Unit cost",
+      "amount": "Current number of"
+    }
+  },
+  "adminUsers": {
+    "uptitle": "Members",
+    "labelUser": "User",
+    "labelCreate": "Date of creation",
+    "apply": "Apply",
+    "table": {
+      "unlock": "Unblock",
+      "lock": "Block",
+      "user": "User",
+      "balans": "Balance",
+      "role": "Role",
+      "dataCreate": "Date of creation",
+      "lang": "Lang",
+      "rus": "Russian"
     },
-    "themeDark": "Dark theme",
-    "themeLight": "Light theme",
-    "period":"Specify period",
-    "ready": "Done",
-    "logout": "Log Out",
-    "notFound": "No data found. Try changing your search parameters.",
-    "headerButton":{
-        "admin": "Admin",
-        "personalArea": "Personal Area",
-        "register": "Register"
+    "modal": {
+      "paySum": "Amount of payments",
+      "payAmount": "Payment amount",
+      "prevDate": "Date of previous payment",
+      "nextDate": "Date of next payment",
+      "contrAmount": "Contribution amount",
+      "totalDeposit": "Total return on the deposit",
+      "revenue": "Revenue",
+      "payments": "Payments"
+    }
+  },
+  "adminPay": {
+    "uptitle": "Payouts",
+    "title1": "To pay",
+    "title2": "Paid",
+    "title3": "On approval",
+    "confirmButton": "Confirm all",
+    "procentPay": "% payouts",
+    "status": "Status",
+    "table": {
+      "user": "User",
+      "name": "Name",
+      "procent": "% profit",
+      "datePay": "Payout date",
+      "profit": "Program yield",
+      "contribution": "Deposit amount",
+      "payments": "Payout volume",
+      "desc": "Program description",
+      "category": "Category",
+      "nextDate": "Date next payments",
+      "openDate": "Opening date",
+      "paid": "Paid",
+      "amount": "Current number of",
+      "cost": "Unit cost"
     },
-    "more": "more",
-    "show": "show",
-    "hide": "hide",
-    "login": {
-        "in": "Sing In",
-        "where": "Where to enter?",
-        "signIn": "Sign In",
-        "code": "Enter a code",
-        "incorrectCode": "The code is not correct",
-        "goTo": "Go to Activity",
-        "login": "Enter login",
-        "incorrectLogin": "Login is not correct",
-        "getCode": "To get the code",
-        "repeat": "Request the code again",
-        "over": "in"
+    "filter": {
+      "user": "User",
+      "date": "Date",
+      "deposit": "Deposit",
+      "agree": "Agreed",
+      "disagree": "Inconsistent"
     },
-    "banner":{
-        "uptitle": "About fund ",
-        "H1": "Multiply your funds wisely!",
-        "brand": "Global safe",
-        "desc": "is a modern crypto fund which investing and managing your funds, under the control of our best specialists!",
-        "toProgramm": "Go to programs"
+    "analitics": {
+      "data": "Date",
+      "amount": "Amount",
+      "sum": "Payout amount",
+      "payAnalitics": "Payout analytics",
+      "analitic": "Analitic",
+      "label": "in 3 months"
+    }
+  },
+  "pagination": {
+    "of": "of",
+    "elementOnPage":"Elements on page:"
+  },
+  "depositList": {
+    "confirmed": "Cancel",
+    "confirm": "Confirm",
+    "depositClose": "Closing a deposit",
+    "dividents": "Accrual of dividends"
+  },
+  "depositSelect": {
+    "forActive": "To activate the deposit, you need",
+    "willActiv": "Upon activation, the deposit will be debited",
+    "bill": "from your globalsafe account",
+    "transfer": "transfer funds to your account",
+    "transferButton": "Transfer",
+    "balanceOff": "Upon activation, the deposit will be debited",
+    "condition": "Program conditions",
+    "add": "Add"
+  },
+  "depositSuccess": {
+    "title": "Deposit created successfully",
+    "button": "Go to the list"
+  },
+  "depositError": {
+    "title": "No deposit created",
+    "desc": "Funds will not be debited from your personal account. Please contact your administrator."
+  },
+  "privateArea": {
+    "at": "Behind",
+    "allTime": "For all the time",
+    "uptitle": "Personal Area",
+    "balance": "Balance",
+    "newDeposit": "New deposit",
+    "withdraw": "Withdraw funds",
+    "prevPay": "Previous payout",
+    "procentPrevPay": "Percentage of the previous payment",
+    "tabs": {
+      "tab1": "Information",
+      "tab2": "Deposits",
+      "tab3": "Balance"
     },
-    "tariffs":{
-        "uptitle": "Our tariffs",
-        "H1": "Just for you!",
-        "subHead": "Partner Program",
-        "desc": "Partner Program START, EXPERT and INFINITY: 5% from the first line; 2% second line and 1% third line ",
-        "start": "Line 1 - 4%, Line 2 - 1,6, Line 3 - 0,8%",
-        "expert": "Line 1 - 5%, Line 2 - 2%, Line 3 - 1%, Line 4 - 1%, Line 5 - 1%",
-        "infinity": "Line 1 - 5%, Line 2 - 2%, Line 3 - 1%, Line 4 - 1%, Line 5 - 1%, Line 6 - 1%, Line 7 - 1%, Line 8 - 1%",
-        "depositSize": "Deposit amount",
-        "ok": "ОК",
-        "buttons":{
-            "start": "Want Start",
-            "housing": "Want ЖИЛФОНД",
-            "start30000": "Want START 30000+",
-            "autobonus": "Want АВТОБОНУС",
-            "expert": "Want EXPERT",
-            "infinity": "Want INFINITY"
-        }
-    },
-    "payments":{
-        "open": "Open deposit",
-        "currPay": "Current payments",
-        "on": "on"
-    },
-    "contacts":{
-        "uptitle": "Contacts",
-        "H1": "In touch with us ",
-        "site": "Website",
-        "irinaganina3110": "Irina Gabon’s",
-        "smansurskaya": "Svetlana Mansurskaya",
-        "sporttanets8": "Maksim Sportanets"
-    },
-    "about":{
-        "uptitle": "About us",
-        "H1": "Our founders",
-        "name1": "Maksim",
-        "name2": "Svetlana",
-        "name3": "Irina",
-        "position": "Founder",
-        "brand": "Global Safe",
-        "desc": "This is a product created specifically for those who are not ready to constantly monitor the quotes on the exchange and work on it independently. Experienced traders of the Fund take care of increasing your savings and invest in the most highly profitable platform assets.",
-        "desc1": "Successful in his field.",
-        "desc2": "More than 150 completed projects",
-        "position1": "Investor founder of the fund",
-        "self1": "Personal BRAND",
-        "impement": "Implemented 3 large-scale projects",
-        "fond": "Fund",
-        "top": "Top Leader",
-        "investor": "Investor",
-        "founder": "Co-founder and founder",
-        "crypto": "CryptoFund",
-        "apostol": "Apostle and Top Leader"
-    },
-    "sideNav":{
-        "mainScreen": "Main screen",
-        "deposits": "Deposits",
-        "pay": "Payouts",
-        "users": "Members",
-        "portfolio": "Portfolio",
-        "toHome": "To the main",
-        "lottery": "Lottery"
-    },
-    "adminDeposit":{
-        "uptitle": "Payouts",
-        "headTitle": "Active deposits",
-        "labelUser": "User",
-        "labelProgram": "The name of the program",
-        "labelOpen": "Opening date",
-        "labelDate": "Close date",
-        "btnApply": "Apply",
-        "filter": "Filter",
-        "table":{
-            "user": "User",
-            "name": "Name",
-            "openDate": "Opening date",
-            "closeDate": "Closing date",
-            "sum": "Deposit amount",
-            "nextDate": "Date next payments",
-            "paid": "Paid"
-        }
-    },
-    "adminMain":{
-        "uptitle": "Main screen",
-        "headTitle": "New deposits",
-        "dayLabel": "30 days",
-        "chartTitle1": "Payouts",
-        "chartTitle2": "Fund performance",
-        "depositsCount": "Number of deposits",
-        "depositsAmount": "Deposits",
-        "openDeposit": "Open deposits",
-        "closeDeposit": "Closing deposits"
-    },
-    "adminPortfolio":{
-        "uptitle": "Portfolio",
-        "table":{
-            "date": "Purchase date",
-            "count": "Primary quantity",
-            "cost": "Unit cost",
-            "amount": "Current number of"
-        }
-    },
-    "adminUsers":{
-        "uptitle": "Members",
-        "labelUser": "User",
-        "labelCreate": "Date of creation",
-        "apply": "Apply",
-        "table": {
-            "unlock": "Unblock",
-            "lock": "Block",
-            "user": "User",
-            "balans": "Balance",
-            "role": "Role",
-            "dataCreate": "Date of creation",
-            "lang": "Lang",
-            "rus": "Russian"
-        },
-        "modal":{
-            "paySum": "Amount of payments",
-            "payAmount": "Payment amount",
-            "prevDate": "Date of previous payment",
-            "nextDate": "Date of next payment",
-            "contrAmount": "Contribution amount",
-            "totalDeposit": "Total return on the deposit",
-            "revenue": "Revenue",
-            "payments": "Payments"
-        }
-    },
-    "adminPay":{
-        "uptitle": "Payouts",
-        "title1": "To pay",
-        "title2": "Paid",
-        "title3": "On approval",
-        "confirmButton": "Confirm all",
-        "procentPay": "% payouts",
-        "status": "Status",
-        "table":{
-            "user":"User",
-            "name": "Name",
-            "procent": "% profit",
-            "datePay": "Payout date",
-            "profit": "Program yield",
-            "contribution": "Deposit amount",
-            "payments": "Payout volume",
-            "desc": "Program description",
-            "category": "Category",
-            "nextDate":"Date next payments",
-            "openDate":"Opening date",
-            "paid":"Paid",
-            "amount":"Current number of",
-            "cost":"Unit cost"
-
-        },
-        "filter":{
-            "user": "User",
-            "date": "Date",
-            "deposit": "Deposit",
-            "agree": "Agreed",
-            "disagree": "Inconsistent"
-        },
-        "analitics":{
-            "data": "Date",
-            "amount": "Amount",
-            "sum": "Payout amount",
-            "payAnalitics": "Payout analytics",
-            "analitic": "Analitic",
-            "label": "in 3 months"
-        }
-    },
-    "depositList":{
-        "confirmed": "Cancel",
-        "confirm": "Confirm",
-        "depositClose": "Closing a deposit",
-        "dividents": "Accrual of dividends"
-    },
-    "depositSelect":{
-        "forActive": "To activate the deposit, you need",
-        "willActiv": "Upon activation, the deposit will be debited",
-        "bill": "from your globalsafe account",
-        "transfer": "transfer funds to your account",
-        "transferButton": "Transfer",
-        "balanceOff": "Upon activation, the deposit will be debited",
-        "condition": "Program conditions",
-        "add": "Add"
-    },
-    "depositSuccess":{
-        "title": "Deposit created successfully",
-        "button": "Go to the list"
-    },
-    "depositError":{
-        "title": "No deposit created",
-        "desc": "Funds will not be debited from your personal account. Please contact your administrator."
-    },
-    "privateArea":{
-        "at": "Behind",
-        "allTime": "For all the time",
-        "uptitle": "Personal Area",
-        "balance": "Balance",
-        "newDeposit": "New deposit",
-        "withdraw": "Withdraw funds",
-        "prevPay": "Previous payout",
-        "procentPrevPay": "Percentage of the previous payment",
-        "tabs":{
-            "tab1": "Information",
-            "tab2": "Deposits",
-            "tab3": "Balance"
-        },
-        "name": "Name",
-        "pay":"Payouts",
-        "sum": "Amount",
-        "desc": "Description",
-        "deposit": "Deposit",
-        "toPay": "To pay",
-        "take": "Receipts",
-        "findings": "Withdraws",
-        "openDeposits": "Open deposits",
-        "sumDeposits": "Amount in deposits",
-        "sumDeposit": "Deposit amount",
-        "allPay": "Total paid",
-        "nextPay": "Next payout",
-        "selectPeriod": "Select period",
-        "thisMonth": "This month",
-        "thisYear": "This year",
-        "amountEnter": "Enter the amount",
-        "addDeposit": "Add deposit",
-        "choiseDeposite": "Select deposit",
-        "add": "Add to",
-        "topUpBalance": "Top up balance",
-        "allOperation": "All operations",
-        "topUp": "Top up",
-        "minPay": "Min. payment",
-        "depositTerm": "Deposit term",
-        "day": "day",
-        "dividents": "Accrual of dividends",
-        "dateOpen": "Opening date",
-        "nextDate":"Date of next payment",
-        "amountPay": "Payout volume",
-        "procent": "Payout percentage",
-        "notData": "No data",
-        "dateEnd": "Deposit completion date",
-        "contrAmount": "Contribution amount"
-    },
-    "alert": {
-        "success": "Successfully",
-        "successMsg": "Funds transferred successfully",
-        "error": "Error",
-        "errorMsg": "Output error",
-        "depositMsg": "Deposit created successfully",
-        "depositErrorMsg": "No deposit created"
-    },
-    "operation":{
-       "open": "Opening a deposit",
-       "divedents": "Accrual of dividends",
-       "close": "Closing a deposit",
-       "withdraw": "Balance withdrawal",
-       "add": "GLOBALSAFE balance top-up",
-       "rollback": "Transaction failure",
-       "partners": "Affiliate fees",
-       "failed": "Failed transaction",
-       "balance": "Balance adjustment promo",
-       "last": "Recent transactions",
-       "date": "Date",
-       "type": "Type of transaction",
-       "sum": "Transaction amount",
-       "byProgramm": "by program",
-       "showMore": "Show more"
-    },
-    "copy":{
-        "copy": "Copied",
-        "text": "To clipboard"
-    },
-    "chip":{
-        "pay": "Payment required",
-        "open": "Open",
-        "noWork": "Not work",
-        "return": "Returned",
-        "confirm": "Confirmation required"
-    },
-    "usersTabs":{
-        "mainInfo": "General Information",
-        "deposits": "Deposits"
-    },
-    "backTo": "Back to list",
-    "win": {
-        "one": "Money prize",
-        "two": "Affiliate contract",
-        "three": "Private deposit access"
-    },
-    "lotteryTable": {
-        "date": "Date",
-        "typeWin": "Win type",
-        "sumWin": "Winning amount",
-        "winners": "Winners",
-        "status": "Status",
-        "done": "Done",
-        "error": "Error"
-    },
-    "writting":{
-        "startDate": "Start date",
-        "repeat": "Repeat",
-        "next": "Next",
-        "cancel": "Cancel the draw"
-    },
-    "footer": {
-      "title": "User support in official",
-      "link": "telegram channel"
-    },
-    "newLottery": "New draw",
-    "write": "Schedule",
-    "winner": "Winner",
-    "timerStart": "Draw start in",
-    "congrat": "Congratulations",
-    "youWon": "You won",
-    "moneyTransfer": "Funds are credited to your account",
-    "ifQuestion": "If you have any questions about the prize, please contact administration",
-    "well": "Ok",
-    "everyone": "Everyone",
-    "every": "Every",
-    "hour": "hour",
-    "hours": "hours",
-    "hourss": "hours",
-    "create": "Create",
-    "historyLottery": "Draw history",
-    "draws": "Draws",
-    "newDraw": "Start of a new drawing in",
-    "goDraw": "Go to",
-    "depositsToClose": "Deposits to close",
-    "line": "line",
-    "partnersTitle": "Partners programs"
+    "name": "Name",
+    "pay": "Payouts",
+    "sum": "Amount",
+    "desc": "Description",
+    "deposit": "Deposit",
+    "toPay": "To pay",
+    "take": "Receipts",
+    "findings": "Withdraws",
+    "openDeposits": "Open deposits",
+    "sumDeposits": "Amount in deposits",
+    "sumDeposit": "Deposit amount",
+    "allPay": "Total paid",
+    "nextPay": "Next payout",
+    "selectPeriod": "Select period",
+    "thisMonth": "This month",
+    "thisYear": "This year",
+    "amountEnter": "Enter the amount",
+    "addDeposit": "Add deposit",
+    "choiseDeposite": "Select deposit",
+    "add": "Add to",
+    "topUpBalance": "Top up balance",
+    "allOperation": "All operations",
+    "topUp": "Top up",
+    "minPay": "Min. payment",
+    "depositTerm": "Deposit term",
+    "day": "day",
+    "dividents": "Accrual of dividends",
+    "dateOpen": "Opening date",
+    "nextDate": "Date of next payment",
+    "amountPay": "Payout volume",
+    "procent": "Payout percentage",
+    "notData": "No data",
+    "dateEnd": "Deposit completion date",
+    "contrAmount": "Contribution amount"
+  },
+  "alert": {
+    "success": "Successfully",
+    "successMsg": "Funds transferred successfully",
+    "error": "Error",
+    "errorMsg": "Output error",
+    "depositMsg": "Deposit created successfully",
+    "depositErrorMsg": "No deposit created"
+  },
+  "operation": {
+    "open": "Opening a deposit",
+    "divedents": "Accrual of dividends",
+    "close": "Closing a deposit",
+    "withdraw": "Balance withdrawal",
+    "add": "GLOBALSAFE balance top-up",
+    "rollback": "Transaction failure",
+    "partners": "Affiliate fees",
+    "failed": "Failed transaction",
+    "balance": "Balance adjustment promo",
+    "last": "Recent transactions",
+    "date": "Date",
+    "type": "Type of transaction",
+    "sum": "Transaction amount",
+    "byProgramm": "by program",
+    "showMore": "Show more"
+  },
+  "copy": {
+    "copy": "Copied",
+    "text": "To clipboard"
+  },
+  "chip": {
+    "pay": "Payment required",
+    "open": "Open",
+    "noWork": "Not work",
+    "return": "Returned",
+    "confirm": "Confirmation required"
+  },
+  "usersTabs": {
+    "mainInfo": "General Information",
+    "deposits": "Deposits"
+  },
+  "backTo": "Back to list",
+  "win": {
+    "one": "Money prize",
+    "two": "Affiliate contract",
+    "three": "Private deposit access"
+  },
+  "lotteryTable": {
+    "date": "Date",
+    "typeWin": "Win type",
+    "sumWin": "Winning amount",
+    "winners": "Winners",
+    "status": "Status",
+    "done": "Done",
+    "error": "Error"
+  },
+  "writting": {
+    "startDate": "Start date",
+    "repeat": "Repeat",
+    "next": "Next",
+    "cancel": "Cancel the draw"
+  },
+  "footer": {
+    "title": "User support in official",
+    "link": "telegram channel"
+  },
+  "newLottery": "New draw",
+  "write": "Schedule",
+  "winner": "Winner",
+  "timerStart": "Draw start in",
+  "congrat": "Congratulations",
+  "youWon": "You won",
+  "moneyTransfer": "Funds are credited to your account",
+  "ifQuestion": "If you have any questions about the prize, please contact administration",
+  "well": "Ok",
+  "everyone": "Everyone",
+  "every": "Every",
+  "hour": "hour",
+  "hours": "hours",
+  "hourss": "hours",
+  "create": "Create",
+  "historyLottery": "Draw history",
+  "draws": "Draws",
+  "newDraw": "Start of a new drawing in",
+  "goDraw": "Go to",
+  "depositsToClose": "Deposits to close",
+  "line": "line",
+  "partnersTitle": "Partners programs"
 }

@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 import * as Styled from '../Styled.elements';
 
 type PaginationPropsType = {
@@ -16,9 +17,11 @@ export const Pagination: FC<PaginationPropsType> = ({
   setCurrentPage,
   totalLottery,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <Styled.Pagination>
-      <Styled.CountText>Элементов на странице:</Styled.CountText>
+      <Styled.Page>{t('pagination.elementOnPage')}</Styled.Page>
       <Styled.PaginationSelect
         name="countRows"
         onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -31,7 +34,9 @@ export const Pagination: FC<PaginationPropsType> = ({
         <option value="30">30</option>
       </Styled.PaginationSelect>
       <Styled.Page>
-        {`${currentPage} из ${Math.ceil(totalLottery / pageLength)}`}
+        {`${currentPage} ${t('pagination.of')} ${Math.ceil(
+          totalLottery / pageLength,
+        )}`}
       </Styled.Page>
       <Styled.Arrows>
         <Styled.ArrowRight
@@ -41,7 +46,11 @@ export const Pagination: FC<PaginationPropsType> = ({
         />
         <Styled.ArrowLeft
           onClick={() => {
-            setCurrentPage(currentPage < Math.ceil(totalLottery / pageLength) ? currentPage + 1 : currentPage);
+            setCurrentPage(
+              currentPage < Math.ceil(totalLottery / pageLength)
+                ? currentPage + 1
+                : currentPage,
+            );
           }}
         />
       </Styled.Arrows>
