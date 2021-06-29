@@ -133,7 +133,7 @@ export const AdminDeposit = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<ListDeposits>('GetAllPublicDeposits', 1, false, 0, 40)
+        .invoke<ListDeposits>('GetAllPublicDeposits', null, false, 0, 40)
         .then((res) => {
           setListDeposits(res.collection);
         })
