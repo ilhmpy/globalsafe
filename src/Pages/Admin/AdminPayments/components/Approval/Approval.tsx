@@ -390,7 +390,7 @@ export const Approval: FC<Props> = ({
             <Scrollbars style={{ height: '500px' }}>
               {depositList.map((item: PaymentsCollection, idx: number) => (
                 <DepositList
-                  idx={idx}
+                  idx={idx + (currentPage - 1) * pageLength}
                   key={item.safeId}
                   data={item}
                   adjustPay={adjustPay}
