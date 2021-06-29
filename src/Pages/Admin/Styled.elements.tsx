@@ -51,12 +51,11 @@ export const PaginationSelect = styled.select`
   cursor: pointer;
   line-height: inherit;
 
-  background-image: linear-gradient(45deg, transparent 50%, #56657f 50%),
-    linear-gradient(135deg, #56657f 50%, transparent 50%),
-    linear-gradient(to right, white, white);
+  background-image: ${(props) =>
+    props.theme.pagination.selectCountBackgroundImage};
+
   background-position: calc(100% - 10px) calc(1em + -4px),
     calc(100% - 5px) calc(1em + -4px), 100% 0;
-
   background-size: 5px 5px, 5px 5px, 5em 5em;
   background-repeat: no-repeat;
   width: 40px;

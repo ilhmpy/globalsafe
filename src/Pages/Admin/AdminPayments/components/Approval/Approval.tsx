@@ -13,6 +13,7 @@ import { Card } from "../../../../../globalStyles";
 import { OpenDate } from "../../../../../types/dates";
 import { Notify } from "../../../../../types/notify";
 import { CollectionListDeposits } from "../../../../../types/deposits";
+
 import {
   PaymentsCollection,
   RootPayments,
@@ -51,6 +52,8 @@ export const Approval: FC<Props> = ({
 }) => {
   const [depositList, setDepositList] = useState<PaymentsCollection[]>([]);
   const [totalDeposits, setTotalDeposits] = useState(0);
+  const [count, setCount] = useState(true);
+  const [num, setNum] = useState(20);
   const [nameApproval, setNameApproval] = useState("");
   const [checkList, setCheckList] = useState<any>([]);
   const [loading, setLoading] = useState(true);
@@ -109,9 +112,38 @@ export const Approval: FC<Props> = ({
     }
   };
 
+  const loadMoreItems = () => {
+    setCount(false);
+    if (hubConnection && depositList.length < totalDeposits) {
+      hubConnection
+        .invoke<RootPayments>(
+          "GetUsersDeposits",
+          depositState,
+          nameApproval ? nameApproval.toLowerCase() : null,
+          searchSafeIDApproval.length ? searchSafeIDApproval : null,
+          openDateApproval.from ? openDateApproval.from : null,
+          openDateApproval.to ? openDateApproval.to : null,
+          null,
+          null,
+          null,
+          (currentPage - 1) * pageLength,
+          pageLength
+        )
+        .then((res) => {
+          setTotalDeposits(res.totalRecords);
+          if (res.collection.length) {
+            setDepositList([...res.collection]);
+            setCount(true);
+            setNum(num + 20);
+          }
+        })
+        .catch((err: Error) => console.log(err));
+    }
+  };
+
   useEffect(() => {
     deposites();
-  }, [currentPage, hubConnection, pageLength]);
+  }, [hubConnection]);
 
   const confirmPay = (id: string) => {
     if (hubConnection) {
@@ -166,8 +198,13 @@ export const Approval: FC<Props> = ({
     setNotifications([...notifications, item]);
   };
 
+  useEffect(() => {
+    loadMoreItems();
+  }, [currentPage, hubConnection, pageLength]);
+
   const submitApproval = () => {
     if (hubConnection) {
+      setCurrentPage(1);
       hubConnection
         .invoke<RootPayments>(
           "GetUsersDeposits",
@@ -179,11 +216,12 @@ export const Approval: FC<Props> = ({
           null,
           null,
           null, //
-          0,
-          20
+          (currentPage - 1) * pageLength,
+          pageLength
         )
         .then((res) => {
           setDepositList([]);
+          setTotalDeposits(res.totalRecords);
           if (res.collection.length) {
             setDepositList(res.collection);
             setTotalDeposits(res.totalRecords);
@@ -233,6 +271,7 @@ export const Approval: FC<Props> = ({
             error: false,
             timeleft: 5,
           });
+
           getPaymentsOverview();
           submitApproval();
         })

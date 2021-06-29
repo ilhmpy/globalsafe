@@ -53,6 +53,7 @@ export const AdminPay = () => {
   const [totalDeposits, setTotalDeposits] = useState(0);
   const [depositList, setDepositList] = useState<any>([]);
   const [totalPayDeposits, setTotalPayDeposits] = useState(0);
+
   const [depositPayList, setDepositPayList] = useState<any>([]);
   const [paymentsList, setPaymentsList] = useState<any>([]);
   const [totalPayments, setTotalPayments] = useState(0);
@@ -69,6 +70,7 @@ export const AdminPay = () => {
   });
 
   const [openFilter, setOpenFilter] = useState(false);
+  const [num, setNum] = useState(20);
 
   const [checkList, setCheckList] = useState<any>([]);
   const [checkListApproval, setCheckListApproval] = useState<any>([]);
@@ -231,25 +233,6 @@ export const AdminPay = () => {
   useEffect(() => {
     getPaymentsOverview();
   }, [hubConnection]);
-
-  const alert = (
-    title: string,
-    message: string,
-    type: "success" | "default" | "warning" | "info" | "danger"
-  ) => {
-    store.addNotification({
-      title: title,
-      message: message,
-      type: type,
-      insert: "top",
-      container: "center",
-      animationIn: ["animate__animated", "animate__fadeIn"],
-      animationOut: ["animate__animated", "animate__fadeOut"],
-      dismiss: {
-        duration: 5000,
-      },
-    });
-  };
 
   const submit = () => {
     if (hubConnection) {

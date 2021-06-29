@@ -66,7 +66,6 @@ export const AdminLottery = () => {
       hubConnection
         .invoke<RootGetDraw>('GetDraws', [1], 0, 20)
         .then((res) => {
-          console.log('GetDraws', res);
           setDrawList(res.collection);
         })
         .catch((e) => console.log(e));
@@ -124,7 +123,6 @@ export const AdminLottery = () => {
   };
 
   const myLoad = () => {
-    console.log('myLoad');
     setCount(false);
     if (hubConnection && lotteryArrList.length < totalLottery) {
       hubConnection
@@ -138,7 +136,6 @@ export const AdminLottery = () => {
           pageLength,
         )
         .then((res) => {
-          console.log('.then ~~~~~~~~~~~~ res', res);
           setLoading(false);
           if (res.collection.length) {
             if (res.collection.length && lotteryList) {
