@@ -61,7 +61,7 @@ export const Select: FC<Props> = ({
     let id = idx ? idx : 0;
     if (values && list.length === 0) {
       let arr = values!.map((i) => ({
-        id: id++,
+        id: id--,
         label: i,
         checked: false,
       }));

@@ -328,7 +328,7 @@ export const Approval: FC<Props> = ({
                 <SelectOne
                   checkList={checkList}
                   setCheckList={setCheckList}
-                  idx={5}
+                  idx={6}
                   values={[
                     t('adminPay.filter.disagree'),
                     t('adminPay.filter.agree'),
