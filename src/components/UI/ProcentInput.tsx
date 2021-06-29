@@ -1,6 +1,6 @@
-import styled from "styled-components/macro";
-import React, { FC } from "react";
-import bord from "../../assets/svg/borderinput.svg";
+import React, { FC } from 'react';
+import styled from 'styled-components/macro';
+import bord from '../../assets/svg/borderinput.svg';
 
 type Props = {
   label: string;
@@ -20,7 +20,7 @@ export const ProcentInput: FC<Props> = ({
       <InputWrap>
         <Label>{label}</Label>
         <Input
-          type="number"
+          type="text"
           value={value}
           placeholder={placeholder}
           onChange={onChange}

@@ -292,7 +292,13 @@ export const Approval: FC<Props> = ({
         <ProcentInput
           placeholder="—"
           value={procent}
-          onChange={(e) => setProcent(e.target.value)}
+          onChange={(e) => {
+            if (
+              e.target.value.match(/^[\d]*\.?[\d]*$/g) ||
+              e.target.value === ''
+            )
+              setProcent(e.target.value);
+          }}
           label={t('adminPay.procentPay')}
         />
       </Styled.ButtonWrap>
