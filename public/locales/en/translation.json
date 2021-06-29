@@ -175,7 +175,7 @@
     "confirmButton": "Confirm all",
     "procentPay": "% payouts",
     "status": "Status",
-    "success": "Payment was successful",
+    "success": "Payment agreed",
     "error": "Payment error",
     "table": {
       "user": "User",
@@ -211,7 +211,7 @@
   },
   "pagination": {
     "of": "of",
-    "elementOnPage":"Elements on page:"
+    "elementOnPage": "Elements on page:"
   },
   "depositList": {
     "confirmed": "Cancel",
