@@ -175,6 +175,8 @@
     "confirmButton": "Confirm all",
     "procentPay": "% payouts",
     "status": "Status",
+    "success": "Payment was successful",
+    "error": "Payment error",
     "table": {
       "user": "User",
       "name": "Name",
