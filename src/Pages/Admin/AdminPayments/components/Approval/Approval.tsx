@@ -30,10 +30,8 @@ import {
   SelectContainerInnerPaid,
   SelectWrap,
   ShowHide,
-} from "../../../Styled.elements";
-import "react-notifications-component/dist/theme.css";
-import * as Styled from "./Styled.elements";
-import { SliderComponent } from "../../../../../components/Slider/Slider";
+} from '../../../Styled.elements';
+import * as Styled from './Styled.elements';
 
 type Props = {
   adjustPay: (id: string, val: number) => void;
@@ -131,6 +129,7 @@ export const Approval: FC<Props> = ({
           pageLength,
         )
         .then((res) => {
+          setTotalDeposits(res.totalRecords);
           if (res.collection.length) {
             setDepositList([...res.collection]);
             setCount(true);
@@ -148,7 +147,7 @@ export const Approval: FC<Props> = ({
   const confirmPay = (id: string) => {
     if (hubConnection) {
       hubConnection
-        .invoke("ConfirmDepositPayment", id)
+        .invoke('ConfirmDepositPayment', id)
         .then((res) => {
           const key = depositList.findIndex((i) => i.safeId === id);
 
@@ -161,7 +160,7 @@ export const Approval: FC<Props> = ({
             ]);
           }
 
-          console.log("ConfirmDepositPayment", res);
+          console.log('ConfirmDepositPayment', res);
           getPaymentsOverview();
         })
         .catch((err: Error) => {
@@ -173,9 +172,9 @@ export const Approval: FC<Props> = ({
   const unConfirmPay = (id: string) => {
     if (hubConnection) {
       hubConnection
-        .invoke("UnconfirmDepositPayment", id)
+        .invoke('UnconfirmDepositPayment', id)
         .then((res) => {
-          console.log("UnconfirmDepositPayment", res);
+          console.log('UnconfirmDepositPayment', res);
           const key = depositList.findIndex((i) => i.safeId === id);
 
           if (key !== -1) {
@@ -217,9 +216,9 @@ export const Approval: FC<Props> = ({
         )
         .then((res) => {
           setDepositList([]);
+          setTotalDeposits(res.totalRecords);
           if (res.collection.length) {
             setDepositList(res.collection);
-            setTotalDeposits(res.totalRecords);
             setNum(20);
           }
         })
