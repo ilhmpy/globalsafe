@@ -290,7 +290,7 @@ export const Approval: FC<Props> = ({
           {t('adminPay.confirmButton')}
         </Button>
         <ProcentInput
-          placeholder="0"
+          placeholder="—"
           value={procent}
           onChange={(e) => setProcent(e.target.value)}
           label={t('adminPay.procentPay')}
