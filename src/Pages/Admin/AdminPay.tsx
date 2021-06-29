@@ -15,6 +15,7 @@ import { Loading } from "../../components/UI/Loading";
 import { Content, Tab } from "../../components/UI/Tabs";
 import { UpTitle } from "../../components/UI/UpTitle";
 import { AppContext } from "../../context/HubContext";
+import { LangualeContext } from "../../context/LangualeContext";
 import { ThemeContext } from "../../context/ThemeContext";
 import { Card } from "../../globalStyles";
 import useWindowSize from "../../hooks/useWindowSize";
@@ -52,16 +53,9 @@ export const AdminPay = () => {
   const [totalDeposits, setTotalDeposits] = useState(0);
   const [depositList, setDepositList] = useState<any>([]);
   const [totalPayDeposits, setTotalPayDeposits] = useState(0);
-  const [openFilterOne, setOpenFilterOne] = useState(false);
-
   const [depositPayList, setDepositPayList] = useState<any>([]);
   const [paymentsList, setPaymentsList] = useState<any>([]);
   const [totalPayments, setTotalPayments] = useState(0);
-
-  const [countPay, setPayCount] = useState(true);
-  const [numPayments, setNumPayments] = useState(20);
-
-  const [numPay, setPayNum] = useState(20);
   const [next, setNext] = useState(true);
   const [procent, setProcent] = useState("");
   const [loading, setLoading] = useState(true);
@@ -75,13 +69,10 @@ export const AdminPay = () => {
   });
 
   const [openFilter, setOpenFilter] = useState(false);
-  const [num, setNum] = useState(20);
 
   const [checkList, setCheckList] = useState<any>([]);
   const [checkListApproval, setCheckListApproval] = useState<any>([]);
   const [name, setName] = useState("");
-  const [nameApproval, setNameApproval] = useState("");
-  const [selectedOption, setSelectedOption] = useState<null | string>(null);
   const [pageLength, setPageLength] = useState<number>(10);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageLengthPay, setPageLengthPay] = useState<number>(10);
@@ -98,7 +89,7 @@ export const AdminPay = () => {
     to: backDay,
   });
   const [stats, setStats] = useState<any[]>([]);
-
+  const { lang } = useContext(LangualeContext);
   const { t } = useTranslation();
 
   const getPaymentsOverview = () => {
@@ -144,38 +135,9 @@ export const AdminPay = () => {
     }
   };
 
-  const confirmPay = (id: string) => {
-    if (hubConnection) {
-      hubConnection
-        .invoke("ConfirmDepositPayment", id)
-        .then((res) => {
-          console.log("ConfirmDepositPayment", res);
-          getPaymentsOverview();
-        })
-        .catch((err: Error) => {
-          console.log(err);
-        });
-    }
-  };
-
-  const unConfirmPay = (id: string) => {
-    if (hubConnection) {
-      hubConnection
-        .invoke("UnconfirmDepositPayment", id)
-        .then((res) => {
-          console.log("UnconfirmDepositPayment", res);
-          getPaymentsOverview();
-        })
-        .catch((err: Error) => {
-          console.log(err);
-        });
-    }
-  };
-
   useEffect(() => {
-    if (hubConnection) {
+    if (hubConnection && active === 2) {
       setLoading(true);
-
       setPaymentsList([]);
       hubConnection
         .invoke<RootPayments>(
@@ -194,8 +156,6 @@ export const AdminPay = () => {
         .then((res) => {
           setTotalPayments(res.totalRecords);
           setPaymentsList(res.collection);
-          setNumPayments(20);
-          setLoading(false);
         })
         .catch((err: Error) => {
           setLoading(false);
@@ -226,7 +186,6 @@ export const AdminPay = () => {
           setLoading(false);
           setTotalDeposits(res.totalRecords);
           setDepositList(res.collection);
-          setNum(20);
           setLoading(false);
         })
         .catch((err: Error) => {
@@ -237,7 +196,7 @@ export const AdminPay = () => {
   }, [hubConnection, active, currentPageDeposit, pageLengthDeposit]);
 
   useEffect(() => {
-    if (hubConnection) {
+    if (hubConnection && active === 1) {
       setLoading(true);
 
       setDepositPayList([]);
@@ -259,7 +218,6 @@ export const AdminPay = () => {
           if (res.collection.length) {
             setTotalPayDeposits(res.totalRecords);
             setDepositPayList(res.collection);
-            setPayNum(20);
             setLoading(false);
           }
         })
@@ -293,20 +251,6 @@ export const AdminPay = () => {
     });
   };
 
-  const adjustPay = (id: string, amount: number) => {
-    if (hubConnection) {
-      hubConnection
-        .invoke("AdjustDepositPayment", id, amount)
-        .then((res) => {
-          getPaymentsOverview();
-          alert("Успешно", "Подтверждено", "success");
-        })
-        .catch((err: Error) => {
-          alert("Ошибка", "Произошла ошибка", "danger");
-        });
-    }
-  };
-
   const submit = () => {
     if (hubConnection) {
       setDepositPayList([]);
@@ -328,7 +272,6 @@ export const AdminPay = () => {
           if (res.collection.length) {
             setTotalPayDeposits(res.totalRecords);
             setDepositPayList(res.collection);
-            setPayNum(20);
           }
         })
         .catch((err: Error) => {
@@ -348,11 +291,10 @@ export const AdminPay = () => {
         )
         .then((res) => {
           setStats(res);
-          console.log("stats", res);
         })
         .catch((e) => console.log(e));
     }
-  }, [depositsDate, hubConnection]);
+  }, [depositsDate, hubConnection, lang]);
 
   return (
     <>
@@ -458,7 +400,6 @@ export const AdminPay = () => {
       <Content active={active === 0}>
         <Approval
           getPaymentsOverview={getPaymentsOverview}
-          adjustPay={adjustPay}
           listDeposits={listDeposits}
           setProcent={setProcent}
           procent={procent}

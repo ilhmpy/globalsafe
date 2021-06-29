@@ -3,6 +3,7 @@ import styled from "styled-components/macro";
 export const PaymentsTable = styled.div`
   padding: 30px;
   height: 600px;
+  position: relative;
 `;
 
 export const TableHead = styled.ul`

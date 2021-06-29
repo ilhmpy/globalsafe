@@ -3,6 +3,7 @@ import Chart from "react-apexcharts";
 import styled from "styled-components/macro";
 import { ThemeContext } from "../../context/ThemeContext";
 import moment from "moment";
+import "moment/locale/ru";
 
 type Props = {
   series: number[];
@@ -708,6 +709,8 @@ export const ColumnChartAnalitic: FC<PropsColumn> = ({ date, value }) => {
   const themeContext = useContext(ThemeContext);
   const theme = themeContext.theme;
   const color = theme === "light" ? "#222" : "#fff";
+
+  moment.locale(localStorage.getItem("i18nextLng") || "ru");
 
   const data = {
     series: [

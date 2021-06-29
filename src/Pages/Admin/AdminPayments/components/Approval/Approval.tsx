@@ -11,6 +11,7 @@ import { ProcentInput } from "../../../../../components/UI/ProcentInput";
 import { AppContext } from "../../../../../context/HubContext";
 import { Card } from "../../../../../globalStyles";
 import { OpenDate } from "../../../../../types/dates";
+import { Notify } from "../../../../../types/notify";
 import { CollectionListDeposits } from "../../../../../types/deposits";
 import {
   PaymentsCollection,
@@ -33,10 +34,9 @@ import ReactNotification, { store } from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 import * as Styled from "./Styled.elements";
 import { SliderComponent } from "../../../../../components/Slider/Slider";
+import { Notification } from "../../../../../components/Notify/Notification";
 
 type Props = {
-  adjustPay: (id: string, val: number) => void;
-
   listDeposits: CollectionListDeposits[];
   getPaymentsOverview: () => void;
   procent: string;
@@ -44,7 +44,6 @@ type Props = {
 };
 
 export const Approval: FC<Props> = ({
-  adjustPay,
   listDeposits,
   getPaymentsOverview,
   setProcent,
@@ -52,8 +51,6 @@ export const Approval: FC<Props> = ({
 }) => {
   const [depositList, setDepositList] = useState<PaymentsCollection[]>([]);
   const [totalDeposits, setTotalDeposits] = useState(0);
-  const [count, setCount] = useState(true);
-  const [num, setNum] = useState(20);
   const [nameApproval, setNameApproval] = useState("");
   const [checkList, setCheckList] = useState<any>([]);
   const [loading, setLoading] = useState(true);
@@ -62,6 +59,7 @@ export const Approval: FC<Props> = ({
     from: undefined,
     to: undefined,
   });
+  const [notifications, setNotifications] = useState<Notify[]>([]);
   const [openFilterOne, setOpenFilterOne] = useState(false);
 
   const [pageLength, setPageLength] = useState<number>(10);
@@ -102,7 +100,6 @@ export const Approval: FC<Props> = ({
         .then((res) => {
           setTotalDeposits(res.totalRecords);
           setDepositList(res.collection);
-          setNum(20);
           setLoading(false);
         })
         .catch((err: Error) => {
@@ -165,6 +162,10 @@ export const Approval: FC<Props> = ({
     }
   };
 
+  const createNotify = (item: Notify) => {
+    setNotifications([...notifications, item]);
+  };
+
   const submitApproval = () => {
     if (hubConnection) {
       hubConnection
@@ -186,30 +187,32 @@ export const Approval: FC<Props> = ({
           if (res.collection.length) {
             setDepositList(res.collection);
             setTotalDeposits(res.totalRecords);
-            setNum(20);
           }
         })
         .catch((err: Error) => console.log(err));
     }
   };
 
-  const alert = (
-    title: string,
-    message: string,
-    type: "success" | "default" | "warning" | "info" | "danger"
-  ) => {
-    store.addNotification({
-      title: title,
-      message: message,
-      type: type,
-      insert: "top",
-      container: "center",
-      animationIn: ["animate__animated", "animate__fadeIn"],
-      animationOut: ["animate__animated", "animate__fadeOut"],
-      dismiss: {
-        duration: 5000,
-      },
-    });
+  const adjustPay = (id: string, amount: number) => {
+    if (hubConnection) {
+      hubConnection
+        .invoke("AdjustDepositPayment", id, amount)
+        .then((res) => {
+          getPaymentsOverview();
+          createNotify({
+            text: t("adminPay.success"),
+            error: false,
+            timeleft: 5,
+          });
+        })
+        .catch((err: Error) => {
+          createNotify({
+            text: t("adminPay.error"),
+            error: true,
+            timeleft: 5,
+          });
+        });
+    }
   };
 
   const paymentsConfirm = () => {
@@ -225,12 +228,21 @@ export const Approval: FC<Props> = ({
         )
         .then((res) => {
           console.log("ConfirmAllDepositsPayment", res);
-          alert("Успешно", "согласовано", "success");
+          createNotify({
+            text: t("adminPay.success"),
+            error: false,
+            timeleft: 5,
+          });
           getPaymentsOverview();
           submitApproval();
         })
         .catch((err: Error) => {
-          alert("Ошибка", "Произошла ошибка", "danger");
+          console.log(err);
+          createNotify({
+            text: t("adminPay.error"),
+            error: true,
+            timeleft: 5,
+          });
         });
     }
   };
@@ -359,6 +371,7 @@ export const Approval: FC<Props> = ({
           ) : (
             <Styled.NotFound>{t("notFound")}</Styled.NotFound>
           )}
+          <Notification data={notifications} />
         </Styled.PaymentsTable>
       </Card>
 

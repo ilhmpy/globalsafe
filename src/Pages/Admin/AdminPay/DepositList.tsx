@@ -51,14 +51,21 @@ export const DepositList: FC<ListProps> = ({
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation();
-    if (+e.target.value <= 0) {
-      setValue("");
-      setProcent("");
-    } else {
-      setValue(e.target.value);
-      const proc = ((+e.target.value / data.baseAmountView) * 100).toFixed(0);
-      // console.log("proc", proc);
-      setProcent(proc.toString());
+    const pattern = /^[0-9]*\.?[0-9]*$/;
+    if (pattern.test(e.target.value)) {
+      if (+e.target.value < 0) {
+        setValue("");
+        setProcent("");
+      } else {
+        setValue(e.target.value);
+        if (e.target.value !== ".") {
+          const proc = ((+e.target.value / data.baseAmountView) * 100).toFixed(
+            0
+          );
+          // console.log("proc", proc);
+          setProcent(proc.toString());
+        }
+      }
     }
   };
 
@@ -95,14 +102,18 @@ export const DepositList: FC<ListProps> = ({
   };
 
   const onHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // console.log("onHandleChange", e.target.value);
-    if (+e.target.value <= 0) {
-      setValue("");
-      setProcent("");
-    } else {
-      setProcent(e.target.value);
-      const values = (data.baseAmountView * +e.target.value) / 100;
-      setValue(values.toString());
+    const pattern = /^[0-9]*\.?[0-9]*$/;
+    if (pattern.test(e.target.value)) {
+      if (+e.target.value < 0) {
+        setValue("");
+        setProcent("");
+      } else {
+        setProcent(e.target.value);
+        if (e.target.value !== ".") {
+          const values = (data.baseAmountView * +e.target.value) / 100;
+          setValue(values.toString());
+        }
+      }
     }
   };
 

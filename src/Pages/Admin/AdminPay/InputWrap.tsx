@@ -59,29 +59,33 @@ export const InputWrap: FC<{
           onChange={onChange}
           ref={inputRef}
           value={val}
-          type="number"
+          type="text"
           onKeyDown={onKeyDown}
         />
       ) : (
         <Text
           dis={done}
           title={
-            +val > 0
+            typeof +val === "number" && +val >= 0
               ? Number(val).toLocaleString("ru-RU", {
                   maximumFractionDigits: 5,
                 })
-              : Number(placeholder).toLocaleString("ru-RU", {
+              : typeof +placeholder === "number" && +placeholder >= 0
+              ? Number(placeholder).toLocaleString("ru-RU", {
                   maximumFractionDigits: 5,
                 })
+              : "0"
           }
         >
-          {+val > 0
+          {typeof +val === "number" && +val >= 0
             ? Number(val).toLocaleString("ru-RU", {
                 maximumFractionDigits: 5,
               })
-            : Number(placeholder).toLocaleString("ru-RU", {
+            : typeof +placeholder === "number" && +placeholder >= 0
+            ? Number(placeholder).toLocaleString("ru-RU", {
                 maximumFractionDigits: 5,
-              })}
+              })
+            : "0"}
         </Text>
       )}
       {showCheck && !done ? (
