@@ -264,7 +264,7 @@ export const PartnerProgramBlock = styled.div<{ phone?: boolean }>`
   padding-top: 26px;
   display: ${({ phone }) => phone ? "none" : "block"};
 
-  @media only screen and (max-device-width: 480px) {
+  @media only screen and (max-device-width: 1024px) {
     margin-top: 20px;
     padding-top: 20px;
     display: ${({ phone }) => phone ? "block" : "none"};
@@ -287,6 +287,10 @@ export const PartnerProgramBlock = styled.div<{ phone?: boolean }>`
 
     ${PartnerProgramLineNumber} {
       width: 64%;
+    }
+
+    @media only screen and (min-device-width: 481px) and (max-device-width: 900px) {
+      max-width: 300px;
     }
   }
 `;
