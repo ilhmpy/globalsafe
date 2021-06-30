@@ -335,7 +335,7 @@ export const Approval: FC<Props> = ({
         >
           <SelectContainer>
             <SelectContainerInnerPaid>
-              <SelectWrap style={{ minWidth: 263 }}>
+              <SelectWrap style={{ minWidth: 210 }}>
                 <Label>{t("adminPay.filter.user")}</Label>
                 <Input
                   value={nameApproval}
@@ -344,14 +344,14 @@ export const Approval: FC<Props> = ({
                   }
                 />
               </SelectWrap>
-              <SelectWrap input>
+              <SelectWrap style={{ minWidth: 200 }}>
                 <TestInput
                   setOpenDate={setOpenDateApproval}
                   openDate={openDateApproval}
                   label={t("adminPay.filter.date")}
                 />
               </SelectWrap>
-              <SelectWrap style={{ minWidth: 263 }}>
+              <SelectWrap style={{ minWidth: 200 }}>
                 <Label>{t("adminPay.filter.deposit")}</Label>
                 <Select
                   checkList={checkListApproval}
@@ -360,7 +360,7 @@ export const Approval: FC<Props> = ({
                 />
                 <pre>{JSON.stringify(setCheckListApproval)}</pre>
               </SelectWrap>
-              <SelectWrap style={{ minWidth: 263 }}>
+              <SelectWrap style={{ minWidth: 200 }}>
                 <Label>{t("adminPay.status")}</Label>
                 <SelectOne
                   checkList={checkList}

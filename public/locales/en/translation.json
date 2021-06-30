@@ -196,7 +196,7 @@
     },
     "filter": {
       "user": "User",
-      "date": "Date",
+      "date": "Deposit opening date",
       "deposit": "Deposit",
       "agree": "Agreed",
       "disagree": "Inconsistent"
