@@ -167,6 +167,7 @@ export const PartnerProgramTitle = styled.h3<{ phone?: boolean }>`
   font-size: 1.70em;
   font-weight: 500;
   margin-bottom: 20px;
+  text-align: center;
   color: ${({ theme }) => theme.partnerProgram.titleColor};
   display: ${({ phone }) => phone != undefined ? "none" : "inline"};
 
@@ -269,13 +270,14 @@ export const PartnerProgramBlock = styled.div<{ phone?: boolean }>`
     padding-top: 20px;
     display: ${({ phone }) => phone ? "block" : "none"};
     border: 1px solid #000;
-    max-width: 280px;
+    max-width: 340px;
 
     ${PartnerProgramHeaderItem} {
-      float: right;
-      font-size: 1.50em;
-      margin-bottom: 15px;
-      margin-right: 43px;
+      text-align: center;
+      font-size: 1.35em;
+      margin: 0 auto;
+      margin-bottom: 20px;
+      line-height: 41px;
     }
 
     ${PartnerProgramLine} {
