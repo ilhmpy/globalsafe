@@ -211,7 +211,7 @@ export const Approval: FC<Props> = ({
           openDateApproval.to ? openDateApproval.to : null,
           null,
           null,
-          null, //
+          null,
           (currentPage - 1) * pageLength,
           pageLength
         )
@@ -252,36 +252,45 @@ export const Approval: FC<Props> = ({
   };
 
   const paymentsConfirm = () => {
-    if (hubConnection) {
-      hubConnection
-        .invoke(
-          "ConfirmAllDepositsPayment",
-          nameApproval ? nameApproval.toLowerCase() : null,
-          openDateApproval.from ? openDateApproval.from : null,
-          openDateApproval.to ? openDateApproval.to : null,
-          searchSafeIDApproval.length ? searchSafeIDApproval : null,
-          procent ? +procent / 100 : null
-        )
-        .then((res) => {
-          createNotify({
-            text: t("adminPay.success"),
-            error: false,
-            timeleft: 5,
-            id: notifications.length,
-          });
+    if (depositList.some((item) => item.state === 6)) {
+      if (hubConnection) {
+        hubConnection
+          .invoke(
+            "ConfirmAllDepositsPayment",
+            nameApproval ? nameApproval.toLowerCase() : null,
+            openDateApproval.from ? openDateApproval.from : null,
+            openDateApproval.to ? openDateApproval.to : null,
+            searchSafeIDApproval.length ? searchSafeIDApproval : null,
+            procent ? +procent / 100 : null
+          )
+          .then((res) => {
+            createNotify({
+              text: t("adminPay.success"),
+              error: false,
+              timeleft: 5,
+              id: notifications.length,
+            });
 
-          getPaymentsOverview();
-          submitApproval();
-        })
-        .catch((err: Error) => {
-          console.log(err);
-          createNotify({
-            text: t("adminPay.error"),
-            error: true,
-            timeleft: 5,
-            id: notifications.length,
+            getPaymentsOverview();
+            submitApproval();
+          })
+          .catch((err: Error) => {
+            console.log(err);
+            createNotify({
+              text: t("adminPay.error"),
+              error: true,
+              timeleft: 5,
+              id: notifications.length,
+            });
           });
-        });
+      }
+    } else {
+      createNotify({
+        text: t("adminPay.notPays"),
+        error: true,
+        timeleft: 5,
+        id: notifications.length,
+      });
     }
   };
 

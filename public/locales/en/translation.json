@@ -177,6 +177,7 @@
     "status": "Status",
     "success": "Payment agreed",
     "error": "Payment error",
+    "notPays": "No payments",
     "table": {
       "user": "User",
       "name": "Name",

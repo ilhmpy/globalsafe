@@ -20,26 +20,14 @@ type PropsMatch = {
 
 export const OnePage = ({ match }: RouteComponentProps<PropsMatch>) => {
   const [active, setActive] = useState(1);
-  const [list, setList] = useState<any>([]);
-  const [card, setCard] = useState(0);
+
   const appContext = useContext(AppContext);
   const user = appContext.user;
-  const hubConnection = appContext.hubConnection;
   const location = useLocation();
+  let state = location.state;
+
   const safeId = match.params.slug;
   const { t } = useTranslation();
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection
-        .invoke("GetUserDeposits", [1, 2, 3, 4, 5, 6], 0, 20)
-        .then((res: any) => {
-          setList(res.collection);
-        })
-        .catch((err: Error) => console.log(err));
-    }
-  }, [hubConnection]);
-
-  const data = list.filter((item: any) => item.safeId === safeId);
 
   if (user === null) {
     return null;
@@ -60,7 +48,7 @@ export const OnePage = ({ match }: RouteComponentProps<PropsMatch>) => {
         </Container>
         <Container>
           <Card>
-            <InfoBlock data={data[0]} />
+            <InfoBlock data={state} />
           </Card>
         </Container>
       </Styled.Content>
