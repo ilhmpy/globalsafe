@@ -44,10 +44,12 @@ export const InfoMain = () => {
   const [addDeposit, setAddDeposit] = useState(false);
   const [depositListModal, setDepositListModal] = useState(false);
   const [addDepositValue, setAddDepositValue] = useState("");
-  const [depositSelect, setDepositSelect] =
-    useState<null | DepositsCollection>(null);
-  const [depositsList, setDepositsList] =
-    useState<DepositsCollection[] | null>(null);
+  const [depositSelect, setDepositSelect] = useState<null | DepositsCollection>(
+    null
+  );
+  const [depositsList, setDepositsList] = useState<DepositsCollection[] | null>(
+    null
+  );
   const [withdraw, setWithdraw] = useState(false);
   const [loadDeposit, setLoadDeposit] = useState(false);
   const [withdrawValueLoad, setWithdrawValueLoad] = useState(false);
@@ -233,6 +235,13 @@ export const InfoMain = () => {
     history.push("/info/deposits");
   };
 
+  const onChangeWithdraw = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const pattern = /^[1-9][0-9]*$/;
+    if (e.target.value === "" || pattern.test(e.target.value)) {
+      setWithdrawValue(e.target.value);
+    }
+  };
+
   return (
     <>
       {withdrawValueLoad && (
@@ -379,10 +388,9 @@ export const InfoMain = () => {
                   {t("privateArea.withdraw")}
                 </Styled.ModalTitle>
                 <Input
-                  onChange={(e) => setWithdrawValue(e.target.value)}
+                  onChange={onChangeWithdraw}
                   placeholder={t("privateArea.amountEnter")}
-                  step="any"
-                  type="number"
+                  type="text"
                   ref={inputRef}
                   value={withdrawValue}
                 />
