@@ -44,7 +44,7 @@ export const lightTheme = {
     titleColor: '#0E0D3D',
     lineItemColor: '#0E0D3D',
     lineNumberColor: '#0E0D3D',
-    nthItemBG: "rgba(196, 196, 196, 0.05)",
+    nthItemBG: "#fff",
     titlePhoneColor: '#0E0D3D',
   },
   pagination: {
