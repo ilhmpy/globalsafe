@@ -51,27 +51,20 @@ export const AdminPay = () => {
   const user = appContext.user;
 
   const [totalDeposits, setTotalDeposits] = useState(0);
-  const [depositList, setDepositList] = useState<any>([]);
+
   const [totalPayDeposits, setTotalPayDeposits] = useState(0);
 
   const [depositPayList, setDepositPayList] = useState<any>([]);
   const [paymentsList, setPaymentsList] = useState<any>([]);
   const [totalPayments, setTotalPayments] = useState(0);
-  const [next, setNext] = useState(true);
   const [procent, setProcent] = useState("");
   const [loading, setLoading] = useState(true);
   const [openDate, setOpenDate] = useState<OpenDate>({
     from: undefined,
     to: undefined,
   });
-  const [openDateApproval, setOpenDateApproval] = useState<OpenDate>({
-    from: undefined,
-    to: undefined,
-  });
 
   const [openFilter, setOpenFilter] = useState(false);
-  const [num, setNum] = useState(20);
-
   const [checkList, setCheckList] = useState<any>([]);
   const [checkListApproval, setCheckListApproval] = useState<any>([]);
   const [name, setName] = useState("");
@@ -165,37 +158,6 @@ export const AdminPay = () => {
         });
     }
   }, [hubConnection, active, currentPage, pageLength]);
-
-  useEffect(() => {
-    if (hubConnection) {
-      setLoading(true);
-      setDepositList([]);
-      hubConnection
-        .invoke<RootPayments>(
-          "GetUsersDeposits",
-          [5, 6],
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          (currentPageDeposit - 1) * pageLengthDeposit,
-          pageLengthDeposit
-        )
-        .then((res) => {
-          setLoading(false);
-          setTotalDeposits(res.totalRecords);
-          setDepositList(res.collection);
-          setLoading(false);
-        })
-        .catch((err: Error) => {
-          setLoading(false);
-          console.log(err);
-        });
-    }
-  }, [hubConnection, active, currentPageDeposit, pageLengthDeposit]);
 
   useEffect(() => {
     if (hubConnection && active === 1) {
