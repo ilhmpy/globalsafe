@@ -1,14 +1,12 @@
-import React, { useEffect, useState, useContext, FC } from "react";
-import Chart from "react-apexcharts";
-import styled, { keyframes, css } from "styled-components/macro";
-import moment from "moment";
-import { Container, Card } from "../../globalStyles";
-import greenBg from "../../assets/svg/greenBack.svg";
-import redBg from "../../assets/svg/redBack.svg";
-import { AppContext } from "../../context/HubContext";
-import { RootChange, Collection } from "../../types/currency";
-import { CSSTransition } from "react-transition-group";
-import useWindowSize from "../../hooks/useWindowSize";
+import moment from 'moment';
+import React, { FC, useContext, useEffect, useState } from 'react';
+import Chart from 'react-apexcharts';
+import { CSSTransition } from 'react-transition-group';
+import styled, { css, keyframes } from 'styled-components/macro';
+import { AppContext } from '../../context/HubContext';
+import { Card, Container } from '../../globalStyles';
+import useWindowSize from '../../hooks/useWindowSize';
+import { Collection, RootChange } from '../../types/currency';
 
 export const CurrencyValues = () => {
   const appContext = useContext(AppContext);
@@ -21,19 +19,19 @@ export const CurrencyValues = () => {
   const [numMGCWD, setNumMGCWD] = useState(0);
   const [numGCWD, setNumGCWD] = useState(0);
   const size = useWindowSize();
-  const mob = size < 768;
+  const mob = size <= 768;
 
   useEffect(() => {
-    const dateFrom: any = moment().subtract(7, "days");
+    const dateFrom: any = moment().subtract(7, 'days');
     if (hubConnection) {
       hubConnection
         .invoke<RootChange>(
-          "GetMarket",
+          'GetMarket',
           4,
           dateFrom._d,
           new Date(),
           numDIAMOND,
-          100
+          100,
         )
         .then((res) => {
           // console.log("res diamond", res);
@@ -47,16 +45,16 @@ export const CurrencyValues = () => {
   }, [hubConnection, numDIAMOND]);
 
   useEffect(() => {
-    const dateFrom: any = moment().subtract(7, "days");
+    const dateFrom: any = moment().subtract(7, 'days');
     if (hubConnection) {
       hubConnection
         .invoke<RootChange>(
-          "GetMarket",
+          'GetMarket',
           2,
           dateFrom._d,
           new Date(),
           numMGCWD,
-          100
+          100,
         )
         .then((res) => {
           if (res.totalRecords > listMGCWD.length) {
@@ -69,16 +67,16 @@ export const CurrencyValues = () => {
   }, [hubConnection]);
 
   useEffect(() => {
-    const dateFrom: any = moment().subtract(7, "days");
+    const dateFrom: any = moment().subtract(7, 'days');
     if (hubConnection) {
       hubConnection
         .invoke<RootChange>(
-          "GetMarket",
+          'GetMarket',
           3,
           dateFrom._d,
           new Date(),
           numGCWD,
-          100
+          100,
         )
         .then((res) => {
           if (res.totalRecords > listGCWD.length) {
@@ -92,8 +90,8 @@ export const CurrencyValues = () => {
 
   useEffect(() => {
     if (hubConnection) {
-      hubConnection.on("MarketNotification", (data) => {
-        console.log("MarketNotification", data);
+      hubConnection.on('MarketNotification', (data) => {
+        console.log('MarketNotification', data);
         if (data.assetKind === 3) {
           setListGCWD((listGCWD) => [...listGCWD, data]);
         } else if (data.assetKind === 2) {
@@ -109,7 +107,7 @@ export const CurrencyValues = () => {
     const currValue = data[data.length - 1].latestBid;
     const prevValue = data[1].latestBid;
     const filterPrevValues = data.filter(
-      (item) => item.latestBid !== currValue
+      (item) => item.latestBid !== currValue,
     );
     const value =
       ((currValue - filterPrevValues[filterPrevValues.length - 1].latestBid) /
@@ -125,17 +123,16 @@ export const CurrencyValues = () => {
   const redOrGreen = (data: Collection[]) => {
     const currValue = data[data.length - 1].latestBid;
     const filterPrevValues = data.filter(
-      (item) => item.latestBid !== currValue
+      (item) => item.latestBid !== currValue,
     );
     const value =
       currValue > filterPrevValues[filterPrevValues.length - 1].latestBid;
     if (value) {
-      return ["#BCD476", "rgba(188, 212, 118, 0.4)"];
+      return ['#BCD476', 'rgba(188, 212, 118, 0.4)'];
     } else {
-      return ["#FF416E", "rgba(255, 255, 255, 0.4)"];
+      return ['#FF416E', 'rgba(255, 255, 255, 0.4)'];
     }
   };
-  // console.log("listGCWD", listGCWD);
 
   const disabled = listGCWD.length && listMGCWD.length && listDIAMOND.length;
 
@@ -153,8 +150,7 @@ export const CurrencyValues = () => {
               }
               alfa
               onClick={() => setActive(0)}
-              active={active === 0}
-            >
+              active={active === 0}>
               {!!disabled && (
                 <>
                   <ChartItemInner>
@@ -167,12 +163,18 @@ export const CurrencyValues = () => {
                         listGCWD[listGCWD.length - 1].latestBid >
                         listGCWD[listGCWD.length - 2].latestBid
                       }
-                    >
+                      fontLength={
+                        (
+                          listGCWD[listGCWD.length - 1].latestBid / 100000
+                        ).toLocaleString('ru-RU', {
+                          maximumFractionDigits: 2,
+                        }).length < 8
+                      }>
                       {(
                         listGCWD[listGCWD.length - 1].latestBid / 100000
-                      ).toLocaleString("ru-RU", {
+                      ).toLocaleString('ru-RU', {
                         maximumFractionDigits: 2,
-                      })}{" "}
+                      })}{' '}
                       CWD
                     </ChartItemValue>
                   </ChartItemInner>
@@ -195,8 +197,7 @@ export const CurrencyValues = () => {
                 !!listMGCWD.length &&
                 listMGCWD[listMGCWD.length - 1].latestBid <
                   listMGCWD[listMGCWD.length - 2].latestBid
-              }
-            >
+              }>
               {!!disabled && (
                 <>
                   <ChartItemInner>
@@ -210,12 +211,18 @@ export const CurrencyValues = () => {
                           listMGCWD[listMGCWD.length - 1].latestBid >
                           listMGCWD[listMGCWD.length - 2].latestBid
                         }
-                      >
+                        fontLength={
+                          (
+                            listMGCWD[listMGCWD.length - 1].latestBid / 100000
+                          ).toLocaleString('ru-RU', {
+                            maximumFractionDigits: 2,
+                          }).length < 8
+                        }>
                         {(
                           listMGCWD[listMGCWD.length - 1].latestBid / 100000
-                        ).toLocaleString("ru-RU", {
+                        ).toLocaleString('ru-RU', {
                           maximumFractionDigits: 2,
-                        })}{" "}
+                        })}{' '}
                         CWD
                       </ChartItemValue>
                     )}
@@ -241,8 +248,7 @@ export const CurrencyValues = () => {
                   listDIAMOND[listDIAMOND.length - 2].latestBid
               }
               onClick={() => setActive(2)}
-              active={active === 2}
-            >
+              active={active === 2}>
               {!!disabled && (
                 <>
                   <ChartItemInner>
@@ -256,12 +262,18 @@ export const CurrencyValues = () => {
                           listDIAMOND[listDIAMOND.length - 1].latestBid >
                           listDIAMOND[listDIAMOND.length - 2].latestBid
                         }
-                      >
+                        fontLength={
+                          (
+                            listDIAMOND[listDIAMOND.length - 1].latestBid / 100
+                          ).toLocaleString('ru-RU', {
+                            maximumFractionDigits: 2,
+                          }).length < 8
+                        }>
                         {(
                           listDIAMOND[listDIAMOND.length - 1].latestBid / 100
-                        ).toLocaleString("ru-RU", {
+                        ).toLocaleString('ru-RU', {
                           maximumFractionDigits: 2,
-                        })}{" "}
+                        })}{' '}
                         CWD
                       </ChartItemValue>
                     )}
@@ -284,8 +296,7 @@ export const CurrencyValues = () => {
               in={active === 0}
               timeout={0}
               classNames="modal"
-              unmountOnExit
-            >
+              unmountOnExit>
               <ChartsWrapper>
                 {disabled ? (
                   <>
@@ -297,7 +308,7 @@ export const CurrencyValues = () => {
                     />
                   </>
                 ) : (
-                  ""
+                  ''
                 )}
               </ChartsWrapper>
             </CSSTransition>
@@ -305,8 +316,7 @@ export const CurrencyValues = () => {
               in={active === 1}
               timeout={0}
               classNames="modal"
-              unmountOnExit
-            >
+              unmountOnExit>
               <ChartsWrapper>
                 {disabled ? (
                   <>
@@ -318,7 +328,7 @@ export const CurrencyValues = () => {
                     />
                   </>
                 ) : (
-                  ""
+                  ''
                 )}
               </ChartsWrapper>
             </CSSTransition>
@@ -326,8 +336,7 @@ export const CurrencyValues = () => {
               in={active === 2}
               timeout={0}
               classNames="modal"
-              unmountOnExit
-            >
+              unmountOnExit>
               <ChartsWrapper>
                 {disabled ? (
                   <>
@@ -339,7 +348,7 @@ export const CurrencyValues = () => {
                     />
                   </>
                 ) : (
-                  ""
+                  ''
                 )}
               </ChartsWrapper>
             </CSSTransition>
@@ -365,10 +374,10 @@ const ApexChart: FC<ChartProps> = ({ values, gradientColor, height = 280 }) => {
     ],
     options: {
       chart: {
-        type: "area",
+        type: 'area',
         animations: {
           enabled: true,
-          easing: "linear",
+          easing: 'linear',
           speed: 150,
           animateGradually: {
             enabled: true,
@@ -389,7 +398,7 @@ const ApexChart: FC<ChartProps> = ({ values, gradientColor, height = 280 }) => {
           show: false,
         },
         noData: {
-          text: "Loading...",
+          text: 'Loading...',
         },
       },
       colors: [gradientColor[0]],
@@ -397,10 +406,10 @@ const ApexChart: FC<ChartProps> = ({ values, gradientColor, height = 280 }) => {
         enabled: false,
       },
       stroke: {
-        curve: "smooth",
+        curve: 'smooth',
         width: 2,
       },
-      labels: [""],
+      labels: [''],
       xaxis: {
         tooltip: {
           enabled: false,
@@ -408,7 +417,7 @@ const ApexChart: FC<ChartProps> = ({ values, gradientColor, height = 280 }) => {
         labels: {
           show: false,
         },
-        type: "category",
+        type: 'category',
         axisBorder: {
           show: false,
         },
@@ -447,7 +456,7 @@ const ApexChart: FC<ChartProps> = ({ values, gradientColor, height = 280 }) => {
       },
       fill: {
         colors: gradientColor,
-        type: "gradient",
+        type: 'gradient',
         gradient: {
           shadeIntensity: 1,
           opacityFrom: 0.5,
@@ -492,9 +501,9 @@ const ChartItemChange = styled.div<{ red?: boolean }>`
   font-weight: 500;
   font-size: 14px;
   line-height: 16px;
-  color: ${(props) => (props.red ? " #FF416E" : "#BCD476")};
+  color: ${(props) => (props.red ? ' #FF416E' : '#BCD476')};
   &:before {
-    content: "";
+    content: '';
     position: absolute;
     width: 0;
     height: 0;
@@ -503,8 +512,8 @@ const ChartItemChange = styled.div<{ red?: boolean }>`
     margin-top: -4px;
     border-left: 3px solid transparent;
     border-right: 3px solid transparent;
-    border-top: 6px solid ${(props) => (props.red ? " #FF416E" : "#BCD476")};
-    transform: ${(props) => (props.red ? "rotate(0)" : "rotate(180deg)")};
+    border-top: 6px solid ${(props) => (props.red ? ' #FF416E' : '#BCD476')};
+    transform: ${(props) => (props.red ? 'rotate(0)' : 'rotate(180deg)')};
   }
 `;
 
@@ -553,12 +562,12 @@ const MyCss = css`
   opacity: 1;
   visibility: hidden;
   overflow: hidden;
-  content: "&nbsp;";
+  content: '&nbsp;';
   color: transparent;
   height: 87px;
   &:after {
     position: absolute;
-    content: "";
+    content: '';
     height: 100%;
     width: 100%;
     visibility: visible;
@@ -574,12 +583,12 @@ const MyChartCss = css`
   opacity: 1;
   visibility: hidden;
   overflow: hidden;
-  content: "&nbsp;";
+  content: '&nbsp;';
   color: transparent;
   /* height: 300px; */
   &:after {
     position: absolute;
-    content: "";
+    content: '';
     height: 100%;
     width: 100%;
     visibility: visible;
@@ -636,7 +645,7 @@ const ChartItem = styled(Card)<{
   margin-bottom: 20px;
   display: flex;
   border: 1px solid
-    ${(props) => (props.active ? "#FF416E" : props.theme.card.background)};
+    ${(props) => (props.active ? '#FF416E' : props.theme.card.background)};
   justify-content: space-between;
   align-items: center;
   background-repeat: no-repeat;
@@ -674,14 +683,14 @@ const BgRed = keyframes`
   100% { background: transparent }
 `;
 
-const ChartItemValue = styled.div<{ green?: boolean }>`
+const ChartItemValue = styled.div<{ green?: boolean; fontLength?: boolean }>`
   font-weight: 500;
-  font-size: 36px;
+  font-size: ${(props) => (props.fontLength ? '36px' : '28px')};
+
   line-height: 42px;
   color: ${(props) => props.theme.text2};
   animation: ${(props) => (props.green ? BgGreen : BgRed)} 0.5s linear;
   display: inline-block;
-  padding: 0 5px;
   opacity: 1;
   transition: opacity 0.5s ease-in;
   @media (max-width: 768px) {
