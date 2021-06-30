@@ -1,51 +1,43 @@
-﻿import React, { useState, useContext, useEffect } from "react";
-import * as Styled from "./Styled.elements";
-import styled, { css } from "styled-components/macro";
-import { Card } from "../../globalStyles";
-import { UpTitle } from "../../components/UI/UpTitle";
-import { ReactComponent as Exit } from "../../assets/svg/exit.svg";
-import { ReactComponent as Filter } from "../../assets/svg/filter.svg";
-import { Tab, Content } from "../../components/UI/Tabs";
-import { AppContext } from "../../context/HubContext";
-import { ThemeContext } from "../../context/ThemeContext";
-import { Select } from "../../components/Select/Select2";
-import { TestInput } from "../../components/UI/DayPicker";
-import { Button } from "../../components/Button/Button";
-import useWindowSize from "../../hooks/useWindowSize";
-import {
-  RootPayments,
-  PaymentsCollection,
-  RootCharges,
-  CollectionCharges,
-  ConfirmAllDepositsPayment,
-} from "../../types/payments";
-import {
-  DepositStats,
-  ListDeposits,
-  CollectionListDeposits,
-} from "../../types/deposits";
-import ReactNotification, { store } from "react-notifications-component";
-import InfiniteScroll from "react-infinite-scroller";
+﻿import moment from "moment";
+import React, { useContext, useEffect, useState } from "react";
+import { Scrollbars } from "react-custom-scrollbars";
+import { useTranslation } from "react-i18next";
+import ReactNotification from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 import { CSSTransition } from "react-transition-group";
-import { ModalPay } from "./AdminPay/Payments";
-import { Scrollbars } from "react-custom-scrollbars";
+import styled from "styled-components/macro";
+import { ReactComponent as Exit } from "../../assets/svg/exit.svg";
+import { Button } from "../../components/Button/Button";
+import { Select } from "../../components/Select/Select2";
+import { TestInput } from "../../components/UI/DayPicker";
 import { Loading } from "../../components/UI/Loading";
-import {
-  DepositList,
-  PaymentsList,
-  PaymentsListPay,
-} from "./AdminPay/DepositList";
+import { Content, Tab } from "../../components/UI/Tabs";
+import { UpTitle } from "../../components/UI/UpTitle";
+import { AppContext } from "../../context/HubContext";
+import { LangualeContext } from "../../context/LangualeContext";
+import { ThemeContext } from "../../context/ThemeContext";
+import { Card } from "../../globalStyles";
+import useWindowSize from "../../hooks/useWindowSize";
 import { OpenDate } from "../../types/dates";
-import moment from "moment";
-import { useTranslation } from "react-i18next";
+import { CollectionListDeposits, ListDeposits } from "../../types/deposits";
+import {
+  CollectionCharges,
+  PaymentsCollection,
+  RootCharges,
+  RootPayments,
+} from "../../types/payments";
+import { PaymentsList, PaymentsListPay } from "./AdminPay/DepositList";
+import { Analitics } from "./AdminPayments/components/Analitics/Analitics";
+import { Approval } from "./AdminPayments/components/Approval/Approval";
+import { Chart } from "./AdminPayments/components/Chart/Chart";
+import { Pagination } from "./Pagination";
+import * as Styled from "./Styled.elements";
 
 export const AdminPay = () => {
   const [active, setActive] = useState(0);
   const sizes = useWindowSize();
-  const [show, setShow] = useState(false);
   const [sum, setSum] = useState<number[] | null>(null);
-  const [depositList, setDepositList] = useState<any>([]);
+
   const appContext = useContext(AppContext);
   const themeContext = useContext(ThemeContext);
   const theme = themeContext.theme;
@@ -54,38 +46,43 @@ export const AdminPay = () => {
   const user = appContext.user;
 
   const [totalDeposits, setTotalDeposits] = useState(0);
+
   const [totalPayDeposits, setTotalPayDeposits] = useState(0);
+
   const [depositPayList, setDepositPayList] = useState<any>([]);
   const [paymentsList, setPaymentsList] = useState<any>([]);
   const [totalPayments, setTotalPayments] = useState(0);
-  const [count, setCount] = useState(true);
-  const [countPayments, setCountPayments] = useState(30);
-  const [countPay, setPayCount] = useState(true);
-  const [numPayments, setNumPayments] = useState(20);
-  const [num, setNum] = useState(20);
-  const [numPay, setPayNum] = useState(20);
-  const [next, setNext] = useState(true);
 
-  const [open, setOpen] = useState<boolean>(false);
-  const [dataModal, setDataModal] = useState<PaymentsCollection | any>({});
+  const [next, setNext] = useState(true);
+  const [procent, setProcent] = useState("");
+
   const [loading, setLoading] = useState(true);
   const [openDate, setOpenDate] = useState<OpenDate>({
     from: undefined,
     to: undefined,
   });
-  const [openDateApproval, setOpenDateApproval] = useState<OpenDate>({
-    from: undefined,
-    to: undefined,
-  });
+
   const [openFilter, setOpenFilter] = useState(false);
-  const [openFilterOne, setOpenFilterOne] = useState(false);
   const [checkList, setCheckList] = useState<any>([]);
   const [checkListApproval, setCheckListApproval] = useState<any>([]);
   const [name, setName] = useState("");
-  const [nameApproval, setNameApproval] = useState("");
+  const [pageLength, setPageLength] = useState<number>(10);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageLengthPay, setPageLengthPay] = useState<number>(10);
+  const [currentPagePay, setCurrentPagePay] = useState<number>(1);
+  const [pageLengthDeposit, setPageLengthDeposit] = useState<number>(10);
+  const [currentPageDeposit, setCurrentPageDeposit] = useState<number>(1);
+
   const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>(
     []
   );
+  const backDay: any = moment().add(90, "days").format();
+  const [depositsDate, setDepositsDate] = useState<OpenDate>({
+    from: new Date(),
+    to: backDay,
+  });
+  const [stats, setStats] = useState<any[]>([]);
+  const { lang } = useContext(LangualeContext);
   const { t } = useTranslation();
 
   const getPaymentsOverview = () => {
@@ -102,9 +99,8 @@ export const AdminPay = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<ListDeposits>("GetAllPublicDeposits", 1, false, 0, 40)
+        .invoke<ListDeposits>("GetAllPublicDeposits", null, false, 0, 40)
         .then((res) => {
-          // console.log("GetDeposits", res);
           setListDeposits(res.collection);
         })
         .catch((err: Error) => console.log(err));
@@ -121,33 +117,9 @@ export const AdminPay = () => {
     namesProgramApproval.includes(i.safeId)
   );
   const searchSafeIDApproval = idProgramApproval.map((i) => i.safeId);
-
-  const myLoad = () => {
-    setNext(false);
-    if (hubConnection && depositPayList.length < totalPayDeposits) {
-      hubConnection
-        .invoke<RootCharges>(
-          "GetDepositsCharges",
-          name ? name.toLowerCase() : null,
-          openDate.from ? openDate.from : backDays._d,
-          openDate.to ? openDate.to : new Date(),
-          searchSafeID.length ? searchSafeID : null,
-          null,
-          [7, 8],
-          numPay,
-          20
-        )
-        .then((res) => {
-          if (res.collection.length) {
-            // console.log("myLoad", res);
-            setDepositPayList([...depositPayList, ...res.collection]);
-            setPayNum(numPay + 20);
-            setNext(true);
-          }
-        })
-        .catch((err: Error) => console.log(err));
-    }
-  };
+  const depositState = checkList.length
+    ? checkList.map((i: any) => i.id)
+    : [5, 6];
 
   const handleClick = (id: number) => {
     if (id !== active) {
@@ -155,36 +127,9 @@ export const AdminPay = () => {
     }
   };
 
-  const confirmPay = (id: string) => {
-    if (hubConnection) {
-      hubConnection
-        .invoke("ConfirmDepositPayment", id)
-        .then((res) => {
-          console.log("ConfirmDepositPayment", res);
-          getPaymentsOverview();
-        })
-        .catch((err: Error) => {
-          console.log(err);
-        });
-    }
-  };
-
-  const unConfirmPay = (id: string) => {
-    if (hubConnection) {
-      hubConnection
-        .invoke("UnconfirmDepositPayment", id)
-        .then((res) => {
-          console.log("UnconfirmDepositPayment", res);
-          getPaymentsOverview();
-        })
-        .catch((err: Error) => {
-          console.log(err);
-        });
-    }
-  };
-
   useEffect(() => {
-    if (hubConnection) {
+    if (hubConnection && active === 2) {
+      setLoading(true);
       setPaymentsList([]);
       hubConnection
         .invoke<RootPayments>(
@@ -197,54 +142,23 @@ export const AdminPay = () => {
           null,
           null,
           null,
-          0,
-          20
+          (currentPage - 1) * pageLength,
+          pageLength
         )
         .then((res) => {
-          setLoading(false);
           setTotalPayments(res.totalRecords);
           setPaymentsList(res.collection);
-          setNumPayments(20);
         })
         .catch((err: Error) => {
           setLoading(false);
           console.log(err);
         });
     }
-  }, [hubConnection, active]);
+  }, [hubConnection, active, currentPage, pageLength]);
 
   useEffect(() => {
-    if (hubConnection) {
-      setDepositList([]);
-      hubConnection
-        .invoke<RootPayments>(
-          "GetUsersDeposits",
-          [5, 6],
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          0,
-          20
-        )
-        .then((res) => {
-          setLoading(false);
-          setTotalDeposits(res.totalRecords);
-          setDepositList(res.collection);
-          setNum(20);
-        })
-        .catch((err: Error) => {
-          setLoading(false);
-          console.log(err);
-        });
-    }
-  }, [hubConnection, active]);
-
-  useEffect(() => {
-    if (hubConnection) {
+    if (hubConnection && active === 1) {
+      setLoading(true);
       setDepositPayList([]);
       hubConnection
         .invoke<RootCharges>(
@@ -255,16 +169,15 @@ export const AdminPay = () => {
           searchSafeID.length ? searchSafeID : null,
           null,
           [7, 8],
-          0,
-          20
+          (currentPagePay - 1) * pageLengthPay,
+          pageLengthPay
         )
         .then((res) => {
-          // console.log("GetDepositsCharges", res);
           setLoading(false);
           if (res.collection.length) {
             setTotalPayDeposits(res.totalRecords);
             setDepositPayList(res.collection);
-            setPayNum(20);
+            setLoading(false);
           }
         })
         .catch((err: Error) => {
@@ -272,128 +185,11 @@ export const AdminPay = () => {
           console.log(err);
         });
     }
-  }, [hubConnection, active]);
+  }, [hubConnection, active, currentPagePay, pageLengthPay]);
 
   useEffect(() => {
     getPaymentsOverview();
   }, [hubConnection]);
-
-  const loadMorePayments = () => {
-    setPayCount(false);
-    if (hubConnection && paymentsList.length < totalPayments) {
-      hubConnection
-        .invoke<RootPayments>(
-          "GetUsersDeposits",
-          [5],
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          numPayments,
-          20
-        )
-        .then((res) => {
-          if (res.collection.length) {
-            setPaymentsList([...paymentsList, ...res.collection]);
-            setNumPayments(numPayments + 20);
-            setPayCount(true);
-          }
-        })
-        .catch((err: Error) => console.log(err));
-    }
-  };
-
-  const loadMoreItems = () => {
-    setCount(false);
-    if (hubConnection && depositList.length < totalDeposits) {
-      hubConnection
-        .invoke<RootPayments>(
-          "GetUsersDeposits",
-          [5, 6],
-          nameApproval ? nameApproval.toLowerCase() : null,
-          searchSafeIDApproval.length ? searchSafeIDApproval : null,
-          openDateApproval.from ? openDateApproval.from : null,
-          openDateApproval.to ? openDateApproval.to : null,
-          null,
-          null,
-          null,
-          num,
-          20
-        )
-        .then((res) => {
-          if (res.collection.length) {
-            setDepositList([...depositList, ...res.collection]);
-            setCount(true);
-            setNum(num + 20);
-          }
-        })
-        .catch((err: Error) => console.log(err));
-    }
-  };
-
-  const alert = (
-    title: string,
-    message: string,
-    type: "success" | "default" | "warning" | "info" | "danger"
-  ) => {
-    store.addNotification({
-      title: title,
-      message: message,
-      type: type,
-      insert: "top",
-      container: "top-right",
-      animationIn: ["animate__animated", "animate__fadeIn"],
-      animationOut: ["animate__animated", "animate__fadeOut"],
-      dismiss: {
-        duration: 5000,
-      },
-    });
-  };
-
-  const adjustPay = (id: string, amount: number) => {
-    if (hubConnection) {
-      hubConnection
-        .invoke("AdjustDepositPayment", id, amount)
-        .then((res) => {
-          getPaymentsOverview();
-          alert("Успешно", "Подтверждено", "success");
-        })
-        .catch((err: Error) => {
-          alert("Ошибка", "Произошла ошибка", "danger");
-        });
-    }
-  };
-
-  const paymentsConfirm = () => {
-    console.log(nameApproval);
-    console.log(openDateApproval);
-    console.log(checkListApproval);
-    if (hubConnection) {
-      hubConnection
-        .invoke<ConfirmAllDepositsPayment>("ConfirmAllDepositsPayment",
-        nameApproval ? nameApproval : null,
-        openDateApproval.from ? openDateApproval.from: null, 
-        openDateApproval.to ? openDateApproval.to: null,
-        checkListApproval.length ? checkListApproval.map((i: any) => i.id) : null,
-        12
-        )
-        .then((res) => {
-          alert("Успешно", "", "success");
-          console.log('ураррарарарара')
-          console.log("ConfirmAllDepositPayment", res);
-          getPaymentsOverview();
-          
-          
-        })
-        .catch((err: Error) => {
-          alert("Ошибка", "Произошла ошибка", "danger");
-          console.log(err)
-        });
-    }
-  };
 
   const submit = () => {
     if (hubConnection) {
@@ -411,12 +207,10 @@ export const AdminPay = () => {
           20
         )
         .then((res) => {
-          // console.log("res", res);
           setLoading(false);
           if (res.collection.length) {
             setTotalPayDeposits(res.totalRecords);
             setDepositPayList(res.collection);
-            setPayNum(20);
           }
         })
         .catch((err: Error) => {
@@ -426,33 +220,20 @@ export const AdminPay = () => {
     }
   };
 
-  const submitApproval = () => {
+  useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<RootPayments>(
-          "GetUsersDeposits",
-          [5, 6],
-          nameApproval ? nameApproval.toLowerCase() : null,
-          searchSafeIDApproval.length ? searchSafeIDApproval : null,
-          openDateApproval.from ? openDateApproval.from : null,
-          openDateApproval.to ? openDateApproval.to : null,
-          null,
-          null,
-          null,
-          0,
-          20
+        .invoke(
+          "GetPayoutsEstimateStats",
+          depositsDate.from ? depositsDate.from : new Date(),
+          depositsDate.to ? depositsDate.to : backDay
         )
         .then((res) => {
-          setDepositList([]);
-          if (res.collection.length) {
-            setDepositList(res.collection);
-            setTotalDeposits(res.totalRecords);
-            setNum(20);
-          }
+          setStats(res);
         })
-        .catch((err: Error) => console.log(err));
+        .catch((e) => console.log(e));
     }
-  };
+  }, [depositsDate, hubConnection, lang]);
 
   return (
     <>
@@ -464,72 +245,80 @@ export const AdminPay = () => {
           <Exit onClick={logOut} />
         </Styled.UserName>
       </Styled.HeadBlock>
+      {active === 3 && (
+        <Chart
+          depositsDate={depositsDate}
+          setDepositsDate={setDepositsDate}
+          stats={stats}
+        />
+      )}
+      {active !== 3 && (
+        <Card>
+          <Styled.PayList>
+            <Styled.PayItem>
+              <Styled.PayItemHead mb>
+                <SelfUpTitle small>{t("adminPay.title1")}</SelfUpTitle>
+              </Styled.PayItemHead>
+              <Styled.Radial
+                bg={
+                  theme === "light"
+                    ? "rgba(255, 65, 110, 0.2)"
+                    : "rgba(255, 65, 110, 1)"
+                }
+              >
+                <span>
+                  {sum ? (sum[2] / 100000).toLocaleString("ru-RU") : "-"}
+                </span>
+                <span>CWD</span>
+              </Styled.Radial>
+            </Styled.PayItem>
+            <Styled.PayItem>
+              <Styled.PayItemHead mb>
+                <SelfUpTitle small>{t("adminPay.title2")}</SelfUpTitle>
+              </Styled.PayItemHead>
 
-      <Card>
-        <Styled.PayList>
-          <Styled.PayItem>
-            <Styled.PayItemHead mb>
-              <SelfUpTitle small>{t("adminPay.title1")}</SelfUpTitle>
-            </Styled.PayItemHead>
-            <Styled.Radial
-              bg={
-                theme === "light"
-                  ? "rgba(255, 65, 110, 0.2)"
-                  : "rgba(255, 65, 110, 1)"
-              }
-            >
-              <span>
-                {sum ? (sum[2] / 100000).toLocaleString("ru-RU") : "-"}
-              </span>
-              <span>CWD</span>
-            </Styled.Radial>
-          </Styled.PayItem>
-          <Styled.PayItem>
-            <Styled.PayItemHead mb>
-              <SelfUpTitle small>{t("adminPay.title2")}</SelfUpTitle>
-            </Styled.PayItemHead>
-
-            <Styled.Radial
-              bg={
-                theme === "light"
-                  ? "rgba(188, 212, 118, 0.2)"
-                  : "rgba(188, 212, 118, 1)"
-              }
-            >
-              <span>
-                {sum
-                  ? (sum[0] / 100000).toLocaleString("ru-RU", {
-                      maximumFractionDigits: 0,
-                    })
-                  : "-"}
-              </span>
-              <span>CWD</span>
-            </Styled.Radial>
-          </Styled.PayItem>
-          <Styled.PayItem>
-            <Styled.PayItemHead mb>
-              <SelfUpTitle small>{t("adminPay.title3")}</SelfUpTitle>
-            </Styled.PayItemHead>
-            <Styled.Radial
-              bg={
-                theme === "light"
-                  ? "rgba(109, 185, 255, 0.2)"
-                  : "rgba(109, 185, 255, 1)"
-              }
-            >
-              <span>
-                {sum
-                  ? (sum[1] / 100000).toLocaleString("ru-RU", {
-                      maximumFractionDigits: 0,
-                    })
-                  : "-"}
-              </span>
-              <span>CWD</span>
-            </Styled.Radial>
-          </Styled.PayItem>
-          <Styled.PayItem></Styled.PayItem>
-        </Styled.PayList>
-      </Card>
+              <Styled.Radial
+                bg={
+                  theme === "light"
+                    ? "rgba(188, 212, 118, 0.2)"
+                    : "rgba(188, 212, 118, 1)"
+                }
+              >
+                <span>
+                  {sum
+                    ? (sum[0] / 100000).toLocaleString("ru-RU", {
+                        maximumFractionDigits: 0,
+                      })
+                    : "-"}
+                </span>
+                <span>CWD</span>
+              </Styled.Radial>
+            </Styled.PayItem>
+            <Styled.PayItem>
+              <Styled.PayItemHead mb>
+                <SelfUpTitle small>{t("adminPay.title3")}</SelfUpTitle>
+              </Styled.PayItemHead>
+              <Styled.Radial
+                bg={
+                  theme === "light"
+                    ? "rgba(109, 185, 255, 0.2)"
+                    : "rgba(109, 185, 255, 1)"
+                }
+              >
+                <span>
+                  {sum
+                    ? (sum[1] / 100000).toLocaleString("ru-RU", {
+                        maximumFractionDigits: 0,
+                      })
+                    : "-"}
+                </span>
+                <span>CWD</span>
+              </Styled.Radial>
+            </Styled.PayItem>
+            <Styled.PayItem></Styled.PayItem>
+          </Styled.PayList>
+        </Card>
+      )}
       <Card>
         <Tabs>
           <PayTab onClick={() => handleClick(0)} active={active === 0}>
@@ -541,117 +330,19 @@ export const AdminPay = () => {
           <Tab onClick={() => handleClick(2)} active={active === 2}>
             {t("adminPay.title1")}
           </Tab>
+          <Tab onClick={() => handleClick(3)} active={active === 3}>
+            {t("adminPay.analitics.analitic")}
+          </Tab>
         </Tabs>
       </Card>
 
-      {active === 0 && (
-        <ButtonWrap>
-          <Button dangerOutline mb onClick={paymentsConfirm}>
-            {t("adminPay.confirmButton")}!!!
-            
-          </Button>
-          <Styled.Input
-                    value={nameApproval}
-                    onChange={(e) =>
-                      setNameApproval(e.target.value.toLowerCase())
-                    }
-          />
-        </ButtonWrap>
-      )}
-
       <Content active={active === 0}>
-        <Styled.FilterBlock>
-          <Styled.FilterHeader>
-            <Styled.FilterName>{t("adminDeposit.filter")}</Styled.FilterName>
-            <Styled.ShowHide onClick={() => setOpenFilterOne(!openFilterOne)}>
-              {openFilterOne ? t("hide") : t("show")}
-            </Styled.ShowHide>
-          </Styled.FilterHeader>
-          <CSSTransition
-            in={openFilterOne}
-            timeout={200}
-            classNames="filter"
-            unmountOnExit
-          >
-            <Styled.SelectContainer>
-              <Styled.SelectContainerInnerPaid>
-                <Styled.SelectWrap style={{ minWidth: 263 }}>
-                  <Styled.Label>{t("adminPay.filter.user")}</Styled.Label>
-                  <Styled.Input
-                    value={nameApproval}
-                    onChange={(e) =>
-                      setNameApproval(e.target.value.toLowerCase())
-                    }
-                  />
-                </Styled.SelectWrap>
-                <Styled.SelectWrap input>
-                  <TestInput
-                    setOpenDate={setOpenDateApproval}
-                    openDate={openDateApproval}
-                    label={t("adminPay.filter.date")}
-                  />
-                </Styled.SelectWrap>
-                <Styled.SelectWrap style={{ minWidth: 263 }}>
-                  <Styled.Label>{t("adminPay.filter.deposit")}</Styled.Label>
-                  <Select
-                    checkList={checkListApproval}
-                    setCheckList={setCheckListApproval}
-                    values={listDeposits}
-                  />
-                </Styled.SelectWrap>
-              </Styled.SelectContainerInnerPaid>
-              <Button danger onClick={submitApproval}>
-                {t("adminUsers.apply")}???
-              </Button>
-            </Styled.SelectContainer>
-          </CSSTransition>
-        </Styled.FilterBlock>
-        <Card>
-          <PaymentsTable>
-            <TableHead>
-              <TableHeadItem>№</TableHeadItem>
-              <TableHeadItem>{t("adminPay.table.user")}</TableHeadItem>
-              <TableHeadItem>{t("adminPay.table.name")}</TableHeadItem>
-              <TableHeadItem>{t("adminPay.table.procent")}</TableHeadItem>
-              <TableHeadItem>{t("adminPay.table.datePay")}</TableHeadItem>
-              <TableHeadItem>{t("adminPay.table.profit")}</TableHeadItem>
-              <TableHeadItem>{t("adminPay.table.openDate")}</TableHeadItem>
-              <TableHeadItem>{t("adminPay.table.contribution")}</TableHeadItem>
-              <TableHeadItem>{t("adminPay.table.payments")}</TableHeadItem>
-              <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
-            </TableHead>
-            {depositList.length ? (
-              <Scrollbars style={{ height: "500px" }}>
-                <InfiniteScroll
-                  pageStart={10}
-                  loadMore={loadMoreItems}
-                  hasMore={count}
-                  useWindow={false}
-                  loader={
-                    <div className="loader" key={0}>
-                      Loading ...
-                    </div>
-                  }
-                >
-                  {depositList.map((item: PaymentsCollection, idx: number) => (
-                    <DepositList
-                      idx={idx}
-                      key={item.safeId}
-                      data={item}
-                      adjustPay={adjustPay}
-                      confirmPay={confirmPay}
-                      unConfirmPay={unConfirmPay}
-                    />
-                  ))}
-                </InfiniteScroll>
-              </Scrollbars>
-            ) : loading ? (
-              <Loading />
-            ) : (
-              <NotFound>{t("notFound")}</NotFound>
-            )}
-          </PaymentsTable>
-        </Card>
+        <Approval
+          getPaymentsOverview={getPaymentsOverview}
+          listDeposits={listDeposits}
+          setProcent={setProcent}
+          procent={procent}
+        />
       </Content>
 
       <Content active={active === 1}>
@@ -720,21 +411,9 @@ export const AdminPay = () => {
             </TableHead>
             {depositPayList.length ? (
               <Scrollbars style={{ height: "500px" }}>
-                <InfiniteScroll
-                  pageStart={10}
-                  loadMore={myLoad}
-                  hasMore={next}
-                  useWindow={false}
-                  loader={
-                    <div className="loader" key={0}>
-                      Loading ...
-                    </div>
-                  }
-                >
-                  {depositPayList.map((item: CollectionCharges) => (
-                    <PaymentsListPay key={item.safeId} data={item} />
-                  ))}
-                </InfiniteScroll>
+                {depositPayList.map((item: CollectionCharges) => (
+                  <PaymentsListPay key={item.safeId} data={item} />
+                ))}
               </Scrollbars>
             ) : loading ? (
               <Loading />
@@ -743,6 +422,14 @@ export const AdminPay = () => {
             )}
           </PaymentsTable>
         </Card>
+
+        <Pagination
+          pageLength={pageLengthPay}
+          setPageLength={setPageLengthPay}
+          currentPage={currentPagePay}
+          setCurrentPage={setCurrentPagePay}
+          totalLottery={totalDeposits}
+        />
       </Content>
 
       <Content active={active === 2}>
@@ -767,21 +454,9 @@ export const AdminPay = () => {
             </TableHead>
             {paymentsList.length ? (
               <Scrollbars style={{ height: "500px" }}>
-                <InfiniteScroll
-                  pageStart={10}
-                  loadMore={loadMorePayments}
-                  hasMore={countPay}
-                  useWindow={false}
-                  loader={
-                    <div className="loader" key={0}>
-                      Loading ...
-                    </div>
-                  }
-                >
-                  {paymentsList.map((item: PaymentsCollection) => (
-                    <PaymentsList key={item.safeId} data={item} />
-                  ))}
-                </InfiniteScroll>
+                {paymentsList.map((item: PaymentsCollection) => (
+                  <PaymentsList key={item.safeId} data={item} />
+                ))}
               </Scrollbars>
             ) : loading ? (
               <Loading />
@@ -790,6 +465,18 @@ export const AdminPay = () => {
             )}
           </PaymentsTable>
         </Card>
+
+        <Pagination
+          pageLength={pageLength}
+          setPageLength={setPageLength}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalLottery={totalPayments}
+        />
+      </Content>
+
+      <Content active={active === 3}>
+        {active === 3 ? <Analitics listDeposits={listDeposits} /> : null}
       </Content>
     </>
   );
@@ -948,26 +635,12 @@ const TableHeadItemPaid = styled(TableHeadItem)`
   }
 `;
 
-const TableBody = styled(TableHead)`
-  padding: 10px 10px 10px 0;
-`;
-
-const TableBodyItemCss = css`
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 16px;
-  color: ${(props) => props.theme.text2};
-`;
-
-const TableBodyItemPaid = styled(TableHeadItemPaid)`
-  ${TableBodyItemCss}
-`;
-
 const Tabs = styled.div`
   display: flex;
   padding: 12px 20px 0;
   ${Tab} {
-    &:nth-child(2) {
+    &:nth-child(2),
+    &:nth-child(3) {
       width: 90px;
       @media (max-width: 768px) {
         width: 80px;
@@ -983,6 +656,7 @@ const Tabs = styled.div`
   }
   @media (max-width: 768px) {
     padding: 0px 10px 0;
+    flex-wrap: wrap;
     ${Tab} {
       width: 80px;
       &:first-child {
@@ -995,15 +669,6 @@ const Tabs = styled.div`
           left: 10px;
         }
       }
-    }
-  }
-`;
-
-const ButtonWrap = styled.div`
-  @media (max-width: 768px) {
-    ${Button} {
-      margin-left: auto;
-      margin-right: auto;
     }
   }
 `;
