@@ -154,10 +154,10 @@ export const InfoMain = () => {
   }, [hubConnection]);
 
   useEffect(() => {
-    if (withdrawValue || addDepositValue) {
+    if (withdraw) {
       inputRef.current.focus();
     }
-  }, [withdrawValue, addDepositValue]);
+  }, [withdraw]);
 
   useEffect(() => {
     if (hubConnection) {

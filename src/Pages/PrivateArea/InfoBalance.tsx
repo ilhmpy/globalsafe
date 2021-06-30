@@ -201,10 +201,10 @@ export const InfoBalance = () => {
   }, [languale]);
 
   useEffect(() => {
-    if (balanceValue) {
+    if (addBalance) {
       inputRef.current.focus();
     }
-  }, [balanceValue]);
+  }, [addBalance]);
 
   useEffect(() => {
     setBalanceLog(null);
@@ -404,6 +404,13 @@ export const InfoBalance = () => {
     }
   };
 
+  const onChangeBalanceValue = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const pattern = /^[1-9][0-9]*$/;
+    if (e.target.value === "" || pattern.test(e.target.value)) {
+      setBalanceValue(e.target.value);
+    }
+  };
+
   return (
     <>
       {loadDeposit && (
@@ -577,9 +584,9 @@ export const InfoBalance = () => {
               {t("privateArea.topUpBalance")}
             </Styled.ModalTitle>
             <Input
-              onChange={(e) => setBalanceValue(e.target.value)}
+              onChange={onChangeBalanceValue}
               placeholder={t("privateArea.amountEnter")}
-              type="number"
+              type="text"
               ref={inputRef}
               value={balanceValue}
             />
