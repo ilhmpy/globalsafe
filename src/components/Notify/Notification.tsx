@@ -5,14 +5,15 @@ import { Notify } from "../../types/notify";
 
 type Props = {
   data: Notify[];
+  onDelete: (id: number) => void;
 };
 
-export const Notification: FC<Props> = ({ data }) => {
+export const Notification: FC<Props> = ({ data, onDelete }) => {
   return (
     <Styled.Container>
       <Styled.ContainerInner>
-        {data.map((item, idx) => (
-          <NotifyItem data={item} key={idx} />
+        {data.map((item) => (
+          <NotifyItem onDelete={onDelete} data={item} key={item.id} />
         ))}
       </Styled.ContainerInner>
     </Styled.Container>
@@ -21,30 +22,30 @@ export const Notification: FC<Props> = ({ data }) => {
 
 type NotifyProps = {
   data: Notify;
+  onDelete: (id: number) => void;
 };
 
-const NotifyItem: FC<NotifyProps> = ({ data }) => {
+const NotifyItem: FC<NotifyProps> = ({ data, onDelete }) => {
   const [show, setShow] = useState(true);
 
   const timerDone = () => {
     setShow(false);
+    onDelete(data.id);
   };
   return (
     <>
-      {show ? (
-        <Styled.Notification error={data.error}>
-          <Styled.NotificationInner>
-            <Styled.Text>{data.text}</Styled.Text>
-            <CountdownTimer
-              seconds={data.timeleft}
-              size={24}
-              strokeColor="rgba(81, 81, 114, .5)"
-              strokeWidth={4}
-              timerDone={timerDone}
-            />
-          </Styled.NotificationInner>
-        </Styled.Notification>
-      ) : null}
+      <Styled.Notification error={data.error}>
+        <Styled.NotificationInner>
+          <Styled.Text>{data.text}</Styled.Text>
+          <CountdownTimer
+            seconds={data.timeleft}
+            size={24}
+            strokeColor="rgba(81, 81, 114, .5)"
+            strokeWidth={4}
+            timerDone={timerDone}
+          />
+        </Styled.NotificationInner>
+      </Styled.Notification>
     </>
   );
 };
