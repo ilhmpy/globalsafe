@@ -3,13 +3,13 @@ import { createPortal } from "react-dom";
 
 export const Portal: React.FC = ({ children }) => {
   const targetElem = document.createElement("div");
-
+  const div = React.useMemo(() => document.createElement("div"), []);
   useEffect(() => {
-    document.body.appendChild(targetElem);
+    document.body.appendChild(div);
     return () => {
-      document.body.removeChild(targetElem);
+      document.body.removeChild(div);
     };
-  }, [targetElem]);
+  }, []);
 
-  return createPortal(children, targetElem);
+  return createPortal(children, div);
 };
