@@ -1,17 +1,15 @@
-﻿import React, { useState, useRef, useContext, useEffect, FC } from "react";
-import { ReactComponent as Pen } from "../../../assets/svg/pen.svg";
-import { Checkbox } from "../../../components/UI/Checkbox";
-import { PaymentsCollection, CollectionCharges } from "../../../types/payments";
-import useWindowSize from "../../../hooks/useWindowSize";
-import { ModalPay, ModalPaid, ModalPayList, ModalDeposit } from "./Payments";
-import { CSSTransition } from "react-transition-group";
-import { Button } from "../../../components/Button/Button";
-import { InputWrap } from "./InputWrap";
-import styled, { css } from "styled-components/macro";
-import useOnClickOutside from "../../../hooks/useOutsideHook";
-import moment from "moment";
+﻿import moment from "moment";
+import React, { FC, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { CSSTransition } from "react-transition-group";
+import styled, { css } from "styled-components/macro";
+import { Button } from "../../../components/Button/Button";
 import { RoundButton } from "../../../components/UI/RoundButton";
+import useOnClickOutside from "../../../hooks/useOutsideHook";
+import useWindowSize from "../../../hooks/useWindowSize";
+import { CollectionCharges, PaymentsCollection } from "../../../types/payments";
+import { InputWrap } from "./InputWrap";
+import { ModalPaid, ModalPay, ModalPayList } from "./Payments";
 
 type ListProps = {
   data: PaymentsCollection;
@@ -33,7 +31,7 @@ export const DepositList: FC<ListProps> = ({
   );
   const [done, setDone] = useState(false);
   const [procent, setProcent] = useState(
-    ((data.payAmount / data.baseAmount) * 100).toFixed(1).toString()
+    ((data.payAmount / data.baseAmount) * 100).toString()
   );
   const [open, setOpen] = useState(false);
   const sizes = useWindowSize();
@@ -121,6 +119,7 @@ export const DepositList: FC<ListProps> = ({
     e.stopPropagation();
     setOpen(true);
   };
+
 
   return (
     <div>
