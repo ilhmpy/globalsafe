@@ -6,13 +6,15 @@ import * as Styled from "./Table.styled";
 import moment from "moment";
 import "moment/locale/ru";
 import { Balance } from "../../types/balance";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { TableModal } from "./TableModal";
 import { FilterMenu } from "../FilterMenu/FilterMenu";
+import useWindowSize from "../../hooks/useWindowSize";
 
 const Row = ({ data }: any) => {
   const [open, setOpen] = useState<boolean | string>(false);
+  const size = useWindowSize();
   const history = useHistory();
   const onClose = () => {
     setOpen(false);
@@ -28,57 +30,126 @@ const Row = ({ data }: any) => {
   // console.log("data", data);
   return (
     <>
-      <Styled.TR
-        key={data.safeId}
-        onClick={() => onClick(data.safeId)}
-        disactive={data.state === 4}
-      >
-        <Styled.TD>
-          <Styled.Name>{data.deposit.name}</Styled.Name>
-          <Styled.NameData>
-            <Styled.NameData>
-              {moment(data.creationDate).format("DD/MM/YYYY")}
-            </Styled.NameData>{" "}
-            <Styled.NameData>&nbsp; - &nbsp;</Styled.NameData>
-            <Styled.NameData
-              green={moment.valueOf() > moment(data.endDate).valueOf()}
-            >
-              {moment(data.endDate).format("DD/MM/YYYY")}
-            </Styled.NameData>
-          </Styled.NameData>
-        </Styled.TD>
-        <Styled.TD>
-          <Styled.Text
-            dangerouslySetInnerHTML={{ __html: data.deposit.description }}
-          />
-        </Styled.TD>
-        <Styled.TD>
-          <Styled.Text>{data.amountView}</Styled.Text>
-          <Styled.Text>{Balance[data.deposit.asset]}</Styled.Text>
-        </Styled.TD>
-        <Styled.TD>
-          <Styled.Text>
-            {data.paymentAmountView
-              ? data.paymentAmountView.toString().length > 15
-                ? data.paymentAmountView.toFixed(7)
-                : data.paymentAmountView
-              : "-"}
-          </Styled.Text>
-          {data.paymentAmountView ? (
-            <Styled.Text>{Balance[data.deposit.asset]}</Styled.Text>
-          ) : (
-            <Styled.Text></Styled.Text>
-          )}
-        </Styled.TD>
-        <Styled.TD>
-          <Styled.Text>
-            {data.paymentDate
-              ? moment(data.paymentDate).format("DD MMMM YYYY")
-              : "-"}
-          </Styled.Text>
-        </Styled.TD>
-      </Styled.TR>
-      <TableModal onClose={onClose} open={open} data={data} />
+      {size < 992 ? (
+        <>
+          <Styled.TR key={data.safeId} disactive={data.state === 4}>
+            <Styled.TD>
+              <Link
+                key={data.safeId}
+                to={{
+                  pathname: "/info/deposits/" + data.safeId,
+                  state: data,
+                }}
+              >
+                <Styled.Name>{data.deposit.name}</Styled.Name>
+              </Link>
+              <Styled.NameData>
+                <Styled.NameData>
+                  {moment(data.creationDate).format("DD/MM/YYYY")}7
+                </Styled.NameData>{" "}
+                <Styled.NameData>&nbsp; - &nbsp;</Styled.NameData>
+                <Styled.NameData
+                  green={moment.valueOf() > moment(data.endDate).valueOf()}
+                >
+                  {moment(data.endDate).format("DD/MM/YYYY")}
+                </Styled.NameData>
+              </Styled.NameData>
+            </Styled.TD>
+            <Styled.TD>
+              <Styled.Text
+                dangerouslySetInnerHTML={{ __html: data.deposit.description }}
+              />
+            </Styled.TD>
+            <Styled.TD>
+              <Styled.Text>{data.amountView}</Styled.Text>
+              <Styled.Text>{Balance[data.deposit.asset]}</Styled.Text>
+            </Styled.TD>
+            <Styled.TD>
+              <Styled.Text>
+                {data.paymentAmountView
+                  ? data.paymentAmountView.toString().length > 15
+                    ? data.paymentAmountView.toFixed(7)
+                    : data.paymentAmountView
+                  : "-"}
+              </Styled.Text>
+              {data.paymentAmountView ? (
+                <Styled.Text>{Balance[data.deposit.asset]}</Styled.Text>
+              ) : (
+                <Styled.Text></Styled.Text>
+              )}
+            </Styled.TD>
+            <Styled.TD>
+              <Link
+                key={data.safeId}
+                to={{
+                  pathname: "/info/deposits/" + data.safeId,
+                  state: data,
+                }}
+              >
+                <Styled.Text>
+                  {data.paymentDate
+                    ? moment(data.paymentDate).format("DD MMMM YYYY")
+                    : "-"}
+                </Styled.Text>
+              </Link>
+            </Styled.TD>
+          </Styled.TR>
+        </>
+      ) : (
+        <>
+          <Styled.TR
+            key={data.safeId}
+            onClick={() => onClick(data.safeId)}
+            disactive={data.state === 4}
+          >
+            <Styled.TD>
+              <Styled.Name>{data.deposit.name}</Styled.Name>
+              <Styled.NameData>
+                <Styled.NameData>
+                  {moment(data.creationDate).format("DD/MM/YYYY")}
+                </Styled.NameData>{" "}
+                <Styled.NameData>&nbsp; - &nbsp;</Styled.NameData>
+                <Styled.NameData
+                  green={moment.valueOf() > moment(data.endDate).valueOf()}
+                >
+                  {moment(data.endDate).format("DD/MM/YYYY")}
+                </Styled.NameData>
+              </Styled.NameData>
+            </Styled.TD>
+            <Styled.TD>
+              <Styled.Text
+                dangerouslySetInnerHTML={{ __html: data.deposit.description }}
+              />
+            </Styled.TD>
+            <Styled.TD>
+              <Styled.Text>{data.amountView}</Styled.Text>
+              <Styled.Text>{Balance[data.deposit.asset]}</Styled.Text>
+            </Styled.TD>
+            <Styled.TD>
+              <Styled.Text>
+                {data.paymentAmountView
+                  ? data.paymentAmountView.toString().length > 15
+                    ? data.paymentAmountView.toFixed(7)
+                    : data.paymentAmountView
+                  : "-"}
+              </Styled.Text>
+              {data.paymentAmountView ? (
+                <Styled.Text>{Balance[data.deposit.asset]}</Styled.Text>
+              ) : (
+                <Styled.Text></Styled.Text>
+              )}
+            </Styled.TD>
+            <Styled.TD>
+              <Styled.Text>
+                {data.paymentDate
+                  ? moment(data.paymentDate).format("DD MMMM YYYY")
+                  : "-"}
+              </Styled.Text>
+            </Styled.TD>
+          </Styled.TR>
+          <TableModal onClose={onClose} open={open} data={data} />
+        </>
+      )}
     </>
   );
 };
