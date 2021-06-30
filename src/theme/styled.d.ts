@@ -45,5 +45,8 @@ declare module 'styled-components' {
     pagination: {
       selectCountBackgroundImage: string;
     };
+    footer: {
+      color: string;
+    }
   }
 }

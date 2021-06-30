@@ -10,7 +10,7 @@ export const Footer = () => {
     <DIV>
       <Container>
         <Text>{t("footer.title")} <A href="https://t.me/joinchat/E_Acz5BKQnJlNTVi">{t("footer.link")}</A></Text>
-        <Text>GLOBALSAFE © 2021</Text>
+        <Text>Globalsafe © 2021</Text>
       </Container>
     </DIV>
   );
@@ -19,12 +19,13 @@ export const Footer = () => {
 export const Text = styled.p`
   display: block;
   font-size: .80em;
-  font-weight: 400;
+  font-weight: 300;
   line-height: 22px;
+  color: ${({ theme }) => theme.footer.color};
 `;
 
 export const A = styled.a`
-  color: #515172;
+  color: ${({ theme }) => theme.footer.color};
   text-decoration: underline;
 `;
 

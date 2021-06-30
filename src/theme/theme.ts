@@ -51,6 +51,9 @@ export const lightTheme = {
     selectCountBackgroundImage:
       'linear-gradient(45deg, transparent 50%, #56657f 50%), linear-gradient(135deg, #56657f 50%, transparent 50%), linear-gradient(to right, white, white)',
   },
+  footer: {
+    color: "#0E0D3D"
+  }
 };
 
 export const darkTheme = {
@@ -98,4 +101,7 @@ export const darkTheme = {
     selectCountBackgroundImage:
       'linear-gradient(45deg, transparent 50%, #e2e2e2 50%), linear-gradient(135deg, #e2e2e2 50%, transparent 50%), linear-gradient(to right, #212121, #212121)',
   },
+  footer: {
+    color: "#fff"
+  }
 };
