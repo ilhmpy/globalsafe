@@ -1,6 +1,6 @@
-import styled from "styled-components/macro";
-import React, { FC } from "react";
-import bord from "../../assets/svg/borderinput.svg";
+import React, { FC } from 'react';
+import styled from 'styled-components/macro';
+import bord from '../../assets/svg/borderinput.svg';
 
 type Props = {
   label: string;
@@ -20,7 +20,7 @@ export const ProcentInput: FC<Props> = ({
       <InputWrap>
         <Label>{label}</Label>
         <Input
-          type="number"
+          type="text"
           value={value}
           placeholder={placeholder}
           onChange={onChange}
@@ -35,7 +35,7 @@ const Container = styled.div`
   /* border: 1px solid #ff416e; */
   background: url(${bord}) no-repeat center;
   border-radius: 24px;
-  padding: 7px 12px 0;
+  padding: 10px 12px 0;
   height: 42px;
   width: 115px;
   position: relative;

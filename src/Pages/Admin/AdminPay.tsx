@@ -2,13 +2,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Scrollbars } from "react-custom-scrollbars";
 import { useTranslation } from "react-i18next";
-import ReactNotification, { store } from "react-notifications-component";
+import ReactNotification from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 import { CSSTransition } from "react-transition-group";
 import styled from "styled-components/macro";
 import { ReactComponent as Exit } from "../../assets/svg/exit.svg";
 import { Button } from "../../components/Button/Button";
-import { Select as SelectOne } from "../../components/Select/Select";
 import { Select } from "../../components/Select/Select2";
 import { TestInput } from "../../components/UI/DayPicker";
 import { Loading } from "../../components/UI/Loading";
@@ -27,11 +26,7 @@ import {
   RootCharges,
   RootPayments,
 } from "../../types/payments";
-import {
-  DepositList,
-  PaymentsList,
-  PaymentsListPay,
-} from "./AdminPay/DepositList";
+import { PaymentsList, PaymentsListPay } from "./AdminPay/DepositList";
 import { Analitics } from "./AdminPayments/components/Analitics/Analitics";
 import { Approval } from "./AdminPayments/components/Approval/Approval";
 import { Chart } from "./AdminPayments/components/Chart/Chart";
@@ -57,7 +52,10 @@ export const AdminPay = () => {
   const [depositPayList, setDepositPayList] = useState<any>([]);
   const [paymentsList, setPaymentsList] = useState<any>([]);
   const [totalPayments, setTotalPayments] = useState(0);
+
+  const [next, setNext] = useState(true);
   const [procent, setProcent] = useState("");
+
   const [loading, setLoading] = useState(true);
   const [openDate, setOpenDate] = useState<OpenDate>({
     from: undefined,
@@ -101,9 +99,8 @@ export const AdminPay = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<ListDeposits>("GetAllPublicDeposits", 1, false, 0, 40)
+        .invoke<ListDeposits>("GetAllPublicDeposits", null, false, 0, 40)
         .then((res) => {
-          // console.log("GetDeposits", res);
           setListDeposits(res.collection);
         })
         .catch((err: Error) => console.log(err));
@@ -162,7 +159,6 @@ export const AdminPay = () => {
   useEffect(() => {
     if (hubConnection && active === 1) {
       setLoading(true);
-
       setDepositPayList([]);
       hubConnection
         .invoke<RootCharges>(
@@ -177,7 +173,6 @@ export const AdminPay = () => {
           pageLengthPay
         )
         .then((res) => {
-          // console.log("GetDepositsCharges", res);
           setLoading(false);
           if (res.collection.length) {
             setTotalPayDeposits(res.totalRecords);
@@ -212,7 +207,6 @@ export const AdminPay = () => {
           20
         )
         .then((res) => {
-          // console.log("res", res);
           setLoading(false);
           if (res.collection.length) {
             setTotalPayDeposits(res.totalRecords);

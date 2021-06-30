@@ -182,7 +182,9 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
                 <Styled.TableBody
                   key={item.safeId}
                   onClick={() => setOpen(item)}>
-                  <Styled.TableBodyItem>{idx + 1}</Styled.TableBodyItem>
+                  <Styled.TableBodyItem>
+                    {idx + 1 + (currentPage - 1) * pageLength}
+                  </Styled.TableBodyItem>
                   <Styled.TableBodyItem>
                     {item.deposit.name}
                   </Styled.TableBodyItem>

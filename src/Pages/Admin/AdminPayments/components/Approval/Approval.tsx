@@ -1,8 +1,11 @@
 import React, { FC, useContext, useEffect, useState } from "react";
 import { Scrollbars } from "react-custom-scrollbars";
 import { useTranslation } from "react-i18next";
+import ReactNotification from "react-notifications-component";
+import "react-notifications-component/dist/theme.css";
 import { CSSTransition } from "react-transition-group";
 import { Button } from "../../../../../components/Button/Button";
+import { Notification } from "../../../../../components/Notify/Notification";
 import { Select as SelectOne } from "../../../../../components/Select/Select";
 import { Select } from "../../../../../components/Select/Select2";
 import { TestInput } from "../../../../../components/UI/DayPicker";
@@ -11,9 +14,8 @@ import { ProcentInput } from "../../../../../components/UI/ProcentInput";
 import { AppContext } from "../../../../../context/HubContext";
 import { Card } from "../../../../../globalStyles";
 import { OpenDate } from "../../../../../types/dates";
-import { Notify } from "../../../../../types/notify";
 import { CollectionListDeposits } from "../../../../../types/deposits";
-
+import { Notify } from "../../../../../types/notify";
 import {
   PaymentsCollection,
   RootPayments,
@@ -31,11 +33,7 @@ import {
   SelectWrap,
   ShowHide,
 } from "../../../Styled.elements";
-import ReactNotification, { store } from "react-notifications-component";
-import "react-notifications-component/dist/theme.css";
 import * as Styled from "./Styled.elements";
-import { SliderComponent } from "../../../../../components/Slider/Slider";
-import { Notification } from "../../../../../components/Notify/Notification";
 
 type Props = {
   listDeposits: CollectionListDeposits[];
@@ -161,7 +159,6 @@ export const Approval: FC<Props> = ({
             ]);
           }
 
-          console.log("ConfirmDepositPayment", res);
           getPaymentsOverview();
         })
         .catch((err: Error) => {
@@ -175,7 +172,6 @@ export const Approval: FC<Props> = ({
       hubConnection
         .invoke("UnconfirmDepositPayment", id)
         .then((res) => {
-          console.log("UnconfirmDepositPayment", res);
           const key = depositList.findIndex((i) => i.safeId === id);
 
           if (key !== -1) {
@@ -267,7 +263,6 @@ export const Approval: FC<Props> = ({
           procent ? +procent / 100 : null
         )
         .then((res) => {
-          console.log("ConfirmAllDepositsPayment", res);
           createNotify({
             text: t("adminPay.success"),
             error: false,
@@ -297,26 +292,21 @@ export const Approval: FC<Props> = ({
   return (
     <>
       <ReactNotification />
-      <button
-        onClick={() =>
-          createNotify({
-            text: t("adminPay.success"),
-            error: false,
-            timeleft: 5,
-            id: notifications.length,
-          })
-        }
-      >
-        Notify
-      </button>
+
       <Styled.ButtonWrap>
         <Button dangerOutline mb onClick={paymentsConfirm}>
           {t("adminPay.confirmButton")}
         </Button>
         <ProcentInput
-          placeholder="0"
+          placeholder="—"
           value={procent}
-          onChange={(e) => setProcent(e.target.value)}
+          onChange={(e) => {
+            if (
+              e.target.value.match(/^[\d]*\.?[\d]*$/g) ||
+              e.target.value === ""
+            )
+              setProcent(e.target.value);
+          }}
           label={t("adminPay.procentPay")}
         />
       </Styled.ButtonWrap>
@@ -366,7 +356,7 @@ export const Approval: FC<Props> = ({
                 <SelectOne
                   checkList={checkList}
                   setCheckList={setCheckList}
-                  idx={5}
+                  idx={6}
                   values={[
                     t("adminPay.filter.disagree"),
                     t("adminPay.filter.agree"),
@@ -415,7 +405,7 @@ export const Approval: FC<Props> = ({
             <Scrollbars style={{ height: "500px" }}>
               {depositList.map((item: PaymentsCollection, idx: number) => (
                 <DepositList
-                  idx={idx}
+                  idx={idx + (currentPage - 1) * pageLength}
                   key={item.safeId}
                   data={item}
                   adjustPay={adjustPay}
