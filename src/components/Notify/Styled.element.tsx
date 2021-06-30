@@ -49,3 +49,31 @@ export const Text = styled.div`
   letter-spacing: 0.1px;
   color: #515172;
 `;
+
+export const CountContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin: auto;
+  height: 30px;
+  width: 30px;
+`;
+
+export const CountValue = styled.p<{ strokeColor: string }>`
+  color: ${(props) => props.strokeColor};
+  font-size: 12px;
+  padding-top: 7px;
+  padding-left: 5px;
+`;
+
+export const Svg = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  transform: rotateY(-180deg) rotateZ(-90deg);
+  overflow: visible;
+`;

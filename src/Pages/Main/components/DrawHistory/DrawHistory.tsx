@@ -115,7 +115,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }) => {
       <Container>
         <UpTitle small>{t("draws")}</UpTitle>
       </Container>
-      <Container id="lottery">
+      <Container id="lottery" bigMargin>
         <H2>{t("historyLottery")}</H2>
       </Container>
 

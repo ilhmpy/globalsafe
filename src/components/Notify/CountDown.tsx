@@ -1,4 +1,5 @@
 import React, { FC, useState, useEffect } from "react";
+import * as Styled from "./Styled.element";
 
 type Props = {
   seconds: number;
@@ -30,7 +31,6 @@ export const CountdownTimer: FC<Props> = ({
     if (isPlay) {
       interval = setInterval(() => {
         setCountDown(countdown - 10);
-
         if (countdown === 0) {
           clearInterval(interval);
           setCountDown(0);
@@ -46,27 +46,10 @@ export const CountdownTimer: FC<Props> = ({
 
   return (
     <div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          position: "relative",
-          margin: "auto",
-          height: 30,
-          width: 30,
-        }}
-      >
-        <p
-          style={{
-            color: strokeColor,
-            fontSize: 12,
-            paddingTop: 7,
-            paddingLeft: 5,
-          }}
-        >
+      <Styled.CountContainer>
+        <Styled.CountValue strokeColor={strokeColor}>
           {second}
-        </p>
+        </Styled.CountValue>
         <svg
           style={{
             position: "absolute",
@@ -91,7 +74,7 @@ export const CountdownTimer: FC<Props> = ({
             strokeWidth={strokeWidth}
           ></circle>
         </svg>
-      </div>
+      </Styled.CountContainer>
     </div>
   );
 };

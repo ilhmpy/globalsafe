@@ -98,3 +98,11 @@ export interface RootCharges {
     collection: CollectionCharges[];
 }
 
+export interface ConfirmAllDepositsPayment {
+    accountName: string;
+    dateFrom: Date;
+    dateTo: Date;
+    deposits: [];
+    ratio: number;
+}
+

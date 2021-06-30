@@ -237,6 +237,7 @@ export const Approval: FC<Props> = ({
             text: t("adminPay.success"),
             error: false,
             timeleft: 5,
+            id: notifications.length,
           });
         })
         .catch((err: Error) => {
@@ -244,6 +245,7 @@ export const Approval: FC<Props> = ({
             text: t("adminPay.error"),
             error: true,
             timeleft: 5,
+            id: notifications.length,
           });
         });
     }
@@ -266,6 +268,7 @@ export const Approval: FC<Props> = ({
               text: t("adminPay.success"),
               error: false,
               timeleft: 5,
+              id: notifications.length,
             });
 
             getPaymentsOverview();
@@ -277,6 +280,7 @@ export const Approval: FC<Props> = ({
               text: t("adminPay.error"),
               error: true,
               timeleft: 5,
+              id: notifications.length,
             });
           });
       }
@@ -285,8 +289,13 @@ export const Approval: FC<Props> = ({
         text: t("adminPay.notPays"),
         error: true,
         timeleft: 5,
+        id: notifications.length,
       });
     }
+  };
+
+  const onDelete = (id: number) => {
+    setNotifications(notifications.filter((i) => i.id !== id));
   };
 
   return (
@@ -419,7 +428,7 @@ export const Approval: FC<Props> = ({
           ) : (
             <Styled.NotFound>{t("notFound")}</Styled.NotFound>
           )}
-          <Notification data={notifications} />
+          <Notification onDelete={onDelete} data={notifications} />
         </Styled.PaymentsTable>
       </Card>
 
