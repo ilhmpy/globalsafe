@@ -21,7 +21,7 @@ export const CurrencyValues = () => {
   const [numMGCWD, setNumMGCWD] = useState(0);
   const [numGCWD, setNumGCWD] = useState(0);
   const size = useWindowSize();
-  const mob = size < 768;
+  const mob = size <= 768;
 
   useEffect(() => {
     const dateFrom: any = moment().subtract(7, "days");
