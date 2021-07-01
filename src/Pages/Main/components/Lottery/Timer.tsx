@@ -74,13 +74,12 @@ export const Timer: FC<Props> = ({
 
     let timer = setInterval(() => {
       let durations = moment.duration(deadline, "seconds");
-      let formatted = durations.format("hh:mm:ss", {
-        trim: false,
-      });
+      let formatted = `${Math.floor(durations.asDays())} дн ${Math.floor(durations.asHours())} ч ${Math.floor(durations.asMinutes())} мин`;
 
       !cancel && setState(formatted);
       !cancel && setDeadline(deadline - 1);
     }, 1000);
+
 
     return () => {
       clearInterval(timer);
