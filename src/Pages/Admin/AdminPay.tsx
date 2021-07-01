@@ -99,7 +99,7 @@ export const AdminPay = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<ListDeposits>("GetAllPublicDeposits", null, false, 0, 40)
+        .invoke<ListDeposits>("GetAllPublicDeposits", null, false, 0, 100)
         .then((res) => {
           setListDeposits(res.collection);
         })
