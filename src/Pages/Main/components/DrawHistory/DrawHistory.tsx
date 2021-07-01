@@ -167,25 +167,14 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }) => {
                   </CSSTransition>
                 )
               } else {
-                console.log("MOBILE");
+                console.log(item)
                 return (
                   <CSSTransition key={idx} timeout={500} classNames="item">
                     <TableList card>
                       <TableItem>
                         {moment(item.date).format("DD.MM.YYYY")}
                       </TableItem>
-                      <TableItem>{typeWin(item.kind)}</TableItem>
-                      <TableItem>
-                        {item.kind === 0
-                          ? (item.volume / 100000).toLocaleString("ru-RU", {
-                              maximumFractionDigits: 5,
-                            })
-                          : Item.kind === 1
-                          ? t("win.two")
-                          : item.volume}
-                        &nbsp;
-                        {item.volume ? item.volume : Balance[item.balanceKind]}
-                      </TableItem>
+                      <TableItem>{item.volume ? item.volume : typeWin(item.kind)}</TableItem>
                       <TableItem>
                         <Value data-title={item.name} >{item.name}</Value>
                       </TableItem>
@@ -301,7 +290,6 @@ const TableItem = styled.li`
     max-width: 200px;
     @media (max-width: 576px) {
       max-width: 100%;
-      display: none;
     }
   }
   &:nth-child(3) {
@@ -315,6 +303,9 @@ const TableItem = styled.li`
     @media (max-width: 576px) {
       max-width: 100%;
     }
+  }
+  @media only screen and (max-device-width: 600px) {
+    text-align: left;
   }
 `;
 
@@ -366,7 +357,7 @@ const Value = styled.div`
   }
   @media (max-width: 576px) {
     flex-wrap: wrap;
-    text-align: right;
+    text-align: left;
     justify-content: flex-start;
     span {
       display: block;
