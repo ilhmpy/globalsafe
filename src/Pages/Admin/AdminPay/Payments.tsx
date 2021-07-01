@@ -1,17 +1,17 @@
-﻿import React, { FC, useState, useEffect } from "react";
-import styled from "styled-components/macro";
-import { Button } from "../../../components/Button/Button";
-import { Card } from "../../../globalStyles";
-import { PaymentsCollection, CollectionCharges } from "../../../types/payments";
-import { CollectionPortfolio } from "../../../types/portfolio";
-import { InputWrap } from "./InputWrap";
-import { CollectionUsers } from "../../../types/users";
-import { useTranslation } from "react-i18next";
-import { CSSTransition } from "react-transition-group";
-import { ReactComponent as Icon } from "../../../assets/svg/selectArrow.svg";
-import { Scrollbars } from "react-custom-scrollbars";
-import { CollectionAnalitics } from "../../../types/analitics";
-import moment from "moment";
+﻿import moment from 'moment';
+import React, { FC, useEffect, useState } from 'react';
+import { Scrollbars } from 'react-custom-scrollbars';
+import { useTranslation } from 'react-i18next';
+import { CSSTransition } from 'react-transition-group';
+import styled from 'styled-components/macro';
+import { ReactComponent as Icon } from '../../../assets/svg/selectArrow.svg';
+import { Button } from '../../../components/Button/Button';
+import { Card } from '../../../globalStyles';
+import { CollectionAnalitics } from '../../../types/analitics';
+import { CollectionCharges, PaymentsCollection } from '../../../types/payments';
+import { CollectionPortfolio } from '../../../types/portfolio';
+import { CollectionUsers } from '../../../types/users';
+import { InputWrap } from './InputWrap';
 
 type ListProps = {
   data: PaymentsCollection;
@@ -54,16 +54,16 @@ export const ModalPay: FC<ListProps> = ({
             <PayName>{data.deposit.name}</PayName>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>{t("adminPay.table.desc")}</PayText>
+            <PayText small>{t('adminPay.table.desc')}</PayText>
             <PayText>{data.deposit.description}</PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>{t("adminPay.table.user")}</PayText>
+            <PayText small>{t('adminPay.table.user')}</PayText>
             <PayText>{data.userName}</PayText>
           </PayCardBlock>
           {data.state !== 5 && (
             <PayCardBlock>
-              <PayText small>{t("adminPay.table.procent")}</PayText>
+              <PayText small>{t('adminPay.table.procent')}</PayText>
               {/* <PayText></PayText> */}
               <InputWrap
                 paymentsAdjust={paymentsAdjust}
@@ -79,29 +79,29 @@ export const ModalPay: FC<ListProps> = ({
             </PayCardBlock>
           )}
           <PayCardBlock>
-            <PayText small>{t("adminPay.table.datePay")}</PayText>
+            <PayText small>{t('adminPay.table.datePay')}</PayText>
             <PayText>
               {data.paymentDate
-                ? moment(data.paymentDate).format("DD/MM/YYYY")
-                : "-"}
+                ? moment(data.paymentDate).format('DD/MM/YYYY')
+                : '-'}
             </PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>{t("adminPay.table.profit")}</PayText>
+            <PayText small>{t('adminPay.table.profit')}</PayText>
             <PayText>
-              {(data.deposit.paymentRatio * 100).toLocaleString("ru-RU", {
+              {(data.deposit.paymentRatio * 100).toLocaleString('ru-RU', {
                 maximumFractionDigits: 2,
               })}
               %
             </PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>{t("adminPay.table.contribution")}</PayText>
+            <PayText small>{t('adminPay.table.contribution')}</PayText>
             <PayText>{data.baseAmountView.toLocaleString()}</PayText>
           </PayCardBlock>
           {data.state !== 5 && (
             <PayCardBlock>
-              <PayText small>{t("adminPay.table.payments")}</PayText>
+              <PayText small>{t('adminPay.table.payments')}</PayText>
               <InputWrap
                 paymentsAdjust={paymentsAdjust}
                 done={disabled}
@@ -116,18 +116,16 @@ export const ModalPay: FC<ListProps> = ({
             {!disabled ? (
               <Button
                 dangerOutline
-                onClick={() => paymentsConfirm(data.safeId)}
-              >
-                {t("depositList.confirm")}
+                onClick={() => paymentsConfirm(data.safeId)}>
+                {t('depositList.confirm')}
               </Button>
             ) : (
               <Button
                 greenOutline
                 onClick={() => {
                   unConfirmPay(data.safeId);
-                }}
-              >
-                {t("depositList.confirmed")}
+                }}>
+                {t('depositList.confirmed')}
               </Button>
             )}
           </PayCardBlock>
@@ -157,27 +155,27 @@ export const ModalPaid: FC<PaidProps> = ({ data, onClose }: PaidProps) => {
             <PayName>{data.deposit.name}</PayName>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>{t("adminPay.table.user")}</PayText>
+            <PayText small>{t('adminPay.table.user')}</PayText>
             <PayText>{data.userName}</PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>{t("adminPay.table.datePay")}</PayText>
-            <PayText>{moment(data.paymentDate).format("DD/MM/YYYY")}</PayText>
+            <PayText small>{t('adminPay.table.datePay')}</PayText>
+            <PayText>{moment(data.paymentDate).format('DD/MM/YYYY')}</PayText>
           </PayCardBlock>
           <PayCardBlock>
             <PayText small>Категория</PayText>
             <PayText>
               {data.state === 4
-                ? t("depositList.depositClose")
-                : t("depositList.dividents")}
+                ? t('depositList.depositClose')
+                : t('depositList.dividents')}
             </PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>{t("adminPay.table.contribution")}</PayText>
+            <PayText small>{t('adminPay.table.contribution')}</PayText>
             <PayText>{data.baseAmountView.toLocaleString()}</PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>{t("adminPay.table.payments")}</PayText>
+            <PayText small>{t('adminPay.table.payments')}</PayText>
             <PayText>{data.paymentAmountView}</PayText>
           </PayCardBlock>
           <PayCardBlock></PayCardBlock>
@@ -204,33 +202,33 @@ export const ModalAnalitic: FC<AnaliticProps> = ({ data, onClose }) => {
       <Center onClick={handleContainerClick}>
         <PayCard>
           <PayCardBlock>
-            <PayText small>{t("adminPay.table.name")}</PayText>
+            <PayText small>{t('adminPay.table.name')}</PayText>
             <PayName>{data.deposit.name}</PayName>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>{t("adminPay.table.desc")}</PayText>
+            <PayText small>{t('adminPay.table.desc')}</PayText>
             <PayText>{data.deposit.description}</PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>{t("adminPay.analitics.data")}</PayText>
-            <PayText>{moment(data.payoutDate).format("DD/MM/YYYY")}</PayText>
+            <PayText small>{t('adminPay.analitics.data')}</PayText>
+            <PayText>{moment(data.payoutDate).format('DD/MM/YYYY')}</PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>{t("adminPay.analitics.amount")}</PayText>
+            <PayText small>{t('adminPay.analitics.amount')}</PayText>
             <PayText>{data.count}</PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>{t("adminPay.analitics.sum")}</PayText>
+            <PayText small>{t('adminPay.analitics.sum')}</PayText>
             <PayText>
-              {(data.amount / 100000).toLocaleString("ru-RU", {
+              {(data.amount / 100000).toLocaleString('ru-RU', {
                 maximumFractionDigits: 2,
               })}
             </PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>{t("adminPay.table.profit")}</PayText>
+            <PayText small>{t('adminPay.table.profit')}</PayText>
             <PayText>
-              {(data.deposit.paymentRatio * 100).toLocaleString("ru-RU", {
+              {(data.deposit.paymentRatio * 100).toLocaleString('ru-RU', {
                 maximumFractionDigits: 2,
               })}
               %
@@ -257,21 +255,21 @@ export const ModalDeposit: FC<PaidProps> = ({ data, onClose }: PaidProps) => {
           <PayCardBlock>
             <PayName>{data.deposit.name}</PayName>
             <PayText>
-              {moment(data.creationDate).format("DD/MM/YYYY") +
-                "-" +
-                moment(data.endDate).format("DD/MM/YYYY")}
+              {moment(data.creationDate).format('DD/MM/YYYY') +
+                '-' +
+                moment(data.endDate).format('DD/MM/YYYY')}
             </PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>{t("adminPay.table.user")}</PayText>
+            <PayText small>{t('adminPay.table.user')}</PayText>
             <PayText>{data.userName}</PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>{t("adminPay.table.nextDate")}</PayText>
-            <PayText>{moment(data.paymentDate).format("DD/MM/YYYY")}</PayText>
+            <PayText small>{t('adminPay.table.nextDate')}</PayText>
+            <PayText>{moment(data.paymentDate).format('DD/MM/YYYY')}</PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>{t("adminPay.table.paid")}</PayText>
+            <PayText small>{t('adminPay.table.paid')}</PayText>
             <PayText>{data.payedAmountView}</PayText>
           </PayCardBlock>
           <PayCardBlock></PayCardBlock>
@@ -301,31 +299,31 @@ export const ModalPayList: FC<Prop> = ({ data, onClose }: Prop) => {
             <PayName>{data.userDeposit.deposit.name}</PayName>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>{t("adminPay.table.user")}</PayText>
+            <PayText small>{t('adminPay.table.user')}</PayText>
             <PayText>{data.account}</PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>{t("adminPay.table.datePay")}</PayText>
+            <PayText small>{t('adminPay.table.datePay')}</PayText>
             <PayText>
-              {moment(data.userDeposit.prevPayment).format("DD/MM/YYYY")}
+              {moment(data.userDeposit.prevPayment).format('DD/MM/YYYY')}
             </PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>{t("adminPay.table.category")}</PayText>
+            <PayText small>{t('adminPay.table.category')}</PayText>
             <PayText>
               {data.userDeposit.state === 4
-                ? t("depositList.depositClose")
-                : t("depositList.dividents")}
+                ? t('depositList.depositClose')
+                : t('depositList.dividents')}
             </PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>{t("adminPay.table.contribution")}</PayText>
+            <PayText small>{t('adminPay.table.contribution')}</PayText>
             <PayText>
               {data.userDeposit.baseAmountView.toLocaleString()}
             </PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>{t("adminPay.table.payments")}</PayText>
+            <PayText small>{t('adminPay.table.payments')}</PayText>
             <PayText>
               {(data.amount / 100000).toFixed(2).toLocaleString()}
             </PayText>
@@ -352,21 +350,21 @@ export const ModalPortfolio: FC<{
       <Center onClick={handleContainerClick}>
         <PayCard>
           <PayCardBlock>
-            <PayText small>{t("adminPortfolio.table.date")}</PayText>
-            <PayText>{moment(data.creationDate).format("DD/MM/YYYY")}</PayText>
+            <PayText small>{t('adminPortfolio.table.date')}</PayText>
+            <PayText>{moment(data.creationDate).format('DD/MM/YYYY')}</PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>{t("adminPortfolio.table.count")}</PayText>
+            <PayText small>{t('adminPortfolio.table.count')}</PayText>
             <PayText>{data.initialVolume}</PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>{t("adminPortfolio.table.cost")}, CWD</PayText>
+            <PayText small>{t('adminPortfolio.table.cost')}, CWD</PayText>
             <PayText>
               {(data.unitPrice / 100000).toFixed(2).toLocaleString()}
             </PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>{t("adminPortfolio.table.amount")}</PayText>
+            <PayText small>{t('adminPortfolio.table.amount')}</PayText>
             <PayText>{data.volume}</PayText>
           </PayCardBlock>
         </PayCard>
@@ -381,7 +379,7 @@ const AccordeonList: FC<{
   adjustBalanceAsync: (
     userSafeId: string,
     delta: number,
-    safeOperationId: string
+    safeOperationId: string,
   ) => void;
   dataUpdate: (safeId: string, childId: string, value: string) => void;
 }> = ({ arr1, data, adjustBalanceAsync, dataUpdate }) => {
@@ -395,9 +393,8 @@ const AccordeonList: FC<{
           <PayCardInner>
             <AccordeonHead
               open={activeFold}
-              onClick={() => setActiveFold(!activeFold)}
-            >
-              {t("adminUsers.modal.payments")} <Icon />
+              onClick={() => setActiveFold(!activeFold)}>
+              {t('adminUsers.modal.payments')} <Icon />
             </AccordeonHead>
           </PayCardInner>
           {arr1[data.safeId].map((j: CollectionCharges) => (
@@ -412,7 +409,7 @@ const AccordeonList: FC<{
           ))}
         </Accordeon>
       ) : (
-        ""
+        ''
       )}
     </>
   );
@@ -423,20 +420,20 @@ const ModalUsersList: FC<{
   adjustBalanceAsync: (
     userSafeId: string,
     delta: number,
-    safeOperationId: string
+    safeOperationId: string,
   ) => void;
   activeFold: boolean;
   dataUpdate: (safeId: string, childId: string, value: string) => void;
   safeId: string;
 }> = ({ dataOne, adjustBalanceAsync, activeFold, dataUpdate, safeId }) => {
   const [value, setValue] = useState(
-    (dataOne.amount / 100000).toFixed(4).toString()
+    (dataOne.amount / 100000).toFixed(4).toString(),
   );
   const [done, setDone] = useState(false);
   const [procent, setProcent] = useState(
     ((dataOne.amount / 100000 / dataOne.userDeposit.baseAmountView) * 100)
       .toFixed(1)
-      .toString()
+      .toString(),
   );
 
   const { t } = useTranslation();
@@ -445,8 +442,8 @@ const ModalUsersList: FC<{
     e.stopPropagation();
 
     if (+e.target.value <= 0) {
-      setValue("");
-      setProcent("");
+      setValue('');
+      setProcent('');
     } else {
       dataUpdate(safeId, dataOne.safeId, e.target.value);
       setValue(e.target.value);
@@ -460,8 +457,8 @@ const ModalUsersList: FC<{
 
   const onHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (+e.target.value <= 0) {
-      setValue("");
-      setProcent("");
+      setValue('');
+      setProcent('');
     } else {
       setProcent(e.target.value);
       const values = (
@@ -476,7 +473,7 @@ const ModalUsersList: FC<{
   const paymentsAdjust = () => {
     const userSafeId = dataOne.userDeposit.userSafeId;
     const delta = ((dataOne.amount / 100000 - Number(value)) * 100000).toFixed(
-      0
+      0,
     );
 
     const safeOperationId = dataOne.safeId;
@@ -494,15 +491,15 @@ const ModalUsersList: FC<{
 
   const operation = (id: number) => {
     if (id === 6) {
-      return t("operation.open");
+      return t('operation.open');
     } else if (id === 7) {
-      return t("operation.divedents");
+      return t('operation.divedents');
     } else if (id === 8) {
-      return t("operation.close");
+      return t('operation.close');
     } else if (id === 2) {
-      return t("operation.withdraw");
+      return t('operation.withdraw');
     } else if (id === 1) {
-      return t("operation.add");
+      return t('operation.add');
     }
   };
 
@@ -513,17 +510,15 @@ const ModalUsersList: FC<{
       <AccordeonContent open={activeFold}>
         <PayCardInner>
           <PayCardBlock>
-            <PayText small>{t("adminUsers.modal.paySum")}</PayText>
-            <PayText>
-              {moment(dataOne.userDeposit.paymentDate).format("DD/MM/YYYY")}
-            </PayText>
+            <PayText small>{t('adminUsers.modal.paySum')}</PayText>
+            <PayText>{dataOne.userDeposit.payedAmountView}</PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>{t("operation.type")}</PayText>
+            <PayText small>{t('operation.type')}</PayText>
             <PayText>{operation(dataOne.operationKind)}</PayText>
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>{t("adminUsers.modal.payAmount")}</PayText>
+            <PayText small>{t('adminUsers.modal.payAmount')}</PayText>
             <InputWrap
               paymentsAdjust={paymentsAdjust}
               done={disabled}
@@ -533,7 +528,7 @@ const ModalUsersList: FC<{
             />
           </PayCardBlock>
           <PayCardBlock>
-            <PayText small>{t("adminUsers.modal.revenue")} %</PayText>
+            <PayText small>{t('adminUsers.modal.revenue')} %</PayText>
             <InputWrap
               paymentsAdjust={paymentsAdjust}
               done={disabled}
@@ -557,7 +552,7 @@ export const ModalUsersContent: FC<{
   adjustBalanceAsync: (
     userSafeId: string,
     delta: number,
-    safeOperationId: string
+    safeOperationId: string,
   ) => void;
   lock: boolean;
   unLocked: (e: any, id: string) => void;
@@ -585,9 +580,9 @@ export const ModalUsersContent: FC<{
     function handleResize() {
       setHeight(window.innerHeight);
     }
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
     handleResize();
-    return () => window.removeEventListener("resize", handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const arr1: any = {};
@@ -612,17 +607,17 @@ export const ModalUsersContent: FC<{
   const chip = (id: number) => {
     switch (id) {
       case 1:
-        return <Chip need>{t("chip.pay")}</Chip>;
+        return <Chip need>{t('chip.pay')}</Chip>;
       case 2:
-        return <Chip>{t("chip.open")}</Chip>;
+        return <Chip>{t('chip.open')}</Chip>;
       case 3:
-        return <Chip need>{t("chip.noWork")}</Chip>;
+        return <Chip need>{t('chip.noWork')}</Chip>;
       case 4:
-        return <Chip need>{t("chip.return")}</Chip>;
+        return <Chip need>{t('chip.return')}</Chip>;
       case 5:
-        return <Chip need>{t("chip.pay")}</Chip>;
+        return <Chip need>{t('chip.pay')}</Chip>;
       case 6:
-        return <Chip need>{t("chip.confirm")}</Chip>;
+        return <Chip need>{t('chip.confirm')}</Chip>;
     }
   };
 
@@ -653,10 +648,10 @@ export const ModalUsersContent: FC<{
         <PayCardInner>
           <PayTabs>
             <PayTab active={active === 0} onClick={() => setActive(0)}>
-              {t("usersTabs.mainInfo")}
+              {t('usersTabs.mainInfo')}
             </PayTab>
             <PayTab active={active === 1} onClick={() => setActive(1)}>
-              {t("usersTabs.deposits")}
+              {t('usersTabs.deposits')}
             </PayTab>
           </PayTabs>
         </PayCardInner>
@@ -664,41 +659,40 @@ export const ModalUsersContent: FC<{
           in={active === 0}
           timeout={0}
           classNames="modal"
-          unmountOnExit
-        >
+          unmountOnExit>
           <PayCardInner>
             <PayCardBlock>
-              <PayText small>{t("adminPay.table.user")}</PayText>
+              <PayText small>{t('adminPay.table.user')}</PayText>
               <PayText>{data.name}</PayText>
             </PayCardBlock>
             <PayCardBlock>
-              <PayText small>{t("adminUsers.table.balans")}</PayText>
+              <PayText small>{t('adminUsers.table.balans')}</PayText>
               <PayText>
                 {balance?.length
-                  ? (balance[0].volume / 100000).toLocaleString("ru-RU", {
+                  ? (balance[0].volume / 100000).toLocaleString('ru-RU', {
                       maximumFractionDigits: 2,
                     })
-                  : "-"}
+                  : '-'}
               </PayText>
             </PayCardBlock>
             <PayCardBlock>
-              <PayText small>{t("adminUsers.table.role")}</PayText>
-              <PayText>{data.roles.length ? data.roles[0].name : "-"}</PayText>
+              <PayText small>{t('adminUsers.table.role')}</PayText>
+              <PayText>{data.roles.length ? data.roles[0].name : '-'}</PayText>
             </PayCardBlock>
             <PayCardBlock>
-              <PayText small>{t("adminUsers.table.dataCreate")}</PayText>
+              <PayText small>{t('adminUsers.table.dataCreate')}</PayText>
               <PayText>
-                {moment(data.creationDate).format("DD/MM/YYYY")}
+                {moment(data.creationDate).format('DD/MM/YYYY')}
               </PayText>
             </PayCardBlock>
             <PayCardBlock>
-              <PayText small>{t("adminUsers.table.lang")}</PayText>
-              <PayText>{t("adminUsers.table.rus")}</PayText>
+              <PayText small>{t('adminUsers.table.lang')}</PayText>
+              <PayText>{t('adminUsers.table.rus')}</PayText>
             </PayCardBlock>
             {dataOne.length ? (
               <>
                 <PayCardBlock>
-                  <PayText small>{t("adminUsers.modal.paySum")}</PayText>
+                  <PayText small>{t('adminUsers.modal.paySum')}</PayText>
                   <PayText>
                     {/* {dataTwo[0].payedAmountView.toLocaleString("ru-RU", {
                       maximumFractionDigits: 3,
@@ -706,54 +700,54 @@ export const ModalUsersContent: FC<{
                     {(
                       dataOne.reduce(
                         (a, b) => a + b.userDeposit.payedAmount,
-                        0
+                        0,
                       ) / 100000
-                    ).toLocaleString("ru-RU", {
+                    ).toLocaleString('ru-RU', {
                       maximumFractionDigits: 3,
                     })}
                   </PayText>
                 </PayCardBlock>
                 {dataOne.length && dataOne[0].userDeposit ? (
                   <PayCardBlock>
-                    <PayText small>{t("adminUsers.modal.prevDate")}</PayText>
+                    <PayText small>{t('adminUsers.modal.prevDate')}</PayText>
                     <PayText>
                       {moment(
                         dataOne.reduce((a, b) =>
                           b.userDeposit.prevPayment > a.userDeposit.prevPayment
                             ? b
-                            : a
-                        ).userDeposit.prevPayment
-                      ).format("DD/MM/YYYY")}
+                            : a,
+                        ).userDeposit.prevPayment,
+                      ).format('DD/MM/YYYY')}
                     </PayText>
                   </PayCardBlock>
                 ) : (
-                  ""
+                  ''
                 )}
                 <PayCardBlock>
-                  <PayText small>{t("adminUsers.modal.nextDate")}</PayText>
+                  <PayText small>{t('adminUsers.modal.nextDate')}</PayText>
                   <PayText>
                     {moment(
                       dataOne.reduce((a, b) =>
                         b.userDeposit.paymentDate > a.userDeposit.paymentDate
                           ? b
-                          : a
-                      ).userDeposit.paymentDate
-                    ).format("DD/MM/YYYY")}
+                          : a,
+                      ).userDeposit.paymentDate,
+                    ).format('DD/MM/YYYY')}
                   </PayText>
                 </PayCardBlock>
               </>
             ) : (
-              ""
+              ''
             )}
 
             <PayCardBlock>
               {lock ? (
                 <Button greenOutline onClick={(e) => unLocked(e, data.safeId)}>
-                  {t("adminUsers.table.unlock")}
+                  {t('adminUsers.table.unlock')}
                 </Button>
               ) : (
                 <Button dangerOutline onClick={(e) => locked(e, data.safeId)}>
-                  {t("adminUsers.table.lock")}
+                  {t('adminUsers.table.lock')}
                 </Button>
               )}
             </PayCardBlock>
@@ -764,9 +758,8 @@ export const ModalUsersContent: FC<{
           in={active === 1}
           timeout={0}
           classNames="modal"
-          unmountOnExit
-        >
-          <Scrollbars style={{ height: height < 900 ? "550px" : "750px" }}>
+          unmountOnExit>
+          <Scrollbars style={{ height: height < 900 ? '550px' : '750px' }}>
             <PayCardWrapper>
               {dataTwo.length
                 ? dataTwo.map((item) => (
@@ -780,34 +773,34 @@ export const ModalUsersContent: FC<{
                             </PayName>
                           </PayText>
                           <PayDate>
-                            {moment(item.creationDate).format("DD/MM/YYYY") +
-                              "-" +
-                              moment(item.endDate).format("DD/MM/YYYY")}
+                            {moment(item.creationDate).format('DD/MM/YYYY') +
+                              '-' +
+                              moment(item.endDate).format('DD/MM/YYYY')}
                           </PayDate>
                         </PayCardBlock>
                         <PayCardBlock>
                           <PayText small>
-                            {t("adminUsers.modal.contrAmount")}
+                            {t('adminUsers.modal.contrAmount')}
                           </PayText>
                           <PayText>{item.baseAmountView}</PayText>
                         </PayCardBlock>
                         <PayCardBlock>
                           <PayText small>
-                            {t("adminUsers.modal.paySum")}
+                            {t('adminUsers.modal.paySum')}
                           </PayText>
                           <PayText>
                             {/* {selfData[item.safeId] &&
                               selfData[item.safeId][0].userDeposit
                                 .payedAmountView}
                             <br /> */}
-                            {item.payedAmountView.toLocaleString("ru-RU", {
+                            {item.payedAmountView.toLocaleString('ru-RU', {
                               maximumFractionDigits: 4,
                             })}
                           </PayText>
                         </PayCardBlock>
                         <PayCardBlock>
                           <PayText small>
-                            {t("adminUsers.modal.totalDeposit")}
+                            {t('adminUsers.modal.totalDeposit')}
                           </PayText>
                           <PayText>
                             {(
@@ -826,11 +819,11 @@ export const ModalUsersContent: FC<{
                           dataUpdate={dataUpdate}
                         />
                       ) : (
-                        ""
+                        ''
                       )}
                     </PayCardBorder>
                   ))
-                : ""}
+                : ''}
             </PayCardWrapper>
           </Scrollbars>
         </CSSTransition>
@@ -849,7 +842,7 @@ export const ModalUsers: FC<{
   adjustBalanceAsync: (
     userSafeId: string,
     delta: number,
-    safeOperationId: string
+    safeOperationId: string,
   ) => void;
   dataTwo: PaymentsCollection[];
 }> = ({
@@ -899,7 +892,7 @@ const Chip = styled.div<{ need?: boolean }>`
   float: right;
   color: ${(props) => props.theme.cdis};
   border-radius: 24px;
-  background: ${(props) => (props.need ? "#FFB23E" : "#FF416E")};
+  background: ${(props) => (props.need ? '#FFB23E' : '#FF416E')};
 `;
 
 const PayCardBorder = styled.div`
@@ -910,7 +903,7 @@ const PayCardBorder = styled.div`
 
 const PayCardInner = styled.div<{ prNone?: boolean }>`
   padding-left: 18px;
-  padding-right: ${(props) => (props.prNone ? "0px" : "18px")};
+  padding-right: ${(props) => (props.prNone ? '0px' : '18px')};
 `;
 
 const Accordeon = styled.div`
@@ -929,7 +922,7 @@ const AccordeonHead = styled.div<{ open?: boolean }>`
   align-items: center;
   svg {
     transition: 0.3s linear;
-    transform: ${(props) => (props.open ? "rotate(0deg)" : "rotate(-90deg)")};
+    transform: ${(props) => (props.open ? 'rotate(0deg)' : 'rotate(-90deg)')};
     margin-left: 14px;
   }
   @media (max-width: 992px) {
@@ -938,12 +931,12 @@ const AccordeonHead = styled.div<{ open?: boolean }>`
 `;
 
 const AccordeonContent = styled.div<{ open?: boolean }>`
-  height: ${(props) => (props.open ? "auto" : "0")};
+  height: ${(props) => (props.open ? 'auto' : '0')};
   overflow: hidden;
   transition: height 300ms linear;
   background: rgba(66, 139, 202, 0.06);
-  padding-bottom: ${(props) => (props.open ? "1px" : "0px")};
-  margin-bottom: ${(props) => (props.open ? "3px" : "0px")};
+  padding-bottom: ${(props) => (props.open ? '1px' : '0px')};
+  margin-bottom: ${(props) => (props.open ? '3px' : '0px')};
 `;
 
 const PayTabs = styled.div`
@@ -966,8 +959,8 @@ const PayTab = styled.div<{ active?: boolean }>`
   padding-bottom: 7px;
   width: 50%;
   cursor: pointer;
-  color: ${(props) => (props.active ? "#FF416E" : props.theme.text2)};
-  border-bottom: ${(props) => (props.active ? "1px solid #FF416E" : "none")};
+  color: ${(props) => (props.active ? '#FF416E' : props.theme.text2)};
+  border-bottom: ${(props) => (props.active ? '1px solid #FF416E' : 'none')};
   position: relative;
   @media (max-width: 992px) {
     cursor: initial;
@@ -1010,8 +1003,8 @@ const PayCard = styled(Card)<{
   mNone?: boolean;
 }>`
   transition: height 300ms linear;
-  padding: 20px ${(props) => (props.smallPad ? "8px" : "20px")};
-  max-width: ${(props) => (props.wide ? "350px" : "280px")};
+  padding: 20px ${(props) => (props.smallPad ? '8px' : '20px')};
+  max-width: ${(props) => (props.wide ? '350px' : '280px')};
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -1019,8 +1012,8 @@ const PayCard = styled(Card)<{
   position: relative;
   margin: 0px auto;
   @media (max-width: 992px) {
-    margin: ${(props) => (props.mNone ? "0px auto" : "50px auto")};
-    max-width: ${(props) => (props.wide ? "100%" : "280px")};
+    margin: ${(props) => (props.mNone ? '0px auto' : '50px auto')};
+    max-width: ${(props) => (props.wide ? '100%' : '280px')};
   }
   background: ${(props) => props.theme.card.background};
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
@@ -1076,15 +1069,15 @@ const PayName = styled.div`
 `;
 
 const PayText = styled.div<{ small?: boolean; big?: boolean }>`
-  font-weight: ${(props) => (props.big ? "bold" : "normal")};
-  font-size: ${(props) => (props.small ? "12px" : "14px")};
-  line-height: ${(props) => (props.small ? "21px" : "16px")};
+  font-weight: ${(props) => (props.big ? 'bold' : 'normal')};
+  font-size: ${(props) => (props.small ? '12px' : '14px')};
+  line-height: ${(props) => (props.small ? '21px' : '16px')};
   letter-spacing: 0.1px;
   color: ${(props) =>
     props.small
       ? props.theme.thHead
       : props.big
-      ? "#FF416E"
+      ? '#FF416E'
       : props.theme.text2};
 `;
 
