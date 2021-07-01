@@ -159,13 +159,12 @@ export const AdminPay = () => {
   useEffect(() => {
     if (hubConnection && active === 1) {
       setLoading(true);
-      setDepositPayList([]);
       hubConnection
         .invoke<RootCharges>(
           "GetDepositsCharges",
           name ? name.toLowerCase() : null,
-          openDate.from ? openDate.from : backDays._d,
-          openDate.to ? openDate.to : new Date(),
+          openDate.from ? openDate.from : null,
+          openDate.to ? openDate.to : null,
           searchSafeID.length ? searchSafeID : null,
           null,
           [7, 8],
@@ -173,6 +172,7 @@ export const AdminPay = () => {
           pageLengthPay
         )
         .then((res) => {
+          console.log("GetDepositsCharges", res);
           setLoading(false);
           if (res.collection.length) {
             setTotalPayDeposits(res.totalRecords);
@@ -193,22 +193,23 @@ export const AdminPay = () => {
 
   const submit = () => {
     if (hubConnection) {
-      setDepositPayList([]);
+      setCurrentPagePay(1);
       hubConnection
         .invoke<RootCharges>(
           "GetDepositsCharges",
           name ? name.toLowerCase() : null,
-          openDate.from ? openDate.from : backDays._d,
-          openDate.to ? openDate.to : new Date(),
+          openDate.from ? openDate.from : null,
+          openDate.to ? openDate.to : null,
           searchSafeID.length ? searchSafeID : null,
           null,
           [7, 8],
-          0,
-          20
+          (currentPagePay - 1) * pageLengthPay,
+          pageLengthPay
         )
         .then((res) => {
           setLoading(false);
           if (res.collection.length) {
+            console.log("GetDepositsCharges submit", res);
             setTotalPayDeposits(res.totalRecords);
             setDepositPayList(res.collection);
           }
@@ -428,7 +429,7 @@ export const AdminPay = () => {
           setPageLength={setPageLengthPay}
           currentPage={currentPagePay}
           setCurrentPage={setCurrentPagePay}
-          totalLottery={totalDeposits}
+          totalLottery={totalPayDeposits}
         />
       </Content>
 

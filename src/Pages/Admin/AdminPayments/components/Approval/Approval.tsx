@@ -32,6 +32,7 @@ import {
   SelectContainerInnerPaid,
   SelectWrap,
   ShowHide,
+  SelectWrapTwo,
 } from "../../../Styled.elements";
 import * as Styled from "./Styled.elements";
 
@@ -287,6 +288,17 @@ export const Approval: FC<Props> = ({
     setNotifications(notifications.filter((i) => i.id !== id));
   };
 
+  const clear = () => {
+    console.log("clear");
+    setNameApproval("");
+    setOpenDateApproval({
+      from: undefined,
+      to: undefined,
+    });
+    setCheckListApproval([]);
+    setCheckList([]);
+  };
+
   return (
     <>
       <ReactNotification />
@@ -324,7 +336,7 @@ export const Approval: FC<Props> = ({
         >
           <SelectContainer>
             <SelectContainerInnerPaid>
-              <SelectWrap style={{ minWidth: 210 }}>
+              <SelectWrapTwo mWidth="154px">
                 <Label>{t("adminPay.filter.user")}</Label>
                 <Input
                   value={nameApproval}
@@ -332,24 +344,23 @@ export const Approval: FC<Props> = ({
                     setNameApproval(e.target.value.toLowerCase())
                   }
                 />
-              </SelectWrap>
-              <SelectWrap style={{ minWidth: 200 }}>
+              </SelectWrapTwo>
+              <SelectWrapTwo mWidth="210px">
                 <TestInput
                   setOpenDate={setOpenDateApproval}
                   openDate={openDateApproval}
                   label={t("adminPay.filter.date")}
                 />
-              </SelectWrap>
-              <SelectWrap style={{ minWidth: 200 }}>
+              </SelectWrapTwo>
+              <SelectWrapTwo mWidth="184px">
                 <Label>{t("adminPay.filter.deposit")}</Label>
                 <Select
                   checkList={checkListApproval}
                   setCheckList={setCheckListApproval}
                   values={listDeposits}
                 />
-                <pre>{JSON.stringify(setCheckListApproval)}</pre>
-              </SelectWrap>
-              <SelectWrap style={{ minWidth: 200 }}>
+              </SelectWrapTwo>
+              <SelectWrapTwo mWidth="184px" mNone>
                 <Label>{t("adminPay.status")}</Label>
                 <SelectOne
                   checkList={checkList}
@@ -360,11 +371,16 @@ export const Approval: FC<Props> = ({
                     t("adminPay.filter.agree"),
                   ]}
                 />
-              </SelectWrap>
+              </SelectWrapTwo>
             </SelectContainerInnerPaid>
-            <Button danger onClick={submitApproval}>
-              {t("adminUsers.apply")}
-            </Button>
+            <Styled.Buttons>
+              <Button danger onClick={submitApproval}>
+                {t("adminUsers.apply")}
+              </Button>
+              <Button dangerOutline onClick={clear}>
+                Сбросить
+              </Button>
+            </Styled.Buttons>
           </SelectContainer>
         </CSSTransition>
       </FilterBlock>

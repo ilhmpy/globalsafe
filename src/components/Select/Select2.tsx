@@ -75,7 +75,7 @@ export const Select: FC<Props> = ({
 
   useEffect(() => {
     let id = 0;
-    if (values && list.length === 0) {
+    if ((values && list.length === 0) || !checkList.length) {
       let arr = values!.map((i) => ({
         id: id++,
         label: i.name,
@@ -86,7 +86,7 @@ export const Select: FC<Props> = ({
       }));
       setList(arr);
     }
-  }, [values]);
+  }, [values, checkList]);
 
   const ref = useRef(null);
 
@@ -98,7 +98,6 @@ export const Select: FC<Props> = ({
 
   const addList = (e: any, id: number) => {
     const { checked, name } = e.target;
-
     const arr = list.map((item: any) =>
       item.safeId === id ? { ...item, checked: checked } : item
     );
