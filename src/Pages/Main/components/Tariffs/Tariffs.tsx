@@ -1,4 +1,4 @@
-﻿import React, { useState, useRef, useEffect, useContext } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { Container } from "../../../../globalStyles";
 import { H1 } from "../../../../components/UI/MainStyled";
 import { UpTitle } from "../../../../components/UI/UpTitle";
@@ -79,11 +79,11 @@ export const Tariffs = () => {
       name: "expert",
       color: "#6DB9FF",
       lines: [
-        { id: "1", count: "4%" },
-        { id: "2", count: "1,6%" },
-        { id: "3", count: "0,8%" },
-        { id: "4", count: "4%" },
-        { id: "5", count: "1,6%" },
+        { id: "1", count: "5%" },
+        { id: "2", count: "2%" },
+        { id: "3", count: "1%" },
+        { id: "4", count: "1%" },
+        { id: "5", count: "1%" },
         { id: "6", count: "" },
         { id: "7", count: "" },
         { id: "8", count: "" },
@@ -93,14 +93,14 @@ export const Tariffs = () => {
       name: "infinity",
       color: "#FF416E",
       lines: [
-        { id: "1", count: "4%" },
-        { id: "2", count: "1,6%" },
-        { id: "3", count: "0,8%" },
-        { id: "4", count: "4%" },
-        { id: "5", count: "1,6%" },
-        { id: "6", count: "0,8%" },
-        { id: "7", count: "1,6%" },
-        { id: "8", count: "0,8%" },
+        { id: "1", count: "5%" },
+        { id: "2", count: "2%" },
+        { id: "3", count: "1%" },
+        { id: "4", count: "1%" },
+        { id: "5", count: "1%" },
+        { id: "6", count: "1%" },
+        { id: "7", count: "1%" },
+        { id: "8", count: "1%" },
       ],
     }
   ]);
@@ -295,8 +295,8 @@ export const Tariffs = () => {
                 <PartnerProgramLineNumber>1 {t("line")}</PartnerProgramLineNumber>
                 <div className="inner">
                   <PartnerProgramLineItem>4%</PartnerProgramLineItem>
-                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
-                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>5%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>5%</PartnerProgramLineItem>
                 </div>
               </PartnerProgramContainer>
             </PartnerProgramLine>
@@ -305,8 +305,8 @@ export const Tariffs = () => {
                 <PartnerProgramLineNumber>2 {t("line")}</PartnerProgramLineNumber>
                 <div className="inner">
                   <PartnerProgramLineItem>1,6%</PartnerProgramLineItem>
-                  <PartnerProgramLineItem>1,6%</PartnerProgramLineItem>
-                  <PartnerProgramLineItem>1,6%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>2%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>2%</PartnerProgramLineItem>
                 </div>
               </PartnerProgramContainer>
             </PartnerProgramLine>
@@ -315,8 +315,8 @@ export const Tariffs = () => {
                 <PartnerProgramLineNumber>3 {t("line")}</PartnerProgramLineNumber>
                 <div className="inner">
                   <PartnerProgramLineItem>0,8%</PartnerProgramLineItem>
-                  <PartnerProgramLineItem>0,8%</PartnerProgramLineItem>
-                  <PartnerProgramLineItem>0,8%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>1%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>1%</PartnerProgramLineItem>
                 </div>
               </PartnerProgramContainer>
             </PartnerProgramLine>
@@ -325,8 +325,8 @@ export const Tariffs = () => {
                 <PartnerProgramLineNumber>4 {t("line")}</PartnerProgramLineNumber>
                 <div className="inner">
                   <PartnerProgramLineItem></PartnerProgramLineItem>
-                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
-                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>1%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>1%</PartnerProgramLineItem>
                 </div>
               </PartnerProgramContainer>
             </PartnerProgramLine>
@@ -335,8 +335,8 @@ export const Tariffs = () => {
                 <PartnerProgramLineNumber>5 {t("line")}</PartnerProgramLineNumber>
                 <div className="inner">
                   <PartnerProgramLineItem></PartnerProgramLineItem>
-                  <PartnerProgramLineItem>1,6%</PartnerProgramLineItem>
-                  <PartnerProgramLineItem>1,6%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>1%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>1%</PartnerProgramLineItem>
                 </div>
               </PartnerProgramContainer>
             </PartnerProgramLine>
@@ -346,7 +346,7 @@ export const Tariffs = () => {
                 <div className="inner">
                   <PartnerProgramLineItem></PartnerProgramLineItem>
                   <PartnerProgramLineItem></PartnerProgramLineItem>
-                  <PartnerProgramLineItem>0,8%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>1%</PartnerProgramLineItem>
                 </div>
               </PartnerProgramContainer>
             </PartnerProgramLine>
@@ -356,7 +356,7 @@ export const Tariffs = () => {
                 <div className="inner">
                   <PartnerProgramLineItem></PartnerProgramLineItem>
                   <PartnerProgramLineItem></PartnerProgramLineItem>
-                  <PartnerProgramLineItem>1,6%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>1%</PartnerProgramLineItem>
                 </div>
               </PartnerProgramContainer>
             </PartnerProgramLine>
@@ -366,7 +366,7 @@ export const Tariffs = () => {
                 <div className="inner">
                   <PartnerProgramLineItem></PartnerProgramLineItem>
                   <PartnerProgramLineItem></PartnerProgramLineItem>
-                  <PartnerProgramLineItem>0,8%</PartnerProgramLineItem>
+                  <PartnerProgramLineItem>1%</PartnerProgramLineItem>
                 </div>
               </PartnerProgramContainer>
             </PartnerProgramLine>
