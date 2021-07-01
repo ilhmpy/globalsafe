@@ -29,6 +29,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }) => {
   const [notifyList, setNotifyList] = useState<ArrList[]>([]);
   const [num, setNum] = useState(0);
   const [show, setShow] = useState(true);
+  const [ isMobile, setIsMobile ] = useState(false);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
 
@@ -58,6 +59,9 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }) => {
       clean = true;
     };
   }, [hubConnection]);
+
+  useEffect(() => setIsMobile(window.screen.width < 600), []);
+
 
   const repeat = () => {
     if (hubConnection) {
@@ -135,30 +139,61 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }) => {
         </TableList>
         <TransitionGroup>
           {notifyList.length &&
-            notifyList.map((item, idx) => (
-              <CSSTransition key={idx} timeout={500} classNames="item">
-                <TableList card>
-                  <TableItem>
-                    {moment(item.date).format("DD.MM.YYYY")}
-                  </TableItem>
-                  <TableItem>{typeWin(item.kind)}</TableItem>
-                  <TableItem>
-                    {item.kind === 0
-                      ? (item.volume / 100000).toLocaleString("ru-RU", {
-                          maximumFractionDigits: 5,
-                        })
-                      : Item.kind === 1
-                      ? t("win.two")
-                      : item.volume}
-                    &nbsp;
-                    {item.volume ? Balance[item.balanceKind] : "-"}
-                  </TableItem>
-                  <TableItem>
-                    <Value data-title={item.name} >{item.name}</Value>
-                  </TableItem>
-                </TableList>
-              </CSSTransition>
-            ))}
+            notifyList.map((item, idx) => {
+              if (!isMobile) {
+                console.log("DESCTOP")
+                return (
+                  <CSSTransition key={idx} timeout={500} classNames="item">
+                    <TableList card>
+                      <TableItem>
+                        {moment(item.date).format("DD.MM.YYYY")}
+                      </TableItem>
+                      <TableItem>{typeWin(item.kind)}</TableItem>
+                      <TableItem>
+                        {item.kind === 0
+                          ? (item.volume / 100000).toLocaleString("ru-RU", {
+                              maximumFractionDigits: 5,
+                            })
+                          : Item.kind === 1
+                          ? t("win.two")
+                          : item.volume}
+                        &nbsp;
+                        {item.volume ? Balance[item.balanceKind] : "-"}
+                      </TableItem>
+                      <TableItem>
+                        <Value data-title={item.name} >{item.name}</Value>
+                      </TableItem>
+                    </TableList>
+                  </CSSTransition>
+                )
+              } else {
+                console.log("MOBILE");
+                return (
+                  <CSSTransition key={idx} timeout={500} classNames="item">
+                    <TableList card>
+                      <TableItem>
+                        {moment(item.date).format("DD.MM.YYYY")}
+                      </TableItem>
+                      <TableItem>{typeWin(item.kind)}</TableItem>
+                      <TableItem>
+                        {item.kind === 0
+                          ? (item.volume / 100000).toLocaleString("ru-RU", {
+                              maximumFractionDigits: 5,
+                            })
+                          : Item.kind === 1
+                          ? t("win.two")
+                          : item.volume}
+                        &nbsp;
+                        {item.volume ? item.volume : Balance[item.balanceKind]}
+                      </TableItem>
+                      <TableItem>
+                        <Value data-title={item.name} >{item.name}</Value>
+                      </TableItem>
+                    </TableList>
+                  </CSSTransition>
+                )
+              }
+            })}
         </TransitionGroup>
         {show && (
           <Button dangerOutline onClick={add}>
