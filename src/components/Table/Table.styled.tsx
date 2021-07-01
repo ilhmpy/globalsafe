@@ -1,5 +1,5 @@
-import styled from "styled-components/macro";
-import { ReactComponent as Filter } from "../../assets/svg/filter.svg";
+import styled from 'styled-components/macro';
+import { ReactComponent as Filter } from '../../assets/svg/filter.svg';
 
 export const Name = styled.div`
   font-weight: 500;
@@ -14,7 +14,7 @@ export const NameData = styled.div<{ green?: boolean }>`
   font-weight: normal;
   font-size: 12px;
   letter-spacing: 0.1px;
-  color: ${(props) => (props.green ? "#c9da99" : props.theme.text2)};
+  color: ${(props) => (props.green ? '#c9da99' : props.theme.text2)};
   display: flex;
   align-items: center;
   @media (max-width: 992px) {
@@ -23,6 +23,7 @@ export const NameData = styled.div<{ green?: boolean }>`
 `;
 
 export const TH = styled.th`
+  cursor: auto;
   text-align: left;
   font-weight: normal;
   font-size: 12px;
@@ -102,7 +103,7 @@ export const TR = styled.tr<{ disactive?: boolean }>`
   border-bottom: 1px solid rgba(81, 81, 114, 0.2);
   cursor: pointer;
   transition: 0.3s;
-  opacity: ${(props) => (props.disactive ? "0.4" : "1")};
+  opacity: ${(props) => (props.disactive ? '0.4' : '1')};
   &:not(thead tr):hover {
     background: rgba(0, 0, 0, 0.05);
   }

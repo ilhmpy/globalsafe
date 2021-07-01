@@ -1,16 +1,13 @@
-import React, { useState, useContext, useEffect } from "react";
-import { AppContext } from "../../context/HubContext";
-import styled from "styled-components/macro";
-import { ReactComponent as Filter } from "../../assets/svg/filter.svg";
-import * as Styled from "./Table.styled";
-import moment from "moment";
-import "moment/locale/ru";
-import { Balance } from "../../types/balance";
-import { useHistory, Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { TableModal } from "./TableModal";
-import { FilterMenu } from "../FilterMenu/FilterMenu";
-import useWindowSize from "../../hooks/useWindowSize";
+import moment from 'moment';
+import 'moment/locale/ru';
+import React, { useContext, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link, useHistory } from 'react-router-dom';
+import { AppContext } from '../../context/HubContext';
+import useWindowSize from '../../hooks/useWindowSize';
+import { Balance } from '../../types/balance';
+import * as Styled from './Table.styled';
+import { TableModal } from './TableModal';
 
 const Row = ({ data }: any) => {
   const [open, setOpen] = useState<boolean | string>(false);
@@ -37,21 +34,19 @@ const Row = ({ data }: any) => {
               <Link
                 key={data.safeId}
                 to={{
-                  pathname: "/info/deposits/" + data.safeId,
+                  pathname: '/info/deposits/' + data.safeId,
                   state: data,
-                }}
-              >
+                }}>
                 <Styled.Name>{data.deposit.name}</Styled.Name>
               </Link>
               <Styled.NameData>
                 <Styled.NameData>
-                  {moment(data.creationDate).format("DD/MM/YYYY")}7
-                </Styled.NameData>{" "}
+                  {moment(data.creationDate).format('DD/MM/YYYY')}7
+                </Styled.NameData>{' '}
                 <Styled.NameData>&nbsp; - &nbsp;</Styled.NameData>
                 <Styled.NameData
-                  green={moment.valueOf() > moment(data.endDate).valueOf()}
-                >
-                  {moment(data.endDate).format("DD/MM/YYYY")}
+                  green={moment.valueOf() > moment(data.endDate).valueOf()}>
+                  {moment(data.endDate).format('DD/MM/YYYY')}
                 </Styled.NameData>
               </Styled.NameData>
             </Styled.TD>
@@ -70,7 +65,7 @@ const Row = ({ data }: any) => {
                   ? data.paymentAmountView.toString().length > 15
                     ? data.paymentAmountView.toFixed(7)
                     : data.paymentAmountView
-                  : "-"}
+                  : '-'}
               </Styled.Text>
               {data.paymentAmountView ? (
                 <Styled.Text>{Balance[data.deposit.asset]}</Styled.Text>
@@ -82,14 +77,13 @@ const Row = ({ data }: any) => {
               <Link
                 key={data.safeId}
                 to={{
-                  pathname: "/info/deposits/" + data.safeId,
+                  pathname: '/info/deposits/' + data.safeId,
                   state: data,
-                }}
-              >
+                }}>
                 <Styled.Text>
                   {data.paymentDate
-                    ? moment(data.paymentDate).format("DD MMMM YYYY")
-                    : "-"}
+                    ? moment(data.paymentDate).format('DD MMMM YYYY')
+                    : '-'}
                 </Styled.Text>
               </Link>
             </Styled.TD>
@@ -100,19 +94,17 @@ const Row = ({ data }: any) => {
           <Styled.TR
             key={data.safeId}
             onClick={() => onClick(data.safeId)}
-            disactive={data.state === 4}
-          >
+            disactive={data.state === 4}>
             <Styled.TD>
               <Styled.Name>{data.deposit.name}</Styled.Name>
               <Styled.NameData>
                 <Styled.NameData>
-                  {moment(data.creationDate).format("DD/MM/YYYY")}
-                </Styled.NameData>{" "}
+                  {moment(data.creationDate).format('DD/MM/YYYY')}
+                </Styled.NameData>{' '}
                 <Styled.NameData>&nbsp; - &nbsp;</Styled.NameData>
                 <Styled.NameData
-                  green={moment.valueOf() > moment(data.endDate).valueOf()}
-                >
-                  {moment(data.endDate).format("DD/MM/YYYY")}
+                  green={moment.valueOf() > moment(data.endDate).valueOf()}>
+                  {moment(data.endDate).format('DD/MM/YYYY')}
                 </Styled.NameData>
               </Styled.NameData>
             </Styled.TD>
@@ -131,7 +123,7 @@ const Row = ({ data }: any) => {
                   ? data.paymentAmountView.toString().length > 15
                     ? data.paymentAmountView.toFixed(7)
                     : data.paymentAmountView
-                  : "-"}
+                  : '-'}
               </Styled.Text>
               {data.paymentAmountView ? (
                 <Styled.Text>{Balance[data.deposit.asset]}</Styled.Text>
@@ -142,8 +134,8 @@ const Row = ({ data }: any) => {
             <Styled.TD>
               <Styled.Text>
                 {data.paymentDate
-                  ? moment(data.paymentDate).format("DD MMMM YYYY")
-                  : "-"}
+                  ? moment(data.paymentDate).format('DD MMMM YYYY')
+                  : '-'}
               </Styled.Text>
             </Styled.TD>
           </Styled.TR>
@@ -160,22 +152,22 @@ export const Tables = ({ list }: any) => {
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const filterClick = (id: number) => {
-    console.log("click", id);
+    console.log('click', id);
   };
 
   return (
     <Styled.TableWrap>
       {/* <FilterMenu filterClick={filterClick} /> */}
       <Styled.Table>
-        <thead style={{ position: "relative" }}>
+        <thead style={{ position: 'relative' }}>
           <Styled.TR>
-            <Styled.TH>{t("privateArea.name")}</Styled.TH>
-            <Styled.TH>{t("privateArea.desc")}</Styled.TH>
-            <Styled.TH>{t("privateArea.deposit")}</Styled.TH>
-            <Styled.TH>{t("privateArea.toPay")}</Styled.TH>
+            <Styled.TH>{t('privateArea.name')}</Styled.TH>
+            <Styled.TH>{t('privateArea.desc')}</Styled.TH>
+            <Styled.TH>{t('privateArea.deposit')}</Styled.TH>
+            <Styled.TH>{t('privateArea.toPay')}</Styled.TH>
             <Styled.TH>
-              <p>{t("privateArea.nextDate")}</p>
-              <span>{t("adminPay.table.nextDate")}</span>
+              <p>{t('privateArea.nextDate')}</p>
+              <span>{t('adminPay.table.nextDate')}</span>
               {/* <Styled.StyledFilter /> */}
             </Styled.TH>
           </Styled.TR>
