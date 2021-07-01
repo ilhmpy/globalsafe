@@ -2204,6 +2204,7 @@ const Center = styled.div`
 
 const MainPage = styled(Page)`
   //margin-top: 200px;
+  margin-top: 171px;
   /* @media (max-width: 1060px) {
     margin-top: 140px;
   } */
@@ -2217,7 +2218,7 @@ const TimerPopup = styled.div`
   cursor: pointer;
   right: 30px;
   top: 230px;
-  margin-top: -160px;
+  margin-top: -342px;
   @media (max-width: 768px) {
     margin-top: -180px;
   }
