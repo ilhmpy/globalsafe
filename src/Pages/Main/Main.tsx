@@ -2207,8 +2207,8 @@ const MainPage = styled(Page)`
   /* @media (max-width: 1060px) {
     margin-top: 140px;
   } */
-  @media (max-width: 768px) {
-    margin-top: 10px;
+  @media only screen and (max-width: 768px) {
+    margin-top: 102px;
   }
 `;
 
@@ -2221,7 +2221,10 @@ const TimerPopup = styled.div`
   @media (max-width: 768px) {
     margin-top: -180px;
   }
-  @media (max-width: 576px) {
+  @media only screen and (max-width: 576px) {
     right: 10px;
+    position: static;
+    margin-top: 0;
+    top: 0;
   }
 `;
