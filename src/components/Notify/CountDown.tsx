@@ -1,5 +1,6 @@
-import React, { FC, useState, useEffect } from "react";
+import React, { FC, useState, useEffect, useContext } from "react";
 import * as Styled from "./Styled.element";
+import { ThemeContext } from "../../context/ThemeContext";
 
 type Props = {
   seconds: number;
@@ -16,6 +17,10 @@ export const CountdownTimer: FC<Props> = ({
   strokeWidth,
   timerDone,
 }) => {
+  const themeContext = useContext(ThemeContext);
+  const theme = themeContext.theme;
+
+  const colors = theme === "light" ? "rgba(81, 81, 114, .5)" : "#fff";
   const milliseconds = seconds * 1000;
   const radius = size / 2;
   const circumference = size * Math.PI;
@@ -47,9 +52,7 @@ export const CountdownTimer: FC<Props> = ({
   return (
     <div>
       <Styled.CountContainer>
-        <Styled.CountValue strokeColor={strokeColor}>
-          {second}
-        </Styled.CountValue>
+        <Styled.CountValue strokeColor={colors}>{second}</Styled.CountValue>
         <svg
           style={{
             position: "absolute",
@@ -70,7 +73,7 @@ export const CountdownTimer: FC<Props> = ({
             cy={radius}
             fill="none"
             strokeLinecap="round"
-            stroke={strokeColor}
+            stroke={colors}
             strokeWidth={strokeWidth}
           ></circle>
         </svg>

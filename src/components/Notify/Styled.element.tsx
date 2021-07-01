@@ -47,7 +47,6 @@ export const Text = styled.div`
   display: flex;
   align-items: center;
   letter-spacing: 0.1px;
-  color: #515172;
 `;
 
 export const CountContainer = styled.div`

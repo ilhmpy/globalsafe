@@ -23,6 +23,7 @@ export const Button = styled.a<Props>`
   font-size: 14px;
   line-height: 16px;
   display: flex;
+  user-select: none;
   align-items: center;
   justify-content: center;
   text-align: center;
