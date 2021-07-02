@@ -27,7 +27,7 @@ export const DepositList: FC<ListProps> = ({
   idx,
 }: ListProps) => {
   const [value, setValue] = useState(
-    (data.payAmount / 100000).toFixed(0).toString()
+    (data.payAmount / 100000).toString()
   );
   const [done, setDone] = useState(false);
   const [procent, setProcent] = useState(
@@ -60,7 +60,6 @@ export const DepositList: FC<ListProps> = ({
           const proc = ((+e.target.value / data.baseAmountView) * 100).toFixed(
             0
           );
-          // console.log("proc", proc);
           setProcent(proc.toString());
         }
       }
