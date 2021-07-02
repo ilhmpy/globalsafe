@@ -373,5 +373,10 @@
   "goDraw": "Go to",
   "depositsToClose": "Deposits to close",
   "line": "line",
-  "partnersTitle": "Partners programs"
+  "partnersTitle": "Partners programs",
+  "time": {
+    "d": "d",
+    "h": "h",
+    "m": "min"
+  }
 }
