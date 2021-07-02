@@ -15,6 +15,7 @@ export const Operations = () => {
   const [num, setNum] = useState(0);
   const [show, setShow] = useState(true);
   const appContext = useContext(AppContext);
+  const [ maxItems, setMaxItems ] = useState(4);
   console.log('Operations ~ appContext', appContext)
   const hubConnection = appContext.hubConnection;
 
@@ -31,7 +32,7 @@ export const Operations = () => {
           'GetOperationsNotifications',
           [2, 4, 5, 6, 7, 8],
           0,
-          5,
+          4,
         )
         .then((res) => {
           console.log('GetOperationsNotifications~~~~~~~~~~~~~`', res);
@@ -98,37 +99,39 @@ export const Operations = () => {
         </TableList>
         <TransitionGroup>
           {notifyList.length &&
-            notifyList.map((item, idx) => (
-              <CSSTransition
-                key={item.date.toString() + idx}
-                timeout={500}
-                classNames="item">
-                <TableList card>
-                  <TableItem>
-                    {moment(item.date).format('DD.MM.YYYY')}
-                  </TableItem>
-                  <TableItem>
-                    {item.depositName ? (
-                      <Text>
-                        {operation(item.operationKind)}{' '}
-                        {t('operation.byProgramm')}
-                        <span>&nbsp;{item.depositName}</span>
-                      </Text>
-                    ) : (
-                      <Text>{operation(item.operationKind)}</Text>
-                    )}
-                  </TableItem>
-                  <TableItem>
-                    <Value>
-                      {(item.amount / 100000).toLocaleString('ru-RU', {
-                        maximumFractionDigits: 2,
-                      })}{' '}
-                      CWD
-                    </Value>
-                  </TableItem>
-                </TableList>
-              </CSSTransition>
-            ))}
+            notifyList.map((item, idx) => {
+              return (
+                <CSSTransition
+                  key={item.date.toString() + idx}
+                  timeout={500}
+                  classNames="item">
+                  <TableList card className="operations-item">
+                    <TableItem>
+                      {moment(item.date).format('DD.MM.YYYY')}
+                    </TableItem>
+                    <TableItem>
+                      {item.depositName ? (
+                        <Text>
+                          {operation(item.operationKind)}{' '}
+                          {t('operation.byProgramm')}
+                          <span>&nbsp;{item.depositName}</span>
+                        </Text>
+                      ) : (
+                        <Text>{operation(item.operationKind)}</Text>
+                      )}
+                    </TableItem>
+                    <TableItem>
+                      <Value>
+                        {(item.amount / 100000).toLocaleString('ru-RU', {
+                          maximumFractionDigits: 2,
+                        })}{' '}
+                        CWD
+                      </Value>
+                    </TableItem>
+                  </TableList>
+                </CSSTransition>
+              )
+            })}
         </TransitionGroup>
         {show && (
           <Button dangerOutline onClick={add}>
