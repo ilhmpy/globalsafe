@@ -378,7 +378,7 @@ export const Approval: FC<Props> = ({
                 {t("adminUsers.apply")}
               </Button>
               <Button dangerOutline onClick={clear}>
-                Сбросить
+                {t("reset")}
               </Button>
             </Styled.Buttons>
           </SelectContainer>
