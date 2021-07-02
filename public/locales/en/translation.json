@@ -374,5 +374,9 @@
   "depositsToClose": "Deposits to close",
   "line": "line",
   "partnersTitle": "Partners programs",
-  "reset": "Reset"
+  "time": {
+    "d": "d",
+    "h": "h",
+    "m": "min"
+  }
 }
