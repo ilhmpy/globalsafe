@@ -530,7 +530,7 @@ const RadialModalItem = styled.div<{ small?: boolean, flex?: boolean }>`
   ${RoundInsideName} {
     font-weight: 500;
     line-height: 28px;
-    font-size: 1.90em;
+    font-size: 1.80em;
     @media (max-width: 768px) {
       max-width: 100%;
       padding-top: 23px;
