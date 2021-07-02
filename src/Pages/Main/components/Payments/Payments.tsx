@@ -475,7 +475,6 @@ const RoundInsideName = styled.div<{ small?: boolean }>`
   text-transform: uppercase;
   padding-top: 26px;
   padding-bottom: 4px;
-  overflow: hidden;
   text-overflow: ellipsis;
   @media (max-width: 768px) {
     font-size: 14px;
@@ -530,9 +529,8 @@ const RadialModalItem = styled.div<{ small?: boolean, flex?: boolean }>`
   }
   ${RoundInsideName} {
     font-weight: 500;
-    font-size: ${(props) => (props.small ? "18px" : "36px")};
-    line-height: ${(props) => (props.small ? "28px" : "40px")};
-    display: ${({ flex }) => flex != null && flex ? "none" : ""};
+    line-height: 28px;
+    font-size: 1.80em;
     @media (max-width: 768px) {
       max-width: 100%;
       padding-top: 23px;
