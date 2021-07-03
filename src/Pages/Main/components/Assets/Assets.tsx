@@ -142,19 +142,19 @@ export const Assets = () => {
   return (
     <Page id="assets">
       <Container>
-        <UpTitle small>{'Активы'}</UpTitle>
+        <UpTitle small>{t('assets.uptitle')}</UpTitle>
       </Container>
       <Container>
-        <H1>{'Активы'}</H1>
+        <H1>{t('assets.uptitle')}</H1>
       </Container>
       {isNormalOpen && (
         <Modal onClose={() => setIsNormalOpen(false)}>
           <ModalBlock>
-            <ModalTitle>{'Купить MilliCent (mCent)'}</ModalTitle>
+            <ModalTitle>{`${t('assets.buy')} MilliCent (mCent)`}</ModalTitle>
             <ModalBlockBody>
               <Input
                 onChange={onChange}
-                placeholder={'Введите сумму, CWD'}
+                placeholder={`${t('assets.inputPlaceholder')}, CWD`}
                 type="number"
                 ref={inputRef}
                 value={value}
@@ -165,7 +165,7 @@ export const Assets = () => {
                 onClick={toLink}
                 danger
                 disabled={+value < min}>
-                {'Купить MCENT'}
+                {`${t('assets.buy')} MCENT`}
               </ModalButton>
             </ModalBlockBody>
           </ModalBlock>
@@ -176,18 +176,12 @@ export const Assets = () => {
           <BlockTitle>{'MILLICENT (MCENT)'}</BlockTitle>
 
           <BlockBody>
-            <BlockOne>{'mCent - это 1/100 mGCWD'}</BlockOne>
-            <BlockOne>
-              {'mCent обладает всеми свойствами и качествами'}
-            </BlockOne>
-            <BlockOne>
-              {
-                'mGCWD - источник пассивного дохода (начисление дивидендов) и спекулятивный инструмент (дешевле купил - дороже продал'
-              }
-            </BlockOne>
+            <BlockOne>{t('assets.mCentIs')}</BlockOne>
+            {/* <BlockOne>{t('assets.mCentHas')}</BlockOne> */}
+            <BlockOne>{t('assets.mCentDescpition')}</BlockOne>
           </BlockBody>
           <Button danger onClick={() => handleClick(0)}>
-            {'Купить MCENT'}
+            {`${t('assets.buy')} MCENT`}
           </Button>
         </BlockItem>
       </BlockContainers>
