@@ -177,7 +177,6 @@ export const Assets = () => {
 
           <BlockBody>
             <BlockOne>{t('assets.mCentIs')}</BlockOne>
-            {/* <BlockOne>{t('assets.mCentHas')}</BlockOne> */}
             <BlockOne>{t('assets.mCentDescpition')}</BlockOne>
           </BlockBody>
           <Button danger onClick={() => handleClick(0)}>
@@ -195,18 +194,11 @@ export const Assets = () => {
             <BlockTitle>{'MILLICENT (MCENT)'}</BlockTitle>
 
             <BlockBody>
-              <BlockOne>{'mCent - это 1/100 mGCWD'}</BlockOne>
-              <BlockOne>
-                {'mCent обладает всеми свойствами и качествами'}
-              </BlockOne>
-              <BlockOne>
-                {
-                  'mGCWD - источник пассивного дохода (начисление дивидендов) и спекулятивный инструмент (дешевле купил - дороже продал'
-                }
-              </BlockOne>
+              <BlockOne>{t('assets.mCentIs')}</BlockOne>
+              <BlockOne>{t('assets.mCentDescpition')}</BlockOne>
             </BlockBody>
             <Button danger onClick={() => handleClick(0)}>
-              {'Купить MCENT'}
+              {`${t('assets.buy')} MCENT`}
             </Button>
           </BlockItem>
         </Swiper>
