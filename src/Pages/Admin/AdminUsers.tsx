@@ -246,7 +246,7 @@ export const AdminUsers = () => {
           pageLength,
         )
         .then((res) => {
-          // console.log("GetUsers", res);
+          console.log("GetUsers", res);
           setLoading(false);
           setNum(20);
           seTotalUsers(res.totalRecords);
@@ -386,6 +386,7 @@ export const AdminUsers = () => {
             <TableHeadItem>{t('adminUsers.table.role')}</TableHeadItem>
             <TableHeadItem>{t('adminUsers.table.dataCreate')}</TableHeadItem>
             <TableHeadItem>{t('adminUsers.table.lang')}</TableHeadItem>
+            <TableHeadItem>{t("adminUsers.table.depositSum")}</TableHeadItem>
             <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
           </TableHead>
           {listDeposits.length ? (

@@ -154,7 +154,8 @@
       "role": "Role",
       "dataCreate": "Date of creation",
       "lang": "Lang",
-      "rus": "Russian"
+      "rus": "Russian",
+      "depositSum": "Deposit sum"
     },
     "modal": {
       "paySum": "Amount of payments",

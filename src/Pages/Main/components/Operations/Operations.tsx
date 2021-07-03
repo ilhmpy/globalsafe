@@ -73,8 +73,8 @@ export const Operations = () => {
         .invoke<RootOperations>(
           'GetOperationsNotifications',
           [2, 4, 5, 6, 7, 8],
-          5,
-          5,
+          4,
+          4,
         )
         .then((res) => {
           setNotifyList((notifyList) => [...notifyList, ...res.collection]);
