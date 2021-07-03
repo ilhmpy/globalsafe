@@ -1,10 +1,10 @@
-import { Link } from 'react-router-dom';
-import styled from 'styled-components/macro';
-import Vector from '../../assets/img/Vector.png';
-import { ReactComponent as Left } from '../../assets/svg/left.svg';
-import { Button } from '../../components/Button/Button';
-import { UpTitle } from '../../components/UI/UpTitle';
-import { Card } from '../../globalStyles';
+import { Link } from "react-router-dom";
+import styled from "styled-components/macro";
+import Vector from "../../assets/img/Vector.png";
+import { ReactComponent as Left } from "../../assets/svg/left.svg";
+import { Button } from "../../components/Button/Button";
+import { UpTitle } from "../../components/UI/UpTitle";
+import { Card } from "../../globalStyles";
 
 export const CountText = styled.div`
   font-weight: normal;
@@ -17,7 +17,7 @@ export const CountText = styled.div`
   }
 `;
 
-export const Page = styled.div`
+export const Page = styled.div<{ dn?: boolean }>`
   font-weight: normal;
   font-size: 14px;
   line-height: 16px;
@@ -26,6 +26,9 @@ export const Page = styled.div`
   @media (max-width: 600px) {
     font-size: 13px;
     min-width: 70px;
+  }
+  @media (max-width: 576px) {
+    display: ${(props) => (props.dn ? "none" : "initial")};
   }
 `;
 
@@ -256,9 +259,9 @@ type ContentProps = {
 export const Content = styled.div<ContentProps>`
   flex-grow: 1;
   transition: 0.3s;
-  margin: ${(props) => (props.mtbig ? '60px auto 40px' : '30px auto 40px')};
+  margin: ${(props) => (props.mtbig ? "60px auto 40px" : "30px auto 40px")};
   padding: 0 35px 0;
-  padding-left: ${(props) => (props.widthCont ? '278px' : '91px')};
+  padding-left: ${(props) => (props.widthCont ? "278px" : "91px")};
   @media (max-width: 1200px) {
     padding-left: 91px;
   }
@@ -355,7 +358,7 @@ export const PayItemHead = styled.div<{ mb?: boolean }>`
   display: flex;
   text-align: right;
   justify-content: center;
-  margin: 0 auto ${(props) => (props.mb ? '12px' : '0')};
+  margin: 0 auto ${(props) => (props.mb ? "12px" : "0")};
   &:last-child() {
     margin-bottom: 12px;
   }
@@ -368,7 +371,7 @@ export const PayItemHead = styled.div<{ mb?: boolean }>`
     }
   } */
   @media (max-width: 768px) {
-    margin: 0 auto ${(props) => (props.mb ? '8px' : '0')};
+    margin: 0 auto ${(props) => (props.mb ? "8px" : "0")};
   }
 `;
 
@@ -453,14 +456,32 @@ export const SelectContainerLottery = styled(SelectContainer)`
 `;
 
 export const SelectWrap = styled.div<{ input?: boolean }>`
-  max-width: ${(props) => (props.input ? '153px' : '280px')};
-  width: 100%;
+  max-width: ${(props) => (props.input ? "153px" : "280px")};
+  /* width: 100%; */
   margin: 20px 20px 20px 0;
   position: relative;
   @media (max-width: 992px) {
-    max-width: ${(props) => (props.input ? '153px' : '45%')};
+    max-width: ${(props) => (props.input ? "153px" : "45%")};
   }
   @media (max-width: 768px) {
+    max-width: 100%;
+    margin: 12px 20px 12px 0;
+  }
+  @media (max-width: 576px) {
+    margin: 12px 0px;
+  }
+`;
+
+export const SelectWrapTwo = styled.div<{ mWidth?: string; mNone?: boolean }>`
+  width: ${(props) => (props.mWidth ? props.mWidth : "280px")};
+  margin: 20px 20px 20px 0;
+  margin-right: ${(props) => (props.mNone ? "0" : "20px")};
+  position: relative;
+  @media (max-width: 992px) {
+    max-width: ${(props) => (props.mWidth ? props.mWidth : "45%")};
+  }
+  @media (max-width: 768px) {
+    width: 100%;
     max-width: 100%;
     margin: 12px 20px 12px 0;
   }
@@ -540,7 +561,7 @@ export const SelectContainerInnerUsers = styled.div`
 export const SelectContainerInnerPaid = styled.div`
   display: flex;
   align-items: center;
-  @media (max-width: 850px) {
+  @media (max-width: 992px) {
     flex-wrap: wrap;
     width: 100%;
   }
@@ -635,8 +656,8 @@ export const LotteryTable = styled.div`
 `;
 
 export const InputLottery = styled.div<{ mrn?: boolean }>`
-  width: ${(props) => (props.mrn ? '165px' : '185px')};
-  margin-right: ${(props) => (props.mrn ? '0' : '20px')};
+  width: ${(props) => (props.mrn ? "165px" : "185px")};
+  margin-right: ${(props) => (props.mrn ? "0" : "20px")};
   margin-bottom: 15px;
   @media (max-width: 834px) {
     width: 46%;

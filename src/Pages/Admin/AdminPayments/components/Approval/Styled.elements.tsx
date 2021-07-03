@@ -1,4 +1,5 @@
 import styled from "styled-components/macro";
+import { Button } from "../../../../../components/Button/Button";
 
 export const PaymentsTable = styled.div`
   padding: 30px;
@@ -137,5 +138,23 @@ export const ButtonWrap = styled.div`
   display: flex;
   @media (max-width: 768px) {
     justify-content: center;
+  }
+`;
+
+export const Buttons = styled.div`
+  display: flex;
+  @media (max-width: 576px) {
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  ${Button} {
+    padding-left: 10px;
+    padding-right: 10px;
+    &:first-child {
+      margin-right: 15px;
+      @media (max-width: 576px) {
+        margin: 0 auto 20px;
+      }
+    }
   }
 `;

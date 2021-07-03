@@ -85,7 +85,7 @@ const MyCss = css`
 
 export const TimerValue = styled.div<{ nodata?: boolean }>`
   font-weight: 500;
-  font-size: 36px;
+  font-size: 28px;
   line-height: 42px;
   height: 42px;
   display: flex;
