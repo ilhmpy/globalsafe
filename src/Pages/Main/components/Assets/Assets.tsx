@@ -4,6 +4,7 @@ import SwiperCore, { A11y, Navigation, Pagination, Scrollbar } from 'swiper';
 import 'swiper/components/navigation/navigation.scss';
 import 'swiper/components/pagination/pagination.scss';
 import 'swiper/components/scrollbar/scrollbar.scss';
+import { Swiper } from 'swiper/react';
 import 'swiper/swiper.scss';
 import { Button } from '../../../../components/Button/Button';
 import { Modal } from '../../../../components/Modal/Modal';
@@ -27,6 +28,7 @@ import {
   ModalBlockBody,
   ModalButton,
   ModalTitle,
+  SwiperContainer,
 } from './styled';
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
@@ -35,7 +37,7 @@ export const Assets = () => {
   const [isNormalOpen, setIsNormalOpen] = useState(false);
   const [oldLink, setOldLink] = useState('');
   const [link, setLink] = useState('');
-  const [min, setMin] = useState(500);
+  const [min, setMin] = useState(1);
   const [value, setValue] = useState('');
   const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>(
     [],
@@ -103,18 +105,17 @@ export const Assets = () => {
     }
   }, [hubConnection, languale]);
 
-  const handleClick = (str: string, value: number) => {
+  const handleClick = (num: number) => {
     setIsNormalOpen(true);
     setValue('');
     // setLink(str);
-    const newLink = `https://cwd.global/shopping/payment?to_name=mcent-fond&amount=${value}`;
+    const newLink = `https://cwd.global/shopping/payment?to_name=mcent-fond&amount=${num}`;
     setLink(newLink);
     setOldLink(
       `https://cwd.global/shopping/payment?to_name=mcent-fond&amount=`,
     );
-    const val: any = /\d{3,}/g.exec(str);
-    setMin(value / 100000);
-    setValue((value / 100000).toString());
+    setMin(num);
+    setValue('Введите сумму, CWD');
   };
 
   useEffect(() => {
@@ -136,77 +137,6 @@ export const Assets = () => {
 
   const toLink = () => {
     window.open(link);
-  };
-
-  const colors = (item: CollectionListDeposits, id: number) => {
-    switch (id) {
-      case 0:
-        return (
-          <Button
-            green
-            onClick={() => handleClick(item.account, item.minAmount)}>
-            {item.name}
-          </Button>
-        );
-      case 1:
-        return (
-          <Button
-            blue
-            onClick={() => handleClick(item.account, item.minAmount)}>
-            {item.name}
-          </Button>
-        );
-      case 2:
-        return (
-          <Button
-            danger
-            onClick={() => handleClick(item.account, item.minAmount)}>
-            {item.name}
-          </Button>
-        );
-      case 3:
-        return (
-          <Button
-            pink
-            onClick={() => handleClick(item.account, item.minAmount)}>
-            {item.name}
-          </Button>
-        );
-      case 4:
-        return (
-          <Button
-            purple
-            onClick={() => handleClick(item.account, item.minAmount)}>
-            {item.name}
-          </Button>
-        );
-
-      case 5:
-        return (
-          <Button
-            yellow
-            onClick={() => handleClick(item.account, item.minAmount)}>
-            {item.name}
-          </Button>
-        );
-
-      case 6:
-        return (
-          <Button
-            yellow
-            onClick={() => handleClick(item.account, item.minAmount)}>
-            {item.name}
-          </Button>
-        );
-      default:
-        return (
-          <Button
-            green
-            onClick={() => handleClick(item.account, item.minAmount)}>
-            {item.name}
-          </Button>
-        );
-    }
   };
 
   return (
@@ -256,11 +186,37 @@ export const Assets = () => {
               }
             </BlockOne>
           </BlockBody>
-          <Button danger onClick={() => handleClick('sebsrkjgb', 0)}>
+          <Button danger onClick={() => handleClick(0)}>
             {'Купить MCENT'}
           </Button>
         </BlockItem>
       </BlockContainers>
+      <SwiperContainer>
+        <Swiper
+          spaceBetween={50}
+          slidesPerView={1}
+          loop
+          pagination={{ clickable: true }}>
+          <BlockItem>
+            <BlockTitle>{'MILLICENT (MCENT)'}</BlockTitle>
+
+            <BlockBody>
+              <BlockOne>{'mCent - это 1/100 mGCWD'}</BlockOne>
+              <BlockOne>
+                {'mCent обладает всеми свойствами и качествами'}
+              </BlockOne>
+              <BlockOne>
+                {
+                  'mGCWD - источник пассивного дохода (начисление дивидендов) и спекулятивный инструмент (дешевле купил - дороже продал'
+                }
+              </BlockOne>
+            </BlockBody>
+            <Button danger onClick={() => handleClick(0)}>
+              {'Купить MCENT'}
+            </Button>
+          </BlockItem>
+        </Swiper>
+      </SwiperContainer>
     </Page>
   );
 };
