@@ -107,11 +107,11 @@ export const Assets = () => {
     setIsNormalOpen(true);
     setValue('');
     // setLink(str);
-    const newLink = `https://cwd.global/shopping/payment?to_name=${str}&amount=${
-      value / 100000
-    }`;
+    const newLink = `https://cwd.global/shopping/payment?to_name=mcent-fond&amount=${value}`;
     setLink(newLink);
-    setOldLink(`https://cwd.global/shopping/payment?to_name=${str}&amount=`);
+    setOldLink(
+      `https://cwd.global/shopping/payment?to_name=mcent-fond&amount=`,
+    );
     const val: any = /\d{3,}/g.exec(str);
     setMin(value / 100000);
     setValue((value / 100000).toString());
@@ -227,7 +227,7 @@ export const Assets = () => {
                 placeholder={'Введите сумму, CWD'}
                 type="number"
                 ref={inputRef}
-                // value={value}
+                value={value}
               />
 
               <ModalButton
@@ -261,27 +261,6 @@ export const Assets = () => {
           </Button>
         </BlockItem>
       </BlockContainers>
-      {/* <SwiperContainer>
-        <Swiper
-          spaceBetween={50}
-          slidesPerView={1}
-          loop
-          pagination={{ clickable: true }}>
-          {listDeposits.map((item, idx) => (
-            <SwiperSlide key={item.safeId}>
-              <BlockItem>
-                <BlockTitle>{item.name}</BlockTitle>
-                <div className="item__subtitle">
-                  <Text
-                    dangerouslySetInnerHTML={{ __html: item.description }}
-                  />
-                </div>
-                {colors(item, idx)}
-              </BlockItem>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </SwiperContainer> */}
     </Page>
   );
 };
