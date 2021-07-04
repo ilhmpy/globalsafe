@@ -10,7 +10,7 @@ import img3 from "../../assets/img/img3.jpg";
 
 export const About = () => {
   return (
-    <Page>
+    <Page id="about">
       <Container id="about">
         <UpTitle>О нас</UpTitle>
       </Container>

@@ -14,7 +14,7 @@ export const Banner = () => {
 
   return (
     <>
-      <Container id="banner">
+      <Container >
         {/* <UpTitle small>Емко и по-делу</UpTitle> */}
         <UpTitle small>{t('banner.uptitle')}</UpTitle>
       </Container>
@@ -65,7 +65,7 @@ const ArrowIcon = styled(Arrow)`
 `;
 
 const TextBlock = styled.div`
-  max-width: 648px;
+  max-width: 611px;
   margin-right: auto;
   color: ${({ theme }) => theme.descFund};
   margin-bottom: 60px;

@@ -71,6 +71,13 @@
     "smansurskaya": "Svetlana Mansurskaya",
     "sporttanets8": "Maksim Sportanets"
   },
+  "assets": {
+    "uptitle": "Assets",
+    "inputPlaceholder": "Enter the amount",
+    "buy": "Buy",
+    "mCentIs": "mCent is 1/100 mGCWD",
+    "mCentDescpition": "mCent has all mGCWD properties and qualities - a source of passive income (calculating dividends) and a speculative tool (cheaper bought - sold more expensive)"
+  },
   "about": {
     "uptitle": "About us",
     "H1": "Our founders",
@@ -154,7 +161,8 @@
       "role": "Role",
       "dataCreate": "Date of creation",
       "lang": "Lang",
-      "rus": "Russian"
+      "rus": "Russian",
+      "depositSum": "Deposit sum"
     },
     "modal": {
       "paySum": "Amount of payments",
@@ -374,5 +382,9 @@
   "depositsToClose": "Deposits to close",
   "line": "line",
   "partnersTitle": "Partners programs",
-  "reset": "Reset"
+  "time": {
+    "d": "d",
+    "h": "h",
+    "m": "min"
+  }
 }
