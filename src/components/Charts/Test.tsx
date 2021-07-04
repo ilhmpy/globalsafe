@@ -224,7 +224,14 @@ export const ColumnChart: FC<PropsColumn> = ({ date, value }) => {
       xaxis: {
         categories: date,
         labels: {
-          show: false,
+          show: true,
+          style: {
+            fontSize: '10px',
+          },
+          offsetY: -4,
+          formatter: function (value: any) {
+            return new Date(value).getDate();
+          },
         },
         axisBorder: {
           show: false,
