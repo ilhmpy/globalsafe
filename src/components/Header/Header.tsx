@@ -1,16 +1,16 @@
-import React, { FC, useContext, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useHistory, useLocation } from 'react-router-dom';
-import styled from 'styled-components/macro';
-import { ReactComponent as Logo } from '../../assets/svg/logo.svg';
-import ru from '../../assets/svg/russia.svg';
-import { ReactComponent as DarkTheme } from '../../assets/svg/theme.svg';
-import { ReactComponent as LightTheme } from '../../assets/svg/themeLight.svg';
-import usa from '../../assets/svg/usa.svg';
-import { AppContext } from '../../context/HubContext';
-import { ThemeContext } from '../../context/ThemeContext';
-import { Container } from '../../globalStyles';
-import { Button } from '../Button/Button';
+import React, { FC, useContext, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useHistory, useLocation } from "react-router-dom";
+import styled from "styled-components/macro";
+import { ReactComponent as Logo } from "../../assets/svg/logo.svg";
+import ru from "../../assets/svg/russia.svg";
+import { ReactComponent as DarkTheme } from "../../assets/svg/theme.svg";
+import { ReactComponent as LightTheme } from "../../assets/svg/themeLight.svg";
+import usa from "../../assets/svg/usa.svg";
+import { AppContext } from "../../context/HubContext";
+import { ThemeContext } from "../../context/ThemeContext";
+import { Container } from "../../globalStyles";
+import { Button } from "../Button/Button";
 import {
   AdminButton,
   HeaderInner,
@@ -20,9 +20,9 @@ import {
   Languale,
   MenuBtn,
   SwitchTheme,
-} from './Header.elements';
-import { Nav } from './Nav';
-import { NavAdmin } from './NavAdmin';
+} from "./Header.elements";
+import { Nav } from "./Nav";
+import { NavAdmin } from "./NavAdmin";
 
 export const Header: FC<{ admPanel?: boolean }> = ({ admPanel }) => {
   const [header, setHeader] = useState(false);
@@ -40,9 +40,9 @@ export const Header: FC<{ admPanel?: boolean }> = ({ admPanel }) => {
 
   function handleClick() {
     if (!user) {
-      history.push('/login');
+      history.push("/login");
     } else {
-      history.push('/info');
+      history.push("/info");
     }
   }
 
@@ -56,15 +56,15 @@ export const Header: FC<{ admPanel?: boolean }> = ({ admPanel }) => {
     };
     handleScroll();
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
     if (open) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     }
   }, [open]);
 
@@ -73,9 +73,9 @@ export const Header: FC<{ admPanel?: boolean }> = ({ admPanel }) => {
   };
 
   const toAdmin = () => {
-    history.push('/admin');
+    history.push("/admin");
   };
-  const lang = localStorage.getItem('i18nextLng') || 'ru';
+  const lang = localStorage.getItem("i18nextLng") || "ru";
   return (
     <HeaderWrap header={header}>
       <Container>
@@ -103,34 +103,34 @@ export const Header: FC<{ admPanel?: boolean }> = ({ admPanel }) => {
             )}
           </HeaderMenu>
           <SwitchTheme onClick={swithTheme}>
-            {theme === 'light' ? <DarkTheme /> : <LightTheme />}
+            {theme === "light" ? <DarkTheme /> : <LightTheme />}
           </SwitchTheme>
-          {lang === 'ru' ? (
-            <Languale onClick={() => i18n.changeLanguage('en')}>
+          {lang === "ru" ? (
+            <Languale onClick={() => i18n.changeLanguage("en")}>
               EN
               <img src={usa} alt="en" />
             </Languale>
           ) : (
-            <Languale onClick={() => i18n.changeLanguage('ru')}>
+            <Languale onClick={() => i18n.changeLanguage("ru")}>
               RU
               <img src={ru} alt="ru" />
             </Languale>
           )}
           {admin && (
             <AdminButton danger onClick={toAdmin}>
-              {t('headerButton.admin')}
+              {t("headerButton.admin")}
             </AdminButton>
           )}
-          {location.pathname === '/' ? (
+          {location.pathname === "/" ? (
             <Button onClick={handleClick}>
-              {t('headerButton.personalArea')}
+              {t("headerButton.personalArea")}
             </Button>
           ) : user ? (
-            <Button onClick={logOut}>{t('logout')}</Button>
+            <Button onClick={logOut}>{t("logout")}</Button>
           ) : (
             <>
               <Button onClick={handleClick}>
-                {t('headerButton.personalArea')}
+                {t("headerButton.personalArea")}
               </Button>
             </>
           )}
