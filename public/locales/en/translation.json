@@ -153,6 +153,7 @@
     "labelUser": "User",
     "labelCreate": "Date of creation",
     "apply": "Apply",
+    "reset": "Reset",
     "table": {
       "unlock": "Unblock",
       "lock": "Block",
