@@ -1,6 +1,6 @@
-﻿import { Button } from "../../../../components/Button/Button";
-import styled from "styled-components/macro";
-import { Container } from "../../../../globalStyles";
+﻿import styled from 'styled-components/macro';
+import { Button } from '../../../../components/Button/Button';
+import { Container } from '../../../../globalStyles';
 
 export const BlockTitle = styled.div`
   font-size: 18px;
@@ -136,7 +136,6 @@ export const ModalTitle = styled.h4`
   margin-bottom: 20px;
 `;
 
-
 export const PartnerProgramContainer = styled.div`
   width: 90%;
   margin: 0 auto;
@@ -151,7 +150,7 @@ export const PartnerProgramContainer = styled.div`
   .swiper-pagination-bullet {
     width: 7px;
     height: 7px;
-    background: #C4C4C4;
+    background: #c4c4c4;
     border-radius: 50%;
   }
 
@@ -159,21 +158,21 @@ export const PartnerProgramContainer = styled.div`
     width: 30px;
     height: 3px;
     border-radius: 4px;
-    background: #FF416E;
+    background: #ff416e;
   }
 `;
 
 export const PartnerProgramTitle = styled.h3<{ phone?: boolean }>`
-  font-size: 1.70em;
+  font-size: 1.7em;
   font-weight: 500;
   margin-bottom: 20px;
   text-align: center;
   color: ${({ theme }) => theme.partnerProgram.titleColor};
-  display: ${({ phone }) => phone != undefined ? "none" : "inline"};
+  display: ${({ phone }) => (phone != undefined ? 'none' : 'inline')};
 
   @media only screen and (max-device-width: 480px) {
-    font-size: 1.50em;
-    display: ${({ phone }) => phone ? "inline" : "none"};
+    font-size: 1.5em;
+    display: ${({ phone }) => (phone ? 'inline' : 'none')};
     color: ${({ theme }) => theme.partnerProgram.titlePhoneColor};
   }
 `;
@@ -194,19 +193,24 @@ export const PartnerProgramHeader = styled.header`
   }
 `;
 
-export const PartnerProgramHeaderItem = styled.h3<{ green?: boolean, red?: boolean, blue?: boolean, color?: string }>`
+export const PartnerProgramHeaderItem = styled.h3<{
+  green?: boolean;
+  red?: boolean;
+  blue?: boolean;
+  color?: string;
+}>`
   color: ${({ green, red, blue, color }) => {
     if (!color) {
-      if (green) return "#BCD476";
-      if (blue) return "#6DB9FF";
-      if (red) return "#FF416E";
+      if (green) return '#BCD476';
+      if (blue) return '#6DB9FF';
+      if (red) return '#FF416E';
     } else return color;
   }};
   text-transform: uppercase;
   display: block;
   margin-right: 5px;
   width: 35%;
-  font-size: 1.30em;
+  font-size: 1.3em;
   font-weight: bold;
 `;
 
@@ -235,8 +239,13 @@ export const PartnerProgramLine = styled.div`
   }
 
   @media only screen and (max-device-width: 1024px) {
+    justify-content: space-around;
     &:last-child {
       margin-bottom: 50px;
+    }
+    .inner {
+      width: 10%;
+      display: flex;
     }
   }
 `;
@@ -263,12 +272,12 @@ export const PartnerProgramBlock = styled.div<{ phone?: boolean }>`
   background: ${({ theme }) => theme.partnerProgram.background};
   color: ${({ theme }) => theme.partnerProgram.color};
   padding-top: 26px;
-  display: ${({ phone }) => phone ? "none" : "block"};
+  display: ${({ phone }) => (phone ? 'none' : 'block')};
 
   @media only screen and (max-device-width: 1024px) {
     margin-top: 20px;
     padding-top: 20px;
-    display: ${({ phone }) => phone ? "block" : "none"};
+    display: ${({ phone }) => (phone ? 'block' : 'none')};
     border: 1px solid #000;
     max-width: 340px;
 
@@ -281,7 +290,6 @@ export const PartnerProgramBlock = styled.div<{ phone?: boolean }>`
     }
 
     ${PartnerProgramLine} {
-      margin-left: 19px;
       &:nth-child(2n) {
         background: 0;
       }
@@ -317,7 +325,8 @@ export const PartnerProgramPaginationItem = styled.span<{ active?: boolean }>`
         border-radius: 4px;
         background: #FF416E;
       `;
-    } else return `
+    } else
+      return `
         width: 7px;
         height: 7px;
         background: #C4C4C4;
