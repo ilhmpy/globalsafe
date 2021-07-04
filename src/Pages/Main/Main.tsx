@@ -2205,7 +2205,7 @@ const MainPage = styled(Page)`
     margin-top: 140px;
   } */
   @media only screen and (max-width: 768px) {
-    margin-top: 102px;
+    margin-top: 0px;
   }
 `;
 
