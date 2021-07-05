@@ -79,7 +79,7 @@ export const Operations = () => {
           setNotifyList((notifyList) => [...notifyList, ...res.collection]);
         })
         .catch((e) => console.log(e));
-    }
+    } 
   };
 
   console.log('~~~~~~~~~~~~~~', notifyList);
