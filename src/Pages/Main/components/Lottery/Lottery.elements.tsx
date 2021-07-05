@@ -1,7 +1,7 @@
-import styled, { css, keyframes } from "styled-components/macro";
-import { ReactComponent as Close } from "../../../../assets/svg/close.svg";
-import { Card } from "../../../../globalStyles";
-import { Button } from "../../../../components/Button/Button";
+import styled, { css, keyframes } from 'styled-components/macro';
+import { ReactComponent as Close } from '../../../../assets/svg/close.svg';
+import { Button } from '../../../../components/Button/Button';
+import { Card } from '../../../../globalStyles';
 
 export const CloseIcon = styled(Close)`
   position: absolute;
@@ -20,16 +20,20 @@ export const CloseIcon = styled(Close)`
 export const TimerContainer = styled.div`
   position: relative;
   margin: 40px auto;
-  background: ${(props) => props.theme.card.backgroundAlfa};
+  /* background: ${(props) => props.theme.card.backgroundAlfa}; */
+  background: rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(86, 101, 127, 0.05);
   box-sizing: border-box;
   border-radius: 20px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  padding: 24px;
+  padding: 24px 36px;
   text-align: center;
   width: 340px;
   @media (max-width: 768px) {
-    width: 300px;
+    margin: 40px 20px;
+    width: auto;
+  padding: 24px 22px;
+
   }
 `;
 
@@ -39,7 +43,7 @@ export const TimerTitle = styled.div`
   line-height: 21px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
   letter-spacing: 0.1px;
   color: ${(props) => props.theme.text2};
   margin-bottom: 10px;
@@ -68,11 +72,11 @@ const MyCss = css`
   opacity: 1;
   visibility: hidden;
   overflow: hidden;
-  content: "&nbsp;";
+  content: '&nbsp;';
   color: transparent;
   &:after {
     position: absolute;
-    content: "";
+    content: '';
     height: 100%;
     width: 100%;
     visibility: visible;
@@ -85,12 +89,12 @@ const MyCss = css`
 
 export const TimerValue = styled.div<{ nodata?: boolean }>`
   font-weight: 500;
-  font-size: 28px;
+  font-size: 36px;
   line-height: 42px;
   height: 42px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
   letter-spacing: 0.1px;
   color: #ff416e;
   ${(props) => {
@@ -138,7 +142,7 @@ export const Present = styled.div`
 `;
 
 export const PresentInner = styled.div<{ show?: boolean }>`
-  opacity: ${(props) => (props.show ? "1" : "0")};
+  opacity: ${(props) => (props.show ? '1' : '0')};
 `;
 
 export const WheelContainer = styled.div`
@@ -261,7 +265,7 @@ export const ContainerItem = styled.div`
 
 export const Inside = styled.div<{ red?: boolean }>`
   background: ${(props) => props.theme.card.background};
-  color: ${(props) => (props.red ? "#FF416E" : "#9D9D9D")};
+  color: ${(props) => (props.red ? '#FF416E' : '#9D9D9D')};
   font-size: 21px;
   line-height: 25px;
 `;
@@ -354,13 +358,13 @@ export const WinTitle = styled.div<{ sub?: boolean }>`
   font-weight: ${(props) => (props.sub ? 400 : 500)};
   font-size: 36px;
   line-height: 42px;
-  margin-bottom: ${(props) => (props.sub ? "17px" : "8px")};
+  margin-bottom: ${(props) => (props.sub ? '17px' : '8px')};
   text-align: center;
   letter-spacing: 0.1px;
-  color: ${(props) => (props.sub ? props.theme.text2 : "#FF416E")};
+  color: ${(props) => (props.sub ? props.theme.text2 : '#FF416E')};
   @media (max-width: 576px) {
-    font-size: ${(props) => (props.sub ? "28px" : "16px")};
-    line-height: ${(props) => (props.sub ? "32px" : "19px")};
+    font-size: ${(props) => (props.sub ? '28px' : '16px')};
+    line-height: ${(props) => (props.sub ? '32px' : '19px')};
   }
 `;
 
