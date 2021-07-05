@@ -13,7 +13,6 @@ import { Collection, RootOperations } from '../../../../types/operations';
 export const Operations = () => {
   const [notifyList, setNotifyList] = useState<Collection[]>([]);
   const [num, setNum] = useState(0);
-  const [show, setShow] = useState(true);
   const appContext = useContext(AppContext);
   const [ maxItems, setMaxItems ] = useState(4);
   console.log('Operations ~ appContext', appContext)
@@ -81,7 +80,6 @@ export const Operations = () => {
         })
         .catch((e) => console.log(e));
     }
-    setShow(false);
   };
 
   console.log('~~~~~~~~~~~~~~', notifyList);
@@ -133,11 +131,11 @@ export const Operations = () => {
               )
             })}
         </TransitionGroup>
-        {show && (
+        {
           <Button dangerOutline onClick={add}>
             {t('operation.showMore')}
           </Button>
-        )}
+        }
       </TableContainer>
     </Page>
   );
