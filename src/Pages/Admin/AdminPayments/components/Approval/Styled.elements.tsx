@@ -1,5 +1,5 @@
-import styled from "styled-components/macro";
-import { Button } from "../../../../../components/Button/Button";
+import styled from 'styled-components/macro';
+import { Button } from '../../../../../components/Button/Button';
 
 export const PaymentsTable = styled.div`
   padding: 30px;
@@ -87,6 +87,55 @@ export const TableHeadItem = styled.li`
       max-width: 30px;
     }
   }
+`;
+export const BurgerButton = styled(TableHeadItem)`
+  display: flex;
+  justify-content: center;
+`;
+
+export const BurgerImg = styled.img`
+  cursor: pointer;
+`;
+
+export const SortingWindow = styled.div<{ open: boolean }>`
+  position: absolute;
+  right: 30px;
+  top: 64px;
+  width: 280px;
+  background: #fff;
+  border: 1px solid rgba(86, 101, 127, 0.3);
+  border-radius: 0px 0px 4px 4px;
+  display: ${(props) => (props.open ? 'flex' : 'none')};
+  flex-direction: column;
+  gap: 15px;
+  padding: 30px 20px;
+  z-index: 10;
+`;
+
+export const WindowTitle = styled.h3`
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 21px;
+  letter-spacing: 0.1px;
+  color: #515172;
+`;
+
+export const WindowBody = styled.ul`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
+export const SortingItem = styled.li`
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 16px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.1px;
+  color: #515172;
+  cursor: pointer;
 `;
 
 export const TableHeadItemPaid = styled(TableHeadItem)`
