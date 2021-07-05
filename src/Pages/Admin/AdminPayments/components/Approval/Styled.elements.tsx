@@ -126,9 +126,9 @@ export const WindowBody = styled.ul`
   gap: 12px;
 `;
 
-export const SortingItem = styled.li`
+export const SortingItem = styled.li<{ active: boolean }>`
   font-style: normal;
-  font-weight: normal;
+  /* font-weight: normal; */
   font-size: 14px;
   line-height: 16px;
   display: flex;
@@ -136,6 +136,7 @@ export const SortingItem = styled.li`
   letter-spacing: 0.1px;
   color: #515172;
   cursor: pointer;
+  font-weight: ${(props) => (props.active ? '700' : 'normal')};
 `;
 
 export const TableHeadItemPaid = styled(TableHeadItem)`

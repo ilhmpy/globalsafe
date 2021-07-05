@@ -19,7 +19,7 @@ import { CollectionListDeposits } from '../../../../../types/deposits';
 import { Notify } from '../../../../../types/notify';
 import {
   PaymentsCollection,
-  RootPayments
+  RootPayments,
 } from '../../../../../types/payments';
 import { DepositList } from '../../../AdminPay/DepositList';
 import { Pagination } from '../../../Pagination';
@@ -32,7 +32,7 @@ import {
   SelectContainer,
   SelectContainerInnerPaid,
   SelectWrapTwo,
-  ShowHide
+  ShowHide,
 } from '../../../Styled.elements';
 import * as Styled from './Styled.elements';
 
@@ -399,26 +399,23 @@ export const Approval: FC<Props> = ({
     closeDate: Values;
     descendingAmount: Values;
   };
-  const [listForSorting, setListForSorting] = useState<any>({
-    userHigh: { text: 'Пользователь: От А до Я', active: false },
-    userLow: { text: 'Пользователь: От Я до А', active: false },
-    nameHigh: { text: 'Название: От А до Я', active: false },
-    nameLow: { text: 'Название: От Я до А', active: false },
-    openDate: { text: 'По дате открытия', active: false },
-    closeDate: { text: 'По дате закрытия', active: false },
-    descendingAmount: { text: 'По убыванию суммы вклада', active: false },
-  });
-
-  Object.keys(listForSorting).map((key) => console.log(typeof key));
+  const [listForSorting, setListForSorting] = useState<any>([
+    { text: 'Пользователь: От А до Я', active: false },
+    { text: 'Пользователь: От Я до А', active: false },
+    { text: 'Название: От А до Я', active: false },
+    { text: 'Название: От Я до А', active: false },
+    { text: 'По дате открытия', active: false },
+    { text: 'По дате закрытия', active: false },
+    { text: 'По убыванию суммы вклада', active: false },
+  ]);
 
   const getActiveSort = (index: number) => {
     setListForSorting((prev: any) => {
-      Object.keys(prev).map((key, i) => {
+      return prev.map((one: any, i: number) => {
         return {
-          ...key,
-          prev[key].active: true
-        }
-        // index === i ? 
+          ...one,
+          active: index === i ? true : false,
+        };
       });
     });
   };
@@ -556,15 +553,14 @@ export const Approval: FC<Props> = ({
                   По убыванию суммы вклада
                 </Styled.SortingItem> */}
 
-                {Object.keys(listForSorting).map(
-                  (key: string, index: number) => (
-                    <Styled.SortingItem
-                      key={index}
-                      onClick={() => getActiveSort(index)}>
-                      {listForSorting[key].text}
-                    </Styled.SortingItem>
-                  ),
-                )}
+                {listForSorting.map((obj: any, index: number) => (
+                  <Styled.SortingItem
+                    active={listForSorting[index].active}
+                    key={index}
+                    onClick={() => getActiveSort(index)}>
+                    {obj.text}
+                  </Styled.SortingItem>
+                ))}
               </Styled.WindowBody>
             </Styled.SortingWindow>
           </Styled.TableHead>
