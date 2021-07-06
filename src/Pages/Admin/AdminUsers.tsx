@@ -244,6 +244,7 @@ export const AdminUsers = () => {
           openDate.to ? openDate.to : null,
           (currentPage - 1) * pageLength,
           pageLength,
+          []
         )
         .then((res) => {
           console.log("GetUsers", res);
@@ -272,6 +273,7 @@ export const AdminUsers = () => {
           openDate.to ? openDate.to : null,
           (currentPage - 1) * pageLength,
           pageLength,
+          []
         )
         .then((res) => {
           setListDeposits([]);

@@ -60,6 +60,7 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
           openDate.to ? openDate.to : null,
           (currentPage - 1) * pageLength,
           pageLength,
+          []
         )
         .then((res) => {
           setList(res.collection);
@@ -88,6 +89,7 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
           openDate.to ? openDate.to : null,
           (currentPage - 1) * pageLength,
           pageLength,
+          []
         )
         .then((res) => {
           setList(res.collection);

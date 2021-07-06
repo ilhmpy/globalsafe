@@ -117,6 +117,7 @@ export const AdminDeposit = () => {
           null,
           (currentPage - 1) * pageLength,
           pageLength,
+          []
         )
         .then((res) => {
           if (res.collection.length) {
@@ -156,6 +157,7 @@ export const AdminDeposit = () => {
           null,
           (currentPage - 1) * pageLength,
           pageLength,
+          []
         )
         .then((res) => {
           setTotalList(res.totalRecords);

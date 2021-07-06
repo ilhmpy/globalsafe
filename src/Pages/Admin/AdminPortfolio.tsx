@@ -171,6 +171,7 @@ export const AdminPortfolio = () => {
           3,
           (currentPageGCWD - 1) * pageLengthGCWD,
           pageLengthGCWD,
+          []
         )
         .then((res) => {
           setLoading(false);
@@ -192,6 +193,7 @@ export const AdminPortfolio = () => {
           2,
           (currentPageMGCWD - 1) * pageLengthMGCWD,
           pageLengthMGCWD,
+          []
         )
         .then((res) => {
           setLoading(false);
@@ -213,6 +215,7 @@ export const AdminPortfolio = () => {
           4,
           (currentPageDIAMOND - 1) * pageLengthDIAMOND,
           pageLengthDIAMOND,
+          []
         )
         .then((res) => {
           setLoading(false);

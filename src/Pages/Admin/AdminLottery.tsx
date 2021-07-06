@@ -89,7 +89,8 @@ export const AdminLottery = () => {
           openDate.to ? openDate.to : null,
           checkList.length ? checkList.map((i: any) => i.id) : null,
           (currentPage - 1) * pageLength,
-          pageLength
+          pageLength,
+          []
         )
         .then((res) => {
           setTotalLottery(res.totalRecords);

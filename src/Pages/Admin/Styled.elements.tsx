@@ -1,10 +1,10 @@
-import { Link } from "react-router-dom";
-import styled from "styled-components/macro";
-import Vector from "../../assets/img/Vector.png";
-import { ReactComponent as Left } from "../../assets/svg/left.svg";
-import { Button } from "../../components/Button/Button";
-import { UpTitle } from "../../components/UI/UpTitle";
-import { Card } from "../../globalStyles";
+import { Link } from 'react-router-dom';
+import styled from 'styled-components/macro';
+import Vector from '../../assets/img/Vector.png';
+import { ReactComponent as Left } from '../../assets/svg/left.svg';
+import { Button } from '../../components/Button/Button';
+import { UpTitle } from '../../components/UI/UpTitle';
+import { Card } from '../../globalStyles';
 
 export const CountText = styled.div`
   font-weight: normal;
@@ -28,7 +28,7 @@ export const Page = styled.div<{ dn?: boolean }>`
     min-width: 70px;
   }
   @media (max-width: 576px) {
-    display: ${(props) => (props.dn ? "none" : "initial")};
+    display: ${(props) => (props.dn ? 'none' : 'initial')};
   }
 `;
 
@@ -259,9 +259,9 @@ type ContentProps = {
 export const Content = styled.div<ContentProps>`
   flex-grow: 1;
   transition: 0.3s;
-  margin: ${(props) => (props.mtbig ? "60px auto 40px" : "30px auto 40px")};
+  margin: ${(props) => (props.mtbig ? '60px auto 40px' : '30px auto 40px')};
   padding: 0 35px 0;
-  padding-left: ${(props) => (props.widthCont ? "278px" : "91px")};
+  padding-left: ${(props) => (props.widthCont ? '278px' : '91px')};
   @media (max-width: 1200px) {
     padding-left: 91px;
   }
@@ -358,7 +358,7 @@ export const PayItemHead = styled.div<{ mb?: boolean }>`
   display: flex;
   text-align: right;
   justify-content: center;
-  margin: 0 auto ${(props) => (props.mb ? "12px" : "0")};
+  margin: 0 auto ${(props) => (props.mb ? '12px' : '0')};
   &:last-child() {
     margin-bottom: 12px;
   }
@@ -371,7 +371,7 @@ export const PayItemHead = styled.div<{ mb?: boolean }>`
     }
   } */
   @media (max-width: 768px) {
-    margin: 0 auto ${(props) => (props.mb ? "8px" : "0")};
+    margin: 0 auto ${(props) => (props.mb ? '8px' : '0')};
   }
 `;
 
@@ -456,12 +456,12 @@ export const SelectContainerLottery = styled(SelectContainer)`
 `;
 
 export const SelectWrap = styled.div<{ input?: boolean }>`
-  max-width: ${(props) => (props.input ? "153px" : "280px")};
+  max-width: ${(props) => (props.input ? '153px' : '280px')};
   /* width: 100%; */
   margin: 20px 20px 20px 0;
   position: relative;
   @media (max-width: 992px) {
-    max-width: ${(props) => (props.input ? "153px" : "45%")};
+    max-width: ${(props) => (props.input ? '153px' : '45%')};
   }
   @media (max-width: 768px) {
     max-width: 100%;
@@ -473,12 +473,12 @@ export const SelectWrap = styled.div<{ input?: boolean }>`
 `;
 
 export const SelectWrapTwo = styled.div<{ mWidth?: string; mNone?: boolean }>`
-  width: ${(props) => (props.mWidth ? props.mWidth : "280px")};
+  width: ${(props) => (props.mWidth ? props.mWidth : '280px')};
   margin: 20px 20px 20px 0;
-  margin-right: ${(props) => (props.mNone ? "0" : "20px")};
+  margin-right: ${(props) => (props.mNone ? '0' : '20px')};
   position: relative;
   @media (max-width: 992px) {
-    max-width: ${(props) => (props.mWidth ? props.mWidth : "45%")};
+    max-width: ${(props) => (props.mWidth ? props.mWidth : '45%')};
   }
   @media (max-width: 768px) {
     width: 100%;
@@ -656,8 +656,8 @@ export const LotteryTable = styled.div`
 `;
 
 export const InputLottery = styled.div<{ mrn?: boolean }>`
-  width: ${(props) => (props.mrn ? "165px" : "185px")};
-  margin-right: ${(props) => (props.mrn ? "0" : "20px")};
+  width: ${(props) => (props.mrn ? '165px' : '185px')};
+  margin-right: ${(props) => (props.mrn ? '0' : '20px')};
   margin-bottom: 15px;
   @media (max-width: 834px) {
     width: 46%;
@@ -667,4 +667,62 @@ export const InputLottery = styled.div<{ mrn?: boolean }>`
     margin-right: 0px;
     margin-bottom: 20px;
   }
+`;
+
+
+export const SortingWindow = styled.div<{ open: boolean }>`
+  position: absolute;
+  right: 30px;
+  top: 64px;
+  width: 280px;
+  background: ${(props) => props.theme.sortingWindow.backgroundColor};
+  border: 1px solid rgba(86, 101, 127, 0.3);
+  border-radius: 0px 0px 4px 4px;
+  display: ${(props) => (props.open ? 'flex' : 'none')};
+  flex-direction: column;
+  gap: 15px;
+  padding: 30px 20px;
+  z-index: 10;
+`;
+
+export const BurgerButton = styled.li`
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 14px;
+  letter-spacing: 0.1px;
+  color: ${(props) => props.theme.thHead};
+  width: 100%;
+  display: flex;
+  justify-content: center;
+`;
+
+export const BurgerImg = styled.img`
+  cursor: pointer;
+`;
+
+export const WindowTitle = styled.h3`
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 21px;
+  letter-spacing: 0.1px;
+  color: ${(props) => props.theme.sortingWindow.fontColor};
+`;
+
+export const WindowBody = styled.ul`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
+export const SortingItem = styled.li<{ active: boolean }>`
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 16px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.1px;
+  color: ${(props) => props.theme.sortingWindow.fontColor};
+  cursor: pointer;
+  font-weight: ${(props) => (props.active ? '600' : 'normal')};
 `;

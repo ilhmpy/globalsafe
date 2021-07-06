@@ -24,6 +24,8 @@ import {
 import { DepositList } from '../../../AdminPay/DepositList';
 import { Pagination } from '../../../Pagination';
 import {
+  BurgerButton,
+  BurgerImg,
   FilterBlock,
   FilterHeader,
   FilterName,
@@ -33,6 +35,10 @@ import {
   SelectContainerInnerPaid,
   SelectWrapTwo,
   ShowHide,
+  SortingItem,
+  SortingWindow,
+  WindowBody,
+  WindowTitle,
 } from '../../../Styled.elements';
 import * as Styled from './Styled.elements';
 
@@ -82,89 +88,69 @@ export const Approval: FC<Props> = ({
   const searchSafeIDApproval = idProgramApproval.map((i) => i.safeId);
 
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
-  const [sorting, setSorting] = useState([
-    // {
-    //   ConditionWeight: 1,
-    //   OrderType: 0,
-    //   FieldName: 'userName',
-    // },
-    // {
-    //   ConditionWeight: 1,
-    //   OrderType: 1,
-    //   FieldName: 'deposit.name',
-    // },
-    // {
-    // ConditionWeight: 1,
-    // OrderType: 0,
-    // FieldName: 'payAmount',
-    // },
-    // {
-    //   ConditionWeight: 1,
-    //   OrderType: 1,
-    //   FieldName: 'baseAmount',
-    // },
-    // {
-    //   ConditionWeight: 1,
-    //   OrderType: 1,
-    //   FieldName: 'paymentDate',
-    // },
-    // {
-    //   ConditionWeight: 1,
-    //   OrderType: 1,
-    //   FieldName: 'deposit.paymentRatio',
-    // },
-    // {
-    //   ConditionWeight: 1,
-    //   OrderType: 1,
-    //   FieldName: 'creationDate',
-    // },
-    // {
-    //   ConditionWeight: 1,
-    //   OrderType: 1,
-    //   FieldName: 'baseAmountView',
-    // },
-    // {
-    //   ConditionWeight: 1,
-    //   OrderType: 1,
-    //   FieldName: 'payAmount',
-    // },
-  ]);
-
-  const resorting = (name: string) => {
-    const one = sorting.find((item: any) => item.FieldName === name);
-
-    if (one) {
-      setSorting((prev: any) => {
-        return prev?.map((item: any) => {
-          if (item.FieldName === name) {
-            return {
-              ...item,
-              ConditionWeight: 2,
-              OrderType: item.OrderType === 1 ? 2 : 1,
-            };
-          } else {
-            return {
-              ...item,
-              ConditionWeight: 1,
-            };
-          }
-        });
-      });
-    } else {
-      setSorting((prev: any) => {
-        const newPrev = prev?.map((item: any) => ({
-          ...item,
-          ConditionWeight: 1,
-        }));
-        newPrev.push({
-          ConditionWeight: 2,
-          OrderType: 1,
-          FieldName: name,
-        });
-        return newPrev;
-      });
-    }
+  type SortingType = {
+    ConditionWeight: number;
+    OrderType: number;
+    FieldName: string;
   };
+  const [sorting, setSorting] = useState<SortingType[]>([]);
+
+  type Values = {
+    text: string;
+    active: boolean;
+    OrderType: number;
+    FieldName: string;
+  };
+  const [listForSorting, setListForSorting] = useState<Values[]>([
+    {
+      text: 'Пользователь: От А до Я',
+      active: false,
+      OrderType: 1,
+      FieldName: 'userId',
+    },
+    {
+      text: 'Пользователь: От Я до А',
+      active: false,
+      OrderType: 2,
+      FieldName: 'userId',
+    },
+    {
+      text: 'Название: От А до Я',
+      active: false,
+      OrderType: 2,
+      FieldName: 'DepositId',
+    },
+    {
+      text: 'Название: От Я до А',
+      active: false,
+      OrderType: 1,
+      FieldName: 'DepositId',
+    },
+    {
+      text: 'По убыванию даты открытия',
+      active: false,
+      OrderType: 2,
+      FieldName: 'creationDate',
+    },
+    {
+      text: 'По возрастанию даты открытия',
+      active: false,
+      OrderType: 1,
+      FieldName: 'creationDate',
+    },
+    {
+      text: 'По убыванию суммы вклада',
+      active: false,
+      OrderType: 2,
+      FieldName: 'baseAmount',
+    },
+    {
+      text: 'По возрастанию суммы вклада',
+      active: false,
+      OrderType: 1,
+      FieldName: 'baseAmount',
+    },
+  ]);
 
   const deposites = () => {
     if (hubConnection) {
@@ -183,7 +169,7 @@ export const Approval: FC<Props> = ({
           null,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting,
+          [],
         )
         .then((res) => {
           setTotalDeposits(res.totalRecords);
@@ -389,33 +375,34 @@ export const Approval: FC<Props> = ({
     setCheckList([]);
   };
 
-  type Values = { text: string; active: boolean };
-  type ListForSortingType = {
-    userHigh: Values;
-    userLow: Values;
-    nameHigh: Values;
-    nameLow: Values;
-    openDate: Values;
-    closeDate: Values;
-    descendingAmount: Values;
-  };
-  const [listForSorting, setListForSorting] = useState<any>([
-    { text: 'Пользователь: От А до Я', active: false },
-    { text: 'Пользователь: От Я до А', active: false },
-    { text: 'Название: От А до Я', active: false },
-    { text: 'Название: От Я до А', active: false },
-    { text: 'По дате открытия', active: false },
-    { text: 'По дате закрытия', active: false },
-    { text: 'По убыванию суммы вклада', active: false },
-  ]);
-
   const getActiveSort = (index: number) => {
-    setListForSorting((prev: any) => {
-      return prev.map((one: any, i: number) => {
-        return {
-          ...one,
-          active: index === i ? true : false,
-        };
+    setSorting([
+      {
+        ConditionWeight: 1,
+        OrderType: listForSorting[index].OrderType,
+        FieldName: listForSorting[index].FieldName,
+      },
+    ]);
+
+    setListForSorting((prev) => {
+      return prev.map((one, i) => {
+        if (one.active === true && index === i) {
+          setSorting([]);
+          return {
+            ...one,
+            active: false,
+          };
+        } else if (index === i) {
+          return {
+            ...one,
+            active: true,
+          };
+        } else {
+          return {
+            ...one,
+            active: false,
+          };
+        }
       });
     });
   };
@@ -509,7 +496,7 @@ export const Approval: FC<Props> = ({
         <Styled.PaymentsTable>
           <Styled.TableHead>
             <Styled.TableHeadItem>№</Styled.TableHeadItem>
-            <Styled.TableHeadItem onClick={() => resorting('userName')}>
+            <Styled.TableHeadItem>
               {t('adminPay.table.user')}
             </Styled.TableHeadItem>
             <Styled.TableHeadItem>
@@ -518,51 +505,41 @@ export const Approval: FC<Props> = ({
             <Styled.TableHeadItem>
               {t('adminPay.table.procent')}
             </Styled.TableHeadItem>
-            <Styled.TableHeadItem onClick={() => resorting('paymentDate')}>
+            <Styled.TableHeadItem>
               {t('adminPay.table.datePay')}
             </Styled.TableHeadItem>
             <Styled.TableHeadItem>
               {t('adminPay.table.profit')}
             </Styled.TableHeadItem>
-            <Styled.TableHeadItem onClick={() => resorting('creationDate')}>
+            <Styled.TableHeadItem>
               {t('adminPay.table.openDate')}
             </Styled.TableHeadItem>
-            <Styled.TableHeadItem onClick={() => resorting('BaseAmountпо')}>
+            <Styled.TableHeadItem>
               {t('adminPay.table.contribution')}
             </Styled.TableHeadItem>
-            <Styled.TableHeadItem onClick={() => resorting('payAmount')}>
+            <Styled.TableHeadItem>
               {t('adminPay.table.payments')}
             </Styled.TableHeadItem>
-            <Styled.BurgerButton>
-              <Styled.BurgerImg
+            <BurgerButton>
+              <BurgerImg
                 src={burgerGroup}
                 alt="burger"
                 onClick={() => setSortingWindowOpen((prev) => !prev)}
               />
-            </Styled.BurgerButton>
-            <Styled.SortingWindow open={sortingWindowOpen}>
-              <Styled.WindowTitle>Сортировка</Styled.WindowTitle>
-              <Styled.WindowBody>
-                {/* <Styled.SortingItem>Пользователь: От А до Я</Styled.SortingItem>
-                <Styled.SortingItem>Пользователь: От Я до А</Styled.SortingItem>
-                <Styled.SortingItem>Название: От А до Я</Styled.SortingItem>
-                <Styled.SortingItem>Название: От Я до А</Styled.SortingItem>
-                <Styled.SortingItem>По дате открытия</Styled.SortingItem>
-                <Styled.SortingItem>По дате закрытия</Styled.SortingItem>
-                <Styled.SortingItem>
-                  По убыванию суммы вклада
-                </Styled.SortingItem> */}
-
-                {listForSorting.map((obj: any, index: number) => (
-                  <Styled.SortingItem
+            </BurgerButton>
+            <SortingWindow open={sortingWindowOpen}>
+              <WindowTitle>Сортировка</WindowTitle>
+              <WindowBody>
+                {listForSorting.map((obj, index) => (
+                  <SortingItem
                     active={listForSorting[index].active}
                     key={index}
                     onClick={() => getActiveSort(index)}>
                     {obj.text}
-                  </Styled.SortingItem>
+                  </SortingItem>
                 ))}
-              </Styled.WindowBody>
-            </Styled.SortingWindow>
+              </WindowBody>
+            </SortingWindow>
           </Styled.TableHead>
           {depositList.length ? (
             <Scrollbars style={{ height: '500px' }}>
