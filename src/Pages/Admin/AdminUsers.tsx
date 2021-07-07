@@ -255,7 +255,7 @@ export const AdminUsers = () => {
         })
         .catch((err: Error) => {
           setLoading(false);
-          console.log(err);
+          console.error(err);
         });
     }
   }, [hubConnection, currentPage, pageLength]);
