@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import GlobalStyle from "./globalStyles";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Authentication, Register } from "./Pages/Auth";
@@ -10,6 +10,21 @@ import { InfoMain } from "./Pages/PrivateArea";
 import { Scrollbars } from "react-custom-scrollbars";
 
 function App() {
+
+  (window as any).OneSignal = (window as any).OneSignal || [];
+  const OneSignal = (window as any).OneSignal;
+
+  useEffect(() => {
+    OneSignal.push(() => {
+      OneSignal.init({
+        appId: "52d9baf3-7bb8-4254-929a-22e6c87e2410",
+        notifyButton: {
+          enable: false,
+        },
+      });
+    });
+  }, []);
+
   return (
     <Router>
       <HubProvider>
