@@ -1,11 +1,10 @@
-import React, { useEffect, useState, FC, useContext } from "react";
-import * as Styled from "./Lottery.elements";
-import { AppContext } from "../../../../context/HubContext";
-import moment from "moment";
-import { useTranslation } from "react-i18next";
-import "moment-duration-format";
-import { RootClock } from "../../../../types/clock";
-import { Button } from "../../../../components/Button/Button";
+import moment from 'moment';
+import 'moment-duration-format';
+import React, { FC, useContext, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { AppContext } from '../../../../context/HubContext';
+import { RootClock } from '../../../../types/clock';
+import * as Styled from './Lottery.elements';
 
 type Props = {
   last?: string;
@@ -16,7 +15,7 @@ type Props = {
 };
 
 export const Timer: FC<Props> = ({
-  last = "2021-05-22T10:35:43.902Z",
+  last = '2021-05-22T10:35:43.902Z',
   icon,
   closeTimer,
   timerHistory,
@@ -28,21 +27,21 @@ export const Timer: FC<Props> = ({
   const hubConnection = appContext.hubConnection;
   const { t } = useTranslation();
 
-  const lang = localStorage.getItem("i18nextLng") || "ru";
-  const languale = lang === "ru" ? 1 : 0;
+  const lang = localStorage.getItem('i18nextLng') || 'ru';
+  const languale = lang === 'ru' ? 1 : 0;
 
   useEffect(() => {
     let cancel = false;
     if (hubConnection && !cancel) {
-      hubConnection.on("DrawCountdown", (data) => {
+      hubConnection.on('DrawCountdown', (data) => {
         setDeadline(data.totalSeconds);
       });
       hubConnection
-        .invoke<RootClock>("GetNextDraw")
+        .invoke<RootClock>('GetNextDraw')
         .then((res) => {
           setClock(res);
           setDeadline(res.totalSeconds);
-          setState("0");
+          setState('0');
         })
         .catch((e) => console.log(e));
     }
@@ -54,9 +53,9 @@ export const Timer: FC<Props> = ({
   const repeat = () => {
     if (hubConnection) {
       hubConnection
-        .invoke<RootClock>("GetNextDraw")
+        .invoke<RootClock>('GetNextDraw')
         .then((res) => {
-          console.log("GetNextDraw repeat", res);
+          console.log('GetNextDraw repeat', res);
           setDeadline(res.totalSeconds);
           setClock(res);
         })
@@ -73,13 +72,16 @@ export const Timer: FC<Props> = ({
     }
 
     let timer = setInterval(() => {
-      let durations = moment.duration(deadline, "seconds");
-      let formatted = `${Math.floor(durations.asDays())} ${t("time.d")} ${Math.floor(durations.asHours())} ${t("time.h")} ${Math.floor(durations.asMinutes())} ${t("time.m")}`;
+      let durations = moment.duration(deadline, 'seconds');
+      let formatted = `${Math.floor(durations.asDays())} ${t(
+        'time.d',
+      )} ${Math.floor(durations.asHours())} ${t('time.h')} ${Math.floor(
+        durations.asMinutes(),
+      )} ${t('time.m')}`;
 
       !cancel && setState(formatted);
       !cancel && setDeadline(deadline - 1);
     }, 1000);
-
 
     return () => {
       clearInterval(timer);
@@ -92,15 +94,15 @@ export const Timer: FC<Props> = ({
       {!timerHistory ? (
         <Styled.TimerContainer>
           {icon && <Styled.CloseIcon onClick={closeTimer} />}
-          <Styled.TimerTitle>{t("timerStart")}</Styled.TimerTitle>
-          <Styled.TimerValue nodata={clock === null || state === "0"}>
+          <Styled.TimerTitle>{t('timerStart')}</Styled.TimerTitle>
+          <Styled.TimerValue nodata={clock === null || state === '0'}>
             {state}
           </Styled.TimerValue>
         </Styled.TimerContainer>
       ) : (
         <Styled.TimerHistoryInner>
-          <Styled.TimerHisroryTitle>{t("newDraw")}</Styled.TimerHisroryTitle>
-          <Styled.TimerHistoryValue nodata={clock === null || state === "0"}>
+          <Styled.TimerHisroryTitle>{t('newDraw')}</Styled.TimerHisroryTitle>
+          <Styled.TimerHistoryValue nodata={clock === null || state === '0'}>
             {state}
           </Styled.TimerHistoryValue>
         </Styled.TimerHistoryInner>
