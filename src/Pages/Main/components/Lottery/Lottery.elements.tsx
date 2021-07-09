@@ -30,10 +30,9 @@ export const TimerContainer = styled.div`
   text-align: center;
   width: 340px;
   @media (max-width: 768px) {
-    margin: 40px 20px;
+    margin: 0px 20px 30px;
     width: auto;
-  padding: 24px 22px;
-
+    padding: 24px 22px;
   }
 `;
 
