@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import 'react-notifications-component/dist/theme.css';
 import styled from 'styled-components/macro';
@@ -2036,7 +2036,7 @@ let fakeData = [
   },
 ];
 
-export const Main = () => {
+export const Main: FC<{ OneSignal: any }> = ({ OneSignal }) => {
   const [clock, setClock] = useState<number | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [showModalCongrats, setShowModalCongrats] = useState(false);
@@ -2052,6 +2052,36 @@ export const Main = () => {
 
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
+
+  type OneSignalId = {
+    id: any;
+  };
+
+  const subscribe = (id: any) => {
+    if (hubConnection) {
+      hubConnection.invoke<OneSignalId>(
+        id
+      ).then((res: any) => console.log(res))
+       .catch((err) => console.log(err));
+    };
+  };
+
+  const unSubscribe = (id: any) => {
+    if (hubConnection) {
+      hubConnection.invoke<OneSignalId>(
+        id
+      ).then((res: any) => console.log(res))
+       .catch((err) => console.log(err));
+    }
+  };
+
+  OneSignal.push(() => {
+    OneSignal.on('subscriptionChange', (permissionChange: any) => {
+        const currentPermission = permissionChange.to;
+        if (currentPermission == "granted") OneSignal.getUserId((userId: any) => subscribe(userId));
+        else OneSignal.getUserId((userId: any) => unSubscribe(userId));
+      });
+   });
 
   useEffect(() => {
     setShowModal(false);
