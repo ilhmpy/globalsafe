@@ -89,7 +89,8 @@ export const Assets = () => {
   };
 
   const toLink = () => {
-    window.open(link);
+    const newWindow = window.open();
+    newWindow && (newWindow.location.href = link);
   };
 
   return (
