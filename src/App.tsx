@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import GlobalStyle from "./globalStyles";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Authentication, Register } from "./Pages/Auth";
@@ -9,6 +9,7 @@ import { ThemesProvider } from "./context/ThemeContext";
 import { InfoMain } from "./Pages/PrivateArea";
 import { Scrollbars } from "react-custom-scrollbars";
 import { Id } from "./types/Id";
+import { AppContext } from './context/HubContext';
 
 function App() {
   const [ token, setToken ] = useState(localStorage.getItem("token"));
@@ -25,6 +26,42 @@ function App() {
 
   OneSignal.registerForPushNotifications();
 
+  const appContext = useContext(AppContext);
+  const hubConnection = appContext.hubConnection;
+
+  interface OneSignalId {
+    name: string;
+    id: string;
+  };
+
+  const subscribe = (id: any) => {
+    if (hubConnection) {
+      hubConnection.invoke<OneSignalId>(
+        "RegisterDevice",
+        id
+      ).then((res: any) => console.log(res))
+       .catch((err) => console.log(err));
+    };
+  };
+
+  const unSubscribe = (id: any) => {
+    if (hubConnection) {
+      hubConnection.invoke<OneSignalId>(
+        "UnregisterDevice",
+        id
+      ).then((res: any) => console.log(res))
+       .catch((err) => console.log(err));
+    }
+  };
+
+  OneSignal.push(() => {
+    OneSignal.on('subscriptionChange', (permissionChange: any) => {
+        const currentPermission = permissionChange.to;
+        if (currentPermission == "granted") OneSignal.getUserId((userId: any) => subscribe(userId));
+        else OneSignal.getUserId((userId: any) => unSubscribe(userId));
+      });
+   });
+
   return (
     <Router>
       <HubProvider>
@@ -34,7 +71,7 @@ function App() {
           <div className="App">
             <GlobalStyle />
             <Switch>
-              <Route path="/" component={Main} OneSignal={OneSignal} exact />
+              <Route path="/" component={Main} push={OneSignal.push} on={OneSignal.on} getUserId={OneSignal.getUserId} exact />
               <Route path="/admin" component={Admin} />
               <Route path="/info" component={InfoMain} />
               <Route path="/login" component={Authentication} />
