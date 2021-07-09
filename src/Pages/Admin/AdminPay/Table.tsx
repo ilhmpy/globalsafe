@@ -46,6 +46,9 @@ export const LotteryTable: FC<{ data: CollectionLottery }> = ({ data }) => {
           <Chips black>{t("lotteryTable.error")}</Chips>
         )}
       </Td>
+      <Td>
+        {''}
+      </Td>
     </Tr>
   );
 };
@@ -54,6 +57,9 @@ const Tr = styled.tr`
   background-color: transparent;
   border-bottom: 1px solid rgba(66, 139, 202, 0.2);
   padding: 15px;
+  display:grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 22px;
+  width: 100%;
   @media (max-width: 600px) {
     border-bottom: 3px solid rgba(66, 139, 202, 0.2);
     display: block;
@@ -69,6 +75,7 @@ const Td = styled.td`
   line-height: 16px;
   letter-spacing: 0.1px;
   color: ${(props) => props.theme.text2};
+  
   @media (max-width: 600px) {
     display: block;
     text-align: left;

@@ -106,13 +106,13 @@ export const Approval: FC<Props> = ({
       text: 'Пользователь: От А до Я',
       active: false,
       OrderType: 1,
-      FieldName: 'userId',
+      FieldName: 'userName',
     },
     {
       text: 'Пользователь: От Я до А',
       active: false,
       OrderType: 2,
-      FieldName: 'userId',
+      FieldName: 'userName',
     },
     {
       text: 'Название: От А до Я',
@@ -291,6 +291,7 @@ export const Approval: FC<Props> = ({
           null,
           (currentPage - 1) * pageLength,
           pageLength,
+          sorting,
         )
         .then((res) => {
           setDepositList([]);

@@ -107,6 +107,8 @@ export const Tr = styled.tr`
   background-color: transparent;
   border-bottom: 1px solid rgba(66, 139, 202, 0.2);
   padding: 15px;
+  display:grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 22px;
   @media (max-width: 600px) {
     border-bottom: 3px solid rgba(66, 139, 202, 0.2);
     display: block;
@@ -705,6 +707,7 @@ export const WindowTitle = styled.h3`
   font-size: 18px;
   line-height: 21px;
   letter-spacing: 0.1px;
+  text-align: start;
   color: ${(props) => props.theme.sortingWindow.fontColor};
 `;
 

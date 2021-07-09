@@ -3,6 +3,8 @@ import React, { FC, useContext, useEffect, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
+import styled from 'styled-components';
+import burgerGroup from '../../../../../assets/img/burgerGroup.png';
 import { Button } from '../../../../../components/Button/Button';
 import { Select } from '../../../../../components/Select/Select2';
 import { TestInputAnalitic } from '../../../../../components/UI/DayPicker';
@@ -18,6 +20,8 @@ import { CollectionListDeposits } from '../../../../../types/deposits';
 import { ModalAnalitic } from '../../../AdminPay/Payments';
 import { Pagination } from '../../../Pagination';
 import {
+  BurgerButton,
+  BurgerImg,
   FilterBlock,
   FilterHeader,
   FilterName,
@@ -26,6 +30,10 @@ import {
   SelectContainerInnerPaid,
   SelectWrap,
   ShowHide,
+  SortingItem,
+  SortingWindow,
+  WindowBody,
+  WindowTitle,
 } from '../../../Styled.elements';
 import * as Styled from './Styled.elements';
 
@@ -49,6 +57,71 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
 
+  const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
+  type SortingType = {
+    ConditionWeight: number;
+    OrderType: number;
+    FieldName: string;
+  };
+  const [sorting, setSorting] = useState<SortingType[]>([]);
+
+  type Values = {
+    text: string;
+    active: boolean;
+    OrderType: number;
+    FieldName: string;
+  };
+  const [listForSorting, setListForSorting] = useState<Values[]>([
+    {
+      text: 'Пользователь: От А до Я',
+      active: false,
+      OrderType: 1,
+      FieldName: 'userName',
+    },
+    {
+      text: 'Пользователь: От Я до А',
+      active: false,
+      OrderType: 2,
+      FieldName: 'userName',
+    },
+    {
+      text: 'Название: От А до Я',
+      active: false,
+      OrderType: 2,
+      FieldName: 'deposit.name',
+    },
+    {
+      text: 'Название: От Я до А',
+      active: false,
+      OrderType: 1,
+      FieldName: 'deposit.name',
+    },
+    {
+      text: 'По убыванию суммы депозита',
+      active: false,
+      OrderType: 2,
+      FieldName: 'amountView',
+    },
+    {
+      text: 'По возрастанию суммы депозита',
+      active: false,
+      OrderType: 1,
+      FieldName: 'amountView',
+    },
+    {
+      text: 'По убыванию даты след.  выплаты',
+      active: false,
+      OrderType: 2,
+      FieldName: 'paymentDate',
+    },
+    {
+      text: 'По возрастанию даты след.  выплаты',
+      active: false,
+      OrderType: 1,
+      FieldName: 'paymentDate',
+    },
+  ]);
+
   useEffect(() => {
     if (hubConnection) {
       setLoading(true);
@@ -60,7 +133,7 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
           openDate.to ? openDate.to : null,
           (currentPage - 1) * pageLength,
           pageLength,
-          []
+          sorting,
         )
         .then((res) => {
           setList(res.collection);
@@ -72,7 +145,7 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
           console.log(e);
         });
     }
-  }, [currentPage, hubConnection, pageLength]);
+  }, [currentPage, hubConnection, pageLength, sorting]);
 
   const submit = () => {
     console.log(currentPage);
@@ -89,7 +162,7 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
           openDate.to ? openDate.to : null,
           (currentPage - 1) * pageLength,
           pageLength,
-          []
+          sorting,
         )
         .then((res) => {
           setList(res.collection);
@@ -111,6 +184,38 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
 
   const onClose = () => {
     setOpen(null);
+  };
+
+  const getActiveSort = (index: number) => {
+    setSorting([
+      {
+        ConditionWeight: 1,
+        OrderType: listForSorting[index].OrderType,
+        FieldName: listForSorting[index].FieldName,
+      },
+    ]);
+
+    setListForSorting((prev) => {
+      return prev.map((one, i) => {
+        if (one.active === true && index === i) {
+          setSorting([]);
+          return {
+            ...one,
+            active: false,
+          };
+        } else if (index === i) {
+          return {
+            ...one,
+            active: true,
+          };
+        } else {
+          return {
+            ...one,
+            active: false,
+          };
+        }
+      });
+    });
   };
 
   return (
@@ -174,8 +279,28 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
             <Styled.TableHeadItemPaid>
               {t('adminPay.analitics.sum')}
             </Styled.TableHeadItemPaid>
+
             <Styled.TableHeadItemPaid>
-              {/* <Filter /> */}
+              <BurgerButton>
+                <BurgerImg
+                  src={burgerGroup}
+                  alt="burger"
+                  onClick={() => setSortingWindowOpen((prev) => !prev)}
+                />
+              </BurgerButton>
+              <Window open={sortingWindowOpen}>
+                <WindowTitle>Сортировка</WindowTitle>
+                <WindowBody>
+                  {listForSorting.map((obj, index) => (
+                    <SortingItem
+                      active={listForSorting[index].active}
+                      key={index}
+                      onClick={() => getActiveSort(index)}>
+                      {obj.text}
+                    </SortingItem>
+                  ))}
+                </WindowBody>
+              </Window>
             </Styled.TableHeadItemPaid>
           </Styled.TableHead>
           {list.length ? (
@@ -221,3 +346,8 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
     </div>
   );
 };
+
+const Window = styled(SortingWindow)`
+  right: 66px;
+  top: 683px;
+`;

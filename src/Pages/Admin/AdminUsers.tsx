@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 import styled, { css } from 'styled-components/macro';
+import burgerGroup from '../../assets/img/burgerGroup.png';
 import { ReactComponent as Exit } from '../../assets/svg/exit.svg';
 import { Button } from '../../components/Button/Button';
 import { TestInput } from '../../components/UI/DayPicker';
@@ -26,6 +27,14 @@ import { CollectionUsers, RootUsers } from '../../types/users';
 import { ModalUsers } from './AdminPay/Payments';
 import { Pagination } from './Pagination';
 import * as Styled from './Styled.elements';
+import {
+  BurgerButton,
+  BurgerImg,
+  SortingItem,
+  SortingWindow,
+  WindowBody,
+  WindowTitle,
+} from './Styled.elements';
 
 type PropsTable = {
   lockAccount: (id: string) => void;
@@ -233,6 +242,71 @@ export const AdminUsers = () => {
   const [pageLength, setPageLength] = useState<number>(10);
   const [currentPage, setCurrentPage] = useState<number>(1);
 
+  const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
+  type SortingType = {
+    ConditionWeight: number;
+    OrderType: number;
+    FieldName: string;
+  };
+  const [sorting, setSorting] = useState<SortingType[]>([]);
+
+  type Values = {
+    text: string;
+    active: boolean;
+    OrderType: number;
+    FieldName: string;
+  };
+  const [listForSorting, setListForSorting] = useState<Values[]>([
+    {
+      text: 'Пользователь: От А до Я',
+      active: false,
+      OrderType: 1,
+      FieldName: 'name',
+    },
+    {
+      text: 'Пользователь: От Я до А',
+      active: false,
+      OrderType: 2,
+      FieldName: 'name',
+    },
+    {
+      text: 'По убыванию баланса',
+      active: false,
+      OrderType: 2,
+      FieldName: 'balances',
+    },
+    {
+      text: 'По возрастанию баланса',
+      active: false,
+      OrderType: 1,
+      FieldName: 'balances',
+    },
+    {
+      text: 'По убыванию даты создания',
+      active: false,
+      OrderType: 2,
+      FieldName: 'creationDate',
+    },
+    {
+      text: 'По возрастанию даты создания',
+      active: false,
+      OrderType: 1,
+      FieldName: 'creationDate',
+    },
+    // {
+    //   text: 'По убыванию суммы вклада',
+    //   active: false,
+    //   OrderType: 2,
+    //   FieldName: 'baseAmount',
+    // },
+    // {
+    //   text: 'По возрастанию суммы вклада',
+    //   active: false,
+    //   OrderType: 1,
+    //   FieldName: 'baseAmount',
+    // },
+  ]);
+
   useEffect(() => {
     if (hubConnection) {
       setLoading(true);
@@ -244,10 +318,10 @@ export const AdminUsers = () => {
           openDate.to ? openDate.to : null,
           (currentPage - 1) * pageLength,
           pageLength,
-          []
+          sorting,
         )
         .then((res) => {
-          console.log("GetUsers", res);
+          console.log('GetUsers', res);
           setLoading(false);
           setNum(20);
           seTotalUsers(res.totalRecords);
@@ -259,7 +333,7 @@ export const AdminUsers = () => {
           console.log(err);
         });
     }
-  }, [hubConnection, currentPage, pageLength]);
+  }, [hubConnection, currentPage, pageLength, sorting]);
 
   const submit = () => {
     if (hubConnection) {
@@ -273,7 +347,7 @@ export const AdminUsers = () => {
           openDate.to ? openDate.to : null,
           (currentPage - 1) * pageLength,
           pageLength,
-          []
+          sorting,
         )
         .then((res) => {
           setListDeposits([]);
@@ -336,6 +410,38 @@ export const AdminUsers = () => {
     }
   };
 
+  const getActiveSort = (index: number) => {
+    setSorting([
+      {
+        ConditionWeight: 1,
+        OrderType: listForSorting[index].OrderType,
+        FieldName: listForSorting[index].FieldName,
+      },
+    ]);
+
+    setListForSorting((prev) => {
+      return prev.map((one, i) => {
+        if (one.active === true && index === i) {
+          setSorting([]);
+          return {
+            ...one,
+            active: false,
+          };
+        } else if (index === i) {
+          return {
+            ...one,
+            active: true,
+          };
+        } else {
+          return {
+            ...one,
+            active: false,
+          };
+        }
+      });
+    });
+  };
+
   return (
     <>
       <Styled.HeadBlock>
@@ -388,8 +494,29 @@ export const AdminUsers = () => {
             <TableHeadItem>{t('adminUsers.table.role')}</TableHeadItem>
             <TableHeadItem>{t('adminUsers.table.dataCreate')}</TableHeadItem>
             <TableHeadItem>{t('adminUsers.table.lang')}</TableHeadItem>
-            <TableHeadItem>{t("adminUsers.table.depositSum")}</TableHeadItem>
-            <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
+            {/* <TableHeadItem>{t('adminUsers.table.depositSum')}</TableHeadItem> */}
+            <TableHeadItem>
+              <BurgerButton>
+                <BurgerImg
+                  src={burgerGroup}
+                  alt="burger"
+                  onClick={() => setSortingWindowOpen((prev) => !prev)}
+                />
+              </BurgerButton>
+              <Window open={sortingWindowOpen}>
+                <WindowTitle>Сортировка</WindowTitle>
+                <WindowBody>
+                  {listForSorting.map((obj, index) => (
+                    <SortingItem
+                      active={listForSorting[index].active}
+                      key={index}
+                      onClick={() => getActiveSort(index)}>
+                      {obj.text}
+                    </SortingItem>
+                  ))}
+                </WindowBody>
+              </Window>
+            </TableHeadItem>
           </TableHead>
           {listDeposits.length ? (
             <Scrollbars style={{ height: '500px' }}>
@@ -420,6 +547,11 @@ export const AdminUsers = () => {
     </>
   );
 };
+
+const Window = styled(SortingWindow)`
+  right: 64px;
+  top: 226px;
+`;
 
 const InputsWrapItem = styled.div`
   margin-right: 10px;
@@ -514,6 +646,13 @@ const TableHeadItem = styled.li`
     }
   }
   &:nth-child(6) {
+    max-width: 130px;
+    text-align: right;
+    @media (max-width: 992px) {
+      max-width: 40px;
+    }
+  }
+  &:nth-child(7) {
     max-width: 130px;
     text-align: right;
     @media (max-width: 992px) {

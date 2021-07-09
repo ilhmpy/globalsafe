@@ -108,27 +108,27 @@ export const AdminPay = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<ListDeposits>('GetAllPublicDeposits', null, false, 0, 100)
+        .invoke<ListDeposits>('GetAllPublicDeposits', null, false, 0, 100, [])
         .then((res) => {
           setListDeposits(res.collection);
         })
         .catch((err: Error) => console.log(err));
     }
   }, [hubConnection]);
-  const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
   type SortingType = {
     ConditionWeight: number;
     OrderType: number;
     FieldName: string;
   };
-  const [sorting, setSorting] = useState<SortingType[]>([]);
-
   type Values = {
     text: string;
     active: boolean;
     OrderType: number;
     FieldName: string;
   };
+  const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
+  const [sorting, setSorting] = useState<SortingType[]>([]);
+
   const [listForSorting, setListForSorting] = useState<Values[]>([
     {
       text: 'Пользователь: От А до Я',
@@ -141,6 +141,60 @@ export const AdminPay = () => {
       active: false,
       OrderType: 2,
       FieldName: 'userId',
+    },
+    {
+      text: 'Название: От А до Я',
+      active: false,
+      OrderType: 2,
+      FieldName: 'DepositId',
+    },
+    {
+      text: 'Название: От Я до А',
+      active: false,
+      OrderType: 1,
+      FieldName: 'DepositId',
+    },
+    {
+      text: 'По убыванию даты выплаты',
+      active: false,
+      OrderType: 2,
+      FieldName: 'creationDate',
+    },
+    {
+      text: 'По возрастанию даты выплаты',
+      active: false,
+      OrderType: 1,
+      FieldName: 'creationDate',
+    },
+    {
+      text: 'По убыванию суммы вклада',
+      active: false,
+      OrderType: 2,
+      FieldName: 'baseAmount',
+    },
+    {
+      text: 'По возрастанию суммы вклада',
+      active: false,
+      OrderType: 1,
+      FieldName: 'baseAmount',
+    },
+  ]);
+
+  const [sortingWindowOpenForPay, setSortingWindowOpenForPay] = useState(false);
+  const [sortingForPay, setSortingForPay] = useState<SortingType[]>([]);
+
+  const [listForSortingForPay, setListForSortingForPay] = useState<Values[]>([
+    {
+      text: 'Пользователь: От А до Я',
+      active: false,
+      OrderType: 1,
+      FieldName: 'userName',
+    },
+    {
+      text: 'Пользователь: От Я до А',
+      active: false,
+      OrderType: 2,
+      FieldName: 'userName',
     },
     {
       text: 'Название: От А до Я',
@@ -202,6 +256,8 @@ export const AdminPay = () => {
 
   useEffect(() => {
     if (hubConnection && active === 2) {
+      console.log(sortingForPay);
+      
       setLoading(true);
       setPaymentsList([]);
       hubConnection
@@ -217,7 +273,7 @@ export const AdminPay = () => {
           null,
           (currentPage - 1) * pageLength,
           pageLength,
-          [],
+          sortingForPay,
         )
         .then((res) => {
           setTotalPayments(res.totalRecords);
@@ -228,7 +284,7 @@ export const AdminPay = () => {
           console.log(err);
         });
     }
-  }, [hubConnection, active, currentPage, pageLength]);
+  }, [hubConnection, active, currentPage, pageLength, sortingForPay]);
 
   useEffect(() => {
     if (hubConnection && active === 1) {
@@ -247,9 +303,8 @@ export const AdminPay = () => {
         )
         .then((res) => {
           console.log('GetDepositsCharges', res);
-          setLoading(false);
+          setTotalPayDeposits(res.totalRecords);
           if (res.collection.length) {
-            setTotalPayDeposits(res.totalRecords);
             setDepositPayList(res.collection);
             setLoading(false);
           }
@@ -323,6 +378,38 @@ export const AdminPay = () => {
       return prev.map((one, i) => {
         if (one.active === true && index === i) {
           setSorting([]);
+          return {
+            ...one,
+            active: false,
+          };
+        } else if (index === i) {
+          return {
+            ...one,
+            active: true,
+          };
+        } else {
+          return {
+            ...one,
+            active: false,
+          };
+        }
+      });
+    });
+  };
+
+  const getActiveSortForPay = (index: number) => {
+    setSortingForPay([
+      {
+        ConditionWeight: 1,
+        OrderType: listForSortingForPay[index].OrderType,
+        FieldName: listForSortingForPay[index].FieldName,
+      },
+    ]);
+
+    setListForSortingForPay((prev) => {
+      return prev.map((one, i) => {
+        if (one.active === true && index === i) {
+          setSortingForPay([]);
           return {
             ...one,
             active: false,
@@ -575,7 +662,30 @@ export const AdminPay = () => {
               <TableHeadItemPaid>
                 {t('adminPay.table.payments')}
               </TableHeadItemPaid>
-              <TableHeadItemPaid>{/* <Filter /> */}</TableHeadItemPaid>
+              <TableHeadItemPaid>
+                <BurgerButton>
+                  <BurgerImg
+                    src={burgerGroup}
+                    alt="burger"
+                    onClick={() => setSortingWindowOpenForPay((prev) => !prev)}
+                  />
+                </BurgerButton>
+              </TableHeadItemPaid>
+              <SortingWindow
+                style={{ top: '415px', right: '65px' }}
+                open={sortingWindowOpenForPay}>
+                <WindowTitle>Сортировка</WindowTitle>
+                <WindowBody>
+                  {listForSortingForPay.map((obj, index) => (
+                    <SortingItem
+                      active={listForSortingForPay[index].active}
+                      key={index}
+                      onClick={() => getActiveSortForPay(index)}>
+                      {obj.text}
+                    </SortingItem>
+                  ))}
+                </WindowBody>
+              </SortingWindow>
             </TableHead>
             {paymentsList.length ? (
               <Scrollbars style={{ height: '500px' }}>
