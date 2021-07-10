@@ -19,11 +19,11 @@ function App() {
   useEffect(() => {
     if (token) {
       OneSignal.push(() => OneSignal.init({
-          appId: "aac4e1e6-162b-45c0-bb3b-d4c655950a64",
-          safari_web_id: "web.onesignal.auto.170dfd78-50f3-4c48-aaba-810262274b60",
-          notifyButton: {
-            enable: true,
-          },
+        appId: "99ed06df-a681-4df2-b6c3-59c9976406d9",
+        safari_web_id: "web.onesignal.auto.3d5e9a66-9429-4fce-a7e3-61aa58d6c253",
+        notifyButton: {
+          enable: true,
+        },
       }));
     };
   }, []);
