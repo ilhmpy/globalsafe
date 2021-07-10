@@ -19,11 +19,10 @@ function App() {
   useEffect(() => {
     if (token) {
       OneSignal.push(() => OneSignal.init({
-        OneSignal.init({
           appId: "aac4e1e6-162b-45c0-bb3b-d4c655950a64",
           safari_web_id: "web.onesignal.auto.170dfd78-50f3-4c48-aaba-810262274b60",
           notifyButton: {
-            enable: true, 
+            enable: true,
           },
       }));
     };
