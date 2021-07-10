@@ -321,7 +321,6 @@ export const AdminUsers = () => {
           sorting,
         )
         .then((res) => {
-          console.log('GetUsers', res);
           setLoading(false);
           setNum(20);
           seTotalUsers(res.totalRecords);
@@ -363,30 +362,6 @@ export const AdminUsers = () => {
     }
   };
 
-  const myLoad = () => {
-    setCount(false);
-    if (hubConnection && listDeposits.length < totalUsers) {
-      hubConnection
-        .invoke<RootUsers>(
-          'GetUsers',
-          name.toLowerCase() || null,
-          openDate.from ? openDate.from : null,
-          openDate.to ? openDate.to : null,
-          num,
-          20,
-        )
-        .then((res) => {
-          console.log('load user', res);
-          if (res.collection.length) {
-            setLoading(false);
-            setListDeposits([...listDeposits, ...res.collection]);
-            setCount(true);
-            setNum(num + 20);
-          }
-        })
-        .catch((err: Error) => console.log(err));
-    }
-  };
 
   const lockAccount = (id: string) => {
     if (hubConnection) {

@@ -521,26 +521,28 @@ export const Approval: FC<Props> = ({
             <Styled.TableHeadItem>
               {t('adminPay.table.payments')}
             </Styled.TableHeadItem>
-            <BurgerButton>
-              <BurgerImg
-                src={burgerGroup}
-                alt="burger"
-                onClick={() => setSortingWindowOpen((prev) => !prev)}
-              />
-            </BurgerButton>
-            <SortingWindow open={sortingWindowOpen}>
-              <WindowTitle>Сортировка</WindowTitle>
-              <WindowBody>
-                {listForSorting.map((obj, index) => (
-                  <SortingItem
-                    active={listForSorting[index].active}
-                    key={index}
-                    onClick={() => getActiveSort(index)}>
-                    {obj.text}
-                  </SortingItem>
-                ))}
-              </WindowBody>
-            </SortingWindow>
+            <Styled.TableHeadItem>
+              <BurgerButton>
+                <BurgerImg
+                  src={burgerGroup}
+                  alt="burger"
+                  onClick={() => setSortingWindowOpen((prev) => !prev)}
+                />
+              </BurgerButton>
+              <SortingWindow open={sortingWindowOpen}>
+                <WindowTitle>Сортировка</WindowTitle>
+                <WindowBody>
+                  {listForSorting.map((obj, index) => (
+                    <SortingItem
+                      active={listForSorting[index].active}
+                      key={index}
+                      onClick={() => getActiveSort(index)}>
+                      {obj.text}
+                    </SortingItem>
+                  ))}
+                </WindowBody>
+              </SortingWindow>
+            </Styled.TableHeadItem>
           </Styled.TableHead>
           {depositList.length ? (
             <Scrollbars style={{ height: '500px' }}>

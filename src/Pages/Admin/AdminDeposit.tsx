@@ -35,7 +35,6 @@ import {
   WindowTitle,
 } from './Styled.elements';
 
-
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 type PayProps = {
   data: PaymentsCollection;
@@ -140,25 +139,25 @@ export const AdminDeposit = () => {
       text: 'Название: От А до Я',
       active: false,
       OrderType: 2,
-      FieldName: 'deposit.name',
+      FieldName: 'depositId',
     },
     {
       text: 'Название: От Я до А',
       active: false,
       OrderType: 1,
-      FieldName: 'deposit.name',
+      FieldName: 'depositId',
     },
     {
       text: 'По убыванию суммы депозита',
       active: false,
       OrderType: 2,
-      FieldName: 'amountView',
+      FieldName: 'amount',
     },
     {
       text: 'По возрастанию суммы депозита',
       active: false,
       OrderType: 1,
-      FieldName: 'amountView',
+      FieldName: 'amount',
     },
     {
       text: 'По убыванию даты след.  выплаты',
@@ -407,6 +406,9 @@ export const AdminDeposit = () => {
 const Window = styled(SortingWindow)`
   right: 0px;
   top: 20px;
+  @media (max-width: 576px) {
+    right: -30px;
+  }
 `;
 
 const FilterName = styled.div`

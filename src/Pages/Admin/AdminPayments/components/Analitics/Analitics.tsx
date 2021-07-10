@@ -73,54 +73,43 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
   };
   const [listForSorting, setListForSorting] = useState<Values[]>([
     {
-      text: 'Пользователь: От А до Я',
-      active: false,
-      OrderType: 1,
-      FieldName: 'userName',
-    },
-    {
-      text: 'Пользователь: От Я до А',
-      active: false,
-      OrderType: 2,
-      FieldName: 'userName',
-    },
-    {
       text: 'Название: От А до Я',
       active: false,
       OrderType: 2,
-      FieldName: 'deposit.name',
+      FieldName: 'depositId',
     },
     {
       text: 'Название: От Я до А',
       active: false,
       OrderType: 1,
-      FieldName: 'deposit.name',
+      FieldName: 'depositId',
     },
     {
-      text: 'По убыванию суммы депозита',
+      text: 'По убыванию даты',
       active: false,
       OrderType: 2,
-      FieldName: 'amountView',
+      FieldName: 'payoutDate',
     },
     {
-      text: 'По возрастанию суммы депозита',
+      text: 'По возрастанию даты',
       active: false,
       OrderType: 1,
-      FieldName: 'amountView',
+      FieldName: 'payoutDate',
     },
     {
-      text: 'По убыванию даты след.  выплаты',
+      text: 'По убыванию суммы выплаты',
       active: false,
       OrderType: 2,
-      FieldName: 'paymentDate',
+      FieldName: 'amount',
     },
     {
-      text: 'По возрастанию даты след.  выплаты',
+      text: 'По возрастанию суммы выплаты',
       active: false,
       OrderType: 1,
-      FieldName: 'paymentDate',
+      FieldName: 'amount',
     },
   ]);
+  console.log(sorting);
 
   useEffect(() => {
     if (hubConnection) {

@@ -260,6 +260,7 @@ export const AdminLottery = () => {
   };
 
   console.log('lotteryList', lotteryList);
+  console.log('sorting', sorting);
 
   return (
     <div>

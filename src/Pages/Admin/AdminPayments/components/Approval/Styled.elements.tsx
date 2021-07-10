@@ -89,7 +89,6 @@ export const TableHeadItem = styled.li`
   }
 `;
 
-
 export const TableHeadItemPaid = styled(TableHeadItem)`
   &:nth-child(1) {
     white-space: nowrap;

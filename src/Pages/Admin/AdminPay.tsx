@@ -257,7 +257,7 @@ export const AdminPay = () => {
   useEffect(() => {
     if (hubConnection && active === 2) {
       console.log(sortingForPay);
-      
+
       setLoading(true);
       setPaymentsList([]);
       hubConnection
@@ -597,9 +597,10 @@ export const AdminPay = () => {
               <TableHeadItemPaid>
                 {t('adminPay.table.payments')}
               </TableHeadItemPaid>
-              {/* <TableHeadItemPaid><Filter /></TableHeadItemPaid> */}
+              <TableHeadItemPaid>{/* <Filter /> */}</TableHeadItemPaid>
+              {/*
               <TableHeadItemPaid>
-                <BurgerButton>
+                 <BurgerButton>
                   <BurgerImg
                     src={burgerGroup}
                     alt="burger"
@@ -619,7 +620,7 @@ export const AdminPay = () => {
                     </SortingItem>
                   ))}
                 </WindowBody>
-              </Window>
+              </Window> */}
             </TableHead>
             {depositPayList.length ? (
               <Scrollbars style={{ height: '500px' }}>
