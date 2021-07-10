@@ -28,8 +28,6 @@ function App() {
     };
   }, []);
 
-  OneSignal.registerForPushNotifications();
-
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
 
