@@ -61,5 +61,7 @@ export interface RootDeposits {
     collection: DepositsCollection[];
 }
 
-
-
+export type Commisions = {
+  BalanceKind: any;
+  amount: any;
+}

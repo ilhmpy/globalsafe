@@ -18,7 +18,7 @@ import { Header } from "../../components/Header/Header";
 import * as Styled from "./Styles.elements";
 import { CSSTransition } from "react-transition-group";
 import { Modal } from "../../components/Modal/Modal";
-import { RootDeposits, DepositsCollection } from "../../types/info";
+import { RootDeposits, DepositsCollection, Commisions } from "../../types/info";
 import { Input } from "../../components/UI/Input";
 import { Button } from "../../components/Button/Button";
 import { AppContext } from "../../context/HubContext";
@@ -237,23 +237,16 @@ export const InfoMain = () => {
     history.push("/info/deposits");
   };
 
-  interface Commisions {
-    type: string;
-    ulong: string;
-    BalanceKind: any;
-  }
-
   const getCommisions = (value: string) => {
     // get commisions from server
     if (hubConnection) {
       hubConnection.invoke<Commisions>(
         "GetWithdrawFee",
-        value,
-        balance
+        1, Number(value)
       ).then((res: any) => {
         console.log("commisions", res);
-        setBlockchainCommision(res.NetWorkFee);
-        setServiceCommision(res.ServiceFee);
+        setBlockchainCommision(res.networkFee);
+        setServiceCommision(res.serviceFee);
       })
        .catch((err) => console.error(err));
     };
