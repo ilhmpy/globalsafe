@@ -864,3 +864,24 @@ export const SmallRoundButton = styled.div`
     fill: #6db9ff;
   }
 `;
+
+export const ModalCommision = styled.h3`
+  font-weight: 400;
+  line-height: 22px;
+  font-size: 1em;
+  text-align: center;
+
+  &:first-child {
+    margin-top: 20px;
+  }
+`;
+
+export const ModalCommisionCount = styled.h3`
+  color: #FF416E;
+  font-size: inherit;
+`;
+
+export const ModalCommisionBox = styled.div`
+  width: 100%;
+  padding-top: 1px;
+`;
