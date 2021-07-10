@@ -69,8 +69,8 @@ export const InfoMain = () => {
   const lang = localStorage.getItem("i18nextLng") || "ru";
   const languale = lang === "ru" ? 1 : 0;
   moment.locale(lang);
-  const [ blockchainCommision, setBlockchainCommision ] = useState<any>("");
-  const [ serviceCommision, setServiceCommision ] = useState<any>("");
+  const [ blockchainCommision, setBlockchainCommision ] = useState<string>("0");
+  const [ serviceCommision, setServiceCommision ] = useState<string>("0");
 
   const handleDepositModal = () => {
     setAddDeposit(false);
@@ -239,7 +239,8 @@ export const InfoMain = () => {
 
   interface Commisions {
     type: string;
-    value: string;
+    ulong: string;
+    BalanceKind: any;
   }
 
   const getCommisions = (value: string) => {
@@ -247,12 +248,14 @@ export const InfoMain = () => {
     if (hubConnection) {
       hubConnection.invoke<Commisions>(
         "GetWithdrawFee",
-        value
+        value,
+        balance
       ).then((res: any) => {
+        console.log("commisions", res);
         setBlockchainCommision(res.NetWorkFee);
         setServiceCommision(res.ServiceFee);
       })
-       .catch((err) => console.log(err));
+       .catch((err) => console.error(err));
     };
   };
 
