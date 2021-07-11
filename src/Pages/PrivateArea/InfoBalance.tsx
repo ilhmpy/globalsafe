@@ -384,20 +384,23 @@ export const InfoBalance = () => {
     options.push(<option value={year}>{year}</option>);
   }
 
-  const linkOpen = (res: any) => {
+  const linkOpen = (res: string) => {
     const newWindow = window.open();
     newWindow && (newWindow.location.href = res);
   };
 
   const getTopUp = () => {
-    if (hubConnection) {
-      hubConnection
-        .invoke('GetTopUpUrl', +balanceValue * 100000)
-        .then((res: any) => {
-          linkOpen(res);
-        })
-        .catch((err: Error) => console.log(err));
-    }
+    linkOpen(`https://cwd.global/shopping/payment?to_name=stella3&amount=${balanceValue}`)
+    // if (hubConnection) {
+    //   hubConnection
+    //     .invoke('GetTopUpUrl', +balanceValue * 100000)
+    //     .then((res: string) => {
+    //       console.log('.then ~~~~~~~~~~ res', res)
+    //       // https://cwd.global/shopping/payment?to_name=stella3&amount=222
+    //       // linkOpen(res);
+    //     })
+    //     .catch((err: Error) => console.log(err));
+    // }
   };
 
   const onChangeBalanceValue = (e: React.ChangeEvent<HTMLInputElement>) => {
