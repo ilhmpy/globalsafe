@@ -350,7 +350,6 @@ export const AdminUsers = () => {
     }
   };
 
-
   const lockAccount = (id: string) => {
     if (hubConnection) {
       hubConnection
@@ -470,12 +469,12 @@ export const AdminUsers = () => {
                 <WindowTitle>Сортировка</WindowTitle>
                 <WindowBody>
                   {listForSorting.map((obj, index) => (
-                    <SortingItem
+                    <Sort
                       active={listForSorting[index].active}
                       key={index}
                       onClick={() => getActiveSort(index)}>
                       {obj.text}
-                    </SortingItem>
+                    </Sort>
                   ))}
                 </WindowBody>
               </Window>
@@ -514,6 +513,25 @@ export const AdminUsers = () => {
 const Window = styled(SortingWindow)`
   right: 64px;
   top: 226px;
+  @media (max-width: 992px) {
+    top: 230px;
+  }
+  @media (max-width: 768px) {
+    top: 210px;
+    right: 50px;
+  }
+`;
+const Sort = styled(SortingItem)`
+  &:nth-child(3) {
+    @media (max-width: 992px) {
+      display: none;
+    }
+  }
+  &:nth-child(4) {
+    @media (max-width: 992px) {
+      display: none;
+    }
+  }
 `;
 
 const InputsWrapItem = styled.div`

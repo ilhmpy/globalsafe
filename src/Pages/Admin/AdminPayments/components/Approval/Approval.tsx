@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import ReactNotification from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
 import { CSSTransition } from 'react-transition-group';
+import styled from 'styled-components';
 import burgerGroup from '../../../../../assets/img/burgerGroup.png';
 import { Button } from '../../../../../components/Button/Button';
 import { Notification } from '../../../../../components/Notify/Notification';
@@ -529,19 +530,19 @@ export const Approval: FC<Props> = ({
                   onClick={() => setSortingWindowOpen((prev) => !prev)}
                 />
               </BurgerButton>
-              <SortingWindow open={sortingWindowOpen}>
+              <Window open={sortingWindowOpen}>
                 <WindowTitle>Сортировка</WindowTitle>
                 <WindowBody>
                   {listForSorting.map((obj, index) => (
-                    <SortingItem
+                    <Sort
                       active={listForSorting[index].active}
                       key={index}
                       onClick={() => getActiveSort(index)}>
                       {obj.text}
-                    </SortingItem>
+                    </Sort>
                   ))}
                 </WindowBody>
-              </SortingWindow>
+              </Window>
             </Styled.TableHeadItem>
           </Styled.TableHead>
           {depositList.length ? (
@@ -576,3 +577,43 @@ export const Approval: FC<Props> = ({
     </>
   );
 };
+
+const Window = styled(SortingWindow)`
+  right: 30px;
+  top: 64px;
+  @media (min-width: 576px) and (max-width: 992px) {
+    top: 50px;
+  }
+`;
+const Sort = styled(SortingItem)`
+  &:nth-child(1) {
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+  &:nth-child(2) {
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+  &:nth-child(5) {
+    @media (max-width: 1100px) {
+      display: none;
+    }
+  }
+  &:nth-child(6) {
+    @media (max-width: 1100px) {
+      display: none;
+    }
+  }
+  &:nth-child(7) {
+    @media (max-width: 576px) {
+      display: none;
+    }
+  }
+  &:nth-child(8) {
+    @media (max-width: 576px) {
+      display: none;
+    }
+  }
+`;

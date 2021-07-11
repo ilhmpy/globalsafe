@@ -672,21 +672,19 @@ export const AdminPay = () => {
                   />
                 </BurgerButton>
               </TableHeadItemPaid>
-              <SortingWindow
-                style={{ top: '415px', right: '65px' }}
-                open={sortingWindowOpenForPay}>
+              <Window open={sortingWindowOpenForPay}>
                 <WindowTitle>Сортировка</WindowTitle>
                 <WindowBody>
                   {listForSortingForPay.map((obj, index) => (
-                    <SortingItem
+                    <Sort
                       active={listForSortingForPay[index].active}
                       key={index}
                       onClick={() => getActiveSortForPay(index)}>
                       {obj.text}
-                    </SortingItem>
+                    </Sort>
                   ))}
                 </WindowBody>
-              </SortingWindow>
+              </Window>
             </TableHead>
             {paymentsList.length ? (
               <Scrollbars style={{ height: '500px' }}>
@@ -720,7 +718,56 @@ export const AdminPay = () => {
 
 const Window = styled(SortingWindow)`
   right: 65px;
-  top: 531px;
+  top: 415px;
+  @media (max-width: 992px) {
+    top: 423px;
+  }
+  @media (max-width: 768px) {
+    top: 628px;
+    right: 50px;
+  }
+  @media (max-width: 576px) {
+    top: 464px;
+    right: 50px;
+  }
+  @media (max-width: 400px) {
+    top: 504px;
+  }
+  @media (max-width: 338px) {
+    top: 518px;
+  }
+`;
+const Sort = styled(SortingItem)`
+  &:nth-child(1) {
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+  &:nth-child(2) {
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+  &:nth-child(3) {
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+  &:nth-child(4) {
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+  &:nth-child(7) {
+    @media (max-width: 1100px) {
+      display: none;
+    }
+  }
+  &:nth-child(8) {
+    @media (max-width: 1100px) {
+      display: none;
+    }
+  }
 `;
 
 const SelfUpTitle = styled(UpTitle)`
@@ -813,7 +860,7 @@ const TableHeadItem = styled.li`
   &:nth-child(7) {
     max-width: 100px;
     @media (max-width: 1100px) {
-      display: none;
+      /* display: none; */
     }
   }
   &:nth-child(8) {
@@ -828,7 +875,7 @@ const TableHeadItem = styled.li`
       max-width: 80px;
     }
   }
-  &:nth-child(10) {
+  &:last-child {
     max-width: 120px;
     text-align: right;
     @media (max-width: 992px) {

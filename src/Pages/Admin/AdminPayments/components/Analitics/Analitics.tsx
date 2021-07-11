@@ -281,12 +281,12 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
                 <WindowTitle>Сортировка</WindowTitle>
                 <WindowBody>
                   {listForSorting.map((obj, index) => (
-                    <SortingItem
+                    <Sort
                       active={listForSorting[index].active}
                       key={index}
                       onClick={() => getActiveSort(index)}>
                       {obj.text}
-                    </SortingItem>
+                    </Sort>
                   ))}
                 </WindowBody>
               </Window>
@@ -339,4 +339,35 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
 const Window = styled(SortingWindow)`
   right: 66px;
   top: 683px;
+  @media (max-width: 992px) {
+    top: 691px;
+  }
+  @media (max-width: 800px) {
+    top: 719px;
+  }
+  @media (max-width: 768px) {
+    right: 50px;
+    top: 699px;
+  }
+  @media (max-width: 576px) {
+    top: 711px;
+  }
+  @media (max-width: 399px) {
+    top: 751px;
+  }
+  @media (max-width: 333px) {
+    top: 765px;
+  }
+`;
+const Sort = styled(SortingItem)`
+  &:nth-child(3) {
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+  &:nth-child(4) {
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
 `;

@@ -467,7 +467,7 @@ export const AdminPortfolio = () => {
                     alt="burger"
                     onClick={() => setSortingWindowOpenGCWD((prev) => !prev)}
                   />
-                  {/* <Window open={sortingWindowOpenGCWD}>
+                  <Window open={sortingWindowOpenGCWD}>
                     <WindowTitle>Сортировка</WindowTitle>
                     <WindowBody>
                       {listForSortingGCWD.map((obj, index) => (
@@ -479,7 +479,7 @@ export const AdminPortfolio = () => {
                         </SortingItem>
                       ))}
                     </WindowBody>
-                  </Window> */}
+                  </Window>
                 </BurgerButton>
               </TableHeadItem>
             </TableHead>
@@ -618,23 +618,20 @@ export const AdminPortfolio = () => {
 };
 
 const Window = styled(SortingWindow)`
-  /* right: 380px; */
-  left: calc(100% - 660px);
+  left: calc(100% - 345px);
   top: 485px;
-  /* @media (max-width: 1240px) {
-    left: calc(100% - 400px);
-    top: 485px;
-  } */
-  /* @media (max-width: 1300px) {
-    right: 250px;
-  }
-  @media (max-width: 1300px) {
-    right: 125px;
-  }
   @media (max-width: 992px) {
-    right: 64px;
-    top: 485px;
-  } */
+    top: 489px;
+  }
+  @media (max-width: 768px) {
+    top: 692px;
+    left: calc(100% - 330px);
+  }
+  @media (max-width: 576px) {
+    top: 514px;
+    left: calc(100% - 280px);
+    width: 230px;
+  }
 `;
 
 const CardTable = styled(Card)`
@@ -646,14 +643,18 @@ const PaymentsTable = styled.div`
 `;
 
 const TableHead = styled.ul`
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+
   list-style: none;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
   padding-bottom: 6px;
   border-bottom: 1px solid rgba(81, 81, 114, 0.2);
+
   @media (max-width: 992px) {
     justify-content: space-between;
+  }
+  @media (max-width: 576px) {
+    grid-template-columns: repeat(3, 1fr);
   }
 `;
 
@@ -699,7 +700,11 @@ const TableHeadItem = styled.li`
   }
   &:nth-child(5) {
     max-width: 80px;
+    justify-self: flex-end;
     @media (max-width: 992px) {
+      max-width: 30px;
+    }
+    @media (max-width: 576px) {
       max-width: 30px;
     }
   }

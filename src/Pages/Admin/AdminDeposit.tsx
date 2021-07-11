@@ -367,12 +367,12 @@ export const AdminDeposit = () => {
                 <WindowTitle>Сортировка</WindowTitle>
                 <WindowBody>
                   {listForSorting.map((obj, index) => (
-                    <SortingItem
+                    <Sort
                       active={listForSorting[index].active}
                       key={index}
                       onClick={() => getActiveSort(index)}>
                       {obj.text}
-                    </SortingItem>
+                    </Sort>
                   ))}
                 </WindowBody>
               </Window>
@@ -406,8 +406,27 @@ export const AdminDeposit = () => {
 const Window = styled(SortingWindow)`
   right: 0px;
   top: 20px;
-  @media (max-width: 576px) {
-    right: -30px;
+`;
+const Sort = styled(SortingItem)`
+  &:nth-child(1) {
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+  &:nth-child(2) {
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+  &:nth-child(7) {
+    @media (max-width: 576px) {
+      display: none;
+    }
+  }
+  &:nth-child(8) {
+    @media (max-width: 576px) {
+      display: none;
+    }
   }
 `;
 

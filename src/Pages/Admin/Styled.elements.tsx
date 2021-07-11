@@ -672,9 +672,7 @@ export const InputLottery = styled.div<{ mrn?: boolean }>`
 `;
 
 export const SortingWindow = styled.div<{ open: boolean }>`
-  position: relative;
-  right: 0;
-  top: 0;
+  position: absolute;
   width: 280px;
   background: ${(props) => props.theme.sortingWindow.backgroundColor};
   border: 1px solid rgba(86, 101, 127, 0.3);
@@ -684,9 +682,12 @@ export const SortingWindow = styled.div<{ open: boolean }>`
   gap: 15px;
   padding: 30px 20px;
   z-index: 10;
+  @media (max-width: 576px) {
+    width: 230px;
+  }
 `;
 
-export const BurgerButton = styled.li`
+export const BurgerButton = styled.div`
   font-weight: normal;
   font-size: 12px;
   line-height: 14px;
@@ -727,4 +728,6 @@ export const SortingItem = styled.li<{ active: boolean }>`
   color: ${(props) => props.theme.sortingWindow.fontColor};
   cursor: pointer;
   font-weight: ${(props) => (props.active ? '600' : 'normal')};
+  text-align: start;
+  white-space: pre-wrap;
 `;
