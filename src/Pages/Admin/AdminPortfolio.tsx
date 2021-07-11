@@ -467,20 +467,20 @@ export const AdminPortfolio = () => {
                     alt="burger"
                     onClick={() => setSortingWindowOpenGCWD((prev) => !prev)}
                   />
+                  {/* <Window open={sortingWindowOpenGCWD}>
+                    <WindowTitle>Сортировка</WindowTitle>
+                    <WindowBody>
+                      {listForSortingGCWD.map((obj, index) => (
+                        <SortingItem
+                          active={listForSortingGCWD[index].active}
+                          key={index}
+                          onClick={() => getActiveSortGCWD(index)}>
+                          {obj.text}
+                        </SortingItem>
+                      ))}
+                    </WindowBody>
+                  </Window> */}
                 </BurgerButton>
-                <Window open={sortingWindowOpenGCWD}>
-                  <WindowTitle>Сортировка</WindowTitle>
-                  <WindowBody>
-                    {listForSortingGCWD.map((obj, index) => (
-                      <SortingItem
-                        active={listForSortingGCWD[index].active}
-                        key={index}
-                        onClick={() => getActiveSortGCWD(index)}>
-                        {obj.text}
-                      </SortingItem>
-                    ))}
-                  </WindowBody>
-                </Window>
               </TableHeadItem>
             </TableHead>
             {basketGCWD.length ? (
@@ -618,8 +618,23 @@ export const AdminPortfolio = () => {
 };
 
 const Window = styled(SortingWindow)`
-  right: 25%;
-  top: 42%;
+  /* right: 380px; */
+  left: calc(100% - 660px);
+  top: 485px;
+  /* @media (max-width: 1240px) {
+    left: calc(100% - 400px);
+    top: 485px;
+  } */
+  /* @media (max-width: 1300px) {
+    right: 250px;
+  }
+  @media (max-width: 1300px) {
+    right: 125px;
+  }
+  @media (max-width: 992px) {
+    right: 64px;
+    top: 485px;
+  } */
 `;
 
 const CardTable = styled(Card)`

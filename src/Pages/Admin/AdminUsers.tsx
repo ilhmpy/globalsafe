@@ -293,18 +293,6 @@ export const AdminUsers = () => {
       OrderType: 1,
       FieldName: 'creationDate',
     },
-    // {
-    //   text: 'По убыванию суммы вклада',
-    //   active: false,
-    //   OrderType: 2,
-    //   FieldName: 'baseAmount',
-    // },
-    // {
-    //   text: 'По возрастанию суммы вклада',
-    //   active: false,
-    //   OrderType: 1,
-    //   FieldName: 'baseAmount',
-    // },
   ]);
 
   useEffect(() => {

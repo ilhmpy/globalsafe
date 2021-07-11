@@ -67,25 +67,25 @@ export const AdminLottery = () => {
       text: 'По убыванию даты',
       active: false,
       OrderType: 2,
-      FieldName: 'date',
+      FieldName: 'drawLog.drawDate',
     },
     {
       text: 'По возрастанию даты',
       active: false,
       OrderType: 1,
-      FieldName: 'date',
+      FieldName: 'drawLog.drawDate',
     },
     {
       text: 'Тип выигрыша: От А до Я',
       active: false,
       OrderType: 1,
-      FieldName: 'typeWin',
+      FieldName: 'definition.kind',
     },
     {
       text: 'Тип выигрыша: От Я до А',
       active: false,
       OrderType: 2,
-      FieldName: 'typeWin',
+      FieldName: 'definition.kind',
     },
     {
       text: 'По убыванию суммы выигрыша',
@@ -463,4 +463,8 @@ export const AdminLottery = () => {
 const Window = styled(SortingWindow)`
   right: 66px;
   top: 366px;
+  @media (max-width: 768px) {
+    right: 40px;
+    top: 316px;
+  }
 `;

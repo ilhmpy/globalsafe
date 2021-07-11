@@ -107,7 +107,7 @@ export const Tr = styled.tr`
   background-color: transparent;
   border-bottom: 1px solid rgba(66, 139, 202, 0.2);
   padding: 15px;
-  display:grid;
+  display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 22px;
   @media (max-width: 600px) {
     border-bottom: 3px solid rgba(66, 139, 202, 0.2);
@@ -671,11 +671,10 @@ export const InputLottery = styled.div<{ mrn?: boolean }>`
   }
 `;
 
-
 export const SortingWindow = styled.div<{ open: boolean }>`
-  position: absolute;
-  right: 30px;
-  top: 64px;
+  position: relative;
+  right: 0;
+  top: 0;
   width: 280px;
   background: ${(props) => props.theme.sortingWindow.backgroundColor};
   border: 1px solid rgba(86, 101, 127, 0.3);
