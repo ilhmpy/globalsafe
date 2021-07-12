@@ -38,7 +38,7 @@ export const Assets = () => {
   const [oldLink, setOldLink] = useState('');
   const [link, setLink] = useState('');
   const [min, setMin] = useState(1);
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState<string | undefined>();
   const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>(
     [],
   );
@@ -48,50 +48,6 @@ export const Assets = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   const languale = lang === 'ru' ? 1 : 0;
-  const [programs, setPrograms] = useState([
-    {
-      name: 'start',
-      color: '#BCD476',
-      lines: [
-        { id: '1', count: '4%' },
-        { id: '2', count: '1,6%' },
-        { id: '3', count: '0,8%' },
-        { id: '4', count: '' },
-        { id: '5', count: '' },
-        { id: '6', count: '' },
-        { id: '7', count: '' },
-        { id: '8', count: '' },
-      ],
-    },
-    {
-      name: 'expert',
-      color: '#6DB9FF',
-      lines: [
-        { id: '1', count: '5%' },
-        { id: '2', count: '2%' },
-        { id: '3', count: '1%' },
-        { id: '4', count: '1%' },
-        { id: '5', count: '1%' },
-        { id: '6', count: '' },
-        { id: '7', count: '' },
-        { id: '8', count: '' },
-      ],
-    },
-    {
-      name: 'infinity',
-      color: '#FF416E',
-      lines: [
-        { id: '1', count: '5%' },
-        { id: '2', count: '2%' },
-        { id: '3', count: '1%' },
-        { id: '4', count: '1%' },
-        { id: '5', count: '1%' },
-        { id: '6', count: '1%' },
-        { id: '7', count: '1%' },
-        { id: '8', count: '1%' },
-      ],
-    },
-  ]);
 
   useEffect(() => {
     if (hubConnection) {
@@ -106,15 +62,12 @@ export const Assets = () => {
 
   const handleClick = (num: number) => {
     setIsNormalOpen(true);
-    setValue('');
-    // setLink(str);
     const newLink = `https://cwd.global/shopping/payment?to_name=mcent-fond&amount=${num}`;
     setLink(newLink);
     setOldLink(
       `https://cwd.global/shopping/payment?to_name=mcent-fond&amount=`,
     );
-    setMin(num);
-    setValue('Введите сумму, CWD');
+    setValue('');
   };
 
   useEffect(() => {
@@ -124,18 +77,19 @@ export const Assets = () => {
   }, [value, inputRef]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const id = e.target.value;
-    setValue(id);
+    const { value } = e.target;
+    setValue(value);
     const newLink = oldLink.replace(/\d{5,}/g, '');
-    if (id === '') {
+    if (value === '') {
       setLink(newLink);
     } else {
-      setLink(newLink + id);
+      setLink(newLink + value);
     }
   };
 
   const toLink = () => {
-    window.open(link);
+    const newWindow = window.open();
+    newWindow && (newWindow.location.href = link);
   };
 
   return (
@@ -158,12 +112,11 @@ export const Assets = () => {
                 ref={inputRef}
                 value={value}
               />
-
               <ModalButton
                 as="button"
                 onClick={toLink}
                 danger
-                disabled={+value < min}>
+                disabled={value === undefined || +value < 1 ? true : false}>
                 {`${t('assets.buy')} MCENT`}
               </ModalButton>
             </ModalBlockBody>

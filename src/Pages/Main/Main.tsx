@@ -9,6 +9,7 @@ import { AppContext } from '../../context/HubContext';
 import { Prize } from '../../types/drawResult';
 import { ArrList } from '../../types/lottery';
 import { About } from './components/About/About';
+import { Assets } from './components/Assets';
 import { Banner } from './components/Banner/Banner';
 import { DrawHistory } from './components/DrawHistory/DrawHistory';
 import { ModalLottery } from './components/Lottery/Modal';
@@ -17,7 +18,6 @@ import { Timer } from './components/Lottery/Timer';
 import { Operations } from './components/Operations/Operations';
 import { Payments } from './components/Payments/Payments';
 import { Tariffs } from './components/Tariffs/Tariffs';
-import { Assets } from './components/Assets';
 
 let fakeData = [
   [
@@ -2162,7 +2162,7 @@ export const Main = () => {
         <Operations />
         <Tariffs />
 
-        <Assets/>
+        <Assets />
 
         <DrawHistory onOpenModal={onOpenModal} clock={clock} />
         <About />
@@ -2204,8 +2204,12 @@ const MainPage = styled(Page)`
   /* @media (max-width: 1060px) {
     margin-top: 140px;
   } */
-  @media only screen and (max-width: 768px) {
-    margin-top: 102px;
+  @media only screen and (min-width: 577px) and (max-width: 768px) {
+    margin-top: 0px;
+    padding-top: 250px;
+  }
+  @media only screen and (max-width: 576px) {
+    margin-top: 0px;
   }
 `;
 

@@ -13,10 +13,8 @@ import { Collection, RootOperations } from '../../../../types/operations';
 export const Operations = () => {
   const [notifyList, setNotifyList] = useState<Collection[]>([]);
   const [num, setNum] = useState(0);
-  const [show, setShow] = useState(true);
   const appContext = useContext(AppContext);
-  const [ maxItems, setMaxItems ] = useState(4);
-  console.log('Operations ~ appContext', appContext)
+  const [maxItems, setMaxItems] = useState(4);
   const hubConnection = appContext.hubConnection;
 
   useEffect(() => {
@@ -24,7 +22,6 @@ export const Operations = () => {
 
     if (hubConnection) {
       hubConnection.on('OperationNotification', (data) => {
-        console.log('OperationNotification', data);
         !clean && setNotifyList((notifyList) => [data, ...notifyList]);
       });
       hubConnection
@@ -35,7 +32,6 @@ export const Operations = () => {
           4,
         )
         .then((res) => {
-          console.log('GetOperationsNotifications~~~~~~~~~~~~~`', res);
           !clean && setNotifyList(res.collection);
         })
         .catch((e) => console.log(e));
@@ -81,10 +77,7 @@ export const Operations = () => {
         })
         .catch((e) => console.log(e));
     }
-    setShow(false);
   };
-
-  console.log('~~~~~~~~~~~~~~', notifyList);
 
   return (
     <Page>
@@ -130,14 +123,14 @@ export const Operations = () => {
                     </TableItem>
                   </TableList>
                 </CSSTransition>
-              )
+              );
             })}
         </TransitionGroup>
-        {show && (
+        {
           <Button dangerOutline onClick={add}>
             {t('operation.showMore')}
           </Button>
-        )}
+        }
       </TableContainer>
     </Page>
   );

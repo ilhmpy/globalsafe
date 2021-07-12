@@ -458,13 +458,8 @@ export const SelectContainerLottery = styled(SelectContainer)`
 `;
 
 export const SelectWrap = styled.div<{ input?: boolean }>`
-  max-width: ${(props) => (props.input ? '153px' : '280px')};
-  /* width: 100%; */
   margin: 20px 20px 20px 0;
   position: relative;
-  @media (max-width: 992px) {
-    max-width: ${(props) => (props.input ? '153px' : '45%')};
-  }
   @media (max-width: 768px) {
     max-width: 100%;
     margin: 12px 20px 12px 0;

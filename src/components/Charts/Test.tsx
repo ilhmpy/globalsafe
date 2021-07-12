@@ -1,9 +1,9 @@
-import React, { FC, useContext } from "react";
-import Chart from "react-apexcharts";
-import styled from "styled-components/macro";
-import { ThemeContext } from "../../context/ThemeContext";
-import moment from "moment";
-import "moment/locale/ru";
+import moment from 'moment';
+import 'moment/locale/ru';
+import React, { FC, useContext } from 'react';
+import Chart from 'react-apexcharts';
+import styled from 'styled-components/macro';
+import { ThemeContext } from '../../context/ThemeContext';
 
 type Props = {
   series: number[];
@@ -23,14 +23,14 @@ export const TestChart: FC<Props> = ({
   const themeContext = useContext(ThemeContext);
   const theme = themeContext.theme;
 
-  const colors = theme === "light" ? "#fff" : "#000";
+  const colors = theme === 'light' ? '#fff' : '#000';
 
   const data = {
     series: series,
     options: {
       chart: {
         // width: 500,
-        type: "donut",
+        type: 'donut',
       },
       dataLabels: {
         enabled: false,
@@ -44,7 +44,7 @@ export const TestChart: FC<Props> = ({
               total: {
                 showAlways: true,
                 show: true,
-                label: "CWD",
+                label: 'CWD',
                 offsetY: 60,
                 formatter: function (w: any) {
                   return `${w.globals.seriesTotals
@@ -56,16 +56,16 @@ export const TestChart: FC<Props> = ({
               },
               value: {
                 show: true,
-                fontSize: "24px",
-                fontFamily: "Roboto, sans-serif",
+                fontSize: '24px',
+                fontFamily: 'Roboto, sans-serif',
                 fontWeight: 500,
-                color: "#0E0D3D",
+                color: '#0E0D3D',
                 offsetY: -10,
               },
               name: {
                 show: true,
-                fontSize: "22px",
-                fontFamily: "Roboto, sans-serif",
+                fontSize: '22px',
+                fontFamily: 'Roboto, sans-serif',
                 fontWeight: 600,
                 color: undefined,
                 offsetY: 30,
@@ -77,8 +77,8 @@ export const TestChart: FC<Props> = ({
       labels: labels,
       legend: {
         // position: "right",
-        fontSize: "18px",
-        fontFamily: "Roboto, sans-serif",
+        fontSize: '18px',
+        fontFamily: 'Roboto, sans-serif',
         fontWeight: 400,
         markers: {
           width: 15,
@@ -94,7 +94,7 @@ export const TestChart: FC<Props> = ({
       // colors: colors,
       tooltip: {
         enabled: true,
-        theme: "light",
+        theme: 'light',
         followCursor: true,
         custom: function ({ series, seriesIndex, dataPointIndex, w }: any) {
           if (percent) {
@@ -136,16 +136,16 @@ export const TestChart: FC<Props> = ({
               width: mobLegend,
               height: 150,
               // show: false,
-              horizontalAlign: "center",
-              position: "bottom",
+              horizontalAlign: 'center',
+              position: 'bottom',
             },
           },
         },
       ],
       stroke: {
         show: true,
-        curve: "smooth",
-        lineCap: "butt",
+        curve: 'smooth',
+        lineCap: 'butt',
         colors: [colors],
         width: 2,
         dashArray: 1,
@@ -185,7 +185,7 @@ type PropsColumn = {
 export const ColumnChart: FC<PropsColumn> = ({ date, value }) => {
   const themeContext = useContext(ThemeContext);
   const theme = themeContext.theme;
-  const color = theme === "light" ? "#222" : "#fff";
+  const color = theme === 'light' ? '#222' : '#fff';
 
   const data = {
     series: [
@@ -196,7 +196,7 @@ export const ColumnChart: FC<PropsColumn> = ({ date, value }) => {
 
     options: {
       chart: {
-        type: "bar",
+        type: 'bar',
         events: {
           click: function (chart: any, w: any, e: any) {},
         },
@@ -205,18 +205,18 @@ export const ColumnChart: FC<PropsColumn> = ({ date, value }) => {
         },
       },
       fill: {
-        colors: ["#6DB9FF"],
+        colors: ['#6DB9FF'],
       },
       states: {
         normal: {
           filter: {
-            type: "none",
+            type: 'none',
             value: 0,
           },
         },
         hover: {
           filter: {
-            type: "darken",
+            type: 'darken',
             value: 0.5,
           },
         },
@@ -224,7 +224,14 @@ export const ColumnChart: FC<PropsColumn> = ({ date, value }) => {
       xaxis: {
         categories: date,
         labels: {
-          show: false,
+          show: true,
+          style: {
+            fontSize: '10px',
+          },
+          offsetY: -4,
+          formatter: function (value: any) {
+            return new Date(value).getDate();
+          },
         },
         axisBorder: {
           show: false,
@@ -234,24 +241,24 @@ export const ColumnChart: FC<PropsColumn> = ({ date, value }) => {
         },
       },
       yaxis: {
-        fillColor: "#fff",
+        fillColor: '#fff',
         labels: {
-          background: "#fff",
+          background: '#fff',
           formatter: function (value: any) {
             if (value >= 1000000) {
-              return (value / 1000000).toFixed(1) + "M";
+              return (value / 1000000).toFixed(1) + 'M';
             } else if (value >= 1000 && value < 1000000) {
-              return (value / 1000).toFixed(1) + "k";
+              return (value / 1000).toFixed(1) + 'k';
             } else {
               return value;
             }
           },
           style: {
             colors: [color],
-            fontSize: "10px",
-            fontFamily: "Roboto, sans-serif",
+            fontSize: '10px',
+            fontFamily: 'Roboto, sans-serif',
             fontWeight: 400,
-            cssClass: "apexcharts-yaxis-label",
+            cssClass: 'apexcharts-yaxis-label',
           },
         },
       },
@@ -260,8 +267,8 @@ export const ColumnChart: FC<PropsColumn> = ({ date, value }) => {
           return `
           <div class="column-toltip">
           <div class="column-toltip-light">${moment(
-            w.globals.labels[dataPointIndex]
-          ).format("DD MMMM YYYY")}</div>
+            w.globals.labels[dataPointIndex],
+          ).format('DD MMMM YYYY')}</div>
             <div class="column-toltip-bold">${w.globals.stackedSeriesTotals[
               dataPointIndex
             ].toLocaleString()}</div>
@@ -271,13 +278,13 @@ export const ColumnChart: FC<PropsColumn> = ({ date, value }) => {
         // enabled: false,
         fixed: {
           enabled: true,
-          position: "topLeft", // topRight, topLeft, bottomRight, bottomLeft
+          position: 'topLeft', // topRight, topLeft, bottomRight, bottomLeft
           offsetY: 0,
           offsetX: 110,
         },
       },
       legend: {
-        horizontalAlign: "center",
+        horizontalAlign: 'center',
         offsetX: 0,
         show: false,
       },
@@ -287,7 +294,7 @@ export const ColumnChart: FC<PropsColumn> = ({ date, value }) => {
       plotOptions: {
         bar: {
           borderRadius: 6,
-          columnWidth: "45%",
+          columnWidth: '45%',
           distributed: false,
         },
       },
@@ -298,7 +305,7 @@ export const ColumnChart: FC<PropsColumn> = ({ date, value }) => {
   };
 
   return (
-    <div id="chart1" style={{ position: "relative" }}>
+    <div id="chart1" style={{ position: 'relative' }}>
       <Chart
         options={data.options}
         series={data.series}
@@ -310,12 +317,12 @@ export const ColumnChart: FC<PropsColumn> = ({ date, value }) => {
 };
 
 export const ColumnChartCwd: FC<PropsColumn> = ({
-  date = [""],
-  value = [""],
+  date = [''],
+  value = [''],
 }) => {
   const themeContext = useContext(ThemeContext);
   const theme = themeContext.theme;
-  const color = theme === "light" ? "#222" : "#fff";
+  const color = theme === 'light' ? '#222' : '#fff';
 
   const data = {
     series: [
@@ -325,7 +332,7 @@ export const ColumnChartCwd: FC<PropsColumn> = ({
     ],
     options: {
       chart: {
-        type: "bar",
+        type: 'bar',
         events: {
           click: function (chart: any, w: any, e: any) {},
         },
@@ -334,18 +341,18 @@ export const ColumnChartCwd: FC<PropsColumn> = ({
         },
       },
       fill: {
-        colors: ["#6DB9FF"],
+        colors: ['#6DB9FF'],
       },
       states: {
         normal: {
           filter: {
-            type: "none",
+            type: 'none',
             value: 0,
           },
         },
         hover: {
           filter: {
-            type: "darken",
+            type: 'darken',
             value: 0.5,
           },
         },
@@ -363,24 +370,24 @@ export const ColumnChartCwd: FC<PropsColumn> = ({
         },
       },
       yaxis: {
-        fillColor: "#B3F7CA",
+        fillColor: '#B3F7CA',
         labels: {
-          background: "#775DD0",
+          background: '#775DD0',
           formatter: function (value: any) {
             if (value >= 1000000) {
-              return (value / 1000000).toFixed(1) + "M";
+              return (value / 1000000).toFixed(1) + 'M';
             } else if (value >= 1000 && value < 1000000) {
-              return (value / 1000).toFixed(1) + "k";
+              return (value / 1000).toFixed(1) + 'k';
             } else {
               return value;
             }
           },
           style: {
             colors: [color],
-            fontSize: "10px",
-            fontFamily: "Roboto, sans-serif",
+            fontSize: '10px',
+            fontFamily: 'Roboto, sans-serif',
             fontWeight: 400,
-            cssClass: "apexcharts-yaxis-label",
+            cssClass: 'apexcharts-yaxis-label',
           },
         },
       },
@@ -389,8 +396,8 @@ export const ColumnChartCwd: FC<PropsColumn> = ({
           return `
           <div class="column-toltip">
           <div class="column-toltip-light">${moment(
-            w.globals.labels[dataPointIndex]
-          ).format("DD MMMM YYYY")}</div>
+            w.globals.labels[dataPointIndex],
+          ).format('DD MMMM YYYY')}</div>
             <div class="column-toltip-bold">${w.globals.stackedSeriesTotals[
               dataPointIndex
             ].toLocaleString()} CWD</div>
@@ -400,13 +407,13 @@ export const ColumnChartCwd: FC<PropsColumn> = ({
         // enabled: false,
         fixed: {
           enabled: true,
-          position: "topLeft", // topRight, topLeft, bottomRight, bottomLeft
+          position: 'topLeft', // topRight, topLeft, bottomRight, bottomLeft
           offsetY: 0,
           offsetX: 110,
         },
       },
       legend: {
-        horizontalAlign: "center",
+        horizontalAlign: 'center',
         offsetX: 0,
         show: false,
       },
@@ -416,7 +423,7 @@ export const ColumnChartCwd: FC<PropsColumn> = ({
       plotOptions: {
         bar: {
           borderRadius: 6,
-          columnWidth: "45%",
+          columnWidth: '45%',
           distributed: false,
         },
       },
@@ -427,7 +434,7 @@ export const ColumnChartCwd: FC<PropsColumn> = ({
   };
 
   return (
-    <div id="chart1" style={{ position: "relative" }}>
+    <div id="chart1" style={{ position: 'relative' }}>
       <Chart
         options={data.options}
         series={data.series}
@@ -441,7 +448,7 @@ export const ColumnChartCwd: FC<PropsColumn> = ({
 export const ColumnChartThree: FC<PropsColumn> = ({ date, value }) => {
   const themeContext = useContext(ThemeContext);
   const theme = themeContext.theme;
-  const color = theme === "light" ? "#222" : "#fff";
+  const color = theme === 'light' ? '#222' : '#fff';
 
   const data = {
     series: [
@@ -451,7 +458,7 @@ export const ColumnChartThree: FC<PropsColumn> = ({ date, value }) => {
     ],
     options: {
       chart: {
-        type: "bar",
+        type: 'bar',
         height: 350,
         toolbar: {
           show: false,
@@ -463,8 +470,8 @@ export const ColumnChartThree: FC<PropsColumn> = ({ date, value }) => {
       plotOptions: {
         bar: {
           horizontal: false,
-          columnWidth: "45%",
-          endingShape: "rounded",
+          columnWidth: '45%',
+          endingShape: 'rounded',
         },
       },
       dataLabels: {
@@ -473,16 +480,19 @@ export const ColumnChartThree: FC<PropsColumn> = ({ date, value }) => {
       stroke: {
         show: true,
         width: 2,
-        colors: ["transparent"],
+        colors: ['transparent'],
       },
       xaxis: {
         categories: date,
         labels: {
-          show: false,
+          show: true,
           style: {
-            fontSize: "10px",
+            fontSize: '10px',
           },
           offsetY: -4,
+          formatter: function (value: any) {
+            return new Date(value).getDate();
+          },
         },
         axisBorder: {
           show: false,
@@ -492,18 +502,18 @@ export const ColumnChartThree: FC<PropsColumn> = ({ date, value }) => {
         },
       },
       fill: {
-        colors: ["#6DB9FF"],
+        colors: ['#6DB9FF'],
       },
       states: {
         normal: {
           filter: {
-            type: "none",
+            type: 'none',
             value: 0,
           },
         },
         hover: {
           filter: {
-            type: "darken",
+            type: 'darken',
             value: 0.5,
           },
         },
@@ -513,8 +523,8 @@ export const ColumnChartThree: FC<PropsColumn> = ({ date, value }) => {
           return `
           <div class="column-toltip">
           <div class="column-toltip-light">${moment(
-            w.globals.labels[dataPointIndex]
-          ).format("DD MMMM YYYY")}</div>
+            w.globals.labels[dataPointIndex],
+          ).format('DD MMMM YYYY')}</div>
             <div class="column-toltip-bold">${w.globals.stackedSeriesTotals[
               dataPointIndex
             ].toLocaleString()} CWD</div>
@@ -524,30 +534,30 @@ export const ColumnChartThree: FC<PropsColumn> = ({ date, value }) => {
         // enabled: false,
         fixed: {
           enabled: true,
-          position: "topLeft",
+          position: 'topLeft',
           offsetY: 0,
           offsetX: 110,
         },
       },
       yaxis: {
-        fillColor: "#B3F7CA",
+        fillColor: '#B3F7CA',
         labels: {
-          background: "#775DD0",
+          background: '#775DD0',
           formatter: function (value: any) {
             if (value >= 1000000) {
-              return (value / 1000000).toFixed(1) + "M";
+              return (value / 1000000).toFixed(1) + 'M';
             } else if (value >= 1000 && value < 1000000) {
-              return (value / 1000).toFixed(1) + "k";
+              return (value / 1000).toFixed(1) + 'k';
             } else {
               return value;
             }
           },
           style: {
             colors: [color],
-            fontSize: "10px",
-            fontFamily: "Roboto, sans-serif",
+            fontSize: '10px',
+            fontFamily: 'Roboto, sans-serif',
             fontWeight: 400,
-            cssClass: "apexcharts-yaxis-label",
+            cssClass: 'apexcharts-yaxis-label',
           },
         },
       },
@@ -555,7 +565,7 @@ export const ColumnChartThree: FC<PropsColumn> = ({ date, value }) => {
   };
 
   return (
-    <div id="chart1" style={{ position: "relative" }}>
+    <div id="chart1" style={{ position: 'relative' }}>
       <Chart
         options={data.options}
         series={data.series}
@@ -569,7 +579,7 @@ export const ColumnChartThree: FC<PropsColumn> = ({ date, value }) => {
 export const ColumnChartTwo: FC<PropsColumn> = ({ date, value }) => {
   const themeContext = useContext(ThemeContext);
   const theme = themeContext.theme;
-  const color = theme === "light" ? "#222" : "#fff";
+  const color = theme === 'light' ? '#222' : '#fff';
 
   const data = {
     series: [
@@ -581,7 +591,7 @@ export const ColumnChartTwo: FC<PropsColumn> = ({ date, value }) => {
     options: {
       chart: {
         height: 350,
-        type: "bar",
+        type: 'bar',
         events: {
           click: function (chart: any, w: any, e: any) {
             // console.log(chart, w, e)
@@ -592,18 +602,18 @@ export const ColumnChartTwo: FC<PropsColumn> = ({ date, value }) => {
         },
       },
       fill: {
-        colors: ["#BCD476"],
+        colors: ['#BCD476'],
       },
       states: {
         normal: {
           filter: {
-            type: "none",
+            type: 'none',
             value: 0,
           },
         },
         hover: {
           filter: {
-            type: "darken",
+            type: 'darken',
             value: 0.5,
           },
         },
@@ -611,11 +621,14 @@ export const ColumnChartTwo: FC<PropsColumn> = ({ date, value }) => {
       xaxis: {
         categories: date,
         labels: {
-          show: false,
+          show: true,
           style: {
-            fontSize: "10px",
+            fontSize: '10px',
           },
           offsetY: -4,
+          formatter: function (value: any) {
+            return new Date(value).getDate();
+          },
         },
         axisBorder: {
           show: false,
@@ -634,19 +647,19 @@ export const ColumnChartTwo: FC<PropsColumn> = ({ date, value }) => {
               return 0;
             }
             if (value >= 1000000) {
-              return (value / 1000000).toFixed(1) + "M";
+              return (value / 1000000).toFixed(1) + 'M';
             } else if (value >= 1000 && value < 1000000) {
-              return (value / 1000).toFixed(1) + "k";
+              return (value / 1000).toFixed(1) + 'k';
             } else {
               return value;
             }
           },
           style: {
             colors: [color],
-            fontSize: "10px",
-            fontFamily: "Roboto, sans-serif",
+            fontSize: '10px',
+            fontFamily: 'Roboto, sans-serif',
             fontWeight: 400,
-            cssClass: "apexcharts-yaxis-label",
+            cssClass: 'apexcharts-yaxis-label',
           },
         },
       },
@@ -655,11 +668,11 @@ export const ColumnChartTwo: FC<PropsColumn> = ({ date, value }) => {
           return `
           <div class="column-toltip">
           <div class="column-toltip-light">${moment(
-            w.globals.labels[dataPointIndex]
-          ).format("DD MMMM YYYY")}</div>
+            w.globals.labels[dataPointIndex],
+          ).format('DD MMMM YYYY')}</div>
             <div class="column-toltip-bold">${
               w.globals.stackedSeriesTotals[dataPointIndex].toLocaleString() +
-              "CWD"
+              'CWD'
             } </div>
           </div>
           `;
@@ -667,13 +680,13 @@ export const ColumnChartTwo: FC<PropsColumn> = ({ date, value }) => {
         // enabled: false,
         fixed: {
           enabled: true,
-          position: "topLeft",
+          position: 'topLeft',
           offsetY: 0,
           offsetX: 110,
         },
       },
       legend: {
-        horizontalAlign: "center",
+        horizontalAlign: 'center',
         offsetX: 0,
         show: false,
       },
@@ -683,7 +696,7 @@ export const ColumnChartTwo: FC<PropsColumn> = ({ date, value }) => {
       plotOptions: {
         bar: {
           borderRadius: 6,
-          columnWidth: "45%",
+          columnWidth: '45%',
           distributed: false,
         },
       },
@@ -694,7 +707,7 @@ export const ColumnChartTwo: FC<PropsColumn> = ({ date, value }) => {
   };
 
   return (
-    <div id="chart2" style={{ position: "relative" }}>
+    <div id="chart2" style={{ position: 'relative' }}>
       <Chart
         options={data.options}
         series={data.series}
@@ -708,9 +721,9 @@ export const ColumnChartTwo: FC<PropsColumn> = ({ date, value }) => {
 export const ColumnChartAnalitic: FC<PropsColumn> = ({ date, value }) => {
   const themeContext = useContext(ThemeContext);
   const theme = themeContext.theme;
-  const color = theme === "light" ? "#222" : "#fff";
+  const color = theme === 'light' ? '#222' : '#fff';
 
-  moment.locale(localStorage.getItem("i18nextLng") || "ru");
+  moment.locale(localStorage.getItem('i18nextLng') || 'ru');
 
   const data = {
     series: [
@@ -722,7 +735,7 @@ export const ColumnChartAnalitic: FC<PropsColumn> = ({ date, value }) => {
     options: {
       chart: {
         height: 350,
-        type: "bar",
+        type: 'bar',
         events: {
           click: function (chart: any, w: any, e: any) {
             // console.log(chart, w, e)
@@ -733,30 +746,30 @@ export const ColumnChartAnalitic: FC<PropsColumn> = ({ date, value }) => {
         },
       },
       fill: {
-        colors: ["#BCD476"],
+        colors: ['#BCD476'],
       },
       states: {
         normal: {
           filter: {
-            type: "none",
+            type: 'none',
             value: 0,
           },
         },
         hover: {
           filter: {
-            type: "darken",
+            type: 'darken',
             value: 0.5,
           },
         },
       },
       xaxis: {
         categories: date,
-        type: "datetime",
+        type: 'datetime',
         labels: {
           show: true,
-          format: "dd/MM",
+          format: 'dd/MM',
           style: {
-            fontSize: "10px",
+            fontSize: '10px',
           },
           offsetY: -4,
         },
@@ -777,19 +790,19 @@ export const ColumnChartAnalitic: FC<PropsColumn> = ({ date, value }) => {
               return 0;
             }
             if (value >= 1000000) {
-              return (value / 1000000).toFixed(1) + "M";
+              return (value / 1000000).toFixed(1) + 'M';
             } else if (value >= 1000 && value < 1000000) {
-              return (value / 1000).toFixed(1) + "k";
+              return (value / 1000).toFixed(1) + 'k';
             } else {
               return value;
             }
           },
           style: {
             colors: [color],
-            fontSize: "10px",
-            fontFamily: "Roboto, sans-serif",
+            fontSize: '10px',
+            fontFamily: 'Roboto, sans-serif',
             fontWeight: 400,
-            cssClass: "apexcharts-yaxis-label",
+            cssClass: 'apexcharts-yaxis-label',
           },
         },
       },
@@ -798,11 +811,11 @@ export const ColumnChartAnalitic: FC<PropsColumn> = ({ date, value }) => {
           return `
           <div class="column-toltip">
           <div class="column-toltip-light">${moment(
-            date[dataPointIndex]
-          ).format("DD MMMM YYYY")}</div>
+            date[dataPointIndex],
+          ).format('DD MMMM YYYY')}</div>
             <div class="column-toltip-bold">${
               w.globals.stackedSeriesTotals[dataPointIndex].toLocaleString() +
-              "CWD"
+              'CWD'
             } </div>
           </div>
           `;
@@ -810,13 +823,13 @@ export const ColumnChartAnalitic: FC<PropsColumn> = ({ date, value }) => {
         // enabled: false,
         fixed: {
           enabled: true,
-          position: "topLeft",
+          position: 'topLeft',
           offsetY: 0,
           offsetX: 110,
         },
       },
       legend: {
-        horizontalAlign: "center",
+        horizontalAlign: 'center',
         offsetX: 0,
         show: false,
       },
@@ -826,7 +839,7 @@ export const ColumnChartAnalitic: FC<PropsColumn> = ({ date, value }) => {
       plotOptions: {
         bar: {
           borderRadius: 6,
-          columnWidth: "45%",
+          columnWidth: '45%',
           distributed: false,
         },
       },
@@ -837,7 +850,7 @@ export const ColumnChartAnalitic: FC<PropsColumn> = ({ date, value }) => {
   };
 
   return (
-    <div id="chart2" style={{ position: "relative" }}>
+    <div id="chart2" style={{ position: 'relative' }}>
       <Chart
         options={data.options}
         series={data.series}
@@ -859,30 +872,30 @@ export const RadialBar: FC<RadialProps> = ({
   values,
   color,
   height = 210,
-  size = "70%",
+  size = '70%',
 }) => {
   const data = {
     series: [values],
     options: {
       chart: {
         height: 350,
-        type: "radialBar",
+        type: 'radialBar',
       },
       colors: [color],
       plotOptions: {
         radialBar: {
           hollow: {
             size: size,
-            background: "transparent",
+            background: 'transparent',
           },
           dataLabels: {
             show: false,
             name: {
               show: true,
-              fontSize: "18px",
-              fontFamily: "Roboto, sans-serif",
+              fontSize: '18px',
+              fontFamily: 'Roboto, sans-serif',
               fontWeight: 600,
-              color: "#0E0D3D",
+              color: '#0E0D3D',
               offsetY: -20,
             },
           },
@@ -890,8 +903,8 @@ export const RadialBar: FC<RadialProps> = ({
             show: true,
             startAngle: undefined,
             endAngle: undefined,
-            background: "#f2f2f2",
-            strokeWidth: "97%",
+            background: '#f2f2f2',
+            strokeWidth: '97%',
             opacity: 1,
             margin: 5,
             dropShadow: {
@@ -905,13 +918,13 @@ export const RadialBar: FC<RadialProps> = ({
         },
       },
       stroke: {
-        lineCap: "round",
+        lineCap: 'round',
       },
     },
   };
 
   return (
-    <div id="chart2" style={{ position: "relative" }}>
+    <div id="chart2" style={{ position: 'relative' }}>
       <Chart
         options={data.options}
         series={data.series}
@@ -927,23 +940,23 @@ export const RadialBarRound = () => {
     series: [100],
     options: {
       chart: {
-        type: "radialBar",
+        type: 'radialBar',
       },
       stroke: {
-        lineCap: "round",
+        lineCap: 'round',
       },
-      colors: ["#BCD476"],
+      colors: ['#BCD476'],
       plotOptions: {
         radialBar: {
           // startAngle: -35,
           // endAngle: 325,
           hollow: {
-            size: "70%",
-            background: "#fff",
+            size: '70%',
+            background: '#fff',
           },
         },
       },
-      labels: ["1 700 000"],
+      labels: ['1 700 000'],
     },
   };
 
@@ -951,12 +964,11 @@ export const RadialBarRound = () => {
     <div
       id="chart2"
       style={{
-        position: "absolute",
+        position: 'absolute',
         height: 182,
-        right: "0",
-        borderRadius: "50%",
-      }}
-    >
+        right: '0',
+        borderRadius: '50%',
+      }}>
       <Chart
         options={data.options}
         series={data.series}
@@ -973,28 +985,28 @@ export const RadialBarHalf = () => {
     series: [67],
     options: {
       chart: {
-        type: "radialBar",
+        type: 'radialBar',
       },
       stroke: {
-        lineCap: "round",
+        lineCap: 'round',
       },
-      colors: ["#BCD476"],
+      colors: ['#BCD476'],
       plotOptions: {
         radialBar: {
           startAngle: -205,
           endAngle: 140,
           hollow: {
-            size: "70%",
-            background: "#fff",
+            size: '70%',
+            background: '#fff',
           },
         },
       },
-      labels: ["Cricket"],
+      labels: ['Cricket'],
     },
   };
 
   return (
-    <div id="chart2" style={{ position: "relative", height: 182 }}>
+    <div id="chart2" style={{ position: 'relative', height: 182 }}>
       <Chart
         options={data.options}
         series={data.series}
