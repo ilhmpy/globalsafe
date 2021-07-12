@@ -9,6 +9,7 @@ import 'swiper/components/navigation/navigation.scss';
 import 'swiper/components/pagination/pagination.scss';
 import 'swiper/components/scrollbar/scrollbar.scss';
 import 'swiper/swiper.scss';
+import burgerGroup from '../../assets/img/burgerGroup.png';
 import { ReactComponent as Exit } from '../../assets/svg/exit.svg';
 import { Button } from '../../components/Button/Button';
 import { Select } from '../../components/Select/Select2';
@@ -21,10 +22,19 @@ import { OpenDate } from '../../types/dates';
 // import { AdminDepositList } from "./AdminPay/DepositList";
 import { CollectionListDeposits, ListDeposits } from '../../types/deposits';
 import { PaymentsCollection, RootPayments } from '../../types/payments';
+import { SelectValues, SortingType } from '../../types/sorting';
 import { ModalDeposit } from './AdminPay/Payments';
 import { Rounds } from './AdminPay/Rounds';
 import { Pagination as CustomPagination } from './Pagination';
 import * as Styled from './Styled.elements';
+import {
+  BurgerButton,
+  BurgerImg,
+  SortingItem,
+  SortingWindow,
+  WindowBody,
+  WindowTitle,
+} from './Styled.elements';
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 type PayProps = {
@@ -99,11 +109,64 @@ export const AdminDeposit = () => {
   const user = appContext.user;
   const [pageLength, setPageLength] = useState<number>(10);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
+
+  const [sorting, setSorting] = useState<SortingType[]>([]);
+  const [listForSorting, setListForSorting] = useState<SelectValues[]>([
+    {
+      text: 'Пользователь: От А до Я',
+      active: false,
+      OrderType: 1,
+      FieldName: 'userName',
+    },
+    {
+      text: 'Пользователь: От Я до А',
+      active: false,
+      OrderType: 2,
+      FieldName: 'userName',
+    },
+    {
+      text: 'Название: От А до Я',
+      active: false,
+      OrderType: 2,
+      FieldName: 'depositId',
+    },
+    {
+      text: 'Название: От Я до А',
+      active: false,
+      OrderType: 1,
+      FieldName: 'depositId',
+    },
+    {
+      text: 'По убыванию суммы депозита',
+      active: false,
+      OrderType: 2,
+      FieldName: 'amount',
+    },
+    {
+      text: 'По возрастанию суммы депозита',
+      active: false,
+      OrderType: 1,
+      FieldName: 'amount',
+    },
+    {
+      text: 'По убыванию даты след.  выплаты',
+      active: false,
+      OrderType: 2,
+      FieldName: 'paymentDate',
+    },
+    {
+      text: 'По возрастанию даты след.  выплаты',
+      active: false,
+      OrderType: 1,
+      FieldName: 'paymentDate',
+    },
+  ]);
 
   const myLoad = () => {
     setCount(false);
     setLoading(true);
-    if (hubConnection && depositsList.length < totalList) {
+    if (hubConnection) {
       hubConnection
         .invoke<RootPayments>(
           'GetUsersDeposits',
@@ -117,10 +180,12 @@ export const AdminDeposit = () => {
           null,
           (currentPage - 1) * pageLength,
           pageLength,
+          sorting,
         )
         .then((res) => {
+          setTotalList(res.totalRecords);
           if (res.collection.length) {
-            setDepositsList([...res.collection]);
+            setDepositsList(res.collection);
             setCount(true);
             setNum(num + 20);
           }
@@ -133,7 +198,7 @@ export const AdminDeposit = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<ListDeposits>('GetAllPublicDeposits', null, false, 0, 40)
+        .invoke<ListDeposits>('GetAllPublicDeposits', null, false, 0, 40, [])
         .then((res) => {
           setListDeposits(res.collection);
         })
@@ -142,36 +207,8 @@ export const AdminDeposit = () => {
   }, [hubConnection]);
 
   useEffect(() => {
-    if (hubConnection) {
-      hubConnection
-        .invoke<RootPayments>(
-          'GetUsersDeposits',
-          [1, 2, 3, 4, 5, 6],
-          null,
-          searchSafeID.length ? searchSafeID : null,
-          backDays._d,
-          new Date(),
-          null,
-          null,
-          null,
-          (currentPage - 1) * pageLength,
-          pageLength,
-        )
-        .then((res) => {
-          setTotalList(res.totalRecords);
-          setLoading(false);
-          setDepositsList(res.collection);
-        })
-        .catch((err: Error) => {
-          setLoading(false);
-          console.log(err);
-        });
-    }
-  }, [hubConnection]);
-
-  useEffect(() => {
     myLoad();
-  }, [currentPage, hubConnection, pageLength]);
+  }, [currentPage, hubConnection, pageLength, sorting]);
 
   const submit = () => {
     if (hubConnection) {
@@ -189,6 +226,7 @@ export const AdminDeposit = () => {
           null,
           (currentPage - 1) * pageLength,
           pageLength,
+          sorting,
         )
         .then((res) => {
           setDepositsList([]);
@@ -199,6 +237,38 @@ export const AdminDeposit = () => {
         })
         .catch((err: Error) => console.log(err));
     }
+  };
+
+  const getActiveSort = (index: number) => {
+    setSorting([
+      {
+        ConditionWeight: 1,
+        OrderType: listForSorting[index].OrderType,
+        FieldName: listForSorting[index].FieldName,
+      },
+    ]);
+
+    setListForSorting((prev) => {
+      return prev.map((one, i) => {
+        if (one.active === true && index === i) {
+          setSorting([]);
+          return {
+            ...one,
+            active: false,
+          };
+        } else if (index === i) {
+          return {
+            ...one,
+            active: true,
+          };
+        } else {
+          return {
+            ...one,
+            active: false,
+          };
+        }
+      });
+    });
   };
 
   return (
@@ -273,8 +343,29 @@ export const AdminDeposit = () => {
             <TableHeadItem>{t('adminDeposit.table.sum')}</TableHeadItem>
             <TableHeadItem>{t('adminDeposit.table.nextDate')}</TableHeadItem>
             <TableHeadItem>{t('adminDeposit.table.paid')}</TableHeadItem>
-            <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
             {/* <FilterMenu filterClick={filterClick} /> */}
+            <TableHeadItem>
+              <BurgerButton>
+                <BurgerImg
+                  src={burgerGroup}
+                  alt="burger"
+                  onClick={() => setSortingWindowOpen((prev) => !prev)}
+                />
+              </BurgerButton>
+              <Window open={sortingWindowOpen}>
+                <WindowTitle>Сортировка</WindowTitle>
+                <WindowBody>
+                  {listForSorting.map((obj, index) => (
+                    <Sort
+                      active={listForSorting[index].active}
+                      key={index}
+                      onClick={() => getActiveSort(index)}>
+                      {obj.text}
+                    </Sort>
+                  ))}
+                </WindowBody>
+              </Window>
+            </TableHeadItem>
           </TableHead>
           {depositsList.length ? (
             <Scrollbars style={{ height: '500px' }}>
@@ -300,6 +391,33 @@ export const AdminDeposit = () => {
     </>
   );
 };
+
+const Window = styled(SortingWindow)`
+  right: 0px;
+  top: 20px;
+`;
+const Sort = styled(SortingItem)`
+  &:nth-child(1) {
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+  &:nth-child(2) {
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+  &:nth-child(7) {
+    @media (max-width: 576px) {
+      display: none;
+    }
+  }
+  &:nth-child(8) {
+    @media (max-width: 576px) {
+      display: none;
+    }
+  }
+`;
 
 const FilterName = styled.div`
   font-weight: 500;

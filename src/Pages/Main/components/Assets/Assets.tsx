@@ -54,7 +54,6 @@ export const Assets = () => {
       hubConnection
         .invoke<ListDeposits>('GetDeposits', languale, true, 0, 40)
         .then((res) => {
-          // console.log("GetDeposits", res);
           setListDeposits(res.collection);
         })
         .catch((err: Error) => console.log(err));

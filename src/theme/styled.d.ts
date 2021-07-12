@@ -47,6 +47,10 @@ declare module 'styled-components' {
     };
     footer: {
       color: string;
-    }
+    };
+    sortingWindow: {
+      backgroundColor: string;
+      fontColor: string;
+    };
   }
 }

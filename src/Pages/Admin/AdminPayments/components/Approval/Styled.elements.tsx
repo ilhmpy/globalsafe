@@ -1,5 +1,5 @@
-import styled from "styled-components/macro";
-import { Button } from "../../../../../components/Button/Button";
+import styled from 'styled-components/macro';
+import { Button } from '../../../../../components/Button/Button';
 
 export const PaymentsTable = styled.div`
   padding: 30px;

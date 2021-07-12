@@ -3,6 +3,8 @@ import React, { FC, useContext, useEffect, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
+import styled from 'styled-components';
+import burgerGroup from '../../../../../assets/img/burgerGroup.png';
 import { Button } from '../../../../../components/Button/Button';
 import { Select } from '../../../../../components/Select/Select2';
 import { TestInputAnalitic } from '../../../../../components/UI/DayPicker';
@@ -18,6 +20,8 @@ import { CollectionListDeposits } from '../../../../../types/deposits';
 import { ModalAnalitic } from '../../../AdminPay/Payments';
 import { Pagination } from '../../../Pagination';
 import {
+  BurgerButton,
+  BurgerImg,
   FilterBlock,
   FilterHeader,
   FilterName,
@@ -26,8 +30,13 @@ import {
   SelectContainerInnerPaid,
   SelectWrap,
   ShowHide,
+  SortingItem,
+  SortingWindow,
+  WindowBody,
+  WindowTitle,
 } from '../../../Styled.elements';
 import * as Styled from './Styled.elements';
+import { SelectValues, SortingType } from '../../../../../types/sorting';
 
 type Props = {
   listDeposits: CollectionListDeposits[];
@@ -49,6 +58,48 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
 
+  const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
+  const [sorting, setSorting] = useState<SortingType[]>([]);
+  const [listForSorting, setListForSorting] = useState<SelectValues[]>([
+    {
+      text: 'Название: От А до Я',
+      active: false,
+      OrderType: 2,
+      FieldName: 'depositId',
+    },
+    {
+      text: 'Название: От Я до А',
+      active: false,
+      OrderType: 1,
+      FieldName: 'depositId',
+    },
+    {
+      text: 'По убыванию даты',
+      active: false,
+      OrderType: 2,
+      FieldName: 'payoutDate',
+    },
+    {
+      text: 'По возрастанию даты',
+      active: false,
+      OrderType: 1,
+      FieldName: 'payoutDate',
+    },
+    {
+      text: 'По убыванию суммы выплаты',
+      active: false,
+      OrderType: 2,
+      FieldName: 'amount',
+    },
+    {
+      text: 'По возрастанию суммы выплаты',
+      active: false,
+      OrderType: 1,
+      FieldName: 'amount',
+    },
+  ]);
+  console.log(sorting);
+
   useEffect(() => {
     if (hubConnection) {
       setLoading(true);
@@ -60,6 +111,7 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
           openDate.to ? openDate.to : null,
           (currentPage - 1) * pageLength,
           pageLength,
+          sorting,
         )
         .then((res) => {
           setList(res.collection);
@@ -71,11 +123,9 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
           console.log(e);
         });
     }
-  }, [currentPage, hubConnection, pageLength]);
+  }, [currentPage, hubConnection, pageLength, sorting]);
 
   const submit = () => {
-    console.log(currentPage);
-    console.log(pageLength);
     setList([]);
     setCurrentPage(1);
     if (hubConnection) {
@@ -88,6 +138,7 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
           openDate.to ? openDate.to : null,
           (currentPage - 1) * pageLength,
           pageLength,
+          sorting,
         )
         .then((res) => {
           setList(res.collection);
@@ -109,6 +160,38 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
 
   const onClose = () => {
     setOpen(null);
+  };
+
+  const getActiveSort = (index: number) => {
+    setSorting([
+      {
+        ConditionWeight: 1,
+        OrderType: listForSorting[index].OrderType,
+        FieldName: listForSorting[index].FieldName,
+      },
+    ]);
+
+    setListForSorting((prev) => {
+      return prev.map((one, i) => {
+        if (one.active === true && index === i) {
+          setSorting([]);
+          return {
+            ...one,
+            active: false,
+          };
+        } else if (index === i) {
+          return {
+            ...one,
+            active: true,
+          };
+        } else {
+          return {
+            ...one,
+            active: false,
+          };
+        }
+      });
+    });
   };
 
   return (
@@ -172,8 +255,28 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
             <Styled.TableHeadItemPaid>
               {t('adminPay.analitics.sum')}
             </Styled.TableHeadItemPaid>
+
             <Styled.TableHeadItemPaid>
-              {/* <Filter /> */}
+              <BurgerButton>
+                <BurgerImg
+                  src={burgerGroup}
+                  alt="burger"
+                  onClick={() => setSortingWindowOpen((prev) => !prev)}
+                />
+              </BurgerButton>
+              <Window open={sortingWindowOpen}>
+                <WindowTitle>Сортировка</WindowTitle>
+                <WindowBody>
+                  {listForSorting.map((obj, index) => (
+                    <Sort
+                      active={listForSorting[index].active}
+                      key={index}
+                      onClick={() => getActiveSort(index)}>
+                      {obj.text}
+                    </Sort>
+                  ))}
+                </WindowBody>
+              </Window>
             </Styled.TableHeadItemPaid>
           </Styled.TableHead>
           {list.length ? (
@@ -219,3 +322,39 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
     </div>
   );
 };
+
+const Window = styled(SortingWindow)`
+  right: 66px;
+  top: 683px;
+  @media (max-width: 992px) {
+    top: 691px;
+  }
+  @media (max-width: 800px) {
+    top: 719px;
+  }
+  @media (max-width: 768px) {
+    right: 50px;
+    top: 699px;
+  }
+  @media (max-width: 576px) {
+    top: 711px;
+  }
+  @media (max-width: 399px) {
+    top: 751px;
+  }
+  @media (max-width: 333px) {
+    top: 765px;
+  }
+`;
+const Sort = styled(SortingItem)`
+  &:nth-child(3) {
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+  &:nth-child(4) {
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+`;

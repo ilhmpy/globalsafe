@@ -55,7 +55,6 @@ export const Timer: FC<Props> = ({
       hubConnection
         .invoke<RootClock>('GetNextDraw')
         .then((res) => {
-          console.log('GetNextDraw repeat', res);
           setDeadline(res.totalSeconds);
           setClock(res);
         })
