@@ -22,4 +22,3 @@ if (process.env.REACT_APP_ENV) {
 }
 
 export { APP_URL };
-
