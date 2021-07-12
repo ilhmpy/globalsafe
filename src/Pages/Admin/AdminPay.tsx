@@ -21,6 +21,7 @@ import { Card } from '../../globalStyles';
 import useWindowSize from '../../hooks/useWindowSize';
 import { OpenDate } from '../../types/dates';
 import { CollectionListDeposits, ListDeposits } from '../../types/deposits';
+import { SortingType, SelectValues } from '../../types/sorting';
 import {
   CollectionCharges,
   PaymentsCollection,
@@ -115,21 +116,11 @@ export const AdminPay = () => {
         .catch((err: Error) => console.log(err));
     }
   }, [hubConnection]);
-  type SortingType = {
-    ConditionWeight: number;
-    OrderType: number;
-    FieldName: string;
-  };
-  type Values = {
-    text: string;
-    active: boolean;
-    OrderType: number;
-    FieldName: string;
-  };
+  
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
   const [sorting, setSorting] = useState<SortingType[]>([]);
 
-  const [listForSorting, setListForSorting] = useState<Values[]>([
+  const [listForSorting, setListForSorting] = useState<SelectValues[]>([
     {
       text: 'Пользователь: От А до Я',
       active: false,
@@ -183,7 +174,7 @@ export const AdminPay = () => {
   const [sortingWindowOpenForPay, setSortingWindowOpenForPay] = useState(false);
   const [sortingForPay, setSortingForPay] = useState<SortingType[]>([]);
 
-  const [listForSortingForPay, setListForSortingForPay] = useState<Values[]>([
+  const [listForSortingForPay, setListForSortingForPay] = useState<SelectValues[]>([
     {
       text: 'Пользователь: От А до Я',
       active: false,

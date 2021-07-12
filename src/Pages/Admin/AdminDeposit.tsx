@@ -22,6 +22,7 @@ import { OpenDate } from '../../types/dates';
 // import { AdminDepositList } from "./AdminPay/DepositList";
 import { CollectionListDeposits, ListDeposits } from '../../types/deposits';
 import { PaymentsCollection, RootPayments } from '../../types/payments';
+import { SelectValues, SortingType } from '../../types/sorting';
 import { ModalDeposit } from './AdminPay/Payments';
 import { Rounds } from './AdminPay/Rounds';
 import { Pagination as CustomPagination } from './Pagination';
@@ -109,20 +110,9 @@ export const AdminDeposit = () => {
   const [pageLength, setPageLength] = useState<number>(10);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
-  type SortingType = {
-    ConditionWeight: number;
-    OrderType: number;
-    FieldName: string;
-  };
-  const [sorting, setSorting] = useState<SortingType[]>([]);
 
-  type Values = {
-    text: string;
-    active: boolean;
-    OrderType: number;
-    FieldName: string;
-  };
-  const [listForSorting, setListForSorting] = useState<Values[]>([
+  const [sorting, setSorting] = useState<SortingType[]>([]);
+  const [listForSorting, setListForSorting] = useState<SelectValues[]>([
     {
       text: 'Пользователь: От А до Я',
       active: false,
@@ -195,7 +185,6 @@ export const AdminDeposit = () => {
         .then((res) => {
           setTotalList(res.totalRecords);
           if (res.collection.length) {
-            console.log(res);
             setDepositsList(res.collection);
             setCount(true);
             setNum(num + 20);

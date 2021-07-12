@@ -21,6 +21,7 @@ import {
   RootGetDraw,
   RootLottery,
 } from '../../types/lottery';
+import { SelectValues, SortingType } from '../../types/sorting';
 import { LotteryTable } from './AdminPay/Table';
 import { Writing } from './AdminPay/Writing';
 import { Pagination } from './Pagination';
@@ -49,20 +50,9 @@ export const AdminLottery = () => {
   });
 
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
-  type SortingType = {
-    ConditionWeight: number;
-    OrderType: number;
-    FieldName: string;
-  };
-  const [sorting, setSorting] = useState<SortingType[]>([]);
 
-  type Values = {
-    text: string;
-    active: boolean;
-    OrderType: number;
-    FieldName: string;
-  };
-  const [listForSorting, setListForSorting] = useState<Values[]>([
+  const [sorting, setSorting] = useState<SortingType[]>([]);
+  const [listForSorting, setListForSorting] = useState<SelectValues[]>([
     {
       text: 'По убыванию даты',
       active: false,
@@ -259,8 +249,6 @@ export const AdminLottery = () => {
     });
   };
 
-  console.log('lotteryList', lotteryList);
-  console.log('sorting', sorting);
 
   return (
     <div>

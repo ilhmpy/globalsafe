@@ -35,6 +35,8 @@ import {
   WindowBody,
   WindowTitle,
 } from './Styled.elements';
+import { SelectValues, SortingType } from '../../types/sorting';
+
 
 type PropsTable = {
   lockAccount: (id: string) => void;
@@ -81,7 +83,6 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
           80,
         )
         .then((res) => {
-          // console.log("GetDepositsCharges 11", res);
           setDataOne(res.collection);
         })
         .catch((err: Error) => {
@@ -108,7 +109,6 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
         )
         .then((res) => {
           setDataTwo(res.collection);
-          // console.log("GetUsersDeposits 22", res);
         })
         .catch((err: Error) => {
           console.log(err);
@@ -149,7 +149,6 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
       hubConnection
         .invoke('AdjustBalanceAsync', userSafeId, delta, safeOperationId)
         .then((res) => {
-          console.log('AdjustBalanceAsync', res);
           getDepositsCharges();
           getUsersDeposits();
         })
@@ -243,20 +242,8 @@ export const AdminUsers = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
-  type SortingType = {
-    ConditionWeight: number;
-    OrderType: number;
-    FieldName: string;
-  };
   const [sorting, setSorting] = useState<SortingType[]>([]);
-
-  type Values = {
-    text: string;
-    active: boolean;
-    OrderType: number;
-    FieldName: string;
-  };
-  const [listForSorting, setListForSorting] = useState<Values[]>([
+  const [listForSorting, setListForSorting] = useState<SelectValues[]>([
     {
       text: 'Пользователь: От А до Я',
       active: false,

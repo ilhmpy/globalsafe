@@ -29,6 +29,7 @@ import {
   WindowBody,
   WindowTitle,
 } from './Styled.elements';
+import { SelectValues, SortingType } from '../../types/sorting';
 
 const TableList: FC<{ data: CollectionPortfolio }> = ({ data }) => {
   const [open, setOpen] = useState(false);
@@ -97,17 +98,6 @@ export const AdminPortfolio = () => {
   const [pageLengthDIAMOND, setPageLengthDIAMOND] = useState<number>(10);
   const [currentPageDIAMOND, setCurrentPageDIAMOND] = useState<number>(1);
 
-  type SortingType = {
-    ConditionWeight: number;
-    OrderType: number;
-    FieldName: string;
-  };
-  type Values = {
-    text: string;
-    active: boolean;
-    OrderType: number;
-    FieldName: string;
-  };
   const [sortingWindowOpenGCWD, setSortingWindowOpenGCWD] = useState(false);
   const [sortingWindowOpenMGCWD, setSortingWindowOpenMGCWD] = useState(false);
   const [sortingWindowOpenDIAMOND, setSortingWindowOpenDIAMOND] =
@@ -115,7 +105,7 @@ export const AdminPortfolio = () => {
 
   const [sortingGCWD, setSortingGCWD] = useState<SortingType[]>([]);
 
-  const [listForSortingGCWD, setListForSortingGCWD] = useState<Values[]>([
+  const [listForSortingGCWD, setListForSortingGCWD] = useState<SelectValues[]>([
     {
       text: 'По убыванию даты покупки',
       active: false,
@@ -144,7 +134,7 @@ export const AdminPortfolio = () => {
 
   const [sortingMGCWD, setSortingMGCWD] = useState<SortingType[]>([]);
 
-  const [listForSortingMGCWD, setListForSortingMGCWD] = useState<Values[]>([
+  const [listForSortingMGCWD, setListForSortingMGCWD] = useState<SelectValues[]>([
     {
       text: 'По убыванию даты покупки',
       active: false,
@@ -173,7 +163,7 @@ export const AdminPortfolio = () => {
 
   const [sortingDIAMOND, setSortingDIAMOND] = useState<SortingType[]>([]);
 
-  const [listForSortingDIAMOND, setListForSortingDIAMOND] = useState<Values[]>([
+  const [listForSortingDIAMOND, setListForSortingDIAMOND] = useState<SelectValues[]>([
     {
       text: 'По убыванию даты покупки',
       active: false,

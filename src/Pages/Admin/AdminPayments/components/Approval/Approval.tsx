@@ -22,6 +22,7 @@ import {
   PaymentsCollection,
   RootPayments,
 } from '../../../../../types/payments';
+import { SelectValues, SortingType } from '../../../../../types/sorting';
 import { DepositList } from '../../../AdminPay/DepositList';
 import { Pagination } from '../../../Pagination';
 import {
@@ -89,20 +90,8 @@ export const Approval: FC<Props> = ({
   const searchSafeIDApproval = idProgramApproval.map((i) => i.safeId);
 
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
-  type SortingType = {
-    ConditionWeight: number;
-    OrderType: number;
-    FieldName: string;
-  };
   const [sorting, setSorting] = useState<SortingType[]>([]);
-
-  type Values = {
-    text: string;
-    active: boolean;
-    OrderType: number;
-    FieldName: string;
-  };
-  const [listForSorting, setListForSorting] = useState<Values[]>([
+  const [listForSorting, setListForSorting] = useState<SelectValues[]>([
     {
       text: 'Пользователь: От А до Я',
       active: false,
@@ -188,7 +177,6 @@ export const Approval: FC<Props> = ({
     setCount(false);
 
     if (hubConnection && depositList.length < totalDeposits) {
-      console.log(1111);
       hubConnection
         .invoke<RootPayments>(
           'GetUsersDeposits',

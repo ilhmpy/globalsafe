@@ -36,6 +36,7 @@ import {
   WindowTitle,
 } from '../../../Styled.elements';
 import * as Styled from './Styled.elements';
+import { SelectValues, SortingType } from '../../../../../types/sorting';
 
 type Props = {
   listDeposits: CollectionListDeposits[];
@@ -58,20 +59,8 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
   const hubConnection = appContext.hubConnection;
 
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
-  type SortingType = {
-    ConditionWeight: number;
-    OrderType: number;
-    FieldName: string;
-  };
   const [sorting, setSorting] = useState<SortingType[]>([]);
-
-  type Values = {
-    text: string;
-    active: boolean;
-    OrderType: number;
-    FieldName: string;
-  };
-  const [listForSorting, setListForSorting] = useState<Values[]>([
+  const [listForSorting, setListForSorting] = useState<SelectValues[]>([
     {
       text: 'Название: От А до Я',
       active: false,
@@ -137,8 +126,6 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
   }, [currentPage, hubConnection, pageLength, sorting]);
 
   const submit = () => {
-    console.log(currentPage);
-    console.log(pageLength);
     setList([]);
     setCurrentPage(1);
     if (hubConnection) {
