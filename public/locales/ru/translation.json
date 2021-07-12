@@ -294,7 +294,9 @@
     "procent": "Процент выплаты",
     "notData": "Нет данных",
     "dateEnd": "Дата завершения депозита",
-    "contrAmount": "Сумма взноса"
+    "contrAmount": "Сумма взноса",
+    "blockchainCommision": "Комиссия блокчейн",
+    "serviceCommision": "Комиссия сервиса"
   },
   "alert": {
     "success": "Успешно",

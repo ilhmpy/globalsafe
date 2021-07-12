@@ -18,7 +18,7 @@ import { Header } from "../../components/Header/Header";
 import * as Styled from "./Styles.elements";
 import { CSSTransition } from "react-transition-group";
 import { Modal } from "../../components/Modal/Modal";
-import { RootDeposits, DepositsCollection } from "../../types/info";
+import { RootDeposits, DepositsCollection, Commisions } from "../../types/info";
 import { Input } from "../../components/UI/Input";
 import { Button } from "../../components/Button/Button";
 import { AppContext } from "../../context/HubContext";
@@ -69,6 +69,8 @@ export const InfoMain = () => {
   const lang = localStorage.getItem("i18nextLng") || "ru";
   const languale = lang === "ru" ? 1 : 0;
   moment.locale(lang);
+  const [ blockchainCommision, setBlockchainCommision ] = useState<string>("0");
+  const [ serviceCommision, setServiceCommision ] = useState<string>("0");
 
   const handleDepositModal = () => {
     setAddDeposit(false);
@@ -235,9 +237,26 @@ export const InfoMain = () => {
     history.push("/info/deposits");
   };
 
+  const getCommisions = (value: string) => {
+    // get commisions from server
+    if (hubConnection) {
+      hubConnection.invoke<Commisions>(
+        "GetWithdrawFee",
+        1, Number(value)
+      ).then((res: any) => {
+        console.log("commisions", res);
+        setBlockchainCommision(res.networkFee);
+        setServiceCommision(res.serviceFee);
+      })
+       .catch((err) => console.error(err));
+    };
+  };
+
   const onChangeWithdraw = (e: React.ChangeEvent<HTMLInputElement>) => {
     const pattern = /^[1-9][0-9]*$/;
     if (e.target.value === "" || pattern.test(e.target.value)) {
+      // call function to get commisions
+      getCommisions(e.target.value);
       setWithdrawValue(e.target.value);
     }
   };
@@ -402,6 +421,14 @@ export const InfoMain = () => {
                 >
                   {t("privateArea.withdraw")}
                 </Styled.ModalButton>
+                <Styled.ModalCommisionBox>
+                  <Styled.ModalCommision>
+                    {t("privateArea.blockchainCommision")} - <Styled.ModalCommisionCount>{blockchainCommision} CWD</Styled.ModalCommisionCount>
+                  </Styled.ModalCommision>
+                  <Styled.ModalCommision>
+                    {t("privateArea.serviceCommision")} - <Styled.ModalCommisionCount>{serviceCommision} CWD</Styled.ModalCommisionCount>
+                  </Styled.ModalCommision>
+                </Styled.ModalCommisionBox>
               </Styled.ModalBlock>
             </Modal>
           )}
