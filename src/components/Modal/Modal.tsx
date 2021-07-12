@@ -1,6 +1,6 @@
-import React from "react";
-import styled from "styled-components/macro";
-import { Portal } from "../Portal/Portal";
+import React from 'react';
+import styled from 'styled-components/macro';
+import { Portal } from '../Portal/Portal';
 
 type ModalProps = {
   onClose: () => void;
@@ -13,7 +13,7 @@ export const Modal: React.FC<ModalProps> = ({
   children,
   onClose,
   width,
-  zIndex = "99999",
+  zIndex = '99999',
   mobMarg,
 }) => {
   const handleContainerClick = (e: React.MouseEvent) => {
@@ -64,6 +64,9 @@ const ModalContainer = styled.div<{ zIndex: string }>`
   transition: 0.3s;
   z-index: ${(props) => props.zIndex};
   overflow: auto;
+  @media (max-width: 576px) {
+    padding: 20px;
+  }
 `;
 
 const ModalComponent = styled.div<{ width?: number; mobMarg?: boolean }>`
@@ -75,9 +78,10 @@ const ModalComponent = styled.div<{ width?: number; mobMarg?: boolean }>`
   background: ${(props) => props.theme.modal};
   border-radius: 10px;
   padding: 1rem;
-  max-width: ${(props) => (props.width ? props.width + "px" : "400px")};
+  max-width: ${(props) => (props.width ? props.width + 'px' : '400px')};
   width: 100%;
   position: relative;
+  /* padding: 20px; */
   span {
     color: ${(props) => props.theme.text3};
     position: absolute;
@@ -91,7 +95,7 @@ const ModalComponent = styled.div<{ width?: number; mobMarg?: boolean }>`
     }
   }
   @media (max-width: 768px) {
-    margin: ${(props) => (props.mobMarg ? "50px 20px" : "50px auto")};
-    padding: ${(props) => (props.mobMarg ? "0" : "1rem")};
+    margin: ${(props) => (props.mobMarg ? '50px 20px' : '50px auto')};
+    padding: ${(props) => (props.mobMarg ? '0' : '1rem')};
   }
 `;

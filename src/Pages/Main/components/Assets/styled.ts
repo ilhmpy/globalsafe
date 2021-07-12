@@ -137,9 +137,20 @@ export const ModalBlock = styled.div`
       color: #000;
     }
   }
+  @media (max-width: 992px) {
+    padding: 50px 20px;
+    max-width: 280px;
+  }
 `;
+
 export const ModalBlockBody = styled.div`
   padding: 0 45px;
+  @media (max-width: 992px) {
+    padding: 0 30px;
+  }
+  @media (max-width: 576px) {
+    padding: 0 20px;
+  }
 `;
 
 export const ModalButton = styled(Button)`
@@ -152,6 +163,7 @@ export const ModalTitle = styled.h4`
   line-height: 28px;
   text-align: center;
   margin-bottom: 20px;
+  width: 100%;
 `;
 
 export const PartnerProgramContainer = styled.div`
