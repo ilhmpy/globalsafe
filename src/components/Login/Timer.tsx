@@ -25,7 +25,6 @@ export const Timer: FC<{
       setState("-");
     }
   }, [last]);
-  // console.log("state", state);
   const lang = localStorage.getItem("i18nextLng") || "ru";
   const languale = lang === "ru" ? 1 : 0;
   useEffect(() => {

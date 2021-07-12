@@ -4,6 +4,7 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
 import styled, { css } from 'styled-components/macro';
+import burgerGroup from '../../assets/img/burgerGroup.png';
 import { ReactComponent as Exit } from '../../assets/svg/exit.svg';
 import { Button } from '../../components/Button/Button';
 import { Loading } from '../../components/UI/Loading';
@@ -20,6 +21,15 @@ import {
 import { ModalPortfolio } from './AdminPay/Payments';
 import { Pagination } from './Pagination';
 import * as Styled from './Styled.elements';
+import {
+  BurgerButton,
+  BurgerImg,
+  SortingItem,
+  SortingWindow,
+  WindowBody,
+  WindowTitle,
+} from './Styled.elements';
+import { SelectValues, SortingType } from '../../types/sorting';
 
 const TableList: FC<{ data: CollectionPortfolio }> = ({ data }) => {
   const [open, setOpen] = useState(false);
@@ -88,63 +98,97 @@ export const AdminPortfolio = () => {
   const [pageLengthDIAMOND, setPageLengthDIAMOND] = useState<number>(10);
   const [currentPageDIAMOND, setCurrentPageDIAMOND] = useState<number>(1);
 
-  const myLoadGCWD = () => {
-    console.log((currentPageGCWD - 1) * pageLengthGCWD);
-    console.log(pageLengthGCWD);
+  const [sortingWindowOpenGCWD, setSortingWindowOpenGCWD] = useState(false);
+  const [sortingWindowOpenMGCWD, setSortingWindowOpenMGCWD] = useState(false);
+  const [sortingWindowOpenDIAMOND, setSortingWindowOpenDIAMOND] =
+    useState(false);
 
-    setCountGCWD(false);
-    if (hubConnection && basketGCWD.length < totalGCWD) {
-      hubConnection
-        .invoke<RootPortfolio>(
-          'GetBaskets',
-          3,
-          (currentPageGCWD - 1) * pageLengthGCWD,
-          pageLengthGCWD,
-        )
-        .then((res) => {
-          console.log('.then ~ res', res);
-          if (res.collection.length) {
-            setBasketGCWD([...basketGCWD, ...res.collection]);
-            setCountGCWD(true);
-            setNumGCWD(numGCWD + 20);
-          }
-        })
-        .catch((err: Error) => console.log(err));
-    }
-  };
+  const [sortingGCWD, setSortingGCWD] = useState<SortingType[]>([]);
 
-  const myLoadMGCWD = () => {
-    setCountMGCWD(false);
-    if (hubConnection && basketMGCWD.length < totalMGCWD) {
-      hubConnection
-        .invoke<RootPortfolio>('GetBaskets', 2, numMGCWD, 20)
-        .then((res) => {
-          if (res.collection.length) {
-            setBasketMGCWD([...basketMGCWD, ...res.collection]);
-            setCountMGCWD(true);
-            setNumMGCWD(numMGCWD + 20);
-          }
-        })
-        .catch((err: Error) => console.log(err));
-    }
-  };
+  const [listForSortingGCWD, setListForSortingGCWD] = useState<SelectValues[]>([
+    {
+      text: 'По убыванию даты покупки',
+      active: false,
+      OrderType: 2,
+      FieldName: 'creationDate',
+    },
+    {
+      text: 'По возрастанию даты покупки',
+      active: false,
+      OrderType: 1,
+      FieldName: 'creationDate',
+    },
+    {
+      text: 'По убыванию стоимости за единицу',
+      active: false,
+      OrderType: 2,
+      FieldName: 'unitPrice',
+    },
+    {
+      text: 'По возрастанию стоимости за единицу',
+      active: false,
+      OrderType: 1,
+      FieldName: 'unitPrice',
+    },
+  ]);
 
-  const myLoadDIAMOND = () => {
-    setCountDIAMOND(false);
-    if (hubConnection && basketDIAMOND.length < totalDIAMOND) {
-      hubConnection
-        .invoke<RootPortfolio>('GetBaskets', 4, numDIAMOND, 20)
-        .then((res) => {
-          if (res.collection.length) {
-            setLoading(false);
-            setBasketDIAMOND([...basketDIAMOND, ...res.collection]);
-            setCountDIAMOND(true);
-            setNumDIAMOND(numDIAMOND + 20);
-          }
-        })
-        .catch((err: Error) => console.log(err));
-    }
-  };
+  const [sortingMGCWD, setSortingMGCWD] = useState<SortingType[]>([]);
+
+  const [listForSortingMGCWD, setListForSortingMGCWD] = useState<SelectValues[]>([
+    {
+      text: 'По убыванию даты покупки',
+      active: false,
+      OrderType: 2,
+      FieldName: 'creationDate',
+    },
+    {
+      text: 'По возрастанию даты покупки',
+      active: false,
+      OrderType: 1,
+      FieldName: 'creationDate',
+    },
+    {
+      text: 'По убыванию стоимости за единицу',
+      active: false,
+      OrderType: 2,
+      FieldName: 'unitPrice',
+    },
+    {
+      text: 'По возрастанию стоимости за единицу',
+      active: false,
+      OrderType: 1,
+      FieldName: 'unitPrice',
+    },
+  ]);
+
+  const [sortingDIAMOND, setSortingDIAMOND] = useState<SortingType[]>([]);
+
+  const [listForSortingDIAMOND, setListForSortingDIAMOND] = useState<SelectValues[]>([
+    {
+      text: 'По убыванию даты покупки',
+      active: false,
+      OrderType: 2,
+      FieldName: 'creationDate',
+    },
+    {
+      text: 'По возрастанию даты покупки',
+      active: false,
+      OrderType: 1,
+      FieldName: 'creationDate',
+    },
+    {
+      text: 'По убыванию стоимости за единицу',
+      active: false,
+      OrderType: 2,
+      FieldName: 'unitPrice',
+    },
+    {
+      text: 'По возрастанию стоимости за единицу',
+      active: false,
+      OrderType: 1,
+      FieldName: 'unitPrice',
+    },
+  ]);
 
   const handleClick = (id: number) => {
     if (id !== active) {
@@ -171,6 +215,7 @@ export const AdminPortfolio = () => {
           3,
           (currentPageGCWD - 1) * pageLengthGCWD,
           pageLengthGCWD,
+          sortingGCWD,
         )
         .then((res) => {
           setLoading(false);
@@ -182,7 +227,7 @@ export const AdminPortfolio = () => {
           console.log(err);
         });
     }
-  }, [hubConnection, pageLengthGCWD, currentPageGCWD]);
+  }, [hubConnection, pageLengthGCWD, currentPageGCWD, sortingGCWD]);
 
   useEffect(() => {
     if (hubConnection) {
@@ -192,6 +237,7 @@ export const AdminPortfolio = () => {
           2,
           (currentPageMGCWD - 1) * pageLengthMGCWD,
           pageLengthMGCWD,
+          sortingMGCWD,
         )
         .then((res) => {
           setLoading(false);
@@ -203,7 +249,7 @@ export const AdminPortfolio = () => {
           console.log(err);
         });
     }
-  }, [hubConnection, pageLengthMGCWD, currentPageMGCWD]);
+  }, [hubConnection, pageLengthMGCWD, currentPageMGCWD, sortingMGCWD]);
 
   useEffect(() => {
     if (hubConnection) {
@@ -213,6 +259,7 @@ export const AdminPortfolio = () => {
           4,
           (currentPageDIAMOND - 1) * pageLengthDIAMOND,
           pageLengthDIAMOND,
+          sortingDIAMOND,
         )
         .then((res) => {
           setLoading(false);
@@ -224,7 +271,103 @@ export const AdminPortfolio = () => {
           console.log(err);
         });
     }
-  }, [hubConnection, pageLengthDIAMOND, currentPageDIAMOND]);
+  }, [hubConnection, pageLengthDIAMOND, currentPageDIAMOND, sortingDIAMOND]);
+
+  const getActiveSortGCWD = (index: number) => {
+    setSortingGCWD([
+      {
+        ConditionWeight: 1,
+        OrderType: listForSortingGCWD[index].OrderType,
+        FieldName: listForSortingGCWD[index].FieldName,
+      },
+    ]);
+
+    setListForSortingGCWD((prev) => {
+      return prev.map((one, i) => {
+        if (one.active === true && index === i) {
+          setSortingGCWD([]);
+          return {
+            ...one,
+            active: false,
+          };
+        } else if (index === i) {
+          return {
+            ...one,
+            active: true,
+          };
+        } else {
+          return {
+            ...one,
+            active: false,
+          };
+        }
+      });
+    });
+  };
+
+  const getActiveSortMGCWD = (index: number) => {
+    setSortingMGCWD([
+      {
+        ConditionWeight: 1,
+        OrderType: listForSortingGCWD[index].OrderType,
+        FieldName: listForSortingGCWD[index].FieldName,
+      },
+    ]);
+
+    setListForSortingMGCWD((prev) => {
+      return prev.map((one, i) => {
+        if (one.active === true && index === i) {
+          setSortingMGCWD([]);
+          return {
+            ...one,
+            active: false,
+          };
+        } else if (index === i) {
+          return {
+            ...one,
+            active: true,
+          };
+        } else {
+          return {
+            ...one,
+            active: false,
+          };
+        }
+      });
+    });
+  };
+
+  const getActiveSortDIAMOND = (index: number) => {
+    setSortingDIAMOND([
+      {
+        ConditionWeight: 1,
+        OrderType: listForSortingGCWD[index].OrderType,
+        FieldName: listForSortingGCWD[index].FieldName,
+      },
+    ]);
+
+    setListForSortingDIAMOND((prev) => {
+      return prev.map((one, i) => {
+        if (one.active === true && index === i) {
+          setSortingDIAMOND([]);
+          return {
+            ...one,
+            active: false,
+          };
+        } else if (index === i) {
+          return {
+            ...one,
+            active: true,
+          };
+        } else {
+          return {
+            ...one,
+            active: false,
+          };
+        }
+      });
+    });
+  };
 
   return (
     <>
@@ -306,7 +449,29 @@ export const AdminPortfolio = () => {
                 {t('adminPortfolio.table.cost')}, CWD
               </TableHeadItem>
               <TableHeadItem>{t('adminPortfolio.table.amount')}</TableHeadItem>
-              <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
+              {/* <TableHeadItem><Filter /></TableHeadItem> */}
+              <TableHeadItem>
+                <BurgerButton>
+                  <BurgerImg
+                    src={burgerGroup}
+                    alt="burger"
+                    onClick={() => setSortingWindowOpenGCWD((prev) => !prev)}
+                  />
+                  <Window open={sortingWindowOpenGCWD}>
+                    <WindowTitle>Сортировка</WindowTitle>
+                    <WindowBody>
+                      {listForSortingGCWD.map((obj, index) => (
+                        <SortingItem
+                          active={listForSortingGCWD[index].active}
+                          key={index}
+                          onClick={() => getActiveSortGCWD(index)}>
+                          {obj.text}
+                        </SortingItem>
+                      ))}
+                    </WindowBody>
+                  </Window>
+                </BurgerButton>
+              </TableHeadItem>
             </TableHead>
             {basketGCWD.length ? (
               <Scrollbars style={{ height: '500px' }}>
@@ -340,7 +505,29 @@ export const AdminPortfolio = () => {
                 {t('adminPortfolio.table.cost')}, CWD
               </TableHeadItem>
               <TableHeadItem>{t('adminPortfolio.table.amount')}</TableHeadItem>
-              <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
+              {/* <TableHeadItem><Filter /></TableHeadItem> */}
+              <TableHeadItem>
+                <BurgerButton>
+                  <BurgerImg
+                    src={burgerGroup}
+                    alt="burger"
+                    onClick={() => setSortingWindowOpenMGCWD((prev) => !prev)}
+                  />
+                </BurgerButton>
+                <Window open={sortingWindowOpenMGCWD}>
+                  <WindowTitle>Сортировка</WindowTitle>
+                  <WindowBody>
+                    {listForSortingMGCWD.map((obj, index) => (
+                      <SortingItem
+                        active={listForSortingMGCWD[index].active}
+                        key={index}
+                        onClick={() => getActiveSortMGCWD(index)}>
+                        {obj.text}
+                      </SortingItem>
+                    ))}
+                  </WindowBody>
+                </Window>
+              </TableHeadItem>
             </TableHead>
             {basketMGCWD.length ? (
               <Scrollbars style={{ height: '500px' }}>
@@ -372,7 +559,29 @@ export const AdminPortfolio = () => {
                 {t('adminPortfolio.table.cost')}, CWD
               </TableHeadItem>
               <TableHeadItem>{t('adminPortfolio.table.amount')}</TableHeadItem>
-              <TableHeadItem>{/* <Filter /> */}</TableHeadItem>
+              {/* <TableHeadItem><Filter /></TableHeadItem> */}
+              <TableHeadItem>
+                <BurgerButton>
+                  <BurgerImg
+                    src={burgerGroup}
+                    alt="burger"
+                    onClick={() => setSortingWindowOpenDIAMOND((prev) => !prev)}
+                  />
+                </BurgerButton>
+                <Window open={sortingWindowOpenDIAMOND}>
+                  <WindowTitle>Сортировка</WindowTitle>
+                  <WindowBody>
+                    {listForSortingDIAMOND.map((obj, index) => (
+                      <SortingItem
+                        active={listForSortingDIAMOND[index].active}
+                        key={index}
+                        onClick={() => getActiveSortDIAMOND(index)}>
+                        {obj.text}
+                      </SortingItem>
+                    ))}
+                  </WindowBody>
+                </Window>
+              </TableHeadItem>
             </TableHead>
             {basketDIAMOND.length ? (
               <Scrollbars style={{ height: '500px' }}>
@@ -398,6 +607,23 @@ export const AdminPortfolio = () => {
   );
 };
 
+const Window = styled(SortingWindow)`
+  left: calc(100% - 345px);
+  top: 485px;
+  @media (max-width: 992px) {
+    top: 489px;
+  }
+  @media (max-width: 768px) {
+    top: 692px;
+    left: calc(100% - 330px);
+  }
+  @media (max-width: 576px) {
+    top: 514px;
+    left: calc(100% - 280px);
+    width: 230px;
+  }
+`;
+
 const CardTable = styled(Card)`
   height: 600px;
 `;
@@ -407,14 +633,18 @@ const PaymentsTable = styled.div`
 `;
 
 const TableHead = styled.ul`
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+
   list-style: none;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
   padding-bottom: 6px;
   border-bottom: 1px solid rgba(81, 81, 114, 0.2);
+
   @media (max-width: 992px) {
     justify-content: space-between;
+  }
+  @media (max-width: 576px) {
+    grid-template-columns: repeat(3, 1fr);
   }
 `;
 
@@ -460,7 +690,11 @@ const TableHeadItem = styled.li`
   }
   &:nth-child(5) {
     max-width: 80px;
+    justify-self: flex-end;
     @media (max-width: 992px) {
+      max-width: 30px;
+    }
+    @media (max-width: 576px) {
       max-width: 30px;
     }
   }

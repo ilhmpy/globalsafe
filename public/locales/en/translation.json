@@ -294,7 +294,9 @@
     "procent": "Payout percentage",
     "notData": "No data",
     "dateEnd": "Deposit completion date",
-    "contrAmount": "Contribution amount"
+    "contrAmount": "Contribution amount",
+    "blockchainCommision": "Blockchain commision",
+    "serviceCommision": "Service commision"
   },
   "alert": {
     "success": "Successfully",

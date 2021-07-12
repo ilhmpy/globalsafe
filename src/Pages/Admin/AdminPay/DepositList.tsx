@@ -392,6 +392,9 @@ const TableHeadItem = styled.li`
   }
   &:nth-child(3) {
     max-width: 94px;
+    @media (max-width: 576px) {
+      /* display: none; */
+    }
   }
   &:nth-child(4) {
     max-width: 110px;
@@ -430,6 +433,16 @@ const TableHeadItem = styled.li`
     }
   }
   &:nth-child(10) {
+    max-width: 120px;
+    text-align: right;
+    @media (max-width: 992px) {
+      max-width: 60px;
+    }
+    @media (max-width: 576px) {
+      max-width: 30px;
+    }
+  }
+  &:last-child {
     max-width: 120px;
     text-align: right;
     @media (max-width: 992px) {

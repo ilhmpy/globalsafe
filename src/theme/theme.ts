@@ -44,7 +44,7 @@ export const lightTheme = {
     titleColor: '#0E0D3D',
     lineItemColor: '#0E0D3D',
     lineNumberColor: '#0E0D3D',
-    nthItemBG: "rgba(255, 255, 255, 0.4)",
+    nthItemBG: 'rgba(255, 255, 255, 0.4)',
     titlePhoneColor: '#0E0D3D',
   },
   pagination: {
@@ -52,8 +52,12 @@ export const lightTheme = {
       'linear-gradient(45deg, transparent 50%, #56657f 50%), linear-gradient(135deg, #56657f 50%, transparent 50%), linear-gradient(to right, white, white)',
   },
   footer: {
-    color: "#0E0D3D"
-  }
+    color: '#0E0D3D',
+  },
+  sortingWindow: {
+    backgroundColor: '#ffffff',
+    fontColor: '#515172',
+  },
 };
 
 export const darkTheme = {
@@ -102,6 +106,10 @@ export const darkTheme = {
       'linear-gradient(45deg, transparent 50%, #e2e2e2 50%), linear-gradient(135deg, #e2e2e2 50%, transparent 50%), linear-gradient(to right, #212121, #212121)',
   },
   footer: {
-    color: "#fff"
-  }
+    color: '#fff',
+  },
+  sortingWindow: {
+    backgroundColor: '#303030',
+    fontColor: '#ffffff',
+  },
 };

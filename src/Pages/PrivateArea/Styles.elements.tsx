@@ -607,10 +607,15 @@ export const ModalButton = styled(Button)<{ mb?: boolean }>`
 `;
 
 export const ModalBlock = styled.div`
-  max-width: 230px;
+  max-width: 235px;
   width: 100%;
   margin: 0 auto;
   padding: 50px 10px;
+  padding-bottom: 5px;
+
+  & > input {
+    margin-bottom: 32px;
+  }
 `;
 
 export const ModalBlockWide = styled(ModalBlock)`
@@ -650,7 +655,7 @@ export const ModalTitle = styled.h3<{ mt?: boolean }>`
   font-size: 24px;
   line-height: 28px;
   text-align: center;
-  padding-bottom: 15px;
+  padding-bottom: 26px;
   margin-top: ${(props) => (props.mt ? "40px" : 0)};
   @media (max-width: 768px) {
     font-size: 18px;
@@ -863,4 +868,25 @@ export const SmallRoundButton = styled.div`
   &:hover path {
     fill: #6db9ff;
   }
+`;
+
+export const ModalCommision = styled.h3`
+  font-weight: 400;
+  line-height: 22px;
+  font-size: 1em;
+  text-align: center;
+
+  &:first-child {
+    margin-top: 20px;
+  }
+`;
+
+export const ModalCommisionCount = styled.h3`
+  color: #FF416E;
+  font-size: inherit;
+`;
+
+export const ModalCommisionBox = styled.div`
+  width: 100%;
+  padding-top: 1px;
 `;

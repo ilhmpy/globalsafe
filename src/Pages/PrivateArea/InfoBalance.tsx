@@ -1,20 +1,20 @@
-﻿import React, { useState, useContext, useEffect, useRef, FC } from "react";
-import * as Styled from "./Styles.elements";
-import { Card, Container } from "../../globalStyles";
-import { AppContext } from "../../context/HubContext";
-import { CSSTransition } from "react-transition-group";
-import { Modal } from "../../components/Modal/Modal";
-import moment from "moment";
-import { ModalRangeInput } from "../../components/UI/DayPicker";
-import { Input } from "../../components/UI/Input";
-import { OpenDate } from "../../types/dates";
-import { ModalDividends } from "./Modals";
-import InfiniteScroll from "react-infinite-scroller";
-import { Scrollbars } from "react-custom-scrollbars";
-import { Loading } from "../../components/UI/Loading";
-import { useTranslation } from "react-i18next";
-import { Balance } from "../../types/balance";
-import { StackedColumn } from "../../components/Charts/StackedColumn";
+﻿import moment from 'moment';
+import React, { FC, useContext, useEffect, useRef, useState } from 'react';
+import { Scrollbars } from 'react-custom-scrollbars';
+import { useTranslation } from 'react-i18next';
+import InfiniteScroll from 'react-infinite-scroller';
+import { CSSTransition } from 'react-transition-group';
+import { StackedColumn } from '../../components/Charts/StackedColumn';
+import { Modal } from '../../components/Modal/Modal';
+import { ModalRangeInput } from '../../components/UI/DayPicker';
+import { Input } from '../../components/UI/Input';
+import { Loading } from '../../components/UI/Loading';
+import { AppContext } from '../../context/HubContext';
+import { Card, Container } from '../../globalStyles';
+import { Balance } from '../../types/balance';
+import { OpenDate } from '../../types/dates';
+import { ModalDividends } from './Modals';
+import * as Styled from './Styles.elements';
 
 type Obj = {
   id: string;
@@ -36,15 +36,15 @@ const BalanceTable: FC<BalanceTableProps> = ({ balanceLog }) => {
 
   const operation = (id: number) => {
     if (id === 6) {
-      return t("operation.open");
+      return t('operation.open');
     } else if (id === 7) {
-      return t("operation.divedents");
+      return t('operation.divedents');
     } else if (id === 8) {
-      return t("operation.close");
+      return t('operation.close');
     } else if (id === 2) {
-      return t("operation.withdraw");
+      return t('operation.withdraw');
     } else if (id === 1) {
-      return t("operation.add");
+      return t('operation.add');
     }
   };
 
@@ -66,22 +66,21 @@ const BalanceTable: FC<BalanceTableProps> = ({ balanceLog }) => {
         )}
         <Styled.DataListItem
           divident={balanceLog.operationKind === 7}
-          onClick={() => dividentModal(balanceLog.operationKind)}
-        >
+          onClick={() => dividentModal(balanceLog.operationKind)}>
           <Styled.DataListName>
             {operation(balanceLog.operationKind)}
           </Styled.DataListName>
           <Styled.DataListSum plus={balanceLog.balance >= 0}>
             {balanceLog.balance < 0
-              ? ""
+              ? ''
               : balanceLog.operationKind !== 6
-              ? "+"
-              : "-"}{" "}
-            {(balanceLog.balance / 100000).toLocaleString("ru-RU", {
+              ? '+'
+              : '-'}{' '}
+            {(balanceLog.balance / 100000).toLocaleString('ru-RU', {
               maximumFractionDigits: 5,
             })}
             <br />
-            {balanceLog.asset ? Balance[balanceLog.asset] : "CWD"}
+            {balanceLog.asset ? Balance[balanceLog.asset] : 'CWD'}
           </Styled.DataListSum>
         </Styled.DataListItem>
       </div>
@@ -95,12 +94,12 @@ export const InfoBalance = () => {
   const [balanceLogs, setBalanceLogs] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8]);
   const [open, setOpen] = useState(false);
   const [openDate, setOpenDate] = useState<OpenDate>({
-    from: new Date("2020-12-02T00:47:45"),
+    from: new Date('2020-12-02T00:47:45'),
     to: new Date(),
   });
   const { t } = useTranslation();
   const [selected, setSelected] = useState<string | never>(
-    t("privateArea.allTime")
+    t('privateArea.allTime'),
   );
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
@@ -111,7 +110,7 @@ export const InfoBalance = () => {
   const [num, setNum] = useState(20);
   const [loading, setLoading] = useState(true);
   const [addBalance, setAddBalance] = useState(false);
-  const [balanceValue, setBalanceValue] = useState("");
+  const [balanceValue, setBalanceValue] = useState('');
   const [loadDeposit, setLoadDeposit] = useState(false);
   const [totalDeposit, setTotalDeposit] = useState(0);
   const [depositList, setDepositList] = useState<any>([]);
@@ -121,7 +120,7 @@ export const InfoBalance = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke("GetTotalPayedAmount")
+        .invoke('GetTotalPayedAmount')
         .then((res) => {
           setTotalPayed(res);
         })
@@ -132,7 +131,7 @@ export const InfoBalance = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke("GetTotalDepositsAmount")
+        .invoke('GetTotalDepositsAmount')
         .then((res) => {
           setDepositTotal(res);
         })
@@ -140,32 +139,32 @@ export const InfoBalance = () => {
     }
   }, [hubConnection]);
 
-  const lang = localStorage.getItem("i18nextLng") || "ru";
-  const languale = lang === "ru" ? 1 : 0;
+  const lang = localStorage.getItem('i18nextLng') || 'ru';
+  const languale = lang === 'ru' ? 1 : 0;
 
   const yearSelected = () => {
-    let year = moment().format("YYYY");
-    let yearStart: any = moment(year, "YYYY").startOf("month");
-    let yearEnd: any = moment(year, "YYYY").endOf("year");
+    let year = moment().format('YYYY');
+    let yearStart: any = moment(year, 'YYYY').startOf('month');
+    let yearEnd: any = moment(year, 'YYYY').endOf('year');
     setOpenDate({
       from: yearStart._d,
       to: yearEnd._d,
     });
-    setSelected(`${t("privateArea.at")} ${moment().format("YYYY")}`);
+    setSelected(`${t('privateArea.at')} ${moment().format('YYYY')}`);
     onClose();
   };
 
   const monthSelected = () => {
-    let currentMonth = moment().format("MMYYYY");
-    let currentMonthStart: any = moment(currentMonth, "M.YYYY").startOf(
-      "month"
+    let currentMonth = moment().format('MMYYYY');
+    let currentMonthStart: any = moment(currentMonth, 'M.YYYY').startOf(
+      'month',
     );
-    let currentMonthEnd: any = moment(currentMonth, "M.YYYY").endOf("month");
+    let currentMonthEnd: any = moment(currentMonth, 'M.YYYY').endOf('month');
     setOpenDate({
       from: currentMonthStart._d,
       to: currentMonthEnd._d,
     });
-    setSelected(`${t("privateArea.at")} ${moment().format("MMMM YYYY")}`);
+    setSelected(`${t('privateArea.at')} ${moment().format('MMMM YYYY')}`);
     onClose();
   };
 
@@ -175,25 +174,25 @@ export const InfoBalance = () => {
       to: to,
     });
     setSelected(
-      `${moment(from).format("DD.MM.YY")} - ${moment(to).format("DD.MM.YY")}`
+      `${moment(from).format('DD.MM.YY')} - ${moment(to).format('DD.MM.YY')}`,
     );
     onClose();
   };
 
   const allDate = () => {
     setOpenDate({
-      from: new Date("2020-12-02T00:47:45"),
+      from: new Date('2020-12-02T00:47:45'),
       to: new Date(),
     });
-    setSelected(t("privateArea.allTime"));
+    setSelected(t('privateArea.allTime'));
     onClose();
   };
 
   useEffect(() => {
-    console.log("selected", selected);
-    console.log("privateArea.allTime", t("privateArea.allTime"));
-    if (selected === "За все время" || selected === "For all the time") {
-      setSelected(t("privateArea.allTime"));
+    console.log('selected', selected);
+    console.log('privateArea.allTime', t('privateArea.allTime'));
+    if (selected === 'За все время' || selected === 'For all the time') {
+      setSelected(t('privateArea.allTime'));
       allDate();
     } else {
       monthSelected();
@@ -211,20 +210,20 @@ export const InfoBalance = () => {
     if (hubConnection) {
       hubConnection
         .invoke(
-          "GetUserDepositsCharges",
+          'GetUserDepositsCharges',
           balanceLogs,
-          openDate.from || new Date("2020-12-02T00:47:45"),
+          openDate.from || new Date('2020-12-02T00:47:45'),
           openDate.to || new Date(),
           0,
-          20
+          20,
         )
         .then((res: any) => {
-          console.log("GetUserDepositsCharges", res);
+          console.log('GetUserDepositsCharges', res);
           setTotalDeposit(res.totalRecords);
           setNum(20);
           setLoading(false);
           function getFormatedDate(dateStr: Date) {
-            let date = moment(dateStr).format("DD MMMM YYYY");
+            let date = moment(dateStr).format('DD MMMM YYYY');
             return date;
           }
           if (res.collection.length) {
@@ -267,12 +266,12 @@ export const InfoBalance = () => {
     if (hubConnection && depositList.length < totalDeposit) {
       hubConnection
         .invoke(
-          "GetUserDepositsCharges",
+          'GetUserDepositsCharges',
           balanceLogs,
           openDate.from,
           openDate.to,
           num,
-          20
+          20,
         )
         .then((res) => {
           setLoading(false);
@@ -281,7 +280,7 @@ export const InfoBalance = () => {
               setDepositList([...depositList, res.collection]);
               let result: any = { ...balanceLog };
               res.collection.forEach((item: any) => {
-                const d = moment(item.operationDate).format("DD MMMM YYYY");
+                const d = moment(item.operationDate).format('DD MMMM YYYY');
                 const obj = {
                   id: item.safeId,
                   operationKind: item.operationKind,
@@ -315,14 +314,14 @@ export const InfoBalance = () => {
     if (hubConnection) {
       hubConnection
         .invoke(
-          "GetBalanceStats",
+          'GetBalanceStats',
           openDate.from,
           openDate.to,
           balanceLogs,
-          [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+          [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         )
         .then((res) => {
-          console.log("responce", res);
+          console.log('responce', res);
           let result: any = {};
           for (let key in res) {
             const newArr =
@@ -342,7 +341,7 @@ export const InfoBalance = () => {
                     },
                   ];
 
-            const d = moment(key).format("DD MMMM YYYY");
+            const d = moment(key).format('DD MMMM YYYY');
             if (result[d]) {
               result[d].push(...newArr);
             } else {
@@ -385,28 +384,28 @@ export const InfoBalance = () => {
     options.push(<option value={year}>{year}</option>);
   }
 
-  const linkOpen = (res: any) => {
-    const link = document.createElement("a");
-    link.setAttribute("href", res);
-    link.setAttribute("target", "_blank");
-    link.setAttribute("referer", "noreferer");
-    link.click();
+  const linkOpen = (res: string) => {
+    const newWindow = window.open();
+    newWindow && (newWindow.location.href = res);
   };
 
   const getTopUp = () => {
-    if (hubConnection) {
-      hubConnection
-        .invoke("GetTopUpUrl", +balanceValue * 100000)
-        .then((res: any) => {
-          linkOpen(res);
-        })
-        .catch((err: Error) => console.log(err));
-    }
+    linkOpen(`https://cwd.global/shopping/payment?to_name=stella3&amount=${balanceValue}`)
+    // if (hubConnection) {
+    //   hubConnection
+    //     .invoke('GetTopUpUrl', +balanceValue * 100000)
+    //     .then((res: string) => {
+    //       console.log('.then ~~~~~~~~~~ res', res)
+    //       // https://cwd.global/shopping/payment?to_name=stella3&amount=222
+    //       // linkOpen(res);
+    //     })
+    //     .catch((err: Error) => console.log(err));
+    // }
   };
 
   const onChangeBalanceValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     const pattern = /^[1-9][0-9]*$/;
-    if (e.target.value === "" || pattern.test(e.target.value)) {
+    if (e.target.value === '' || pattern.test(e.target.value)) {
       setBalanceValue(e.target.value);
     }
   };
@@ -421,21 +420,21 @@ export const InfoBalance = () => {
       <Container>
         <Styled.BalanceWrap>
           <Styled.TopUpButton blue onClick={() => setAddBalance(true)}>
-            {t("privateArea.topUpBalance")}
+            {t('privateArea.topUpBalance')}
           </Styled.TopUpButton>
           <Styled.BalanceList>
             <Styled.BalanceItem>
               <Styled.BalanceItemName>
-                {t("privateArea.balance")}
+                {t('privateArea.balance')}
               </Styled.BalanceItemName>
               <Styled.BalanceItemValue pink>
-                {balance ? (balance / 100000).toLocaleString() : "0"}
+                {balance ? (balance / 100000).toLocaleString() : '0'}
               </Styled.BalanceItemValue>
             </Styled.BalanceItem>
 
             <Styled.BalanceItem>
               <Styled.BalanceItemName>
-                {t("privateArea.take")}
+                {t('privateArea.take')}
               </Styled.BalanceItemName>
               <Styled.BalanceItemValue pink>
                 {(depositTotal / 100000).toLocaleString()}
@@ -444,7 +443,7 @@ export const InfoBalance = () => {
 
             <Styled.BalanceItem>
               <Styled.BalanceItemName>
-                {t("privateArea.findings")}
+                {t('privateArea.findings')}
               </Styled.BalanceItemName>
               <Styled.BalanceItemValue>
                 {(totalPayed / 100000).toLocaleString()}
@@ -463,21 +462,18 @@ export const InfoBalance = () => {
           <Styled.BalanceTabHead>
             <Styled.BalanceTabItem
               onClick={() => handleBalance(0)}
-              active={depositTabs === 0}
-            >
-              {t("privateArea.allOperation")}
+              active={depositTabs === 0}>
+              {t('privateArea.allOperation')}
             </Styled.BalanceTabItem>
             <Styled.BalanceTabItem
               onClick={() => handleBalance(1)}
-              active={depositTabs === 1}
-            >
-              {t("privateArea.take")}
+              active={depositTabs === 1}>
+              {t('privateArea.take')}
             </Styled.BalanceTabItem>
             <Styled.BalanceTabItem
               onClick={() => handleBalance(2)}
-              active={depositTabs === 2}
-            >
-              {t("privateArea.findings")}
+              active={depositTabs === 2}>
+              {t('privateArea.findings')}
             </Styled.BalanceTabItem>
           </Styled.BalanceTabHead>
         </Card>
@@ -494,15 +490,15 @@ export const InfoBalance = () => {
               <Styled.DataListHead>
                 <Styled.DataListItem>
                   <Styled.DataListName>
-                    {t("privateArea.name")}
+                    {t('privateArea.name')}
                   </Styled.DataListName>
                   <Styled.DataListName>
-                    {t("privateArea.sum")}
+                    {t('privateArea.sum')}
                   </Styled.DataListName>
                 </Styled.DataListItem>
               </Styled.DataListHead>
               {balanceLog ? (
-                <Scrollbars style={{ height: "500px" }}>
+                <Scrollbars style={{ height: '500px' }}>
                   <InfiniteScroll
                     pageStart={0}
                     loadMore={myLoad}
@@ -512,8 +508,7 @@ export const InfoBalance = () => {
                       <div className="loader" key={0}>
                         Loading ...
                       </div>
-                    }
-                  >
+                    }>
                     {Object.keys(balanceLog).map((key) => (
                       <div key={key}>
                         <Styled.DataListDate>{key}</Styled.DataListDate>
@@ -528,7 +523,7 @@ export const InfoBalance = () => {
               ) : loading ? (
                 <Loading />
               ) : (
-                <Styled.NotFound>{t("notFound")}</Styled.NotFound>
+                <Styled.NotFound>{t('notFound')}</Styled.NotFound>
               )}
             </Styled.DataList>
           </Styled.DataListWrap>
@@ -540,26 +535,26 @@ export const InfoBalance = () => {
           <Modal onClose={onClose}>
             <Styled.ModalContent>
               <Styled.ModalTitle>
-                {t("privateArea.selectPeriod")}
+                {t('privateArea.selectPeriod')}
               </Styled.ModalTitle>
               <Styled.ModalItem>
                 <Styled.DateTitle>
-                  {t("privateArea.thisMonth")}
+                  {t('privateArea.thisMonth')}
                 </Styled.DateTitle>
                 <Styled.DateText onClick={monthSelected}>
-                  {moment().format("MMMM YYYY")}
+                  {moment().format('MMMM YYYY')}
                 </Styled.DateText>
               </Styled.ModalItem>
               <Styled.ModalItem>
-                <Styled.DateTitle>{t("privateArea.thisYear")}</Styled.DateTitle>
+                <Styled.DateTitle>{t('privateArea.thisYear')}</Styled.DateTitle>
                 <Styled.DateText onClick={yearSelected}>
-                  {moment().format("YYYY")}
+                  {moment().format('YYYY')}
                 </Styled.DateText>
               </Styled.ModalItem>
               <Styled.ModalItem>
                 <Styled.DateTitle></Styled.DateTitle>
                 <Styled.DateText onClick={allDate}>
-                  {t("privateArea.allTime")}
+                  {t('privateArea.allTime')}
                 </Styled.DateText>
               </Styled.ModalItem>
             </Styled.ModalContent>
@@ -576,16 +571,15 @@ export const InfoBalance = () => {
         in={addBalance}
         timeout={300}
         classNames="modal"
-        unmountOnExit
-      >
+        unmountOnExit>
         <Modal onClose={() => setAddBalance(false)}>
           <Styled.ModalBlock>
             <Styled.ModalTitle>
-              {t("privateArea.topUpBalance")}
+              {t('privateArea.topUpBalance')}
             </Styled.ModalTitle>
             <Input
               onChange={onChangeBalanceValue}
-              placeholder={t("privateArea.amountEnter")}
+              placeholder={t('privateArea.amountEnter')}
               type="text"
               ref={inputRef}
               value={balanceValue}
@@ -594,9 +588,8 @@ export const InfoBalance = () => {
               as="button"
               disabled={!balanceValue}
               onClick={getTopUp}
-              danger
-            >
-              {t("privateArea.topUp")}
+              danger>
+              {t('privateArea.topUp')}
             </Styled.ModalButton>
           </Styled.ModalBlock>
         </Modal>
