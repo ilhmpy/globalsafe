@@ -60,6 +60,8 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
     setOpen(false);
   };
 
+  console.log(data.depositsAmount);
+
   const onClick = () => {
     if (window.innerWidth < 992) {
       history.push(`/admin/users/${data.name}`);
@@ -191,6 +193,9 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
         </TableBodyItem>
         <TableBodyItem>Русский</TableBodyItem>
         <TableBodyItem>
+          {data.depositsAmount}
+        </TableBodyItem>
+        <TableBodyItem>
           {size ? (
             lock ? (
               <UnLockButton onClick={(e) => unLocked(e, data.safeId)} />
@@ -298,13 +303,14 @@ export const AdminUsers = () => {
         .then((res) => {
           setLoading(false);
           setNum(20);
+          console.log("USERS", res.collection);
           seTotalUsers(res.totalRecords);
           setListDeposits(res.collection);
           setLoading(false);
         })
         .catch((err: Error) => {
           setLoading(false);
-          console.log(err);
+          console.error(err);
         });
     }
   }, [hubConnection, currentPage, pageLength, sorting]);
@@ -443,7 +449,7 @@ export const AdminUsers = () => {
             <TableHeadItem>{t('adminUsers.table.role')}</TableHeadItem>
             <TableHeadItem>{t('adminUsers.table.dataCreate')}</TableHeadItem>
             <TableHeadItem>{t('adminUsers.table.lang')}</TableHeadItem>
-            {/* <TableHeadItem>{t('adminUsers.table.depositSum')}</TableHeadItem> */}
+            <TableHeadItem>{t('adminUsers.table.depositSum')}</TableHeadItem>
             <TableHeadItem>
               <BurgerButton>
                 <BurgerImg
@@ -615,9 +621,9 @@ const TableHeadItem = styled.li`
   }
   &:nth-child(6) {
     max-width: 130px;
-    text-align: right;
     @media (max-width: 992px) {
       max-width: 40px;
+      display: none;
     }
   }
   &:nth-child(7) {
@@ -625,6 +631,12 @@ const TableHeadItem = styled.li`
     text-align: right;
     @media (max-width: 992px) {
       max-width: 40px;
+    }
+
+    &:last-child {
+      @media only screen and (max-device-width: 992px) {
+        text-align: center;
+      }
     }
   }
 `;

@@ -16,12 +16,10 @@ export interface CollectionUsers {
     languageCode: number;
     balances: any[];
     endDate: Date;
+    depositsAmount: number;
 }
 
 export interface RootUsers {
     totalRecords: number;
     collection: CollectionUsers[];
 }
-
-
-
