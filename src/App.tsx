@@ -17,6 +17,8 @@ function App() {
   (window as any).OneSignal = (window as any).OneSignal || [];
   const OneSignal = (window as any).OneSignal;
 
+  console.log(APP_ID, APP_SAFARI_ID)
+
   useEffect(() => {
     if (token) {
       OneSignal.push(() => OneSignal.init({
