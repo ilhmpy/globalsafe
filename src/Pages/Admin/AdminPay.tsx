@@ -21,17 +21,18 @@ import { Card } from '../../globalStyles';
 import useWindowSize from '../../hooks/useWindowSize';
 import { OpenDate } from '../../types/dates';
 import { CollectionListDeposits, ListDeposits } from '../../types/deposits';
-import { SortingType, SelectValues } from '../../types/sorting';
 import {
   CollectionCharges,
   PaymentsCollection,
   RootCharges,
-  RootPayments,
+  RootPayments
 } from '../../types/payments';
+import { SelectValues, SortingType } from '../../types/sorting';
 import { PaymentsList, PaymentsListPay } from './AdminPay/DepositList';
 import { Analitics } from './AdminPayments/components/Analitics/Analitics';
 import { Approval } from './AdminPayments/components/Approval/Approval';
 import { Chart } from './AdminPayments/components/Chart/Chart';
+import { Delayed } from './AdminPayments/components/Delayed';
 import { Pagination } from './Pagination';
 import * as Styled from './Styled.elements';
 import {
@@ -40,7 +41,7 @@ import {
   SortingItem,
   SortingWindow,
   WindowBody,
-  WindowTitle,
+  WindowTitle
 } from './Styled.elements';
 
 export const AdminPay = () => {
@@ -116,7 +117,7 @@ export const AdminPay = () => {
         .catch((err: Error) => console.log(err));
     }
   }, [hubConnection]);
-  
+
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
   const [sorting, setSorting] = useState<SortingType[]>([]);
 
@@ -174,7 +175,9 @@ export const AdminPay = () => {
   const [sortingWindowOpenForPay, setSortingWindowOpenForPay] = useState(false);
   const [sortingForPay, setSortingForPay] = useState<SortingType[]>([]);
 
-  const [listForSortingForPay, setListForSortingForPay] = useState<SelectValues[]>([
+  const [listForSortingForPay, setListForSortingForPay] = useState<
+    SelectValues[]
+  >([
     {
       text: 'Пользователь: От А до Я',
       active: false,
@@ -255,6 +258,7 @@ export const AdminPay = () => {
         .invoke<RootPayments>(
           'GetUsersDeposits',
           [5],
+          null,
           null,
           null,
           null,
@@ -420,6 +424,8 @@ export const AdminPay = () => {
     });
   };
 
+  console.log(listDeposits);
+
   return (
     <>
       <ReactNotification />
@@ -509,10 +515,15 @@ export const AdminPay = () => {
           <Tab onClick={() => handleClick(1)} active={active === 1}>
             {t('adminPay.title2')}
           </Tab>
+
           <Tab onClick={() => handleClick(2)} active={active === 2}>
+            {t('adminPay.delayed.title')}
+          </Tab>
+
+          <Tab onClick={() => handleClick(3)} active={active === 3}>
             {t('adminPay.title1')}
           </Tab>
-          <Tab onClick={() => handleClick(3)} active={active === 3}>
+          <Tab onClick={() => handleClick(4)} active={active === 4}>
             {t('adminPay.analitics.analitic')}
           </Tab>
         </Tabs>
@@ -637,6 +648,10 @@ export const AdminPay = () => {
       </Content>
 
       <Content active={active === 2}>
+        {active === 2 ? <Delayed listDeposits={listDeposits} /> : null}
+      </Content>
+
+      <Content active={active === 3}>
         <Card>
           <PaymentsTable>
             <TableHead>
@@ -700,8 +715,8 @@ export const AdminPay = () => {
         />
       </Content>
 
-      <Content active={active === 3}>
-        {active === 3 ? <Analitics listDeposits={listDeposits} /> : null}
+      <Content active={active === 4}>
+        {active === 4 ? <Analitics listDeposits={listDeposits} /> : null}
       </Content>
     </>
   );
