@@ -10,6 +10,7 @@ import { InfoMain } from "./Pages/PrivateArea";
 import { Scrollbars } from "react-custom-scrollbars";
 import { Id } from "./types/Id";
 import { AppContext } from './context/HubContext';
+import { APP_ID, APP_SAFARI_ID } from "./constantes/onesignal";
 
 function App() {
   const [ token, setToken ] = useState(localStorage.getItem("token"));
@@ -19,8 +20,8 @@ function App() {
   useEffect(() => {
     if (token) {
       OneSignal.push(() => OneSignal.init({
-        appId: "99ed06df-a681-4df2-b6c3-59c9976406d9",
-        safari_web_id: "web.onesignal.auto.3d5e9a66-9429-4fce-a7e3-61aa58d6c253",
+        appId: APP_ID,
+        safari_web_id: APP_SAFARI_ID,
         notifyButton: {
           enable: true,
         },
