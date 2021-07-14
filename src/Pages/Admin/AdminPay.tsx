@@ -25,7 +25,7 @@ import {
   CollectionCharges,
   PaymentsCollection,
   RootCharges,
-  RootPayments
+  RootPayments,
 } from '../../types/payments';
 import { SelectValues, SortingType } from '../../types/sorting';
 import { PaymentsList, PaymentsListPay } from './AdminPay/DepositList';
@@ -41,7 +41,7 @@ import {
   SortingItem,
   SortingWindow,
   WindowBody,
-  WindowTitle
+  WindowTitle,
 } from './Styled.elements';
 
 export const AdminPay = () => {
@@ -112,6 +112,7 @@ export const AdminPay = () => {
       hubConnection
         .invoke<ListDeposits>('GetAllPublicDeposits', null, false, 0, 100, [])
         .then((res) => {
+          console.log('.then ~555555555555555555555 res', res);
           setListDeposits(res.collection);
         })
         .catch((err: Error) => console.log(err));
