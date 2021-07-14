@@ -17,6 +17,7 @@ import {
 } from '../../../../../types/analitics';
 import { OpenDate } from '../../../../../types/dates';
 import { CollectionListDeposits } from '../../../../../types/deposits';
+import { SelectValues, SortingType } from '../../../../../types/sorting';
 import { ModalAnalitic } from '../../../AdminPay/Payments';
 import { Pagination } from '../../../Pagination';
 import {
@@ -36,7 +37,6 @@ import {
   WindowTitle,
 } from '../../../Styled.elements';
 import * as Styled from './Styled.elements';
-import { SelectValues, SortingType } from '../../../../../types/sorting';
 
 type Props = {
   listDeposits: CollectionListDeposits[];
@@ -325,25 +325,22 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
 
 const Window = styled(SortingWindow)`
   right: 66px;
-  top: 683px;
+  top: 531px;
   @media (max-width: 992px) {
-    top: 691px;
-  }
-  @media (max-width: 800px) {
-    top: 719px;
+    top: 539px;
   }
   @media (max-width: 768px) {
     right: 50px;
-    top: 699px;
+    top: 724px;
   }
   @media (max-width: 576px) {
-    top: 711px;
+    top: 560px;
   }
-  @media (max-width: 399px) {
-    top: 751px;
+  @media (max-width: 479px) {
+    top: 600px;
   }
   @media (max-width: 333px) {
-    top: 765px;
+    top: 614px;
   }
 `;
 const Sort = styled(SortingItem)`

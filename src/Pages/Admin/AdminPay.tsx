@@ -112,7 +112,6 @@ export const AdminPay = () => {
       hubConnection
         .invoke<ListDeposits>('GetAllPublicDeposits', null, false, 0, 100, [])
         .then((res) => {
-          console.log('.then ~555555555555555555555 res', res);
           setListDeposits(res.collection);
         })
         .catch((err: Error) => console.log(err));
@@ -298,7 +297,6 @@ export const AdminPay = () => {
           pageLengthPay,
         )
         .then((res) => {
-          console.log('GetDepositsCharges', res);
           setTotalPayDeposits(res.totalRecords);
           if (res.collection.length) {
             setDepositPayList(res.collection);
@@ -425,7 +423,6 @@ export const AdminPay = () => {
     });
   };
 
-  console.log(listDeposits);
 
   return (
     <>

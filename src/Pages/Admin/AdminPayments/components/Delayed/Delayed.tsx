@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { FC, useContext, useEffect, useState } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
@@ -114,7 +114,6 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
       FieldName: 'payAmount',
     },
   ]);
-  console.log(sorting);
 
   useEffect(() => {
     if (hubConnection) {
@@ -122,11 +121,11 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
       hubConnection
         .invoke<RootPayments>(
           'GetUsersDeposits',
-          [5, 6],
-          null,
-          null,
-          null,
-          null,
+          [2],
+          name ? name.toLowerCase() : null,
+          searchSafeID.length ? searchSafeID : null,
+          openDate.from ? openDate.from : null,
+          openDate.to ? openDate.to : null,
           null,
           null,
           null,
@@ -136,7 +135,6 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
           sorting,
         )
         .then((res) => {
-          console.log('.then ~~~~~!!!!~~~~~~~~~~~~~ res', res);
           setList(res.collection);
           setTotalList(res.totalRecords);
           setLoading(false);
@@ -151,19 +149,15 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
   const submit = () => {
     setList([]);
     setCurrentPage(1);
-    console.log(name);
-    console.log(checkList);
-    console.log(openDate);
-    console.log(closeDate);
 
     if (hubConnection) {
       setLoading(true);
       hubConnection
         .invoke<RootPayments>(
           'GetUsersDeposits',
-          [5, 6],
+          [2],
+          name ? name.toLowerCase() : null,
           searchSafeID.length ? searchSafeID : null,
-          null,
           openDate.from ? openDate.from : null,
           openDate.to ? openDate.to : null,
           null,
@@ -175,7 +169,6 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
           sorting,
         )
         .then((res) => {
-          console.log('~~~~~~~~~~~~~', res);
           setList(res.collection);
           setTotalList(res.totalRecords);
           setLoading(false);
@@ -400,10 +393,7 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
 
 const Window = styled(SortingWindow)`
   right: 66px;
-  top: 531px;
-  @media (max-width: 1288px) {
-    top: 545px;
-  }
+  top: 545px;
   @media (max-width: 992px) {
     top: 539px;
   }
