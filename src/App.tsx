@@ -40,20 +40,22 @@ function App() {
 
 const subscribe = useCallback((id: any) => {
    if (hubConnection) {
+     console.log("subscribe req")
       hubConnection.invoke(
         "RegisterDevice",
          id
-       ).then((res: any) => console.log(res))
+       ).then((res: any) => console.log("subscribe res", res))
         .catch((err) => console.log(err));
     };
  }, [hubConnection]);
 
  const unSubscribe = useCallback((id: any) => {
     if (hubConnection) {
+      console.log("unsubscribe req")
       hubConnection.invoke(
           "UnregisterDevice",
           id
-      ).then((res: any) => console.log(res))
+      ).then((res: any) => console.log("unSubscribe res", res))
        .catch((err) => console.log(err));
     };
   }, [hubConnection]);
@@ -62,10 +64,8 @@ const subscribe = useCallback((id: any) => {
     try {
       OneSignal.on('subscriptionChange', (isSubscribed: boolean) => {
         if (isSubscribed) {
-          console.log("subscribe")
           OneSignal.getUserId((id: any) => subscribe(id));
         } else {
-          console.log('unSubscribe')
           OneSignal.getUserId((id: any) => unSubscribe(id));
         }
       });
