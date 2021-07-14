@@ -21,51 +21,44 @@ function App() {
 
   useEffect(() => {
     if (token) {
-      OneSignal.push(() => OneSignal.init({
-        appId: APP_ID,
-        safari_web_id: APP_SAFARI_ID,
-        notifyButton: {
-          enable: true,
-        },
-      }));
+      try {
+        OneSignal.push(() => OneSignal.init({
+          appId: APP_ID,
+          safari_web_id: APP_SAFARI_ID,
+          notifyButton: {
+            enable: true,
+          },
+        }));
+      } catch(e) {
+        console.error("initial onesignal error", e);
+      };
     };
   }, []);
 
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
 
-  interface OneSignalId {
-    name: string;
-    id: string;
-  };
-
-  const subscribe = (id: any) => {
+  const oneSignalSubscribe = (id: any, type: string = "RegisterDevice") => {
     if (hubConnection) {
-      hubConnection.invoke<OneSignalId>(
-        "RegisterDevice",
+      hubConnection.invoke(
+        type,
         id
       ).then((res: any) => console.log(res))
-       .catch((err) => console.log(err));
+       .catch((err) => console.error(err));
     };
-  };
-
-  const unSubscribe = (id: any) => {
-    if (hubConnection) {
-      hubConnection.invoke<OneSignalId>(
-        "UnregisterDevice",
-        id
-      ).then((res: any) => console.log(res))
-       .catch((err) => console.log(err));
-    };
-  };
+  }
 
   OneSignal.push(() => {
-    OneSignal.on('subscriptionChange', (permissionChange: any) => {
-        const currentPermission = permissionChange.to;
-        if (currentPermission == "granted") OneSignal.getUserId((userId: any) => subscribe(userId));
-        else OneSignal.getUserId((userId: any) => unSubscribe(userId));
+    try {
+      OneSignal.on('subscriptionChange', (isSubscribed: boolean) => {
+        if (isSubscribed) {
+          OneSignal.getUserId((id: any) => oneSignalSubscribe(id));
+        } else OneSignal.getUserId((id: any) => oneSignalSubscribe(id, "UnregisterDevice"));
       });
-   });
+    } catch(e) {
+      console.error("onesignal event loop error", e);
+    };
+  });
 
   return (
     <Router>
