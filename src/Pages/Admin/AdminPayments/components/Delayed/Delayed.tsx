@@ -65,18 +65,18 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
   const [sorting, setSorting] = useState<SortingType[]>([]);
   const [listForSorting, setListForSorting] = useState<SelectValues[]>([
-    {
-      text: 'Пользователь: От А до Я',
-      active: false,
-      OrderType: 1,
-      FieldName: 'userName',
-    },
-    {
-      text: 'Пользователь: От Я до А',
-      active: false,
-      OrderType: 2,
-      FieldName: 'userName',
-    },
+    // {
+    //   text: 'Пользователь: От А до Я',
+    //   active: false,
+    //   OrderType: 1,
+    //   FieldName: 'userName',
+    // },
+    // {
+    //   text: 'Пользователь: От Я до А',
+    //   active: false,
+    //   OrderType: 2,
+    //   FieldName: 'userName',
+    // },
     {
       text: 'Название: От А до Я',
       active: false,
@@ -101,6 +101,19 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
       OrderType: 1,
       FieldName: 'creationDate',
     },
+    {
+      text: 'По убыванию даты закрытия депозита',
+      active: false,
+      OrderType: 2,
+      FieldName: 'endDate',
+    },
+    {
+      text: 'По возрастанию даты закрытия депозита',
+      active: false,
+      OrderType: 1,
+      FieldName: 'endDate',
+    },
+
     {
       text: 'По убыванию суммы к выплате',
       active: false,
@@ -412,13 +425,13 @@ const Window = styled(SortingWindow)`
   }
 `;
 const Sort = styled(SortingItem)`
-  &:nth-child(1) {
-    @media (max-width: 768px) {
+  &:nth-child(3) {
+    @media (max-width: 992px) {
       display: none;
     }
   }
-  &:nth-child(2) {
-    @media (max-width: 768px) {
+  &:nth-child(4) {
+    @media (max-width: 992px) {
       display: none;
     }
   }
