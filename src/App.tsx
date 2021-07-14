@@ -10,10 +10,11 @@ import { InfoMain } from "./Pages/PrivateArea";
 import { Scrollbars } from "react-custom-scrollbars";
 import { Id } from "./types/Id";
 import { AppContext } from './context/HubContext';
+import useLocalStorage  from "./hooks/useLocalStorage";
 import { APP_ID, APP_SAFARI_ID } from "./constantes/onesignal";
 
 function App() {
-  const [ token, setToken ] = useState(localStorage.getItem("token"));
+  const [ token, setToken ] = useLocalStorage("token");
   (window as any).OneSignal = (window as any).OneSignal || [];
   const OneSignal = (window as any).OneSignal;
 
