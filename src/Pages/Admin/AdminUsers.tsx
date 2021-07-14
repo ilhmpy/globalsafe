@@ -23,6 +23,7 @@ import {
   RootCharges,
   RootPayments,
 } from '../../types/payments';
+import { SelectValues, SortingType } from '../../types/sorting';
 import { CollectionUsers, RootUsers } from '../../types/users';
 import { ModalUsers } from './AdminPay/Payments';
 import { Pagination } from './Pagination';
@@ -35,8 +36,6 @@ import {
   WindowBody,
   WindowTitle,
 } from './Styled.elements';
-import { SelectValues, SortingType } from '../../types/sorting';
-
 
 type PropsTable = {
   lockAccount: (id: string) => void;
@@ -190,9 +189,7 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
           {moment(data.creationDate).format('DD/MM/YYYY')}
         </TableBodyItem>
         <TableBodyItem>Русский</TableBodyItem>
-        <TableBodyItem>
-          {data.depositsAmount}
-        </TableBodyItem>
+        <TableBodyItem>{data.depositsAmount}</TableBodyItem>
         <TableBodyItem>
           {size ? (
             lock ? (
@@ -283,6 +280,19 @@ export const AdminUsers = () => {
       OrderType: 1,
       FieldName: 'creationDate',
     },
+
+    {
+      text: 'По убыванию суммы депозита',
+      active: false,
+      OrderType: 2,
+      FieldName: 'depositsAmount',
+    },
+    {
+      text: 'По возрастанию суммы депозита',
+      active: false,
+      OrderType: 1,
+      FieldName: 'depositsAmount',
+    },
   ]);
 
   useEffect(() => {
@@ -296,18 +306,12 @@ export const AdminUsers = () => {
           openDate.to ? openDate.to : null,
           (currentPage - 1) * pageLength,
           pageLength,
-          [
-            {
-              ConditionWeight: 1,
-              OrderType: 1,
-              FieldName: "depositsAmount",
-            }
-          ],
+          sorting,
         )
         .then((res) => {
           setLoading(false);
           setNum(20);
-          console.log("USERS", res.collection);
+          console.log('USERS', res.collection);
           seTotalUsers(res.totalRecords);
           setListDeposits(res.collection);
           setLoading(false);
@@ -624,7 +628,7 @@ const TableHeadItem = styled.li`
     }
   }
   &:nth-child(6) {
-    max-width: 130px;
+    max-width: 100px;
     @media (max-width: 992px) {
       max-width: 40px;
       display: none;
@@ -634,13 +638,12 @@ const TableHeadItem = styled.li`
     max-width: 130px;
     text-align: right;
     @media (max-width: 992px) {
-      max-width: 40px;
+      max-width: 80px;
     }
-
-    &:last-child {
-      @media only screen and (max-device-width: 992px) {
-        text-align: center;
-      }
+  }
+  &:last-child {
+    @media only screen and (max-device-width: 992px) {
+      text-align: center;
     }
   }
 `;
