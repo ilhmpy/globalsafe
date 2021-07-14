@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import GlobalStyle from "./globalStyles";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Authentication, Register } from "./Pages/Auth";
@@ -38,22 +38,36 @@ function App() {
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
 
-  const oneSignalSubscribe = (id: any, type: string = "RegisterDevice") => {
+const subscribe = useCallback((id: any) => {
+   if (hubConnection) {
+      hubConnection.invoke(
+        "RegisterDevice",
+         id
+       ).then((res: any) => console.log(res))
+        .catch((err) => console.log(err));
+    };
+ });
+
+ const unSubscribe = useCallback((id: any) => {
     if (hubConnection) {
       hubConnection.invoke(
-        type,
-        id
+          "UnregisterDevice",
+          id
       ).then((res: any) => console.log(res))
-       .catch((err) => console.error(err));
+       .catch((err) => console.log(err));
     };
-  }
+  });
 
   OneSignal.push(() => {
     try {
       OneSignal.on('subscriptionChange', (isSubscribed: boolean) => {
         if (isSubscribed) {
-          OneSignal.getUserId((id: any) => oneSignalSubscribe(id));
-        } else OneSignal.getUserId((id: any) => oneSignalSubscribe(id, "UnregisterDevice"));
+          console.log("subscribe")
+          ///OneSignal.getUserId((id: any) => subscribe(id));
+        } else {
+          console.log('unSubscribe')
+          //OneSignal.getUserId((id: any) => unSubscribe(id));
+        }
       });
     } catch(e) {
       console.error("onesignal event loop error", e);
