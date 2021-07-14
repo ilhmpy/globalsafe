@@ -60,8 +60,6 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
     setOpen(false);
   };
 
-  console.log(data.depositsAmount);
-
   const onClick = () => {
     if (window.innerWidth < 992) {
       history.push(`/admin/users/${data.name}`);
@@ -298,7 +296,13 @@ export const AdminUsers = () => {
           openDate.to ? openDate.to : null,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting,
+          [
+            {
+              ConditionWeight: 1,
+              OrderType: 1,
+              FieldName: "depositsAmount",
+            }
+          ],
         )
         .then((res) => {
           setLoading(false);
