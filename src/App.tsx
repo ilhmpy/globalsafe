@@ -33,7 +33,7 @@ function App() {
         console.error("initial onesignal error", e);
       };
     };
-  }, []);
+  }, [token]);
 
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
