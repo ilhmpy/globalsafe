@@ -2182,6 +2182,7 @@ const ModalComponent = styled.div`
   display: block;
   z-index: 99999;
   overflow: auto;
+  margin: 0;
   &::-webkit-scrollbar {
     width: 0 !important;
   }

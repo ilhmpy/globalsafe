@@ -211,7 +211,7 @@ export const Container = styled.div`
     min-height: 330px;
   }
   @media (max-width: 950px) {
-    margin: 0px auto 25px;
+    margin: 0px auto 50px;
   }
 `;
 
@@ -360,10 +360,16 @@ export const WinTitle = styled.div<{ sub?: boolean }>`
   margin-bottom: ${(props) => (props.sub ? '17px' : '8px')};
   text-align: center;
   letter-spacing: 0.1px;
+  width: 100%;
+  word-wrap: none;
   color: ${(props) => (props.sub ? props.theme.text2 : '#FF416E')};
   @media (max-width: 576px) {
-    font-size: ${(props) => (props.sub ? '28px' : '16px')};
+    font-size: ${(props) => (props.sub ? '24px' : '16px')};
     line-height: ${(props) => (props.sub ? '32px' : '19px')};
+    margin-bottom: 18px;
+    width: ${({ sub }) => sub ? "71%" : ""};
+    margin: ${({ sub }) => sub ? "0 auto" : ""};
+    margin-bottom: ${({ sub }) => sub ? "18px" : ""};
   }
 `;
 
@@ -372,7 +378,7 @@ export const WinDesc = styled.div`
   letter-spacing: 0.1px;
   font-weight: normal;
   text-align: center;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 21px;
 `;
 
@@ -397,7 +403,7 @@ export const ModalCongratsWrap = styled.div`
 `;
 
 export const BrandImg = styled.div`
-  width: 97px;
+  width: 98px;
   margin: 0 80px 0 20px;
   @media (max-width: 992px) {
     margin-bottom: 20px;
@@ -406,7 +412,9 @@ export const BrandImg = styled.div`
     margin-right: auto;
     margin-left: auto;
     margin-top: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 2px;
+    width: 53px;
+    height: 30px;
   }
 `;
 
