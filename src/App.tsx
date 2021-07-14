@@ -46,7 +46,7 @@ const subscribe = useCallback((id: any) => {
        ).then((res: any) => console.log(res))
         .catch((err) => console.log(err));
     };
- });
+ }, [hubConnection]);
 
  const unSubscribe = useCallback((id: any) => {
     if (hubConnection) {
@@ -56,17 +56,17 @@ const subscribe = useCallback((id: any) => {
       ).then((res: any) => console.log(res))
        .catch((err) => console.log(err));
     };
-  });
+  }, [hubConnection]);
 
   OneSignal.push(() => {
     try {
       OneSignal.on('subscriptionChange', (isSubscribed: boolean) => {
         if (isSubscribed) {
           console.log("subscribe")
-          ///OneSignal.getUserId((id: any) => subscribe(id));
+          OneSignal.getUserId((id: any) => subscribe(id));
         } else {
           console.log('unSubscribe')
-          //OneSignal.getUserId((id: any) => unSubscribe(id));
+          OneSignal.getUserId((id: any) => unSubscribe(id));
         }
       });
     } catch(e) {
