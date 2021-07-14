@@ -10,10 +10,11 @@ import { InfoMain } from "./Pages/PrivateArea";
 import { Scrollbars } from "react-custom-scrollbars";
 import { Id } from "./types/Id";
 import { AppContext } from './context/HubContext';
+import useLocalStorage  from "./hooks/useLocalStorage";
 import { APP_ID, APP_SAFARI_ID } from "./constantes/onesignal";
 
 function App() {
-  const [ token, setToken ] = useState(localStorage.getItem("token"));
+  const [ token, setToken ] = useLocalStorage("token");
   (window as any).OneSignal = (window as any).OneSignal || [];
   const OneSignal = (window as any).OneSignal;
 
@@ -33,27 +34,29 @@ function App() {
         console.error("initial onesignal error", e);
       };
     };
-  }, []);
+  }, [token]);
 
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
 
 const subscribe = useCallback((id: any) => {
    if (hubConnection) {
+     console.log("subscribe req")
       hubConnection.invoke(
         "RegisterDevice",
          id
-       ).then((res: any) => console.log(res))
+       ).then((res: any) => console.log("subscribe res", res))
         .catch((err) => console.log(err));
     };
  }, [hubConnection]);
 
  const unSubscribe = useCallback((id: any) => {
     if (hubConnection) {
+      console.log("unsubscribe req")
       hubConnection.invoke(
           "UnregisterDevice",
           id
-      ).then((res: any) => console.log(res))
+      ).then((res: any) => console.log("unSubscribe res", res))
        .catch((err) => console.log(err));
     };
   }, [hubConnection]);
@@ -62,10 +65,8 @@ const subscribe = useCallback((id: any) => {
     try {
       OneSignal.on('subscriptionChange', (isSubscribed: boolean) => {
         if (isSubscribed) {
-          console.log("subscribe")
           OneSignal.getUserId((id: any) => subscribe(id));
         } else {
-          console.log('unSubscribe')
           OneSignal.getUserId((id: any) => unSubscribe(id));
         }
       });
