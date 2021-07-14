@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import GlobalStyle from "./globalStyles";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Authentication, Register } from "./Pages/Auth";
@@ -21,51 +21,58 @@ function App() {
 
   useEffect(() => {
     if (token) {
-      OneSignal.push(() => OneSignal.init({
-        appId: APP_ID,
-        safari_web_id: APP_SAFARI_ID,
-        notifyButton: {
-          enable: true,
-        },
-      }));
+      try {
+        OneSignal.push(() => OneSignal.init({
+          appId: APP_ID,
+          safari_web_id: APP_SAFARI_ID,
+          notifyButton: {
+            enable: true,
+          },
+        }));
+      } catch(e) {
+        console.error("initial onesignal error", e);
+      };
     };
   }, []);
 
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
 
-  interface OneSignalId {
-    name: string;
-    id: string;
-  };
-
-  const subscribe = (id: any) => {
-    if (hubConnection) {
-      hubConnection.invoke<OneSignalId>(
+const subscribe = useCallback((id: any) => {
+   if (hubConnection) {
+      hubConnection.invoke(
         "RegisterDevice",
-        id
-      ).then((res: any) => console.log(res))
-       .catch((err) => console.log(err));
+         id
+       ).then((res: any) => console.log(res))
+        .catch((err) => console.log(err));
     };
-  };
+ }, [hubConnection]);
 
-  const unSubscribe = (id: any) => {
+ const unSubscribe = useCallback((id: any) => {
     if (hubConnection) {
-      hubConnection.invoke<OneSignalId>(
-        "UnregisterDevice",
-        id
+      hubConnection.invoke(
+          "UnregisterDevice",
+          id
       ).then((res: any) => console.log(res))
        .catch((err) => console.log(err));
     };
-  };
+  }, [hubConnection]);
 
   OneSignal.push(() => {
-    OneSignal.on('subscriptionChange', (permissionChange: any) => {
-        const currentPermission = permissionChange.to;
-        if (currentPermission == "granted") OneSignal.getUserId((userId: any) => subscribe(userId));
-        else OneSignal.getUserId((userId: any) => unSubscribe(userId));
+    try {
+      OneSignal.on('subscriptionChange', (isSubscribed: boolean) => {
+        if (isSubscribed) {
+          console.log("subscribe")
+          OneSignal.getUserId((id: any) => subscribe(id));
+        } else {
+          console.log('unSubscribe')
+          OneSignal.getUserId((id: any) => unSubscribe(id));
+        }
       });
-   });
+    } catch(e) {
+      console.error("onesignal event loop error", e);
+    };
+  });
 
   return (
     <Router>
