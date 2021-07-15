@@ -29,6 +29,7 @@ function App() {
             enable: true,
           },
         }));
+        console.log("after onesignal settings")
       } catch(e) {
         console.error("initial onesignal error", e);
       };
