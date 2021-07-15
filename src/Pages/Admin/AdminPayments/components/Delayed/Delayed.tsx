@@ -1,4 +1,3 @@
-import moment from 'moment';
 import { FC, useContext, useEffect, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +10,7 @@ import { TestInput } from '../../../../../components/UI/DayPicker';
 import { Loading } from '../../../../../components/UI/Loading';
 import { AppContext } from '../../../../../context/HubContext';
 import { Card } from '../../../../../globalStyles';
+import useWindowSize from '../../../../../hooks/useWindowSize';
 import { CollectionAnalitics } from '../../../../../types/analitics';
 import { OpenDate } from '../../../../../types/dates';
 import { CollectionListDeposits } from '../../../../../types/deposits';
@@ -36,12 +36,16 @@ import {
   WindowTitle,
 } from '../../../Styled.elements';
 import * as Styled from './styled';
+import { TableRow } from './TableRow';
 
 type Props = {
   listDeposits: CollectionListDeposits[];
 };
 
 export const Delayed: FC<Props> = ({ listDeposits }) => {
+  const sizes = useWindowSize();
+  const size = sizes < 992;
+  const field = sizes > 576;
   const [loading, setLoading] = useState(true);
   const [openDate, setOpenDate] = useState<OpenDate>({
     from: undefined,
@@ -61,6 +65,7 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const [name, setName] = useState('');
+  const [done, setDone] = useState(false);
 
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
   const [sorting, setSorting] = useState<SortingType[]>([]);
@@ -115,6 +120,8 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
       FieldName: 'payAmount',
     },
   ]);
+  const disabled = done;
+  // const disabled = true;
 
   useEffect(() => {
     if (hubConnection) {
@@ -239,6 +246,81 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
     });
   };
 
+  const confirmPay = (id: string) => {
+    console.log('confirmPay ~ id', id);
+    if (hubConnection) {
+      hubConnection
+        .invoke('PayPostponedPayment', id, '10')
+        .then((res) => {
+          console.log('.then ~ res', res);
+        })
+        .catch((err: Error) => {
+          console.log(err);
+        });
+    }
+  };
+
+  const unConfirmPay = (id: string) => {
+    console.log('unConfirmPay ~ id', id);
+    // if (hubConnection) {
+    //   hubConnection
+    //     .invoke('PayPostponedPayment', id)
+    //     .then((res) => {
+    //       const key = depositList.findIndex((i) => i.safeId === id);
+
+    //       if (key !== -1) {
+    //         const item = depositList.filter((i) => i.safeId === id)[0];
+    //         setDepositList([
+    //           ...depositList.slice(0, key),
+    //           { ...item, state: 6 },
+    //           ...depositList.slice(key + 1),
+    //         ]);
+    //       }
+    //       getPaymentsOverview();
+    //     })
+    //     .catch((err: Error) => {
+    //       console.log(err);
+    //     });
+    // }
+  };
+
+  const paymentsConfirm = (id: string) => {
+    setDone(true);
+    confirmPay(id);
+    onClose();
+  };
+
+  const paymentsUnConfirm = (id: string) => {
+    setDone(false);
+    unConfirmPay(id);
+    onClose();
+  };
+
+  const paymentsConfirmCheckbox = (id: string) => {
+    if (disabled) {
+      paymentsUnConfirm(id);
+    } else {
+      paymentsConfirm(id);
+    }
+  };
+  const adjustPay = (id: string, amount: number) => {
+    console.log('adjustPay ~ amount', amount);
+    console.log('adjustPay ~ id', id);
+    // if (hubConnection) {
+    //   hubConnection
+    //     .invoke('AdjustDepositPayment', id, amount)
+    //     .then((res) => {
+    //       getPaymentsOverview();
+    //     })
+    //     .catch((err: Error) => {
+    //       console.log(err);
+    //     });
+    // }
+  };
+
+  console.log('213214',list);
+  
+
   return (
     <div>
       <FilterBlock>
@@ -353,28 +435,13 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
           {list.length ? (
             <Scrollbars style={{ height: '500px' }}>
               {list.map((item, idx) => (
-                <Styled.TableBody
+                <TableRow
+                  idx={idx + (currentPage - 1) * pageLength}
                   key={item.safeId}
-                  onClick={() => setOpen(item)}>
-                  <Styled.TableBodyItem>
-                    {idx + 1 + (currentPage - 1) * pageLength}
-                  </Styled.TableBodyItem>
-                  <Styled.TableBodyItem>{item.userName}</Styled.TableBodyItem>
-                  <Styled.TableBodyItem>
-                    {item.deposit.name}
-                  </Styled.TableBodyItem>
-                  <Styled.TableBodyItem>{item.amountView}</Styled.TableBodyItem>
-                  <Styled.TableBodyItem>
-                    {moment(item.creationDate).format('DD/MM/YYYY')}
-                  </Styled.TableBodyItem>
-                  <Styled.TableBodyItem>
-                    {moment(item.endDate).format('DD/MM/YYYY')}
-                  </Styled.TableBodyItem>
-                  <Styled.TableBodyItem>
-                    {item.payAmountView}
-                  </Styled.TableBodyItem>
-                  <Styled.TableBodyItem></Styled.TableBodyItem>
-                </Styled.TableBody>
+                  item={item}
+                  adjustPay={adjustPay}
+                  confirmPay={confirmPay}
+                />
               ))}
             </Scrollbars>
           ) : loading ? (

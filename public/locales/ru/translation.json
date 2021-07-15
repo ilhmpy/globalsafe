@@ -222,7 +222,9 @@
     "delayed": {
       "title": "Отложено",
       "depositAmount": "Сумма депозита",
-      "payableAmount": "Сумма к выплате"
+      "payableAmount": "Сумма к выплате",
+      "pay": "Выплатить",
+      "payed": "Выплачено"
     }
   },
   "pagination": {

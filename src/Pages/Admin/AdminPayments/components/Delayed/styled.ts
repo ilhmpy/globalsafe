@@ -72,7 +72,6 @@ export const TableHeadItem = styled.li`
   }
   &:nth-child(7) {
     max-width: 150px;
-    text-align: right;
     @media (max-width: 576px) {
       max-width: 120px;
     }
