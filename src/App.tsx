@@ -25,9 +25,9 @@ function App() {
       console.log(token);
       try {
         OneSignal.push(() => {
-          OneSignal.SERVICE_WORKER_PARAM = { scope: "/public/" };
-          OneSignal.SERVICE_WORKER_PATH = "/OneSignalSDKWorker.js";
-          OneSignal.SERVICE_WORKER_UPDATER_PATH = "/OneSignalSDKUpdaterWorker.js";
+          OneSignal.SERVICE_WORKER_PARAM = { scope: "/push/onesignal/" };
+          OneSignal.SERVICE_WORKER_PATH = "push/onesignal/OneSignalSDKWorker.js";
+          OneSignal.SERVICE_WORKER_UPDATER_PATH = "push/onesignal/OneSignalSDKUpdaterWorker.js";
           OneSignal.init({
             appId: APP_ID,
             safari_web_id: APP_SAFARI_ID,
