@@ -208,7 +208,8 @@
       "date": "Deposit opening date",
       "deposit": "Deposit",
       "agree": "Agreed",
-      "disagree": "Inconsistent"
+      "disagree": "Inconsistent",
+      "closeDate": "Deposit closing date"
     },
     "analitics": {
       "data": "Date",
@@ -217,6 +218,11 @@
       "payAnalitics": "Payout analytics",
       "analitic": "Analitic",
       "label": "in 3 months"
+    },
+    "delayed": {
+      "title": "Delayed",
+      "depositAmount": "Deposit amount",
+      "payableAmount": "Payablea mount"
     }
   },
   "pagination": {
