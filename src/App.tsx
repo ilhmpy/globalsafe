@@ -40,7 +40,6 @@ function App() {
 
   const subscribe = useCallback((id: any) => {
      if (hubConnection) {
-       console.log("subscribe req")
         hubConnection.invoke(
           "RegisterDevice",
            id
@@ -51,7 +50,6 @@ function App() {
 
    const unSubscribe = useCallback((id: any) => {
       if (hubConnection) {
-        console.log("unsubscribe req")
         hubConnection.invoke(
             "UnregisterDevice",
             id
