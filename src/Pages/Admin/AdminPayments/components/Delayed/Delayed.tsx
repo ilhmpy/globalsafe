@@ -65,18 +65,6 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
   const [sorting, setSorting] = useState<SortingType[]>([]);
   const [listForSorting, setListForSorting] = useState<SelectValues[]>([
-    // {
-    //   text: 'Пользователь: От А до Я',
-    //   active: false,
-    //   OrderType: 1,
-    //   FieldName: 'userName',
-    // },
-    // {
-    //   text: 'Пользователь: От Я до А',
-    //   active: false,
-    //   OrderType: 2,
-    //   FieldName: 'userName',
-    // },
     {
       text: 'Название: От А до Я',
       active: false,
@@ -139,6 +127,8 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
           searchSafeID.length ? searchSafeID : null,
           openDate.from ? openDate.from : null,
           openDate.to ? openDate.to : null,
+          closeDate.from ? closeDate.from : null,
+          closeDate.to ? closeDate.to : null,
           null,
           null,
           null,
@@ -173,6 +163,8 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
           searchSafeID.length ? searchSafeID : null,
           openDate.from ? openDate.from : null,
           openDate.to ? openDate.to : null,
+          closeDate.from ? closeDate.from : null,
+          closeDate.to ? closeDate.to : null,
           null,
           null,
           null,

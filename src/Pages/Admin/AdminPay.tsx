@@ -266,6 +266,8 @@ export const AdminPay = () => {
           null,
           null,
           null,
+          null,
+          null,
           (currentPage - 1) * pageLength,
           pageLength,
           sortingForPay,
