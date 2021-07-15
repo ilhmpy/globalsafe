@@ -39,7 +39,7 @@ function App() {
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
 
-  const subscribe = useCallback((id: any) => {
+  const subscribe = useCallback((id: string) => {
      if (hubConnection) {
        console.log("subscribe request, hubConnection = true")
         hubConnection.invoke(
@@ -50,7 +50,7 @@ function App() {
       };
    }, [hubConnection]);
 
-   const unSubscribe = useCallback((id: any) => {
+   const unSubscribe = useCallback((id: string) => {
       if (hubConnection) {
         console.log("subscribe request, hubConnection = true")
         hubConnection.invoke(
@@ -65,10 +65,10 @@ function App() {
       try {
         OneSignal.on('subscriptionChange', (isSubscribed: boolean) => {
           if (isSubscribed) {
-            OneSignal.getUserId((id: any) => subscribe(id));
+            OneSignal.getUserId((id: string) => subscribe(id));
             console.log("subscribe event")
           } else {
-            OneSignal.getUserId((id: any) => unSubscribe(id));
+            OneSignal.getUserId((id: string) => unSubscribe(id));
             console.log("unSubscribe event")
           };
         });
