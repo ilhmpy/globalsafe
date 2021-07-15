@@ -32,6 +32,7 @@ function App() {
       } catch(e) {
         console.error("initial onesignal error", e);
       };
+      console.log("onesignal initialized");
     };
   }, [token]);
 
@@ -40,6 +41,7 @@ function App() {
 
   const subscribe = useCallback((id: any) => {
      if (hubConnection) {
+       console.log("subscribe request, hubConnection = true")
         hubConnection.invoke(
           "RegisterDevice",
            id
@@ -50,6 +52,7 @@ function App() {
 
    const unSubscribe = useCallback((id: any) => {
       if (hubConnection) {
+        console.log("subscribe request, hubConnection = true")
         hubConnection.invoke(
             "UnregisterDevice",
             id
@@ -63,9 +66,11 @@ function App() {
         OneSignal.on('subscriptionChange', (isSubscribed: boolean) => {
           if (isSubscribed) {
             OneSignal.getUserId((id: any) => subscribe(id));
+            console.log("subscribe event")
           } else {
             OneSignal.getUserId((id: any) => unSubscribe(id));
-          }
+            console.log("unSubscribe event")
+          };
         });
       } catch(e) {
         console.error("onesignal event loop error", e);
