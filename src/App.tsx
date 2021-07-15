@@ -35,6 +35,20 @@ function App() {
               enable: true,
             },
           });
+          try {
+            OneSignal.on('subscriptionChange', (isSubscribed: boolean) => {
+              console.log('onesignal events start')
+              if (isSubscribed) {
+                console.log("subscribe event")
+                OneSignal.getUserId((id: string) => subscribe(id));
+              } else {
+                console.log("unSubscribe event")
+                OneSignal.getUserId((id: string) => unSubscribe(id));
+              };
+            });
+          } catch(e) {
+            console.error("onesignal event loop error", e);
+          };
         });
         console.log("after onesignal settings")
       } catch(e) {
@@ -70,23 +84,6 @@ function App() {
          .catch((err) => console.log(err));
       };
     }, [hubConnection]);
-
-    OneSignal.push(() => {
-      try {
-        OneSignal.on('subscriptionChange', (isSubscribed: boolean) => {
-          console.log('onesignal events start')
-          if (isSubscribed) {
-            console.log("subscribe event")
-            OneSignal.getUserId((id: string) => subscribe(id));
-          } else {
-            console.log("unSubscribe event")
-            OneSignal.getUserId((id: string) => unSubscribe(id));
-          };
-        });
-      } catch(e) {
-        console.error("onesignal event loop error", e);
-      };
-    });
 
   return (
     <Router>
