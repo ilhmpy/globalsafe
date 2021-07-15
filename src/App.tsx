@@ -20,7 +20,9 @@ function App() {
   console.log("onesignal ids", APP_ID, APP_SAFARI_ID);
 
   useEffect(() => {
+    console.log(token);
     if (token) {
+      console.log(token);
       try {
         OneSignal.push(() => OneSignal.init({
           appId: APP_ID,
@@ -29,6 +31,7 @@ function App() {
             enable: true,
           },
         }));
+        console.log("after onesignal settings")
       } catch(e) {
         console.error("initial onesignal error", e);
       };
@@ -39,7 +42,8 @@ function App() {
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
 
-  const subscribe = useCallback((id: any) => {
+  const subscribe = useCallback((id: string) => {
+    console.log("before hubconnection check / subscribe", hubConnection)
      if (hubConnection) {
        console.log("subscribe request, hubConnection = true")
         hubConnection.invoke(
@@ -50,7 +54,8 @@ function App() {
       };
    }, [hubConnection]);
 
-   const unSubscribe = useCallback((id: any) => {
+   const unSubscribe = useCallback((id: string) => {
+     console.log("before hubConnection check / unSubscribe", hubConnection)
       if (hubConnection) {
         console.log("subscribe request, hubConnection = true")
         hubConnection.invoke(
@@ -64,12 +69,13 @@ function App() {
     OneSignal.push(() => {
       try {
         OneSignal.on('subscriptionChange', (isSubscribed: boolean) => {
+          console.log('onesignal events start')
           if (isSubscribed) {
-            OneSignal.getUserId((id: any) => subscribe(id));
             console.log("subscribe event")
+            OneSignal.getUserId((id: string) => subscribe(id));
           } else {
-            OneSignal.getUserId((id: any) => unSubscribe(id));
             console.log("unSubscribe event")
+            OneSignal.getUserId((id: string) => unSubscribe(id));
           };
         });
       } catch(e) {
