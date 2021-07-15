@@ -65,11 +65,11 @@ function App() {
       try {
         OneSignal.on('subscriptionChange', (isSubscribed: boolean) => {
           if (isSubscribed) {
-            OneSignal.getUserId((id: string) => subscribe(id));
             console.log("subscribe event")
+            OneSignal.getUserId((id: string) => subscribe(id));
           } else {
-            OneSignal.getUserId((id: string) => unSubscribe(id));
             console.log("unSubscribe event")
+            OneSignal.getUserId((id: string) => unSubscribe(id));
           };
         });
       } catch(e) {
