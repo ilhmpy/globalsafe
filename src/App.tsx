@@ -49,6 +49,7 @@ function App() {
   useEffect(() => {
     console.log(token);
     if (token) {
+      console.log(hubConnection)
       console.log(token);
       try {
         OneSignal.push(() => {
