@@ -24,13 +24,18 @@ function App() {
     if (token) {
       console.log(token);
       try {
-        OneSignal.push(() => OneSignal.init({
-          appId: APP_ID,
-          safari_web_id: APP_SAFARI_ID,
-          notifyButton: {
-            enable: true,
-          },
-        }));
+        OneSignal.push(() => {
+          OneSignal.SERVICE_WORKER_PARAM = { scope: "/push/onesignal/" };
+          OneSignal.SERVICE_WORKER_PATH = "push/onesignal/OneSignalSDKWorker.js";
+          OneSignal.SERVICE_WORKER_UPDATER_PATH = "push/onesignal/OneSignalSDKUpdaterWorker.js";
+          OneSignal.init({
+            appId: APP_ID,
+            safari_web_id: APP_SAFARI_ID,
+            notifyButton: {
+              enable: true,
+            },
+          });
+        });
         console.log("after onesignal settings")
       } catch(e) {
         console.error("initial onesignal error", e);
