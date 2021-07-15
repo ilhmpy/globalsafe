@@ -19,6 +19,33 @@ function App() {
 
   console.log("onesignal ids", APP_ID, APP_SAFARI_ID);
 
+  const appContext = useContext(AppContext);
+  const hubConnection = appContext.hubConnection;
+
+  const subscribe = useCallback((id: string) => {
+    console.log("before hubconnection check / subscribe", hubConnection)
+     if (hubConnection) {
+       console.log("subscribe request, hubConnection = true")
+        hubConnection.invoke(
+          "RegisterDevice",
+           id
+         ).then(() => {})
+          .catch((err) => console.log(err));
+      };
+   }, [hubConnection]);
+
+   const unSubscribe = useCallback((id: string) => {
+     console.log("before hubConnection check / unSubscribe", hubConnection)
+      if (hubConnection) {
+        console.log("subscribe request, hubConnection = true")
+        hubConnection.invoke(
+            "UnregisterDevice",
+            id
+        ).then(() => {})
+         .catch((err) => console.log(err));
+      };
+    }, [hubConnection]);
+
   useEffect(() => {
     console.log(token);
     if (token) {
@@ -56,34 +83,7 @@ function App() {
       };
       console.log("onesignal initialized");
     };
-  }, [token]);
-
-  const appContext = useContext(AppContext);
-  const hubConnection = appContext.hubConnection;
-
-  const subscribe = useCallback((id: string) => {
-    console.log("before hubconnection check / subscribe", hubConnection)
-     if (hubConnection) {
-       console.log("subscribe request, hubConnection = true")
-        hubConnection.invoke(
-          "RegisterDevice",
-           id
-         ).then(() => {})
-          .catch((err) => console.log(err));
-      };
-   }, [hubConnection]);
-
-   const unSubscribe = useCallback((id: string) => {
-     console.log("before hubConnection check / unSubscribe", hubConnection)
-      if (hubConnection) {
-        console.log("subscribe request, hubConnection = true")
-        hubConnection.invoke(
-            "UnregisterDevice",
-            id
-        ).then(() => {})
-         .catch((err) => console.log(err));
-      };
-    }, [hubConnection]);
+  }, [token, hubConnection]);
 
   return (
     <Router>
