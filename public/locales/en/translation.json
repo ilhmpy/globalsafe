@@ -321,7 +321,8 @@
     "type": "Type of transaction",
     "sum": "Transaction amount",
     "byProgramm": "by program",
-    "showMore": "Show more"
+    "showMore": "Show more",
+    "showLess": "Show less"
   },
   "copy": {
     "copy": "Copied",
