@@ -20,7 +20,9 @@ function App() {
   console.log("onesignal ids", APP_ID, APP_SAFARI_ID);
 
   useEffect(() => {
+    console.log(token);
     if (token) {
+      console.log(token);
       try {
         OneSignal.push(() => OneSignal.init({
           appId: APP_ID,
@@ -41,6 +43,7 @@ function App() {
   const hubConnection = appContext.hubConnection;
 
   const subscribe = useCallback((id: string) => {
+    console.log("before hubconnection check / subscribe")
      if (hubConnection) {
        console.log("subscribe request, hubConnection = true")
         hubConnection.invoke(
@@ -52,6 +55,7 @@ function App() {
    }, [hubConnection]);
 
    const unSubscribe = useCallback((id: string) => {
+     console.log("before hubConnection check / unSubscribe")
       if (hubConnection) {
         console.log("subscribe request, hubConnection = true")
         hubConnection.invoke(
