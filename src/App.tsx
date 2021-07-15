@@ -43,7 +43,7 @@ function App() {
   const hubConnection = appContext.hubConnection;
 
   const subscribe = useCallback((id: string) => {
-    console.log("before hubconnection check / subscribe")
+    console.log("before hubconnection check / subscribe", hubConnection)
      if (hubConnection) {
        console.log("subscribe request, hubConnection = true")
         hubConnection.invoke(
@@ -55,7 +55,7 @@ function App() {
    }, [hubConnection]);
 
    const unSubscribe = useCallback((id: string) => {
-     console.log("before hubConnection check / unSubscribe")
+     console.log("before hubConnection check / unSubscribe", hubConnection)
       if (hubConnection) {
         console.log("subscribe request, hubConnection = true")
         hubConnection.invoke(
