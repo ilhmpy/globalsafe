@@ -13,6 +13,7 @@ import { Collection, RootOperations } from '../../../../types/operations';
 export const Operations = () => {
   const [notifyList, setNotifyList] = useState<Collection[]>([]);
   const [num, setNum] = useState(0);
+  const [showLess, setShowLess] = useState<boolean>(false);
   const appContext = useContext(AppContext);
   const [maxItems, setMaxItems] = useState(4);
   const hubConnection = appContext.hubConnection;
@@ -74,9 +75,21 @@ export const Operations = () => {
         )
         .then((res) => {
           setNotifyList((notifyList) => [...notifyList, ...res.collection]);
+          setShowLess(true);
         })
         .catch((e) => console.log(e));
     }
+  };
+
+  const less = () => {
+    let lessNotifyList: any[] = [];
+    notifyList.forEach(notify => {
+      if (lessNotifyList.length < 4) {
+        lessNotifyList.push(notify);
+      };
+    });
+    setNotifyList(lessNotifyList);
+    setShowLess(false);
   };
 
   return (
@@ -127,8 +140,8 @@ export const Operations = () => {
             })}
         </TransitionGroup>
         {
-          <Button dangerOutline onClick={add}>
-            {t('operation.showMore')}
+          <Button dangerOutline onClick={!showLess ? add : less}>
+            {!showLess ? t('operation.showMore') : t("operation.showLess")}
           </Button>
         }
       </TableContainer>
