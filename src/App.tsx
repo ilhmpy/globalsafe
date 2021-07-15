@@ -69,6 +69,7 @@ function App() {
     OneSignal.push(() => {
       try {
         OneSignal.on('subscriptionChange', (isSubscribed: boolean) => {
+          console.log('onesignal events start')
           if (isSubscribed) {
             console.log("subscribe event")
             OneSignal.getUserId((id: string) => subscribe(id));
