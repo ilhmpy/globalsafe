@@ -3,7 +3,6 @@ import GlobalStyle from "./globalStyles";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Authentication, Register } from "./Pages/Auth";
 import { Main } from "./Pages/Main/Main";
-import { HubProvider } from "./context/HubContext";
 import { Admin } from "./Pages/Admin";
 import { ThemesProvider } from "./context/ThemeContext";
 import { InfoMain } from "./Pages/PrivateArea";
@@ -18,7 +17,7 @@ function App() {
   (window as any).OneSignal = (window as any).OneSignal || [];
   const OneSignal = (window as any).OneSignal;
 
-  console.log(APP_ID, APP_SAFARI_ID)
+  console.log("onesignal ids", APP_ID, APP_SAFARI_ID);
 
   useEffect(() => {
     if (token) {
@@ -39,46 +38,45 @@ function App() {
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
 
-const subscribe = useCallback((id: any) => {
-   if (hubConnection) {
-     console.log("subscribe req")
-      hubConnection.invoke(
-        "RegisterDevice",
-         id
-       ).then((res: any) => console.log("subscribe res", res))
-        .catch((err) => console.log(err));
-    };
- }, [hubConnection]);
+  const subscribe = useCallback((id: any) => {
+     if (hubConnection) {
+       console.log("subscribe req")
+        hubConnection.invoke(
+          "RegisterDevice",
+           id
+         ).then(() => {})
+          .catch((err) => console.log(err));
+      };
+   }, [hubConnection]);
 
- const unSubscribe = useCallback((id: any) => {
-    if (hubConnection) {
-      console.log("unsubscribe req")
-      hubConnection.invoke(
-          "UnregisterDevice",
-          id
-      ).then((res: any) => console.log("unSubscribe res", res))
-       .catch((err) => console.log(err));
-    };
-  }, [hubConnection]);
+   const unSubscribe = useCallback((id: any) => {
+      if (hubConnection) {
+        console.log("unsubscribe req")
+        hubConnection.invoke(
+            "UnregisterDevice",
+            id
+        ).then(() => {})
+         .catch((err) => console.log(err));
+      };
+    }, [hubConnection]);
 
-  OneSignal.push(() => {
-    try {
-      OneSignal.on('subscriptionChange', (isSubscribed: boolean) => {
-        if (isSubscribed) {
-          OneSignal.getUserId((id: any) => subscribe(id));
-        } else {
-          OneSignal.getUserId((id: any) => unSubscribe(id));
-        }
-      });
-    } catch(e) {
-      console.error("onesignal event loop error", e);
-    };
-  });
+    OneSignal.push(() => {
+      try {
+        OneSignal.on('subscriptionChange', (isSubscribed: boolean) => {
+          if (isSubscribed) {
+            OneSignal.getUserId((id: any) => subscribe(id));
+          } else {
+            OneSignal.getUserId((id: any) => unSubscribe(id));
+          }
+        });
+      } catch(e) {
+        console.error("onesignal event loop error", e);
+      };
+    });
 
   return (
     <Router>
-      <HubProvider>
-        <ThemesProvider>
+      <ThemesProvider>
           {/* <div style={{ height: "100vh" }}>
               <Scrollbars style={{ height: "100%", width: "100%" }}> */}
           <div className="App">
@@ -94,8 +92,7 @@ const subscribe = useCallback((id: any) => {
             {/* </div>
               </Scrollbars> */}
           </div>
-        </ThemesProvider>
-      </HubProvider>
+       </ThemesProvider>
     </Router>
   );
 }
