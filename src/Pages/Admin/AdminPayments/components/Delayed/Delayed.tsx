@@ -125,7 +125,7 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
       hubConnection
         .invoke<RootPayments>(
           'GetUsersDeposits',
-          [2],
+          [1, 2, 3, 4, 5, 6],
           name ? name.toLowerCase() : null,
           searchSafeID.length ? searchSafeID : null,
           openDate.from ? openDate.from : null,
@@ -161,7 +161,7 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
       hubConnection
         .invoke<RootPayments>(
           'GetUsersDeposits',
-          [2],
+          [1, 2, 3, 4, 5, 6],
           name ? name.toLowerCase() : null,
           searchSafeID.length ? searchSafeID : null,
           openDate.from ? openDate.from : null,
