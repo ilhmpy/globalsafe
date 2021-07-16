@@ -5,15 +5,16 @@ import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
 import burgerGroup from '../../../../../assets/img/burgerGroup.png';
 import { Button } from '../../../../../components/Button/Button';
+import { Notification } from '../../../../../components/Notify/Notification';
 import { Select } from '../../../../../components/Select/Select2';
 import { TestInput } from '../../../../../components/UI/DayPicker';
 import { Loading } from '../../../../../components/UI/Loading';
 import { AppContext } from '../../../../../context/HubContext';
 import { Card } from '../../../../../globalStyles';
-import useWindowSize from '../../../../../hooks/useWindowSize';
 import { CollectionAnalitics } from '../../../../../types/analitics';
 import { OpenDate } from '../../../../../types/dates';
 import { CollectionListDeposits } from '../../../../../types/deposits';
+import { Notify } from '../../../../../types/notify';
 import { RootPayments } from '../../../../../types/payments';
 import { SelectValues, SortingType } from '../../../../../types/sorting';
 import { ModalAnalitic } from '../../../AdminPay/Payments';
@@ -43,9 +44,6 @@ type Props = {
 };
 
 export const Delayed: FC<Props> = ({ listDeposits }) => {
-  const sizes = useWindowSize();
-  const size = sizes < 992;
-  const field = sizes > 576;
   const [loading, setLoading] = useState(true);
   const [openDate, setOpenDate] = useState<OpenDate>({
     from: undefined,
@@ -65,7 +63,7 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const [name, setName] = useState('');
-  const [done, setDone] = useState(false);
+  const [notifications, setNotifications] = useState<Notify[]>([]);
 
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
   const [sorting, setSorting] = useState<SortingType[]>([]);
@@ -111,17 +109,15 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
       text: 'По убыванию суммы к выплате',
       active: false,
       OrderType: 2,
-      FieldName: 'payAmount',
+      FieldName: 'pendingAmount',
     },
     {
       text: 'По возрастанию суммы к выплате',
       active: false,
       OrderType: 1,
-      FieldName: 'payAmount',
+      FieldName: 'pendingAmount',
     },
   ]);
-  const disabled = done;
-  // const disabled = true;
 
   useEffect(() => {
     if (hubConnection) {
@@ -214,6 +210,10 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
     setOpen(null);
   };
 
+  const onDelete = (id: number) => {
+    setNotifications(notifications.filter((i) => i.id !== id));
+  };
+
   const getActiveSort = (index: number) => {
     setSorting([
       {
@@ -246,80 +246,43 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
     });
   };
 
-  const confirmPay = (id: string) => {
-    console.log('confirmPay ~ id', id);
+  const confirmPay = (safeId: string, amount: number) => {
     if (hubConnection) {
       hubConnection
-        .invoke('PayPostponedPayment', id, '10')
+        .invoke('PayPostponedPayment', safeId, amount)
         .then((res) => {
           console.log('.then ~ res', res);
+          setNotifications([
+            {
+              text: t('adminPay.delayed.success'),
+              error: false,
+              timeleft: 5,
+              id: notifications.length,
+            },
+          ]);
         })
         .catch((err: Error) => {
           console.log(err);
+          setNotifications([
+            {
+              text: t('adminPay.delayed.failed'),
+              error: true,
+              timeleft: 5,
+              id: notifications.length,
+            },
+          ]);
         });
     }
   };
-
-  const unConfirmPay = (id: string) => {
-    console.log('unConfirmPay ~ id', id);
-    // if (hubConnection) {
-    //   hubConnection
-    //     .invoke('PayPostponedPayment', id)
-    //     .then((res) => {
-    //       const key = depositList.findIndex((i) => i.safeId === id);
-
-    //       if (key !== -1) {
-    //         const item = depositList.filter((i) => i.safeId === id)[0];
-    //         setDepositList([
-    //           ...depositList.slice(0, key),
-    //           { ...item, state: 6 },
-    //           ...depositList.slice(key + 1),
-    //         ]);
-    //       }
-    //       getPaymentsOverview();
-    //     })
-    //     .catch((err: Error) => {
-    //       console.log(err);
-    //     });
-    // }
+  const payAll = () => {
+    list.forEach((element) => {
+      confirmPay(element.safeId, element.pendingAmount);
+    });
+    setList([]);
+    setTotalList(0);
   };
 
-  const paymentsConfirm = (id: string) => {
-    setDone(true);
-    confirmPay(id);
-    onClose();
-  };
-
-  const paymentsUnConfirm = (id: string) => {
-    setDone(false);
-    unConfirmPay(id);
-    onClose();
-  };
-
-  const paymentsConfirmCheckbox = (id: string) => {
-    if (disabled) {
-      paymentsUnConfirm(id);
-    } else {
-      paymentsConfirm(id);
-    }
-  };
-  const adjustPay = (id: string, amount: number) => {
-    console.log('adjustPay ~ amount', amount);
-    console.log('adjustPay ~ id', id);
-    // if (hubConnection) {
-    //   hubConnection
-    //     .invoke('AdjustDepositPayment', id, amount)
-    //     .then((res) => {
-    //       getPaymentsOverview();
-    //     })
-    //     .catch((err: Error) => {
-    //       console.log(err);
-    //     });
-    // }
-  };
-
-  console.log('213214',list);
-  
+  console.log('~~~~~~~~~~~~~', list);
 
   return (
     <div>
@@ -379,6 +342,16 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
         </CSSTransition>
       </FilterBlock>
 
+      <Button
+        dangerOutline
+        onClick={(e) => {
+          e.stopPropagation();
+          payAll();
+        }}
+        style={{ marginBottom: '20px' }}>
+        {t('adminPay.delayed.payAll')}
+      </Button>
+
       <Card>
         <CSSTransition
           in={!!open}
@@ -387,6 +360,7 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
           unmountOnExit>
           <>{open && <ModalAnalitic onClose={onClose} data={open} />}</>
         </CSSTransition>
+
         <Styled.PaymentsTable>
           <Styled.TableHead>
             <Styled.TableHeadItemPaid>№</Styled.TableHeadItemPaid>
@@ -436,10 +410,9 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
             <Scrollbars style={{ height: '500px' }}>
               {list.map((item, idx) => (
                 <TableRow
-                  idx={idx + (currentPage - 1) * pageLength}
                   key={item.safeId}
+                  idx={idx + (currentPage - 1) * pageLength}
                   item={item}
-                  adjustPay={adjustPay}
                   confirmPay={confirmPay}
                 />
               ))}
@@ -459,28 +432,32 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
         setCurrentPage={setCurrentPage}
         totalLottery={totalList}
       />
+      <Notification onDelete={onDelete} data={notifications} />
     </div>
   );
 };
 
 const Window = styled(SortingWindow)`
-  right: 66px;
-  top: 545px;
+  right: 65px;
+  top: 593px;
+  @media (max-width: 1288px) {
+    top: 607px;
+  }
   @media (max-width: 992px) {
-    top: 539px;
+    top: 601px;
   }
   @media (max-width: 768px) {
     right: 50px;
-    top: 724px;
+    top: 786px;
   }
   @media (max-width: 576px) {
-    top: 560px;
+    top: 622px;
   }
   @media (max-width: 479px) {
-    top: 600px;
+    top: 662px;
   }
   @media (max-width: 420px) {
-    top: 614px;
+    top: 676px;
   }
 `;
 const Sort = styled(SortingItem)`

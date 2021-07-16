@@ -216,6 +216,7 @@ export const Approval: FC<Props> = ({
   }, [hubConnection]);
 
   const confirmPay = (id: string) => {
+  console.log('confirmPay ~+++++++++ id', typeof id)
     if (hubConnection) {
       hubConnection
         .invoke('ConfirmDepositPayment', id)
@@ -238,6 +239,8 @@ export const Approval: FC<Props> = ({
         });
     }
   };
+  console.log(depositList);
+  
 
   const unConfirmPay = (id: string) => {
     if (hubConnection) {

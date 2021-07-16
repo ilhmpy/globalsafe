@@ -1,6 +1,7 @@
-import styled from "styled-components/macro";
+import styled from 'styled-components/macro';
 
 export const Container = styled.div`
+  margin: 0px 33px 0 0;
   position: fixed;
   width: 100%;
   max-width: 500px;
@@ -27,9 +28,9 @@ export const Notification = styled.div<{ error?: boolean }>`
     top: 0;
     height: 100%;
     width: 10px;
-    content: "";
+    content: '';
     background: ${(props) =>
-      props.error ? "rgba(237, 76, 92, 0.8)" : "rgba(188, 212, 118, .8)"};
+      props.error ? 'rgba(237, 76, 92, 0.8)' : 'rgba(188, 212, 118, .8)'};
     border-radius: 8px 0px 0px 8px;
   }
 `;

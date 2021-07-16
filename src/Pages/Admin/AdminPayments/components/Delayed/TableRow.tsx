@@ -1,15 +1,13 @@
 import moment from 'moment';
-import { FC, useContext, useState } from 'react';
+import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
 import { Button } from '../../../../../components/Button/Button';
 import { Modal } from '../../../../../components/Modal/Modal';
 import { Input } from '../../../../../components/UI/Input';
 import { RoundButton } from '../../../../../components/UI/RoundButton';
-import { AppContext } from '../../../../../context/HubContext';
 import useWindowSize from '../../../../../hooks/useWindowSize';
 import { CollectionAnalitics } from '../../../../../types/analitics';
-import { OpenDate } from '../../../../../types/dates';
 import {
   ModalBlock,
   ModalBlockBody,
@@ -20,31 +18,19 @@ import { ModalAnalitic } from '../../../AdminPay/Payments';
 import * as Styled from './styled';
 
 type Props = {
-  item: any;
-  adjustPay: (id: string, val: number) => void;
-  confirmPay: (id: string) => void;
   idx: number;
+  item: any;
+  confirmPay: (safeId: string, amount: number) => void;
 };
 
-export const TableRow: FC<Props> = ({
-  item,
-  adjustPay,
-  confirmPay,
-  idx,
-}) => {
+export const TableRow: FC<Props> = ({ item, confirmPay, idx }) => {
   const sizes = useWindowSize();
   const size = sizes < 992;
-  const field = sizes > 576;
-  const [closeDate, setCloseDate] = useState<OpenDate>({
-    from: undefined,
-    to: undefined,
-  });
   const [open, setOpen] = useState<CollectionAnalitics | null>(null);
-  const appContext = useContext(AppContext);
-  const hubConnection = appContext.hubConnection;
   const [done, setDone] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const disabled = done;
+  const [forPay, setForPay] = useState<number>(item.pendingAmount);
 
   const { t } = useTranslation();
 
@@ -52,25 +38,10 @@ export const TableRow: FC<Props> = ({
     setOpen(null);
   };
 
-  const paymentsConfirm = (id: string) => {
-    // setModalOpen(true);
+  const paymentsConfirm = (id: string, amount: number) => {
     setDone(true);
-    confirmPay(id);
-    onClose();
-  };
-
-  // const paymentsUnConfirm = (id: string) => {
-  //   setDone(false);
-  //   unConfirmPay(id);
-  //   onClose();
-  // };
-
-  const paymentsConfirmCheckbox = (id: string) => {
-    // if (disabled) {
-    //   paymentsUnConfirm(id);
-    // } else {
-    paymentsConfirm(id);
-    // }
+    confirmPay(id, amount);
+    setModalOpen(false);
   };
 
   return (
@@ -81,21 +52,16 @@ export const TableRow: FC<Props> = ({
             <ModalTitle>{t('adminPay.delayed.pay')}</ModalTitle>
             <ModalBlockBody>
               <Input
-                onChange={() => console.log(1)}
-                // placeholder={`${t('assets.inputPlaceholder')}, CWD`}
+                onChange={(e) => setForPay(+e.target.value * 100000)}
                 type="number"
-                // ref={inputRef}
-                value={item.payAmountView}
+                value={forPay / 100000}
               />
               <ModalButton
                 as="button"
                 onClick={() => {
-                  paymentsConfirm(item.deposit.id);
-                  setModalOpen(false);
+                  paymentsConfirm(item.safeId, +forPay);
                 }}
-                danger
-                // disabled={value === undefined || +value < 1 ? true : false}
-              >
+                danger>
                 {t('adminPay.delayed.pay')}
               </ModalButton>
             </ModalBlockBody>
@@ -125,7 +91,7 @@ export const TableRow: FC<Props> = ({
           {moment(item.endDate).format('DD/MM/YYYY')}
         </Styled.TableBodyItem>
         <Styled.TableBodyItem dis={disabled}>
-          {item.payAmountView}
+          {forPay / 100000}
         </Styled.TableBodyItem>
 
         <Styled.TableBodyItem>
@@ -134,25 +100,16 @@ export const TableRow: FC<Props> = ({
               dis={disabled}
               onClick={(e) => {
                 e.stopPropagation();
-                paymentsConfirmCheckbox(item.deposit.id);
+                setModalOpen(true);
               }}
             />
           ) : disabled ? (
-            <Button
-              greenOutline
-              // onClick={(e) => {
-              //   e.stopPropagation();
-              //   paymentsUnConfirm(item.safeId);
-              // }}
-            >
-              {t('adminPay.delayed.payed')}
-            </Button>
+            <Button greenOutline>{t('adminPay.delayed.payed')}</Button>
           ) : (
             <Button
               dangerOutline
               onClick={(e) => {
                 e.stopPropagation();
-                // paymentsConfirm(item.safeId);
                 setModalOpen(true);
               }}>
               {t('adminPay.delayed.pay')}
