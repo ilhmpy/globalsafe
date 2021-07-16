@@ -51,6 +51,11 @@ export const AdminDepositsPrograms = () => {
   const hubConnection = appContext.hubConnection;
   const user = appContext.user;
   const logOut = appContext.logOut;
+  const [ list, setList ] = useState(["START", "MASTER", "MAIN"]);
+  const [ checkList, setCheckList ] = useState([]);
+  const [ procents, setProcents ] = useState([]);
+  const [ procentsList, setProcentsList ] = useState(["0%", "30%", "50%"]);
+  const [ filter, setFilter ] = useState(false);
 
   return (
     <>
@@ -80,24 +85,24 @@ export const AdminDepositsPrograms = () => {
                 <Styled.SelectWrap style={{ minWidth: 280 }}>
                   <Styled.Label>{t('depositsPrograms.name')}</Styled.Label>
                   <Select
-                    checkList={[]}
-                    setCheckList={() => {}}
-                    values={[]}
+                    checkList={checkList}
+                    setCheckList={setCheckList}
+                    values={list}
                   />
                 </Styled.SelectWrap>
                 <Styled.SelectWrap style={{ minWidth: 280 }}>
                   <Styled.Label>{t('depositsPrograms.depositSum')}</Styled.Label>
                   <Input
                     value={""}
-                    onChange={(e) => {}}
+                    onChange={(value) => {}}
                   />
                 </Styled.SelectWrap>
                 <Styled.SelectWrap style={{ minWidth: 133 }}>
                   <Styled.Label>{t('depositsPrograms.procents')}</Styled.Label>
                   <Select
-                    checkList={[]}
-                    setCheckList={() => {}}
-                    values={[]}
+                    checkList={procents}
+                    setCheckList={setProcents}
+                    values={procentsList}
                   />
                 </Styled.SelectWrap>
                 <Button danger onClick={() => {}} style={{ height: "40px" }}>
@@ -123,17 +128,23 @@ export const AdminDepositsPrograms = () => {
                   <BurgerImg
                     src={burgerGroup}
                     alt="burger"
-                    onClick={() => {}}
+                    onClick={() => setFilter(!filter)}
                   />
-                  <Window open={false}>
+                  <Window open={filter}>
                     <WindowTitle>Сортировка</WindowTitle>
                     <WindowBody>
-                      {[].map((obj, index) => (
+                      {[
+                        { name: "По убыванию даты" },
+                        { name: "По возрастанию даты" },
+                        { name: "Имя программы: От А до Я" },
+                        { name: "По убыванию суммы депозитов программы" },
+                        { name: "По возрастанию суммы депозитов программы" },
+                      ].map((obj, index) => (
                         <SortingItem
-                          active={false}
+                          active={filter}
                           key={index}
                           onClick={() => {}}>
-                          {}
+                          {obj.name}
                         </SortingItem>
                       ))}
                     </WindowBody>
@@ -206,6 +217,21 @@ const TableBodyItem = styled.li`
   font-size: 14px;
   line-height: 16px;
   color: ${(props) => props.theme.text2};
+
+  @media (max-width: 992px) {
+    display: none;
+    &:nth-child(1) {
+      display: block;
+    }
+
+    &:nth-child(2) {
+      display: block;
+    }
+
+    &:nth-child(6) {
+      display: block;
+    }
+  }
 `;
 
 const ContentWrap = styled.div`
@@ -258,7 +284,18 @@ const TableHeadItem = styled.li`
   width: 100%;
 
   @media (max-width: 992px) {
-    padding-right: 5px;
+    display: none;
+    &:nth-child(1) {
+      display: block;
+    }
+
+    &:nth-child(2) {
+      display: block;
+    }
+
+    &:nth-child(6) {
+      display: block;
+    }
   }
 
   &:nth-child(1) {
@@ -276,20 +313,8 @@ const TableHeadItem = styled.li`
 `;
 
 const Window = styled(SortingWindow)`
-  left: calc(100% - 345px);
-  top: 485px;
-  @media (max-width: 992px) {
-    top: 489px;
-  }
-  @media (max-width: 768px) {
-    top: 692px;
-    left: calc(100% - 330px);
-  }
-  @media (max-width: 576px) {
-    top: 514px;
-    left: calc(100% - 280px);
-    width: 230px;
-  }
+  right: 0px;
+  top: 24px;
 `;
 
 const TableBody = styled(TableHead)`
