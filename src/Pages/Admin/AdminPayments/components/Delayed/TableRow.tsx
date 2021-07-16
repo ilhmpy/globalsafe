@@ -2,6 +2,7 @@ import moment from 'moment';
 import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
+import styled from 'styled-components';
 import { Button } from '../../../../../components/Button/Button';
 import { Modal } from '../../../../../components/Modal/Modal';
 import { Input } from '../../../../../components/UI/Input';
@@ -20,7 +21,11 @@ import * as Styled from './styled';
 type Props = {
   idx: number;
   item: any;
-  confirmPay: (safeId: string, amount: number) => void;
+  confirmPay: (
+    safeId: string,
+    amount: number,
+    setDone: (status: boolean) => void,
+  ) => void;
 };
 
 export const TableRow: FC<Props> = ({ item, confirmPay, idx }) => {
@@ -39,8 +44,7 @@ export const TableRow: FC<Props> = ({ item, confirmPay, idx }) => {
   };
 
   const paymentsConfirm = (id: string, amount: number) => {
-    setDone(true);
-    confirmPay(id, amount);
+    confirmPay(id, amount, setDone);
     setModalOpen(false);
   };
 
@@ -64,6 +68,7 @@ export const TableRow: FC<Props> = ({ item, confirmPay, idx }) => {
                 danger>
                 {t('adminPay.delayed.pay')}
               </ModalButton>
+              <BottomText>{t('adminPay.delayed.setAllAmount')}</BottomText>
             </ModalBlockBody>
           </ModalBlock>
         </Modal>
@@ -112,7 +117,7 @@ export const TableRow: FC<Props> = ({ item, confirmPay, idx }) => {
                 e.stopPropagation();
                 setModalOpen(true);
               }}>
-              {t('adminPay.delayed.pay')}
+              {t('adminPay.delayed.payAll')}
             </Button>
           )}
         </Styled.TableBodyItem>
@@ -120,3 +125,22 @@ export const TableRow: FC<Props> = ({ item, confirmPay, idx }) => {
     </div>
   );
 };
+
+const BottomText = styled.div`
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 14px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  text-decoration-line: underline;
+  max-width: 160px;
+  margin-top: 15px;
+  color: ${(props) => props.theme.nextPay};
+  cursor: pointer;
+  &:active {
+    opacity: 0.5;
+    transition: opacity 0.1s ease;
+  }
+`;

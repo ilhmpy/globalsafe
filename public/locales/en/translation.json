@@ -227,7 +227,8 @@
       "payed": "Payed",
       "payAll": "Pay all",
       "success": "Payment was successful",
-      "failed": "Payout error"
+      "failed": "Payout error",
+      "setAllAmount": "Set the entire amount of the deferred payment"
     }
   },
   "pagination": {

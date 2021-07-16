@@ -28,23 +28,26 @@ export const TableHeadItem = styled.li`
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 97px;
+    max-width: 30px;
     @media (max-width: 768px) {
-      max-width: 60px;
+      max-width: 30px;
     }
     @media (max-width: 576px) {
       max-width: 20px;
     }
   }
   &:nth-child(2) {
-    max-width: 170px;
+    max-width: 100px;
     @media (max-width: 768px) {
       padding-right: 10px;
       display: none;
     }
   }
   &:nth-child(3) {
-    max-width: 100px;
+    max-width: 130px;
+    white-space: pre-wrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     @media (max-width: 768px) {
       /* display: none; */
     }

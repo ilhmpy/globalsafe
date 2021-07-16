@@ -135,7 +135,7 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
           null,
           null,
           null,
-          true,
+          null,
           (currentPage - 1) * pageLength,
           pageLength,
           sorting,
@@ -246,12 +246,17 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
     });
   };
 
-  const confirmPay = (safeId: string, amount: number) => {
+  const confirmPay = (
+    safeId: string,
+    amount: number,
+    setDone: (status: boolean) => void,
+  ) => {
     if (hubConnection) {
       hubConnection
         .invoke('PayPostponedPayment', safeId, amount)
         .then((res) => {
           console.log('.then ~ res', res);
+          setDone(true);
           setNotifications([
             {
               text: t('adminPay.delayed.success'),
@@ -263,6 +268,7 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
         })
         .catch((err: Error) => {
           console.log(err);
+          setDone(false);
           setNotifications([
             {
               text: t('adminPay.delayed.failed'),
@@ -274,13 +280,13 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
         });
     }
   };
-  const payAll = () => {
-    list.forEach((element) => {
-      confirmPay(element.safeId, element.pendingAmount);
-    });
-    setList([]);
-    setTotalList(0);
-  };
+  // const payAll = () => {
+  //   list.forEach((element) => {
+  //     confirmPay(element.safeId, element.pendingAmount);
+  //   });
+  //   setList([]);
+  //   setTotalList(0);
+  // };
 
   console.log('~~~~~~~~~~~~~', list);
 
@@ -342,7 +348,7 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
         </CSSTransition>
       </FilterBlock>
 
-      <Button
+      {/* <Button
         dangerOutline
         onClick={(e) => {
           e.stopPropagation();
@@ -350,7 +356,7 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
         }}
         style={{ marginBottom: '20px' }}>
         {t('adminPay.delayed.payAll')}
-      </Button>
+      </Button> */}
 
       <Card>
         <CSSTransition
@@ -439,25 +445,25 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
 
 const Window = styled(SortingWindow)`
   right: 65px;
-  top: 593px;
-  @media (max-width: 1288px) {
-    top: 607px;
+  top: 531px;
+  @media (max-width: 1209px) {
+    top: 545px;
   }
   @media (max-width: 992px) {
-    top: 601px;
+    top: 539px;
   }
   @media (max-width: 768px) {
     right: 50px;
-    top: 786px;
+    top: 724px;
   }
   @media (max-width: 576px) {
-    top: 622px;
+    top: 560px;
   }
   @media (max-width: 479px) {
-    top: 662px;
+    top: 600px;
   }
   @media (max-width: 420px) {
-    top: 676px;
+    top: 614px;
   }
 `;
 const Sort = styled(SortingItem)`
