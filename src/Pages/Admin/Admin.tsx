@@ -9,6 +9,7 @@ import {
   AdminUserOnePage,
   AdminLottery,
 } from "./";
+import { AdminDepositsPrograms } from "./AdminDepositsPrograms";
 import * as Styled from "./Styled.elements";
 import { SideNavbar } from "../../components/SideNav";
 import useWindowSize from "../../hooks/useWindowSize";
@@ -65,6 +66,7 @@ export const Admin = () => {
           <Route path="/admin/users/:slug" component={AdminUserOnePage} />
           <Route path="/admin/portfolio" component={AdminPortfolio} />
           <Route path="/admin/lottery" component={AdminLottery} />
+          <Route path="/admin/depositsPrograms" component={AdminDepositsPrograms} />
           <Route path="/" component={AdminMain} exact />
         </Switch>
       </Styled.Content>

@@ -106,7 +106,8 @@
     "users": "Пользователи",
     "portfolio": "Портфель",
     "toHome": "На главную",
-    "lottery": "Розыгрыши"
+    "lottery": "Розыгрыши",
+    "depositsPrograms": "Программы депозитов"
   },
   "adminDeposit": {
     "uptitle": "Выплаты",
@@ -395,5 +396,12 @@
     "d": "дн",
     "h": "ч",
     "m": "мин"
+  },
+  "depositsPrograms": {
+    "name": "Название",
+    "depositSum": "Сумма депозитов",
+    "procents": "Проценты",
+    "desc": "Описание",
+    "createDate": "Дата создания"
   }
 }

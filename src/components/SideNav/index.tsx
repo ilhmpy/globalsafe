@@ -9,6 +9,7 @@ import logo from '../../assets/svg/logo.svg';
 import logoWhite from '../../assets/svg/logoWhite.svg';
 import { ReactComponent as Lottery } from '../../assets/svg/lottery.svg';
 import { ReactComponent as Peppa } from '../../assets/svg/peppa.svg';
+import { ReactComponent as Deposits } from "../../assets/svg/deposits.svg";
 import ru from '../../assets/svg/russia.svg';
 import { ReactComponent as DarkTheme } from '../../assets/svg/theme.svg';
 import { ReactComponent as LightTheme } from '../../assets/svg/themeLight.svg';
@@ -87,6 +88,12 @@ export const SideNavbar: FC<Props> = ({ navWidth, navShow }) => {
             <StyledLink to="/admin/lottery">
               <Lottery />
               <Text>{t('sideNav.lottery')}</Text>
+            </StyledLink>
+          </Li>
+          <Li>
+            <StyledLink to="/admin/depositsPrograms">
+              <Deposits />
+              <Text>{t('sideNav.depositsPrograms')}</Text>
             </StyledLink>
           </Li>
         </Ul>

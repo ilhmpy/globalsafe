@@ -106,7 +106,8 @@
     "users": "Members",
     "portfolio": "Portfolio",
     "toHome": "To the main",
-    "lottery": "Lottery"
+    "lottery": "Lottery",
+    "depositsPrograms": "Deposits programs"
   },
   "adminDeposit": {
     "uptitle": "Payouts",
@@ -396,5 +397,12 @@
     "d": "d",
     "h": "h",
     "m": "min"
+  },
+  "depositsPrograms": {
+    "name": "Name",
+    "depositSum": "Deposits sum",
+    "procents": "Procents",
+    "desc": "Description",
+    "createDate": "Create date"
   }
 }
