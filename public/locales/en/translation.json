@@ -222,7 +222,13 @@
     "delayed": {
       "title": "Delayed",
       "depositAmount": "Deposit amount",
-      "payableAmount": "Payablea mount"
+      "payableAmount": "Payable amount",
+      "pay": "Pay",
+      "payed": "Payed",
+      "payAll": "Pay all",
+      "success": "Payment was successful",
+      "failed": "Payout error",
+      "setAllAmount": "Set the entire amount of the deferred payment"
     }
   },
   "pagination": {
@@ -254,6 +260,7 @@
     "desc": "Funds will not be debited from your personal account. Please contact your administrator."
   },
   "privateArea": {
+    "delayed": "Delayed payment",
     "at": "Behind",
     "allTime": "For all the time",
     "uptitle": "Personal Area",

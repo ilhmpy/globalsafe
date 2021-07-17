@@ -44,6 +44,9 @@ export const TH = styled.th`
   &:nth-child(4) {
     width: 123px;
   }
+  &:nth-child(5) {
+    width: 90px;
+  }
   p {
     display: inline-block;
   }
@@ -76,6 +79,9 @@ export const TD = styled.td`
   }
   &:nth-child(4) {
     width: 123px;
+  }
+  &:nth-child(4) {
+    width: 90px;
   }
 `;
 

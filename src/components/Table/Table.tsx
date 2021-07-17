@@ -132,6 +132,9 @@ const Row = ({ data }: any) => {
               )}
             </Styled.TD>
             <Styled.TD>
+              <Styled.Text>{data.pendingAmount}</Styled.Text>
+            </Styled.TD>
+            <Styled.TD>
               <Styled.Text>
                 {data.paymentDate
                   ? moment(data.paymentDate).format('DD MMMM YYYY')
@@ -165,6 +168,7 @@ export const Tables = ({ list }: any) => {
             <Styled.TH>{t('privateArea.desc')}</Styled.TH>
             <Styled.TH>{t('privateArea.deposit')}</Styled.TH>
             <Styled.TH>{t('privateArea.toPay')}</Styled.TH>
+            <Styled.TH>{t('privateArea.delayed')}</Styled.TH>
             <Styled.TH>
               <p>{t('privateArea.nextDate')}</p>
               <span>{t('adminPay.table.nextDate')}</span>

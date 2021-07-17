@@ -1,4 +1,3 @@
-import moment from 'moment';
 import { FC, useContext, useEffect, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTranslation } from 'react-i18next';
@@ -6,6 +5,7 @@ import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
 import burgerGroup from '../../../../../assets/img/burgerGroup.png';
 import { Button } from '../../../../../components/Button/Button';
+import { Notification } from '../../../../../components/Notify/Notification';
 import { Select } from '../../../../../components/Select/Select2';
 import { TestInput } from '../../../../../components/UI/DayPicker';
 import { Loading } from '../../../../../components/UI/Loading';
@@ -14,6 +14,7 @@ import { Card } from '../../../../../globalStyles';
 import { CollectionAnalitics } from '../../../../../types/analitics';
 import { OpenDate } from '../../../../../types/dates';
 import { CollectionListDeposits } from '../../../../../types/deposits';
+import { Notify } from '../../../../../types/notify';
 import { RootPayments } from '../../../../../types/payments';
 import { SelectValues, SortingType } from '../../../../../types/sorting';
 import { ModalAnalitic } from '../../../AdminPay/Payments';
@@ -36,6 +37,7 @@ import {
   WindowTitle,
 } from '../../../Styled.elements';
 import * as Styled from './styled';
+import { TableRow } from './TableRow';
 
 type Props = {
   listDeposits: CollectionListDeposits[];
@@ -61,6 +63,7 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const [name, setName] = useState('');
+  const [notifications, setNotifications] = useState<Notify[]>([]);
 
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
   const [sorting, setSorting] = useState<SortingType[]>([]);
@@ -106,13 +109,13 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
       text: 'По убыванию суммы к выплате',
       active: false,
       OrderType: 2,
-      FieldName: 'payAmount',
+      FieldName: 'pendingAmount',
     },
     {
       text: 'По возрастанию суммы к выплате',
       active: false,
       OrderType: 1,
-      FieldName: 'payAmount',
+      FieldName: 'pendingAmount',
     },
   ]);
 
@@ -122,7 +125,7 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
       hubConnection
         .invoke<RootPayments>(
           'GetUsersDeposits',
-          [2],
+          [1, 2, 3, 4, 5, 6],
           name ? name.toLowerCase() : null,
           searchSafeID.length ? searchSafeID : null,
           openDate.from ? openDate.from : null,
@@ -158,7 +161,7 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
       hubConnection
         .invoke<RootPayments>(
           'GetUsersDeposits',
-          [2],
+          [1, 2, 3, 4, 5, 6],
           name ? name.toLowerCase() : null,
           searchSafeID.length ? searchSafeID : null,
           openDate.from ? openDate.from : null,
@@ -207,6 +210,10 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
     setOpen(null);
   };
 
+  const onDelete = (id: number) => {
+    setNotifications(notifications.filter((i) => i.id !== id));
+  };
+
   const getActiveSort = (index: number) => {
     setSorting([
       {
@@ -238,6 +245,42 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
       });
     });
   };
+
+  const confirmPay = (
+    safeId: string,
+    amount: number,
+    setDone: (status: boolean) => void,
+  ) => {
+    if (hubConnection) {
+      hubConnection
+        .invoke('PayPostponedPayment', safeId, amount)
+        .then((res) => {
+          console.log('.then ~ res', res);
+          setDone(true);
+          setNotifications([
+            {
+              text: t('adminPay.delayed.success'),
+              error: false,
+              timeleft: 5,
+              id: notifications.length,
+            },
+          ]);
+        })
+        .catch((err: Error) => {
+          console.log(err);
+          setDone(false);
+          setNotifications([
+            {
+              text: t('adminPay.delayed.failed'),
+              error: true,
+              timeleft: 5,
+              id: notifications.length,
+            },
+          ]);
+        });
+    }
+  };
+
 
   return (
     <div>
@@ -305,6 +348,7 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
           unmountOnExit>
           <>{open && <ModalAnalitic onClose={onClose} data={open} />}</>
         </CSSTransition>
+
         <Styled.PaymentsTable>
           <Styled.TableHead>
             <Styled.TableHeadItemPaid>№</Styled.TableHeadItemPaid>
@@ -353,28 +397,12 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
           {list.length ? (
             <Scrollbars style={{ height: '500px' }}>
               {list.map((item, idx) => (
-                <Styled.TableBody
+                <TableRow
                   key={item.safeId}
-                  onClick={() => setOpen(item)}>
-                  <Styled.TableBodyItem>
-                    {idx + 1 + (currentPage - 1) * pageLength}
-                  </Styled.TableBodyItem>
-                  <Styled.TableBodyItem>{item.userName}</Styled.TableBodyItem>
-                  <Styled.TableBodyItem>
-                    {item.deposit.name}
-                  </Styled.TableBodyItem>
-                  <Styled.TableBodyItem>{item.amountView}</Styled.TableBodyItem>
-                  <Styled.TableBodyItem>
-                    {moment(item.creationDate).format('DD/MM/YYYY')}
-                  </Styled.TableBodyItem>
-                  <Styled.TableBodyItem>
-                    {moment(item.endDate).format('DD/MM/YYYY')}
-                  </Styled.TableBodyItem>
-                  <Styled.TableBodyItem>
-                    {item.payAmountView}
-                  </Styled.TableBodyItem>
-                  <Styled.TableBodyItem></Styled.TableBodyItem>
-                </Styled.TableBody>
+                  idx={idx + (currentPage - 1) * pageLength}
+                  item={item}
+                  confirmPay={confirmPay}
+                />
               ))}
             </Scrollbars>
           ) : loading ? (
@@ -392,13 +420,17 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
         setCurrentPage={setCurrentPage}
         totalLottery={totalList}
       />
+      <Notification onDelete={onDelete} data={notifications} />
     </div>
   );
 };
 
 const Window = styled(SortingWindow)`
-  right: 66px;
-  top: 545px;
+  right: 65px;
+  top: 531px;
+  @media (max-width: 1209px) {
+    top: 545px;
+  }
   @media (max-width: 992px) {
     top: 539px;
   }

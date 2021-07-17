@@ -145,6 +145,8 @@ export const ModalBlock = styled.div`
 
 export const ModalBlockBody = styled.div`
   padding: 0 45px;
+  display: grid;
+  justify-content: center;
   @media (max-width: 992px) {
     padding: 0 30px;
   }
