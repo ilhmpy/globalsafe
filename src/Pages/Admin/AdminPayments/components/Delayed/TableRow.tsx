@@ -68,7 +68,11 @@ export const TableRow: FC<Props> = ({ item, confirmPay, idx }) => {
                 danger>
                 {t('adminPay.delayed.pay')}
               </ModalButton>
-              <BottomText>{t('adminPay.delayed.setAllAmount')}</BottomText>
+              <BottomText
+                active={forPay === item.pendingAmount}
+                onClick={() => setForPay(item.pendingAmount)}>
+                {t('adminPay.delayed.setAllAmount')}
+              </BottomText>
             </ModalBlockBody>
           </ModalBlock>
         </Modal>
@@ -96,7 +100,7 @@ export const TableRow: FC<Props> = ({ item, confirmPay, idx }) => {
           {moment(item.endDate).format('DD/MM/YYYY')}
         </Styled.TableBodyItem>
         <Styled.TableBodyItem dis={disabled}>
-          {forPay / 100000}
+          {item.pendingAmount / 100000}
         </Styled.TableBodyItem>
 
         <Styled.TableBodyItem>
@@ -126,7 +130,7 @@ export const TableRow: FC<Props> = ({ item, confirmPay, idx }) => {
   );
 };
 
-const BottomText = styled.div`
+const BottomText = styled.div<{ active: boolean }>`
   font-weight: 500;
   font-size: 12px;
   line-height: 14px;
@@ -137,10 +141,12 @@ const BottomText = styled.div`
   text-decoration-line: underline;
   max-width: 160px;
   margin-top: 15px;
-  color: ${(props) => props.theme.nextPay};
-  cursor: pointer;
+  /* color: ${(props) => (props.active ? props.theme.nextPay : 'red')}; */
+  color: ${(props) => (props.active ? '#c4bfbf' : props.theme.nextPay)};
+
+  cursor: ${(props) => (props.active ? '' : 'pointer')};
   &:active {
-    opacity: 0.5;
+    opacity: ${(props) => (props.active ? '1' : '0.5')};
     transition: opacity 0.1s ease;
   }
 `;

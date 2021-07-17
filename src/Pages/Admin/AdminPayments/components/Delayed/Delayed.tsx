@@ -135,7 +135,7 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
           null,
           null,
           null,
-          null,
+          true,
           (currentPage - 1) * pageLength,
           pageLength,
           sorting,
@@ -280,15 +280,7 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
         });
     }
   };
-  // const payAll = () => {
-  //   list.forEach((element) => {
-  //     confirmPay(element.safeId, element.pendingAmount);
-  //   });
-  //   setList([]);
-  //   setTotalList(0);
-  // };
 
-  console.log('~~~~~~~~~~~~~', list);
 
   return (
     <div>
@@ -347,16 +339,6 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
           </SelectContainer>
         </CSSTransition>
       </FilterBlock>
-
-      {/* <Button
-        dangerOutline
-        onClick={(e) => {
-          e.stopPropagation();
-          payAll();
-        }}
-        style={{ marginBottom: '20px' }}>
-        {t('adminPay.delayed.payAll')}
-      </Button> */}
 
       <Card>
         <CSSTransition
