@@ -298,14 +298,14 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
           unmountOnExit>
           <SelectContainer>
             <SelectContainerInnerPaid>
-              <SelectWrapTwo mWidth="154px">
+              <SelectWrapTwo mWidth="190px">
                 <Label>{t('adminPay.filter.user')}</Label>
                 <Input
                   value={name}
                   onChange={(e) => setName(e.target.value.toLowerCase())}
                 />
               </SelectWrapTwo>
-              <SelectWrapTwo mWidth="184px">
+              <SelectWrapTwo mWidth="190px">
                 <Label>{t('adminPay.filter.deposit')}</Label>
                 <Select
                   checkList={checkList}

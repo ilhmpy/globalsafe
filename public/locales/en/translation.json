@@ -225,7 +225,6 @@
       "payableAmount": "Payable amount",
       "pay": "Pay",
       "payed": "Payed",
-      "payAll": "Pay all",
       "success": "Payment was successful",
       "failed": "Payout error",
       "setAllAmount": "Set the entire amount of the deferred payment"

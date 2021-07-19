@@ -121,7 +121,7 @@ export const TableRow: FC<Props> = ({ item, confirmPay, idx }) => {
                 e.stopPropagation();
                 setModalOpen(true);
               }}>
-              {t('adminPay.delayed.payAll')}
+              {t('adminPay.delayed.pay')}
             </Button>
           )}
         </Styled.TableBodyItem>
