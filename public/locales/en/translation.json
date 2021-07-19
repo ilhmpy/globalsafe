@@ -106,7 +106,8 @@
     "users": "Members",
     "portfolio": "Portfolio",
     "toHome": "To the main",
-    "lottery": "Lottery"
+    "lottery": "Lottery",
+    "depositsPrograms": "Deposits programs"
   },
   "adminDeposit": {
     "uptitle": "Payouts",
@@ -266,7 +267,7 @@
     "uptitle": "Personal Area",
     "balance": "Balance",
     "newDeposit": "New deposit",
-    "withdraw": "Withdraw funds",
+    "withdraw": "Withdraw moneys",
     "prevPay": "Previous payout",
     "procentPrevPay": "Percentage of the previous payment",
     "tabs": {
@@ -412,5 +413,12 @@
     "deposit": "Deposit",
     "btn": "Accept",
     "rule": "If % is not specified, then data is taken from the table"
+  },
+  "depositsPrograms": {
+    "name": "Name",
+    "depositSum": "Deposits sum",
+    "createDate": "Created date",
+    "procents": "Procents",
+    "desc": "Description"
   }
 }

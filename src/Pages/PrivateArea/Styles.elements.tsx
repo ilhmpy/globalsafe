@@ -597,7 +597,7 @@ export const DataListDate = styled.div`
 
 export const ModalButton = styled(Button)<{ mb?: boolean }>`
   max-width: 100%;
-  color: ${(props) => props.theme.text};
+  color: #fff;
   width: 100%;
   margin-bottom: ${(props) => (props.mb ? "20px" : "0")};
   &:disabled {
