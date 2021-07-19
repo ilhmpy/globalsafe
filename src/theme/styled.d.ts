@@ -52,5 +52,9 @@ declare module 'styled-components' {
       backgroundColor: string;
       fontColor: string;
     };
+    acceptAll: {
+      bg: string;
+      rule: string;
+    }
   }
 }

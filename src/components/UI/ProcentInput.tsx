@@ -31,17 +31,6 @@ export const ProcentInput: FC<Props> = ({
   );
 };
 
-const Container = styled.div`
-  /* border: 1px solid #ff416e; */
-  background: url(${bord}) no-repeat center;
-  border-radius: 24px;
-  padding: 10px 12px 0;
-  height: 42px;
-  width: 115px;
-  position: relative;
-  margin-left: 25px;
-`;
-
 const Input = styled.input`
   font-size: 14px;
   line-height: 16px;
@@ -86,4 +75,15 @@ const Val = styled.span`
   font-size: 14px;
   line-height: 16px;
   font-weight: bold;
+`;
+
+const Container = styled.div`
+  /* border: 1px solid #ff416e; */
+  background: url(${bord}) no-repeat center;
+  border-radius: 24px;
+  padding: 10px 12px 0;
+  height: 42px;
+  width: 115px;
+  position: relative;
+  margin-left: 25px;
 `;
