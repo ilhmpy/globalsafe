@@ -245,8 +245,8 @@ export const InfoMain = () => {
         1, Number(value)
       ).then((res: any) => {
         console.log("commisions", res);
-        setBlockchainCommision(res.networkFee);
-        setServiceCommision(res.serviceFee);
+        setBlockchainCommision((res.networkFee / 100000).toString());
+        setServiceCommision((res.serviceFee / 100000).toString());
       })
        .catch((err) => console.error(err));
     };
