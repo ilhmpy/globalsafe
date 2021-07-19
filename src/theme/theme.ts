@@ -58,6 +58,10 @@ export const lightTheme = {
     backgroundColor: '#ffffff',
     fontColor: '#515172',
   },
+  acceptAll: {
+    bg: "#fff",
+    rule: "rgba(0, 0, 0, 0.6)"
+  }
 };
 
 export const darkTheme = {
@@ -112,4 +116,8 @@ export const darkTheme = {
     backgroundColor: '#303030',
     fontColor: '#ffffff',
   },
+  acceptAll: {
+    bg: "rgba(48,48,48,1)",
+    rule: "#fff"
+  }
 };

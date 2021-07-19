@@ -12,8 +12,11 @@ import { Button } from '../../components/Button/Button';
 import { Select } from '../../components/Select/Select2';
 import { TestInput } from '../../components/UI/DayPicker';
 import { Loading } from '../../components/UI/Loading';
+import { AcceptAllInput } from "../../components/UI/AcceptAllInput";
+import { BBG as BlackBackground } from "../../components/BlackBackground/BlackBackground";
 import { Content, Tab } from '../../components/UI/Tabs';
 import { UpTitle } from '../../components/UI/UpTitle';
+import { List } from "../../components/UI/List";
 import { AppContext } from '../../context/HubContext';
 import { LangualeContext } from '../../context/LangualeContext';
 import { ThemeContext } from '../../context/ThemeContext';
@@ -21,6 +24,7 @@ import { Card } from '../../globalStyles';
 import useWindowSize from '../../hooks/useWindowSize';
 import { OpenDate } from '../../types/dates';
 import { CollectionListDeposits, ListDeposits } from '../../types/deposits';
+import { ProcentInput } from "../../components/UI/ProcentInput";
 import {
   CollectionCharges,
   PaymentsCollection,
@@ -43,6 +47,7 @@ import {
   WindowBody,
   WindowTitle,
 } from './Styled.elements';
+
 
 export const AdminPay = () => {
   const [active, setActive] = useState(0);
@@ -174,6 +179,7 @@ export const AdminPay = () => {
 
   const [sortingWindowOpenForPay, setSortingWindowOpenForPay] = useState(false);
   const [sortingForPay, setSortingForPay] = useState<SortingType[]>([]);
+  const [ acceptAll, setAcceptAll ] = useState<boolean>(false);
 
   const [listForSortingForPay, setListForSortingForPay] = useState<
     SelectValues[]
@@ -232,6 +238,7 @@ export const AdminPay = () => {
   const idProgram = listDeposits.filter((i) => namesProgram.includes(i.safeId));
   const searchSafeID = idProgram.map((i) => i.safeId);
   const backDays: any = moment().subtract(30, 'days');
+  const [ usersListVisible, setUsersListVisible ] = useState(true);
 
   const namesProgramApproval = checkListApproval.map((i: any) => i.safeId);
   const idProgramApproval = listDeposits.filter((i) =>
@@ -425,9 +432,42 @@ export const AdminPay = () => {
     });
   };
 
+  //useEffect(() => setAcceptAll(true), []);
+
+  const [dateOfCreateDepositVisible, setDateOfCreateDepositVisible] = useState(true);
+  const [depositVisible, setDepositVisible] = useState(true);
 
   return (
     <>
+        <Styled.ModalComponent visible={acceptAll}>
+          <Styled.ModalTitle>{t("acceptAll.title")}</Styled.ModalTitle>
+          <AcceptAllInput
+            onValue={() => {}}
+            placeholder="-"
+            value={""}
+            label={`${t("acceptAll.%")} %`}
+          />
+          <List
+            listLabel={t("acceptAll.users")}
+            list={["Account", "Account", "Account", "Account", "Account"]}
+            visible={usersListVisible}
+            setVisible={setUsersListVisible}
+          />
+          <List
+            listLabel={t("acceptAll.dateOfCreateDeposit")}
+            list={["Все даты"]}
+            visible={dateOfCreateDepositVisible}
+            setVisible={setDateOfCreateDepositVisible}
+          />
+          <List
+            listLabel={t("acceptAll.deposit")}
+            list={["INFINITY", "INFINITY", "INFINITY", "INFINITY", "INFINITY"]}
+            visible={depositVisible}
+            setVisible={setDepositVisible}
+          />
+          <Button danger onClick={() => {}} style={{ margin: "0 auto" }}>{t("acceptAll.btn")}</Button>
+          <Styled.ModalRule>{t("acceptAll.rule")}</Styled.ModalRule>
+        </Styled.ModalComponent>
       <ReactNotification />
       <Styled.HeadBlock>
         <SelfUpTitle small>{t('adminPay.uptitle')}</SelfUpTitle>
@@ -535,6 +575,7 @@ export const AdminPay = () => {
           listDeposits={listDeposits}
           setProcent={setProcent}
           procent={procent}
+          setModal={setAcceptAll}
         />
       </Content>
 

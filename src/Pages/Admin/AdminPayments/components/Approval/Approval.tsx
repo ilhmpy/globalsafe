@@ -49,6 +49,7 @@ type Props = {
   getPaymentsOverview: () => void;
   procent: string;
   setProcent: (e: string) => void;
+  setModal: (boolean: boolean) => void;
 };
 
 export const Approval: FC<Props> = ({
@@ -56,6 +57,7 @@ export const Approval: FC<Props> = ({
   getPaymentsOverview,
   setProcent,
   procent,
+  setModal
 }) => {
   const [depositList, setDepositList] = useState<PaymentsCollection[]>([]);
   const [totalDeposits, setTotalDeposits] = useState(0);
@@ -240,7 +242,7 @@ export const Approval: FC<Props> = ({
     }
   };
   console.log(depositList);
-  
+
 
   const unConfirmPay = (id: string) => {
     if (hubConnection) {
@@ -319,6 +321,7 @@ export const Approval: FC<Props> = ({
   };
 
   const paymentsConfirm = () => {
+    setModal(true);
     if (depositList.some((item) => item.state === 6)) {
       if (hubConnection) {
         hubConnection
