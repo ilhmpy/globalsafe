@@ -17,16 +17,12 @@ function App() {
   (window as any).OneSignal = (window as any).OneSignal || [];
   const OneSignal = (window as any).OneSignal;
 
-  console.log("onesignal ids", APP_ID, APP_SAFARI_ID);
-
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
 
   const subscribe = useCallback((id: string) => {
-    console.log("before hubconnection check / subscribe", hubConnection)
      if (hubConnection) {
-       console.log("subscribe request, hubConnection = true")
-        hubConnection.invoke(
+      hubConnection.invoke(
           "RegisterDevice",
            id
          ).then(() => {})
@@ -35,9 +31,7 @@ function App() {
    }, [hubConnection]);
 
    const unSubscribe = useCallback((id: string) => {
-     console.log("before hubConnection check / unSubscribe", hubConnection)
       if (hubConnection) {
-        console.log("subscribe request, hubConnection = true")
         hubConnection.invoke(
             "UnregisterDevice",
             id
@@ -65,12 +59,9 @@ function App() {
           });
           try {
             OneSignal.on('subscriptionChange', (isSubscribed: boolean) => {
-              console.log('onesignal events start')
               if (isSubscribed) {
-                console.log("subscribe event")
                 OneSignal.getUserId((id: string) => subscribe(id));
               } else {
-                console.log("unSubscribe event")
                 OneSignal.getUserId((id: string) => unSubscribe(id));
               };
             });
@@ -78,11 +69,9 @@ function App() {
             console.error("onesignal event loop error", e);
           };
         });
-        console.log("after onesignal settings")
       } catch(e) {
-        console.error("initial onesignal error", e);
+        console.error(e)
       };
-      console.log("onesignal initialized");
     };
   }, [token, hubConnection]);
 
