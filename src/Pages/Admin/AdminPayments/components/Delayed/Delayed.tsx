@@ -251,6 +251,8 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
     amount: number,
     setDone: (status: boolean) => void,
   ) => {
+    console.log('amount', amount);
+    console.log('safeId', safeId);
     if (hubConnection) {
       hubConnection
         .invoke('PayPostponedPayment', safeId, amount)
@@ -281,6 +283,7 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
     }
   };
 
+  console.log(list);
 
   return (
     <div>
@@ -313,14 +316,14 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
                   values={listDeposits}
                 />
               </SelectWrapTwo>
-              <SelectWrapTwo mWidth="180px">
+              <SelectWrapTwo mWidth="200px">
                 <TestInput
                   setOpenDate={setOpenDate}
                   openDate={openDate}
                   label={t('adminPay.filter.date')}
                 />
               </SelectWrapTwo>
-              <SelectWrapTwo mWidth="190px">
+              <SelectWrapTwo mWidth="200px">
                 <TestInput
                   setOpenDate={setCloseDate}
                   openDate={closeDate}

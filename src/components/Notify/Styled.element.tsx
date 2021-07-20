@@ -2,9 +2,8 @@ import styled from 'styled-components/macro';
 
 export const Container = styled.div`
   margin: 0px 33px 0 0;
-  position: fixed;
+  position: sticky;
   width: 100%;
-  max-width: 500px;
   right: 0;
   bottom: 0;
   z-index: 999;

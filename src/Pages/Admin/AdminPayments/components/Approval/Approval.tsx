@@ -562,7 +562,6 @@ export const Approval: FC<Props> = ({
           ) : (
             <Styled.NotFound>{t('notFound')}</Styled.NotFound>
           )}
-          <Notification onDelete={onDelete} data={notifications} />
         </Styled.PaymentsTable>
       </Card>
 
@@ -573,6 +572,7 @@ export const Approval: FC<Props> = ({
         setCurrentPage={setCurrentPage}
         totalLottery={totalDeposits}
       />
+      <Notification onDelete={onDelete} data={notifications} />
     </>
   );
 };
