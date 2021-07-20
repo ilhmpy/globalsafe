@@ -9,6 +9,7 @@ import { InfoMain } from "./Pages/PrivateArea";
 import { Scrollbars } from "react-custom-scrollbars";
 import { Id } from "./types/Id";
 import { AppContext } from './context/HubContext';
+import { Loader } from "./components/Loader/Loader";
 import useLocalStorage  from "./hooks/useLocalStorage";
 import { APP_ID, APP_SAFARI_ID } from "./constantes/onesignal";
 
@@ -19,6 +20,7 @@ function App() {
 
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
+  const user = appContext.user;
 
   const subscribe = useCallback((id: string) => {
      if (hubConnection) {
@@ -75,27 +77,29 @@ function App() {
     };
   }, [token, hubConnection]);
 
-  return (
-    <Router>
-      <ThemesProvider>
-          {/* <div style={{ height: "100vh" }}>
-              <Scrollbars style={{ height: "100%", width: "100%" }}> */}
-          <div className="App">
-            <GlobalStyle />
-            <Switch>
-              <Route path="/" component={Main} push={OneSignal.push} on={OneSignal.on} getUserId={OneSignal.getUserId} exact />
-              <Route path="/admin" component={Admin} />
-              <Route path="/info" component={InfoMain} />
-              <Route path="/login" component={Authentication} />
-              <Route path="/register" component={Register} />
-              <Route component={Main} />
-            </Switch>
-            {/* </div>
-              </Scrollbars> */}
-          </div>
-       </ThemesProvider>
-    </Router>
-  );
+  if (user != null) {
+    return (
+      <Router>
+        <ThemesProvider>
+            {/* <div style={{ height: "100vh" }}>
+                <Scrollbars style={{ height: "100%", width: "100%" }}> */}
+            <div className="App">
+              <GlobalStyle />
+              <Switch>
+                <Route path="/" component={Main} push={OneSignal.push} on={OneSignal.on} getUserId={OneSignal.getUserId} exact />
+                <Route path="/admin" component={Admin} />
+                <Route path="/info" component={InfoMain} />
+                <Route path="/login" component={Authentication} />
+                <Route path="/register" component={Register} />
+                <Route component={Main} />
+              </Switch>
+              {/* </div>
+                </Scrollbars> */}
+            </div>
+         </ThemesProvider>
+      </Router>
+    );
+  } else return <Loader />
 }
 
 export default App;

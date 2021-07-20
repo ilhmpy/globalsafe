@@ -106,6 +106,7 @@ export const HubProvider: FC = ({ children }) => {
         })
         .catch((err) => {
           console.log(err);
+          setUser(false);
           setIsAdmin(false);
           setLoading(false);
         });
