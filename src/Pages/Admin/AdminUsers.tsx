@@ -304,11 +304,30 @@ export const AdminUsers = () => {
           sorting
         )
         .then((res) => {
+          let divisionSums: any[] = [];
           setLoading(false);
+          res.collection.forEach((item) => {
+            let convertBalances: any[] = [];
+            const { 
+              balances, claims, creationDate, depositsAmount, 
+              email, id, isEmailConfirmed, isLockedout, 
+              isPhoneNumberConfirmed, isTwoFactorEnabled, 
+              languageCode, lockoutEnd, name, phoneNumber, 
+              roles, safeId } = item;
+            
+            balances.forEach(item => {
+              const { balanceKind, exhaustBalanceKind, exhaustRatio, id, safeId, volume } = item;
+              convertBalances = [...convertBalances, { balanceKind, exhaustBalanceKind, exhaustRatio, id, safeId, volume: (volume / 100000).toString(), }]
+            });
+
+            divisionSums = [...divisionSums, { balances: convertBalances, claims, creationDate, 
+              depositsAmount, email, id, isEmailConfirmed, isLockedout, 
+              isPhoneNumberConfirmed, isTwoFactorEnabled,  languageCode, lockoutEnd, name, phoneNumber, roles, safeId }];
+          });
           setNum(20);
           console.log('USERS', res.collection);
           seTotalUsers(res.totalRecords);
-          setListDeposits(res.collection);
+          setListDeposits(divisionSums);
           setLoading(false);
         })
         .catch((err: Error) => {
