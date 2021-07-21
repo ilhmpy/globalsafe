@@ -1,4 +1,4 @@
-import React, { useContext, useState, FC, useEffect } from "react";
+import React, { useContext, useState, FC, useEffect, ReactNode } from 'react';
 
 type Context = {
   lang: string;
@@ -6,16 +6,12 @@ type Context = {
 };
 
 export const LangualeContext = React.createContext<Context>({
-  lang: localStorage.getItem("i18nextLng") || "ru",
-  setLang: () => {},
+  lang: localStorage.getItem('i18nextLng') || 'ru',
+  setLang: () => undefined,
 });
 
-export const LangualeProvider: FC = ({ children }) => {
-  const [lang, setLang] = useState(localStorage.getItem("i18nextLng") || "ru");
+export const LangualeProvider: FC = ({ children }: any) => {
+  const [lang, setLang] = useState(localStorage.getItem('i18nextLng') || 'ru');
 
-  return (
-    <LangualeContext.Provider value={{ lang, setLang }}>
-      {children}
-    </LangualeContext.Provider>
-  );
+  return <LangualeContext.Provider value={{ lang, setLang }}>{children}</LangualeContext.Provider>;
 };

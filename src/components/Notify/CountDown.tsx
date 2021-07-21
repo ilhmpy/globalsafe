@@ -1,6 +1,6 @@
-import React, { FC, useState, useEffect, useContext } from "react";
-import * as Styled from "./Styled.element";
-import { ThemeContext } from "../../context/ThemeContext";
+import React, { FC, useState, useEffect, useContext } from 'react';
+import * as Styled from './Styled.element';
+import { ThemeContext } from '../../context/ThemeContext';
 
 type Props = {
   seconds: number;
@@ -16,11 +16,11 @@ export const CountdownTimer: FC<Props> = ({
   strokeColor,
   strokeWidth,
   timerDone,
-}) => {
+}: Props) => {
   const themeContext = useContext(ThemeContext);
   const theme = themeContext.theme;
 
-  const colors = theme === "light" ? "rgba(81, 81, 114, .5)" : "#fff";
+  const colors = theme === 'light' ? 'rgba(81, 81, 114, .5)' : '#fff';
   const milliseconds = seconds * 1000;
   const radius = size / 2;
   const circumference = size * Math.PI;
@@ -28,8 +28,7 @@ export const CountdownTimer: FC<Props> = ({
   const [countdown, setCountDown] = useState(milliseconds);
   const [isPlay, setIsPlay] = useState(true);
 
-  const strokeDashoffset = () =>
-    circumference - (countdown / milliseconds) * circumference;
+  const strokeDashoffset = () => circumference - (countdown / milliseconds) * circumference;
 
   useEffect(() => {
     let interval: any;
@@ -55,14 +54,14 @@ export const CountdownTimer: FC<Props> = ({
         <Styled.CountValue strokeColor={colors}>{second}</Styled.CountValue>
         <svg
           style={{
-            position: "absolute",
+            position: 'absolute',
             top: 0,
             left: 0,
-            width: "100%",
-            height: "100%",
-            margin: "0 auto",
-            transform: "rotateY(-180deg) rotateZ(-90deg)",
-            overflow: "visible",
+            width: '100%',
+            height: '100%',
+            margin: '0 auto',
+            transform: 'rotateY(-180deg) rotateZ(-90deg)',
+            overflow: 'visible',
           }}
         >
           <circle

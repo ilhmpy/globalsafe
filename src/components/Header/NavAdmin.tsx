@@ -1,4 +1,4 @@
-import React, { FC, useContext } from "react";
+import React, { FC, useContext } from 'react';
 import {
   HeaderNav,
   List,
@@ -8,20 +8,20 @@ import {
   Languale,
   SwitchTheme,
   Text,
-} from "./Header.elements";
-import { useTranslation } from "react-i18next";
-import { ThemeContext } from "../../context/ThemeContext";
-import { ReactComponent as DarkTheme } from "../../assets/svg/theme.svg";
-import { ReactComponent as LightTheme } from "../../assets/svg/themeLight.svg";
-import usa from "../../assets/svg/usa.svg";
-import ru from "../../assets/svg/russia.svg";
+} from './Header.elements';
+import { useTranslation } from 'react-i18next';
+import { ThemeContext } from '../../context/ThemeContext';
+import { ReactComponent as DarkTheme } from '../../assets/svg/theme.svg';
+import { ReactComponent as LightTheme } from '../../assets/svg/themeLight.svg';
+import usa from '../../assets/svg/usa.svg';
+import ru from '../../assets/svg/russia.svg';
 
 type Props = {
   onClose: () => void;
   lang: string;
 };
 
-export const NavAdmin: FC<Props> = ({ onClose, lang }) => {
+export const NavAdmin: FC<Props> = ({ onClose, lang }: Props) => {
   const { t, i18n } = useTranslation();
   const themeContext = useContext(ThemeContext);
   const swithTheme = themeContext.toggleTheme;
@@ -31,52 +31,52 @@ export const NavAdmin: FC<Props> = ({ onClose, lang }) => {
     <List>
       <ListItem>
         <StyledLink to="/admin" onClick={onClose}>
-          {t("sideNav.mainScreen")}
+          {t('sideNav.mainScreen')}
         </StyledLink>
       </ListItem>
       <ListItem>
         <StyledLink to="/admin/deposit" onClick={onClose}>
-          {t("sideNav.deposits")}
+          {t('sideNav.deposits')}
         </StyledLink>
       </ListItem>
       <ListItem>
         <StyledLink to="/admin/payments" onClick={onClose}>
-          {t("sideNav.pay")}
+          {t('sideNav.pay')}
         </StyledLink>
       </ListItem>
       <ListItem>
         <StyledLink to="/admin/users" onClick={onClose}>
-          {t("sideNav.users")}
+          {t('sideNav.users')}
         </StyledLink>
       </ListItem>
       <ListItem>
         <StyledLink to="/admin/portfolio" onClick={onClose}>
-          {t("sideNav.portfolio")}
+          {t('sideNav.portfolio')}
         </StyledLink>
       </ListItem>
       <ListItem>
         <StyledLink to="/admin/lottery" onClick={onClose}>
-          {t("sideNav.lottery")}
+          {t('sideNav.lottery')}
         </StyledLink>
       </ListItem>
       <ListItem>
         <StyledLink to="/admin/depositsPrograms" onClick={onClose}>
-          {t("sideNav.depositsPrograms")}
+          {t('sideNav.depositsPrograms')}
         </StyledLink>
       </ListItem>
       <ListItem>
         <StyledLink to="/" onClick={onClose}>
-          {t("sideNav.toHome")}
+          {t('sideNav.toHome')}
         </StyledLink>
       </ListItem>
       <ListItem>
-        {lang === "ru" ? (
-          <Languale onClick={() => i18n.changeLanguage("en")}>
+        {lang === 'ru' ? (
+          <Languale onClick={() => i18n.changeLanguage('en')}>
             en
             <img src={usa} alt="en" />
           </Languale>
         ) : (
-          <Languale onClick={() => i18n.changeLanguage("ru")}>
+          <Languale onClick={() => i18n.changeLanguage('ru')}>
             ru
             <img src={ru} alt="ru" />
           </Languale>
@@ -84,15 +84,15 @@ export const NavAdmin: FC<Props> = ({ onClose, lang }) => {
       </ListItem>
       <ListItem>
         <SwitchTheme onClick={swithTheme}>
-          {theme === "light" ? (
+          {theme === 'light' ? (
             <div>
               <DarkTheme />
-              <Text>{t("themeDark")}</Text>
+              <Text>{t('themeDark')}</Text>
             </div>
           ) : (
             <div>
               <LightTheme />
-              <Text>{t("themeLight")}</Text>
+              <Text>{t('themeLight')}</Text>
             </div>
           )}
         </SwitchTheme>

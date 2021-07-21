@@ -16,7 +16,7 @@ export const Pagination: FC<PaginationPropsType> = ({
   currentPage,
   setCurrentPage,
   totalLottery,
-}) => {
+}: PaginationPropsType) => {
   const { t } = useTranslation();
 
   return (

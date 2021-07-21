@@ -1,4 +1,4 @@
-﻿import React, { FC } from "react";
+﻿import React, { FC } from 'react';
 import {
   BarChart,
   Bar,
@@ -9,11 +9,11 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-} from "recharts";
-import styled from "styled-components/macro";
-import moment from "moment";
-import { Balance } from "../../types/balance";
-import { useTranslation } from "react-i18next";
+} from 'recharts';
+import styled from 'styled-components/macro';
+import moment from 'moment';
+import { Balance } from '../../types/balance';
+import { useTranslation } from 'react-i18next';
 
 const TooltipBlock = styled.div`
   background: ${(props) => props.theme.card.background};
@@ -33,27 +33,31 @@ const Date = styled.div`
 const Text = styled.div<{ red?: boolean }>`
   font-size: 11px;
   padding-bottom: 2px;
-  color: ${(props) => (props.red ? "#FF416E" : props.theme.text)};
+  color: ${(props) => (props.red ? '#FF416E' : props.theme.text)};
 `;
 
-export const StackedColumn: FC<{ values: any }> = ({ values }) => {
+type StackedColumnProps = {
+  values: any;
+};
+
+export const StackedColumn: FC<StackedColumnProps> = ({ values }: StackedColumnProps) => {
   const { t } = useTranslation();
   const operation = (id: number) => {
     if (id === 6) {
-      return t("operation.open");
+      return t('operation.open');
     } else if (id === 7) {
-      return t("operation.divedents");
+      return t('operation.divedents');
     } else if (id === 8) {
-      return t("operation.close");
+      return t('operation.close');
     } else if (id === 2) {
-      return t("operation.withdraw");
+      return t('operation.withdraw');
     } else if (id === 1) {
-      return t("operation.add");
+      return t('operation.add');
     }
   };
 
   const operationValue = (id: number, value: number, type: number) => {
-    const val = (value / 100000).toLocaleString("ru-RU", {
+    const val = (value / 100000).toLocaleString('ru-RU', {
       maximumFractionDigits: 5,
     });
     const bal = Balance[type];
@@ -91,39 +95,39 @@ export const StackedColumn: FC<{ values: any }> = ({ values }) => {
   const DataFormater = (number: number) => {
     const value = number / 100000;
     if (value >= 1000000) {
-      return (value / 1000000).toString() + "M";
+      return (value / 1000000).toString() + 'M';
     } else if (value >= 1000 && value < 1000000) {
-      return (value / 1000).toString() + "k";
+      return (value / 1000).toString() + 'k';
     } else {
       return value.toString();
     }
   };
 
-  let data: any = [];
+  const data: any = [];
 
   Object.values(values).map((item: any) => data.push(...item));
 
   const colors = (id: number) => {
     if (id === 6) {
-      return "#6DB9FF";
+      return '#6DB9FF';
     } else if (id === 7) {
-      return "rgba(188,212,118,.5)";
+      return 'rgba(188,212,118,.5)';
     } else if (id === 2) {
-      return "rgba(81,81,114,.5)";
+      return 'rgba(81,81,114,.5)';
     } else if (id === 1) {
-      return "#A78CF2";
+      return '#A78CF2';
     } else if (id === 8) {
-      return "#FFCCFF";
+      return '#FFCCFF';
     }
   };
 
   const data1 = Object.values(values).map((item: any) => {
     return item.reduce((a: any, b: any) => {
       a[b.operationKind] = b.balance < 0 ? b.balance * -1 : b.balance;
-      a["operationKind"] = b.operationKind;
-      a["date"] = moment(b.date).format("DD MMMM YYYY");
-      a["type"] = b.type;
-      a["color"] = colors(b.operationKind);
+      a['operationKind'] = b.operationKind;
+      a['date'] = moment(b.date).format('DD MMMM YYYY');
+      a['type'] = b.type;
+      a['color'] = colors(b.operationKind);
       return a;
     }, {});
   });

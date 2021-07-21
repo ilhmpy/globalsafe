@@ -224,28 +224,6 @@ export const AdminDeposit = () => {
       setCurrentPage(1);
       setDepositsList([]);
       setLoading(true);
-      console.log(new Date(`${openDate.from}`).toISOString());
-      console.log(typeof openDate.from);
-      console.log(typeof new Date(`${openDate.from}`));
-      console.log(new Date(`${openDate.from}`));
-
-      console.log(
-        'GetUsersDeposits',
-        [1, 2, 3, 4, 5, 6],
-        name ? name.toLowerCase() : null,
-        searchSafeID.length ? searchSafeID : null,
-        openDate.from ? new Date(`${openDate.from}`) : null,
-        openDate.to ? new Date(`${openDate.to}`) : null,
-        closeDate.from ? closeDate.from : null,
-        closeDate.to ? closeDate.from : null,
-        null,
-        null,
-        null,
-        null,
-        (currentPage - 1) * pageLength,
-        pageLength,
-        sorting,
-      );
 
       hubConnection
         .invoke<RootPayments>(

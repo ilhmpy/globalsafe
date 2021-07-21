@@ -43,7 +43,7 @@ type Props = {
   listDeposits: CollectionListDeposits[];
 };
 
-export const Delayed: FC<Props> = ({ listDeposits }) => {
+export const Delayed: FC<Props> = ({ listDeposits }: Props) => {
   const [loading, setLoading] = useState(true);
   const [openDate, setOpenDate] = useState<OpenDate>({
     from: undefined,
@@ -138,7 +138,7 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
           true,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting,
+          sorting
         )
         .then((res) => {
           setList(res.collection);
@@ -174,7 +174,7 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
           true,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting,
+          sorting
         )
         .then((res) => {
           setList(res.collection);
@@ -246,11 +246,7 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
     });
   };
 
-  const confirmPay = (
-    safeId: string,
-    amount: number,
-    setDone: (status: boolean) => void,
-  ) => {
+  const confirmPay = (safeId: string, amount: number, setDone: (status: boolean) => void) => {
     console.log('amount', amount);
     console.log('safeId', safeId);
     if (hubConnection) {
@@ -294,27 +290,16 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
             {openFilterOne ? t('hide') : t('show')}
           </ShowHide>
         </FilterHeader>
-        <CSSTransition
-          in={openFilterOne}
-          timeout={200}
-          classNames="filter"
-          unmountOnExit>
+        <CSSTransition in={openFilterOne} timeout={200} classNames="filter" unmountOnExit>
           <SelectContainer>
             <SelectContainerInnerPaid>
               <SelectWrapTwo mWidth="165px">
                 <Label>{t('adminPay.filter.user')}</Label>
-                <Input
-                  value={name}
-                  onChange={(e) => setName(e.target.value.toLowerCase())}
-                />
+                <Input value={name} onChange={(e) => setName(e.target.value.toLowerCase())} />
               </SelectWrapTwo>
               <SelectWrapTwo mWidth="165px">
                 <Label>{t('adminPay.filter.deposit')}</Label>
-                <Select
-                  checkList={checkList}
-                  setCheckList={setCheckList}
-                  values={listDeposits}
-                />
+                <Select checkList={checkList} setCheckList={setCheckList} values={listDeposits} />
               </SelectWrapTwo>
               <SelectWrapTwo mWidth="180px">
                 <TestInput
@@ -344,32 +329,20 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
       </FilterBlock>
 
       <Card>
-        <CSSTransition
-          in={!!open}
-          timeout={300}
-          classNames="modal"
-          unmountOnExit>
+        <CSSTransition in={!!open} timeout={300} classNames="modal" unmountOnExit>
           <>{open && <ModalAnalitic onClose={onClose} data={open} />}</>
         </CSSTransition>
 
         <Styled.PaymentsTable>
           <Styled.TableHead>
             <Styled.TableHeadItemPaid>№</Styled.TableHeadItemPaid>
-            <Styled.TableHeadItemPaid>
-              {t('adminPay.table.user')}
-            </Styled.TableHeadItemPaid>
-            <Styled.TableHeadItemPaid>
-              {t('adminPay.table.name')}
-            </Styled.TableHeadItemPaid>
+            <Styled.TableHeadItemPaid>{t('adminPay.table.user')}</Styled.TableHeadItemPaid>
+            <Styled.TableHeadItemPaid>{t('adminPay.table.name')}</Styled.TableHeadItemPaid>
             <Styled.TableHeadItemPaid>
               {t('adminPay.delayed.depositAmount')}
             </Styled.TableHeadItemPaid>
-            <Styled.TableHeadItemPaid>
-              {t('adminPay.filter.date')}
-            </Styled.TableHeadItemPaid>
-            <Styled.TableHeadItemPaid>
-              {t('adminPay.filter.closeDate')}
-            </Styled.TableHeadItemPaid>
+            <Styled.TableHeadItemPaid>{t('adminPay.filter.date')}</Styled.TableHeadItemPaid>
+            <Styled.TableHeadItemPaid>{t('adminPay.filter.closeDate')}</Styled.TableHeadItemPaid>
             <Styled.TableHeadItemPaid>
               {t('adminPay.delayed.payableAmount')}
             </Styled.TableHeadItemPaid>
@@ -389,7 +362,8 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
                     <Sort
                       active={listForSorting[index].active}
                       key={index}
-                      onClick={() => getActiveSort(index)}>
+                      onClick={() => getActiveSort(index)}
+                    >
                       {obj.text}
                     </Sort>
                   ))}

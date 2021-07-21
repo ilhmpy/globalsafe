@@ -19,7 +19,7 @@ import { Operations } from './components/Operations/Operations';
 import { Payments } from './components/Payments/Payments';
 import { Tariffs } from './components/Tariffs/Tariffs';
 
-let fakeData = [
+const fakeData = [
   [
     {
       id: 322559860770078700,

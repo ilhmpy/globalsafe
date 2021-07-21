@@ -9,7 +9,7 @@ import logo from '../../assets/svg/logo.svg';
 import logoWhite from '../../assets/svg/logoWhite.svg';
 import { ReactComponent as Lottery } from '../../assets/svg/lottery.svg';
 import { ReactComponent as Peppa } from '../../assets/svg/peppa.svg';
-import { ReactComponent as Deposits } from "../../assets/svg/deposits.svg";
+import { ReactComponent as Deposits } from '../../assets/svg/deposits.svg';
 import ru from '../../assets/svg/russia.svg';
 import { ReactComponent as DarkTheme } from '../../assets/svg/theme.svg';
 import { ReactComponent as LightTheme } from '../../assets/svg/themeLight.svg';
@@ -25,7 +25,7 @@ type Props = {
   navShow: (e: React.MouseEvent) => void;
 };
 
-export const SideNavbar: FC<Props> = ({ navWidth, navShow }) => {
+export const SideNavbar: FC<Props> = ({ navWidth, navShow }: Props) => {
   const appContext = useContext(AppContext);
   const themeContext = useContext(ThemeContext);
   const theme = themeContext.theme;
@@ -44,11 +44,7 @@ export const SideNavbar: FC<Props> = ({ navWidth, navShow }) => {
         </Burger>
         <Link to="/">
           <LogoBrand>
-            {theme === 'light' ? (
-              <img src={logo} alt="" />
-            ) : (
-              <img src={logoWhite} alt="" />
-            )}
+            {theme === 'light' ? <img src={logo} alt="" /> : <img src={logoWhite} alt="" />}
           </LogoBrand>
         </Link>
       </NavHead>
@@ -119,7 +115,8 @@ export const SideNavbar: FC<Props> = ({ navWidth, navShow }) => {
                 onClick={(e) => {
                   e.stopPropagation();
                   i18n.changeLanguage('en');
-                }}>
+                }}
+              >
                 EN
                 <img src={usa} alt="en" />
               </Languale>
@@ -128,7 +125,8 @@ export const SideNavbar: FC<Props> = ({ navWidth, navShow }) => {
                 onClick={(e) => {
                   e.stopPropagation();
                   i18n.changeLanguage('ru');
-                }}>
+                }}
+              >
                 RU
                 <img src={ru} alt="ru" />
               </Languale>

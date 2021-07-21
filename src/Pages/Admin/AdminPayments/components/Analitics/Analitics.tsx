@@ -11,10 +11,7 @@ import { TestInputAnalitic } from '../../../../../components/UI/DayPicker';
 import { Loading } from '../../../../../components/UI/Loading';
 import { AppContext } from '../../../../../context/HubContext';
 import { Card } from '../../../../../globalStyles';
-import {
-  CollectionAnalitics,
-  RootAnalitics,
-} from '../../../../../types/analitics';
+import { CollectionAnalitics, RootAnalitics } from '../../../../../types/analitics';
 import { OpenDate } from '../../../../../types/dates';
 import { CollectionListDeposits } from '../../../../../types/deposits';
 import { SelectValues, SortingType } from '../../../../../types/sorting';
@@ -42,7 +39,7 @@ type Props = {
   listDeposits: CollectionListDeposits[];
 };
 
-export const Analitics: FC<Props> = ({ listDeposits }) => {
+export const Analitics: FC<Props> = ({ listDeposits }: Props) => {
   const [loading, setLoading] = useState(true);
   const [openDate, setOpenDate] = useState<OpenDate>({
     from: undefined,
@@ -111,7 +108,7 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
           openDate.to ? openDate.to : null,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting,
+          sorting
         )
         .then((res) => {
           setList(res.collection);
@@ -138,7 +135,7 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
           openDate.to ? openDate.to : null,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting,
+          sorting
         )
         .then((res) => {
           setList(res.collection);
@@ -203,20 +200,12 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
             {openFilterOne ? t('hide') : t('show')}
           </ShowHide>
         </FilterHeader>
-        <CSSTransition
-          in={openFilterOne}
-          timeout={200}
-          classNames="filter"
-          unmountOnExit>
+        <CSSTransition in={openFilterOne} timeout={200} classNames="filter" unmountOnExit>
           <SelectContainer>
             <SelectContainerInnerPaid>
               <SelectWrap style={{ minWidth: 263 }}>
                 <Label>{t('adminPay.filter.deposit')}</Label>
-                <Select
-                  checkList={checkList}
-                  setCheckList={setCheckList}
-                  values={listDeposits}
-                />
+                <Select checkList={checkList} setCheckList={setCheckList} values={listDeposits} />
               </SelectWrap>
               <SelectWrap input>
                 <TestInputAnalitic
@@ -233,28 +222,16 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
         </CSSTransition>
       </FilterBlock>
       <Card>
-        <CSSTransition
-          in={!!open}
-          timeout={300}
-          classNames="modal"
-          unmountOnExit>
+        <CSSTransition in={!!open} timeout={300} classNames="modal" unmountOnExit>
           <>{open && <ModalAnalitic onClose={onClose} data={open} />}</>
         </CSSTransition>
         <Styled.PaymentsTable>
           <Styled.TableHead>
             <Styled.TableHeadItemPaid>№</Styled.TableHeadItemPaid>
-            <Styled.TableHeadItemPaid>
-              {t('adminPay.table.name')}
-            </Styled.TableHeadItemPaid>
-            <Styled.TableHeadItemPaid>
-              {t('adminPay.analitics.data')}
-            </Styled.TableHeadItemPaid>
-            <Styled.TableHeadItemPaid>
-              {t('adminPay.analitics.amount')}
-            </Styled.TableHeadItemPaid>
-            <Styled.TableHeadItemPaid>
-              {t('adminPay.analitics.sum')}
-            </Styled.TableHeadItemPaid>
+            <Styled.TableHeadItemPaid>{t('adminPay.table.name')}</Styled.TableHeadItemPaid>
+            <Styled.TableHeadItemPaid>{t('adminPay.analitics.data')}</Styled.TableHeadItemPaid>
+            <Styled.TableHeadItemPaid>{t('adminPay.analitics.amount')}</Styled.TableHeadItemPaid>
+            <Styled.TableHeadItemPaid>{t('adminPay.analitics.sum')}</Styled.TableHeadItemPaid>
 
             <Styled.TableHeadItemPaid>
               <BurgerButton>
@@ -271,7 +248,8 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
                     <Sort
                       active={listForSorting[index].active}
                       key={index}
-                      onClick={() => getActiveSort(index)}>
+                      onClick={() => getActiveSort(index)}
+                    >
                       {obj.text}
                     </Sort>
                   ))}
@@ -282,15 +260,11 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
           {list.length ? (
             <Scrollbars style={{ height: '500px' }}>
               {list.map((item, idx) => (
-                <Styled.TableBody
-                  key={item.safeId}
-                  onClick={() => setOpen(item)}>
+                <Styled.TableBody key={item.safeId} onClick={() => setOpen(item)}>
                   <Styled.TableBodyItem>
                     {idx + 1 + (currentPage - 1) * pageLength}
                   </Styled.TableBodyItem>
-                  <Styled.TableBodyItem>
-                    {item.deposit.name}
-                  </Styled.TableBodyItem>
+                  <Styled.TableBodyItem>{item.deposit.name}</Styled.TableBodyItem>
                   <Styled.TableBodyItem>
                     {moment(item.payoutDate).format('DD/MM/YYYY')}
                   </Styled.TableBodyItem>

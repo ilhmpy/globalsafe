@@ -1,17 +1,17 @@
-import { useState, useEffect, FC } from "react";
-import wheel from "../../../../assets/svg/wheel.svg";
-import arrow from "../../../../assets/svg/arrowWheel.svg";
-import center from "../../../../assets/svg/center.svg";
-import * as Styled from "./Lottery.elements";
-import { Prize, Winner, Users } from "../../../../types/drawResult";
-import { Balance } from "../../../../types/balance";
-import { ReactComponent as PresentIcon } from "../../../../assets/svg/present.svg";
-import { useTranslation } from "react-i18next";
-import { CSSTransition } from "react-transition-group";
-import styled from "styled-components";
-import doc from "../../../../assets/svg/document.svg";
-import euro from "../../../../assets/svg/euro.svg";
-import proc from "../../../../assets/svg/proc.svg";
+import { useState, useEffect, FC } from 'react';
+import wheel from '../../../../assets/svg/wheel.svg';
+import arrow from '../../../../assets/svg/arrowWheel.svg';
+import center from '../../../../assets/svg/center.svg';
+import * as Styled from './Lottery.elements';
+import { Prize, Winner, Users } from '../../../../types/drawResult';
+import { Balance } from '../../../../types/balance';
+import { ReactComponent as PresentIcon } from '../../../../assets/svg/present.svg';
+import { useTranslation } from 'react-i18next';
+import { CSSTransition } from 'react-transition-group';
+import styled from 'styled-components';
+import doc from '../../../../assets/svg/document.svg';
+import euro from '../../../../assets/svg/euro.svg';
+import proc from '../../../../assets/svg/proc.svg';
 
 type Props = {
   drawResult: [Prize[], Prize, Users[], Winner] | null;
@@ -20,7 +20,7 @@ type Props = {
   onShowModalCongrats: () => void;
 };
 
-export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
+export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }: Props) => {
   const [deg, setDeg] = useState(0);
   const [radius, setRadius] = useState(75);
   const [angle, setAngle] = useState(0);
@@ -38,15 +38,15 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
   // let netRotation = ((spin % 360) * Math.PI) / 180;
   // console.log("netRotation", netRotation)
 
-  const list = ["document", "euro1", "euro2", "procent", "euro3", "euro4"];
+  const list = ['document', 'euro1', 'euro2', 'procent', 'euro3', 'euro4'];
 
   // list = ["document = 1 0", "euro1", "euro2", "procent = 2  3", "euro3", "euro4"]
   // list = [drawResult[1][0], drawResult[1][3], drawResult[1][4], drawResult[1][1], drawResult[1][2], drawResult[1][5]]
 
-  let fakeArr = [
+  const fakeArr = [
     {
       id: 322559577302237185,
-      safeId: "322559577302237185", //1
+      safeId: '322559577302237185', // 1
       kind: 2,
       isActive: true,
       balanceKind: 9,
@@ -54,7 +54,7 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
     },
     {
       id: 322559860770078721,
-      safeId: "322559860770078721", //3
+      safeId: '322559860770078721', // 3
       kind: 1,
       isActive: true,
       balanceKind: null,
@@ -62,7 +62,7 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
     },
     {
       id: 322558885812502529,
-      safeId: "322558885812502529",
+      safeId: '322558885812502529',
       kind: 0,
       isActive: true,
       balanceKind: 1,
@@ -70,7 +70,7 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
     },
     {
       id: 322558847157796865,
-      safeId: "322558847157796865",
+      safeId: '322558847157796865',
       kind: 0,
       isActive: true,
       balanceKind: 1,
@@ -78,7 +78,7 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
     },
     {
       id: 322558902992371713,
-      safeId: "322558902992371713",
+      safeId: '322558902992371713',
       kind: 0,
       isActive: true,
       balanceKind: 1,
@@ -86,7 +86,7 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
     },
     {
       id: 322558567984922625,
-      safeId: "322558567984922625",
+      safeId: '322558567984922625',
       kind: 0,
       isActive: true,
       balanceKind: 1,
@@ -118,10 +118,10 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
   };
 
   const spin = () => {
-    let randomSpin = Math.floor(Math.random() * 900) + 500;
+    const randomSpin = Math.floor(Math.random() * 900) + 500;
 
     // let randomSpin = 60 + 500;
-    console.log("randomSpin", randomSpin);
+    console.log('randomSpin', randomSpin);
     setRotate(randomSpin);
     setEaseOut(2);
     setSpinning(true);
@@ -132,7 +132,7 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
   };
 
   const getResult = (spin: number) => {
-    let netRotation = ((spin % 360) * Math.PI) / 180; // RADIANS
+    const netRotation = ((spin % 360) * Math.PI) / 180; // RADIANS
     let travel = netRotation + offset;
     let count = top + 1;
     while (travel > 0) {
@@ -170,9 +170,7 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
         drawResult[0][2],
         drawResult[0][5],
       ];
-      const keyWin = drawResult[0].findIndex(
-        (i) => i.safeId === drawResult[1].safeId
-      );
+      const keyWin = drawResult[0].findIndex((i) => i.safeId === drawResult[1].safeId);
       const numOptions = list.length;
       const arcSize = (2 * Math.PI) / numOptions;
       setAngle(arcSize);
@@ -180,7 +178,7 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
       const segment = 360 / list.length;
       const win = drawResult[1].kind;
       const key = win === 0 ? 2 : win === 1 ? 1 : win === 2 ? 4 : 5;
-      let newPosition = segment * (keyWin + 1) - Math.random() * segment;
+      const newPosition = segment * (keyWin + 1) - Math.random() * segment;
 
       timer1 = setTimeout(() => {
         setPrevRotate(newPosition);
@@ -205,15 +203,15 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
     const segment = 360 / list.length;
     // let position = 1500 + Math.round(Math.random() * 1500);
     const key = 5;
-    let newPosition = segment * key - Math.random() * segment;
+    const newPosition = segment * key - Math.random() * segment;
     setPrevRotate(newPosition);
     setRotate(-newPosition + 2880);
 
-    console.log("newPosition", newPosition);
+    console.log('newPosition', newPosition);
   };
 
   return (
-    <>
+    <div>
       {drawResult && (
         // <CSSTransition
         //   in={show && !!drawResult}
@@ -224,14 +222,14 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
           <Styled.PresentInner show={show && !!drawResult}>
             <PresentIcon />
             {drawResult[1].kind === 0
-              ? (drawResult[1].volume / 100000).toLocaleString("ru-RU", {
+              ? (drawResult[1].volume / 100000).toLocaleString('ru-RU', {
                   maximumFractionDigits: 5,
                 })
               : drawResult[1].kind === 1
-              ? t("win.two")
+              ? t('win.two')
               : drawResult[1].volume}
             &nbsp;
-            {drawResult[1].volume ? Balance[drawResult[1].balanceKind] : ""}
+            {drawResult[1].volume ? Balance[drawResult[1].balanceKind] : ''}
           </Styled.PresentInner>
         </Styled.Present>
         // </CSSTransition>
@@ -262,74 +260,50 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
               className="chart"
               style={{
                 WebkitTransform: `rotate(${rotate}deg)`,
-                position: "relative",
+                position: 'relative',
               }}
             >
               {drawResult ? (
                 <>
                   <Img1
                     src={
-                      drawResult[0][0].kind === 1
-                        ? doc
-                        : drawResult[0][0].kind === 2
-                        ? proc
-                        : euro
+                      drawResult[0][0].kind === 1 ? doc : drawResult[0][0].kind === 2 ? proc : euro
                     }
                     alt=""
                   />
                   <Img2
                     src={
-                      drawResult[0][1].kind === 1
-                        ? doc
-                        : drawResult[0][1].kind === 2
-                        ? proc
-                        : euro
+                      drawResult[0][1].kind === 1 ? doc : drawResult[0][1].kind === 2 ? proc : euro
                     }
                     alt=""
                   />
                   <Img3
                     src={
-                      drawResult[0][2].kind === 1
-                        ? doc
-                        : drawResult[0][2].kind === 2
-                        ? proc
-                        : euro
+                      drawResult[0][2].kind === 1 ? doc : drawResult[0][2].kind === 2 ? proc : euro
                     }
                     alt=""
                   />
                   <Img4
                     src={
-                      drawResult[0][3].kind === 1
-                        ? doc
-                        : drawResult[0][3].kind === 2
-                        ? proc
-                        : euro
+                      drawResult[0][3].kind === 1 ? doc : drawResult[0][3].kind === 2 ? proc : euro
                     }
                     alt=""
                   />
                   <Img5
                     src={
-                      drawResult[0][4].kind === 1
-                        ? doc
-                        : drawResult[0][4].kind === 2
-                        ? proc
-                        : euro
+                      drawResult[0][4].kind === 1 ? doc : drawResult[0][4].kind === 2 ? proc : euro
                     }
                     alt=""
                   />
                   <Img6
                     src={
-                      drawResult[0][5].kind === 1
-                        ? doc
-                        : drawResult[0][5].kind === 2
-                        ? proc
-                        : euro
+                      drawResult[0][5].kind === 1 ? doc : drawResult[0][5].kind === 2 ? proc : euro
                     }
                     alt=""
                   />
                 </>
               ) : (
-                ""
+                ''
               )}
               {/* <Img1 src={doc} alt="" />
               <Img2 src={euro} alt="" />
@@ -337,12 +311,12 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
               <Img4 src={proc} alt="" />
               <Img5 src={euro} alt="" />
               <Img6 src={euro} alt="" /> */}
-              <div className="triangle" style={{ transform: "rotate(0deg)" }}>
+              <div className="triangle" style={{ transform: 'rotate(0deg)' }}>
                 <div
                   className="circle"
                   style={{
                     background:
-                      "radial-gradient(circle farthest-corner, rgba(255, 145, 0, 1) 3.76%, rgba(255, 182, 85, 1) 100%)",
+                      'radial-gradient(circle farthest-corner, rgba(255, 145, 0, 1) 3.76%, rgba(255, 182, 85, 1) 100%)',
                   }}
                 ></div>
               </div>
@@ -354,68 +328,53 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
                   className="circle"
                   style={{
                     background:
-                      "radial-gradient( circle farthest-corner, rgba(197, 0, 72, 1) 0%, rgba(224, 43, 106, 1) 47.98%, rgba(255, 94, 147, 1) 100%)",
-                    position: "relative",
+                      'radial-gradient( circle farthest-corner, rgba(197, 0, 72, 1) 0%, rgba(224, 43, 106, 1) 47.98%, rgba(255, 94, 147, 1) 100%)',
+                    position: 'relative',
                   }}
                 ></div>
               </div>
-              <div
-                className="triangle"
-                style={{ transform: "rotate(-120deg)" }}
-              >
+              <div className="triangle" style={{ transform: 'rotate(-120deg)' }}>
                 <div
                   className="circle"
                   style={{
                     background:
-                      "radial-gradient( circle farthest-corner, rgba(122, 244, 171, 1) 3.76%, rgba(201, 206, 126, 1) 100%)",
+                      'radial-gradient( circle farthest-corner, rgba(122, 244, 171, 1) 3.76%, rgba(201, 206, 126, 1) 100%)',
                   }}
                 ></div>
               </div>
-              <div
-                className="triangle"
-                style={{ transform: "rotate(-180deg)" }}
-              >
+              <div className="triangle" style={{ transform: 'rotate(-180deg)' }}>
                 <div
                   className="circle"
                   style={{
                     background:
-                      "radial-gradient( circle farthest-corner, rgba(122, 244, 171, 1) 3.76%, rgba(201, 206, 126, 1) 100%)",
+                      'radial-gradient( circle farthest-corner, rgba(122, 244, 171, 1) 3.76%, rgba(201, 206, 126, 1) 100%)',
                   }}
                 ></div>
               </div>
-              <div
-                className="triangle"
-                style={{ transform: "rotate(-180deg)" }}
-              >
+              <div className="triangle" style={{ transform: 'rotate(-180deg)' }}>
                 <div
                   className="circle"
                   style={{
                     background:
-                      "radial-gradient( circle farthest-corner, rgba(9, 86, 198, 1) 3.76%, rgba(9, 91, 200, 1) 13.58%, rgba(9, 104, 207, 1) 24.66%, rgba(8, 127, 219, 1) 36.35%, rgba(7, 158, 235, 1) 48.38%, rgba(7, 169, 240, 1) 51.96%, rgba(30, 177, 242, 1) 55.27%, rgba(66, 190, 245, 1) 61.22%, rgba(95, 201, 248, 1) 67.51%, rgba(118, 210, 250, 1) 74.15%, rgba(134, 215, 251, 1) 81.3%, rgba(144, 219, 252, 1) 89.32%, rgba(147, 220, 252, 1) 100%)",
+                      'radial-gradient( circle farthest-corner, rgba(9, 86, 198, 1) 3.76%, rgba(9, 91, 200, 1) 13.58%, rgba(9, 104, 207, 1) 24.66%, rgba(8, 127, 219, 1) 36.35%, rgba(7, 158, 235, 1) 48.38%, rgba(7, 169, 240, 1) 51.96%, rgba(30, 177, 242, 1) 55.27%, rgba(66, 190, 245, 1) 61.22%, rgba(95, 201, 248, 1) 67.51%, rgba(118, 210, 250, 1) 74.15%, rgba(134, 215, 251, 1) 81.3%, rgba(144, 219, 252, 1) 89.32%, rgba(147, 220, 252, 1) 100%)',
                   }}
                 ></div>
               </div>
-              <div
-                className="triangle"
-                style={{ transform: "rotate(-240deg)" }}
-              >
+              <div className="triangle" style={{ transform: 'rotate(-240deg)' }}>
                 <div
                   className="circle"
                   style={{
                     background:
-                      "radial-gradient(circle farthest-corner, rgba(43, 56, 148, 1) 3.76%, rgba(128, 120, 191, 1) 100%)",
+                      'radial-gradient(circle farthest-corner, rgba(43, 56, 148, 1) 3.76%, rgba(128, 120, 191, 1) 100%)',
                   }}
                 ></div>
               </div>
-              <div
-                className="triangle"
-                style={{ transform: "rotate(-300deg)" }}
-              >
+              <div className="triangle" style={{ transform: 'rotate(-300deg)' }}>
                 <div
                   className="circle"
                   style={{
                     background:
-                      "radial-gradient( circle farthest-corner, rgba(197, 0, 72, 1) 0%, rgba(104, 100, 181, 1) 100%)",
+                      'radial-gradient( circle farthest-corner, rgba(197, 0, 72, 1) 0%, rgba(104, 100, 181, 1) 100%)',
                   }}
                 ></div>
               </div>
@@ -429,7 +388,7 @@ export const Wheel: FC<Props> = ({ drawResult, onShowModalCongrats }) => {
           <img src={arrow} alt="" />
         </Arrow>
       </WheelContainer>
-    </>
+    </div>
   );
 };
 
@@ -452,7 +411,7 @@ const Center = styled.div`
   margin-left: -85px;
   transform: rotate(-30deg);
   &:before {
-    content: "";
+    content: '';
     border: 12px solid #fff;
     border-radius: 50%;
     width: 100%;
@@ -603,7 +562,7 @@ const WheelImg = styled.div`
   }
 
   .chart:before {
-    content: "";
+    content: '';
     display: block;
     padding-top: 100%;
   }

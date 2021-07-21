@@ -1,14 +1,14 @@
-import React, { FC, useState } from "react";
-import { CountdownTimer } from "./CountDown";
-import * as Styled from "./Styled.element";
-import { Notify } from "../../types/notify";
+import React, { FC, useState } from 'react';
+import { CountdownTimer } from './CountDown';
+import * as Styled from './Styled.element';
+import { Notify } from '../../types/notify';
 
 type Props = {
   data: Notify[];
   onDelete: (id: number) => void;
 };
 
-export const Notification: FC<Props> = ({ data, onDelete }) => {
+export const Notification: FC<Props> = ({ data, onDelete }: Props) => {
   return (
     <Styled.Container>
       <Styled.ContainerInner>
@@ -25,11 +25,8 @@ type NotifyProps = {
   onDelete: (id: number) => void;
 };
 
-const NotifyItem: FC<NotifyProps> = ({ data, onDelete }) => {
-  const [show, setShow] = useState(true);
-
+const NotifyItem: FC<NotifyProps> = ({ data, onDelete }: NotifyProps) => {
   const timerDone = () => {
-    setShow(false);
     onDelete(data.id);
   };
   return (

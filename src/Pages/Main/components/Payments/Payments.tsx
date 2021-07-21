@@ -1,51 +1,46 @@
-import React, {
-  useEffect,
-  useContext,
-  useState,
-  useCallback,
-  FC,
-  useRef,
-} from "react";
-import { H2 } from "../../../../components/UI/MainStyled";
-import { Card, Container } from "../../../../globalStyles";
-import styled, { keyframes } from "styled-components/macro";
-import { RadialBar } from "../../../../components/Charts/Test";
-import { AppContext } from "../../../../context/HubContext";
-import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
-import "swiper/swiper.scss";
-import "swiper/components/navigation/navigation.scss";
-import "swiper/components/pagination/pagination.scss";
-import "swiper/components/scrollbar/scrollbar.scss";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { RootPayDeposit, PayDeposit, Pokedex } from "../../../../types/payouts";
-import { ReactComponent as Refresh } from "../../../../assets/svg/refresh.svg";
-import moment from "moment";
-import { Page } from "../../../../components/UI/Page";
-import { Modal } from "../../../../components/Modal/Modal";
-import { CSSTransition } from "react-transition-group";
-import { Button } from "../../../../components/Button/Button";
+import React, { useEffect, useContext, useState, useCallback, FC, useRef } from 'react';
+import { H2 } from '../../../../components/UI/MainStyled';
+import { Card, Container } from '../../../../globalStyles';
+import styled, { keyframes } from 'styled-components/macro';
+import { RadialBar } from '../../../../components/Charts/Test';
+import { AppContext } from '../../../../context/HubContext';
+import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
+import 'swiper/swiper.scss';
+import 'swiper/components/navigation/navigation.scss';
+import 'swiper/components/pagination/pagination.scss';
+import 'swiper/components/scrollbar/scrollbar.scss';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { RootPayDeposit, PayDeposit, Pokedex } from '../../../../types/payouts';
+import { ReactComponent as Refresh } from '../../../../assets/svg/refresh.svg';
+import moment from 'moment';
+import { Page } from '../../../../components/UI/Page';
+import { Modal } from '../../../../components/Modal/Modal';
+import { CSSTransition } from 'react-transition-group';
+import { Button } from '../../../../components/Button/Button';
 import {
   DescContainer,
   BlockContainers,
   BlockItem,
   ModalBlock,
   ModalTitle,
-} from "../Tariffs/Tariffs.elements";
-import { useTranslation } from "react-i18next";
-import { Input } from "../../../../components/UI/Input";
+} from '../Tariffs/Tariffs.elements';
+import { useTranslation } from 'react-i18next';
+import { Input } from '../../../../components/UI/Input';
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
-const RadialComponent: FC<{ data: Pokedex; height: number }> = ({
-  data,
-  height,
-}) => {
+type RadialComponentProps = {
+  data: Pokedex;
+  height: number;
+};
+
+const RadialComponent: FC<RadialComponentProps> = ({ data, height }: RadialComponentProps) => {
   const [show, setShow] = useState(false);
   const [isNormalOpen, setIsNormalOpen] = useState(false);
-  const [oldLink, setOldLink] = useState("");
-  const [link, setLink] = useState("");
+  const [oldLink, setOldLink] = useState('');
+  const [link, setLink] = useState('');
   const [min, setMin] = useState(500);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
   const { t } = useTranslation();
   const onClose = () => {
@@ -55,10 +50,8 @@ const RadialComponent: FC<{ data: Pokedex; height: number }> = ({
   const handleClick = (str: string, num: number) => {
     setIsNormalOpen(true);
     onClose();
-    setValue("");
-    const newLink = `https://cwd.global/shopping/payment?to_name=${str}&amount=${
-      num / 100000
-    }`;
+    setValue('');
+    const newLink = `https://cwd.global/shopping/payment?to_name=${str}&amount=${num / 100000}`;
     setLink(newLink);
     setOldLink(`https://cwd.global/shopping/payment?to_name=${str}&amount=`);
     const val: any = /\d{3,}/g.exec(str);
@@ -75,8 +68,8 @@ const RadialComponent: FC<{ data: Pokedex; height: number }> = ({
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const id = e.target.value;
     setValue(id);
-    const newLink = oldLink.replace(/\d{3,}/g, "");
-    if (id === "") {
+    const newLink = oldLink.replace(/\d{3,}/g, '');
+    if (id === '') {
       setLink(newLink + min);
     } else {
       setLink(newLink + id);
@@ -89,9 +82,9 @@ const RadialComponent: FC<{ data: Pokedex; height: number }> = ({
 
   useEffect(() => {
     if (show) {
-      document.body.style.overflow = "hidden";
+      document.body.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = 'unset';
     }
   }, [show]);
 
@@ -100,7 +93,7 @@ const RadialComponent: FC<{ data: Pokedex; height: number }> = ({
       {isNormalOpen && (
         <Modal zIndex="999999" onClose={() => setIsNormalOpen(false)}>
           <ModalBlock>
-            <ModalTitle>{t("tariffs.depositSize")}</ModalTitle>
+            <ModalTitle>{t('tariffs.depositSize')}</ModalTitle>
             <Input
               onChange={onChange}
               // placeholder={min.toString()}
@@ -108,13 +101,8 @@ const RadialComponent: FC<{ data: Pokedex; height: number }> = ({
               ref={inputRef}
               value={value}
             />
-            <ModalButton
-              as="button"
-              onClick={toLink}
-              danger
-              disabled={+value < min}
-            >
-              {t("tariffs.ok")}
+            <ModalButton as="button" onClick={toLink} danger disabled={+value < min}>
+              {t('tariffs.ok')}
             </ModalButton>
           </ModalBlock>
         </Modal>
@@ -125,32 +113,28 @@ const RadialComponent: FC<{ data: Pokedex; height: number }> = ({
             <ProgramCard>
               <BlockTitle>{data.deposit.name}</BlockTitle>
               <div className="item__subtitle">
-                <Text
-                  dangerouslySetInnerHTML={{ __html: data.deposit.description }}
-                />
+                <Text dangerouslySetInnerHTML={{ __html: data.deposit.description }} />
               </div>
               <ModalButton
                 as="button"
                 disabled={!data.deposit.isActive}
                 blue
-                onClick={() =>
-                  handleClick(data.deposit.account, data.deposit.minAmount)
-                }
+                onClick={() => handleClick(data.deposit.account, data.deposit.minAmount)}
               >
-                {t("payments.open")}
+                {t('payments.open')}
               </ModalButton>
             </ProgramCard>
             <RadialModalItem
               small={
-                data.deposit.name.split(" ")[0].length > 6 &&
-                data.deposit.name.split(" ").length > 1
+                data.deposit.name.split(' ')[0].length > 6 &&
+                data.deposit.name.split(' ').length > 1
               }
               flex={true}
             >
               <RadialBar
                 height={300}
                 values={Number((data.procent * 100).toFixed(0))}
-                color={data.deposit.isActive ? data.colors : "#666"}
+                color={data.deposit.isActive ? data.colors : '#666'}
                 size="60%"
               />
               <RoundInside>
@@ -168,20 +152,17 @@ const RadialComponent: FC<{ data: Pokedex; height: number }> = ({
         <RadialBar
           height={height}
           values={data.procent * 100}
-          color={data.deposit.isActive ? data.colors : "#666"}
+          color={data.deposit.isActive ? data.colors : '#666'}
         />
         <RoundInside>
           <RoundInsideName
             small={
-              data.deposit.name.split(" ")[0].length > 6 &&
-              data.deposit.name.split(" ").length > 1
+              data.deposit.name.split(' ')[0].length > 6 && data.deposit.name.split(' ').length > 1
             }
           >
             {data.depositName}
           </RoundInsideName>
-          <RoundInsideDate>
-            {moment(data.date).format("DD.MM.YYYY")}
-          </RoundInsideDate>
+          <RoundInsideDate>{moment(data.date).format('DD.MM.YYYY')}</RoundInsideDate>
           <RoundInsideProcent>
             {(data.procent * 100).toFixed(2)}
             <Proc>%</Proc>
@@ -203,16 +184,16 @@ export const Payments = () => {
   const hubConnection = appContext.hubConnection;
   const { t } = useTranslation();
 
-  const lang = localStorage.getItem("i18nextLng") || "ru";
-  const languale = lang === "ru" ? 1 : 0;
+  const lang = localStorage.getItem('i18nextLng') || 'ru';
+  const languale = lang === 'ru' ? 1 : 0;
 
   const stats = useCallback(() => {
     const newStats = statsDeposit.map((i) => {
       const color =
-        "#" +
+        '#' +
         Math.floor(Math.random() * 16777215)
           .toString(16)
-          .padStart(6, "0");
+          .padStart(6, '0');
       return {
         depositName: i.deposit.name,
         date: i.depositCreationDate,
@@ -224,19 +205,13 @@ export const Payments = () => {
 
     const newArrayBig: any[] = [];
     for (let i = 0; i < Math.ceil(newStats.length / arrSizeBig); i++) {
-      newArrayBig[i] = newStats.slice(
-        i * arrSizeBig,
-        i * arrSizeBig + arrSizeBig
-      );
+      newArrayBig[i] = newStats.slice(i * arrSizeBig, i * arrSizeBig + arrSizeBig);
     }
 
     setBigArr(newArrayBig);
     const newArrayMob: any[] = [];
     for (let i = 0; i < Math.ceil(newStats.length / arrSizeMob); i++) {
-      newArrayMob[i] = newStats.slice(
-        i * arrSizeMob,
-        i * arrSizeMob + arrSizeMob
-      );
+      newArrayMob[i] = newStats.slice(i * arrSizeMob, i * arrSizeMob + arrSizeMob);
     }
     setSmallArr(newArrayMob);
   }, [statsDeposit]);
@@ -253,9 +228,9 @@ export const Payments = () => {
     if (hubConnection) {
       setLoadReset(true);
       hubConnection
-        .invoke<RootPayDeposit[]>("GetDayPayouts", languale)
+        .invoke<RootPayDeposit[]>('GetDayPayouts', languale)
         .then((res) => {
-          console.log("res", res);
+          console.log('res', res);
           setStatsDeposit(res);
           setLoadReset(false);
         })
@@ -270,21 +245,17 @@ export const Payments = () => {
     <Page>
       {statsDeposit.length ? (
         <Container>
-          <H2>{t("payments.currPay")}</H2>
+          <H2>{t('payments.currPay')}</H2>
         </Container>
       ) : (
-        ""
+        ''
       )}
 
       <Container>
         {statsDeposit.length ? (
           <>
             <SwiperContainer alfa>
-              <Swiper
-                spaceBetween={10}
-                slidesPerView={1}
-                pagination={{ clickable: true }}
-              >
+              <Swiper spaceBetween={10} slidesPerView={1} pagination={{ clickable: true }}>
                 {bigArr.map((i: any, idx: number) => (
                   <SwiperSlide key={idx} style={{ maxWidth: 1130 }}>
                     <RadialWrap>
@@ -296,19 +267,14 @@ export const Payments = () => {
                 ))}
               </Swiper>
               <OnDate rtt={loadReset}>
-                {t("payments.on")}{" "}
-                {moment(statsDeposit[0].payoutDate).format("DD.MM.YYYY")}{" "}
+                {t('payments.on')} {moment(statsDeposit[0].payoutDate).format('DD.MM.YYYY')}{' '}
                 <Refresh onClick={reset} />
               </OnDate>
             </SwiperContainer>
 
             <SwiperContainerMob alfa>
               {statsDeposit.length && (
-                <Swiper
-                  spaceBetween={10}
-                  slidesPerView={1}
-                  pagination={{ clickable: true }}
-                >
+                <Swiper spaceBetween={10} slidesPerView={1} pagination={{ clickable: true }}>
                   {smallArr.map((i: any, idx: number) => (
                     <SwiperSlide key={idx}>
                       <RadialWrap>
@@ -321,14 +287,13 @@ export const Payments = () => {
                 </Swiper>
               )}
               <OnDate rtt={loadReset}>
-                {t("payments.on")}{" "}
-                {moment(statsDeposit[0].payoutDate).format("DD.MM.YYYY")}{" "}
+                {t('payments.on')} {moment(statsDeposit[0].payoutDate).format('DD.MM.YYYY')}{' '}
                 <Refresh onClick={reset} />
               </OnDate>
             </SwiperContainerMob>
           </>
         ) : (
-          ""
+          ''
         )}
       </Container>
     </Page>
@@ -470,8 +435,8 @@ const RoundInside = styled.div`
 const RoundInsideName = styled.div<{ small?: boolean }>`
   text-align: center;
   font-weight: 500;
-  font-size: ${(props) => (props.small ? "16px" : "18px")};
-  line-height: ${(props) => (props.small ? "18px" : "21px")};
+  font-size: ${(props) => (props.small ? '16px' : '18px')};
+  line-height: ${(props) => (props.small ? '18px' : '21px')};
   text-transform: uppercase;
   padding-top: 26px;
   padding-bottom: 4px;
@@ -508,7 +473,7 @@ const RoundInsideProcent = styled.div`
   }
 `;
 
-const RadialModalItem = styled.div<{ small?: boolean, flex?: boolean }>`
+const RadialModalItem = styled.div<{ small?: boolean; flex?: boolean }>`
   width: 280px;
   flex: none;
   position: relative;
@@ -530,7 +495,7 @@ const RadialModalItem = styled.div<{ small?: boolean, flex?: boolean }>`
   ${RoundInsideName} {
     font-weight: 500;
     line-height: 28px;
-    font-size: 1.80em;
+    font-size: 1.8em;
     @media (max-width: 768px) {
       max-width: 100%;
       padding-top: 23px;
@@ -539,7 +504,7 @@ const RadialModalItem = styled.div<{ small?: boolean, flex?: boolean }>`
   ${RoundInsideProcent} {
     font-size: 38px;
     line-height: 48px;
-    display: ${({ flex }) => flex != null && flex ? "flex" : "" };
+    display: ${({ flex }) => (flex != null && flex ? 'flex' : '')};
   }
   @media (max-width: 768px) {
     width: 280px;

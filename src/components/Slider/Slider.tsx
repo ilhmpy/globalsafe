@@ -1,12 +1,14 @@
-import React, { FC } from "react";
-import Slider, { Range } from "rc-slider";
-import "rc-slider/assets/index.css";
-import * as Styled from "./Slider.elements";
+import React, { FC } from 'react';
+import Slider, { Range } from 'rc-slider';
+import 'rc-slider/assets/index.css';
+import * as Styled from './Slider.elements';
 
-export const SliderComponent: FC<{
+type Props = {
   onAfterChange?: (num: number) => void;
   value?: number;
-}> = ({ onAfterChange, value = 0 }) => {
+};
+
+export const SliderComponent: FC<Props> = ({ onAfterChange, value = 0 }: Props) => {
   return (
     <Styled.SliderWrap>
       <Slider

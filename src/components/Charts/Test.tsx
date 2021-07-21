@@ -100,9 +100,7 @@ export const TestChart: FC<Props> = ({
           if (percent) {
             return `
             <div class="chart-toltip">
-            <div class="chart-tottip-light">${
-              w.config.labels[seriesIndex]
-            }</div> 
+            <div class="chart-tottip-light">${w.config.labels[seriesIndex]}</div> 
               <div>${(
                 (series[seriesIndex] /
                   w.globals.seriesTotals.reduce((a: any, b: any) => {
@@ -116,9 +114,7 @@ export const TestChart: FC<Props> = ({
             return `
           <div class="chart-toltip">
           <div class="chart-tottip-light">${w.config.labels[seriesIndex]}</div> 
-            <div class="chart-tottip-bold">${series[
-              seriesIndex
-            ].toLocaleString()} CWD</div>
+            <div class="chart-tottip-bold">${series[seriesIndex].toLocaleString()} CWD</div>
           </div> 
           `;
           }
@@ -157,12 +153,7 @@ export const TestChart: FC<Props> = ({
     <div className="app">
       <div className="row">
         <ChartWrap>
-          <Chart
-            options={data.options}
-            series={data.series}
-            type="donut"
-            ac-chart="'donut'"
-          />
+          <Chart options={data.options} series={data.series} type="donut" ac-chart="'donut'" />
         </ChartWrap>
       </div>
     </div>
@@ -182,7 +173,7 @@ type PropsColumn = {
   value: number[] | string[];
 };
 
-export const ColumnChart: FC<PropsColumn> = ({ date, value }) => {
+export const ColumnChart: FC<PropsColumn> = ({ date, value }: PropsColumn) => {
   const themeContext = useContext(ThemeContext);
   const theme = themeContext.theme;
   const color = theme === 'light' ? '#222' : '#fff';
@@ -197,9 +188,6 @@ export const ColumnChart: FC<PropsColumn> = ({ date, value }) => {
     options: {
       chart: {
         type: 'bar',
-        events: {
-          click: function (chart: any, w: any, e: any) {},
-        },
         toolbar: {
           show: false,
         },
@@ -266,9 +254,9 @@ export const ColumnChart: FC<PropsColumn> = ({ date, value }) => {
         custom: function ({ series, seriesIndex, dataPointIndex, w }: any) {
           return `
           <div class="column-toltip">
-          <div class="column-toltip-light">${moment(
-            w.globals.labels[dataPointIndex],
-          ).format('DD MMMM YYYY')}</div>
+          <div class="column-toltip-light">${moment(w.globals.labels[dataPointIndex]).format(
+            'DD MMMM YYYY'
+          )}</div>
             <div class="column-toltip-bold">${w.globals.stackedSeriesTotals[
               dataPointIndex
             ].toLocaleString()}</div>
@@ -306,20 +294,12 @@ export const ColumnChart: FC<PropsColumn> = ({ date, value }) => {
 
   return (
     <div id="chart1" style={{ position: 'relative' }}>
-      <Chart
-        options={data.options}
-        series={data.series}
-        type="bar"
-        height={287}
-      />
+      <Chart options={data.options} series={data.series} type="bar" height={287} />
     </div>
   );
 };
 
-export const ColumnChartCwd: FC<PropsColumn> = ({
-  date = [''],
-  value = [''],
-}) => {
+export const ColumnChartCwd: FC<PropsColumn> = ({ date = [''], value = [''] }: PropsColumn) => {
   const themeContext = useContext(ThemeContext);
   const theme = themeContext.theme;
   const color = theme === 'light' ? '#222' : '#fff';
@@ -333,9 +313,6 @@ export const ColumnChartCwd: FC<PropsColumn> = ({
     options: {
       chart: {
         type: 'bar',
-        events: {
-          click: function (chart: any, w: any, e: any) {},
-        },
         toolbar: {
           show: false,
         },
@@ -395,9 +372,9 @@ export const ColumnChartCwd: FC<PropsColumn> = ({
         custom: function ({ series, seriesIndex, dataPointIndex, w }: any) {
           return `
           <div class="column-toltip">
-          <div class="column-toltip-light">${moment(
-            w.globals.labels[dataPointIndex],
-          ).format('DD MMMM YYYY')}</div>
+          <div class="column-toltip-light">${moment(w.globals.labels[dataPointIndex]).format(
+            'DD MMMM YYYY'
+          )}</div>
             <div class="column-toltip-bold">${w.globals.stackedSeriesTotals[
               dataPointIndex
             ].toLocaleString()} CWD</div>
@@ -435,17 +412,12 @@ export const ColumnChartCwd: FC<PropsColumn> = ({
 
   return (
     <div id="chart1" style={{ position: 'relative' }}>
-      <Chart
-        options={data.options}
-        series={data.series}
-        type="bar"
-        height={287}
-      />
+      <Chart options={data.options} series={data.series} type="bar" height={287} />
     </div>
   );
 };
 
-export const ColumnChartThree: FC<PropsColumn> = ({ date, value }) => {
+export const ColumnChartThree: FC<PropsColumn> = ({ date, value }: PropsColumn) => {
   const themeContext = useContext(ThemeContext);
   const theme = themeContext.theme;
   const color = theme === 'light' ? '#222' : '#fff';
@@ -522,9 +494,9 @@ export const ColumnChartThree: FC<PropsColumn> = ({ date, value }) => {
         custom: function ({ series, seriesIndex, dataPointIndex, w }: any) {
           return `
           <div class="column-toltip">
-          <div class="column-toltip-light">${moment(
-            w.globals.labels[dataPointIndex],
-          ).format('DD MMMM YYYY')}</div>
+          <div class="column-toltip-light">${moment(w.globals.labels[dataPointIndex]).format(
+            'DD MMMM YYYY'
+          )}</div>
             <div class="column-toltip-bold">${w.globals.stackedSeriesTotals[
               dataPointIndex
             ].toLocaleString()} CWD</div>
@@ -566,17 +538,12 @@ export const ColumnChartThree: FC<PropsColumn> = ({ date, value }) => {
 
   return (
     <div id="chart1" style={{ position: 'relative' }}>
-      <Chart
-        options={data.options}
-        series={data.series}
-        type="bar"
-        height={287}
-      />
+      <Chart options={data.options} series={data.series} type="bar" height={287} />
     </div>
   );
 };
 
-export const ColumnChartTwo: FC<PropsColumn> = ({ date, value }) => {
+export const ColumnChartTwo: FC<PropsColumn> = ({ date, value }: PropsColumn) => {
   const themeContext = useContext(ThemeContext);
   const theme = themeContext.theme;
   const color = theme === 'light' ? '#222' : '#fff';
@@ -667,12 +634,11 @@ export const ColumnChartTwo: FC<PropsColumn> = ({ date, value }) => {
         custom: function ({ series, seriesIndex, dataPointIndex, w }: any) {
           return `
           <div class="column-toltip">
-          <div class="column-toltip-light">${moment(
-            w.globals.labels[dataPointIndex],
-          ).format('DD MMMM YYYY')}</div>
+          <div class="column-toltip-light">${moment(w.globals.labels[dataPointIndex]).format(
+            'DD MMMM YYYY'
+          )}</div>
             <div class="column-toltip-bold">${
-              w.globals.stackedSeriesTotals[dataPointIndex].toLocaleString() +
-              'CWD'
+              w.globals.stackedSeriesTotals[dataPointIndex].toLocaleString() + 'CWD'
             } </div>
           </div>
           `;
@@ -708,17 +674,12 @@ export const ColumnChartTwo: FC<PropsColumn> = ({ date, value }) => {
 
   return (
     <div id="chart2" style={{ position: 'relative' }}>
-      <Chart
-        options={data.options}
-        series={data.series}
-        type="bar"
-        height={287}
-      />
+      <Chart options={data.options} series={data.series} type="bar" height={287} />
     </div>
   );
 };
 
-export const ColumnChartAnalitic: FC<PropsColumn> = ({ date, value }) => {
+export const ColumnChartAnalitic: FC<PropsColumn> = ({ date, value }: PropsColumn) => {
   const themeContext = useContext(ThemeContext);
   const theme = themeContext.theme;
   const color = theme === 'light' ? '#222' : '#fff';
@@ -810,12 +771,11 @@ export const ColumnChartAnalitic: FC<PropsColumn> = ({ date, value }) => {
         custom: function ({ series, seriesIndex, dataPointIndex, w }: any) {
           return `
           <div class="column-toltip">
-          <div class="column-toltip-light">${moment(
-            date[dataPointIndex],
-          ).format('DD MMMM YYYY')}</div>
+          <div class="column-toltip-light">${moment(date[dataPointIndex]).format(
+            'DD MMMM YYYY'
+          )}</div>
             <div class="column-toltip-bold">${
-              w.globals.stackedSeriesTotals[dataPointIndex].toLocaleString() +
-              'CWD'
+              w.globals.stackedSeriesTotals[dataPointIndex].toLocaleString() + 'CWD'
             } </div>
           </div>
           `;
@@ -851,12 +811,7 @@ export const ColumnChartAnalitic: FC<PropsColumn> = ({ date, value }) => {
 
   return (
     <div id="chart2" style={{ position: 'relative' }}>
-      <Chart
-        options={data.options}
-        series={data.series}
-        type="bar"
-        height={287}
-      />
+      <Chart options={data.options} series={data.series} type="bar" height={287} />
     </div>
   );
 };
@@ -873,7 +828,7 @@ export const RadialBar: FC<RadialProps> = ({
   color,
   height = 210,
   size = '70%',
-}) => {
+}: RadialProps) => {
   const data = {
     series: [values],
     options: {
@@ -925,12 +880,7 @@ export const RadialBar: FC<RadialProps> = ({
 
   return (
     <div id="chart2" style={{ position: 'relative' }}>
-      <Chart
-        options={data.options}
-        series={data.series}
-        type="radialBar"
-        height={height}
-      />
+      <Chart options={data.options} series={data.series} type="radialBar" height={height} />
     </div>
   );
 };
@@ -968,7 +918,8 @@ export const RadialBarRound = () => {
         height: 182,
         right: '0',
         borderRadius: '50%',
-      }}>
+      }}
+    >
       <Chart
         options={data.options}
         series={data.series}

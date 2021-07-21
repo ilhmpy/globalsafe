@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, useContext } from "react";
+import React, { FC, useState, useEffect, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import * as Styled from './Styled.elements';
@@ -23,39 +23,105 @@ import {
 
 export const AdminDepositsPrograms = () => {
   const { t } = useTranslation();
-  const [ depositsPrograms, setDepositsPrograms ] = useState([
-    { name: "Программа #1", depositsAmount: "1000.0", createDate: "12/07/2021", procents: "1", desc: "фикс. выплата 10% /мес., 70% от доходности фонда" },
-    { name: "Программа #1", depositsAmount: "500.0", createDate: "12/07/2021", procents: "2", desc: "фикс. выплата 10% /мес., 70% от доходности фонда" },
-    { name: "Программа #1", depositsAmount: "300.0", createDate: "13/07/2021", procents: "4", desc: "фикс. выплата 10% /мес., 70% от доходности фонда" },
-    { name: "Программа #1", depositsAmount: "1200.0", createDate: "14/07/2021", procents: "2", desc: "фикс. выплата 10% /мес., 70% от доходности фонда" },
-    { name: "Программа #1", depositsAmount: "200.0", createDate: "21/07/2021", procents: "8", desc: "фикс. выплата 10% /мес., 70% от доходности фонда" },
-    { name: "Программа #1", depositsAmount: "300.0", createDate: "12/07/2021", procents: "2", desc: "фикс. выплата 10% /мес., 70% от доходности фонда" },
-    { name: "Программа #1", depositsAmount: "600.0", createDate: "28/07/2021", procents: "5", desc: "фикс. выплата 10% /мес., 70% от доходности фонда" },
-    { name: "Программа #1", depositsAmount: "800.0", createDate: "12/07/2021", procents: "2", desc: "фикс. выплата 10% /мес., 70% от доходности фонда" },
-    { name: "Программа #1", depositsAmount: "0", createDate: "32/07/2021", procents: "1", desc: "фикс. выплата 10% /мес., 70% от доходности фонда" },
-    { name: "Программа #1", depositsAmount: "0", createDate: "12/07/2021", procents: "2", desc: "фикс. выплата 10% /мес., 70% от доходности фонда" },
-    { name: "Программа #1", depositsAmount: "0", createDate: "12/07/2021", procents: "3", desc: "фикс. выплата 10% /мес., 70% от доходности фонда" },
+  const [depositsPrograms, setDepositsPrograms] = useState([
+    {
+      name: 'Программа #1',
+      depositsAmount: '1000.0',
+      createDate: '12/07/2021',
+      procents: '1',
+      desc: 'фикс. выплата 10% /мес., 70% от доходности фонда',
+    },
+    {
+      name: 'Программа #1',
+      depositsAmount: '500.0',
+      createDate: '12/07/2021',
+      procents: '2',
+      desc: 'фикс. выплата 10% /мес., 70% от доходности фонда',
+    },
+    {
+      name: 'Программа #1',
+      depositsAmount: '300.0',
+      createDate: '13/07/2021',
+      procents: '4',
+      desc: 'фикс. выплата 10% /мес., 70% от доходности фонда',
+    },
+    {
+      name: 'Программа #1',
+      depositsAmount: '1200.0',
+      createDate: '14/07/2021',
+      procents: '2',
+      desc: 'фикс. выплата 10% /мес., 70% от доходности фонда',
+    },
+    {
+      name: 'Программа #1',
+      depositsAmount: '200.0',
+      createDate: '21/07/2021',
+      procents: '8',
+      desc: 'фикс. выплата 10% /мес., 70% от доходности фонда',
+    },
+    {
+      name: 'Программа #1',
+      depositsAmount: '300.0',
+      createDate: '12/07/2021',
+      procents: '2',
+      desc: 'фикс. выплата 10% /мес., 70% от доходности фонда',
+    },
+    {
+      name: 'Программа #1',
+      depositsAmount: '600.0',
+      createDate: '28/07/2021',
+      procents: '5',
+      desc: 'фикс. выплата 10% /мес., 70% от доходности фонда',
+    },
+    {
+      name: 'Программа #1',
+      depositsAmount: '800.0',
+      createDate: '12/07/2021',
+      procents: '2',
+      desc: 'фикс. выплата 10% /мес., 70% от доходности фонда',
+    },
+    {
+      name: 'Программа #1',
+      depositsAmount: '0',
+      createDate: '32/07/2021',
+      procents: '1',
+      desc: 'фикс. выплата 10% /мес., 70% от доходности фонда',
+    },
+    {
+      name: 'Программа #1',
+      depositsAmount: '0',
+      createDate: '12/07/2021',
+      procents: '2',
+      desc: 'фикс. выплата 10% /мес., 70% от доходности фонда',
+    },
+    {
+      name: 'Программа #1',
+      depositsAmount: '0',
+      createDate: '12/07/2021',
+      procents: '3',
+      desc: 'фикс. выплата 10% /мес., 70% от доходности фонда',
+    },
   ]);
 
-  const [ programs, setPrograms ] = useState([
-    { name: "START" },
-    { name: "START" },
-    { name: "START" },
-    { name: "START" },
-    { name: "START" },
-    { name: "START" },
+  const [programs, setPrograms] = useState([
+    { name: 'START' },
+    { name: 'START' },
+    { name: 'START' },
+    { name: 'START' },
+    { name: 'START' },
+    { name: 'START' },
   ]);
-  const [ openFilter, setOpenFilter ] = useState(false);
+  const [openFilter, setOpenFilter] = useState(false);
 
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const user = appContext.user;
   const logOut = appContext.logOut;
-  const [ list, setList ] = useState(["START", "MASTER", "MAIN"]);
-  const [ checkList, setCheckList ] = useState([]);
-  const [ procents, setProcents ] = useState([]);
-  const [ procentsList, setProcentsList ] = useState(["0%", "30%", "50%"]);
-  const [ filter, setFilter ] = useState(false);
+  const [list, setList] = useState(['START', 'MASTER', 'MAIN']);
+  const [checkList, setCheckList] = useState([]);
+  const [procents, setProcents] = useState([]);
+  const [procentsList, setProcentsList] = useState(['0%', '30%', '50%']);
+  const [filter, setFilter] = useState(false);
 
   return (
     <>
@@ -75,37 +141,22 @@ export const AdminDepositsPrograms = () => {
               {openFilter ? t('hide') : t('show')}
             </Styled.ShowHide>
           </Styled.FilterHeader>
-          <CSSTransition
-            in={openFilter}
-            timeout={200}
-            classNames="filter"
-            unmountOnExit>
+          <CSSTransition in={openFilter} timeout={200} classNames="filter" unmountOnExit>
             <>
               <ContentWrap>
                 <Styled.SelectWrap style={{ minWidth: 280 }}>
                   <Styled.Label>{t('depositsPrograms.name')}</Styled.Label>
-                  <Select
-                    checkList={checkList}
-                    setCheckList={setCheckList}
-                    values={list}
-                  />
+                  <Select checkList={checkList} setCheckList={setCheckList} values={list} />
                 </Styled.SelectWrap>
                 <Styled.SelectWrap style={{ minWidth: 280 }}>
                   <Styled.Label>{t('depositsPrograms.depositSum')}</Styled.Label>
-                  <Input
-                    value={""}
-                    onChange={(value) => {}}
-                  />
+                  <Input value={''} onChange={(value) => undefined} />
                 </Styled.SelectWrap>
                 <Styled.SelectWrap style={{ minWidth: 133 }}>
                   <Styled.Label>{t('depositsPrograms.procents')}</Styled.Label>
-                  <Select
-                    checkList={procents}
-                    setCheckList={setProcents}
-                    values={procentsList}
-                  />
+                  <Select checkList={procents} setCheckList={setProcents} values={procentsList} />
                 </Styled.SelectWrap>
-                <Button danger onClick={() => {}} style={{ height: "40px" }}>
+                <Button danger onClick={() => undefined} style={{ height: '40px' }}>
                   {t('adminDeposit.btnApply')}
                 </Button>
               </ContentWrap>
@@ -125,25 +176,18 @@ export const AdminDepositsPrograms = () => {
               <TableHeadItem>{t('depositsPrograms.desc')}</TableHeadItem>
               <TableHeadItem>
                 <BurgerButton>
-                  <BurgerImg
-                    src={burgerGroup}
-                    alt="burger"
-                    onClick={() => setFilter(!filter)}
-                  />
+                  <BurgerImg src={burgerGroup} alt="burger" onClick={() => setFilter(!filter)} />
                   <Window open={filter}>
                     <WindowTitle>Сортировка</WindowTitle>
                     <WindowBody>
                       {[
-                        { name: "По убыванию даты" },
-                        { name: "По возрастанию даты" },
-                        { name: "Имя программы: От А до Я" },
-                        { name: "По убыванию суммы депозитов программы" },
-                        { name: "По возрастанию суммы депозитов программы" },
+                        { name: 'По убыванию даты' },
+                        { name: 'По возрастанию даты' },
+                        { name: 'Имя программы: От А до Я' },
+                        { name: 'По убыванию суммы депозитов программы' },
+                        { name: 'По возрастанию суммы депозитов программы' },
                       ].map((obj, index) => (
-                        <SortingItem
-                          active={filter}
-                          key={index}
-                          onClick={() => {}}>
+                        <SortingItem active={filter} key={index} onClick={() => undefined}>
                           {obj.name}
                         </SortingItem>
                       ))}
@@ -155,7 +199,7 @@ export const AdminDepositsPrograms = () => {
             {depositsPrograms.length ? (
               <Scrollbars style={{ height: '500px' }}>
                 {depositsPrograms.map((program, idx) => (
-                   <TableList key={depositsPrograms.indexOf(program)} data={program} />
+                  <TableList key={depositsPrograms.indexOf(program)} data={program} />
                 ))}
               </Scrollbars>
             ) : (
@@ -165,10 +209,10 @@ export const AdminDepositsPrograms = () => {
         </CardTable>
       </Content>
     </>
-  )
+  );
 };
 
-const TableList: FC<{ data: any }> = ({ data }) => {
+const TableList: FC<{ data: any }> = ({ data }: any) => {
   const [open, setOpen] = useState(false);
 
   const onClose = () => {
@@ -192,7 +236,6 @@ const TableList: FC<{ data: any }> = ({ data }) => {
     </div>
   );
 };
-
 
 const Input = styled.input`
   width: 100%;

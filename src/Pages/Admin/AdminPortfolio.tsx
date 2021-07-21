@@ -13,11 +13,7 @@ import { UpTitle } from '../../components/UI/UpTitle';
 import { AppContext } from '../../context/HubContext';
 import { ThemeContext } from '../../context/ThemeContext';
 import { Card } from '../../globalStyles';
-import {
-  CollectionPortfolio,
-  Portfolio,
-  RootPortfolio,
-} from '../../types/portfolio';
+import { CollectionPortfolio, Portfolio, RootPortfolio } from '../../types/portfolio';
 import { ModalPortfolio } from './AdminPay/Payments';
 import { Pagination } from './Pagination';
 import * as Styled from './Styled.elements';
@@ -31,7 +27,11 @@ import {
 } from './Styled.elements';
 import { SelectValues, SortingType } from '../../types/sorting';
 
-const TableList: FC<{ data: CollectionPortfolio }> = ({ data }) => {
+type Props = {
+  data: CollectionPortfolio;
+};
+
+const TableList: FC<Props> = ({ data }: Props) => {
   const [open, setOpen] = useState(false);
 
   const onClose = () => {
@@ -49,13 +49,9 @@ const TableList: FC<{ data: CollectionPortfolio }> = ({ data }) => {
         <ModalPortfolio onClose={onClose} data={data} />
       </CSSTransition>
       <TableBody onClick={modalOpen}>
-        <TableBodyItem>
-          {moment(data.creationDate).format('DD/MM/YYYY')}
-        </TableBodyItem>
+        <TableBodyItem>{moment(data.creationDate).format('DD/MM/YYYY')}</TableBodyItem>
         <TableBodyItem>{data.initialVolume}</TableBodyItem>
-        <TableBodyItem>
-          {(data.unitPrice / 100000).toFixed(2).toLocaleString()}
-        </TableBodyItem>
+        <TableBodyItem>{(data.unitPrice / 100000).toFixed(2).toLocaleString()}</TableBodyItem>
         <TableBodyItem>{data.volume}</TableBodyItem>
         <TableBodyItem></TableBodyItem>
       </TableBody>
@@ -100,8 +96,7 @@ export const AdminPortfolio = () => {
 
   const [sortingWindowOpenGCWD, setSortingWindowOpenGCWD] = useState(false);
   const [sortingWindowOpenMGCWD, setSortingWindowOpenMGCWD] = useState(false);
-  const [sortingWindowOpenDIAMOND, setSortingWindowOpenDIAMOND] =
-    useState(false);
+  const [sortingWindowOpenDIAMOND, setSortingWindowOpenDIAMOND] = useState(false);
 
   const [sortingGCWD, setSortingGCWD] = useState<SortingType[]>([]);
 
@@ -215,7 +210,7 @@ export const AdminPortfolio = () => {
           3,
           (currentPageGCWD - 1) * pageLengthGCWD,
           pageLengthGCWD,
-          sortingGCWD,
+          sortingGCWD
         )
         .then((res) => {
           setLoading(false);
@@ -237,7 +232,7 @@ export const AdminPortfolio = () => {
           2,
           (currentPageMGCWD - 1) * pageLengthMGCWD,
           pageLengthMGCWD,
-          sortingMGCWD,
+          sortingMGCWD
         )
         .then((res) => {
           setLoading(false);
@@ -259,7 +254,7 @@ export const AdminPortfolio = () => {
           4,
           (currentPageDIAMOND - 1) * pageLengthDIAMOND,
           pageLengthDIAMOND,
-          sortingDIAMOND,
+          sortingDIAMOND
         )
         .then((res) => {
           setLoading(false);
@@ -385,11 +380,8 @@ export const AdminPortfolio = () => {
               <UpTitle small>GCWD</UpTitle>
             </Styled.PayItemHead>
             <Styled.Radial
-              bg={
-                theme === 'light'
-                  ? 'rgba(255, 65, 110, 0.2)'
-                  : 'rgba(255, 65, 110, 1)'
-              }>
+              bg={theme === 'light' ? 'rgba(255, 65, 110, 0.2)' : 'rgba(255, 65, 110, 1)'}
+            >
               <span>{basket.GCWD}</span>
               <span></span>
             </Styled.Radial>
@@ -400,11 +392,8 @@ export const AdminPortfolio = () => {
             </Styled.PayItemHead>
 
             <Styled.Radial
-              bg={
-                theme === 'light'
-                  ? 'rgba(188, 212, 118, 0.2)'
-                  : 'rgba(188, 212, 118, 1)'
-              }>
+              bg={theme === 'light' ? 'rgba(188, 212, 118, 0.2)' : 'rgba(188, 212, 118, 1)'}
+            >
               <span>{basket.MGCWD}</span>
               <span></span>
             </Styled.Radial>
@@ -414,11 +403,8 @@ export const AdminPortfolio = () => {
               <UpTitle small>DIAMOND</UpTitle>
             </Styled.PayItemHead>
             <Styled.Radial
-              bg={
-                theme === 'light'
-                  ? 'rgba(109, 185, 255, 0.2)'
-                  : 'rgba(109, 185, 255, 1)'
-              }>
+              bg={theme === 'light' ? 'rgba(109, 185, 255, 0.2)' : 'rgba(109, 185, 255, 1)'}
+            >
               <span>{basket.DIAMOND}</span>
               <span></span>
             </Styled.Radial>
@@ -445,9 +431,7 @@ export const AdminPortfolio = () => {
             <TableHead>
               <TableHeadItem>{t('adminPortfolio.table.date')}</TableHeadItem>
               <TableHeadItem>{t('adminPortfolio.table.count')}</TableHeadItem>
-              <TableHeadItem>
-                {t('adminPortfolio.table.cost')}, CWD
-              </TableHeadItem>
+              <TableHeadItem>{t('adminPortfolio.table.cost')}, CWD</TableHeadItem>
               <TableHeadItem>{t('adminPortfolio.table.amount')}</TableHeadItem>
               {/* <TableHeadItem><Filter /></TableHeadItem> */}
               <TableHeadItem>
@@ -464,7 +448,8 @@ export const AdminPortfolio = () => {
                         <SortingItem
                           active={listForSortingGCWD[index].active}
                           key={index}
-                          onClick={() => getActiveSortGCWD(index)}>
+                          onClick={() => getActiveSortGCWD(index)}
+                        >
                           {obj.text}
                         </SortingItem>
                       ))}
@@ -501,9 +486,7 @@ export const AdminPortfolio = () => {
             <TableHead>
               <TableHeadItem>{t('adminPortfolio.table.date')}</TableHeadItem>
               <TableHeadItem>{t('adminPortfolio.table.count')}</TableHeadItem>
-              <TableHeadItem>
-                {t('adminPortfolio.table.cost')}, CWD
-              </TableHeadItem>
+              <TableHeadItem>{t('adminPortfolio.table.cost')}, CWD</TableHeadItem>
               <TableHeadItem>{t('adminPortfolio.table.amount')}</TableHeadItem>
               {/* <TableHeadItem><Filter /></TableHeadItem> */}
               <TableHeadItem>
@@ -521,7 +504,8 @@ export const AdminPortfolio = () => {
                       <SortingItem
                         active={listForSortingMGCWD[index].active}
                         key={index}
-                        onClick={() => getActiveSortMGCWD(index)}>
+                        onClick={() => getActiveSortMGCWD(index)}
+                      >
                         {obj.text}
                       </SortingItem>
                     ))}
@@ -555,9 +539,7 @@ export const AdminPortfolio = () => {
             <TableHead>
               <TableHeadItem>{t('adminPortfolio.table.date')}</TableHeadItem>
               <TableHeadItem>{t('adminPortfolio.table.count')}</TableHeadItem>
-              <TableHeadItem>
-                {t('adminPortfolio.table.cost')}, CWD
-              </TableHeadItem>
+              <TableHeadItem>{t('adminPortfolio.table.cost')}, CWD</TableHeadItem>
               <TableHeadItem>{t('adminPortfolio.table.amount')}</TableHeadItem>
               {/* <TableHeadItem><Filter /></TableHeadItem> */}
               <TableHeadItem>
@@ -575,7 +557,8 @@ export const AdminPortfolio = () => {
                       <SortingItem
                         active={listForSortingDIAMOND[index].active}
                         key={index}
-                        onClick={() => getActiveSortDIAMOND(index)}>
+                        onClick={() => getActiveSortDIAMOND(index)}
+                      >
                         {obj.text}
                       </SortingItem>
                     ))}
@@ -842,8 +825,7 @@ const HalfTab = styled.span<{ card?: boolean }>`
 `;
 
 const MobHalfTab = styled(HalfTab)`
-  border-bottom: ${(props) =>
-    props.card ? '1px solid #FF416E' : '1px solid #FFF'};
+  border-bottom: ${(props) => (props.card ? '1px solid #FF416E' : '1px solid #FFF')};
   padding-bottom: 6px;
   padding-top: 20px;
   width: 50%;
