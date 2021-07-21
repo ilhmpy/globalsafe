@@ -273,6 +273,9 @@ export const Approval: FC<Props> = ({
   }, [currentPage, hubConnection, pageLength, sorting]);
 
   const submitApproval = () => {
+    console.log(openDateApproval.from);
+    console.log(openDateApproval.to);
+
     if (hubConnection) {
       setCurrentPage(1);
       hubConnection
@@ -283,6 +286,7 @@ export const Approval: FC<Props> = ({
           searchSafeIDApproval.length ? searchSafeIDApproval : null,
           openDateApproval.from ? openDateApproval.from : null,
           openDateApproval.to ? openDateApproval.to : null,
+          null,
           null,
           null,
           null,
@@ -562,7 +566,6 @@ export const Approval: FC<Props> = ({
           ) : (
             <Styled.NotFound>{t('notFound')}</Styled.NotFound>
           )}
-          <Notification onDelete={onDelete} data={notifications} />
         </Styled.PaymentsTable>
       </Card>
 
@@ -573,6 +576,7 @@ export const Approval: FC<Props> = ({
         setCurrentPage={setCurrentPage}
         totalLottery={totalDeposits}
       />
+      <Notification onDelete={onDelete} data={notifications} />
     </>
   );
 };

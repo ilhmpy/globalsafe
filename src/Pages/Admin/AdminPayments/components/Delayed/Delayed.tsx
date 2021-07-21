@@ -251,6 +251,8 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
     amount: number,
     setDone: (status: boolean) => void,
   ) => {
+    console.log('amount', amount);
+    console.log('safeId', safeId);
     if (hubConnection) {
       hubConnection
         .invoke('PayPostponedPayment', safeId, amount)
@@ -281,6 +283,7 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
     }
   };
 
+  console.log(list);
 
   return (
     <div>
@@ -305,7 +308,7 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
                   onChange={(e) => setName(e.target.value.toLowerCase())}
                 />
               </SelectWrapTwo>
-              <SelectWrapTwo mWidth="190px">
+              <SelectWrapTwo mWidth="180px">
                 <Label>{t('adminPay.filter.deposit')}</Label>
                 <Select
                   checkList={checkList}
@@ -313,14 +316,14 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
                   values={listDeposits}
                 />
               </SelectWrapTwo>
-              <SelectWrapTwo mWidth="210px">
+              <SelectWrapTwo mWidth="200px">
                 <TestInput
                   setOpenDate={setOpenDate}
                   openDate={openDate}
                   label={t('adminPay.filter.date')}
                 />
               </SelectWrapTwo>
-              <SelectWrapTwo mWidth="210px">
+              <SelectWrapTwo mWidth="200px">
                 <TestInput
                   setOpenDate={setCloseDate}
                   openDate={closeDate}
@@ -399,7 +402,7 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
               {list.map((item, idx) => (
                 <TableRow
                   key={item.safeId}
-                  idx={idx + (currentPage - 1) * pageLength}
+                  idx={idx + 1 + (currentPage - 1) * pageLength}
                   item={item}
                   confirmPay={confirmPay}
                 />
