@@ -301,14 +301,14 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
           unmountOnExit>
           <SelectContainer>
             <SelectContainerInnerPaid>
-              <SelectWrapTwo mWidth="190px">
+              <SelectWrapTwo mWidth="165px">
                 <Label>{t('adminPay.filter.user')}</Label>
                 <Input
                   value={name}
                   onChange={(e) => setName(e.target.value.toLowerCase())}
                 />
               </SelectWrapTwo>
-              <SelectWrapTwo mWidth="180px">
+              <SelectWrapTwo mWidth="165px">
                 <Label>{t('adminPay.filter.deposit')}</Label>
                 <Select
                   checkList={checkList}
@@ -316,14 +316,14 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
                   values={listDeposits}
                 />
               </SelectWrapTwo>
-              <SelectWrapTwo mWidth="200px">
+              <SelectWrapTwo mWidth="180px">
                 <TestInput
                   setOpenDate={setOpenDate}
                   openDate={openDate}
                   label={t('adminPay.filter.date')}
                 />
               </SelectWrapTwo>
-              <SelectWrapTwo mWidth="200px">
+              <SelectWrapTwo mWidth="180px">
                 <TestInput
                   setOpenDate={setCloseDate}
                   openDate={closeDate}

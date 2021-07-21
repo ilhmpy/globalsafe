@@ -108,7 +108,7 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
           null,
           0,
           80,
-          []
+          [],
         )
         .then((res) => {
           setDataTwo(res.collection);

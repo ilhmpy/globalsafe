@@ -165,7 +165,9 @@ export const AdminDeposit = () => {
 
   const myLoad = () => {
     setCount(false);
+    setDepositsList([]);
     setLoading(true);
+
     if (hubConnection) {
       hubConnection
         .invoke<RootPayments>(
@@ -191,10 +193,12 @@ export const AdminDeposit = () => {
             setDepositsList(res.collection);
             setCount(true);
             setNum(num + 20);
+            setLoading(false);
           }
-          setLoading(false);
         })
-        .catch((err: Error) => console.log(err));
+        .catch((err: Error) => {
+          console.log(err);
+        });
     }
   };
 
@@ -205,7 +209,9 @@ export const AdminDeposit = () => {
         .then((res) => {
           setListDeposits(res.collection);
         })
-        .catch((err: Error) => console.log(err));
+        .catch((err: Error) => {
+          console.log(err);
+        });
     }
   }, [hubConnection]);
 
@@ -216,6 +222,31 @@ export const AdminDeposit = () => {
   const submit = () => {
     if (hubConnection) {
       setCurrentPage(1);
+      setDepositsList([]);
+      setLoading(true);
+      console.log(new Date(`${openDate.from}`).toISOString());
+      console.log(typeof openDate.from);
+      console.log(typeof new Date(`${openDate.from}`));
+      console.log(new Date(`${openDate.from}`));
+
+      console.log(
+        'GetUsersDeposits',
+        [1, 2, 3, 4, 5, 6],
+        name ? name.toLowerCase() : null,
+        searchSafeID.length ? searchSafeID : null,
+        openDate.from ? new Date(`${openDate.from}`) : null,
+        openDate.to ? new Date(`${openDate.to}`) : null,
+        closeDate.from ? closeDate.from : null,
+        closeDate.to ? closeDate.from : null,
+        null,
+        null,
+        null,
+        null,
+        (currentPage - 1) * pageLength,
+        pageLength,
+        sorting,
+      );
+
       hubConnection
         .invoke<RootPayments>(
           'GetUsersDeposits',
@@ -235,7 +266,6 @@ export const AdminDeposit = () => {
           sorting,
         )
         .then((res) => {
-          setDepositsList([]);
           setTotalList(res.totalRecords);
           setLoading(false);
           setNum(20);
