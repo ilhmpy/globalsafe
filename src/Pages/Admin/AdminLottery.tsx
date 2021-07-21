@@ -426,10 +426,9 @@ export const AdminLottery = () => {
 };
 
 const Window = styled(SortingWindow)`
-  right: 66px;
-  top: 366px;
-  @media (max-width: 768px) {
-    right: 40px;
-    top: 316px;
+  right: -15px;
+  top: 59px;
+  @media (max-width: 694px) {
+    top: 73px;
   }
 `;

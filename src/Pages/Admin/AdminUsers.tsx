@@ -107,7 +107,7 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }: PropsTa
           null,
           0,
           80,
-          [],
+          []
         )
         .then((res) => {
           setDataTwo(res.collection);
@@ -501,16 +501,10 @@ export const AdminUsers = () => {
 };
 
 const Window = styled(SortingWindow)`
-  right: 64px;
-  top: 226px;
-  @media (max-width: 992px) {
-    top: 230px;
-  }
-  @media (max-width: 768px) {
-    top: 210px;
-    right: 50px;
-  }
+  right: 0px;
+  top: 18px;
 `;
+
 const Sort = styled(SortingItem)`
   &:nth-child(3) {
     @media (max-width: 992px) {
@@ -631,6 +625,7 @@ const TableHeadItem = styled.li`
     }
   }
   &:last-child {
+    position: relative;
     @media only screen and (max-device-width: 992px) {
       text-align: center;
     }

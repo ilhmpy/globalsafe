@@ -21,6 +21,7 @@ export const TableHeadItem = styled.li`
   letter-spacing: 0.1px;
   color: ${(props) => props.theme.thHead};
   width: 100%;
+  position: relative;
   &:nth-child(1) {
     white-space: nowrap;
     overflow: hidden;

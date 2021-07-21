@@ -60,16 +60,10 @@ const AdminDepositList: FC<PayProps> = ({ data }: PayProps) => {
       <TableBody onClick={modalOpen}>
         <TableBodyItem>{data.userName}</TableBodyItem>
         <TableBodyItem>{data.deposit.name}</TableBodyItem>
-        <TableBodyItem>
-          {moment(data.creationDate).format('DD/MM/YYYY')}
-        </TableBodyItem>
-        <TableBodyItem>
-          {moment(data.endDate).format('DD/MM/YYYY')}
-        </TableBodyItem>
+        <TableBodyItem>{moment(data.creationDate).format('DD/MM/YYYY')}</TableBodyItem>
+        <TableBodyItem>{moment(data.endDate).format('DD/MM/YYYY')}</TableBodyItem>
         <TableBodyItem>{data.amountView ? data.amountView : '-'}</TableBodyItem>
-        <TableBodyItem>
-          {moment(data.paymentDate).format('DD/MM/YYYY')}
-        </TableBodyItem>
+        <TableBodyItem>{moment(data.paymentDate).format('DD/MM/YYYY')}</TableBodyItem>
         <TableBodyItem>{data.payedAmountView}</TableBodyItem>
         <TableBodyItem></TableBodyItem>
       </TableBody>
@@ -78,9 +72,7 @@ const AdminDepositList: FC<PayProps> = ({ data }: PayProps) => {
 };
 
 export const AdminDeposit = () => {
-  const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>(
-    [],
-  );
+  const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>([]);
   const [loading, setLoading] = useState(true);
   const [depositsList, setDepositsList] = useState<PaymentsCollection[]>([]);
   const [totalList, setTotalList] = useState(0);
@@ -185,7 +177,7 @@ export const AdminDeposit = () => {
           null,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting,
+          sorting
         )
         .then((res) => {
           setTotalList(res.totalRecords);
@@ -241,7 +233,7 @@ export const AdminDeposit = () => {
           null,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting,
+          sorting
         )
         .then((res) => {
           setTotalList(res.totalRecords);
@@ -304,27 +296,16 @@ export const AdminDeposit = () => {
             {open ? t('hide') : t('show')}
           </Styled.ShowHide>
         </Styled.FilterHeader>
-        <CSSTransition
-          in={open}
-          timeout={200}
-          classNames="filter"
-          unmountOnExit>
+        <CSSTransition in={open} timeout={200} classNames="filter" unmountOnExit>
           <Styled.SelectContainer>
             <Styled.SelectContainerInner>
               <Styled.SelectWrap>
                 <Styled.Label>{t('adminDeposit.labelUser')}</Styled.Label>
-                <Input
-                  value={name}
-                  onChange={(e) => setName(e.target.value.toLowerCase())}
-                />
+                <Input value={name} onChange={(e) => setName(e.target.value.toLowerCase())} />
               </Styled.SelectWrap>
               <Styled.SelectWrap style={{ minWidth: 233 }}>
                 <Styled.Label>{t('adminDeposit.labelProgram')}</Styled.Label>
-                <Select
-                  checkList={checkList}
-                  setCheckList={setCheckList}
-                  values={listDeposits}
-                />
+                <Select checkList={checkList} setCheckList={setCheckList} values={listDeposits} />
               </Styled.SelectWrap>
               <Styled.SelectWrap input>
                 <TestInput
@@ -373,7 +354,8 @@ export const AdminDeposit = () => {
                     <Sort
                       active={listForSorting[index].active}
                       key={index}
-                      onClick={() => getActiveSort(index)}>
+                      onClick={() => getActiveSort(index)}
+                    >
                       {obj.text}
                     </Sort>
                   ))}
