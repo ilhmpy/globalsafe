@@ -390,17 +390,14 @@ export const InfoBalance = () => {
   };
 
   const getTopUp = () => {
-    linkOpen(`https://cwd.global/shopping/payment?to_name=stella3&amount=${balanceValue}`)
-    // if (hubConnection) {
-    //   hubConnection
-    //     .invoke('GetTopUpUrl', +balanceValue * 100000)
-    //     .then((res: string) => {
-    //       console.log('.then ~~~~~~~~~~ res', res)
-    //       // https://cwd.global/shopping/payment?to_name=stella3&amount=222
-    //       // linkOpen(res);
-    //     })
-    //     .catch((err: Error) => console.log(err));
-    // }
+    if (hubConnection) {
+      hubConnection
+        .invoke('GetTopUpUrl', +balanceValue * 100000)
+        .then((res: string) => {
+          linkOpen(res);
+        })
+        .catch((err: Error) => console.log(err));
+    }
   };
 
   const onChangeBalanceValue = (e: React.ChangeEvent<HTMLInputElement>) => {
