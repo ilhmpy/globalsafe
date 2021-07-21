@@ -246,8 +246,6 @@ export const InfoBalance = () => {
     }
   }, [hubConnection, openDate, balanceLogs, languale]);
 
-  // console.log("balanceLog", balanceLog);
-
   const myLoad = () => {
     setCount(false);
     if (hubConnection && depositList.length < totalDeposit) {
@@ -289,7 +287,7 @@ export const InfoBalance = () => {
         });
     }
   };
-  // console.log("balance", balanceLog);
+
   useEffect(() => {
     if (hubConnection) {
       hubConnection
@@ -373,13 +371,18 @@ export const InfoBalance = () => {
   };
 
   const getTopUp = () => {
+    const newWindow = window.open();
     if (hubConnection) {
       hubConnection
         .invoke('GetTopUpUrl', +balanceValue * 100000)
         .then((res: string) => {
-          linkOpen(res);
+          // linkOpen(res);
+          newWindow && (newWindow.location.href = res);
         })
-        .catch((err: Error) => console.log(err));
+        .catch((err: Error) => {
+          console.log(err);
+          newWindow && newWindow.close();
+        });
     }
   };
 
