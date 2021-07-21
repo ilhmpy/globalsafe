@@ -188,6 +188,7 @@ export const InfoMain = () => {
         .catch((err: Error) => {
           setWithdraw(false);
           setWithdrawValue("");
+          console.log(err);
           alert(t("alert.error"), t("alert.errorMsg"), "danger");
           setWithdrawValueLoad(false);
         });

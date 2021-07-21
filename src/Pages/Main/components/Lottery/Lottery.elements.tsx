@@ -20,8 +20,7 @@ export const CloseIcon = styled(Close)`
 export const TimerContainer = styled.div`
   position: relative;
   margin: 40px auto;
-  /* background: ${(props) => props.theme.card.backgroundAlfa}; */
-  background: rgba(255, 255, 255, 0.9);
+  background: ${(props) => props.theme.card.backgroundAlfa};
   border: 1px solid rgba(86, 101, 127, 0.05);
   box-sizing: border-box;
   border-radius: 20px;
