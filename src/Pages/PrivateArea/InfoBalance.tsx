@@ -116,7 +116,6 @@ export const InfoBalance = () => {
   const [depositList, setDepositList] = useState<any>([]);
   const [chartList, setChartList] = useState<any>({});
   const inputRef = useRef<any>(null);
-  const [windowLink, setWindowLink] = useState('');
 
   useEffect(() => {
     if (hubConnection) {
@@ -260,7 +259,6 @@ export const InfoBalance = () => {
     }
   }, [hubConnection, openDate, balanceLogs, languale]);
 
-
   const myLoad = () => {
     setCount(false);
     if (hubConnection && depositList.length < totalDeposit) {
@@ -384,25 +382,24 @@ export const InfoBalance = () => {
     options.push(<option value={year}>{year}</option>);
   }
 
-
   const linkOpen = (res: string) => {
     const newWindow = window.open();
     newWindow && (newWindow.location.href = res);
   };
 
-  useEffect(() => {
-    linkOpen(windowLink);
-  }, [windowLink]);
-
   const getTopUp = () => {
+    const newWindow = window.open();
     if (hubConnection) {
       hubConnection
         .invoke('GetTopUpUrl', +balanceValue * 100000)
         .then((res: string) => {
           // linkOpen(res);
-          setWindowLink(res);
+          newWindow && (newWindow.location.href = res);
         })
-        .catch((err: Error) => console.log(err));
+        .catch((err: Error) => {
+          console.log(err);
+          newWindow && newWindow.close();
+        });
     }
   };
 
