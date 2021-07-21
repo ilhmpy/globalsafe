@@ -20,7 +20,7 @@ import { CollectionListDeposits } from '../../../../../types/deposits';
 import { Notify } from '../../../../../types/notify';
 import {
   PaymentsCollection,
-  RootPayments,
+  RootPayments
 } from '../../../../../types/payments';
 import { SelectValues, SortingType } from '../../../../../types/sorting';
 import { DepositList } from '../../../AdminPay/DepositList';
@@ -40,7 +40,7 @@ import {
   SortingItem,
   SortingWindow,
   WindowBody,
-  WindowTitle,
+  WindowTitle
 } from '../../../Styled.elements';
 import * as Styled from './Styled.elements';
 
@@ -275,6 +275,24 @@ export const Approval: FC<Props> = ({
   const submitApproval = () => {
     console.log(openDateApproval.from);
     console.log(openDateApproval.to);
+
+    console.log(
+      'GetUsersDeposits',
+      depositState,
+      nameApproval ? nameApproval.toLowerCase() : null,
+      searchSafeIDApproval.length ? searchSafeIDApproval : null,
+      openDateApproval.from ? openDateApproval.from : null,
+      openDateApproval.to ? openDateApproval.to : null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      (currentPage - 1) * pageLength,
+      pageLength,
+      sorting,
+    );
 
     if (hubConnection) {
       setCurrentPage(1);
