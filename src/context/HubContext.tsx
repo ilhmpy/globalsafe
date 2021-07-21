@@ -1,10 +1,10 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
-import * as signalR from "@microsoft/signalr";
-import { API_URL } from "../constantes/api";
-import useLocalStorage from "../hooks/useLocalStorage";
-import { useHistory } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { BalanceList } from "../types/balance";
+import React, { FC, ReactNode, useCallback, useEffect, useState } from 'react';
+import * as signalR from '@microsoft/signalr';
+import { API_URL } from '../constantes/api';
+import useLocalStorage from '../hooks/useLocalStorage';
+import { useHistory } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { BalanceList } from '../types/balance';
 type Nulable<T> = T | null;
 
 type Context = {
@@ -21,23 +21,21 @@ type Context = {
 export const AppContext = React.createContext<Context>({
   hubConnection: null,
   user: null,
-  logOut: () => {},
-  login: () => {},
+  logOut: () => undefined,
+  login: () => undefined,
   loading: true,
   balance: null,
   isAdmin: null,
   balanceList: null,
 });
 
-export const HubProvider: FC = ({ children }) => {
-  const [hubConnection, setHubConnection] = useState<
-    Nulable<signalR.HubConnection>
-  >(null);
+export const HubProvider: FC = ({ children }: any) => {
+  const [hubConnection, setHubConnection] = useState<Nulable<signalR.HubConnection>>(null);
   const [user, setUser] = useState<null | string | false>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [balance, setBalance] = useState<null | number>(null);
   const [isAdmin, setIsAdmin] = useState<null | boolean>(null);
-  const [myToken, setMyToken] = useLocalStorage("token");
+  const [myToken, setMyToken] = useLocalStorage('token');
   const [balanceList, setBalanceList] = useState<BalanceList[] | null>(null);
   const history = useHistory();
   const { i18n } = useTranslation();
@@ -58,47 +56,39 @@ export const HubProvider: FC = ({ children }) => {
       .then(() => {
         setHubConnection(hubConnection);
       })
-      .catch(e => console.log(e));
+      .catch((e) => console.log(e));
   }, [myToken]);
   // console.log("balanceList", balanceList);
   useEffect(() => {
     if (hubConnection) {
-      hubConnection.on("BalanceUpdate", (data) => {
-        console.log("BalanceUpdate", data);
+      hubConnection.on('BalanceUpdate', (data) => {
+        console.log('BalanceUpdate', data);
         if (balanceList) {
-          const idx = balanceList.findIndex(
-            (item) => item.balanceKind === data.balanceKind
-          );
-          setBalanceList([
-            ...balanceList.slice(0, idx),
-            data,
-            ...balanceList.slice(idx + 1),
-          ]);
+          const idx = balanceList.findIndex((item) => item.balanceKind === data.balanceKind);
+          setBalanceList([...balanceList.slice(0, idx), data, ...balanceList.slice(idx + 1)]);
         }
         if (data.balanceKind === 1) {
           setBalance(data.volume);
         }
       });
       hubConnection
-        .invoke("GetSigned")
+        .invoke('GetSigned')
         .then((res) => {
-          console.log("GetSigned", res);
+          console.log('GetSigned', res);
           setUser(res.name);
           setLoading(false);
           if (res.balances) {
-            const newArr = res.balances.filter(
-              (item: any) => item.balanceKind === 1
-            );
+            const newArr = res.balances.filter((item: any) => item.balanceKind === 1);
             setBalance(newArr[0].volume);
 
-            i18n.changeLanguage(res.languageCode === 1 ? "ru" : "en");
+            i18n.changeLanguage(res.languageCode === 1 ? 'ru' : 'en');
             const balanceList = res.balances.map((item: any) => ({
               balanceKind: item.balanceKind,
               volume: item.volume,
             }));
             setBalanceList(res.balances);
           }
-          if (res.roles.length && res.roles[0].name === "administrator") {
+          if (res.roles.length && res.roles[0].name === 'administrator') {
             setIsAdmin(true);
           } else {
             setIsAdmin(false);
@@ -122,7 +112,7 @@ export const HubProvider: FC = ({ children }) => {
     setMyToken(null);
     setUser(null);
     setIsAdmin(false);
-    history.replace("/");
+    history.replace('/');
   };
 
   const login = (token: string) => {

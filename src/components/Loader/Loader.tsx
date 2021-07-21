@@ -1,7 +1,8 @@
-import { Loading } from "../UI/Loading";
-import styled from "styled-components";
+import React, { FC } from 'react';
+import { Loading } from '../UI/Loading';
+import styled from 'styled-components';
 
-export const Loader = () => {
+export const Loader: FC = () => {
   return (
     <LoaderWrap>
       <Loading />

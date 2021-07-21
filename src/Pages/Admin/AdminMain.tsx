@@ -22,9 +22,9 @@ import { PaymentsStat } from '../../types/main';
 import * as Styled from './Styled.elements';
 
 export const AdminMain = () => {
-  let currentMonth = moment().format('MMYYYY');
-  let year = moment().format('YYYY');
-  let prevMonth = moment().subtract(1, 'months').date(1).format('MMYYYY');
+  const currentMonth = moment().format('MMYYYY');
+  const year = moment().format('YYYY');
+  const prevMonth = moment().subtract(1, 'months').date(1).format('MMYYYY');
   // let currentMonthStart: any = moment(currentMonth, "M.YYYY").startOf("month");
   // let currentMonthEnd: any = moment(currentMonth, "M.YYYY").endOf("month");
 
@@ -77,11 +77,7 @@ export const AdminMain = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<PaymentsStat>(
-          'GetDepositsCreationStat',
-          depositsDate.from,
-          depositsDate.to,
-        )
+        .invoke<PaymentsStat>('GetDepositsCreationStat', depositsDate.from, depositsDate.to)
         .then((res) => {
           setDepositsCreationStat(res);
         })
@@ -92,11 +88,7 @@ export const AdminMain = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<PaymentsStat>(
-          'GetDepositsClosingStat',
-          closeDate.from,
-          closeDate.to,
-        )
+        .invoke<PaymentsStat>('GetDepositsClosingStat', closeDate.from, closeDate.to)
         .then((res) => {
           setDepositsClosedStat(res);
         })
@@ -138,9 +130,7 @@ export const AdminMain = () => {
   }, [hubConnection, selectedDay]);
 
   const start: any = moment(new Date(selectedDay).setHours(0, 0, 0, 0)).utc();
-  const end: any = moment(
-    new Date(selectedDay).setHours(23, 59, 59, 999),
-  ).utc();
+  const end: any = moment(new Date(selectedDay).setHours(23, 59, 59, 999)).utc();
 
   useEffect(() => {
     if (hubConnection) {
@@ -262,11 +252,7 @@ export const AdminMain = () => {
                 </TabsItem>
               </TabsChart>
               <TabsContent active={card === 0}>
-                <CSSTransition
-                  in={card === 0}
-                  timeout={300}
-                  classNames="chart"
-                  unmountOnExit>
+                <CSSTransition in={card === 0} timeout={300} classNames="chart" unmountOnExit>
                   <ColumnChart
                     date={
                       Object.keys(depositsCreationStat).length
@@ -275,20 +261,14 @@ export const AdminMain = () => {
                     }
                     value={
                       Object.values(depositsCreationStat).length
-                        ? Object.values(depositsCreationStat).map(
-                            (i: any) => i[0],
-                          )
+                        ? Object.values(depositsCreationStat).map((i: any) => i[0])
                         : ['']
                     }
                   />
                 </CSSTransition>
               </TabsContent>
               <TabsContent active={card === 1}>
-                <CSSTransition
-                  in={card === 1}
-                  timeout={300}
-                  classNames="chart"
-                  unmountOnExit>
+                <CSSTransition in={card === 1} timeout={300} classNames="chart" unmountOnExit>
                   <ColumnChartCwd
                     date={
                       Object.keys(depositsCreationStat).length
@@ -297,9 +277,7 @@ export const AdminMain = () => {
                     }
                     value={
                       Object.values(depositsCreationStat).length
-                        ? Object.values(depositsCreationStat).map(
-                            (i: any) => i[1] / 100000,
-                          )
+                        ? Object.values(depositsCreationStat).map((i: any) => i[1] / 100000)
                         : ['']
                     }
                   />
@@ -310,9 +288,7 @@ export const AdminMain = () => {
           <LastChartItem>
             <ChartItem>
               <ChartItemHead>
-                <ChartItemTitle small>
-                  {t('adminMain.depositsToClose')}
-                </ChartItemTitle>
+                <ChartItemTitle small>{t('adminMain.depositsToClose')}</ChartItemTitle>
                 <MainAdminInput
                   setOpenDate={setCloseDate}
                   openDate={closeDate}
@@ -321,15 +297,11 @@ export const AdminMain = () => {
               </ChartItemHead>
               <ChartInner>
                 <TabsChart>
-                  <TabsItem
-                    active={cardClosed === 0}
-                    onClick={() => setCardClosed(0)}>
+                  <TabsItem active={cardClosed === 0} onClick={() => setCardClosed(0)}>
                     CNT
                   </TabsItem>
                   <TabsItem>/</TabsItem>
-                  <TabsItem
-                    active={cardClosed === 1}
-                    onClick={() => setCardClosed(1)}>
+                  <TabsItem active={cardClosed === 1} onClick={() => setCardClosed(1)}>
                     CWD
                   </TabsItem>
                 </TabsChart>
@@ -338,7 +310,8 @@ export const AdminMain = () => {
                     in={cardClosed === 0}
                     timeout={300}
                     classNames="chart"
-                    unmountOnExit>
+                    unmountOnExit
+                  >
                     <ColumnChart
                       date={
                         Object.keys(depositsClosedStat).length
@@ -347,9 +320,7 @@ export const AdminMain = () => {
                       }
                       value={
                         Object.values(depositsClosedStat).length
-                          ? Object.values(depositsClosedStat).map(
-                              (i: any) => i[0],
-                            )
+                          ? Object.values(depositsClosedStat).map((i: any) => i[0])
                           : ['']
                       }
                     />
@@ -360,7 +331,8 @@ export const AdminMain = () => {
                     in={cardClosed === 1}
                     timeout={300}
                     classNames="chart"
-                    unmountOnExit>
+                    unmountOnExit
+                  >
                     <ColumnChartCwd
                       date={
                         Object.keys(depositsClosedStat).length
@@ -369,9 +341,7 @@ export const AdminMain = () => {
                       }
                       value={
                         Object.values(depositsClosedStat).length
-                          ? Object.values(depositsClosedStat).map(
-                              (i: any) => i[1] / 100000,
-                            )
+                          ? Object.values(depositsClosedStat).map((i: any) => i[1] / 100000)
                           : ['']
                       }
                     />
@@ -387,9 +357,7 @@ export const AdminMain = () => {
         <MainChartsContainer>
           <ChartItem>
             <ChartItemHead>
-              <ChartItemTitle small>
-                {t('adminMain.chartTitle1')}
-              </ChartItemTitle>
+              <ChartItemTitle small>{t('adminMain.chartTitle1')}</ChartItemTitle>
               <MainAdminInput
                 setOpenDate={setOpenDate}
                 openDate={openDate}
@@ -397,11 +365,7 @@ export const AdminMain = () => {
               />
             </ChartItemHead>
             <ColumnChartTwo
-              date={
-                Object.keys(paymentsStat).length
-                  ? Object.keys(paymentsStat)
-                  : ['']
-              }
+              date={Object.keys(paymentsStat).length ? Object.keys(paymentsStat) : ['']}
               value={
                 Object.values(paymentsStat).length
                   ? Object.values(paymentsStat).map((i) => i / 100000)
@@ -412,9 +376,7 @@ export const AdminMain = () => {
           <LastChartItem>
             <ChartItem>
               <ChartItemHead>
-                <ChartItemTitleLast small>
-                  {t('adminMain.chartTitle2')}
-                </ChartItemTitleLast>
+                <ChartItemTitleLast small>{t('adminMain.chartTitle2')}</ChartItemTitleLast>
                 <MainAdminInput
                   setOpenDate={setStatDate}
                   openDate={statDate}
@@ -422,11 +384,7 @@ export const AdminMain = () => {
                 />
               </ChartItemHead>
               <ColumnChartThree
-                date={
-                  Object.keys(revenueStat).length
-                    ? Object.keys(revenueStat)
-                    : ['']
-                }
+                date={Object.keys(revenueStat).length ? Object.keys(revenueStat) : ['']}
                 value={
                   Object.values(revenueStat).length
                     ? Object.values(revenueStat).map((i) => i / 100000)

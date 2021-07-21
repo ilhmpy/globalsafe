@@ -1,26 +1,26 @@
-import React, { useState, FC, useContext, useEffect } from "react";
-import * as Styled from "../Styled.elements";
-import { DateInput } from "../../../components/UI/DatePicker";
-import { SliderComponent } from "../../../components/Slider/Slider";
-import { FakeInput } from "../../../components/UI/FakeInput";
-import { Button } from "../../../components/Button/Button";
-import { AppContext } from "../../../context/HubContext";
-import { CollectionGetDraw } from "../../../types/lottery";
-import { useTranslation } from "react-i18next";
-import moment from "moment";
+import React, { useState, FC, useContext, useEffect } from 'react';
+import * as Styled from '../Styled.elements';
+import { DateInput } from '../../../components/UI/DatePicker';
+import { SliderComponent } from '../../../components/Slider/Slider';
+import { FakeInput } from '../../../components/UI/FakeInput';
+import { Button } from '../../../components/Button/Button';
+import { AppContext } from '../../../context/HubContext';
+import { CollectionGetDraw } from '../../../types/lottery';
+import { useTranslation } from 'react-i18next';
+import moment from 'moment';
 
 type Props = {
   data: CollectionGetDraw;
   drawListEdited: (item: CollectionGetDraw) => void;
 };
 
-export const Writing: FC<Props> = ({ data, drawListEdited }) => {
+export const Writing: FC<Props> = ({ data, drawListEdited }: Props) => {
   const [sliderValue, setSliderValue] = useState(data.delay || 0);
   const [startDate, setStartDate] = useState<Date | null>(
-    data.startDate ? new Date(data.startDate + "Z") : null
+    data.startDate ? new Date(data.startDate + 'Z') : null
   );
   const [endDate, setEndDate] = useState<Date | null>(
-    data.nextDraw ? new Date(data.nextDraw + "Z") : null
+    data.nextDraw ? new Date(data.nextDraw + 'Z') : null
   );
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
@@ -33,14 +33,14 @@ export const Writing: FC<Props> = ({ data, drawListEdited }) => {
     if (hubConnection) {
       hubConnection
         .invoke(
-          "ModyfyDrawAsync",
+          'ModyfyDrawAsync',
           data.safeId,
           state ? state : data.state,
           value ? value : sliderValue,
           endDate ? moment.utc(endDate) : endDate
         )
         .then((res) => {
-          console.log("ModyfyDrawAsync", res);
+          console.log('ModyfyDrawAsync', res);
           drawListEdited(res);
         })
         .catch((e) => {
@@ -51,7 +51,7 @@ export const Writing: FC<Props> = ({ data, drawListEdited }) => {
 
   const onAfterChange = (value: number) => {
     setSliderValue(value);
-    const time: any = moment(startDate).add(sliderValue, "hours");
+    const time: any = moment(startDate).add(sliderValue, 'hours');
     setEndDate(time._d);
     modyfyDrawState(value, null, null);
   };
@@ -74,35 +74,28 @@ export const Writing: FC<Props> = ({ data, drawListEdited }) => {
             <DateInput
               startDate={startDate}
               setStartDate={setStartDate}
-              label={t("writting.startDate")}
+              label={t('writting.startDate')}
               readOnly
             />
           </Styled.InputLottery>
           <Styled.InputLottery>
-            <FakeInput hours={sliderValue} label={t("writting.repeat")} />
+            <FakeInput hours={sliderValue} label={t('writting.repeat')} />
           </Styled.InputLottery>
           <Styled.SliderWrap>
-            <SliderComponent
-              value={sliderValue}
-              onAfterChange={onAfterChange}
-            />
+            <SliderComponent value={sliderValue} onAfterChange={onAfterChange} />
           </Styled.SliderWrap>
           <Styled.InputLottery>
-            <DateInput
-              startDate={endDate}
-              setStartDate={changeDate}
-              label={t("writting.next")}
-            />
+            <DateInput startDate={endDate} setStartDate={changeDate} label={t('writting.next')} />
           </Styled.InputLottery>
           {/* </Styled.SliderContainerInner> */}
           <Styled.InputLottery mrn>
             <Button dangerOutline onClick={cancelLottery}>
-              {t("writting.cancel")}
+              {t('writting.cancel')}
             </Button>
           </Styled.InputLottery>
         </Styled.SelectContainerLottery>
       ) : (
-        ""
+        ''
       )}
     </>
   );

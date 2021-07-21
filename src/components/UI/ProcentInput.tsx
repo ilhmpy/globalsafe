@@ -9,22 +9,12 @@ type Props = {
   placeholder: string;
 };
 
-export const ProcentInput: FC<Props> = ({
-  onChange,
-  value,
-  label,
-  placeholder,
-}) => {
+export const ProcentInput: FC<Props> = ({ onChange, value, label, placeholder }: Props) => {
   return (
     <Container>
       <InputWrap>
         <Label>{label}</Label>
-        <Input
-          type="text"
-          value={value}
-          placeholder={placeholder}
-          onChange={onChange}
-        />
+        <Input type="text" value={value} placeholder={placeholder} onChange={onChange} />
         <Val>%</Val>
       </InputWrap>
     </Container>

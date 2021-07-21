@@ -30,7 +30,7 @@ type BalanceTableProps = {
   balanceLog: any;
 };
 
-const BalanceTable: FC<BalanceTableProps> = ({ balanceLog }) => {
+const BalanceTable: FC<BalanceTableProps> = ({ balanceLog }: BalanceTableProps) => {
   const [divModal, setDivModal] = useState(false);
   const { t } = useTranslation();
 
@@ -61,21 +61,14 @@ const BalanceTable: FC<BalanceTableProps> = ({ balanceLog }) => {
   return (
     <>
       <div>
-        {divModal && (
-          <ModalDividends open={divModal} data={balanceLog} onClose={onClose} />
-        )}
+        {divModal && <ModalDividends open={divModal} data={balanceLog} onClose={onClose} />}
         <Styled.DataListItem
           divident={balanceLog.operationKind === 7}
-          onClick={() => dividentModal(balanceLog.operationKind)}>
-          <Styled.DataListName>
-            {operation(balanceLog.operationKind)}
-          </Styled.DataListName>
+          onClick={() => dividentModal(balanceLog.operationKind)}
+        >
+          <Styled.DataListName>{operation(balanceLog.operationKind)}</Styled.DataListName>
           <Styled.DataListSum plus={balanceLog.balance >= 0}>
-            {balanceLog.balance < 0
-              ? ''
-              : balanceLog.operationKind !== 6
-              ? '+'
-              : '-'}{' '}
+            {balanceLog.balance < 0 ? '' : balanceLog.operationKind !== 6 ? '+' : '-'}{' '}
             {(balanceLog.balance / 100000).toLocaleString('ru-RU', {
               maximumFractionDigits: 5,
             })}
@@ -98,9 +91,7 @@ export const InfoBalance = () => {
     to: new Date(),
   });
   const { t } = useTranslation();
-  const [selected, setSelected] = useState<string | never>(
-    t('privateArea.allTime'),
-  );
+  const [selected, setSelected] = useState<string | never>(t('privateArea.allTime'));
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const balance = appContext.balance;
@@ -143,9 +134,9 @@ export const InfoBalance = () => {
   const languale = lang === 'ru' ? 1 : 0;
 
   const yearSelected = () => {
-    let year = moment().format('YYYY');
-    let yearStart: any = moment(year, 'YYYY').startOf('month');
-    let yearEnd: any = moment(year, 'YYYY').endOf('year');
+    const year = moment().format('YYYY');
+    const yearStart: any = moment(year, 'YYYY').startOf('month');
+    const yearEnd: any = moment(year, 'YYYY').endOf('year');
     setOpenDate({
       from: yearStart._d,
       to: yearEnd._d,
@@ -155,11 +146,9 @@ export const InfoBalance = () => {
   };
 
   const monthSelected = () => {
-    let currentMonth = moment().format('MMYYYY');
-    let currentMonthStart: any = moment(currentMonth, 'M.YYYY').startOf(
-      'month',
-    );
-    let currentMonthEnd: any = moment(currentMonth, 'M.YYYY').endOf('month');
+    const currentMonth = moment().format('MMYYYY');
+    const currentMonthStart: any = moment(currentMonth, 'M.YYYY').startOf('month');
+    const currentMonthEnd: any = moment(currentMonth, 'M.YYYY').endOf('month');
     setOpenDate({
       from: currentMonthStart._d,
       to: currentMonthEnd._d,
@@ -173,9 +162,7 @@ export const InfoBalance = () => {
       from: from,
       to: to,
     });
-    setSelected(
-      `${moment(from).format('DD.MM.YY')} - ${moment(to).format('DD.MM.YY')}`,
-    );
+    setSelected(`${moment(from).format('DD.MM.YY')} - ${moment(to).format('DD.MM.YY')}`);
     onClose();
   };
 
@@ -215,7 +202,7 @@ export const InfoBalance = () => {
           openDate.from || new Date('2020-12-02T00:47:45'),
           openDate.to || new Date(),
           0,
-          20,
+          20
         )
         .then((res: any) => {
           console.log('GetUserDepositsCharges', res);
@@ -223,12 +210,12 @@ export const InfoBalance = () => {
           setNum(20);
           setLoading(false);
           function getFormatedDate(dateStr: Date) {
-            let date = moment(dateStr).format('DD MMMM YYYY');
+            const date = moment(dateStr).format('DD MMMM YYYY');
             return date;
           }
           if (res.collection.length) {
             setDepositList(res.collection);
-            let result: any = {};
+            const result: any = {};
             res.collection.forEach((item: any) => {
               const d = getFormatedDate(item.operationDate);
 
@@ -265,20 +252,13 @@ export const InfoBalance = () => {
     setCount(false);
     if (hubConnection && depositList.length < totalDeposit) {
       hubConnection
-        .invoke(
-          'GetUserDepositsCharges',
-          balanceLogs,
-          openDate.from,
-          openDate.to,
-          num,
-          20,
-        )
+        .invoke('GetUserDepositsCharges', balanceLogs, openDate.from, openDate.to, num, 20)
         .then((res) => {
           setLoading(false);
           if (res.collection.length) {
             if (res.collection.length) {
               setDepositList([...depositList, res.collection]);
-              let result: any = { ...balanceLog };
+              const result: any = { ...balanceLog };
               res.collection.forEach((item: any) => {
                 const d = moment(item.operationDate).format('DD MMMM YYYY');
                 const obj = {
@@ -318,34 +298,37 @@ export const InfoBalance = () => {
           openDate.from,
           openDate.to,
           balanceLogs,
-          [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+          [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         )
         .then((res) => {
           console.log('responce', res);
-          let result: any = {};
-          for (let key in res) {
-            const newArr =
-              res[key].length > 0
-                ? res[key].map((i: any) => ({
-                    operationKind: i[0],
-                    type: i[1],
-                    balance: i[2],
-                    date: key,
-                  }))
-                : [
-                    {
+          const result: any = {};
+          // eslint-disable-next-line max-len
+          for (const key in res) {
+            if (res) {
+              const newArr =
+                res[key].length > 0
+                  ? res[key].map((i: any) => ({
+                      operationKind: i[0],
+                      type: i[1],
+                      balance: i[2],
                       date: key,
-                      operationKind: 0,
-                      type: null,
-                      balance: 0,
-                    },
-                  ];
+                    }))
+                  : [
+                      {
+                        date: key,
+                        operationKind: 0,
+                        type: null,
+                        balance: 0,
+                      },
+                    ];
 
-            const d = moment(key).format('DD MMMM YYYY');
-            if (result[d]) {
-              result[d].push(...newArr);
-            } else {
-              result[d] = [...newArr];
+              const d = moment(key).format('DD MMMM YYYY');
+              if (result[d]) {
+                result[d].push(...newArr);
+              } else {
+                result[d] = [...newArr];
+              }
             }
           }
           setChartList(result);
@@ -421,27 +404,21 @@ export const InfoBalance = () => {
           </Styled.TopUpButton>
           <Styled.BalanceList>
             <Styled.BalanceItem>
-              <Styled.BalanceItemName>
-                {t('privateArea.balance')}
-              </Styled.BalanceItemName>
+              <Styled.BalanceItemName>{t('privateArea.balance')}</Styled.BalanceItemName>
               <Styled.BalanceItemValue pink>
                 {balance ? (balance / 100000).toLocaleString() : '0'}
               </Styled.BalanceItemValue>
             </Styled.BalanceItem>
 
             <Styled.BalanceItem>
-              <Styled.BalanceItemName>
-                {t('privateArea.take')}
-              </Styled.BalanceItemName>
+              <Styled.BalanceItemName>{t('privateArea.take')}</Styled.BalanceItemName>
               <Styled.BalanceItemValue pink>
                 {(depositTotal / 100000).toLocaleString()}
               </Styled.BalanceItemValue>
             </Styled.BalanceItem>
 
             <Styled.BalanceItem>
-              <Styled.BalanceItemName>
-                {t('privateArea.findings')}
-              </Styled.BalanceItemName>
+              <Styled.BalanceItemName>{t('privateArea.findings')}</Styled.BalanceItemName>
               <Styled.BalanceItemValue>
                 {(totalPayed / 100000).toLocaleString()}
               </Styled.BalanceItemValue>
@@ -457,28 +434,20 @@ export const InfoBalance = () => {
       <Container>
         <Card>
           <Styled.BalanceTabHead>
-            <Styled.BalanceTabItem
-              onClick={() => handleBalance(0)}
-              active={depositTabs === 0}>
+            <Styled.BalanceTabItem onClick={() => handleBalance(0)} active={depositTabs === 0}>
               {t('privateArea.allOperation')}
             </Styled.BalanceTabItem>
-            <Styled.BalanceTabItem
-              onClick={() => handleBalance(1)}
-              active={depositTabs === 1}>
+            <Styled.BalanceTabItem onClick={() => handleBalance(1)} active={depositTabs === 1}>
               {t('privateArea.take')}
             </Styled.BalanceTabItem>
-            <Styled.BalanceTabItem
-              onClick={() => handleBalance(2)}
-              active={depositTabs === 2}>
+            <Styled.BalanceTabItem onClick={() => handleBalance(2)} active={depositTabs === 2}>
               {t('privateArea.findings')}
             </Styled.BalanceTabItem>
           </Styled.BalanceTabHead>
         </Card>
       </Container>
       <Styled.ContainerChart>
-        <Styled.InnerChart>
-          {chartList && <StackedColumn values={chartList} />}
-        </Styled.InnerChart>
+        <Styled.InnerChart>{chartList && <StackedColumn values={chartList} />}</Styled.InnerChart>
       </Styled.ContainerChart>
       <Container>
         <Styled.InnerTable>
@@ -486,12 +455,8 @@ export const InfoBalance = () => {
             <Styled.DataList>
               <Styled.DataListHead>
                 <Styled.DataListItem>
-                  <Styled.DataListName>
-                    {t('privateArea.name')}
-                  </Styled.DataListName>
-                  <Styled.DataListName>
-                    {t('privateArea.sum')}
-                  </Styled.DataListName>
+                  <Styled.DataListName>{t('privateArea.name')}</Styled.DataListName>
+                  <Styled.DataListName>{t('privateArea.sum')}</Styled.DataListName>
                 </Styled.DataListItem>
               </Styled.DataListHead>
               {balanceLog ? (
@@ -505,7 +470,8 @@ export const InfoBalance = () => {
                       <div className="loader" key={0}>
                         Loading ...
                       </div>
-                    }>
+                    }
+                  >
                     {Object.keys(balanceLog).map((key) => (
                       <div key={key}>
                         <Styled.DataListDate>{key}</Styled.DataListDate>
@@ -531,49 +497,31 @@ export const InfoBalance = () => {
         <Styled.ModalWrap>
           <Modal onClose={onClose}>
             <Styled.ModalContent>
-              <Styled.ModalTitle>
-                {t('privateArea.selectPeriod')}
-              </Styled.ModalTitle>
+              <Styled.ModalTitle>{t('privateArea.selectPeriod')}</Styled.ModalTitle>
               <Styled.ModalItem>
-                <Styled.DateTitle>
-                  {t('privateArea.thisMonth')}
-                </Styled.DateTitle>
+                <Styled.DateTitle>{t('privateArea.thisMonth')}</Styled.DateTitle>
                 <Styled.DateText onClick={monthSelected}>
                   {moment().format('MMMM YYYY')}
                 </Styled.DateText>
               </Styled.ModalItem>
               <Styled.ModalItem>
                 <Styled.DateTitle>{t('privateArea.thisYear')}</Styled.DateTitle>
-                <Styled.DateText onClick={yearSelected}>
-                  {moment().format('YYYY')}
-                </Styled.DateText>
+                <Styled.DateText onClick={yearSelected}>{moment().format('YYYY')}</Styled.DateText>
               </Styled.ModalItem>
               <Styled.ModalItem>
                 <Styled.DateTitle></Styled.DateTitle>
-                <Styled.DateText onClick={allDate}>
-                  {t('privateArea.allTime')}
-                </Styled.DateText>
+                <Styled.DateText onClick={allDate}>{t('privateArea.allTime')}</Styled.DateText>
               </Styled.ModalItem>
             </Styled.ModalContent>
-            <ModalRangeInput
-              onClose={onClose}
-              openDate={openDate}
-              setOpenDate={rangeDate}
-            />
+            <ModalRangeInput onClose={onClose} openDate={openDate} setOpenDate={rangeDate} />
           </Modal>
         </Styled.ModalWrap>
       </CSSTransition>
 
-      <CSSTransition
-        in={addBalance}
-        timeout={300}
-        classNames="modal"
-        unmountOnExit>
+      <CSSTransition in={addBalance} timeout={300} classNames="modal" unmountOnExit>
         <Modal onClose={() => setAddBalance(false)}>
           <Styled.ModalBlock>
-            <Styled.ModalTitle>
-              {t('privateArea.topUpBalance')}
-            </Styled.ModalTitle>
+            <Styled.ModalTitle>{t('privateArea.topUpBalance')}</Styled.ModalTitle>
             <Input
               onChange={onChangeBalanceValue}
               placeholder={t('privateArea.amountEnter')}
@@ -581,11 +529,7 @@ export const InfoBalance = () => {
               ref={inputRef}
               value={balanceValue}
             />
-            <Styled.ModalButton
-              as="button"
-              disabled={!balanceValue}
-              onClick={getTopUp}
-              danger>
+            <Styled.ModalButton as="button" disabled={!balanceValue} onClick={getTopUp} danger>
               {t('privateArea.topUp')}
             </Styled.ModalButton>
           </Styled.ModalBlock>

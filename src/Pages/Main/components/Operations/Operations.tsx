@@ -26,12 +26,7 @@ export const Operations = () => {
         !clean && setNotifyList((notifyList) => [data, ...notifyList]);
       });
       hubConnection
-        .invoke<RootOperations>(
-          'GetOperationsNotifications',
-          [2, 4, 5, 6, 7, 8],
-          0,
-          4,
-        )
+        .invoke<RootOperations>('GetOperationsNotifications', [2, 4, 5, 6, 7, 8], 0, 4)
         .then((res) => {
           !clean && setNotifyList(res.collection);
         })
@@ -67,12 +62,7 @@ export const Operations = () => {
   const add = () => {
     if (hubConnection) {
       hubConnection
-        .invoke<RootOperations>(
-          'GetOperationsNotifications',
-          [2, 4, 5, 6, 7, 8],
-          4,
-          4,
-        )
+        .invoke<RootOperations>('GetOperationsNotifications', [2, 4, 5, 6, 7, 8], 4, 4)
         .then((res) => {
           setNotifyList((notifyList) => [...notifyList, ...res.collection]);
           setShowLess(true);
@@ -82,11 +72,11 @@ export const Operations = () => {
   };
 
   const less = () => {
-    let lessNotifyList: any[] = [];
-    notifyList.forEach(notify => {
+    const lessNotifyList: any[] = [];
+    notifyList.forEach((notify) => {
       if (lessNotifyList.length < 4) {
         lessNotifyList.push(notify);
-      };
+      }
     });
     setNotifyList(lessNotifyList);
     setShowLess(false);
@@ -107,19 +97,13 @@ export const Operations = () => {
           {notifyList.length &&
             notifyList.map((item, idx) => {
               return (
-                <CSSTransition
-                  key={item.date.toString() + idx}
-                  timeout={500}
-                  classNames="item">
+                <CSSTransition key={item.date.toString() + idx} timeout={500} classNames="item">
                   <TableList card className="operations-item">
-                    <TableItem>
-                      {moment(item.date).format('DD.MM.YYYY')}
-                    </TableItem>
+                    <TableItem>{moment(item.date).format('DD.MM.YYYY')}</TableItem>
                     <TableItem>
                       {item.depositName ? (
                         <Text>
-                          {operation(item.operationKind)}{' '}
-                          {t('operation.byProgramm')}
+                          {operation(item.operationKind)} {t('operation.byProgramm')}
                           <span>&nbsp;{item.depositName}</span>
                         </Text>
                       ) : (
@@ -141,7 +125,7 @@ export const Operations = () => {
         </TransitionGroup>
         {
           <Button dangerOutline onClick={!showLess ? add : less}>
-            {!showLess ? t('operation.showMore') : t("operation.showLess")}
+            {!showLess ? t('operation.showMore') : t('operation.showLess')}
           </Button>
         }
       </TableContainer>
@@ -166,10 +150,8 @@ const TableList = styled.ul<{ card?: boolean; dn?: boolean }>`
   justify-content: space-between;
   padding: 10px 50px;
   margin-bottom: 18px;
-  background: ${(props) =>
-    props.card ? props.theme.card.backgroundAlfa : 'transparent'};
-  box-shadow: ${(props) =>
-    props.card ? '0px 1px 3px rgba(0, 0, 0, 0.25)' : 'none'};
+  background: ${(props) => (props.card ? props.theme.card.backgroundAlfa : 'transparent')};
+  box-shadow: ${(props) => (props.card ? '0px 1px 3px rgba(0, 0, 0, 0.25)' : 'none')};
   border-radius: 20px;
   border: ${(props) => (props.card ? props.theme.card.border : 'none')};
   @media (max-width: 992px) {

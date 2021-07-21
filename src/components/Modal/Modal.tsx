@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import styled from 'styled-components/macro';
 import { Portal } from '../Portal/Portal';
 
@@ -7,6 +7,7 @@ type ModalProps = {
   width?: number;
   zIndex?: string;
   mobMarg?: boolean;
+  children: ReactNode;
 };
 
 export const Modal: React.FC<ModalProps> = ({
@@ -15,7 +16,7 @@ export const Modal: React.FC<ModalProps> = ({
   width,
   zIndex = '99999',
   mobMarg,
-}) => {
+}: ModalProps) => {
   const handleContainerClick = (e: React.MouseEvent) => {
     if (e.currentTarget === e.target) {
       onClose();

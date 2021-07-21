@@ -19,7 +19,7 @@ export const Timer: FC<Props> = ({
   icon,
   closeTimer,
   timerHistory,
-}) => {
+}: Props) => {
   const [state, setState] = useState<null | string>(null);
   const [deadline, setDeadline] = useState(-1);
   const [clock, setClock] = useState<RootClock | null>(null);
@@ -70,13 +70,11 @@ export const Timer: FC<Props> = ({
       return;
     }
 
-    let timer = setInterval(() => {
-      let durations = moment.duration(deadline, 'seconds');
-      let formatted = `${Math.floor(durations.asDays())} ${t(
-        'time.d',
-      )} ${Math.floor(durations.asHours())} ${t('time.h')} ${Math.floor(
-        durations.asMinutes(),
-      )} ${t('time.m')}`;
+    const timer = setInterval(() => {
+      const durations = moment.duration(deadline, 'seconds');
+      const formatted = `${Math.floor(durations.asDays())} ${t('time.d')} ${Math.floor(
+        durations.asHours()
+      )} ${t('time.h')} ${Math.floor(durations.asMinutes())} ${t('time.m')}`;
 
       !cancel && setState(formatted);
       !cancel && setDeadline(deadline - 1);
@@ -94,9 +92,7 @@ export const Timer: FC<Props> = ({
         <Styled.TimerContainer>
           {icon && <Styled.CloseIcon onClick={closeTimer} />}
           <Styled.TimerTitle>{t('timerStart')}</Styled.TimerTitle>
-          <Styled.TimerValue nodata={clock === null || state === '0'}>
-            {state}
-          </Styled.TimerValue>
+          <Styled.TimerValue nodata={clock === null || state === '0'}>{state}</Styled.TimerValue>
         </Styled.TimerContainer>
       ) : (
         <Styled.TimerHistoryInner>

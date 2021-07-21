@@ -81,9 +81,7 @@ export const ModalPay: FC<ListProps> = ({
           <PayCardBlock>
             <PayText small>{t('adminPay.table.datePay')}</PayText>
             <PayText>
-              {data.paymentDate
-                ? moment(data.paymentDate).format('DD/MM/YYYY')
-                : '-'}
+              {data.paymentDate ? moment(data.paymentDate).format('DD/MM/YYYY') : '-'}
             </PayText>
           </PayCardBlock>
           <PayCardBlock>
@@ -114,9 +112,7 @@ export const ModalPay: FC<ListProps> = ({
           )}
           <PayCardBlock>
             {!disabled ? (
-              <Button
-                dangerOutline
-                onClick={() => paymentsConfirm(data.safeId)}>
+              <Button dangerOutline onClick={() => paymentsConfirm(data.safeId)}>
                 {t('depositList.confirm')}
               </Button>
             ) : (
@@ -124,7 +120,8 @@ export const ModalPay: FC<ListProps> = ({
                 greenOutline
                 onClick={() => {
                   unConfirmPay(data.safeId);
-                }}>
+                }}
+              >
                 {t('depositList.confirmed')}
               </Button>
             )}
@@ -165,9 +162,7 @@ export const ModalPaid: FC<PaidProps> = ({ data, onClose }: PaidProps) => {
           <PayCardBlock>
             <PayText small>Категория</PayText>
             <PayText>
-              {data.state === 4
-                ? t('depositList.depositClose')
-                : t('depositList.dividents')}
+              {data.state === 4 ? t('depositList.depositClose') : t('depositList.dividents')}
             </PayText>
           </PayCardBlock>
           <PayCardBlock>
@@ -190,7 +185,7 @@ type AnaliticProps = {
   onClose: () => void;
 };
 
-export const ModalAnalitic: FC<AnaliticProps> = ({ data, onClose }) => {
+export const ModalAnalitic: FC<AnaliticProps> = ({ data, onClose }: AnaliticProps) => {
   const handleContainerClick = (e: React.MouseEvent) => {
     if (e.currentTarget === e.target) {
       onClose();
@@ -304,9 +299,7 @@ export const ModalPayList: FC<Prop> = ({ data, onClose }: Prop) => {
           </PayCardBlock>
           <PayCardBlock>
             <PayText small>{t('adminPay.table.datePay')}</PayText>
-            <PayText>
-              {moment(data.userDeposit.prevPayment).format('DD/MM/YYYY')}
-            </PayText>
+            <PayText>{moment(data.userDeposit.prevPayment).format('DD/MM/YYYY')}</PayText>
           </PayCardBlock>
           <PayCardBlock>
             <PayText small>{t('adminPay.table.category')}</PayText>
@@ -318,15 +311,11 @@ export const ModalPayList: FC<Prop> = ({ data, onClose }: Prop) => {
           </PayCardBlock>
           <PayCardBlock>
             <PayText small>{t('adminPay.table.contribution')}</PayText>
-            <PayText>
-              {data.userDeposit.baseAmountView.toLocaleString()}
-            </PayText>
+            <PayText>{data.userDeposit.baseAmountView.toLocaleString()}</PayText>
           </PayCardBlock>
           <PayCardBlock>
             <PayText small>{t('adminPay.table.payments')}</PayText>
-            <PayText>
-              {(data.amount / 100000).toFixed(2).toLocaleString()}
-            </PayText>
+            <PayText>{(data.amount / 100000).toFixed(2).toLocaleString()}</PayText>
           </PayCardBlock>
           <PayCardBlock></PayCardBlock>
         </PayCard>
@@ -335,10 +324,12 @@ export const ModalPayList: FC<Prop> = ({ data, onClose }: Prop) => {
   );
 };
 
-export const ModalPortfolio: FC<{
+type ModalPortfolioProps = {
   data: CollectionPortfolio;
   onClose: () => void;
-}> = ({ data, onClose }) => {
+};
+
+export const ModalPortfolio: FC<ModalPortfolioProps> = ({ data, onClose }: ModalPortfolioProps) => {
   const handleContainerClick = (e: React.MouseEvent) => {
     if (e.currentTarget === e.target) {
       onClose();
@@ -359,9 +350,7 @@ export const ModalPortfolio: FC<{
           </PayCardBlock>
           <PayCardBlock>
             <PayText small>{t('adminPortfolio.table.cost')}, CWD</PayText>
-            <PayText>
-              {(data.unitPrice / 100000).toFixed(2).toLocaleString()}
-            </PayText>
+            <PayText>{(data.unitPrice / 100000).toFixed(2).toLocaleString()}</PayText>
           </PayCardBlock>
           <PayCardBlock>
             <PayText small>{t('adminPortfolio.table.amount')}</PayText>
@@ -373,16 +362,19 @@ export const ModalPortfolio: FC<{
   );
 };
 
-const AccordeonList: FC<{
+type AccordeonListProps = {
   arr1: any;
   data: PaymentsCollection;
-  adjustBalanceAsync: (
-    userSafeId: string,
-    delta: number,
-    safeOperationId: string,
-  ) => void;
+  adjustBalanceAsync: (userSafeId: string, delta: number, safeOperationId: string) => void;
   dataUpdate: (safeId: string, childId: string, value: string) => void;
-}> = ({ arr1, data, adjustBalanceAsync, dataUpdate }) => {
+};
+
+const AccordeonList: FC<AccordeonListProps> = ({
+  arr1,
+  data,
+  adjustBalanceAsync,
+  dataUpdate,
+}: AccordeonListProps) => {
   const [activeFold, setActiveFold] = useState(false);
   const { t } = useTranslation();
 
@@ -391,9 +383,7 @@ const AccordeonList: FC<{
       {arr1[data.safeId] ? (
         <Accordeon>
           <PayCardInner>
-            <AccordeonHead
-              open={activeFold}
-              onClick={() => setActiveFold(!activeFold)}>
+            <AccordeonHead open={activeFold} onClick={() => setActiveFold(!activeFold)}>
               {t('adminUsers.modal.payments')} <Icon />
             </AccordeonHead>
           </PayCardInner>
@@ -415,25 +405,25 @@ const AccordeonList: FC<{
   );
 };
 
-const ModalUsersList: FC<{
+type ModalUsersListProps = {
   dataOne: CollectionCharges;
-  adjustBalanceAsync: (
-    userSafeId: string,
-    delta: number,
-    safeOperationId: string,
-  ) => void;
+  adjustBalanceAsync: (userSafeId: string, delta: number, safeOperationId: string) => void;
   activeFold: boolean;
   dataUpdate: (safeId: string, childId: string, value: string) => void;
   safeId: string;
-}> = ({ dataOne, adjustBalanceAsync, activeFold, dataUpdate, safeId }) => {
-  const [value, setValue] = useState(
-    (dataOne.amount / 100000).toFixed(4).toString(),
-  );
+};
+
+const ModalUsersList: FC<ModalUsersListProps> = ({
+  dataOne,
+  adjustBalanceAsync,
+  activeFold,
+  dataUpdate,
+  safeId,
+}: ModalUsersListProps) => {
+  const [value, setValue] = useState((dataOne.amount / 100000).toFixed(4).toString());
   const [done, setDone] = useState(false);
   const [procent, setProcent] = useState(
-    ((dataOne.amount / 100000 / dataOne.userDeposit.baseAmountView) * 100)
-      .toFixed(1)
-      .toString(),
+    ((dataOne.amount / 100000 / dataOne.userDeposit.baseAmountView) * 100).toFixed(1).toString()
   );
 
   const { t } = useTranslation();
@@ -447,10 +437,7 @@ const ModalUsersList: FC<{
     } else {
       dataUpdate(safeId, dataOne.safeId, e.target.value);
       setValue(e.target.value);
-      const proc = (
-        (+e.target.value / dataOne.userDeposit.baseAmountView) *
-        100
-      ).toFixed(2);
+      const proc = ((+e.target.value / dataOne.userDeposit.baseAmountView) * 100).toFixed(2);
       setProcent(proc.toString());
     }
   };
@@ -461,10 +448,7 @@ const ModalUsersList: FC<{
       setProcent('');
     } else {
       setProcent(e.target.value);
-      const values = (
-        (dataOne.userDeposit.baseAmountView * +e.target.value) /
-        100
-      ).toFixed(2);
+      const values = ((dataOne.userDeposit.baseAmountView * +e.target.value) / 100).toFixed(2);
       setValue(values.toString());
       dataUpdate(safeId, dataOne.safeId, values.toString());
     }
@@ -472,19 +456,14 @@ const ModalUsersList: FC<{
 
   const paymentsAdjust = () => {
     const userSafeId = dataOne.userDeposit.userSafeId;
-    const delta = ((dataOne.amount / 100000 - Number(value)) * 100000).toFixed(
-      0,
-    );
+    const delta = ((dataOne.amount / 100000 - Number(value)) * 100000).toFixed(0);
 
     const safeOperationId = dataOne.safeId;
     // adjustBalanceAsync(userSafeId, +delta, safeOperationId);
     if (Number(value) * 100000 < dataOne.amount) {
       adjustBalanceAsync(userSafeId, -delta, safeOperationId);
     } else {
-      const delta = (
-        (Number(value) - dataOne.amount / 100000) *
-        100000
-      ).toFixed(0);
+      const delta = ((Number(value) - dataOne.amount / 100000) * 100000).toFixed(0);
       adjustBalanceAsync(userSafeId, +delta, safeOperationId);
     }
   };
@@ -546,14 +525,10 @@ const ModalUsersList: FC<{
   );
 };
 
-export const ModalUsersContent: FC<{
+type ModalUsersContentProps = {
   data: CollectionUsers;
   dataOne: CollectionCharges[];
-  adjustBalanceAsync: (
-    userSafeId: string,
-    delta: number,
-    safeOperationId: string,
-  ) => void;
+  adjustBalanceAsync: (userSafeId: string, delta: number, safeOperationId: string) => void;
   lock: boolean;
   unLocked: (e: any, id: string) => void;
   locked: (e: any, id: string) => void;
@@ -561,7 +536,9 @@ export const ModalUsersContent: FC<{
   setActive: (active: number) => void;
   dataTwo: PaymentsCollection[];
   wide?: boolean;
-}> = ({
+};
+
+export const ModalUsersContent: FC<ModalUsersContentProps> = ({
   data,
   dataOne,
   adjustBalanceAsync,
@@ -572,7 +549,7 @@ export const ModalUsersContent: FC<{
   setActive,
   dataTwo,
   wide = false,
-}) => {
+}: ModalUsersContentProps) => {
   const [height, setHeight] = useState(0);
   const [selfData, setSelfData] = useState<any>({});
 
@@ -621,9 +598,7 @@ export const ModalUsersContent: FC<{
     }
   };
 
-  const balance = data.balances
-    ? data.balances.filter((item) => item.balanceKind === 1)
-    : null;
+  const balance = data.balances ? data.balances.filter((item) => item.balanceKind === 1) : null;
 
   const dateTwoSelf = Object.assign({}, arr1);
 
@@ -632,11 +607,7 @@ export const ModalUsersContent: FC<{
     const idx = parent.findIndex((item) => item.safeId === childId);
     if (idx !== -1) {
       const item = { ...arr1[id][idx], amount: +value };
-      const newArr = [
-        ...arr1[id].slice(0, idx),
-        item,
-        ...arr1[id].slice(idx + 1),
-      ];
+      const newArr = [...arr1[id].slice(0, idx), item, ...arr1[id].slice(idx + 1)];
       dateTwoSelf[id] = newArr;
     }
     // arr1[id]
@@ -655,11 +626,7 @@ export const ModalUsersContent: FC<{
             </PayTab>
           </PayTabs>
         </PayCardInner>
-        <CSSTransition
-          in={active === 0}
-          timeout={0}
-          classNames="modal"
-          unmountOnExit>
+        <CSSTransition in={active === 0} timeout={0} classNames="modal" unmountOnExit>
           <PayCardInner>
             <PayCardBlock>
               <PayText small>{t('adminPay.table.user')}</PayText>
@@ -681,9 +648,7 @@ export const ModalUsersContent: FC<{
             </PayCardBlock>
             <PayCardBlock>
               <PayText small>{t('adminUsers.table.dataCreate')}</PayText>
-              <PayText>
-                {moment(data.creationDate).format('DD/MM/YYYY')}
-              </PayText>
+              <PayText>{moment(data.creationDate).format('DD/MM/YYYY')}</PayText>
             </PayCardBlock>
             <PayCardBlock>
               <PayText small>{t('adminUsers.table.lang')}</PayText>
@@ -698,10 +663,7 @@ export const ModalUsersContent: FC<{
                       maximumFractionDigits: 3,
                     })} */}
                     {(
-                      dataOne.reduce(
-                        (a, b) => a + b.userDeposit.payedAmount,
-                        0,
-                      ) / 100000
+                      dataOne.reduce((a, b) => a + b.userDeposit.payedAmount, 0) / 100000
                     ).toLocaleString('ru-RU', {
                       maximumFractionDigits: 3,
                     })}
@@ -713,10 +675,8 @@ export const ModalUsersContent: FC<{
                     <PayText>
                       {moment(
                         dataOne.reduce((a, b) =>
-                          b.userDeposit.prevPayment > a.userDeposit.prevPayment
-                            ? b
-                            : a,
-                        ).userDeposit.prevPayment,
+                          b.userDeposit.prevPayment > a.userDeposit.prevPayment ? b : a
+                        ).userDeposit.prevPayment
                       ).format('DD/MM/YYYY')}
                     </PayText>
                   </PayCardBlock>
@@ -728,10 +688,8 @@ export const ModalUsersContent: FC<{
                   <PayText>
                     {moment(
                       dataOne.reduce((a, b) =>
-                        b.userDeposit.paymentDate > a.userDeposit.paymentDate
-                          ? b
-                          : a,
-                      ).userDeposit.paymentDate,
+                        b.userDeposit.paymentDate > a.userDeposit.paymentDate ? b : a
+                      ).userDeposit.paymentDate
                     ).format('DD/MM/YYYY')}
                   </PayText>
                 </PayCardBlock>
@@ -754,11 +712,7 @@ export const ModalUsersContent: FC<{
           </PayCardInner>
         </CSSTransition>
 
-        <CSSTransition
-          in={active === 1}
-          timeout={0}
-          classNames="modal"
-          unmountOnExit>
+        <CSSTransition in={active === 1} timeout={0} classNames="modal" unmountOnExit>
           <Scrollbars style={{ height: height < 900 ? '550px' : '750px' }}>
             <PayCardWrapper>
               {dataTwo.length
@@ -779,15 +733,11 @@ export const ModalUsersContent: FC<{
                           </PayDate>
                         </PayCardBlock>
                         <PayCardBlock>
-                          <PayText small>
-                            {t('adminUsers.modal.contrAmount')}
-                          </PayText>
+                          <PayText small>{t('adminUsers.modal.contrAmount')}</PayText>
                           <PayText>{item.baseAmountView}</PayText>
                         </PayCardBlock>
                         <PayCardBlock>
-                          <PayText small>
-                            {t('adminUsers.modal.paySum')}
-                          </PayText>
+                          <PayText small>{t('adminUsers.modal.paySum')}</PayText>
                           <PayText>
                             {/* {selfData[item.safeId] &&
                               selfData[item.safeId][0].userDeposit
@@ -799,15 +749,9 @@ export const ModalUsersContent: FC<{
                           </PayText>
                         </PayCardBlock>
                         <PayCardBlock>
-                          <PayText small>
-                            {t('adminUsers.modal.totalDeposit')}
-                          </PayText>
+                          <PayText small>{t('adminUsers.modal.totalDeposit')}</PayText>
                           <PayText>
-                            {(
-                              (item.payedAmountView / item.baseAmountView) *
-                              100
-                            ).toFixed(1)}
-                            %
+                            {((item.payedAmountView / item.baseAmountView) * 100).toFixed(1)}%
                           </PayText>
                         </PayCardBlock>
                       </PayCardInner>
@@ -832,20 +776,18 @@ export const ModalUsersContent: FC<{
   );
 };
 
-export const ModalUsers: FC<{
+type ModalUsersProps = {
   data: CollectionUsers;
   onClose: () => void;
   lock: boolean;
   unLocked: (e: any, id: string) => void;
   locked: (e: any, id: string) => void;
   dataOne: CollectionCharges[];
-  adjustBalanceAsync: (
-    userSafeId: string,
-    delta: number,
-    safeOperationId: string,
-  ) => void;
+  adjustBalanceAsync: (userSafeId: string, delta: number, safeOperationId: string) => void;
   dataTwo: PaymentsCollection[];
-}> = ({
+};
+
+export const ModalUsers: FC<ModalUsersProps> = ({
   data,
   lock,
   onClose,
@@ -854,7 +796,7 @@ export const ModalUsers: FC<{
   dataOne,
   adjustBalanceAsync,
   dataTwo,
-}) => {
+}: ModalUsersProps) => {
   const [active, setActive] = useState(0);
 
   const handleContainerClick = (e: React.MouseEvent) => {
@@ -1074,11 +1016,7 @@ const PayText = styled.div<{ small?: boolean; big?: boolean }>`
   line-height: ${(props) => (props.small ? '21px' : '16px')};
   letter-spacing: 0.1px;
   color: ${(props) =>
-    props.small
-      ? props.theme.thHead
-      : props.big
-      ? '#FF416E'
-      : props.theme.text2};
+    props.small ? props.theme.thHead : props.big ? '#FF416E' : props.theme.text2};
 `;
 
 const PayDate = styled.div`

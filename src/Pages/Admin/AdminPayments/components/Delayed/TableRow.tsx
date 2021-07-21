@@ -21,14 +21,10 @@ import * as Styled from './styled';
 type Props = {
   idx: number;
   item: any;
-  confirmPay: (
-    safeId: string,
-    amount: number,
-    setDone: (status: boolean) => void,
-  ) => void;
+  confirmPay: (safeId: string, amount: number, setDone: (status: boolean) => void) => void;
 };
 
-export const TableRow: FC<Props> = ({ item, confirmPay, idx }) => {
+export const TableRow: FC<Props> = ({ item, confirmPay, idx }: Props) => {
   const sizes = useWindowSize();
   const size = sizes < 992;
   const [open, setOpen] = useState<CollectionAnalitics | null>(null);
@@ -65,12 +61,14 @@ export const TableRow: FC<Props> = ({ item, confirmPay, idx }) => {
                 onClick={() => {
                   paymentsConfirm(item.safeId, +forPay);
                 }}
-                danger>
+                danger
+              >
                 {t('adminPay.delayed.pay')}
               </ModalButton>
               <BottomText
                 active={forPay === item.pendingAmount}
-                onClick={() => setForPay(item.pendingAmount)}>
+                onClick={() => setForPay(item.pendingAmount)}
+              >
                 {t('adminPay.delayed.setAllAmount')}
               </BottomText>
             </ModalBlockBody>
@@ -84,24 +82,16 @@ export const TableRow: FC<Props> = ({ item, confirmPay, idx }) => {
 
       <Styled.TableBody key={item.safeId} onClick={() => setOpen(item)}>
         <Styled.TableBodyItem dis={disabled}>{idx}</Styled.TableBodyItem>
-        <Styled.TableBodyItem dis={disabled}>
-          {item.userName}
-        </Styled.TableBodyItem>
-        <Styled.TableBodyItem dis={disabled}>
-          {item.deposit.name}
-        </Styled.TableBodyItem>
-        <Styled.TableBodyItem dis={disabled}>
-          {item.amountView}
-        </Styled.TableBodyItem>
+        <Styled.TableBodyItem dis={disabled}>{item.userName}</Styled.TableBodyItem>
+        <Styled.TableBodyItem dis={disabled}>{item.deposit.name}</Styled.TableBodyItem>
+        <Styled.TableBodyItem dis={disabled}>{item.amountView}</Styled.TableBodyItem>
         <Styled.TableBodyItem dis={disabled}>
           {moment(item.creationDate).format('DD/MM/YYYY')}
         </Styled.TableBodyItem>
         <Styled.TableBodyItem dis={disabled}>
           {moment(item.endDate).format('DD/MM/YYYY')}
         </Styled.TableBodyItem>
-        <Styled.TableBodyItem dis={disabled}>
-          {item.pendingAmount / 100000}
-        </Styled.TableBodyItem>
+        <Styled.TableBodyItem dis={disabled}>{item.pendingAmount / 100000}</Styled.TableBodyItem>
 
         <Styled.TableBodyItem>
           {size ? (
@@ -120,7 +110,8 @@ export const TableRow: FC<Props> = ({ item, confirmPay, idx }) => {
               onClick={(e) => {
                 e.stopPropagation();
                 setModalOpen(true);
-              }}>
+              }}
+            >
               {t('adminPay.delayed.pay')}
             </Button>
           )}

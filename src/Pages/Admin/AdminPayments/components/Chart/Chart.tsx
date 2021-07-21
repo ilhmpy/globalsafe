@@ -1,10 +1,10 @@
-import React, { FC } from "react";
-import { Card } from "../../../../../globalStyles";
-import * as Styled from "./Styled.elements";
-import { useTranslation } from "react-i18next";
-import { MainAnaliticInput } from "../../../../../components/UI/DayPicker";
-import { OpenDate } from "../../../../../types/dates";
-import { ColumnChartAnalitic } from "../../../../../components/Charts/Test";
+import React, { FC } from 'react';
+import { Card } from '../../../../../globalStyles';
+import * as Styled from './Styled.elements';
+import { useTranslation } from 'react-i18next';
+import { MainAnaliticInput } from '../../../../../components/UI/DayPicker';
+import { OpenDate } from '../../../../../types/dates';
+import { ColumnChartAnalitic } from '../../../../../components/Charts/Test';
 
 type Props = {
   stats: any[];
@@ -12,7 +12,7 @@ type Props = {
   depositsDate: OpenDate;
 };
 
-export const Chart: FC<Props> = ({ stats, setDepositsDate, depositsDate }) => {
+export const Chart: FC<Props> = ({ stats, setDepositsDate, depositsDate }: Props) => {
   const { t } = useTranslation();
 
   return (
@@ -20,12 +20,12 @@ export const Chart: FC<Props> = ({ stats, setDepositsDate, depositsDate }) => {
       <Styled.DateBlock>
         <Styled.ChartItemHead>
           <Styled.ChartItemTitle small>
-            {t("adminPay.analitics.payAnalitics")}
+            {t('adminPay.analitics.payAnalitics')}
           </Styled.ChartItemTitle>
           <MainAnaliticInput
             setOpenDate={setDepositsDate}
             openDate={depositsDate}
-            label={t("adminPay.analitics.label")}
+            label={t('adminPay.analitics.label')}
           />
         </Styled.ChartItemHead>
       </Styled.DateBlock>

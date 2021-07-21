@@ -1,8 +1,8 @@
-import React, { useState, useRef, useEffect, useContext } from "react";
-import { Container } from "../../../../globalStyles";
-import { H1 } from "../../../../components/UI/MainStyled";
-import { UpTitle } from "../../../../components/UI/UpTitle";
-import { Button } from "../../../../components/Button/Button";
+import React, { useState, useRef, useEffect, useContext } from 'react';
+import { Container } from '../../../../globalStyles';
+import { H1 } from '../../../../components/UI/MainStyled';
+import { UpTitle } from '../../../../components/UI/UpTitle';
+import { Button } from '../../../../components/Button/Button';
 import {
   BlockTitle,
   DescContainer,
@@ -25,90 +25,85 @@ import {
   PartnerProgramLineItem,
   PartnerProgramPagination,
   PartnerProgramPaginationItem,
-} from "./Tariffs.elements";
-import { Modal } from "../../../../components/Modal/Modal";
-import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
-import "swiper/swiper.scss";
-import "swiper/components/navigation/navigation.scss";
-import "swiper/components/pagination/pagination.scss";
-import "swiper/components/scrollbar/scrollbar.scss";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Input } from "../../../../components/UI/Input";
-import { useHistory } from "react-router-dom";
-import { AppContext } from "../../../../context/HubContext";
-import {
-  ListDeposits,
-  CollectionListDeposits,
-} from "../../../../types/deposits";
-import { useTranslation } from "react-i18next";
-import { Page } from "../../../../components/UI/Page";
+} from './Tariffs.elements';
+import { Modal } from '../../../../components/Modal/Modal';
+import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
+import 'swiper/swiper.scss';
+import 'swiper/components/navigation/navigation.scss';
+import 'swiper/components/pagination/pagination.scss';
+import 'swiper/components/scrollbar/scrollbar.scss';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Input } from '../../../../components/UI/Input';
+import { useHistory } from 'react-router-dom';
+import { AppContext } from '../../../../context/HubContext';
+import { ListDeposits, CollectionListDeposits } from '../../../../types/deposits';
+import { useTranslation } from 'react-i18next';
+import { Page } from '../../../../components/UI/Page';
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
 export const Tariffs = () => {
   const [isNormalOpen, setIsNormalOpen] = useState(false);
-  const [oldLink, setOldLink] = useState("");
-  const [link, setLink] = useState("");
+  const [oldLink, setOldLink] = useState('');
+  const [link, setLink] = useState('');
   const [min, setMin] = useState(500);
-  const [value, setValue] = useState("");
-  const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>(
-    []
-  );
+  const [value, setValue] = useState('');
+  const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>([]);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const { t } = useTranslation();
   const inputRef = useRef<HTMLInputElement>(null);
-  const lang = localStorage.getItem("i18nextLng") || "ru";
-  const languale = lang === "ru" ? 1 : 0;
-  const [ programs, setPrograms ] = useState([
+  const lang = localStorage.getItem('i18nextLng') || 'ru';
+  const languale = lang === 'ru' ? 1 : 0;
+  const [programs, setPrograms] = useState([
     {
-      name: "start",
-      color: "#BCD476",
+      name: 'start',
+      color: '#BCD476',
       lines: [
-        { id: "1", count: "4%" },
-        { id: "2", count: "1,6%" },
-        { id: "3", count: "0,8%" },
-        { id: "4", count: "" },
-        { id: "5", count: "" },
-        { id: "6", count: "" },
-        { id: "7", count: "" },
-        { id: "8", count: "" },
+        { id: '1', count: '4%' },
+        { id: '2', count: '1,6%' },
+        { id: '3', count: '0,8%' },
+        { id: '4', count: '' },
+        { id: '5', count: '' },
+        { id: '6', count: '' },
+        { id: '7', count: '' },
+        { id: '8', count: '' },
       ],
     },
     {
-      name: "expert",
-      color: "#6DB9FF",
+      name: 'expert',
+      color: '#6DB9FF',
       lines: [
-        { id: "1", count: "5%" },
-        { id: "2", count: "2%" },
-        { id: "3", count: "1%" },
-        { id: "4", count: "1%" },
-        { id: "5", count: "1%" },
-        { id: "6", count: "" },
-        { id: "7", count: "" },
-        { id: "8", count: "" },
+        { id: '1', count: '5%' },
+        { id: '2', count: '2%' },
+        { id: '3', count: '1%' },
+        { id: '4', count: '1%' },
+        { id: '5', count: '1%' },
+        { id: '6', count: '' },
+        { id: '7', count: '' },
+        { id: '8', count: '' },
       ],
     },
     {
-      name: "infinity",
-      color: "#FF416E",
+      name: 'infinity',
+      color: '#FF416E',
       lines: [
-        { id: "1", count: "5%" },
-        { id: "2", count: "2%" },
-        { id: "3", count: "1%" },
-        { id: "4", count: "1%" },
-        { id: "5", count: "1%" },
-        { id: "6", count: "1%" },
-        { id: "7", count: "1%" },
-        { id: "8", count: "1%" },
+        { id: '1', count: '5%' },
+        { id: '2', count: '2%' },
+        { id: '3', count: '1%' },
+        { id: '4', count: '1%' },
+        { id: '5', count: '1%' },
+        { id: '6', count: '1%' },
+        { id: '7', count: '1%' },
+        { id: '8', count: '1%' },
       ],
-    }
+    },
   ]);
 
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<ListDeposits>("GetDeposits", languale, true, 0, 40)
+        .invoke<ListDeposits>('GetDeposits', languale, true, 0, 40)
         .then((res) => {
           // console.log("GetDeposits", res);
           setListDeposits(res.collection);
@@ -119,11 +114,9 @@ export const Tariffs = () => {
 
   const handleClick = (str: string, num: number) => {
     setIsNormalOpen(true);
-    setValue("");
+    setValue('');
     // setLink(str);
-    const newLink = `https://cwd.global/shopping/payment?to_name=${str}&amount=${
-      num / 100000
-    }`;
+    const newLink = `https://cwd.global/shopping/payment?to_name=${str}&amount=${num / 100000}`;
     setLink(newLink);
     setOldLink(`https://cwd.global/shopping/payment?to_name=${str}&amount=`);
     const val: any = /\d{3,}/g.exec(str);
@@ -140,8 +133,8 @@ export const Tariffs = () => {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const id = e.target.value;
     setValue(id);
-    const newLink = oldLink.replace(/\d{5,}/g, "");
-    if (id === "") {
+    const newLink = oldLink.replace(/\d{5,}/g, '');
+    if (id === '') {
       setLink(newLink);
     } else {
       setLink(newLink + id);
@@ -156,75 +149,51 @@ export const Tariffs = () => {
     switch (id) {
       case 0:
         return (
-          <Button
-            green
-            onClick={() => handleClick(item.account, item.minAmount)}
-          >
+          <Button green onClick={() => handleClick(item.account, item.minAmount)}>
             {item.name}
           </Button>
         );
       case 1:
         return (
-          <Button
-            blue
-            onClick={() => handleClick(item.account, item.minAmount)}
-          >
+          <Button blue onClick={() => handleClick(item.account, item.minAmount)}>
             {item.name}
           </Button>
         );
       case 2:
         return (
-          <Button
-            danger
-            onClick={() => handleClick(item.account, item.minAmount)}
-          >
+          <Button danger onClick={() => handleClick(item.account, item.minAmount)}>
             {item.name}
           </Button>
         );
       case 3:
         return (
-          <Button
-            pink
-            onClick={() => handleClick(item.account, item.minAmount)}
-          >
+          <Button pink onClick={() => handleClick(item.account, item.minAmount)}>
             {item.name}
           </Button>
         );
       case 4:
         return (
-          <Button
-            purple
-            onClick={() => handleClick(item.account, item.minAmount)}
-          >
+          <Button purple onClick={() => handleClick(item.account, item.minAmount)}>
             {item.name}
           </Button>
         );
 
       case 5:
         return (
-          <Button
-            yellow
-            onClick={() => handleClick(item.account, item.minAmount)}
-          >
+          <Button yellow onClick={() => handleClick(item.account, item.minAmount)}>
             {item.name}
           </Button>
         );
 
       case 6:
         return (
-          <Button
-            yellow
-            onClick={() => handleClick(item.account, item.minAmount)}
-          >
+          <Button yellow onClick={() => handleClick(item.account, item.minAmount)}>
             {item.name}
           </Button>
         );
       default:
         return (
-          <Button
-            green
-            onClick={() => handleClick(item.account, item.minAmount)}
-          >
+          <Button green onClick={() => handleClick(item.account, item.minAmount)}>
             {item.name}
           </Button>
         );
@@ -234,44 +203,40 @@ export const Tariffs = () => {
   return (
     <Page id="tariffs">
       <Container>
-        <UpTitle small>{t("tariffs.uptitle")}</UpTitle>
+        <UpTitle small>{t('tariffs.uptitle')}</UpTitle>
       </Container>
       <Container>
-        <H1>{t("tariffs.H1")}</H1>
+        <H1>{t('tariffs.H1')}</H1>
       </Container>
       <PartnerProgramContainer>
-        <PartnerProgramTitle phone={true}>{t("partnersTitle")}</PartnerProgramTitle>
+        <PartnerProgramTitle phone={true}>{t('partnersTitle')}</PartnerProgramTitle>
       </PartnerProgramContainer>
       <DescContainerInner>
         <PartnerProgramBlock phone={true}>
           <PartnerProgramContainer>
-            <Swiper
-              spaceBetween={10}
-              slidesPerView={1}
-              pagination={{ clickable: true }}
-            >
-              {
-                programs.map(( program: any ) => {
-                  return (
-                    <SwiperSlide key={programs.indexOf(program)}>
-                      <PartnerProgramHeaderItem color={program.color}>{program.name}</PartnerProgramHeaderItem>
-                      {
-                        program.lines.map(( line: any ) => {
-                          const { id, count } = line;
-                          return (
-                            <PartnerProgramLine>
-                              <PartnerProgramLineNumber>{id} {t("line")}</PartnerProgramLineNumber>
-                              <div className="inner">
-                                <PartnerProgramLineItem>{count}</PartnerProgramLineItem>
-                              </div>
-                            </PartnerProgramLine>
-                          )
-                       })
-                     }
-                    </SwiperSlide>
-                  )
-                })
-              }
+            <Swiper spaceBetween={10} slidesPerView={1} pagination={{ clickable: true }}>
+              {programs.map((program: any) => {
+                return (
+                  <SwiperSlide key={programs.indexOf(program)}>
+                    <PartnerProgramHeaderItem color={program.color}>
+                      {program.name}
+                    </PartnerProgramHeaderItem>
+                    {program.lines.map((line: any, idx: number) => {
+                      const { id, count } = line;
+                      return (
+                        <PartnerProgramLine key={idx}>
+                          <PartnerProgramLineNumber>
+                            {id} {t('line')}
+                          </PartnerProgramLineNumber>
+                          <div className="inner">
+                            <PartnerProgramLineItem>{count}</PartnerProgramLineItem>
+                          </div>
+                        </PartnerProgramLine>
+                      );
+                    })}
+                  </SwiperSlide>
+                );
+              })}
             </Swiper>
             <PartnerProgramPagination></PartnerProgramPagination>
           </PartnerProgramContainer>
@@ -280,7 +245,7 @@ export const Tariffs = () => {
       <DescContainerInner>
         <PartnerProgramBlock>
           <PartnerProgramContainer>
-            <PartnerProgramTitle>{t("partnersTitle")}</PartnerProgramTitle>
+            <PartnerProgramTitle>{t('partnersTitle')}</PartnerProgramTitle>
           </PartnerProgramContainer>
           <PartnerProgramHeader>
             <div>
@@ -292,7 +257,7 @@ export const Tariffs = () => {
           <PartnerProgramData>
             <PartnerProgramLine>
               <PartnerProgramContainer>
-                <PartnerProgramLineNumber>1 {t("line")}</PartnerProgramLineNumber>
+                <PartnerProgramLineNumber>1 {t('line')}</PartnerProgramLineNumber>
                 <div className="inner">
                   <PartnerProgramLineItem>4%</PartnerProgramLineItem>
                   <PartnerProgramLineItem>5%</PartnerProgramLineItem>
@@ -302,7 +267,7 @@ export const Tariffs = () => {
             </PartnerProgramLine>
             <PartnerProgramLine>
               <PartnerProgramContainer>
-                <PartnerProgramLineNumber>2 {t("line")}</PartnerProgramLineNumber>
+                <PartnerProgramLineNumber>2 {t('line')}</PartnerProgramLineNumber>
                 <div className="inner">
                   <PartnerProgramLineItem>1,6%</PartnerProgramLineItem>
                   <PartnerProgramLineItem>2%</PartnerProgramLineItem>
@@ -312,7 +277,7 @@ export const Tariffs = () => {
             </PartnerProgramLine>
             <PartnerProgramLine>
               <PartnerProgramContainer>
-                <PartnerProgramLineNumber>3 {t("line")}</PartnerProgramLineNumber>
+                <PartnerProgramLineNumber>3 {t('line')}</PartnerProgramLineNumber>
                 <div className="inner">
                   <PartnerProgramLineItem>0,8%</PartnerProgramLineItem>
                   <PartnerProgramLineItem>1%</PartnerProgramLineItem>
@@ -322,7 +287,7 @@ export const Tariffs = () => {
             </PartnerProgramLine>
             <PartnerProgramLine>
               <PartnerProgramContainer>
-                <PartnerProgramLineNumber>4 {t("line")}</PartnerProgramLineNumber>
+                <PartnerProgramLineNumber>4 {t('line')}</PartnerProgramLineNumber>
                 <div className="inner">
                   <PartnerProgramLineItem></PartnerProgramLineItem>
                   <PartnerProgramLineItem>1%</PartnerProgramLineItem>
@@ -332,7 +297,7 @@ export const Tariffs = () => {
             </PartnerProgramLine>
             <PartnerProgramLine>
               <PartnerProgramContainer>
-                <PartnerProgramLineNumber>5 {t("line")}</PartnerProgramLineNumber>
+                <PartnerProgramLineNumber>5 {t('line')}</PartnerProgramLineNumber>
                 <div className="inner">
                   <PartnerProgramLineItem></PartnerProgramLineItem>
                   <PartnerProgramLineItem>1%</PartnerProgramLineItem>
@@ -342,7 +307,7 @@ export const Tariffs = () => {
             </PartnerProgramLine>
             <PartnerProgramLine>
               <PartnerProgramContainer>
-                <PartnerProgramLineNumber>6 {t("line")}</PartnerProgramLineNumber>
+                <PartnerProgramLineNumber>6 {t('line')}</PartnerProgramLineNumber>
                 <div className="inner">
                   <PartnerProgramLineItem></PartnerProgramLineItem>
                   <PartnerProgramLineItem></PartnerProgramLineItem>
@@ -352,7 +317,7 @@ export const Tariffs = () => {
             </PartnerProgramLine>
             <PartnerProgramLine>
               <PartnerProgramContainer>
-                <PartnerProgramLineNumber>7 {t("line")}</PartnerProgramLineNumber>
+                <PartnerProgramLineNumber>7 {t('line')}</PartnerProgramLineNumber>
                 <div className="inner">
                   <PartnerProgramLineItem></PartnerProgramLineItem>
                   <PartnerProgramLineItem></PartnerProgramLineItem>
@@ -362,7 +327,7 @@ export const Tariffs = () => {
             </PartnerProgramLine>
             <PartnerProgramLine>
               <PartnerProgramContainer>
-                <PartnerProgramLineNumber>8 {t("line")}</PartnerProgramLineNumber>
+                <PartnerProgramLineNumber>8 {t('line')}</PartnerProgramLineNumber>
                 <div className="inner">
                   <PartnerProgramLineItem></PartnerProgramLineItem>
                   <PartnerProgramLineItem></PartnerProgramLineItem>
@@ -376,7 +341,7 @@ export const Tariffs = () => {
       {isNormalOpen && (
         <Modal onClose={() => setIsNormalOpen(false)}>
           <ModalBlock>
-            <ModalTitle>{t("tariffs.depositSize")}</ModalTitle>
+            <ModalTitle>{t('tariffs.depositSize')}</ModalTitle>
             <Input
               onChange={onChange}
               // placeholder={min.toString()}
@@ -385,13 +350,8 @@ export const Tariffs = () => {
               value={value}
             />
 
-            <ModalButton
-              as="button"
-              onClick={toLink}
-              danger
-              disabled={+value < min}
-            >
-              {t("tariffs.ok")}
+            <ModalButton as="button" onClick={toLink} danger disabled={+value < min}>
+              {t('tariffs.ok')}
             </ModalButton>
           </ModalBlock>
         </Modal>
@@ -408,20 +368,13 @@ export const Tariffs = () => {
         ))}
       </BlockContainers>
       <SwiperContainer>
-        <Swiper
-          spaceBetween={50}
-          slidesPerView={1}
-          loop
-          pagination={{ clickable: true }}
-        >
+        <Swiper spaceBetween={50} slidesPerView={1} loop pagination={{ clickable: true }}>
           {listDeposits.map((item, idx) => (
             <SwiperSlide key={item.safeId}>
               <BlockItem>
                 <BlockTitle>{item.name}</BlockTitle>
                 <div className="item__subtitle">
-                  <Text
-                    dangerouslySetInnerHTML={{ __html: item.description }}
-                  />
+                  <Text dangerouslySetInnerHTML={{ __html: item.description }} />
                 </div>
                 {colors(item, idx)}
               </BlockItem>
