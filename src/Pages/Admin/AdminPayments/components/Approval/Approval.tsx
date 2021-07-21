@@ -18,10 +18,7 @@ import { Card } from '../../../../../globalStyles';
 import { OpenDate } from '../../../../../types/dates';
 import { CollectionListDeposits } from '../../../../../types/deposits';
 import { Notify } from '../../../../../types/notify';
-import {
-  PaymentsCollection,
-  RootPayments,
-} from '../../../../../types/payments';
+import { PaymentsCollection, RootPayments } from '../../../../../types/payments';
 import { SelectValues, SortingType } from '../../../../../types/sorting';
 import { DepositList } from '../../../AdminPay/DepositList';
 import { Pagination } from '../../../Pagination';
@@ -58,7 +55,7 @@ export const Approval: FC<Props> = ({
   setProcent,
   procent,
   setModal,
-}) => {
+}: Props) => {
   const [depositList, setDepositList] = useState<PaymentsCollection[]>([]);
   const [totalDeposits, setTotalDeposits] = useState(0);
   const [count, setCount] = useState(true);
@@ -81,14 +78,10 @@ export const Approval: FC<Props> = ({
   const hubConnection = appContext.hubConnection;
   const { t } = useTranslation();
 
-  const depositState = checkList.length
-    ? checkList.map((i: any) => i.id)
-    : [5, 6];
+  const depositState = checkList.length ? checkList.map((i: any) => i.id) : [5, 6];
 
   const namesProgramApproval = checkListApproval.map((i: any) => i.safeId);
-  const idProgramApproval = listDeposits.filter((i) =>
-    namesProgramApproval.includes(i.safeId),
-  );
+  const idProgramApproval = listDeposits.filter((i) => namesProgramApproval.includes(i.safeId));
   const searchSafeIDApproval = idProgramApproval.map((i) => i.safeId);
 
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
@@ -164,7 +157,7 @@ export const Approval: FC<Props> = ({
           null,
           (currentPage - 1) * pageLength,
           pageLength,
-          [],
+          []
         )
         .then((res) => {
           setTotalDeposits(res.totalRecords);
@@ -198,7 +191,7 @@ export const Approval: FC<Props> = ({
           null,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting,
+          sorting
         )
         .then((res) => {
           console.log('~~~~~~~~~~~~~~~~~~~~~~~~', res);
@@ -294,7 +287,7 @@ export const Approval: FC<Props> = ({
           null,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting,
+          sorting
         )
         .then((res) => {
           setDepositList([]);
@@ -332,7 +325,7 @@ export const Approval: FC<Props> = ({
             openDateApproval.from ? openDateApproval.from : null,
             openDateApproval.to ? openDateApproval.to : null,
             searchSafeIDApproval.length ? searchSafeIDApproval : null,
-            procent ? +procent / 100 : null,
+            procent ? +procent / 100 : null
           )
           .then((res) => {
             createNotify({
@@ -424,10 +417,7 @@ export const Approval: FC<Props> = ({
           placeholder="—"
           value={procent}
           onChange={(e) => {
-            if (
-              e.target.value.match(/^[\d]*\.?[\d]*$/g) ||
-              e.target.value === ''
-            )
+            if (e.target.value.match(/^[\d]*\.?[\d]*$/g) || e.target.value === '')
               setProcent(e.target.value);
           }}
           label={t('adminPay.procentPay')}
@@ -441,20 +431,14 @@ export const Approval: FC<Props> = ({
             {openFilterOne ? t('hide') : t('show')}
           </ShowHide>
         </FilterHeader>
-        <CSSTransition
-          in={openFilterOne}
-          timeout={200}
-          classNames="filter"
-          unmountOnExit>
+        <CSSTransition in={openFilterOne} timeout={200} classNames="filter" unmountOnExit>
           <SelectContainer>
             <SelectContainerInnerPaid>
               <SelectWrapTwo mWidth="154px">
                 <Label>{t('adminPay.filter.user')}</Label>
                 <Input
                   value={nameApproval}
-                  onChange={(e) =>
-                    setNameApproval(e.target.value.toLowerCase())
-                  }
+                  onChange={(e) => setNameApproval(e.target.value.toLowerCase())}
                 />
               </SelectWrapTwo>
               <SelectWrapTwo mWidth="210px">
@@ -478,10 +462,7 @@ export const Approval: FC<Props> = ({
                   checkList={checkList}
                   setCheckList={setCheckList}
                   idx={6}
-                  values={[
-                    t('adminPay.filter.disagree'),
-                    t('adminPay.filter.agree'),
-                  ]}
+                  values={[t('adminPay.filter.disagree'), t('adminPay.filter.agree')]}
                 />
               </SelectWrapTwo>
             </SelectContainerInnerPaid>
@@ -501,30 +482,14 @@ export const Approval: FC<Props> = ({
         <Styled.PaymentsTable>
           <Styled.TableHead>
             <Styled.TableHeadItem>№</Styled.TableHeadItem>
-            <Styled.TableHeadItem>
-              {t('adminPay.table.user')}
-            </Styled.TableHeadItem>
-            <Styled.TableHeadItem>
-              {t('adminPay.table.name')}
-            </Styled.TableHeadItem>
-            <Styled.TableHeadItem>
-              {t('adminPay.table.procent')}
-            </Styled.TableHeadItem>
-            <Styled.TableHeadItem>
-              {t('adminPay.table.datePay')}
-            </Styled.TableHeadItem>
-            <Styled.TableHeadItem>
-              {t('adminPay.table.profit')}
-            </Styled.TableHeadItem>
-            <Styled.TableHeadItem>
-              {t('adminPay.table.openDate')}
-            </Styled.TableHeadItem>
-            <Styled.TableHeadItem>
-              {t('adminPay.table.contribution')}
-            </Styled.TableHeadItem>
-            <Styled.TableHeadItem>
-              {t('adminPay.table.payments')}
-            </Styled.TableHeadItem>
+            <Styled.TableHeadItem>{t('adminPay.table.user')}</Styled.TableHeadItem>
+            <Styled.TableHeadItem>{t('adminPay.table.name')}</Styled.TableHeadItem>
+            <Styled.TableHeadItem>{t('adminPay.table.procent')}</Styled.TableHeadItem>
+            <Styled.TableHeadItem>{t('adminPay.table.datePay')}</Styled.TableHeadItem>
+            <Styled.TableHeadItem>{t('adminPay.table.profit')}</Styled.TableHeadItem>
+            <Styled.TableHeadItem>{t('adminPay.table.openDate')}</Styled.TableHeadItem>
+            <Styled.TableHeadItem>{t('adminPay.table.contribution')}</Styled.TableHeadItem>
+            <Styled.TableHeadItem>{t('adminPay.table.payments')}</Styled.TableHeadItem>
             <Styled.TableHeadItem>
               <BurgerButton>
                 <BurgerImg
@@ -540,7 +505,8 @@ export const Approval: FC<Props> = ({
                     <Sort
                       active={listForSorting[index].active}
                       key={index}
-                      onClick={() => getActiveSort(index)}>
+                      onClick={() => getActiveSort(index)}
+                    >
                       {obj.text}
                     </Sort>
                   ))}

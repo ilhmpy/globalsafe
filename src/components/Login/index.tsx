@@ -1,37 +1,34 @@
-import React, { useState, useContext, useEffect, FC } from "react";
-import { Button } from "../../components/Button/Button";
-import { Container, Card } from "../../globalStyles";
-import styled from "styled-components/macro";
-import { Input } from "../../components/UI/Input";
-import { AppContext } from "../../context/HubContext";
-import { Link, useHistory } from "react-router-dom";
-import { CSSTransition } from "react-transition-group";
-import { useTranslation } from "react-i18next";
-import { Timer } from "./Timer";
-import moment from "moment";
+import React, { useState, useContext, useEffect, FC } from 'react';
+import { Button } from '../../components/Button/Button';
+import { Container, Card } from '../../globalStyles';
+import styled from 'styled-components/macro';
+import { Input } from '../../components/UI/Input';
+import { AppContext } from '../../context/HubContext';
+import { Link, useHistory } from 'react-router-dom';
+import { CSSTransition } from 'react-transition-group';
+import { useTranslation } from 'react-i18next';
+import { Timer } from './Timer';
+import moment from 'moment';
 
-const TimerButton: FC<{
+type TimerButtonProps = {
   password: string;
   tryCode: number;
   setTryCode: (num: number) => void;
-}> = ({ password, tryCode, setTryCode }) => {
+};
+
+const TimerButton: FC<TimerButtonProps> = ({ password, tryCode, setTryCode }: TimerButtonProps) => {
   const [state, setState] = useState<null | string>(null);
   const { t } = useTranslation();
   return (
     <Timer
-      last={tryCode > 2 ? localStorage.getItem("time") : ""}
+      last={tryCode > 2 ? localStorage.getItem('time') : ''}
       setTryCode={setTryCode}
       state={state}
       setState={setState}
     >
       {state === null ? (
-        <Submit
-          as="button"
-          danger
-          type="submit"
-          disabled={password === "" || state !== null}
-        >
-          {t("login.in")}
+        <Submit as="button" danger type="submit" disabled={password === '' || state !== null}>
+          {t('login.in')}
         </Submit>
       ) : (
         <Submit as="button" danger type="submit" disabled>
@@ -45,8 +42,8 @@ const TimerButton: FC<{
 export const LoginComponent = () => {
   const [error, setError] = useState(true);
   const [login, setLogin] = useState(false);
-  const [password, setPassword] = useState("");
-  const [value, setValue] = useState("");
+  const [password, setPassword] = useState('');
+  const [value, setValue] = useState('');
   const [where, setWhere] = useState(false);
   const [stateRepeat, setStateRepeat] = useState<null | string>(null);
   const [tryCode, setTryCode] = useState(0);
@@ -64,7 +61,7 @@ export const LoginComponent = () => {
   };
   useEffect(() => {
     if (user) {
-      history.replace("/info");
+      history.replace('/info');
     }
   }, []);
 
@@ -75,20 +72,20 @@ export const LoginComponent = () => {
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement> | React.MouseEvent) => {
     e.preventDefault();
-    console.log("submit", value);
+    console.log('submit', value);
     if (hubConnection) {
       hubConnection
-        .invoke("CheckAccount", value)
+        .invoke('CheckAccount', value)
         .then((res: boolean) => {
           if (res) {
             setTryCode(0);
-            setStateRepeat("-");
-            localStorage.setItem("timeRepeat", moment().toISOString());
+            setStateRepeat('-');
+            localStorage.setItem('timeRepeat', moment().toISOString());
             setError(true);
             loginSubmit();
           } else {
             setError(false);
-            setValue("");
+            setValue('');
           }
         })
         .catch((err: Error) => console.log(err));
@@ -98,11 +95,11 @@ export const LoginComponent = () => {
   const singIn = () => {
     if (hubConnection) {
       hubConnection
-        .invoke("SignIn", { login: value, password: password, signInMethod: 3 })
+        .invoke('SignIn', { login: value, password: password, signInMethod: 3 })
         .then((res: any) => {
           // console.log("res", res);
           setTryCode((tryCode) => tryCode + 1);
-          localStorage.setItem("time", moment().toISOString());
+          localStorage.setItem('time', moment().toISOString());
           if (res.token !== null) {
             logIn(res.token);
             setWhere(true);
@@ -119,7 +116,7 @@ export const LoginComponent = () => {
   const loginSubmit = () => {
     if (hubConnection) {
       hubConnection
-        .invoke("SendAuthCode", value)
+        .invoke('SendAuthCode', value)
         .then((res: boolean) => {
           // console.log("res", res);
           setError(true);
@@ -141,63 +138,34 @@ export const LoginComponent = () => {
   return (
     <Container>
       <CardContainer>
-        <CSSTransition
-          in={where || !!user}
-          timeout={300}
-          classNames="alert"
-          unmountOnExit
-        >
+        <CSSTransition in={where || !!user} timeout={300} classNames="alert" unmountOnExit>
           <FormBlock>
-            <H4>{t("login.where")}</H4>
-            <Submit
-              mb
-              as="button"
-              onClick={() => history.push("/info")}
-              dangerOutline
-            >
-              {t("headerButton.personalArea")}
+            <H4>{t('login.where')}</H4>
+            <Submit mb as="button" onClick={() => history.push('/info')} dangerOutline>
+              {t('headerButton.personalArea')}
             </Submit>
-            <Submit
-              as="button"
-              onClick={() => history.push("/admin")}
-              danger
-              disabled={!admin}
-            >
-              {t("headerButton.admin")}
+            <Submit as="button" onClick={() => history.push('/admin')} danger disabled={!admin}>
+              {t('headerButton.admin')}
             </Submit>
           </FormBlock>
         </CSSTransition>
-        <CSSTransition
-          in={login && !user && !where}
-          timeout={300}
-          classNames="alert"
-          unmountOnExit
-        >
+        <CSSTransition in={login && !user && !where} timeout={300} classNames="alert" unmountOnExit>
           <FormBlock onSubmit={onSubmitCode}>
-            <H4>{t("login.signIn")}</H4>
+            <H4>{t('login.signIn')}</H4>
             <SelfInput
               value={password}
               name="password"
-              placeholder={t("login.code")}
+              placeholder={t('login.code')}
               onChange={onChangeNumber}
               autoComplete="new-password"
             />
             {!error && (
-              <StyledInlineErrorMessage>
-                {t("login.incorrectCode")}
-              </StyledInlineErrorMessage>
+              <StyledInlineErrorMessage>{t('login.incorrectCode')}</StyledInlineErrorMessage>
             )}
-            <TimerButton
-              tryCode={tryCode}
-              setTryCode={setTryCode}
-              password={password}
-            />
+            <TimerButton tryCode={tryCode} setTryCode={setTryCode} password={password} />
 
-            <LinkTo
-              href={`https://cwd.global/account/${value}`}
-              target="_blank"
-            >
-              {t("login.goTo")}
+            <LinkTo href={`https://cwd.global/account/${value}`} target="_blank">
+              {t('login.goTo')}
             </LinkTo>
           </FormBlock>
         </CSSTransition>
@@ -209,37 +177,30 @@ export const LoginComponent = () => {
           unmountOnExit
         >
           <FormBlock onSubmit={onSubmit}>
-            <H4>{t("login.signIn")}</H4>
+            <H4>{t('login.signIn')}</H4>
             <SelfInput
               value={value}
               name="login"
-              placeholder={t("login.login")}
+              placeholder={t('login.login')}
               onChange={onChangeValue}
               autoComplete="off"
             />
             {!error && (
-              <StyledInlineErrorMessage>
-                {t("login.incorrectLogin")}
-              </StyledInlineErrorMessage>
+              <StyledInlineErrorMessage>{t('login.incorrectLogin')}</StyledInlineErrorMessage>
             )}
             {/* <Submit as="button" danger type="submit" disabled={value === ""}>
               {t("login.getCode")}
             </Submit> */}
 
             <Timer
-              last={localStorage.getItem("timeRepeat") || ""}
+              last={localStorage.getItem('timeRepeat') || ''}
               setTryCode={setTryCode}
               state={stateRepeat}
               setState={setStateRepeat}
             >
               {stateRepeat === null ? (
-                <Submit
-                  as="button"
-                  danger
-                  type="submit"
-                  disabled={value === ""}
-                >
-                  {t("login.getCode")}
+                <Submit as="button" danger type="submit" disabled={value === ''}>
+                  {t('login.getCode')}
                 </Submit>
               ) : (
                 <Submit as="button" danger type="submit" disabled>
@@ -251,7 +212,7 @@ export const LoginComponent = () => {
         </CSSTransition>
 
         <Timer
-          last={localStorage.getItem("timeRepeat") || ""}
+          last={localStorage.getItem('timeRepeat') || ''}
           setTryCode={setTryCode}
           state={stateRepeat}
           setState={setStateRepeat}
@@ -262,8 +223,7 @@ export const LoginComponent = () => {
             disabled={stateRepeat !== null}
           >
             <>
-              {t("login.repeat")}{" "}
-              {stateRepeat && t("login.over") + " " + stateRepeat}
+              {t('login.repeat')} {stateRepeat && t('login.over') + ' ' + stateRepeat}
             </>
           </RepeatCode>
         </Timer>
@@ -277,7 +237,7 @@ const SelfInput = styled(Input)`
 `;
 
 const RepeatCode = styled.button<{ op?: boolean }>`
-  opacity: ${(props) => (props.op ? "1" : "0")};
+  opacity: ${(props) => (props.op ? '1' : '0')};
   cursor: pointer;
   appearance: none;
   border: none;
@@ -343,7 +303,7 @@ const FormBlock = styled.form`
 
 export const Submit = styled(Button)<{ mb?: boolean }>`
   max-width: 100%;
-  margin-bottom: ${(props) => (props.mb ? "20px" : "0")};
+  margin-bottom: ${(props) => (props.mb ? '20px' : '0')};
   color: ${(props) => props.theme.text};
 `;
 

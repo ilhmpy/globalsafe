@@ -25,14 +25,7 @@ export const CurrencyValues = () => {
     const dateFrom: any = moment().subtract(7, 'days');
     if (hubConnection) {
       hubConnection
-        .invoke<RootChange>(
-          'GetMarket',
-          4,
-          dateFrom._d,
-          new Date(),
-          numDIAMOND,
-          100,
-        )
+        .invoke<RootChange>('GetMarket', 4, dateFrom._d, new Date(), numDIAMOND, 100)
         .then((res) => {
           // console.log("res diamond", res);
           if (res.totalRecords > listDIAMOND.length) {
@@ -48,14 +41,7 @@ export const CurrencyValues = () => {
     const dateFrom: any = moment().subtract(7, 'days');
     if (hubConnection) {
       hubConnection
-        .invoke<RootChange>(
-          'GetMarket',
-          2,
-          dateFrom._d,
-          new Date(),
-          numMGCWD,
-          100,
-        )
+        .invoke<RootChange>('GetMarket', 2, dateFrom._d, new Date(), numMGCWD, 100)
         .then((res) => {
           if (res.totalRecords > listMGCWD.length) {
             setNumMGCWD((numMGCWD) => numMGCWD + 100);
@@ -70,14 +56,7 @@ export const CurrencyValues = () => {
     const dateFrom: any = moment().subtract(7, 'days');
     if (hubConnection) {
       hubConnection
-        .invoke<RootChange>(
-          'GetMarket',
-          3,
-          dateFrom._d,
-          new Date(),
-          numGCWD,
-          100,
-        )
+        .invoke<RootChange>('GetMarket', 3, dateFrom._d, new Date(), numGCWD, 100)
         .then((res) => {
           if (res.totalRecords > listGCWD.length) {
             setNumGCWD((numGCWD) => numGCWD + 100);
@@ -106,13 +85,9 @@ export const CurrencyValues = () => {
   const changeValue = (data: Collection[]) => {
     const currValue = data[data.length - 1].latestBid;
     const prevValue = data[1].latestBid;
-    const filterPrevValues = data.filter(
-      (item) => item.latestBid !== currValue,
-    );
+    const filterPrevValues = data.filter((item) => item.latestBid !== currValue);
     const value =
-      ((currValue - filterPrevValues[filterPrevValues.length - 1].latestBid) /
-        currValue) *
-      100;
+      ((currValue - filterPrevValues[filterPrevValues.length - 1].latestBid) / currValue) * 100;
     if (value > 0) {
       return <ChartItemChange>{value.toFixed(2)} &nbsp;%</ChartItemChange>;
     } else {
@@ -122,11 +97,8 @@ export const CurrencyValues = () => {
 
   const redOrGreen = (data: Collection[]) => {
     const currValue = data[data.length - 1].latestBid;
-    const filterPrevValues = data.filter(
-      (item) => item.latestBid !== currValue,
-    );
-    const value =
-      currValue > filterPrevValues[filterPrevValues.length - 1].latestBid;
+    const filterPrevValues = data.filter((item) => item.latestBid !== currValue);
+    const value = currValue > filterPrevValues[filterPrevValues.length - 1].latestBid;
     if (value) {
       return ['#BCD476', 'rgba(188, 212, 118, 0.4)'];
     } else {
@@ -145,12 +117,12 @@ export const CurrencyValues = () => {
               plchldr={!disabled}
               red={
                 !!listGCWD.length &&
-                listGCWD[listGCWD.length - 1].latestBid <
-                  listGCWD[listGCWD.length - 2].latestBid
+                listGCWD[listGCWD.length - 1].latestBid < listGCWD[listGCWD.length - 2].latestBid
               }
               alfa
               onClick={() => setActive(0)}
-              active={active === 0}>
+              active={active === 0}
+            >
               {!!disabled && (
                 <>
                   <ChartItemInner>
@@ -164,15 +136,12 @@ export const CurrencyValues = () => {
                         listGCWD[listGCWD.length - 2].latestBid
                       }
                       fontLength={
-                        (
-                          listGCWD[listGCWD.length - 1].latestBid / 100000
-                        ).toLocaleString('ru-RU', {
+                        (listGCWD[listGCWD.length - 1].latestBid / 100000).toLocaleString('ru-RU', {
                           maximumFractionDigits: 2,
                         }).length < 8
-                      }>
-                      {(
-                        listGCWD[listGCWD.length - 1].latestBid / 100000
-                      ).toLocaleString('ru-RU', {
+                      }
+                    >
+                      {(listGCWD[listGCWD.length - 1].latestBid / 100000).toLocaleString('ru-RU', {
                         maximumFractionDigits: 2,
                       })}{' '}
                       CWD
@@ -197,7 +166,8 @@ export const CurrencyValues = () => {
                 !!listMGCWD.length &&
                 listMGCWD[listMGCWD.length - 1].latestBid <
                   listMGCWD[listMGCWD.length - 2].latestBid
-              }>
+              }
+            >
               {!!disabled && (
                 <>
                   <ChartItemInner>
@@ -212,17 +182,20 @@ export const CurrencyValues = () => {
                           listMGCWD[listMGCWD.length - 2].latestBid
                         }
                         fontLength={
-                          (
-                            listMGCWD[listMGCWD.length - 1].latestBid / 100000
-                          ).toLocaleString('ru-RU', {
+                          (listMGCWD[listMGCWD.length - 1].latestBid / 100000).toLocaleString(
+                            'ru-RU',
+                            {
+                              maximumFractionDigits: 2,
+                            }
+                          ).length < 8
+                        }
+                      >
+                        {(listMGCWD[listMGCWD.length - 1].latestBid / 100000).toLocaleString(
+                          'ru-RU',
+                          {
                             maximumFractionDigits: 2,
-                          }).length < 8
-                        }>
-                        {(
-                          listMGCWD[listMGCWD.length - 1].latestBid / 100000
-                        ).toLocaleString('ru-RU', {
-                          maximumFractionDigits: 2,
-                        })}{' '}
+                          }
+                        )}{' '}
                         CWD
                       </ChartItemValue>
                     )}
@@ -230,9 +203,7 @@ export const CurrencyValues = () => {
                   <ChartBg>
                     <ApexChart
                       height={75}
-                      values={listMGCWD
-                        .slice(-20)
-                        .map((i) => i.latestBid / 100)}
+                      values={listMGCWD.slice(-20).map((i) => i.latestBid / 100)}
                       gradientColor={redOrGreen(listMGCWD)}
                     />
                   </ChartBg>
@@ -248,7 +219,8 @@ export const CurrencyValues = () => {
                   listDIAMOND[listDIAMOND.length - 2].latestBid
               }
               onClick={() => setActive(2)}
-              active={active === 2}>
+              active={active === 2}
+            >
               {!!disabled && (
                 <>
                   <ChartItemInner>
@@ -263,17 +235,20 @@ export const CurrencyValues = () => {
                           listDIAMOND[listDIAMOND.length - 2].latestBid
                         }
                         fontLength={
-                          (
-                            listDIAMOND[listDIAMOND.length - 1].latestBid / 100
-                          ).toLocaleString('ru-RU', {
+                          (listDIAMOND[listDIAMOND.length - 1].latestBid / 100).toLocaleString(
+                            'ru-RU',
+                            {
+                              maximumFractionDigits: 2,
+                            }
+                          ).length < 8
+                        }
+                      >
+                        {(listDIAMOND[listDIAMOND.length - 1].latestBid / 100).toLocaleString(
+                          'ru-RU',
+                          {
                             maximumFractionDigits: 2,
-                          }).length < 8
-                        }>
-                        {(
-                          listDIAMOND[listDIAMOND.length - 1].latestBid / 100
-                        ).toLocaleString('ru-RU', {
-                          maximumFractionDigits: 2,
-                        })}{' '}
+                          }
+                        )}{' '}
                         CWD
                       </ChartItemValue>
                     )}
@@ -281,9 +256,7 @@ export const CurrencyValues = () => {
                   <ChartBg>
                     <ApexChart
                       height={75}
-                      values={listDIAMOND
-                        .slice(-20)
-                        .map((i) => i.latestBid / 100)}
+                      values={listDIAMOND.slice(-20).map((i) => i.latestBid / 100)}
                       gradientColor={redOrGreen(listDIAMOND)}
                     />
                   </ChartBg>
@@ -292,11 +265,7 @@ export const CurrencyValues = () => {
             </ChartItem>
           </ChartItems>
           <Charts alfa plchldr={!disabled}>
-            <CSSTransition
-              in={active === 0}
-              timeout={0}
-              classNames="modal"
-              unmountOnExit>
+            <CSSTransition in={active === 0} timeout={0} classNames="modal" unmountOnExit>
               <ChartsWrapper>
                 {disabled ? (
                   <>
@@ -312,11 +281,7 @@ export const CurrencyValues = () => {
                 )}
               </ChartsWrapper>
             </CSSTransition>
-            <CSSTransition
-              in={active === 1}
-              timeout={0}
-              classNames="modal"
-              unmountOnExit>
+            <CSSTransition in={active === 1} timeout={0} classNames="modal" unmountOnExit>
               <ChartsWrapper>
                 {disabled ? (
                   <>
@@ -332,11 +297,7 @@ export const CurrencyValues = () => {
                 )}
               </ChartsWrapper>
             </CSSTransition>
-            <CSSTransition
-              in={active === 2}
-              timeout={0}
-              classNames="modal"
-              unmountOnExit>
+            <CSSTransition in={active === 2} timeout={0} classNames="modal" unmountOnExit>
               <ChartsWrapper>
                 {disabled ? (
                   <>
@@ -365,7 +326,7 @@ type ChartProps = {
   height?: number;
 };
 
-const ApexChart: FC<ChartProps> = ({ values, gradientColor, height = 280 }) => {
+const ApexChart: FC<ChartProps> = ({ values, gradientColor, height = 280 }: ChartProps) => {
   const data = {
     series: [
       {
@@ -447,9 +408,7 @@ const ApexChart: FC<ChartProps> = ({ values, gradientColor, height = 280 }) => {
         custom: function ({ series, seriesIndex, dataPointIndex, w }: any) {
           return `
           <div class="currency-toltip">
-            <div >${w.globals.stackedSeriesTotals[
-              dataPointIndex
-            ].toLocaleString()} CWD</div>
+            <div >${w.globals.stackedSeriesTotals[dataPointIndex].toLocaleString()} CWD</div>
           </div>
           `;
         },
@@ -469,12 +428,7 @@ const ApexChart: FC<ChartProps> = ({ values, gradientColor, height = 280 }) => {
 
   return (
     <div id="chart">
-      <Chart
-        options={data.options}
-        series={data.series}
-        type="area"
-        height={height}
-      />
+      <Chart options={data.options} series={data.series} type="area" height={height} />
     </div>
   );
 };
@@ -644,8 +598,7 @@ const ChartItem = styled(Card)<{
   position: relative;
   margin-bottom: 20px;
   display: flex;
-  border: 1px solid
-    ${(props) => (props.active ? '#FF416E' : props.theme.card.background)};
+  border: 1px solid ${(props) => (props.active ? '#FF416E' : props.theme.card.background)};
   justify-content: space-between;
   align-items: center;
   background-repeat: no-repeat;

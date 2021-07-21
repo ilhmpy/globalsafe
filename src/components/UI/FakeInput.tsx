@@ -1,27 +1,29 @@
-import React, { FC } from "react";
-import styled from "styled-components/macro";
-import { useTranslation } from "react-i18next";
+import React, { FC } from 'react';
+import styled from 'styled-components/macro';
+import { useTranslation } from 'react-i18next';
 
-export const FakeInput: FC<{ label: string; hours: number }> = ({
-  label = "place",
-  hours,
-}) => {
+type Props = {
+  label: string;
+  hours: number;
+};
+
+export const FakeInput: FC<Props> = ({ label = 'place', hours }: Props) => {
   const { t } = useTranslation();
   const wordDecline = (num: number) => {
     let result;
-    const ever = [t("everyone"), t("every")];
-    const expressions = [t("hour"), t("hours"), t("hourss")];
+    const ever = [t('everyone'), t('every')];
+    const expressions = [t('hour'), t('hours'), t('hourss')];
     let count = num % 100;
     if (count >= 5 && count <= 20) {
-      result = ever[1] + " " + num + " " + expressions[2];
+      result = ever[1] + ' ' + num + ' ' + expressions[2];
     } else {
       count = count % 10;
       if (count == 1) {
-        result = ever[0] + " " + num + " " + expressions[0];
+        result = ever[0] + ' ' + num + ' ' + expressions[0];
       } else if (count >= 2 && count <= 4) {
-        result = ever[1] + " " + num + " " + expressions[1];
+        result = ever[1] + ' ' + num + ' ' + expressions[1];
       } else {
-        result = ever[1] + " " + num + " " + expressions[2];
+        result = ever[1] + ' ' + num + ' ' + expressions[2];
       }
     }
     return result;

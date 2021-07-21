@@ -86,9 +86,7 @@ export const AdminPay = () => {
   const [pageLengthDeposit, setPageLengthDeposit] = useState<number>(10);
   const [currentPageDeposit, setCurrentPageDeposit] = useState<number>(1);
 
-  const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>(
-    [],
-  );
+  const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>([]);
   const backDay: any = moment().add(90, 'days').format();
   const [depositsDate, setDepositsDate] = useState<OpenDate>({
     from: new Date(),
@@ -178,9 +176,7 @@ export const AdminPay = () => {
   const [sortingForPay, setSortingForPay] = useState<SortingType[]>([]);
   const [acceptAll, setAcceptAll] = useState<boolean>(false);
 
-  const [listForSortingForPay, setListForSortingForPay] = useState<
-    SelectValues[]
-  >([
+  const [listForSortingForPay, setListForSortingForPay] = useState<SelectValues[]>([
     {
       text: 'Пользователь: От А до Я',
       active: false,
@@ -238,13 +234,9 @@ export const AdminPay = () => {
   const [usersListVisible, setUsersListVisible] = useState(true);
 
   const namesProgramApproval = checkListApproval.map((i: any) => i.safeId);
-  const idProgramApproval = listDeposits.filter((i) =>
-    namesProgramApproval.includes(i.safeId),
-  );
+  const idProgramApproval = listDeposits.filter((i) => namesProgramApproval.includes(i.safeId));
   const searchSafeIDApproval = idProgramApproval.map((i) => i.safeId);
-  const depositState = checkList.length
-    ? checkList.map((i: any) => i.id)
-    : [5, 6];
+  const depositState = checkList.length ? checkList.map((i: any) => i.id) : [5, 6];
 
   const handleClick = (id: number) => {
     if (id !== active) {
@@ -274,7 +266,7 @@ export const AdminPay = () => {
           null,
           (currentPage - 1) * pageLength,
           pageLength,
-          sortingForPay,
+          sortingForPay
         )
         .then((res) => {
           setTotalPayments(res.totalRecords);
@@ -300,7 +292,7 @@ export const AdminPay = () => {
           null,
           [7, 8],
           (currentPagePay - 1) * pageLengthPay,
-          pageLengthPay,
+          pageLengthPay
         )
         .then((res) => {
           setTotalPayDeposits(res.totalRecords);
@@ -333,7 +325,7 @@ export const AdminPay = () => {
           null,
           [7, 8],
           (currentPagePay - 1) * pageLengthPay,
-          pageLengthPay,
+          pageLengthPay
         )
         .then((res) => {
           setLoading(false);
@@ -356,7 +348,7 @@ export const AdminPay = () => {
         .invoke(
           'GetPayoutsEstimateStats',
           depositsDate.from ? depositsDate.from : new Date(),
-          depositsDate.to ? depositsDate.to : backDay,
+          depositsDate.to ? depositsDate.to : backDay
         )
         .then((res) => {
           setStats(res);
@@ -429,8 +421,7 @@ export const AdminPay = () => {
     });
   };
 
-  const [dateOfCreateDepositVisible, setDateOfCreateDepositVisible] =
-    useState(true);
+  const [dateOfCreateDepositVisible, setDateOfCreateDepositVisible] = useState(true);
   const [depositVisible, setDepositVisible] = useState(true);
 
   return (
@@ -438,7 +429,7 @@ export const AdminPay = () => {
       <Styled.ModalComponent visible={acceptAll}>
         <Styled.ModalTitle>{t('acceptAll.title')}</Styled.ModalTitle>
         <AcceptAllInput
-          onValue={() => {}}
+          onValue={() => undefined}
           placeholder="-"
           value={''}
           label={`${t('acceptAll.%')} %`}
@@ -461,7 +452,7 @@ export const AdminPay = () => {
           visible={depositVisible}
           setVisible={setDepositVisible}
         />
-        <Button danger onClick={() => {}} style={{ margin: '0 auto' }}>
+        <Button danger onClick={() => undefined} style={{ margin: '0 auto' }}>
           {t('acceptAll.btn')}
         </Button>
         <Styled.ModalRule>{t('acceptAll.rule')}</Styled.ModalRule>
@@ -475,11 +466,7 @@ export const AdminPay = () => {
         </Styled.UserName>
       </Styled.HeadBlock>
       {active === 3 && (
-        <Chart
-          depositsDate={depositsDate}
-          setDepositsDate={setDepositsDate}
-          stats={stats}
-        />
+        <Chart depositsDate={depositsDate} setDepositsDate={setDepositsDate} stats={stats} />
       )}
       {active !== 3 && (
         <Card>
@@ -489,14 +476,9 @@ export const AdminPay = () => {
                 <SelfUpTitle small>{t('adminPay.title1')}</SelfUpTitle>
               </Styled.PayItemHead>
               <Styled.Radial
-                bg={
-                  theme === 'light'
-                    ? 'rgba(255, 65, 110, 0.2)'
-                    : 'rgba(255, 65, 110, 1)'
-                }>
-                <span>
-                  {sum ? (sum[2] / 100000).toLocaleString('ru-RU') : '-'}
-                </span>
+                bg={theme === 'light' ? 'rgba(255, 65, 110, 0.2)' : 'rgba(255, 65, 110, 1)'}
+              >
+                <span>{sum ? (sum[2] / 100000).toLocaleString('ru-RU') : '-'}</span>
                 <span>CWD</span>
               </Styled.Radial>
             </Styled.PayItem>
@@ -506,11 +488,8 @@ export const AdminPay = () => {
               </Styled.PayItemHead>
 
               <Styled.Radial
-                bg={
-                  theme === 'light'
-                    ? 'rgba(188, 212, 118, 0.2)'
-                    : 'rgba(188, 212, 118, 1)'
-                }>
+                bg={theme === 'light' ? 'rgba(188, 212, 118, 0.2)' : 'rgba(188, 212, 118, 1)'}
+              >
                 <span>
                   {sum
                     ? (sum[0] / 100000).toLocaleString('ru-RU', {
@@ -526,11 +505,8 @@ export const AdminPay = () => {
                 <SelfUpTitle small>{t('adminPay.title3')}</SelfUpTitle>
               </Styled.PayItemHead>
               <Styled.Radial
-                bg={
-                  theme === 'light'
-                    ? 'rgba(109, 185, 255, 0.2)'
-                    : 'rgba(109, 185, 255, 1)'
-                }>
+                bg={theme === 'light' ? 'rgba(109, 185, 255, 0.2)' : 'rgba(109, 185, 255, 1)'}
+              >
                 <span>
                   {sum
                     ? (sum[1] / 100000).toLocaleString('ru-RU', {
@@ -585,11 +561,7 @@ export const AdminPay = () => {
               {openFilter ? t('hide') : t('show')}
             </Styled.ShowHide>
           </Styled.FilterHeader>
-          <CSSTransition
-            in={openFilter}
-            timeout={200}
-            classNames="filter"
-            unmountOnExit>
+          <CSSTransition in={openFilter} timeout={200} classNames="filter" unmountOnExit>
             <Styled.SelectContainer>
               <Styled.SelectContainerInnerPaid>
                 <Styled.SelectWrap style={{ minWidth: 263 }}>
@@ -608,11 +580,7 @@ export const AdminPay = () => {
                 </Styled.SelectWrap>
                 <Styled.SelectWrap style={{ minWidth: 263 }}>
                   <Styled.Label>{t('adminPay.filter.deposit')}</Styled.Label>
-                  <Select
-                    checkList={checkList}
-                    setCheckList={setCheckList}
-                    values={listDeposits}
-                  />
+                  <Select checkList={checkList} setCheckList={setCheckList} values={listDeposits} />
                 </Styled.SelectWrap>
               </Styled.SelectContainerInnerPaid>
               <Button danger onClick={submit}>
@@ -626,18 +594,10 @@ export const AdminPay = () => {
             <TableHead>
               <TableHeadItemPaid>{t('adminPay.table.user')}</TableHeadItemPaid>
               <TableHeadItemPaid>{t('adminPay.table.name')}</TableHeadItemPaid>
-              <TableHeadItemPaid>
-                {t('adminPay.table.datePay')}
-              </TableHeadItemPaid>
-              <TableHeadItemPaid>
-                {t('adminPay.table.category')}
-              </TableHeadItemPaid>
-              <TableHeadItemPaid>
-                {t('adminPay.table.contribution')}
-              </TableHeadItemPaid>
-              <TableHeadItemPaid>
-                {t('adminPay.table.payments')}
-              </TableHeadItemPaid>
+              <TableHeadItemPaid>{t('adminPay.table.datePay')}</TableHeadItemPaid>
+              <TableHeadItemPaid>{t('adminPay.table.category')}</TableHeadItemPaid>
+              <TableHeadItemPaid>{t('adminPay.table.contribution')}</TableHeadItemPaid>
+              <TableHeadItemPaid>{t('adminPay.table.payments')}</TableHeadItemPaid>
               <TableHeadItemPaid>{/* <Filter /> */}</TableHeadItemPaid>
               {/*
               <TableHeadItemPaid>
@@ -692,18 +652,10 @@ export const AdminPay = () => {
             <TableHead>
               <TableHeadItemPaid>{t('adminPay.table.user')}</TableHeadItemPaid>
               <TableHeadItemPaid>{t('adminPay.table.name')}</TableHeadItemPaid>
-              <TableHeadItemPaid>
-                {t('adminPay.table.datePay')}
-              </TableHeadItemPaid>
-              <TableHeadItemPaid>
-                {t('adminPay.table.category')}
-              </TableHeadItemPaid>
-              <TableHeadItemPaid>
-                {t('adminPay.table.contribution')}
-              </TableHeadItemPaid>
-              <TableHeadItemPaid>
-                {t('adminPay.table.payments')}
-              </TableHeadItemPaid>
+              <TableHeadItemPaid>{t('adminPay.table.datePay')}</TableHeadItemPaid>
+              <TableHeadItemPaid>{t('adminPay.table.category')}</TableHeadItemPaid>
+              <TableHeadItemPaid>{t('adminPay.table.contribution')}</TableHeadItemPaid>
+              <TableHeadItemPaid>{t('adminPay.table.payments')}</TableHeadItemPaid>
               <TableHeadItemPaid>
                 <BurgerButton>
                   <BurgerImg
@@ -720,7 +672,8 @@ export const AdminPay = () => {
                     <Sort
                       active={listForSortingForPay[index].active}
                       key={index}
-                      onClick={() => getActiveSortForPay(index)}>
+                      onClick={() => getActiveSortForPay(index)}
+                    >
                       {obj.text}
                     </Sort>
                   ))}

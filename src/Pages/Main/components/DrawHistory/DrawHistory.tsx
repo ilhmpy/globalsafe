@@ -19,7 +19,7 @@ type Props = {
   clock: number | null;
 };
 
-export const DrawHistory: FC<Props> = ({ onOpenModal, clock }) => {
+export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
   const [notifyList, setNotifyList] = useState<ArrList[]>([]);
   const [num, setNum] = useState(0);
   const [show, setShow] = useState(true);
@@ -138,18 +138,16 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }) => {
                 return (
                   <CSSTransition key={idx} timeout={500} classNames="item">
                     <TableList card>
-                      <TableItem>
-                        {moment(item.date).format('DD.MM.YYYY')}
-                      </TableItem>
+                      <TableItem>{moment(item.date).format('DD.MM.YYYY')}</TableItem>
                       <TableItem>{typeWin(item.kind)}</TableItem>
                       <TableItem>
                         {item.kind === 0
                           ? (item.volume / 100000).toLocaleString('ru-RU', {
-                            maximumFractionDigits: 5,
-                          })
+                              maximumFractionDigits: 5,
+                            })
                           : Item.kind === 1
-                            ? t('win.two')
-                            : item.volume}
+                          ? t('win.two')
+                          : item.volume}
                         &nbsp;
                         {item.volume ? Balance[item.balanceKind] : '-'}
                       </TableItem>
@@ -163,9 +161,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }) => {
                 return (
                   <CSSTransition key={idx} timeout={500} classNames="item">
                     <TableList card>
-                      <TableItem>
-                        {moment(item.date).format('DD.MM.YYYY')}
-                      </TableItem>
+                      <TableItem>{moment(item.date).format('DD.MM.YYYY')}</TableItem>
                       <TableItem>{item.volume ? item.volume : typeWin(item.kind)}</TableItem>
                       <TableItem>
                         <Value data-title={item.name}>{item.name}</Value>
@@ -221,10 +217,8 @@ const TableList = styled.ul<{ card?: boolean; dn?: boolean }>`
   justify-content: space-between;
   padding: 10px 50px;
   margin-bottom: 18px;
-  background: ${(props) =>
-    props.card ? props.theme.card.backgroundAlfa : 'transparent'};
-  box-shadow: ${(props) =>
-    props.card ? '0px 1px 3px rgba(0, 0, 0, 0.25)' : 'none'};
+  background: ${(props) => (props.card ? props.theme.card.backgroundAlfa : 'transparent')};
+  box-shadow: ${(props) => (props.card ? '0px 1px 3px rgba(0, 0, 0, 0.25)' : 'none')};
   border-radius: 20px;
   border: ${(props) => (props.card ? props.theme.card.border : 'none')};
   @media (max-width: 992px) {
