@@ -324,6 +324,9 @@ export const AdminUsers = () => {
               depositsAmount, email, id, isEmailConfirmed, isLockedout, 
               isPhoneNumberConfirmed, isTwoFactorEnabled,  languageCode, lockoutEnd, name, phoneNumber, roles, safeId }];
           });
+
+          console.log("BEFORE DIVISION USERS BALANCES (each user have a massive 'balances')", res.collection);
+          console.log("AFTER DIVISION USERS BALANCES (each user have a massive 'balances')", divisionSums);
           setNum(20);
           console.log('USERS', res.collection);
           seTotalUsers(res.totalRecords);
