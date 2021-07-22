@@ -72,10 +72,12 @@ export const Timer: FC<Props> = ({
 
     const timer = setInterval(() => {
       const durations = moment.duration(deadline, 'seconds');
-      const formatted = `${Math.floor(durations.asDays())} ${t('time.d')} ${Math.floor(
-        durations.asHours()
-      )} ${t('time.h')} ${Math.floor(durations.asMinutes())} ${t('time.m')}`;
-
+      let formatted;
+      if (languale === 1) {
+        formatted = durations.format('d [дн] h [ч] m [мин]', { trim: false });
+      } else {
+        formatted = durations.format('d [d] h [h] m [m]', { trim: false });
+      };
       !cancel && setState(formatted);
       !cancel && setDeadline(deadline - 1);
     }, 1000);
