@@ -160,6 +160,18 @@ export const AdminDeposit = () => {
     setDepositsList([]);
     setLoading(true);
 
+    let openFrom = null;
+    let openTo = null;
+    const closeFrom = null;
+    const closeTo = null;
+    if (openDate.from)
+      openFrom = moment(openDate.from).set({ hour: 0, minute: 0, second: 0 }).toDate();
+    if (openDate.to) {
+      openTo = moment(openDate.to).set({ hour: 23, minute: 59, second: 59 }).toDate();
+    } else if (!openDate.to && openDate.from) {
+      openTo = moment(openDate.from).set({ hour: 23, minute: 59, second: 59 }).toDate();
+    }
+
     if (hubConnection) {
       hubConnection
         .invoke<RootPayments>(
@@ -168,18 +180,40 @@ export const AdminDeposit = () => {
           name ? name.toLowerCase() : null,
           searchSafeID.length ? searchSafeID : null,
           openDate.from
-            ? moment(openDate.from).set({ hour: 0, minute: 0, second: 0 }).toDate()
+            ? moment(openDate.from)
+                .utcOffset('+00:00')
+                .set({ hour: 0, minute: 0, second: 0 })
+                .toDate()
             : null,
           openDate.to
-            ? moment(openDate.to).set({ hour: 23, minute: 59, second: 59 }).toDate()
-            : moment(openDate.from).set({ hour: 23, minute: 59, second: 59 }).toDate() || null,
+            ? moment(openDate.to)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : openDate.from
+            ? moment(openDate.from)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : null,
 
           closeDate.from
-            ? moment(closeDate.from).set({ hour: 0, minute: 0, second: 0 }).toDate()
+            ? moment(closeDate.from)
+                .utcOffset('+00:00')
+                .set({ hour: 0, minute: 0, second: 0 })
+                .toDate()
             : null,
           closeDate.to
-            ? moment(closeDate.to).set({ hour: 23, minute: 59, second: 59 }).toDate()
-            : moment(closeDate.from).set({ hour: 23, minute: 59, second: 59 }).toDate() || null,
+            ? moment(closeDate.to)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : closeDate.from
+            ? moment(closeDate.from)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : null,
           null,
           null,
           null,
@@ -226,17 +260,6 @@ export const AdminDeposit = () => {
       setDepositsList([]);
       setLoading(true);
 
-      console.log(
-        closeDate.from
-          ? moment(closeDate.from).set({ hour: 0, minute: 0, second: 0 }).toDate()
-          : null
-      );
-      console.log(
-        closeDate.to
-          ? moment(closeDate.to).set({ hour: 23, minute: 59, second: 59 }).toDate()
-          : moment(closeDate.from).set({ hour: 23, minute: 59, second: 59 }).toDate() || null
-      );
-
       hubConnection
         .invoke<RootPayments>(
           'GetUsersDeposits',
@@ -245,18 +268,40 @@ export const AdminDeposit = () => {
           searchSafeID.length ? searchSafeID : null,
 
           openDate.from
-            ? moment(openDate.from).set({ hour: 0, minute: 0, second: 0 }).toDate()
+            ? moment(openDate.from)
+                .utcOffset('+00:00')
+                .set({ hour: 0, minute: 0, second: 0 })
+                .toDate()
             : null,
           openDate.to
-            ? moment(openDate.to).set({ hour: 23, minute: 59, second: 59 }).toDate()
-            : moment(openDate.from).set({ hour: 23, minute: 59, second: 59 }).toDate() || null,
+            ? moment(openDate.to)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : openDate.from
+            ? moment(openDate.from)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : null,
 
           closeDate.from
-            ? moment(closeDate.from).set({ hour: 0, minute: 0, second: 0 }).toDate()
+            ? moment(closeDate.from)
+                .utcOffset('+00:00')
+                .set({ hour: 0, minute: 0, second: 0 })
+                .toDate()
             : null,
           closeDate.to
-            ? moment(closeDate.to).set({ hour: 23, minute: 59, second: 59 }).toDate()
-            : moment(closeDate.from).set({ hour: 23, minute: 59, second: 59 }).toDate() || null,
+            ? moment(closeDate.to)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : closeDate.from
+            ? moment(closeDate.from)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : null,
 
           null,
           null,
@@ -307,9 +352,6 @@ export const AdminDeposit = () => {
       });
     });
   };
-
-  console.log(depositsList);
-  
 
   return (
     <>

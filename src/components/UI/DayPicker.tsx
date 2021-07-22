@@ -355,25 +355,25 @@ export const TestInputAnalitic: FC<TestInputAnaliticProps> = ({
 
   useOnClickOutside(ref, handleClickOutside);
 
-  const handleDayClick = (day: Date) => {
-    const range = DateUtils.addDayToRange(day, selfDate);
-    if (
-      range.from &&
-      range.from.valueOf() >= moment().hour(11).valueOf() &&
-      ((range.to && range.to >= new Date()) || range.to === undefined)
-    ) {
-      setSelfDate({ from: range.from, to: range.to });
-      if (range.from && range.to) {
-        setOpenDate({ from: range.from, to: range.to });
-      }
-    }
-  };
-
   // const handleDayClick = (day: Date) => {
   //   const range = DateUtils.addDayToRange(day, selfDate);
-  //   setSelfDate({ from: range.from, to: range.to });
-  //   setOpenDate({ from: range.from, to: range.to });
+  //   if (
+  //     range.from &&
+  //     range.from.valueOf() >= moment().hour(11).valueOf() &&
+  //     ((range.to && range.to >= new Date()) || range.to === undefined)
+  //   ) {
+  //     setSelfDate({ from: range.from, to: range.to });
+  //     if (range.from && range.to) {
+  //       setOpenDate({ from: range.from, to: range.to });
+  //     }
+  //   }
   // };
+
+  const handleDayClick = (day: Date) => {
+    const range = DateUtils.addDayToRange(day, selfDate);
+    setSelfDate({ from: range.from, to: range.to });
+    setOpenDate({ from: range.from, to: range.to });
+  };
 
   const handleChange = () => {
     if (selfDate.from && selfDate.to) {

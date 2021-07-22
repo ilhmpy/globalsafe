@@ -136,28 +136,29 @@ export const Analitics: FC<Props> = ({ listDeposits }: Props) => {
     setList([]);
     setCurrentPage(1);
 
-    console.log(
-      openDate.from ? moment(openDate.from).set({ hour: 0, minute: 0, second: 0 }).toDate() : null,
-      openDate.to
-        ? moment(openDate.to).set({ hour: 23, minute: 59, second: 59 }).toDate()
-        : moment(openDate.from).set({ hour: 23, minute: 59, second: 59 }).toDate() || null
-    );
-
     if (hubConnection) {
       setLoading(true);
       hubConnection
         .invoke<RootAnalitics>(
           'GetPayoutsEstimate',
           searchSafeID.length ? searchSafeID : null,
-          // openDate.from ? openDate.from : null,
-          // openDate.to ? openDate.to : null,
-
           openDate.from
-            ? moment(openDate.from).set({ hour: 0, minute: 0, second: 0 }).toDate()
+            ? moment(openDate.from)
+                .utcOffset('+00:00')
+                .set({ hour: 0, minute: 0, second: 0 })
+                .toDate()
             : null,
           openDate.to
-            ? moment(openDate.to).set({ hour: 23, minute: 59, second: 59 }).toDate()
-            : moment(openDate.from).set({ hour: 23, minute: 59, second: 59 }).toDate() || null,
+            ? moment(openDate.to)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : openDate.from
+            ? moment(openDate.from)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : null,
           (currentPage - 1) * pageLength,
           pageLength,
           sorting
