@@ -59,7 +59,7 @@ export const Approval: FC<Props> = ({
   procent,
   setModal,
   setPaymentsList,
-  setTotalPayments
+  setTotalPayments,
 }: Props) => {
   const [depositList, setDepositList] = useState<PaymentsCollection[]>([]);
   const [totalDeposits, setTotalDeposits] = useState(0);
@@ -178,6 +178,8 @@ export const Approval: FC<Props> = ({
 
   const loadMoreItems = () => {
     setCount(false);
+    setDepositList([]);
+    setLoading(true);
 
     if (hubConnection && depositList.length < totalDeposits) {
       hubConnection
@@ -219,9 +221,13 @@ export const Approval: FC<Props> = ({
             setDepositList([...res.collection]);
             setCount(true);
             setNum(num + 20);
+            setLoading(false);
           }
         })
-        .catch((err: Error) => console.log(err));
+        .catch((err: Error) => {
+          console.log(err);
+          setLoading(false);
+        });
     }
   };
 
@@ -285,11 +291,10 @@ export const Approval: FC<Props> = ({
   }, [currentPage, hubConnection, pageLength, sorting]);
 
   const submitApproval = () => {
-    console.log(openDateApproval.from);
-    console.log(openDateApproval.to);
-
     if (hubConnection) {
       setCurrentPage(1);
+      setDepositList([]);
+      setLoading(true);
       hubConnection
         .invoke<RootPayments>(
           'GetUsersDeposits',
@@ -333,14 +338,17 @@ export const Approval: FC<Props> = ({
           sorting
         )
         .then((res) => {
-          setDepositList([]);
           setTotalDeposits(res.totalRecords);
           if (res.collection.length) {
             setDepositList(res.collection);
             setTotalDeposits(res.totalRecords);
+            setLoading(false);
           }
         })
-        .catch((err: Error) => console.log(err));
+        .catch((err: Error) => {
+          console.log(err);
+          setLoading(false);
+        });
     }
   };
 
@@ -415,31 +423,41 @@ export const Approval: FC<Props> = ({
     setCheckList([]);
 
     if (hubConnection) {
-      hubConnection.invoke(
-        'GetUsersDeposits',
-        [5],
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        (currentPage - 1) * pageLength,
-        pageLength,
-        []
-      )
-        .then((res: any) => {
-          console.log("CLEAR DATA", res);
-          setDepositList(res.collection);
+      setCurrentPage(1);
+      setDepositList([]);
+      setLoading(true);
+      hubConnection
+        .invoke<RootPayments>(
+          'GetUsersDeposits',
+          depositState,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          (currentPage - 1) * pageLength,
+          pageLength,
+          sorting
+        )
+        .then((res) => {
           setTotalDeposits(res.totalRecords);
-          setDepositList((item: any) => item.map((s: any) => s)); 
+          if (res.collection.length) {
+            setDepositList(res.collection);
+            setTotalDeposits(res.totalRecords);
+            setLoading(false);
+          }
         })
-        .catch((e: Error) => console.error("get users deposits clear error", e));
+        .catch((err: Error) => {
+          console.log(err);
+          setLoading(false);
+        });
     }
+
   };
 
   const getActiveSort = (index: number) => {
