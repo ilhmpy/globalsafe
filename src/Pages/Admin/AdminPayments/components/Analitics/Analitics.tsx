@@ -95,16 +95,26 @@ export const Analitics: FC<Props> = ({ listDeposits }: Props) => {
       FieldName: 'amount',
     },
   ]);
-  console.log(sorting);
 
   useEffect(() => {
+    console.log(
+      openDate.from ? moment(openDate.from).set({ hour: 0, minute: 0, second: 0 }).toDate() : null,
+      openDate.to
+        ? moment(openDate.to).set({ hour: 23, minute: 59, second: 59 }).toDate()
+        : moment(openDate.from).set({ hour: 23, minute: 59, second: 59 }).toDate() || null
+    );
+
+    console.log(openDate.from, openDate.to);
+
     if (hubConnection) {
       setLoading(true);
       hubConnection
         .invoke<RootAnalitics>(
           'GetPayoutsEstimate',
           searchSafeID.length ? searchSafeID : null,
-          openDate.from ? openDate.from : null,
+          openDate.from
+            ? moment(openDate.from).set({ hour: 0, minute: 0, second: 0 }).toDate()
+            : null,
           openDate.to ? openDate.to : null,
           (currentPage - 1) * pageLength,
           pageLength,
@@ -125,14 +135,29 @@ export const Analitics: FC<Props> = ({ listDeposits }: Props) => {
   const submit = () => {
     setList([]);
     setCurrentPage(1);
+
+    console.log(
+      openDate.from ? moment(openDate.from).set({ hour: 0, minute: 0, second: 0 }).toDate() : null,
+      openDate.to
+        ? moment(openDate.to).set({ hour: 23, minute: 59, second: 59 }).toDate()
+        : moment(openDate.from).set({ hour: 23, minute: 59, second: 59 }).toDate() || null
+    );
+
     if (hubConnection) {
       setLoading(true);
       hubConnection
         .invoke<RootAnalitics>(
           'GetPayoutsEstimate',
           searchSafeID.length ? searchSafeID : null,
-          openDate.from ? openDate.from : null,
-          openDate.to ? openDate.to : null,
+          // openDate.from ? openDate.from : null,
+          // openDate.to ? openDate.to : null,
+
+          openDate.from
+            ? moment(openDate.from).set({ hour: 0, minute: 0, second: 0 }).toDate()
+            : null,
+          openDate.to
+            ? moment(openDate.to).set({ hour: 23, minute: 59, second: 59 }).toDate()
+            : moment(openDate.from).set({ hour: 23, minute: 59, second: 59 }).toDate() || null,
           (currentPage - 1) * pageLength,
           pageLength,
           sorting
@@ -190,6 +215,8 @@ export const Analitics: FC<Props> = ({ listDeposits }: Props) => {
       });
     });
   };
+
+  console.log('~~~~~~~~~~~', openDate);
 
   return (
     <div>
