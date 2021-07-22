@@ -44,7 +44,7 @@ export const Admin = () => {
       <Styled.Loader>
         <Loading />
       </Styled.Loader>
-    );
+    ); 
   }
 
   if (admin === false) {
