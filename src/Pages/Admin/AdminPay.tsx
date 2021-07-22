@@ -287,8 +287,23 @@ export const AdminPay = () => {
         .invoke<RootCharges>(
           'GetDepositsCharges',
           name ? name.toLowerCase() : null,
-          openDate.from ? openDate.from : null,
-          openDate.to ? openDate.to : null,
+          openDate.from
+            ? moment(openDate.from)
+                .utcOffset('+00:00')
+                .set({ hour: 0, minute: 0, second: 0 })
+                .toDate()
+            : null,
+          openDate.to
+            ? moment(openDate.to)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : openDate.from
+            ? moment(openDate.from)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : null,
           searchSafeID.length ? searchSafeID : null,
           null,
           [7, 8],
@@ -313,6 +328,17 @@ export const AdminPay = () => {
     getPaymentsOverview();
   }, [hubConnection]);
 
+  console.log(
+    openDate.from
+      ? moment(openDate.from).utcOffset('+00:00').set({ hour: 0, minute: 0, second: 0 }).toDate()
+      : null,
+    openDate.to
+      ? moment(openDate.to).utcOffset('+00:00').set({ hour: 23, minute: 59, second: 59 }).toDate()
+      : openDate.from
+      ? moment(openDate.from).utcOffset('+00:00').set({ hour: 23, minute: 59, second: 59 }).toDate()
+      : null
+  );
+
   const submit = () => {
     if (hubConnection) {
       setCurrentPagePay(1);
@@ -320,8 +346,23 @@ export const AdminPay = () => {
         .invoke<RootCharges>(
           'GetDepositsCharges',
           name ? name.toLowerCase() : null,
-          openDate.from ? openDate.from : null,
-          openDate.to ? openDate.to : null,
+          openDate.from
+            ? moment(openDate.from)
+                .utcOffset('+00:00')
+                .set({ hour: 0, minute: 0, second: 0 })
+                .toDate()
+            : null,
+          openDate.to
+            ? moment(openDate.to)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : openDate.from
+            ? moment(openDate.from)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : null,
           searchSafeID.length ? searchSafeID : null,
           null,
           [7, 8],
@@ -331,7 +372,6 @@ export const AdminPay = () => {
         .then((res) => {
           setLoading(false);
           if (res.collection.length) {
-            console.log('GetDepositsCharges submit', res);
             setTotalPayDeposits(res.totalRecords);
             setDepositPayList(res.collection);
           }
@@ -530,11 +570,9 @@ export const AdminPay = () => {
           <Tab onClick={() => handleClick(1)} active={active === 1}>
             {t('adminPay.title2')}
           </Tab>
-
           <Tab onClick={() => handleClick(2)} active={active === 2}>
             {t('adminPay.title1')}
           </Tab>
-
           <Tab onClick={() => handleClick(3)} active={active === 3}>
             {t('adminPay.delayed.title')}
           </Tab>
@@ -578,7 +616,7 @@ export const AdminPay = () => {
                   <TestInput
                     setOpenDate={setOpenDate}
                     openDate={openDate}
-                    label={t('adminPay.filter.date')}
+                    label={t('adminPay.table.datePay')}
                   />
                 </Styled.SelectWrap>
                 <Styled.SelectWrap style={{ minWidth: 263 }}>
