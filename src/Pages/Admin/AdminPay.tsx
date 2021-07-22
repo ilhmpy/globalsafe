@@ -269,6 +269,7 @@ export const AdminPay = () => {
           sortingForPay
         )
         .then((res) => {
+          console.log(res);
           setTotalPayments(res.totalRecords);
           setPaymentsList(res.collection);
         })
@@ -550,6 +551,8 @@ export const AdminPay = () => {
           setProcent={setProcent}
           procent={procent}
           setModal={setAcceptAll}
+          setPaymentsList={setPaymentsList}
+          setTotalPayments={setTotalPayments}
         />
       </Content>
 

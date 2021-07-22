@@ -50,6 +50,8 @@ type Props = {
   procent: string;
   setProcent: (e: string) => void;
   setModal: (boolean: boolean) => void;
+  setPaymentsList: (value: any) => void;
+  setTotalPayments: (value: any) => void;
 };
 
 export const Approval: FC<Props> = ({
@@ -58,6 +60,8 @@ export const Approval: FC<Props> = ({
   setProcent,
   procent,
   setModal,
+  setPaymentsList,
+  setTotalPayments
 }: Props) => {
   const [depositList, setDepositList] = useState<PaymentsCollection[]>([]);
   const [totalDeposits, setTotalDeposits] = useState(0);
@@ -384,7 +388,6 @@ export const Approval: FC<Props> = ({
   };
 
   const clear = () => {
-    console.log('clear');
     setNameApproval('');
     setOpenDateApproval({
       from: undefined,
@@ -392,6 +395,33 @@ export const Approval: FC<Props> = ({
     });
     setCheckListApproval([]);
     setCheckList([]);
+
+    if (hubConnection) {
+      hubConnection.invoke(
+        'GetUsersDeposits',
+        [5],
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        (currentPage - 1) * pageLength,
+        pageLength,
+        []
+      )
+        .then((res: any) => {
+          console.log("CLEAR DATA", res);
+          setDepositList(res.collection);
+          setTotalDeposits(res.totalRecords);
+          setDepositList((item: any) => item.map((s: any) => s)); 
+        })
+        .catch((e: Error) => console.error("get users deposits clear error", e));
+    }
   };
 
   const getActiveSort = (index: number) => {
