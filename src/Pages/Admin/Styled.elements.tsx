@@ -54,19 +54,17 @@ export const PaginationSelect = styled.select`
   cursor: pointer;
   line-height: inherit;
 
-  background-image: ${(props) =>
-    props.theme.pagination.selectCountBackgroundImage};
+  background-image: ${(props) => props.theme.pagination.selectCountBackgroundImage};
 
-  background-position: calc(100% - 10px) calc(1em + -4px),
-    calc(100% - 5px) calc(1em + -4px), 100% 0;
+  background-position: calc(100% - 10px) calc(1em + -4px), calc(100% - 5px) calc(1em + -4px), 100% 0;
   background-size: 5px 5px, 5px 5px, 5em 5em;
   background-repeat: no-repeat;
   width: 40px;
 
   @media (max-width: 600px) {
     font-size: 13px;
-    background-position: calc(100% - 14px) calc(1em + -2px),
-      calc(100% - 9px) calc(1em + -2px), 100% 0;
+    background-position: calc(100% - 14px) calc(1em + -2px), calc(100% - 9px) calc(1em + -2px),
+      100% 0;
     width: 60px;
   }
 `;
@@ -131,6 +129,9 @@ export const Th = styled.th`
   line-height: 14px;
   letter-spacing: 0.1px;
   color: ${(props) => props.theme.thHead};
+  &:last-child {
+    position: relative;
+  }
 `;
 
 export const Thead = styled.thead`
@@ -741,7 +742,7 @@ export const ModalComponent = styled.div<{ visible: boolean }>`
   left: 0;
   margin-left: auto;
   margin-right: auto;
-  display: ${({ visible }) => visible ? "block" : "none"};
+  display: ${({ visible }) => (visible ? 'block' : 'none')};
 
   @media only screen and (max-device-width: 922px) {
     position: absolute;

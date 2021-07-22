@@ -298,24 +298,8 @@ export const Analitics: FC<Props> = ({ listDeposits }: Props) => {
 };
 
 const Window = styled(SortingWindow)`
-  right: 66px;
-  top: 531px;
-  @media (max-width: 992px) {
-    top: 539px;
-  }
-  @media (max-width: 768px) {
-    right: 50px;
-    top: 724px;
-  }
-  @media (max-width: 576px) {
-    top: 560px;
-  }
-  @media (max-width: 479px) {
-    top: 600px;
-  }
-  @media (max-width: 333px) {
-    top: 614px;
-  }
+  right: 0px;
+  top: 18px;
 `;
 const Sort = styled(SortingItem)`
   &:nth-child(3) {

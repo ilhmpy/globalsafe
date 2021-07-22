@@ -293,22 +293,22 @@ export const Delayed: FC<Props> = ({ listDeposits }: Props) => {
         <CSSTransition in={openFilterOne} timeout={200} classNames="filter" unmountOnExit>
           <SelectContainer>
             <SelectContainerInnerPaid>
-              <SelectWrapTwo mWidth="190px">
+              <SelectWrapTwo mWidth="165px">
                 <Label>{t('adminPay.filter.user')}</Label>
                 <Input value={name} onChange={(e) => setName(e.target.value.toLowerCase())} />
               </SelectWrapTwo>
-              <SelectWrapTwo mWidth="180px">
+              <SelectWrapTwo mWidth="165px">
                 <Label>{t('adminPay.filter.deposit')}</Label>
                 <Select checkList={checkList} setCheckList={setCheckList} values={listDeposits} />
               </SelectWrapTwo>
-              <SelectWrapTwo mWidth="200px">
+              <SelectWrapTwo mWidth="180px">
                 <TestInput
                   setOpenDate={setOpenDate}
                   openDate={openDate}
                   label={t('adminPay.filter.date')}
                 />
               </SelectWrapTwo>
-              <SelectWrapTwo mWidth="200px">
+              <SelectWrapTwo mWidth="180px">
                 <TestInput
                   setOpenDate={setCloseDate}
                   openDate={closeDate}
@@ -403,26 +403,10 @@ export const Delayed: FC<Props> = ({ listDeposits }: Props) => {
 };
 
 const Window = styled(SortingWindow)`
-  right: 65px;
-  top: 531px;
-  @media (max-width: 1209px) {
-    top: 545px;
-  }
-  @media (max-width: 992px) {
-    top: 539px;
-  }
-  @media (max-width: 768px) {
-    right: 50px;
-    top: 724px;
-  }
-  @media (max-width: 576px) {
-    top: 560px;
-  }
-  @media (max-width: 479px) {
-    top: 600px;
-  }
-  @media (max-width: 420px) {
-    top: 614px;
+  right: 0px;
+  top: 25px;
+  @media only screen and (max-width: 992px) and (min-width: 428px) {
+    top: 18px;
   }
 `;
 const Sort = styled(SortingItem)`

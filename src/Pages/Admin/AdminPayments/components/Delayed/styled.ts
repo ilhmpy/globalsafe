@@ -14,6 +14,7 @@ export const TableHead = styled.ul`
   padding-bottom: 6px;
   border-bottom: 1px solid rgba(81, 81, 114, 0.2);
   gap: 7px;
+  /* position: relative; */
 `;
 
 export const TableHeadItem = styled.li`
@@ -83,6 +84,7 @@ export const TableHeadItem = styled.li`
   &:last-child {
     max-width: 150px;
     text-align: right;
+    position: relative;
     @media (max-width: 992px) {
       max-width: 80px;
     }

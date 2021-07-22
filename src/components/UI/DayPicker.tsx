@@ -1013,7 +1013,7 @@ const DateInput = styled.div`
   border: 1px solid rgba(86, 101, 127, 0.3);
   box-sizing: border-box;
   border-radius: 2px;
-  min-width: 200px;
+  min-width: 180px;
   height: 40px;
   font-weight: normal;
   font-size: 14px;

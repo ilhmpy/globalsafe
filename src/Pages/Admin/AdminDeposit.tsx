@@ -60,16 +60,10 @@ const AdminDepositList: FC<PayProps> = ({ data }: PayProps) => {
       <TableBody onClick={modalOpen}>
         <TableBodyItem>{data.userName}</TableBodyItem>
         <TableBodyItem>{data.deposit.name}</TableBodyItem>
-        <TableBodyItem>
-          {moment(data.creationDate).format('DD/MM/YYYY')}
-        </TableBodyItem>
-        <TableBodyItem>
-          {moment(data.endDate).format('DD/MM/YYYY')}
-        </TableBodyItem>
+        <TableBodyItem>{moment(data.creationDate).format('DD/MM/YYYY')}</TableBodyItem>
+        <TableBodyItem>{moment(data.endDate).format('DD/MM/YYYY')}</TableBodyItem>
         <TableBodyItem>{data.amountView ? data.amountView : '-'}</TableBodyItem>
-        <TableBodyItem>
-          {moment(data.paymentDate).format('DD/MM/YYYY')}
-        </TableBodyItem>
+        <TableBodyItem>{moment(data.paymentDate).format('DD/MM/YYYY')}</TableBodyItem>
         <TableBodyItem>{data.payedAmountView}</TableBodyItem>
         <TableBodyItem></TableBodyItem>
       </TableBody>
@@ -78,9 +72,7 @@ const AdminDepositList: FC<PayProps> = ({ data }: PayProps) => {
 };
 
 export const AdminDeposit = () => {
-  const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>(
-    [],
-  );
+  const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>([]);
   const [loading, setLoading] = useState(true);
   const [depositsList, setDepositsList] = useState<PaymentsCollection[]>([]);
   const [totalList, setTotalList] = useState(0);
@@ -165,7 +157,9 @@ export const AdminDeposit = () => {
 
   const myLoad = () => {
     setCount(false);
+    setDepositsList([]);
     setLoading(true);
+
     if (hubConnection) {
       hubConnection
         .invoke<RootPayments>(
@@ -178,9 +172,12 @@ export const AdminDeposit = () => {
           closeDate.from ? closeDate.from : null,
           closeDate.to ? closeDate.from : null,
           null,
+          null,
+          null,
+          null,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting,
+          sorting
         )
         .then((res) => {
           setTotalList(res.totalRecords);
@@ -188,10 +185,12 @@ export const AdminDeposit = () => {
             setDepositsList(res.collection);
             setCount(true);
             setNum(num + 20);
+            setLoading(false);
           }
-          setLoading(false);
         })
-        .catch((err: Error) => console.log(err));
+        .catch((err: Error) => {
+          console.log(err);
+        });
     }
   };
 
@@ -202,7 +201,9 @@ export const AdminDeposit = () => {
         .then((res) => {
           setListDeposits(res.collection);
         })
-        .catch((err: Error) => console.log(err));
+        .catch((err: Error) => {
+          console.log(err);
+        });
     }
   }, [hubConnection]);
 
@@ -213,6 +214,9 @@ export const AdminDeposit = () => {
   const submit = () => {
     if (hubConnection) {
       setCurrentPage(1);
+      setDepositsList([]);
+      setLoading(true);
+
       hubConnection
         .invoke<RootPayments>(
           'GetUsersDeposits',
@@ -224,12 +228,14 @@ export const AdminDeposit = () => {
           closeDate.from ? closeDate.from : null,
           closeDate.to ? closeDate.from : null,
           null,
+          null,
+          null,
+          null,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting,
+          sorting
         )
         .then((res) => {
-          setDepositsList([]);
           setTotalList(res.totalRecords);
           setLoading(false);
           setNum(20);
@@ -290,27 +296,16 @@ export const AdminDeposit = () => {
             {open ? t('hide') : t('show')}
           </Styled.ShowHide>
         </Styled.FilterHeader>
-        <CSSTransition
-          in={open}
-          timeout={200}
-          classNames="filter"
-          unmountOnExit>
+        <CSSTransition in={open} timeout={200} classNames="filter" unmountOnExit>
           <Styled.SelectContainer>
             <Styled.SelectContainerInner>
               <Styled.SelectWrap>
                 <Styled.Label>{t('adminDeposit.labelUser')}</Styled.Label>
-                <Input
-                  value={name}
-                  onChange={(e) => setName(e.target.value.toLowerCase())}
-                />
+                <Input value={name} onChange={(e) => setName(e.target.value.toLowerCase())} />
               </Styled.SelectWrap>
               <Styled.SelectWrap style={{ minWidth: 233 }}>
                 <Styled.Label>{t('adminDeposit.labelProgram')}</Styled.Label>
-                <Select
-                  checkList={checkList}
-                  setCheckList={setCheckList}
-                  values={listDeposits}
-                />
+                <Select checkList={checkList} setCheckList={setCheckList} values={listDeposits} />
               </Styled.SelectWrap>
               <Styled.SelectWrap input>
                 <TestInput
@@ -359,7 +354,8 @@ export const AdminDeposit = () => {
                     <Sort
                       active={listForSorting[index].active}
                       key={index}
-                      onClick={() => getActiveSort(index)}>
+                      onClick={() => getActiveSort(index)}
+                    >
                       {obj.text}
                     </Sort>
                   ))}

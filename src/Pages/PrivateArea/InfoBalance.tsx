@@ -365,18 +365,12 @@ export const InfoBalance = () => {
     options.push(<option value={year}>{year}</option>);
   }
 
-  const linkOpen = (res: string) => {
-    const newWindow = window.open();
-    newWindow && (newWindow.location.href = res);
-  };
-
   const getTopUp = () => {
     const newWindow = window.open();
     if (hubConnection) {
       hubConnection
         .invoke('GetTopUpUrl', +balanceValue * 100000)
         .then((res: string) => {
-          // linkOpen(res);
           newWindow && (newWindow.location.href = res);
         })
         .catch((err: Error) => {
