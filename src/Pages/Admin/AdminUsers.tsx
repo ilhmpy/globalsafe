@@ -182,7 +182,11 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }: PropsTa
         <TableBodyItem>{data.roles.length ? data.roles[0].name : '-'}</TableBodyItem>
         <TableBodyItem>{moment(data.creationDate).format('DD/MM/YYYY')}</TableBodyItem>
         <TableBodyItem>Русский</TableBodyItem>
-        <TableBodyItem>{data.depositsAmount}</TableBodyItem>
+        <TableBodyItem>
+          {(data.depositsAmount / 100000).toLocaleString('ru-RU', {
+            maximumFractionDigits: 2,
+          })}
+        </TableBodyItem>
         <TableBodyItem>
           {size ? (
             lock ? (
@@ -308,25 +312,71 @@ export const AdminUsers = () => {
           setLoading(false);
           res.collection.forEach((item) => {
             let convertBalances: any[] = [];
-            const { 
-              balances, claims, creationDate, depositsAmount, 
-              email, id, isEmailConfirmed, isLockedout, 
-              isPhoneNumberConfirmed, isTwoFactorEnabled, 
-              languageCode, lockoutEnd, name, phoneNumber, 
-              roles, safeId } = item;
-            
-            balances.forEach(item => {
+            const {
+              balances,
+              claims,
+              creationDate,
+              depositsAmount,
+              email,
+              id,
+              isEmailConfirmed,
+              isLockedout,
+              isPhoneNumberConfirmed,
+              isTwoFactorEnabled,
+              languageCode,
+              lockoutEnd,
+              name,
+              phoneNumber,
+              roles,
+              safeId,
+            } = item;
+
+            balances.forEach((item) => {
               const { balanceKind, exhaustBalanceKind, exhaustRatio, id, safeId, volume } = item;
-              convertBalances = [...convertBalances, { balanceKind, exhaustBalanceKind, exhaustRatio, id, safeId, volume: (volume / 100000).toString(), }]
+              convertBalances = [
+                ...convertBalances,
+                {
+                  balanceKind,
+                  exhaustBalanceKind,
+                  exhaustRatio,
+                  id,
+                  safeId,
+                  volume: (volume / 100000).toString(),
+                },
+              ];
             });
 
-            divisionSums = [...divisionSums, { balances: convertBalances, claims, creationDate, 
-              depositsAmount, email, id, isEmailConfirmed, isLockedout, 
-              isPhoneNumberConfirmed, isTwoFactorEnabled,  languageCode, lockoutEnd, name, phoneNumber, roles, safeId }];
+            divisionSums = [
+              ...divisionSums,
+              {
+                balances: convertBalances,
+                claims,
+                creationDate,
+                depositsAmount,
+                email,
+                id,
+                isEmailConfirmed,
+                isLockedout,
+                isPhoneNumberConfirmed,
+                isTwoFactorEnabled,
+                languageCode,
+                lockoutEnd,
+                name,
+                phoneNumber,
+                roles,
+                safeId,
+              },
+            ];
           });
 
-          console.log("BEFORE DIVISION USERS BALANCES (each user have a massive 'balances')", res.collection);
-          console.log("AFTER DIVISION USERS BALANCES (each user have a massive 'balances')", divisionSums);
+          console.log(
+            "BEFORE DIVISION USERS BALANCES (each user have a massive 'balances')",
+            res.collection
+          );
+          console.log(
+            "AFTER DIVISION USERS BALANCES (each user have a massive 'balances')",
+            divisionSums
+          );
           setNum(20);
           console.log('USERS', res.collection);
           seTotalUsers(res.totalRecords);
