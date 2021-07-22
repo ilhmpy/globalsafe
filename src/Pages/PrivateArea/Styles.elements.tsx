@@ -17,6 +17,14 @@ export const ToLink = styled.a`
 export const InnerChart = styled(Card)`
   margin-bottom: 0;
   border-radius: 20px 20px 0 0;
+
+  & > div {
+    max-width: 930px;
+    margin: 0 auto;
+    margin-top: 16px;
+    margin-bottom: 10px;
+  }
+
   @media (max-width: 768px) {
     margin-bottom: 20px;
     background: transparent;
@@ -559,6 +567,7 @@ export const DataListName = styled.span`
   display: flex;
   align-items: center;
   letter-spacing: 0.1px;
+  margin-right: 28px;
   color: ${(props) => props.theme.text2};
 `;
 
@@ -580,6 +589,11 @@ export const DataListSum = styled.div<{ plus?: boolean }>`
   white-space: nowrap;
   padding-left: 20px;
   text-align: right;
+
+  &:nth-child(2) {
+    margin-right: 28px;
+    padding-left: 0;
+  }
 `;
 
 export const DataListDate = styled.div`
