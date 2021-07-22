@@ -18,10 +18,7 @@ import { Card } from '../../../../../globalStyles';
 import { OpenDate } from '../../../../../types/dates';
 import { CollectionListDeposits } from '../../../../../types/deposits';
 import { Notify } from '../../../../../types/notify';
-import {
-  PaymentsCollection,
-  RootPayments
-} from '../../../../../types/payments';
+import { PaymentsCollection, RootPayments } from '../../../../../types/payments';
 import { SelectValues, SortingType } from '../../../../../types/sorting';
 import { DepositList } from '../../../AdminPay/DepositList';
 import { Pagination } from '../../../Pagination';
@@ -40,7 +37,7 @@ import {
   SortingItem,
   SortingWindow,
   WindowBody,
-  WindowTitle
+  WindowTitle,
 } from '../../../Styled.elements';
 import * as Styled from './Styled.elements';
 
@@ -61,7 +58,7 @@ export const Approval: FC<Props> = ({
   procent,
   setModal,
   setPaymentsList,
-  setTotalPayments
+  setTotalPayments,
 }: Props) => {
   const [depositList, setDepositList] = useState<PaymentsCollection[]>([]);
   const [totalDeposits, setTotalDeposits] = useState(0);
@@ -180,6 +177,8 @@ export const Approval: FC<Props> = ({
 
   const loadMoreItems = () => {
     setCount(false);
+    setDepositList([]);
+    setLoading(true);
 
     if (hubConnection && depositList.length < totalDeposits) {
       hubConnection
@@ -201,15 +200,18 @@ export const Approval: FC<Props> = ({
           sorting
         )
         .then((res) => {
-          console.log('~~~~~~~~~~~~~~~~~~~~~~~~', res);
           setTotalDeposits(res.totalRecords);
           if (res.collection.length) {
             setDepositList([...res.collection]);
             setCount(true);
             setNum(num + 20);
+            setLoading(false);
           }
         })
-        .catch((err: Error) => console.log(err));
+        .catch((err: Error) => {
+          console.log(err);
+          setLoading(false);
+        });
     }
   };
 
@@ -273,29 +275,10 @@ export const Approval: FC<Props> = ({
   }, [currentPage, hubConnection, pageLength, sorting]);
 
   const submitApproval = () => {
-    console.log(openDateApproval.from);
-    console.log(openDateApproval.to);
-
-    console.log(
-      'GetUsersDeposits',
-      depositState,
-      nameApproval ? nameApproval.toLowerCase() : null,
-      searchSafeIDApproval.length ? searchSafeIDApproval : null,
-      openDateApproval.from ? openDateApproval.from : null,
-      openDateApproval.to ? openDateApproval.to : null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      (currentPage - 1) * pageLength,
-      pageLength,
-      sorting,
-    );
-
     if (hubConnection) {
       setCurrentPage(1);
+      setDepositList([]);
+      setLoading(true);
       hubConnection
         .invoke<RootPayments>(
           'GetUsersDeposits',
@@ -315,14 +298,17 @@ export const Approval: FC<Props> = ({
           sorting
         )
         .then((res) => {
-          setDepositList([]);
           setTotalDeposits(res.totalRecords);
           if (res.collection.length) {
             setDepositList(res.collection);
             setTotalDeposits(res.totalRecords);
+            setLoading(false);
           }
         })
-        .catch((err: Error) => console.log(err));
+        .catch((err: Error) => {
+          console.log(err);
+          setLoading(false);
+        });
     }
   };
 
@@ -397,31 +383,41 @@ export const Approval: FC<Props> = ({
     setCheckList([]);
 
     if (hubConnection) {
-      hubConnection.invoke(
-        'GetUsersDeposits',
-        [5],
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        (currentPage - 1) * pageLength,
-        pageLength,
-        []
-      )
-        .then((res: any) => {
-          console.log("CLEAR DATA", res);
-          setDepositList(res.collection);
+      setCurrentPage(1);
+      setDepositList([]);
+      setLoading(true);
+      hubConnection
+        .invoke<RootPayments>(
+          'GetUsersDeposits',
+          depositState,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          (currentPage - 1) * pageLength,
+          pageLength,
+          sorting
+        )
+        .then((res) => {
           setTotalDeposits(res.totalRecords);
-          setDepositList((item: any) => item.map((s: any) => s)); 
+          if (res.collection.length) {
+            setDepositList(res.collection);
+            setTotalDeposits(res.totalRecords);
+            setLoading(false);
+          }
         })
-        .catch((e: Error) => console.error("get users deposits clear error", e));
+        .catch((err: Error) => {
+          console.log(err);
+          setLoading(false);
+        });
     }
+
   };
 
   const getActiveSort = (index: number) => {
