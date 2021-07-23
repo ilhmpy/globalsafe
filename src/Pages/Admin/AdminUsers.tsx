@@ -60,6 +60,7 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }: PropsTa
 
   const onClick = () => {
     if (window.innerWidth < 992) {
+      console.log(data.safeId)
       history.push(`/admin/users/${data.name}`);
     } else {
       setOpen(true);

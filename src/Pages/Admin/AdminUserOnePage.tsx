@@ -17,6 +17,7 @@ import {
   RootCharges,
   CollectionCharges,
 } from "../../types/payments";
+import { SortingType } from "../../types/sorting";
 
 type PropsMatch = {
   slug: string;
@@ -31,12 +32,17 @@ export const AdminUserOnePage = ({
   const [dataTwo, setDataTwo] = useState<PaymentsCollection[]>([]);
   const [lock, setLock] = useState(false);
   const appContext = useContext(AppContext);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageLength, setPageLength] = useState<number>(10);
   const hubConnection = appContext.hubConnection;
   const logOut = appContext.logOut;
   const user = appContext.user;
   const location = useLocation();
   const safeId = match.params.slug;
+  const [sorting, setSorting] = useState<SortingType[]>([]);
   const { t } = useTranslation();
+
+  console.log(safeId);
 
   const handleClick = (id: number) => {
     if (id !== active) {
@@ -96,8 +102,9 @@ export const AdminUserOnePage = ({
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<RootUsers>("GetUsers", safeId, null, null, 0, 1)
+        .invoke("GetUsers", safeId, null, null, (currentPage - 1) * pageLength, pageLength, sorting)
         .then((res) => {
+          console.log("get user by slug", res);
           if (res.collection.length) {
             setData(res.collection);
             setLock(
@@ -109,7 +116,7 @@ export const AdminUserOnePage = ({
           }
         })
         .catch((err: Error) => {
-          console.log(err);
+          console.log("get user by slug error", err);
         });
     }
   }, [hubConnection]);
@@ -150,8 +157,12 @@ export const AdminUserOnePage = ({
           null,
           null,
           null,
-          0,
-          80
+          null,
+          null,
+          null,
+          (currentPage - 1) * pageLength,
+          pageLength,
+          sorting
         )
         .then((res) => {
           setDataTwo(res.collection);
