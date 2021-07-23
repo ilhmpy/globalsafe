@@ -205,12 +205,10 @@ export const Button = styled.a<Props>`
     }
   }}
   ${({ maxWidth }) => {
-    if (maxWidth) {
-      return `
-        max-width: ${maxWidth}px;
-        min-width: ${maxWidth}px;
-      ` 
-    }
+    return `
+      max-width: ${maxWidth}px;
+      min-width: ${maxWidth}px;
+    `
   }};
   &:disabled {
     cursor: initial;
