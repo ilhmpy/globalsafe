@@ -613,7 +613,7 @@ export const DataListDate = styled.div`
 
 export const ModalButton = styled(Button)<{ mb?: boolean, choice?: boolean, blue?: boolean }>`
   max-width: 100%;
-  color: ${({ choice }) => choice ? "#0E0D3D" : "#fff"};
+  color: ${({ choice, theme }) => choice ? theme.text : "#fff"};
   ${({ choice }) => {
     if (choice) {
       return `
