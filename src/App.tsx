@@ -14,7 +14,7 @@ import useLocalStorage from './hooks/useLocalStorage';
 import { APP_ID, APP_SAFARI_ID } from './constantes/onesignal';
 
 function App() {
-  const [token, setToken] = useLocalStorage('token');
+  const token = localStorage.getItem('token');
   (window as any).OneSignal = (window as any).OneSignal || [];
   const OneSignal = (window as any).OneSignal;
 
@@ -48,9 +48,8 @@ function App() {
 
   useEffect(() => {
     console.log(hubConnection);
-    console.log(token);
-    if (token && hubConnection) {
-      console.log(token);
+    if (token) {
+      console.log('token', token);
       try {
         OneSignal.push(() => {
           OneSignal.SERVICE_WORKER_PARAM = { scope: '/push/onesignal/' };
@@ -79,7 +78,7 @@ function App() {
         console.error(e);
       }
     }
-  }, [token, hubConnection]);
+  }, [token]);
 
   if (user != null) {
     return (

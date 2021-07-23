@@ -86,12 +86,12 @@ export const SideNavbar: FC<Props> = ({ navWidth, navShow }: Props) => {
               <Text>{t('sideNav.lottery')}</Text>
             </StyledLink>
           </Li>
-          {/*<Li>
+          {/* <Li>
             <StyledLink to="/admin/depositsPrograms">
               <Deposits />
               <Text>{t('sideNav.depositsPrograms')}</Text>
             </StyledLink>
-          </Li>*/}
+          </Li> */}
         </Ul>
         <div>
           <Theme onClick={swithTheme}>
