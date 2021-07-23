@@ -609,9 +609,16 @@ export const DataListDate = styled.div`
   border-radius: 24px;
 `;
 
-export const ModalButton = styled(Button)<{ mb?: boolean }>`
+export const ModalButton = styled(Button)<{ mb?: boolean, choice?: boolean }>`
   max-width: 100%;
-  color: #fff;
+  color: ${({ choice }) => choice ? "#0E0D3D" : "#fff"};
+  ${({ choice }) => {
+    if (choice) {
+      return `
+        font-weight: 300;
+      `
+    };
+  }}
   width: 100%;
   margin-bottom: ${(props) => (props.mb ? "20px" : "0")};
   &:disabled {
@@ -817,7 +824,7 @@ export const ModalDeposits = styled.div`
 `;
 
 export const ModalDepositsWrap = styled.div`
-  width: 540px;
+  max-width: 384px;
 `;
 
 export const SmallButton = styled.a<{ color: string }>`

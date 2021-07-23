@@ -425,11 +425,11 @@ export const InfoMain = () => {
             unmountOnExit
           >
             <Styled.ModalDepositsWrap>
-              <Modal width={540} onClose={() => setAddDeposit(false)}>
+              <Modal onClose={() => setAddDeposit(false)} width={384}>
                 <Styled.ModalTitle mt>{t('privateArea.addDeposit')}</Styled.ModalTitle>
                 <Styled.ModalDeposits>
                   <div>
-                    <Styled.ModalButton mb as="button" onClick={handleDepositModal} dangerOutline>
+                    <Styled.ModalButton choice mb as="button" onClick={handleDepositModal} dangerOutline>
                       {depositSelect ? depositSelect.name : t('privateArea.choiseDeposite')}{' '}
                       <Styled.IconRotate rights>
                         <Styled.ModalBack />

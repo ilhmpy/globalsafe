@@ -70,7 +70,7 @@ const ModalContainer = styled.div<{ zIndex: string }>`
   }
 `;
 
-const ModalComponent = styled.div<{ width?: number; mobMarg?: boolean }>`
+const ModalComponent = styled.div<{ width?: number; mobMarg?: boolean; }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -80,6 +80,7 @@ const ModalComponent = styled.div<{ width?: number; mobMarg?: boolean }>`
   border-radius: 10px;
   padding: 1rem;
   max-width: ${(props) => (props.width ? props.width + 'px' : '400px')};
+  max-height: ${({ width }) => width ? width + "px" : ""};
   width: 100%;
   position: relative;
   /* padding: 20px; */
