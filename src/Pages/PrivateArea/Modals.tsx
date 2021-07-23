@@ -6,6 +6,7 @@ import { DepositsCollection } from '../../types/info';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../../components/Button/Button';
+import styled from "styled-components/macro";
 
 type Props = {
   depositListModal: boolean;
@@ -26,7 +27,9 @@ export const DepositListModal: FC<Props> = ({
   return (
     <CSSTransition in={depositListModal} timeout={3} classNames="modal" unmountOnExit>
       <Modal onClose={() => setDepositListModal(false)}>
-        <Styled.ModalBack onClick={handleBackModal} />
+        <ModalBackDiv>
+          <Styled.ModalBack onClick={handleBackModal} />
+        </ModalBackDiv>
         <Styled.ModalTitle>{t('privateArea.addDeposit')}</Styled.ModalTitle>
         <Styled.ModalList>
           <Styled.ModalListItem>
@@ -128,3 +131,7 @@ export const ModalDividends: FC<DividendsProps> = ({ onClose, data, open }: Divi
     </Modal>
   );
 };
+
+const ModalBackDiv = styled.div`
+  width: 100%;
+`;

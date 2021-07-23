@@ -249,7 +249,8 @@
     "transferButton": "Transfer",
     "balanceOff": "Upon activation, the deposit will be debited",
     "condition": "Program conditions",
-    "add": "Add"
+    "add": "Add",
+    "showCondition": "Show condition"
   },
   "depositSuccess": {
     "title": "Deposit created successfully",

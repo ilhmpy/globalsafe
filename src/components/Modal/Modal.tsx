@@ -30,9 +30,7 @@ export const Modal: React.FC<ModalProps> = ({
       <ModalContainer zIndex={zIndex}>
         <Center onClick={handleContainerClick}>
           <ModalComponent width={width} mobMarg={mobMarg} paddingTop={paddingTop}>
-            <span className="close" onClick={onClose}>
-              &times;
-            </span>
+            <span className="close" onClick={onClose}>X</span>
             {children}
           </ModalComponent>
         </Center>
@@ -82,7 +80,9 @@ const ModalComponent = styled.div<{ width?: number; mobMarg?: boolean; paddingTo
   border-radius: 10px;
   padding: 1rem;
   max-width: ${(props) => (props.width ? props.width + 'px' : '400px')};
-  max-height: ${({ width }) => width ? width + "px" : ""};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
   position: relative;
   /* padding: 20px; */
@@ -93,14 +93,17 @@ const ModalComponent = styled.div<{ width?: number; mobMarg?: boolean; paddingTo
       `;
     }
   }}
-  span {
+  & > span {
     color: ${(props) => props.theme.text3};
     position: absolute;
     right: 20px;
     top: 15px;
     cursor: pointer;
     z-index: 9999;
+    width: 15px;
+    height: 15px;
     font-size: 18px;
+    opacity: 40%;
     &:hover {
       color: ${(props) => props.theme.text3Hover};
     }
