@@ -102,7 +102,7 @@ export const AdminUserOnePage = ({
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke("GetUsers", safeId, null, null, (currentPage - 1) * pageLength, pageLength, sorting)
+        .invoke<RootUsers>("GetUsers", safeId, null, null, (currentPage - 1) * pageLength, pageLength, sorting)
         .then((res) => {
           console.log("get user by slug", res);
           if (res.collection.length) {
