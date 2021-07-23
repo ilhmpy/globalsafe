@@ -1,0 +1,3 @@
+./src/serviceWorkerRegistration.ts
+service-worker.ts
+build
