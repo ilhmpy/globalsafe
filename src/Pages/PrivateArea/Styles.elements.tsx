@@ -198,7 +198,9 @@ export const IconRotate = styled.div<{ rights?: boolean }>`
   width: 16px;
   height: 16px;
   margin-left: 10px;
-
+  position: absolute;
+  right: 10px;
+  opacity: 50%;
   transform: ${(props) => (props.rights ? "rotate(180deg)" : "rotate(0deg)")};
 `;
 
@@ -609,9 +611,17 @@ export const DataListDate = styled.div`
   border-radius: 24px;
 `;
 
-export const ModalButton = styled(Button)<{ mb?: boolean }>`
+export const ModalButton = styled(Button)<{ mb?: boolean, choice?: boolean, blue?: boolean }>`
   max-width: 100%;
-  color: #fff;
+  color: ${({ choice, theme }) => choice ? theme.text : "#fff"};
+  ${({ choice }) => {
+    if (choice) {
+      return `
+        font-weight: 300;
+      `
+    };
+  }}
+  position: relative;
   width: 100%;
   margin-bottom: ${(props) => (props.mb ? "20px" : "0")};
   &:disabled {
@@ -751,7 +761,7 @@ export const ModalListItem = styled.li`
   }
 `;
 
-export const Program = styled.div`
+export const Program = styled.div<{ show?: boolean }>`
   font-weight: bold;
   font-size: 14px;
   line-height: 16px;
@@ -761,6 +771,15 @@ export const Program = styled.div`
   color: ${(props) => props.theme.text2};
   cursor: pointer;
   transition: 0.3s;
+  padding-top: 10px;
+  margin-bottom: 15px;
+  ${({ show }) => {
+    if (show) {
+      return `
+        margin-bottom: 30px;
+      `;
+    }
+  }}
   &:hover {
     color: #ff416e;
   }
@@ -769,17 +788,36 @@ export const Program = styled.div`
   }
 `;
 
-export const Warning = styled.div`
-  font-weight: 500;
+export const Warning = styled.div<{ choice?: boolean; }>`
+  font-weight: 400;
   font-size: 14px;
   line-height: 16px;
   letter-spacing: 0.1px;
   color: #ff416e;
-  text-align: left;
-  margin-bottom: 15px;
+  text-align: center;
+  margin-bottom: 20px;
+  
   bdi {
     color: #6db9ff;
   }
+
+  ${({ choice }) => {
+    if (choice) {
+      return `
+        & > span {
+          color: inherit;
+          position: inherit;
+          z-index: 0;
+          font-size: inherit;
+          font-weight: 700;
+
+          &:hover { 
+            color: inherit;
+          }
+        }
+      `;
+    };
+  }}
 `;
 
 export const Conditions = styled.div<{ open?: boolean }>`
@@ -817,7 +855,7 @@ export const ModalDeposits = styled.div`
 `;
 
 export const ModalDepositsWrap = styled.div`
-  width: 540px;
+  max-width: 384px;
 `;
 
 export const SmallButton = styled.a<{ color: string }>`

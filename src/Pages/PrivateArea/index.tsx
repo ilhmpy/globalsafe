@@ -425,11 +425,11 @@ export const InfoMain = () => {
             unmountOnExit
           >
             <Styled.ModalDepositsWrap>
-              <Modal width={540} onClose={() => setAddDeposit(false)}>
+              <Modal onClose={() => setAddDeposit(false)} width={384} paddingTop={34}>
                 <Styled.ModalTitle mt>{t('privateArea.addDeposit')}</Styled.ModalTitle>
                 <Styled.ModalDeposits>
                   <div>
-                    <Styled.ModalButton mb as="button" onClick={handleDepositModal} dangerOutline>
+                    <Styled.ModalButton choice mb as="button" onClick={handleDepositModal} dangerOutline>
                       {depositSelect ? depositSelect.name : t('privateArea.choiseDeposite')}{' '}
                       <Styled.IconRotate rights>
                         <Styled.ModalBack />
@@ -450,17 +450,12 @@ export const InfoMain = () => {
                     >
                       {t('depositSelect.add')}
                     </Styled.ModalButton>
-                    {depositSelect ? (
-                      <>
-                        <Tooltip text={depositSelect.description}>
-                          <Styled.Program onClick={() => setContition(true)}>
-                            {t('depositSelect.condition')}
-                          </Styled.Program>
-                        </Tooltip>
-                      </>
-                    ) : (
-                      <br />
-                    )}
+                    {depositSelect?.description ? 
+                    <Tooltip text={depositSelect.description}>
+                      <Styled.Program onClick={() => setContition(true)}>
+                         {t('depositSelect.condition')}
+                       </Styled.Program>
+                    </Tooltip> : <Styled.Program show>{t("depositSelect.showCondition")}</Styled.Program>}
                     {depositSelect && !asset && balanceFuture ? (
                       <>
                         <Styled.Warning>
@@ -482,9 +477,11 @@ export const InfoMain = () => {
                       </>
                     ) : null}
                     {depositSelect && depositSelect.priceKind && asset ? (
-                      <Styled.Warning>
-                        {t('depositSelect.willActiv')}&nbsp; {depositSelect.price}{' '}
-                        {depositSelect.priceKind ? Balance[depositSelect.priceKind] : 'CWD'}
+                      <Styled.Warning choice>
+                        {t('depositSelect.willActiv')}&nbsp; <span>
+                          {depositSelect.price}{' '}
+                          {depositSelect.priceKind ? Balance[depositSelect.priceKind] : 'CWD'}
+                        </span>
                         <br />
                         {t('depositSelect.bill')}
                       </Styled.Warning>
@@ -496,6 +493,7 @@ export const InfoMain = () => {
                         {t('depositSelect.bill')}
                       </Styled.Warning>
                     ) : null}
+                    <Styled.ModalButton blue>Перевести</Styled.ModalButton>
                   </div>
                   {/* {depositSelect ? (
                     <Styled.Conditions>
