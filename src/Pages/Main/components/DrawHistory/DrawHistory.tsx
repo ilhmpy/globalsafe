@@ -158,11 +158,14 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
                   </CSSTransition>
                 );
               } else {
+                console.log("item data", item.name, item.volume, typeWin(Number(item.kind)));
                 return (
                   <CSSTransition key={idx} timeout={500} classNames="item">
                     <TableList card>
                       <TableItem>{moment(item.date).format('DD.MM.YYYY')}</TableItem>
-                      <TableItem>{item.volume ? item.volume : typeWin(item.kind)}</TableItem>
+                      <TableItem>{item.volume ? (item.volume / 100000).toLocaleString("ru-RU", { maximumFractionDigits: 5 }) + " " + "CWD"
+                                              : 
+                                                typeWin(Number(item.kind))}</TableItem>
                       <TableItem>
                         <Value data-title={item.name}>{item.name}</Value>
                       </TableItem>
@@ -232,6 +235,11 @@ const TableList = styled.ul<{ card?: boolean; dn?: boolean }>`
     justify-content: flex-start;
     padding: 10px 15px;
     display: ${(props) => (props.dn ? 'none' : 'flex')};
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 19px;
+    padding-bottom: 5px;
   }
   ${(props) => {
     if (props.card) {
@@ -258,7 +266,7 @@ const TableItem = styled.li`
     line-height: 16px;
   }
   @media (max-width: 576px) {
-    padding-bottom: 5px;
+    padding-bottom: 12px;
   }
   @media (max-width: 576px) {
     text-align: left;
