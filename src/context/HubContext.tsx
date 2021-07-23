@@ -112,7 +112,7 @@ export const HubProvider: FC = ({ children }: any) => {
     setMyToken(null);
     setUser(null);
     setIsAdmin(false);
-    history.replace('/');
+    // history.replace('/');
   };
 
   const login = (token: string) => {
