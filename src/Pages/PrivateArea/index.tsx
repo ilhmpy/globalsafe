@@ -425,7 +425,7 @@ export const InfoMain = () => {
             unmountOnExit
           >
             <Styled.ModalDepositsWrap>
-              <Modal onClose={() => setAddDeposit(false)} width={384}>
+              <Modal onClose={() => setAddDeposit(false)} width={384} paddingTop={34}>
                 <Styled.ModalTitle mt>{t('privateArea.addDeposit')}</Styled.ModalTitle>
                 <Styled.ModalDeposits>
                   <div>

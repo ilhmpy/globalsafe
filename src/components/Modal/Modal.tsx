@@ -8,6 +8,7 @@ type ModalProps = {
   zIndex?: string;
   mobMarg?: boolean;
   children: ReactNode;
+  paddingTop?: number;
 };
 
 export const Modal: React.FC<ModalProps> = ({
@@ -16,6 +17,7 @@ export const Modal: React.FC<ModalProps> = ({
   width,
   zIndex = '99999',
   mobMarg,
+  paddingTop
 }: ModalProps) => {
   const handleContainerClick = (e: React.MouseEvent) => {
     if (e.currentTarget === e.target) {
@@ -27,7 +29,7 @@ export const Modal: React.FC<ModalProps> = ({
     <Portal>
       <ModalContainer zIndex={zIndex}>
         <Center onClick={handleContainerClick}>
-          <ModalComponent width={width} mobMarg={mobMarg}>
+          <ModalComponent width={width} mobMarg={mobMarg} paddingTop={paddingTop}>
             <span className="close" onClick={onClose}>
               &times;
             </span>
@@ -70,7 +72,7 @@ const ModalContainer = styled.div<{ zIndex: string }>`
   }
 `;
 
-const ModalComponent = styled.div<{ width?: number; mobMarg?: boolean; }>`
+const ModalComponent = styled.div<{ width?: number; mobMarg?: boolean; paddingTop?: number; }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -84,6 +86,13 @@ const ModalComponent = styled.div<{ width?: number; mobMarg?: boolean; }>`
   width: 100%;
   position: relative;
   /* padding: 20px; */
+  ${({ paddingTop }) => {
+    if (paddingTop) {
+      return `
+        padding-top: ${paddingTop}px;
+      `;
+    }
+  }}
   span {
     color: ${(props) => props.theme.text3};
     position: absolute;
