@@ -56,7 +56,10 @@ export const HubProvider: FC = ({ children }: any) => {
       .then(() => {
         setHubConnection(hubConnection);
       })
-      .catch((e) => console.log(e));
+      .catch((e) => {
+        setMyToken('');
+        console.log(e);
+      });
   }, [myToken]);
   // console.log("balanceList", balanceList);
   useEffect(() => {

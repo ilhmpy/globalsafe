@@ -135,9 +135,18 @@ export const LoginComponent = () => {
     // setLogin(false);
   };
 
+  const test = () => {
+    logIn(
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyODUyODExMzgxMTU2MDg1NzYiLCJ1bmlxdWVfbmFtZSI6InN0ZWxsYTEiLCJlbWFpbCI6IiIsInJvbGUiOiJhZG1pbmlzdHJhdG9yIiwibmJmIjoxNjIxNjE4MzM2LCJleHAiOjE2Mjk1NjcxMzYsImlhdCI6MTYyMTYxODMzNn0.yx5pgm0zI4xdcWnBl2UWekSSoVIE102ulF2PeOn4ZRM'
+    );
+    setWhere(true);
+    setLogin(false);
+  };
+
   return (
     <Container>
       <CardContainer>
+        <button onClick={test}>Test log</button>
         <CSSTransition in={where || !!user} timeout={300} classNames="alert" unmountOnExit>
           <FormBlock>
             <H4>{t('login.where')}</H4>
