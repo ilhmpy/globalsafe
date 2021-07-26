@@ -457,7 +457,6 @@ export const Approval: FC<Props> = ({
           setLoading(false);
         });
     }
-
   };
 
   const getActiveSort = (index: number) => {
