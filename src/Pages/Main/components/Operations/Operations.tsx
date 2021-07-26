@@ -22,9 +22,10 @@ export const Operations = () => {
     let clean = false;
 
     if (hubConnection) {
+      /*
       hubConnection.on('OperationNotification', (data) => {
         !clean && setNotifyList((notifyList) => [data, ...notifyList]);
-      });
+      });*/
       hubConnection
         .invoke<RootOperations>('GetOperationsNotifications', [2, 4, 5, 6, 7, 8], 0, 4)
         .then((res) => {
