@@ -61,6 +61,10 @@ export const lightTheme = {
   acceptAll: {
     bg: "#fff",
     rule: "rgba(0, 0, 0, 0.6)"
+  },
+  timerIcon: {
+    background: "rgba(255, 255, 255, 0.9)",
+    border: "1px solid rgba(86, 101, 127, 0.05)" 
   }
 };
 
@@ -119,5 +123,10 @@ export const darkTheme = {
   acceptAll: {
     bg: "rgba(48,48,48,1)",
     rule: "#fff"
+  },
+  timerIcon: {
+    background: "rgba(33,33,33,1)",
+    border: "1px solid #000000" 
   }
 };
+ 

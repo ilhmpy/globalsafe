@@ -469,3 +469,22 @@ export const BrandImgAbs = styled(BrandImg)`
     width: 100%;
   }
 `;
+
+export const TimerIcon = styled.div`
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: ${({ theme }) => theme.timerIcon.border};
+    background: ${({ theme }) => theme.timerIcon.background};
+    right: 234px;
+    position: absolute;
+    margin-top: 47px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-directrion: column;
+
+    .timericon_cirlce {
+      position: absolute;
+    }
+`;
