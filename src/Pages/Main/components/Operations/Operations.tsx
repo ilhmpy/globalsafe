@@ -20,12 +20,11 @@ export const Operations = () => {
 
   useEffect(() => {
     let clean = false;
-
+    
     if (hubConnection) {
       hubConnection.on('OperationNotification', (data) => {
+        setNotifyList((items: any) => items.filter((item: any, idx: any) => idx != items.length - 1));
         !clean && setNotifyList((notifyList) => [data, ...notifyList]);
-        setNotifyList((items: any) => items.filter((dt: any, idx: any) => idx != notifyList.length - 1));
-        setNotifyList(s => s.map(t => t));
       });
       hubConnection
         .invoke<RootOperations>('GetOperationsNotifications', [2, 4, 5, 6, 7, 8], 0, 4)
