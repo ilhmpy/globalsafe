@@ -23,8 +23,7 @@ export const Operations = () => {
     
     if (hubConnection) {
       hubConnection.on('OperationNotification', (data) => {
-        setNotifyList((items: any) => items.filter((item: any, idx: any) => idx != items.length - 1));
-        !clean && setNotifyList((notifyList) => [data, ...notifyList]);
+        !clean && setNotifyList((notifyList) => [data, ...notifyList.slice(0, -1)]);
       });
       hubConnection
         .invoke<RootOperations>('GetOperationsNotifications', [2, 4, 5, 6, 7, 8], 0, 4)
