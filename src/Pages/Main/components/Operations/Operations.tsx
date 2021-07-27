@@ -17,15 +17,13 @@ export const Operations = () => {
   const appContext = useContext(AppContext);
   const [maxItems, setMaxItems] = useState(4);
   const hubConnection = appContext.hubConnection;
-  const [max, setMax] = useState<number>(5); 
 
   useEffect(() => {
     let clean = false;
 
     if (hubConnection) {
       hubConnection.on('OperationNotification', (data) => {
-        !clean && setNotifyList([data, ...notifyList]);
-        setNotifyList((t: any) => t.map((s: any) => s));
+        !clean && setNotifyList((notifyList) => [data, ...notifyList]);
       });
       hubConnection
         .invoke<RootOperations>('GetOperationsNotifications', [2, 4, 5, 6, 7, 8], 0, 4)
@@ -68,7 +66,6 @@ export const Operations = () => {
         .then((res) => {
           setNotifyList((notifyList) => [...notifyList, ...res.collection]);
           setShowLess(true);
-          setMax(9);
         })
         .catch((e) => console.log(e));
     }
@@ -79,7 +76,6 @@ export const Operations = () => {
     notifyList.forEach((notify) => {
       if (lessNotifyList.length < 4) {
         lessNotifyList.push(notify);
-        setMax(5);
       }
     });
     setNotifyList(lessNotifyList);
@@ -100,35 +96,31 @@ export const Operations = () => {
         <TransitionGroup>
           {notifyList.length &&
             notifyList.map((item, idx) => {
-              if (notifyList.indexOf(item) + 1 >= max) {
-                return;
-              } else {
-                return (
-                  <CSSTransition key={item.date.toString() + idx} timeout={500} classNames="item">
-                    <TableList card className="operations-item">
-                      <TableItem>{moment(item.date).format('DD.MM.YYYY')}</TableItem>
-                      <TableItem>
-                        {item.depositName ? (
-                          <Text>
-                            {operation(item.operationKind)} {t('operation.byProgramm')}
-                            <span>&nbsp;{item.depositName}</span>
-                          </Text>
-                        ) : (
-                          <Text>{operation(item.operationKind)}</Text>
-                        )}
-                      </TableItem>
-                      <TableItem>
-                        <Value>
-                          {(item.amount / 100000).toLocaleString('ru-RU', {
-                            maximumFractionDigits: 2,
-                          })}{' '}
-                          CWD
-                        </Value>
-                      </TableItem>
-                    </TableList>
-                  </CSSTransition>
-                )
-              };
+              return (
+                <CSSTransition key={item.date.toString() + idx} timeout={500} classNames="item">
+                  <TableList card className="operations-item">
+                    <TableItem>{moment(item.date).format('DD.MM.YYYY')}</TableItem>
+                    <TableItem>
+                      {item.depositName ? (
+                        <Text>
+                          {operation(item.operationKind)} {t('operation.byProgramm')}
+                          <span>&nbsp;{item.depositName}</span>
+                        </Text>
+                      ) : (
+                        <Text>{operation(item.operationKind)}</Text>
+                      )}
+                    </TableItem>
+                    <TableItem>
+                      <Value>
+                        {(item.amount / 100000).toLocaleString('ru-RU', {
+                          maximumFractionDigits: 2,
+                        })}{' '}
+                        CWD
+                      </Value>
+                    </TableItem>
+                  </TableList>
+                </CSSTransition>
+              );
             })}
         </TransitionGroup>
         {
