@@ -2162,7 +2162,7 @@ export const Main = () => {
         <Operations />
         <Tariffs />
 
-        <Assets />
+        {/* <Assets /> */}
 
         <DrawHistory onOpenModal={onOpenModal} clock={clock} />
         <About />
