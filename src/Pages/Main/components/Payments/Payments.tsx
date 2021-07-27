@@ -301,6 +301,8 @@ export const Payments = () => {
 };
 
 const ModalButton = styled(Button)`
+  width: 100%;
+  max-width: 100%;
   &:disabled {
     background: ${(props) => props.theme.bbdis};
     border-color: ${(props) => props.theme.bbdis};

@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { AppContext } from '../../../../context/HubContext';
 import { RootClock } from '../../../../types/clock';
 import * as Styled from './Lottery.elements';
+import { ReactComponent as Prize } from "../../../../assets/svg/prize.svg";
 
 type Props = {
   last?: string;
@@ -26,6 +27,7 @@ export const Timer: FC<Props> = ({
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const { t } = useTranslation();
+  const [ clickOnIcon, setClickOnIcon ] = useState<boolean>(false);
 
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   const languale = lang === 'ru' ? 1 : 0;
