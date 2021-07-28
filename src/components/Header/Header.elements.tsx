@@ -14,12 +14,13 @@ export const Text = styled.p`
   transition: all 0.3s;
 `;
 
-export const SwitchTheme = styled.div`
+export const SwitchTheme = styled.div<{ mob?: boolean; }>`
   width: 28px;
   height: 28px;
 
   border-radius: 50%;
   /* background: ${(props) => props.theme.switch}; */
+
   cursor: pointer;
   @media (max-width: 1100px) {
     width: 100%;
@@ -31,6 +32,17 @@ export const SwitchTheme = styled.div`
         flex: none;
       }
     }
+
+    ${({ mob }) => {
+      if (mob) {
+        return `
+          & > div > svg {
+            width: 28px;
+            height: 28px;
+          }
+        `;
+      }
+    }}
   }
 `;
 
@@ -173,7 +185,7 @@ export const List = styled.ul`
   }
 `;
 
-export const ListItem = styled.li<{ mob?: boolean }>`
+export const ListItem = styled.li<{ mob?: boolean; without?: boolean; last?: boolean; }>`
   padding: 0px 12px;
   display: ${(props) => props.mob && "none"};
   position: relative;
@@ -199,6 +211,30 @@ export const ListItem = styled.li<{ mob?: boolean }>`
       display: block;
       cursor: initial;
     }
+    ${({ mob }) => {
+      if (mob) {
+        return `
+          max-width: 30px;
+          margin-right: 10px;
+        `;
+      };
+    }}
+
+    ${({ without }) => {
+      if (without) {
+        return `
+          border-top: 0;
+        `;
+      }
+    }}
+
+    ${({ last }) => {
+      if (last) {
+        return `
+          border-bottom: 1px solid ${({ theme }: any) => theme.listBorder};
+        `;
+      }
+    }}
   }
 `;
 
@@ -224,4 +260,11 @@ export const LinkButton = styled.div`
   font-size: 14px;
   line-height: 16px;
   color: ${(props) => props.theme.text};
+`;
+
+export const Switch = styled.div`
+  display: flex;
+  position: absolute;
+  bottom: 5px;
+  align-items: center;
 `;
