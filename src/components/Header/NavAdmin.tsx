@@ -8,6 +8,7 @@ import {
   Languale,
   SwitchTheme,
   Text,
+  Switch,
 } from './Header.elements';
 import { useTranslation } from 'react-i18next';
 import { ThemeContext } from '../../context/ThemeContext';
@@ -64,39 +65,39 @@ export const NavAdmin: FC<Props> = ({ onClose, lang }: Props) => {
           {t('sideNav.depositsPrograms')}
         </StyledLink>
       </ListItem> */}
-      <ListItem>
+      <ListItem last>
         <StyledLink to="/" onClick={onClose}>
           {t('sideNav.toHome')}
         </StyledLink>
       </ListItem>
-      <ListItem>
-        {lang === 'ru' ? (
-          <Languale onClick={() => i18n.changeLanguage('en')}>
-            en
-            <img src={usa} alt="en" />
-          </Languale>
-        ) : (
-          <Languale onClick={() => i18n.changeLanguage('ru')}>
-            ru
-            <img src={ru} alt="ru" />
-          </Languale>
-        )}
-      </ListItem>
-      <ListItem>
-        <SwitchTheme onClick={swithTheme}>
-          {theme === 'light' ? (
-            <div>
-              <DarkTheme />
-              <Text>{t('themeDark')}</Text>
-            </div>
+      <Switch>
+        <ListItem mob without>
+          <SwitchTheme mob onClick={swithTheme}>
+            {theme === 'light' ? (
+              <div>
+                <DarkTheme />
+              </div>
+            ) : (
+              <div>
+                <LightTheme />
+              </div>
+            )}
+          </SwitchTheme>
+        </ListItem>
+        <ListItem without>
+          {lang === 'ru' ? (
+            <Languale onClick={() => i18n.changeLanguage('en')}>
+              EN
+              <img src={usa} alt="en" />
+            </Languale>
           ) : (
-            <div>
-              <LightTheme />
-              <Text>{t('themeLight')}</Text>
-            </div>
+            <Languale onClick={() => i18n.changeLanguage('ru')}>
+              RU
+              <img src={ru} alt="ru" />
+            </Languale>
           )}
-        </SwitchTheme>
-      </ListItem>
+        </ListItem>
+      </Switch>
     </List>
   );
 };
