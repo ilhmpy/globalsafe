@@ -33,7 +33,7 @@ i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    // lng: "ru",
+    lng: localStorage.getItem("i18nextLng") || "ru",
     detection: DETECTION_OPTIONS,
     fallbackLng,
     debug: true,
