@@ -11,6 +11,7 @@ import { Id } from './types/Id';
 import { AppContext } from './context/HubContext';
 import { Loader } from './components/Loader/Loader';
 import useLocalStorage from './hooks/useLocalStorage';
+import { useTranslation } from 'react-i18next';
 import { APP_ID, APP_SAFARI_ID } from './constantes/onesignal';
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const user = appContext.user;
+  const { t } = useTranslation();
 
   const subscribe = useCallback(
     (id: string) => {
@@ -60,6 +62,20 @@ function App() {
             safari_web_id: APP_SAFARI_ID,
             notifyButton: {
               enable: true,
+              text: {
+                "tip.state.unsubscribed": t("text.tip_state_unsubscribed"),
+                "tip.state.subscribed": t("text.tip_state_subscribed"),
+                "tip.state.blocked": t("text.tip_state_blocked"),
+                "message.prenotify": t("text.message_prenotify"),
+                "message.action.subscribed": t("text.message_action_subscribed"),
+                "message.action.resubscribed": t("text.message_action_resubscribed"),
+                "message.action.unsubscribed": t("message_action_unsubscribed"),
+                "dialog.main.title": t("text.dialog_main_title"),
+                "dialog.main.button.subscribe": t("text.dialog_main_button_subscribe"),
+                "dialog.main.button.unsubscribe": t("text.dialog_main_button_unsubscribe"),
+                "dialog.blocked.title": t("text.dialog_blocked_title"),
+                "dialog.blocked.message": t("text.dialog_blocked_message")
+              }
             },
           });
           try {
@@ -78,7 +94,7 @@ function App() {
         console.error(e);
       }
     }
-  }, [token]);
+  }, [token, t]);
 
   if (user != null) {
     return (
