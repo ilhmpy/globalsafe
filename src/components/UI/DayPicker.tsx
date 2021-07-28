@@ -278,12 +278,16 @@ export const TestInput: FC<TestInputProps> = ({ label, openDate, setOpenDate }: 
     const range = DateUtils.addDayToRange(day, openDate as any);
     setSelfDate({ from: range.from, to: range.to });
     setOpenDate({ from: range.from, to: range.to });
+
+    setInputString(
+      `${range.from ? moment(range.from).format('DD.MM.YY') : ''} ${
+        range.to ? `- ${moment(range.to).format('DD.MM.YY')}` : ''
+      }`
+    );
   };
 
   const handleChange = () => {
-    // if (selfDate.from && selfDate.to) {
     setOpenDate({ from: openDate.from, to: openDate.to });
-    // }
     setShowOpen(false);
   };
 
@@ -299,14 +303,69 @@ export const TestInput: FC<TestInputProps> = ({ label, openDate, setOpenDate }: 
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   const modifiers = { start: openDate.from, end: openDate.to };
 
+  const [inputString, setInputString] = useState(
+    `${openDate.from ? moment(openDate.from).format('DD.MM.YY') : ''} ${
+      openDate.to ? `- ${moment(openDate.to).format('DD.MM.YY')}` : ''
+    }`
+  );
   return (
     <>
       <RangeInputs ref={ref}>
         <BoxInput onClick={() => setShowOpen(!showOpen)}>
           <DateLabel>{label}</DateLabel>
           <DateInput>
-            <span>{openDate.from ? moment(openDate.from).format('DD.MM.YY') : ''}</span>
-            <span>{openDate.to ? `-${moment(openDate.to).format('DD.MM.YY')} ` : ''}</span>
+            {/* <InputDate type="date" data-date-format="DD MMMM YYYY" /> */}
+            {/* {console.log(openDate.from ? new Date(moment(openDate.from).format('DD.MM.YY')) : '')}
+            {console.log(openDate)} */}
+            {/* <InputDate
+              type="date"
+              value={openDate.from ? moment(openDate.from).format('DD.MM.YY') : ''}
+              onChange={(e) => {
+                console.log({
+                  ...openDate,
+                  from: new Date(moment(openDate.from).format('DD.MM.YY')),
+                });
+                setOpenDate({
+                  ...openDate,
+                  from: new Date(moment(openDate.from).format('DD.MM.YY')),
+                });
+              }}
+            ></InputDate> */}
+            <InputDate
+              type="text"
+              value={inputString}
+              onChange={(e) => {
+                setInputString(e.target.value);
+                const arr = e.target.value.split(' - ');
+                const fromSplitted = arr[0].split('.');
+                console.log('fromSplitted', fromSplitted);
+                const toSplitted = arr[0].split('.');
+                console.log('toSplitted', toSplitted);
+
+                // const one = `${
+                //   fromSplitted[0][1].length === 2 ? fromSplitted[0][1] : '0' + fromSplitted[0][1]
+                // }.${
+                //   fromSplitted[0][0].length === 2 ? fromSplitted[0][0] : '0' + fromSplitted[0][0]
+                // }.${fromSplitted[0][2]}`;
+                // const two = `${toSplitted[1][1]}.${toSplitted[1][0]}.${toSplitted[1][2]}`;
+
+                // console.log(one);
+                // console.log(two);
+
+                // console.log(moment(one));
+
+                console.log(moment(moment(arr[0]).format('DD.MM.YY')).toDate());
+                console.log(moment(moment(arr[1]).format('DD.MM.YY')).toDate());
+
+                setOpenDate({
+                  from: moment(moment(arr[0]).format('DD.MM.YY')).toDate(),
+                  to: moment(moment(arr[1]).format('DD.MM.YY')).toDate(),
+                });
+              }}
+            ></InputDate>
+
+            {/* <span>{openDate.from ? moment(openDate.from).format('DD.MM.YY') : ''}</span>
+            <span>{openDate.to ? `-${moment(openDate.to).format('DD.MM.YY')} ` : ''}</span> */}
             {openDate.from && <Close onClick={reset}>&times;</Close>}
           </DateInput>
         </BoxInput>
@@ -329,6 +388,23 @@ export const TestInput: FC<TestInputProps> = ({ label, openDate, setOpenDate }: 
     </>
   );
 };
+
+const InputDate = styled.input`
+  border: none;
+  outline: none;
+  background: transparent;
+  ::-webkit-inner-spin-button,
+  ::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+  }
+
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 21px;
+  letter-spacing: 0.1px;
+  color: ${(props) => props.theme.text2};
+`;
 
 type TestInputAnaliticProps = {
   label: string;
