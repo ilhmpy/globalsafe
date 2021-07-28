@@ -249,6 +249,7 @@ const StyledLink = styled(NavLink).attrs({ activeclassname })`
   }
   svg path {
     stroke: ${(props) => props.theme.text2};
+    stroke-width: .4px;
   }
   &:hover {
     transition: all 0.3s;
