@@ -49,8 +49,8 @@ function App() {
   );
 
   useEffect(() => {
-    console.log(hubConnection);
-    if (token) {
+    console.log("initialize", t("text.tip_state_unsubscribed"))
+    if (token && user) {
       console.log('token', token);
       try {
         OneSignal.push(() => {

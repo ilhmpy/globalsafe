@@ -11,7 +11,7 @@ export const LangualeContext = React.createContext<Context>({
 });
 
 export const LangualeProvider: FC = ({ children }: any) => {
-  const [lang, setLang] = useState(localStorage.getItem('i18nextLng') || 'ru');
+  const [lang, setLang] = useState(localStorage.getItem('i18nextLng') || "ru");
 
   return <LangualeContext.Provider value={{ lang, setLang }}>{children}</LangualeContext.Provider>;
 };
