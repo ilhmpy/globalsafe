@@ -554,10 +554,10 @@ export const Approval: FC<Props> = ({
               </SelectWrapTwo>
             </SelectContainerInnerPaid>
             <Styled.Buttons>
-              <Button danger onClick={submitApproval}>
+              <Button danger maxWidth={134} onClick={submitApproval}>
                 {t('adminUsers.apply')}
               </Button>
-              <Button dangerOutline onClick={clear}>
+              <Button dangerOutline maxWidth={117} onClick={clear}>
                 {t('adminUsers.reset')}
               </Button>
             </Styled.Buttons>
