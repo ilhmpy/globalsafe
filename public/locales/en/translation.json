@@ -434,5 +434,9 @@
     "dialog_main_button_unsubscribe": "UNSUBSCRIBE",
     "dialog_blocked_title": "Unblock Notifications",
     "dialog_blocked_message": "Follow these instructions to allow notifications:"
+  },
+  "tech": {
+    "desc": "The requested page has been removed or is temporarily unavailable. Go to ",
+    "main": "home page"
   }
 }

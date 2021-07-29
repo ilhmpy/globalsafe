@@ -13,6 +13,7 @@ import { Loader } from './components/Loader/Loader';
 import useLocalStorage from './hooks/useLocalStorage';
 import { useTranslation } from 'react-i18next';
 import { APP_ID, APP_SAFARI_ID } from './constantes/onesignal';
+import PageNotFound  from "./Pages/Tech/PageNotFound";
 
 function App() {
   const token = localStorage.getItem('token');
@@ -117,7 +118,7 @@ function App() {
               <Route path="/info" component={InfoMain} />
               <Route path="/login" component={Authentication} />
               <Route path="/register" component={Register} />
-              <Route component={Main} />
+              <Route component={PageNotFound} />
             </Switch>
             {/* </div>
                 </Scrollbars> */}
