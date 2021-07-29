@@ -1,6 +1,7 @@
 import moment from 'moment';
 import React, { FC, useRef, useState } from 'react';
 import DayPicker, { DateUtils } from 'react-day-picker';
+import DayPickerInput from 'react-day-picker/DayPickerInput';
 import 'react-day-picker/lib/style.css';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
@@ -260,6 +261,26 @@ type TestInputProps = {
   onClose?: () => void;
 };
 
+// function CustomOverlay<any>({ classNames, selectedDay, children, ...props }) {
+//   return (
+//     <div {...props}>
+//       <CustomDatePicker
+//         selectedDays={[openDate.from, openDate as any]}
+//         months={lang === 'en' ? MONTHS_ENG : MONTHS}
+//         onDayClick={handleDayClick}
+//         firstDayOfWeek={1}
+//         onTodayButtonClick={handleChange}
+//         todayButton={t('ready')}
+//         modifiers={modifiers}
+//         weekdaysLong={WEEKDAYS_LONG}
+//         weekdaysShort={lang === 'en' ? WEEKDAYS_SHORT_ENG : WEEKDAYS_SHORT}
+//         navbarElement={<Navbar />}
+//       >
+//         <div>{children}</div>
+//       </CustomDatePicker>
+//     </div>
+//   );
+// }
 export const TestInput: FC<TestInputProps> = ({ label, openDate, setOpenDate }: TestInputProps) => {
   const [showOpen, setShowOpen] = useState(false);
   const [selfDate, setSelfDate] = useState<any>({
@@ -308,6 +329,17 @@ export const TestInput: FC<TestInputProps> = ({ label, openDate, setOpenDate }: 
       openDate.to ? `- ${moment(openDate.to).format('DD.MM.YY')}` : ''
     }`
   );
+  const [state, setState] = useState({});
+
+  const handleDayChange=({selectedDay, modifiers, dayPickerInput}:any) =>{
+    const input = dayPickerInput.getInput();
+    setState({
+      selectedDay,
+      isEmpty: !input.value.trim(),
+      isValidDay: typeof selectedDay !== 'undefined',
+      isDisabled: modifiers.disabled === true,
+    });
+  }
   return (
     <>
       <RangeInputs ref={ref}>
@@ -364,13 +396,41 @@ export const TestInput: FC<TestInputProps> = ({ label, openDate, setOpenDate }: 
               }}
             ></InputDate>
 
+            <DayPickerInput
+              onDayChange={handleDayChange}
+              selectedDay={state.selectedDay}
+              overlayComponent={({ classNames, selectedDay, children, ...props }: any) => {
+                return (
+                  <CustomDatePicker
+                    {...props}
+                    // selectedDays={[openDate.from, openDate as any]}
+                    // months={lang === 'en' ? MONTHS_ENG : MONTHS}
+                    // onDayClick={handleDayClick}
+                    // firstDayOfWeek={1}
+                    // onTodayButtonClick={handleChange}
+                    // todayButton={t('ready')}
+                    // modifiers={modifiers}
+                    // weekdaysLong={WEEKDAYS_LONG}
+                    // weekdaysShort={lang === 'en' ? WEEKDAYS_SHORT_ENG : WEEKDAYS_SHORT}
+                    // navbarElement={<Navbar />}
+                  >
+                    <div>{children}</div>
+                  </CustomDatePicker>
+                );
+              }}
+              dayPickerProps={{
+                todayButton: 'Today',
+              }}
+              keepFocus={false}
+            />
+
             {/* <span>{openDate.from ? moment(openDate.from).format('DD.MM.YY') : ''}</span>
             <span>{openDate.to ? `-${moment(openDate.to).format('DD.MM.YY')} ` : ''}</span> */}
             {openDate.from && <Close onClick={reset}>&times;</Close>}
           </DateInput>
         </BoxInput>
 
-        {showOpen && (
+        {/* {showOpen && (
           <CustomDatePicker
             selectedDays={[openDate.from, openDate as any]}
             months={lang === 'en' ? MONTHS_ENG : MONTHS}
@@ -383,7 +443,7 @@ export const TestInput: FC<TestInputProps> = ({ label, openDate, setOpenDate }: 
             weekdaysShort={lang === 'en' ? WEEKDAYS_SHORT_ENG : WEEKDAYS_SHORT}
             navbarElement={<Navbar />}
           />
-        )}
+        )} */}
       </RangeInputs>
     </>
   );
