@@ -51,44 +51,58 @@ export const SideNavbar: FC<Props> = ({ navWidth, navShow }: Props) => {
       <SideInner>
         <Ul>
           <Li>
-            <StyledLink to="/admin" exact>
-              <DashBoard />
+            <StyledLink to="/admin" exact className="first-styledlink">
+              <div>
+                <DashBoard />
+              </div>
               <Text>{t('sideNav.mainScreen')}</Text>
             </StyledLink>
           </Li>
           <Li>
             <StyledLink to="/admin/deposit">
-              <Peppa />
+              <div>
+                <Peppa />
+              </div>
               <Text>{t('sideNav.deposits')}</Text>
             </StyledLink>
           </Li>
           <Li>
             <StyledLink to="/admin/payments">
-              <Wallet />
+              <div>
+                <Wallet />
+              </div>
               <Text>{t('sideNav.pay')}</Text>
             </StyledLink>
           </Li>
           <Li>
             <StyledLink to="/admin/users">
-              <Users />
+              <div>
+                <Users />
+              </div>
               <Text>{t('sideNav.users')}</Text>
             </StyledLink>
           </Li>
           <Li>
             <StyledLink to="/admin/portfolio">
-              <Briefcase />
+              <div>
+                <Briefcase />
+              </div>
               <Text>{t('sideNav.portfolio')}</Text>
             </StyledLink>
           </Li>
           <Li>
             <StyledLink to="/admin/lottery">
-              <Lottery />
+              <div>
+                <Lottery />
+              </div>
               <Text>{t('sideNav.lottery')}</Text>
             </StyledLink>
           </Li>
           {/* <Li>
             <StyledLink to="/admin/depositsPrograms">
-              <Deposits />
+              <div>
+                <Deposits />
+              </div>
               <Text>{t('sideNav.depositsPrograms')}</Text>
             </StyledLink>
           </Li> */}
@@ -227,6 +241,10 @@ const StyledLink = styled(NavLink).attrs({ activeclassname })`
   width: 100%;
   transition: all 0.3s;
   &.${activeclassname} {
+    & > * {
+      opacity: 100%;
+    }
+
     background: rgba(255, 65, 110, 0.07);
     ${Text} {
       color: #ff416e;
@@ -247,9 +265,9 @@ const StyledLink = styled(NavLink).attrs({ activeclassname })`
   svg {
     flex: none;
   }
+
   svg path {
     stroke: ${(props) => props.theme.text2};
-    stroke-width: .4px;
   }
   &:hover {
     transition: all 0.3s;
@@ -270,6 +288,14 @@ const StyledLink = styled(NavLink).attrs({ activeclassname })`
       border-radius: 4px;
       left: 0;
     }
+
+    & > * {
+      opacity: 100%;
+    }
+  } 
+
+  & > * {
+    opacity: 30%;
   }
 `;
 
