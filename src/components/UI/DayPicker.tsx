@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { FC, useRef, useState } from 'react';
+import React, { FC, useRef, useState, useEffect } from 'react';
 import DayPicker, { DateUtils } from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +17,7 @@ function Navbar({
   onNextClick,
   className,
   localeUtils,
+  lang,
 }: any) {
   const months = localeUtils.getMonths();
   const prev = months[previousMonth.getMonth()];
@@ -174,11 +175,12 @@ export const Calendar: FC<CalendarProps> = ({ selectedDay, setSelectedDay }: Cal
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   return (
     <CustomDatePickers
+      locale={lang}
       months={lang === 'en' ? MONTHS_ENG : MONTHS}
       firstDayOfWeek={lang === 'en' ? 0 : 1}
       weekdaysLong={WEEKDAYS_LONG}
       weekdaysShort={lang === 'en' ? WEEKDAYS_SHORT_ENG : WEEKDAYS_SHORT}
-      navbarElement={<Navbar />}
+      navbarElement={<Navbar lang={lang} />}
       selectedDays={selectedDay}
       onDayClick={handleDayClick}
     />
