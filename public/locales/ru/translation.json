@@ -419,5 +419,19 @@
     "createDate": "Дата создания",
     "procents": "Проценты",
     "desc": "Описание"
+  },
+  "text": {
+    "tip_state_unsubscribed": "Подпишитесь на уведомления",
+    "tip_state_subscribed": "Вы подписались на уведомления",
+    "tip_state_blocked": "Вы заблокировали уведомления",
+    "message_prenotify": "Нажмите для подписки на уведомления",
+    "message_action_subscribed": "Спасибо за подписку!",
+    "message_action_resubscribed": "Вы подписались на уведомления!",
+    "message_action_unsubscribed": "Вы не хотите получать уведомления",
+    "dialog_main_title": "Управление уведомлениями сайта",
+    "dialog_main_button_subscribe": "ПОДПИСКА",
+    "dialog_main_button_unsubscribe": "ОТПИСКА",
+    "dialog_blocked_title": "Разблокирование уведомлений",
+    "dialog_blocked_message": "Следуйте этим инструкциям что бы сделать подписку:"
   }
 }

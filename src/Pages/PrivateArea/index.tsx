@@ -429,7 +429,7 @@ export const InfoMain = () => {
                 <Styled.ModalTitle mt>{t('privateArea.addDeposit')}</Styled.ModalTitle>
                 <Styled.ModalDeposits>
                   <div>
-                    <Styled.ModalButton choice mb as="button" onClick={handleDepositModal} dangerOutline>
+                    <Styled.ModalButton choice mb onClick={handleDepositModal} dangerOutline>
                       {depositSelect ? depositSelect.name : t('privateArea.choiseDeposite')}{' '}
                       <Styled.IconRotate rights>
                         <Styled.ModalBack />

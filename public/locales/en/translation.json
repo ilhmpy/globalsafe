@@ -420,5 +420,19 @@
     "createDate": "Created date",
     "procents": "Procents",
     "desc": "Description"
+  },
+  "text": {
+    "tip_state_unsubscribed": "Subscribe to notifications",
+    "tip_state_subscribed": "You're subscribed to notifications",
+    "tip_state_blocked": "You've blocked notifications",
+    "message_prenotify": "Click to subscribe to notifications",
+    "message_action_subscribed": "Thanks for subscribing!",
+    "message_action_resubscribed": "You're subscribed to notifications",
+    "message_action_unsubscribed": "You won't receive notifications again",
+    "dialog_main_title": "Manage Site Notifications",
+    "dialog_main_button_subscribe": "SUBSCRIBE",
+    "dialog_main_button_unsubscribe": "UNSUBSCRIBE",
+    "dialog_blocked_title": "Unblock Notifications",
+    "dialog_blocked_message": "Follow these instructions to allow notifications:"
   }
 }

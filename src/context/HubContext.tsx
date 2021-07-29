@@ -1,9 +1,9 @@
-import React, { FC, ReactNode, useCallback, useEffect, useState } from 'react';
 import * as signalR from '@microsoft/signalr';
+import React, { FC, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 import { API_URL } from '../constantes/api';
 import useLocalStorage from '../hooks/useLocalStorage';
-import { useHistory } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { BalanceList } from '../types/balance';
 type Nulable<T> = T | null;
 
@@ -56,9 +56,12 @@ export const HubProvider: FC = ({ children }: any) => {
       .then(() => {
         setHubConnection(hubConnection);
       })
-      .catch((e) => console.log(e));
+      .catch((e) => {
+        setMyToken('');
+        console.log(e);
+      });
   }, [myToken]);
-  // console.log("balanceList", balanceList);
+  console.log('balanceList', balanceList);
   useEffect(() => {
     if (hubConnection) {
       hubConnection.on('BalanceUpdate', (data) => {
@@ -77,7 +80,7 @@ export const HubProvider: FC = ({ children }: any) => {
           console.log('GetSigned', res);
           setUser(res.name);
           setLoading(false);
-          if (res.balances) {
+          if (res.balances.length) {
             const newArr = res.balances.filter((item: any) => item.balanceKind === 1);
             setBalance(newArr[0].volume);
 

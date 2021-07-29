@@ -507,6 +507,7 @@ export const Approval: FC<Props> = ({
               setProcent(e.target.value);
           }}
           label={t('adminPay.procentPay')}
+          maxLng={6}
         />
       </Styled.ButtonWrap>
 
