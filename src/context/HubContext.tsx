@@ -84,7 +84,9 @@ export const HubProvider: FC = ({ children }: any) => {
             const newArr = res.balances.filter((item: any) => item.balanceKind === 1);
             setBalance(newArr[0].volume);
 
-            i18n.changeLanguage(res.languageCode === 1 ? 'ru' : 'en');
+            if (!localStorage.getItem("i18nextLng")) {
+              i18n.changeLanguage(res.languageCode === 1 ? 'ru' : 'en');
+            };
             const balanceList = res.balances.map((item: any) => ({
               balanceKind: item.balanceKind,
               volume: item.volume,

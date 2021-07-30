@@ -65,6 +65,9 @@ export const lightTheme = {
   timerIcon: {
     background: "rgba(255, 255, 255, 0.9)",
     border: "1px solid rgba(86, 101, 127, 0.05)" 
+  },
+  tech: {
+    color: "#0E0D3D"
   }
 };
 
@@ -127,6 +130,9 @@ export const darkTheme = {
   timerIcon: {
     background: "rgba(33,33,33,1)",
     border: "1px solid #000000" 
+  },
+  tech: {
+    color: "#fff"
   }
 };
  

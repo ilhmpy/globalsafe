@@ -60,6 +60,9 @@ declare module 'styled-components' {
       background: string;
       border: string;
     };
+    tech: {
+      color: string;
+    }
   }
 } 
  
