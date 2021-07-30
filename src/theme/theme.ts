@@ -68,6 +68,10 @@ export const lightTheme = {
   },
   tech: {
     color: "#0E0D3D"
+  },
+  loader: {
+    bg: "rgba(0, 0, 0, 0.2)",
+    pointsColor: ""
   }
 };
 
@@ -133,6 +137,10 @@ export const darkTheme = {
   },
   tech: {
     color: "#fff"
+  },
+  loader: {
+    bg: "",
+    pointsColor: ""
   }
 };
  

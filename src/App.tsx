@@ -101,7 +101,6 @@ function App() {
   if (user != null) {
     return (
       <Router>
-        <ThemesProvider>
           {/* <div style={{ height: "100vh" }}>
                 <Scrollbars style={{ height: "100%", width: "100%" }}> */}
           <div className="App">
@@ -126,7 +125,6 @@ function App() {
             {/* </div>
                 </Scrollbars> */}
           </div>
-        </ThemesProvider>
       </Router>
     );
   } else return <Loader />;
