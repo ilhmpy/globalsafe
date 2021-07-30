@@ -309,30 +309,14 @@ export const TestInput: FC<TestInputProps> = ({ label, openDate, setOpenDate }: 
       openDate.to ? `- ${moment(openDate.to).format('DD.MM.YY')}` : ''
     }`
   );
-  const regEx = /^(0[1-9]|[12][0-9]|3[01])[.](0[1-9]|1[012])[.]\d\d$/gm;
+  const dateRangeRegEx = /^(0[1-9]|[12][0-9]|3[01])[.](0[1-9]|1[012])[.]\d\d$/gm;
+
   return (
     <>
       <RangeInputs ref={ref}>
         <BoxInput onClick={() => setShowOpen(!showOpen)}>
           <DateLabel>{label}</DateLabel>
           <DateInput>
-            {/* <InputDate type="date" data-date-format="DD MMMM YYYY" /> */}
-            {/* {console.log(openDate.from ? new Date(moment(openDate.from).format('DD.MM.YY')) : '')}
-            {console.log(openDate)} */}
-            {/* <InputDate
-              type="date"
-              value={openDate.from ? moment(openDate.from).format('DD.MM.YY') : ''}
-              onChange={(e) => {
-                console.log({
-                  ...openDate,
-                  from: new Date(moment(openDate.from).format('DD.MM.YY')),
-                });
-                setOpenDate({
-                  ...openDate,
-                  from: new Date(moment(openDate.from).format('DD.MM.YY')),
-                });
-              }}
-            ></InputDate> */}
             <InputDate
               type="text"
               value={inputString}
@@ -340,38 +324,15 @@ export const TestInput: FC<TestInputProps> = ({ label, openDate, setOpenDate }: 
                 setInputString(e.target.value);
                 const arr = e.target.value.split(' - ');
                 const fromSplitted = arr[0].split('.');
-                // console.log('fromSplitted', fromSplitted);
-                const toSplitted = arr[0].split('.');
-                // console.log('toSplitted', toSplitted);
-
-                // console.log(arr[0].length);
-                // console.log(arr[1].length);
-                // console.log(arr[1] === arr[0]);
-                // console.log(regEx.test(arr[0]));
-                // console.log(regEx.test(arr[1]));
-
-                const one = `${
-                  fromSplitted[0][1].length === 2 ? fromSplitted[0][1] : '0' + fromSplitted[0][1]
-                }.${
-                  fromSplitted[0][0].length === 2 ? fromSplitted[0][0] : '0' + fromSplitted[0][0]
-                }.${fromSplitted[0][2]}`;
-                const two = `${toSplitted[1][1]}.${toSplitted[1][0]}.${toSplitted[1][2]}`;
-
-                // console.log(one);
-                // console.log(two);
-
-                // console.log(moment(one));
-
-                // console.log(moment(moment(arr[0]).format('DD.MM.YY')).toDate());
-                // console.log(
-                //   new Date(
-                //     `${arr[1].split('.')[1]}.${arr[1].split('.')[0]}.${arr[1].split('.')[2]}`
-                //   )
-                // );
+                const toSplitted = arr[1].split('.');
 
                 setOpenDate({
-                  from: new Date(`${fromSplitted[1]}.${fromSplitted[0]}.${fromSplitted[2]}`),
-                  to: new Date(`${toSplitted[1]}.${toSplitted[0]}.${toSplitted[2]}`),
+                  from: moment(`${fromSplitted[1]}.${fromSplitted[0]}.${fromSplitted[2]}`)
+                    .set({ hour: 12, minute: 0, second: 0 })
+                    .toDate(),
+                  to: moment(`${toSplitted[1]}.${toSplitted[0]}.${toSplitted[2]}`)
+                    .set({ hour: 12, minute: 0, second: 0 })
+                    .toDate(),
                 });
               }}
             ></InputDate>
@@ -405,11 +366,6 @@ const InputDate = styled.input`
   border: none;
   outline: none;
   background: transparent;
-  ::-webkit-inner-spin-button,
-  ::-webkit-calendar-picker-indicator {
-    display: none;
-    -webkit-appearance: none;
-  }
 
   font-weight: normal;
   font-size: 14px;
