@@ -437,6 +437,7 @@
   },
   "tech": {
     "desc": "The requested page has been removed or is temporarily unavailable. Go to ",
-    "main": "home page"
+    "main": "home page",
+    "tech": "Technical work in progress"
   }
 }

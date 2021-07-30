@@ -14,6 +14,7 @@ import useLocalStorage from './hooks/useLocalStorage';
 import { useTranslation } from 'react-i18next';
 import { APP_ID, APP_SAFARI_ID } from './constantes/onesignal';
 import PageNotFound  from "./Pages/Tech/PageNotFound";
+import TechWorks from "./Pages/Tech/TechWorks";
 
 function App() {
   const token = localStorage.getItem('token');
@@ -118,6 +119,8 @@ function App() {
               <Route path="/info" component={InfoMain} />
               <Route path="/login" component={Authentication} />
               <Route path="/register" component={Register} />
+              {/* tech works route for testing */}
+              <Route path="/tech" component={TechWorks} />
               <Route component={PageNotFound} />
             </Switch>
             {/* </div>
