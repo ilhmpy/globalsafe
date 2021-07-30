@@ -117,7 +117,6 @@ function App() {
               <Route path="/info" component={InfoMain} />
               <Route path="/login" component={Authentication} />
               <Route path="/register" component={Register} />
-              <Route path="/load" component={Loader} />
               <Route component={PageNotFound} />
             </Switch>
             {/* </div>
