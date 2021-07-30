@@ -295,6 +295,29 @@ export const Approval: FC<Props> = ({
       setCurrentPage(1);
       setDepositList([]);
       setLoading(true);
+
+      console.log(
+        openDateApproval.from
+          ? moment(openDateApproval.from)
+              .utcOffset('+00:00')
+              .set({ hour: 0, minute: 0, second: 0 })
+              .toDate()
+          : null,
+      );
+      console.log(
+        openDateApproval.to
+          ? moment(openDateApproval.to)
+              .utcOffset('+00:00')
+              .set({ hour: 23, minute: 59, second: 59 })
+              .toDate()
+          : openDateApproval.from
+          ? moment(openDateApproval.from)
+              .utcOffset('+00:00')
+              .set({ hour: 23, minute: 59, second: 59 })
+              .toDate()
+          : null
+      );
+
       hubConnection
         .invoke<RootPayments>(
           'GetUsersDeposits',

@@ -1,9 +1,7 @@
 import moment from 'moment';
 import React, { FC, useRef, useState } from 'react';
 import DayPicker, { DateUtils } from 'react-day-picker';
-import DayPickerInput from 'react-day-picker/DayPickerInput';
 import 'react-day-picker/lib/style.css';
-// import { formatDate, parseDate } from 'react-day-picker/moment';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
 import styled, { css } from 'styled-components/macro';
@@ -280,14 +278,16 @@ export const TestInput: FC<TestInputProps> = ({ label, openDate, setOpenDate }: 
     const range = DateUtils.addDayToRange(day, openDate as any);
     setSelfDate({ from: range.from, to: range.to });
     setOpenDate({ from: range.from, to: range.to });
+
+    setInputString(
+      `${range.from ? moment(range.from).format('DD.MM.YY') : ''} ${
+        range.to ? `- ${moment(range.to).format('DD.MM.YY')}` : ''
+      }`
+    );
   };
 
   const handleChange = () => {
-    // if (selfDate.from && selfDate.to) {
-    console.log({ from: openDate.from, to: openDate.to });
-
     setOpenDate({ from: openDate.from, to: openDate.to });
-    // }
     setShowOpen(false);
   };
 
@@ -298,87 +298,83 @@ export const TestInput: FC<TestInputProps> = ({ label, openDate, setOpenDate }: 
       from: undefined,
       to: undefined,
     });
+    setInputString('');
   };
-
-  const [state, setState] = useState({
-    from: undefined,
-    to: undefined,
-  });
 
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   const modifiers = { start: openDate.from, end: openDate.to };
-  const handleFromChange = (from: any) => {
-    console.log('handleFromChange ~ from', from);
-    setState({ from, ...state });
-  };
 
-  const handleToChange = (to: any) => {
-    console.log('handleToChange ~ to', to);
-    setState({ to, ...state });
-  };
+  const [inputString, setInputString] = useState(
+    `${openDate.from ? moment(openDate.from).format('DD.MM.YY') : ''} ${
+      openDate.to ? `- ${moment(openDate.to).format('DD.MM.YY')}` : ''
+    }`
+  );
+  const regEx = /^(0[1-9]|[12][0-9]|3[01])[.](0[1-9]|1[012])[.]\d\d$/gm;
   return (
     <>
       <RangeInputs ref={ref}>
         <BoxInput onClick={() => setShowOpen(!showOpen)}>
           <DateLabel>{label}</DateLabel>
           <DateInput>
-            <Days>
-              <DayPickerInput
-                value={openDate.from ? moment(openDate.from).format('DD.MM.YY') : ''}
-                placeholder="C"
-                format="MM.dd.yyyy"
-                onDayChange={handleFromChange}
-                overlayComponent={({ classNames, selectedDay, children, ...props }: any) => {
-                  return (
-                    showOpen && (
-                      <CustomDatePicker
-                        {...props}
-                        selectedDays={[openDate.from, openDate as any]}
-                        months={lang === 'en' ? MONTHS_ENG : MONTHS}
-                        onDayClick={handleDayClick}
-                        firstDayOfWeek={1}
-                        onTodayButtonClick={handleChange}
-                        todayButton={t('ready')}
-                        modifiers={modifiers}
-                        weekdaysLong={WEEKDAYS_LONG}
-                        weekdaysShort={lang === 'en' ? WEEKDAYS_SHORT_ENG : WEEKDAYS_SHORT}
-                        navbarElement={<Navbar />}
-                      >
-                        <div>{children}</div>
-                      </CustomDatePicker>
-                    )
-                  );
-                }}
-              />
-              —
-              <DayPickerInput
-                value={openDate.to ? moment(openDate.to).format('DD.MM.YY') : ''}
-                placeholder="До"
-                format="LL"
-                onDayChange={handleToChange}
-                overlayComponent={({ classNames, selectedDay, children, ...props }: any) => {
-                  return (
-                    showOpen && (
-                      <CustomDatePicker
-                        {...props}
-                        selectedDays={[openDate.from, openDate as any]}
-                        months={lang === 'en' ? MONTHS_ENG : MONTHS}
-                        onDayClick={handleDayClick}
-                        firstDayOfWeek={1}
-                        onTodayButtonClick={handleChange}
-                        todayButton={t('ready')}
-                        modifiers={modifiers}
-                        weekdaysLong={WEEKDAYS_LONG}
-                        weekdaysShort={lang === 'en' ? WEEKDAYS_SHORT_ENG : WEEKDAYS_SHORT}
-                        navbarElement={<Navbar />}
-                      >
-                        <div>{children}</div>
-                      </CustomDatePicker>
-                    )
-                  );
-                }}
-              />
-            </Days>
+            {/* <InputDate type="date" data-date-format="DD MMMM YYYY" /> */}
+            {/* {console.log(openDate.from ? new Date(moment(openDate.from).format('DD.MM.YY')) : '')}
+            {console.log(openDate)} */}
+            {/* <InputDate
+              type="date"
+              value={openDate.from ? moment(openDate.from).format('DD.MM.YY') : ''}
+              onChange={(e) => {
+                console.log({
+                  ...openDate,
+                  from: new Date(moment(openDate.from).format('DD.MM.YY')),
+                });
+                setOpenDate({
+                  ...openDate,
+                  from: new Date(moment(openDate.from).format('DD.MM.YY')),
+                });
+              }}
+            ></InputDate> */}
+            <InputDate
+              type="text"
+              value={inputString}
+              onChange={(e) => {
+                setInputString(e.target.value);
+                const arr = e.target.value.split(' - ');
+                const fromSplitted = arr[0].split('.');
+                // console.log('fromSplitted', fromSplitted);
+                const toSplitted = arr[0].split('.');
+                // console.log('toSplitted', toSplitted);
+
+                // console.log(arr[0].length);
+                // console.log(arr[1].length);
+                // console.log(arr[1] === arr[0]);
+                // console.log(regEx.test(arr[0]));
+                // console.log(regEx.test(arr[1]));
+
+                const one = `${
+                  fromSplitted[0][1].length === 2 ? fromSplitted[0][1] : '0' + fromSplitted[0][1]
+                }.${
+                  fromSplitted[0][0].length === 2 ? fromSplitted[0][0] : '0' + fromSplitted[0][0]
+                }.${fromSplitted[0][2]}`;
+                const two = `${toSplitted[1][1]}.${toSplitted[1][0]}.${toSplitted[1][2]}`;
+
+                // console.log(one);
+                // console.log(two);
+
+                // console.log(moment(one));
+
+                // console.log(moment(moment(arr[0]).format('DD.MM.YY')).toDate());
+                // console.log(
+                //   new Date(
+                //     `${arr[1].split('.')[1]}.${arr[1].split('.')[0]}.${arr[1].split('.')[2]}`
+                //   )
+                // );
+
+                setOpenDate({
+                  from: new Date(`${fromSplitted[1]}.${fromSplitted[0]}.${fromSplitted[2]}`),
+                  to: new Date(`${toSplitted[1]}.${toSplitted[0]}.${toSplitted[2]}`),
+                });
+              }}
+            ></InputDate>
 
             {/* <span>{openDate.from ? moment(openDate.from).format('DD.MM.YY') : ''}</span>
             <span>{openDate.to ? `-${moment(openDate.to).format('DD.MM.YY')} ` : ''}</span> */}
@@ -386,7 +382,7 @@ export const TestInput: FC<TestInputProps> = ({ label, openDate, setOpenDate }: 
           </DateInput>
         </BoxInput>
 
-        {/* {showOpen && (
+        {showOpen && (
           <CustomDatePicker
             selectedDays={[openDate.from, openDate as any]}
             months={lang === 'en' ? MONTHS_ENG : MONTHS}
@@ -399,26 +395,27 @@ export const TestInput: FC<TestInputProps> = ({ label, openDate, setOpenDate }: 
             weekdaysShort={lang === 'en' ? WEEKDAYS_SHORT_ENG : WEEKDAYS_SHORT}
             navbarElement={<Navbar />}
           />
-        )} */}
+        )}
       </RangeInputs>
     </>
   );
 };
 
-const Days = styled.div`
-  .DayPickerInput > input {
-    background-color: transparent;
-
-    width: 60px;
-    outline: none;
-    border: none;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 21px;
-    letter-spacing: 0.1px;
-    color: ${(props) => props.theme.text2};
-    text-align: center;
+const InputDate = styled.input`
+  border: none;
+  outline: none;
+  background: transparent;
+  ::-webkit-inner-spin-button,
+  ::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
   }
+
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 21px;
+  letter-spacing: 0.1px;
+  color: ${(props) => props.theme.text2};
 `;
 
 type TestInputAnaliticProps = {
