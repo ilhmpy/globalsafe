@@ -62,6 +62,10 @@ declare module 'styled-components' {
     };
     tech: {
       color: string;
+    },
+    loader: {
+      bg: string;
+      pointsColor: string;
     }
   }
 } 

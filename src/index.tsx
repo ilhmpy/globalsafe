@@ -7,11 +7,14 @@ import "./i18n/i18n";
 import { Loader } from "./components/Loader/Loader";
 import { HubProvider } from "./context/HubContext";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
+import { ThemesProvider } from './context/ThemeContext';
 
 ReactDOM.render(
   <Suspense fallback={<Loader />}>
     <HubProvider>
-      <App />
+      <ThemesProvider>
+          <App />
+      </ThemesProvider>
     </HubProvider>
   </Suspense>,
   document.getElementById("root")

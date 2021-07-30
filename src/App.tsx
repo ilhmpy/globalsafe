@@ -100,7 +100,6 @@ function App() {
   if (user != null) {
     return (
       <Router>
-        <ThemesProvider>
           {/* <div style={{ height: "100vh" }}>
                 <Scrollbars style={{ height: "100%", width: "100%" }}> */}
           <div className="App">
@@ -118,12 +117,12 @@ function App() {
               <Route path="/info" component={InfoMain} />
               <Route path="/login" component={Authentication} />
               <Route path="/register" component={Register} />
+              <Route path="/load" component={Loader} />
               <Route component={PageNotFound} />
             </Switch>
             {/* </div>
                 </Scrollbars> */}
           </div>
-        </ThemesProvider>
       </Router>
     );
   } else return <Loader />;
