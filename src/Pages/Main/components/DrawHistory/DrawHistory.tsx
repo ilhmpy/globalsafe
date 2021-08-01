@@ -37,7 +37,6 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
       hubConnection
         .invoke<RootLottery>('GetPrizes', 0, 5)
         .then((res) => {
-          console.log('GetPrizes res', res);
           const arrList = res.collection.map((item) => ({
             name: item.userName,
             kind: item.definition.kind,
@@ -158,14 +157,20 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
                   </CSSTransition>
                 );
               } else {
-                console.log("item data", item.name, item.volume, typeWin(Number(item.kind)));
+                console.log('item data', item.name, item.volume, typeWin(Number(item.kind)));
                 return (
                   <CSSTransition key={idx} timeout={500} classNames="item">
                     <TableList card>
                       <TableItem>{moment(item.date).format('DD.MM.YYYY')}</TableItem>
-                      <TableItem>{item.volume ? (item.volume / 100000).toLocaleString("ru-RU", { maximumFractionDigits: 5 }) + " " + "CWD"
-                                              : 
-                                                typeWin(Number(item.kind))}</TableItem>
+                      <TableItem>
+                        {item.volume
+                          ? (item.volume / 100000).toLocaleString('ru-RU', {
+                              maximumFractionDigits: 5,
+                            }) +
+                            ' ' +
+                            'CWD'
+                          : typeWin(Number(item.kind))}
+                      </TableItem>
                       <TableItem>
                         <Value data-title={item.name}>{item.name}</Value>
                       </TableItem>

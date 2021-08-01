@@ -11,7 +11,6 @@ import { Main } from './Pages/Main/Main';
 import { InfoMain } from './Pages/PrivateArea';
 import PageNotFound from './Pages/Tech/PageNotFound';
 import TechWorks from './Pages/Tech/TechWorks';
-
 declare global {
   interface Window {
     OneSignal: any;
@@ -20,13 +19,12 @@ declare global {
 const App: FC = () => {
   const token = localStorage.getItem('token');
   window.OneSignal = window.OneSignal || [];
+
   const OneSignal = window.OneSignal;
-  console.log('OneSignal', OneSignal);
 
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const user = appContext.user;
-  console.log('user', user)
   const { t } = useTranslation();
 
   const subscribe = useCallback(
@@ -54,12 +52,8 @@ const App: FC = () => {
   );
 
   useEffect(() => {
-    console.log('initialize', t('text.tip_state_unsubscribed'));
-    console.log('token', token);
-    console.log('useEffect ~ user', user);
-    if (token) {
+    if (token && user) {
       try {
-        console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
         OneSignal.push(() => {
           OneSignal.SERVICE_WORKER_PARAM = { scope: '/push/onesignal/' };
           OneSignal.SERVICE_WORKER_PATH = 'push/onesignal/OneSignalSDKWorker.js';
@@ -102,11 +96,7 @@ const App: FC = () => {
         console.error(e);
       }
     }
-  }, [token, t]);
-
-  // console.log(OneSignal.push());
-  // console.log(OneSignal.on());
-  // console.log(OneSignal.getUserId());
+  }, [user]);
 
   if (user != null) {
     return (
