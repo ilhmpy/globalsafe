@@ -71,7 +71,7 @@ export const lightTheme = {
   },
   loader: {
     bg: "rgba(0, 0, 0, 0.2)",
-    pointsColor: ""
+    pointsColor: "#2b3595"
   }
 };
 
@@ -139,8 +139,8 @@ export const darkTheme = {
     color: "#fff"
   },
   loader: {
-    bg: "",
-    pointsColor: ""
+    bg: "rgba(48,48,48,1)",
+    pointsColor: "#fff"
   }
 };
  
