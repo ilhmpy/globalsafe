@@ -25,14 +25,6 @@ export const ThemesProvider: FC = ({ children }: any) => {
     }
   };
 
-  useEffect(() => {
-    if (theme == "light") {
-      setTheme("light");
-    } else {
-      setTheme("dark");
-    };
-  });
-
   return (
     <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
       <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>

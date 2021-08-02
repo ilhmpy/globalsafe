@@ -1,7 +1,6 @@
 import { useContext } from 'react';
 import { Loading } from '../UI/Loading';
 import styled from 'styled-components';
-import { ThemeContext } from '../../context/ThemeContext';
 
 export function Loader() {
   return (
