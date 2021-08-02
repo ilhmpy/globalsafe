@@ -295,20 +295,13 @@ export const Approval: FC<Props> = ({
       setCurrentPage(1);
       setDepositList([]);
       setLoading(true);
+
       hubConnection
         .invoke<RootPayments>(
           'GetUsersDeposits',
           depositState,
           nameApproval ? nameApproval.toLowerCase() : null,
           searchSafeIDApproval.length ? searchSafeIDApproval : null,
-          // openDateApproval.from
-          //   ? moment(openDateApproval.from).set({ hour: 0, minute: 0, second: 0 }).toDate()
-          //   : null,
-          // openDateApproval.to
-          //   ? moment(openDateApproval.to).set({ hour: 23, minute: 59, second: 59 }).toDate()
-          //   : moment(openDateApproval.from).set({ hour: 23, minute: 59, second: 59 }).toDate() ||
-          //       null,
-
           openDateApproval.from
             ? moment(openDateApproval.from)
                 .utcOffset('+00:00')
@@ -326,7 +319,6 @@ export const Approval: FC<Props> = ({
                 .set({ hour: 23, minute: 59, second: 59 })
                 .toDate()
             : null,
-
           null,
           null,
           null,

@@ -280,12 +280,16 @@ export const TestInput: FC<TestInputProps> = ({ label, openDate, setOpenDate }: 
     const range = DateUtils.addDayToRange(day, openDate as any);
     setSelfDate({ from: range.from, to: range.to });
     setOpenDate({ from: range.from, to: range.to });
+
+    setInputString(
+      `${range.from ? moment(range.from).format('DD.MM.YY') : ''} ${
+        range.to ? `- ${moment(range.to).format('DD.MM.YY')}` : ''
+      }`
+    );
   };
 
   const handleChange = () => {
-    // if (selfDate.from && selfDate.to) {
     setOpenDate({ from: openDate.from, to: openDate.to });
-    // }
     setShowOpen(false);
   };
 
@@ -296,10 +300,18 @@ export const TestInput: FC<TestInputProps> = ({ label, openDate, setOpenDate }: 
       from: undefined,
       to: undefined,
     });
+    setInputString('');
   };
 
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   const modifiers = { start: openDate.from, end: openDate.to };
+
+  const [inputString, setInputString] = useState(
+    `${openDate.from ? moment(openDate.from).format('DD.MM.YY') : ''} ${
+      openDate.to ? `- ${moment(openDate.to).format('DD.MM.YY')}` : ''
+    }`
+  );
+  const dateRangeRegEx = /^(0[1-9]|[12][0-9]|3[01])[.](0[1-9]|1[012])[.]\d\d$/gm;
 
   return (
     <>
@@ -307,8 +319,28 @@ export const TestInput: FC<TestInputProps> = ({ label, openDate, setOpenDate }: 
         <BoxInput onClick={() => setShowOpen(!showOpen)}>
           <DateLabel>{label}</DateLabel>
           <DateInput>
-            <span>{openDate.from ? moment(openDate.from).format('DD.MM.YY') : ''}</span>
-            <span>{openDate.to ? `-${moment(openDate.to).format('DD.MM.YY')} ` : ''}</span>
+            <InputDate
+              type="text"
+              value={inputString}
+              onChange={(e) => {
+                setInputString(e.target.value);
+                const arr = e.target.value.split(' - ');
+                const fromSplitted = arr[0].split('.');
+                const toSplitted = arr[1].split('.');
+
+                setOpenDate({
+                  from: moment(`${fromSplitted[1]}.${fromSplitted[0]}.${fromSplitted[2]}`)
+                    .set({ hour: 12, minute: 0, second: 0 })
+                    .toDate(),
+                  to: moment(`${toSplitted[1]}.${toSplitted[0]}.${toSplitted[2]}`)
+                    .set({ hour: 12, minute: 0, second: 0 })
+                    .toDate(),
+                });
+              }}
+            ></InputDate>
+
+            {/* <span>{openDate.from ? moment(openDate.from).format('DD.MM.YY') : ''}</span>
+            <span>{openDate.to ? `-${moment(openDate.to).format('DD.MM.YY')} ` : ''}</span> */}
             {openDate.from && <Close onClick={reset}>&times;</Close>}
           </DateInput>
         </BoxInput>
@@ -331,6 +363,18 @@ export const TestInput: FC<TestInputProps> = ({ label, openDate, setOpenDate }: 
     </>
   );
 };
+
+const InputDate = styled.input`
+  border: none;
+  outline: none;
+  background: transparent;
+
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 21px;
+  letter-spacing: 0.1px;
+  color: ${(props) => props.theme.text2};
+`;
 
 type TestInputAnaliticProps = {
   label: string;
