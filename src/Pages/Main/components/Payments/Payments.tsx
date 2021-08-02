@@ -1,31 +1,27 @@
-import React, { useEffect, useContext, useState, useCallback, FC, useRef } from 'react';
-import { H2 } from '../../../../components/UI/MainStyled';
-import { Card, Container } from '../../../../globalStyles';
+import moment from 'moment';
+import React, { FC, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import styled, { keyframes } from 'styled-components/macro';
-import { RadialBar } from '../../../../components/Charts/Test';
-import { AppContext } from '../../../../context/HubContext';
-import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
-import 'swiper/swiper.scss';
+import SwiperCore, { A11y, Navigation, Pagination, Scrollbar } from 'swiper';
 import 'swiper/components/navigation/navigation.scss';
 import 'swiper/components/pagination/pagination.scss';
 import 'swiper/components/scrollbar/scrollbar.scss';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { RootPayDeposit, PayDeposit, Pokedex } from '../../../../types/payouts';
+import 'swiper/swiper.scss';
 import { ReactComponent as Refresh } from '../../../../assets/svg/refresh.svg';
-import moment from 'moment';
-import { Page } from '../../../../components/UI/Page';
-import { Modal } from '../../../../components/Modal/Modal';
-import { CSSTransition } from 'react-transition-group';
 import { Button } from '../../../../components/Button/Button';
-import {
-  DescContainer,
-  BlockContainers,
-  BlockItem,
-  ModalBlock,
-  ModalTitle,
-} from '../Tariffs/Tariffs.elements';
-import { useTranslation } from 'react-i18next';
+import { RadialBar } from '../../../../components/Charts/Test';
+import { Modal } from '../../../../components/Modal/Modal';
 import { Input } from '../../../../components/UI/Input';
+import { H2 } from '../../../../components/UI/MainStyled';
+import { Page } from '../../../../components/UI/Page';
+import { AppContext } from '../../../../context/HubContext';
+import { Card, Container } from '../../../../globalStyles';
+import { Pokedex, RootPayDeposit } from '../../../../types/payouts';
+import {
+  ModalBlock,
+  ModalTitle
+} from '../Tariffs/Tariffs.elements';
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
@@ -230,7 +226,6 @@ export const Payments = () => {
       hubConnection
         .invoke<RootPayDeposit[]>('GetDayPayouts', languale)
         .then((res) => {
-          console.log('res', res);
           setStatsDeposit(res);
           setLoadReset(false);
         })

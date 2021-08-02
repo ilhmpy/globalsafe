@@ -50,6 +50,7 @@ export const HubProvider: FC = ({ children }: any) => {
       })
       .withAutomaticReconnect()
       .build();
+    console.log(hubConnection);
 
     hubConnection
       .start()
@@ -61,7 +62,7 @@ export const HubProvider: FC = ({ children }: any) => {
         console.log(e);
       });
   }, [myToken]);
-  console.log('balanceList', balanceList);
+
   useEffect(() => {
     if (hubConnection) {
       hubConnection.on('BalanceUpdate', (data) => {
@@ -84,9 +85,9 @@ export const HubProvider: FC = ({ children }: any) => {
             const newArr = res.balances.filter((item: any) => item.balanceKind === 1);
             setBalance(newArr[0].volume);
 
-            if (!localStorage.getItem("i18nextLng")) {
+            if (!localStorage.getItem('i18nextLng')) {
               i18n.changeLanguage(res.languageCode === 1 ? 'ru' : 'en');
-            };
+            }
             const balanceList = res.balances.map((item: any) => ({
               balanceKind: item.balanceKind,
               volume: item.volume,
