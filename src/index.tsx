@@ -10,13 +10,13 @@ import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import { ThemesProvider } from './context/ThemeContext';
 
 ReactDOM.render(
-  <Suspense fallback={<Loader />}>
-    <HubProvider>
       <ThemesProvider>
-          <App />
-      </ThemesProvider>
-    </HubProvider>
-  </Suspense>,
+        <Suspense fallback={Loader}>
+          <HubProvider>
+            <App />
+          </HubProvider>
+        </Suspense>
+      </ThemesProvider>,
   document.getElementById("root")
 );
 

@@ -7,7 +7,7 @@ const BounceAnimation = keyframes`
   100% { margin-bottom: 0 }
 `;
 
-const DotWrapper = styled.div<{ currentTheme: string; }>`
+const DotWrapper = styled.div`
   height: 50px;
   display: flex;
   align-items: center;
@@ -15,7 +15,7 @@ const DotWrapper = styled.div<{ currentTheme: string; }>`
   margin: 40px 0;
 
   & > div {
-    background-color: ${({ currentTheme }) => currentTheme == "light" ? "#2b3595" : "#fff"}
+    background-color: ${({ theme }) => theme.loader.pointsColor}
   }
 `;
 
@@ -28,9 +28,9 @@ const Dot = styled.div<{ delay?: string }>`
   animation-delay: ${(props) => props.delay};
 `;
 
-export const Loading = ({ currentTheme }: any) => {
+export const Loading = () => {
   return (
-    <DotWrapper currentTheme={currentTheme}>
+    <DotWrapper>
       <Dot delay="0s" />
       <Dot delay=".1s" />
       <Dot delay=".2s" />
