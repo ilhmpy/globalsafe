@@ -68,18 +68,22 @@ export const CurrencyValues = () => {
   }, [hubConnection]);
 
   useEffect(() => {
+    const cb = (data: Collection) => {
+      console.log('MarketNotification', data);
+      if (data.assetKind === 3) {
+        setListGCWD((listGCWD) => [...listGCWD, data]);
+      } else if (data.assetKind === 2) {
+        setListMGCWD((listMGCWD) => [...listMGCWD, data]);
+      } else {
+        setListDIAMOND((listDIAMOND) => [...listDIAMOND, data]);
+      }
+    };
     if (hubConnection) {
-      hubConnection.on('MarketNotification', (data) => {
-        console.log('MarketNotification', data);
-        if (data.assetKind === 3) {
-          setListGCWD((listGCWD) => [...listGCWD, data]);
-        } else if (data.assetKind === 2) {
-          setListMGCWD((listMGCWD) => [...listMGCWD, data]);
-        } else {
-          setListDIAMOND((listDIAMOND) => [...listDIAMOND, data]);
-        }
-      });
+      hubConnection.on('MarketNotification', cb);
     }
+    return () => {
+      hubConnection?.off('MarketNotification', cb);
+    };
   }, [hubConnection]);
 
   const changeValue = (data: Collection[]) => {

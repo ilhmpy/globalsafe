@@ -2102,14 +2102,15 @@ export const Main = () => {
 
   useEffect(() => {
     let clean = false;
-
+    const cb = (data: any) => {
+      !clean && setDrawResult(data);
+    };
     if (hubConnection) {
-      hubConnection.on('DrawResult', (data) => {
-        !clean && setDrawResult(data);
-      });
+      hubConnection.on('DrawResult', cb);
     }
     return () => {
       clean = true;
+      hubConnection?.off('DrawResult', cb);
     };
   }, [hubConnection]);
 
