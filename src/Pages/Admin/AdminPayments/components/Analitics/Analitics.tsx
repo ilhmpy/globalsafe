@@ -11,10 +11,7 @@ import { TestInputAnalitic } from '../../../../../components/UI/DayPicker';
 import { Loading } from '../../../../../components/UI/Loading';
 import { AppContext } from '../../../../../context/HubContext';
 import { Card } from '../../../../../globalStyles';
-import {
-  CollectionAnalitics,
-  RootAnalitics,
-} from '../../../../../types/analitics';
+import { CollectionAnalitics, RootAnalitics } from '../../../../../types/analitics';
 import { OpenDate } from '../../../../../types/dates';
 import { CollectionListDeposits } from '../../../../../types/deposits';
 import { SelectValues, SortingType } from '../../../../../types/sorting';
@@ -42,7 +39,7 @@ type Props = {
   listDeposits: CollectionListDeposits[];
 };
 
-export const Analitics: FC<Props> = ({ listDeposits }) => {
+export const Analitics: FC<Props> = ({ listDeposits }: Props) => {
   const [loading, setLoading] = useState(true);
   const [openDate, setOpenDate] = useState<OpenDate>({
     from: undefined,
@@ -98,20 +95,30 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
       FieldName: 'amount',
     },
   ]);
-  console.log(sorting);
 
   useEffect(() => {
+    console.log(
+      openDate.from ? moment(openDate.from).set({ hour: 0, minute: 0, second: 0 }).toDate() : null,
+      openDate.to
+        ? moment(openDate.to).set({ hour: 23, minute: 59, second: 59 }).toDate()
+        : moment(openDate.from).set({ hour: 23, minute: 59, second: 59 }).toDate() || null
+    );
+
+    console.log(openDate.from, openDate.to);
+
     if (hubConnection) {
       setLoading(true);
       hubConnection
         .invoke<RootAnalitics>(
           'GetPayoutsEstimate',
           searchSafeID.length ? searchSafeID : null,
-          openDate.from ? openDate.from : null,
+          openDate.from
+            ? moment(openDate.from).set({ hour: 0, minute: 0, second: 0 }).toDate()
+            : null,
           openDate.to ? openDate.to : null,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting,
+          sorting
         )
         .then((res) => {
           setList(res.collection);
@@ -128,17 +135,33 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
   const submit = () => {
     setList([]);
     setCurrentPage(1);
+
     if (hubConnection) {
       setLoading(true);
       hubConnection
         .invoke<RootAnalitics>(
           'GetPayoutsEstimate',
           searchSafeID.length ? searchSafeID : null,
-          openDate.from ? openDate.from : null,
-          openDate.to ? openDate.to : null,
+          openDate.from
+            ? moment(openDate.from)
+                .utcOffset('+00:00')
+                .set({ hour: 0, minute: 0, second: 0 })
+                .toDate()
+            : null,
+          openDate.to
+            ? moment(openDate.to)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : openDate.from
+            ? moment(openDate.from)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : null,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting,
+          sorting
         )
         .then((res) => {
           setList(res.collection);
@@ -194,6 +217,8 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
     });
   };
 
+  console.log('~~~~~~~~~~~', openDate);
+
   return (
     <div>
       <FilterBlock>
@@ -203,20 +228,12 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
             {openFilterOne ? t('hide') : t('show')}
           </ShowHide>
         </FilterHeader>
-        <CSSTransition
-          in={openFilterOne}
-          timeout={200}
-          classNames="filter"
-          unmountOnExit>
+        <CSSTransition in={openFilterOne} timeout={200} classNames="filter" unmountOnExit>
           <SelectContainer>
             <SelectContainerInnerPaid>
               <SelectWrap style={{ minWidth: 263 }}>
                 <Label>{t('adminPay.filter.deposit')}</Label>
-                <Select
-                  checkList={checkList}
-                  setCheckList={setCheckList}
-                  values={listDeposits}
-                />
+                <Select checkList={checkList} setCheckList={setCheckList} values={listDeposits} />
               </SelectWrap>
               <SelectWrap input>
                 <TestInputAnalitic
@@ -233,28 +250,16 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
         </CSSTransition>
       </FilterBlock>
       <Card>
-        <CSSTransition
-          in={!!open}
-          timeout={300}
-          classNames="modal"
-          unmountOnExit>
+        <CSSTransition in={!!open} timeout={300} classNames="modal" unmountOnExit>
           <>{open && <ModalAnalitic onClose={onClose} data={open} />}</>
         </CSSTransition>
         <Styled.PaymentsTable>
           <Styled.TableHead>
             <Styled.TableHeadItemPaid>№</Styled.TableHeadItemPaid>
-            <Styled.TableHeadItemPaid>
-              {t('adminPay.table.name')}
-            </Styled.TableHeadItemPaid>
-            <Styled.TableHeadItemPaid>
-              {t('adminPay.analitics.data')}
-            </Styled.TableHeadItemPaid>
-            <Styled.TableHeadItemPaid>
-              {t('adminPay.analitics.amount')}
-            </Styled.TableHeadItemPaid>
-            <Styled.TableHeadItemPaid>
-              {t('adminPay.analitics.sum')}
-            </Styled.TableHeadItemPaid>
+            <Styled.TableHeadItemPaid>{t('adminPay.table.name')}</Styled.TableHeadItemPaid>
+            <Styled.TableHeadItemPaid>{t('adminPay.analitics.data')}</Styled.TableHeadItemPaid>
+            <Styled.TableHeadItemPaid>{t('adminPay.analitics.amount')}</Styled.TableHeadItemPaid>
+            <Styled.TableHeadItemPaid>{t('adminPay.analitics.sum')}</Styled.TableHeadItemPaid>
 
             <Styled.TableHeadItemPaid>
               <BurgerButton>
@@ -271,7 +276,8 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
                     <Sort
                       active={listForSorting[index].active}
                       key={index}
-                      onClick={() => getActiveSort(index)}>
+                      onClick={() => getActiveSort(index)}
+                    >
                       {obj.text}
                     </Sort>
                   ))}
@@ -282,15 +288,11 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
           {list.length ? (
             <Scrollbars style={{ height: '500px' }}>
               {list.map((item, idx) => (
-                <Styled.TableBody
-                  key={item.safeId}
-                  onClick={() => setOpen(item)}>
+                <Styled.TableBody key={item.safeId} onClick={() => setOpen(item)}>
                   <Styled.TableBodyItem>
                     {idx + 1 + (currentPage - 1) * pageLength}
                   </Styled.TableBodyItem>
-                  <Styled.TableBodyItem>
-                    {item.deposit.name}
-                  </Styled.TableBodyItem>
+                  <Styled.TableBodyItem>{item.deposit.name}</Styled.TableBodyItem>
                   <Styled.TableBodyItem>
                     {moment(item.payoutDate).format('DD/MM/YYYY')}
                   </Styled.TableBodyItem>
@@ -324,24 +326,8 @@ export const Analitics: FC<Props> = ({ listDeposits }) => {
 };
 
 const Window = styled(SortingWindow)`
-  right: 66px;
-  top: 531px;
-  @media (max-width: 992px) {
-    top: 539px;
-  }
-  @media (max-width: 768px) {
-    right: 50px;
-    top: 724px;
-  }
-  @media (max-width: 576px) {
-    top: 560px;
-  }
-  @media (max-width: 479px) {
-    top: 600px;
-  }
-  @media (max-width: 333px) {
-    top: 614px;
-  }
+  right: 0px;
+  top: 18px;
 `;
 const Sort = styled(SortingItem)`
   &:nth-child(3) {

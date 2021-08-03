@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React, { FC, useContext, useEffect, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTranslation } from 'react-i18next';
@@ -18,10 +19,7 @@ import { Card } from '../../../../../globalStyles';
 import { OpenDate } from '../../../../../types/dates';
 import { CollectionListDeposits } from '../../../../../types/deposits';
 import { Notify } from '../../../../../types/notify';
-import {
-  PaymentsCollection,
-  RootPayments,
-} from '../../../../../types/payments';
+import { PaymentsCollection, RootPayments } from '../../../../../types/payments';
 import { SelectValues, SortingType } from '../../../../../types/sorting';
 import { DepositList } from '../../../AdminPay/DepositList';
 import { Pagination } from '../../../Pagination';
@@ -50,6 +48,8 @@ type Props = {
   procent: string;
   setProcent: (e: string) => void;
   setModal: (boolean: boolean) => void;
+  setPaymentsList: (value: any) => void;
+  setTotalPayments: (value: any) => void;
 };
 
 export const Approval: FC<Props> = ({
@@ -57,8 +57,10 @@ export const Approval: FC<Props> = ({
   getPaymentsOverview,
   setProcent,
   procent,
-  setModal
-}) => {
+  setModal,
+  setPaymentsList,
+  setTotalPayments,
+}: Props) => {
   const [depositList, setDepositList] = useState<PaymentsCollection[]>([]);
   const [totalDeposits, setTotalDeposits] = useState(0);
   const [count, setCount] = useState(true);
@@ -81,14 +83,10 @@ export const Approval: FC<Props> = ({
   const hubConnection = appContext.hubConnection;
   const { t } = useTranslation();
 
-  const depositState = checkList.length
-    ? checkList.map((i: any) => i.id)
-    : [5, 6];
+  const depositState = checkList.length ? checkList.map((i: any) => i.id) : [5, 6];
 
   const namesProgramApproval = checkListApproval.map((i: any) => i.safeId);
-  const idProgramApproval = listDeposits.filter((i) =>
-    namesProgramApproval.includes(i.safeId),
-  );
+  const idProgramApproval = listDeposits.filter((i) => namesProgramApproval.includes(i.safeId));
   const searchSafeIDApproval = idProgramApproval.map((i) => i.safeId);
 
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
@@ -164,7 +162,7 @@ export const Approval: FC<Props> = ({
           null,
           (currentPage - 1) * pageLength,
           pageLength,
-          [],
+          []
         )
         .then((res) => {
           setTotalDeposits(res.totalRecords);
@@ -180,6 +178,8 @@ export const Approval: FC<Props> = ({
 
   const loadMoreItems = () => {
     setCount(false);
+    setDepositList([]);
+    setLoading(true);
 
     if (hubConnection && depositList.length < totalDeposits) {
       hubConnection
@@ -188,8 +188,23 @@ export const Approval: FC<Props> = ({
           depositState,
           nameApproval ? nameApproval.toLowerCase() : null,
           searchSafeIDApproval.length ? searchSafeIDApproval : null,
-          openDateApproval.from ? openDateApproval.from : null,
-          openDateApproval.to ? openDateApproval.to : null,
+          openDateApproval.from
+            ? moment(openDateApproval.from)
+                .utcOffset('+00:00')
+                .set({ hour: 0, minute: 0, second: 0 })
+                .toDate()
+            : null,
+          openDateApproval.to
+            ? moment(openDateApproval.to)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : openDateApproval.from
+            ? moment(openDateApproval.from)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : null,
           null,
           null,
           null,
@@ -198,18 +213,21 @@ export const Approval: FC<Props> = ({
           null,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting,
+          sorting
         )
         .then((res) => {
-          console.log('~~~~~~~~~~~~~~~~~~~~~~~~', res);
           setTotalDeposits(res.totalRecords);
           if (res.collection.length) {
             setDepositList([...res.collection]);
             setCount(true);
             setNum(num + 20);
+            setLoading(false);
           }
         })
-        .catch((err: Error) => console.log(err));
+        .catch((err: Error) => {
+          console.log(err);
+          setLoading(false);
+        });
     }
   };
 
@@ -218,7 +236,6 @@ export const Approval: FC<Props> = ({
   }, [hubConnection]);
 
   const confirmPay = (id: string) => {
-  console.log('confirmPay ~+++++++++ id', typeof id)
     if (hubConnection) {
       hubConnection
         .invoke('ConfirmDepositPayment', id)
@@ -241,8 +258,6 @@ export const Approval: FC<Props> = ({
         });
     }
   };
-  console.log(depositList);
-
 
   const unConfirmPay = (id: string) => {
     if (hubConnection) {
@@ -278,14 +293,33 @@ export const Approval: FC<Props> = ({
   const submitApproval = () => {
     if (hubConnection) {
       setCurrentPage(1);
+      setDepositList([]);
+      setLoading(true);
+
       hubConnection
         .invoke<RootPayments>(
           'GetUsersDeposits',
           depositState,
           nameApproval ? nameApproval.toLowerCase() : null,
           searchSafeIDApproval.length ? searchSafeIDApproval : null,
-          openDateApproval.from ? openDateApproval.from : null,
-          openDateApproval.to ? openDateApproval.to : null,
+          openDateApproval.from
+            ? moment(openDateApproval.from)
+                .utcOffset('+00:00')
+                .set({ hour: 0, minute: 0, second: 0 })
+                .toDate()
+            : null,
+          openDateApproval.to
+            ? moment(openDateApproval.to)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : openDateApproval.from
+            ? moment(openDateApproval.from)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : null,
+          null,
           null,
           null,
           null,
@@ -293,17 +327,20 @@ export const Approval: FC<Props> = ({
           null,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting,
+          sorting
         )
         .then((res) => {
-          setDepositList([]);
           setTotalDeposits(res.totalRecords);
           if (res.collection.length) {
             setDepositList(res.collection);
             setTotalDeposits(res.totalRecords);
+            setLoading(false);
           }
         })
-        .catch((err: Error) => console.log(err));
+        .catch((err: Error) => {
+          console.log(err);
+          setLoading(false);
+        });
     }
   };
 
@@ -321,7 +358,7 @@ export const Approval: FC<Props> = ({
   };
 
   const paymentsConfirm = () => {
-    setModal(true);
+    // setModal(true);
     if (depositList.some((item) => item.state === 6)) {
       if (hubConnection) {
         hubConnection
@@ -331,7 +368,7 @@ export const Approval: FC<Props> = ({
             openDateApproval.from ? openDateApproval.from : null,
             openDateApproval.to ? openDateApproval.to : null,
             searchSafeIDApproval.length ? searchSafeIDApproval : null,
-            procent ? +procent / 100 : null,
+            procent ? +procent / 100 : null
           )
           .then((res) => {
             createNotify({
@@ -369,7 +406,6 @@ export const Approval: FC<Props> = ({
   };
 
   const clear = () => {
-    console.log('clear');
     setNameApproval('');
     setOpenDateApproval({
       from: undefined,
@@ -377,6 +413,42 @@ export const Approval: FC<Props> = ({
     });
     setCheckListApproval([]);
     setCheckList([]);
+
+    if (hubConnection) {
+      setCurrentPage(1);
+      setDepositList([]);
+      setLoading(true);
+      hubConnection
+        .invoke<RootPayments>(
+          'GetUsersDeposits',
+          depositState,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          (currentPage - 1) * pageLength,
+          pageLength,
+          sorting
+        )
+        .then((res) => {
+          setTotalDeposits(res.totalRecords);
+          if (res.collection.length) {
+            setDepositList(res.collection);
+            setTotalDeposits(res.totalRecords);
+            setLoading(false);
+          }
+        })
+        .catch((err: Error) => {
+          console.log(err);
+          setLoading(false);
+        });
+    }
   };
 
   const getActiveSort = (index: number) => {
@@ -423,13 +495,11 @@ export const Approval: FC<Props> = ({
           placeholder="—"
           value={procent}
           onChange={(e) => {
-            if (
-              e.target.value.match(/^[\d]*\.?[\d]*$/g) ||
-              e.target.value === ''
-            )
+            if (e.target.value.match(/^[\d]*\.?[\d]*$/g) || e.target.value === '')
               setProcent(e.target.value);
           }}
           label={t('adminPay.procentPay')}
+          maxLng={6}
         />
       </Styled.ButtonWrap>
 
@@ -440,20 +510,14 @@ export const Approval: FC<Props> = ({
             {openFilterOne ? t('hide') : t('show')}
           </ShowHide>
         </FilterHeader>
-        <CSSTransition
-          in={openFilterOne}
-          timeout={200}
-          classNames="filter"
-          unmountOnExit>
+        <CSSTransition in={openFilterOne} timeout={200} classNames="filter" unmountOnExit>
           <SelectContainer>
             <SelectContainerInnerPaid>
               <SelectWrapTwo mWidth="154px">
                 <Label>{t('adminPay.filter.user')}</Label>
                 <Input
                   value={nameApproval}
-                  onChange={(e) =>
-                    setNameApproval(e.target.value.toLowerCase())
-                  }
+                  onChange={(e) => setNameApproval(e.target.value.toLowerCase())}
                 />
               </SelectWrapTwo>
               <SelectWrapTwo mWidth="210px">
@@ -477,18 +541,15 @@ export const Approval: FC<Props> = ({
                   checkList={checkList}
                   setCheckList={setCheckList}
                   idx={6}
-                  values={[
-                    t('adminPay.filter.disagree'),
-                    t('adminPay.filter.agree'),
-                  ]}
+                  values={[t('adminPay.filter.disagree'), t('adminPay.filter.agree')]}
                 />
               </SelectWrapTwo>
             </SelectContainerInnerPaid>
             <Styled.Buttons>
-              <Button danger onClick={submitApproval}>
+              <Button danger maxWidth={134} onClick={submitApproval}>
                 {t('adminUsers.apply')}
               </Button>
-              <Button dangerOutline onClick={clear}>
+              <Button dangerOutline maxWidth={117} onClick={clear}>
                 {t('adminUsers.reset')}
               </Button>
             </Styled.Buttons>
@@ -500,30 +561,14 @@ export const Approval: FC<Props> = ({
         <Styled.PaymentsTable>
           <Styled.TableHead>
             <Styled.TableHeadItem>№</Styled.TableHeadItem>
-            <Styled.TableHeadItem>
-              {t('adminPay.table.user')}
-            </Styled.TableHeadItem>
-            <Styled.TableHeadItem>
-              {t('adminPay.table.name')}
-            </Styled.TableHeadItem>
-            <Styled.TableHeadItem>
-              {t('adminPay.table.procent')}
-            </Styled.TableHeadItem>
-            <Styled.TableHeadItem>
-              {t('adminPay.table.datePay')}
-            </Styled.TableHeadItem>
-            <Styled.TableHeadItem>
-              {t('adminPay.table.profit')}
-            </Styled.TableHeadItem>
-            <Styled.TableHeadItem>
-              {t('adminPay.table.openDate')}
-            </Styled.TableHeadItem>
-            <Styled.TableHeadItem>
-              {t('adminPay.table.contribution')}
-            </Styled.TableHeadItem>
-            <Styled.TableHeadItem>
-              {t('adminPay.table.payments')}
-            </Styled.TableHeadItem>
+            <Styled.TableHeadItem>{t('adminPay.table.user')}</Styled.TableHeadItem>
+            <Styled.TableHeadItem>{t('adminPay.table.name')}</Styled.TableHeadItem>
+            <Styled.TableHeadItem>{t('adminPay.table.procent')}</Styled.TableHeadItem>
+            <Styled.TableHeadItem>{t('adminPay.table.datePay')}</Styled.TableHeadItem>
+            <Styled.TableHeadItem>{t('adminPay.table.profit')}</Styled.TableHeadItem>
+            <Styled.TableHeadItem>{t('adminPay.table.openDate')}</Styled.TableHeadItem>
+            <Styled.TableHeadItem>{t('adminPay.table.contribution')}</Styled.TableHeadItem>
+            <Styled.TableHeadItem>{t('adminPay.table.payments')}</Styled.TableHeadItem>
             <Styled.TableHeadItem>
               <BurgerButton>
                 <BurgerImg
@@ -539,7 +584,8 @@ export const Approval: FC<Props> = ({
                     <Sort
                       active={listForSorting[index].active}
                       key={index}
-                      onClick={() => getActiveSort(index)}>
+                      onClick={() => getActiveSort(index)}
+                    >
                       {obj.text}
                     </Sort>
                   ))}
@@ -565,7 +611,6 @@ export const Approval: FC<Props> = ({
           ) : (
             <Styled.NotFound>{t('notFound')}</Styled.NotFound>
           )}
-          <Notification onDelete={onDelete} data={notifications} />
         </Styled.PaymentsTable>
       </Card>
 
@@ -576,6 +621,7 @@ export const Approval: FC<Props> = ({
         setCurrentPage={setCurrentPage}
         totalLottery={totalDeposits}
       />
+      <Notification onDelete={onDelete} data={notifications} />
     </>
   );
 };

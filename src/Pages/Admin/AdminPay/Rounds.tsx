@@ -1,28 +1,24 @@
-import React, { useState, useEffect, useContext, FC, useCallback } from "react";
-import * as Styled from "../Styled.elements";
-import styled, { css } from "styled-components/macro";
-import { Card } from "../../../globalStyles";
-import { UpTitle } from "../../../components/UI/UpTitle";
-import { ReactComponent as Exit } from "../../assets/svg/exit.svg";
-import { ReactComponent as Filter } from "../../assets/svg/filter.svg";
-import { HalfRoundBorder } from "../../../components/UI/HalfRound";
-import useWindowSize from "../../../hooks/useWindowSize";
-import { RootPayments, PaymentsCollection } from "../../../types/payments";
-import {
-  DepositStats,
-  ListDeposits,
-  CollectionListDeposits,
-} from "../../../types/deposits";
-import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
-import "swiper/swiper.scss";
-import "swiper/components/navigation/navigation.scss";
-import "swiper/components/pagination/pagination.scss";
-import "swiper/components/scrollbar/scrollbar.scss";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { ModalDeposit } from "./Payments";
-import { Loading } from "../../../components/UI/Loading";
-import { useTranslation } from "react-i18next";
-import { AppContext } from "../../../context/HubContext";
+import React, { useState, useEffect, useContext, FC, useCallback } from 'react';
+import * as Styled from '../Styled.elements';
+import styled, { css } from 'styled-components/macro';
+import { Card } from '../../../globalStyles';
+import { UpTitle } from '../../../components/UI/UpTitle';
+// import { ReactComponent as Exit } from "../../assets/svg/exit.svg";
+// import { ReactComponent as Filter } from "../../assets/svg/filter.svg";
+import { HalfRoundBorder } from '../../../components/UI/HalfRound';
+import useWindowSize from '../../../hooks/useWindowSize';
+import { RootPayments, PaymentsCollection } from '../../../types/payments';
+import { DepositStats, ListDeposits, CollectionListDeposits } from '../../../types/deposits';
+import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
+import 'swiper/swiper.scss';
+import 'swiper/components/navigation/navigation.scss';
+import 'swiper/components/pagination/pagination.scss';
+import 'swiper/components/scrollbar/scrollbar.scss';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { ModalDeposit } from './Payments';
+import { Loading } from '../../../components/UI/Loading';
+import { useTranslation } from 'react-i18next';
+import { AppContext } from '../../../context/HubContext';
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 type PayProps = {
@@ -50,10 +46,10 @@ export const Rounds = () => {
   const stats = useCallback(() => {
     const newStats = statsDeposit.map((i) => {
       const color =
-        "#" +
+        '#' +
         Math.floor(Math.random() * 16777215)
           .toString(16)
-          .padStart(6, "0");
+          .padStart(6, '0');
       return {
         depositName: i.depositName,
         count: i.count,
@@ -64,19 +60,13 @@ export const Rounds = () => {
 
     const newArrayBig: any[] = [];
     for (let i = 0; i < Math.ceil(newStats.length / arrSizeBig); i++) {
-      newArrayBig[i] = newStats.slice(
-        i * arrSizeBig,
-        i * arrSizeBig + arrSizeBig
-      );
+      newArrayBig[i] = newStats.slice(i * arrSizeBig, i * arrSizeBig + arrSizeBig);
     }
 
     setBigArr(newArrayBig);
     const newArrayMob: any[] = [];
     for (let i = 0; i < Math.ceil(newStats.length / arrSizeMob); i++) {
-      newArrayMob[i] = newStats.slice(
-        i * arrSizeMob,
-        i * arrSizeMob + arrSizeMob
-      );
+      newArrayMob[i] = newStats.slice(i * arrSizeMob, i * arrSizeMob + arrSizeMob);
     }
     setSmallArr(newArrayMob);
   }, [statsDeposit]);
@@ -88,7 +78,7 @@ export const Rounds = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<DepositStats[]>("GetUsersDepositsStats")
+        .invoke<DepositStats[]>('GetUsersDepositsStats')
         .then((res) => {
           setStatsDeposit(res);
         })
@@ -101,11 +91,7 @@ export const Rounds = () => {
       <DepositWrap>
         {!size && (
           <DepositInner>
-            <Swiper
-              spaceBetween={10}
-              slidesPerView={1}
-              pagination={{ clickable: true }}
-            >
+            <Swiper spaceBetween={10} slidesPerView={1} pagination={{ clickable: true }}>
               {bigArr.map((i: any, idx: number) => (
                 <SwiperSlide key={idx} style={{ maxWidth: 1130 }}>
                   <SwiperInner>
@@ -120,17 +106,13 @@ export const Rounds = () => {
                               <HalfRound>
                                 <span>{item.count}</span>
                                 <HalfRoundBorder
-                                  width={size ? "47" : "90"}
-                                  height={size ? "63" : "123"}
+                                  width={size ? '47' : '90'}
+                                  height={size ? '63' : '123'}
                                   color={item.colors}
                                 />
                               </HalfRound>
                               <Styled.Radial bg={item.colors}>
-                                <span>
-                                  {(item.amount / 100000)
-                                    .toFixed(1)
-                                    .toLocaleString()}
-                                </span>
+                                <span>{(item.amount / 100000).toFixed(1).toLocaleString()}</span>
                                 <span>CWD</span>
                               </Styled.Radial>
                             </RadialWrap>
@@ -145,11 +127,7 @@ export const Rounds = () => {
         )}
         {size && (
           <MySwiperContainer>
-            <Swiper
-              spaceBetween={50}
-              slidesPerView={1}
-              pagination={{ clickable: true }}
-            >
+            <Swiper spaceBetween={50} slidesPerView={1} pagination={{ clickable: true }}>
               {smallArr.map((i: any, idx: number) => {
                 return (
                   <SwiperSlide key={idx}>
@@ -164,18 +142,10 @@ export const Rounds = () => {
                               <RadialWrap>
                                 <HalfRound>
                                   <span>{item.count}</span>
-                                  <HalfRoundBorder
-                                    width={"47"}
-                                    height={"63"}
-                                    color={item.colors}
-                                  />
+                                  <HalfRoundBorder width={'47'} height={'63'} color={item.colors} />
                                 </HalfRound>
                                 <Styled.Radial bg={item.colors}>
-                                  <span>
-                                    {(item.amount / 100000)
-                                      .toFixed(1)
-                                      .toLocaleString()}
-                                  </span>
+                                  <span>{(item.amount / 100000).toFixed(1).toLocaleString()}</span>
                                   <span>CWD</span>
                                 </Styled.Radial>
                               </RadialWrap>

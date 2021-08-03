@@ -156,27 +156,29 @@ export const AdminLottery = () => {
           checkList.length ? checkList.map((i: any) => i.id) : null,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting,
+          sorting
         )
         .then((res) => {
           setTotalLottery(res.totalRecords);
 
           setNum(20);
           const getFormatedDate = (dateStr: Date) => {
-            let date = moment(dateStr).format('DD MMMM YYYY');
+            const date = moment(dateStr).format('DD MMMM YYYY');
             return date;
           };
           if (res.collection.length) {
             setLotteryArrList(res.collection);
 
-            let result: LotteryTable = {};
-            for (let key in res.collection) {
-              const newArr = res.collection[key];
-              const d = getFormatedDate(res.collection[key].drawLog.drawDate);
-              if (result[d]) {
-                result[d].push(newArr);
-              } else {
-                result[d] = [newArr];
+            const result: LotteryTable = {};
+            for (const key in res.collection) {
+              if (res.collection.length) {
+                const newArr = res.collection[key];
+                const d = getFormatedDate(res.collection[key].drawLog.drawDate);
+                if (result[d]) {
+                  result[d].push(newArr);
+                } else {
+                  result[d] = [newArr];
+                }
               }
             }
             setLotteryList(result);
@@ -249,7 +251,6 @@ export const AdminLottery = () => {
     });
   };
 
-
   return (
     <div>
       <div>
@@ -260,11 +261,7 @@ export const AdminLottery = () => {
               {openFilter ? t('hide') : t('show')}
             </Styled.ShowHide>
           </Styled.FilterHeader>
-          <CSSTransition
-            in={openFilter}
-            timeout={200}
-            classNames="filter"
-            unmountOnExit>
+          <CSSTransition in={openFilter} timeout={200} classNames="filter" unmountOnExit>
             <>
               <Styled.SelectContainerLottery>
                 <Styled.InputLottery>
@@ -278,10 +275,7 @@ export const AdminLottery = () => {
                   <FakeInput hours={sliderValue} label={t('writting.repeat')} />
                 </Styled.InputLottery>
                 <Styled.SliderWrap>
-                  <SliderComponent
-                    value={sliderValue}
-                    onAfterChange={onAfterChange}
-                  />
+                  <SliderComponent value={sliderValue} onAfterChange={onAfterChange} />
                 </Styled.SliderWrap>
                 <Styled.InputLottery>
                   <DateInput
@@ -295,7 +289,8 @@ export const AdminLottery = () => {
                     as="button"
                     disabled={startDate === null}
                     danger
-                    onClick={createNewLottery}>
+                    onClick={createNewLottery}
+                  >
                     {t('create')}
                   </Button>
                 </Styled.InputLottery>
@@ -305,11 +300,7 @@ export const AdminLottery = () => {
                 <Scrollbars style={{ height: '250px' }}>
                   {drawList.length
                     ? drawList.map((item) => (
-                        <Writing
-                          drawListEdited={drawListEdited}
-                          data={item}
-                          key={item.safeId}
-                        />
+                        <Writing drawListEdited={drawListEdited} data={item} key={item.safeId} />
                       ))
                     : ''}
                 </Scrollbars>
@@ -325,11 +316,7 @@ export const AdminLottery = () => {
               {openFilterOne ? t('hide') : t('show')}
             </Styled.ShowHide>
           </Styled.FilterHeader>
-          <CSSTransition
-            in={openFilterOne}
-            timeout={200}
-            classNames="filter"
-            unmountOnExit>
+          <CSSTransition in={openFilterOne} timeout={200} classNames="filter" unmountOnExit>
             <Styled.SelectContainer>
               <Styled.SelectContainerInnerPaid>
                 <Styled.SelectWrap style={{ minWidth: 240 }}>
@@ -348,11 +335,7 @@ export const AdminLottery = () => {
                 </Styled.SelectWrap>
                 <Styled.SelectWrap style={{ minWidth: 240 }}>
                   <Styled.Label>{t('lotteryTable.typeWin')}</Styled.Label>
-                  <Select
-                    checkList={checkList}
-                    setCheckList={setCheckList}
-                    values={list}
-                  />
+                  <Select checkList={checkList} setCheckList={setCheckList} values={list} />
                 </Styled.SelectWrap>
               </Styled.SelectContainerInnerPaid>
               <Button danger onClick={submit}>
@@ -369,18 +352,10 @@ export const AdminLottery = () => {
                 <Styled.Thead>
                   <Styled.Tr>
                     <Styled.Th scope="col">{t('lotteryTable.date')}</Styled.Th>
-                    <Styled.Th scope="col">
-                      {t('lotteryTable.typeWin')}
-                    </Styled.Th>
-                    <Styled.Th scope="col">
-                      {t('lotteryTable.sumWin')}
-                    </Styled.Th>
-                    <Styled.Th scope="col">
-                      {t('lotteryTable.winners')}
-                    </Styled.Th>
-                    <Styled.Th scope="col">
-                      {t('lotteryTable.status')}
-                    </Styled.Th>
+                    <Styled.Th scope="col">{t('lotteryTable.typeWin')}</Styled.Th>
+                    <Styled.Th scope="col">{t('lotteryTable.sumWin')}</Styled.Th>
+                    <Styled.Th scope="col">{t('lotteryTable.winners')}</Styled.Th>
+                    <Styled.Th scope="col">{t('lotteryTable.status')}</Styled.Th>
 
                     <Styled.Th scope="col">
                       <BurgerButton>
@@ -397,7 +372,8 @@ export const AdminLottery = () => {
                             <SortingItem
                               active={listForSorting[index].active}
                               key={index}
-                              onClick={() => getActiveSort(index)}>
+                              onClick={() => getActiveSort(index)}
+                            >
                               {obj.text}
                             </SortingItem>
                           ))}
@@ -417,7 +393,8 @@ export const AdminLottery = () => {
                             width: '100%',
                             display: 'flex',
                             justifyContent: 'center',
-                          }}>
+                          }}
+                        >
                           <Styled.DataListDate>{key}</Styled.DataListDate>
                         </div>
                         {lotteryList[key].map((item, idx) => (
@@ -449,10 +426,9 @@ export const AdminLottery = () => {
 };
 
 const Window = styled(SortingWindow)`
-  right: 66px;
-  top: 366px;
-  @media (max-width: 768px) {
-    right: 40px;
-    top: 316px;
+  right: -15px;
+  top: 59px;
+  @media (max-width: 694px) {
+    top: 73px;
   }
 `;

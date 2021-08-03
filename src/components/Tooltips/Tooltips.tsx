@@ -1,5 +1,5 @@
-import React, { useState, useRef, useContext, useEffect, FC } from "react";
-import { Portal } from "../Portal/Portal";
+import React, { useState, useRef, useContext, useEffect, FC } from 'react';
+import { Portal } from '../Portal/Portal';
 
 export const Tooltip = (props: any) => {
   const [visible, setVisible] = useState(false);
@@ -9,8 +9,8 @@ export const Tooltip = (props: any) => {
   const el = useRef<any>(null);
   console.log(el);
   const showTooltip = () => {
-    let styles: any = {};
-    console.log("true");
+    const styles: any = {};
+    console.log('true');
     if (el && el.current) {
       const dimensions = el.current.getBoundingClientRect();
 
@@ -57,22 +57,20 @@ export const Tooltip = (props: any) => {
 export const TestTolltips = () => (
   <div>
     <p>
-      Some text, some of which{" "}
+      Some text, some of which{' '}
       <Tooltip text="This is some more info about that first thing that you should find every interesting.">
         requires explanation.
-      </Tooltip>{" "}
+      </Tooltip>{' '}
       (Scroll down for more.)
     </p>
 
     <div style={{ lineHeight: 80 }}>Scroll down</div>
 
     <p>
-      <Tooltip text="You hovered over the second one!">
-        Something else to hover over
-      </Tooltip>{" "}
-      is what this is.
+      <Tooltip text="You hovered over the second one!">Something else to hover over</Tooltip> is
+      what this is.
     </p>
 
-    <div style={{ lineHeight: 80 }}>Just more paddin'</div>
+    <div style={{ lineHeight: 80 }}>Just more paddin &lsquo;</div>
   </div>
 );

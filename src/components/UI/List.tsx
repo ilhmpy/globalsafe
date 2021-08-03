@@ -1,23 +1,30 @@
-import React, { Component, FC } from "react";
-import styled, { keyframes } from "styled-components";
-import { ReactComponent as Arrow } from "../../assets/svg/arrow_payments.svg";
+import React, { Component, FC } from 'react';
+import styled, { keyframes } from 'styled-components';
+import { ReactComponent as Arrow } from '../../assets/svg/arrow_payments.svg';
 
 export function List({ listLabel, list, visible, setVisible }: any) {
   return (
     <>
       <ListDiv>
-        <ListLabel onClick={() => setVisible(!visible)}>{listLabel} <Arrow style={
-          { width: 11, height: 8, marginLeft: 20, transform: `rotate(${visible ? "0deg" : "-90deg"})`, transition: "0.5s" }}
-        /></ListLabel>
+        <ListLabel onClick={() => setVisible(!visible)}>
+          {listLabel}{' '}
+          <Arrow
+            style={{
+              width: 11,
+              height: 8,
+              marginLeft: 20,
+              transform: `rotate(${visible ? '0deg' : '-90deg'})`,
+              transition: '0.5s',
+            }}
+          />
+        </ListLabel>
         <ListItems visible={visible}>
-          {list && list.map((item: any) => (
-              <ListItem>{item}</ListItem>
-           ))}
+          {list && list.map((item: any, idx: number) => <ListItem key={idx}>{item}</ListItem>)}
         </ListItems>
       </ListDiv>
     </>
   );
-};
+}
 
 const ListDiv = styled.div`
   width: 100%;
@@ -25,18 +32,18 @@ const ListDiv = styled.div`
 `;
 
 const ListLabel = styled.h3`
-  color: #56657F;
+  color: #56657f;
   font-weight: 500;
   font-size: 14px;
   cursor: pointer;
-  users-select: none;
+  user-select: none;
   margin-bottom: 10px;
   color: ${({ theme }) => theme.text};
 `;
 
 const ListItems = styled.div<{ visible: boolean }>`
   width: 100%;
-  display: ${({ visible }) => visible ? "block" : "none"};
+  display: ${({ visible }) => (visible ? 'block' : 'none')};
 `;
 
 const ListItem = styled.div`

@@ -10,13 +10,12 @@ import burgerGroup from '../../assets/img/burgerGroup.png';
 import { ReactComponent as Exit } from '../../assets/svg/exit.svg';
 import { Button } from '../../components/Button/Button';
 import { Select } from '../../components/Select/Select2';
+import { AcceptAllInput } from '../../components/UI/AcceptAllInput';
 import { TestInput } from '../../components/UI/DayPicker';
+import { List } from '../../components/UI/List';
 import { Loading } from '../../components/UI/Loading';
-import { AcceptAllInput } from "../../components/UI/AcceptAllInput";
-import { BBG as BlackBackground } from "../../components/BlackBackground/BlackBackground";
 import { Content, Tab } from '../../components/UI/Tabs';
 import { UpTitle } from '../../components/UI/UpTitle';
-import { List } from "../../components/UI/List";
 import { AppContext } from '../../context/HubContext';
 import { LangualeContext } from '../../context/LangualeContext';
 import { ThemeContext } from '../../context/ThemeContext';
@@ -24,7 +23,6 @@ import { Card } from '../../globalStyles';
 import useWindowSize from '../../hooks/useWindowSize';
 import { OpenDate } from '../../types/dates';
 import { CollectionListDeposits, ListDeposits } from '../../types/deposits';
-import { ProcentInput } from "../../components/UI/ProcentInput";
 import {
   CollectionCharges,
   PaymentsCollection,
@@ -49,8 +47,7 @@ import {
 } from './Styled.elements';
 import { Modal } from "../../components/Modal/Modal";
  
-
-export const AdminPay = () => { 
+export const AdminPay = () => {
   const [active, setActive] = useState(0);
   const sizes = useWindowSize();
   const [sum, setSum] = useState<number[] | null>(null);
@@ -90,9 +87,7 @@ export const AdminPay = () => {
   const [pageLengthDeposit, setPageLengthDeposit] = useState<number>(10);
   const [currentPageDeposit, setCurrentPageDeposit] = useState<number>(1);
 
-  const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>(
-    [],
-  );
+  const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>([]);
   const backDay: any = moment().add(90, 'days').format();
   const [depositsDate, setDepositsDate] = useState<OpenDate>({
     from: new Date(),
@@ -180,11 +175,9 @@ export const AdminPay = () => {
 
   const [sortingWindowOpenForPay, setSortingWindowOpenForPay] = useState(false);
   const [sortingForPay, setSortingForPay] = useState<SortingType[]>([]);
-  const [ acceptAll, setAcceptAll ] = useState<boolean>(false);
+  const [acceptAll, setAcceptAll] = useState<boolean>(false);
 
-  const [listForSortingForPay, setListForSortingForPay] = useState<
-    SelectValues[]
-  >([
+  const [listForSortingForPay, setListForSortingForPay] = useState<SelectValues[]>([
     {
       text: 'Пользователь: От А до Я',
       active: false,
@@ -239,16 +232,12 @@ export const AdminPay = () => {
   const idProgram = listDeposits.filter((i) => namesProgram.includes(i.safeId));
   const searchSafeID = idProgram.map((i) => i.safeId);
   const backDays: any = moment().subtract(30, 'days');
-  const [ usersListVisible, setUsersListVisible ] = useState(true);
+  const [usersListVisible, setUsersListVisible] = useState(true);
 
   const namesProgramApproval = checkListApproval.map((i: any) => i.safeId);
-  const idProgramApproval = listDeposits.filter((i) =>
-    namesProgramApproval.includes(i.safeId),
-  );
+  const idProgramApproval = listDeposits.filter((i) => namesProgramApproval.includes(i.safeId));
   const searchSafeIDApproval = idProgramApproval.map((i) => i.safeId);
-  const depositState = checkList.length
-    ? checkList.map((i: any) => i.id)
-    : [5, 6];
+  const depositState = checkList.length ? checkList.map((i: any) => i.id) : [5, 6];
 
   const handleClick = (id: number) => {
     if (id !== active) {
@@ -278,9 +267,10 @@ export const AdminPay = () => {
           null,
           (currentPage - 1) * pageLength,
           pageLength,
-          sortingForPay,
+          sortingForPay
         )
         .then((res) => {
+          console.log(res);
           setTotalPayments(res.totalRecords);
           setPaymentsList(res.collection);
         })
@@ -298,13 +288,28 @@ export const AdminPay = () => {
         .invoke<RootCharges>(
           'GetDepositsCharges',
           name ? name.toLowerCase() : null,
-          openDate.from ? openDate.from : null,
-          openDate.to ? openDate.to : null,
+          openDate.from
+            ? moment(openDate.from)
+                .utcOffset('+00:00')
+                .set({ hour: 0, minute: 0, second: 0 })
+                .toDate()
+            : null,
+          openDate.to
+            ? moment(openDate.to)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : openDate.from
+            ? moment(openDate.from)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : null,
           searchSafeID.length ? searchSafeID : null,
           null,
           [7, 8],
           (currentPagePay - 1) * pageLengthPay,
-          pageLengthPay,
+          pageLengthPay
         )
         .then((res) => {
           setTotalPayDeposits(res.totalRecords);
@@ -324,6 +329,17 @@ export const AdminPay = () => {
     getPaymentsOverview();
   }, [hubConnection]);
 
+  console.log(
+    openDate.from
+      ? moment(openDate.from).utcOffset('+00:00').set({ hour: 0, minute: 0, second: 0 }).toDate()
+      : null,
+    openDate.to
+      ? moment(openDate.to).utcOffset('+00:00').set({ hour: 23, minute: 59, second: 59 }).toDate()
+      : openDate.from
+      ? moment(openDate.from).utcOffset('+00:00').set({ hour: 23, minute: 59, second: 59 }).toDate()
+      : null
+  );
+
   const submit = () => {
     if (hubConnection) {
       setCurrentPagePay(1);
@@ -331,18 +347,32 @@ export const AdminPay = () => {
         .invoke<RootCharges>(
           'GetDepositsCharges',
           name ? name.toLowerCase() : null,
-          openDate.from ? openDate.from : null,
-          openDate.to ? openDate.to : null,
+          openDate.from
+            ? moment(openDate.from)
+                .utcOffset('+00:00')
+                .set({ hour: 0, minute: 0, second: 0 })
+                .toDate()
+            : null,
+          openDate.to
+            ? moment(openDate.to)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : openDate.from
+            ? moment(openDate.from)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : null,
           searchSafeID.length ? searchSafeID : null,
           null,
           [7, 8],
           (currentPagePay - 1) * pageLengthPay,
-          pageLengthPay,
+          pageLengthPay
         )
         .then((res) => {
           setLoading(false);
           if (res.collection.length) {
-            console.log('GetDepositsCharges submit', res);
             setTotalPayDeposits(res.totalRecords);
             setDepositPayList(res.collection);
           }
@@ -360,7 +390,7 @@ export const AdminPay = () => {
         .invoke(
           'GetPayoutsEstimateStats',
           depositsDate.from ? depositsDate.from : new Date(),
-          depositsDate.to ? depositsDate.to : backDay,
+          depositsDate.to ? depositsDate.to : backDay
         )
         .then((res) => {
           setStats(res);
@@ -433,8 +463,6 @@ export const AdminPay = () => {
     });
   };
 
-  //useEffect(() => setAcceptAll(true), []);
-
   const [dateOfCreateDepositVisible, setDateOfCreateDepositVisible] = useState(true);
   const [depositVisible, setDepositVisible] = useState(true);
 
@@ -452,11 +480,7 @@ export const AdminPay = () => {
         </Styled.UserName>
       </Styled.HeadBlock>
       {active === 3 && (
-        <Chart
-          depositsDate={depositsDate}
-          setDepositsDate={setDepositsDate}
-          stats={stats}
-        />
+        <Chart depositsDate={depositsDate} setDepositsDate={setDepositsDate} stats={stats} />
       )}
       {active !== 3 && (
         <Card>
@@ -466,14 +490,9 @@ export const AdminPay = () => {
                 <SelfUpTitle small>{t('adminPay.title1')}</SelfUpTitle>
               </Styled.PayItemHead>
               <Styled.Radial
-                bg={
-                  theme === 'light'
-                    ? 'rgba(255, 65, 110, 0.2)'
-                    : 'rgba(255, 65, 110, 1)'
-                }>
-                <span>
-                  {sum ? (sum[2] / 100000).toLocaleString('ru-RU') : '-'}
-                </span>
+                bg={theme === 'light' ? 'rgba(255, 65, 110, 0.2)' : 'rgba(255, 65, 110, 1)'}
+              >
+                <span>{sum ? (sum[2] / 100000).toLocaleString('ru-RU') : '-'}</span>
                 <span>CWD</span>
               </Styled.Radial>
             </Styled.PayItem>
@@ -483,11 +502,8 @@ export const AdminPay = () => {
               </Styled.PayItemHead>
 
               <Styled.Radial
-                bg={
-                  theme === 'light'
-                    ? 'rgba(188, 212, 118, 0.2)'
-                    : 'rgba(188, 212, 118, 1)'
-                }>
+                bg={theme === 'light' ? 'rgba(188, 212, 118, 0.2)' : 'rgba(188, 212, 118, 1)'}
+              >
                 <span>
                   {sum
                     ? (sum[0] / 100000).toLocaleString('ru-RU', {
@@ -503,11 +519,8 @@ export const AdminPay = () => {
                 <SelfUpTitle small>{t('adminPay.title3')}</SelfUpTitle>
               </Styled.PayItemHead>
               <Styled.Radial
-                bg={
-                  theme === 'light'
-                    ? 'rgba(109, 185, 255, 0.2)'
-                    : 'rgba(109, 185, 255, 1)'
-                }>
+                bg={theme === 'light' ? 'rgba(109, 185, 255, 0.2)' : 'rgba(109, 185, 255, 1)'}
+              >
                 <span>
                   {sum
                     ? (sum[1] / 100000).toLocaleString('ru-RU', {
@@ -530,13 +543,11 @@ export const AdminPay = () => {
           <Tab onClick={() => handleClick(1)} active={active === 1}>
             {t('adminPay.title2')}
           </Tab>
-
           <Tab onClick={() => handleClick(2)} active={active === 2}>
-            {t('adminPay.delayed.title')}
-          </Tab>
-
-          <Tab onClick={() => handleClick(3)} active={active === 3}>
             {t('adminPay.title1')}
+          </Tab>
+          <Tab onClick={() => handleClick(3)} active={active === 3}>
+            {t('adminPay.delayed.title')}
           </Tab>
           <Tab onClick={() => handleClick(4)} active={active === 4}>
             {t('adminPay.analitics.analitic')}
@@ -551,6 +562,8 @@ export const AdminPay = () => {
           setProcent={setProcent}
           procent={procent}
           setModal={setAcceptAll}
+          setPaymentsList={setPaymentsList}
+          setTotalPayments={setTotalPayments}
         />
       </Content>
 
@@ -562,11 +575,7 @@ export const AdminPay = () => {
               {openFilter ? t('hide') : t('show')}
             </Styled.ShowHide>
           </Styled.FilterHeader>
-          <CSSTransition
-            in={openFilter}
-            timeout={200}
-            classNames="filter"
-            unmountOnExit>
+          <CSSTransition in={openFilter} timeout={200} classNames="filter" unmountOnExit>
             <Styled.SelectContainer>
               <Styled.SelectContainerInnerPaid>
                 <Styled.SelectWrap style={{ minWidth: 263 }}>
@@ -580,16 +589,12 @@ export const AdminPay = () => {
                   <TestInput
                     setOpenDate={setOpenDate}
                     openDate={openDate}
-                    label={t('adminPay.filter.date')}
+                    label={t('adminPay.table.datePay')}
                   />
                 </Styled.SelectWrap>
                 <Styled.SelectWrap style={{ minWidth: 263 }}>
                   <Styled.Label>{t('adminPay.filter.deposit')}</Styled.Label>
-                  <Select
-                    checkList={checkList}
-                    setCheckList={setCheckList}
-                    values={listDeposits}
-                  />
+                  <Select checkList={checkList} setCheckList={setCheckList} values={listDeposits} />
                 </Styled.SelectWrap>
               </Styled.SelectContainerInnerPaid>
               <Button danger onClick={submit}>
@@ -603,18 +608,10 @@ export const AdminPay = () => {
             <TableHead>
               <TableHeadItemPaid>{t('adminPay.table.user')}</TableHeadItemPaid>
               <TableHeadItemPaid>{t('adminPay.table.name')}</TableHeadItemPaid>
-              <TableHeadItemPaid>
-                {t('adminPay.table.datePay')}
-              </TableHeadItemPaid>
-              <TableHeadItemPaid>
-                {t('adminPay.table.category')}
-              </TableHeadItemPaid>
-              <TableHeadItemPaid>
-                {t('adminPay.table.contribution')}
-              </TableHeadItemPaid>
-              <TableHeadItemPaid>
-                {t('adminPay.table.payments')}
-              </TableHeadItemPaid>
+              <TableHeadItemPaid>{t('adminPay.table.datePay')}</TableHeadItemPaid>
+              <TableHeadItemPaid>{t('adminPay.table.category')}</TableHeadItemPaid>
+              <TableHeadItemPaid>{t('adminPay.table.contribution')}</TableHeadItemPaid>
+              <TableHeadItemPaid>{t('adminPay.table.payments')}</TableHeadItemPaid>
               <TableHeadItemPaid>{/* <Filter /> */}</TableHeadItemPaid>
               {/*
               <TableHeadItemPaid>
@@ -664,27 +661,15 @@ export const AdminPay = () => {
       </Content>
 
       <Content active={active === 2}>
-        {active === 2 ? <Delayed listDeposits={listDeposits} /> : null}
-      </Content>
-
-      <Content active={active === 3}>
         <Card>
           <PaymentsTable>
             <TableHead>
               <TableHeadItemPaid>{t('adminPay.table.user')}</TableHeadItemPaid>
               <TableHeadItemPaid>{t('adminPay.table.name')}</TableHeadItemPaid>
-              <TableHeadItemPaid>
-                {t('adminPay.table.datePay')}
-              </TableHeadItemPaid>
-              <TableHeadItemPaid>
-                {t('adminPay.table.category')}
-              </TableHeadItemPaid>
-              <TableHeadItemPaid>
-                {t('adminPay.table.contribution')}
-              </TableHeadItemPaid>
-              <TableHeadItemPaid>
-                {t('adminPay.table.payments')}
-              </TableHeadItemPaid>
+              <TableHeadItemPaid>{t('adminPay.table.datePay')}</TableHeadItemPaid>
+              <TableHeadItemPaid>{t('adminPay.table.category')}</TableHeadItemPaid>
+              <TableHeadItemPaid>{t('adminPay.table.contribution')}</TableHeadItemPaid>
+              <TableHeadItemPaid>{t('adminPay.table.payments')}</TableHeadItemPaid>
               <TableHeadItemPaid>
                 <BurgerButton>
                   <BurgerImg
@@ -701,7 +686,8 @@ export const AdminPay = () => {
                     <Sort
                       active={listForSortingForPay[index].active}
                       key={index}
-                      onClick={() => getActiveSortForPay(index)}>
+                      onClick={() => getActiveSortForPay(index)}
+                    >
                       {obj.text}
                     </Sort>
                   ))}
@@ -729,6 +715,10 @@ export const AdminPay = () => {
           setCurrentPage={setCurrentPage}
           totalLottery={totalPayments}
         />
+      </Content>
+
+      <Content active={active === 3}>
+        {active === 3 ? <Delayed listDeposits={listDeposits} /> : null}
       </Content>
 
       <Content active={active === 4}>
@@ -759,6 +749,7 @@ const Window = styled(SortingWindow)`
     top: 518px;
   }
 `;
+
 const Sort = styled(SortingItem)`
   &:nth-child(1) {
     @media (max-width: 768px) {

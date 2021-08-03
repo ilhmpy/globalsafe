@@ -20,8 +20,7 @@ export const CloseIcon = styled(Close)`
 export const TimerContainer = styled.div`
   position: relative;
   margin: 40px auto;
-  /* background: ${(props) => props.theme.card.backgroundAlfa}; */
-  background: rgba(255, 255, 255, 0.9);
+  background: ${(props) => props.theme.card.backgroundAlfa};
   border: 1px solid rgba(86, 101, 127, 0.05);
   box-sizing: border-box;
   border-radius: 20px;
@@ -469,4 +468,23 @@ export const BrandImgAbs = styled(BrandImg)`
     right: 0;
     width: 100%;
   }
+`;
+
+export const TimerIcon = styled.div`
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: ${({ theme }) => theme.timerIcon.border};
+    background: ${({ theme }) => theme.timerIcon.background};
+    right: 234px;
+    position: absolute;
+    margin-top: 47px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-directrion: column;
+
+    .timericon_cirlce {
+      position: absolute;
+    }
 `;

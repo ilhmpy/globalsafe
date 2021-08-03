@@ -43,7 +43,7 @@ type Props = {
   listDeposits: CollectionListDeposits[];
 };
 
-export const Delayed: FC<Props> = ({ listDeposits }) => {
+export const Delayed: FC<Props> = ({ listDeposits }: Props) => {
   const [loading, setLoading] = useState(true);
   const [openDate, setOpenDate] = useState<OpenDate>({
     from: undefined,
@@ -138,7 +138,7 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
           true,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting,
+          sorting
         )
         .then((res) => {
           setList(res.collection);
@@ -174,7 +174,7 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
           true,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting,
+          sorting
         )
         .then((res) => {
           setList(res.collection);
@@ -246,11 +246,9 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
     });
   };
 
-  const confirmPay = (
-    safeId: string,
-    amount: number,
-    setDone: (status: boolean) => void,
-  ) => {
+  const confirmPay = (safeId: string, amount: number, setDone: (status: boolean) => void) => {
+    console.log('amount', amount);
+    console.log('safeId', safeId);
     if (hubConnection) {
       hubConnection
         .invoke('PayPostponedPayment', safeId, amount)
@@ -281,6 +279,7 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
     }
   };
 
+  console.log(list);
 
   return (
     <div>
@@ -291,36 +290,25 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
             {openFilterOne ? t('hide') : t('show')}
           </ShowHide>
         </FilterHeader>
-        <CSSTransition
-          in={openFilterOne}
-          timeout={200}
-          classNames="filter"
-          unmountOnExit>
+        <CSSTransition in={openFilterOne} timeout={200} classNames="filter" unmountOnExit>
           <SelectContainer>
             <SelectContainerInnerPaid>
-              <SelectWrapTwo mWidth="154px">
+              <SelectWrapTwo mWidth="165px">
                 <Label>{t('adminPay.filter.user')}</Label>
-                <Input
-                  value={name}
-                  onChange={(e) => setName(e.target.value.toLowerCase())}
-                />
+                <Input value={name} onChange={(e) => setName(e.target.value.toLowerCase())} />
               </SelectWrapTwo>
-              <SelectWrapTwo mWidth="184px">
+              <SelectWrapTwo mWidth="165px">
                 <Label>{t('adminPay.filter.deposit')}</Label>
-                <Select
-                  checkList={checkList}
-                  setCheckList={setCheckList}
-                  values={listDeposits}
-                />
+                <Select checkList={checkList} setCheckList={setCheckList} values={listDeposits} />
               </SelectWrapTwo>
-              <SelectWrapTwo mWidth="210px">
+              <SelectWrapTwo mWidth="180px">
                 <TestInput
                   setOpenDate={setOpenDate}
                   openDate={openDate}
                   label={t('adminPay.filter.date')}
                 />
               </SelectWrapTwo>
-              <SelectWrapTwo mWidth="210px">
+              <SelectWrapTwo mWidth="180px">
                 <TestInput
                   setOpenDate={setCloseDate}
                   openDate={closeDate}
@@ -341,32 +329,20 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
       </FilterBlock>
 
       <Card>
-        <CSSTransition
-          in={!!open}
-          timeout={300}
-          classNames="modal"
-          unmountOnExit>
+        <CSSTransition in={!!open} timeout={300} classNames="modal" unmountOnExit>
           <>{open && <ModalAnalitic onClose={onClose} data={open} />}</>
         </CSSTransition>
 
         <Styled.PaymentsTable>
           <Styled.TableHead>
             <Styled.TableHeadItemPaid>№</Styled.TableHeadItemPaid>
-            <Styled.TableHeadItemPaid>
-              {t('adminPay.table.user')}
-            </Styled.TableHeadItemPaid>
-            <Styled.TableHeadItemPaid>
-              {t('adminPay.table.name')}
-            </Styled.TableHeadItemPaid>
+            <Styled.TableHeadItemPaid>{t('adminPay.table.user')}</Styled.TableHeadItemPaid>
+            <Styled.TableHeadItemPaid>{t('adminPay.table.name')}</Styled.TableHeadItemPaid>
             <Styled.TableHeadItemPaid>
               {t('adminPay.delayed.depositAmount')}
             </Styled.TableHeadItemPaid>
-            <Styled.TableHeadItemPaid>
-              {t('adminPay.filter.date')}
-            </Styled.TableHeadItemPaid>
-            <Styled.TableHeadItemPaid>
-              {t('adminPay.filter.closeDate')}
-            </Styled.TableHeadItemPaid>
+            <Styled.TableHeadItemPaid>{t('adminPay.filter.date')}</Styled.TableHeadItemPaid>
+            <Styled.TableHeadItemPaid>{t('adminPay.filter.closeDate')}</Styled.TableHeadItemPaid>
             <Styled.TableHeadItemPaid>
               {t('adminPay.delayed.payableAmount')}
             </Styled.TableHeadItemPaid>
@@ -386,7 +362,8 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
                     <Sort
                       active={listForSorting[index].active}
                       key={index}
-                      onClick={() => getActiveSort(index)}>
+                      onClick={() => getActiveSort(index)}
+                    >
                       {obj.text}
                     </Sort>
                   ))}
@@ -399,7 +376,7 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
               {list.map((item, idx) => (
                 <TableRow
                   key={item.safeId}
-                  idx={idx + (currentPage - 1) * pageLength}
+                  idx={idx + 1 + (currentPage - 1) * pageLength}
                   item={item}
                   confirmPay={confirmPay}
                 />
@@ -426,26 +403,10 @@ export const Delayed: FC<Props> = ({ listDeposits }) => {
 };
 
 const Window = styled(SortingWindow)`
-  right: 65px;
-  top: 531px;
-  @media (max-width: 1209px) {
-    top: 545px;
-  }
-  @media (max-width: 992px) {
-    top: 539px;
-  }
-  @media (max-width: 768px) {
-    right: 50px;
-    top: 724px;
-  }
-  @media (max-width: 576px) {
-    top: 560px;
-  }
-  @media (max-width: 479px) {
-    top: 600px;
-  }
-  @media (max-width: 420px) {
-    top: 614px;
+  right: 0px;
+  top: 25px;
+  @media only screen and (max-width: 992px) and (min-width: 428px) {
+    top: 18px;
   }
 `;
 const Sort = styled(SortingItem)`

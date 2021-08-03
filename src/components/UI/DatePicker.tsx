@@ -1,8 +1,8 @@
-import React, { useState, FC } from "react";
-import DatePicker, { registerLocale } from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import styled from "styled-components/macro";
-import { enGB, ru } from "date-fns/locale";
+import React, { useState, FC } from 'react';
+import DatePicker, { registerLocale } from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import styled from 'styled-components/macro';
+import { enGB, ru } from 'date-fns/locale';
 
 type Props = {
   label: string;
@@ -18,10 +18,10 @@ export const DateInput: FC<Props> = ({
   setStartDate,
   readOnly = false,
   placeholderText,
-}) => {
-  const lang = localStorage.getItem("i18nextLng") || "ru";
-  const el = lang === "ru" ? ru : enGB;
-  registerLocale("el", el);
+}: Props) => {
+  const lang = localStorage.getItem('i18nextLng') || 'ru';
+  const el = lang === 'ru' ? ru : enGB;
+  registerLocale('el', el);
   return (
     <DateContainer>
       <Label>{label}</Label>
@@ -71,9 +71,7 @@ const DateContainer = styled.div`
       width: 100%;
     }
   }
-  .react-datepicker__time-container
-    .react-datepicker__time
-    .react-datepicker__time-box {
+  .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box {
     width: 75px;
   }
   .react-datepicker__input-container {

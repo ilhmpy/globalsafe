@@ -19,7 +19,7 @@ type Props = {
   clock: number | null;
 };
 
-export const DrawHistory: FC<Props> = ({ onOpenModal, clock }) => {
+export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
   const [notifyList, setNotifyList] = useState<ArrList[]>([]);
   const [num, setNum] = useState(0);
   const [show, setShow] = useState(true);
@@ -37,7 +37,6 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }) => {
       hubConnection
         .invoke<RootLottery>('GetPrizes', 0, 5)
         .then((res) => {
-          console.log('GetPrizes res', res);
           const arrList = res.collection.map((item) => ({
             name: item.userName,
             kind: item.definition.kind,
@@ -138,18 +137,16 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }) => {
                 return (
                   <CSSTransition key={idx} timeout={500} classNames="item">
                     <TableList card>
-                      <TableItem>
-                        {moment(item.date).format('DD.MM.YYYY')}
-                      </TableItem>
+                      <TableItem>{moment(item.date).format('DD.MM.YYYY')}</TableItem>
                       <TableItem>{typeWin(item.kind)}</TableItem>
                       <TableItem>
                         {item.kind === 0
                           ? (item.volume / 100000).toLocaleString('ru-RU', {
-                            maximumFractionDigits: 5,
-                          })
+                              maximumFractionDigits: 5,
+                            })
                           : Item.kind === 1
-                            ? t('win.two')
-                            : item.volume}
+                          ? t('win.two')
+                          : item.volume}
                         &nbsp;
                         {item.volume ? Balance[item.balanceKind] : '-'}
                       </TableItem>
@@ -160,13 +157,20 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }) => {
                   </CSSTransition>
                 );
               } else {
+                console.log('item data', item.name, item.volume, typeWin(Number(item.kind)));
                 return (
                   <CSSTransition key={idx} timeout={500} classNames="item">
                     <TableList card>
+                      <TableItem>{moment(item.date).format('DD.MM.YYYY')}</TableItem>
                       <TableItem>
-                        {moment(item.date).format('DD.MM.YYYY')}
+                        {item.volume
+                          ? (item.volume / 100000).toLocaleString('ru-RU', {
+                              maximumFractionDigits: 5,
+                            }) +
+                            ' ' +
+                            'CWD'
+                          : typeWin(Number(item.kind))}
                       </TableItem>
-                      <TableItem>{item.volume ? item.volume : typeWin(item.kind)}</TableItem>
                       <TableItem>
                         <Value data-title={item.name}>{item.name}</Value>
                       </TableItem>
@@ -221,10 +225,8 @@ const TableList = styled.ul<{ card?: boolean; dn?: boolean }>`
   justify-content: space-between;
   padding: 10px 50px;
   margin-bottom: 18px;
-  background: ${(props) =>
-    props.card ? props.theme.card.backgroundAlfa : 'transparent'};
-  box-shadow: ${(props) =>
-    props.card ? '0px 1px 3px rgba(0, 0, 0, 0.25)' : 'none'};
+  background: ${(props) => (props.card ? props.theme.card.backgroundAlfa : 'transparent')};
+  box-shadow: ${(props) => (props.card ? '0px 1px 3px rgba(0, 0, 0, 0.25)' : 'none')};
   border-radius: 20px;
   border: ${(props) => (props.card ? props.theme.card.border : 'none')};
   @media (max-width: 992px) {
@@ -238,6 +240,11 @@ const TableList = styled.ul<{ card?: boolean; dn?: boolean }>`
     justify-content: flex-start;
     padding: 10px 15px;
     display: ${(props) => (props.dn ? 'none' : 'flex')};
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 19px;
+    padding-bottom: 5px;
   }
   ${(props) => {
     if (props.card) {
@@ -264,7 +271,7 @@ const TableItem = styled.li`
     line-height: 16px;
   }
   @media (max-width: 576px) {
-    padding-bottom: 5px;
+    padding-bottom: 12px;
   }
   @media (max-width: 576px) {
     text-align: left;

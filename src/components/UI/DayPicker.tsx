@@ -1,14 +1,14 @@
-import moment from "moment";
-import React, { FC, useRef, useState } from "react";
-import DayPicker, { DateUtils } from "react-day-picker";
-import "react-day-picker/lib/style.css";
-import { useTranslation } from "react-i18next";
-import { CSSTransition } from "react-transition-group";
-import styled, { css } from "styled-components/macro";
-import { ReactComponent as Left } from "../../assets/svg/monthLeft.svg";
-import { ReactComponent as Right } from "../../assets/svg/monthRight.svg";
-import useOnClickOutside from "../../hooks/useOutsideHook";
-import { OpenDate } from "../../types/dates";
+import moment from 'moment';
+import React, { FC, useRef, useState, useEffect } from 'react';
+import DayPicker, { DateUtils } from 'react-day-picker';
+import 'react-day-picker/lib/style.css';
+import { useTranslation } from 'react-i18next';
+import { CSSTransition } from 'react-transition-group';
+import styled, { css } from 'styled-components/macro';
+import { ReactComponent as Left } from '../../assets/svg/monthLeft.svg';
+import { ReactComponent as Right } from '../../assets/svg/monthRight.svg';
+import useOnClickOutside from '../../hooks/useOutsideHook';
+import { OpenDate } from '../../types/dates';
 
 function Navbar({
   nextMonth,
@@ -17,6 +17,7 @@ function Navbar({
   onNextClick,
   className,
   localeUtils,
+  lang,
 }: any) {
   const months = localeUtils.getMonths();
   const prev = months[previousMonth.getMonth()];
@@ -29,48 +30,48 @@ function Navbar({
     </Arrows>
   );
 }
-const lang = localStorage.getItem("i18nextLng") || "ru";
-const WEEKDAYS_SHORT = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
-const WEEKDAYS_SHORT_ENG = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+const lang = localStorage.getItem('i18nextLng') || 'ru';
+const WEEKDAYS_SHORT = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+const WEEKDAYS_SHORT_ENG = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 
 const MONTHS = [
-  "Январь",
-  "Февраль",
-  "Март",
-  "Апрель",
-  "Май",
-  "Июнь",
-  "Июль",
-  "Август",
-  "Сентябрь",
-  "Октябрь",
-  "Ноябрь",
-  "Декабрь",
+  'Январь',
+  'Февраль',
+  'Март',
+  'Апрель',
+  'Май',
+  'Июнь',
+  'Июль',
+  'Август',
+  'Сентябрь',
+  'Октябрь',
+  'Ноябрь',
+  'Декабрь',
 ];
 
 const MONTHS_ENG = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ];
 
 const WEEKDAYS_LONG = [
-  "Воскресенье",
-  "Понедельник",
-  "Вторник",
-  "Среда",
-  "Четверг",
-  "Пятница",
-  "Суббота",
+  'Воскресенье',
+  'Понедельник',
+  'Вторник',
+  'Среда',
+  'Четверг',
+  'Пятница',
+  'Суббота',
 ];
 
 const Arrows = styled.div`
@@ -99,7 +100,7 @@ const CustomDatePickers = styled(DayPicker)`
     line-height: 21px;
     letter-spacing: 0.1px;
     color: ${(props) => props.theme.text};
-    font-family: "Roboto", sans-serif;
+    font-family: 'Roboto', sans-serif;
   }
   .DayPicker-Caption {
     margin-bottom: 13px;
@@ -162,33 +163,42 @@ const CustomDatePickers = styled(DayPicker)`
   }
 `;
 
-export const Calendar: FC<{
+type CalendarProps = {
   selectedDay: Date;
   setSelectedDay: (selectedDay: Date | string) => void;
-}> = ({ selectedDay, setSelectedDay }) => {
+};
+
+export const Calendar: FC<CalendarProps> = ({ selectedDay, setSelectedDay }: CalendarProps) => {
   const handleDayClick = (day: any, { selected }: any) => {
     setSelectedDay(selected ? undefined : day);
   };
-  const lang = localStorage.getItem("i18nextLng") || "ru";
+  const lang = localStorage.getItem('i18nextLng') || 'ru';
   return (
     <CustomDatePickers
-      months={lang === "en" ? MONTHS_ENG : MONTHS}
-      firstDayOfWeek={lang === "en" ? 0 : 1}
+      locale={lang}
+      months={lang === 'en' ? MONTHS_ENG : MONTHS}
+      firstDayOfWeek={lang === 'en' ? 0 : 1}
       weekdaysLong={WEEKDAYS_LONG}
-      weekdaysShort={lang === "en" ? WEEKDAYS_SHORT_ENG : WEEKDAYS_SHORT}
-      navbarElement={<Navbar />}
+      weekdaysShort={lang === 'en' ? WEEKDAYS_SHORT_ENG : WEEKDAYS_SHORT}
+      navbarElement={<Navbar lang={lang} />}
       selectedDays={selectedDay}
       onDayClick={handleDayClick}
     />
   );
 };
 
-export const ModalRangeInput: FC<{
+type ModalRangeInputProps = {
   label?: string;
   openDate: OpenDate;
   setOpenDate: (from: Date, to: Date) => void;
   onClose: () => void;
-}> = ({ openDate, setOpenDate, onClose }) => {
+};
+
+export const ModalRangeInput: FC<ModalRangeInputProps> = ({
+  openDate,
+  setOpenDate,
+  onClose,
+}: ModalRangeInputProps) => {
   const [showOpen, setShowOpen] = useState(false);
   const [selfDate, setselfDate] = useState<any>({
     from: undefined,
@@ -217,26 +227,26 @@ export const ModalRangeInput: FC<{
       onClose();
     }
   };
-  const lang = localStorage.getItem("i18nextLng") || "ru";
+  const lang = localStorage.getItem('i18nextLng') || 'ru';
   const modifiers = { start: selfDate.from, end: selfDate.to };
   const { t } = useTranslation();
   return (
     <>
       <DatePickerContainer ref={ref}>
         <CalendarWrap onClick={() => setShowOpen(!showOpen)}>
-          <Period>{t("period")}...</Period>
+          <Period>{t('period')}...</Period>
         </CalendarWrap>
         {showOpen && (
           <CustomDatePicker
             selectedDays={[selfDate.from, selfDate]}
-            months={lang === "en" ? MONTHS_ENG : MONTHS}
+            months={lang === 'en' ? MONTHS_ENG : MONTHS}
             onDayClick={handleDayClick}
             firstDayOfWeek={1}
-            todayButton={t("ready")}
+            todayButton={t('ready')}
             onTodayButtonClick={handleChange}
             modifiers={modifiers}
             weekdaysLong={WEEKDAYS_LONG}
-            weekdaysShort={lang === "en" ? WEEKDAYS_SHORT_ENG : WEEKDAYS_SHORT}
+            weekdaysShort={lang === 'en' ? WEEKDAYS_SHORT_ENG : WEEKDAYS_SHORT}
             navbarElement={<Navbar />}
           />
         )}
@@ -245,12 +255,14 @@ export const ModalRangeInput: FC<{
   );
 };
 
-export const TestInput: FC<{
+type TestInputProps = {
   label: string;
   openDate: OpenDate;
   setOpenDate: (openDate: OpenDate) => void;
   onClose?: () => void;
-}> = ({ label, openDate, setOpenDate }) => {
+};
+
+export const TestInput: FC<TestInputProps> = ({ label, openDate, setOpenDate }: TestInputProps) => {
   const [showOpen, setShowOpen] = useState(false);
   const [selfDate, setSelfDate] = useState<any>({
     from: undefined,
@@ -268,12 +280,16 @@ export const TestInput: FC<{
     const range = DateUtils.addDayToRange(day, openDate as any);
     setSelfDate({ from: range.from, to: range.to });
     setOpenDate({ from: range.from, to: range.to });
+
+    setInputString(
+      `${range.from ? moment(range.from).format('DD.MM.YY') : ''} ${
+        range.to ? `- ${moment(range.to).format('DD.MM.YY')}` : ''
+      }`
+    );
   };
 
   const handleChange = () => {
-    // if (selfDate.from && selfDate.to) {
     setOpenDate({ from: openDate.from, to: openDate.to });
-    // }
     setShowOpen(false);
   };
 
@@ -284,10 +300,18 @@ export const TestInput: FC<{
       from: undefined,
       to: undefined,
     });
+    setInputString('');
   };
 
-  const lang = localStorage.getItem("i18nextLng") || "ru";
+  const lang = localStorage.getItem('i18nextLng') || 'ru';
   const modifiers = { start: openDate.from, end: openDate.to };
+
+  const [inputString, setInputString] = useState(
+    `${openDate.from ? moment(openDate.from).format('DD.MM.YY') : ''} ${
+      openDate.to ? `- ${moment(openDate.to).format('DD.MM.YY')}` : ''
+    }`
+  );
+  const dateRangeRegEx = /^(0[1-9]|[12][0-9]|3[01])[.](0[1-9]|1[012])[.]\d\d$/gm;
 
   return (
     <>
@@ -295,12 +319,28 @@ export const TestInput: FC<{
         <BoxInput onClick={() => setShowOpen(!showOpen)}>
           <DateLabel>{label}</DateLabel>
           <DateInput>
-            <span>
-              {openDate.from ? moment(openDate.from).format("DD.MM.YY") : ""}
-            </span>
-            <span>
-              {openDate.to ? `-${moment(openDate.to).format("DD.MM.YY")} ` : ""}
-            </span>
+            <InputDate
+              type="text"
+              value={inputString}
+              onChange={(e) => {
+                setInputString(e.target.value);
+                const arr = e.target.value.split(' - ');
+                const fromSplitted = arr[0].split('.');
+                const toSplitted = arr[1].split('.');
+
+                setOpenDate({
+                  from: moment(`${fromSplitted[1]}.${fromSplitted[0]}.${fromSplitted[2]}`)
+                    .set({ hour: 12, minute: 0, second: 0 })
+                    .toDate(),
+                  to: moment(`${toSplitted[1]}.${toSplitted[0]}.${toSplitted[2]}`)
+                    .set({ hour: 12, minute: 0, second: 0 })
+                    .toDate(),
+                });
+              }}
+            ></InputDate>
+
+            {/* <span>{openDate.from ? moment(openDate.from).format('DD.MM.YY') : ''}</span>
+            <span>{openDate.to ? `-${moment(openDate.to).format('DD.MM.YY')} ` : ''}</span> */}
             {openDate.from && <Close onClick={reset}>&times;</Close>}
           </DateInput>
         </BoxInput>
@@ -308,14 +348,14 @@ export const TestInput: FC<{
         {showOpen && (
           <CustomDatePicker
             selectedDays={[openDate.from, openDate as any]}
-            months={lang === "en" ? MONTHS_ENG : MONTHS}
+            months={lang === 'en' ? MONTHS_ENG : MONTHS}
             onDayClick={handleDayClick}
             firstDayOfWeek={1}
             onTodayButtonClick={handleChange}
-            todayButton={t("ready")}
+            todayButton={t('ready')}
             modifiers={modifiers}
             weekdaysLong={WEEKDAYS_LONG}
-            weekdaysShort={lang === "en" ? WEEKDAYS_SHORT_ENG : WEEKDAYS_SHORT}
+            weekdaysShort={lang === 'en' ? WEEKDAYS_SHORT_ENG : WEEKDAYS_SHORT}
             navbarElement={<Navbar />}
           />
         )}
@@ -324,12 +364,30 @@ export const TestInput: FC<{
   );
 };
 
-export const TestInputAnalitic: FC<{
+const InputDate = styled.input`
+  border: none;
+  outline: none;
+  background: transparent;
+
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 21px;
+  letter-spacing: 0.1px;
+  color: ${(props) => props.theme.text2};
+`;
+
+type TestInputAnaliticProps = {
   label: string;
   openDate: OpenDate;
   setOpenDate: (openDate: OpenDate) => void;
   onClose?: () => void;
-}> = ({ label, openDate, setOpenDate }) => {
+};
+
+export const TestInputAnalitic: FC<TestInputAnaliticProps> = ({
+  label,
+  openDate,
+  setOpenDate,
+}: TestInputAnaliticProps) => {
   const [showOpen, setShowOpen] = useState(false);
   const [selfDate, setSelfDate] = useState<any>({
     from: undefined,
@@ -343,25 +401,25 @@ export const TestInputAnalitic: FC<{
 
   useOnClickOutside(ref, handleClickOutside);
 
-  const handleDayClick = (day: Date) => {
-    const range = DateUtils.addDayToRange(day, selfDate);
-    if (
-      range.from &&
-      range.from.valueOf() >= moment().hour(11).valueOf() &&
-      ((range.to && range.to >= new Date()) || range.to === undefined)
-    ) {
-      setSelfDate({ from: range.from, to: range.to });
-      if (range.from && range.to) {
-        setOpenDate({ from: range.from, to: range.to });
-      }
-    }
-  };
-
   // const handleDayClick = (day: Date) => {
   //   const range = DateUtils.addDayToRange(day, selfDate);
-  //   setSelfDate({ from: range.from, to: range.to });
-  //   setOpenDate({ from: range.from, to: range.to });
+  //   if (
+  //     range.from &&
+  //     range.from.valueOf() >= moment().hour(11).valueOf() &&
+  //     ((range.to && range.to >= new Date()) || range.to === undefined)
+  //   ) {
+  //     setSelfDate({ from: range.from, to: range.to });
+  //     if (range.from && range.to) {
+  //       setOpenDate({ from: range.from, to: range.to });
+  //     }
+  //   }
   // };
+
+  const handleDayClick = (day: Date) => {
+    const range = DateUtils.addDayToRange(day, selfDate);
+    setSelfDate({ from: range.from, to: range.to });
+    setOpenDate({ from: range.from, to: range.to });
+  };
 
   const handleChange = () => {
     if (selfDate.from && selfDate.to) {
@@ -379,7 +437,7 @@ export const TestInputAnalitic: FC<{
     });
   };
 
-  const lang = localStorage.getItem("i18nextLng") || "ru";
+  const lang = localStorage.getItem('i18nextLng') || 'ru';
   const modifiers = { start: selfDate.from, end: selfDate.to };
 
   return (
@@ -388,12 +446,8 @@ export const TestInputAnalitic: FC<{
         <BoxInput onClick={() => setShowOpen(!showOpen)}>
           <DateLabel>{label}</DateLabel>
           <DateInput>
-            <span>
-              {selfDate.from ? moment(selfDate.from).format("DD.MM.YY") : ""}
-            </span>
-            <span>
-              {selfDate.to ? `-${moment(selfDate.to).format("DD.MM.YY")} ` : ""}
-            </span>
+            <span>{selfDate.from ? moment(selfDate.from).format('DD.MM.YY') : ''}</span>
+            <span>{selfDate.to ? `-${moment(selfDate.to).format('DD.MM.YY')} ` : ''}</span>
             {selfDate.from && <Close onClick={reset}>&times;</Close>}
           </DateInput>
         </BoxInput>
@@ -401,14 +455,14 @@ export const TestInputAnalitic: FC<{
         {showOpen && (
           <CustomDatePicker
             selectedDays={[selfDate.from, selfDate]}
-            months={lang === "en" ? MONTHS_ENG : MONTHS}
+            months={lang === 'en' ? MONTHS_ENG : MONTHS}
             onDayClick={handleDayClick}
             firstDayOfWeek={1}
             onTodayButtonClick={handleChange}
-            todayButton={t("ready")}
+            todayButton={t('ready')}
             modifiers={modifiers}
             weekdaysLong={WEEKDAYS_LONG}
-            weekdaysShort={lang === "en" ? WEEKDAYS_SHORT_ENG : WEEKDAYS_SHORT}
+            weekdaysShort={lang === 'en' ? WEEKDAYS_SHORT_ENG : WEEKDAYS_SHORT}
             navbarElement={<Navbar />}
             disabledDays={[
               {
@@ -422,12 +476,18 @@ export const TestInputAnalitic: FC<{
   );
 };
 
-export const MainAdminInput: FC<{
+type MainAdminProps = {
   label: string;
   openDate: OpenDate;
   setOpenDate: (openDate: OpenDate) => void;
   onClose?: () => void;
-}> = ({ openDate, setOpenDate, label }) => {
+};
+
+export const MainAdminInput: FC<MainAdminProps> = ({
+  openDate,
+  setOpenDate,
+  label,
+}: MainAdminProps) => {
   const [showOpen, setShowOpen] = useState(false);
   const [selfDate, setSelfDate] = useState<any>({
     from: undefined,
@@ -456,7 +516,7 @@ export const MainAdminInput: FC<{
     }
     setShowOpen(false);
   };
-  const lang = localStorage.getItem("i18nextLng") || "ru";
+  const lang = localStorage.getItem('i18nextLng') || 'ru';
   const modifiers = { start: selfDate.from, end: selfDate.to };
   return (
     <>
@@ -465,41 +525,28 @@ export const MainAdminInput: FC<{
           <DateInput>
             {selfDate.from && selfDate.to ? (
               <>
-                <span>
-                  {selfDate.from
-                    ? moment(selfDate.from).format("DD.MM.YY")
-                    : ""}
-                </span>
-                <span>
-                  {selfDate.to
-                    ? `-${moment(selfDate.to).format("DD.MM.YY")} `
-                    : ""}
-                </span>
+                <span>{selfDate.from ? moment(selfDate.from).format('DD.MM.YY') : ''}</span>
+                <span>{selfDate.to ? `-${moment(selfDate.to).format('DD.MM.YY')} ` : ''}</span>
               </>
             ) : (
               <span>
-                {t("privateArea.at")} {label}
+                {t('privateArea.at')} {label}
               </span>
             )}
           </DateInput>
         </BoxInput>
 
-        <CSSTransition
-          in={showOpen}
-          timeout={300}
-          classNames="data"
-          unmountOnExit
-        >
+        <CSSTransition in={showOpen} timeout={300} classNames="data" unmountOnExit>
           <CustomDatePicker
             selectedDays={[selfDate.from, selfDate]}
-            months={lang === "en" ? MONTHS_ENG : MONTHS}
+            months={lang === 'en' ? MONTHS_ENG : MONTHS}
             onDayClick={handleDayClick}
             firstDayOfWeek={1}
             onTodayButtonClick={handleChange}
-            todayButton={t("ready")}
+            todayButton={t('ready')}
             modifiers={modifiers}
             weekdaysLong={WEEKDAYS_LONG}
-            weekdaysShort={lang === "en" ? WEEKDAYS_SHORT_ENG : WEEKDAYS_SHORT}
+            weekdaysShort={lang === 'en' ? WEEKDAYS_SHORT_ENG : WEEKDAYS_SHORT}
             navbarElement={<Navbar />}
           />
         </CSSTransition>
@@ -508,13 +555,20 @@ export const MainAdminInput: FC<{
   );
 };
 
-export const MainAnaliticInput: FC<{
+type MainAnaliticInputProps = {
   label: string;
   openDate: OpenDate;
   setOpenDate: (openDate: OpenDate) => void;
   onClose?: () => void;
   pastDay?: boolean;
-}> = ({ openDate, setOpenDate, label, pastDay }) => {
+};
+
+export const MainAnaliticInput: FC<MainAnaliticInputProps> = ({
+  openDate,
+  setOpenDate,
+  label,
+  pastDay,
+}: MainAnaliticInputProps) => {
   const [showOpen, setShowOpen] = useState(false);
   const [selfDate, setSelfDate] = useState<any>({
     from: undefined,
@@ -549,9 +603,9 @@ export const MainAnaliticInput: FC<{
     }
     setShowOpen(false);
   };
-  const lang = localStorage.getItem("i18nextLng") || "ru";
+  const lang = localStorage.getItem('i18nextLng') || 'ru';
   const modifiers = { start: selfDate.from, end: selfDate.to };
-  const backDays: any = moment().add(90, "days");
+  const backDays: any = moment().add(90, 'days');
   const reset = (e: React.MouseEvent) => {
     e.stopPropagation();
     setOpenDate({ from: new Date(), to: backDays });
@@ -568,42 +622,29 @@ export const MainAnaliticInput: FC<{
           <DateInput>
             {selfDate.from && selfDate.to ? (
               <>
-                <span>
-                  {selfDate.from
-                    ? moment(selfDate.from).format("DD.MM.YY")
-                    : ""}
-                </span>
-                <span>
-                  {selfDate.to
-                    ? `-${moment(selfDate.to).format("DD.MM.YY")} `
-                    : ""}
-                </span>
+                <span>{selfDate.from ? moment(selfDate.from).format('DD.MM.YY') : ''}</span>
+                <span>{selfDate.to ? `-${moment(selfDate.to).format('DD.MM.YY')} ` : ''}</span>
                 {selfDate.from && <Close onClick={reset}>&times;</Close>}
               </>
             ) : (
               <span>
-                {t("privateArea.at")} {label}
+                {t('privateArea.at')} {label}
               </span>
             )}
           </DateInput>
         </BoxInput>
 
-        <CSSTransition
-          in={showOpen}
-          timeout={300}
-          classNames="data"
-          unmountOnExit
-        >
+        <CSSTransition in={showOpen} timeout={300} classNames="data" unmountOnExit>
           <CustomDatePicker
             selectedDays={[selfDate.from, selfDate]}
-            months={lang === "en" ? MONTHS_ENG : MONTHS}
+            months={lang === 'en' ? MONTHS_ENG : MONTHS}
             onDayClick={handleDayClick}
             firstDayOfWeek={1}
             onTodayButtonClick={handleChange}
-            todayButton={t("ready")}
+            todayButton={t('ready')}
             modifiers={modifiers}
             weekdaysLong={WEEKDAYS_LONG}
-            weekdaysShort={lang === "en" ? WEEKDAYS_SHORT_ENG : WEEKDAYS_SHORT}
+            weekdaysShort={lang === 'en' ? WEEKDAYS_SHORT_ENG : WEEKDAYS_SHORT}
             navbarElement={<Navbar />}
             disabledDays={[
               {
@@ -713,7 +754,7 @@ const InputCustom = styled.div`
     line-height: 21px;
     letter-spacing: 0.1px;
     color: #0e0d3d;
-    font-family: "Roboto", sans-serif;
+    font-family: 'Roboto', sans-serif;
   }
   .DayPicker-Caption {
     margin-bottom: 13px;
@@ -790,8 +831,8 @@ const InputCustom = styled.div`
 
 const ModalInputCustom = styled(InputCustom)<{ left?: boolean }>`
   .DayPickerInput-Overlay {
-    right: ${(props) => (props.left ? "auto" : "0")};
-    left: ${(props) => (props.left ? "-16px" : "auto")};
+    right: ${(props) => (props.left ? 'auto' : '0')};
+    left: ${(props) => (props.left ? '-16px' : 'auto')};
     bottom: 100%;
     z-index: 10000;
     @media (max-width: 768px) {
@@ -843,7 +884,7 @@ const CustomDatePicker = styled(DayPicker)`
     font-size: 14px;
     line-height: 21px;
     letter-spacing: 0.1px;
-    font-family: "Roboto", sans-serif;
+    font-family: 'Roboto', sans-serif;
   }
   .DayPicker-Caption {
     margin-bottom: 13px;
@@ -1018,7 +1059,7 @@ const DateInput = styled.div`
   border: 1px solid rgba(86, 101, 127, 0.3);
   box-sizing: border-box;
   border-radius: 2px;
-  min-width: 200px;
+  min-width: 180px;
   height: 40px;
   font-weight: normal;
   font-size: 14px;

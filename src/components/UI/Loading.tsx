@@ -13,10 +13,13 @@ const DotWrapper = styled.div`
   align-items: center;
   justify-content: center;
   margin: 40px 0;
+
+  & > div {
+    background-color: ${({ theme }) => theme.loader.pointsColor}
+  }
 `;
 
 const Dot = styled.div<{ delay?: string }>`
-  background-color: #2b3595;
   border-radius: 50%;
   width: 10px;
   height: 10px;

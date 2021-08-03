@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { AppContext } from '../../../../context/HubContext';
 import { RootClock } from '../../../../types/clock';
 import * as Styled from './Lottery.elements';
+import { ReactComponent as Prize } from "../../../../assets/svg/prize.svg";
 
 type Props = {
   last?: string;
@@ -19,13 +20,14 @@ export const Timer: FC<Props> = ({
   icon,
   closeTimer,
   timerHistory,
-}) => {
+}: Props) => {
   const [state, setState] = useState<null | string>(null);
   const [deadline, setDeadline] = useState(-1);
   const [clock, setClock] = useState<RootClock | null>(null);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const { t } = useTranslation();
+  const [ clickOnIcon, setClickOnIcon ] = useState<boolean>(false);
 
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   const languale = lang === 'ru' ? 1 : 0;
@@ -70,14 +72,14 @@ export const Timer: FC<Props> = ({
       return;
     }
 
-    let timer = setInterval(() => {
-      let durations = moment.duration(deadline, 'seconds');
-      let formatted = `${Math.floor(durations.asDays())} ${t(
-        'time.d',
-      )} ${Math.floor(durations.asHours())} ${t('time.h')} ${Math.floor(
-        durations.asMinutes(),
-      )} ${t('time.m')}`;
-
+    const timer = setInterval(() => {
+      const durations = moment.duration(deadline, 'seconds');
+      let formatted;
+      if (languale === 1) {
+        formatted = durations.format('d [дн] h [ч] m [мин]', { trim: false });
+      } else {
+        formatted = durations.format('d [d] h [h] m [m]', { trim: false });
+      };
       !cancel && setState(formatted);
       !cancel && setDeadline(deadline - 1);
     }, 1000);
@@ -94,9 +96,7 @@ export const Timer: FC<Props> = ({
         <Styled.TimerContainer>
           {icon && <Styled.CloseIcon onClick={closeTimer} />}
           <Styled.TimerTitle>{t('timerStart')}</Styled.TimerTitle>
-          <Styled.TimerValue nodata={clock === null || state === '0'}>
-            {state}
-          </Styled.TimerValue>
+          <Styled.TimerValue nodata={clock === null || state === '0'}>{state}</Styled.TimerValue>
         </Styled.TimerContainer>
       ) : (
         <Styled.TimerHistoryInner>

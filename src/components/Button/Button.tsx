@@ -14,6 +14,7 @@ type Props = {
   aqua?: boolean;
   avocado?: boolean;
   mb?: boolean;
+  maxWidth?: number;
 };
 
 export const Button = styled.a<Props>`
@@ -203,6 +204,12 @@ export const Button = styled.a<Props>`
       `;
     }
   }}
+  ${({ maxWidth }) => {
+    return `
+      max-width: ${maxWidth}px;
+      min-width: ${maxWidth}px;
+    `
+  }};
   &:disabled {
     cursor: initial;
   }

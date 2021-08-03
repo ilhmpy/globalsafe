@@ -106,7 +106,8 @@
     "users": "Пользователи",
     "portfolio": "Портфель",
     "toHome": "На главную",
-    "lottery": "Розыгрыши"
+    "lottery": "Розыгрыши",
+    "depositsPrograms": "Программы депозитов"
   },
   "adminDeposit": {
     "uptitle": "Выплаты",
@@ -225,7 +226,6 @@
       "payableAmount": "Сумма к выплате",
       "pay": "Выплатить",
       "payed": "Выплачено",
-      "payAll": "Выплатить все",
       "success": "Выплата прошла успешно",
       "failed":"Ошибка выплаты",
       "setAllAmount": "Установить всю сумму отложенной выплаты"
@@ -249,7 +249,8 @@
     "transferButton": "Перевести",
     "balanceOff": "При активации депозита будет списано",
     "condition": "Условия программы",
-    "add": "Добавить"
+    "add": "Добавить",
+    "showCondition": "Показать условия"
   },
   "depositSuccess": {
     "title": "Депозит успешно создан",
@@ -411,5 +412,31 @@
     "deposit": "Депозит",
     "btn": "Подтвердить",
     "rule": "Если % не указан, то данные берутся из таблицы"
+  },
+  "depositsPrograms": {
+    "name": "Название",
+    "depositSum": "Сумма депозитов",
+    "createDate": "Дата создания",
+    "procents": "Проценты",
+    "desc": "Описание"
+  },
+  "text": {
+    "tip_state_unsubscribed": "Подпишитесь на уведомления",
+    "tip_state_subscribed": "Вы подписались на уведомления",
+    "tip_state_blocked": "Вы заблокировали уведомления",
+    "message_prenotify": "Нажмите для подписки на уведомления",
+    "message_action_subscribed": "Спасибо за подписку!",
+    "message_action_resubscribed": "Вы подписались на уведомления!",
+    "message_action_unsubscribed": "Вы не хотите получать уведомления",
+    "dialog_main_title": "Управление уведомлениями сайта",
+    "dialog_main_button_subscribe": "ПОДПИСКА",
+    "dialog_main_button_unsubscribe": "ОТПИСКА",
+    "dialog_blocked_title": "Разблокирование уведомлений",
+    "dialog_blocked_message": "Следуйте этим инструкциям что бы сделать подписку:"
+  },
+  "tech": {
+    "desc": "Запрашиваемая страница удалена или временно недоступна. Перейти на ",
+    "main": "главную страницу",
+    "tech": "Ведутся технические работы"
   }
 }

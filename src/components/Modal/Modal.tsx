@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import styled from 'styled-components/macro';
 import { Portal } from '../Portal/Portal';
 
@@ -7,6 +7,8 @@ type ModalProps = {
   width?: number;
   zIndex?: string;
   mobMarg?: boolean;
+  children: ReactNode;
+  paddingTop?: number;
 };
 
 export const Modal: React.FC<ModalProps> = ({
@@ -15,7 +17,8 @@ export const Modal: React.FC<ModalProps> = ({
   width,
   zIndex = '99999',
   mobMarg,
-}) => {
+  paddingTop
+}: ModalProps) => {
   const handleContainerClick = (e: React.MouseEvent) => {
     if (e.currentTarget === e.target) {
       onClose();
@@ -26,10 +29,8 @@ export const Modal: React.FC<ModalProps> = ({
     <Portal>
       <ModalContainer zIndex={zIndex}>
         <Center onClick={handleContainerClick}>
-          <ModalComponent width={width} mobMarg={mobMarg}>
-            <span className="close" onClick={onClose}>
-              &times;
-            </span>
+          <ModalComponent width={width} mobMarg={mobMarg} paddingTop={paddingTop}>
+            <span className="close" onClick={onClose}>&times;</span>
             {children}
           </ModalComponent>
         </Center>
@@ -69,7 +70,7 @@ const ModalContainer = styled.div<{ zIndex: string }>`
   }
 `;
 
-const ModalComponent = styled.div<{ width?: number; mobMarg?: boolean }>`
+const ModalComponent = styled.div<{ width?: number; mobMarg?: boolean; paddingTop?: number; }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -79,21 +80,36 @@ const ModalComponent = styled.div<{ width?: number; mobMarg?: boolean }>`
   border-radius: 10px;
   padding: 1rem;
   max-width: ${(props) => (props.width ? props.width + 'px' : '400px')};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
   position: relative;
   /* padding: 20px; */
-  span {
+  ${({ paddingTop }) => {
+    if (paddingTop) {
+      return `
+        padding-top: ${paddingTop}px;
+      `;
+    }
+  }}
+
+  & > span {
     color: ${(props) => props.theme.text3};
     position: absolute;
-    right: 20px;
-    top: 15px;
+    right: 15px;
+    top: -2px;
     cursor: pointer;
     z-index: 9999;
-    font-size: 18px;
+    font-size: 36px;
+    opacity: 40%;
+    font-weight: 100;
     &:hover {
       color: ${(props) => props.theme.text3Hover};
     }
   }
+
+
   @media (max-width: 768px) {
     margin: ${(props) => (props.mobMarg ? '50px 20px' : '50px auto')};
     padding: ${(props) => (props.mobMarg ? '0' : '1rem')};

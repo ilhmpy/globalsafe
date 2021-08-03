@@ -9,6 +9,7 @@ import logo from '../../assets/svg/logo.svg';
 import logoWhite from '../../assets/svg/logoWhite.svg';
 import { ReactComponent as Lottery } from '../../assets/svg/lottery.svg';
 import { ReactComponent as Peppa } from '../../assets/svg/peppa.svg';
+import { ReactComponent as Deposits } from '../../assets/svg/deposits.svg';
 import ru from '../../assets/svg/russia.svg';
 import { ReactComponent as DarkTheme } from '../../assets/svg/theme.svg';
 import { ReactComponent as LightTheme } from '../../assets/svg/themeLight.svg';
@@ -24,7 +25,7 @@ type Props = {
   navShow: (e: React.MouseEvent) => void;
 };
 
-export const SideNavbar: FC<Props> = ({ navWidth, navShow }) => {
+export const SideNavbar: FC<Props> = ({ navWidth, navShow }: Props) => {
   const appContext = useContext(AppContext);
   const themeContext = useContext(ThemeContext);
   const theme = themeContext.theme;
@@ -43,52 +44,68 @@ export const SideNavbar: FC<Props> = ({ navWidth, navShow }) => {
         </Burger>
         <Link to="/">
           <LogoBrand>
-            {theme === 'light' ? (
-              <img src={logo} alt="" />
-            ) : (
-              <img src={logoWhite} alt="" />
-            )}
+            {theme === 'light' ? <img src={logo} alt="" /> : <img src={logoWhite} alt="" />}
           </LogoBrand>
         </Link>
       </NavHead>
       <SideInner>
         <Ul>
           <Li>
-            <StyledLink to="/admin" exact>
-              <DashBoard />
+            <StyledLink to="/admin" exact className="first-styledlink">
+              <div>
+                <DashBoard />
+              </div>
               <Text>{t('sideNav.mainScreen')}</Text>
             </StyledLink>
           </Li>
           <Li>
             <StyledLink to="/admin/deposit">
-              <Peppa />
+              <div>
+                <Peppa />
+              </div>
               <Text>{t('sideNav.deposits')}</Text>
             </StyledLink>
           </Li>
           <Li>
             <StyledLink to="/admin/payments">
-              <Wallet />
+              <div>
+                <Wallet />
+              </div>
               <Text>{t('sideNav.pay')}</Text>
             </StyledLink>
           </Li>
           <Li>
             <StyledLink to="/admin/users">
-              <Users />
+              <div>
+                <Users />
+              </div>
               <Text>{t('sideNav.users')}</Text>
             </StyledLink>
           </Li>
           <Li>
             <StyledLink to="/admin/portfolio">
-              <Briefcase />
+              <div>
+                <Briefcase />
+              </div>
               <Text>{t('sideNav.portfolio')}</Text>
             </StyledLink>
           </Li>
           <Li>
             <StyledLink to="/admin/lottery">
-              <Lottery />
+              <div>
+                <Lottery />
+              </div>
               <Text>{t('sideNav.lottery')}</Text>
             </StyledLink>
           </Li>
+          {/* <Li>
+            <StyledLink to="/admin/depositsPrograms">
+              <div>
+                <Deposits />
+              </div>
+              <Text>{t('sideNav.depositsPrograms')}</Text>
+            </StyledLink>
+          </Li> */}
         </Ul>
         <div>
           <Theme onClick={swithTheme}>
@@ -112,7 +129,8 @@ export const SideNavbar: FC<Props> = ({ navWidth, navShow }) => {
                 onClick={(e) => {
                   e.stopPropagation();
                   i18n.changeLanguage('en');
-                }}>
+                }}
+              >
                 EN
                 <img src={usa} alt="en" />
               </Languale>
@@ -121,7 +139,8 @@ export const SideNavbar: FC<Props> = ({ navWidth, navShow }) => {
                 onClick={(e) => {
                   e.stopPropagation();
                   i18n.changeLanguage('ru');
-                }}>
+                }}
+              >
                 RU
                 <img src={ru} alt="ru" />
               </Languale>
@@ -222,6 +241,10 @@ const StyledLink = styled(NavLink).attrs({ activeclassname })`
   width: 100%;
   transition: all 0.3s;
   &.${activeclassname} {
+    & > * {
+      opacity: 100%;
+    }
+
     background: rgba(255, 65, 110, 0.07);
     ${Text} {
       color: #ff416e;
@@ -242,6 +265,7 @@ const StyledLink = styled(NavLink).attrs({ activeclassname })`
   svg {
     flex: none;
   }
+
   svg path {
     stroke: ${(props) => props.theme.text2};
   }
@@ -264,6 +288,14 @@ const StyledLink = styled(NavLink).attrs({ activeclassname })`
       border-radius: 4px;
       left: 0;
     }
+
+    & > * {
+      opacity: 100%;
+    }
+  } 
+
+  & > * {
+    opacity: 30%;
   }
 `;
 

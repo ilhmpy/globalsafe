@@ -60,16 +60,10 @@ const AdminDepositList: FC<PayProps> = ({ data }: PayProps) => {
       <TableBody onClick={modalOpen}>
         <TableBodyItem>{data.userName}</TableBodyItem>
         <TableBodyItem>{data.deposit.name}</TableBodyItem>
-        <TableBodyItem>
-          {moment(data.creationDate).format('DD/MM/YYYY')}
-        </TableBodyItem>
-        <TableBodyItem>
-          {moment(data.endDate).format('DD/MM/YYYY')}
-        </TableBodyItem>
+        <TableBodyItem>{moment(data.creationDate).format('DD/MM/YYYY')}</TableBodyItem>
+        <TableBodyItem>{moment(data.endDate).format('DD/MM/YYYY')}</TableBodyItem>
         <TableBodyItem>{data.amountView ? data.amountView : '-'}</TableBodyItem>
-        <TableBodyItem>
-          {moment(data.paymentDate).format('DD/MM/YYYY')}
-        </TableBodyItem>
+        <TableBodyItem>{moment(data.paymentDate).format('DD/MM/YYYY')}</TableBodyItem>
         <TableBodyItem>{data.payedAmountView}</TableBodyItem>
         <TableBodyItem></TableBodyItem>
       </TableBody>
@@ -78,9 +72,7 @@ const AdminDepositList: FC<PayProps> = ({ data }: PayProps) => {
 };
 
 export const AdminDeposit = () => {
-  const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>(
-    [],
-  );
+  const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>([]);
   const [loading, setLoading] = useState(true);
   const [depositsList, setDepositsList] = useState<PaymentsCollection[]>([]);
   const [totalList, setTotalList] = useState(0);
@@ -165,7 +157,21 @@ export const AdminDeposit = () => {
 
   const myLoad = () => {
     setCount(false);
+    setDepositsList([]);
     setLoading(true);
+
+    let openFrom = null;
+    let openTo = null;
+    const closeFrom = null;
+    const closeTo = null;
+    if (openDate.from)
+      openFrom = moment(openDate.from).set({ hour: 0, minute: 0, second: 0 }).toDate();
+    if (openDate.to) {
+      openTo = moment(openDate.to).set({ hour: 23, minute: 59, second: 59 }).toDate();
+    } else if (!openDate.to && openDate.from) {
+      openTo = moment(openDate.from).set({ hour: 23, minute: 59, second: 59 }).toDate();
+    }
+
     if (hubConnection) {
       hubConnection
         .invoke<RootPayments>(
@@ -173,14 +179,48 @@ export const AdminDeposit = () => {
           [1, 2, 3, 4, 5, 6],
           name ? name.toLowerCase() : null,
           searchSafeID.length ? searchSafeID : null,
-          openDate.from ? openDate.from : null,
-          openDate.to ? openDate.to : null,
-          closeDate.from ? closeDate.from : null,
-          closeDate.to ? closeDate.from : null,
+          openDate.from
+            ? moment(openDate.from)
+                .utcOffset('+00:00')
+                .set({ hour: 0, minute: 0, second: 0 })
+                .toDate()
+            : null,
+          openDate.to
+            ? moment(openDate.to)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : openDate.from
+            ? moment(openDate.from)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : null,
+
+          closeDate.from
+            ? moment(closeDate.from)
+                .utcOffset('+00:00')
+                .set({ hour: 0, minute: 0, second: 0 })
+                .toDate()
+            : null,
+          closeDate.to
+            ? moment(closeDate.to)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : closeDate.from
+            ? moment(closeDate.from)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : null,
+          null,
+          null,
+          null,
           null,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting,
+          sorting
         )
         .then((res) => {
           setTotalList(res.totalRecords);
@@ -188,10 +228,12 @@ export const AdminDeposit = () => {
             setDepositsList(res.collection);
             setCount(true);
             setNum(num + 20);
+            setLoading(false);
           }
-          setLoading(false);
         })
-        .catch((err: Error) => console.log(err));
+        .catch((err: Error) => {
+          console.log(err);
+        });
     }
   };
 
@@ -202,7 +244,9 @@ export const AdminDeposit = () => {
         .then((res) => {
           setListDeposits(res.collection);
         })
-        .catch((err: Error) => console.log(err));
+        .catch((err: Error) => {
+          console.log(err);
+        });
     }
   }, [hubConnection]);
 
@@ -213,23 +257,61 @@ export const AdminDeposit = () => {
   const submit = () => {
     if (hubConnection) {
       setCurrentPage(1);
+      setDepositsList([]);
+      setLoading(true);
+
       hubConnection
         .invoke<RootPayments>(
           'GetUsersDeposits',
           [1, 2, 3, 4, 5, 6],
           name ? name.toLowerCase() : null,
           searchSafeID.length ? searchSafeID : null,
-          openDate.from ? openDate.from : null,
-          openDate.to ? openDate.to : null,
-          closeDate.from ? closeDate.from : null,
-          closeDate.to ? closeDate.from : null,
+
+          openDate.from
+            ? moment(openDate.from)
+                .utcOffset('+00:00')
+                .set({ hour: 0, minute: 0, second: 0 })
+                .toDate()
+            : null,
+          openDate.to
+            ? moment(openDate.to)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : openDate.from
+            ? moment(openDate.from)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : null,
+
+          closeDate.from
+            ? moment(closeDate.from)
+                .utcOffset('+00:00')
+                .set({ hour: 0, minute: 0, second: 0 })
+                .toDate()
+            : null,
+          closeDate.to
+            ? moment(closeDate.to)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : closeDate.from
+            ? moment(closeDate.from)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : null,
+
+          null,
+          null,
+          null,
           null,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting,
+          sorting
         )
         .then((res) => {
-          setDepositsList([]);
           setTotalList(res.totalRecords);
           setLoading(false);
           setNum(20);
@@ -290,27 +372,16 @@ export const AdminDeposit = () => {
             {open ? t('hide') : t('show')}
           </Styled.ShowHide>
         </Styled.FilterHeader>
-        <CSSTransition
-          in={open}
-          timeout={200}
-          classNames="filter"
-          unmountOnExit>
+        <CSSTransition in={open} timeout={200} classNames="filter" unmountOnExit>
           <Styled.SelectContainer>
             <Styled.SelectContainerInner>
               <Styled.SelectWrap>
                 <Styled.Label>{t('adminDeposit.labelUser')}</Styled.Label>
-                <Input
-                  value={name}
-                  onChange={(e) => setName(e.target.value.toLowerCase())}
-                />
+                <Input value={name} onChange={(e) => setName(e.target.value.toLowerCase())} />
               </Styled.SelectWrap>
               <Styled.SelectWrap style={{ minWidth: 233 }}>
                 <Styled.Label>{t('adminDeposit.labelProgram')}</Styled.Label>
-                <Select
-                  checkList={checkList}
-                  setCheckList={setCheckList}
-                  values={listDeposits}
-                />
+                <Select checkList={checkList} setCheckList={setCheckList} values={listDeposits} />
               </Styled.SelectWrap>
               <Styled.SelectWrap input>
                 <TestInput
@@ -359,7 +430,8 @@ export const AdminDeposit = () => {
                     <Sort
                       active={listForSorting[index].active}
                       key={index}
-                      onClick={() => getActiveSort(index)}>
+                      onClick={() => getActiveSort(index)}
+                    >
                       {obj.text}
                     </Sort>
                   ))}

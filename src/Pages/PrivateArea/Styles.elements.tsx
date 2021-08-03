@@ -17,6 +17,14 @@ export const ToLink = styled.a`
 export const InnerChart = styled(Card)`
   margin-bottom: 0;
   border-radius: 20px 20px 0 0;
+
+  & > div {
+    max-width: 930px;
+    margin: 0 auto;
+    margin-top: 16px;
+    margin-bottom: 10px;
+  }
+
   @media (max-width: 768px) {
     margin-bottom: 20px;
     background: transparent;
@@ -190,7 +198,9 @@ export const IconRotate = styled.div<{ rights?: boolean }>`
   width: 16px;
   height: 16px;
   margin-left: 10px;
-
+  position: absolute;
+  right: 10px;
+  opacity: 50%;
   transform: ${(props) => (props.rights ? "rotate(180deg)" : "rotate(0deg)")};
 `;
 
@@ -559,6 +569,7 @@ export const DataListName = styled.span`
   display: flex;
   align-items: center;
   letter-spacing: 0.1px;
+  margin-right: 28px;
   color: ${(props) => props.theme.text2};
 `;
 
@@ -580,6 +591,11 @@ export const DataListSum = styled.div<{ plus?: boolean }>`
   white-space: nowrap;
   padding-left: 20px;
   text-align: right;
+
+  &:nth-child(2) {
+    margin-right: 28px;
+    padding-left: 0;
+  }
 `;
 
 export const DataListDate = styled.div`
@@ -595,9 +611,26 @@ export const DataListDate = styled.div`
   border-radius: 24px;
 `;
 
-export const ModalButton = styled(Button)<{ mb?: boolean }>`
+export const ModalButton = styled(Button)<{ mb?: boolean, choice?: boolean, blue?: boolean }>`
   max-width: 100%;
-  color: ${(props) => props.theme.text};
+
+  & > * {
+    opacity: 50%;
+  }
+  
+  ${({ choice }) => {
+    if (choice) {
+      return `
+        color: ${({ theme }: any) => theme.text};
+        font-weight: 300;
+
+        & > {
+          opacity: 60%;
+        }
+      `
+    };
+  }}
+  position: relative;
   width: 100%;
   margin-bottom: ${(props) => (props.mb ? "20px" : "0")};
   &:disabled {
@@ -737,7 +770,7 @@ export const ModalListItem = styled.li`
   }
 `;
 
-export const Program = styled.div`
+export const Program = styled.div<{ show?: boolean }>`
   font-weight: bold;
   font-size: 14px;
   line-height: 16px;
@@ -747,6 +780,15 @@ export const Program = styled.div`
   color: ${(props) => props.theme.text2};
   cursor: pointer;
   transition: 0.3s;
+  padding-top: 10px;
+  margin-bottom: 15px;
+  ${({ show }) => {
+    if (show) {
+      return `
+        margin-bottom: 30px;
+      `;
+    }
+  }}
   &:hover {
     color: #ff416e;
   }
@@ -755,17 +797,36 @@ export const Program = styled.div`
   }
 `;
 
-export const Warning = styled.div`
-  font-weight: 500;
+export const Warning = styled.div<{ choice?: boolean; }>`
+  font-weight: 400;
   font-size: 14px;
   line-height: 16px;
   letter-spacing: 0.1px;
   color: #ff416e;
-  text-align: left;
-  margin-bottom: 15px;
+  text-align: center;
+  margin-bottom: 20px;
+  
   bdi {
     color: #6db9ff;
   }
+
+  ${({ choice }) => {
+    if (choice) {
+      return `
+        & > span {
+          color: inherit;
+          position: inherit;
+          z-index: 0;
+          font-size: inherit;
+          font-weight: 700;
+
+          &:hover { 
+            color: inherit;
+          }
+        }
+      `;
+    };
+  }}
 `;
 
 export const Conditions = styled.div<{ open?: boolean }>`
@@ -803,7 +864,7 @@ export const ModalDeposits = styled.div`
 `;
 
 export const ModalDepositsWrap = styled.div`
-  width: 540px;
+  max-width: 384px;
 `;
 
 export const SmallButton = styled.a<{ color: string }>`

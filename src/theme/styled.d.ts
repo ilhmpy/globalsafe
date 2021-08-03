@@ -55,6 +55,18 @@ declare module 'styled-components' {
     acceptAll: {
       bg: string;
       rule: string;
+    };
+    timerIcon: {
+      background: string;
+      border: string;
+    };
+    tech: {
+      color: string;
+    },
+    loader: {
+      bg: string;
+      pointsColor: string;
     }
   }
-}
+} 
+ 

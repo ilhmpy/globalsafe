@@ -1,11 +1,4 @@
-﻿import React, {
-  useState,
-  MouseEvent,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-} from "react";
+﻿import React, { useState, MouseEvent, useContext, useEffect, useMemo, useRef } from 'react';
 import {
   BrowserRouter as Router,
   Route,
@@ -13,51 +6,47 @@ import {
   Switch,
   Redirect,
   useHistory,
-} from "react-router-dom";
-import { Header } from "../../components/Header/Header";
-import * as Styled from "./Styles.elements";
-import { CSSTransition } from "react-transition-group";
-import { Modal } from "../../components/Modal/Modal";
-import { RootDeposits, DepositsCollection, Commisions } from "../../types/info";
-import { Input } from "../../components/UI/Input";
-import { Button } from "../../components/Button/Button";
-import { AppContext } from "../../context/HubContext";
-import ReactNotification, { store } from "react-notifications-component";
-import "react-notifications-component/dist/theme.css";
-import { DepositListModal } from "./Modals";
-import { Tabs, Tab } from "../../components/UI/Tabs";
-import { Card, Container } from "../../globalStyles";
-import { UpTitle } from "../../components/UI/UpTitle";
-import { useTranslation } from "react-i18next";
-import { Info } from "./Info";
-import { InfoBalance } from "./InfoBalance";
-import { InfoDeposits } from "./InfoDeposits";
-import { OnePage } from "./OnePage";
-import moment from "moment";
-import "moment/locale/ru";
-import { Balance } from "../../types/balance";
-import { TestTolltips, Tooltip } from "../../components/Tooltips/Tooltips";
-import { ReactComponent as Copy } from "../../assets/svg/copy.svg";
-import { Loading } from "../../components/UI/Loading";
+} from 'react-router-dom';
+import { Header } from '../../components/Header/Header';
+import * as Styled from './Styles.elements';
+import { CSSTransition } from 'react-transition-group';
+import { Modal } from '../../components/Modal/Modal';
+import { RootDeposits, DepositsCollection, Commisions } from '../../types/info';
+import { Input } from '../../components/UI/Input';
+import { Button } from '../../components/Button/Button';
+import { AppContext } from '../../context/HubContext';
+import ReactNotification, { store } from 'react-notifications-component';
+import 'react-notifications-component/dist/theme.css';
+import { DepositListModal } from './Modals';
+import { Tabs, Tab } from '../../components/UI/Tabs';
+import { Card, Container } from '../../globalStyles';
+import { UpTitle } from '../../components/UI/UpTitle';
+import { useTranslation } from 'react-i18next';
+import { Info } from './Info';
+import { InfoBalance } from './InfoBalance';
+import { InfoDeposits } from './InfoDeposits';
+import { OnePage } from './OnePage';
+import moment from 'moment';
+import 'moment/locale/ru';
+import { Balance } from '../../types/balance';
+import { TestTolltips, Tooltip } from '../../components/Tooltips/Tooltips';
+import { ReactComponent as Copy } from '../../assets/svg/copy.svg';
+import { Loading } from '../../components/UI/Loading';
 
 export const InfoMain = () => {
   const [addDeposit, setAddDeposit] = useState(false);
   const [depositListModal, setDepositListModal] = useState(false);
-  const [addDepositValue, setAddDepositValue] = useState("");
-  const [depositSelect, setDepositSelect] = useState<null | DepositsCollection>(
-    null
-  );
-  const [depositsList, setDepositsList] = useState<DepositsCollection[] | null>(
-    null
-  );
+  const [addDepositValue, setAddDepositValue] = useState('');
+  const [depositSelect, setDepositSelect] = useState<null | DepositsCollection>(null);
+  const [depositsList, setDepositsList] = useState<DepositsCollection[] | null>(null);
   const [withdraw, setWithdraw] = useState(false);
   const [loadDeposit, setLoadDeposit] = useState(false);
   const [withdrawValueLoad, setWithdrawValueLoad] = useState(false);
   const [condition, setContition] = useState(false);
   const [depositSuccess, setDepositSuccess] = useState(false);
   const [depositError, setDepositError] = useState(false);
-  const [withdrawValue, setWithdrawValue] = useState("");
-  const [account, setAccount] = useState("");
+  const [withdrawValue, setWithdrawValue] = useState('');
+  const [account, setAccount] = useState('');
   const appContext = useContext(AppContext);
   const user = appContext.user;
   const balance = appContext.balance;
@@ -66,11 +55,11 @@ export const InfoMain = () => {
   const { t, i18n } = useTranslation();
   const inputRef = useRef<any>(null);
   const history = useHistory();
-  const lang = localStorage.getItem("i18nextLng") || "ru";
-  const languale = lang === "ru" ? 1 : 0;
+  const lang = localStorage.getItem('i18nextLng') || 'ru';
+  const languale = lang === 'ru' ? 1 : 0;
   moment.locale(lang);
-  const [ blockchainCommision, setBlockchainCommision ] = useState<string>("0");
-  const [ serviceCommision, setServiceCommision ] = useState<string>("0");
+  const [blockchainCommision, setBlockchainCommision] = useState<string>('0');
+  const [serviceCommision, setServiceCommision] = useState<string>('0');
 
   const handleDepositModal = () => {
     setAddDeposit(false);
@@ -86,16 +75,16 @@ export const InfoMain = () => {
   const alert = (
     title: string,
     message: string,
-    type: "success" | "default" | "warning" | "info" | "danger"
+    type: 'success' | 'default' | 'warning' | 'info' | 'danger'
   ) => {
     store.addNotification({
       title: title,
       message: message,
       type: type,
-      insert: "top",
-      container: "top-right",
-      animationIn: ["animate__animated", "animate__fadeIn"],
-      animationOut: ["animate__animated", "animate__fadeOut"],
+      insert: 'top',
+      container: 'top-right',
+      animationIn: ['animate__animated', 'animate__fadeIn'],
+      animationOut: ['animate__animated', 'animate__fadeOut'],
       dismiss: {
         duration: 5000,
       },
@@ -111,17 +100,13 @@ export const InfoMain = () => {
   const openNewDeposit = () => {
     if (hubConnection && depositSelect !== null) {
       setLoadDeposit(true);
-      //setAddDepositValue("");
+
       hubConnection
-        .invoke(
-          "CreateUserDeposit",
-          +addDepositValue * 100000,
-          depositSelect.safeId
-        )
+        .invoke('CreateUserDeposit', +addDepositValue * 100000, depositSelect.safeId)
         .then((res) => {
           setLoadDeposit(false);
           setWithdraw(false);
-          setWithdrawValue("");
+          setWithdrawValue('');
           if (res) {
             setDepositSuccess(true);
             // alert(t("alert.success"), t("alert.depositMsg"), "success");
@@ -134,7 +119,7 @@ export const InfoMain = () => {
           console.log(err);
           setLoadDeposit(false);
           setWithdraw(false);
-          setWithdrawValue("");
+          setWithdrawValue('');
           setDepositError(true);
           // alert(t("alert.error"), t("alert.depositErrorMsg"), "danger");
         })
@@ -149,7 +134,7 @@ export const InfoMain = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke("GetTopUpAccount")
+        .invoke('GetTopUpAccount')
         .then((res) => setAccount(res))
         .catch((e) => console.log(e));
     }
@@ -164,7 +149,7 @@ export const InfoMain = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<RootDeposits>("GetDeposits", languale, false, 0, 40)
+        .invoke<RootDeposits>('GetDeposits', languale, false, 0, 40)
         .then((res) => {
           if (res.collection.length) {
             setDepositsList(res.collection);
@@ -178,17 +163,18 @@ export const InfoMain = () => {
     if (hubConnection) {
       setWithdrawValueLoad(true);
       hubConnection
-        .invoke("Withdraw", 1, +withdrawValue * 100000)
+        .invoke('Withdraw', 1, +withdrawValue * 100000)
         .then((res) => {
           setWithdraw(false);
-          setWithdrawValue("");
-          alert(t("alert.success"), t("alert.successMsg"), "success");
+          setWithdrawValue('');
+          alert(t('alert.success'), t('alert.successMsg'), 'success');
           setWithdrawValueLoad(false);
         })
         .catch((err: Error) => {
           setWithdraw(false);
-          setWithdrawValue("");
-          alert(t("alert.error"), t("alert.errorMsg"), "danger");
+          setWithdrawValue('');
+          console.log(err);
+          alert(t('alert.error'), t('alert.errorMsg'), 'danger');
           setWithdrawValueLoad(false);
         });
     }
@@ -196,9 +182,7 @@ export const InfoMain = () => {
 
   const balanceAsset =
     depositSelect && depositSelect?.priceKind !== null
-      ? balanceList?.some(
-          (item) => item.balanceKind === depositSelect?.priceKind
-        )
+      ? balanceList?.some((item) => item.balanceKind === depositSelect?.priceKind)
       : true;
 
   const balanseType =
@@ -219,42 +203,39 @@ export const InfoMain = () => {
   }
 
   const balanceFuture =
-    depositSelect &&
-    [9, 10, 11].includes(depositSelect.priceKind) &&
-    depositSelect.priceKind !== 1;
+    depositSelect && [9, 10, 11].includes(depositSelect.priceKind) && depositSelect.priceKind !== 1;
 
   if (user === false) {
     return <Redirect to="/" />;
   }
   const copy = (text: string) => {
-    alert(t("copy.copy"), t("copy.text"), "success");
+    alert(t('copy.copy'), t('copy.text'), 'success');
     navigator.clipboard.writeText(text);
   };
 
   const toDeposit = () => {
     setAddDeposit(false);
     setDepositSuccess(false);
-    history.push("/info/deposits");
+    history.push('/info/deposits');
   };
 
   const getCommisions = (value: string) => {
     // get commisions from server
     if (hubConnection) {
-      hubConnection.invoke<Commisions>(
-        "GetWithdrawFee",
-        1, Number(value)
-      ).then((res: any) => {
-        console.log("commisions", res);
-        setBlockchainCommision(res.networkFee);
-        setServiceCommision(res.serviceFee);
-      })
-       .catch((err) => console.error(err));
-    };
+      hubConnection
+        .invoke<Commisions>('GetWithdrawFee', 1, Number(value))
+        .then((res: any) => {
+          console.log('commisions', res);
+          setBlockchainCommision((res.networkFee / 100000).toString());
+          setServiceCommision((res.serviceFee / 100000).toString());
+        })
+        .catch((err) => console.error(err));
+    }
   };
 
   const onChangeWithdraw = (e: React.ChangeEvent<HTMLInputElement>) => {
     const pattern = /^[1-9][0-9]*$/;
-    if (e.target.value === "" || pattern.test(e.target.value)) {
+    if (e.target.value === '' || pattern.test(e.target.value)) {
       // call function to get commisions
       getCommisions(e.target.value);
       setWithdrawValue(e.target.value);
@@ -276,7 +257,7 @@ export const InfoMain = () => {
       <Header />
       <Styled.Page>
         <Container>
-          <UpTitle>{t("privateArea.uptitle")}</UpTitle>
+          <UpTitle>{t('privateArea.uptitle')}</UpTitle>
         </Container>
         <ReactNotification />
         <Container>
@@ -285,28 +266,26 @@ export const InfoMain = () => {
               <Styled.UserBlock>
                 <Styled.InfoTitle>{user}</Styled.InfoTitle>
                 <Styled.BalanceItem>
-                  <Styled.BalanceItemName>
-                    {t("privateArea.balance")}
-                  </Styled.BalanceItemName>
+                  <Styled.BalanceItemName>{t('privateArea.balance')}</Styled.BalanceItemName>
                   <Styled.BalanceItemValue pink>
-                    {balance ? (balance / 100000).toLocaleString() : "0"}
+                    {balance ? (balance / 100000).toLocaleString() : '0'}
                   </Styled.BalanceItemValue>
                 </Styled.BalanceItem>
                 <Styled.SmallButtonsWrapDesc>
                   <Styled.SmallButtonsWrap>
                     {balanceChips &&
                       balanceChips.map((i, idx) => {
-                        let color = "#6DB9FF";
+                        let color = '#6DB9FF';
                         if (i.balanceKind === 9) {
-                          color = "#FF416E";
+                          color = '#FF416E';
                         } else if (i.balanceKind === 10) {
-                          color = "#6DB9FF";
+                          color = '#6DB9FF';
                         } else if (i.balanceKind === 11) {
-                          color = "#BCD476";
+                          color = '#BCD476';
                         } else if (i.balanceKind === 12) {
-                          color = "#A78CF2";
+                          color = '#A78CF2';
                         } else {
-                          color = "#6DB9FF";
+                          color = '#6DB9FF';
                         }
 
                         return (
@@ -321,10 +300,10 @@ export const InfoMain = () => {
               </Styled.UserBlock>
               <Styled.InfoButtons>
                 <Button dangerOutline onClick={() => setAddDeposit(true)}>
-                  {t("privateArea.newDeposit")}
+                  {t('privateArea.newDeposit')}
                 </Button>
                 <Button danger onClick={() => setWithdraw(true)}>
-                  {t("privateArea.withdraw")}
+                  {t('privateArea.withdraw')}
                 </Button>
               </Styled.InfoButtons>
             </Styled.InfoWrap>
@@ -332,15 +311,15 @@ export const InfoMain = () => {
               <Styled.SmallButtonsWrap>
                 {balanceChips &&
                   balanceChips.map((i, idx) => {
-                    let color = "#6DB9FF";
+                    let color = '#6DB9FF';
                     if (i.balanceKind === 9) {
-                      color = "#FF416E";
+                      color = '#FF416E';
                     } else if (i.balanceKind === 10) {
-                      color = "#6DB9FF";
+                      color = '#6DB9FF';
                     } else if (i.balanceKind === 11) {
-                      color = "#BCD476";
+                      color = '#BCD476';
                     } else {
-                      color = "#6DB9FF";
+                      color = '#6DB9FF';
                     }
 
                     return (
@@ -354,13 +333,13 @@ export const InfoMain = () => {
             </Styled.SmallButtonsWrapMob>
             <Tabs>
               <Styled.NavTabs to="/info" exact>
-                <div>{t("privateArea.tabs.tab1")}</div>{" "}
+                <div>{t('privateArea.tabs.tab1')}</div>{' '}
               </Styled.NavTabs>
               <Styled.NavTabs to="/info/deposits">
-                <div>{t("privateArea.tabs.tab2")}</div>{" "}
+                <div>{t('privateArea.tabs.tab2')}</div>{' '}
               </Styled.NavTabs>
               <Styled.NavTabs to="/info/balance">
-                <div>{t("privateArea.tabs.tab3")}</div>{" "}
+                <div>{t('privateArea.tabs.tab3')}</div>{' '}
               </Styled.NavTabs>
             </Tabs>
           </Card>
@@ -371,31 +350,21 @@ export const InfoMain = () => {
           <Route path="/info/balance" component={InfoBalance} exact />
           <Route path="/info/deposits/:slug" component={OnePage} />
         </Switch>
-        <CSSTransition
-          in={depositSuccess}
-          timeout={0}
-          classNames="modal"
-          unmountOnExit
-        >
+        <CSSTransition in={depositSuccess} timeout={0} classNames="modal" unmountOnExit>
           <Modal width={540} onClose={() => setDepositSuccess(false)}>
             <Styled.ModalBlock>
-              <Styled.ModalTitle>{t("depositSuccess.title")}</Styled.ModalTitle>
+              <Styled.ModalTitle>{t('depositSuccess.title')}</Styled.ModalTitle>
               <Styled.ModalButton onClick={toDeposit} danger>
-                {t("depositSuccess.button")}
+                {t('depositSuccess.button')}
               </Styled.ModalButton>
             </Styled.ModalBlock>
           </Modal>
         </CSSTransition>
-        <CSSTransition
-          in={depositError}
-          timeout={0}
-          classNames="modal"
-          unmountOnExit
-        >
+        <CSSTransition in={depositError} timeout={0} classNames="modal" unmountOnExit>
           <Modal width={540} onClose={() => setDepositError(false)}>
             <Styled.ModalBlockWide>
-              <Styled.ModalTitle>{t("depositError.title")}</Styled.ModalTitle>
-              <p>{t("depositError.desc")}</p>
+              <Styled.ModalTitle>{t('depositError.title')}</Styled.ModalTitle>
+              <p>{t('depositError.desc')}</p>
             </Styled.ModalBlockWide>
           </Modal>
         </CSSTransition>
@@ -403,12 +372,10 @@ export const InfoMain = () => {
           {withdraw && (
             <Modal onClose={() => setWithdraw(false)}>
               <Styled.ModalBlock>
-                <Styled.ModalTitle>
-                  {t("privateArea.withdraw")}
-                </Styled.ModalTitle>
+                <Styled.ModalTitle>{t('privateArea.withdraw')}</Styled.ModalTitle>
                 <Input
                   onChange={onChangeWithdraw}
-                  placeholder={t("privateArea.amountEnter")}
+                  placeholder={t('privateArea.amountEnter')}
                   type="text"
                   ref={inputRef}
                   value={withdrawValue}
@@ -419,25 +386,24 @@ export const InfoMain = () => {
                   onClick={withdrawBalance}
                   danger
                 >
-                  {t("privateArea.withdraw")}
+                  {t('privateArea.withdraw')}
                 </Styled.ModalButton>
                 <Styled.ModalCommisionBox>
                   <Styled.ModalCommision>
-                    {t("privateArea.blockchainCommision")} - <Styled.ModalCommisionCount>{blockchainCommision} CWD</Styled.ModalCommisionCount>
+                    {t('privateArea.blockchainCommision')} -{' '}
+                    <Styled.ModalCommisionCount>
+                      {blockchainCommision} CWD
+                    </Styled.ModalCommisionCount>
                   </Styled.ModalCommision>
                   <Styled.ModalCommision>
-                    {t("privateArea.serviceCommision")} - <Styled.ModalCommisionCount>{serviceCommision} CWD</Styled.ModalCommisionCount>
+                    {t('privateArea.serviceCommision')} -{' '}
+                    <Styled.ModalCommisionCount>{serviceCommision} CWD</Styled.ModalCommisionCount>
                   </Styled.ModalCommision>
                 </Styled.ModalCommisionBox>
               </Styled.ModalBlock>
             </Modal>
           )}
-          <CSSTransition
-            in={condition}
-            timeout={0}
-            classNames="modal"
-            unmountOnExit
-          >
+          <CSSTransition in={condition} timeout={0} classNames="modal" unmountOnExit>
             <Modal width={540} onClose={() => setContition(false)}>
               <Styled.Conditions open>
                 {depositSelect ? (
@@ -447,7 +413,7 @@ export const InfoMain = () => {
                     }}
                   />
                 ) : (
-                  ""
+                  ''
                 )}
               </Styled.Conditions>
             </Modal>
@@ -459,28 +425,19 @@ export const InfoMain = () => {
             unmountOnExit
           >
             <Styled.ModalDepositsWrap>
-              <Modal width={540} onClose={() => setAddDeposit(false)}>
-                <Styled.ModalTitle mt>
-                  {t("privateArea.addDeposit")}
-                </Styled.ModalTitle>
+              <Modal onClose={() => setAddDeposit(false)} width={384} paddingTop={34}>
+                <Styled.ModalTitle mt>{t('privateArea.addDeposit')}</Styled.ModalTitle>
                 <Styled.ModalDeposits>
                   <div>
-                    <Styled.ModalButton
-                      mb
-                      as="button"
-                      onClick={handleDepositModal}
-                      dangerOutline
-                    >
-                      {depositSelect
-                        ? depositSelect.name
-                        : t("privateArea.choiseDeposite")}{" "}
+                    <Styled.ModalButton choice mb onClick={handleDepositModal} dangerOutline>
+                      {depositSelect ? depositSelect.name : t('privateArea.choiseDeposite')}{' '}
                       <Styled.IconRotate rights>
                         <Styled.ModalBack />
                       </Styled.IconRotate>
                     </Styled.ModalButton>
                     <Input
                       onChange={(e) => setAddDepositValue(e.target.value)}
-                      placeholder={t("privateArea.amountEnter")}
+                      placeholder={t('privateArea.amountEnter')}
                       type="number"
                       ref={inputRef}
                       value={addDepositValue}
@@ -491,31 +448,22 @@ export const InfoMain = () => {
                       onClick={openNewDeposit}
                       danger
                     >
-                      {t("depositSelect.add")}
+                      {t('depositSelect.add')}
                     </Styled.ModalButton>
-                    {depositSelect ? (
-                      <>
-                        <Tooltip text={depositSelect.description}>
-                          <Styled.Program onClick={() => setContition(true)}>
-                            {t("depositSelect.condition")}
-                          </Styled.Program>
-                        </Tooltip>
-                      </>
-                    ) : (
-                      <br />
-                    )}
+                    {depositSelect?.description ? 
+                    <Tooltip text={depositSelect.description}>
+                      <Styled.Program onClick={() => setContition(true)}>
+                         {t('depositSelect.condition')}
+                       </Styled.Program>
+                    </Tooltip> : <Styled.Program show>{t("depositSelect.showCondition")}</Styled.Program>}
                     {depositSelect && !asset && balanceFuture ? (
                       <>
                         <Styled.Warning>
-                          {t("depositSelect.forActive")}&nbsp;
+                          {t('depositSelect.forActive')}&nbsp;
                           {depositSelect.price}
-                          {depositSelect.priceKind
-                            ? Balance[depositSelect.priceKind]
-                            : "CWD"}
-                          , {t("depositSelect.transfer")} <bdi>{account}</bdi>
-                          <Styled.SmallRoundButton
-                            onClick={() => copy(account)}
-                          >
+                          {depositSelect.priceKind ? Balance[depositSelect.priceKind] : 'CWD'},{' '}
+                          {t('depositSelect.transfer')} <bdi>{account}</bdi>
+                          <Styled.SmallRoundButton onClick={() => copy(account)}>
                             <Copy />
                           </Styled.SmallRoundButton>
                         </Styled.Warning>
@@ -524,31 +472,28 @@ export const InfoMain = () => {
                           href={`https://cwd.global/account/${user}/portfolio`}
                           target="_blank"
                         >
-                          {t("depositSelect.transferButton")}
+                          {t('depositSelect.transferButton')}
                         </Styled.ModalButton>
                       </>
                     ) : null}
                     {depositSelect && depositSelect.priceKind && asset ? (
-                      <Styled.Warning>
-                        {t("depositSelect.willActiv")}&nbsp;{" "}
-                        {depositSelect.price}{" "}
-                        {depositSelect.priceKind
-                          ? Balance[depositSelect.priceKind]
-                          : "CWD"}
+                      <Styled.Warning choice>
+                        {t('depositSelect.willActiv')}&nbsp; <span>
+                          {depositSelect.price}{' '}
+                          {depositSelect.priceKind ? Balance[depositSelect.priceKind] : 'CWD'}
+                        </span>
                         <br />
-                        {t("depositSelect.bill")}
+                        {t('depositSelect.bill')}
                       </Styled.Warning>
                     ) : depositSelect && depositSelect.priceKind > 11 ? (
                       <Styled.Warning>
-                        {t("depositSelect.willActiv")}&nbsp;{" "}
-                        {depositSelect.price}{" "}
-                        {depositSelect.priceKind
-                          ? Balance[depositSelect.priceKind]
-                          : "CWD"}
+                        {t('depositSelect.willActiv')}&nbsp; {depositSelect.price}{' '}
+                        {depositSelect.priceKind ? Balance[depositSelect.priceKind] : 'CWD'}
                         <br />
-                        {t("depositSelect.bill")}
+                        {t('depositSelect.bill')}
                       </Styled.Warning>
                     ) : null}
+                    <Styled.ModalButton blue>Перевести</Styled.ModalButton>
                   </div>
                   {/* {depositSelect ? (
                     <Styled.Conditions>

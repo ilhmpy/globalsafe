@@ -14,6 +14,7 @@ export const TableHead = styled.ul`
   padding-bottom: 6px;
   border-bottom: 1px solid rgba(81, 81, 114, 0.2);
   gap: 7px;
+  /* position: relative; */
 `;
 
 export const TableHeadItem = styled.li`
@@ -23,7 +24,6 @@ export const TableHeadItem = styled.li`
   letter-spacing: 0.1px;
   color: ${(props) => props.theme.thHead};
   width: 100%;
-  text-align: center;
   &:nth-child(1) {
     white-space: nowrap;
     overflow: hidden;
@@ -44,22 +44,24 @@ export const TableHeadItem = styled.li`
     }
   }
   &:nth-child(3) {
-    max-width: 130px;
+    max-width: 140px;
     white-space: pre-wrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    padding-right: 10px;
+
     @media (max-width: 768px) {
       /* display: none; */
     }
   }
   &:nth-child(4) {
-    max-width: 180px;
+    max-width: 130px;
     @media (max-width: 576px) {
       display: none;
     }
   }
   &:nth-child(5) {
-    max-width: 182px;
+    max-width: 140px;
     @media (max-width: 992px) {
       max-width: 120px;
       display: none;
@@ -67,14 +69,14 @@ export const TableHeadItem = styled.li`
   }
 
   &:nth-child(6) {
-    max-width: 150px;
+    max-width: 140px;
     @media (max-width: 992px) {
       max-width: 120px;
       display: none;
     }
   }
   &:nth-child(7) {
-    max-width: 150px;
+    max-width: 140px;
     @media (max-width: 576px) {
       max-width: 120px;
     }
@@ -82,6 +84,7 @@ export const TableHeadItem = styled.li`
   &:last-child {
     max-width: 150px;
     text-align: right;
+    position: relative;
     @media (max-width: 992px) {
       max-width: 80px;
     }

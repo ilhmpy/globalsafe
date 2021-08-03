@@ -1,7 +1,8 @@
-import { Loading } from "../UI/Loading";
-import styled from "styled-components";
+import { useContext } from 'react';
+import { Loading } from '../UI/Loading';
+import styled from 'styled-components';
 
-export const Loader = () => {
+export function Loader() {
   return (
     <LoaderWrap>
       <Loading />
@@ -15,11 +16,12 @@ const LoaderWrap = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.2);
   display: block;
   z-index: 99999;
   overflow: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  background-color: ${({ theme }) => theme.loader.bg};
 `;
+   

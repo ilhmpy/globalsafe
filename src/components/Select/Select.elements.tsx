@@ -1,4 +1,4 @@
-import styled from "styled-components/macro";
+import styled from 'styled-components/macro';
 
 export const Placeholder = styled.div`
   font-weight: normal;
@@ -7,10 +7,6 @@ export const Placeholder = styled.div`
   letter-spacing: 0.1px;
   color: ${(props) => props.theme.depositHead};
 `;
-
-export const MobileFilter = () => {
-  return <div></div>;
-};
 
 export const InputItem = styled.div`
   span {
@@ -50,7 +46,7 @@ export const Container = styled.div`
 
 export const Arrow = styled.div<{ rotat?: boolean }>`
   margin-right: 0px;
-  transform: ${(props) => (props.rotat ? "rotate(0deg)" : "rotate(-90deg)")};
+  transform: ${(props) => (props.rotat ? 'rotate(0deg)' : 'rotate(-90deg)')};
   transition: 0.2s ease;
 `;
 
@@ -63,13 +59,12 @@ export const List = styled.ul<{ rotat?: boolean }>`
   width: 100%;
   background: ${(props) => props.theme.card.background};
   z-index: 9999;
-  border: ${(props) => (props.rotat ? "1px" : "0")} solid
-    rgba(86, 101, 127, 0.3);
+  border: ${(props) => (props.rotat ? '1px' : '0')} solid rgba(86, 101, 127, 0.3);
   box-sizing: border-box;
   border-radius: 0px 0px 4px 4px;
   transition: height 0.2s ease;
   overflow: hidden;
-  height: ${(props) => (props.rotat ? "auto" : "0")};
+  height: ${(props) => (props.rotat ? 'auto' : '0')};
 `;
 
 export const Li = styled.li`
@@ -112,7 +107,7 @@ export const CheckboxIcon = styled.div`
     border-color: transparent;
     border-style: solid;
     border-width: 0 1px 1px 0;
-    content: "";
+    content: '';
     height: 7px;
     left: 4px;
     position: absolute;
@@ -144,7 +139,7 @@ export const LabelContainer = styled.label<{ st?: boolean }>`
   cursor: pointer;
   display: flex;
   width: 100%;
-  justify-content: ${(props) => (props.st ? "flex-start" : "space-between")};
+  justify-content: ${(props) => (props.st ? 'flex-start' : 'space-between')};
   position: relative;
   ${(props) => {
     if (props.st) {
@@ -184,7 +179,7 @@ export const Fold = styled.div`
 `;
 
 export const FoldContent = styled.div<{ open?: boolean }>`
-  max-height: ${(props) => (props.open ? "400px" : "0")};
+  max-height: ${(props) => (props.open ? '400px' : '0')};
   width: 100%;
   padding-top: 5px;
   overflow: hidden;

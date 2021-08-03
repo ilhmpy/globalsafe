@@ -7,24 +7,15 @@ type Props = {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder: string;
+  maxLng: number;
 };
 
-export const ProcentInput: FC<Props> = ({
-  onChange,
-  value,
-  label,
-  placeholder,
-}) => {
+export const ProcentInput: FC<Props> = ({ onChange, value, label, placeholder, maxLng }: Props) => {
   return (
     <Container>
       <InputWrap>
         <Label>{label}</Label>
-        <Input
-          type="text"
-          value={value}
-          placeholder={placeholder}
-          onChange={onChange}
-        />
+        <Input maxLength={maxLng} type="text" value={value} placeholder={placeholder} onChange={onChange} />
         <Val>%</Val>
       </InputWrap>
     </Container>

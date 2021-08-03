@@ -43,10 +43,9 @@ type PropsTable = {
   data: CollectionUsers;
 };
 
-const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
+const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }: PropsTable) => {
   const [lock, setLock] = useState(
-    data.lockoutEnd &&
-      moment(data.lockoutEnd).valueOf() >= moment.utc().valueOf(),
+    data.lockoutEnd && moment(data.lockoutEnd).valueOf() >= moment.utc().valueOf()
   );
   const [open, setOpen] = useState(false);
   const [dataOne, setDataOne] = useState<CollectionCharges[]>([]);
@@ -61,6 +60,7 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
 
   const onClick = () => {
     if (window.innerWidth < 992) {
+      console.log(data.safeId)
       history.push(`/admin/users/${data.name}`);
     } else {
       setOpen(true);
@@ -79,7 +79,7 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
           null,
           [7],
           0,
-          80,
+          80
         )
         .then((res) => {
           setDataOne(res.collection);
@@ -103,8 +103,12 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
           null,
           null,
           null,
+          null,
+          null,
+          null,
           0,
           80,
+          []
         )
         .then((res) => {
           setDataTwo(res.collection);
@@ -139,11 +143,7 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
     unLockAccount(id);
   };
 
-  const adjustBalanceAsync = (
-    userSafeId: string,
-    delta: number,
-    safeOperationId: string,
-  ) => {
+  const adjustBalanceAsync = (userSafeId: string, delta: number, safeOperationId: string) => {
     if (hubConnection) {
       hubConnection
         .invoke('AdjustBalanceAsync', userSafeId, delta, safeOperationId)
@@ -155,9 +155,7 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
     }
   };
 
-  const balance = data.balances
-    ? data.balances.filter((item) => item.balanceKind === 1)
-    : null;
+  const balance = data.balances ? data.balances.filter((item) => item.balanceKind === 1) : null;
 
   return (
     <div>
@@ -182,14 +180,14 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
               })
             : '-'}
         </TableBodyItem>
-        <TableBodyItem>
-          {data.roles.length ? data.roles[0].name : '-'}
-        </TableBodyItem>
-        <TableBodyItem>
-          {moment(data.creationDate).format('DD/MM/YYYY')}
-        </TableBodyItem>
+        <TableBodyItem>{data.roles.length ? data.roles[0].name : '-'}</TableBodyItem>
+        <TableBodyItem>{moment(data.creationDate).format('DD/MM/YYYY')}</TableBodyItem>
         <TableBodyItem>Русский</TableBodyItem>
-        <TableBodyItem>{data.depositsAmount}</TableBodyItem>
+        <TableBodyItem>
+          {(data.depositsAmount / 100000).toLocaleString('ru-RU', {
+            maximumFractionDigits: 2,
+          })}
+        </TableBodyItem>
         <TableBodyItem>
           {size ? (
             lock ? (
@@ -202,7 +200,8 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
               greenOutline
               onClick={(e) => {
                 unLocked(e, data.safeId);
-              }}>
+              }}
+            >
               {t('adminUsers.table.unlock')}
             </Button>
           ) : (
@@ -210,7 +209,8 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }) => {
               dangerOutline
               onClick={(e) => {
                 locked(e, data.safeId);
-              }}>
+              }}
+            >
               {t('adminUsers.table.lock')}
             </Button>
           )}
@@ -302,18 +302,101 @@ export const AdminUsers = () => {
         .invoke<RootUsers>(
           'GetUsers',
           name.toLowerCase() || null,
-          openDate.from ? openDate.from : null,
-          openDate.to ? openDate.to : null,
+          openDate.from
+            ? moment(openDate.from)
+                .utcOffset('+00:00')
+                .set({ hour: 0, minute: 0, second: 0 })
+                .toDate()
+            : null,
+          openDate.to
+            ? moment(openDate.to)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : openDate.from
+            ? moment(openDate.from)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : null,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting,
+          sorting
         )
         .then((res) => {
+          let divisionSums: any[] = [];
           setLoading(false);
+          res.collection.forEach((item) => {
+            let convertBalances: any[] = [];
+            const {
+              balances,
+              claims,
+              creationDate,
+              depositsAmount,
+              email,
+              id,
+              isEmailConfirmed,
+              isLockedout,
+              isPhoneNumberConfirmed,
+              isTwoFactorEnabled,
+              languageCode,
+              lockoutEnd,
+              name,
+              phoneNumber,
+              roles,
+              safeId,
+            } = item;
+
+            balances.forEach((item) => {
+              const { balanceKind, exhaustBalanceKind, exhaustRatio, id, safeId, volume } = item;
+              convertBalances = [
+                ...convertBalances,
+                {
+                  balanceKind,
+                  exhaustBalanceKind,
+                  exhaustRatio,
+                  id,
+                  safeId,
+                  volume: (volume / 100000).toString(),
+                },
+              ];
+            });
+
+            divisionSums = [
+              ...divisionSums,
+              {
+                balances: convertBalances,
+                claims,
+                creationDate,
+                depositsAmount,
+                email,
+                id,
+                isEmailConfirmed,
+                isLockedout,
+                isPhoneNumberConfirmed,
+                isTwoFactorEnabled,
+                languageCode,
+                lockoutEnd,
+                name,
+                phoneNumber,
+                roles,
+                safeId,
+              },
+            ];
+          });
+
+          console.log(
+            "BEFORE DIVISION USERS BALANCES (each user have a massive 'balances')",
+            res.collection
+          );
+          console.log(
+            "AFTER DIVISION USERS BALANCES (each user have a massive 'balances')",
+            divisionSums
+          );
           setNum(20);
           console.log('USERS', res.collection);
           seTotalUsers(res.totalRecords);
-          setListDeposits(res.collection);
+          setListDeposits(divisionSums);
           setLoading(false);
         })
         .catch((err: Error) => {
@@ -331,11 +414,26 @@ export const AdminUsers = () => {
         .invoke<RootUsers>(
           'GetUsers',
           name.toLowerCase() || null,
-          openDate.from ? openDate.from : null,
-          openDate.to ? openDate.to : null,
+          openDate.from
+            ? moment(openDate.from)
+                .utcOffset('+00:00')
+                .set({ hour: 0, minute: 0, second: 0 })
+                .toDate()
+            : null,
+          openDate.to
+            ? moment(openDate.to)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : openDate.from
+            ? moment(openDate.from)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : null,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting,
+          sorting
         )
         .then((res) => {
           setListDeposits([]);
@@ -421,19 +519,12 @@ export const AdminUsers = () => {
             {open ? t('hide') : t('show')}
           </Styled.ShowHide>
         </Styled.FilterHeader>
-        <CSSTransition
-          in={open}
-          timeout={200}
-          classNames="filter"
-          unmountOnExit>
+        <CSSTransition in={open} timeout={200} classNames="filter" unmountOnExit>
           <Styled.SelectContainer>
             <Styled.SelectContainerInnerUsers>
               <Styled.SelectWrap style={{ minWidth: 280 }}>
                 <Styled.Label>{t('adminUsers.labelUser')}</Styled.Label>
-                <Input
-                  value={name}
-                  onChange={(e) => setName(e.target.value.toLowerCase())}
-                />
+                <Input value={name} onChange={(e) => setName(e.target.value.toLowerCase())} />
               </Styled.SelectWrap>
               <Styled.SelectWrap input>
                 <TestInput
@@ -473,7 +564,8 @@ export const AdminUsers = () => {
                     <Sort
                       active={listForSorting[index].active}
                       key={index}
-                      onClick={() => getActiveSort(index)}>
+                      onClick={() => getActiveSort(index)}
+                    >
                       {obj.text}
                     </Sort>
                   ))}
@@ -512,16 +604,10 @@ export const AdminUsers = () => {
 };
 
 const Window = styled(SortingWindow)`
-  right: 64px;
-  top: 226px;
-  @media (max-width: 992px) {
-    top: 230px;
-  }
-  @media (max-width: 768px) {
-    top: 210px;
-    right: 50px;
-  }
+  right: 0px;
+  top: 18px;
 `;
+
 const Sort = styled(SortingItem)`
   &:nth-child(3) {
     @media (max-width: 992px) {
@@ -642,6 +728,7 @@ const TableHeadItem = styled.li`
     }
   }
   &:last-child {
+    position: relative;
     @media only screen and (max-device-width: 992px) {
       text-align: center;
     }

@@ -106,7 +106,8 @@
     "users": "Members",
     "portfolio": "Portfolio",
     "toHome": "To the main",
-    "lottery": "Lottery"
+    "lottery": "Lottery",
+    "depositsPrograms": "Deposits programs"
   },
   "adminDeposit": {
     "uptitle": "Payouts",
@@ -225,7 +226,6 @@
       "payableAmount": "Payable amount",
       "pay": "Pay",
       "payed": "Payed",
-      "payAll": "Pay all",
       "success": "Payment was successful",
       "failed": "Payout error",
       "setAllAmount": "Set the entire amount of the deferred payment"
@@ -249,7 +249,8 @@
     "transferButton": "Transfer",
     "balanceOff": "Upon activation, the deposit will be debited",
     "condition": "Program conditions",
-    "add": "Add"
+    "add": "Add",
+    "showCondition": "Show condition"
   },
   "depositSuccess": {
     "title": "Deposit created successfully",
@@ -412,5 +413,31 @@
     "deposit": "Deposit",
     "btn": "Accept",
     "rule": "If % is not specified, then data is taken from the table"
+  },
+  "depositsPrograms": {
+    "name": "Name",
+    "depositSum": "Deposits sum",
+    "createDate": "Created date",
+    "procents": "Procents",
+    "desc": "Description"
+  },
+  "text": {
+    "tip_state_unsubscribed": "Subscribe to notifications",
+    "tip_state_subscribed": "You're subscribed to notifications",
+    "tip_state_blocked": "You've blocked notifications",
+    "message_prenotify": "Click to subscribe to notifications",
+    "message_action_subscribed": "Thanks for subscribing!",
+    "message_action_resubscribed": "You're subscribed to notifications",
+    "message_action_unsubscribed": "You won't receive notifications again",
+    "dialog_main_title": "Manage Site Notifications",
+    "dialog_main_button_subscribe": "SUBSCRIBE",
+    "dialog_main_button_unsubscribe": "UNSUBSCRIBE",
+    "dialog_blocked_title": "Unblock Notifications",
+    "dialog_blocked_message": "Follow these instructions to allow notifications:"
+  },
+  "tech": {
+    "desc": "The requested page has been removed or is temporarily unavailable. Go to ",
+    "main": "home page",
+    "tech": "Technical work in progress"
   }
 }

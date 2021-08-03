@@ -18,7 +18,7 @@ export const lightTheme = {
       , rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)), linear-gradient(
       82.3deg
       , #effff9 3.67%, #f3f9ff 22.57%, #fffdf0 44.98%, #fff0f0 73%, #f0f0ff 95.88% ), #ffffff`,
-  listBorder: 'rgba(81, 81, 114, 0.2)',
+  listBorder: 'rgba(81, 81, 114, 0.2)', 
   link: '#00e',
   gradient: 'linear-gradient(#39598A, #79D7ED)',
   bbdis: '#ccc',
@@ -61,6 +61,17 @@ export const lightTheme = {
   acceptAll: {
     bg: "#fff",
     rule: "rgba(0, 0, 0, 0.6)"
+  },
+  timerIcon: {
+    background: "rgba(255, 255, 255, 0.9)",
+    border: "1px solid rgba(86, 101, 127, 0.05)" 
+  },
+  tech: {
+    color: "#0E0D3D"
+  },
+  loader: {
+    bg: "rgba(0, 0, 0, 0.2)",
+    pointsColor: "#2b3595"
   }
 };
 
@@ -119,5 +130,17 @@ export const darkTheme = {
   acceptAll: {
     bg: "rgba(48,48,48,1)",
     rule: "#fff"
+  },
+  timerIcon: {
+    background: "rgba(33,33,33,1)",
+    border: "1px solid #000000" 
+  },
+  tech: {
+    color: "#fff"
+  },
+  loader: {
+    bg: "rgba(48,48,48,1)",
+    pointsColor: "#fff"
   }
 };
+ 
