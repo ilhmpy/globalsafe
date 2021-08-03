@@ -64,17 +64,18 @@ export const HubProvider: FC = ({ children }: any) => {
   }, [myToken]);
 
   useEffect(() => {
+    const cb = (data: any) => {
+      console.log('BalanceUpdate', data);
+      if (balanceList) {
+        const idx = balanceList.findIndex((item) => item.balanceKind === data.balanceKind);
+        setBalanceList([...balanceList.slice(0, idx), data, ...balanceList.slice(idx + 1)]);
+      }
+      if (data.balanceKind === 1) {
+        setBalance(data.volume);
+      }
+    };
     if (hubConnection) {
-      hubConnection.on('BalanceUpdate', (data) => {
-        console.log('BalanceUpdate', data);
-        if (balanceList) {
-          const idx = balanceList.findIndex((item) => item.balanceKind === data.balanceKind);
-          setBalanceList([...balanceList.slice(0, idx), data, ...balanceList.slice(idx + 1)]);
-        }
-        if (data.balanceKind === 1) {
-          setBalance(data.volume);
-        }
-      });
+      hubConnection.on('BalanceUpdate', cb);
       hubConnection
         .invoke('GetSigned')
         .then((res) => {
@@ -108,6 +109,7 @@ export const HubProvider: FC = ({ children }: any) => {
         });
     }
     return function cleanup() {
+      hubConnection?.off('BalanceUpdate', cb);
       if (hubConnection !== null) {
         hubConnection.stop();
       }

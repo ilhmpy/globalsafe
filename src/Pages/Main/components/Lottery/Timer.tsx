@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { AppContext } from '../../../../context/HubContext';
 import { RootClock } from '../../../../types/clock';
 import * as Styled from './Lottery.elements';
-import { ReactComponent as Prize } from "../../../../assets/svg/prize.svg";
+import { ReactComponent as Prize } from '../../../../assets/svg/prize.svg';
 
 type Props = {
   last?: string;
@@ -27,17 +27,18 @@ export const Timer: FC<Props> = ({
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const { t } = useTranslation();
-  const [ clickOnIcon, setClickOnIcon ] = useState<boolean>(false);
+  const [clickOnIcon, setClickOnIcon] = useState<boolean>(false);
 
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   const languale = lang === 'ru' ? 1 : 0;
 
   useEffect(() => {
     let cancel = false;
+    const cb = (data: any) => {
+      setDeadline(data.totalSeconds);
+    };
     if (hubConnection && !cancel) {
-      hubConnection.on('DrawCountdown', (data) => {
-        setDeadline(data.totalSeconds);
-      });
+      hubConnection.on('DrawCountdown', cb);
       hubConnection
         .invoke<RootClock>('GetNextDraw')
         .then((res) => {
@@ -48,6 +49,7 @@ export const Timer: FC<Props> = ({
         .catch((e) => console.log(e));
     }
     return () => {
+      hubConnection?.off('DrawCountdown', cb);
       cancel = true;
     };
   }, [hubConnection]);
@@ -79,7 +81,7 @@ export const Timer: FC<Props> = ({
         formatted = durations.format('d [дн] h [ч] m [мин]', { trim: false });
       } else {
         formatted = durations.format('d [d] h [h] m [m]', { trim: false });
-      };
+      }
       !cancel && setState(formatted);
       !cancel && setDeadline(deadline - 1);
     }, 1000);

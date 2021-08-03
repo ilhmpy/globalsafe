@@ -29,11 +29,12 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
 
   useEffect(() => {
     let clean = false;
+    const cb = (data: any) => {
+      console.log('DrawResult history', data);
+      !clean && repeat();
+    };
     if (hubConnection) {
-      hubConnection.on('DrawResult', (data) => {
-        console.log('DrawResult history', data);
-        !clean && repeat();
-      });
+      hubConnection.on('DrawResult', cb);
       hubConnection
         .invoke<RootLottery>('GetPrizes', 0, 5)
         .then((res) => {
@@ -49,6 +50,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
         .catch((e) => console.log(e));
     }
     return () => {
+      hubConnection?.off('DrawResult', cb);
       clean = true;
     };
   }, [hubConnection]);

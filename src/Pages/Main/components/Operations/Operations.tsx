@@ -20,11 +20,11 @@ export const Operations = () => {
 
   useEffect(() => {
     let clean = false;
-    
+    const cb = (data: Collection) => {
+      !clean && setNotifyList((notifyList) => [data, ...notifyList.slice(0, -1)]);
+    };
     if (hubConnection) {
-      hubConnection.on('OperationNotification', (data) => {
-        !clean && setNotifyList((notifyList) => [data, ...notifyList.slice(0, -1)]);
-      });
+      hubConnection.on('OperationNotification', cb);
       hubConnection
         .invoke<RootOperations>('GetOperationsNotifications', [2, 4, 5, 6, 7, 8], 0, 4)
         .then((res) => {
@@ -34,6 +34,7 @@ export const Operations = () => {
     }
     return () => {
       clean = true;
+      hubConnection?.off('OperationNotification', cb);
     };
   }, [hubConnection]);
 
