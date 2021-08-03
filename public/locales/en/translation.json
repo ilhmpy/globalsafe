@@ -408,11 +408,12 @@
   "acceptAll": {
     "title": "Accept all",
     "%": "payment",
-    "users": "Users",
+    "users": "User",
     "dateOfCreateDeposit": "Date of create deposit",
-    "deposit": "Deposit",
+    "deposit": "Deposits Programs",
     "btn": "Accept",
-    "rule": "If % is not specified, then data is taken from the table"
+    "range": "Range of opening deposits",
+    "accept": "Accept"
   },
   "depositsPrograms": {
     "name": "Name",

@@ -9,6 +9,7 @@ type ModalProps = {
   mobMarg?: boolean;
   children: ReactNode;
   paddingTop?: number;
+  style?: any;
 };
 
 export const Modal: React.FC<ModalProps> = ({
@@ -17,7 +18,8 @@ export const Modal: React.FC<ModalProps> = ({
   width,
   zIndex = '99999',
   mobMarg,
-  paddingTop
+  paddingTop,
+  style,
 }: ModalProps) => {
   const handleContainerClick = (e: React.MouseEvent) => {
     if (e.currentTarget === e.target) {
@@ -27,11 +29,11 @@ export const Modal: React.FC<ModalProps> = ({
 
   return (
     <Portal>
-      <ModalContainer zIndex={zIndex}>
-        <Center onClick={handleContainerClick}>
+      <ModalContainer zIndex={zIndex} style={style}>
+        <Center>
           <ModalComponent width={width} mobMarg={mobMarg} paddingTop={paddingTop}>
-            <span className="close" onClick={onClose}>&times;</span>
-            {children}
+              <span className="close" onClick={onClose}>&times;</span>
+              {children}
           </ModalComponent>
         </Center>
       </ModalContainer>
@@ -55,25 +57,24 @@ const Center = styled.div`
 `;
 
 const ModalContainer = styled.div<{ zIndex: string }>`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.2);
-  display: block;
-  transition: 0.3s;
-  z-index: ${(props) => props.zIndex};
-  overflow: auto;
-  @media (max-width: 576px) {
-    padding: 20px;
-  }
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    display: block;
+    transition: 0.3s;
+    z-index: ${(props) => props.zIndex};
+    overflow: auto;
+    @media (max-width: 576px) {
+      padding: 20px;
+    }
 `;
 
 const ModalComponent = styled.div<{ width?: number; mobMarg?: boolean; paddingTop?: number; }>`
   display: flex;
   flex-direction: column;
-  justify-content: center;
   margin: 50px auto;
   cursor: auto;
   background: ${(props) => props.theme.modal};
@@ -82,7 +83,6 @@ const ModalComponent = styled.div<{ width?: number; mobMarg?: boolean; paddingTo
   max-width: ${(props) => (props.width ? props.width + 'px' : '400px')};
   display: flex;
   flex-direction: column;
-  align-items: center;
   width: 100%;
   position: relative;
   /* padding: 20px; */
@@ -93,6 +93,14 @@ const ModalComponent = styled.div<{ width?: number; mobMarg?: boolean; paddingTo
       `;
     }
   }}
+
+  & > .wrap {
+    padding: 22px;
+  }
+
+  & .deposits_programs {
+    display: flex;
+  }
 
   & > span {
     color: ${(props) => props.theme.text3};

@@ -358,7 +358,7 @@ export const Approval: FC<Props> = ({
   };
 
   const paymentsConfirm = () => {
-    // setModal(true);
+    setModal(true);
     if (depositList.some((item) => item.state === 6)) {
       if (hubConnection) {
         hubConnection

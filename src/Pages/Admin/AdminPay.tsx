@@ -468,9 +468,6 @@ export const AdminPay = () => {
 
   return (
     <>
-      <Modal onClose={() => {}}>
-         <Styled.ModalTitle>{t("acceptAll.title")}</Styled.ModalTitle>
-      </Modal>
       <ReactNotification />
       <Styled.HeadBlock>
         <SelfUpTitle small>{t('adminPay.uptitle')}</SelfUpTitle>
