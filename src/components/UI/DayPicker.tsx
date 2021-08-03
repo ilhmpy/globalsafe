@@ -326,15 +326,17 @@ export const TestInput: FC<TestInputProps> = ({ label, openDate, setOpenDate }: 
                 setInputString(e.target.value);
                 const arr = e.target.value.split(' - ');
                 const fromSplitted = arr[0].split('.');
-                const toSplitted = arr[1].split('.');
+                const toSplitted = arr.length === 2 ? arr[1].split('.') : '';
 
                 setOpenDate({
                   from: moment(`${fromSplitted[1]}.${fromSplitted[0]}.${fromSplitted[2]}`)
                     .set({ hour: 12, minute: 0, second: 0 })
                     .toDate(),
-                  to: moment(`${toSplitted[1]}.${toSplitted[0]}.${toSplitted[2]}`)
-                    .set({ hour: 12, minute: 0, second: 0 })
-                    .toDate(),
+                  to: toSplitted
+                    ? moment(`${toSplitted[1]}.${toSplitted[0]}.${toSplitted[2]}`)
+                        .set({ hour: 12, minute: 0, second: 0 })
+                        .toDate()
+                    : undefined,
                 });
               }}
             ></InputDate>
