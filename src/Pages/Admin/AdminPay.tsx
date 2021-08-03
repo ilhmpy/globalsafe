@@ -47,9 +47,10 @@ import {
   WindowBody,
   WindowTitle,
 } from './Styled.elements';
+import { Modal } from "../../components/Modal/Modal";
+ 
 
-
-export const AdminPay = () => {
+export const AdminPay = () => { 
   const [active, setActive] = useState(0);
   const sizes = useWindowSize();
   const [sum, setSum] = useState<number[] | null>(null);
@@ -439,35 +440,9 @@ export const AdminPay = () => {
 
   return (
     <>
-        <Styled.ModalComponent visible={acceptAll}>
-          <Styled.ModalTitle>{t("acceptAll.title")}</Styled.ModalTitle>
-          <AcceptAllInput
-            onValue={() => {}}
-            placeholder="-"
-            value={""}
-            label={`${t("acceptAll.%")} %`}
-          />
-          <List
-            listLabel={t("acceptAll.users")}
-            list={["Account", "Account", "Account", "Account", "Account"]}
-            visible={usersListVisible}
-            setVisible={setUsersListVisible}
-          />
-          <List
-            listLabel={t("acceptAll.dateOfCreateDeposit")}
-            list={["Все даты"]}
-            visible={dateOfCreateDepositVisible}
-            setVisible={setDateOfCreateDepositVisible}
-          />
-          <List
-            listLabel={t("acceptAll.deposit")}
-            list={["INFINITY", "INFINITY", "INFINITY", "INFINITY", "INFINITY"]}
-            visible={depositVisible}
-            setVisible={setDepositVisible}
-          />
-          <Button danger onClick={() => {}} style={{ margin: "0 auto" }}>{t("acceptAll.btn")}</Button>
-          <Styled.ModalRule>{t("acceptAll.rule")}</Styled.ModalRule>
-        </Styled.ModalComponent>
+      <Modal onClose={() => {}}>
+         <Styled.ModalTitle>{t("acceptAll.title")}</Styled.ModalTitle>
+      </Modal>
       <ReactNotification />
       <Styled.HeadBlock>
         <SelfUpTitle small>{t('adminPay.uptitle')}</SelfUpTitle>
