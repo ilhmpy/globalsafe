@@ -468,7 +468,23 @@ export const AdminPay = () => {
 
   return (
     <>
-      <ReactNotification />
+      <Modal style={{ display: acceptAll ? "block" : "none"}} onClose={() => setAcceptAll(false)}>
+        <div className="wrap">
+          <Styled.ModalTitle>{t("acceptAll.title")}</Styled.ModalTitle>
+          <Styled.ModalDescription>{t("acceptAll.users")}:</Styled.ModalDescription>
+          <Styled.ModalItem>Azure777</Styled.ModalItem>
+          <Styled.ModalDescription>{t("acceptAll.deposit")}:</Styled.ModalDescription>
+          <div className="deposits_programs">
+            {["START", "START"].map((item, idx) => (
+              <Styled.ModalItem red key={idx}>{item}</Styled.ModalItem>
+            ))}
+          </div>
+          <Styled.ModalDescription>{t("acceptAll.range")}</Styled.ModalDescription>
+          <Styled.ModalItem>12.03.2021 - 13.05.2021</Styled.ModalItem>
+          <Button style={{ margin: "0 auto" }} danger>{t("acceptAll.accept")} 12%</Button>
+        </div>
+      </Modal>
+      <ReactNotification /> 
       <Styled.HeadBlock>
         <SelfUpTitle small>{t('adminPay.uptitle')}</SelfUpTitle>
         <Styled.UserName>
