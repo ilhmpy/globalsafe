@@ -415,11 +415,14 @@
     "rule": "If % is not specified, then data is taken from the table"
   },
   "depositsPrograms": {
+    "newProgram": "New Program",
     "name": "Name",
-    "depositSum": "Deposits sum",
-    "createDate": "Created date",
-    "procents": "Procents",
-    "desc": "Description"
+    "currency": "Currency",
+    "amount": "Amount",
+    "profitability": "Profitability",
+    "payment": "Payment",
+    "depositPeriod": "Period of the deposit",
+    "programActivity": "Activity of the program"
   },
   "text": {
     "tip_state_unsubscribed": "Subscribe to notifications",
