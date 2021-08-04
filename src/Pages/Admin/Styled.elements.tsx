@@ -746,38 +746,3 @@ export const ModalComponent = styled.div`
     margin-top: 80px;
   }
 `;
-
-export const ModalTitle = styled.h3`
-  color: ${({ theme }) => theme.text};
-  text-align: center;
-  font-weight: 500;
-  font-size: 22px;
-  margin-top: 6px;
-  margin-bottom: 25px;
-`;
-
-export const ModalDescription = styled.h3`
-  color: ${({ theme }) => theme.acceptAll.desc};
-  font-size: 12px;
-  letter-spacing: 0.1px;
-  opacity: ${({ theme }) => theme.acceptAll.opacity};
-  font-weight: 400;
-  margin-bottom: 10px;
-`;
-
-export const ModalItem = styled.h3<{ red?: boolean; }>`
-  color: ${({ theme }) => theme.acceptAll.item};
-  font-size: 14px;
-  font-weight: 500;
-  margin-bottom: 20px;
-
-  ${({ red }) => {
-    if (red) {
-      return `
-        color: #FF416E;
-        text-decoration: underline;
-        margin-right: 13px;
-      `
-    };
-  }}
-`;
