@@ -18,7 +18,6 @@ import { AppContext } from '../../../../../context/HubContext';
 import { Card } from '../../../../../globalStyles';
 import { OpenDate } from '../../../../../types/dates';
 import { CollectionListDeposits } from '../../../../../types/deposits';
-import { Notify } from '../../../../../types/notify';
 import { PaymentsCollection, RootPayments } from '../../../../../types/payments';
 import { SelectValues, SortingType } from '../../../../../types/sorting';
 import { DepositList } from '../../../AdminPay/DepositList';
@@ -41,6 +40,7 @@ import {
   WindowTitle,
 } from '../../../Styled.elements';
 import * as Styled from './Styled.elements';
+import { Notify } from "../../../../../types/notify";
 
 type Props = {
   listDeposits: CollectionListDeposits[];
@@ -50,9 +50,14 @@ type Props = {
   setModal: (boolean: boolean) => void;
   setPaymentsList: (value: any) => void;
   setTotalPayments: (value: any) => void;
+  setSettings: (value: any) => void;
+  setNotifications: (prevState: Notify[]) => void;
+  notifications: Notify[];
+  depositList: any;
+  setDepositList: (value: any) => void;
 };
 
-export const Approval: FC<Props> = ({
+export const Approval: FC<Props> = ({ 
   listDeposits,
   getPaymentsOverview,
   setProcent,
@@ -60,8 +65,12 @@ export const Approval: FC<Props> = ({
   setModal,
   setPaymentsList,
   setTotalPayments,
+  setSettings,
+  setNotifications,
+  notifications,
+  depositList,
+  setDepositList
 }: Props) => {
-  const [depositList, setDepositList] = useState<PaymentsCollection[]>([]);
   const [totalDeposits, setTotalDeposits] = useState(0);
   const [count, setCount] = useState(true);
   const [num, setNum] = useState(20);
@@ -73,7 +82,6 @@ export const Approval: FC<Props> = ({
     from: undefined,
     to: undefined,
   });
-  const [notifications, setNotifications] = useState<Notify[]>([]);
   const [openFilterOne, setOpenFilterOne] = useState(false);
 
   const [pageLength, setPageLength] = useState<number>(10);
@@ -240,10 +248,10 @@ export const Approval: FC<Props> = ({
       hubConnection
         .invoke('ConfirmDepositPayment', id)
         .then((res) => {
-          const key = depositList.findIndex((i) => i.safeId === id);
+          const key = depositList.findIndex((i: any) => i.safeId === id);
 
           if (key !== -1) {
-            const item = depositList.filter((i) => i.safeId === id)[0];
+            const item = depositList.filter((i: any) => i.safeId === id)[0];
             setDepositList([
               ...depositList.slice(0, key),
               { ...item, state: 5 },
@@ -264,10 +272,10 @@ export const Approval: FC<Props> = ({
       hubConnection
         .invoke('UnconfirmDepositPayment', id)
         .then((res) => {
-          const key = depositList.findIndex((i) => i.safeId === id);
+          const key = depositList.findIndex((i: any) => i.safeId === id);
 
           if (key !== -1) {
-            const item = depositList.filter((i) => i.safeId === id)[0];
+            const item = depositList.filter((i: any) => i.safeId === id)[0];
             setDepositList([
               ...depositList.slice(0, key),
               { ...item, state: 6 },
@@ -280,10 +288,6 @@ export const Approval: FC<Props> = ({
           console.log(err);
         });
     }
-  };
-
-  const createNotify = (item: Notify) => {
-    setNotifications([item]);
   };
 
   useEffect(() => {
@@ -357,50 +361,6 @@ export const Approval: FC<Props> = ({
     }
   };
 
-  const paymentsConfirm = () => {
-    setModal(true);
-    if (depositList.some((item) => item.state === 6)) {
-      if (hubConnection) {
-        hubConnection
-          .invoke(
-            'ConfirmAllDepositsPayment',
-            nameApproval ? nameApproval.toLowerCase() : null,
-            openDateApproval.from ? openDateApproval.from : null,
-            openDateApproval.to ? openDateApproval.to : null,
-            searchSafeIDApproval.length ? searchSafeIDApproval : null,
-            procent ? +procent / 100 : null
-          )
-          .then((res) => {
-            createNotify({
-              text: t('adminPay.success'),
-              error: false,
-              timeleft: 5,
-              id: notifications.length,
-            });
-
-            getPaymentsOverview();
-            submitApproval();
-          })
-          .catch((err: Error) => {
-            console.log(err);
-            createNotify({
-              text: t('adminPay.error'),
-              error: true,
-              timeleft: 5,
-              id: notifications.length,
-            });
-          });
-      }
-    } else {
-      createNotify({
-        text: t('adminPay.notPays'),
-        error: true,
-        timeleft: 5,
-        id: notifications.length,
-      });
-    }
-  };
-
   const onDelete = (id: number) => {
     setNotifications(notifications.filter((i) => i.id !== id));
   };
@@ -413,6 +373,7 @@ export const Approval: FC<Props> = ({
     });
     setCheckListApproval([]);
     setCheckList([]);
+    setSettings({ user: "", deposits: [], range: "", procent: "" });
 
     if (hubConnection) {
       setCurrentPage(1);
@@ -488,7 +449,10 @@ export const Approval: FC<Props> = ({
       <ReactNotification />
 
       <Styled.ButtonWrap>
-        <Button dangerOutline mb onClick={paymentsConfirm}>
+        <Button dangerOutline mb onClick={() => {
+          setSettings({ user: nameApproval, deposits: checkListApproval, range: openDateApproval, procent });
+          setModal(true);
+        }}>
           {t('adminPay.confirmButton')}
         </Button>
         <ProcentInput

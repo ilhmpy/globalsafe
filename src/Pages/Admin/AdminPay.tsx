@@ -46,6 +46,7 @@ import {
   WindowTitle,
 } from './Styled.elements';
 import { Modal } from "../../components/Modal/Modal";
+import { Notify } from '../../types/notify';
  
 export const AdminPay = () => {
   const [active, setActive] = useState(0);
@@ -177,6 +178,8 @@ export const AdminPay = () => {
   const [sortingForPay, setSortingForPay] = useState<SortingType[]>([]);
   const [acceptAll, setAcceptAll] = useState<boolean>(false);
 
+  const [notifications, setNotifications] = useState<Notify[]>([]);
+
   const [listForSortingForPay, setListForSortingForPay] = useState<SelectValues[]>([
     {
       text: 'Пользователь: От А до Я',
@@ -238,6 +241,7 @@ export const AdminPay = () => {
   const idProgramApproval = listDeposits.filter((i) => namesProgramApproval.includes(i.safeId));
   const searchSafeIDApproval = idProgramApproval.map((i) => i.safeId);
   const depositState = checkList.length ? checkList.map((i: any) => i.id) : [5, 6];
+  const [depositList, setDepositList] = useState<PaymentsCollection[]>([]);
 
   const handleClick = (id: number) => {
     if (id !== active) {
@@ -465,11 +469,119 @@ export const AdminPay = () => {
 
   const [dateOfCreateDepositVisible, setDateOfCreateDepositVisible] = useState(true);
   const [depositVisible, setDepositVisible] = useState(true);
-  const [filterSettings, setFilterSettings] = useState<{ user: any; deposits: any[]; range: any; }>({ 
+  const [filterSettings, setFilterSettings] = useState<{ user: string; deposits: any[]; range: any; procent: any; }>({ 
     user: "",
     deposits: [],
-    range: "" 
+    range: "",
+    procent: ""
   });
+
+  useEffect(() => {
+    console.log(filterSettings);
+  }, [filterSettings])
+
+  const createNotify = (item: Notify) => {
+    setNotifications([item]);
+  };
+
+  
+  const submitApproval = () => {
+    if (hubConnection) {
+      setCurrentPage(1);
+      setDepositList([]);
+      setLoading(true);
+
+      hubConnection
+        .invoke<RootPayments>(
+          'GetUsersDeposits',
+          depositState,
+          filterSettings.user ? filterSettings.user.toLowerCase() : null,
+          searchSafeIDApproval.length ? searchSafeIDApproval : null,
+          filterSettings.range.from
+            ? moment(filterSettings.range.from)
+                .utcOffset('+00:00')
+                .set({ hour: 0, minute: 0, second: 0 })
+                .toDate()
+            : null,
+          filterSettings.range.to
+            ? moment(filterSettings.range.to)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : filterSettings.range.from
+            ? moment(filterSettings.range.from)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          (currentPage - 1) * pageLength,
+          pageLength,
+          sorting
+        )
+        .then((res) => {
+          setTotalDeposits(res.totalRecords);
+          if (res.collection.length) {
+            setDepositList(res.collection);
+            setTotalDeposits(res.totalRecords);
+            setLoading(false);
+          }
+        })
+        .catch((err: Error) => {
+          console.log(err);
+          setLoading(false);
+        });
+    }
+  };
+
+
+  const paymentsConfirm = () => {
+    if (filterSettings.deposits.some((item) => item.state === 6)) {
+      if (hubConnection) {
+        hubConnection
+          .invoke(
+            'ConfirmAllDepositsPayment',
+            filterSettings.user ? filterSettings.user.toLowerCase() : null,
+            filterSettings.range.from ? filterSettings.range.from : null,
+            filterSettings.range.to ? filterSettings.range.to : null,
+            searchSafeIDApproval.length ? searchSafeIDApproval : null,
+            filterSettings.procent ? +filterSettings.procent / 100 : null
+          )
+          .then((res) => {
+            createNotify({
+              text: t('adminPay.success'),
+              error: false,
+              timeleft: 5,
+              id: notifications.length,
+            });
+
+            getPaymentsOverview();
+            submitApproval();
+          })
+          .catch((err: Error) => {
+            console.log(err);
+            createNotify({
+              text: t('adminPay.error'),
+              error: true,
+              timeleft: 5,
+              id: notifications.length,
+            });
+          });
+      }
+    } else {
+      createNotify({
+        text: t('adminPay.notPays'),
+        error: true,
+        timeleft: 5,
+        id: notifications.length,
+      });
+    }
+  };
   
   return (
     <>
@@ -481,12 +593,13 @@ export const AdminPay = () => {
           <Styled.ModalDescription>{t("acceptAll.deposit")}:</Styled.ModalDescription>
           <div className="deposits_programs">
             {filterSettings.deposits.length > 0 ? filterSettings.deposits.map((item, idx) => (
-              <Styled.ModalItem red key={idx}>{item}</Styled.ModalItem>
+              <Styled.ModalItem red key={idx}>{item.label}</Styled.ModalItem>
             )) : <Styled.ModalItem>Все</Styled.ModalItem>}
           </div>
           <Styled.ModalDescription>{t("acceptAll.range")}</Styled.ModalDescription>
-          <Styled.ModalItem>{filterSettings.range.length ? filterSettings.range : "Все"}</Styled.ModalItem>
-          <Button style={{ margin: "0 auto" }} danger>{t("acceptAll.accept")} 12%</Button>
+          <Styled.ModalItem>{filterSettings.range.from ? 
+          `${moment(filterSettings.range.from).format("DD.MM.YYYY")} - ${moment(filterSettings.range.to).format("DD.MM.YYYY")}` : "Все"}</Styled.ModalItem>
+          <Button style={{ margin: "0 auto" }} danger onClick={paymentsConfirm}>{t("acceptAll.accept")} {filterSettings.procent.length > 0 ? filterSettings.procent + "%" : "все"}</Button>
         </div>
       </Modal>
       <ReactNotification /> 
@@ -582,6 +695,11 @@ export const AdminPay = () => {
           setModal={setAcceptAll}
           setPaymentsList={setPaymentsList}
           setTotalPayments={setTotalPayments}
+          setSettings={setFilterSettings}
+          setNotifications={setNotifications}
+          notifications={notifications}
+          setDepositList={setDepositList}
+          depositList={depositList}
         />
       </Content>
 
