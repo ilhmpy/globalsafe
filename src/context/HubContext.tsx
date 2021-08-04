@@ -62,8 +62,10 @@ export const HubProvider: FC = ({ children }: any) => {
           console.log(e);
         });
     } catch(e) {
-      window.location.href = "/tech";
-    }
+      window.location.href = "/tech"; 
+      setUser(false);
+    }; 
+
     console.log(hubConnection);
   }, [myToken]);
 

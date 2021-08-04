@@ -103,27 +103,26 @@ const App: FC = () => {
       <Router>
         <div className="App">
           <GlobalStyle />
-
-          <Switch>
-            <Route
-              path="/"
-              component={Main}
-              push={OneSignal.push}
-              on={OneSignal.on}
-              getUserId={OneSignal.getUserId}
-              exact
-            />
-            <Route path="/admin" component={Admin} />
-            <Route path="/info" component={InfoMain} />
-            <Route path="/login" component={Authentication} />
-            <Route path="/register" component={Register} />
-            <Route path="/tech" component={TechWorks} />
-            <Route component={PageNotFound} />
-          </Switch>
+            <Switch>
+              <Route
+                path="/"
+                component={Main}
+                push={OneSignal.push}
+                on={OneSignal.on}
+                getUserId={OneSignal.getUserId}
+                exact
+              />
+              <Route path="/admin" component={Admin} />
+              <Route path="/info" component={InfoMain} />
+              <Route path="/login" component={Authentication} />
+              <Route path="/register" component={Register} />
+              <Route path="/tech" component={TechWorks} />
+              <Route component={PageNotFound} />
+           </Switch>
         </div>
       </Router>
     );
-  } else return <Loader />;
+  } else return <Loader />
 };
 
 export default App;
