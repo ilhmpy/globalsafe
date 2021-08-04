@@ -41,7 +41,8 @@ export const HubProvider: FC = ({ children }: any) => {
   const { i18n } = useTranslation();
 
   useEffect(() => {
-    const hubConnection = new signalR.HubConnectionBuilder()
+    try {
+      const hubConnection = new signalR.HubConnectionBuilder()
       .configureLogging(signalR.LogLevel.Debug)
       .withUrl(`${API_URL}/accounts`, {
         skipNegotiation: true,
@@ -50,21 +51,20 @@ export const HubProvider: FC = ({ children }: any) => {
       })
       .withAutomaticReconnect()
       .build();
-    console.log(hubConnection);
 
-    if (!hubConnection) {
+      hubConnection
+        .start()
+        .then(() => {
+          setHubConnection(hubConnection);
+        })
+        .catch((e) => {
+          setMyToken('');
+          console.log(e);
+        });
+    } catch(e) {
       window.location.href = "/tech";
-    };
-
-    hubConnection
-      .start()
-      .then(() => {
-        setHubConnection(hubConnection);
-      })
-      .catch((e) => {
-        setMyToken('');
-        console.log(e);
-      });
+    }
+    console.log(hubConnection);
   }, [myToken]);
 
   useEffect(() => {
