@@ -52,6 +52,10 @@ export const HubProvider: FC = ({ children }: any) => {
       .build();
     console.log(hubConnection);
 
+    if (!hubConnection) {
+      window.location.href = "/tech";
+    };
+
     hubConnection
       .start()
       .then(() => {
@@ -107,7 +111,7 @@ export const HubProvider: FC = ({ children }: any) => {
           setIsAdmin(false);
           setLoading(false);
         });
-    }
+    };
     return function cleanup() {
       hubConnection?.off('BalanceUpdate', cb);
       if (hubConnection !== null) {

@@ -117,7 +117,6 @@ const App: FC = () => {
             <Route path="/info" component={InfoMain} />
             <Route path="/login" component={Authentication} />
             <Route path="/register" component={Register} />
-            {/* tech works route for testing */}
             <Route path="/tech" component={TechWorks} />
             <Route component={PageNotFound} />
           </Switch>
