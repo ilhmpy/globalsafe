@@ -422,7 +422,9 @@
     "profitability": "Profitability",
     "payment": "Payment",
     "depositPeriod": "Period of the deposit",
-    "programActivity": "Activity of the program"
+    "programActivity": "Activity of the program",
+    "on": "On",
+    "off": "Off"
   },
   "text": {
     "tip_state_unsubscribed": "Subscribe to notifications",

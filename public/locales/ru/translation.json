@@ -414,14 +414,16 @@
     "rule": "Если % не указан, то данные берутся из таблицы"
   },
   "depositsPrograms": {
-    "newProgram":"Новая программа",
+    "newProgram": "Новая программа",
     "name": "Название",
     "currency": "Валюта",
     "amount": "Сумма",
     "profitability": "Доходность",
     "payment": "Выплата",
     "depositPeriod": "Срок депозита",
-    "programActivity": "Активность программы"
+    "programActivity": "Активность программы",
+    "on": "Вкл",
+    "off": "Выкл"
   },
   "text": {
     "tip_state_unsubscribed": "Подпишитесь на уведомления",

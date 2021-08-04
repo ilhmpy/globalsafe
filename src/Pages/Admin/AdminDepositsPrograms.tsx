@@ -1,9 +1,11 @@
 import React, { FC, useContext, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTranslation } from 'react-i18next';
+import Switch from 'react-switch';
 import styled from 'styled-components';
 import { ReactComponent as Exit } from '../../assets/svg/exit.svg';
 import { Button } from '../../components/Button/Button';
+import { Loading } from '../../components/UI/Loading';
 import { Content } from '../../components/UI/Tabs';
 import { UpTitle } from '../../components/UI/UpTitle';
 import { AppContext } from '../../context/HubContext';
@@ -127,6 +129,7 @@ export const AdminDepositsPrograms = () => {
       depositPeriod: '180 дней',
     },
   ]);
+  const [loading, setLoading] = useState(true);
 
   const [programs, setPrograms] = useState([
     { name: 'START' },
@@ -151,7 +154,7 @@ export const AdminDepositsPrograms = () => {
   return (
     <>
       <Styled.HeadBlock>
-        <UpTitle small>{t('adminMain.uptitle')}</UpTitle>
+        <UpTitle small>{t('sideNav.depositsPrograms')}</UpTitle>
         <Styled.UserName>
           <span>{user}</span>
           <Exit onClick={logOut} />
@@ -193,7 +196,7 @@ export const AdminDepositsPrograms = () => {
           <PaymentsTable>
             <TableHeader>
               <TableTitle>{t('sideNav.depositsPrograms')}</TableTitle>
-              <Button danger onClick={() => undefined} style={{ height: '40px' }}>
+              <Button danger onClick={() => undefined}>
                 {t('depositsPrograms.newProgram')}
               </Button>
             </TableHeader>
@@ -230,11 +233,13 @@ export const AdminDepositsPrograms = () => {
              */}
             </TableHead>
             {depositsPrograms.length ? (
-              <Scrollbars style={{ height: '500px' }}>
+              <Scrollbars style={{ height: '450px' }}>
                 {depositsPrograms.map((program, idx) => (
                   <TableList key={depositsPrograms.indexOf(program)} data={program} />
                 ))}
               </Scrollbars>
+            ) : loading ? (
+              <Loading />
             ) : (
               <Styled.NotFound>{t('notFound')}</Styled.NotFound>
             )}
@@ -247,6 +252,7 @@ export const AdminDepositsPrograms = () => {
 
 const TableList: FC<{ data: any }> = ({ data }: any) => {
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
 
   const onClose = () => {
     setOpen(false);
@@ -257,21 +263,45 @@ const TableList: FC<{ data: any }> = ({ data }: any) => {
     setOpen(true);
   };
 
+  const [checked, setChecked] = useState(false);
+
   return (
-    <div>
-      <TableBody onClick={modalOpen}>
-        <TableBodyItem>{data.name}</TableBodyItem>
-        <TableBodyItem>{data.currency}</TableBodyItem>
-        <TableBodyItem>{data.amount}</TableBodyItem>
-        <TableBodyItem>{data.profitability}</TableBodyItem>
-        <TableBodyItem>{data.payment}</TableBodyItem>
-        <TableBodyItem>{data.depositPeriod}</TableBodyItem>
-        <TableBodyItem>{data.programActivity}</TableBodyItem>
-        <TableBodyItem>{data.programActivity}</TableBodyItem>
-      </TableBody>
-    </div>
+    <TableBody onClick={modalOpen}>
+      <TableBodyItem>{data.name}</TableBodyItem>
+      <TableBodyItem>{data.currency}</TableBodyItem>
+      <TableBodyItem>{data.amount}</TableBodyItem>
+      <TableBodyItem>{data.profitability}</TableBodyItem>
+      <TableBodyItem>{data.payment}</TableBodyItem>
+      <TableBodyItem>{data.depositPeriod}</TableBodyItem>
+      <TableBodyItem checked={checked}>
+        <Switcher
+          uncheckedIcon={false}
+          checkedIcon={false}
+          onChange={() => setChecked(!checked)}
+          checked={checked}
+        />
+        <span>{t(checked ? 'depositsPrograms.off' : 'depositsPrograms.on')}</span>
+      </TableBodyItem>
+    </TableBody>
   );
 };
+
+const Switcher = styled(Switch)<{ checked: boolean }>`
+  > div.react-switch-bg {
+    background: ${(props) => (props.checked ? '#DBE7F1 !important' : '#ff416e !important')};
+    height: 18px !important;
+    width: 28px !important;
+  }
+  > div.react-switch-handle {
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.15), 0px 3px 1px rgba(0, 0, 0, 0.06) !important;
+    height: 16px !important;
+    width: 16px !important;
+    top: 1px !important;
+    left: 1px !important;
+    transform: ${(props) =>
+      props.checked ? 'translateX(0px) !important' : 'translateX(10px) !important'};
+  }
+`;
 
 const Input = styled.input`
   width: 100%;
@@ -288,35 +318,6 @@ const Input = styled.input`
   color: ${(props) => props.theme.text2};
   &:focus {
     outline: none;
-  }
-`;
-
-const TableBodyItem = styled.li`
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 16px;
-  color: ${(props) => props.theme.text2};
-
-  &:nth-child(1) {
-    max-width: 60px;
-    @media (max-width: 576px) {
-      max-width: 80px;
-    }
-  }
-
-  @media (max-width: 992px) {
-    display: none;
-    &:nth-child(1) {
-      display: block;
-    }
-
-    &:nth-child(2) {
-      display: block;
-    }
-
-    &:nth-child(6) {
-      display: block;
-    }
   }
 `;
 
@@ -348,8 +349,14 @@ const TableHeader = styled.div`
   align-items: center;
   justify-content: space-between;
   padding-bottom: 35px;
-
   position: relative;
+  > a {
+    height: 40px;
+    @media (max-width: 576px) {
+      width: 100%;
+      max-width: 100%;
+    }
+  }
 `;
 const TableTitle = styled.p`
   font-style: normal;
@@ -357,6 +364,9 @@ const TableTitle = styled.p`
   font-size: 18px;
   line-height: 21px;
   color: #0e0d3d;
+  @media (max-width: 576px) {
+    display: none;
+  }
 `;
 
 const TableHead = styled.ul`
@@ -383,6 +393,9 @@ const TableHead = styled.ul`
 `;
 
 const TableHeadItem = styled.li`
+  display: flex;
+  align-items: center;
+  gap: 5px;
   font-weight: normal;
   font-size: 12px;
   line-height: 14px;
@@ -392,63 +405,44 @@ const TableHeadItem = styled.li`
   color: ${(props) => props.theme.thHead};
   width: 100%;
 
-  @media (max-width: 992px) {
-    display: none;
-    &:nth-child(1) {
-      display: block;
-    }
-
-    &:nth-child(2) {
-      display: block;
-    }
-
-    &:nth-child(6) {
-      display: block;
-    }
-  }
-
   &:nth-child(1) {
     max-width: 85px;
-    @media (max-width: 576px) {
-      max-width: 80px;
-    }
   }
   &:nth-child(2) {
     max-width: 90px;
     @media (max-width: 576px) {
-      max-width: 80px;
+      display: none;
     }
   }
   &:nth-child(3) {
     max-width: 155px;
-    @media (max-width: 576px) {
-      max-width: 80px;
+    @media (max-width: 992px) {
+      max-width: 110px;
+    }
+    @media (max-width: 768px) {
+      display: none;
     }
   }
   &:nth-child(4) {
     max-width: 100px;
-    @media (max-width: 576px) {
-      max-width: 80px;
+    @media (max-width: 480px) {
+      display: none;
     }
   }
   &:nth-child(5) {
     max-width: 140px;
-    @media (max-width: 576px) {
-      max-width: 80px;
+    @media (max-width: 768px) {
+      display: none;
     }
   }
   &:nth-child(6) {
     max-width: 120px;
     @media (max-width: 576px) {
-      max-width: 80px;
+      display: none;
     }
   }
   &:nth-child(7) {
     max-width: 155px;
-    @media (max-width: 992px) {
-      max-width: 40px;
-      display: none;
-    }
   }
 `;
 
@@ -458,13 +452,21 @@ const Window = styled(SortingWindow)`
 `;
 
 const TableBody = styled(TableHead)`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 0;
+  padding: 25px 5px;
   cursor: pointer;
   transition: 0.3s;
   &:hover {
     background: rgba(66, 139, 202, 0.109);
+  }
+`;
+const TableBodyItem = styled(TableHeadItem)<{ checked?: boolean }>`
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 16px;
+  letter-spacing: 0.1px;
+  color: ${(props) => props.theme.text2};
+  width: 100%;
+  > span {
+    color: ${(props) => (props.checked ? '' : '#FF416E')};
   }
 `;
