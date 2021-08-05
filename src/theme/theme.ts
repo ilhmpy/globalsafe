@@ -60,7 +60,9 @@ export const lightTheme = {
   },
   acceptAll: {
     bg: "#fff",
-    rule: "rgba(0, 0, 0, 0.6)"
+    desc: "#56657F",
+    opacity: "60%",
+    item: "#515172"
   },
   timerIcon: {
     background: "rgba(255, 255, 255, 0.9)",
@@ -78,7 +80,7 @@ export const lightTheme = {
 export const darkTheme = {
   body: 'rgba(48,48,48,1)',
   text: '#FFF',
-  toggleBorder: '#6B8096',
+  toggleBorder: '#6B8096', 
   buttonBorder: '#FF416E',
   text2: '#E2E2E2',
   text3: '#fff',
@@ -129,7 +131,9 @@ export const darkTheme = {
   },
   acceptAll: {
     bg: "rgba(48,48,48,1)",
-    rule: "#fff"
+    desc: "#fff",
+    opacity: "100%",
+    item: "#fff"
   },
   timerIcon: {
     background: "rgba(33,33,33,1)",

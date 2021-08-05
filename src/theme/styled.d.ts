@@ -54,7 +54,9 @@ declare module 'styled-components' {
     };
     acceptAll: {
       bg: string;
-      rule: string;
+      desc: string;
+      opacity: string;
+      item: string; 
     };
     timerIcon: {
       background: string;

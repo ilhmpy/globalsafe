@@ -45,7 +45,9 @@ import {
   WindowBody,
   WindowTitle,
 } from './Styled.elements';
-
+import { Modal } from "../../components/Modal/Modal";
+import { Notify } from '../../types/notify';
+ 
 export const AdminPay = () => {
   const [active, setActive] = useState(0);
   const sizes = useWindowSize();
@@ -174,7 +176,6 @@ export const AdminPay = () => {
 
   const [sortingWindowOpenForPay, setSortingWindowOpenForPay] = useState(false);
   const [sortingForPay, setSortingForPay] = useState<SortingType[]>([]);
-  const [acceptAll, setAcceptAll] = useState<boolean>(false);
 
   const [listForSortingForPay, setListForSortingForPay] = useState<SelectValues[]>([
     {
@@ -467,38 +468,7 @@ export const AdminPay = () => {
 
   return (
     <>
-      <Styled.ModalComponent visible={acceptAll}>
-        <Styled.ModalTitle>{t('acceptAll.title')}</Styled.ModalTitle>
-        <AcceptAllInput
-          onValue={() => undefined}
-          placeholder="-"
-          value={''}
-          label={`${t('acceptAll.%')} %`}
-        />
-        <List
-          listLabel={t('acceptAll.users')}
-          list={['Account', 'Account', 'Account', 'Account', 'Account']}
-          visible={usersListVisible}
-          setVisible={setUsersListVisible}
-        />
-        <List
-          listLabel={t('acceptAll.dateOfCreateDeposit')}
-          list={['Все даты']}
-          visible={dateOfCreateDepositVisible}
-          setVisible={setDateOfCreateDepositVisible}
-        />
-        <List
-          listLabel={t('acceptAll.deposit')}
-          list={['INFINITY', 'INFINITY', 'INFINITY', 'INFINITY', 'INFINITY']}
-          visible={depositVisible}
-          setVisible={setDepositVisible}
-        />
-        <Button danger onClick={() => undefined} style={{ margin: '0 auto' }}>
-          {t('acceptAll.btn')}
-        </Button>
-        <Styled.ModalRule>{t('acceptAll.rule')}</Styled.ModalRule>
-      </Styled.ModalComponent>
-      <ReactNotification />
+      <ReactNotification /> 
       <Styled.HeadBlock>
         <SelfUpTitle small>{t('adminPay.uptitle')}</SelfUpTitle>
         <Styled.UserName>
@@ -588,7 +558,6 @@ export const AdminPay = () => {
           listDeposits={listDeposits}
           setProcent={setProcent}
           procent={procent}
-          setModal={setAcceptAll}
           setPaymentsList={setPaymentsList}
           setTotalPayments={setTotalPayments}
         />
