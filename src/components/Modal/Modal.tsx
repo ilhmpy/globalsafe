@@ -22,6 +22,7 @@ export const Modal: React.FC<ModalProps> = ({
   style,
 }: ModalProps) => {
   const handleContainerClick = (e: React.MouseEvent) => {
+    console.log(e.currentTarget, e.target)
     if (e.currentTarget === e.target) {
       onClose();
     }
@@ -29,7 +30,7 @@ export const Modal: React.FC<ModalProps> = ({
 
   return (
     <Portal>
-      <ModalContainer zIndex={zIndex} style={style}>
+      <ModalContainer zIndex={zIndex} style={style} onClick={onClose}>
         <Center>
           <ModalComponent width={width} mobMarg={mobMarg} paddingTop={paddingTop}>
               <span className="close" onClick={onClose}>&times;</span>
