@@ -16,6 +16,7 @@ type Context = {
   balance: null | number;
   isAdmin: boolean | null;
   balanceList: BalanceList[] | null;
+  isFailed: boolean | null;
 };
 
 export const AppContext = React.createContext<Context>({
@@ -27,6 +28,7 @@ export const AppContext = React.createContext<Context>({
   balance: null,
   isAdmin: null,
   balanceList: null,
+  isFailed: null,
 });
 
 export const HubProvider: FC = ({ children }: any) => {
@@ -37,34 +39,36 @@ export const HubProvider: FC = ({ children }: any) => {
   const [isAdmin, setIsAdmin] = useState<null | boolean>(null);
   const [myToken, setMyToken] = useLocalStorage('token');
   const [balanceList, setBalanceList] = useState<BalanceList[] | null>(null);
+  const [isFailed, setIsFailed] = useState<boolean | null>(null);
   const history = useHistory();
   const { i18n } = useTranslation();
 
   useEffect(() => {
-    try {
-      const hubConnection = new signalR.HubConnectionBuilder()
-      .configureLogging(signalR.LogLevel.Debug)
-      .withUrl(`${API_URL}/accounts`, {
-        skipNegotiation: true,
-        transport: signalR.HttpTransportType.WebSockets,
-        accessTokenFactory: () => myToken,
-      })
-      .withAutomaticReconnect()
-      .build();
+    const hubConnection = new signalR.HubConnectionBuilder()
+    .configureLogging(signalR.LogLevel.Debug)
+    .withUrl(`${API_URL}/accounts`, {
+      skipNegotiation: true,
+      transport: signalR.HttpTransportType.WebSockets,
+      accessTokenFactory: () => myToken,
+    })
+    .withAutomaticReconnect()
+    .build()
 
-      hubConnection
-        .start()
-        .then(() => {
-          setHubConnection(hubConnection);
-        })
-        .catch((e) => {
-          setMyToken('');
-          console.log(e);
-        });
-    } catch(e) {
-      window.location.href = "/tech"; 
-      setUser(false);
-    }; 
+    hubConnection
+      .start()
+      .then(() => {
+        setHubConnection(hubConnection);
+        if (isFailed == true) {
+          setIsFailed(false);
+        };
+      })
+      .catch((e: Error) => {
+        console.error(e)
+        setMyToken('');
+        console.log(e);
+        setIsFailed(true);
+        setUser("");
+      });
 
     console.log(hubConnection);
   }, [myToken]);
@@ -144,6 +148,7 @@ export const HubProvider: FC = ({ children }: any) => {
         balance,
         isAdmin,
         balanceList,
+        isFailed
       }}
     >
       {children}

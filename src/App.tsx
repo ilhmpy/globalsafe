@@ -1,6 +1,6 @@
 import React, { FC, useCallback, useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { Loader } from './components/Loader/Loader';
 import { APP_ID, APP_SAFARI_ID } from './constantes/onesignal';
 import { AppContext } from './context/HubContext';
@@ -25,6 +25,7 @@ const App: FC = () => {
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const user = appContext.user;
+  const isFailed = appContext.isFailed;
   const { t } = useTranslation();
 
   const subscribe = useCallback(
@@ -95,10 +96,22 @@ const App: FC = () => {
       } catch (e) {
         console.error(e);
       }
-    }
+    } 
   }, [user]);
+  
+  useEffect(() => {
+    if (isFailed != null) {
+      if (isFailed && window.location.pathname != "/tech") {
+        window.location.href = "/tech";
+      };
 
-  if (user != null) {
+      if (isFailed == false) {
+        window.location.href = "/";
+      }
+    };
+  }, [isFailed]);
+
+  if (user != null) { 
     return (
       <Router>
         <div className="App">
@@ -122,7 +135,7 @@ const App: FC = () => {
         </div>
       </Router>
     );
-  } else return <Loader />
+  } else return <Loader /> 
 };
 
 export default App;
