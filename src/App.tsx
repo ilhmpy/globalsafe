@@ -99,24 +99,27 @@ const App: FC = () => {
       }
     } 
   }, [user]);
-  
+
   useEffect(() => {
-    fetch(`https://static-global-s-msn-com.akamaized.net/hp-neu/sc/2b/a5ea21.ico?d='${Date.now()}`)
-      .then(res => {
-        if (res.ok && isFailed != null) {
-          if (isFailed && window.location.pathname != "/tech") {
-            window.location.href = "/tech";
-          };
-          if (isFailed == false) {
-            window.location.href = "/";
-          };
-        };
-      })
-      .catch((e) => {
+    if (isFailed != null) {
+      if (isFailed) {
+        fetch(`https://static-global-s-msn-com.akamaized.net/hp-neu/sc/2b/a5ea21.ico?d='${Date.now()}`)
+          .then(res => {
+            if (res.ok && window.location.pathname != "/tech") {
+              window.location.href = "/tech";
+            };
+          })
+          .catch(e => {
+            if (window.location.pathname == "/tech") {
+              window.location.href = "/";
+            };
+          });
+      } else {
         if (window.location.pathname == "/tech") {
           window.location.href = "/";
         };
-      });
+      };
+    }
   }, [isFailed]);
 
   return (
