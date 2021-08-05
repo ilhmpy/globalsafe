@@ -22,16 +22,21 @@ export const Modal: React.FC<ModalProps> = ({
   style,
 }: ModalProps) => {
   const handleContainerClick = (e: React.MouseEvent) => {
-    console.log(e.currentTarget, e.target)
-    if (e.currentTarget === e.target) {
+   // console.log(e.currentTarget.parentNode, e.currentTarget)
+    /* if (e.target.classList.contains("bbg")) {
+      console.log(e.target.classList)
+     // onClose();
+    }; */
+
+    if (e.currentTarget == e.target) {
       onClose();
     }
   };
 
   return (
     <Portal>
-      <ModalContainer zIndex={zIndex} style={style} onClick={onClose}>
-        <Center>
+      <ModalContainer zIndex={zIndex} style={style} className="bbg" >
+        <Center onClick={handleContainerClick}>
           <ModalComponent width={width} mobMarg={mobMarg} paddingTop={paddingTop}>
               <span className="close" onClick={onClose}>&times;</span>
               {children}
