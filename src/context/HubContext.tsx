@@ -58,7 +58,8 @@ export const HubProvider: FC = ({ children }: any) => {
       .start()
       .then(() => {
         setHubConnection(hubConnection);
-        if (isFailed == true) {
+        console.log("connected", isFailed);
+        if (window.location.pathname == "/tech") {
           setIsFailed(false);
         };
       })
@@ -66,12 +67,13 @@ export const HubProvider: FC = ({ children }: any) => {
         console.error(e)
         setMyToken('');
         console.log(e);
+        console.log("notConnected", isFailed);
         setIsFailed(true);
         setUser("");
       });
 
     console.log(hubConnection);
-  }, [myToken]);
+  }, [myToken, isFailed]);
 
   useEffect(() => {
     const cb = (data: any) => {

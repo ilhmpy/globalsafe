@@ -107,7 +107,7 @@ const App: FC = () => {
 
       if (isFailed == false) {
         window.location.href = "/";
-      }
+      };
     };
   }, [isFailed]);
 
