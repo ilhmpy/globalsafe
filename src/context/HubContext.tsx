@@ -46,7 +46,7 @@ export const HubProvider: FC = ({ children }: any) => {
   useEffect(() => {
     const hubConnection = new signalR.HubConnectionBuilder()
     .configureLogging(signalR.LogLevel.Debug)
-    .withUrl(`${API_URL}/accounts`, {
+    .withUrl(`${API_URL}/account s`, {
       skipNegotiation: true,
       transport: signalR.HttpTransportType.WebSockets,
       accessTokenFactory: () => myToken,

@@ -1,3 +1,4 @@
+import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 import React, { FC, useCallback, useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
@@ -100,42 +101,49 @@ const App: FC = () => {
   }, [user]);
   
   useEffect(() => {
-    if (isFailed != null) {
-      if (isFailed && window.location.pathname != "/tech") {
-        window.location.href = "/tech";
-      };
-
-      if (isFailed == false) {
-        window.location.href = "/";
-      };
-    };
+    fetch(`https://static-global-s-msn-com.akamaized.net/hp-neu/sc/2b/a5ea21.ico?d='${Date.now()}`)
+      .then(res => {
+        if (res.ok && isFailed != null) {
+          if (isFailed && window.location.pathname != "/tech") {
+            window.location.href = "/tech";
+          };
+          if (isFailed == false) {
+            window.location.href = "/";
+          };
+        };
+      })
+      .catch((e) => {
+        if (window.location.pathname == "/tech") {
+          window.location.href = "/";
+        };
+      });
   }, [isFailed]);
 
-  if (user != null) { 
-    return (
-      <Router>
-        <div className="App">
-          <GlobalStyle />
-            <Switch>
-              <Route
-                path="/"
-                component={Main}
-                push={OneSignal.push}
-                on={OneSignal.on}
-                getUserId={OneSignal.getUserId}
-                exact
-              />
-              <Route path="/admin" component={Admin} />
-              <Route path="/info" component={InfoMain} />
-              <Route path="/login" component={Authentication} />
-              <Route path="/register" component={Register} />
-              <Route path="/tech" component={TechWorks} />
-              <Route component={PageNotFound} />
-           </Switch>
-        </div>
-      </Router>
-    );
-  } else return <Loader /> 
+  return (
+    <Router>
+      <div className="App">
+        <GlobalStyle />
+
+        <Switch>
+          <Route
+            path="/"
+            component={Main}
+            push={OneSignal.push}
+            on={OneSignal.on}
+            getUserId={OneSignal.getUserId}
+            exact
+          />
+          <Route path="/admin" component={Admin} />
+          <Route path="/info" component={InfoMain} />
+          <Route path="/login" component={Authentication} />
+          <Route path="/register" component={Register} />
+          {/* tech works route for testing */}
+          <Route path="/tech" component={TechWorks} />
+          <Route component={PageNotFound} />
+        </Switch>
+      </div>
+    </Router>
+  );
 };
 
 export default App;
