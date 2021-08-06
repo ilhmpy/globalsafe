@@ -31,16 +31,35 @@ const App: FC = () => {
   const [online, setOnline] = useState<boolean | null>(null);
   const { t } = useTranslation();
 
+  useEffect(() => {
+    setOnline(navigator.onLine);
+  }, []);
+
+  window.addEventListener("online", onlineState);
+  window.addEventListener("offline", onlineState);
+
   function onlineState() {
     setOnline(window.navigator.onLine);
     console.log("online update state event working, and set online/offline status")
-  };
+  }; 
 
   useEffect(() => {
-    window.addEventListener("online", () => onlineState);
-    window.addEventListener("offline", () => onlineState);
-    console.log(window.navigator.onLine, "use effect current online status(navigator.onLine)");
-  }, [window.navigator.onLine])
+    if (isFailed != null) {
+      if (online && window.location.pathname != "/tech") {
+        console.log("user online but server not working")
+        window.location.href = "/tech";
+      };
+
+      if (!online && window.location.pathname == "/tech") {
+        console.log("user offline")
+        window.location.href = "/";
+      }
+
+      if (isFailed == false && window.location.pathname == "/tech") {
+        window.location.href = "/";
+      };
+    };
+  }, [isFailed, navigator.onLine]);
 
   const subscribe = useCallback(
     (id: string) => {
@@ -112,23 +131,6 @@ const App: FC = () => {
       }
     } 
   }, [user]);
-
-  useEffect(() => {
-    if (isFailed != null && isFailed) {
-      if (online && window.location.pathname != "/tech") {
-        console.log("user online but sever not working")
-        window.location.href = "/tech";
-      };
-      if (!online && window.location.pathname == "/tech") {
-        console.log("user offline")
-        window.location.href = "/";
-      }
-    } else {
-      if (window.location.pathname == "/tech") {
-        window.location.href = "/";
-      };
-    };
-  }, [isFailed]);
 
   return (
     <Router>
