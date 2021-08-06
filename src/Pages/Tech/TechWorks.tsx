@@ -13,9 +13,7 @@ export default function TechWorks() {
     return (
         <>
            <Styled.TechHeader>
-             <a href="/">
-                { theme == "light" ? ( <DarkLogo /> ) : ( <WhiteLogo /> ) }
-             </a>
+              { theme == "light" ? ( <DarkLogo /> ) : ( <WhiteLogo /> ) }
           </Styled.TechHeader>
           <Styled.TechContainer>
               <Styled.Tech />
@@ -24,5 +22,5 @@ export default function TechWorks() {
               </Styled.TechDescription>
           </Styled.TechContainer>
         </>
-    )
+    );
 };

@@ -23,6 +23,7 @@
     "moment": "^2.29.1",
     "moment-duration-format": "^2.3.2",
     "node-sass": "^5.0.0",
+    "online-js": "^1.0.2",
     "openssl": "^1.1.0",
     "rc-slider": "^9.7.2",
     "react": "^17.0.1",
