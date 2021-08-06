@@ -103,13 +103,16 @@ const App: FC = () => {
   useEffect(() => {
     if (isFailed != null) {
       if (isFailed) {
-        fetch(`https://static-global-s-msn-com.akamaized.net/hp-neu/sc/2b/a5ea21.ico?d='${Date.now()}`)
+        fetch(`https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js`)
           .then(res => {
+            console.log(res);
+            console.log("connected but server is don't working");
             if (res.ok && window.location.pathname != "/tech") {
               window.location.href = "/tech";
             };
           })
           .catch(e => {
+            console.log("server maybe working but user don't have internet");
             if (window.location.pathname == "/tech") {
               window.location.href = "/";
             };
@@ -119,7 +122,7 @@ const App: FC = () => {
           window.location.href = "/";
         };
       };
-    }
+    };
   }, [isFailed]);
 
   return (
