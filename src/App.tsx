@@ -1,5 +1,5 @@
 import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
-import React, { FC, useCallback, useContext, useEffect } from 'react';
+import React, { FC, useCallback, useContext, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { Loader } from './components/Loader/Loader';
@@ -12,10 +12,11 @@ import { Main } from './Pages/Main/Main';
 import { InfoMain } from './Pages/PrivateArea';
 import PageNotFound from './Pages/Tech/PageNotFound';
 import TechWorks from './Pages/Tech/TechWorks';
+
 declare global {
   interface Window {
     OneSignal: any;
-  }
+  } 
 }
 const App: FC = () => {
   const token = localStorage.getItem('token');
@@ -27,7 +28,19 @@ const App: FC = () => {
   const hubConnection = appContext.hubConnection;
   const user = appContext.user;
   const isFailed = appContext.isFailed;
+  const [online, setOnline] = useState<boolean | null>(null);
   const { t } = useTranslation();
+
+  function onlineState() {
+    setOnline(window.navigator.onLine);
+    console.log("online update state event working, and set online/offline status")
+  };
+
+  useEffect(() => {
+    window.addEventListener("online", () => onlineState);
+    window.addEventListener("offline", () => onlineState);
+    console.log(window.navigator.onLine, "use effect current online status(navigator.onLine)");
+  }, [window.navigator.onLine])
 
   const subscribe = useCallback(
     (id: string) => {
@@ -41,7 +54,7 @@ const App: FC = () => {
     [hubConnection]
   );
 
-  const unSubscribe = useCallback(
+  const unSubscribe = useCallback( 
     (id: string) => {
       if (hubConnection) {
         hubConnection
@@ -101,26 +114,18 @@ const App: FC = () => {
   }, [user]);
 
   useEffect(() => {
-    if (isFailed != null) {
-      if (isFailed) {
-        fetch(`https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js`)
-          .then(res => {
-            console.log(res);
-            console.log("connected but server is don't working");
-            if (res.ok && window.location.pathname != "/tech") {
-              window.location.href = "/tech";
-            };
-          })
-          .catch(e => {
-            console.log("server maybe working but user don't have internet");
-            if (window.location.pathname == "/tech") {
-              window.location.href = "/";
-            };
-          });
-      } else {
-        if (window.location.pathname == "/tech") {
-          window.location.href = "/";
-        };
+    if (isFailed != null && isFailed) {
+      if (online && window.location.pathname != "/tech") {
+        console.log("user online but sever not working")
+        window.location.href = "/tech";
+      };
+      if (!online && window.location.pathname == "/tech") {
+        console.log("user offline")
+        window.location.href = "/";
+      }
+    } else {
+      if (window.location.pathname == "/tech") {
+        window.location.href = "/";
       };
     };
   }, [isFailed]);
