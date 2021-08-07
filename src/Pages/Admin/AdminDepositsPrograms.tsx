@@ -1,15 +1,16 @@
 import React, { FC, useContext, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTranslation } from 'react-i18next';
-import Switch from 'react-switch';
 import styled from 'styled-components';
 import { ReactComponent as Exit } from '../../assets/svg/exit.svg';
 import { Button } from '../../components/Button/Button';
+import { Switcher } from '../../components/Switcher';
 import { Loading } from '../../components/UI/Loading';
 import { Content } from '../../components/UI/Tabs';
 import { UpTitle } from '../../components/UI/UpTitle';
 import { AppContext } from '../../context/HubContext';
 import { Card } from '../../globalStyles';
+import { DepositProgramForm } from './DepositProgramForm';
 import * as Styled from './Styled.elements';
 import { SortingWindow } from './Styled.elements';
 
@@ -131,25 +132,12 @@ export const AdminDepositsPrograms = () => {
   ]);
   const [loading, setLoading] = useState(true);
 
-  const [programs, setPrograms] = useState([
-    { name: 'START' },
-    { name: 'START' },
-    { name: 'START' },
-    { name: 'START' },
-    { name: 'START' },
-    { name: 'START' },
-  ]);
-  const [openFilter, setOpenFilter] = useState(false);
+  const [openNewProgram, setOpenNewProgram] = useState(false);
 
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const user = appContext.user;
   const logOut = appContext.logOut;
-  const [list, setList] = useState(['START', 'MASTER', 'MAIN']);
-  const [checkList, setCheckList] = useState([]);
-  const [procents, setProcents] = useState([]);
-  const [procentsList, setProcentsList] = useState(['0%', '30%', '50%']);
-  const [filter, setFilter] = useState(false);
 
   return (
     <>
@@ -161,89 +149,41 @@ export const AdminDepositsPrograms = () => {
         </Styled.UserName>
       </Styled.HeadBlock>
 
-      {/* <Styled.FilterBlock>
-        <Styled.FilterHeader>
-          <Styled.FilterName>{t('adminDeposit.filter')}</Styled.FilterName>
-          <Styled.ShowHide onClick={() => setOpenFilter(!openFilter)}>
-            {openFilter ? t('hide') : t('show')}
-          </Styled.ShowHide>
-        </Styled.FilterHeader>
-        <CSSTransition in={openFilter} timeout={200} classNames="filter" unmountOnExit>
-          <>
-            <ContentWrap>
-              <Styled.SelectWrap style={{ minWidth: 280 }}>
-                <Styled.Label>{t('depositsPrograms.name')}</Styled.Label>
-                <Select checkList={checkList} setCheckList={setCheckList} values={list} />
-              </Styled.SelectWrap>
-              <Styled.SelectWrap style={{ minWidth: 280 }}>
-                <Styled.Label>{t('depositsPrograms.depositSum')}</Styled.Label>
-                <Input value={''} onChange={(value) => undefined} />
-              </Styled.SelectWrap>
-              <Styled.SelectWrap style={{ minWidth: 133 }}>
-                <Styled.Label>{t('depositsPrograms.procents')}</Styled.Label>
-                <Select checkList={procents} setCheckList={setProcents} values={procentsList} />
-              </Styled.SelectWrap>
-              <Button danger onClick={() => undefined} style={{ height: '40px' }}>
-                {t('adminDeposit.btnApply')}
-              </Button>
-            </ContentWrap>
-          </>
-        </CSSTransition>
-      </Styled.FilterBlock> */}
-
       <Content active={true}>
         <CardTable>
-          <PaymentsTable>
-            <TableHeader>
-              <TableTitle>{t('sideNav.depositsPrograms')}</TableTitle>
-              <Button danger onClick={() => undefined}>
-                {t('depositsPrograms.newProgram')}
-              </Button>
-            </TableHeader>
+          {openNewProgram ? (
+            <DepositProgramForm setOpenNewProgram={setOpenNewProgram} />
+          ) : (
+            <PaymentsTable>
+              <TableHeader>
+                <TableTitle>{t('sideNav.depositsPrograms')}</TableTitle>
+                <Button danger onClick={() => setOpenNewProgram(true)}>
+                  {t('depositsPrograms.newProgram')}
+                </Button>
+              </TableHeader>
 
-            <TableHead>
-              <TableHeadItem>{t('depositsPrograms.name')}</TableHeadItem>
-              <TableHeadItem>{t('depositsPrograms.currency')}</TableHeadItem>
-              <TableHeadItem>{t('depositsPrograms.amount')}</TableHeadItem>
-              <TableHeadItem>{t('depositsPrograms.profitability')}</TableHeadItem>
-              <TableHeadItem>{t('depositsPrograms.payment')}</TableHeadItem>
-              <TableHeadItem>{t('depositsPrograms.depositPeriod')}</TableHeadItem>
-              <TableHeadItem>{t('depositsPrograms.programActivity')}</TableHeadItem>
-              {/* <TableHeadItem>
-                <BurgerButton>
-                  <BurgerImg src={burgerGroup} alt="burger" onClick={() => setFilter(!filter)} />
-                  <Window open={filter}>
-                    <WindowTitle>Сортировка</WindowTitle>
-                    <WindowBody>
-                      {[
-                        { name: 'По убыванию даты' },
-                        { name: 'По возрастанию даты' },
-                        { name: 'Имя программы: От А до Я' },
-                        { name: 'По убыванию суммы депозитов программы' },
-                        { name: 'По возрастанию суммы депозитов программы' },
-                      ].map((obj, index) => (
-                        <SortingItem active={filter} key={index} onClick={() => undefined}>
-                          {obj.name}
-                        </SortingItem>
-                      ))}
-                    </WindowBody>
-                  </Window>
-                </BurgerButton>
-              </TableHeadItem>
-             */}
-            </TableHead>
-            {depositsPrograms.length ? (
-              <Scrollbars style={{ height: '450px' }}>
-                {depositsPrograms.map((program, idx) => (
-                  <TableList key={depositsPrograms.indexOf(program)} data={program} />
-                ))}
-              </Scrollbars>
-            ) : loading ? (
-              <Loading />
-            ) : (
-              <Styled.NotFound>{t('notFound')}</Styled.NotFound>
-            )}
-          </PaymentsTable>
+              <TableHead>
+                <TableHeadItem>{t('depositsPrograms.name')}</TableHeadItem>
+                <TableHeadItem>{t('depositsPrograms.currency')}</TableHeadItem>
+                <TableHeadItem>{t('depositsPrograms.amount')}</TableHeadItem>
+                <TableHeadItem>{t('depositsPrograms.profitability')}</TableHeadItem>
+                <TableHeadItem>{t('depositsPrograms.payment')}</TableHeadItem>
+                <TableHeadItem>{t('depositsPrograms.depositPeriod')}</TableHeadItem>
+                <TableHeadItem>{t('depositsPrograms.programActivity')}</TableHeadItem>
+              </TableHead>
+              {depositsPrograms.length ? (
+                <Scrollbars style={{ height: '450px' }}>
+                  {depositsPrograms.map((program, idx) => (
+                    <TableList key={depositsPrograms.indexOf(program)} data={program} />
+                  ))}
+                </Scrollbars>
+              ) : loading ? (
+                <Loading />
+              ) : (
+                <Styled.NotFound>{t('notFound')}</Styled.NotFound>
+              )}
+            </PaymentsTable>
+          )}
         </CardTable>
       </Content>
     </>
@@ -274,34 +214,12 @@ const TableList: FC<{ data: any }> = ({ data }: any) => {
       <TableBodyItem>{data.payment}</TableBodyItem>
       <TableBodyItem>{data.depositPeriod}</TableBodyItem>
       <TableBodyItem checked={checked}>
-        <Switcher
-          uncheckedIcon={false}
-          checkedIcon={false}
-          onChange={() => setChecked(!checked)}
-          checked={checked}
-        />
+        <Switcher onChange={() => setChecked(!checked)} checked={checked} />
         <span>{t(checked ? 'depositsPrograms.off' : 'depositsPrograms.on')}</span>
       </TableBodyItem>
     </TableBody>
   );
 };
-
-const Switcher = styled(Switch)<{ checked: boolean }>`
-  > div.react-switch-bg {
-    background: ${(props) => (props.checked ? '#DBE7F1 !important' : '#ff416e !important')};
-    height: 18px !important;
-    width: 28px !important;
-  }
-  > div.react-switch-handle {
-    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.15), 0px 3px 1px rgba(0, 0, 0, 0.06) !important;
-    height: 16px !important;
-    width: 16px !important;
-    top: 1px !important;
-    left: 1px !important;
-    transform: ${(props) =>
-      props.checked ? 'translateX(0px) !important' : 'translateX(10px) !important'};
-  }
-`;
 
 const Input = styled.input`
   width: 100%;
@@ -337,7 +255,7 @@ const ContentWrap = styled.div`
 `;
 
 const CardTable = styled(Card)`
-  height: 600px;
+  height: auto;
 `;
 
 const PaymentsTable = styled.div`
@@ -363,7 +281,7 @@ const TableTitle = styled.p`
   font-weight: 500;
   font-size: 18px;
   line-height: 21px;
-  color: #0e0d3d;
+  color: ${(props) => props.theme.text};
   @media (max-width: 576px) {
     display: none;
   }
