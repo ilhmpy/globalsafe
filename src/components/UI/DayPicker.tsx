@@ -280,8 +280,8 @@ export const TestInput: FC<TestInputProps> = ({ label, openDate, setOpenDate }: 
     setOpenDate({ from: range.from, to: range.to });
 
     setInputString(
-      `${range.from ? moment(range.from).format('DD.MM.YY') : ''} ${
-        range.to ? `- ${moment(range.to).format('DD.MM.YY')}` : ''
+      `${range.from ? moment(range.from).format('DD.MM.YY') : ''}${
+        range.to ? `-${moment(range.to).format('DD.MM.YY')}` : ''
       }`
     );
   };
@@ -306,9 +306,10 @@ export const TestInput: FC<TestInputProps> = ({ label, openDate, setOpenDate }: 
 
   const [inputString, setInputString] = useState(
     `${openDate.from ? moment(openDate.from).format('DD.MM.YY') : ''} ${
-      openDate.to ? `- ${moment(openDate.to).format('DD.MM.YY')}` : ''
+      openDate.to ? `-${moment(openDate.to).format('DD.MM.YY')}` : ''
     }`
   );
+
   const dateRangeRegEx = /^(0[1-9]|[12][0-9]|3[01])[.](0[1-9]|1[012])[.]\d\d$/gm;
 
   return (
@@ -322,7 +323,7 @@ export const TestInput: FC<TestInputProps> = ({ label, openDate, setOpenDate }: 
               value={inputString}
               onChange={(e) => {
                 setInputString(e.target.value);
-                const arr = e.target.value.split(' - ');
+                const arr = e.target.value.split('-');
                 const fromSplitted = arr[0].split('.');
                 const toSplitted = arr.length === 2 ? arr[1].split('.') : '';
 
@@ -1049,7 +1050,7 @@ const RangeInputs = styled.div`
 
 const Close = styled.div`
   position: absolute;
-  right: 5px;
+  right: 10px;
   top: 50%;
   cursor: pointer;
   margin-top: -11px;
