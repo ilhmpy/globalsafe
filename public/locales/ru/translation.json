@@ -451,7 +451,15 @@
     "depositActivationCost": "Стоимость активации депозита",
     "value": "Значение",
     "programIsActive": "Программа активна",
-    "publishingProgram": "Публикация программы на титульной странице"
+    "publishingProgram": "Публикация программы на титульной странице",
+    "return": "Вернуться",
+    "preservation": "Сохранение",
+    "areYouSure": "Вы уверены, что хотите сохранить новую программу ?",
+    "areYouSureNot": "Вы уверены, что НЕ хотите сохранять новую программу ?",
+    "dontSave": "Не сохранять",
+    "depositProgramSuccessfullySaved": "Программа депозита успешно сохранена.",
+    "changesCanceled": "Изменения отменены !",
+    "changesCanceledSuccessfully": "Изменения успешно отменены."
   },
   "text": {
     "tip_state_unsubscribed": "Подпишитесь на уведомления",

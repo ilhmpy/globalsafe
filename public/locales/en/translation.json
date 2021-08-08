@@ -452,7 +452,15 @@
     "depositActivationCost": "Deposit activation cost",
     "value": "Value",
     "programIsActive": "The program is active",
-    "publishingProgram": "Publishing the program on the title page"
+    "publishingProgram": "Publishing the program on the title page",
+    "return": "Return",
+    "preservation": "Preservation",
+    "areYouSure": "Are you sure you want to save the new program ?",
+    "areYouSureNot": "Are you sure you DO NOT want to save new program ?",
+    "dontSave": "Do not save",
+    "depositProgramSuccessfullySaved": "The deposit program has been successfully saved.",
+    "changesCanceled": "Changes canceled!",
+    "changesCanceledSuccessfully": "Changes have been successfully canceled."
   },
   "text": {
     "tip_state_unsubscribed": "Subscribe to notifications",

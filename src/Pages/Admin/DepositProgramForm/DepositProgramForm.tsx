@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { ReactComponent as Stroke } from '../../../assets/svg/leftStroke.svg';
 import { Button } from '../../../components/Button/Button';
+import { Modal } from '../../../components/Modal/Modal';
 import { Select } from '../../../components/Select/Select';
 import { Switcher } from '../../../components/Switcher';
 import { DepositProgramFormPropsType } from './types';
@@ -16,6 +17,11 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
   const [startColumn, setStartColumn] = useState(false);
   const [expertColumn, setExpertColumn] = useState(false);
   const [infinityColumn, setInfinityColumn] = useState(false);
+  const [isOpenSaveConfirm, setIsOpenSaveConfirm] = useState(false);
+  const [isOpenCancelConfirm, setIsOpenCancelConfirm] = useState(false);
+  const [isSavingSuccess, setIsSavingSuccess] = useState(false);
+  const [isSavingCanceled, setIsSavingCanceled] = useState(false);
+  const [isModalError, setIsModalError] = useState(false);
 
   return (
     <Container>
@@ -349,24 +355,170 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
           </InputGroup>
         </Row>
         <ButtonGroup>
-          <Button danger maxWidth={130} onClick={() => undefined}>
+          <Button danger maxWidth={130} onClick={() => setIsOpenSaveConfirm(true)}>
             {t('depositsPrograms.save')}
           </Button>
-          <Button dangerOutline maxWidth={130} onClick={() => undefined}>
+          <Button dangerOutline maxWidth={130} onClick={() => setIsOpenCancelConfirm(true)}>
             {t('depositsPrograms.cancel')}
           </Button>
         </ButtonGroup>
+        {isOpenSaveConfirm && (
+          <Modal onClose={() => setIsOpenSaveConfirm(false)}>
+            <ModalBlock>
+              <ModalTitle>{t('depositsPrograms.preservation')}</ModalTitle>
+              <ModalContent>{t('depositsPrograms.areYouSure')}</ModalContent>
+              <ModalButtons>
+                <Button
+                  danger
+                  maxWidth={200}
+                  onClick={() => {
+                    setIsOpenSaveConfirm(false);
+                    setIsSavingSuccess(true);
+                  }}
+                >
+                  {t('depositsPrograms.save')}
+                </Button>
+                <Button dangerOutline maxWidth={200} onClick={() => setIsOpenSaveConfirm(false)}>
+                  {t('depositsPrograms.return')}
+                </Button>
+              </ModalButtons>
+            </ModalBlock>
+          </Modal>
+        )}
+
+        {isOpenCancelConfirm && (
+          <Modal onClose={() => setIsOpenCancelConfirm(false)}>
+            <ModalBlock>
+              <ModalTitle>{t('depositsPrograms.cancel')}</ModalTitle>
+              <ModalContent>{t('depositsPrograms.areYouSureNot')}</ModalContent>
+              <ModalButtons>
+                <Button
+                  danger
+                  maxWidth={200}
+                  onClick={() => {
+                    setIsOpenCancelConfirm(false);
+                    setIsSavingCanceled(true);
+                  }}
+                >
+                  {t('depositsPrograms.dontSave')}
+                </Button>
+                <Button dangerOutline maxWidth={200} onClick={() => setIsOpenCancelConfirm(false)}>
+                  {t('depositsPrograms.return')}
+                </Button>
+              </ModalButtons>
+            </ModalBlock>
+          </Modal>
+        )}
+
+        {isSavingSuccess && (
+          <Modal onClose={() => setIsSavingSuccess(false)}>
+            <ModalBlock sm>
+              <ModalTitle>{t('alert.success')} !</ModalTitle>
+              <ModalContent>{t('depositsPrograms.depositProgramSuccessfullySaved')}</ModalContent>
+            </ModalBlock>
+          </Modal>
+        )}
+        {isSavingCanceled && (
+          <Modal onClose={() => setIsSavingCanceled(false)}>
+            <ModalBlock sm>
+              <ModalTitle>{t('depositsPrograms.changesCanceled')}</ModalTitle>
+              <ModalContent>{t('depositsPrograms.changesCanceledSuccessfully')}</ModalContent>
+            </ModalBlock>
+          </Modal>
+        )}
+        {isModalError && (
+          <Modal onClose={() => setIsModalError(false)}>
+            <ModalBlock sm>
+              <ModalTitle>{t('alert.error')} !</ModalTitle>
+              <ModalContent>{t('alert.error')}.</ModalContent>
+            </ModalBlock>
+          </Modal>
+        )}
       </ContentWrapper>
     </Container>
   );
 };
 
+const ModalBlock = styled.div<{ sm?: boolean }>`
+  display: flex;
+  flex-direction: column;
+  padding: ${(props) => (props.sm ? '30px 0px 35px' : '50px 50px 30px')};
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  @media (max-width: 576px) {
+    padding: ${(props) => (props.sm ? '30px 5px 35px' : '50px 5px 30px')};
+  }
+`;
+const ModalTitle = styled.h1`
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 28px;
+  text-align: center;
+  color: ${(props) => props.theme.text};
+`;
+const ModalContent = styled.p`
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  letter-spacing: 0.1px;
+
+  color: ${(props) => props.theme.text2};
+`;
+
+const ModalButtons = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  & > a {
+    @media (max-width: 576px) {
+      min-width: 100%;
+    }
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    text-align: center;
+    &:first-child {
+      line-height: 16px;
+      display: flex;
+      align-items: center;
+    }
+    &:last-child {
+      line-height: 20px;
+      letter-spacing: 0.1px;
+      color: ${(props) => props.theme.text2};
+    }
+  }
+`;
+
 const ButtonGroup = styled.div`
   display: flex;
   gap: 20px;
+  & > a {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    text-align: center;
+    &:first-child {
+      line-height: 16px;
+      display: flex;
+      align-items: center;
+    }
+    &:last-child {
+      line-height: 20px;
+      letter-spacing: 0.1px;
+      color: ${(props) => props.theme.text2};
+    }
+  }
   @media (max-width: 576px) {
     flex-direction: column;
-    & a {
+    & > a {
       min-width: 100%;
     }
   }
