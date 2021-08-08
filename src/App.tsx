@@ -1,6 +1,7 @@
-import React, { FC, useCallback, useContext, useEffect } from 'react';
+import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
+import React, { FC, useCallback, useContext, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { Loader } from './components/Loader/Loader';
 import { APP_ID, APP_SAFARI_ID } from './constantes/onesignal';
 import { AppContext } from './context/HubContext';
@@ -11,10 +12,11 @@ import { Main } from './Pages/Main/Main';
 import { InfoMain } from './Pages/PrivateArea';
 import PageNotFound from './Pages/Tech/PageNotFound';
 import TechWorks from './Pages/Tech/TechWorks';
+
 declare global {
   interface Window {
     OneSignal: any;
-  }
+  } 
 }
 const App: FC = () => {
   const token = localStorage.getItem('token');
@@ -25,7 +27,39 @@ const App: FC = () => {
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const user = appContext.user;
+  const isFailed = appContext.isFailed;
+  const [online, setOnline] = useState<boolean | null>(null);
   const { t } = useTranslation();
+
+  useEffect(() => {
+    setOnline(navigator.onLine);
+  }, []);
+
+  window.addEventListener("online", onlineState);
+  window.addEventListener("offline", onlineState);
+
+  function onlineState() {
+    setOnline(window.navigator.onLine);
+    console.log("online update state event working, and set online/offline status")
+  }; 
+
+  useEffect(() => {
+    if (isFailed != null) {
+      if (online && window.location.pathname != "/tech") {
+        console.log("user online but server not working")
+        window.location.href = "/tech";
+      };
+
+      if (!online && window.location.pathname == "/tech") {
+        console.log("user offline")
+        window.location.href = "/";
+      }
+
+      if (isFailed == false && window.location.pathname == "/tech") {
+        window.location.href = "/";
+      };
+    };
+  }, [isFailed, navigator.onLine]);
 
   const subscribe = useCallback(
     (id: string) => {
@@ -39,7 +73,7 @@ const App: FC = () => {
     [hubConnection]
   );
 
-  const unSubscribe = useCallback(
+  const unSubscribe = useCallback( 
     (id: string) => {
       if (hubConnection) {
         hubConnection
@@ -95,36 +129,34 @@ const App: FC = () => {
       } catch (e) {
         console.error(e);
       }
-    }
+    } 
   }, [user]);
 
-  if (user != null) {
-    return (
-      <Router>
-        <div className="App">
-          <GlobalStyle />
+  return (
+    <Router>
+      <div className="App">
+        <GlobalStyle />
 
-          <Switch>
-            <Route
-              path="/"
-              component={Main}
-              push={OneSignal.push}
-              on={OneSignal.on}
-              getUserId={OneSignal.getUserId}
-              exact
-            />
-            <Route path="/admin" component={Admin} />
-            <Route path="/info" component={InfoMain} />
-            <Route path="/login" component={Authentication} />
-            <Route path="/register" component={Register} />
-            {/* tech works route for testing */}
-            <Route path="/tech" component={TechWorks} />
-            <Route component={PageNotFound} />
-          </Switch>
-        </div>
-      </Router>
-    );
-  } else return <Loader />;
+        <Switch>
+          <Route
+            path="/"
+            component={Main}
+            push={OneSignal.push}
+            on={OneSignal.on}
+            getUserId={OneSignal.getUserId}
+            exact
+          />
+          <Route path="/admin" component={Admin} />
+          <Route path="/info" component={InfoMain} />
+          <Route path="/login" component={Authentication} />
+          <Route path="/register" component={Register} />
+          {/* tech works route for testing */}
+          <Route path="/tech" component={TechWorks} />
+          <Route component={PageNotFound} />
+        </Switch>
+      </div>
+    </Router>
+  );
 };
 
 export default App;

@@ -728,7 +728,7 @@ export const SortingItem = styled.li<{ active: boolean }>`
   white-space: pre-wrap;
 `;
 
-export const ModalComponent = styled.div<{ visible: boolean }>`
+export const ModalComponent = styled.div`
   width: 90%;
   max-width: 384px;
   background: ${({ theme }) => theme.acceptAll.bg};
@@ -741,29 +741,8 @@ export const ModalComponent = styled.div<{ visible: boolean }>`
   right: 0;
   left: 0;
   margin-left: auto;
-  margin-right: auto;
-  display: ${({ visible }) => (visible ? 'block' : 'none')};
-
   @media only screen and (max-device-width: 922px) {
     position: absolute;
     margin-top: 80px;
   }
-`;
-
-export const ModalTitle = styled.h3`
-  color: ${({ theme }) => theme.text};
-  text-align: center;
-  font-weight: 500;
-  font-size: 24px;
-  margin-bottom: 20px;
-`;
-
-export const ModalRule = styled.h3`
-  color: ${({ theme }) => theme.acceptAll.rule};
-  font-size: 12px;
-  font-weight: normal;
-  text-align: center;
-  width: 60%;
-  margin: 0 auto;
-  margin-top: 20px;
 `;

@@ -18,7 +18,6 @@ import { AppContext } from '../../../../../context/HubContext';
 import { Card } from '../../../../../globalStyles';
 import { OpenDate } from '../../../../../types/dates';
 import { CollectionListDeposits } from '../../../../../types/deposits';
-import { Notify } from '../../../../../types/notify';
 import { PaymentsCollection, RootPayments } from '../../../../../types/payments';
 import { SelectValues, SortingType } from '../../../../../types/sorting';
 import { DepositList } from '../../../AdminPay/DepositList';
@@ -41,23 +40,23 @@ import {
   WindowTitle,
 } from '../../../Styled.elements';
 import * as Styled from './Styled.elements';
+import { Notify } from "../../../../../types/notify";
+import { Modal } from "../../../../../components/Modal/Modal"; 
 
 type Props = {
   listDeposits: CollectionListDeposits[];
   getPaymentsOverview: () => void;
   procent: string;
   setProcent: (e: string) => void;
-  setModal: (boolean: boolean) => void;
   setPaymentsList: (value: any) => void;
   setTotalPayments: (value: any) => void;
 };
 
-export const Approval: FC<Props> = ({
+export const Approval: FC<Props> = ({ 
   listDeposits,
   getPaymentsOverview,
   setProcent,
   procent,
-  setModal,
   setPaymentsList,
   setTotalPayments,
 }: Props) => {
@@ -73,7 +72,6 @@ export const Approval: FC<Props> = ({
     from: undefined,
     to: undefined,
   });
-  const [notifications, setNotifications] = useState<Notify[]>([]);
   const [openFilterOne, setOpenFilterOne] = useState(false);
 
   const [pageLength, setPageLength] = useState<number>(10);
@@ -88,9 +86,11 @@ export const Approval: FC<Props> = ({
   const namesProgramApproval = checkListApproval.map((i: any) => i.safeId);
   const idProgramApproval = listDeposits.filter((i) => namesProgramApproval.includes(i.safeId));
   const searchSafeIDApproval = idProgramApproval.map((i) => i.safeId);
+  const [notifications, setNotifications] = useState<Notify[]>([]);
 
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
   const [sorting, setSorting] = useState<SortingType[]>([]);
+  const [acceptAll, setAcceptAll] = useState<boolean>(false);
   const [listForSorting, setListForSorting] = useState<SelectValues[]>([
     {
       text: 'Пользователь: От А до Я',
@@ -145,7 +145,7 @@ export const Approval: FC<Props> = ({
   const deposites = () => {
     if (hubConnection) {
       setLoading(true);
-      setDepositList([]);
+      setCheckListApproval([]);
       hubConnection
         .invoke<RootPayments>(
           'GetUsersDeposits',
@@ -165,6 +165,7 @@ export const Approval: FC<Props> = ({
           []
         )
         .then((res) => {
+          console.log(res);
           setTotalDeposits(res.totalRecords);
           setDepositList(res.collection);
           setLoading(false);
@@ -178,7 +179,7 @@ export const Approval: FC<Props> = ({
 
   const loadMoreItems = () => {
     setCount(false);
-    setDepositList([]);
+    setDepositList([]); 
     setLoading(true);
 
     if (hubConnection && depositList.length < totalDeposits) {
@@ -240,10 +241,10 @@ export const Approval: FC<Props> = ({
       hubConnection
         .invoke('ConfirmDepositPayment', id)
         .then((res) => {
-          const key = depositList.findIndex((i) => i.safeId === id);
+          const key = depositList.findIndex((i: any) => i.safeId === id);
 
           if (key !== -1) {
-            const item = depositList.filter((i) => i.safeId === id)[0];
+            const item = depositList.filter((i: any) => i.safeId === id)[0];
             setDepositList([
               ...depositList.slice(0, key),
               { ...item, state: 5 },
@@ -264,10 +265,10 @@ export const Approval: FC<Props> = ({
       hubConnection
         .invoke('UnconfirmDepositPayment', id)
         .then((res) => {
-          const key = depositList.findIndex((i) => i.safeId === id);
+          const key = depositList.findIndex((i: any) => i.safeId === id);
 
           if (key !== -1) {
-            const item = depositList.filter((i) => i.safeId === id)[0];
+            const item = depositList.filter((i: any) => i.safeId === id)[0];
             setDepositList([
               ...depositList.slice(0, key),
               { ...item, state: 6 },
@@ -280,10 +281,6 @@ export const Approval: FC<Props> = ({
           console.log(err);
         });
     }
-  };
-
-  const createNotify = (item: Notify) => {
-    setNotifications([item]);
   };
 
   useEffect(() => {
@@ -357,50 +354,6 @@ export const Approval: FC<Props> = ({
     }
   };
 
-  const paymentsConfirm = () => {
-    // setModal(true);
-    if (depositList.some((item) => item.state === 6)) {
-      if (hubConnection) {
-        hubConnection
-          .invoke(
-            'ConfirmAllDepositsPayment',
-            nameApproval ? nameApproval.toLowerCase() : null,
-            openDateApproval.from ? openDateApproval.from : null,
-            openDateApproval.to ? openDateApproval.to : null,
-            searchSafeIDApproval.length ? searchSafeIDApproval : null,
-            procent ? +procent / 100 : null
-          )
-          .then((res) => {
-            createNotify({
-              text: t('adminPay.success'),
-              error: false,
-              timeleft: 5,
-              id: notifications.length,
-            });
-
-            getPaymentsOverview();
-            submitApproval();
-          })
-          .catch((err: Error) => {
-            console.log(err);
-            createNotify({
-              text: t('adminPay.error'),
-              error: true,
-              timeleft: 5,
-              id: notifications.length,
-            });
-          });
-      }
-    } else {
-      createNotify({
-        text: t('adminPay.notPays'),
-        error: true,
-        timeleft: 5,
-        id: notifications.length,
-      });
-    }
-  };
-
   const onDelete = (id: number) => {
     setNotifications(notifications.filter((i) => i.id !== id));
   };
@@ -416,7 +369,6 @@ export const Approval: FC<Props> = ({
 
     if (hubConnection) {
       setCurrentPage(1);
-      setDepositList([]);
       setLoading(true);
       hubConnection
         .invoke<RootPayments>(
@@ -483,12 +435,79 @@ export const Approval: FC<Props> = ({
     });
   };
 
+  const createNotify = (item: Notify) => {
+    setNotifications([item]);
+  };
+
+  const paymentsConfirm = () => {
+    if (checkListApproval.some((item: any) => item.state === 6)) {
+      if (hubConnection) {
+        hubConnection
+          .invoke(
+            'ConfirmAllDepositsPayment',
+            nameApproval ? nameApproval.toLowerCase() : null,
+            openDateApproval.from ? openDateApproval.from : null,
+            openDateApproval.to ? openDateApproval.to : null,
+            searchSafeIDApproval.length ? searchSafeIDApproval : null,
+            procent ? +procent / 100 : null
+          )
+          .then((res) => {
+            createNotify({
+              text: t('adminPay.success'),
+              error: false,
+              timeleft: 5,
+              id: notifications.length,
+            });
+
+            getPaymentsOverview();
+            submitApproval();
+          })
+          .catch((err: Error) => {
+            console.log(err);
+            createNotify({
+              text: t('adminPay.error'),
+              error: true,
+              timeleft: 5,
+              id: notifications.length,
+            });
+          });
+      }
+    } else {
+      createNotify({
+        text: t('adminPay.notPays'),
+        error: true,
+        timeleft: 5,
+        id: notifications.length,
+      });
+    }
+  };
+
   return (
     <>
+    <Modal style={{ display: acceptAll ? "block" : "none"}} onClose={() => setAcceptAll(false)}>
+        <div className="wrap">
+          <Styled.ModalTitle>{t("acceptAll.title")}</Styled.ModalTitle>
+          <Styled.ModalDescription>{t("acceptAll.users")}:</Styled.ModalDescription>
+          <Styled.ModalItem>{nameApproval ? nameApproval : "Все"}</Styled.ModalItem>
+          <Styled.ModalDescription>{t("acceptAll.deposit")}:</Styled.ModalDescription>
+          <div className="deposits_programs">
+            {checkListApproval.length > 0 ? checkListApproval.map((item: any, idx: any) => (
+              <Styled.ModalItem red key={idx}>{item.label}</Styled.ModalItem>
+            )) : <Styled.ModalItem>Все</Styled.ModalItem>}
+          </div>
+          <Styled.ModalDescription>{t("acceptAll.range")}</Styled.ModalDescription>
+          <Styled.ModalItem>{openDateApproval.from ? 
+          `${moment(openDateApproval.from).format("DD.MM.YYYY")} - ${moment(openDateApproval.to).format("DD.MM.YYYY")}` : "Все"}</Styled.ModalItem>
+          <Button style={{ margin: "0 auto" }} danger onClick={paymentsConfirm}>{t("acceptAll.accept")} {procent ? procent + "%" : "все"}</Button>
+        </div>
+      </Modal>
+      
       <ReactNotification />
 
       <Styled.ButtonWrap>
-        <Button dangerOutline mb onClick={paymentsConfirm}>
+        <Button dangerOutline mb onClick={() => {
+          setAcceptAll(true);
+        }}>
           {t('adminPay.confirmButton')}
         </Button>
         <ProcentInput

@@ -16,6 +16,7 @@ type Context = {
   balance: null | number;
   isAdmin: boolean | null;
   balanceList: BalanceList[] | null;
+  isFailed: boolean | null;
 };
 
 export const AppContext = React.createContext<Context>({
@@ -27,6 +28,7 @@ export const AppContext = React.createContext<Context>({
   balance: null,
   isAdmin: null,
   balanceList: null,
+  isFailed: null,
 });
 
 export const HubProvider: FC = ({ children }: any) => {
@@ -37,44 +39,55 @@ export const HubProvider: FC = ({ children }: any) => {
   const [isAdmin, setIsAdmin] = useState<null | boolean>(null);
   const [myToken, setMyToken] = useLocalStorage('token');
   const [balanceList, setBalanceList] = useState<BalanceList[] | null>(null);
+  const [isFailed, setIsFailed] = useState<boolean | null>(null);
   const history = useHistory();
   const { i18n } = useTranslation();
 
   useEffect(() => {
     const hubConnection = new signalR.HubConnectionBuilder()
-      .configureLogging(signalR.LogLevel.Debug)
-      .withUrl(`${API_URL}/accounts`, {
-        skipNegotiation: true,
-        transport: signalR.HttpTransportType.WebSockets,
-        accessTokenFactory: () => myToken,
-      })
-      .withAutomaticReconnect()
-      .build();
-    console.log(hubConnection);
+    .configureLogging(signalR.LogLevel.Debug)
+    .withUrl(`${API_URL}/accounts`, {
+      skipNegotiation: true,
+      transport: signalR.HttpTransportType.WebSockets,
+      accessTokenFactory: () => myToken,
+    })
+    .withAutomaticReconnect()
+    .build()
 
     hubConnection
       .start()
       .then(() => {
         setHubConnection(hubConnection);
+        console.log("connected", isFailed);
+        if (window.location.pathname == "/tech") {
+          setIsFailed(false);
+        };
       })
-      .catch((e) => {
+      .catch((e: Error) => {
+        console.error(e)
         setMyToken('');
         console.log(e);
+        console.log("notConnected", isFailed);
+        setIsFailed(true);
+        setUser("");
       });
-  }, [myToken]);
+
+    console.log(hubConnection);
+  }, [myToken, isFailed]);
 
   useEffect(() => {
+    const cb = (data: any) => {
+      console.log('BalanceUpdate', data);
+      if (balanceList) {
+        const idx = balanceList.findIndex((item) => item.balanceKind === data.balanceKind);
+        setBalanceList([...balanceList.slice(0, idx), data, ...balanceList.slice(idx + 1)]);
+      }
+      if (data.balanceKind === 1) {
+        setBalance(data.volume);
+      }
+    };
     if (hubConnection) {
-      hubConnection.on('BalanceUpdate', (data) => {
-        console.log('BalanceUpdate', data);
-        if (balanceList) {
-          const idx = balanceList.findIndex((item) => item.balanceKind === data.balanceKind);
-          setBalanceList([...balanceList.slice(0, idx), data, ...balanceList.slice(idx + 1)]);
-        }
-        if (data.balanceKind === 1) {
-          setBalance(data.volume);
-        }
-      });
+      hubConnection.on('BalanceUpdate', cb);
       hubConnection
         .invoke('GetSigned')
         .then((res) => {
@@ -106,8 +119,9 @@ export const HubProvider: FC = ({ children }: any) => {
           setIsAdmin(false);
           setLoading(false);
         });
-    }
+    };
     return function cleanup() {
+      hubConnection?.off('BalanceUpdate', cb);
       if (hubConnection !== null) {
         hubConnection.stop();
       }
@@ -136,6 +150,7 @@ export const HubProvider: FC = ({ children }: any) => {
         balance,
         isAdmin,
         balanceList,
+        isFailed
       }}
     >
       {children}
