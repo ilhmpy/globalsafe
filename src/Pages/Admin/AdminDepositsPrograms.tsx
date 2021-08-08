@@ -203,7 +203,7 @@ const TableList: FC<{ data: any }> = ({ data }: any) => {
     setOpen(true);
   };
 
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(true);
 
   return (
     <TableBody onClick={modalOpen}>
@@ -215,7 +215,7 @@ const TableList: FC<{ data: any }> = ({ data }: any) => {
       <TableBodyItem>{data.depositPeriod}</TableBodyItem>
       <TableBodyItem checked={checked}>
         <Switcher onChange={() => setChecked(!checked)} checked={checked} />
-        <span>{t(checked ? 'depositsPrograms.off' : 'depositsPrograms.on')}</span>
+        <span>{t(checked ? 'depositsPrograms.on' : 'depositsPrograms.off')}</span>
       </TableBodyItem>
     </TableBody>
   );
@@ -385,6 +385,6 @@ const TableBodyItem = styled(TableHeadItem)<{ checked?: boolean }>`
   color: ${(props) => props.theme.text2};
   width: 100%;
   > span {
-    color: ${(props) => (props.checked ? '' : '#FF416E')};
+    color: ${(props) => (props.checked ? '#FF416E' : '')};
   }
 `;

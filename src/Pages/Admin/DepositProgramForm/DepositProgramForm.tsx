@@ -14,6 +14,9 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
   const { t } = useTranslation();
   const list = ['Ru', 'En'];
   const [checked, setChecked] = useState(false);
+  const [delayedDepositChecked, setDelayedDepositChecked] = useState(false);
+  const [programIsActiveChecked, setProgramIsActiveChecked] = useState(true);
+  const [publishingProgramChecked, setPublishingProgramChecked] = useState(false);
   const [startColumn, setStartColumn] = useState(false);
   const [expertColumn, setExpertColumn] = useState(false);
   const [infinityColumn, setInfinityColumn] = useState(false);
@@ -56,9 +59,9 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
 
           <Hr />
 
-          <InputGroup>
+          <InputGroup disabled>
             <Label>{t('depositsPrograms.exchangeRate')}</Label>
-            <Input />
+            <Input placeholder="&mdash;" CWD disabled />
           </InputGroup>
         </Row>
 
@@ -117,9 +120,12 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
           <InputGroup>
             <Label>{t('depositsPrograms.delayedDeposit')}</Label>
             <StatusGroup>
-              <Switcher onChange={() => setChecked(!checked)} checked={checked} />
-              <Status checked={checked}>
-                {t(checked ? 'depositsPrograms.no' : 'depositsPrograms.yes')}
+              <Switcher
+                onChange={() => setDelayedDepositChecked(!delayedDepositChecked)}
+                checked={delayedDepositChecked}
+              />
+              <Status checked={delayedDepositChecked}>
+                {t(delayedDepositChecked ? 'depositsPrograms.yes' : 'depositsPrograms.no')}
               </Status>
             </StatusGroup>
           </InputGroup>
@@ -335,9 +341,12 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
           <InputGroup>
             <Label>{t('depositsPrograms.programIsActive')}</Label>
             <StatusGroup>
-              <Switcher onChange={() => setChecked(!checked)} checked={checked} />
-              <Status checked={checked}>
-                {t(checked ? 'depositsPrograms.no' : 'depositsPrograms.yes')}
+              <Switcher
+                onChange={() => setProgramIsActiveChecked(!programIsActiveChecked)}
+                checked={programIsActiveChecked}
+              />
+              <Status checked={programIsActiveChecked}>
+                {t(programIsActiveChecked ? 'depositsPrograms.yes' : 'depositsPrograms.no')}
               </Status>
             </StatusGroup>
           </InputGroup>
@@ -347,9 +356,12 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
           <InputGroup lg>
             <Label>{t('depositsPrograms.publishingProgram')}</Label>
             <StatusGroup>
-              <Switcher onChange={() => setChecked(!checked)} checked={checked} />
-              <Status checked={checked}>
-                {t(checked ? 'depositsPrograms.no' : 'depositsPrograms.yes')}
+              <Switcher
+                onChange={() => setPublishingProgramChecked(!publishingProgramChecked)}
+                checked={publishingProgramChecked}
+              />
+              <Status checked={publishingProgramChecked}>
+                {t(publishingProgramChecked ? 'depositsPrograms.yes' : 'depositsPrograms.no')}
               </Status>
             </StatusGroup>
           </InputGroup>
@@ -594,21 +606,27 @@ const StatusGroup = styled.div`
   align-items: center;
   gap: 10px;
   padding: 5px 0;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 21px;
+  letter-spacing: 0.1px;
+  color: ${(props) => props.theme.depositHead};
+  background: ${(props) => props.theme.card.background};
 `;
 
 const Status = styled.span<{ checked: boolean }>`
-  color: ${(props) => (props.checked ? props.theme.text2 : '#FF416E')};
+  color: ${(props) => (props.checked ? '#FF416E' : props.theme.text2)};
 `;
 
 const Hr = styled.hr`
   position: relative;
-  top: 44px;
+  top: 47px;
   left: 0;
   max-width: 63px;
-  height: 1px;
+  height: 2px;
   width: 63px;
   opacity: 0.3;
-  border: 1px solid #56657f;
+  color: #56657f;
   @media (max-width: 768px) {
     flex-direction: column;
     transform: rotate(90deg);
@@ -635,20 +653,16 @@ const Row = styled.div<{ hr?: boolean }>`
   }
 `;
 
-const InputGroup = styled.div<{ lg?: boolean }>`
+const InputGroup = styled.div<{ lg?: boolean; disabled?: boolean }>`
   max-width: ${(props) => (props.lg ? '650px' : '280px')};
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 5px;
   justify-content: space-between;
-
-  /* font-weight: normal;
-  font-size: 14px;
-  line-height: 21px;
-  letter-spacing: 0.1px;
-  color: ${(props) => props.theme.depositHead};
-  background: ${(props) => props.theme.card.background}; */
+  & > * {
+    opacity: ${(props) => (props.disabled ? '0.6' : '')};
+  }
 `;
 const Label = styled.span`
   font-weight: normal;
@@ -661,13 +675,13 @@ const Label = styled.span`
   }
 `;
 
-const Input = styled.input`
+const Input = styled.input<{ CWD?: boolean }>`
   width: 100%;
   border: 1px solid rgba(86, 101, 127, 0.3);
   box-sizing: border-box;
   border-radius: 2px;
   min-height: 40px;
-  padding: 8px;
+  padding: ${(props) => (props.CWD ? '8px 45px 8px 8px' : '8px')};
   font-weight: normal;
   background: transparent;
   font-size: 14px;
@@ -677,6 +691,17 @@ const Input = styled.input`
   &:focus {
     outline: none;
   }
+  ::placeholder,
+  ::-webkit-input-placeholder {
+    font-size: 12px;
+    color: ${(props) => props.theme.text2};
+  }
+  background-image: ${(props) =>
+    props.CWD
+      ? `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='50px' width='120px'><text x='0' y='15' fill='${props.theme.thHead}' font-family='Roboto, Helvetica, sans-serif' font-size='14'>CWD</text></svg>")`
+      : ''};
+  background-position: ${(props) => (props.CWD ? 'top 8px right -50%' : '')};
+  background-repeat: ${(props) => (props.CWD ? 'no-repeat' : '')};
 `;
 
 const Text = styled.textarea`
