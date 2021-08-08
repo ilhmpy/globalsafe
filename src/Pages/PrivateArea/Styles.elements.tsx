@@ -1,10 +1,22 @@
-import styled from "styled-components/macro";
-import { Button } from "../../components/Button/Button";
-import { ReactComponent as Left } from "../../assets/svg/left.svg";
-import { Link } from "react-router-dom";
-import { Card, Container } from "../../globalStyles";
-import { ReactComponent as BackIcon } from "../../assets/svg/arrowLeftModal.svg";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from 'react-router-dom';
+import styled from 'styled-components/macro';
+import { ReactComponent as BackIcon } from '../../assets/svg/arrowLeftModal.svg';
+import { ReactComponent as Left } from '../../assets/svg/left.svg';
+import { Button } from '../../components/Button/Button';
+import { Card, Container } from '../../globalStyles';
+
+export const Note = styled.div`
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 10px;
+  position: sticky;
+  right: 0;
+  bottom: 0;
+  & > div {
+    margin: 0;
+  }
+`;
 
 export const ToLink = styled.a`
   color: #ff416e;
@@ -81,9 +93,9 @@ export const Hr = styled.hr`
 `;
 
 export const PayText = styled.p<{ small?: boolean; wbold?: boolean }>`
-  font-weight: ${(props) => (props.wbold ? "500" : "400")};
-  font-size: ${(props) => (props.small ? "12px" : "14px")};
-  line-height: ${(props) => (props.small ? "21px" : "16px")};
+  font-weight: ${(props) => (props.wbold ? '500' : '400')};
+  font-size: ${(props) => (props.small ? '12px' : '14px')};
+  line-height: ${(props) => (props.small ? '21px' : '16px')};
   letter-spacing: 0.1px;
   color: ${(props) => (props.small ? props.theme.thHead : props.theme.text2)};
 `;
@@ -120,7 +132,7 @@ export const PayCardBlock = styled.div`
   }
 `;
 
-const activeclassname = "active";
+const activeclassname = 'active';
 
 export const NavTabs = styled(NavLink).attrs({ activeclassname })`
   display: inline-block;
@@ -155,7 +167,7 @@ export const NavTabs = styled(NavLink).attrs({ activeclassname })`
       font-weight: 600;
     }
     div:before {
-      content: "";
+      content: '';
       position: absolute;
       bottom: 0;
       display: block;
@@ -201,7 +213,7 @@ export const IconRotate = styled.div<{ rights?: boolean }>`
   position: absolute;
   right: 10px;
   opacity: 50%;
-  transform: ${(props) => (props.rights ? "rotate(180deg)" : "rotate(0deg)")};
+  transform: ${(props) => (props.rights ? 'rotate(180deg)' : 'rotate(0deg)')};
 `;
 
 export const Date = styled.div`
@@ -358,7 +370,7 @@ export const HalfTabs = styled.div`
 `;
 
 export const HalfTab = styled.span<{ card?: boolean }>`
-  font-weight: ${(props) => (props.card ? "600" : "400")};
+  font-weight: ${(props) => (props.card ? '600' : '400')};
   font-size: 20px;
   line-height: 14px;
   cursor: pointer;
@@ -367,8 +379,7 @@ export const HalfTab = styled.span<{ card?: boolean }>`
 `;
 
 export const MobHalfTab = styled(HalfTab)`
-  border-bottom: ${(props) =>
-    props.card ? "1px solid #FF416E" : "1px solid #FFF"};
+  border-bottom: ${(props) => (props.card ? '1px solid #FF416E' : '1px solid #FFF')};
   padding-bottom: 6px;
   padding-top: 20px;
   width: 50%;
@@ -376,7 +387,7 @@ export const MobHalfTab = styled(HalfTab)`
 `;
 
 export const HalfContent = styled.div<{ card: boolean }>`
-  ${(props) => (props.card ? "" : "display:none")};
+  ${(props) => (props.card ? '' : 'display:none')};
   .chart-enter {
     opacity: 0;
   }
@@ -408,7 +419,7 @@ export const ContainerRow = styled(Container)`
 `;
 
 export const Content = styled.div<{ active?: boolean }>`
-  ${(props) => (props.active ? "" : "display:none")};
+  ${(props) => (props.active ? '' : 'display:none')};
   @media (max-width: 992px) {
     min-height: 350px;
     ${HalfTabs} {
@@ -431,7 +442,7 @@ export const Li = styled.li<{ color?: string }>`
   padding-left: 40px;
   padding-bottom: 12px;
   &:before {
-    content: "";
+    content: '';
     left: 0;
     top: 50%;
     position: absolute;
@@ -474,7 +485,7 @@ export const BalanceItemValue = styled.p<{ pink?: boolean }>`
   font-weight: 500;
   font-size: 24px;
   line-height: 28px;
-  color: ${(props) => (props.pink ? "#FF416E" : props.theme.text)};
+  color: ${(props) => (props.pink ? '#FF416E' : props.theme.text)};
   @media (max-width: 992px) {
     font-size: 18px;
     line-height: 21px;
@@ -519,7 +530,7 @@ export const BalanceTabItem = styled.div<{ active?: boolean }>`
   line-height: 16px;
   padding-right: 30px;
   cursor: pointer;
-  color: ${(props) => (props.active ? "#FF416E" : props.theme.text)};
+  color: ${(props) => (props.active ? '#FF416E' : props.theme.text)};
   @media (max-width: 768px) {
     padding-right: 5px;
   }
@@ -587,7 +598,7 @@ export const DataListHead = styled.div`
 `;
 
 export const DataListSum = styled.div<{ plus?: boolean }>`
-  color: ${(props) => (props.plus ? "#FF416E" : props.theme.text2)};
+  color: ${(props) => (props.plus ? '#FF416E' : props.theme.text2)};
   white-space: nowrap;
   padding-left: 20px;
   text-align: right;
@@ -611,13 +622,13 @@ export const DataListDate = styled.div`
   border-radius: 24px;
 `;
 
-export const ModalButton = styled(Button)<{ mb?: boolean, choice?: boolean, blue?: boolean }>`
+export const ModalButton = styled(Button)<{ mb?: boolean; choice?: boolean; blue?: boolean }>`
   max-width: 100%;
 
   & > * {
     opacity: 50%;
   }
-  
+
   ${({ choice }) => {
     if (choice) {
       return `
@@ -627,12 +638,12 @@ export const ModalButton = styled(Button)<{ mb?: boolean, choice?: boolean, blue
         & > {
           opacity: 60%;
         }
-      `
-    };
+      `;
+    }
   }}
   position: relative;
   width: 100%;
-  margin-bottom: ${(props) => (props.mb ? "20px" : "0")};
+  margin-bottom: ${(props) => (props.mb ? '20px' : '0')};
   &:disabled {
     color: ${(props) => props.theme.cdis};
     background: ${(props) => props.theme.bbdis};
@@ -653,6 +664,9 @@ export const ModalBlock = styled.div`
 
 export const ModalBlockWide = styled(ModalBlock)`
   max-width: 380px;
+  & > p {
+    text-align: center;
+  }
 `;
 
 export const ModalWrap = styled.div`
@@ -689,7 +703,7 @@ export const ModalTitle = styled.h3<{ mt?: boolean }>`
   line-height: 28px;
   text-align: center;
   padding-bottom: 26px;
-  margin-top: ${(props) => (props.mt ? "40px" : 0)};
+  margin-top: ${(props) => (props.mt ? '40px' : 0)};
   @media (max-width: 768px) {
     font-size: 18px;
     line-height: 21px;
@@ -716,7 +730,7 @@ export const DateText = styled.p<{ red?: boolean }>`
   font-weight: normal;
   font-size: 18px;
   line-height: 21px;
-  color: ${(props) => (props.red ? "#FF416E" : props.theme.text2)};
+  color: ${(props) => (props.red ? '#FF416E' : props.theme.text2)};
   text-align: center;
   transition: 0.3s;
   cursor: pointer;
@@ -747,8 +761,7 @@ export const ModalListText = styled.div<{ head?: boolean }>`
   line-height: 16px;
   letter-spacing: 0.1px;
   padding-right: 5px;
-  color: ${(props) =>
-    props.head ? props.theme.depositHead : props.theme.text2};
+  color: ${(props) => (props.head ? props.theme.depositHead : props.theme.text2)};
 `;
 
 export const ModalListItem = styled.li`
@@ -797,7 +810,7 @@ export const Program = styled.div<{ show?: boolean }>`
   }
 `;
 
-export const Warning = styled.div<{ choice?: boolean; }>`
+export const Warning = styled.div<{ choice?: boolean }>`
   font-weight: 400;
   font-size: 14px;
   line-height: 16px;
@@ -805,7 +818,7 @@ export const Warning = styled.div<{ choice?: boolean; }>`
   color: #ff416e;
   text-align: center;
   margin-bottom: 20px;
-  
+
   bdi {
     color: #6db9ff;
   }
@@ -825,7 +838,7 @@ export const Warning = styled.div<{ choice?: boolean; }>`
           }
         }
       `;
-    };
+    }
   }}
 `;
 
@@ -836,7 +849,7 @@ export const Conditions = styled.div<{ open?: boolean }>`
   letter-spacing: 0.1px;
   color: #56657f;
   overflow: hidden;
-  max-height: ${(props) => (props.open ? "auto" : "0")};
+  max-height: ${(props) => (props.open ? 'auto' : '0')};
   transition: max-heihgt 0.3s;
   width: 100%;
   p {
@@ -943,7 +956,7 @@ export const ModalCommision = styled.h3`
 `;
 
 export const ModalCommisionCount = styled.h3`
-  color: #FF416E;
+  color: #ff416e;
   font-size: inherit;
 `;
 

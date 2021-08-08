@@ -2,8 +2,6 @@ import moment from 'moment';
 import React, { FC, useContext, useEffect, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTranslation } from 'react-i18next';
-import ReactNotification from 'react-notifications-component';
-import 'react-notifications-component/dist/theme.css';
 import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
 import burgerGroup from '../../../../../assets/img/burgerGroup.png';
@@ -502,8 +500,6 @@ export const Approval: FC<Props> = ({
         </div>
       </Modal>
       
-      <ReactNotification />
-
       <Styled.ButtonWrap>
         <Button dangerOutline mb onClick={() => {
           setAcceptAll(true);

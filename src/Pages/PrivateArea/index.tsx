@@ -2,11 +2,8 @@
 import 'moment/locale/ru';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import ReactNotification, { store } from 'react-notifications-component';
-import 'react-notifications-component/dist/theme.css';
 import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
-import styled from 'styled-components';
 import { ReactComponent as Copy } from '../../assets/svg/copy.svg';
 import { Button } from '../../components/Button/Button';
 import { Header } from '../../components/Header/Header';
@@ -29,14 +26,8 @@ import { OnePage } from './OnePage';
 import * as Styled from './Styles.elements';
 
 export const InfoMain = () => {
-  const { t, i18n } = useTranslation();
-  const [notifications, setNotifications] = useState<Notify[]>([{
-    text: t('alert.errorMsg'),
-    error: true,
-    timeleft: 995,
-    id: 2,
-  }]);
-
+  const { t } = useTranslation();
+  const [notifications, setNotifications] = useState<Notify[]>([]);
   const [addDeposit, setAddDeposit] = useState(false);
   const [depositListModal, setDepositListModal] = useState(false);
   const [addDepositValue, setAddDepositValue] = useState('');
@@ -72,25 +63,6 @@ export const InfoMain = () => {
   const handleBackModal = () => {
     setAddDeposit(true);
     setDepositListModal(false);
-  };
-
-  const alert = (
-    title: string,
-    message: string,
-    type: 'success' | 'default' | 'warning' | 'info' | 'danger'
-  ) => {
-    store.addNotification({
-      title: title,
-      message: message,
-      type: type,
-      insert: 'top',
-      container: 'top-right',
-      animationIn: ['animate__animated', 'animate__fadeIn'],
-      animationOut: ['animate__animated', 'animate__fadeOut'],
-      dismiss: {
-        duration: 5000,
-      },
-    });
   };
 
   const selectDeposit = (item: DepositsCollection) => {
@@ -169,7 +141,6 @@ export const InfoMain = () => {
         .then((res) => {
           setWithdraw(false);
           setWithdrawValue('');
-          alert(t('alert.success'), t('alert.successMsg'), 'success');
           createNotify({
             text: t('alert.successMsg'),
             error: false,
@@ -182,7 +153,6 @@ export const InfoMain = () => {
           setWithdraw(false);
           setWithdrawValue('');
           console.log(err);
-          alert(t('alert.error'), t('alert.errorMsg'), 'danger');
           createNotify({
             text: t('alert.errorMsg'),
             error: true,
@@ -223,7 +193,12 @@ export const InfoMain = () => {
     return <Redirect to="/" />;
   }
   const copy = (text: string) => {
-    alert(t('copy.copy'), t('copy.text'), 'success');
+    createNotify({
+      text: t('copy.text'),
+      error: false,
+      timeleft: 5,
+      id: notifications.length,
+    });
     navigator.clipboard.writeText(text);
   };
 
@@ -280,7 +255,6 @@ export const InfoMain = () => {
         <Container>
           <UpTitle>{t('privateArea.uptitle')}</UpTitle>
         </Container>
-        <ReactNotification />
         <Container>
           <Card>
             <Styled.InfoWrap>
@@ -552,15 +526,9 @@ export const InfoMain = () => {
           />
         </div>
       </Styled.Page>
-        <Note>
-          <Notification onDelete={onDelete} data={notifications} />
-        </Note>
+      <Styled.Note>
+        <Notification onDelete={onDelete} data={notifications} />
+      </Styled.Note>
     </>
   );
 };
-const Note = styled.div`
-  max-width: 1080px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;

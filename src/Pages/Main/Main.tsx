@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import 'react-notifications-component/dist/theme.css';
 import styled from 'styled-components/macro';
 import { Footer } from '../../components/Footer/Footer';
 import { Header } from '../../components/Header/Header';
