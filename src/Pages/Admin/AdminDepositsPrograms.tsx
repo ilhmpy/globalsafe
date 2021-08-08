@@ -364,11 +364,6 @@ const TableHeadItem = styled.li`
   }
 `;
 
-const Window = styled(SortingWindow)`
-  right: 0px;
-  top: 24px;
-`;
-
 const TableBody = styled(TableHead)`
   padding: 25px 5px;
   cursor: pointer;

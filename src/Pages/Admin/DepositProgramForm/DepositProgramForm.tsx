@@ -132,9 +132,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
         </Row>
 
         <Table>
-          <TableHead>
-            <Label>{t('depositsPrograms.affiliateRatio')}</Label>
-          </TableHead>
+          <Label>{t('depositsPrograms.affiliateRatio')}</Label>
           <TableBody>
             <ColumnGroup hide={startColumn}>
               <ColumnHead onClick={() => setStartColumn(!startColumn)}>
@@ -570,17 +568,6 @@ const TableBody = styled.div`
     flex-direction: column;
     gap: 20px;
   }
-`;
-const TableHead = styled.div`
-  /* font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 20px;
-  display: flex;
-  align-items: center;
-  letter-spacing: 0.1px;
-
-  color: #515172; */
 `;
 
 const ColumnGroup = styled.div<{ labelHide?: boolean; hide?: boolean }>`
