@@ -45,31 +45,31 @@ export const HubProvider: FC = ({ children }: any) => {
 
   useEffect(() => {
     const hubConnection = new signalR.HubConnectionBuilder()
-    .configureLogging(signalR.LogLevel.Debug)
-    .withUrl(`${API_URL}/accounts`, {
-      skipNegotiation: true,
-      transport: signalR.HttpTransportType.WebSockets,
-      accessTokenFactory: () => myToken,
-    })
-    .withAutomaticReconnect()
-    .build()
+      .configureLogging(signalR.LogLevel.Debug)
+      .withUrl(`${API_URL}/accounts`, {
+        skipNegotiation: true,
+        transport: signalR.HttpTransportType.WebSockets,
+        accessTokenFactory: () => myToken,
+      })
+      .withAutomaticReconnect()
+      .build();
 
     hubConnection
       .start()
       .then(() => {
         setHubConnection(hubConnection);
-        console.log("connected", isFailed);
-        if (window.location.pathname == "/tech") {
+        console.log('connected', isFailed);
+        if (window.location.pathname == '/tech') {
           setIsFailed(false);
-        };
+        }
       })
       .catch((e: Error) => {
-        console.error(e)
+        console.error(e);
         setMyToken('');
         console.log(e);
-        console.log("notConnected", isFailed);
+        console.log('notConnected', isFailed);
         setIsFailed(true);
-        setUser("");
+        setUser('');
       });
 
     console.log(hubConnection);
@@ -119,7 +119,7 @@ export const HubProvider: FC = ({ children }: any) => {
           setIsAdmin(false);
           setLoading(false);
         });
-    };
+    }
     return function cleanup() {
       hubConnection?.off('BalanceUpdate', cb);
       if (hubConnection !== null) {
@@ -150,7 +150,7 @@ export const HubProvider: FC = ({ children }: any) => {
         balance,
         isAdmin,
         balanceList,
-        isFailed
+        isFailed,
       }}
     >
       {children}

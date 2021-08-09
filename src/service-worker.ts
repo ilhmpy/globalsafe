@@ -12,8 +12,9 @@ import { clientsClaim } from 'workbox-core';
 import { ExpirationPlugin } from 'workbox-expiration';
 import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
-// import { StaleWhileRevalidate } from 'workbox-strategies';
-import {NetworkOnly} from 'workbox-strategies';
+import { StaleWhileRevalidate } from 'workbox-strategies';
+import { NetworkFirst } from 'workbox-strategies';
+import {CacheableResponsePlugin} from 'workbox-cacheable-response';
 
 declare const self: ServiceWorkerGlobalScope;
 
@@ -24,6 +25,37 @@ clientsClaim();
 // This variable must be present somewhere in your service worker file,
 // even if you decide not to use precaching. See https://cra.link/PWA
 precacheAndRoute(self.__WB_MANIFEST);
+
+import {CacheFirst} from 'workbox-strategies';
+
+
+registerRoute(
+  /.*\.json/,
+  new CacheFirst({
+    cacheName: 'json',
+    plugins: [
+      new ExpirationPlugin({
+        maxEntries: 2,
+      }),
+    ],
+  }),
+);
+
+registerRoute(
+  ({url}) => url.origin === 'https://fonts.gstatic.com',
+  new CacheFirst({
+    cacheName: 'google-fonts-webfonts',
+    plugins: [
+      new CacheableResponsePlugin({
+        statuses: [0, 200],
+      }),
+      new ExpirationPlugin({
+        maxAgeSeconds: 60 * 60 * 24 * 365,
+        maxEntries: 30,
+      }),
+    ],
+  })
+);
 
 // Set up App Shell-style routing, so that all navigation requests
 // are fulfilled with your index.html shell. Learn more at
@@ -60,15 +92,14 @@ registerRoute(
   // Add in any other file extensions or routing criteria as needed.
   ({ url }) => url.origin === self.location.origin && url.pathname.endsWith('.png'),
   // Customize this strategy as needed, e.g., by changing to CacheFirst.
-  // new StaleWhileRevalidate({
-  //   cacheName: 'images',
-  //   plugins: [
-  //     // Ensure that once this runtime cache reaches a maximum size the
-  //     // least-recently used images are removed.
-  //     new ExpirationPlugin({ maxEntries: 50 }),
-  //   ],
-  // })
-  new NetworkOnly()
+  new StaleWhileRevalidate({
+    cacheName: 'images',
+    plugins: [
+      // Ensure that once this runtime cache reaches a maximum size the
+      // least-recently used images are removed.
+      new ExpirationPlugin({ maxEntries: 50 }),
+    ],
+  })
 );
 
 // This allows the web app to trigger skipWaiting via
@@ -79,3 +110,4 @@ self.addEventListener('message', (event) => {
   }
 });
 
+// Any other custom service worker logic can go here.
