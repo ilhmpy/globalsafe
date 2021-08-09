@@ -2131,9 +2131,7 @@ export const Main = () => {
       <Header />
       <MainPage id="banner">
         {showTimer && (
-          <TimerPopup onClick={onShowModal}>
-            <Timer closeTimer={closeTimer} icon={true} clock={clock} />
-          </TimerPopup>
+          <Timer closeTimer={closeTimer} icon={true} clock={clock} />
         )}
 
         {showModal && (

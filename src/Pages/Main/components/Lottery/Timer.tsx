@@ -21,13 +21,16 @@ export const Timer: FC<Props> = ({
   closeTimer,
   timerHistory,
 }: Props) => {
-  const [state, setState] = useState<null | string>(null);
+  const [state, setState] = useState<any[]>([]);
   const [deadline, setDeadline] = useState(-1);
   const [clock, setClock] = useState<RootClock | null>(null);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const { t } = useTranslation();
   const [clickOnIcon, setClickOnIcon] = useState<boolean>(false);
+  const [over50, setOver50] = useState<boolean>(false);
+  const [progress, setProgress] = useState<number>(15);
+  const [display, setDisplay] = useState<boolean>(false);
 
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   const languale = lang === 'ru' ? 1 : 0;
@@ -43,8 +46,10 @@ export const Timer: FC<Props> = ({
         .invoke<RootClock>('GetNextDraw')
         .then((res) => {
           setClock(res);
+          console.log(res);
+          setProgress(103);
           setDeadline(res.totalSeconds);
-          setState('0');
+          setState([]);
         })
         .catch((e) => console.log(e));
     }
@@ -69,20 +74,19 @@ export const Timer: FC<Props> = ({
   useEffect(() => {
     let cancel = false;
     if (deadline < 1 && !cancel) {
-      setState(null);
+      setState([]);
       // repeat();
       return;
     }
 
     const timer = setInterval(() => {
       const durations = moment.duration(deadline, 'seconds');
-      let formatted;
-      if (languale === 1) {
-        formatted = durations.format('d [дн] h [ч] m [мин]', { trim: false });
-      } else {
-        formatted = durations.format('d [d] h [h] m [m]', { trim: false });
-      }
-      !cancel && setState(formatted);
+      console.log(Math.floor(durations.asDays()))
+      const minutes = Math.floor(durations.asMinutes()) != 59 ? 
+                      Math.floor(durations.asMinutes()) + 1 : Math.floor(durations.asMinutes()); 
+      !cancel && setState(
+        Math.floor(durations.asMinutes()) !== 0 ? 
+            [Math.floor(durations.asDays()), Math.floor(durations.asHours()), minutes] : [0, 0, 0]);
       !cancel && setDeadline(deadline - 1);
     }, 1000);
 
@@ -94,20 +98,24 @@ export const Timer: FC<Props> = ({
 
   return (
     <>
-      {!timerHistory ? (
-        <Styled.TimerContainer>
-          {icon && <Styled.CloseIcon onClick={closeTimer} />}
-          <Styled.TimerTitle>{t('timerStart')}</Styled.TimerTitle>
-          <Styled.TimerValue nodata={clock === null || state === '0'}>{state}</Styled.TimerValue>
-        </Styled.TimerContainer>
-      ) : (
-        <Styled.TimerHistoryInner>
-          <Styled.TimerHisroryTitle>{t('newDraw')}</Styled.TimerHisroryTitle>
-          <Styled.TimerHistoryValue nodata={clock === null || state === '0'}>
-            {state}
-          </Styled.TimerHistoryValue>
-        </Styled.TimerHistoryInner>
-      )}
+      <Styled.TimerModal display={display}> 
+        <Styled.TimerModalTitle>{t("time.title")}</Styled.TimerModalTitle>
+        {state && (<Styled.TimerModalDuration><span>{state[0]}</span> : <span>{state[1]}</span> : <span>{state[2]}</span></Styled.TimerModalDuration>)}
+        <Styled.TimerModalUnits>
+          <span>{t("time.days")}</span> <span>{t("time.hours")}</span> <span>{t("time.minutes")}</span>
+        </Styled.TimerModalUnits> 
+      </Styled.TimerModal>
+      <Styled.TimerCircle
+        onMouseOver={() => setDisplay(!display)}
+        onMouseOut={() => setDisplay(!display)}
+      >
+        <div>
+          <Styled.TimerProgress progress={progress}></Styled.TimerProgress>
+          <Styled.TimerIn>
+            <Prize />
+          </Styled.TimerIn>
+        </div>
+      </Styled.TimerCircle>
     </>
   );
 };

@@ -488,3 +488,137 @@ export const TimerIcon = styled.div`
       position: absolute;
     }
 `;
+
+export const TimerCircle = styled.div`
+  position: fixed;
+  right: 50px;
+  top: 600px;
+  width: 52px; 
+  height: 52px;
+  display: flex;
+  flex-direction: column;
+  aligns-items: center;
+  z-index: 999;
+  justify-content: center;
+  padding-left: 4px;
+  cursor: pointer;
+  background: ${({ theme }) => theme.timer.bg};
+  border-radius: 50%;
+
+  & > div {
+    position: relative; 
+    width: 45px;
+    height: 45px;
+    border-radius: 50%; 
+    background: ${({ theme }) => theme.timer.bg};
+    overflow: hidden;  
+  }
+
+  @media only screen and (max-device-width: 620px) {
+    right: 15px;
+  }
+`;
+
+export const TimerIn = styled.div`
+  position: absolute; 
+  width: 40px; 
+  height: 41px; 
+  margin: 2px; 
+  border-radius: 50%; 
+  background: ${({ theme }) => theme.timer.bg};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & > svg {
+    width: 23px;
+    height: 23px;
+  }
+`;
+
+export const TimerProgress = styled.div<{ progress: number; }>`
+  height: 55px; 
+  width: 165px; 
+  background: #FF416E; 
+  position: absolute; 
+  top: -55px; 
+  left: -50px;
+  transform: ${({ progress }) => `rotate(${progress}deg)`}; 
+  transform-origin: 55px 55px; 
+  transition: all .3s; 
+`; 
+
+export const TimerModal = styled.div<{ display?: boolean; }>` 
+  width: 80%;
+  max-width: 260px;
+  background: ${({ theme }) => theme.timer.bg};
+  border-radius: 10px;
+  position: fixed;
+  right: 50px;
+  top: 430px;
+  box-shadow: rgba(86, 101, 127, 0.05);
+  padding: 20px;
+  display: ${({ display }) => display ? "flex" : "none"};
+  min-height: 151px;
+  flex-direction: column; 
+  justify-content: center;
+  align-items: center;
+
+  @media only screen and (max-device-width: 620px) {
+    right: 15px;
+  }
+
+  &::after {
+    content: "";
+    display: block;
+    width: 30px;
+    height: 30px;
+    background: ${({ theme }) => theme.timer.bg};
+    border-radius: 10px;
+    position: absolute;
+    right: 15px;
+    bottom: -8px;
+    transform: rotate(40deg);
+  }
+`;
+
+export const TimerModalTitle = styled.h3`
+  text-align: center;
+  font-size: 1.20em;
+  letter-spacing: 0.1px;
+  max-width: 220px;
+  font-weight: 500;
+  margin-bottom: 10px;
+`; 
+
+export const TimerModalDuration = styled.h3`
+  text-align: center;
+  font-size: 1.60em;
+  color: ${({ theme }) => theme.timer.color};
+  word-spacing: 10px;
+  margin-bottom: 2px;
+
+  & > span {
+    color: #FF416E;
+  }
+`;
+
+export const TimerModalUnits = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  grid-gap: 15px;
+
+  & > span:nth-child(1) {
+    margin-right: 10px;
+  }
+
+  & > span:nth-child(2) {
+    margin-right: 10px;
+  }
+
+  & > span {
+    color: ${({ theme }) => theme.timer.color};
+  }
+`;

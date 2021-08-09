@@ -74,6 +74,10 @@ export const lightTheme = {
   loader: {
     bg: "rgba(0, 0, 0, 0.2)",
     pointsColor: "#2b3595"
+  },
+  timer: {
+    bg: "#fff",
+    color: "#515172"
   }
 };
 
@@ -145,6 +149,10 @@ export const darkTheme = {
   loader: {
     bg: "rgba(48,48,48,1)",
     pointsColor: "#fff"
+  },
+  timer: {
+    bg: "rgba(33,33,33,1)",
+    color: "#fff"
   }
 };
  
