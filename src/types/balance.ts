@@ -18,3 +18,9 @@ export type BalanceList = {
     balanceKind: number;
     volume: number;
 }
+export type Notify = {
+  text: string;
+  error: boolean;
+  timeleft: number;
+  id: number;
+}

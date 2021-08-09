@@ -2,17 +2,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTranslation } from 'react-i18next';
-import ReactNotification from 'react-notifications-component';
-import 'react-notifications-component/dist/theme.css';
 import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components/macro';
 import burgerGroup from '../../assets/img/burgerGroup.png';
 import { ReactComponent as Exit } from '../../assets/svg/exit.svg';
 import { Button } from '../../components/Button/Button';
 import { Select } from '../../components/Select/Select2';
-import { AcceptAllInput } from '../../components/UI/AcceptAllInput';
 import { TestInput } from '../../components/UI/DayPicker';
-import { List } from '../../components/UI/List';
 import { Loading } from '../../components/UI/Loading';
 import { Content, Tab } from '../../components/UI/Tabs';
 import { UpTitle } from '../../components/UI/UpTitle';
@@ -45,9 +41,7 @@ import {
   WindowBody,
   WindowTitle,
 } from './Styled.elements';
-import { Modal } from "../../components/Modal/Modal";
-import { Notify } from '../../types/notify';
- 
+
 export const AdminPay = () => {
   const [active, setActive] = useState(0);
   const sizes = useWindowSize();
@@ -468,7 +462,6 @@ export const AdminPay = () => {
 
   return (
     <>
-      <ReactNotification /> 
       <Styled.HeadBlock>
         <SelfUpTitle small>{t('adminPay.uptitle')}</SelfUpTitle>
         <Styled.UserName>
