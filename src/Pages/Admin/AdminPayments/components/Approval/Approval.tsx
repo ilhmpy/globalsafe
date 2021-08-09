@@ -327,11 +327,12 @@ export const Approval: FC<Props> = ({
           sorting
         )
         .then((res) => {
+          console.log('.then ~ res', res);
           setTotalDeposits(res.totalRecords);
+          setLoading(false);
           if (res.collection.length) {
             setDepositList(res.collection);
             setTotalDeposits(res.totalRecords);
-            setLoading(false);
           }
         })
         .catch((err: Error) => {
