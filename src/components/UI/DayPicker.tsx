@@ -277,7 +277,7 @@ export const TestInput: FC<TestInputProps> = ({ label, openDate, setOpenDate }: 
   useOnClickOutside(ref, handleClickOutside);
 
   const handleDayClick = (day: Date) => {
-    const range = DateUtils.addDayToRange(day, openDate as any);
+    const range: any = DateUtils.addDayToRange(day, openDate as any);
     setSelfDate({ from: range.from, to: range.to });
     setOpenDate({ from: range.from, to: range.to });
 
@@ -419,7 +419,7 @@ export const TestInputAnalitic: FC<TestInputAnaliticProps> = ({
   // };
 
   const handleDayClick = (day: Date) => {
-    const range = DateUtils.addDayToRange(day, selfDate);
+    const range: any = DateUtils.addDayToRange(day, selfDate);
     setSelfDate({ from: range.from, to: range.to });
     setOpenDate({ from: range.from, to: range.to });
   };
