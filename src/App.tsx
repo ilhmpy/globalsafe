@@ -16,7 +16,7 @@ import TechWorks from './Pages/Tech/TechWorks';
 declare global {
   interface Window {
     OneSignal: any;
-  } 
+  }
 }
 const App: FC = () => {
   const token = localStorage.getItem('token');
@@ -35,30 +35,30 @@ const App: FC = () => {
     setOnline(navigator.onLine);
   }, []);
 
-  window.addEventListener("online", onlineState);
-  window.addEventListener("offline", onlineState);
+  window.addEventListener('online', onlineState);
+  window.addEventListener('offline', onlineState);
 
   function onlineState() {
     setOnline(window.navigator.onLine);
-    console.log("online update state event working, and set online/offline status")
-  }; 
+    console.log('online update state event working, and set online/offline status');
+  }
 
   useEffect(() => {
     if (isFailed != null) {
-      if (online && window.location.pathname != "/tech") {
-        console.log("user online but server not working")
-        window.location.href = "/tech";
-      };
-
-      if (!online && window.location.pathname == "/tech") {
-        console.log("user offline")
-        window.location.href = "/";
+      if (online && window.location.pathname != '/tech') {
+        console.log('user online but server not working');
+        window.location.href = '/tech';
       }
 
-      if (isFailed == false && window.location.pathname == "/tech") {
-        window.location.href = "/";
-      };
-    };
+      if (!online && window.location.pathname == '/tech') {
+        console.log('user offline');
+        window.location.href = '/';
+      }
+
+      if (isFailed == false && window.location.pathname == '/tech') {
+        window.location.href = '/';
+      }
+    }
   }, [isFailed, navigator.onLine]);
 
   const subscribe = useCallback(
@@ -73,7 +73,7 @@ const App: FC = () => {
     [hubConnection]
   );
 
-  const unSubscribe = useCallback( 
+  const unSubscribe = useCallback(
     (id: string) => {
       if (hubConnection) {
         hubConnection
@@ -129,7 +129,7 @@ const App: FC = () => {
       } catch (e) {
         console.error(e);
       }
-    } 
+    }
   }, [user]);
 
   return (
@@ -138,14 +138,7 @@ const App: FC = () => {
         <GlobalStyle />
 
         <Switch>
-          <Route
-            path="/"
-            component={Main}
-            push={OneSignal.push}
-            on={OneSignal.on}
-            getUserId={OneSignal.getUserId}
-            exact
-          />
+          <Route path="/" component={Main} exact />
           <Route path="/admin" component={Admin} />
           <Route path="/info" component={InfoMain} />
           <Route path="/login" component={Authentication} />
