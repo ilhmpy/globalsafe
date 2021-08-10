@@ -81,7 +81,6 @@ export const Timer: FC<Props> = ({
 
     const timer = setInterval(() => {
       const durations = moment.duration(deadline, 'seconds');
-      console.log(Math.floor(durations.asDays()))
       const minutes = Math.floor(durations.asMinutes()) != 59 ? 
                       Math.floor(durations.asMinutes()) + 1 : Math.floor(durations.asMinutes()); 
       !cancel && setState(

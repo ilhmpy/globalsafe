@@ -12,6 +12,7 @@ import { Card } from '../../../../globalStyles';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useTranslation } from 'react-i18next';
 import brand from '../../../../assets/svg/Gs.svg';
+import { ReactComponent as PrizeSVG } from "../../../../assets/svg/prize.svg";
 
 type Props = {
   clock: number | null;
@@ -47,7 +48,7 @@ export const ModalLottery: FC<Props> = ({
 
   return (
     <Modal width={1100} onClose={onCloseModal} mobMarg>
-      <Styled.Container>
+      <Styled.Container before={!!drawResult ? false : true}>
         {/* <button onClick={testResult}>test</button> */}
         <CSSTransition in={!!drawResult} timeout={300} classNames="alert" unmountOnExit>
           <>
@@ -69,15 +70,12 @@ export const ModalLottery: FC<Props> = ({
 
         <Styled.ContainerItem>
           <CSSTransition in={!drawResult} timeout={300} classNames="alert" unmountOnExit>
-            <div>
-              <Styled.BrandImgAbs>
-                <img src={brand} alt="" />{' '}
-              </Styled.BrandImgAbs>
-              <Timer icon={false} clock={clock} />
-            </div>
+              <div>
+                 <Styled.LotteryModalDesc><PrizeSVG /> </Styled.LotteryModalDesc>
+              </div>
           </CSSTransition>
         </Styled.ContainerItem>
-      </Styled.Container>
+        </Styled.Container>
 
       {/* 
         {drawResult ? (

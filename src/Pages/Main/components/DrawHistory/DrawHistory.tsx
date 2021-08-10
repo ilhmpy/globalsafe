@@ -135,7 +135,6 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
           {notifyList.length &&
             notifyList.map((item, idx) => {
               if (!isMobile) {
-                console.log('DESCTOP');
                 return (
                   <CSSTransition key={idx} timeout={500} classNames="item">
                     <TableList card>
@@ -159,7 +158,6 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
                   </CSSTransition>
                 );
               } else {
-                console.log('item data', item.name, item.volume, typeWin(Number(item.kind)));
                 return (
                   <CSSTransition key={idx} timeout={500} classNames="item">
                     <TableList card>

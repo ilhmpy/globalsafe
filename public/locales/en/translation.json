@@ -404,7 +404,8 @@
     "title": "Start of the drawing in",
     "days": "days",
     "hours": "hours",
-    "minutes": "minutes"
+    "minutes": "minutes",
+    "yourPrize": "Your prize will be here"
   },
   "acceptAll": {
     "title": "Accept all",

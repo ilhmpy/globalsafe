@@ -195,7 +195,7 @@ export const Center = styled.div`
   }
 `;
 
-export const Container = styled.div`
+export const Container = styled.div<{ before?: boolean; }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -203,7 +203,6 @@ export const Container = styled.div`
   /* background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0) 100%),
     linear-gradient(113.23deg, #ffffff 25.61%, #f3f4f5 60.51%); */
   max-width: 1060px;
-  margin: 0px auto 10px;
   height: 500px;
   @media (max-width: 1070px) {
     height: auto;
@@ -212,6 +211,25 @@ export const Container = styled.div`
   @media (max-width: 950px) {
     margin: 0px auto 50px;
   }
+
+  ${({ before }) => {
+    if (before) {
+      return `
+        margin: 0 auto;
+        width: 100%;
+        max-width: 900px;
+        align-items: normal;
+        justify-content: normal;
+
+        & > div {
+          width: 100%;
+          display: block;
+          padding-top: 12px;
+          padding-bottom: 13px;
+        }
+      `;
+    };
+  }}
 `;
 
 export const ContainerItem = styled.div`
@@ -621,4 +639,24 @@ export const TimerModalUnits = styled.div`
   & > span {
     color: ${({ theme }) => theme.timer.color};
   }
+`;
+
+export const LotteryModalDesc = styled.div`
+    width: 70%;
+    max-width: 325px;
+    background: ${({ theme }) => theme.timer.bg};
+    -webkit-box-shadow: 2px 4px 13px 1px rgba(86, 101, 127, 0.2);
+    -moz-box-shadow: 2px 4px 13px 1px rgba(86, 101, 127, 0.2);
+    box-shadow: 2px 4px 13px 1px rgba(86, 101, 127, 0.2);
+    min-height: 66px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    padding-right: 20px;
+
+    & > svg {
+      width: 30px;
+      height: 30px;
+    }
 `;
