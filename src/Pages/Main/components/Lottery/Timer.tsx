@@ -13,6 +13,7 @@ type Props = {
   icon: boolean;
   closeTimer?: (e: React.MouseEvent) => void;
   timerHistory?: boolean;
+  setShowModal: (value: boolean) => void;
 };
 
 export const Timer: FC<Props> = ({
@@ -20,6 +21,7 @@ export const Timer: FC<Props> = ({
   icon,
   closeTimer,
   timerHistory,
+  setShowModal,
 }: Props) => {
   const [state, setState] = useState<any[]>([]);
   const [deadline, setDeadline] = useState(-1);
@@ -81,11 +83,9 @@ export const Timer: FC<Props> = ({
 
     const timer = setInterval(() => {
       const durations = moment.duration(deadline, 'seconds');
-      const minutes = Math.floor(durations.asMinutes()) != 59 ? 
-                      Math.floor(durations.asMinutes()) + 1 : Math.floor(durations.asMinutes()); 
       !cancel && setState(
         Math.floor(durations.asMinutes()) !== 0 ? 
-            [Math.floor(durations.asDays()), Math.floor(durations.asHours()), minutes] : [0, 0, 0]);
+            [Math.floor(durations.asDays()), Math.floor(durations.asHours()), Math.floor(durations.asMinutes())] : [0, 0, 0]);
       !cancel && setDeadline(deadline - 1);
     }, 1000);
 
@@ -95,18 +95,25 @@ export const Timer: FC<Props> = ({
     };
   }, [state, deadline]);
 
+  const openWindow = () => {
+    if (screen.width > 480) {
+      setDisplay(!display);
+    };
+  };
+
   return (
     <>
       <Styled.TimerModal display={display}> 
         <Styled.TimerModalTitle>{t("time.title")}</Styled.TimerModalTitle>
-        {state && (<Styled.TimerModalDuration><span>{state[0]}</span> : <span>{state[1]}</span> : <span>{state[2]}</span></Styled.TimerModalDuration>)}
+          {state && (<Styled.TimerModalDuration><span>{state[0]}</span> : <span>{state[1]}</span> : <span>{state[2]}</span></Styled.TimerModalDuration>)}
         <Styled.TimerModalUnits>
           <span>{t("time.days")}</span> <span>{t("time.hours")}</span> <span>{t("time.minutes")}</span>
         </Styled.TimerModalUnits> 
       </Styled.TimerModal>
       <Styled.TimerCircle
-        onMouseOver={() => setDisplay(!display)}
-        onMouseOut={() => setDisplay(!display)}
+        onMouseOver={openWindow}
+        onMouseOut={openWindow}
+        onClick={() => setShowModal(true)}
       >
         <div>
           <Styled.TimerProgress progress={progress}></Styled.TimerProgress>
@@ -118,3 +125,119 @@ export const Timer: FC<Props> = ({
     </>
   );
 };
+
+type OldTimerProps = {
+  modalTimer?: boolean;
+  history?: boolean;
+};
+
+export const OldTimer: FC<OldTimerProps> = ({ modalTimer, history }: OldTimerProps) => {
+  const [state, setState] = useState<any>(null);
+  const [deadline, setDeadline] = useState(-1);
+  const [clock, setClock] = useState<any>(null);
+  const [isMobile, setIsMobile] = useState<boolean | undefined>();
+  const [otherState, setOtherState] = useState<any[] | undefined>();
+
+  useEffect(() => {
+    setIsMobile(screen.width > 480);
+  }, []);
+
+  const appContext = useContext(AppContext); 
+  const hubConnection = appContext.hubConnection;
+  const { t } = useTranslation();
+  const lang = localStorage.getItem('i18nextLng') || 'ru';
+  const languale = lang === 'ru' ? 1 : 0;
+
+  useEffect(() => {
+    let cancel = false;
+    const cb = (data: any) => {
+      setDeadline(data.totalSeconds);
+    };
+    if (hubConnection && !cancel) {
+      hubConnection.on('DrawCountdown', cb);
+      hubConnection
+        .invoke<RootClock>('GetNextDraw')
+        .then((res) => {
+          setClock(res);
+          setDeadline(res.totalSeconds);
+          setState([]);
+        })
+        .catch((e) => console.log(e));
+    }
+    return () => {
+      hubConnection?.off('DrawCountdown', cb);
+      cancel = true;
+    };
+  }, [hubConnection]);
+
+  const repeat = () => {
+    if (hubConnection) {
+      hubConnection
+        .invoke<RootClock>('GetNextDraw')
+        .then((res) => {
+          setDeadline(res.totalSeconds);
+          setClock(res);
+        })
+        .catch((e) => console.log(e));
+    }
+  };
+
+  useEffect(() => {
+    let cancel = false;
+    if (deadline < 1 && !cancel) {
+      setState([]);
+      return;
+    }
+    
+    const timer = setInterval(() => {
+      const durations = moment.duration(deadline, 'seconds');
+      let formatted;
+      if (languale === 1) {
+        formatted = durations.format('d [дн] h [ч] m [мин]', { trim: false });
+      } else {
+        formatted = durations.format('d [d] h [h] m [m]', { trim: false });
+      }
+      !cancel && setOtherState(
+        Math.floor(durations.asMinutes()) !== 0 ? 
+            [Math.floor(durations.asDays()), Math.floor(durations.asHours()), Math.floor(durations.asMinutes())] : [0, 0, 0]);
+      !cancel && setState(formatted);
+      !cancel && setDeadline(deadline - 1);
+    }, 1000);
+
+    return () => {
+      clearInterval(timer);
+      cancel = true;
+    };
+  });
+
+  return (
+    <>
+      {
+        isMobile ? (
+          <Styled.TimerHistoryInner mt={modalTimer} history={history}>
+             <Styled.TimerHisroryTitle>{history ? t('newDraw') : t('timerStart')}</Styled.TimerHisroryTitle>
+             <Styled.TimerHistoryValue nodata={clock === null || state === '0'}>
+                {state}
+             </Styled.TimerHistoryValue>
+          </Styled.TimerHistoryInner>
+        ) : (
+          <TimerModal state={otherState} />
+        )
+      }
+    </> 
+  );
+};
+
+export const TimerModal = ({ state }: any) => {
+  const { t } = useTranslation();
+
+  return (
+    <Styled.TimerModal fixed> 
+      <Styled.TimerModalTitle>{t("time.title")}</Styled.TimerModalTitle>
+      {state && (<Styled.TimerModalDuration><span>{state[0]}</span> : <span>{state[1]}</span> : <span>{state[2]}</span></Styled.TimerModalDuration>)}
+      <Styled.TimerModalUnits>
+        <span>{t("time.days")}</span> <span>{t("time.hours")}</span> <span>{t("time.minutes")}</span>
+      </Styled.TimerModalUnits> 
+    </Styled.TimerModal>
+  )
+}

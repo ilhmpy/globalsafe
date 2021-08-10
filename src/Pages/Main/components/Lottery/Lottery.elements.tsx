@@ -271,8 +271,8 @@ export const ContainerItem = styled.div`
     transition: opacity 5000ms;
   }
   @media (max-width: 576px) {
-    max-width: 260px;
-    margin: 0 10px;
+    max-width: 280px;
+    margin: 0 auto;
     ${TimerContainer} {
       width: 250px;
     }
@@ -439,11 +439,42 @@ export const ModalButton = styled(Button)`
   margin: 37px auto 0;
 `;
 
-export const TimerHistoryInner = styled.div`
+export const TimerHistoryInner = styled.div<{ mt?: boolean; history?: boolean; }>`
   margin-right: 80px;
+  width: 80%;
+  max-width: 341px;
+  height: 123px;
+  display: flex;
+  justify-content: center;
+  padding-left: 40px;
+  flex-direction: column;
+  border-radius: 20px;
+  -webkit-box-shadow: 1px 0px 12px 1px rgba(34, 60, 80, 0.2);
+  -moz-box-shadow: 1px 0px 12px 1px rgba(34, 60, 80, 0.2);
+  box-shadow: 1px 0px 12px 1px rgba(34, 60, 80, 0.2);
+ 
   @media (max-width: 768px) {
     margin-right: 0px;
   }
+
+  ${({ mt, history }) => {
+    if (mt) {
+      return `
+        margin: 0;
+        margin-top: 35px;
+        margin-left: auto;
+      `;
+    };
+
+    if (history) {
+      return `
+        box-shadow: none;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        height: 83px;
+      `;
+    };
+  }}
 `;
 
 export const TimerHistoryValue = styled.div<{ nodata?: boolean }>`
@@ -566,7 +597,7 @@ export const TimerProgress = styled.div<{ progress: number; }>`
   transition: all .3s; 
 `; 
 
-export const TimerModal = styled.div<{ display?: boolean; }>` 
+export const TimerModal = styled.div<{ display?: boolean; fixed?: boolean; }>` 
   width: 80%;
   max-width: 260px;
   background: ${({ theme }) => theme.timer.bg};
@@ -598,6 +629,46 @@ export const TimerModal = styled.div<{ display?: boolean; }>`
     bottom: -8px;
     transform: rotate(40deg);
   }
+
+  ${({ fixed }) => {
+    if (fixed) {
+      return `
+        position: static;
+        display: block;
+        -webkit-box-shadow: 2px 4px 13px 1px rgba(86, 101, 127, 0.2);
+        -moz-box-shadow: 2px 4px 13px 1px rgba(86, 101, 127, 0.2);
+        box-shadow: 2px 4px 13px 1px rgba(86, 101, 127, 0.2);
+        max-width: 300px;
+        width: 100%;
+        min-height: 80px;
+        margin-top: 20px;
+        border-radius: 30px;
+        padding: 10px;
+        padding-top: 15px;
+        padding-left: 5px;
+
+        & ${TimerModalTitle} {
+          font-size: 1em;
+        }
+
+        & ${TimerModalDuration} {
+          text-align: none;
+          padding-left: 0;
+          font-size: 1.85em;
+          max-width: 200px;
+        }
+
+        & ${TimerModalUnits} {
+          justify-content: none;
+          max-width: 200px;
+        }
+
+        &::after {
+          display: none;
+        }
+      `;
+    }
+  }}
 `;
 
 export const TimerModalTitle = styled.h3`
@@ -654,9 +725,51 @@ export const LotteryModalDesc = styled.div`
     align-items: center;
     padding-left: 20px;
     padding-right: 20px;
+    color: #FF416E;
+    font-weight: 500;
+    font-size: 1.43em;
 
     & > svg {
       width: 30px;
       height: 30px;
+      margin-right: 15px;
+    }
+
+    & > span {
+      margin-top: 5px;
+    }
+
+    @media only screen and (max-device-width: 620px) {
+      width: 100%;
+      max-width: 100%;
+      margin: 0 auto;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 40px;
+      font-size: 1.10em;
+      border-radius: 30px;
+
+      & > svg {
+        width: 22px;
+        height: 22px;
+      }
     }
 `;
+
+export const LotteryFlexBox = styled.div`
+  width: 100%;
+  display: flex;
+  padding-top: 90px;
+
+  @media only screen and (max-device-width: 576px) {
+    display: block;
+    padding-top: 30px;
+
+    & > svg {
+      width: 236px;
+      height: 150px;
+      margin: 0 auto;
+      display: block;
+    }
+  }
+`; 

@@ -2131,9 +2131,9 @@ export const Main = () => {
       <Header />
       <MainPage id="banner">
         {showTimer && (
-          <Timer closeTimer={closeTimer} icon={true} clock={clock} />
+          <Timer closeTimer={closeTimer} icon={true} clock={clock} setShowModal={setShowModal} />
         )}
-
+ 
         {showModal && (
           <ModalLottery
             drawResult={drawResult}
