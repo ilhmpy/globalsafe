@@ -1,9 +1,7 @@
-import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
-import React, { FC, useCallback, useContext, useState, useEffect } from 'react';
+import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
-import { Loader } from './components/Loader/Loader';
-import { APP_ID, APP_SAFARI_ID } from './constantes/onesignal';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { APP_SAFARI_ID } from './constantes/onesignal';
 import { AppContext } from './context/HubContext';
 import GlobalStyle from './globalStyles';
 import { Admin } from './Pages/Admin';
@@ -84,6 +82,17 @@ const App: FC = () => {
     },
     [hubConnection]
   );
+  //   public func notifyAboutSubscription(userObject:User, receiverArray:[String]) {
+  //     var receiverArray = removeChallengeCreatorTokenFromArray(receiverArray: receiverArray)
+
+  //     notificationTypeService.clearReceiverListForNotificationType(completionHandler: { (clearedReceiverArray) in
+  //         receiverArray = clearedReceiverArray
+
+  //         let source = self.determineUserType(userObject: userObject)
+  //         OneSignal.postNotification(["contents": ["en": source +
+  //             " started following you", "de": source + " folgt dir jetzt", "tr": source + " seni takip ediyor"], "include_player_ids": receiverArray])
+  //     }, receiverList: receiverArray, notificationType: NotificationType.follow)
+  // }
 
   useEffect(() => {
     if (token && user) {
@@ -92,8 +101,14 @@ const App: FC = () => {
           OneSignal.SERVICE_WORKER_PARAM = { scope: '/push/onesignal/' };
           OneSignal.SERVICE_WORKER_PATH = 'push/onesignal/OneSignalSDKWorker.js';
           OneSignal.SERVICE_WORKER_UPDATER_PATH = 'push/onesignal/OneSignalSDKUpdaterWorker.js';
+          // OneSignal.postNotification(["contents": ["en": 'source' +
+          //       FOLLOW_MESSAGE, "de": 'source' + " folgt dir jetzt", "tr": 'source' + " seni takip ediyor"], "include_player_ids": 'receiverArray'])
           OneSignal.init({
-            appId: APP_ID,
+            appId: '81f9a56e-ad59-406c-86de-4b7521cdc636',
+            contents: { en: 'English Message' },
+            filters: {
+              language: 'ru',
+            },
             safari_web_id: APP_SAFARI_ID,
             notifyButton: {
               enable: true,
