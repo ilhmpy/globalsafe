@@ -23,7 +23,7 @@ export const Timer: FC<Props> = ({
   timerHistory,
   setShowModal,
 }: Props) => {
-  const [state, setState] = useState<any[]>([]);
+  const [state, setState] = useState<any[] | null>(null);
   const [deadline, setDeadline] = useState(-1);
   const [clock, setClock] = useState<RootClock | null>(null);
   const appContext = useContext(AppContext);
@@ -34,7 +34,7 @@ export const Timer: FC<Props> = ({
   const [display, setDisplay] = useState<boolean>(false);
   const [allTimeLottery, setAllTimeLottery] = useState<any>(null);
   const [defaultTimeLottery, setDefaultTimeLottery] = useState<any>(null);
-  const [timerProgress, setTimerProgress] = useState<string | number>("");
+  const [timerProgress, setTimerProgress] = useState<string | number>(0);
 
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   const languale = lang === 'ru' ? 1 : 0;
@@ -66,7 +66,7 @@ export const Timer: FC<Props> = ({
             setDefaultTimeLottery(res[1]);
             setProgress(getProgress(res));
           };
-          setState([]);
+          setState(null);
         })
         .catch((e) => console.log(e));
     }
@@ -113,34 +113,61 @@ export const Timer: FC<Props> = ({
     };
   }, [state, deadline]);
 
-  const openWindow = () => {
+  let closeTimeOut: any;
+
+  const openWindow = (e: any) => {
     if (screen.width > 480) {
-      setDisplay(!display);
+      let timeOut: any;
+
+      if (e.type == "mouseover") {
+        setDisplay(true);
+        timeOut = setTimeout(() => setTimerProgress(100), 1000);
+      } else {
+        clearTimeout(timeOut);
+        setTimerProgress(0);
+        setDisplay(false);
+      };
     };
   };
 
   return (
     <>
-      <Styled.TimerModal display={display}> 
-        <Styled.TimerLoading progress={timerProgress} />
-        <Styled.TimerModalTitle>{t("time.title")}</Styled.TimerModalTitle>
-          {state && (<Styled.TimerModalDuration><span>{state[0]}</span> : <span>{state[1]}</span> : <span>{state[2]}</span></Styled.TimerModalDuration>)}
-        <Styled.TimerModalUnits>
-          <span>{t("time.days")}</span> <span>{t("time.hours")}</span> <span>{t("time.minutes")}</span>
-        </Styled.TimerModalUnits> 
-      </Styled.TimerModal>
-      <Styled.TimerCircle
-        onMouseOver={openWindow}
-        onMouseOut={openWindow}
-        onClick={() => setShowModal(true)}
-      >
-        <div>
-          <Styled.TimerProgress progress={progress}></Styled.TimerProgress>
-          <Styled.TimerIn>
-            <Prize />
-          </Styled.TimerIn>
-        </div>
-      </Styled.TimerCircle>
+       <Styled.TimerModal display={display}> 
+          {state == null ? (
+           <>
+              <Styled.TimerLoading progress={timerProgress} />
+              <Styled.TimerModalTitle>{t("time.title")}</Styled.TimerModalTitle>
+              {state && (<Styled.TimerModalDuration><span>{state[0]}</span> : <span>{state[1]}</span> : <span>{state[2]}</span></Styled.TimerModalDuration>)}
+              <Styled.TimerModalUnits>
+                <span>{t("time.days")}</span> <span>{t("time.hours")}</span> <span>{t("time.minutes")}</span>
+              </Styled.TimerModalUnits> 
+           </>
+          ) : (
+            <Styled.LoadingBeforeData>
+              <Styled.LoadingBeforeItem width="100%" height="34px" />
+              <div className="flex_loading">
+                <Styled.LoadingBeforeItem width="65px" height="34px" />
+                <Styled.LoadingBeforeItem width="65px" height="34px" />
+                <Styled.LoadingBeforeItem width="65px" height="34px" />
+              </div>
+              <div className="flex_loading">
+
+              </div>
+            </Styled.LoadingBeforeData>
+          )}
+        </Styled.TimerModal> 
+        <Styled.TimerCircle
+          onMouseOver={openWindow}
+          onMouseOut={openWindow}
+          onClick={() => setShowModal(true)}
+        >
+          <div>
+            <Styled.TimerProgress progress={progress}></Styled.TimerProgress>
+              <Styled.TimerIn>
+                <Prize />
+              </Styled.TimerIn>
+          </div>
+        </Styled.TimerCircle>
     </>
   );
 };

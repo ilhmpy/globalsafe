@@ -775,10 +775,40 @@ export const LotteryFlexBox = styled.div`
   }
 `; 
 
-export const TimerLoading = styled.span<{ progress: number | string; }>`
-  width: 90%:
+export const TimerLoading = styled.div<{ progress: number | string; }>`
+  width: ${({ progress }) => progress}%;
+  left: 5px;
+  max-width: 95%;
+  position: absolute;
+  top: 3px;
   height: 1px;
-  margin: 1px;
+  transition: ${({ progress }) => progress == 0 ? "" : "4s"};
   display: block;
   background: #FF416E;
+`;
+
+export const LoadingBeforeData = styled.div`
+  width: 100%;
+  height: inherit;
+
+  & > .flex_loading {
+    width: 100%;
+    display: flex;
+    margin-top: 8px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  & > .flex_loading > div {
+    margin-right: 10px;
+  }
+`;
+
+export const LoadingBeforeItem = styled.div<{ width: number | string; height: number | string; }>`
+  background: #EFF2F6;
+  border-radius: 4px;
+  height: ${({ height }) => height};
+  min-width: ${({ width }) => width};
+  width: ${({ width }) => width};
+  display: block;
 `;
