@@ -605,6 +605,7 @@ export const TimerModal = styled.div<{ display?: boolean; fixed?: boolean; }>`
   position: fixed;
   right: 50px;
   top: 430px;
+  z-index: 9999;
   box-shadow: rgba(86, 101, 127, 0.05);
   padding: 20px;
   display: ${({ display }) => display ? "flex" : "none"};
@@ -773,3 +774,11 @@ export const LotteryFlexBox = styled.div`
     }
   }
 `; 
+
+export const TimerLoading = styled.span<{ progress: number | string; }>`
+  width: 90%:
+  height: 1px;
+  margin: 1px;
+  display: block;
+  background: #FF416E;
+`;
