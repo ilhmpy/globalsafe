@@ -113,26 +113,27 @@ export const Timer: FC<Props> = ({
     };
   }, [state, deadline]);
 
-  let closeTimeOut: any;
-
   const openWindow = (e: any) => {
     if (screen.width > 480) {
       let timeOut: any;
       let closeTimeout: any;
 
       if (e.type == "mouseover") {
+        console.log(e.type);
         setDisplay(true);
         setTimerProgress(0);
-        clearInterval(timeOut);
-        clearInterval(closeTimeout);
-        timeOut = setTimeout(() => setTimerProgress(100), 1000);
-        closeTimeout = setTimeout(() => setTimerProgress(103), 6000);
-      } else {
         clearTimeout(timeOut);
-        clearInterval(closeTimeout);
+        clearTimeout(closeTimeout);
+        timeOut = setTimeout(() => {
+          setTimerProgress(100);
+        }, 1000);
+      } else {
+        console.log(e.type);
+        clearTimeout(timeOut);
+        clearTimeout(closeTimeout);
         setTimerProgress(0);
-        setDisplay(false);
-      }; 
+        setDisplay(false); 
+      };
     }; 
   };
 

@@ -670,16 +670,6 @@ export const TimerModal = styled.div<{ display?: boolean; fixed?: boolean; progr
       `;
     }
   }}
-
-  ${({ progressBar }) => {
-    if (progressBar) {
-      if (progressBar == 103) {
-        return `display: none;`;
-      } else {
-        return ``;
-      };
-    };
-  }}
 `;
 
 export const TimerModalTitle = styled.h3`
