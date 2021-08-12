@@ -26,7 +26,7 @@ import { SelectValues, SortingType } from '../../types/sorting';
 import { ModalDeposit } from './AdminPay/Payments';
 import { Rounds } from './AdminPay/Rounds';
 import { Pagination as CustomPagination } from './Pagination';
-import * as Styled from './Styled.elements';
+import * as Styled from './Styled.elements'; 
 import {
   BurgerButton,
   BurgerImg,
@@ -197,6 +197,9 @@ export const AdminDeposit = () => {
                 .toDate()
             : null,
 
+          null,
+          null,
+
           closeDate.from
             ? moment(closeDate.from)
                 .utcOffset('+00:00')
@@ -214,8 +217,7 @@ export const AdminDeposit = () => {
                 .set({ hour: 23, minute: 59, second: 59 })
                 .toDate()
             : null,
-          null,
-          null,
+        
           null,
           null,
           (currentPage - 1) * pageLength,
@@ -254,6 +256,25 @@ export const AdminDeposit = () => {
     myLoad();
   }, [currentPage, hubConnection, pageLength, sorting]);
 
+  // Request Params Model for 'GetUsersDeposits'
+  // Task<CollectionResult> GetUsersDeposits(
+  //   DepositState[] states,
+  //   string? account,
+  //   string[]? depositsSafeIds,
+  //   DateTime? createdFrom,
+  //   DateTime? createdTo,
+  //   DateTime? closedFrom,
+  //   DateTime? closedTo,
+  //   DateTime? payedFrom,
+  //   DateTime? payedTo,
+  //   bool? hasPayments,
+  //   bool? isPostponed,
+  //   long skip,
+  //   long take,
+  //   QuerySorting[] sorting)
+
+  // ## Attention ## payedFrom = closeDate.from | payedTo = closeDate.to
+
   const submit = () => {
     if (hubConnection) {
       setCurrentPage(1);
@@ -285,6 +306,9 @@ export const AdminDeposit = () => {
                 .toDate()
             : null,
 
+          null, 
+          null,
+
           closeDate.from
             ? moment(closeDate.from)
                 .utcOffset('+00:00')
@@ -303,8 +327,6 @@ export const AdminDeposit = () => {
                 .toDate()
             : null,
 
-          null,
-          null,
           null,
           null,
           (currentPage - 1) * pageLength,
@@ -391,7 +413,7 @@ export const AdminDeposit = () => {
                 />
               </Styled.SelectWrap>
               <Styled.SelectWrap input>
-                <TestInput
+                <TestInput 
                   setOpenDate={setCloseDate}
                   openDate={closeDate}
                   label={t('adminDeposit.labelDate')}
@@ -404,6 +426,7 @@ export const AdminDeposit = () => {
           </Styled.SelectContainer>
         </CSSTransition>
       </Styled.FilterBlock>
+
       <Card>
         <PaymentsTable>
           <TableHead>
