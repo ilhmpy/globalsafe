@@ -597,7 +597,7 @@ export const TimerProgress = styled.div<{ progress: number; }>`
   transition: all .3s; 
 `; 
 
-export const TimerModal = styled.div<{ display?: boolean; fixed?: boolean; }>` 
+export const TimerModal = styled.div<{ display?: boolean; fixed?: boolean; progressBar?: any; }>` 
   width: 80%;
   max-width: 260px;
   background: ${({ theme }) => theme.timer.bg};
@@ -610,7 +610,7 @@ export const TimerModal = styled.div<{ display?: boolean; fixed?: boolean; }>`
   padding: 20px;
   display: ${({ display }) => display ? "flex" : "none"};
   min-height: 151px;
-  flex-direction: column; 
+  flex-direction: column;  
   justify-content: center;
   align-items: center;
 
@@ -669,6 +669,16 @@ export const TimerModal = styled.div<{ display?: boolean; fixed?: boolean; }>`
         }
       `;
     }
+  }}
+
+  ${({ progressBar }) => {
+    if (progressBar) {
+      if (progressBar == 103) {
+        return `display: none;`;
+      } else {
+        return ``;
+      };
+    };
   }}
 `;
 
@@ -800,15 +810,27 @@ export const LoadingBeforeData = styled.div`
   }
 
   & > .flex_loading > div {
-    margin-right: 10px;
+    margin-right: 20px;
+  }
+
+  & > .flex_loading > div:nth-child(1) {
+    margin-left: 20px;
   }
 `;
 
-export const LoadingBeforeItem = styled.div<{ width: number | string; height: number | string; }>`
+export const LoadingBeforeItem = styled.div<{ width: number | string; height: number | string; circle?: boolean; }>`
   background: #EFF2F6;
   border-radius: 4px;
   height: ${({ height }) => height};
   min-width: ${({ width }) => width};
   width: ${({ width }) => width};
   display: block;
+
+  ${({ circle }) => {
+    if (circle) {
+      return `
+        border-radius: 10px;
+      `;
+    };
+  }}
 `;

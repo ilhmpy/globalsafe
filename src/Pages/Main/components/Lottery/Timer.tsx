@@ -118,22 +118,28 @@ export const Timer: FC<Props> = ({
   const openWindow = (e: any) => {
     if (screen.width > 480) {
       let timeOut: any;
+      let closeTimeout: any;
 
       if (e.type == "mouseover") {
         setDisplay(true);
+        setTimerProgress(0);
+        clearInterval(timeOut);
+        clearInterval(closeTimeout);
         timeOut = setTimeout(() => setTimerProgress(100), 1000);
+        closeTimeout = setTimeout(() => setTimerProgress(103), 6000);
       } else {
         clearTimeout(timeOut);
+        clearInterval(closeTimeout);
         setTimerProgress(0);
         setDisplay(false);
-      };
-    };
+      }; 
+    }; 
   };
 
-  return (
+  return ( 
     <>
-       <Styled.TimerModal display={display}> 
-          {state == null ? (
+       <Styled.TimerModal display={display} progressBar={timerProgress}> 
+          {state != null ? ( 
            <>
               <Styled.TimerLoading progress={timerProgress} />
               <Styled.TimerModalTitle>{t("time.title")}</Styled.TimerModalTitle>
@@ -146,18 +152,20 @@ export const Timer: FC<Props> = ({
             <Styled.LoadingBeforeData>
               <Styled.LoadingBeforeItem width="100%" height="34px" />
               <div className="flex_loading">
-                <Styled.LoadingBeforeItem width="65px" height="34px" />
-                <Styled.LoadingBeforeItem width="65px" height="34px" />
-                <Styled.LoadingBeforeItem width="65px" height="34px" />
+                <Styled.LoadingBeforeItem width="60px" height="30px" />
+                <Styled.LoadingBeforeItem width="60px" height="30px" />
+                <Styled.LoadingBeforeItem width="60px" height="30px" />
               </div>
               <div className="flex_loading">
-
+                <Styled.LoadingBeforeItem circle width="60px" height="19px"/>
+                <Styled.LoadingBeforeItem circle width="60px" height="19px"/>
+                <Styled.LoadingBeforeItem circle width="60px" height="19px"/>
               </div>
             </Styled.LoadingBeforeData>
           )}
         </Styled.TimerModal> 
         <Styled.TimerCircle
-          onMouseOver={openWindow}
+          onMouseOver={openWindow} 
           onMouseOut={openWindow}
           onClick={() => setShowModal(true)}
         >
@@ -262,8 +270,7 @@ export const OldTimer: FC<OldTimerProps> = ({ modalTimer, history }: OldTimerPro
 
   return (
     <>
-      {
-        isMobile ? (
+      {  isMobile ? (
           <Styled.TimerHistoryInner mt={modalTimer} history={history}>
              <Styled.TimerHisroryTitle>{history ? t('newDraw') : t('timerStart')}</Styled.TimerHisroryTitle>
              <Styled.TimerHistoryValue nodata={clock === null || state === '0'}>
