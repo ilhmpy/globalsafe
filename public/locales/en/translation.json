@@ -401,9 +401,11 @@
   "line": "line",
   "partnersTitle": "Partners programs",
   "time": {
-    "d": "d",
-    "h": "h",
-    "m": "min"
+    "title": "Start of the drawing in",
+    "days": "days",
+    "hours": "hours",
+    "minutes": "minutes",
+    "yourPrize": "Your prize will be here"
   },
   "acceptAll": {
     "title": "Accept all",
