@@ -68,6 +68,10 @@ declare module 'styled-components' {
     loader: {
       bg: string;
       pointsColor: string;
+    },
+    timer: {
+      bg: string;
+      color: string;
     }
   }
 } 
