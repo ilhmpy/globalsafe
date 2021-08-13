@@ -40,11 +40,15 @@ export const Timer: FC<Props> = ({
   const languale = lang === 'ru' ? 1 : 0;
 
   const getProgress = (data: any) => {
-    return Number(
-      ((((data[1].days * 24) * 60) + (data[1].hours * 60) + data[1].minutes) / 
-      (((data[0].days * 24) * 60) + (data[0].hours * 60) + data[0].minutes) * 100)
-      .toFixed(0)
-    );
+    if (data != null) {
+      return Number(
+        ((((data[1].days * 24) * 60) + (data[1].hours * 60) + data[1].minutes) / 
+        (((data[0].days * 24) * 60) + (data[0].hours * 60) + data[0].minutes) * 100)
+        .toFixed(0)
+      );
+    } else {
+      return 0;
+    };
   };
 
   useEffect(() => {
