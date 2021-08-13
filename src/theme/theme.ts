@@ -77,7 +77,8 @@ export const lightTheme = {
   },
   timer: {
     bg: "#fff",
-    color: "#515172"
+    color: "#515172",
+    bgLoad: "#EFF2F6"
   }
 };
 
@@ -152,7 +153,8 @@ export const darkTheme = {
   },
   timer: {
     bg: "rgba(33,33,33,1)",
-    color: "#fff"
+    color: "#fff",
+    bgLoad: "#000"
   }
 };
  
