@@ -220,6 +220,10 @@ export const Container = styled.div<{ before?: boolean; }>`
         align-items: normal;
         justify-content: normal;
 
+        @media only screen and (max-device-width: 620px) {
+          margin: 0px auto 14px;
+        }
+
         & > div {
           width: 100%;
           display: block;
@@ -669,7 +673,7 @@ export const TimerModal = styled.div<{ display?: boolean; fixed?: boolean; progr
         max-width: 215px; 
         width: 100%;
         min-height: 80px;
-        margin-top: 10px;
+        margin-top: 17px;
         border-radius: 30px;
         padding-top: 10px;
         padding-left: 0px;
@@ -692,6 +696,7 @@ export const TimerModal = styled.div<{ display?: boolean; fixed?: boolean; progr
           padding-left: 5px;
           font-size: 28px;
           max-width: 200px;
+          margin-bottom: 0;
         }
 
         & ${TimerModalUnits} {
@@ -778,17 +783,21 @@ export const LotteryModalDesc = styled.div`
       margin: 0 auto;
       margin-left: auto;
       margin-right: auto;
-      margin-top: 40px;
+      margin-top: 10px;
       font-size: 1.10em;
-      border-radius: 30px;
+      height: 50px;
+      min-height: 50px;
+      border-radius: 25px;
+      padding-left: 32px;
 
       & > * {
-        font-size: 15px;
+        font-size: 14px;
       }
 
       & > svg {
         width: 22px;
         height: 22px;
+        margin-right: 11px;
       }
     }
 `;

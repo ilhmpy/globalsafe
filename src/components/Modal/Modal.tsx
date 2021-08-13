@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import { Portal } from '../Portal/Portal';
 
@@ -11,6 +11,8 @@ type ModalProps = {
   paddingTop?: number;
   style?: any;
   styles?: string;
+  lottery?: boolean;
+  withoutClose?: boolean;
 };
 
 export const Modal: React.FC<ModalProps> = ({
@@ -22,6 +24,8 @@ export const Modal: React.FC<ModalProps> = ({
   paddingTop,
   style,
   styles,
+  lottery,
+  withoutClose,
 }: ModalProps) => {
   const handleContainerClick = (e: React.MouseEvent) => {
    // console.log(e.currentTarget.parentNode, e.currentTarget)
@@ -35,12 +39,20 @@ export const Modal: React.FC<ModalProps> = ({
     }
   };
 
+  console.log(withoutClose)
+
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsMobile(window.screen.width > 480);
+  }, []);
+
   return (
     <Portal>
-      <ModalContainer zIndex={zIndex} style={style} className="bbg" >
-        <Center styles={styles}  onClick={handleContainerClick}>
+      <ModalContainer zIndex={zIndex} style={style} className="bbg" lottery={lottery}>
+        <Center styles={styles}  onClick={handleContainerClick} lottery={lottery}>
           <ModalComponent width={width} mobMarg={mobMarg} paddingTop={paddingTop}>
-              <span className="close" onClick={onClose}>&times;</span>
+              {withoutClose ? (<span className="close" onClick={onClose}>&times;</span>) : ( <></> )}
               {children}
           </ModalComponent>
         </Center>
@@ -56,7 +68,7 @@ const Main = styled.div`
   align-items: center;
 `;
 
-const Center = styled.div<{ styles?: string; }>`
+const Center = styled.div<{ styles?: string; lottery?: boolean; }>`
   min-height: calc(100% - 3.5rem);
   margin: 1.75rem auto;
   display: flex;
@@ -68,9 +80,26 @@ const Center = styled.div<{ styles?: string; }>`
       return styles;
     };
   }}
+
+  ${({ lottery }) => {
+    if (lottery) {
+      return `
+        max-width: 1059px;
+        border-radius: 10px; 
+        max-height: 358px;
+
+        @media only screen and (max-device-width: 620px) {
+          max-width: 280px;
+          & > div {
+            min-width: 280px;
+          }
+        }
+      `;
+    };
+  }}
 `;
 
-const ModalContainer = styled.div<{ zIndex: string }>`
+const ModalContainer = styled.div<{ zIndex: string, lottery?: boolean; }>`
     position: fixed;
     top: 0;
     left: 0;
@@ -86,7 +115,7 @@ const ModalContainer = styled.div<{ zIndex: string }>`
     }
 `;
 
-const ModalComponent = styled.div<{ width?: number; mobMarg?: boolean; paddingTop?: number; styles?: string; }>`
+const ModalComponent = styled.div<{ width?: number; mobMarg?: boolean; paddingTop?: number; styles?: string; lottery?: boolean; }>`
   display: flex;
   flex-direction: column;
   margin: 50px auto;
@@ -137,9 +166,12 @@ const ModalComponent = styled.div<{ width?: number; mobMarg?: boolean; paddingTo
     };
   }}
 
-
   @media (max-width: 768px) {
     margin: ${(props) => (props.mobMarg ? '50px 20px' : '50px auto')};
     padding: ${(props) => (props.mobMarg ? '0' : '1rem')};
+  }
+
+  @media only screen and (max-device-width: 620px) {
+    margin: 0 auto;
   }
 `;

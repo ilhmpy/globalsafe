@@ -54,13 +54,7 @@ export const ModalLottery: FC<Props> = ({
   }, []);
 
   return (
-    <Modal width={1100} onClose={onCloseModal} mobMarg styles={`
-      max-width: ${!isMobile ? "280px" : "1059px"};
-      border-radius: 0px; 
-      & > div {
-        min-width: ${!isMobile ? "280px" : ""};
-      }`
-      }>
+    <Modal width={1100} onClose={onCloseModal} mobMarg lottery withoutClose={isMobile}>
       <Styled.Container before={!!drawResult ? false : true}>
         {/* <button onClick={testResult}>test</button> */}
         <CSSTransition in={!!drawResult} timeout={300} classNames="alert" unmountOnExit>
