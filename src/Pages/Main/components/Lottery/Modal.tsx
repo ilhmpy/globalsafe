@@ -47,9 +47,20 @@ export const ModalLottery: FC<Props> = ({
   testResult,
 }: Props) => {
   const { t } = useTranslation();
+  const [isMobile, setIsMobile] = useState<boolean | undefined>(undefined);
+
+  useEffect(() => {
+    setIsMobile(window.screen.width > 480);
+  }, []);
 
   return (
-    <Modal width={1100} onClose={onCloseModal} mobMarg>
+    <Modal width={1100} onClose={onCloseModal} mobMarg styles={`
+      max-width: ${!isMobile ? "280px" : "1059px"};
+      border-radius: 0px; 
+      & > div {
+        min-width: ${!isMobile ? "280px" : ""};
+      }`
+      }>
       <Styled.Container before={!!drawResult ? false : true}>
         {/* <button onClick={testResult}>test</button> */}
         <CSSTransition in={!!drawResult} timeout={300} classNames="alert" unmountOnExit>

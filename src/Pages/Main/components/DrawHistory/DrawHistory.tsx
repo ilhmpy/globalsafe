@@ -197,11 +197,9 @@ const TimerHistoryContainer = styled(Card)`
   align-items: center;
   justify-content: space-between;
   margin-bottom: 30px;
-  ${Button} {
     @media (max-width: 768px) {
       display: none;
     }
-  }
   @media (max-width: 768px) {
     justify-content: center;
     padding: 20px;

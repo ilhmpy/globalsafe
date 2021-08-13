@@ -10,6 +10,7 @@ type ModalProps = {
   children: ReactNode;
   paddingTop?: number;
   style?: any;
+  styles?: string;
 };
 
 export const Modal: React.FC<ModalProps> = ({
@@ -20,6 +21,7 @@ export const Modal: React.FC<ModalProps> = ({
   mobMarg,
   paddingTop,
   style,
+  styles,
 }: ModalProps) => {
   const handleContainerClick = (e: React.MouseEvent) => {
    // console.log(e.currentTarget.parentNode, e.currentTarget)
@@ -36,7 +38,7 @@ export const Modal: React.FC<ModalProps> = ({
   return (
     <Portal>
       <ModalContainer zIndex={zIndex} style={style} className="bbg" >
-        <Center onClick={handleContainerClick}>
+        <Center styles={styles}  onClick={handleContainerClick}>
           <ModalComponent width={width} mobMarg={mobMarg} paddingTop={paddingTop}>
               <span className="close" onClick={onClose}>&times;</span>
               {children}
@@ -54,12 +56,18 @@ const Main = styled.div`
   align-items: center;
 `;
 
-const Center = styled.div`
+const Center = styled.div<{ styles?: string; }>`
   min-height: calc(100% - 3.5rem);
   margin: 1.75rem auto;
   display: flex;
   align-items: center;
   transition: 0.3s;
+
+  ${({ styles }) => {
+    if (styles) {
+      return styles;
+    };
+  }}
 `;
 
 const ModalContainer = styled.div<{ zIndex: string }>`
@@ -78,7 +86,7 @@ const ModalContainer = styled.div<{ zIndex: string }>`
     }
 `;
 
-const ModalComponent = styled.div<{ width?: number; mobMarg?: boolean; paddingTop?: number; }>`
+const ModalComponent = styled.div<{ width?: number; mobMarg?: boolean; paddingTop?: number; styles?: string; }>`
   display: flex;
   flex-direction: column;
   margin: 50px auto;
@@ -122,6 +130,12 @@ const ModalComponent = styled.div<{ width?: number; mobMarg?: boolean; paddingTo
       color: ${(props) => props.theme.text3Hover};
     }
   }
+
+  ${({ styles }) => {
+    if (styles) {
+      return styles;
+    };
+  }}
 
 
   @media (max-width: 768px) {
