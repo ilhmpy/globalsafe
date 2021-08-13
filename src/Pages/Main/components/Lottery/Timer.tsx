@@ -111,7 +111,7 @@ export const Timer: FC<Props> = ({
       clearInterval(timer);
       cancel = true;
     };
-  }, [state, deadline]);
+  }, [deadline]);
 
   const openWindow = (e: any) => {
     setTimeout(() => setTimerProgress(100), 1000);
