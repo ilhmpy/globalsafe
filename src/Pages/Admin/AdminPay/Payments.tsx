@@ -1,5 +1,5 @@
 ﻿import moment from 'moment';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState, useMemo } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
@@ -620,6 +620,18 @@ export const ModalUsersContent: FC<ModalUsersContentProps> = ({
     // arr1[id]
   };
 
+  // Get Ammout of User All deposits
+  const depositsTotalAmmount = useMemo<string>(() => {
+    let temp = 0;
+    dataTwo.forEach(collection => {
+      temp += collection.payedAmountView;
+    });
+
+    return temp.toLocaleString("ru-RU", {
+      maximumFractionDigits: 4,
+    });
+  }, [dataTwo]);
+
   return (
     <>
       <PayCard smallPad wide={wide} mNone>
@@ -666,14 +678,15 @@ export const ModalUsersContent: FC<ModalUsersContentProps> = ({
                 <PayCardBlock>
                   <PayText small>{t('adminUsers.modal.paySum')}</PayText>
                   <PayText>
+                    {depositsTotalAmmount}
                     {/* {dataTwo[0].payedAmountView.toLocaleString("ru-RU", {
                       maximumFractionDigits: 3,
                     })} */}
-                    {(
+                    {/* {(
                       dataOne.reduce((a, b) => a + b.userDeposit.payedAmount, 0) / 100000
                     ).toLocaleString('ru-RU', {
                       maximumFractionDigits: 3,
-                    })}
+                    })} */}
                   </PayText>
                 </PayCardBlock>
                 {dataOne.length && dataOne[0].userDeposit ? (
