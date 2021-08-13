@@ -440,6 +440,13 @@ export const Approval: FC<Props> = ({
   };
 
   const paymentsConfirm = () => {
+    console.log(
+    { NAMEAPPROVAL: nameApproval,
+      OPENDATEAPPROVALFROM: openDateApproval.from,
+      OPENDATEAPPROVALTO: openDateApproval.to,
+      SEARCHSAFEID: searchSafeIDApproval,
+      procent: procent,
+    });
     if (checkListApproval.some((item: any) => item.state === 6)) {
       if (hubConnection) {
         hubConnection

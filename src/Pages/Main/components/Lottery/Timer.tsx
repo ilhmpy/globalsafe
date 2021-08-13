@@ -122,8 +122,6 @@ export const Timer: FC<Props> = ({
     }, 5000);
   };
 
-  console.log(state);
-
   return ( 
     <>
        <Styled.TimerModal display={display} onClick={() => setShowModal(true)}> 
@@ -256,7 +254,7 @@ export const OldTimer: FC<OldTimerProps> = ({ modalTimer, history }: OldTimerPro
       clearInterval(timer);
       cancel = true;
     };
-  }, [state, deadline, otherState]);
+  }, [deadline]);
 
   return (
     <>
