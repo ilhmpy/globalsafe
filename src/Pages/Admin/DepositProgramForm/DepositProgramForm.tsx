@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { ReactComponent as Stroke } from '../../../assets/svg/leftStroke.svg';
@@ -6,6 +6,7 @@ import { Button } from '../../../components/Button/Button';
 import { Modal } from '../../../components/Modal/Modal';
 import { Select } from '../../../components/Select/Select';
 import { Switcher } from '../../../components/Switcher';
+import { AppContext } from '../../../context/HubContext';
 import { DepositProgramFormPropsType } from './types';
 
 // eslint-disable-next-line react/prop-types
@@ -25,6 +26,67 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
   const [isSavingSuccess, setIsSavingSuccess] = useState(false);
   const [isSavingCanceled, setIsSavingCanceled] = useState(false);
   const [isModalError, setIsModalError] = useState(false);
+
+  const appContext = useContext(AppContext);
+  const hubConnection = appContext.hubConnection;
+  const [programList, setProgramList] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const getPrograms = () => {
+    console.log('~~~~~~~~~~~~~~~~~~start');
+    if (hubConnection) {
+      setProgramList([]);
+      setLoading(true);
+
+      hubConnection
+        .invoke<any>(
+          'GetDepositDefinitions',
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        )
+        .then((res) => {
+          console.log('.then ~ res', res);
+          // setTotalDeposits(res.totalRecords);
+          setLoading(false);
+          if (res.collection.length) {
+            setProgramList(res.collection);
+            // setTotalDeposits(res.totalRecords);
+          }
+        })
+        .catch((err: Error) => {
+          console.log(err);
+          setLoading(false);
+        });
+    }
+  };
+
+  useEffect(() => {
+    getPrograms();
+  }, []);
 
   return (
     <Container>

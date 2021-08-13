@@ -1,4 +1,4 @@
-import React, { FC, useContext, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
@@ -12,7 +12,6 @@ import { AppContext } from '../../context/HubContext';
 import { Card } from '../../globalStyles';
 import { DepositProgramForm } from './DepositProgramForm';
 import * as Styled from './Styled.elements';
-import { SortingWindow } from './Styled.elements';
 
 export const AdminDepositsPrograms = () => {
   const { t } = useTranslation();
@@ -134,10 +133,41 @@ export const AdminDepositsPrograms = () => {
 
   const [openNewProgram, setOpenNewProgram] = useState(false);
 
+  const [programList, setProgramList] = useState<any[]>([]);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const user = appContext.user;
   const logOut = appContext.logOut;
+
+  const getPrograms = () => {
+    if (hubConnection) {
+      setProgramList([]);
+      setLoading(true);
+
+      hubConnection
+        .invoke<any>(
+          'GetDepositDefinitions',
+          0,10
+        )
+        .then((res) => {
+          console.log('.then ~~~~~~~~ res', res);
+          // setTotalDeposits(res.totalRecords);
+          setLoading(false);
+          if (res.collection.length) {
+            setProgramList(res.collection);
+            // setTotalDeposits(res.totalRecords);
+          }
+        })
+        .catch((err: Error) => {
+          console.log(err);
+          setLoading(false);
+        });
+    }
+  };
+
+  useEffect(() => {
+    getPrograms();
+  }, []);
 
   return (
     <>
