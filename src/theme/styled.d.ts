@@ -56,7 +56,7 @@ declare module 'styled-components' {
       bg: string;
       desc: string;
       opacity: string;
-      item: string; 
+      item: string;
     };
     timerIcon: {
       background: string;
@@ -64,15 +64,15 @@ declare module 'styled-components' {
     };
     tech: {
       color: string;
-    },
+    };
     loader: {
       bg: string;
       pointsColor: string;
-    },
+    };
     timer: {
       bg: string;
       color: string;
-    }
+    };
+    pink: string;
   }
-} 
- 
+}
