@@ -54,7 +54,10 @@ export const Timer: FC<Props> = ({
   useEffect(() => {
     let cancel = false;
     const cb = (data: any) => {
-      setDeadline(data.totalSeconds);
+      if (data[1] != null) {
+        setDeadline(data[1].totalSeconds);
+      };
+      console.log(data);
     };
     if (hubConnection && !cancel) {
       hubConnection.on('DrawCountdown', cb);
@@ -82,7 +85,11 @@ export const Timer: FC<Props> = ({
 
   const repeat = () => {
     if (hubConnection) {
-      hubConnection.on("DrawCountdown", (data: any) => setDeadline(data.totalSeconds))
+      hubConnection.on("DrawCountdown", (data: any) => {
+        if (data[1] != null) {
+          setDeadline(data[1].totalSeconds);
+        };
+      })
       hubConnection
         .invoke('GetNextDraw')
         .then((res) => {
@@ -196,7 +203,9 @@ export const OldTimer: FC<OldTimerProps> = ({ modalTimer, history }: OldTimerPro
   useEffect(() => {
     let cancel = false;
     const cb = (data: any) => {
-      setDeadline(data.totalSeconds);
+      if (data[1] != null) {
+        setDeadline(data[1].totalSeconds);
+      };
     };
     if (hubConnection && !cancel) {
       hubConnection.on('DrawCountdown', cb);
@@ -220,7 +229,9 @@ export const OldTimer: FC<OldTimerProps> = ({ modalTimer, history }: OldTimerPro
 
   const repeat = () => {
     const cb = (data: any) => {
-      setDeadline(data.totalSeconds);
+      if (data[1] != null) {
+        setDeadline(data[1].totalSeconds);
+      };
     }
     if (hubConnection) {
       hubConnection.on("DrawCountdown", cb);
