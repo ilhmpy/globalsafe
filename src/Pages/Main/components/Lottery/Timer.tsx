@@ -40,7 +40,7 @@ export const Timer: FC<Props> = ({
   const languale = lang === 'ru' ? 1 : 0;
 
   const getProgress = (data: any) => {
-    if (data != null) {
+    if (data[0] != null && data[1] != null) {
       return Number(
         ((((data[1].days * 24) * 60) + (data[1].hours * 60) + data[1].minutes) / 
         (((data[0].days * 24) * 60) + (data[0].hours * 60) + data[0].minutes) * 100)
@@ -82,6 +82,7 @@ export const Timer: FC<Props> = ({
 
   const repeat = () => {
     if (hubConnection) {
+      hubConnection.on("DrawCountdown", (data: any) => setDeadline(data.totalSeconds))
       hubConnection
         .invoke('GetNextDraw')
         .then((res) => {
@@ -218,7 +219,11 @@ export const OldTimer: FC<OldTimerProps> = ({ modalTimer, history }: OldTimerPro
   }, [hubConnection]);
 
   const repeat = () => {
+    const cb = (data: any) => {
+      setDeadline(data.totalSeconds);
+    }
     if (hubConnection) {
+      hubConnection.on("DrawCountdown", cb);
       hubConnection
         .invoke<RootClock>('GetNextDraw')
         .then((res) => {
