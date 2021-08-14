@@ -7,6 +7,18 @@ import { RootClock } from '../../../../types/clock';
 import * as Styled from './Lottery.elements';
 import { ReactComponent as Prize } from '../../../../assets/svg/prize.svg';
 
+const getProgress = (data: any) => {
+  if (data[0] != null && data[1] != null) {
+    return Number(
+      ((((data[1].days * 24) * 60) + (data[1].hours * 60) + data[1].minutes) / 
+      (((data[0].days * 24) * 60) + (data[0].hours * 60) + data[0].minutes) * 100)
+      .toFixed(0)
+    );
+  } else {
+    return 0;
+  };
+};
+
 type Props = {
   last?: string;
   clock?: any;
@@ -39,23 +51,16 @@ export const Timer: FC<Props> = ({
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   const languale = lang === 'ru' ? 1 : 0;
 
-  const getProgress = (data: any) => {
-    if (data[0] != null && data[1] != null) {
-      return Number(
-        ((((data[1].days * 24) * 60) + (data[1].hours * 60) + data[1].minutes) / 
-        (((data[0].days * 24) * 60) + (data[0].hours * 60) + data[0].minutes) * 100)
-        .toFixed(0)
-      );
-    } else {
-      return 0;
-    };
-  };
-
   useEffect(() => {
     let cancel = false;
     const cb = (data: any) => {
       if (data[1] != null) {
+        const durations = moment.duration(deadline, 'seconds');
         setDeadline(data[1].totalSeconds);
+        setState(
+          Math.floor(durations.asMinutes()) !== 0 ? 
+              [Math.floor(durations.asDays()), Math.floor(durations.asHours()), Math.floor(durations.asMinutes())] : null);
+        setProgress(getProgress([allTimeLottery, defaultTimeLottery]));
       };
       console.log(data);
     };
@@ -87,8 +92,12 @@ export const Timer: FC<Props> = ({
     if (hubConnection) {
       hubConnection.on("DrawCountdown", (data: any) => {
         if (data[1] != null) {
+          const durations = moment.duration(deadline, 'seconds');
           setDeadline(data[1].totalSeconds);
-        };
+          setState(
+            Math.floor(durations.asMinutes()) !== 0 ? 
+                [Math.floor(durations.asDays()), Math.floor(durations.asHours()), Math.floor(durations.asMinutes())] : null);
+         };
       })
       hubConnection
         .invoke('GetNextDraw')
@@ -204,8 +213,12 @@ export const OldTimer: FC<OldTimerProps> = ({ modalTimer, history }: OldTimerPro
     let cancel = false;
     const cb = (data: any) => {
       if (data[1] != null) {
+        const durations = moment.duration(deadline, 'seconds');
         setDeadline(data[1].totalSeconds);
-      };
+        setState(
+          Math.floor(durations.asMinutes()) !== 0 ? 
+              [Math.floor(durations.asDays()), Math.floor(durations.asHours()), Math.floor(durations.asMinutes())] : null);
+       };
     };
     if (hubConnection && !cancel) {
       hubConnection.on('DrawCountdown', cb);
@@ -230,8 +243,12 @@ export const OldTimer: FC<OldTimerProps> = ({ modalTimer, history }: OldTimerPro
   const repeat = () => {
     const cb = (data: any) => {
       if (data[1] != null) {
+        const durations = moment.duration(deadline, 'seconds');
         setDeadline(data[1].totalSeconds);
-      };
+        setState(
+          Math.floor(durations.asMinutes()) !== 0 ? 
+              [Math.floor(durations.asDays()), Math.floor(durations.asHours()), Math.floor(durations.asMinutes())] : null);
+       };
     }
     if (hubConnection) {
       hubConnection.on("DrawCountdown", cb);
