@@ -459,6 +459,7 @@ export const Approval: FC<Props> = ({
             procent ? +procent / 100 : null
           )
           .then((res) => {
+            console.log("SUCCESS")
             createNotify({
               text: t('adminPay.success'),
               error: false,
@@ -470,7 +471,8 @@ export const Approval: FC<Props> = ({
             submitApproval();
           })
           .catch((err: Error) => {
-            console.log(err);
+            console.log("ERROR")
+            console.error(err);
             createNotify({
               text: t('adminPay.error'),
               error: true,
@@ -480,6 +482,7 @@ export const Approval: FC<Props> = ({
           });
       }
     } else {
+      console.log("not pays")
       createNotify({
         text: t('adminPay.notPays'),
         error: true,
