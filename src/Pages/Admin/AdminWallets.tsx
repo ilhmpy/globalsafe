@@ -36,6 +36,8 @@ export const AdminWallets = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isOpenEditForm, setIsOpenEditForm] = useState(false);
   const [isOpenNewForm, setIsOpenNewForm] = useState(false);
+  const [isOpenShowForm, setIsOpenShowForm] = useState(false);
+
   const [checkList, setCheckList] = useState<any>([]);
   const selectList = [t('win.one'), t('win.two'), t('win.three')];
 
@@ -58,7 +60,7 @@ export const AdminWallets = () => {
           <Button danger maxWidth={158} onClick={() => setIsOpenNewForm(true)}>
             {t('wallets.newWallet')}
           </Button>
-          <Button dangerOutline maxWidth={158} onClick={() => undefined}>
+          <Button dangerOutline maxWidth={158} onClick={() => setIsOpenShowForm(true)}>
             {t('wallets.refreshAll')}
           </Button>
         </ButtonGroup>
@@ -90,7 +92,7 @@ export const AdminWallets = () => {
             <ModalTitle>Wallet 1</ModalTitle>
             <KeysBLock>
               <div>
-                <Label>Активный ключ</Label>
+                <Label>{t('wallets.activeKey')}</Label>
                 <KeyWrapper>
                   {isActiveActiveKey ? (
                     <KeyText>5Kjn6u5wTyHA5jJAJs9b77fzU5mgRdeqTvjhZFcppk7geUvxijH</KeyText>
@@ -117,7 +119,7 @@ export const AdminWallets = () => {
                 </KeyWrapper>
               </div>
               <div>
-                <Label>Ключ примечания </Label>
+                <Label>{t('wallets.keyNotes')}</Label>
                 <KeyWrapper>
                   {isActiveKeyNotes ? (
                     <KeyText>5Kjn6u5wTyHA5jJAJs9b77fzU5mgRdeqTvjhZFcppk7geUvxijH</KeyText>
@@ -148,21 +150,21 @@ export const AdminWallets = () => {
             <InputsBLock>
               <InputsRow>
                 <SelectGroup>
-                  <span>Откуда</span>
+                  <span>{t('wallets.from')}</span>
                   <Select checkList={checkList} setCheckList={setCheckList} values={selectList} />
                 </SelectGroup>
                 <SelectGroup>
-                  <span>Куда</span>
+                  <span>{t('wallets.where')}</span>
                   <Select checkList={checkList} setCheckList={setCheckList} values={selectList} />
                 </SelectGroup>
               </InputsRow>
               <InputsRow>
                 <SelectGroup>
-                  <span>Сумма</span>
+                  <span>{t('depositsPrograms.amount')}</span>
                   <Input />
                 </SelectGroup>
                 <SelectGroup>
-                  <span>Валюта</span>
+                  <span>{t('depositsPrograms.currency')}</span>
                   <Select checkList={checkList} setCheckList={setCheckList} values={selectList} />
                 </SelectGroup>
               </InputsRow>
@@ -175,8 +177,7 @@ export const AdminWallets = () => {
                     setIsOpenEditForm(false);
                   }}
                 >
-                  {/* {t('depositsPrograms.save')} */}
-                  Перевести средства
+                  {t('wallets.transferFunds')}
                 </Button>
               </ModalButtons>
             </InputsBLock>
@@ -234,7 +235,7 @@ export const AdminWallets = () => {
                 <p>
                   102 000
                   <Refresh refresh={refresh}>
-                    <Label>на 16.04.2021</Label>
+                    <Label>{t('wallets.for')} 16.04.2021</Label>
                     <UpdateCircle onClick={() => setRefresh(!refresh)} />
                   </Refresh>
                 </p>
@@ -246,11 +247,11 @@ export const AdminWallets = () => {
 
       {isOpenNewForm && (
         <Modal onClose={() => setIsOpenNewForm(false)}>
-          <ModalBlock>
-            <NewWalletTitle>Новый кошелек</NewWalletTitle>
-            <RoundInput spellCheck="false" placeholder="Наименование" />
-            <RoundInput spellCheck="false" placeholder="Активный ключ" />
-            <RoundInput spellCheck="false" placeholder="Ключ примечания" />
+          <ModalBlock sm>
+            <NewWalletTitle>{t('wallets.newWallet')}</NewWalletTitle>
+            <RoundInput spellCheck="false" placeholder={t('wallets.name')} />
+            <RoundInput spellCheck="false" placeholder={t('wallets.activeKey')} />
+            <RoundInput spellCheck="false" placeholder={t('wallets.keyNotes')} />
             <Button
               danger
               maxWidth={200}
@@ -258,9 +259,92 @@ export const AdminWallets = () => {
                 setIsOpenNewForm(false);
               }}
             >
-              {/* {t('depositsPrograms.save')} */}
-              Создать
+              {t('wallets.create')}
             </Button>
+          </ModalBlock>
+        </Modal>
+      )}
+
+      {isOpenShowForm && (
+        <Modal onClose={() => setIsOpenShowForm(false)}>
+          <ModalBlock>
+            <ModalTitle>Wallet 1</ModalTitle>
+            <KeysBLock>
+              <div>
+                <Label>{t('wallets.activeKey')}</Label>
+                <KeyWrapper>
+                  {isActiveActiveKey ? (
+                    <KeyText>5Kjn6u5wTyHA5jJAJs9b77fzU5mgRdeqTvjhZFcppk7geUvxijH</KeyText>
+                  ) : (
+                    <KeyInput
+                      spellCheck="false"
+                      onChange={(e) => alert(e.target.value)}
+                      value={'5Kjn6u5wTyHA5jJAJs9b77fzU5mgRdeqTvjhZFcppk7geUvxijH'}
+                    />
+                  )}
+                  {isActiveActiveKey ? (
+                    <Pen
+                      onClick={() => {
+                        setIsActiveActiveKey(!isActiveActiveKey);
+                      }}
+                    />
+                  ) : (
+                    <CircleOk
+                      onClick={() => {
+                        setIsActiveActiveKey(!isActiveActiveKey);
+                      }}
+                    />
+                  )}
+                </KeyWrapper>
+              </div>
+              <div>
+                <Label>{t('wallets.keyNotes')}</Label>
+                <KeyWrapper>
+                  {isActiveKeyNotes ? (
+                    <KeyText>5Kjn6u5wTyHA5jJAJs9b77fzU5mgRdeqTvjhZFcppk7geUvxijH</KeyText>
+                  ) : (
+                    <KeyInput
+                      spellCheck="false"
+                      onChange={(e) => alert(e.target.value)}
+                      value={'5Kjn6u5wTyHA5jJAJs9b77fzU5mgRdeqTvjhZFcppk7geUvxijH'}
+                    />
+                  )}
+                  {isActiveKeyNotes ? (
+                    <Pen
+                      onClick={() => {
+                        setIsActiveKeyNotes(!isActiveKeyNotes);
+                      }}
+                    />
+                  ) : (
+                    <CircleOk
+                      onClick={() => {
+                        setIsActiveKeyNotes(!isActiveKeyNotes);
+                      }}
+                    />
+                  )}
+                </KeyWrapper>
+              </div>
+            </KeysBLock>
+
+            <ChipContent>
+              <Chip>Na - 0</Chip>
+              <Chip>CWD - 235 468</Chip>
+              <Chip>MGCWD - 235 468</Chip>
+              <Chip>GCWD - 235 468</Chip>
+              <Chip>DIAMOND - 235 468</Chip>
+              <Chip>CROWDBTC - 235 468</Chip>
+              <Chip>CWDBONUS - 235 468</Chip>
+              <Chip>CARBONE - 235 468</Chip>
+              <Chip>BRONZE - 235 468</Chip>
+              <Chip>FUTURE4 - 235 468</Chip>
+              <Chip>FUTURE5 - 235 468</Chip>
+              <Chip>FUTURE6 - 235 468</Chip>
+              <Chip>GLOBALSAFE - 235 468</Chip>
+              <ChipRefresh refresh={refresh}>
+                <Label>{t('wallets.for')} 16.04.2021</Label>
+                <UpdateCircle onClick={() => setRefresh(!refresh)} />
+              </ChipRefresh>
+            </ChipContent>
           </ModalBlock>
         </Modal>
       )}
@@ -275,6 +359,69 @@ export const AdminWallets = () => {
     </>
   );
 };
+const Refresh = styled.div<{ refresh?: boolean }>`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  & > span {
+    font-size: 14px;
+    line-height: 16px;
+  }
+  & > svg {
+    transform: ${(props) => (props.refresh ? 'rotate(180deg)' : 'rotate(0deg)')};
+    transition: 1s;
+  }
+`;
+
+const ChipRefresh = styled(Refresh)`
+  justify-content: flex-end;
+`;
+const ChipContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  justify-content: start;
+  border-top: 2px solid rgba(81, 81, 114, 0.1);
+  padding-top: 15px;
+`;
+const Chip = styled.p`
+  font-style: normal;
+  font-weight: normal;
+  font-size: 10px;
+  line-height: 12px;
+  height: 18px;
+  text-align: center;
+  color: #ffffff;
+  border-radius: 24px;
+  padding: 3px 5px;
+  width: fit-content;
+  &:nth-child(1n) {
+    background: #ff416e;
+  }
+  &:nth-child(2n) {
+    background: #6db9ff;
+  }
+  &:nth-child(3n) {
+    background: #bcd476;
+  }
+  &:nth-child(4n) {
+    background: #f28ce8;
+  }
+  &:nth-child(5n) {
+    background: #a78cf2;
+  }
+  &:nth-child(6n) {
+    background: #ffb23e;
+  }
+  &:nth-child(7n) {
+    background: #84ddf9;
+  }
+  &:nth-child(8n) {
+    background: #78ebd6;
+  }
+`;
+
 const RoundInput = styled.input`
   max-width: 200px;
   width: 100%;
@@ -308,20 +455,6 @@ const NewWalletTitle = styled.h3`
 
   color: #0e0d3d;
   color: ${(props) => props.theme.text2};
-`;
-
-const Refresh = styled.div<{ refresh?: boolean }>`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  & > span {
-    font-size: 14px;
-    line-height: 16px;
-  }
-  & > svg {
-    transform: ${(props) => (props.refresh ? 'rotate(180deg)' : 'rotate(0deg)')};
-    transition: 1s;
-  }
 `;
 
 const ContentRow = styled.div`
@@ -489,12 +622,12 @@ const ModalTitle = styled.h1`
   border-bottom: 1px solid rgba(81, 81, 114, 0.2);
 `;
 
-const ModalBlock = styled.div`
+const ModalBlock = styled.div<{ sm?: boolean }>`
   display: flex;
   flex-direction: column;
   max-width: 345px;
   width: 100%;
-  padding: 50px 0;
+  padding: ${(props) => (props.sm ? '50px 0' : '')};
   margin: 0 auto;
   align-items: center;
   justify-content: center;

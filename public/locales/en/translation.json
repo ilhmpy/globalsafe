@@ -468,7 +468,15 @@
   },
   "wallets": {
     "refreshAll": "Refresh all",
-    "newWallet": "New wallet"
+    "newWallet": "New wallet",
+    "name": "Name",
+    "activeKey": "Active key",
+    "keyNotes": "Key notes",
+    "create": "Create",
+    "for": "for",
+    "transferFunds": "Transfer funds",
+    "from": "From",
+    "where": "Where"
   },
   "text": {
     "tip_state_unsubscribed": "Subscribe to notifications",
