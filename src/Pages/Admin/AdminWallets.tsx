@@ -34,7 +34,8 @@ export const AdminWallets = () => {
   const backDays: any = moment().subtract(30, 'days');
   const [pageLength, setPageLength] = useState<number>(10);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [isOpenSaveConfirm, setIsOpenSaveConfirm] = useState(false);
+  const [isOpenEditForm, setIsOpenEditForm] = useState(false);
+  const [isOpenNewForm, setIsOpenNewForm] = useState(false);
   const [checkList, setCheckList] = useState<any>([]);
   const selectList = [t('win.one'), t('win.two'), t('win.three')];
 
@@ -54,7 +55,7 @@ export const AdminWallets = () => {
     <>
       <Styled.HeadBlock style={{ justifyContent: 'space-between' }}>
         <ButtonGroup>
-          <Button danger maxWidth={158} onClick={() => setIsOpenSaveConfirm(true)}>
+          <Button danger maxWidth={158} onClick={() => setIsOpenNewForm(true)}>
             {t('wallets.newWallet')}
           </Button>
           <Button dangerOutline maxWidth={158} onClick={() => undefined}>
@@ -71,7 +72,7 @@ export const AdminWallets = () => {
       <WalletTable>
         {list.map((card, index) => {
           return (
-            <Wallet key={index}>
+            <Wallet key={index} onClick={() => setIsOpenEditForm(true)}>
               <Name>{card.name}</Name>
               <BalanceText>{card.balanceText}</BalanceText>
               <AmountGroup>
@@ -83,8 +84,8 @@ export const AdminWallets = () => {
         })}
       </WalletTable>
 
-      {isOpenSaveConfirm && (
-        <Modal onClose={() => setIsOpenSaveConfirm(false)}>
+      {isOpenEditForm && (
+        <Modal onClose={() => setIsOpenEditForm(false)}>
           <ModalBlock>
             <ModalTitle>Wallet 1</ModalTitle>
             <KeysBLock>
@@ -96,8 +97,6 @@ export const AdminWallets = () => {
                   ) : (
                     <KeyInput
                       spellCheck="false"
-                      dis={false}
-                      disabled={false}
                       onChange={(e) => alert(e.target.value)}
                       value={'5Kjn6u5wTyHA5jJAJs9b77fzU5mgRdeqTvjhZFcppk7geUvxijH'}
                     />
@@ -125,8 +124,6 @@ export const AdminWallets = () => {
                   ) : (
                     <KeyInput
                       spellCheck="false"
-                      dis={false}
-                      disabled={false}
                       onChange={(e) => alert(e.target.value)}
                       value={'5Kjn6u5wTyHA5jJAJs9b77fzU5mgRdeqTvjhZFcppk7geUvxijH'}
                     />
@@ -175,7 +172,7 @@ export const AdminWallets = () => {
                   danger
                   maxWidth={200}
                   onClick={() => {
-                    setIsOpenSaveConfirm(false);
+                    setIsOpenEditForm(false);
                   }}
                 >
                   {/* {t('depositsPrograms.save')} */}
@@ -247,6 +244,27 @@ export const AdminWallets = () => {
         </Modal>
       )}
 
+      {isOpenNewForm && (
+        <Modal onClose={() => setIsOpenNewForm(false)}>
+          <ModalBlock>
+            <NewWalletTitle>Новый кошелек</NewWalletTitle>
+            <RoundInput spellCheck="false" placeholder="Наименование" />
+            <RoundInput spellCheck="false" placeholder="Активный ключ" />
+            <RoundInput spellCheck="false" placeholder="Ключ примечания" />
+            <Button
+              danger
+              maxWidth={200}
+              onClick={() => {
+                setIsOpenNewForm(false);
+              }}
+            >
+              {/* {t('depositsPrograms.save')} */}
+              Создать
+            </Button>
+          </ModalBlock>
+        </Modal>
+      )}
+
       <Pagination
         pageLength={pageLength}
         setPageLength={setPageLength}
@@ -257,6 +275,40 @@ export const AdminWallets = () => {
     </>
   );
 };
+const RoundInput = styled.input`
+  max-width: 200px;
+  width: 100%;
+  border: 1px solid rgba(86, 101, 127, 0.3);
+  box-sizing: border-box;
+  border-radius: 24px;
+
+  min-height: 40px;
+  padding: 8px 20px;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 21px;
+  background: transparent;
+  letter-spacing: 0.1px;
+  color: ${(props) => props.theme.text2};
+  border: 1px solid #ff416e;
+  text-align: center;
+  &::-webkit-input-placeholder {
+    color: ${(props) => props.theme.text};
+  }
+  &:focus {
+    outline: none;
+  }
+`;
+
+const NewWalletTitle = styled.h3`
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 28px;
+
+  color: #0e0d3d;
+  color: ${(props) => props.theme.text2};
+`;
 
 const Refresh = styled.div<{ refresh?: boolean }>`
   display: flex;
@@ -269,13 +321,6 @@ const Refresh = styled.div<{ refresh?: boolean }>`
   & > svg {
     transform: ${(props) => (props.refresh ? 'rotate(180deg)' : 'rotate(0deg)')};
     transition: 1s;
-
-    :active {
-      transform: rotate(180deg);
-      -webkit-transform: rotate(180deg);
-      -ms-transform: rotate(180deg);
-      transition: 1s;
-    }
   }
 `;
 
@@ -291,6 +336,8 @@ const ContentRow = styled.div`
     line-height: 14px;
     letter-spacing: 0.1px;
     color: #56657f;
+    color: ${(props) => props.theme.acceptAll.desc};
+
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -305,15 +352,13 @@ const SelectGroup = styled.div`
     font-size: 14px;
     line-height: 21px;
     letter-spacing: 0.1px;
-    color: rgba(86, 101, 127, 0.6);
+    color: ${(props) => props.theme.depositHead};
     position: absolute;
     top: -10px;
     left: 10px;
     background: #fff;
 
     position: absolute;
-    /* left: 7px;
-    top: -12px; */
     padding: 0 10px;
     z-index: 9;
     background: ${(props) => props.theme.card.background};
@@ -331,27 +376,21 @@ const KeyWrapper = styled.div`
   grid-template-columns: 1fr 25px;
   gap: 10px;
 `;
-const KeyInput = styled.textarea<{ dis?: boolean }>`
+const KeyInput = styled.textarea`
   resize: none;
-
-  border: none;
   outline: none;
   width: 100%;
   position: relative;
-  background: ${(props) => props.theme.card.background};
-  color: ${(props) => props.theme.text};
   &:disabled {
-    background: ${(props) => props.theme.card.background};
   }
   &::placeholder {
-    color: ${(props) => (props.dis ? '#c4c4c4' : props.theme.text2)};
   }
   &:focus {
     background: ${(props) => props.theme.inputBg};
     background: #fff0f0;
   }
   font-family: 'Roboto', sans-serif;
-  background: ${(props) => props.theme.inputBg};
+  background: ${(props) => props.theme.rounIputBackground};
   border: 1px solid #56657f;
   box-sizing: border-box;
   border-radius: 9px;
@@ -373,7 +412,7 @@ const Label = styled.span`
   font-size: 12px;
   line-height: 14px;
   letter-spacing: 0.1px;
-  color: rgba(86, 101, 127, 0.6);
+  color: ${(props) => props.theme.depositHead};
 `;
 const KeyText = styled.p`
   max-width: 100%;
@@ -385,8 +424,8 @@ const KeyText = styled.p`
   display: flex;
   align-items: center;
   letter-spacing: 0.1px;
-  color: #515172;
   padding: 9px 0;
+  color: ${(props) => props.theme.text2};
 `;
 const KeysBLock = styled.div`
   width: 100%;
@@ -425,10 +464,6 @@ const ModalButtons = styled.div`
     font-style: normal;
     font-weight: normal;
     font-size: 14px;
-    text-align: center;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
     line-height: 16px;
     display: flex;
     align-items: center;
@@ -439,7 +474,6 @@ const ModalButtons = styled.div`
 `;
 
 const ModalTitle = styled.h1`
-  color: ${(props) => props.theme.text};
   width: 100%;
 
   font-style: normal;
@@ -450,7 +484,7 @@ const ModalTitle = styled.h1`
   align-items: center;
   letter-spacing: 0.1px;
 
-  color: #515172;
+  color: ${(props) => props.theme.text2};
   padding-bottom: 10px;
   border-bottom: 1px solid rgba(81, 81, 114, 0.2);
 `;
@@ -460,11 +494,11 @@ const ModalBlock = styled.div`
   flex-direction: column;
   max-width: 345px;
   width: 100%;
-  padding: 0;
+  padding: 50px 0;
   margin: 0 auto;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 25px;
   @media (max-width: 576px) {
   }
 `;
@@ -474,6 +508,7 @@ const Wallet = styled.div`
   flex-direction: column;
   gap: 5px;
   padding: 20px 22px;
+  cursor: pointer;
 
   background: ${(props) => props.theme.card.background};
   width: 100%;

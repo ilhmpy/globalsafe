@@ -80,6 +80,7 @@ export const lightTheme = {
     color: '#515172',
   },
   pink: '#FF416E',
+  rounIputBackground: '#FFF0F0',
 };
 
 export const darkTheme = {
@@ -156,4 +157,5 @@ export const darkTheme = {
     color: '#fff',
   },
   pink: '#FF416E',
+  rounIputBackground: '#ffffff',
 };
