@@ -64,7 +64,6 @@ export const ModalPay: FC<ListProps> = ({
           {data.state !== 5 && (
             <PayCardBlock>
               <PayText small>{t('adminPay.table.procent')}</PayText>
-              {/* <PayText></PayText> */}
               <InputWrap
                 paymentsAdjust={paymentsAdjust}
                 done={disabled}
