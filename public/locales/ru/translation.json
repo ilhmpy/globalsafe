@@ -475,7 +475,9 @@
     "for": "на",
     "transferFunds": "Перевести средства",
     "from": "Откуда",
-    "where": "Куда"
+    "where": "Куда",
+    "enrollmentAccount": "Аккаунт зачисления",
+    "available": "Доступно"
   },
   "text": {
     "tip_state_unsubscribed": "Подпишитесь на уведомления",

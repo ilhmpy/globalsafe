@@ -476,7 +476,9 @@
     "for": "for",
     "transferFunds": "Transfer funds",
     "from": "From",
-    "where": "Where"
+    "where": "Where",
+    "enrollmentAccount": "Enrollment account",
+    "available": "Available"
   },
   "text": {
     "tip_state_unsubscribed": "Subscribe to notifications",

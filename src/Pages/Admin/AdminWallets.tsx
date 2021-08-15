@@ -37,7 +37,8 @@ export const AdminWallets = () => {
   const [isOpenEditForm, setIsOpenEditForm] = useState(false);
   const [isOpenNewForm, setIsOpenNewForm] = useState(false);
   const [isOpenShowForm, setIsOpenShowForm] = useState(false);
-
+  const [isOpenTransferForm, setIsOpenTransferForm] = useState(false);
+  const [isSavingConfirm, setIsSavingConfirm] = useState(false);
   const [checkList, setCheckList] = useState<any>([]);
   const selectList = [t('win.one'), t('win.two'), t('win.three')];
 
@@ -168,13 +169,13 @@ export const AdminWallets = () => {
                   <Select checkList={checkList} setCheckList={setCheckList} values={selectList} />
                 </SelectGroup>
               </InputsRow>
-              {/* <ModalContent>{t('depositsPrograms.areYouSure')}</ModalContent> */}
               <ModalButtons>
                 <Button
                   danger
                   maxWidth={200}
                   onClick={() => {
                     setIsOpenEditForm(false);
+                    setIsOpenTransferForm(true);
                   }}
                 >
                   {t('wallets.transferFunds')}
@@ -349,6 +350,57 @@ export const AdminWallets = () => {
         </Modal>
       )}
 
+      {isOpenTransferForm && (
+        <Modal onClose={() => setIsOpenTransferForm(false)}>
+          <ModalBlock>
+            <ModalTitle>Crowdwiz diamond asset, DIAMOND</ModalTitle>
+            <ContentRow>
+              <Label>{t('wallets.available')}</Label>
+              <p>102 000 DIAMOND</p>
+            </ContentRow>
+            <SelectGroup>
+              <span>{t('wallets.enrollmentAccount')}</span>
+              <Select checkList={checkList} setCheckList={setCheckList} values={selectList} />
+            </SelectGroup>
+            <TransferButtonGroup>
+              <RoundInput placeholder={t('depositsPrograms.amount')} />
+              <Button
+                danger
+                maxWidth={200}
+                onClick={() => {
+                  setIsSavingConfirm(true);
+                  setIsOpenTransferForm(false);
+                }}
+              >
+                {t('depositSelect.transferButton')}
+              </Button>
+              <Button dangerOutline maxWidth={200} onClick={() => setIsOpenShowForm(true)}>
+                {t('depositSelect.transferButton')}
+              </Button>
+            </TransferButtonGroup>
+          </ModalBlock>
+        </Modal>
+      )}
+
+      {isSavingConfirm && (
+        <Modal onClose={() => setIsSavingConfirm(false)}>
+          <ModalBlock sm confirm>
+            <ConfirmTitle>{t('wallets.transferFunds')}</ConfirmTitle>
+            <ConfirmContent>
+              Вы уверены, что хотите перевести с Wallet 1 20 000 000 CWD на Wallet 2?
+            </ConfirmContent>
+            <Button
+              danger
+              maxWidth={200}
+              onClick={() => {
+                setIsSavingConfirm(false);
+              }}
+            >
+              {t('acceptAll.accept')}
+            </Button>
+          </ModalBlock>
+        </Modal>
+      )}
       <Pagination
         pageLength={pageLength}
         setPageLength={setPageLength}
@@ -359,6 +411,32 @@ export const AdminWallets = () => {
     </>
   );
 };
+const ConfirmTitle = styled.h1`
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 28px;
+  text-align: center;
+  color: ${(props) => props.theme.text};
+`;
+const ConfirmContent = styled.p`
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  letter-spacing: 0.1px;
+
+  color: ${(props) => props.theme.text2};
+`;
+const TransferButtonGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  padding: 0 0 30px;
+`;
 const Refresh = styled.div<{ refresh?: boolean }>`
   display: flex;
   align-items: center;
@@ -622,12 +700,13 @@ const ModalTitle = styled.h1`
   border-bottom: 1px solid rgba(81, 81, 114, 0.2);
 `;
 
-const ModalBlock = styled.div<{ sm?: boolean }>`
+const ModalBlock = styled.div<{ sm?: boolean; confirm?: boolean }>`
   display: flex;
   flex-direction: column;
   max-width: 345px;
   width: 100%;
   padding: ${(props) => (props.sm ? '50px 0' : '')};
+  padding: ${(props) => (props.confirm ? '35px 30px' : '')};
   margin: 0 auto;
   align-items: center;
   justify-content: center;
