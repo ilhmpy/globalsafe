@@ -768,6 +768,12 @@ const WalletTable = styled.div`
   grid-template-columns: repeat(4, 1fr);
   padding: 20px 0 37px;
   gap: 22px;
+  @media (max-width: 992px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 `;
 
 const ButtonGroup = styled.div`
