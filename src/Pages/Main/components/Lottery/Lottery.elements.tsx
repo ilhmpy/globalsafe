@@ -195,7 +195,7 @@ export const Center = styled.div`
   }
 `;
 
-export const Container = styled.div<{ before?: boolean; }>`
+export const Container = styled.div<{ before?: boolean; lotteryModal?: boolean; }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -232,6 +232,14 @@ export const Container = styled.div<{ before?: boolean; }>`
         }
       `;
     };
+  }}
+
+  ${({ lotteryModal }) => {
+    if (lotteryModal) {
+      return `
+        flex-wrap: nowrap;
+      `;
+    }
   }}
 `;
 

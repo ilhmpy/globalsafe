@@ -60,7 +60,7 @@ export const Timer: FC<Props> = ({
         setState(
           Math.floor(durations.asMinutes()) !== 0 ? 
               [Math.floor(durations.asDays()), Math.floor(durations.asHours()), Math.floor(durations.asMinutes())] : null);
-        setProgress(getProgress([allTimeLottery, defaultTimeLottery]));
+        setProgress(getProgress([allTimeLottery, data]));
       };
       console.log(data);
     };
@@ -97,7 +97,7 @@ export const Timer: FC<Props> = ({
           setState(
             Math.floor(durations.asMinutes()) !== 0 ? 
                 [Math.floor(durations.asDays()), Math.floor(durations.asHours()), Math.floor(durations.asMinutes())] : null);
-          setProgress(getProgress([allTimeLottery, defaultTimeLottery]));
+          setProgress(getProgress([allTimeLottery, data]));
         };
       })
       hubConnection
