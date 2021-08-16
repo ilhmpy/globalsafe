@@ -107,7 +107,8 @@
     "portfolio": "Portfolio",
     "toHome": "To the main",
     "lottery": "Lottery",
-    "depositsPrograms": "Deposits programs"
+    "depositsPrograms": "Deposits programs",
+    "wallets": "Wallets"
   },
   "adminDeposit": {
     "uptitle": "Payouts",
@@ -464,6 +465,20 @@
     "depositProgramSuccessfullySaved": "The deposit program has been successfully saved.",
     "changesCanceled": "Changes canceled!",
     "changesCanceledSuccessfully": "Changes have been successfully canceled."
+  },
+  "wallets": {
+    "refreshAll": "Refresh all",
+    "newWallet": "New wallet",
+    "name": "Name",
+    "activeKey": "Active key",
+    "keyNotes": "Key notes",
+    "create": "Create",
+    "for": "for",
+    "transferFunds": "Transfer funds",
+    "from": "From",
+    "where": "Where",
+    "enrollmentAccount": "Enrollment account",
+    "available": "Available"
   },
   "text": {
     "tip_state_unsubscribed": "Subscribe to notifications",

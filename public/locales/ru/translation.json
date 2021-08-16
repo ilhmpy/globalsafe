@@ -107,7 +107,8 @@
     "portfolio": "Портфель",
     "toHome": "На главную",
     "lottery": "Розыгрыши",
-    "depositsPrograms": "Программы депозитов"
+    "depositsPrograms": "Программы депозитов",
+    "wallets": "Кошельки"
   },
   "adminDeposit": {
     "uptitle": "Выплаты",
@@ -463,6 +464,20 @@
     "depositProgramSuccessfullySaved": "Программа депозита успешно сохранена.",
     "changesCanceled": "Изменения отменены !",
     "changesCanceledSuccessfully": "Изменения успешно отменены."
+  },
+  "wallets": {
+    "refreshAll": "Обновить все",
+    "newWallet": "Новый кошелек",
+    "name": "Наименование",
+    "activeKey": "Активный ключ",
+    "keyNotes": "Ключ примечания",
+    "create": "Создать",
+    "for": "на",
+    "transferFunds": "Перевести средства",
+    "from": "Откуда",
+    "where": "Куда",
+    "enrollmentAccount": "Аккаунт зачисления",
+    "available": "Доступно"
   },
   "text": {
     "tip_state_unsubscribed": "Подпишитесь на уведомления",
