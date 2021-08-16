@@ -402,9 +402,9 @@
   "partnersTitle": "Партнерские программы",
   "time": {
     "title": "Старт розыгрыша через",
-    "days": "дня",
-    "hours": "часа",
-    "minutes": "минут",
+    "days": "дни",
+    "hours": "часы",
+    "minutes": "минуты",
     "yourPrize": "Ваш приз будет здесь"
   },
   "acceptAll": {
