@@ -216,9 +216,10 @@ export const OldTimer: FC<OldTimerProps> = ({ modalTimer, history }: OldTimerPro
       if (data != null) {
         const durations = moment.duration(data.totalSeconds, 'seconds');
         setDeadline(data.totalSeconds);
-        setState(
+        setOtherState(
           Math.floor(durations.asMinutes()) !== 0 ? 
               [Math.floor(durations.asDays()), Math.floor(durations.asHours()), Math.floor(durations.asMinutes())] : null);
+        setState(languale === 1 ? durations.format('d [дн] h [ч] m [мин]', { trim: false }) : durations.format("d [d] h [h] m [m]", { trim: false }));
       };
     };
     if (hubConnection && !cancel) {
@@ -240,7 +241,7 @@ export const OldTimer: FC<OldTimerProps> = ({ modalTimer, history }: OldTimerPro
       cancel = true;
     };
   }, [hubConnection]);
-
+ 
   const repeat = () => {
     const cb = (data: any) => {
       if (data != null) {
@@ -249,13 +250,13 @@ export const OldTimer: FC<OldTimerProps> = ({ modalTimer, history }: OldTimerPro
         setOtherState(
           Math.floor(durations.asMinutes()) !== 0 ? 
               [Math.floor(durations.asDays()), Math.floor(durations.asHours()), Math.floor(durations.asMinutes())] : null);
-        setState(languale === 1 ? durations.format('d [дн] h [ч] m [мин]') : durations.format("d [d] h [h] m [m]"));
-      };
+        setState(languale === 1 ? durations.format('d [дн] h [ч] m [мин]', { trim: false }) : durations.format("d [d] h [h] m [m]", { trim: false }));
     }
+  }
     if (hubConnection) {
       hubConnection.on("DrawCountdown", cb);
       hubConnection
-        .invoke<RootClock>('GetNextDraw')
+        .invoke<RootClock>('GetNextDraw') 
         .then((res) => {
           if (res != null) {
             setDeadline(res.totalSeconds);
