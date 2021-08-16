@@ -69,7 +69,7 @@ export const Timer: FC<Props> = ({
       hubConnection
         .invoke('GetNextDraw')
         .then((res) => {
-          console.log(res);
+          console.log(res); 
           if (res != null) {
             setDeadline(res[1].totalSeconds);
             setClock(res[1]);
@@ -246,9 +246,10 @@ export const OldTimer: FC<OldTimerProps> = ({ modalTimer, history }: OldTimerPro
       if (data != null) {
         const durations = moment.duration(data.totalSeconds, 'seconds');
         setDeadline(data.totalSeconds);
-        setState(
+        setOtherState(
           Math.floor(durations.asMinutes()) !== 0 ? 
               [Math.floor(durations.asDays()), Math.floor(durations.asHours()), Math.floor(durations.asMinutes())] : null);
+        setState(languale === 1 ? durations.format('d [дн] h [ч] m [мин]') : durations.format("d [d] h [h] m [m]"));
       };
     }
     if (hubConnection) {
