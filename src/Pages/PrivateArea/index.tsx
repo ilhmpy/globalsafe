@@ -1,39 +1,33 @@
-﻿import React, { useState, MouseEvent, useContext, useEffect, useMemo, useRef } from 'react';
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  Switch,
-  Redirect,
-  useHistory,
-} from 'react-router-dom';
-import { Header } from '../../components/Header/Header';
-import * as Styled from './Styles.elements';
-import { CSSTransition } from 'react-transition-group';
-import { Modal } from '../../components/Modal/Modal';
-import { RootDeposits, DepositsCollection, Commisions } from '../../types/info';
-import { Input } from '../../components/UI/Input';
-import { Button } from '../../components/Button/Button';
-import { AppContext } from '../../context/HubContext';
-import ReactNotification, { store } from 'react-notifications-component';
-import 'react-notifications-component/dist/theme.css';
-import { DepositListModal } from './Modals';
-import { Tabs, Tab } from '../../components/UI/Tabs';
-import { Card, Container } from '../../globalStyles';
-import { UpTitle } from '../../components/UI/UpTitle';
+﻿import moment from 'moment';
+import 'moment/locale/ru';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
+import { CSSTransition } from 'react-transition-group';
+import { ReactComponent as Copy } from '../../assets/svg/copy.svg';
+import { Button } from '../../components/Button/Button';
+import { Header } from '../../components/Header/Header';
+import { Modal } from '../../components/Modal/Modal';
+import { Notification } from '../../components/Notify/Notification';
+import { Tooltip } from '../../components/Tooltips/Tooltips';
+import { Input } from '../../components/UI/Input';
+import { Loading } from '../../components/UI/Loading';
+import { Tabs } from '../../components/UI/Tabs';
+import { UpTitle } from '../../components/UI/UpTitle';
+import { AppContext } from '../../context/HubContext';
+import { Card, Container } from '../../globalStyles';
+import { Balance, Notify } from '../../types/balance';
+import { Commisions, DepositsCollection, RootDeposits } from '../../types/info';
 import { Info } from './Info';
 import { InfoBalance } from './InfoBalance';
 import { InfoDeposits } from './InfoDeposits';
+import { DepositListModal } from './Modals';
 import { OnePage } from './OnePage';
-import moment from 'moment';
-import 'moment/locale/ru';
-import { Balance } from '../../types/balance';
-import { TestTolltips, Tooltip } from '../../components/Tooltips/Tooltips';
-import { ReactComponent as Copy } from '../../assets/svg/copy.svg';
-import { Loading } from '../../components/UI/Loading';
+import * as Styled from './Styles.elements';
 
 export const InfoMain = () => {
+  const { t } = useTranslation();
+  const [notifications, setNotifications] = useState<Notify[]>([]);
   const [addDeposit, setAddDeposit] = useState(false);
   const [depositListModal, setDepositListModal] = useState(false);
   const [addDepositValue, setAddDepositValue] = useState('');
@@ -52,7 +46,6 @@ export const InfoMain = () => {
   const balance = appContext.balance;
   const hubConnection = appContext.hubConnection;
   const balanceList = appContext.balanceList;
-  const { t, i18n } = useTranslation();
   const inputRef = useRef<any>(null);
   const history = useHistory();
   const lang = localStorage.getItem('i18nextLng') || 'ru';
@@ -70,25 +63,6 @@ export const InfoMain = () => {
   const handleBackModal = () => {
     setAddDeposit(true);
     setDepositListModal(false);
-  };
-
-  const alert = (
-    title: string,
-    message: string,
-    type: 'success' | 'default' | 'warning' | 'info' | 'danger'
-  ) => {
-    store.addNotification({
-      title: title,
-      message: message,
-      type: type,
-      insert: 'top',
-      container: 'top-right',
-      animationIn: ['animate__animated', 'animate__fadeIn'],
-      animationOut: ['animate__animated', 'animate__fadeOut'],
-      dismiss: {
-        duration: 5000,
-      },
-    });
   };
 
   const selectDeposit = (item: DepositsCollection) => {
@@ -167,14 +141,24 @@ export const InfoMain = () => {
         .then((res) => {
           setWithdraw(false);
           setWithdrawValue('');
-          alert(t('alert.success'), t('alert.successMsg'), 'success');
+          createNotify({
+            text: t('alert.successMsg'),
+            error: false,
+            timeleft: 5,
+            id: notifications.length,
+          });
           setWithdrawValueLoad(false);
         })
         .catch((err: Error) => {
           setWithdraw(false);
           setWithdrawValue('');
           console.log(err);
-          alert(t('alert.error'), t('alert.errorMsg'), 'danger');
+          createNotify({
+            text: t('alert.errorMsg'),
+            error: true,
+            timeleft: 5,
+            id: notifications.length,
+          });
           setWithdrawValueLoad(false);
         });
     }
@@ -209,7 +193,12 @@ export const InfoMain = () => {
     return <Redirect to="/" />;
   }
   const copy = (text: string) => {
-    alert(t('copy.copy'), t('copy.text'), 'success');
+    createNotify({
+      text: t('copy.text'),
+      error: false,
+      timeleft: 5,
+      id: notifications.length,
+    });
     navigator.clipboard.writeText(text);
   };
 
@@ -241,6 +230,13 @@ export const InfoMain = () => {
       setWithdrawValue(e.target.value);
     }
   };
+  const onDelete = (id: number) => {
+    setNotifications(notifications.filter((i) => i.id !== id));
+  };
+
+  const createNotify = (item: Notify) => {
+    setNotifications([item]);
+  };
 
   return (
     <>
@@ -259,7 +255,6 @@ export const InfoMain = () => {
         <Container>
           <UpTitle>{t('privateArea.uptitle')}</UpTitle>
         </Container>
-        <ReactNotification />
         <Container>
           <Card>
             <Styled.InfoWrap>
@@ -450,12 +445,15 @@ export const InfoMain = () => {
                     >
                       {t('depositSelect.add')}
                     </Styled.ModalButton>
-                    {depositSelect?.description ? 
-                    <Tooltip text={depositSelect.description}>
-                      <Styled.Program onClick={() => setContition(true)}>
-                         {t('depositSelect.condition')}
-                       </Styled.Program>
-                    </Tooltip> : <Styled.Program show>{t("depositSelect.showCondition")}</Styled.Program>}
+                    {depositSelect?.description ? (
+                      <Tooltip text={depositSelect.description}>
+                        <Styled.Program onClick={() => setContition(true)}>
+                          {t('depositSelect.condition')}
+                        </Styled.Program>
+                      </Tooltip>
+                    ) : (
+                      <Styled.Program show>{t('depositSelect.showCondition')}</Styled.Program>
+                    )}
                     {depositSelect && !asset && balanceFuture ? (
                       <>
                         <Styled.Warning>
@@ -478,7 +476,8 @@ export const InfoMain = () => {
                     ) : null}
                     {depositSelect && depositSelect.priceKind && asset ? (
                       <Styled.Warning choice>
-                        {t('depositSelect.willActiv')}&nbsp; <span>
+                        {t('depositSelect.willActiv')}&nbsp;{' '}
+                        <span>
                           {depositSelect.price}{' '}
                           {depositSelect.priceKind ? Balance[depositSelect.priceKind] : 'CWD'}
                         </span>
@@ -527,6 +526,9 @@ export const InfoMain = () => {
           />
         </div>
       </Styled.Page>
+      <Styled.Note>
+        <Notification onDelete={onDelete} data={notifications} />
+      </Styled.Note>
     </>
   );
 };

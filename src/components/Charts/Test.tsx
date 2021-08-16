@@ -153,7 +153,12 @@ export const TestChart: FC<Props> = ({
     <div className="app">
       <div className="row">
         <ChartWrap>
-          <Chart options={data.options} series={data.series} type="donut" ac-chart="'donut'" />
+          <Chart
+            options={data.options as any}
+            series={data.series as any}
+            type="donut"
+            ac-chart="'donut'"
+          />
         </ChartWrap>
       </div>
     </div>
@@ -294,7 +299,7 @@ export const ColumnChart: FC<PropsColumn> = ({ date, value }: PropsColumn) => {
 
   return (
     <div id="chart1" style={{ position: 'relative' }}>
-      <Chart options={data.options} series={data.series} type="bar" height={287} />
+      <Chart options={data.options as any} series={data.series as any} type="bar" height={287} />
     </div>
   );
 };
@@ -412,7 +417,7 @@ export const ColumnChartCwd: FC<PropsColumn> = ({ date = [''], value = [''] }: P
 
   return (
     <div id="chart1" style={{ position: 'relative' }}>
-      <Chart options={data.options} series={data.series} type="bar" height={287} />
+      <Chart options={data.options as any} series={data.series as any} type="bar" height={287} />
     </div>
   );
 };
@@ -538,7 +543,7 @@ export const ColumnChartThree: FC<PropsColumn> = ({ date, value }: PropsColumn) 
 
   return (
     <div id="chart1" style={{ position: 'relative' }}>
-      <Chart options={data.options} series={data.series} type="bar" height={287} />
+      <Chart options={data.options as any} series={data.series as any} type="bar" height={287} />
     </div>
   );
 };
@@ -674,7 +679,7 @@ export const ColumnChartTwo: FC<PropsColumn> = ({ date, value }: PropsColumn) =>
 
   return (
     <div id="chart2" style={{ position: 'relative' }}>
-      <Chart options={data.options} series={data.series} type="bar" height={287} />
+      <Chart options={data.options as any} series={data.series as any} type="bar" height={287} />
     </div>
   );
 };
@@ -811,7 +816,7 @@ export const ColumnChartAnalitic: FC<PropsColumn> = ({ date, value }: PropsColum
 
   return (
     <div id="chart2" style={{ position: 'relative' }}>
-      <Chart options={data.options} series={data.series} type="bar" height={287} />
+      <Chart options={data.options as any} series={data.series as any} type="bar" height={287} />
     </div>
   );
 };
@@ -880,7 +885,12 @@ export const RadialBar: FC<RadialProps> = ({
 
   return (
     <div id="chart2" style={{ position: 'relative' }}>
-      <Chart options={data.options} series={data.series} type="radialBar" height={height} />
+      <Chart
+        options={data.options as any}
+        series={data.series as any}
+        type="radialBar"
+        height={height}
+      />
     </div>
   );
 };
@@ -921,8 +931,8 @@ export const RadialBarRound = () => {
       }}
     >
       <Chart
-        options={data.options}
-        series={data.series}
+        options={data.options as any}
+        series={data.series as any}
         type="radialBar"
         height="100%"
         width={122}
@@ -959,8 +969,8 @@ export const RadialBarHalf = () => {
   return (
     <div id="chart2" style={{ position: 'relative', height: 182 }}>
       <Chart
-        options={data.options}
-        series={data.series}
+        options={data.options as any}
+        series={data.series as any}
         type="radialBar"
         height="100%"
         width={122}

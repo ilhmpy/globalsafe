@@ -272,7 +272,7 @@ export const Content = styled.div<ContentProps>`
     padding-left: 35px;
   }
   @media (max-width: 768px) {
-    padding: 0 20px 0;
+    padding: 0 13px 0;
   }
 `;
 

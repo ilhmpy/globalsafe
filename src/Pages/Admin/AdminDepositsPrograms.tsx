@@ -1,211 +1,189 @@
-import React, { FC, useState, useEffect, useContext } from 'react';
+import React, { FC, useContext, useState } from 'react';
+import { Scrollbars } from 'react-custom-scrollbars';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import * as Styled from './Styled.elements';
-import { UpTitle } from '../../components/UI/UpTitle';
 import { ReactComponent as Exit } from '../../assets/svg/exit.svg';
-import { AppContext } from '../../context/HubContext';
-import { CSSTransition } from 'react-transition-group';
-import { Select } from '../../components/Select/Select';
 import { Button } from '../../components/Button/Button';
-import { Content, Tab } from '../../components/UI/Tabs';
+import { Switcher } from '../../components/Switcher';
+import { Loading } from '../../components/UI/Loading';
+import { Content } from '../../components/UI/Tabs';
+import { UpTitle } from '../../components/UI/UpTitle';
+import { AppContext } from '../../context/HubContext';
 import { Card } from '../../globalStyles';
-import burgerGroup from '../../assets/img/burgerGroup.png';
-import { Scrollbars } from 'react-custom-scrollbars';
-import {
-  BurgerButton,
-  BurgerImg,
-  SortingItem,
-  SortingWindow,
-  WindowBody,
-  WindowTitle,
-} from './Styled.elements';
+import { DepositProgramForm } from './DepositProgramForm';
+import * as Styled from './Styled.elements';
+import { SortingWindow } from './Styled.elements';
 
 export const AdminDepositsPrograms = () => {
   const { t } = useTranslation();
   const [depositsPrograms, setDepositsPrograms] = useState([
     {
-      name: 'Программа #1',
-      depositsAmount: '1000.0',
-      createDate: '12/07/2021',
-      procents: '1',
-      desc: 'фикс. выплата 10% /мес., 70% от доходности фонда',
+      name: 'Start',
+      currency: 'CWD',
+      amount: '1 000.0 - 10 000.0',
+      profitability: '10 %',
+      payment: 'Фиксированная',
+      depositPeriod: '180 дней',
     },
     {
-      name: 'Программа #1',
-      depositsAmount: '500.0',
-      createDate: '12/07/2021',
-      procents: '2',
-      desc: 'фикс. выплата 10% /мес., 70% от доходности фонда',
+      name: 'Start +',
+      currency: 'CWD',
+      amount: '2 000.0 - 20 000.0',
+      profitability: '10 %',
+      payment: 'Фиксированная',
+      depositPeriod: '180 дней',
     },
     {
-      name: 'Программа #1',
-      depositsAmount: '300.0',
-      createDate: '13/07/2021',
-      procents: '4',
-      desc: 'фикс. выплата 10% /мес., 70% от доходности фонда',
+      name: 'Classic',
+      currency: 'CWD',
+      amount: '5 000.0 - 50 000.0',
+      profitability: '10 %',
+      payment: 'Фиксированная',
+      depositPeriod: '180 дней',
     },
     {
-      name: 'Программа #1',
-      depositsAmount: '1200.0',
-      createDate: '14/07/2021',
-      procents: '2',
-      desc: 'фикс. выплата 10% /мес., 70% от доходности фонда',
+      name: 'Gold',
+      currency: 'CWD',
+      amount: '10 000.0 - 100 000.0',
+      profitability: '10 %',
+      payment: 'Фиксированная',
+      depositPeriod: '180 дней',
     },
     {
-      name: 'Программа #1',
-      depositsAmount: '200.0',
-      createDate: '21/07/2021',
-      procents: '8',
-      desc: 'фикс. выплата 10% /мес., 70% от доходности фонда',
+      name: 'Premium',
+      currency: 'CWD',
+      amount: '50 000.0 - 500 000.0',
+      profitability: '10 %',
+      payment: 'Фиксированная',
+      depositPeriod: '180 дней',
     },
     {
-      name: 'Программа #1',
-      depositsAmount: '300.0',
-      createDate: '12/07/2021',
-      procents: '2',
-      desc: 'фикс. выплата 10% /мес., 70% от доходности фонда',
+      name: 'VIP',
+      currency: 'CWD',
+      amount: '100 000.0 - 1 000 000.0',
+      profitability: '10 %',
+      payment: 'Фиксированная',
+      depositPeriod: '180 дней',
     },
     {
-      name: 'Программа #1',
-      depositsAmount: '600.0',
-      createDate: '28/07/2021',
-      procents: '5',
-      desc: 'фикс. выплата 10% /мес., 70% от доходности фонда',
+      name: 'Platinum',
+      currency: 'CWD',
+      amount: '500 000.0 - 5 000 000.0',
+      profitability: '10 %',
+      payment: 'Фиксированная',
+      depositPeriod: '180 дней',
     },
     {
-      name: 'Программа #1',
-      depositsAmount: '800.0',
-      createDate: '12/07/2021',
-      procents: '2',
-      desc: 'фикс. выплата 10% /мес., 70% от доходности фонда',
+      name: 'Start',
+      currency: 'CWD',
+      amount: '500 000.0 - 5 000 000.0',
+      profitability: '10 %',
+      payment: 'Фиксированная',
+      depositPeriod: '180 дней',
     },
     {
-      name: 'Программа #1',
-      depositsAmount: '0',
-      createDate: '32/07/2021',
-      procents: '1',
-      desc: 'фикс. выплата 10% /мес., 70% от доходности фонда',
+      name: 'Start +',
+      currency: 'CWD',
+      amount: '500 000.0 - 5 000 000.0',
+      profitability: '10 %',
+      payment: 'Фиксированная',
+      depositPeriod: '180 дней',
     },
     {
-      name: 'Программа #1',
-      depositsAmount: '0',
-      createDate: '12/07/2021',
-      procents: '2',
-      desc: 'фикс. выплата 10% /мес., 70% от доходности фонда',
+      name: 'Classic',
+      currency: 'CWD',
+      amount: '500 000.0 - 5 000 000.0',
+      profitability: '10 %',
+      payment: 'Фиксированная',
+      depositPeriod: '180 дней',
     },
     {
-      name: 'Программа #1',
-      depositsAmount: '0',
-      createDate: '12/07/2021',
-      procents: '3',
-      desc: 'фикс. выплата 10% /мес., 70% от доходности фонда',
+      name: 'Gold',
+      currency: 'CWD',
+      amount: '500 000.0 - 5 000 000.0',
+      profitability: '10 %',
+      payment: 'Фиксированная',
+      depositPeriod: '180 дней',
+    },
+    {
+      name: 'Premium',
+      currency: 'CWD',
+      amount: '500 000.0 - 5 000 000.0',
+      profitability: '10 %',
+      payment: 'Фиксированная',
+      depositPeriod: '180 дней',
+    },
+    {
+      name: 'VIP',
+      currency: 'CWD',
+      amount: '500 000.0 - 5 000 000.0',
+      profitability: '10 %',
+      payment: 'Фиксированная',
+      depositPeriod: '180 дней',
+    },
+    {
+      name: 'Platinum',
+      currency: 'CWD',
+      amount: '500 000.0 - 5 000 000.0',
+      profitability: '10 %',
+      payment: 'Фиксированная',
+      depositPeriod: '180 дней',
     },
   ]);
+  const [loading, setLoading] = useState(true);
 
-  const [programs, setPrograms] = useState([
-    { name: 'START' },
-    { name: 'START' },
-    { name: 'START' },
-    { name: 'START' },
-    { name: 'START' },
-    { name: 'START' },
-  ]);
-  const [openFilter, setOpenFilter] = useState(false);
+  const [openNewProgram, setOpenNewProgram] = useState(false);
 
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const user = appContext.user;
   const logOut = appContext.logOut;
-  const [list, setList] = useState(['START', 'MASTER', 'MAIN']);
-  const [checkList, setCheckList] = useState([]);
-  const [procents, setProcents] = useState([]);
-  const [procentsList, setProcentsList] = useState(['0%', '30%', '50%']);
-  const [filter, setFilter] = useState(false);
 
   return (
     <>
       <Styled.HeadBlock>
-        <UpTitle small>{t('adminMain.uptitle')}</UpTitle>
+        <UpTitle small>{t('sideNav.depositsPrograms')}</UpTitle>
         <Styled.UserName>
           <span>{user}</span>
           <Exit onClick={logOut} />
         </Styled.UserName>
       </Styled.HeadBlock>
 
-      <div>
-        <Styled.FilterBlock>
-          <Styled.FilterHeader>
-            <Styled.FilterName>{t('adminDeposit.filter')}</Styled.FilterName>
-            <Styled.ShowHide onClick={() => setOpenFilter(!openFilter)}>
-              {openFilter ? t('hide') : t('show')}
-            </Styled.ShowHide>
-          </Styled.FilterHeader>
-          <CSSTransition in={openFilter} timeout={200} classNames="filter" unmountOnExit>
-            <>
-              <ContentWrap>
-                <Styled.SelectWrap style={{ minWidth: 280 }}>
-                  <Styled.Label>{t('depositsPrograms.name')}</Styled.Label>
-                  <Select checkList={checkList} setCheckList={setCheckList} values={list} />
-                </Styled.SelectWrap>
-                <Styled.SelectWrap style={{ minWidth: 280 }}>
-                  <Styled.Label>{t('depositsPrograms.depositSum')}</Styled.Label>
-                  <Input value={''} onChange={(value) => undefined} />
-                </Styled.SelectWrap>
-                <Styled.SelectWrap style={{ minWidth: 133 }}>
-                  <Styled.Label>{t('depositsPrograms.procents')}</Styled.Label>
-                  <Select checkList={procents} setCheckList={setProcents} values={procentsList} />
-                </Styled.SelectWrap>
-                <Button danger onClick={() => undefined} style={{ height: '40px' }}>
-                  {t('adminDeposit.btnApply')}
-                </Button>
-              </ContentWrap>
-            </>
-          </CSSTransition>
-        </Styled.FilterBlock>
-      </div>
-
       <Content active={true}>
         <CardTable>
-          <PaymentsTable>
-            <TableHead>
-              <TableHeadItem>{t('depositsPrograms.name')}</TableHeadItem>
-              <TableHeadItem>{t('depositsPrograms.depositSum')}</TableHeadItem>
-              <TableHeadItem>{t('depositsPrograms.createDate')}</TableHeadItem>
-              <TableHeadItem>{t('depositsPrograms.procents')}</TableHeadItem>
-              <TableHeadItem>{t('depositsPrograms.desc')}</TableHeadItem>
-              <TableHeadItem>
-                <BurgerButton>
-                  <BurgerImg src={burgerGroup} alt="burger" onClick={() => setFilter(!filter)} />
-                  <Window open={filter}>
-                    <WindowTitle>Сортировка</WindowTitle>
-                    <WindowBody>
-                      {[
-                        { name: 'По убыванию даты' },
-                        { name: 'По возрастанию даты' },
-                        { name: 'Имя программы: От А до Я' },
-                        { name: 'По убыванию суммы депозитов программы' },
-                        { name: 'По возрастанию суммы депозитов программы' },
-                      ].map((obj, index) => (
-                        <SortingItem active={filter} key={index} onClick={() => undefined}>
-                          {obj.name}
-                        </SortingItem>
-                      ))}
-                    </WindowBody>
-                  </Window>
-                </BurgerButton>
-              </TableHeadItem>
-            </TableHead>
-            {depositsPrograms.length ? (
-              <Scrollbars style={{ height: '500px' }}>
-                {depositsPrograms.map((program, idx) => (
-                  <TableList key={depositsPrograms.indexOf(program)} data={program} />
-                ))}
-              </Scrollbars>
-            ) : (
-              <Styled.NotFound>{t('notFound')}</Styled.NotFound>
-            )}
-          </PaymentsTable>
+          {openNewProgram ? (
+            <DepositProgramForm setOpenNewProgram={setOpenNewProgram} />
+          ) : (
+            <PaymentsTable>
+              <TableHeader>
+                <TableTitle>{t('sideNav.depositsPrograms')}</TableTitle>
+                <Button danger onClick={() => setOpenNewProgram(true)}>
+                  {t('depositsPrograms.newProgram')}
+                </Button>
+              </TableHeader>
+
+              <TableHead>
+                <TableHeadItem>{t('depositsPrograms.name')}</TableHeadItem>
+                <TableHeadItem>{t('depositsPrograms.currency')}</TableHeadItem>
+                <TableHeadItem>{t('depositsPrograms.amount')}</TableHeadItem>
+                <TableHeadItem>{t('depositsPrograms.profitability')}</TableHeadItem>
+                <TableHeadItem>{t('depositsPrograms.payment')}</TableHeadItem>
+                <TableHeadItem>{t('depositsPrograms.depositPeriod')}</TableHeadItem>
+                <TableHeadItem>{t('depositsPrograms.programActivity')}</TableHeadItem>
+              </TableHead>
+              {depositsPrograms.length ? (
+                <Scrollbars style={{ height: '450px' }}>
+                  {depositsPrograms.map((program, idx) => (
+                    <TableList key={depositsPrograms.indexOf(program)} data={program} />
+                  ))}
+                </Scrollbars>
+              ) : loading ? (
+                <Loading />
+              ) : (
+                <Styled.NotFound>{t('notFound')}</Styled.NotFound>
+              )}
+            </PaymentsTable>
+          )}
         </CardTable>
       </Content>
     </>
@@ -214,6 +192,7 @@ export const AdminDepositsPrograms = () => {
 
 const TableList: FC<{ data: any }> = ({ data }: any) => {
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
 
   const onClose = () => {
     setOpen(false);
@@ -224,16 +203,21 @@ const TableList: FC<{ data: any }> = ({ data }: any) => {
     setOpen(true);
   };
 
+  const [checked, setChecked] = useState(true);
+
   return (
-    <div>
-      <TableBody onClick={modalOpen}>
-        <TableBodyItem>{data.name}</TableBodyItem>
-        <TableBodyItem>{data.depositsAmount}</TableBodyItem>
-        <TableBodyItem>{data.createDate}</TableBodyItem>
-        <TableBodyItem>{data.procents}</TableBodyItem>
-        <TableBodyItem>{data.desc}</TableBodyItem>
-      </TableBody>
-    </div>
+    <TableBody onClick={modalOpen}>
+      <TableBodyItem>{data.name}</TableBodyItem>
+      <TableBodyItem>{data.currency}</TableBodyItem>
+      <TableBodyItem>{data.amount}</TableBodyItem>
+      <TableBodyItem>{data.profitability}</TableBodyItem>
+      <TableBodyItem>{data.payment}</TableBodyItem>
+      <TableBodyItem>{data.depositPeriod}</TableBodyItem>
+      <TableBodyItem checked={checked}>
+        <Switcher onChange={() => setChecked(!checked)} checked={checked} />
+        <span>{t(checked ? 'depositsPrograms.on' : 'depositsPrograms.off')}</span>
+      </TableBodyItem>
+    </TableBody>
   );
 };
 
@@ -255,28 +239,6 @@ const Input = styled.input`
   }
 `;
 
-const TableBodyItem = styled.li`
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 16px;
-  color: ${(props) => props.theme.text2};
-
-  @media (max-width: 992px) {
-    display: none;
-    &:nth-child(1) {
-      display: block;
-    }
-
-    &:nth-child(2) {
-      display: block;
-    }
-
-    &:nth-child(6) {
-      display: block;
-    }
-  }
-`;
-
 const ContentWrap = styled.div`
   width: 100%;
   display: flex;
@@ -293,18 +255,50 @@ const ContentWrap = styled.div`
 `;
 
 const CardTable = styled(Card)`
-  height: 600px;
+  height: auto;
 `;
 
 const PaymentsTable = styled.div`
   padding: 30px;
 `;
 
+const TableHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 35px;
+  position: relative;
+  > a {
+    height: 40px;
+    @media (max-width: 576px) {
+      width: 100%;
+      max-width: 100%;
+    }
+  }
+`;
+const TableTitle = styled.p`
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 21px;
+  color: ${(props) => props.theme.text};
+  @media (max-width: 576px) {
+    display: none;
+  }
+`;
+
 const TableHead = styled.ul`
-  display: grid;
-  grid-template-columns: repeat(5, 0.15fr);
+  display: flex;
   position: relative;
   list-style: none;
+  padding: 0 5px 6px;
+  border-bottom: 1px solid rgba(81, 81, 114, 0.2);
+
+  list-style: none;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
   padding-bottom: 6px;
   border-bottom: 1px solid rgba(81, 81, 114, 0.2);
 
@@ -317,6 +311,9 @@ const TableHead = styled.ul`
 `;
 
 const TableHeadItem = styled.li`
+  display: flex;
+  align-items: center;
+  gap: 5px;
   font-weight: normal;
   font-size: 12px;
   line-height: 14px;
@@ -326,46 +323,63 @@ const TableHeadItem = styled.li`
   color: ${(props) => props.theme.thHead};
   width: 100%;
 
-  @media (max-width: 992px) {
-    display: none;
-    &:nth-child(1) {
-      display: block;
-    }
-
-    &:nth-child(2) {
-      display: block;
-    }
-
-    &:nth-child(6) {
-      display: block;
-    }
-  }
-
   &:nth-child(1) {
-    max-width: 230px;
+    max-width: 85px;
+  }
+  &:nth-child(2) {
+    max-width: 90px;
     @media (max-width: 576px) {
-      max-width: 80px;
+      display: none;
     }
   }
-
-  &:nth-child(6) {
-    position: absolute;
-    right: 0;
-    max-width: 23px;
+  &:nth-child(3) {
+    max-width: 155px;
+    @media (max-width: 992px) {
+      max-width: 110px;
+    }
+    @media (max-width: 768px) {
+      display: none;
+    }
   }
-`;
-
-const Window = styled(SortingWindow)`
-  right: 0px;
-  top: 24px;
+  &:nth-child(4) {
+    max-width: 100px;
+    @media (max-width: 480px) {
+      display: none;
+    }
+  }
+  &:nth-child(5) {
+    max-width: 140px;
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+  &:nth-child(6) {
+    max-width: 120px;
+    @media (max-width: 576px) {
+      display: none;
+    }
+  }
+  &:nth-child(7) {
+    max-width: 155px;
+  }
 `;
 
 const TableBody = styled(TableHead)`
-  padding: 10px 0;
+  padding: 25px 5px;
   cursor: pointer;
-  align-items: center;
   transition: 0.3s;
   &:hover {
     background: rgba(66, 139, 202, 0.109);
+  }
+`;
+const TableBodyItem = styled(TableHeadItem)<{ checked?: boolean }>`
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 16px;
+  letter-spacing: 0.1px;
+  color: ${(props) => props.theme.text2};
+  width: 100%;
+  > span {
+    color: ${(props) => (props.checked ? '#FF416E' : '')};
   }
 `;

@@ -432,7 +432,12 @@ const ApexChart: FC<ChartProps> = ({ values, gradientColor, height = 280 }: Char
 
   return (
     <div id="chart">
-      <Chart options={data.options} series={data.series} type="area" height={height} />
+      <Chart
+        options={data.options as any}
+        series={data.series as any}
+        type="area"
+        height={height}
+      />
     </div>
   );
 };
