@@ -490,7 +490,14 @@ const ModalUsersList: FC<ModalUsersListProps> = ({
         <PayCardInner>
           <PayCardBlock>
             <PayText small>{t('adminUsers.modal.paySum')}</PayText>
-            <PayText>{dataOne.userDeposit.payedAmountView}</PayText>
+            <PayText>
+              {
+                Number(value).toLocaleString("ru-RU", {
+                  maximumFractionDigits: 5,
+                })
+              }
+            </PayText>
+            {/* <PayText>{dataOne.userDeposit.payedAmountView}</PayText> */}
           </PayCardBlock>
           <PayCardBlock>
             <PayText small>{t('operation.type')}</PayText>
@@ -767,7 +774,7 @@ export const ModalUsersContent: FC<ModalUsersContentProps> = ({
                             {((item.payedAmountView / item.baseAmountView) * 100).toFixed(1)}%
                           </PayText>
                         </PayCardBlock>
-                      </PayCardInner>
+                      </PayCardInner> 
                       {arr1[item.safeId] ? (
                         <AccordeonList
                           adjustBalanceAsync={adjustBalanceAsync}

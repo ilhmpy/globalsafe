@@ -160,7 +160,7 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }: PropsTa
   return (
     <div>
       <CSSTransition in={open} timeout={300} classNames="modal" unmountOnExit>
-        <ModalUsers
+        <ModalUsers 
           onClose={onClose}
           data={data}
           lock={lock}
