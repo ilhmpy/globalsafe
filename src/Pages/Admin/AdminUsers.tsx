@@ -156,7 +156,6 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }: PropsTa
   };
 
   const balance = data.balances ? data.balances.filter((item) => item.balanceKind === 1) : null;
-
   return (
     <div>
       <CSSTransition in={open} timeout={300} classNames="modal" unmountOnExit>
@@ -357,7 +356,8 @@ export const AdminUsers = () => {
                   exhaustRatio,
                   id,
                   safeId,
-                  volume: (volume / 100000).toString(),
+                  // volume: (volume / 100000).toString(),
+                  volume
                 },
               ];
             });
