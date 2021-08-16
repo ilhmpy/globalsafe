@@ -54,9 +54,9 @@ export const Timer: FC<Props> = ({
   useEffect(() => {
     let cancel = false;
     const cb = (data: any) => {
-      if (data[1] != null) {
-        const durations = moment.duration(deadline, 'seconds');
-        setDeadline(data[1].totalSeconds);
+      if (data != null) {
+        const durations = moment.duration(data.totalSeconds, 'seconds');
+        setDeadline(data.totalSeconds);
         setState(
           Math.floor(durations.asMinutes()) !== 0 ? 
               [Math.floor(durations.asDays()), Math.floor(durations.asHours()), Math.floor(durations.asMinutes())] : null);
@@ -91,13 +91,14 @@ export const Timer: FC<Props> = ({
   const repeat = () => {
     if (hubConnection) {
       hubConnection.on("DrawCountdown", (data: any) => {
-        if (data[1] != null) {
-          const durations = moment.duration(deadline, 'seconds');
-          setDeadline(data[1].totalSeconds);
+        if (data != null) {
+          const durations = moment.duration(data.totalSeconds, 'seconds');
+          setDeadline(data.totalSeconds);
           setState(
             Math.floor(durations.asMinutes()) !== 0 ? 
                 [Math.floor(durations.asDays()), Math.floor(durations.asHours()), Math.floor(durations.asMinutes())] : null);
-         };
+          setProgress(getProgress([allTimeLottery, defaultTimeLottery]));
+        };
       })
       hubConnection
         .invoke('GetNextDraw')
@@ -212,13 +213,13 @@ export const OldTimer: FC<OldTimerProps> = ({ modalTimer, history }: OldTimerPro
   useEffect(() => {
     let cancel = false;
     const cb = (data: any) => {
-      if (data[1] != null) {
-        const durations = moment.duration(deadline, 'seconds');
-        setDeadline(data[1].totalSeconds);
+      if (data != null) {
+        const durations = moment.duration(data.totalSeconds, 'seconds');
+        setDeadline(data.totalSeconds);
         setState(
           Math.floor(durations.asMinutes()) !== 0 ? 
               [Math.floor(durations.asDays()), Math.floor(durations.asHours()), Math.floor(durations.asMinutes())] : null);
-       };
+      };
     };
     if (hubConnection && !cancel) {
       hubConnection.on('DrawCountdown', cb);
@@ -242,13 +243,13 @@ export const OldTimer: FC<OldTimerProps> = ({ modalTimer, history }: OldTimerPro
 
   const repeat = () => {
     const cb = (data: any) => {
-      if (data[1] != null) {
-        const durations = moment.duration(deadline, 'seconds');
-        setDeadline(data[1].totalSeconds);
+      if (data != null) {
+        const durations = moment.duration(data.totalSeconds, 'seconds');
+        setDeadline(data.totalSeconds);
         setState(
           Math.floor(durations.asMinutes()) !== 0 ? 
               [Math.floor(durations.asDays()), Math.floor(durations.asHours()), Math.floor(durations.asMinutes())] : null);
-       };
+      };
     }
     if (hubConnection) {
       hubConnection.on("DrawCountdown", cb);
