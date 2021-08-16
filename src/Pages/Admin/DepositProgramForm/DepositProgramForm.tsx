@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useState } from 'react';
+import { FC, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { ReactComponent as Stroke } from '../../../assets/svg/leftStroke.svg';
@@ -32,7 +32,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
   const [programList, setProgramList] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const getPrograms = () => {
+  const createProgram = () => {
     console.log('~~~~~~~~~~~~~~~~~~start');
     if (hubConnection) {
       setProgramList([]);
@@ -40,33 +40,31 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
 
       hubConnection
         .invoke<any>(
-          'GetDepositDefinitions',
+          'CreateDeposit',
+          316041573588533250,
+          'GOLD',
+          'Программа GOLD (действует только 2 НЕДЕЛИ)\r\nДепозит на срок 3 месяца от 1000 CWD с гарантированной прибылью 55% за весь период, с фиксированной выплатой прибыли каждые 10 дней в течении срока депозита. Возврат тела депозита - через 3 месяца.',
+          null,
+          100000000,
+          90,
+          10,
+          0,
+          '10,20,30',
+          0.0611111,
+          true,
+          '[\r\n    [\r\n        [4,0.05],[2,0.05],[1,0.04]\r\n    ],\r\n    [\r\n        [4,0.02],[2,0.02],[1,0.016]\r\n    ],\r\n    [\r\n        [4,0.01],[2,0.01],[1,0.008]\r\n    ],\r\n    [\r\n        [4,0.01],[2,0.01]\r\n    ],\r\n    [\r\n        [4,0.01],[2,0.01]\r\n    ],\r\n    [\r\n        [4,0.01]\r\n    ],\r\n    [\r\n        [4,0.01]\r\n    ],\r\n    [\r\n        [4,0.01]\r\n    ]\r\n]',
+          'stella2',
           null,
           null,
+          1,
+          1,
+          [],
+          0,
           null,
           null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null
+
+          true,
+          true
         )
         .then((res) => {
           console.log('.then ~ res', res);
@@ -84,9 +82,9 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
     }
   };
 
-  useEffect(() => {
-    getPrograms();
-  }, []);
+  // useEffect(() => {
+  //   getPrograms();
+  // }, []);
 
   return (
     <Container>
@@ -427,7 +425,14 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
           </InputGroup>
         </Row>
         <ButtonGroup>
-          <Button danger maxWidth={130} onClick={() => setIsOpenSaveConfirm(true)}>
+          <Button
+            danger
+            maxWidth={130}
+            onClick={() => {
+              // setIsOpenSaveConfirm(true);
+              createProgram();
+            }}
+          >
             {t('depositsPrograms.save')}
           </Button>
           <Button dangerOutline maxWidth={130} onClick={() => setIsOpenCancelConfirm(true)}>
