@@ -631,6 +631,9 @@ export const ModalUsersContent: FC<ModalUsersContentProps> = ({
     });
   }, [dataTwo]);
 
+  // console.log("Robert:::::dataTwo", dataTwo)
+  // console.log("Robert:::::dataOne", dataOne)
+
   return (
     <>
       <PayCard smallPad wide={wide} mNone>
@@ -707,8 +710,8 @@ export const ModalUsersContent: FC<ModalUsersContentProps> = ({
                   <PayText>
                     {moment(
                       dataOne.reduce((a, b) =>
-                        b.userDeposit.paymentDate > a.userDeposit.paymentDate ? b : a
-                      ).userDeposit.paymentDate
+                        b.operationDate > a.operationDate ? b : a
+                      ).operationDate
                     ).format('DD/MM/YYYY')}
                   </PayText>
                 </PayCardBlock>
