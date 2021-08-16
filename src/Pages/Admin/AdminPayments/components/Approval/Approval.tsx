@@ -439,7 +439,8 @@ export const Approval: FC<Props> = ({
   };
 
   const paymentsConfirm = () => {
-    if (checkListApproval.some((item: any) => item.state === 6)) {
+    console.log(depositList)
+    if (depositList.some((item: any) => item.state === 6)) {
       if (hubConnection) {
         hubConnection
           .invoke(
