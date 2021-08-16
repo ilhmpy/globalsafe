@@ -442,7 +442,7 @@ export const Approval: FC<Props> = ({
     console.log(depositList)
     if (depositList.some((item: any) => item.state === 6)) {
       if (hubConnection) {
-        hubConnection
+        hubConnection 
           .invoke(
             'ConfirmAllDepositsPayment',
             nameApproval ? nameApproval.toLowerCase() : null,
