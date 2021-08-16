@@ -10,6 +10,7 @@ import { Content } from '../../components/UI/Tabs';
 import { UpTitle } from '../../components/UI/UpTitle';
 import { AppContext } from '../../context/HubContext';
 import { Card } from '../../globalStyles';
+import { Balance } from '../../types/balance';
 import { DepositProgramForm } from './DepositProgramForm';
 import * as Styled from './Styled.elements';
 
@@ -133,6 +134,7 @@ export const AdminDepositsPrograms = () => {
 
   const [openNewProgram, setOpenNewProgram] = useState(false);
 
+  const [totalProps, setTotalProps] = useState<number>(0);
   const [programList, setProgramList] = useState<any[]>([]);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
@@ -145,18 +147,14 @@ export const AdminDepositsPrograms = () => {
       setLoading(true);
 
       hubConnection
-        .invoke<any>(
-          'GetDepositDefinitions',
-          0,10
-        )
+        .invoke<any>('GetDepositDefinitions', 0, 10)
         .then((res) => {
-          console.log('.then ~~~~~~~~ res', res);
-          // setTotalDeposits(res.totalRecords);
-          setLoading(false);
           if (res.collection.length) {
             setProgramList(res.collection);
-            // setTotalDeposits(res.totalRecords);
           }
+          console.log('.then ~~~~~~~~ res', res);
+          setTotalProps(res.totalRecords);
+          setLoading(false);
         })
         .catch((err: Error) => {
           console.log(err);
@@ -201,10 +199,10 @@ export const AdminDepositsPrograms = () => {
                 <TableHeadItem>{t('depositsPrograms.depositPeriod')}</TableHeadItem>
                 <TableHeadItem>{t('depositsPrograms.programActivity')}</TableHeadItem>
               </TableHead>
-              {depositsPrograms.length ? (
+              {programList.length ? (
                 <Scrollbars style={{ height: '450px' }}>
-                  {depositsPrograms.map((program, idx) => (
-                    <TableList key={depositsPrograms.indexOf(program)} data={program} />
+                  {programList.map((program, index) => (
+                    <TableList key={index} data={program} />
                   ))}
                 </Scrollbars>
               ) : loading ? (
@@ -238,14 +236,18 @@ const TableList: FC<{ data: any }> = ({ data }: any) => {
   return (
     <TableBody onClick={modalOpen}>
       <TableBodyItem>{data.name}</TableBodyItem>
-      <TableBodyItem>{data.currency}</TableBodyItem>
-      <TableBodyItem>{data.amount}</TableBodyItem>
-      <TableBodyItem>{data.profitability}</TableBodyItem>
-      <TableBodyItem>{data.payment}</TableBodyItem>
-      <TableBodyItem>{data.depositPeriod}</TableBodyItem>
+      <TableBodyItem>{Balance[data.balanceKind]}</TableBodyItem>
+      <TableBodyItem>
+        {data.minAmount ? data.minAmount : '0'} - {data.maxAmount ? data.maxAmount : data.minAmount}
+      </TableBodyItem>
+      <TableBodyItem>{data.ratio * 100}%</TableBodyItem>
+      <TableBodyItem>{data.depositKind}</TableBodyItem>
+      <TableBodyItem>
+        {data.duration} {t('depositsPrograms.days')}
+      </TableBodyItem>
       <TableBodyItem checked={checked}>
-        <Switcher onChange={() => setChecked(!checked)} checked={checked} />
-        <span>{t(checked ? 'depositsPrograms.on' : 'depositsPrograms.off')}</span>
+        <Switcher onChange={() => setChecked(!checked)} checked={data.isActive} />
+        <span>{t(data.isActive ? 'depositsPrograms.on' : 'depositsPrograms.off')}</span>
       </TableBodyItem>
     </TableBody>
   );
@@ -411,5 +413,11 @@ const TableBodyItem = styled(TableHeadItem)<{ checked?: boolean }>`
   width: 100%;
   > span {
     color: ${(props) => (props.checked ? '#FF416E' : '')};
+  }
+  &:nth-child(1) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
   }
 `;

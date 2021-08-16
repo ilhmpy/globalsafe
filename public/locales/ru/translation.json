@@ -460,7 +460,8 @@
     "dontSave": "Не сохранять",
     "depositProgramSuccessfullySaved": "Программа депозита успешно сохранена.",
     "changesCanceled": "Изменения отменены !",
-    "changesCanceledSuccessfully": "Изменения успешно отменены."
+    "changesCanceledSuccessfully": "Изменения успешно отменены.",
+    "days": "дней"
   },
   "text": {
     "tip_state_unsubscribed": "Подпишитесь на уведомления",

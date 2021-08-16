@@ -461,7 +461,8 @@
     "dontSave": "Do not save",
     "depositProgramSuccessfullySaved": "The deposit program has been successfully saved.",
     "changesCanceled": "Changes canceled!",
-    "changesCanceledSuccessfully": "Changes have been successfully canceled."
+    "changesCanceledSuccessfully": "Changes have been successfully canceled.",
+    "days": "days"
   },
   "text": {
     "tip_state_unsubscribed": "Subscribe to notifications",
