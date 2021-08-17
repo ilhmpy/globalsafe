@@ -100,7 +100,7 @@ export const darkTheme = {
   cdis: '#000',
   nextPay: '#E2E2E2',
   depositHead: '#E2E2E2',
-  thHead: '#fff',
+  thHead: 'rgb(255,255,255)',
   inputBg: '#000',
   topUpButton: 'transparent',
   topUpColor: '#6db9ff',
