@@ -496,8 +496,26 @@ export const Approval: FC<Props> = ({
             )) : <Styled.ModalItem>{t("all")}</Styled.ModalItem>}
           </div>
           <Styled.ModalDescription>{t("acceptAll.range")}</Styled.ModalDescription>
-          <Styled.ModalItem>{openDateApproval.from ? 
-          `${moment(openDateApproval.from).format("DD.MM.YYYY")} - ${moment(openDateApproval.to).format("DD.MM.YYYY")}` : t("all")}</Styled.ModalItem>
+          <Styled.ModalItem>
+            {openDateApproval.from && openDateApproval.to && (
+              <>
+                {`${moment(openDateApproval.from).format("DD.MM.YYYY")} - ${moment(openDateApproval.to).format("DD.MM.YYYY")}`}
+              </>
+            )}
+
+            {openDateApproval.from && !openDateApproval.to && (
+              <>
+                {moment(openDateApproval.from).format("DD.MM.YY")}
+              </>
+            )}
+
+            {!openDateApproval.from && !openDateApproval.to && (
+              <>
+                {t("all")}
+              </>
+            )}
+          </Styled.ModalItem>
+          
           <Button style={{ margin: "0 auto" }} danger onClick={paymentsConfirm}>{t("acceptAll.accept")} {procent ? procent + "%" : (t("all")).toLowerCase()}</Button>
         </div>
       </Modal>
