@@ -41,7 +41,7 @@ const Row = ({ data }: any) => {
               </Link>
               <Styled.NameData>
                 <Styled.NameData>
-                  {moment(data.creationDate).format('DD/MM/YYYY')}7
+                  {moment(data.creationDate).format('DD/MM/YYYY')}
                 </Styled.NameData>{' '}
                 <Styled.NameData>&nbsp; - &nbsp;</Styled.NameData>
                 <Styled.NameData
