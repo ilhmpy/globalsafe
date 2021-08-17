@@ -862,7 +862,7 @@ export const LoadingBeforeData = styled.div`
 `;
 
 export const LoadingBeforeItem = styled.div<{ width: number | string; height: number | string; circle?: boolean; }>`
-  background: ${({ theme }) => theme.timer.bgLoad};
+  background: ${({ theme }) => theme.timer.bg};
   border-radius: 4px;
   height: ${({ height }) => height};
   min-width: ${({ width }) => width};
