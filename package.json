@@ -42,6 +42,7 @@
     "react-router-hash-link": "^2.4.0",
     "react-scripts": "^4.0.3",
     "react-scroll": "^1.8.1",
+    "react-switch": "^6.0.0",
     "react-transition-group": "^4.4.1",
     "react-virtualized": "^9.22.3",
     "react-virtualized-auto-sizer": "^1.0.5",
