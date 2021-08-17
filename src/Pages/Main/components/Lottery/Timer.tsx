@@ -67,6 +67,19 @@ export const Timer: FC<Props> = ({
     };
   }, [hubConnection]);
 
+  function getNextDraw(res: any[]) {
+    console.log(res);
+    if (res != null) {
+      setDeadline(res[1].totalSeconds);
+      setClock(res[1]);
+      setAllTimeLottery(res[0]);
+      console.log(getProgress(res));
+      setDefaultTimeLottery(res[1]);
+      setProgress(getProgress(res));
+    }
+    setState(null);
+  }
+
   useEffect(() => {
     let cancel = false;
     const cb = (data: any) => {
@@ -87,21 +100,18 @@ export const Timer: FC<Props> = ({
       console.log(data);
     };
     if (hubConnection && !cancel) {
+      hubConnection.invoke("DrawResult")
+        .then((res) => {
+          console.log(res);
+          hubConnection.invoke("GetNextDraw")
+            .then((res) => getNextDraw(res))
+            .catch((e) => console.log(e));
+        })
+        .catch((e) => console.log(e));
       hubConnection.on('DrawCountdown', cb);
       hubConnection
         .invoke('GetNextDraw')
-        .then((res) => {
-          console.log(res);
-          if (res != null) {
-            setDeadline(res[1].totalSeconds);
-            setClock(res[1]);
-            setAllTimeLottery(res[0]);
-            console.log(getProgress(res));
-            setDefaultTimeLottery(res[1]);
-            setProgress(getProgress(res));
-          }
-          setState(null);
-        })
+        .then((res) => getNextDraw(res))
         .catch((e) => console.log(e));
     }
     return () => {
