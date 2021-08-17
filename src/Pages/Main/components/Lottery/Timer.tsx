@@ -69,7 +69,7 @@ export const Timer: FC<Props> = ({
       hubConnection
         .invoke('GetNextDraw')
         .then((res) => {
-          console.log(res); 
+          console.log(res);  
           if (res != null) {
             setDeadline(res[1].totalSeconds);
             setClock(res[1]);
