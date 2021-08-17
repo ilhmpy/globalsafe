@@ -195,7 +195,7 @@ export const Center = styled.div`
   }
 `;
 
-export const Container = styled.div<{ before?: boolean; lotteryModal?: boolean; }>`
+export const Container = styled.div<{ before?: boolean; lotteryModal?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -231,7 +231,7 @@ export const Container = styled.div<{ before?: boolean; lotteryModal?: boolean; 
           padding-bottom: 13px;
         }
       `;
-    };
+    }
   }}
 
   ${({ lotteryModal }) => {
@@ -395,9 +395,9 @@ export const WinTitle = styled.div<{ sub?: boolean }>`
     font-size: ${(props) => (props.sub ? '24px' : '16px')};
     line-height: ${(props) => (props.sub ? '32px' : '19px')};
     margin-bottom: 18px;
-    width: ${({ sub }) => sub ? "71%" : ""};
-    margin: ${({ sub }) => sub ? "0 auto" : ""};
-    margin-bottom: ${({ sub }) => sub ? "18px" : ""};
+    width: ${({ sub }) => (sub ? '71%' : '')};
+    margin: ${({ sub }) => (sub ? '0 auto' : '')};
+    margin-bottom: ${({ sub }) => (sub ? '18px' : '')};
   }
 `;
 
@@ -450,7 +450,7 @@ export const ModalButton = styled(Button)`
   margin: 37px auto 0;
 `;
 
-export const TimerHistoryInner = styled.div<{ mt?: boolean; history?: boolean; }>`
+export const TimerHistoryInner = styled.div<{ mt?: boolean; history?: boolean }>`
   margin-right: 80px;
   width: 80%;
   max-width: 341px;
@@ -463,7 +463,7 @@ export const TimerHistoryInner = styled.div<{ mt?: boolean; history?: boolean; }
   -webkit-box-shadow: 1px 0px 12px 1px rgba(34, 60, 80, 0.2);
   -moz-box-shadow: 1px 0px 12px 1px rgba(34, 60, 80, 0.2);
   box-shadow: 1px 0px 12px 1px rgba(34, 60, 80, 0.2);
- 
+
   @media (max-width: 768px) {
     margin-right: 0px;
   }
@@ -475,7 +475,7 @@ export const TimerHistoryInner = styled.div<{ mt?: boolean; history?: boolean; }
         margin-top: 35px;
         margin-left: auto;
       `;
-    };
+    }
 
     if (history) {
       return `
@@ -484,7 +484,7 @@ export const TimerHistoryInner = styled.div<{ mt?: boolean; history?: boolean; }
         -moz-box-shadow: none;
         height: 83px;
       `;
-    };
+    }
   }}
 `;
 
@@ -531,29 +531,29 @@ export const BrandImgAbs = styled(BrandImg)`
 `;
 
 export const TimerIcon = styled.div`
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    border: ${({ theme }) => theme.timerIcon.border};
-    background: ${({ theme }) => theme.timerIcon.background};
-    right: 234px;
-    position: absolute;
-    margin-top: 47px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-directrion: column;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: ${({ theme }) => theme.timerIcon.border};
+  background: ${({ theme }) => theme.timerIcon.background};
+  right: 234px;
+  position: absolute;
+  margin-top: 47px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 
-    .timericon_cirlce {
-      position: absolute;
-    }
+  .timericon_cirlce {
+    position: absolute;
+  }
 `;
 
 export const TimerCircle = styled.div`
   position: fixed;
   right: 143px;
   top: 668px;
-  width: 36px; 
+  width: 36px;
   height: 36px;
   display: flex;
   flex-direction: column;
@@ -568,12 +568,12 @@ export const TimerCircle = styled.div`
   box-shadow: 0px 3px 33px 0px rgba(34, 60, 80, 0.2);
 
   & > div {
-    position: relative; 
+    position: relative;
     width: 32px;
     height: 32px;
-    border-radius: 50%; 
+    border-radius: 50%;
     background: ${({ theme }) => theme.timer.bg};
-    overflow: hidden;  
+    overflow: hidden;
   }
 
   @media only screen and (max-device-width: 620px) {
@@ -583,10 +583,10 @@ export const TimerCircle = styled.div`
 `;
 
 export const TimerIn = styled.div`
-  position: absolute; 
-  width: 30px; 
-  height: 30px; 
-  border-radius: 50%; 
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
   background: ${({ theme }) => theme.timer.bg};
   display: flex;
   justify-content: center;
@@ -600,17 +600,17 @@ export const TimerIn = styled.div`
   }
 `;
 
-export const TimerProgress = styled.div<{ progress: number; }>`
-  height: 55px; 
-  width: 165px; 
-  background: #FF416E; 
-  position: absolute; 
-  top: -55px; 
-  left: -53px; 
-  transform: ${({ progress }) => `rotate(${progress}deg)`}; 
-  transform-origin: 55px 55px; 
-  transition: all .3s; 
-`; 
+export const TimerProgress = styled.div<{ progress: number }>`
+  height: 55px;
+  width: 165px;
+  background: #ff416e;
+  position: absolute;
+  top: -55px;
+  left: -53px;
+  transform: ${({ progress }) => `rotate(${progress}deg)`};
+  transform-origin: 55px 55px;
+  transition: all 0.3s;
+`;
 
 export const TimerModalDuration = styled.h3`
   text-align: center;
@@ -621,11 +621,11 @@ export const TimerModalDuration = styled.h3`
   margin-bottom: 1px;
 
   & > span {
-    color: #FF416E;
+    color: #ff416e;
   }
 `;
 
-export const TimerModal = styled.div<{ display?: boolean; fixed?: boolean; progressBar?: any; }>` 
+export const TimerModal = styled.div<{ display?: boolean; fixed?: boolean; progressBar?: any }>`
   width: 80%;
   max-width: 149px;
   background: ${({ theme }) => theme.timer.bg};
@@ -637,8 +637,8 @@ export const TimerModal = styled.div<{ display?: boolean; fixed?: boolean; progr
   -webkit-box-shadow: 1px 3px 14px -1px rgba(34, 60, 80, 0.2);
   -moz-box-shadow: 1px 3px 14px -1px rgba(34, 60, 80, 0.2);
   box-shadow: 1px 3px 14px -1px rgba(34, 60, 80, 0.2);
-  display: ${({ display }) => display ? "flex" : "none"};
-  flex-direction: column;  
+  display: ${({ display }) => (display ? 'flex' : 'none')};
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 86px;
@@ -648,7 +648,7 @@ export const TimerModal = styled.div<{ display?: boolean; fixed?: boolean; progr
   }
 
   &::after {
-    content: "";
+    content: '';
     display: block;
     width: 20px;
     height: 20px;
@@ -733,7 +733,7 @@ export const TimerModal = styled.div<{ display?: boolean; fixed?: boolean; progr
 
 export const TimerModalTitle = styled.h3`
   text-align: center;
-  font-size: .75em;
+  font-size: 0.75em;
   width: 80%;
   max-width: 108px;
   letter-spacing: 0.1px;
@@ -741,7 +741,7 @@ export const TimerModalTitle = styled.h3`
   margin-top: 2px;
   font-weight: 500;
   margin-bottom: 5px;
-`; 
+`;
 
 export const TimerModalUnits = styled.div`
   width: 100%;
@@ -761,53 +761,53 @@ export const TimerModalUnits = styled.div`
 `;
 
 export const LotteryModalDesc = styled.div`
-    width: 70%;
-    max-width: 325px;
-    background: ${({ theme }) => theme.timer.bg};
-    box-shadow: 2px 4px 13px 1px rgba(86, 101, 127, 0.2);
-    min-height: 66px;
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    padding-left: 20px;
-    padding-right: 20px;
-    color: #FF416E;
-    font-weight: 500;
-    font-size: 1.43em;
+  width: 70%;
+  max-width: 325px;
+  background: ${({ theme }) => theme.timer.bg};
+  box-shadow: 2px 4px 13px 1px rgba(86, 101, 127, 0.2);
+  min-height: 66px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+  padding-right: 20px;
+  color: #ff416e;
+  font-weight: 500;
+  font-size: 1.43em;
+
+  & > svg {
+    width: 30px;
+    height: 30px;
+    margin-right: 15px;
+  }
+
+  & > span {
+    margin-top: 5px;
+  }
+
+  @media only screen and (max-device-width: 620px) {
+    width: 100%;
+    max-width: 241px;
+    margin: 0 auto;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    font-size: 1.1em;
+    height: 50px;
+    min-height: 50px;
+    border-radius: 25px;
+    padding-left: 32px;
+
+    & > * {
+      font-size: 14px;
+    }
 
     & > svg {
-      width: 30px;
-      height: 30px;
-      margin-right: 15px;
+      width: 22px;
+      height: 22px;
+      margin-right: 11px;
     }
-
-    & > span {
-      margin-top: 5px;
-    }
-
-    @media only screen and (max-device-width: 620px) {
-      width: 100%;
-      max-width: 241px;
-      margin: 0 auto;
-      margin-left: auto;
-      margin-right: auto;
-      margin-top: 10px;
-      font-size: 1.10em;
-      height: 50px;
-      min-height: 50px;
-      border-radius: 25px;
-      padding-left: 32px;
-
-      & > * {
-        font-size: 14px;
-      }
-
-      & > svg {
-        width: 22px;
-        height: 22px;
-        margin-right: 11px;
-      }
-    }
+  }
 `;
 
 export const LotteryFlexBox = styled.div`
@@ -826,18 +826,18 @@ export const LotteryFlexBox = styled.div`
       display: block;
     }
   }
-`; 
+`;
 
-export const TimerLoading = styled.div<{ progress: number | string; }>`
+export const TimerLoading = styled.div<{ progress: number | string }>`
   width: ${({ progress }) => progress}%;
   left: 5px;
   max-width: 95%;
   position: absolute;
   top: 2px;
   height: 1px;
-  transition: ${({ progress }) => progress == 0 ? "" : "4s"};
+  transition: ${({ progress }) => (progress == 0 ? '' : '4s')};
   display: block;
-  background: #FF416E;
+  background: #ff416e;
 `;
 
 export const LoadingBeforeData = styled.div`
@@ -861,8 +861,12 @@ export const LoadingBeforeData = styled.div`
   }
 `;
 
-export const LoadingBeforeItem = styled.div<{ width: number | string; height: number | string; circle?: boolean; }>`
-  background: ${({ theme }) => theme.timer.bgLoad};
+export const LoadingBeforeItem = styled.div<{
+  width: number | string;
+  height: number | string;
+  circle?: boolean;
+}>`
+  background: ${({ theme }) => theme.timer.bg};
   border-radius: 4px;
   height: ${({ height }) => height};
   min-width: ${({ width }) => width};
@@ -874,6 +878,6 @@ export const LoadingBeforeItem = styled.div<{ width: number | string; height: nu
       return `
         border-radius: 10px;
       `;
-    };
+    }
   }}
 `;
