@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components/macro';
 import { ReactComponent as CircleOk } from '../../assets/svg/circleOk.svg';
@@ -8,9 +8,13 @@ import { ReactComponent as Pen } from '../../assets/svg/pen.svg';
 import { ReactComponent as UpdateCircle } from '../../assets/svg/updateCircle.svg';
 import { Button } from '../../components/Button/Button';
 import { Modal } from '../../components/Modal/Modal';
+import { Notification } from '../../components/Notify/Notification';
 import { Select } from '../../components/Select/Select';
 import { UpTitle } from '../../components/UI/UpTitle';
 import { AppContext } from '../../context/HubContext';
+import { Notify } from '../../types/balance';
+import { AddCompanyAccountModel, ViewCompanyAccountModel, ViewCompanyAccountModelCollectionResult } from '../../types/balanceModel';
+import { SortingType } from '../../types/sorting';
 import { CollectionUsers } from '../../types/users';
 import { Pagination } from './Pagination';
 import * as Styled from './Styled.elements';
@@ -34,6 +38,7 @@ export const AdminWallets = () => {
   const backDays: any = moment().subtract(30, 'days');
   const [pageLength, setPageLength] = useState<number>(10);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [sorting, setSorting] = useState<SortingType[]>([]);
   const [isOpenEditForm, setIsOpenEditForm] = useState(false);
   const [isOpenNewForm, setIsOpenNewForm] = useState(false);
   const [isOpenShowForm, setIsOpenShowForm] = useState(false);
@@ -41,6 +46,15 @@ export const AdminWallets = () => {
   const [isSavingConfirm, setIsSavingConfirm] = useState(false);
   const [checkList, setCheckList] = useState<any>([]);
   const selectList = [t('win.one'), t('win.two'), t('win.three')];
+  const [notifications, setNotifications] = useState<Notify[]>([]);
+
+
+  const [newWalletLoading, setNewWalletLoading] = useState(false);
+  const [newWallet, setNewWallet] = useState({
+    name: '',
+    activeKey: '',
+    keyNotes: ''
+  });
 
   const [refresh, setRefresh] = useState(false);
   const [cardsList, setCardsList] = useState<any[]>([
@@ -53,6 +67,99 @@ export const AdminWallets = () => {
   ]);
 
   const list = new Array(24).fill(cardsList[0]);
+
+
+  useEffect(() => {
+    handleGetCompanyAccounts()
+  }, [hubConnection, currentPage, pageLength]);
+
+
+  const createNotify = (item: Notify) => {
+    setNotifications([item]);
+  };
+
+  const onDelete = (id: number) => {
+    setNotifications(notifications.filter((i) => i.id !== id));
+  };
+
+  const handleGetCompanyAccounts = () => {
+    if (hubConnection) {
+      setLoading(true);
+      hubConnection
+        .invoke<ViewCompanyAccountModelCollectionResult>(
+          'GetCompanyAccounts',
+          (currentPage - 1) * pageLength,
+          pageLength,
+          sorting
+        )
+        .then((res) => {
+          setLoading(false);
+          console.log("Wallet List:::", res)
+          setNum(20);
+          setLoading(false);
+      
+        })
+        .catch((err: Error) => {
+          setLoading(false);
+          // TODO: update error message
+          createNotify({
+            text: err.message,
+            error: true,
+            timeleft: 5,
+            id: notifications.length,
+          });
+          console.error("Wallet List ERR :::", err);
+        });
+    }
+  };
+
+
+  const handleAddCompanyAccount = () => {
+    if(hubConnection) {
+      setNewWalletLoading(true);
+
+      const newCompanyAccount: AddCompanyAccountModel = {
+        name: newWallet.name,
+        activeWif: newWallet.activeKey,
+        memoWif: newWallet.keyNotes
+      };
+
+      hubConnection
+          .invoke<ViewCompanyAccountModelCollectionResult>(
+            'AddCompanyAccount',
+            newCompanyAccount
+          )
+          .then((res) => {
+            console.log("Wallet Create:::", res);
+            setNewWalletLoading(false);
+            setNum(20);
+            setIsOpenNewForm(false);
+            setNewWallet({
+              name: '',
+              activeKey: '',
+              keyNotes: ''
+            });
+
+            // TODO: update Success message
+            createNotify({
+              text: 'SuccessFully Created!',
+              error: false,
+              timeleft: 5,
+              id: notifications.length,
+            });
+          })
+          .catch((err: Error) => {
+            setNewWalletLoading(false);
+            console.error("Wallet Create Err", err);
+            createNotify({
+              text: err.message,
+              error: true,
+              timeleft: 5,
+              id: notifications.length,
+            });
+          });
+    }
+  }
 
   return (
     <>
@@ -250,15 +357,28 @@ export const AdminWallets = () => {
         <Modal onClose={() => setIsOpenNewForm(false)}>
           <ModalBlock sm>
             <NewWalletTitle>{t('wallets.newWallet')}</NewWalletTitle>
-            <RoundInput spellCheck="false" placeholder={t('wallets.name')} />
-            <RoundInput spellCheck="false" placeholder={t('wallets.activeKey')} />
-            <RoundInput spellCheck="false" placeholder={t('wallets.keyNotes')} />
+            <RoundInput 
+              value={newWallet.name}
+              onChange={(e) => setNewWallet((state) => ({...state, 'name': e.target.value}))}
+              spellCheck="false" 
+              placeholder={t('wallets.name')} 
+            />
+            <RoundInput 
+              value={newWallet.activeKey}
+              onChange={(e) => setNewWallet((state) => ({...state, 'activeKey': e.target.value}))}
+              spellCheck="false" 
+              placeholder={t('wallets.activeKey')} 
+            />
+            <RoundInput 
+              value={newWallet.keyNotes}
+              onChange={(e) => setNewWallet((state) => ({...state, 'keyNotes': e.target.value}))}
+              spellCheck="false" 
+              placeholder={t('wallets.keyNotes')} 
+            />
             <Button
               danger
               maxWidth={200}
-              onClick={() => {
-                setIsOpenNewForm(false);
-              }}
+              onClick={handleAddCompanyAccount}
             >
               {t('wallets.create')}
             </Button>
@@ -408,6 +528,7 @@ export const AdminWallets = () => {
         setCurrentPage={setCurrentPage}
         totalLottery={totalUsers}
       />
+      <Notification onDelete={onDelete} data={notifications} />
     </>
   );
 };
