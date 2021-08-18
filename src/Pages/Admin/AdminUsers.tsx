@@ -723,8 +723,10 @@ const TableHeadItem = styled.li`
   &:nth-child(7) {
     max-width: 130px;
     text-align: right;
+    margin-right: 16px;
     @media (max-width: 992px) {
       max-width: 80px;
+      margin-right: 0;
     }
   }
   &:last-child {
