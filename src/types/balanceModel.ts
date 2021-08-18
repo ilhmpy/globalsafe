@@ -4,18 +4,18 @@ export interface BalanceModel {
     safeAmount: string;
 };
 
-export interface ViewCompanyAccountModel {
+export interface CompanyAccountModel {
     id: number;
     safeId: string;
     name: string;
     activeWif: string;
     memoWif: string;
-    balances: any[];
+    balances: BalanceModel[];
 };
 
-export interface ViewCompanyAccountModelCollectionResult {
+export interface CompanyAccountModelCollectionResult {
     totalRecords: number;
-    collection: ViewCompanyAccountModel[];
+    collection: CompanyAccountModel[];
 };
 
 export interface AddCompanyAccountModel {
@@ -24,5 +24,3 @@ export interface AddCompanyAccountModel {
     activeWif: string;
     memoWif: string;
 };
-
-
