@@ -324,14 +324,16 @@ export const TestInput: FC<TestInputProps> = ({ label, openDate, setOpenDate }: 
               type="text"
               value={inputString}
               onChange={(e) => {
-                setInputString(e.target.value);
                 const arr = e.target.value.split('-');
                 const fromSplitted = arr[0].split('.');
                 const toSplitted = arr.length === 2 ? arr[1].split('.') : '';
+                const validValue = e.target.value.replace(/[^0-9\-\.]/gi, "");6
+
+                setInputString(validValue);
 
                 setOpenDate({
                   from: moment(`${fromSplitted[1]}.${fromSplitted[0]}.${fromSplitted[2]}`)
-                    .set({ hour: 12, minute: 0, second: 0 })
+                    .set({ hour: 12, minute: 0, second: 0 })                                                                                                                                        
                     .toDate(),
                   to: toSplitted
                     ? moment(`${toSplitted[1]}.${toSplitted[0]}.${toSplitted[2]}`)

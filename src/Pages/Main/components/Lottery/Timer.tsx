@@ -10,15 +10,13 @@ import { ReactComponent as Prize } from '../../../../assets/svg/prize.svg';
 const getProgress = (data: any) => {
   if (data[0] != null && data[1] != null) {
     return Number(
-      (
-        ((data[1].days * 24 * 60 + data[1].hours * 60 + data[1].minutes) /
-          (data[0].days * 24 * 60 + data[0].hours * 60 + data[0].minutes)) *
-        100
-      ).toFixed(0)
+      ((((data[1].days * 24) * 60) + (data[1].hours * 60) + data[1].minutes) / 
+      (((data[0].days * 24) * 60) + (data[0].hours * 60) + data[0].minutes) * 100)
+      .toFixed(0)
     );
   } else {
     return 0;
-  }
+  };
 };
 
 type Props = {
@@ -56,34 +54,14 @@ export const Timer: FC<Props> = ({
   useEffect(() => {
     let cancel = false;
     const cb = (data: any) => {
-      !cancel && repeat();
-    };
-    if (hubConnection) {
-      !cancel && hubConnection.on('DrawResult', cb);
-    }
-    return () => {
-      hubConnection?.off('DrawResult', cb);
-      cancel = true;
-    };
-  }, [hubConnection]);
-
-  useEffect(() => {
-    let cancel = false;
-    const cb = (data: any) => {
       if (data != null) {
         const durations = moment.duration(data.totalSeconds, 'seconds');
         setDeadline(data.totalSeconds);
         setState(
-          Math.floor(durations.asMinutes()) !== 0
-            ? [
-                Math.floor(durations.asDays()),
-                Math.floor(durations.asHours()),
-                Math.floor(durations.asMinutes()),
-              ]
-            : null
-        );
+          Math.floor(durations.asMinutes()) !== 0 ? 
+              [Math.floor(durations.asDays()), Math.floor(durations.asHours()), Math.floor(durations.asMinutes())] : null);
         setProgress(getProgress([allTimeLottery, data]));
-      }
+      };
       console.log(data);
     };
     if (hubConnection && !cancel) {
@@ -91,15 +69,15 @@ export const Timer: FC<Props> = ({
       hubConnection
         .invoke('GetNextDraw')
         .then((res) => {
-          console.log(res);
+          console.log(res);  
           if (res != null) {
             setDeadline(res[1].totalSeconds);
             setClock(res[1]);
             setAllTimeLottery(res[0]);
-            console.log(getProgress(res));
+            console.log(getProgress(res))
             setDefaultTimeLottery(res[1]);
             setProgress(getProgress(res));
-          }
+          };
           setState(null);
         })
         .catch((e) => console.log(e));
@@ -112,19 +90,23 @@ export const Timer: FC<Props> = ({
 
   const repeat = () => {
     if (hubConnection) {
+      hubConnection.on("DrawCountdown", (data: any) => {
+        if (data != null) {
+          const durations = moment.duration(data.totalSeconds, 'seconds');
+          setDeadline(data.totalSeconds);
+          setState(
+            Math.floor(durations.asMinutes()) !== 0 ? 
+                [Math.floor(durations.asDays()), Math.floor(durations.asHours()), Math.floor(durations.asMinutes())] : null);
+          setProgress(getProgress([allTimeLottery, data]));
+        };
+      })
       hubConnection
         .invoke('GetNextDraw')
         .then((res) => {
-          console.log(res);
           if (res != null) {
             setDeadline(res[1].totalSeconds);
             setClock(res[1]);
-            setAllTimeLottery(res[0]);
-            console.log(getProgress(res));
-            setDefaultTimeLottery(res[1]);
-            setProgress(getProgress(res));
-          }
-          setState(null);
+          };
         })
         .catch((e) => console.log(e));
     }
@@ -134,21 +116,15 @@ export const Timer: FC<Props> = ({
     let cancel = false;
     if (deadline < 1 && !cancel) {
       setState([]);
+      // repeat();
       return;
     }
 
     const timer = setInterval(() => {
       const durations = moment.duration(deadline, 'seconds');
-      !cancel &&
-        setState(
-          Math.floor(durations.asMinutes()) !== 0
-            ? [
-                Math.floor(durations.asDays()),
-                Math.floor(durations.asHours()),
-                Math.floor(durations.asMinutes()),
-              ]
-            : null
-        );
+      !cancel && setState(
+        Math.floor(durations.asMinutes()) !== 0 ? 
+            [Math.floor(durations.asDays()), Math.floor(durations.asHours()), Math.floor(durations.asMinutes())] : null);
       !cancel && setDeadline(deadline - 1);
       !cancel && setProgress(getProgress([allTimeLottery, defaultTimeLottery]));
     }, 1000);
@@ -168,53 +144,46 @@ export const Timer: FC<Props> = ({
     }, 5000);
   };
 
-  return (
+  return ( 
     <>
-      <Styled.TimerModal display={display} onClick={() => setShowModal(true)}>
-        {state != null ? (
-          <>
-            <Styled.TimerLoading progress={timerProgress} />
-            <Styled.TimerModalTitle>{t('time.title')}</Styled.TimerModalTitle>
-            <div className="timer_content">
-              {state && (
-                <Styled.TimerModalDuration>
-                  <span>{state[0]}</span> : <span>{state[1]}</span> : <span>{state[2]}</span>
-                </Styled.TimerModalDuration>
-              )}
-              <Styled.TimerModalUnits>
-                <span>{t('time.days')}</span> <span>{t('time.hours')}</span>{' '}
-                <span>{t('time.minutes')}</span>
-              </Styled.TimerModalUnits>
-            </div>
-          </>
-        ) : (
-          <Styled.LoadingBeforeData>
-            <Styled.LoadingBeforeItem
-              width="90%"
-              height="19px"
-              style={{ margin: '0 auto', marginTop: '10px' }}
-            />
-            <div className="flex_loading">
-              <Styled.LoadingBeforeItem width="30px" height="19px" />
-              <Styled.LoadingBeforeItem width="30px" height="19px" />
-              <Styled.LoadingBeforeItem width="30px" height="19px" />
-            </div>
-            <div className="flex_loading">
-              <Styled.LoadingBeforeItem circle width="30px" height="10px" />
-              <Styled.LoadingBeforeItem circle width="30px" height="10px" />
-              <Styled.LoadingBeforeItem circle width="30px" height="10px" />
-            </div>
-          </Styled.LoadingBeforeData>
-        )}
-      </Styled.TimerModal>
-      <Styled.TimerCircle onClick={openWindow}>
-        <div>
-          <Styled.TimerProgress progress={progress}></Styled.TimerProgress>
-          <Styled.TimerIn>
-            <Prize />
-          </Styled.TimerIn>
-        </div>
-      </Styled.TimerCircle>
+       <Styled.TimerModal display={display} onClick={() => setShowModal(true)}> 
+          {state != null ? ( 
+           <>
+              <Styled.TimerLoading progress={timerProgress} />
+              <Styled.TimerModalTitle>{t("time.title")}</Styled.TimerModalTitle>
+              <div className="timer_content">
+                {state && (<Styled.TimerModalDuration><span>{state[0]}</span> : <span>{state[1]}</span> : <span>{state[2]}</span></Styled.TimerModalDuration>)}
+                <Styled.TimerModalUnits>
+                  <span>{t("time.days")}</span> <span>{t("time.hours")}</span> <span>{t("time.minutes")}</span>
+                </Styled.TimerModalUnits> 
+              </div>
+           </>
+          ) : (
+            <Styled.LoadingBeforeData>
+              <Styled.LoadingBeforeItem width="90%" height="19px" style={{ margin: "0 auto", marginTop: "10px" }} />
+              <div className="flex_loading">
+                <Styled.LoadingBeforeItem width="30px" height="19px" />
+                <Styled.LoadingBeforeItem width="30px" height="19px" />
+                <Styled.LoadingBeforeItem width="30px" height="19px" />
+              </div>
+              <div className="flex_loading">
+                <Styled.LoadingBeforeItem circle width="30px" height="10px"/>
+                <Styled.LoadingBeforeItem circle width="30px" height="10px"/>
+                <Styled.LoadingBeforeItem circle width="30px" height="10px"/>
+              </div>
+            </Styled.LoadingBeforeData>
+          )}
+        </Styled.TimerModal> 
+        <Styled.TimerCircle
+          onClick={openWindow}
+        >
+          <div>
+            <Styled.TimerProgress progress={progress}></Styled.TimerProgress>
+              <Styled.TimerIn>
+                <Prize />
+              </Styled.TimerIn>
+          </div>
+        </Styled.TimerCircle>
     </>
   );
 };
@@ -235,7 +204,7 @@ export const OldTimer: FC<OldTimerProps> = ({ modalTimer, history }: OldTimerPro
     setIsMobile(screen.width > 480);
   }, []);
 
-  const appContext = useContext(AppContext);
+  const appContext = useContext(AppContext); 
   const hubConnection = appContext.hubConnection;
   const { t } = useTranslation();
   const lang = localStorage.getItem('i18nextLng') || 'ru';
@@ -248,20 +217,10 @@ export const OldTimer: FC<OldTimerProps> = ({ modalTimer, history }: OldTimerPro
         const durations = moment.duration(data.totalSeconds, 'seconds');
         setDeadline(data.totalSeconds);
         setOtherState(
-          Math.floor(durations.asMinutes()) !== 0
-            ? [
-                Math.floor(durations.asDays()),
-                Math.floor(durations.asHours()),
-                Math.floor(durations.asMinutes()),
-              ]
-            : null
-        );
-        setState(
-          languale === 1
-            ? durations.format('d [дн] h [ч] m [мин]', { trim: false })
-            : durations.format('d [d] h [h] m [m]', { trim: false })
-        );
-      }
+          Math.floor(durations.asMinutes()) !== 0 ? 
+              [Math.floor(durations.asDays()), Math.floor(durations.asHours()), Math.floor(durations.asMinutes())] : null);
+        setState(languale === 1 ? durations.format('d [дн] h [ч] m [мин]', { trim: false }) : durations.format("d [d] h [h] m [m]", { trim: false }));
+      };
     };
     if (hubConnection && !cancel) {
       hubConnection.on('DrawCountdown', cb);
@@ -272,8 +231,8 @@ export const OldTimer: FC<OldTimerProps> = ({ modalTimer, history }: OldTimerPro
             setClock(res[1]);
             setDeadline(res[1].totalSeconds);
             setOtherState(res[1]);
-            setState('0');
-          }
+            setState("0");
+          };
         })
         .catch((e) => console.log(e));
     }
@@ -282,32 +241,27 @@ export const OldTimer: FC<OldTimerProps> = ({ modalTimer, history }: OldTimerPro
       cancel = true;
     };
   }, [hubConnection]);
-
-  useEffect(() => {
-    let cancel = false;
-    const cb = (data: any) => {
-      !cancel && repeat();
-    };
-    if (hubConnection) {
-      !cancel && hubConnection.on('DrawResult', cb);
-    }
-    return () => {
-      hubConnection?.off('DrawResult', cb);
-      cancel = true;
-    };
-  }, [hubConnection]);
-
+ 
   const repeat = () => {
+    const cb = (data: any) => {
+      if (data != null) {
+        const durations = moment.duration(data.totalSeconds, 'seconds');
+        setDeadline(data.totalSeconds);
+        setOtherState(
+          Math.floor(durations.asMinutes()) !== 0 ? 
+              [Math.floor(durations.asDays()), Math.floor(durations.asHours()), Math.floor(durations.asMinutes())] : null);
+        setState(languale === 1 ? durations.format('d [дн] h [ч] m [мин]', { trim: false }) : durations.format("d [d] h [h] m [m]", { trim: false }));
+    }
+  }
     if (hubConnection) {
+      hubConnection.on("DrawCountdown", cb);
       hubConnection
-        .invoke('GetNextDraw')
+        .invoke<RootClock>('GetNextDraw') 
         .then((res) => {
           if (res != null) {
-            setClock(res[1]);
-            setDeadline(res[1].totalSeconds);
-            setOtherState(res[1]);
-            setState('0');
-          }
+            setDeadline(res.totalSeconds);
+            setClock(res);
+          };
         })
         .catch((e) => console.log(e));
     }
@@ -319,24 +273,19 @@ export const OldTimer: FC<OldTimerProps> = ({ modalTimer, history }: OldTimerPro
       setState(null);
       return;
     }
-
+    
     const timer = setInterval(() => {
       const durations = moment.duration(deadline, 'seconds');
       const trim = false;
       let formatted;
-
+      
       if (languale === 1) {
         formatted = durations.format('d [дн] h [ч] m [мин]', { trim });
       } else {
         formatted = durations.format('d [d] h [h] m [m]', { trim });
-      }
+      };
 
-      !cancel &&
-        setOtherState({
-          days: Math.floor(durations.asDays()),
-          hours: Math.floor(durations.asHours()),
-          minutes: Math.floor(durations.asMinutes()),
-        });
+      !cancel && setOtherState({ days: Math.floor(durations.asDays()), hours: Math.floor(durations.asHours()), minutes: Math.floor(durations.asMinutes())});
       !cancel && setState(formatted);
       !cancel && setDeadline(deadline - 1);
     }, 1000);
@@ -349,21 +298,20 @@ export const OldTimer: FC<OldTimerProps> = ({ modalTimer, history }: OldTimerPro
 
   return (
     <>
-      {isMobile ? (
-        <Styled.TimerHistoryInner mt={modalTimer} history={history}>
-          <Styled.TimerHisroryTitle>
-            {history ? t('newDraw') : t('timerStart')}
-          </Styled.TimerHisroryTitle>
-          <Styled.TimerHistoryValue nodata={clock === null || state === '0'}>
-            {state && state}
-          </Styled.TimerHistoryValue>
-        </Styled.TimerHistoryInner>
-      ) : (
-        <>
-          <TimerModal state={otherState} />
-        </>
-      )}
-    </>
+      {  isMobile ? (
+          <Styled.TimerHistoryInner mt={modalTimer} history={history}>
+             <Styled.TimerHisroryTitle>{history ? t('newDraw') : t('timerStart')}</Styled.TimerHisroryTitle>
+             <Styled.TimerHistoryValue nodata={clock === null || state === '0'}>
+                {state && ( state )}
+             </Styled.TimerHistoryValue>
+          </Styled.TimerHistoryInner>
+        ) : (
+          <>
+            <TimerModal state={otherState} />
+          </>
+        )
+      }
+    </> 
   );
 };
 
@@ -372,19 +320,14 @@ export const TimerModal = ({ state }: any) => {
   const { t } = useTranslation();
 
   return (
-    <Styled.TimerModal fixed>
-      <Styled.TimerModalTitle>{t('time.title')}</Styled.TimerModalTitle>
+    <Styled.TimerModal fixed> 
+      <Styled.TimerModalTitle>{t("time.title")}</Styled.TimerModalTitle>
       <div>
-        {state && (
-          <Styled.TimerModalDuration>
-            <span>{state.days}</span> : <span>{state.hours}</span> : <span>{state.minutes}</span>
-          </Styled.TimerModalDuration>
-        )}
+        {state && (<Styled.TimerModalDuration><span>{state.days}</span> : <span>{state.hours}</span> : <span>{state.minutes}</span></Styled.TimerModalDuration>)}
         <Styled.TimerModalUnits>
-          <span>{t('time.days')}</span> <span>{t('time.hours')}</span>{' '}
-          <span>{t('time.minutes')}</span>
-        </Styled.TimerModalUnits>
+          <span>{t("time.days")}</span> <span>{t("time.hours")}</span> <span>{t("time.minutes")}</span>
+        </Styled.TimerModalUnits> 
       </div>
     </Styled.TimerModal>
-  );
-};
+  )
+}
