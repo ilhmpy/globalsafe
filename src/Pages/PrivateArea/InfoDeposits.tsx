@@ -62,7 +62,7 @@ export const InfoDeposits = () => {
                   Loading ...
                 </div>
               }
-            >
+            > 
               <Tables list={list} />
             </InfiniteScroll>
           </Scrollbars>
