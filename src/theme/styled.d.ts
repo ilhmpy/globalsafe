@@ -72,6 +72,7 @@ declare module 'styled-components' {
     timer: {
       bg: string;
       color: string;
+      beforeBg: string;
     };
     pink: string;
     rounIputBackground: string;

@@ -178,6 +178,15 @@ export const Timer: FC<Props> = ({
     }, 5000);
   };
 
+  const milliseconds = 32 * 1000;
+  const radius = 32 / 2;
+  const circumference = 32 * Math.PI;
+
+  const [countdown, setCountDown] = useState(milliseconds);
+  const [isPlay, setIsPlay] = useState(true);
+
+  const strokeDashoffset = () => circumference - (countdown / milliseconds) * circumference;
+
   return (
     <>
       <Styled.TimerModal display={display} onClick={() => setShowModal(true)}>
@@ -218,12 +227,35 @@ export const Timer: FC<Props> = ({
         )}
       </Styled.TimerModal>
       <Styled.TimerCircle onClick={openWindow}>
-        <div>
-          <Styled.TimerProgress progress={progress}></Styled.TimerProgress>
-          <Styled.TimerIn>
-            <Prize />
-          </Styled.TimerIn>
-        </div>
+         <Styled.Progress>
+          <Styled.CountContainer>
+            <Styled.CountValue strokeColor={"#ff416e"}><Prize /></Styled.CountValue>
+            <svg
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                margin: '0 auto',
+                transform: 'rotateY(-180deg) rotateZ(-90deg)',
+                overflow: 'visible',
+              }}
+            >
+              <circle
+                strokeDasharray={circumference}
+                strokeDashoffset={100 - progress}
+                r={radius}
+                cx={radius}
+                cy={radius}
+                fill="none"
+                strokeLinecap="round"
+                stroke={"#ff416e"}
+                strokeWidth={"2px"}
+              ></circle>
+            </svg>
+         </Styled.CountContainer>
+        </Styled.Progress>
       </Styled.TimerCircle>
     </>
   );
