@@ -16,7 +16,7 @@ export const Select: FC<Props> = ({
   selectedOption,
   setSelectedOption,
 }) => {
-  const [value, setValue] = useState("");
+  // const [value, setValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [activeList, setActiveList] = useState(0);
 
@@ -46,7 +46,7 @@ export const Select: FC<Props> = ({
       }
       setActiveList(activeList + 1);
     } else if (e.key === "Enter") {
-      let value = options[activeList];
+      const value = options[activeList];
       onOptionClicked(value);
     }
   };

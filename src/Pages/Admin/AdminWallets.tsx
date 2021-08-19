@@ -9,7 +9,7 @@ import { ReactComponent as UpdateCircle } from '../../assets/svg/updateCircle.sv
 import { Button } from '../../components/Button/Button';
 import { Modal } from '../../components/Modal/Modal';
 import { Notification } from '../../components/Notify/Notification';
-import { Select } from '../../components/Select/Select';
+import { Select } from '../../components/Select/Select3';
 import { Loading } from '../../components/UI/Loading';
 import { UpTitle } from '../../components/UI/UpTitle';
 import { AppContext } from '../../context/HubContext';
@@ -44,8 +44,8 @@ export const AdminWallets = () => {
   const [isOpenShowForm, setIsOpenShowForm] = useState(false);
   const [isOpenTransferForm, setIsOpenTransferForm] = useState(false);
   const [isSavingConfirm, setIsSavingConfirm] = useState(false);
-  const [checkList, setCheckList] = useState<any>([]);
-  const selectList = [t('win.one'), t('win.two'), t('win.three')];
+  // const [checkList, setCheckList] = useState<any>([]);
+  // const selectList = [t('win.one'), t('win.two'), t('win.three')];
   const [notifications, setNotifications] = useState<Notify[]>([]);
 
   const [companyAccountsList, setCompanyAccountsList] = useState<CompanyAccountModel[]>([]);
@@ -56,12 +56,14 @@ export const AdminWallets = () => {
   const [newWalletLoading, setNewWalletLoading] = useState(false);
   const [editWalletLoading, setEditWalletLoading] = useState(false);
   const [refreshAccountBalanceLoading, setRefreshAccountBalanceLoading] = useState(false);
+  const [accountsTransferLoading, setAccountsTransferLoading] = useState(false);
   const [newWallet, setNewWallet] = useState({
     name: '',
     activeKey: '',
     keyNotes: ''
   });
 
+  // TODO: Remove mock list 
   const mockBalances = [
     { id: 1,  balanceKind: 1, amount: 0, safeAmount: 'Na'},
     { id: 2,  balanceKind: 1, amount: 235468, safeAmount: 'CWD'},
@@ -131,7 +133,7 @@ export const AdminWallets = () => {
     if(hubConnection) {
       // Check if there is NO empty values
       if(!newWallet.name || !newWallet.activeKey || !newWallet.keyNotes) {
-        return
+        return;
       }
 
       setNewWalletLoading(true);
@@ -185,7 +187,7 @@ export const AdminWallets = () => {
 
       const updateData = {
         activeWif: editActiveKeyValue,
-        memoWif: editKeyNotesValue
+        memoWif: editKeyNotesValue,
       };
 
       hubConnection
@@ -246,8 +248,51 @@ export const AdminWallets = () => {
   };
 
 
-  // Task<IEnumerable<BalanceModel>?> RefreshAccountBalance(string accountSafeId) - 
-  // перезапрос балансов аккаунта компании, возвращает то же самое, что содержится во ViewCompanyAccountModel.Balances.
+  // Transfer Between Company Accounts
+  const handleAccountsTransfer = () => {
+    // AccountsTransfer(string accountSafeIdFrom, string accountSafeIdTo, string volume, BalanceKind balanceKind)
+    if(hubConnection) {
+      setAccountsTransferLoading(true);
+      hubConnection
+        .invoke<any>(
+          'AccountsTransfer',
+          selectedAccount?.safeId,
+          transferToAccount?.safeId,
+          transferAmount,
+          selectedBalance?.balanceKind
+        )
+        .then((res) => {
+          setAccountsTransferLoading(false);
+          console.log("AccountsTransfer:::", res);
+          // TODO: update Success message
+          createNotify({
+            text: "Success",
+            error: false,
+            timeleft: 5,
+            id: notifications.length,
+          });
+
+          // Close Transfer Confirm Modal
+          handleCloseConfirmTransferModal()
+        })
+        .catch((err: Error) => {
+          setAccountsTransferLoading(false);
+          console.log(" AccountsTransfer ERR:::", err.message);
+          // TODO: update error message
+          createNotify({
+            text: err.message,
+            error: true,
+            timeleft: 5,
+            id: notifications.length,
+          });
+
+           // Close Transfer Confirm Modal
+           handleCloseConfirmTransferModal()
+        });
+    }
+  };
+
+
 
 
   const handleShowCompanyAccount = (accountToShow: CompanyAccountModel) => {
@@ -300,20 +345,21 @@ export const AdminWallets = () => {
   };
 
   const handleShowConfirmTransferModal = () => {
+    if(!transferAmount || !transferToAccount) {
+      return;
+    }
     // Close Transfer Modal
     setIsOpenTransferForm(false);
 
     setIsSavingConfirm(true);
   };
 
-
   const handleCloseConfirmTransferModal = () => {
     setIsSavingConfirm(false);
 
-    // Break All State Values
+    // Break All States and Values
     handleCloseTransferModal();
   };
-
 
   return (
     <>
@@ -636,14 +682,16 @@ export const AdminWallets = () => {
             </ContentRow>
 
             <SelectGroup>
-              <span>{t('wallets.enrollmentAccount')}</span>
-              <Select checkList={checkList} setCheckList={setCheckList} values={selectList} />
-              {/* <Select 
+              {/* <span>{t('wallets.enrollmentAccount')}</span> */}
+              {/* <Select checkList={checkList} setCheckList={setCheckList} values={selectList} /> */}
+              <Select 
                 label={t('wallets.enrollmentAccount')}
                 selectedOption={transferToAccount?.name || null} 
                 setSelectedOption={(val) => setTransferToAccount(companyAccountsList.find(acc => acc.name === val) || null)} 
-                options={companyAccountsList.map(c => c.name)} 
-              /> */}
+                options={
+                  companyAccountsList.filter(account => account.id !== selectedAccount?.id).map(account => account.name)
+                } 
+              />
             </SelectGroup>
             
             <TransferButtonGroup>
@@ -655,10 +703,7 @@ export const AdminWallets = () => {
               <Button
                 danger
                 maxWidth={200}
-                onClick={() => {
-                  setIsSavingConfirm(true);
-                  setIsOpenTransferForm(false);
-                }}
+                onClick={handleShowConfirmTransferModal}
               >
                 {t('depositSelect.transferButton')}
               </Button>
@@ -680,7 +725,7 @@ export const AdminWallets = () => {
             <Button
               danger
               maxWidth={200}
-              onClick={handleCloseConfirmTransferModal}
+              onClick={handleAccountsTransfer}
             >
               {t('acceptAll.accept')}
             </Button>
