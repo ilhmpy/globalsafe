@@ -32,7 +32,6 @@
         "react/react-in-jsx-scope": "off",
         "react/jsx-uses-react": "error",   
         "react/jsx-uses-vars": "error",
-        "no-unused-vars": 0 ,
-        "react/prop-types": "off"
+        "no-unused-vars": 0 
     }
 }
