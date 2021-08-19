@@ -469,10 +469,10 @@ export const AdminPay = () => {
           <Exit onClick={logOut} />
         </Styled.UserName>
       </Styled.HeadBlock>
-      {active === 3 && (
+      {active === 4 && (
         <Chart depositsDate={depositsDate} setDepositsDate={setDepositsDate} stats={stats} />
       )}
-      {active !== 3 && (
+      {active !== 4 && (
         <Card>
           <Styled.PayList>
             <Styled.PayItem>
