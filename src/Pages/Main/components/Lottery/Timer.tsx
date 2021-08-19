@@ -10,11 +10,7 @@ import { ReactComponent as Prize } from '../../../../assets/svg/prize.svg';
 const getProgress = (data: any) => {
   if (data[0] != null && data[1] != null) {
     return Number(
-      (
-        ((data[1].days * 24 * 60 + data[1].hours * 60 + data[1].minutes) /
-          (data[0].days * 24 * 60 + data[0].hours * 60 + data[0].minutes)) *
-        100
-      ).toFixed(0)
+      (100 / (data[0].totalSeconds / data[1].totalSeconds)).toFixed(0)
     );
   } else {
     return 0;
@@ -49,14 +45,15 @@ export const Timer: FC<Props> = ({
   const [allTimeLottery, setAllTimeLottery] = useState<any>(null);
   const [defaultTimeLottery, setDefaultTimeLottery] = useState<any>(null);
   const [timerProgress, setTimerProgress] = useState<string | number>(0);
+  const [allState, setAllState] = useState<any[] | any>(null);
 
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   const languale = lang === 'ru' ? 1 : 0;
 
   useEffect(() => {
     let cancel = false;
-    const cb = (data: any) => {
-      !cancel && repeat();
+    const cb = (data: any[]) => { 
+      !cancel && repeat(); 
     };
     if (hubConnection) {
       !cancel && hubConnection.on('DrawResult', cb);
@@ -67,37 +64,52 @@ export const Timer: FC<Props> = ({
     };
   }, [hubConnection]);
 
-  function getNextDraw(res: any[]) {
+  function getNextDraw(res: any) {
     console.log(res);
     if (res != null) {
       setDeadline(res[1].totalSeconds);
       setClock(res[1]);
-      setAllTimeLottery(res[0]);
+      console.log(res[0]);
       console.log(getProgress(res));
+      setAllState(res);
       setDefaultTimeLottery(res[1]);
       setProgress(getProgress(res));
+      return false;
     }
+    setAllState([]);
     setState(null);
+    console.log("ALL STATE", allState)
   }
 
   useEffect(() => {
     let cancel = false;
     const cb = (data: any) => {
-      if (data != null) {
-        const durations = moment.duration(data.totalSeconds, 'seconds');
-        setDeadline(data.totalSeconds);
-        setState(
-          Math.floor(durations.asMinutes()) !== 0
-            ? [
-                Math.floor(durations.asDays()),
-                Math.floor(durations.asHours()),
-                Math.floor(durations.asMinutes()),
-              ]
-            : null
-        );
-        setProgress(getProgress([allTimeLottery, data]));
+      console.log("cb ???????????????????????????????????????????????????????????????????????????????")
+      if (hubConnection) {
+        hubConnection.invoke("GetNextDraw")
+        .then((res) => {
+          if (res != null) {
+            const durations = moment.duration(res[1].totalSeconds, 'seconds');
+            setDeadline(res[1].totalSeconds);
+            setState(
+              Math.floor(durations.asMinutes()) !== 0
+                ? [
+                    Math.floor(durations.asDays()),
+                    Math.floor(durations.asHours()),
+                    Math.floor(durations.asMinutes()),
+                  ]
+                : null
+            );
+            console.log(res);
+            setAllState(res);
+            console.log(getProgress(res));
+            setProgress(getProgress(res));
+            return false;
+          }
+          setState(null);
+        })
+        .catch(e => console.log(e));
       }
-      console.log(data);
     };
     if (hubConnection && !cancel) {
       hubConnection.invoke("DrawResult")
@@ -159,8 +171,12 @@ export const Timer: FC<Props> = ({
               ]
             : null
         );
+      console.log(allState)
       !cancel && setDeadline(deadline - 1);
-      !cancel && setProgress(getProgress([allTimeLottery, defaultTimeLottery]));
+      if (allState != null) {
+        console.log(getProgress(allState))
+        !cancel && setProgress(getProgress(allState));
+      }
     }, 1000);
 
     return () => {
@@ -183,9 +199,6 @@ export const Timer: FC<Props> = ({
   const circumference = 32 * Math.PI;
 
   const [countdown, setCountDown] = useState(milliseconds);
-  const [isPlay, setIsPlay] = useState(true);
-
-  const strokeDashoffset = () => circumference - (countdown / milliseconds) * circumference;
 
   return (
     <>

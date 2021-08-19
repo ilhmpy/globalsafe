@@ -909,6 +909,7 @@ export const CountContainer = styled.div`
 
 export const CountValue = styled.p<{ strokeColor: string }>`
   color: ${(props) => props.strokeColor};
+  width: 100%;
   padding-top: 2px;
-  padding-left: 0.50px;
+  padding-left: 5px;
 `;
