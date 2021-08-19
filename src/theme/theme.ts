@@ -78,7 +78,7 @@ export const lightTheme = {
   timer: {
     bg: '#fff',
     color: '#515172',
-    bgLoad: "#f2e5e4"
+    beforeBg: "#f2e9e4"
   },
   pink: '#FF416E',
   rounIputBackground: '#FFF0F0',
@@ -156,7 +156,7 @@ export const darkTheme = {
   timer: {
     bg: 'rgba(33,33,33,1)',
     color: '#fff',
-    bgLoad: "#000"
+    beforeBg: "#000"
   },
   pink: '#FF416E',
   rounIputBackground: '#ffffff',

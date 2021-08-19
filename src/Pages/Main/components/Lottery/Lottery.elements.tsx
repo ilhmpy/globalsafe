@@ -550,9 +550,9 @@ export const TimerIcon = styled.div`
 `;
 
 export const TimerCircle = styled.div`
-  position: fixed;
-  right: 143px;
-  top: 668px;
+  right: 0;
+  position: absolute;
+  top: 53px;
   width: 36px;
   height: 36px;
   display: flex;
@@ -561,8 +561,8 @@ export const TimerCircle = styled.div`
   cursor: pointer;
   background: ${({ theme }) => theme.timer.bg};
   border-radius: 50%;
-  padding-top: 2px;
-  padding-left: 2px;
+  padding-top: 3px;
+  padding-left: 3px;
   -webkit-box-shadow: 0px 3px 33px 0px rgba(34, 60, 80, 0.2);
   -moz-box-shadow: 0px 3px 33px 0px rgba(34, 60, 80, 0.2);
   box-shadow: 0px 3px 33px 0px rgba(34, 60, 80, 0.2);
@@ -573,26 +573,25 @@ export const TimerCircle = styled.div`
     height: 32px;
     border-radius: 50%;
     background: ${({ theme }) => theme.timer.bg};
-    overflow: hidden;
   }
 
   @media only screen and (max-device-width: 620px) {
     right: 15px;
-    top: 600px;
+    top: 0px;
   }
 `;
 
 export const TimerIn = styled.div`
   position: absolute;
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: ${({ theme }) => theme.timer.bg};
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 1px;
-  margin-left: 1px;
+  margin-top: 2px;
+  margin-left: 2px;
 
   & > svg {
     width: 18px;
@@ -605,10 +604,19 @@ export const TimerProgress = styled.div<{ progress: number }>`
   width: 165px;
   background: #ff416e;
   position: absolute;
+  
+  /*
   top: -55px;
   left: -53px;
   transform: ${({ progress }) => `rotate(${progress}deg)`};
   transform-origin: 55px 55px;
+  */
+
+  transform: rotate(50deg);
+  top: 32px;
+  left: -80px;
+  transform-origin: 90px -0px;
+
   transition: all 0.3s;
 `;
 
@@ -630,9 +638,9 @@ export const TimerModal = styled.div<{ display?: boolean; fixed?: boolean; progr
   max-width: 149px;
   background: ${({ theme }) => theme.timer.bg};
   border-radius: 5px;
-  position: fixed;
-  right: 145px;
-  top: 570px;
+  position: absolute;
+  top: -50px;
+  right: 0;
   z-index: 9999;
   -webkit-box-shadow: 1px 3px 14px -1px rgba(34, 60, 80, 0.2);
   -moz-box-shadow: 1px 3px 14px -1px rgba(34, 60, 80, 0.2);
@@ -669,7 +677,7 @@ export const TimerModal = styled.div<{ display?: boolean; fixed?: boolean; progr
   }
 
   @media only screen and (max-device-width: 620px) {
-    top: 500px;
+    top: -100px;
   }
 
   ${({ fixed }) => {
@@ -830,8 +838,8 @@ export const LotteryFlexBox = styled.div`
 
 export const TimerLoading = styled.div<{ progress: number | string }>`
   width: ${({ progress }) => progress}%;
-  left: 5px;
-  max-width: 95%;
+  left: 3px;
+  max-width: 96%;
   position: absolute;
   top: 2px;
   height: 1px;
@@ -866,7 +874,7 @@ export const LoadingBeforeItem = styled.div<{
   height: number | string;
   circle?: boolean;
 }>`
-  background: ${({ theme }) => theme.timer.bg};
+  background: ${({ theme }) => theme.timer.beforeBg};
   border-radius: 4px;
   height: ${({ height }) => height};
   min-width: ${({ width }) => width};
@@ -880,4 +888,28 @@ export const LoadingBeforeItem = styled.div<{
       `;
     }
   }}
+`;
+
+export const Progress = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const CountContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin: auto;
+  height: 30px;
+  width: 30px;
+`;
+
+export const CountValue = styled.p<{ strokeColor: string }>`
+  color: ${(props) => props.strokeColor};
+  width: 100%;
+  padding-top: 2px;
+  padding-left: 5px;
 `;

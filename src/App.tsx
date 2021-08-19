@@ -133,6 +133,7 @@ const App: FC = () => {
   }, [user]);
 
   return (
+    <div style={{ position: "relative"}}>
     <Router>
       <div className="App">
         <GlobalStyle />
@@ -148,6 +149,7 @@ const App: FC = () => {
         </Switch>
       </div>
     </Router>
+    </div>
   );
 };
 
