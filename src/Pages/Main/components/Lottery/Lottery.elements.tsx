@@ -839,7 +839,7 @@ export const LotteryFlexBox = styled.div`
 export const TimerLoading = styled.div<{ progress: number | string }>`
   width: ${({ progress }) => progress}%;
   left: 3px;
-  max-width: 95%;
+  max-width: 96%;
   position: absolute;
   top: 2px;
   height: 1px;
