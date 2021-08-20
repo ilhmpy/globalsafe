@@ -33,7 +33,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
   const [loading, setLoading] = useState(true);
 
   const createProgram = () => {
-    console.log('~~~~~~~~~~~~~~~~~~start');
+    console.log('1111111111~~~~~~~~~~~~~~~~~~start');
     if (hubConnection) {
       setProgramList([]);
       setLoading(true);
@@ -41,59 +41,30 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
       hubConnection
         .invoke<any>(
           'CreateDeposit',
-          null,
-          '',
-          '',
-          100000,
+          0,
+          'ergeger',
+          'ererg ыммукм упукпукп укпукпукп',
+          1000000,
           100000000,
           90,
           10,
           0,
-          '10,20,30',
-          0.6,
+          '10',
+          0.5,
           true,
-          '',
-          '',
-          '',
-          '',
+          'referge',
+          'rgg45g4',
+          'ergergeg',
+          'efegerg',
           1,
           1,
-          [],
-          0,
+          ['hjyjrt'],
           1,
-          null,
+          1,
+          10000000,
           true,
           true
         )
-
-        //   ('CreateDeposit',
-        //   0,
-        //   '',
-        //   'GOLD',
-        //   'Тестовый депозит с отложенной выплатой',
-        //   50000,
-        //   50000000,
-        //   60,
-        //   60,
-        //   0,
-        //   null,
-        //   null,
-        //   0.5,
-        //   true,
-        //   '[]',
-        //   [],
-        //   'stella',
-        //   null,
-        //   1,
-        //   1,
-        //   1,
-        //   null,
-        //   [],
-        //   1,
-        //   1,
-        //   true,
-        //   true
-        // )
         .then((res) => {
           console.log('.then ~ res', res);
           // setTotalDeposits(res.totalRecords);
