@@ -107,7 +107,8 @@
     "portfolio": "Portfolio",
     "toHome": "To the main",
     "lottery": "Lottery",
-    "depositsPrograms": "Deposits programs"
+    "depositsPrograms": "Deposits programs",
+    "wallets": "Wallets"
   },
   "adminDeposit": {
     "uptitle": "Payouts",
@@ -465,6 +466,20 @@
     "changesCanceled": "Changes canceled!",
     "changesCanceledSuccessfully": "Changes have been successfully canceled."
   },
+  "wallets": {
+    "refreshAll": "Refresh all",
+    "newWallet": "New wallet",
+    "name": "Name",
+    "activeKey": "Active key",
+    "keyNotes": "Key notes",
+    "create": "Create",
+    "for": "for",
+    "transferFunds": "Transfer funds",
+    "from": "From",
+    "where": "Where",
+    "enrollmentAccount": "Enrollment account",
+    "available": "Available"
+  },
   "text": {
     "tip_state_unsubscribed": "Subscribe to notifications",
     "tip_state_subscribed": "You're subscribed to notifications",
@@ -483,5 +498,6 @@
     "desc": "The requested page has been removed or is temporarily unavailable. Go to ",
     "main": "home page",
     "tech": "Technical work in progress"
-  }
+  },
+  "all": "All"
 }

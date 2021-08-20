@@ -195,7 +195,7 @@ export const Center = styled.div`
   }
 `;
 
-export const Container = styled.div<{ before?: boolean; }>`
+export const Container = styled.div<{ before?: boolean; lotteryModal?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -217,9 +217,12 @@ export const Container = styled.div<{ before?: boolean; }>`
       return `
         margin: 0 auto;
         width: 100%;
-        max-width: 900px;
         align-items: normal;
         justify-content: normal;
+
+        @media only screen and (max-device-width: 620px) {
+          margin: 0px auto 14px;
+        }
 
         & > div {
           width: 100%;
@@ -228,7 +231,15 @@ export const Container = styled.div<{ before?: boolean; }>`
           padding-bottom: 13px;
         }
       `;
-    };
+    }
+  }}
+
+  ${({ lotteryModal }) => {
+    if (lotteryModal) {
+      return `
+        flex-wrap: nowrap;
+      `;
+    }
   }}
 `;
 
@@ -384,9 +395,9 @@ export const WinTitle = styled.div<{ sub?: boolean }>`
     font-size: ${(props) => (props.sub ? '24px' : '16px')};
     line-height: ${(props) => (props.sub ? '32px' : '19px')};
     margin-bottom: 18px;
-    width: ${({ sub }) => sub ? "71%" : ""};
-    margin: ${({ sub }) => sub ? "0 auto" : ""};
-    margin-bottom: ${({ sub }) => sub ? "18px" : ""};
+    width: ${({ sub }) => (sub ? '71%' : '')};
+    margin: ${({ sub }) => (sub ? '0 auto' : '')};
+    margin-bottom: ${({ sub }) => (sub ? '18px' : '')};
   }
 `;
 
@@ -439,7 +450,7 @@ export const ModalButton = styled(Button)`
   margin: 37px auto 0;
 `;
 
-export const TimerHistoryInner = styled.div<{ mt?: boolean; history?: boolean; }>`
+export const TimerHistoryInner = styled.div<{ mt?: boolean; history?: boolean }>`
   margin-right: 80px;
   width: 80%;
   max-width: 341px;
@@ -452,7 +463,7 @@ export const TimerHistoryInner = styled.div<{ mt?: boolean; history?: boolean; }
   -webkit-box-shadow: 1px 0px 12px 1px rgba(34, 60, 80, 0.2);
   -moz-box-shadow: 1px 0px 12px 1px rgba(34, 60, 80, 0.2);
   box-shadow: 1px 0px 12px 1px rgba(34, 60, 80, 0.2);
- 
+
   @media (max-width: 768px) {
     margin-right: 0px;
   }
@@ -464,7 +475,7 @@ export const TimerHistoryInner = styled.div<{ mt?: boolean; history?: boolean; }
         margin-top: 35px;
         margin-left: auto;
       `;
-    };
+    }
 
     if (history) {
       return `
@@ -473,7 +484,7 @@ export const TimerHistoryInner = styled.div<{ mt?: boolean; history?: boolean; }
         -moz-box-shadow: none;
         height: 83px;
       `;
-    };
+    }
   }}
 `;
 
@@ -520,115 +531,153 @@ export const BrandImgAbs = styled(BrandImg)`
 `;
 
 export const TimerIcon = styled.div`
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    border: ${({ theme }) => theme.timerIcon.border};
-    background: ${({ theme }) => theme.timerIcon.background};
-    right: 234px;
-    position: absolute;
-    margin-top: 47px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-directrion: column;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: ${({ theme }) => theme.timerIcon.border};
+  background: ${({ theme }) => theme.timerIcon.background};
+  right: 234px;
+  position: absolute;
+  margin-top: 47px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 
-    .timericon_cirlce {
-      position: absolute;
-    }
+  .timericon_cirlce {
+    position: absolute;
+  }
 `;
 
 export const TimerCircle = styled.div`
-  position: fixed;
-  right: 50px;
-  top: 600px;
-  width: 52px; 
-  height: 52px;
+  right: 0;
+  position: absolute;
+  top: 53px;
+  width: 36px;
+  height: 36px;
   display: flex;
   flex-direction: column;
-  aligns-items: center;
   z-index: 999;
-  justify-content: center;
-  padding-left: 4px;
   cursor: pointer;
   background: ${({ theme }) => theme.timer.bg};
   border-radius: 50%;
+  padding-top: 3px;
+  padding-left: 3px;
+  -webkit-box-shadow: 0px 3px 33px 0px rgba(34, 60, 80, 0.2);
+  -moz-box-shadow: 0px 3px 33px 0px rgba(34, 60, 80, 0.2);
+  box-shadow: 0px 3px 33px 0px rgba(34, 60, 80, 0.2);
 
   & > div {
-    position: relative; 
-    width: 45px;
-    height: 45px;
-    border-radius: 50%; 
+    position: relative;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
     background: ${({ theme }) => theme.timer.bg};
-    overflow: hidden;  
   }
 
   @media only screen and (max-device-width: 620px) {
     right: 15px;
+    top: 0px;
   }
 `;
 
 export const TimerIn = styled.div`
-  position: absolute; 
-  width: 40px; 
-  height: 41px; 
-  margin: 2px; 
-  border-radius: 50%; 
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
   background: ${({ theme }) => theme.timer.bg};
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 2px;
+  margin-left: 2px;
 
   & > svg {
-    width: 23px;
-    height: 23px;
+    width: 18px;
+    height: 18px;
   }
 `;
 
-export const TimerProgress = styled.div<{ progress: number; }>`
-  height: 55px; 
-  width: 165px; 
-  background: #FF416E; 
-  position: absolute; 
-  top: -55px; 
-  left: -50px;
-  transform: ${({ progress }) => `rotate(${progress}deg)`}; 
-  transform-origin: 55px 55px; 
-  transition: all .3s; 
-`; 
+export const TimerProgress = styled.div<{ progress: number }>`
+  height: 55px;
+  width: 165px;
+  background: #ff416e;
+  position: absolute;
+  
+  /*
+  top: -55px;
+  left: -53px;
+  transform: ${({ progress }) => `rotate(${progress}deg)`};
+  transform-origin: 55px 55px;
+  */
 
-export const TimerModal = styled.div<{ display?: boolean; fixed?: boolean; progressBar?: any; }>` 
+  transform: rotate(50deg);
+  top: 32px;
+  left: -80px;
+  transform-origin: 90px -0px;
+
+  transition: all 0.3s;
+`;
+
+export const TimerModalDuration = styled.h3`
+  text-align: center;
+  // font-size: 1.60em;
+  font-size: 18px;
+  color: ${({ theme }) => theme.timer.color};
+  word-spacing: 10px;
+  margin-bottom: 1px;
+
+  & > span {
+    color: #ff416e;
+  }
+`;
+
+export const TimerModal = styled.div<{ display?: boolean; fixed?: boolean; progressBar?: any }>`
   width: 80%;
-  max-width: 260px;
+  max-width: 149px;
   background: ${({ theme }) => theme.timer.bg};
-  border-radius: 10px;
-  position: fixed;
-  right: 50px;
-  top: 430px;
+  border-radius: 5px;
+  position: absolute;
+  top: -50px;
+  right: 0;
   z-index: 9999;
-  box-shadow: rgba(86, 101, 127, 0.05);
-  padding: 20px;
-  display: ${({ display }) => display ? "flex" : "none"};
-  min-height: 151px;
-  flex-direction: column;  
+  -webkit-box-shadow: 1px 3px 14px -1px rgba(34, 60, 80, 0.2);
+  -moz-box-shadow: 1px 3px 14px -1px rgba(34, 60, 80, 0.2);
+  box-shadow: 1px 3px 14px -1px rgba(34, 60, 80, 0.2);
+  display: ${({ display }) => (display ? 'flex' : 'none')};
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: 86px;
 
   @media only screen and (max-device-width: 620px) {
     right: 15px;
   }
 
   &::after {
-    content: "";
+    content: '';
     display: block;
-    width: 30px;
-    height: 30px;
+    width: 20px;
+    height: 20px;
     background: ${({ theme }) => theme.timer.bg};
-    border-radius: 10px;
+    border-radius: 4px;
     position: absolute;
-    right: 15px;
-    bottom: -8px;
+    right: 8px;
+    z-index: -9;
+    bottom: -5px;
     transform: rotate(40deg);
+  }
+
+  & > .timer_content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  @media only screen and (max-device-width: 620px) {
+    top: -100px;
   }
 
   ${({ fixed }) => {
@@ -636,32 +685,50 @@ export const TimerModal = styled.div<{ display?: boolean; fixed?: boolean; progr
       return `
         position: static;
         display: block;
-        -webkit-box-shadow: 2px 4px 13px 1px rgba(86, 101, 127, 0.2);
-        -moz-box-shadow: 2px 4px 13px 1px rgba(86, 101, 127, 0.2);
-        box-shadow: 2px 4px 13px 1px rgba(86, 101, 127, 0.2);
-        max-width: 300px;
+        margin: 0 auto;
+        max-width: 215px; 
         width: 100%;
         min-height: 80px;
-        margin-top: 20px;
+        margin-top: 17px;
         border-radius: 30px;
-        padding: 10px;
-        padding-top: 15px;
-        padding-left: 5px;
+        padding-top: 10px;
+        padding-left: 0px;
+
+        & > div {
+          width: 100%;
+          display: flex;
+          flex-direction: column; 
+          padding-left: 25px;
+        }
 
         & ${TimerModalTitle} {
-          font-size: 1em;
+          font-size: 14px;
+          max-width: 100%;
+          width: 100%;
         }
 
         & ${TimerModalDuration} {
-          text-align: none;
-          padding-left: 0;
-          font-size: 1.85em;
+          text-align: start;
+          padding-left: 5px;
+          font-size: 28px;
           max-width: 200px;
+          margin-bottom: 0;
         }
 
         & ${TimerModalUnits} {
-          justify-content: none;
           max-width: 200px;
+          font-size: 12px;
+          padding: 0; 
+          justify-content: normal;
+          align-item: normal;
+
+          & > span:nth-child(2) {
+            margin-left: 14px;
+          }
+
+          & > span:nth-child(3) {
+            margin-left: 17px;
+          }
         }
 
         &::after {
@@ -674,23 +741,14 @@ export const TimerModal = styled.div<{ display?: boolean; fixed?: boolean; progr
 
 export const TimerModalTitle = styled.h3`
   text-align: center;
-  font-size: 1.20em;
+  font-size: 0.75em;
+  width: 80%;
+  max-width: 108px;
   letter-spacing: 0.1px;
   max-width: 220px;
+  margin-top: 2px;
   font-weight: 500;
-  margin-bottom: 10px;
-`; 
-
-export const TimerModalDuration = styled.h3`
-  text-align: center;
-  font-size: 1.60em;
-  color: ${({ theme }) => theme.timer.color};
-  word-spacing: 10px;
-  margin-bottom: 2px;
-
-  & > span {
-    color: #FF416E;
-  }
+  margin-bottom: 5px;
 `;
 
 export const TimerModalUnits = styled.div`
@@ -699,62 +757,65 @@ export const TimerModalUnits = styled.div`
   align-items: center;
   justify-content: center;
   grid-gap: 15px;
-
-  & > span:nth-child(1) {
-    margin-right: 10px;
-  }
-
-  & > span:nth-child(2) {
-    margin-right: 10px;
-  }
+  font-size: 12px;
+  padding-left: 8px;
+  text-align: center;
 
   & > span {
     color: ${({ theme }) => theme.timer.color};
+    display: block;
+    text-align: center;
   }
 `;
 
 export const LotteryModalDesc = styled.div`
-    width: 70%;
-    max-width: 325px;
-    background: ${({ theme }) => theme.timer.bg};
-    -webkit-box-shadow: 2px 4px 13px 1px rgba(86, 101, 127, 0.2);
-    -moz-box-shadow: 2px 4px 13px 1px rgba(86, 101, 127, 0.2);
-    box-shadow: 2px 4px 13px 1px rgba(86, 101, 127, 0.2);
-    min-height: 66px;
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    padding-left: 20px;
-    padding-right: 20px;
-    color: #FF416E;
-    font-weight: 500;
-    font-size: 1.43em;
+  width: 70%;
+  max-width: 325px;
+  background: ${({ theme }) => theme.timer.bg};
+  box-shadow: 2px 4px 13px 1px rgba(86, 101, 127, 0.2);
+  min-height: 66px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+  padding-right: 20px;
+  color: #ff416e;
+  font-weight: 500;
+  font-size: 1.43em;
+
+  & > svg {
+    width: 30px;
+    height: 30px;
+    margin-right: 15px;
+  }
+
+  & > span {
+    margin-top: 5px;
+  }
+
+  @media only screen and (max-device-width: 620px) {
+    width: 100%;
+    max-width: 241px;
+    margin: 0 auto;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    font-size: 1.1em;
+    height: 50px;
+    min-height: 50px;
+    border-radius: 25px;
+    padding-left: 32px;
+
+    & > * {
+      font-size: 14px;
+    }
 
     & > svg {
-      width: 30px;
-      height: 30px;
-      margin-right: 15px;
+      width: 22px;
+      height: 22px;
+      margin-right: 11px;
     }
-
-    & > span {
-      margin-top: 5px;
-    }
-
-    @media only screen and (max-device-width: 620px) {
-      width: 100%;
-      max-width: 100%;
-      margin: 0 auto;
-      margin-left: auto;
-      margin-right: auto;
-      margin-top: 40px;
-      font-size: 1.10em;
-      border-radius: 30px;
-
-      & > svg {
-        width: 22px;
-        height: 22px;
-      }
-    }
+  }
 `;
 
 export const LotteryFlexBox = styled.div`
@@ -767,24 +828,24 @@ export const LotteryFlexBox = styled.div`
     padding-top: 30px;
 
     & > svg {
-      width: 236px;
-      height: 150px;
+      width: 206px;
+      height: 132px;
       margin: 0 auto;
       display: block;
     }
   }
-`; 
+`;
 
-export const TimerLoading = styled.div<{ progress: number | string; }>`
+export const TimerLoading = styled.div<{ progress: number | string }>`
   width: ${({ progress }) => progress}%;
-  left: 5px;
-  max-width: 95%;
+  left: 3px;
+  max-width: 96%;
   position: absolute;
-  top: 3px;
+  top: 2px;
   height: 1px;
-  transition: ${({ progress }) => progress == 0 ? "" : "4s"};
+  transition: ${({ progress }) => (progress == 0 ? '' : '4s')};
   display: block;
-  background: #FF416E;
+  background: #ff416e;
 `;
 
 export const LoadingBeforeData = styled.div`
@@ -808,8 +869,12 @@ export const LoadingBeforeData = styled.div`
   }
 `;
 
-export const LoadingBeforeItem = styled.div<{ width: number | string; height: number | string; circle?: boolean; }>`
-  background: #EFF2F6;
+export const LoadingBeforeItem = styled.div<{
+  width: number | string;
+  height: number | string;
+  circle?: boolean;
+}>`
+  background: ${({ theme }) => theme.timer.beforeBg};
   border-radius: 4px;
   height: ${({ height }) => height};
   min-width: ${({ width }) => width};
@@ -821,6 +886,30 @@ export const LoadingBeforeItem = styled.div<{ width: number | string; height: nu
       return `
         border-radius: 10px;
       `;
-    };
+    }
   }}
+`;
+
+export const Progress = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const CountContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin: auto;
+  height: 30px;
+  width: 30px;
+`;
+
+export const CountValue = styled.p<{ strokeColor: string }>`
+  color: ${(props) => props.strokeColor};
+  width: 100%;
+  padding-top: 2px;
+  padding-left: 5px;
 `;

@@ -18,10 +18,7 @@ import { Page } from '../../../../components/UI/Page';
 import { AppContext } from '../../../../context/HubContext';
 import { Card, Container } from '../../../../globalStyles';
 import { Pokedex, RootPayDeposit } from '../../../../types/payouts';
-import {
-  ModalBlock,
-  ModalTitle
-} from '../Tariffs/Tariffs.elements';
+import { ModalBlock, ModalTitle } from '../Tariffs/Tariffs.elements';
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
@@ -169,7 +166,7 @@ const RadialComponent: FC<RadialComponentProps> = ({ data, height }: RadialCompo
   );
 };
 
-export const Payments = () => {
+export const Payments: FC = () => {
   const [statsDeposit, setStatsDeposit] = useState<RootPayDeposit[]>([]);
   const [bigArr, setBigArr] = useState<any>([]);
   const [smallArr, setSmallArr] = useState<any>([]);
@@ -226,6 +223,7 @@ export const Payments = () => {
       hubConnection
         .invoke<RootPayDeposit[]>('GetDayPayouts', languale)
         .then((res) => {
+          console.log('res', res);
           setStatsDeposit(res);
           setLoadReset(false);
         })
@@ -236,6 +234,7 @@ export const Payments = () => {
     }
   };
 
+  console.log('Payments ~~~~~~~~~~~~~~~~~~~~~ bigArr', bigArr);
   return (
     <Page>
       {statsDeposit.length ? (

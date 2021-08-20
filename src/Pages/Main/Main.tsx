@@ -2130,7 +2130,11 @@ export const Main = () => {
       <Header />
       <MainPage id="banner">
         {showTimer && (
-          <Timer closeTimer={closeTimer} icon={true} clock={clock} setShowModal={setShowModal} />
+          <FixedBlock>
+            <div>
+              <Timer closeTimer={closeTimer} icon={true} clock={clock} setShowModal={setShowModal} />
+            </div>
+          </FixedBlock>
         )}
  
         {showModal && (
@@ -2198,6 +2202,7 @@ const Center = styled.div`
 `;
 
 const MainPage = styled(Page)`
+  position: relative;
   //margin-top: 200px;
   margin-top: 171px;
   /* @media (max-width: 1060px) {
@@ -2227,4 +2232,23 @@ const TimerPopup = styled.div`
     margin-top: 0;
     top: 0;
   }
+`;
+
+export const FixedBlock = styled.div`
+    width: 100%;
+    height: 5px; 
+    max-width: 1280px; 
+    margin-left: auto; 
+    z-index: 99999;
+    display: flex;
+    flex-direction: column; 
+    margin-right: auto;
+    right: 0;
+    left: 0; 
+    position: fixed; 
+    top: 630px;
+
+    & > div {
+      position: relative;
+    }
 `;

@@ -64,7 +64,6 @@ export const ModalPay: FC<ListProps> = ({
           {data.state !== 5 && (
             <PayCardBlock>
               <PayText small>{t('adminPay.table.procent')}</PayText>
-              {/* <PayText></PayText> */}
               <InputWrap
                 paymentsAdjust={paymentsAdjust}
                 done={disabled}
@@ -714,8 +713,8 @@ export const ModalUsersContent: FC<ModalUsersContentProps> = ({
                   <PayText>
                     {moment(
                       dataOne.reduce((a, b) =>
-                        b.userDeposit.paymentDate > a.userDeposit.paymentDate ? b : a
-                      ).userDeposit.paymentDate
+                        b.operationDate > a.operationDate ? b : a
+                      ).operationDate
                     ).format('DD/MM/YYYY')}
                   </PayText>
                 </PayCardBlock>
@@ -769,7 +768,6 @@ export const ModalUsersContent: FC<ModalUsersContentProps> = ({
                               selfData[item.safeId][0].userDeposit
                                 .payedAmountView}
                             <br /> */}
-                          {console.log("item", item)}
                             {/* {item.payedAmountView.toLocaleString('ru-RU', {
                               maximumFractionDigits: 4,
                             })} */}
