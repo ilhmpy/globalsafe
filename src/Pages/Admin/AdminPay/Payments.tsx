@@ -632,6 +632,12 @@ export const ModalUsersContent: FC<ModalUsersContentProps> = ({
     });
   }, [dataTwo]);
 
+
+  // Base Percentage
+  const baseCurrencyRate = (item: PaymentsCollection): number => {
+    return item.amount / item.baseAmount;
+  };
+
   return (
     <>
       <PayCard smallPad wide={wide} mNone>
@@ -763,7 +769,11 @@ export const ModalUsersContent: FC<ModalUsersContentProps> = ({
                               selfData[item.safeId][0].userDeposit
                                 .payedAmountView}
                             <br /> */}
-                            {item.payedAmountView.toLocaleString('ru-RU', {
+                          {console.log("item", item)}
+                            {/* {item.payedAmountView.toLocaleString('ru-RU', {
+                              maximumFractionDigits: 4,
+                            })} */}
+                            {Number((item.payedAmount / baseCurrencyRate(item) / 100).toFixed(0)).toLocaleString('ru-RU', {
                               maximumFractionDigits: 4,
                             })}
                           </PayText>
@@ -771,7 +781,8 @@ export const ModalUsersContent: FC<ModalUsersContentProps> = ({
                         <PayCardBlock>
                           <PayText small>{t('adminUsers.modal.totalDeposit')}</PayText>
                           <PayText>
-                            {((item.payedAmountView / item.baseAmountView) * 100).toFixed(1)}%
+                            {/* {((item.payedAmountView / item.baseAmountView) * 100).toFixed(1)}% */}
+                            {((item.payedAmountView / item.amountView) * 100).toFixed(1)}%
                           </PayText>
                         </PayCardBlock>
                       </PayCardInner> 
