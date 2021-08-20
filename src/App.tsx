@@ -133,22 +133,22 @@ const App: FC = () => {
   }, [user]);
 
   return (
-    <div style={{ position: "relative"}}>
-    <Router>
-      <div className="App">
-        <GlobalStyle />
+    <div style={{ position: 'relative' }}>
+      <Router>
+        <div className="App">
+          <GlobalStyle />
 
-        <Switch>
-          <Route path="/" component={Main} exact />
-          <Route path="/admin" component={Admin} />
-          <Route path="/info" component={InfoMain} />
-          <Route path="/login" component={Authentication} />
-          <Route path="/register" component={Register} />
-          <Route path="/tech" component={TechWorks} />
-          <Route component={PageNotFound} />
-        </Switch>
-      </div>
-    </Router>
+          <Switch>
+            <Route path="/" component={Main} exact />
+            <Route path="/admin" component={Admin} />
+            <Route path="/info" component={InfoMain} />
+            <Route path="/login" component={Authentication} />
+            <Route path="/register" component={Register} />
+            <Route path="/tech" component={TechWorks} />
+            <Route component={PageNotFound} />
+          </Switch>
+        </div>
+      </Router>
     </div>
   );
 };
