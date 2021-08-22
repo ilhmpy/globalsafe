@@ -1,6 +1,7 @@
 import { FC, useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { APP_ID, APP_SAFARI_ID } from './constantes/onesignal';
 import { AppContext } from './context/HubContext';
 import GlobalStyle from './globalStyles';
 import { Admin } from './Pages/Admin';
@@ -91,7 +92,8 @@ const App: FC = () => {
         OneSignal.SERVICE_WORKER_UPDATER_PATH = 'push/onesignal/OneSignalSDKUpdaterWorker.js';
 
         OneSignal.init({
-          appId: 'f6bd054b-e35f-43b0-b74f-70ec77dac183',
+          appId: APP_ID,
+          safari_web_id: APP_SAFARI_ID,
           notifyButton: {
             enable: true,
             text: {
