@@ -1,21 +1,11 @@
 import React, { FC, useContext } from 'react';
-import {
-  HeaderNav,
-  List,
-  ListItem,
-  StyledLink,
-  LinkButton,
-  Languale,
-  SwitchTheme,
-  Text,
-  Switch,
-} from './Header.elements';
 import { useTranslation } from 'react-i18next';
-import { ThemeContext } from '../../context/ThemeContext';
+import ru from '../../assets/svg/russia.svg';
 import { ReactComponent as DarkTheme } from '../../assets/svg/theme.svg';
 import { ReactComponent as LightTheme } from '../../assets/svg/themeLight.svg';
 import usa from '../../assets/svg/usa.svg';
-import ru from '../../assets/svg/russia.svg';
+import { ThemeContext } from '../../context/ThemeContext';
+import { Languale, List, ListItem, StyledLink, Switch, SwitchTheme } from './Header.elements';
 
 type Props = {
   onClose: () => void;
@@ -63,6 +53,11 @@ export const NavAdmin: FC<Props> = ({ onClose, lang }: Props) => {
       <ListItem>
         <StyledLink to="/admin/depositsPrograms" onClick={onClose}>
           {t('sideNav.depositsPrograms')}
+        </StyledLink>
+      </ListItem>
+      <ListItem>
+        <StyledLink to="/admin/wallets" onClick={onClose}>
+          {t('sideNav.wallets')}
         </StyledLink>
       </ListItem>
       <ListItem last>

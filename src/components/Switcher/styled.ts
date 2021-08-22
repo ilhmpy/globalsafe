@@ -17,3 +17,4 @@ export const SwitcherUI = styled(Switch)<{ checked: boolean }>`
       props.checked ? 'translateX(0px) !important' : 'translateX(10px) !important'};
   }
 `;
+ 

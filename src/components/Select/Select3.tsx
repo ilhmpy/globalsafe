@@ -1,29 +1,29 @@
-import React, { ChangeEvent, useState, useRef, FC } from "react";
+import React, { useState, useRef, FC } from "react";
 import * as Styled from "./Select.elements";
 import { ReactComponent as Icon } from "../../assets/svg/selectArrow.svg";
 import useOnClickOutside from "../../hooks/useOutsideHook";
 
-type Props = {
+type SelectProps = {
   options: string[];
   label: string;
   selectedOption: null | string;
   setSelectedOption: (selectedOption: null | string) => void;
 };
 
-export const Select: FC<Props> = ({
+export const Select: FC<SelectProps> = ({
   options,
   label,
   selectedOption,
   setSelectedOption,
-}) => {
-  const [value, setValue] = useState("");
+}: SelectProps) => {
+  // const [value, setValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [activeList, setActiveList] = useState(0);
 
-  const ref = useRef(null);
-  const toggling = () => setIsOpen(!isOpen);
+  const ref = useRef<HTMLDivElement>(null);
+  const toggling = () => {setIsOpen(!isOpen)};
 
-  const onOptionClicked = (value: any) => {
+  const onOptionClicked = (value: string) => {
     setSelectedOption(value);
     setIsOpen(false);
   };
@@ -46,7 +46,7 @@ export const Select: FC<Props> = ({
       }
       setActiveList(activeList + 1);
     } else if (e.key === "Enter") {
-      let value = options[activeList];
+      const value = options[activeList];
       onOptionClicked(value);
     }
   };
@@ -71,7 +71,7 @@ export const Select: FC<Props> = ({
               <Styled.ListItem
                 active={activeList === idx}
                 onClick={() => onOptionClicked(option)}
-                key={Math.random()}
+                key={`select-option-item-${idx}`}
               >
                 <Styled.Text>{option}</Styled.Text>
               </Styled.ListItem>

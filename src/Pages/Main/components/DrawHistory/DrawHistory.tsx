@@ -12,7 +12,7 @@ import { AppContext } from '../../../../context/HubContext';
 import { Card, Container } from '../../../../globalStyles';
 import { Balance } from '../../../../types/balance';
 import { ArrList, RootLottery } from '../../../../types/lottery';
-import { Timer } from '../Lottery/Timer';
+import { OldTimer } from '../Lottery/Timer';
 
 type Props = {
   onOpenModal: () => void;
@@ -119,7 +119,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
 
       <Container>
         <TimerHistoryContainer alfa onClick={onOpenModal}>
-          <Timer icon={false} timerHistory clock={clock} />
+          <OldTimer history />
           <Button danger>{t('goDraw')}</Button>
         </TimerHistoryContainer>
       </Container>
@@ -158,7 +158,6 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
                   </CSSTransition>
                 );
               } else {
-                console.log('item data', item.name, item.volume, typeWin(Number(item.kind)));
                 return (
                   <CSSTransition key={idx} timeout={500} classNames="item">
                     <TableList card>
@@ -198,11 +197,9 @@ const TimerHistoryContainer = styled(Card)`
   align-items: center;
   justify-content: space-between;
   margin-bottom: 30px;
-  ${Button} {
     @media (max-width: 768px) {
       display: none;
     }
-  }
   @media (max-width: 768px) {
     justify-content: center;
     padding: 20px;

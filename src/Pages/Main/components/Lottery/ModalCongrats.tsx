@@ -54,7 +54,7 @@ export const ModalCongrats: FC<Props> = ({
               </Styled.ModalButton>
             </Styled.WinContainer>
           ) : (
-            ''
+            ""
           )}
         </Styled.ModalCongratsWrap>
       </Modal>

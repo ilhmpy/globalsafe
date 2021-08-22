@@ -156,11 +156,10 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }: PropsTa
   };
 
   const balance = data.balances ? data.balances.filter((item) => item.balanceKind === 1) : null;
-
   return (
     <div>
       <CSSTransition in={open} timeout={300} classNames="modal" unmountOnExit>
-        <ModalUsers
+        <ModalUsers 
           onClose={onClose}
           data={data}
           lock={lock}
@@ -357,7 +356,8 @@ export const AdminUsers = () => {
                   exhaustRatio,
                   id,
                   safeId,
-                  volume: (volume / 100000).toString(),
+                  // volume: (volume / 100000).toString(),
+                  volume
                 },
               ];
             });
@@ -723,8 +723,10 @@ const TableHeadItem = styled.li`
   &:nth-child(7) {
     max-width: 130px;
     text-align: right;
+    margin-right: 16px;
     @media (max-width: 992px) {
       max-width: 80px;
+      margin-right: 0;
     }
   }
   &:last-child {

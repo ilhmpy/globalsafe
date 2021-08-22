@@ -5,9 +5,10 @@ export const Name = styled.div`
   font-weight: 500;
   font-size: 14px;
   line-height: 16px;
+  color: ${(props) => props.theme.text};
   @media (max-width: 992px) {
     font-weight: 400;
-  }
+  };
 `;
 
 export const NameData = styled.div<{ green?: boolean }>`
@@ -54,6 +55,9 @@ export const TH = styled.th`
     display: none;
   }
   @media (max-width: 500px) {
+    &:nth-child(1) {
+      width: 100px;
+    }
     p {
       display: none;
     }
@@ -82,6 +86,11 @@ export const TD = styled.td`
   }
   &:nth-child(4) {
     width: 90px;
+  }
+  @media (max-width: 500px) {
+    &:nth-child(1) {
+      width: 100px;
+    }
   }
 `;
 

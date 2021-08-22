@@ -59,10 +59,10 @@ export const lightTheme = {
     fontColor: '#515172',
   },
   acceptAll: {
-    bg: "#fff",
-    desc: "#56657F",
-    opacity: "60%",
-    item: "#515172"
+    bg: '#fff',
+    desc: '#56657F',
+    opacity: '60%',
+    item: '#515172',
   },
   timerIcon: {
     background: 'rgba(255, 255, 255, 0.9)',
@@ -75,12 +75,19 @@ export const lightTheme = {
     bg: 'rgba(0, 0, 0, 0.2)',
     pointsColor: '#2b3595',
   },
+  timer: {
+    bg: '#fff',
+    color: '#515172',
+    beforeBg: "#f2e9e4"
+  },
+  pink: '#FF416E',
+  rounIputBackground: '#FFF0F0',
 };
 
 export const darkTheme = {
   body: 'rgba(48,48,48,1)',
   text: '#FFF',
-  toggleBorder: '#6B8096', 
+  toggleBorder: '#6B8096',
   buttonBorder: '#FF416E',
   text2: '#E2E2E2',
   text3: '#fff',
@@ -130,10 +137,10 @@ export const darkTheme = {
     fontColor: '#ffffff',
   },
   acceptAll: {
-    bg: "rgba(48,48,48,1)",
-    desc: "#fff",
-    opacity: "100%",
-    item: "#fff"
+    bg: 'rgba(48,48,48,1)',
+    desc: '#fff',
+    opacity: '100%',
+    item: '#fff',
   },
   timerIcon: {
     background: 'rgba(33,33,33,1)',
@@ -146,4 +153,11 @@ export const darkTheme = {
     bg: 'rgba(48,48,48,1)',
     pointsColor: '#fff',
   },
+  timer: {
+    bg: 'rgba(33,33,33,1)',
+    color: '#fff',
+    beforeBg: "#000"
+  },
+  pink: '#FF416E',
+  rounIputBackground: '#ffffff',
 };

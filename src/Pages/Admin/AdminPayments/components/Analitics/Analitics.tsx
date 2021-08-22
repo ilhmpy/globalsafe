@@ -217,8 +217,6 @@ export const Analitics: FC<Props> = ({ listDeposits }: Props) => {
     });
   };
 
-  console.log('~~~~~~~~~~~', openDate);
-
   return (
     <div>
       <FilterBlock>

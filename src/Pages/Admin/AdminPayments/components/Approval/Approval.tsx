@@ -439,9 +439,10 @@ export const Approval: FC<Props> = ({
   };
 
   const paymentsConfirm = () => {
-    if (checkListApproval.some((item: any) => item.state === 6)) {
+    console.log(depositList)
+    if (depositList.some((item: any) => item.state === 6)) {
       if (hubConnection) {
-        hubConnection
+        hubConnection 
           .invoke(
             'ConfirmAllDepositsPayment',
             nameApproval ? nameApproval.toLowerCase() : null,
@@ -487,17 +488,17 @@ export const Approval: FC<Props> = ({
         <div className="wrap">
           <Styled.ModalTitle>{t("acceptAll.title")}</Styled.ModalTitle>
           <Styled.ModalDescription>{t("acceptAll.users")}:</Styled.ModalDescription>
-          <Styled.ModalItem>{nameApproval ? nameApproval : "Все"}</Styled.ModalItem>
+          <Styled.ModalItem>{nameApproval ? nameApproval : t("all")}</Styled.ModalItem>
           <Styled.ModalDescription>{t("acceptAll.deposit")}:</Styled.ModalDescription>
           <div className="deposits_programs">
             {checkListApproval.length > 0 ? checkListApproval.map((item: any, idx: any) => (
               <Styled.ModalItem red key={idx}>{item.label}</Styled.ModalItem>
-            )) : <Styled.ModalItem>Все</Styled.ModalItem>}
+            )) : <Styled.ModalItem>{t("all")}</Styled.ModalItem>}
           </div>
           <Styled.ModalDescription>{t("acceptAll.range")}</Styled.ModalDescription>
           <Styled.ModalItem>{openDateApproval.from ? 
-          `${moment(openDateApproval.from).format("DD.MM.YYYY")} - ${moment(openDateApproval.to).format("DD.MM.YYYY")}` : "Все"}</Styled.ModalItem>
-          <Button style={{ margin: "0 auto" }} danger onClick={paymentsConfirm}>{t("acceptAll.accept")} {procent ? procent + "%" : "все"}</Button>
+          `${moment(openDateApproval.from).format("DD.MM.YYYY")} - ${moment(openDateApproval.to).format("DD.MM.YYYY")}` : t("all")}</Styled.ModalItem>
+          <Button style={{ margin: "0 auto" }} danger onClick={paymentsConfirm}>{t("acceptAll.accept")} {procent ? procent + "%" : (t("all")).toLowerCase()}</Button>
         </div>
       </Modal>
       

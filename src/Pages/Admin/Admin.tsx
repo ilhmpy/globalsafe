@@ -1,22 +1,22 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+import React, { useContext, useEffect, useState } from 'react';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import { Header } from '../../components/Header/Header';
+import { SideNavbar } from '../../components/SideNav';
+import { Loading } from '../../components/UI/Loading';
+import { AppContext } from '../../context/HubContext';
+import useWindowSize from '../../hooks/useWindowSize';
 import {
+  AdminDeposit,
+  AdminLottery,
   AdminMain,
   AdminPay,
-  AdminDeposit,
-  AdminUsers,
   AdminPortfolio,
   AdminUserOnePage,
-  AdminLottery,
+  AdminUsers,
 } from './';
 import { AdminDepositsPrograms } from './AdminDepositsPrograms';
+import { AdminWallets } from './AdminWallets';
 import * as Styled from './Styled.elements';
-import { SideNavbar } from '../../components/SideNav';
-import useWindowSize from '../../hooks/useWindowSize';
-import { Header } from '../../components/Header/Header';
-import { AppContext } from '../../context/HubContext';
-import { Loading } from '../../components/UI/Loading';
-import { Redirect } from 'react-router-dom';
 
 export const Admin = () => {
   const [navWidth, setNavWidth] = useState(false);
@@ -67,6 +67,7 @@ export const Admin = () => {
           <Route path="/admin/portfolio" component={AdminPortfolio} />
           <Route path="/admin/lottery" component={AdminLottery} />
           <Route path="/admin/depositsPrograms" component={AdminDepositsPrograms} />
+          <Route path="/admin/wallets" component={AdminWallets} />
           <Route path="/" component={AdminMain} exact />
         </Switch>
       </Styled.Content>

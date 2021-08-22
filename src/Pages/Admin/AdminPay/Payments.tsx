@@ -1,5 +1,5 @@
 ﻿import moment from 'moment';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState, useMemo } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
@@ -64,7 +64,6 @@ export const ModalPay: FC<ListProps> = ({
           {data.state !== 5 && (
             <PayCardBlock>
               <PayText small>{t('adminPay.table.procent')}</PayText>
-              {/* <PayText></PayText> */}
               <InputWrap
                 paymentsAdjust={paymentsAdjust}
                 done={disabled}
@@ -490,7 +489,14 @@ const ModalUsersList: FC<ModalUsersListProps> = ({
         <PayCardInner>
           <PayCardBlock>
             <PayText small>{t('adminUsers.modal.paySum')}</PayText>
-            <PayText>{dataOne.userDeposit.payedAmountView}</PayText>
+            <PayText>
+              {
+                Number(value).toLocaleString("ru-RU", {
+                  maximumFractionDigits: 5,
+                })
+              }
+            </PayText>
+            {/* <PayText>{dataOne.userDeposit.payedAmountView}</PayText> */}
           </PayCardBlock>
           <PayCardBlock>
             <PayText small>{t('operation.type')}</PayText>
@@ -613,6 +619,21 @@ export const ModalUsersContent: FC<ModalUsersContentProps> = ({
     // arr1[id]
   };
 
+  // Get Ammout of User All deposits
+  const depositsTotalAmmount = useMemo<string>(() => {
+    let temp = 0;
+    dataTwo.forEach(collection => {
+      temp += collection.payedAmountView;
+    });
+
+    return temp.toLocaleString("ru-RU", {
+      maximumFractionDigits: 4,
+    });
+  }, [dataTwo]);
+
+  // console.log("Robert:::::dataTwo", dataTwo)
+  // console.log("Robert:::::dataOne", dataOne)
+
   return (
     <>
       <PayCard smallPad wide={wide} mNone>
@@ -659,14 +680,15 @@ export const ModalUsersContent: FC<ModalUsersContentProps> = ({
                 <PayCardBlock>
                   <PayText small>{t('adminUsers.modal.paySum')}</PayText>
                   <PayText>
+                    {depositsTotalAmmount}
                     {/* {dataTwo[0].payedAmountView.toLocaleString("ru-RU", {
                       maximumFractionDigits: 3,
                     })} */}
-                    {(
+                    {/* {(
                       dataOne.reduce((a, b) => a + b.userDeposit.payedAmount, 0) / 100000
                     ).toLocaleString('ru-RU', {
                       maximumFractionDigits: 3,
-                    })}
+                    })} */}
                   </PayText>
                 </PayCardBlock>
                 {dataOne.length && dataOne[0].userDeposit ? (
@@ -688,8 +710,8 @@ export const ModalUsersContent: FC<ModalUsersContentProps> = ({
                   <PayText>
                     {moment(
                       dataOne.reduce((a, b) =>
-                        b.userDeposit.paymentDate > a.userDeposit.paymentDate ? b : a
-                      ).userDeposit.paymentDate
+                        b.operationDate > a.operationDate ? b : a
+                      ).operationDate
                     ).format('DD/MM/YYYY')}
                   </PayText>
                 </PayCardBlock>
@@ -754,7 +776,7 @@ export const ModalUsersContent: FC<ModalUsersContentProps> = ({
                             {((item.payedAmountView / item.baseAmountView) * 100).toFixed(1)}%
                           </PayText>
                         </PayCardBlock>
-                      </PayCardInner>
+                      </PayCardInner> 
                       {arr1[item.safeId] ? (
                         <AccordeonList
                           adjustBalanceAsync={adjustBalanceAsync}

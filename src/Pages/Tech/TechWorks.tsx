@@ -13,7 +13,9 @@ export default function TechWorks() {
     return (
         <>
            <Styled.TechHeader>
-              { theme == "light" ? ( <DarkLogo /> ) : ( <WhiteLogo /> ) }
+              <a href="/">
+                { theme == "light" ? ( <DarkLogo /> ) : ( <WhiteLogo /> ) }
+              </a>
           </Styled.TechHeader>
           <Styled.TechContainer>
               <Styled.Tech />
