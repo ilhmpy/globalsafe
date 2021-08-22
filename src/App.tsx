@@ -1,7 +1,6 @@
-import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
+import { FC, useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { APP_SAFARI_ID } from './constantes/onesignal';
 import { AppContext } from './context/HubContext';
 import GlobalStyle from './globalStyles';
 import { Admin } from './Pages/Admin';
@@ -28,7 +27,8 @@ const App: FC = () => {
   const isFailed = appContext.isFailed;
   const [online, setOnline] = useState<boolean | null>(null);
   const { t } = useTranslation();
-
+  const lang = localStorage.getItem('i18nextLng') || 'ru';
+  const [language, setLanguage] = useState<any>('ru');
   useEffect(() => {
     setOnline(navigator.onLine);
   }, []);
@@ -82,70 +82,83 @@ const App: FC = () => {
     },
     [hubConnection]
   );
-  //   public func notifyAboutSubscription(userObject:User, receiverArray:[String]) {
-  //     var receiverArray = removeChallengeCreatorTokenFromArray(receiverArray: receiverArray)
 
-  //     notificationTypeService.clearReceiverListForNotificationType(completionHandler: { (clearedReceiverArray) in
-  //         receiverArray = clearedReceiverArray
+  const activateBellPush = () => {
+    try {
+      OneSignal.push(() => {
+        OneSignal.SERVICE_WORKER_PARAM = { scope: '/push/onesignal/' };
+        OneSignal.SERVICE_WORKER_PATH = 'push/onesignal/OneSignalSDKWorker.js';
+        OneSignal.SERVICE_WORKER_UPDATER_PATH = 'push/onesignal/OneSignalSDKUpdaterWorker.js';
 
-  //         let source = self.determineUserType(userObject: userObject)
-  //         OneSignal.postNotification(["contents": ["en": source +
-  //             " started following you", "de": source + " folgt dir jetzt", "tr": source + " seni takip ediyor"], "include_player_ids": receiverArray])
-  //     }, receiverList: receiverArray, notificationType: NotificationType.follow)
-  // }
+        OneSignal.init({
+          appId: 'f6bd054b-e35f-43b0-b74f-70ec77dac183',
+          notifyButton: {
+            enable: true,
+            text: {
+              'tip.state.unsubscribed': t('text.tip_state_unsubscribed'),
+              'tip.state.subscribed': t('text.tip_state_subscribed'),
+              'tip.state.blocked': t('text.tip_state_blocked'),
+              'message.prenotify': t('text.message_prenotify'),
+              'message.action.subscribed': t('text.message_action_subscribed'),
+              'message.action.resubscribed': t('text.message_action_resubscribed'),
+              'message.action.unsubscribed': t('text.message_action_unsubscribed'),
+              'dialog.main.title': t('text.dialog_main_title'),
+              'dialog.main.button.subscribe': t('text.dialog_main_button_subscribe'),
+              'dialog.main.button.unsubscribe': t('text.dialog_main_button_unsubscribe'),
+              'dialog.blocked.title': t('text.dialog_blocked_title'),
+              'dialog.blocked.message': t('text.dialog_blocked_message'),
+            },
+          },
+        });
+        try {
+          OneSignal.on('subscriptionChange', (isSubscribed: boolean) => {
+            console.log('OneSignal.on ~ isSubscribed', isSubscribed);
+            if (isSubscribed) {
+              OneSignal.getUserId((id: string) => subscribe(id));
+            } else {
+              OneSignal.getUserId((id: string) => unSubscribe(id));
+            }
+          });
+        } catch (e) {
+          console.error('onesignal event loop error', e);
+        }
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   useEffect(() => {
     if (token && user) {
-      try {
-        OneSignal.push(() => {
-          OneSignal.SERVICE_WORKER_PARAM = { scope: '/push/onesignal/' };
-          OneSignal.SERVICE_WORKER_PATH = 'push/onesignal/OneSignalSDKWorker.js';
-          OneSignal.SERVICE_WORKER_UPDATER_PATH = 'push/onesignal/OneSignalSDKUpdaterWorker.js';
-          // OneSignal.postNotification(["contents": ["en": 'source' +
-          //       FOLLOW_MESSAGE, "de": 'source' + " folgt dir jetzt", "tr": 'source' + " seni takip ediyor"], "include_player_ids": 'receiverArray'])
-          OneSignal.init({
-            appId: '81f9a56e-ad59-406c-86de-4b7521cdc636',
-            contents: { en: 'English Message' },
-            filters: {
-              language: 'ru',
-            },
-            safari_web_id: APP_SAFARI_ID,
-            notifyButton: {
-              enable: true,
-              text: {
-                'tip.state.unsubscribed': t('text.tip_state_unsubscribed'),
-                'tip.state.subscribed': t('text.tip_state_subscribed'),
-                'tip.state.blocked': t('text.tip_state_blocked'),
-                'message.prenotify': t('text.message_prenotify'),
-                'message.action.subscribed': t('text.message_action_subscribed'),
-                'message.action.resubscribed': t('text.message_action_resubscribed'),
-                'message.action.unsubscribed': t('text.message_action_unsubscribed'),
-                'dialog.main.title': t('text.dialog_main_title'),
-                'dialog.main.button.subscribe': t('text.dialog_main_button_subscribe'),
-                'dialog.main.button.unsubscribe': t('text.dialog_main_button_unsubscribe'),
-                'dialog.blocked.title': t('text.dialog_blocked_title'),
-                'dialog.blocked.message': t('text.dialog_blocked_message'),
-              },
-            },
-          });
-          try {
-            OneSignal.on('subscriptionChange', (isSubscribed: boolean) => {
-              console.log('OneSignal.on ~ isSubscribed', isSubscribed);
-              if (isSubscribed) {
-                OneSignal.getUserId((id: string) => subscribe(id));
-              } else {
-                OneSignal.getUserId((id: string) => unSubscribe(id));
-              }
-            });
-          } catch (e) {
-            console.error('onesignal event loop error', e);
-          }
-        });
-      } catch (e) {
-        console.error(e);
-      }
+      activateBellPush();
     }
-  }, [user]);
+  }, []);
+
+  useEffect(() => {
+    if (token && user) {
+      OneSignal.push(function () {
+        OneSignal.sendTags({
+          notifyButton: {
+            enable: true,
+            text: {
+              'tip.state.unsubscribed': t('text.tip_state_unsubscribed'),
+              'tip.state.subscribed': t('text.tip_state_subscribed'),
+              'tip.state.blocked': t('text.tip_state_blocked'),
+              'message.prenotify': t('text.message_prenotify'),
+              'message.action.subscribed': t('text.message_action_subscribed'),
+              'message.action.resubscribed': t('text.message_action_resubscribed'),
+              'message.action.unsubscribed': t('text.message_action_unsubscribed'),
+              'dialog.main.title': t('text.dialog_main_title'),
+              'dialog.main.button.subscribe': t('text.dialog_main_button_subscribe'),
+              'dialog.main.button.unsubscribe': t('text.dialog_main_button_unsubscribe'),
+              'dialog.blocked.title': t('text.dialog_blocked_title'),
+              'dialog.blocked.message': t('text.dialog_blocked_message'),
+            },
+          },
+        });
+      });
+    }
+  }, [localStorage.getItem('i18nextLng')]);
 
   return (
     <Router>

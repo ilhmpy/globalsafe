@@ -1,6 +1,6 @@
-import React, { FC, ReactNode, useCallback, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { ThemeProvider } from 'styled-components';
-import { lightTheme, darkTheme } from '../theme/theme';
+import { darkTheme, lightTheme } from '../theme/theme';
 
 type Context = {
   theme: string;

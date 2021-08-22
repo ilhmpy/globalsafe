@@ -1,18 +1,18 @@
-import React, { useState, useContext, useEffect } from "react";
-import { Button } from "../../components/Button/Button";
-import { Container, Card } from "../../globalStyles";
-import styled from "styled-components/macro";
-import { Input } from "../../components/UI/Input";
-import { AppContext } from "../../context/HubContext";
-import { useHistory, Link } from "react-router-dom";
-import { CSSTransition } from "react-transition-group";
-import { useTranslation } from "react-i18next";
+import React, { FC, useContext, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link, useHistory } from 'react-router-dom';
+import { CSSTransition } from 'react-transition-group';
+import styled from 'styled-components/macro';
+import { Button } from '../../components/Button/Button';
+import { Input } from '../../components/UI/Input';
+import { AppContext } from '../../context/HubContext';
+import { Card, Container } from '../../globalStyles';
 
-export const RegisterComponent = () => {
+export const RegisterComponent: FC = () => {
   const [error, setError] = useState(true);
   const [login, setLogin] = useState(false);
-  const [password, setPassword] = useState("");
-  const [value, setValue] = useState("");
+  const [password, setPassword] = useState('');
+  const [value, setValue] = useState('');
   const [where, setWhere] = useState(false);
   const [cwdAccount, setCwdAccount] = useState(false);
   const appContext = useContext(AppContext);
@@ -29,7 +29,7 @@ export const RegisterComponent = () => {
   };
   useEffect(() => {
     if (user) {
-      history.replace("/info");
+      history.replace('/info');
     }
   }, []);
 
@@ -41,9 +41,9 @@ export const RegisterComponent = () => {
   const onSubmit = () => {
     if (hubConnection) {
       hubConnection
-        .invoke("CheckAccount", value)
+        .invoke('CheckAccount', value)
         .then((res: boolean) => {
-          console.log("CheckAccount", res);
+          console.log('CheckAccount', res);
           if (res) {
             setError(true);
             loginSubmit();
@@ -60,7 +60,7 @@ export const RegisterComponent = () => {
   const singIn = () => {
     if (hubConnection) {
       hubConnection
-        .invoke("SignIn", { login: value, password: password, signInMethod: 3 })
+        .invoke('SignIn', { login: value, password: password, signInMethod: 3 })
         .then((res: any) => {
           // console.log("res", res);
           if (res.token !== null) {
@@ -75,12 +75,10 @@ export const RegisterComponent = () => {
     }
   };
 
-  // console.log("value", value, password);
-
   const loginSubmit = () => {
     if (hubConnection) {
       hubConnection
-        .invoke("SendAuthCode", value)
+        .invoke('SendAuthCode', value)
         .then((res: boolean) => {
           // console.log("res", res);
           setError(true);
@@ -100,7 +98,7 @@ export const RegisterComponent = () => {
   const createAccount = () => {
     if (hubConnection) {
       hubConnection
-        .invoke("CreateAccount", value, 1)
+        .invoke('CreateAccount', value, 1)
         .then((res: boolean) => {
           setError(true);
           loginSubmit();
@@ -116,9 +114,9 @@ export const RegisterComponent = () => {
     e.preventDefault();
     if (hubConnection) {
       hubConnection
-        .invoke("CheckCwdAccount", value)
+        .invoke('CheckCwdAccount', value)
         .then((res: boolean) => {
-          console.log("CheckCwdAccount", res);
+          console.log('CheckCwdAccount', res);
           if (res) {
             setError(true);
             setCwdAccount(true);
@@ -138,61 +136,36 @@ export const RegisterComponent = () => {
   return (
     <Container>
       <CardContainer>
-        <CSSTransition
-          in={where || !!user}
-          timeout={300}
-          classNames="alert"
-          unmountOnExit
-        >
+        <CSSTransition in={where || !!user} timeout={300} classNames="alert" unmountOnExit>
           <FormBlock>
-            <H4>{t("login.where")}</H4>
+            <H4>{t('login.where')}</H4>
 
-            <Submit
-              mb
-              as="button"
-              onClick={() => history.push("/info")}
-              dangerOutline
-            >
-              {t("headerButton.personalArea")}
+            <Submit mb as="button" onClick={() => history.push('/info')} dangerOutline>
+              {t('headerButton.personalArea')}
             </Submit>
-            <Submit
-              as="button"
-              onClick={() => history.push("/admin")}
-              danger
-              disabled={!admin}
-            >
-              {t("headerButton.admin")}
+            <Submit as="button" onClick={() => history.push('/admin')} danger disabled={!admin}>
+              {t('headerButton.admin')}
             </Submit>
           </FormBlock>
         </CSSTransition>
-        <CSSTransition
-          in={login && !user && !where}
-          timeout={300}
-          classNames="alert"
-          unmountOnExit
-        >
+        <CSSTransition in={login && !user && !where} timeout={300} classNames="alert" unmountOnExit>
           <FormBlock onSubmit={onSubmitCode}>
-            <H4>{t("headerButton.register")}</H4>
+            <H4>{t('headerButton.register')}</H4>
             <Input
               value={password}
               name="password"
-              placeholder={t("login.code")}
+              placeholder={t('login.code')}
               onChange={onChangeNumber}
               autoComplete="new-password"
             />
             {!error && (
-              <StyledInlineErrorMessage>
-                {t("login.incorrectCode")}
-              </StyledInlineErrorMessage>
+              <StyledInlineErrorMessage>{t('login.incorrectCode')}</StyledInlineErrorMessage>
             )}
-            <Submit as="button" danger type="submit" disabled={password === ""}>
-              {t("login.in")}
+            <Submit as="button" danger type="submit" disabled={password === ''}>
+              {t('login.in')}
             </Submit>
-            <LinkTo
-              href={`https://cwd.global/account/${value}`}
-              target="_blank"
-            >
-              {t("login.goTo")}
+            <LinkTo href={`https://cwd.global/account/${value}`} target="_blank">
+              {t('login.goTo')}
             </LinkTo>
           </FormBlock>
         </CSSTransition>
@@ -204,23 +177,21 @@ export const RegisterComponent = () => {
           unmountOnExit
         >
           <FormBlock onSubmit={checkCwdAccount}>
-            <H4>{t("headerButton.register")}</H4>
+            <H4>{t('headerButton.register')}</H4>
             <Input
               value={value}
               name="login"
-              placeholder={t("login.login")}
+              placeholder={t('login.login')}
               onChange={onChangeValue}
               autoComplete="off"
             />
             {!error && (
-              <StyledInlineErrorMessage>
-                {t("login.incorrectLogin")}
-              </StyledInlineErrorMessage>
+              <StyledInlineErrorMessage>{t('login.incorrectLogin')}</StyledInlineErrorMessage>
             )}
-            <Submit as="button" danger type="submit" disabled={value === ""}>
-              {t("login.getCode")}
+            <Submit as="button" danger type="submit" disabled={value === ''}>
+              {t('login.getCode')}
             </Submit>
-            <LinkToPage to="/login">{t("login.in")}</LinkToPage>
+            <LinkToPage to="/login">{t('login.in')}</LinkToPage>
           </FormBlock>
         </CSSTransition>
       </CardContainer>
@@ -264,7 +235,7 @@ const FormBlock = styled.form`
 
 const Submit = styled(Button)<{ mb?: boolean }>`
   max-width: 100%;
-  margin-bottom: ${(props) => (props.mb ? "20px" : "0")};
+  margin-bottom: ${(props) => (props.mb ? '20px' : '0')};
   color: ${(props) => props.theme.text};
 `;
 

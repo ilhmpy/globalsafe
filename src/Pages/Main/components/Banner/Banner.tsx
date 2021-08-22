@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-scroll';
 import styled from 'styled-components/macro';
@@ -9,33 +9,27 @@ import { H1 } from '../../../../components/UI/MainStyled';
 import { UpTitle } from '../../../../components/UI/UpTitle';
 import { Container } from '../../../../globalStyles';
 
-export const Banner = () => {
+export const Banner: FC = () => {
   const { t } = useTranslation();
 
   return (
     <>
-      <Container >
-        {/* <UpTitle small>Емко и по-делу</UpTitle> */}
+      <Container>
         <UpTitle small>{t('banner.uptitle')}</UpTitle>
       </Container>
       <Container>
-        <H1>{t("banner.H1")}</H1>
+        <H1>{t('banner.H1')}</H1>
       </Container>
       <Container>
         <TextBlock>
           <p>
-            <span>{t("banner.brand")}</span> - {t("banner.desc")}
+            <span>{t('banner.brand')}</span> - {t('banner.desc')}
           </p>
         </TextBlock>
       </Container>
       <Container>
         <ButtonIcon as="button" danger>
-          <Link
-            to="tariffs"
-            spy={true}
-            smooth={true}
-            offset={-50}
-            duration={500}>
+          <Link to="tariffs" spy={true} smooth={true} offset={-50} duration={500}>
             {t('banner.toProgramm')} <ArrowIcon />
           </Link>
         </ButtonIcon>
