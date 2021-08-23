@@ -163,6 +163,18 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
                     <TableList card>
                       <TableItem>{moment(item.date).format('DD.MM.YYYY')}</TableItem>
                       <TableItem>
+                        {item.kind === 0
+                          ? (item.volume / 100000).toLocaleString('ru-RU', {
+                              maximumFractionDigits: 5,
+                            })
+                          : Item.kind === 1
+                          ? t('win.two')
+                          : item.volume}
+                        &nbsp;
+                        {item.volume ? Balance[item.balanceKind] : '-'}
+                      </TableItem>
+                      {/* <TableItem>
+                        {console.log("Robert:::::", item)}
                         {item.volume
                           ? (item.volume / 100000).toLocaleString('ru-RU', {
                               maximumFractionDigits: 5,
@@ -170,7 +182,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
                             ' ' +
                             'CWD'
                           : typeWin(Number(item.kind))}
-                      </TableItem>
+                      </TableItem> */}
                       <TableItem>
                         <Value data-title={item.name}>{item.name}</Value>
                       </TableItem>
