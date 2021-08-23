@@ -63,25 +63,6 @@ export const AdminWallets = () => {
     keyNotes: ''
   });
 
-  // TODO: Remove mock list 
-  const mockBalances = [
-    { id: 1,  balanceKind: 1, amount: 0, safeAmount: 'Na'},
-    { id: 2,  balanceKind: 1, amount: 235468, safeAmount: 'CWD'},
-    { id: 3,  balanceKind: 1, amount: 235468, safeAmount: 'MGCWD'},
-    { id: 4,  balanceKind: 1, amount: 235468, safeAmount: 'GCWD'},
-    { id: 5,  balanceKind: 1, amount: 235468, safeAmount: 'DIAMOND'},
-    { id: 6,  balanceKind: 1, amount: 235468, safeAmount: 'CROWDBTC'},
-    { id: 7,  balanceKind: 1, amount: 235468, safeAmount: 'CWDBONUS'},
-    { id: 8,  balanceKind: 1, amount: 235468, safeAmount: 'CARBONE'},
-    { id: 9,  balanceKind: 1, amount: 235468, safeAmount: 'BRONZE'},
-    { id: 10,  balanceKind: 1, amount: 235468, safeAmount: 'FUTURE4'},
-    { id: 11,  balanceKind: 1, amount: 235468, safeAmount: 'FUTURE5'},
-    { id: 12,  balanceKind: 1, amount: 235468, safeAmount: 'FUTURE6'},
-    { id: 13,  balanceKind: 1, amount: 235468, safeAmount: 'GLOBALSAFE'},
-  ];
-
-
-
   useEffect(() => {
     handleGetCompanyAccounts();
   }, [hubConnection, currentPage, pageLength]);
@@ -159,6 +140,9 @@ export const AdminWallets = () => {
             keyNotes: ''
           });
 
+          // Fetch Company Accounts List
+          handleGetCompanyAccounts();
+
           // TODO: update Success message
           createNotify({
             text: 'Created Successfully!',
@@ -227,7 +211,6 @@ export const AdminWallets = () => {
 
   // Refetch Selected Account Balance Data
   const handleRefreshAccountBalance = () => {
-    console.log('selectedAccount?.safeId', selectedAccount?.safeId)
     if(hubConnection) {
       setRefreshAccountBalanceLoading(true);
       hubConnection
@@ -316,7 +299,7 @@ export const AdminWallets = () => {
     setIsKeyNotesActive(false);
   };
 
-  const handleShowTransferModal = (balance: any) => {
+  const handleShowTransferModal = (balance: BalanceModel) => {
     // Close Account Details Modal
     setIsOpenShowForm(false);
 
@@ -388,8 +371,10 @@ export const AdminWallets = () => {
                     <Name>{companyAccount.name}</Name>
                     <BalanceText>Баланс, CWD</BalanceText>
                     <AmountGroup>
-                      <Count>{companyAccount.balances[0]?.amount}</Count>
-                      <PlusNumber>{companyAccount.balances.length}</PlusNumber>
+                      <Count>{companyAccount.balances[0]?.safeAmount}</Count>
+                      <PlusNumber>
+                        {(companyAccount.balances.length - 1) > 0 ? `+${companyAccount.balances.length - 1}` : ''}
+                      </PlusNumber>
                     </AmountGroup>
                   </Wallet>
                 ))}
@@ -642,8 +627,8 @@ export const AdminWallets = () => {
 
             <ChipContent>
               {
-                mockBalances.map((balance) => (
-                  <Chip key={`balance-item-${balance.id}`} onClick={() => handleShowTransferModal(balance)}>
+                selectedAccount?.balances.map((balance, i) => (
+                  <Chip key={`balance-item-${i}`} onClick={() => handleShowTransferModal(balance)}>
                     {`${balance.safeAmount} - ${balance.amount}`}
                   </Chip>
                 ))
