@@ -771,7 +771,7 @@ export const ModalUsersContent: FC<ModalUsersContentProps> = ({
                             {/* {item.payedAmountView.toLocaleString('ru-RU', {
                               maximumFractionDigits: 4,
                             })} */}
-                            {Number((item.payedAmount / baseCurrencyRate(item) / 100).toFixed(1)).toLocaleString('ru-RU', {
+                            {Number((item.payedAmount / baseCurrencyRate(item) / 100000).toFixed(4)).toLocaleString('ru-RU', {
                               maximumFractionDigits: 4,
                             })}
                           </PayText>
