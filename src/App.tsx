@@ -134,7 +134,7 @@ const App: FC = () => {
     if (token && user) {
       activateBellPush();
     }
-  }, []);
+  }, [token, user]);
 
   useEffect(() => {
     if (token && user) {
