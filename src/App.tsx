@@ -1,8 +1,6 @@
-import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
-import React, { FC, useCallback, useContext, useState, useEffect } from 'react';
+import { FC, useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
-import { Loader } from './components/Loader/Loader';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { APP_ID, APP_SAFARI_ID } from './constantes/onesignal';
 import { AppContext } from './context/HubContext';
 import GlobalStyle from './globalStyles';
@@ -30,7 +28,6 @@ const App: FC = () => {
   const isFailed = appContext.isFailed;
   const [online, setOnline] = useState<boolean | null>(null);
   const { t } = useTranslation();
-
   useEffect(() => {
     setOnline(navigator.onLine);
   }, []);
@@ -85,52 +82,83 @@ const App: FC = () => {
     [hubConnection]
   );
 
+  const activateBellPush = () => {
+    try {
+      OneSignal.push(() => {
+        OneSignal.SERVICE_WORKER_PARAM = { scope: '/push/onesignal/' };
+        OneSignal.SERVICE_WORKER_PATH = 'push/onesignal/OneSignalSDKWorker.js';
+        OneSignal.SERVICE_WORKER_UPDATER_PATH = 'push/onesignal/OneSignalSDKUpdaterWorker.js';
+
+        OneSignal.init({
+          appId: APP_ID,
+          safari_web_id: APP_SAFARI_ID,
+          notifyButton: {
+            enable: true,
+            text: {
+              'tip.state.unsubscribed': t('text.tip_state_unsubscribed'),
+              'tip.state.subscribed': t('text.tip_state_subscribed'),
+              'tip.state.blocked': t('text.tip_state_blocked'),
+              'message.prenotify': t('text.message_prenotify'),
+              'message.action.subscribed': t('text.message_action_subscribed'),
+              'message.action.resubscribed': t('text.message_action_resubscribed'),
+              'message.action.unsubscribed': t('text.message_action_unsubscribed'),
+              'dialog.main.title': t('text.dialog_main_title'),
+              'dialog.main.button.subscribe': t('text.dialog_main_button_subscribe'),
+              'dialog.main.button.unsubscribe': t('text.dialog_main_button_unsubscribe'),
+              'dialog.blocked.title': t('text.dialog_blocked_title'),
+              'dialog.blocked.message': t('text.dialog_blocked_message'),
+            },
+          },
+        });
+        try {
+          OneSignal.on('subscriptionChange', (isSubscribed: boolean) => {
+            console.log('OneSignal.on ~ isSubscribed', isSubscribed);
+            if (isSubscribed) {
+              OneSignal.getUserId((id: string) => subscribe(id));
+            } else {
+              OneSignal.getUserId((id: string) => unSubscribe(id));
+            }
+          });
+        } catch (e) {
+          console.error('onesignal event loop error', e);
+        }
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   useEffect(() => {
     if (token && user) {
-      try {
-        OneSignal.push(() => {
-          OneSignal.SERVICE_WORKER_PARAM = { scope: '/push/onesignal/' };
-          OneSignal.SERVICE_WORKER_PATH = 'push/onesignal/OneSignalSDKWorker.js';
-          OneSignal.SERVICE_WORKER_UPDATER_PATH = 'push/onesignal/OneSignalSDKUpdaterWorker.js';
-          OneSignal.init({
-            appId: APP_ID,
-            safari_web_id: APP_SAFARI_ID,
-            notifyButton: {
-              enable: true,
-              text: {
-                'tip.state.unsubscribed': t('text.tip_state_unsubscribed'),
-                'tip.state.subscribed': t('text.tip_state_subscribed'),
-                'tip.state.blocked': t('text.tip_state_blocked'),
-                'message.prenotify': t('text.message_prenotify'),
-                'message.action.subscribed': t('text.message_action_subscribed'),
-                'message.action.resubscribed': t('text.message_action_resubscribed'),
-                'message.action.unsubscribed': t('text.message_action_unsubscribed'),
-                'dialog.main.title': t('text.dialog_main_title'),
-                'dialog.main.button.subscribe': t('text.dialog_main_button_subscribe'),
-                'dialog.main.button.unsubscribe': t('text.dialog_main_button_unsubscribe'),
-                'dialog.blocked.title': t('text.dialog_blocked_title'),
-                'dialog.blocked.message': t('text.dialog_blocked_message'),
-              },
-            },
-          });
-          try {
-            OneSignal.on('subscriptionChange', (isSubscribed: boolean) => {
-              console.log('OneSignal.on ~ isSubscribed', isSubscribed);
-              if (isSubscribed) {
-                OneSignal.getUserId((id: string) => subscribe(id));
-              } else {
-                OneSignal.getUserId((id: string) => unSubscribe(id));
-              }
-            });
-          } catch (e) {
-            console.error('onesignal event loop error', e);
-          }
-        });
-      } catch (e) {
-        console.error(e);
-      }
+      activateBellPush();
     }
-  }, [user]);
+  }, [token, user]);
+
+  useEffect(() => {
+    if (token && user) {
+      OneSignal.push(function () {
+        OneSignal.sendTags({
+          notifyButton: {
+            enable: true,
+            text: {
+              'tip.state.unsubscribed': t('text.tip_state_unsubscribed'),
+              'tip.state.subscribed': t('text.tip_state_subscribed'),
+              'tip.state.blocked': t('text.tip_state_blocked'),
+              'message.prenotify': t('text.message_prenotify'),
+              'message.action.subscribed': t('text.message_action_subscribed'),
+              'message.action.resubscribed': t('text.message_action_resubscribed'),
+              'message.action.unsubscribed': t('text.message_action_unsubscribed'),
+              'dialog.main.title': t('text.dialog_main_title'),
+              'dialog.main.button.subscribe': t('text.dialog_main_button_subscribe'),
+              'dialog.main.button.unsubscribe': t('text.dialog_main_button_unsubscribe'),
+              'dialog.blocked.title': t('text.dialog_blocked_title'),
+              'dialog.blocked.message': t('text.dialog_blocked_message'),
+            },
+          },
+        });
+      });
+    }
+  }, [localStorage.getItem('i18nextLng')]);
 
   return (
     <div style={{ position: 'relative' }}>
