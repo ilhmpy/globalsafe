@@ -9,9 +9,7 @@ import { ReactComponent as Prize } from '../../../../assets/svg/prize.svg';
 
 const getProgress = (data: any) => {
   if (data[0] != null && data[1] != null) {
-    return Number(
-      (100 / (data[0].totalSeconds / data[1].totalSeconds)).toFixed(0)
-    );
+    return Number((100 / (data[0].totalSeconds / data[1].totalSeconds)).toFixed(0));
   } else {
     return 0;
   }
@@ -52,8 +50,8 @@ export const Timer: FC<Props> = ({
 
   useEffect(() => {
     let cancel = false;
-    const cb = (data: any[]) => { 
-      !cancel && repeat(); 
+    const cb = (data: any[]) => {
+      !cancel && repeat();
     };
     if (hubConnection) {
       !cancel && hubConnection.on('DrawResult', cb);
@@ -69,8 +67,8 @@ export const Timer: FC<Props> = ({
     if (res != null) {
       setDeadline(res[1].totalSeconds);
       setClock(res[1]);
-      console.log(res[0]);
-      console.log(getProgress(res));
+      // console.log(res[0]);
+      // console.log(getProgress(res));
       setAllState(res);
       setDefaultTimeLottery(res[1]);
       setProgress(getProgress(res));
@@ -78,48 +76,50 @@ export const Timer: FC<Props> = ({
     }
     setAllState([]);
     setState(null);
-    console.log("ALL STATE", allState)
+    // console.log('ALL STATE', allState);
   }
 
   useEffect(() => {
     let cancel = false;
     const cb = (data: any) => {
-      console.log("cb ???????????????????????????????????????????????????????????????????????????????")
       if (hubConnection) {
-        hubConnection.invoke("GetNextDraw")
-        .then((res) => {
-          if (res != null) {
-            const durations = moment.duration(res[1].totalSeconds, 'seconds');
-            setDeadline(res[1].totalSeconds);
-            setState(
-              Math.floor(durations.asMinutes()) !== 0
-                ? [
-                    Math.floor(durations.asDays()),
-                    Math.floor(durations.asHours()),
-                    Math.floor(durations.asMinutes()),
-                  ]
-                : null
-            );
-            console.log(res);
-            setAllState(res);
-            console.log(getProgress(res));
-            setProgress(getProgress(res));
-            return false;
-          }
-          setState(null);
-        })
-        .catch(e => console.log(e));
+        hubConnection
+          .invoke('GetNextDraw')
+          .then((res) => {
+            if (res != null) {
+              const durations = moment.duration(res[1].totalSeconds, 'seconds');
+              setDeadline(res[1].totalSeconds);
+              setState(
+                Math.floor(durations.asMinutes()) !== 0
+                  ? [
+                      Math.floor(durations.asDays()),
+                      Math.floor(durations.asHours()),
+                      Math.floor(durations.asMinutes()),
+                    ]
+                  : null
+              );
+              console.log(res);
+              setAllState(res);
+              console.log(getProgress(res));
+              setProgress(getProgress(res));
+              return false;
+            }
+            setState(null);
+          })
+          .catch((e) => console.log(e));
       }
     };
     if (hubConnection && !cancel) {
-      hubConnection.invoke("DrawResult")
-        .then((res) => {
-          console.log(res);
-          hubConnection.invoke("GetNextDraw")
-            .then((res) => getNextDraw(res))
-            .catch((e) => console.log(e));
-        })
-        .catch((e) => console.log(e));
+      // hubConnection
+      //   .invoke('DrawResult')
+      //   .then((res) => {
+      //     console.log(res);
+      //     hubConnection
+      //       .invoke('GetNextDraw')
+      //       .then((res) => getNextDraw(res))
+      //       .catch((e) => console.log(e));
+      //   })
+      //   .catch((e) => console.log(e));
       hubConnection.on('DrawCountdown', cb);
       hubConnection
         .invoke('GetNextDraw')
@@ -171,10 +171,10 @@ export const Timer: FC<Props> = ({
               ]
             : null
         );
-      console.log(allState)
+
       !cancel && setDeadline(deadline - 1);
       if (allState != null) {
-        console.log(getProgress(allState))
+        // console.log(getProgress(allState))
         !cancel && setProgress(getProgress(allState));
       }
     }, 1000);
@@ -194,83 +194,90 @@ export const Timer: FC<Props> = ({
     }, 5000);
   };
 
-  const milliseconds = 32 * 1000;
-  const radius = 32 / 2;
-  const circumference = 32 * Math.PI;
+  const milliseconds = 30 * 1000;
+  const radius = 30 / 2;
+  const circumference = 30 * Math.PI;
 
   const [countdown, setCountDown] = useState(milliseconds);
 
   return (
-    <>
-      <Styled.TimerModal display={display} onClick={() => setShowModal(true)}>
-        {state != null ? (
-          <>
-            <Styled.TimerLoading progress={timerProgress} />
-            <Styled.TimerModalTitle>{t('time.title')}</Styled.TimerModalTitle>
-            <div className="timer_content">
-              {state && (
-                <Styled.TimerModalDuration>
-                  <span>{state[0]}</span> : <span>{state[1]}</span> : <span>{state[2]}</span>
-                </Styled.TimerModalDuration>
-              )}
-              <Styled.TimerModalUnits>
-                <span>{t('time.days')}</span> <span>{t('time.hours')}</span>{' '}
-                <span>{t('time.minutes')}</span>
-              </Styled.TimerModalUnits>
-            </div>
-          </>
-        ) : (
-          <Styled.LoadingBeforeData>
-            <Styled.LoadingBeforeItem
-              width="90%"
-              height="19px"
-              style={{ margin: '0 auto', marginTop: '10px' }}
-            />
-            <div className="flex_loading">
-              <Styled.LoadingBeforeItem width="30px" height="19px" />
-              <Styled.LoadingBeforeItem width="30px" height="19px" />
-              <Styled.LoadingBeforeItem width="30px" height="19px" />
-            </div>
-            <div className="flex_loading">
-              <Styled.LoadingBeforeItem circle width="30px" height="10px" />
-              <Styled.LoadingBeforeItem circle width="30px" height="10px" />
-              <Styled.LoadingBeforeItem circle width="30px" height="10px" />
-            </div>
-          </Styled.LoadingBeforeData>
-        )}
-      </Styled.TimerModal>
-      <Styled.TimerCircle onClick={openWindow}>
-         <Styled.Progress>
-          <Styled.CountContainer>
-            <Styled.CountValue strokeColor={"#ff416e"}><Prize /></Styled.CountValue>
-            <svg
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                margin: '0 auto',
-                transform: 'rotateY(-180deg) rotateZ(-90deg)',
-                overflow: 'visible',
-              }}
-            >
-              <circle
-                strokeDasharray={circumference}
-                strokeDashoffset={100 - progress}
-                r={radius}
-                cx={radius}
-                cy={radius}
-                fill="none"
-                strokeLinecap="round"
-                stroke={"#ff416e"}
-                strokeWidth={"2px"}
-              ></circle>
-            </svg>
-         </Styled.CountContainer>
-        </Styled.Progress>
-      </Styled.TimerCircle>
-    </>
+    <Styled.TimerModalWrap>
+      <Styled.TimerModalInner>
+        <Styled.TimerModal display={display} onClick={() => setShowModal(true)}>
+          {state != null ? (
+            <>
+              <Styled.TimerLoadingWrap>
+                <Styled.TimerLoading progress={timerProgress} />
+              </Styled.TimerLoadingWrap>
+              <Styled.TimerModalTitle>{t('time.title')}</Styled.TimerModalTitle>
+              <div className="timer_content">
+                {state && (
+                  <Styled.TimerModalDuration>
+                    <span>{state[0]}</span> : <span>{state[1]}</span> : <span>{state[2]}</span>
+                  </Styled.TimerModalDuration>
+                )}
+                <Styled.TimerModalUnits>
+                  <span>{t('time.days')}</span> <span>{t('time.hours')}</span>{' '}
+                  <span>{t('time.minutes')}</span>
+                </Styled.TimerModalUnits>
+              </div>
+            </>
+          ) : (
+            <Styled.LoadingBeforeData>
+              <Styled.LoadingBeforeItem
+                width="90%"
+                height="19px"
+                style={{ margin: '0 auto', marginTop: '10px' }}
+              />
+              <div className="flex_loading">
+                <Styled.LoadingBeforeItem width="30px" height="19px" />
+                <Styled.LoadingBeforeItem width="30px" height="19px" />
+                <Styled.LoadingBeforeItem width="30px" height="19px" />
+              </div>
+              <div className="flex_loading">
+                <Styled.LoadingBeforeItem circle width="30px" height="10px" />
+                <Styled.LoadingBeforeItem circle width="30px" height="10px" />
+                <Styled.LoadingBeforeItem circle width="30px" height="10px" />
+              </div>
+            </Styled.LoadingBeforeData>
+          )}
+        </Styled.TimerModal>
+        <Styled.TimerCircle onClick={openWindow}>
+          <Styled.Progress>
+            <Styled.CountContainer>
+              <Styled.CountValue strokeColor={'#ff416e'}>
+                <Prize />
+              </Styled.CountValue>
+              <svg
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  margin: '0 auto',
+                  transform: 'rotateY(-180deg) rotateZ(-90deg)',
+                  overflow: 'visible',
+                }}
+              >
+                <circle
+                  strokeDasharray={circumference}
+                  strokeDashoffset={100 - progress}
+                  // strokeDashoffset={90}
+                  r={radius}
+                  cx={radius}
+                  cy={radius}
+                  fill="none"
+                  strokeLinecap="round"
+                  stroke={'#ff416e'}
+                  strokeWidth={'2px'}
+                ></circle>
+              </svg>
+            </Styled.CountContainer>
+          </Styled.Progress>
+        </Styled.TimerCircle>
+      </Styled.TimerModalInner>
+    </Styled.TimerModalWrap>
   );
 };
 
