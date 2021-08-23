@@ -28,8 +28,6 @@ const App: FC = () => {
   const isFailed = appContext.isFailed;
   const [online, setOnline] = useState<boolean | null>(null);
   const { t } = useTranslation();
-  const lang = localStorage.getItem('i18nextLng') || 'ru';
-  const [language, setLanguage] = useState<any>('ru');
   useEffect(() => {
     setOnline(navigator.onLine);
   }, []);
