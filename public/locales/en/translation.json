@@ -499,5 +499,8 @@
     "main": "home page",
     "tech": "Technical work in progress"
   },
-  "all": "All"
+  "all": "All",
+  "d": "d",
+  "h": "h",
+  "m": "m"
 }

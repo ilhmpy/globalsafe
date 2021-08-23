@@ -11,7 +11,7 @@ import { AppContext } from '../../../../context/HubContext';
 import { Card, Container } from '../../../../globalStyles';
 import { Balance } from '../../../../types/balance';
 import { ArrList, RootLottery } from '../../../../types/lottery';
-import { OldTimer } from '../Lottery/Timer';
+import { Timer } from '../Lottery/Timer';
 
 type Props = {
   onOpenModal: () => void;
@@ -118,7 +118,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
 
       <Container>
         <TimerHistoryContainer alfa onClick={onOpenModal}>
-          <OldTimer history />
+          <Timer modalTimer />
           <Button danger>{t('goDraw')}</Button>
         </TimerHistoryContainer>
       </Container>
@@ -207,9 +207,9 @@ const TimerHistoryContainer = styled(Card)`
   align-items: center;
   justify-content: space-between;
   margin-bottom: 30px;
-    @media (max-width: 768px) {
-      display: none;
-    }
+  @media (max-width: 768px) {
+    display: none;
+  }
   @media (max-width: 768px) {
     justify-content: center;
     padding: 20px;
