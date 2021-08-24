@@ -327,6 +327,19 @@ input[type=number] {
     }
 }
 
+#onesignal-bell-container.onesignal-reset .onesignal-bell-launcher.onesignal-bell-launcher-bottom-right.onesignal-bell-launcher-sm{
+  width: 36px !important;
+}
+
+#onesignal-bell-container.onesignal-reset .onesignal-bell-launcher.onesignal-bell-launcher-sm{
+  height: 36px !important;
+}
+
+#onesignal-bell-container.onesignal-reset .onesignal-bell-launcher.onesignal-bell-launcher-sm .onesignal-bell-launcher-button {
+    width: 36px !important;
+    height: 36px !important;
+}
+
 `;
 
 export const Container = styled.div<{ pNone?: boolean; bigMargin?: boolean }>`

@@ -768,10 +768,15 @@ export const TimerModalUnits = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  grid-gap: 15px;
   font-size: 12px;
   padding-left: 8px;
   text-align: center;
+  span {
+    padding-right: 11px;
+    &:last-child {
+      padding-right: 0px;
+    }
+  }
 
   & > span {
     color: ${({ theme }) => theme.timer.color};
