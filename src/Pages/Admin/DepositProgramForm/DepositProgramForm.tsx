@@ -76,7 +76,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
           10,
           0,
           '10',
-          0.5,
+          5,
           true,
           'referge',
           'rgg45g4',
