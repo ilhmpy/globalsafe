@@ -10,7 +10,7 @@ type Props = {
 
 export const Notification: FC<Props> = ({ data, onDelete }: Props) => {
   return (
-    <Styled.Container>
+    <Styled.Container style={{ borderRadius: "10px" }}>
       <Styled.ContainerInner>
         {data.map((item) => (
           <NotifyItem onDelete={onDelete} data={item} key={item.id} />
@@ -33,7 +33,7 @@ const NotifyItem: FC<NotifyProps> = ({ data, onDelete }: NotifyProps) => {
     <>
       <Styled.Notification error={data.error}>
         <Styled.NotificationInner>
-          <Styled.Text>{data.text}</Styled.Text>
+          <Styled.Text error={data.error}>{data.text}</Styled.Text>
           <CountdownTimer
             seconds={data.timeleft}
             size={24}

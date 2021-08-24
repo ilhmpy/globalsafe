@@ -330,6 +330,7 @@ export const PaymentsListPay: FC<Prop> = ({ data }: Prop) => {
       return t("operation.add");
     }
   };
+  // console.log("Robert: ::: Data", data)
   return (
     <div>
       <CSSTransition in={open} timeout={300} classNames="modal" unmountOnExit>
@@ -339,7 +340,8 @@ export const PaymentsListPay: FC<Prop> = ({ data }: Prop) => {
         <TableBodyItemPaid>{data.account}</TableBodyItemPaid>
         <TableBodyItemPaid>{data.userDeposit.deposit.name}</TableBodyItemPaid>
         <TableBodyItemPaid>
-          {moment(data.userDeposit.prevPayment).format("DD/MM/YYYY")}
+          {/* {moment(data.userDeposit.prevPayment).format("DD/MM/YYYY")} */}
+          {moment(data.operationDate).format("DD/MM/YYYY")}
         </TableBodyItemPaid>
         <TableBodyItemPaid>
           {operation(data.operationKind)}
