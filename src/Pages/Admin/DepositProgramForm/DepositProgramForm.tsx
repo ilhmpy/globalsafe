@@ -13,7 +13,6 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
   const [checkList, setCheckList] = useState<any>([]);
   const { t } = useTranslation();
   const list = ['Ru', 'En'];
-  const [checked, setChecked] = useState(false);
   const [delayedDepositChecked, setDelayedDepositChecked] = useState(false);
   const [programIsActiveChecked, setProgramIsActiveChecked] = useState(true);
   const [publishingProgramChecked, setPublishingProgramChecked] = useState(false);

@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import styled from 'styled-components/macro';
 import { Button } from '../../../../components/Button/Button';
-import { Item } from '../../../../components/FilterMenu/Styled.elements';
 import { H2 } from '../../../../components/UI/MainStyled';
 import { Page } from '../../../../components/UI/Page';
 import { UpTitle } from '../../../../components/UI/UpTitle';
@@ -12,7 +11,7 @@ import { AppContext } from '../../../../context/HubContext';
 import { Card, Container } from '../../../../globalStyles';
 import { Balance } from '../../../../types/balance';
 import { ArrList, RootLottery } from '../../../../types/lottery';
-import { OldTimer } from '../Lottery/Timer';
+import { Timer } from '../Lottery/Timer';
 
 type Props = {
   onOpenModal: () => void;
@@ -119,7 +118,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
 
       <Container>
         <TimerHistoryContainer alfa onClick={onOpenModal}>
-          <OldTimer history />
+          <Timer modalTimer />
           <Button danger>{t('goDraw')}</Button>
         </TimerHistoryContainer>
       </Container>
@@ -145,7 +144,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
                           ? (item.volume / 100000).toLocaleString('ru-RU', {
                               maximumFractionDigits: 5,
                             })
-                          : Item.kind === 1
+                          : item.kind === 1
                           ? t('win.two')
                           : item.volume}
                         &nbsp;
@@ -163,6 +162,17 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
                     <TableList card>
                       <TableItem>{moment(item.date).format('DD.MM.YYYY')}</TableItem>
                       <TableItem>
+                        {item.kind === 0
+                          ? (item.volume / 100000).toLocaleString('ru-RU', {
+                              maximumFractionDigits: 5,
+                            })
+                          : item.kind === 1
+                          ? t('win.two')
+                          : item.volume}
+                        &nbsp;
+                        {item.volume ? Balance[item.balanceKind] : '-'}
+                      </TableItem>
+                      {/* <TableItem>
                         {item.volume
                           ? (item.volume / 100000).toLocaleString('ru-RU', {
                               maximumFractionDigits: 5,
@@ -170,7 +180,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
                             ' ' +
                             'CWD'
                           : typeWin(Number(item.kind))}
-                      </TableItem>
+                      </TableItem> */}
                       <TableItem>
                         <Value data-title={item.name}>{item.name}</Value>
                       </TableItem>
@@ -197,9 +207,9 @@ const TimerHistoryContainer = styled(Card)`
   align-items: center;
   justify-content: space-between;
   margin-bottom: 30px;
-    @media (max-width: 768px) {
-      display: none;
-    }
+  @media (max-width: 768px) {
+    display: none;
+  }
   @media (max-width: 768px) {
     justify-content: center;
     padding: 20px;
