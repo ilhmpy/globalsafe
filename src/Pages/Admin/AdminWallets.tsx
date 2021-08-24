@@ -362,7 +362,7 @@ export const AdminWallets = () => {
   };
 
   return (
-    <>
+    <WalletsPageWrapper>
       <Styled.HeadBlock style={{ justifyContent: 'space-between' }}>
         <ButtonGroup>
           <Button danger maxWidth={158} onClick={() => setIsOpenNewForm(true)}>
@@ -733,6 +733,7 @@ export const AdminWallets = () => {
         </Modal>
       )}
 
+    <PaginationContainer>
       <Pagination
         pageLength={pageLength}
         setPageLength={setPageLength}
@@ -740,10 +741,23 @@ export const AdminWallets = () => {
         setCurrentPage={setCurrentPage}
         totalLottery={totalCompanyAccounts}
       />
+    </PaginationContainer>
+
       <Notification onDelete={onDelete} data={notifications} />
-    </>
+    </WalletsPageWrapper>
   );
 };
+
+const WalletsPageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 92vh;
+`;
+
+const PaginationContainer = styled.div`
+  margin-top: auto;
+`;
+
 const ConfirmTitle = styled.h1`
   font-style: normal;
   font-weight: 500;
