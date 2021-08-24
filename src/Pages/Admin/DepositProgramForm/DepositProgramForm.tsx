@@ -32,6 +32,32 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
   const [programList, setProgramList] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
+  interface ICreateDepositProgram {
+      id?: number;
+      name: string;
+      description:string;
+      minAmount: number;
+      maxAmount?: number;
+      duration: number;
+      paymentsInterval: number;
+      paymentsOffset: number;
+      paymentsDays?: string;
+      ratio: number;
+      isActive: boolean;
+      affiliateRatio: string;
+      referenceAccount: string;
+      referenceCode?: string;
+      memoWif?: string;
+      language: number;
+      balanceKind: number;
+      exchanges?: string[];
+      depositKind: number;
+      priceKind?: number;
+      price?: number;
+      isPublic: boolean;
+      isInstant: boolean;
+  }
+
   const createProgram = () => {
     console.log('1111111111~~~~~~~~~~~~~~~~~~start');
     if (hubConnection) {
@@ -39,11 +65,11 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
       setLoading(true);
 
       hubConnection
-        .invoke<any>(
+        .invoke(
           'CreateDeposit',
           0,
-          'ergeger',
-          'ererg ыммукм упукпукп укпукпукп',
+          'dfgdfv',
+          'ererg kbkj ewgrgegr ergerge rgsdbvatn mdtrsgfwe',
           1000000,
           100000000,
           90,
@@ -67,12 +93,6 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
         )
         .then((res) => {
           console.log('.then ~ res', res);
-          // setTotalDeposits(res.totalRecords);
-          setLoading(false);
-          if (res.collection.length) {
-            setProgramList(res.collection);
-            // setTotalDeposits(res.totalRecords);
-          }
         })
         .catch((err: Error) => {
           console.log(err);
