@@ -278,6 +278,19 @@ export const AdminPay = () => {
   useEffect(() => {
     if (hubConnection && active === 1) {
       setLoading(true);
+      setDepositPayList([]);
+
+    // GetDepositsCharges Model
+    // Task<CollectionResult> GetDepositsCharges(
+    //   string? userName,
+    //   DateTime? from,
+    //   DateTime? to,
+    //   string[]? usersDepositsSafeIds,
+    //   string[]? depositsSafeIds,
+    //   BalanceOperationKind[] kinds,
+    //   long skip,
+    //   long take);
+
       hubConnection
         .invoke<RootCharges>(
           'GetDepositsCharges',
@@ -299,8 +312,8 @@ export const AdminPay = () => {
                 .set({ hour: 23, minute: 59, second: 59 })
                 .toDate()
             : null,
-          searchSafeID.length ? searchSafeID : null,
           null,
+          searchSafeID.length ? searchSafeID : null,
           [7, 8],
           (currentPagePay - 1) * pageLengthPay,
           pageLengthPay
@@ -336,7 +349,9 @@ export const AdminPay = () => {
 
   const submit = () => {
     if (hubConnection) {
+      setLoading(true);
       setCurrentPagePay(1);
+      setDepositPayList([]);
       hubConnection
         .invoke<RootCharges>(
           'GetDepositsCharges',
@@ -358,8 +373,8 @@ export const AdminPay = () => {
                 .set({ hour: 23, minute: 59, second: 59 })
                 .toDate()
             : null,
-          searchSafeID.length ? searchSafeID : null,
           null,
+          searchSafeID.length ? searchSafeID : null,
           [7, 8],
           (currentPagePay - 1) * pageLengthPay,
           pageLengthPay
