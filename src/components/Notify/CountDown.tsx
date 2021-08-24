@@ -72,7 +72,7 @@ export const CountdownTimer: FC<Props> = ({
             cy={radius}
             fill="none"
             strokeLinecap="round"
-            stroke={colors}
+            stroke={"#fff"}
             strokeWidth={strokeWidth}
           ></circle>
         </svg>
