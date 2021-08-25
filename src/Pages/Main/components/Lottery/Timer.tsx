@@ -2,10 +2,10 @@ import moment from 'moment';
 import 'moment-duration-format';
 import React, { FC, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ReactComponent as Prize } from '../../../../assets/svg/prize.svg';
 import { AppContext } from '../../../../context/HubContext';
 import { RootClock } from '../../../../types/clock';
 import * as Styled from './Lottery.elements';
-import { ReactComponent as Prize } from '../../../../assets/svg/prize.svg';
 
 const getProgress = (data: any) => {
   if (data[0] != null && data[1] != null) {
@@ -63,7 +63,6 @@ export const Timer: FC<Props> = ({
   }, [hubConnection]);
 
   function getNextDraw(res: any) {
-    console.log(res);
     if (res != null) {
       setDeadline(res[1].totalSeconds);
       setClock(res[1]);
@@ -98,9 +97,7 @@ export const Timer: FC<Props> = ({
                     ]
                   : null
               );
-              console.log(res);
               setAllState(res);
-              console.log(getProgress(res));
               setProgress(getProgress(res));
               return false;
             }

@@ -223,7 +223,6 @@ export const Payments: FC = () => {
       hubConnection
         .invoke<RootPayDeposit[]>('GetDayPayouts', languale)
         .then((res) => {
-          console.log('res', res);
           setStatsDeposit(res);
           setLoadReset(false);
         })
@@ -234,7 +233,6 @@ export const Payments: FC = () => {
     }
   };
 
-  console.log('Payments ~~~~~~~~~~~~~~~~~~~~~ bigArr', bigArr);
   return (
     <Page>
       {statsDeposit.length ? (
