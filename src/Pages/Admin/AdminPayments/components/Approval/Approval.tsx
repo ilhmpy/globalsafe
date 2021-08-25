@@ -189,19 +189,12 @@ export const Approval: FC<Props> = ({
           searchSafeIDApproval.length ? searchSafeIDApproval : null,
           openDateApproval.from
             ? moment(openDateApproval.from)
-                .utcOffset('+00:00')
-                .set({ hour: 0, minute: 0, second: 0 })
+                .set({ hour: 12, minute: 0, second: 0 })
                 .toDate()
             : null,
           openDateApproval.to
             ? moment(openDateApproval.to)
-                .utcOffset('+00:00')
-                .set({ hour: 23, minute: 59, second: 59 })
-                .toDate()
-            : openDateApproval.from
-            ? moment(openDateApproval.from)
-                .utcOffset('+00:00')
-                .set({ hour: 23, minute: 59, second: 59 })
+                .set({ hour: 12, minute: 0, second: 0 })
                 .toDate()
             : null,
           null,
@@ -291,6 +284,8 @@ export const Approval: FC<Props> = ({
       setDepositList([]);
       setLoading(true);
 
+      console.log(moment(openDateApproval.from).set({ hour: 12, minute: 0, second: 0 }).toDate());
+
       hubConnection
         .invoke<RootPayments>(
           'GetUsersDeposits',
@@ -299,19 +294,12 @@ export const Approval: FC<Props> = ({
           searchSafeIDApproval.length ? searchSafeIDApproval : null,
           openDateApproval.from
             ? moment(openDateApproval.from)
-                .utcOffset('+00:00')
-                .set({ hour: 0, minute: 0, second: 0 })
+                .set({ hour: 12, minute: 0, second: 0 })
                 .toDate()
             : null,
           openDateApproval.to
             ? moment(openDateApproval.to)
-                .utcOffset('+00:00')
-                .set({ hour: 23, minute: 59, second: 59 })
-                .toDate()
-            : openDateApproval.from
-            ? moment(openDateApproval.from)
-                .utcOffset('+00:00')
-                .set({ hour: 23, minute: 59, second: 59 })
+                .set({ hour: 12, minute: 0, second: 0 })
                 .toDate()
             : null,
           null,
