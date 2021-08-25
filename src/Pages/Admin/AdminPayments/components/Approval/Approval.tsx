@@ -439,7 +439,13 @@ export const Approval: FC<Props> = ({
   };
 
   const paymentsConfirm = () => {
-    console.log(depositList)
+    console.log({
+      NAMEAPPROVAL: nameApproval ? nameApproval.toLowerCase() : null,
+      OPENDATEAPPROVAL_FROM: openDateApproval.from ? openDateApproval.from : null,
+      OPENDATEAPPROVAL_TO: openDateApproval.to ? openDateApproval.to : null,
+      DEPOSITS: checkListApproval ? checkListApproval : null,
+      PROCENT: procent ? +procent / 100 : null
+    })
     if (depositList.some((item: any) => item.state === 6)) {
       if (hubConnection) {
         hubConnection 
@@ -448,7 +454,7 @@ export const Approval: FC<Props> = ({
             nameApproval ? nameApproval.toLowerCase() : null,
             openDateApproval.from ? openDateApproval.from : null,
             openDateApproval.to ? openDateApproval.to : null,
-            searchSafeIDApproval.length ? searchSafeIDApproval : null,
+            checkListApproval ? checkListApproval : null,
             procent ? +procent / 100 : null
           )
           .then((res) => {
@@ -463,7 +469,7 @@ export const Approval: FC<Props> = ({
             submitApproval();
           })
           .catch((err: Error) => {
-            console.log(err);
+            console.error(err);
             createNotify({
               text: t('adminPay.error'),
               error: true,
@@ -515,7 +521,6 @@ export const Approval: FC<Props> = ({
               </>
             )}
           </Styled.ModalItem>
-          
           <Button style={{ margin: "0 auto" }} danger onClick={paymentsConfirm}>{t("acceptAll.accept")} {procent ? procent + "%" : (t("all")).toLowerCase()}</Button>
         </div>
       </Modal>
