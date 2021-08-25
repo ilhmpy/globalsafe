@@ -330,7 +330,7 @@ export const AdminLottery = () => {
                   <TestInput
                     setOpenDate={setOpenDate}
                     openDate={openDate}
-                    label={t('adminPay.filter.date')}
+                    label={t('lotteryTable.date')}
                   />
                 </Styled.SelectWrap>
                 <Styled.SelectWrap style={{ minWidth: 240 }}>
@@ -407,7 +407,7 @@ export const AdminLottery = () => {
               ) : loading ? (
                 <Loading />
               ) : (
-                <Styled.NotFound>{t('notFound')}</Styled.NotFound>
+                <NotFound>{t('notFound')}</NotFound>
               )}
             </>
           </Styled.LotteryTable>
@@ -431,4 +431,13 @@ const Window = styled(SortingWindow)`
   @media (max-width: 694px) {
     top: 73px;
   }
+`;
+
+const NotFound = styled.div`
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 21px;
+  padding: 30px;
+  letter-spacing: 0.1px;
+  min-height: 250px;
 `;
