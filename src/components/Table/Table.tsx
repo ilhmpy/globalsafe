@@ -197,4 +197,4 @@ export const Tables = ({ list }: any) => {
       </Styled.Table>
     </Styled.TableWrap>
   );
-};
+}; 
