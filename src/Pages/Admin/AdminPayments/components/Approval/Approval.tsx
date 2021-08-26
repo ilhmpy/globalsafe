@@ -189,19 +189,12 @@ export const Approval: FC<Props> = ({
           searchSafeIDApproval.length ? searchSafeIDApproval : null,
           openDateApproval.from
             ? moment(openDateApproval.from)
-                .utcOffset('+00:00')
-                .set({ hour: 0, minute: 0, second: 0 })
+                .set({ hour: 12, minute: 0, second: 0 })
                 .toDate()
             : null,
           openDateApproval.to
             ? moment(openDateApproval.to)
-                .utcOffset('+00:00')
-                .set({ hour: 23, minute: 59, second: 59 })
-                .toDate()
-            : openDateApproval.from
-            ? moment(openDateApproval.from)
-                .utcOffset('+00:00')
-                .set({ hour: 23, minute: 59, second: 59 })
+                .set({ hour: 12, minute: 0, second: 0 })
                 .toDate()
             : null,
           null,
@@ -291,6 +284,8 @@ export const Approval: FC<Props> = ({
       setDepositList([]);
       setLoading(true);
 
+      console.log(moment(openDateApproval.from).set({ hour: 12, minute: 0, second: 0 }).toDate());
+
       hubConnection
         .invoke<RootPayments>(
           'GetUsersDeposits',
@@ -299,19 +294,12 @@ export const Approval: FC<Props> = ({
           searchSafeIDApproval.length ? searchSafeIDApproval : null,
           openDateApproval.from
             ? moment(openDateApproval.from)
-                .utcOffset('+00:00')
-                .set({ hour: 0, minute: 0, second: 0 })
+                .set({ hour: 12, minute: 0, second: 0 })
                 .toDate()
             : null,
           openDateApproval.to
             ? moment(openDateApproval.to)
-                .utcOffset('+00:00')
-                .set({ hour: 23, minute: 59, second: 59 })
-                .toDate()
-            : openDateApproval.from
-            ? moment(openDateApproval.from)
-                .utcOffset('+00:00')
-                .set({ hour: 23, minute: 59, second: 59 })
+                .set({ hour: 12, minute: 0, second: 0 })
                 .toDate()
             : null,
           null,
@@ -439,7 +427,13 @@ export const Approval: FC<Props> = ({
   };
 
   const paymentsConfirm = () => {
-    console.log(depositList)
+    console.log({
+      NAMEAPPROVAL: nameApproval ? nameApproval.toLowerCase() : null,
+      OPENDATEAPPROVAL_FROM: openDateApproval.from ? openDateApproval.from : null,
+      OPENDATEAPPROVAL_TO: openDateApproval.to ? openDateApproval.to : null,
+      DEPOSITS: checkListApproval ? checkListApproval : null,
+      PROCENT: procent ? +procent / 100 : null
+    })
     if (depositList.some((item: any) => item.state === 6)) {
       if (hubConnection) {
         hubConnection 
@@ -448,7 +442,7 @@ export const Approval: FC<Props> = ({
             nameApproval ? nameApproval.toLowerCase() : null,
             openDateApproval.from ? openDateApproval.from : null,
             openDateApproval.to ? openDateApproval.to : null,
-            searchSafeIDApproval.length ? searchSafeIDApproval : null,
+            checkListApproval ? checkListApproval : null,
             procent ? +procent / 100 : null
           )
           .then((res) => {
@@ -463,7 +457,7 @@ export const Approval: FC<Props> = ({
             submitApproval();
           })
           .catch((err: Error) => {
-            console.log(err);
+            console.error(err);
             createNotify({
               text: t('adminPay.error'),
               error: true,
@@ -496,8 +490,25 @@ export const Approval: FC<Props> = ({
             )) : <Styled.ModalItem>{t("all")}</Styled.ModalItem>}
           </div>
           <Styled.ModalDescription>{t("acceptAll.range")}</Styled.ModalDescription>
-          <Styled.ModalItem>{openDateApproval.from ? 
-          `${moment(openDateApproval.from).format("DD.MM.YYYY")} - ${moment(openDateApproval.to).format("DD.MM.YYYY")}` : t("all")}</Styled.ModalItem>
+          <Styled.ModalItem>
+            {openDateApproval.from && openDateApproval.to && (
+              <>
+                {`${moment(openDateApproval.from).format("DD.MM.YYYY")} - ${moment(openDateApproval.to).format("DD.MM.YYYY")}`}
+              </>
+            )}
+
+            {openDateApproval.from && !openDateApproval.to && (
+              <>
+                {moment(openDateApproval.from).format("DD.MM.YY")}
+              </>
+            )}
+
+            {!openDateApproval.from && !openDateApproval.to && (
+              <>
+                {t("all")}
+              </>
+            )}
+          </Styled.ModalItem>
           <Button style={{ margin: "0 auto" }} danger onClick={paymentsConfirm}>{t("acceptAll.accept")} {procent ? procent + "%" : (t("all")).toLowerCase()}</Button>
         </div>
       </Modal>
