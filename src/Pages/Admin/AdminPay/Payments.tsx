@@ -247,7 +247,6 @@ export const ModalDeposit: FC<PaidProps> = ({ data, onClose }: PaidProps) => {
       <Center onClick={handleContainerClick}>
         <PayCard>
           <PayCardBlock>
-            <PayText small>{t("adminPay.table.program")}</PayText>
             <PayText>{data.deposit.name}</PayText>
           </PayCardBlock>
           <PayCardBlock>
