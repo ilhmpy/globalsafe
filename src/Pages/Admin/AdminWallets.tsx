@@ -13,7 +13,7 @@ import { Select } from '../../components/Select/Select3';
 import { Loading } from '../../components/UI/Loading';
 import { UpTitle } from '../../components/UI/UpTitle';
 import { AppContext } from '../../context/HubContext';
-import { Notify } from '../../types/balance';
+import { Balance, Notify } from '../../types/balance';
 import { AddCompanyAccountModel, BalanceModel, CompanyAccountModel, CompanyAccountModelCollectionResult } from '../../types/balanceModel';
 import { SortingType } from '../../types/sorting';
 import { CollectionUsers } from '../../types/users';
@@ -62,25 +62,6 @@ export const AdminWallets = () => {
     activeKey: '',
     keyNotes: ''
   });
-
-  // TODO: Remove mock list 
-  const mockBalances = [
-    { id: 1,  balanceKind: 1, amount: 0, safeAmount: 'Na'},
-    { id: 2,  balanceKind: 1, amount: 235468, safeAmount: 'CWD'},
-    { id: 3,  balanceKind: 1, amount: 235468, safeAmount: 'MGCWD'},
-    { id: 4,  balanceKind: 1, amount: 235468, safeAmount: 'GCWD'},
-    { id: 5,  balanceKind: 1, amount: 235468, safeAmount: 'DIAMOND'},
-    { id: 6,  balanceKind: 1, amount: 235468, safeAmount: 'CROWDBTC'},
-    { id: 7,  balanceKind: 1, amount: 235468, safeAmount: 'CWDBONUS'},
-    { id: 8,  balanceKind: 1, amount: 235468, safeAmount: 'CARBONE'},
-    { id: 9,  balanceKind: 1, amount: 235468, safeAmount: 'BRONZE'},
-    { id: 10,  balanceKind: 1, amount: 235468, safeAmount: 'FUTURE4'},
-    { id: 11,  balanceKind: 1, amount: 235468, safeAmount: 'FUTURE5'},
-    { id: 12,  balanceKind: 1, amount: 235468, safeAmount: 'FUTURE6'},
-    { id: 13,  balanceKind: 1, amount: 235468, safeAmount: 'GLOBALSAFE'},
-  ];
-
-
 
   useEffect(() => {
     handleGetCompanyAccounts();
@@ -150,7 +131,6 @@ export const AdminWallets = () => {
           newCompanyAccount
         )
         .then((res) => {
-          console.log("Wallet Create:::", res);
           setNewWalletLoading(false);
           setIsOpenNewForm(false);
           setNewWallet({
@@ -159,13 +139,16 @@ export const AdminWallets = () => {
             keyNotes: ''
           });
 
+          // Fetch Company Accounts List
+          handleGetCompanyAccounts();
+
           // TODO: update Success message
-          createNotify({
-            text: 'Created Successfully!',
-            error: false,
-            timeleft: 5,
-            id: notifications.length,
-          });
+          // createNotify({
+          //   text: 'Created Successfully!',
+          //   error: false,
+          //   timeleft: 5,
+          //   id: notifications.length,
+          // });
         })
         .catch((err: Error) => {
           setNewWalletLoading(false);
@@ -227,7 +210,6 @@ export const AdminWallets = () => {
 
   // Refetch Selected Account Balance Data
   const handleRefreshAccountBalance = () => {
-    console.log('selectedAccount?.safeId', selectedAccount?.safeId)
     if(hubConnection) {
       setRefreshAccountBalanceLoading(true);
       hubConnection
@@ -236,8 +218,7 @@ export const AdminWallets = () => {
           selectedAccount?.safeId
         )
         .then((res) => {
-          // TODO: Set loaded data to Selected Account Balances
-          console.log("RefreshAccountBalance:::", res);
+          setSelectedAccount((state) => state ? {...state, balances: res} : null);
           setRefreshAccountBalanceLoading(false);
         })
         .catch((err: Error) => {
@@ -252,6 +233,10 @@ export const AdminWallets = () => {
   const handleAccountsTransfer = () => {
     // AccountsTransfer(string accountSafeIdFrom, string accountSafeIdTo, string volume, BalanceKind balanceKind)
     if(hubConnection) {
+      console.log("accountSafeIdFrom", selectedAccount?.safeId);
+      console.log("accountSafeIdTo", transferToAccount?.safeId);
+      console.log("volume", transferAmount);
+      console.log("BalanceKind", selectedBalance?.balanceKind);
       setAccountsTransferLoading(true);
       hubConnection
         .invoke<any>(
@@ -265,15 +250,15 @@ export const AdminWallets = () => {
           setAccountsTransferLoading(false);
           console.log("AccountsTransfer:::", res);
           // TODO: update Success message
-          createNotify({
-            text: "Success",
-            error: false,
-            timeleft: 5,
-            id: notifications.length,
-          });
+          // createNotify({
+          //   text: "Success",
+          //   error: false,
+          //   timeleft: 5,
+          //   id: notifications.length,
+          // });
 
           // Close Transfer Confirm Modal
-          handleCloseConfirmTransferModal()
+          handleCloseConfirmTransferModal();
         })
         .catch((err: Error) => {
           setAccountsTransferLoading(false);
@@ -291,8 +276,6 @@ export const AdminWallets = () => {
         });
     }
   };
-
-
 
 
   const handleShowCompanyAccount = (accountToShow: CompanyAccountModel) => {
@@ -316,7 +299,7 @@ export const AdminWallets = () => {
     setIsKeyNotesActive(false);
   };
 
-  const handleShowTransferModal = (balance: any) => {
+  const handleShowTransferModal = (balance: BalanceModel) => {
     // Close Account Details Modal
     setIsOpenShowForm(false);
 
@@ -388,8 +371,10 @@ export const AdminWallets = () => {
                     <Name>{companyAccount.name}</Name>
                     <BalanceText>Баланс, CWD</BalanceText>
                     <AmountGroup>
-                      <Count>{companyAccount.balances[0]?.amount}</Count>
-                      <PlusNumber>{companyAccount.balances.length}</PlusNumber>
+                      <Count>{companyAccount.balances.find(b => b.balanceKind === 1)?.safeAmount || "0"}</Count>
+                      <PlusNumber>
+                        {(companyAccount.balances.length - 1) > 0 ? `+${companyAccount.balances.length - 1}` : ''}
+                      </PlusNumber>
                     </AmountGroup>
                   </Wallet>
                 ))}
@@ -642,9 +627,9 @@ export const AdminWallets = () => {
 
             <ChipContent>
               {
-                mockBalances.map((balance) => (
-                  <Chip key={`balance-item-${balance.id}`} onClick={() => handleShowTransferModal(balance)}>
-                    {`${balance.safeAmount} - ${balance.amount}`}
+                selectedAccount?.balances.map((balance, i) => (
+                  <Chip key={`balance-item-${i}`} onClick={() => handleShowTransferModal(balance)}>
+                    {`${Balance[balance.balanceKind]} - ${balance.safeAmount}`}
                   </Chip>
                 ))
               }
@@ -675,10 +660,10 @@ export const AdminWallets = () => {
       {isOpenTransferForm && selectedBalance && (
         <Modal onClose={handleCloseTransferModal}>
           <ModalBlock>
-            <ModalTitle>{selectedBalance?.safeAmount}</ModalTitle>
+            <ModalTitle>{`${selectedAccount?.name}, ${Balance[selectedBalance?.balanceKind]}`}</ModalTitle>
             <ContentRow>
               <Label>{t('wallets.available')}</Label>
-              <p>{selectedBalance?.amount} {selectedBalance?.safeAmount}</p>
+              <p>{selectedBalance?.amount} {Balance[selectedBalance?.balanceKind]}</p>
             </ContentRow>
 
             <SelectGroup>
@@ -715,12 +700,12 @@ export const AdminWallets = () => {
         </Modal>
       )}
 
-      {isSavingConfirm && (
+      {isSavingConfirm && selectedBalance && (
         <Modal onClose={handleCloseConfirmTransferModal}>
           <ModalBlock sm confirm>
             <ConfirmTitle>{t('wallets.transferFunds')}</ConfirmTitle>
             <ConfirmContent>
-              {`Вы уверены, что хотите перевести с ${selectedAccount?.name} ${transferAmount} ${selectedBalance?.safeAmount} на ${transferToAccount?.name}?`}
+              {`Вы уверены, что хотите перевести с ${selectedAccount?.name} ${transferAmount} ${Balance[selectedBalance.balanceKind]} на ${transferToAccount?.name}?`}
             </ConfirmContent>
             <Button
               danger
