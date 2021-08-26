@@ -203,7 +203,9 @@
       "openDate": "Opening date",
       "paid": "Paid",
       "amount": "Current number of",
-      "cost": "Unit cost"
+      "cost": "Unit cost",
+      "program": "Program",
+      "date": "Date of open and close deposit"
     },
     "filter": {
       "user": "User",
