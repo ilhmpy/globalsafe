@@ -309,6 +309,7 @@ const DepositWrap = styled(Card)`
   margin-bottom: 30px;
   @media (max-width: 576px) {
     padding: 20px 0px;
+    margin-bottom: 20px;
   }
 `;
 
@@ -363,6 +364,11 @@ const DepositItem = styled.div`
   @media (max-width: 768px) {
     width: 99px;
     min-height: 112px;
+  }
+  &:nth-child(6)  {
+    ${UpTitle}::before {
+      width: 48px;
+    }
   }
   ${UpTitle} {
     margin-bottom: 0;

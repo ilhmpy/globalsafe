@@ -387,7 +387,7 @@ export const AdminDeposit = () => {
       <Styled.TitleHead>{t('adminDeposit.headTitle')}</Styled.TitleHead>
       <Rounds />
 
-      <Styled.FilterBlock>
+      <CustomFilterBlock>
         <Styled.FilterHeader>
           <FilterName>{t('adminDeposit.filter')}</FilterName>
           <Styled.ShowHide onClick={() => setOpen(!open)}>
@@ -425,7 +425,7 @@ export const AdminDeposit = () => {
             </Button>
           </Styled.SelectContainer>
         </CSSTransition>
-      </Styled.FilterBlock>
+      </CustomFilterBlock>
 
       <Card>
         <PaymentsTable>
@@ -511,6 +511,13 @@ const Sort = styled(SortingItem)`
     @media (max-width: 576px) {
       display: none;
     }
+  }
+`;
+
+const CustomFilterBlock = styled(Styled.FilterBlock)`
+  margin-bottom: 30px;
+  @media (max-width: 576px) {
+    margin-bottom: 20px;
   }
 `;
 
