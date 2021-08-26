@@ -350,6 +350,7 @@ const Value = styled.div`
     padding-left: 25px;
     padding-right: 25px;
     border-radius: 5px;
+    display: none;
   }
 
   @media (max-width: 768px) {
