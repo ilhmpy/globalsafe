@@ -64,55 +64,58 @@ export const Delayed: FC<Props> = ({ listDeposits }: Props) => {
   const hubConnection = appContext.hubConnection;
   const [name, setName] = useState('');
   const [notifications, setNotifications] = useState<Notify[]>([]);
+  const { t } = useTranslation();
+
+  const sortings = [t("nameSort"), t("nameSort2"), t("descendOpenDateDeposit"), t("ascendOpenDateDeposit"), t("descendCloseDateDeposit"), t("ascendCloseDateDeposit"), t("descendPaySum"), t("ascendPaySum")];
 
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
   const [sorting, setSorting] = useState<SortingType[]>([]);
   const [listForSorting, setListForSorting] = useState<SelectValues[]>([
     {
-      text: 'Название: От А до Я',
+      id: 0,
       active: false,
       OrderType: 2,
       FieldName: 'depositId',
     },
     {
-      text: 'Название: От Я до А',
+      id: 1,
       active: false,
       OrderType: 1,
       FieldName: 'depositId',
     },
     {
-      text: 'По убыванию даты открытия депозита',
+      id: 2,
       active: false,
       OrderType: 2,
       FieldName: 'creationDate',
     },
     {
-      text: 'По возрастанию даты открытия депозита',
+      id: 3,
       active: false,
       OrderType: 1,
       FieldName: 'creationDate',
     },
     {
-      text: 'По убыванию даты закрытия депозита',
+      id: 4,
       active: false,
       OrderType: 2,
       FieldName: 'endDate',
     },
     {
-      text: 'По возрастанию даты закрытия депозита',
+      id: 5,
       active: false,
       OrderType: 1,
       FieldName: 'endDate',
     },
 
     {
-      text: 'По убыванию суммы к выплате',
+      id: 6,
       active: false,
       OrderType: 2,
       FieldName: 'pendingAmount',
     },
     {
-      text: 'По возрастанию суммы к выплате',
+      id: 7,
       active: false,
       OrderType: 1,
       FieldName: 'pendingAmount',
@@ -200,7 +203,6 @@ export const Delayed: FC<Props> = ({ listDeposits }: Props) => {
       to: undefined,
     });
   };
-  const { t } = useTranslation();
 
   const namesProgram = checkList.map((i: any) => i.safeId);
   const idProgram = listDeposits.filter((i) => namesProgram.includes(i.safeId));
@@ -364,7 +366,7 @@ export const Delayed: FC<Props> = ({ listDeposits }: Props) => {
                       key={index}
                       onClick={() => getActiveSort(index)}
                     >
-                      {obj.text}
+                      {sortings[obj.id]}
                     </Sort>
                   ))}
                 </WindowBody>

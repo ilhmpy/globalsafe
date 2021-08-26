@@ -492,7 +492,7 @@ export const InfoMain = () => {
                         {t('depositSelect.bill')}
                       </Styled.Warning>
                     ) : null}
-                    <Styled.ModalButton blue>Перевести</Styled.ModalButton>
+                    <Styled.ModalButton blue>{t("depositSelect.translate")}</Styled.ModalButton>
                   </div>
                   {/* {depositSelect ? (
                     <Styled.Conditions>

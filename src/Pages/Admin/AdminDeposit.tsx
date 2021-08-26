@@ -15,7 +15,7 @@ import { Button } from '../../components/Button/Button';
 import { Select } from '../../components/Select/Select2';
 import { TestInput } from '../../components/UI/DayPicker';
 import { Loading } from '../../components/UI/Loading';
-import { UpTitle } from '../../components/UI/UpTitle';
+import { UpTitle } from '../../components/UI/UpTitle'; 
 import { AppContext } from '../../context/HubContext';
 import { Card } from '../../globalStyles';
 import { OpenDate } from '../../types/dates';
@@ -106,54 +106,56 @@ export const AdminDeposit = () => {
   const [sorting, setSorting] = useState<SortingType[]>([]);
   const [listForSorting, setListForSorting] = useState<SelectValues[]>([
     {
-      text: 'Пользователь: От А до Я',
+      id: 0,
       active: false,
       OrderType: 1,
       FieldName: 'userName',
     },
     {
-      text: 'Пользователь: От Я до А',
+      id: 1,
       active: false,
       OrderType: 2,
       FieldName: 'userName',
     },
     {
-      text: 'Название: От А до Я',
+      id: 2,
       active: false,
       OrderType: 2,
       FieldName: 'depositId',
     },
     {
-      text: 'Название: От Я до А',
+      id: 3,
       active: false,
       OrderType: 1,
       FieldName: 'depositId',
     },
     {
-      text: 'По убыванию суммы депозита',
+      id: 4,
       active: false,
       OrderType: 2,
       FieldName: 'amount',
     },
     {
-      text: 'По возрастанию суммы депозита',
+      id: 5,
       active: false,
       OrderType: 1,
       FieldName: 'amount',
     },
     {
-      text: 'По убыванию даты след.  выплаты',
+      id: 5,
       active: false,
       OrderType: 2,
       FieldName: 'paymentDate',
     },
     {
-      text: 'По возрастанию даты след.  выплаты',
+      id: 6,
       active: false,
       OrderType: 1,
       FieldName: 'paymentDate',
     },
   ]);
+
+  const sortings = [t("userSort"), t("userSort2"), t("nameSort"), t("nameSort2"), t("descend"), t("ascend"), t("nextPayDescend"), t("nextPayAscend")];
 
   const myLoad = () => {
     setCount(false);
@@ -447,7 +449,7 @@ export const AdminDeposit = () => {
                 />
               </BurgerButton>
               <Window open={sortingWindowOpen}>
-                <WindowTitle>Сортировка</WindowTitle>
+                <WindowTitle>{t("sorting")}</WindowTitle>
                 <WindowBody>
                   {listForSorting.map((obj, index) => (
                     <Sort
@@ -455,7 +457,7 @@ export const AdminDeposit = () => {
                       key={index}
                       onClick={() => getActiveSort(index)}
                     >
-                      {obj.text}
+                      {sortings[obj.id]}
                     </Sort>
                   ))}
                 </WindowBody>
