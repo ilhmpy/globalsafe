@@ -532,5 +532,15 @@
   "descendCloseDateDeposit": "По убыванию даты закрытия депозита",
   "ascendCloseDateDeposit": "По возрастанию даты закрытия депозита",
   "descendPaySum": "По убыванию суммы к выплате",
-  "ascendPaySum": "По возрастанию суммы к выплате"
+  "ascendPaySum": "По возрастанию суммы к выплате",
+  "descendDateBuy": "По убыванию даты покупки",
+  "ascendDateBuy": "По возрастанию даты покупки",
+  "descendUnit": "По убыванию стоимости за единицу",
+  "ascendUnit": "По возрастанию стоимости за единицу",
+  "descendBalance": "По убыванию суммы баланса",
+  "ascendBalance": "По возростанию суммы баланса",
+  "descendDateCreate": "По убыванию даты создания",
+  "ascendDateCreate": "По возрастанию даты создания",
+  "descendSumDeposit": "По убыванию суммы депозита",
+  "ascendSumDeposit": "По возростанию суммы депозита"
 }

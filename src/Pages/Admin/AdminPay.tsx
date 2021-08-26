@@ -686,7 +686,7 @@ export const AdminPay = () => {
                 </BurgerButton>
               </TableHeadItemPaid>
               <Window open={sortingWindowOpenForPay}>
-                <WindowTitle>Сортировка</WindowTitle>
+                <WindowTitle>{t("sorting")}</WindowTitle> 
                 <WindowBody>
                   {listForSortingForPay.map((obj, index) => (
                     <Sort

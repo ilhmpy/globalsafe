@@ -533,5 +533,15 @@
   "descendCloseDateDeposit": "By descending of close date deposit",
   "ascendCloseDateDeposit": "By ascending of close date deposit",
   "descendPaySum": "By descending pay sum",
-  "ascendPaySum": "By ascending pay sum"
+  "ascendPaySum": "By ascending pay sum",
+  "descendDateBuy": "By desceding date buy",
+  "ascendDateBuy": "By ascending date buy",
+  "descendUnit": "Descending unit cost",
+  "ascendUnit": "Ascending unit cost",
+  "descendBalance": "By descending sum of balance",
+  "ascendBalance": "By ascending su of balance",
+  "descendDateCreate": "By descending date of create",
+  "ascendDateCreate": "By ascending date of create",
+  "descendSumDeposit": "By descending sum of deposit",
+  "ascendSumDeposit": "By ascending sum of deposit"
 }
