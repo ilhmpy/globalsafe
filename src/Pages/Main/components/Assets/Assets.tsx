@@ -14,10 +14,7 @@ import { Page } from '../../../../components/UI/Page';
 import { UpTitle } from '../../../../components/UI/UpTitle';
 import { AppContext } from '../../../../context/HubContext';
 import { Container } from '../../../../globalStyles';
-import {
-  CollectionListDeposits,
-  ListDeposits,
-} from '../../../../types/deposits';
+import { CollectionListDeposits, ListDeposits } from '../../../../types/deposits';
 import {
   BlockBody,
   BlockContainers,
@@ -39,9 +36,7 @@ export const Assets = () => {
   const [link, setLink] = useState('');
   const [min, setMin] = useState(1);
   const [value, setValue] = useState<string | undefined>();
-  const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>(
-    [],
-  );
+  const [listDeposits, setListDeposits] = useState<CollectionListDeposits[]>([]);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const { t } = useTranslation();
@@ -62,11 +57,9 @@ export const Assets = () => {
 
   const handleClick = (num: number) => {
     setIsNormalOpen(true);
-    const newLink = `https://cwd.global/shopping/payment?to_name=mcent-fond&amount=${num}`;
+    const newLink = `https://backup.cwd.global/shopping/payment?to_name=mcent-fond&amount=${num}`;
     setLink(newLink);
-    setOldLink(
-      `https://cwd.global/shopping/payment?to_name=mcent-fond&amount=`,
-    );
+    setOldLink(`https://backup.cwd.global/shopping/payment?to_name=mcent-fond&amount=`);
     setValue('');
   };
 
@@ -116,7 +109,8 @@ export const Assets = () => {
                 as="button"
                 onClick={toLink}
                 danger
-                disabled={value === undefined || +value < 1 ? true : false}>
+                disabled={value === undefined || +value < 1 ? true : false}
+              >
                 {`${t('assets.buy')} MCENT`}
               </ModalButton>
             </ModalBlockBody>
@@ -137,11 +131,7 @@ export const Assets = () => {
         </BlockItem>
       </BlockContainers>
       <SwiperContainer>
-        <Swiper
-          spaceBetween={50}
-          slidesPerView={1}
-          loop
-          pagination={{ clickable: true }}>
+        <Swiper spaceBetween={50} slidesPerView={1} loop pagination={{ clickable: true }}>
           <BlockItem>
             <BlockTitle>{'MILLICENT (MCENT)'}</BlockTitle>
 
