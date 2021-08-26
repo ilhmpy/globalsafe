@@ -348,6 +348,30 @@ export const AdminPay = () => {
   );
 
   const submit = () => {
+    console.log({
+      NAME: name,
+      openDate,
+      searchSafeID
+    })
+    console.log(
+      openDate.from
+      ? moment(openDate.from)
+          .utcOffset('+00:00')
+          .set({ hour: 0, minute: 0, second: 0 })
+          .toDate()
+      : null,
+    openDate.to
+      ? moment(openDate.to)
+          .utcOffset('+00:00')
+          .set({ hour: 23, minute: 59, second: 59 })
+          .toDate()
+      : openDate.from
+      ? moment(openDate.from)
+          .utcOffset('+00:00')
+          .set({ hour: 23, minute: 59, second: 59 })
+          .toDate()
+      : null,
+    )
     if (hubConnection) {
       setLoading(true);
       setCurrentPagePay(1);
