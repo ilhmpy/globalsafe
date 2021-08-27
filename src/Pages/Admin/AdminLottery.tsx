@@ -53,7 +53,7 @@ export const AdminLottery = () => {
 
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
 
-  const sortings = [t("descendDate"), t("ascendDate"), t("typeWin"), t("typeWin2"), t("descendWinSum"), t("ascendingWinSum"), t("winners"), t("winners2")];
+  const sortings = [t("descendDate"), t("ascendDate"), t("typeWin"), t("typeWin2"), t("descendWinSum"), t("ascendWinSum"), t("winners"), t("winners2")];
 
   const [sorting, setSorting] = useState<SortingType[]>([]);
   const [listForSorting, setListForSorting] = useState<SelectValues[]>([
