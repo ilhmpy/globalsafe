@@ -142,8 +142,8 @@ const App: FC = () => {
         function (event: any) {
           console.log('OneSignal notification clicked:', event);
           OneSignal.init({
-            // appId: 'f6bd054b-e35f-43b0-b74f-70ec77dac183',
-            // safari_web_id: APP_SAFARI_ID,
+            appId: 'f6bd054b-e35f-43b0-b74f-70ec77dac183',
+            safari_web_id: APP_SAFARI_ID,
             notifyButton: {
               enable: true,
               text: {
@@ -182,6 +182,27 @@ const App: FC = () => {
           // if(btn) btn.style.display = '';
         }
       });
+    });
+
+    OneSignal.push([
+      'addListenerForNotificationOpened',
+      function (event: any) {
+        console.log('OneSignal notification clicked:', event);
+        const isNewsFeatureNotification =
+          event.data && event.data.notificationType === 'news-feature';
+        if (isNewsFeatureNotification) {
+          if (event.action === '') {
+          } else if (event.action === 'like-button') {
+            alert("Glad you liked it! We'll show you similar stories in the future");
+          } else if (event.action === 'read-more-button') {
+            alert('Showing you the full news article...');
+          }
+        }
+      },
+    ]);
+
+    OneSignal.on('notificationClick', function (event: any) {
+      console.warn('OneSignal notification displayed:', event);
     });
   }, [localStorage.getItem('i18nextLng')]);
 
