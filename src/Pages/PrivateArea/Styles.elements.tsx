@@ -762,6 +762,8 @@ export const ModalListText = styled.div<{ head?: boolean }>`
   letter-spacing: 0.1px;
   padding-right: 5px;
   color: ${(props) => (props.head ? props.theme.depositHead : props.theme.text2)};
+  text-overflow: ellipsis;
+  overflow: hidden;
 `;
 
 export const ModalListItem = styled.li`

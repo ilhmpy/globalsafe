@@ -6,7 +6,7 @@ import { DepositsCollection } from '../../types/info';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../../components/Button/Button';
-import styled from "styled-components/macro";
+import styled from 'styled-components/macro';
 
 type Props = {
   depositListModal: boolean;
@@ -52,7 +52,7 @@ export const DepositListModal: FC<Props> = ({
             : ''}
         </Styled.ModalList>
         <Styled.ModalListButton onClick={() => setDepositListModal(false)} danger>
-          Понятно
+          {t('unders')}
         </Styled.ModalListButton>
       </Modal>
     </CSSTransition>

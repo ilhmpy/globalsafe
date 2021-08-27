@@ -397,8 +397,8 @@ export const Radial = styled.div<{ bg: string }>`
     color: ${(props) => props.theme.text};
   }
   @media (max-width: 576px) {
-    width: 63px;
-    height: 63px;
+    width: 100px;
+    height: 100px;
     border-width: 3px;
     span {
       font-size: 12px;
@@ -459,14 +459,20 @@ export const SelectContainerLottery = styled(SelectContainer)`
 `;
 
 export const SelectWrap = styled.div<{ input?: boolean }>`
+  max-width: ${(props) => (props.input ? '153px' : '280px')};
   margin: 20px 20px 20px 0;
   position: relative;
+  @media (max-width: 992px) {
+    max-width: ${(props) => (props.input ? '153px' : '45%')};
+  }
   @media (max-width: 768px) {
-    max-width: 100%;
-    margin: 12px 20px 12px 0;
+    width: 100%;
+    max-width: calc(50% - 20px);
+    margin: 12px 10px;
   }
   @media (max-width: 576px) {
     margin: 12px 0px;
+    max-width: 100%;
   }
 `;
 

@@ -280,16 +280,16 @@ export const AdminPay = () => {
       setLoading(true);
       setDepositPayList([]);
 
-    // GetDepositsCharges Model
-    // Task<CollectionResult> GetDepositsCharges(
-    //   string? userName,
-    //   DateTime? from,
-    //   DateTime? to,
-    //   string[]? usersDepositsSafeIds,
-    //   string[]? depositsSafeIds,
-    //   BalanceOperationKind[] kinds,
-    //   long skip,
-    //   long take);
+      // GetDepositsCharges Model
+      // Task<CollectionResult> GetDepositsCharges(
+      //   string? userName,
+      //   DateTime? from,
+      //   DateTime? to,
+      //   string[]? usersDepositsSafeIds,
+      //   string[]? depositsSafeIds,
+      //   BalanceOperationKind[] kinds,
+      //   long skip,
+      //   long take);
 
       hubConnection
         .invoke<RootCharges>(
@@ -351,27 +351,21 @@ export const AdminPay = () => {
     console.log({
       NAME: name,
       openDate,
-      searchSafeID
-    })
+      searchSafeID,
+    });
     console.log(
       openDate.from
-      ? moment(openDate.from)
-          .utcOffset('+00:00')
-          .set({ hour: 0, minute: 0, second: 0 })
-          .toDate()
-      : null,
-    openDate.to
-      ? moment(openDate.to)
-          .utcOffset('+00:00')
-          .set({ hour: 23, minute: 59, second: 59 })
-          .toDate()
-      : openDate.from
-      ? moment(openDate.from)
-          .utcOffset('+00:00')
-          .set({ hour: 23, minute: 59, second: 59 })
-          .toDate()
-      : null,
-    )
+        ? moment(openDate.from).utcOffset('+00:00').set({ hour: 0, minute: 0, second: 0 }).toDate()
+        : null,
+      openDate.to
+        ? moment(openDate.to).utcOffset('+00:00').set({ hour: 23, minute: 59, second: 59 }).toDate()
+        : openDate.from
+        ? moment(openDate.from)
+            .utcOffset('+00:00')
+            .set({ hour: 23, minute: 59, second: 59 })
+            .toDate()
+        : null
+    );
     if (hubConnection) {
       setLoading(true);
       setCurrentPagePay(1);
@@ -521,7 +515,13 @@ export const AdminPay = () => {
               <Styled.Radial
                 bg={theme === 'light' ? 'rgba(255, 65, 110, 0.2)' : 'rgba(255, 65, 110, 1)'}
               >
-                <span>{sum ? (sum[2] / 100000).toLocaleString('ru-RU') : '-'}</span>
+                <span>
+                  {sum
+                    ? (sum[2] / 100000).toLocaleString('ru-RU', {
+                        maximumFractionDigits: 1,
+                      })
+                    : '-'}
+                </span>
                 <span>CWD</span>
               </Styled.Radial>
             </Styled.PayItem>
@@ -835,6 +835,7 @@ const PayTab = styled(Tab)`
   }
   @media (max-width: 768px) {
     width: 110px !important;
+    margin-right: 10px;
   }
   @media (max-width: 576px) {
     width: 100px !important;
