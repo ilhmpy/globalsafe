@@ -772,7 +772,7 @@ export const TimerModalUnits = styled.div`
   padding-left: 8px;
   text-align: center;
   span {
-    padding-right: 11px;
+    padding-right: 19px;
     &:last-child {
       padding-right: 0px;
     }
