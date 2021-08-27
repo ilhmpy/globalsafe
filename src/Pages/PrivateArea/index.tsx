@@ -214,7 +214,6 @@ export const InfoMain = () => {
       hubConnection
         .invoke<Commisions>('GetWithdrawFee', 1, Number(value))
         .then((res: any) => {
-          console.log('commisions', res);
           setBlockchainCommision((res.networkFee / 100000).toString());
           setServiceCommision((res.serviceFee / 100000).toString());
         })

@@ -2056,7 +2056,6 @@ export const Main = () => {
 
   const winnerResult = (res: Prize) => {
     setResult(res);
-    console.log('result', result);
   };
 
   const closeTimer = (e: React.MouseEvent) => {
@@ -2122,11 +2121,16 @@ export const Main = () => {
         {showTimer && (
           <FixedBlock>
             <div>
-              <Timer closeTimer={closeTimer} icon={true} clock={clock} setShowModal={setShowModal} />
+              <Timer
+                closeTimer={closeTimer}
+                icon={true}
+                clock={clock}
+                setShowModal={setShowModal}
+              />
             </div>
           </FixedBlock>
         )}
- 
+
         {showModal && (
           <ModalLottery
             drawResult={drawResult}
@@ -2222,20 +2226,20 @@ const TimerPopup = styled.div`
 `;
 
 export const FixedBlock = styled.div`
-    width: 100%;
-    height: 5px; 
-    max-width: 1280px; 
-    margin-left: auto; 
-    z-index: 99999;
-    display: flex;
-    flex-direction: column; 
-    margin-right: auto;
-    right: 0;
-    left: 0; 
-    position: fixed; 
-    top: 630px;
+  width: 100%;
+  height: 5px;
+  max-width: 1280px;
+  margin-left: auto;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  margin-right: auto;
+  right: 0;
+  left: 0;
+  position: fixed;
+  top: 630px;
 
-    & > div {
-      position: relative;
-    }
+  & > div {
+    position: relative;
+  }
 `;
