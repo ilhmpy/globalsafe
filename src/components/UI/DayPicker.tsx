@@ -993,8 +993,12 @@ const DatePickerContainer = styled.div`
     right: 0;
     left: 0;
     z-index: 9999;
+    @media (max-width: 992px) {
+      width: 370px;
+    }
     @media (max-width: 576px) {
       bottom: -60px;
+      width: 100%;
     }
     .DayPicker-Months {
       height: 395px;
