@@ -19,6 +19,7 @@ export const Notification = styled.div<{ error?: boolean }>`
   margin-bottom: 10px;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
+  opacity: 80%;
   background: ${(props) => props.error ? '#ED4C5C' : '#BCD476'};
   position: relative;
 `;

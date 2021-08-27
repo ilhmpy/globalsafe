@@ -100,27 +100,29 @@ export const AdminPortfolio = () => {
 
   const [sortingGCWD, setSortingGCWD] = useState<SortingType[]>([]);
 
+  const sortings = [t("descendDateBuy"), t("ascendDateBuy"), t("descendUnit"), t("ascendUnit")];
+
   const [listForSortingGCWD, setListForSortingGCWD] = useState<SelectValues[]>([
     {
-      text: 'По убыванию даты покупки',
+      id: 0,
       active: false,
       OrderType: 2,
       FieldName: 'creationDate',
     },
     {
-      text: 'По возрастанию даты покупки',
+      id: 1,
       active: false,
       OrderType: 1,
       FieldName: 'creationDate',
     },
-    {
-      text: 'По убыванию стоимости за единицу',
+    { 
+      id: 2,
       active: false,
       OrderType: 2,
       FieldName: 'unitPrice',
     },
     {
-      text: 'По возрастанию стоимости за единицу',
+      id: 3,
       active: false,
       OrderType: 1,
       FieldName: 'unitPrice',
@@ -131,25 +133,25 @@ export const AdminPortfolio = () => {
 
   const [listForSortingMGCWD, setListForSortingMGCWD] = useState<SelectValues[]>([
     {
-      text: 'По убыванию даты покупки',
+      id: 0,
       active: false,
       OrderType: 2,
       FieldName: 'creationDate',
     },
     {
-      text: 'По возрастанию даты покупки',
+      id: 1,
       active: false,
       OrderType: 1,
       FieldName: 'creationDate',
     },
-    {
-      text: 'По убыванию стоимости за единицу',
+    { 
+      id: 2,
       active: false,
       OrderType: 2,
       FieldName: 'unitPrice',
     },
     {
-      text: 'По возрастанию стоимости за единицу',
+      id: 3,
       active: false,
       OrderType: 1,
       FieldName: 'unitPrice',
@@ -158,27 +160,33 @@ export const AdminPortfolio = () => {
 
   const [sortingDIAMOND, setSortingDIAMOND] = useState<SortingType[]>([]);
 
+  const sortingsDiamond = [];
+
   const [listForSortingDIAMOND, setListForSortingDIAMOND] = useState<SelectValues[]>([
     {
-      text: 'По убыванию даты покупки',
+      id: 0,
+      // text: 'По убыванию даты покупки',
       active: false,
       OrderType: 2,
       FieldName: 'creationDate',
     },
     {
-      text: 'По возрастанию даты покупки',
+      id: 1,
+      // text: 'По возрастанию даты покупки',
       active: false,
       OrderType: 1,
       FieldName: 'creationDate',
     },
     {
-      text: 'По убыванию стоимости за единицу',
+      id: 2,
+     // text: 'По убыванию стоимости за единицу',
       active: false,
       OrderType: 2,
       FieldName: 'unitPrice',
     },
     {
-      text: 'По возрастанию стоимости за единицу',
+      id: 3,
+    //  text: 'По возрастанию стоимости за единицу',
       active: false,
       OrderType: 1,
       FieldName: 'unitPrice',
@@ -442,7 +450,7 @@ export const AdminPortfolio = () => {
                     onClick={() => setSortingWindowOpenGCWD((prev) => !prev)}
                   />
                   <Window open={sortingWindowOpenGCWD}>
-                    <WindowTitle>Сортировка</WindowTitle>
+                    <WindowTitle>{t("sorting")}</WindowTitle>
                     <WindowBody>
                       {listForSortingGCWD.map((obj, index) => (
                         <SortingItem
@@ -450,7 +458,7 @@ export const AdminPortfolio = () => {
                           key={index}
                           onClick={() => getActiveSortGCWD(index)}
                         >
-                          {obj.text}
+                          {sortings[obj.id]}
                         </SortingItem>
                       ))}
                     </WindowBody>
@@ -506,7 +514,7 @@ export const AdminPortfolio = () => {
                         key={index}
                         onClick={() => getActiveSortMGCWD(index)}
                       >
-                        {obj.text}
+                        {sortings[obj.id]}
                       </SortingItem>
                     ))}
                   </WindowBody>
@@ -559,7 +567,7 @@ export const AdminPortfolio = () => {
                         key={index}
                         onClick={() => getActiveSortDIAMOND(index)}
                       >
-                        {obj.text}
+                        {sortings[obj.id]} 
                       </SortingItem>
                     ))}
                   </WindowBody>

@@ -105,8 +105,16 @@ export const Tariffs = () => {
       hubConnection
         .invoke<ListDeposits>('GetDeposits', languale, true, 0, 40)
         .then((res) => {
-          // console.log("GetDeposits", res);
-          setListDeposits(res.collection);
+          const sortedList = [...res.collection].sort((a, b) => {
+            if(a.name === "GOLD") {
+              return -1;
+            } else if(a.name === "LIDER") {
+              return 1;
+            } else {
+              return 0;
+            }
+          })
+          setListDeposits(sortedList);
         })
         .catch((err: Error) => console.log(err));
     }

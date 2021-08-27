@@ -6,7 +6,7 @@ import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
 import burgerGroup from '../../assets/img/burgerGroup.png';
 import { Button } from '../../components/Button/Button';
-import { Select } from '../../components/Select/Select';
+import { Select } from '../../components/Select/Select'; 
 import { SliderComponent } from '../../components/Slider/Slider';
 import { DateInput } from '../../components/UI/DatePicker';
 import { TestInput } from '../../components/UI/DayPicker';
@@ -49,54 +49,66 @@ export const AdminLottery = () => {
     to: undefined,
   });
 
+  const { t } = useTranslation();
+
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
+
+  const sortings = [t("descendDate"), t("ascendDate"), t("typeWin"), t("typeWin2"), t("descendWinSum"), t("ascendingWinSum"), t("winners"), t("winners2")];
 
   const [sorting, setSorting] = useState<SortingType[]>([]);
   const [listForSorting, setListForSorting] = useState<SelectValues[]>([
     {
-      text: 'По убыванию даты',
+      id: 0,
+     // text: 'По убыванию даты',
       active: false,
       OrderType: 2,
       FieldName: 'viewPrizeDrawLogModel.drawDate',
     },
     {
-      text: 'По возрастанию даты',
+      id: 1,
+      // text: 'По возрастанию даты',
       active: false,
       OrderType: 1,
       FieldName: 'viewPrizeDrawLogModel.drawDate',
     },
     {
-      text: 'Тип выигрыша: От А до Я',
+      id: 2,
+      // text: 'Тип выигрыша: От А до Я',
       active: false,
       OrderType: 1,
       FieldName: 'viewPrizeDefinitionModel.kind',
     },
-    {
-      text: 'Тип выигрыша: От Я до А',
+    { 
+      id: 3,
+     // text: 'Тип выигрыша: От Я до А',
       active: false,
       OrderType: 2,
       FieldName: 'viewPrizeDefinitionModel.kind',
     },
     {
-      text: 'По убыванию суммы выигрыша',
+      id: 4,
+      // text: 'По убыванию суммы выигрыша',
       active: false,
       OrderType: 2,
       FieldName: 'viewPrizeDefinitionModel.volume',
     },
-    {
-      text: 'По возрастанию суммы выигрыша',
+    { 
+      id: 5,
+     // text: 'По возрастанию суммы выигрыша',
       active: false,
       OrderType: 1,
       FieldName: 'viewPrizeDefinitionModel.volume',
     },
     {
-      text: 'Победители: От А до Я',
+      id: 6,
+     // text: 'Победители: От А до Я',
       active: false,
       OrderType: 1,
       FieldName: 'userName',
     },
     {
-      text: 'Победители: От Я до А',
+      id: 7,
+      // text: 'Победители: От Я до А',
       active: false,
       OrderType: 2,
       FieldName: 'userName',
@@ -117,7 +129,6 @@ export const AdminLottery = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
-  const { t } = useTranslation();
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   const languale = lang === 'ru' ? 1 : 0;
   const list = [t('win.one'), t('win.two'), t('win.three')];
@@ -366,7 +377,7 @@ export const AdminLottery = () => {
                         />
                       </BurgerButton>
                       <Window open={sortingWindowOpen}>
-                        <WindowTitle>Сортировка</WindowTitle>
+                        <WindowTitle>{t("sorting")}</WindowTitle>
                         <WindowBody>
                           {listForSorting.map((obj, index) => (
                             <SortingItem
@@ -374,7 +385,7 @@ export const AdminLottery = () => {
                               key={index}
                               onClick={() => getActiveSort(index)}
                             >
-                              {obj.text}
+                              {sortings[obj.id]}
                             </SortingItem>
                           ))}
                         </WindowBody>

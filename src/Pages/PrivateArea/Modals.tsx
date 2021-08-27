@@ -52,7 +52,7 @@ export const DepositListModal: FC<Props> = ({
             : ''}
         </Styled.ModalList>
         <Styled.ModalListButton onClick={() => setDepositListModal(false)} danger>
-          {t('unders')}
+          {t("privateArea.undr")}
         </Styled.ModalListButton>
       </Modal>
     </CSSTransition>

@@ -92,6 +92,8 @@ export const AdminPay = () => {
   const { lang } = useContext(LangualeContext);
   const { t } = useTranslation();
 
+  const sortings = [t("userSort"), t("userSort2"), t("nameSort"), t("nameSort2"), t("descendDatePay"), t("ascendDatePay"), t("descendSumСontribution"), t("ascendSumContribution")];
+
   const getPaymentsOverview = () => {
     if (hubConnection) {
       hubConnection
@@ -119,49 +121,49 @@ export const AdminPay = () => {
 
   const [listForSorting, setListForSorting] = useState<SelectValues[]>([
     {
-      text: 'Пользователь: От А до Я',
+      id: 0,
       active: false,
       OrderType: 1,
       FieldName: 'userId',
     },
     {
-      text: 'Пользователь: От Я до А',
+      id: 1,
       active: false,
       OrderType: 2,
       FieldName: 'userId',
     },
     {
-      text: 'Название: От А до Я',
+      id: 2,
       active: false,
       OrderType: 2,
       FieldName: 'DepositId',
     },
     {
-      text: 'Название: От Я до А',
+      id: 3,
       active: false,
       OrderType: 1,
       FieldName: 'DepositId',
     },
     {
-      text: 'По убыванию даты выплаты',
+      id: 4,
       active: false,
       OrderType: 2,
       FieldName: 'creationDate',
     },
     {
-      text: 'По возрастанию даты выплаты',
+      id: 5,
       active: false,
       OrderType: 1,
       FieldName: 'creationDate',
     },
     {
-      text: 'По убыванию суммы вклада',
+      id: 6,
       active: false,
       OrderType: 2,
       FieldName: 'baseAmount',
     },
     {
-      text: 'По возрастанию суммы вклада',
+      id: 7,
       active: false,
       OrderType: 1,
       FieldName: 'baseAmount',
@@ -173,49 +175,49 @@ export const AdminPay = () => {
 
   const [listForSortingForPay, setListForSortingForPay] = useState<SelectValues[]>([
     {
-      text: 'Пользователь: От А до Я',
+      id: 0,
       active: false,
       OrderType: 1,
-      FieldName: 'userName',
+      FieldName: 'userId',
     },
     {
-      text: 'Пользователь: От Я до А',
+      id: 1,
       active: false,
       OrderType: 2,
-      FieldName: 'userName',
+      FieldName: 'userId',
     },
     {
-      text: 'Название: От А до Я',
+      id: 2,
       active: false,
       OrderType: 2,
       FieldName: 'DepositId',
     },
     {
-      text: 'Название: От Я до А',
+      id: 3,
       active: false,
       OrderType: 1,
       FieldName: 'DepositId',
     },
     {
-      text: 'По убыванию даты выплаты',
+      id: 4,
       active: false,
       OrderType: 2,
       FieldName: 'creationDate',
     },
     {
-      text: 'По возрастанию даты выплаты',
+      id: 5,
       active: false,
       OrderType: 1,
       FieldName: 'creationDate',
     },
     {
-      text: 'По убыванию суммы вклада',
+      id: 6,
       active: false,
       OrderType: 2,
       FieldName: 'baseAmount',
     },
     {
-      text: 'По возрастанию суммы вклада',
+      id: 7,
       active: false,
       OrderType: 1,
       FieldName: 'baseAmount',
@@ -708,7 +710,7 @@ export const AdminPay = () => {
                 </BurgerButton>
               </TableHeadItemPaid>
               <Window open={sortingWindowOpenForPay}>
-                <WindowTitle>Сортировка</WindowTitle>
+                <WindowTitle>{t("sorting")}</WindowTitle> 
                 <WindowBody>
                   {listForSortingForPay.map((obj, index) => (
                     <Sort
@@ -716,7 +718,7 @@ export const AdminPay = () => {
                       key={index}
                       onClick={() => getActiveSortForPay(index)}
                     >
-                      {obj.text}
+                      {sortings[obj.id]}
                     </Sort>
                   ))}
                 </WindowBody>
