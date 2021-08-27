@@ -26,7 +26,7 @@ import { SelectValues, SortingType } from '../../types/sorting';
 import { ModalDeposit } from './AdminPay/Payments';
 import { Rounds } from './AdminPay/Rounds';
 import { Pagination as CustomPagination } from './Pagination';
-import * as Styled from './Styled.elements'; 
+import * as Styled from './Styled.elements';
 import {
   BurgerButton,
   BurgerImg,
@@ -219,7 +219,7 @@ export const AdminDeposit = () => {
                 .set({ hour: 23, minute: 59, second: 59 })
                 .toDate()
             : null,
-        
+
           null,
           null,
           (currentPage - 1) * pageLength,
@@ -308,7 +308,7 @@ export const AdminDeposit = () => {
                 .toDate()
             : null,
 
-          null, 
+          null,
           null,
 
           closeDate.from
@@ -407,15 +407,15 @@ export const AdminDeposit = () => {
                 <Styled.Label>{t('adminDeposit.labelProgram')}</Styled.Label>
                 <Select checkList={checkList} setCheckList={setCheckList} values={listDeposits} />
               </Styled.SelectWrap>
-              <Styled.SelectWrap input>
+              <Styled.SelectWrap>
                 <TestInput
                   setOpenDate={setOpenDate}
                   openDate={openDate}
                   label={t('adminDeposit.labelOpen')}
                 />
               </Styled.SelectWrap>
-              <Styled.SelectWrap input>
-                <TestInput 
+              <Styled.SelectWrap>
+                <TestInput
                   setOpenDate={setCloseDate}
                   openDate={closeDate}
                   label={t('adminDeposit.labelDate')}

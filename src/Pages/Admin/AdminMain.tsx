@@ -168,18 +168,6 @@ export const AdminMain = () => {
         <Calendar selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
 
         <Deposites>
-          {/* <DepositItem>
-            <DepositTitle>{t("adminMain.depositsCount")}</DepositTitle>
-            <DepositValue>{depositsCount}</DepositValue>
-          </DepositItem>
-          <DepositItem>
-            <DepositTitle>{t("adminMain.depositsAmount")}</DepositTitle>
-            <DepositValue>
-              {depositsAmount.toLocaleString("ru-RU", {
-                maximumFractionDigits: 1,
-              })}
-            </DepositValue>
-          </DepositItem> */}
           <RoundWrapeer>
             <RoundItem>
               <ChartItemTitle>{t('adminMain.openDeposit')}</ChartItemTitle>
@@ -571,9 +559,6 @@ const ChartItem = styled.div`
     padding-right: 0;
     background: ${(props) => props.theme.card.background};
   }
-  @media (max-width: 340px) {
-    max-width: 280px;
-  }
 `;
 
 const LastChartItem = styled.div`
@@ -583,6 +568,9 @@ const LastChartItem = styled.div`
 
   ${ChartItem} {
     max-width: 410px;
+    @media (max-width: 800px) {
+      max-width: 100%;
+    }
   }
 
   @media (max-width: 992px) {
