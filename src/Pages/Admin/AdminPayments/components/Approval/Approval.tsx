@@ -38,8 +38,8 @@ import {
   WindowTitle,
 } from '../../../Styled.elements';
 import * as Styled from './Styled.elements';
-import { Notify } from "../../../../../types/notify";
-import { Modal } from "../../../../../components/Modal/Modal"; 
+import { Notify } from '../../../../../types/notify';
+import { Modal } from '../../../../../components/Modal/Modal';
 
 type Props = {
   listDeposits: CollectionListDeposits[];
@@ -50,7 +50,7 @@ type Props = {
   setTotalPayments: (value: any) => void;
 };
 
-export const Approval: FC<Props> = ({ 
+export const Approval: FC<Props> = ({
   listDeposits,
   getPaymentsOverview,
   setProcent,
@@ -163,7 +163,6 @@ export const Approval: FC<Props> = ({
           []
         )
         .then((res) => {
-          console.log(res);
           setTotalDeposits(res.totalRecords);
           setDepositList(res.collection);
           setLoading(false);
@@ -177,7 +176,7 @@ export const Approval: FC<Props> = ({
 
   const loadMoreItems = () => {
     setCount(false);
-    setDepositList([]); 
+    setDepositList([]);
     setLoading(true);
 
     if (hubConnection && depositList.length < totalDeposits) {
@@ -188,14 +187,10 @@ export const Approval: FC<Props> = ({
           nameApproval ? nameApproval.toLowerCase() : null,
           searchSafeIDApproval.length ? searchSafeIDApproval : null,
           openDateApproval.from
-            ? moment(openDateApproval.from)
-                .set({ hour: 12, minute: 0, second: 0 })
-                .toDate()
+            ? moment(openDateApproval.from).set({ hour: 12, minute: 0, second: 0 }).toDate()
             : null,
           openDateApproval.to
-            ? moment(openDateApproval.to)
-                .set({ hour: 12, minute: 0, second: 0 })
-                .toDate()
+            ? moment(openDateApproval.to).set({ hour: 12, minute: 0, second: 0 }).toDate()
             : null,
           null,
           null,
@@ -213,8 +208,8 @@ export const Approval: FC<Props> = ({
             setDepositList([...res.collection]);
             setCount(true);
             setNum(num + 20);
-            setLoading(false);
           }
+          setLoading(false);
         })
         .catch((err: Error) => {
           console.log(err);
@@ -284,7 +279,7 @@ export const Approval: FC<Props> = ({
       setDepositList([]);
       setLoading(true);
 
-      console.log(moment(openDateApproval.from).set({ hour: 12, minute: 0, second: 0 }).toDate());
+      // console.log(moment(openDateApproval.from).set({ hour: 12, minute: 0, second: 0 }).toDate());
 
       hubConnection
         .invoke<RootPayments>(
@@ -293,14 +288,10 @@ export const Approval: FC<Props> = ({
           nameApproval ? nameApproval.toLowerCase() : null,
           searchSafeIDApproval.length ? searchSafeIDApproval : null,
           openDateApproval.from
-            ? moment(openDateApproval.from)
-                .set({ hour: 12, minute: 0, second: 0 })
-                .toDate()
+            ? moment(openDateApproval.from).set({ hour: 12, minute: 0, second: 0 }).toDate()
             : null,
           openDateApproval.to
-            ? moment(openDateApproval.to)
-                .set({ hour: 12, minute: 0, second: 0 })
-                .toDate()
+            ? moment(openDateApproval.to).set({ hour: 12, minute: 0, second: 0 }).toDate()
             : null,
           null,
           null,
@@ -313,13 +304,12 @@ export const Approval: FC<Props> = ({
           sorting
         )
         .then((res) => {
-          console.log('.then ~ res', res);
           setTotalDeposits(res.totalRecords);
-          setLoading(false);
           if (res.collection.length) {
             setDepositList(res.collection);
             setTotalDeposits(res.totalRecords);
           }
+          setLoading(false);
         })
         .catch((err: Error) => {
           console.log(err);
@@ -380,8 +370,8 @@ export const Approval: FC<Props> = ({
           if (res.collection.length) {
             setDepositList(res.collection);
             setTotalDeposits(res.totalRecords);
-            setLoading(false);
           }
+          setLoading(false);
         })
         .catch((err: Error) => {
           console.log(err);
@@ -427,16 +417,16 @@ export const Approval: FC<Props> = ({
   };
 
   const paymentsConfirm = () => {
-    console.log({
-      NAMEAPPROVAL: nameApproval ? nameApproval.toLowerCase() : null,
-      OPENDATEAPPROVAL_FROM: openDateApproval.from ? openDateApproval.from : null,
-      OPENDATEAPPROVAL_TO: openDateApproval.to ? openDateApproval.to : null,
-      DEPOSITS: checkListApproval ? checkListApproval : null,
-      PROCENT: procent ? +procent / 100 : null
-    })
+    // console.log({
+    //   NAMEAPPROVAL: nameApproval ? nameApproval.toLowerCase() : null,
+    //   OPENDATEAPPROVAL_FROM: openDateApproval.from ? openDateApproval.from : null,
+    //   OPENDATEAPPROVAL_TO: openDateApproval.to ? openDateApproval.to : null,
+    //   DEPOSITS: checkListApproval ? checkListApproval : null,
+    //   PROCENT: procent ? +procent / 100 : null
+    // })
     if (depositList.some((item: any) => item.state === 6)) {
       if (hubConnection) {
-        hubConnection 
+        hubConnection
           .invoke(
             'ConfirmAllDepositsPayment',
             nameApproval ? nameApproval.toLowerCase() : null,
@@ -478,45 +468,53 @@ export const Approval: FC<Props> = ({
 
   return (
     <>
-    <Modal style={{ display: acceptAll ? "block" : "none"}} onClose={() => setAcceptAll(false)}>
+      <Modal style={{ display: acceptAll ? 'block' : 'none' }} onClose={() => setAcceptAll(false)}>
         <div className="wrap">
-          <Styled.ModalTitle>{t("acceptAll.title")}</Styled.ModalTitle>
-          <Styled.ModalDescription>{t("acceptAll.users")}:</Styled.ModalDescription>
-          <Styled.ModalItem>{nameApproval ? nameApproval : t("all")}</Styled.ModalItem>
-          <Styled.ModalDescription>{t("acceptAll.deposit")}:</Styled.ModalDescription>
+          <Styled.ModalTitle>{t('acceptAll.title')}</Styled.ModalTitle>
+          <Styled.ModalDescription>{t('acceptAll.users')}:</Styled.ModalDescription>
+          <Styled.ModalItem>{nameApproval ? nameApproval : t('all')}</Styled.ModalItem>
+          <Styled.ModalDescription>{t('acceptAll.deposit')}:</Styled.ModalDescription>
           <div className="deposits_programs">
-            {checkListApproval.length > 0 ? checkListApproval.map((item: any, idx: any) => (
-              <Styled.ModalItem red key={idx}>{item.label}</Styled.ModalItem>
-            )) : <Styled.ModalItem>{t("all")}</Styled.ModalItem>}
+            {checkListApproval.length > 0 ? (
+              checkListApproval.map((item: any, idx: any) => (
+                <Styled.ModalItem red key={idx}>
+                  {item.label}
+                </Styled.ModalItem>
+              ))
+            ) : (
+              <Styled.ModalItem>{t('all')}</Styled.ModalItem>
+            )}
           </div>
-          <Styled.ModalDescription>{t("acceptAll.range")}</Styled.ModalDescription>
+          <Styled.ModalDescription>{t('acceptAll.range')}</Styled.ModalDescription>
           <Styled.ModalItem>
             {openDateApproval.from && openDateApproval.to && (
               <>
-                {`${moment(openDateApproval.from).format("DD.MM.YYYY")} - ${moment(openDateApproval.to).format("DD.MM.YYYY")}`}
+                {`${moment(openDateApproval.from).format('DD.MM.YYYY')} - ${moment(
+                  openDateApproval.to
+                ).format('DD.MM.YYYY')}`}
               </>
             )}
 
             {openDateApproval.from && !openDateApproval.to && (
-              <>
-                {moment(openDateApproval.from).format("DD.MM.YY")}
-              </>
+              <>{moment(openDateApproval.from).format('DD.MM.YY')}</>
             )}
 
-            {!openDateApproval.from && !openDateApproval.to && (
-              <>
-                {t("all")}
-              </>
-            )}
+            {!openDateApproval.from && !openDateApproval.to && <>{t('all')}</>}
           </Styled.ModalItem>
-          <Button style={{ margin: "0 auto" }} danger onClick={paymentsConfirm}>{t("acceptAll.accept")} {procent ? procent + "%" : (t("all")).toLowerCase()}</Button>
+          <Button style={{ margin: '0 auto' }} danger onClick={paymentsConfirm}>
+            {t('acceptAll.accept')} {procent ? procent + '%' : t('all').toLowerCase()}
+          </Button>
         </div>
       </Modal>
-      
+
       <Styled.ButtonWrap>
-        <Button dangerOutline mb onClick={() => {
-          setAcceptAll(true);
-        }}>
+        <Button
+          dangerOutline
+          mb
+          onClick={() => {
+            setAcceptAll(true);
+          }}
+        >
           {t('adminPay.confirmButton')}
         </Button>
         <ProcentInput
