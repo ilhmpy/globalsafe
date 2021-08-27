@@ -89,51 +89,54 @@ export const Approval: FC<Props> = ({
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
   const [sorting, setSorting] = useState<SortingType[]>([]);
   const [acceptAll, setAcceptAll] = useState<boolean>(false);
+
+  const sortings = [t("userSort"), t("userSort2"), t("nameSort"), t("nameSort2"), t("descendOpenDate"), t("ascendOpenDate"), t("descendSumСontribution", t("ascendSumContribution"))];
+
   const [listForSorting, setListForSorting] = useState<SelectValues[]>([
     {
-      text: 'Пользователь: От А до Я',
+      id: 0,
       active: false,
       OrderType: 1,
       FieldName: 'userName',
     },
     {
-      text: 'Пользователь: От Я до А',
+      id: 1,
       active: false,
       OrderType: 2,
       FieldName: 'userName',
     },
     {
-      text: 'Название: От А до Я',
+      id: 2,
       active: false,
       OrderType: 2,
       FieldName: 'DepositId',
     },
     {
-      text: 'Название: От Я до А',
+      id: 3,
       active: false,
       OrderType: 1,
       FieldName: 'DepositId',
     },
     {
-      text: 'По убыванию даты открытия',
+      id: 4,
       active: false,
       OrderType: 2,
       FieldName: 'creationDate',
     },
     {
-      text: 'По возрастанию даты открытия',
+      id: 5,
       active: false,
       OrderType: 1,
       FieldName: 'creationDate',
     },
     {
-      text: 'По убыванию суммы вклада',
+      id: 6,
       active: false,
       OrderType: 2,
       FieldName: 'baseAmount',
     },
     {
-      text: 'По возрастанию суммы вклада',
+      id: 7,
       active: false,
       OrderType: 1,
       FieldName: 'baseAmount',
@@ -606,7 +609,7 @@ export const Approval: FC<Props> = ({
                 />
               </BurgerButton>
               <Window open={sortingWindowOpen}>
-                <WindowTitle>Сортировка</WindowTitle>
+                <WindowTitle>{t("sorting")}</WindowTitle>
                 <WindowBody>
                   {listForSorting.map((obj, index) => (
                     <Sort
@@ -614,7 +617,7 @@ export const Approval: FC<Props> = ({
                       key={index}
                       onClick={() => getActiveSort(index)}
                     >
-                      {obj.text}
+                      {sortings[obj.id]}
                     </Sort>
                   ))}
                 </WindowBody>

@@ -242,52 +242,54 @@ export const AdminUsers = () => {
 
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
   const [sorting, setSorting] = useState<SortingType[]>([]);
+
+  const sortings = [t("userSort"), t("userSort2"), t("descendBalance"), t("ascendBalance"), t("descendDateCreate"), t("ascendDateCreate"), t("descendSumDeposit"), t("ascendSumDeposit")];
+
   const [listForSorting, setListForSorting] = useState<SelectValues[]>([
     {
-      text: 'Пользователь: От А до Я',
+      id: 0,
       active: false,
       OrderType: 1,
       FieldName: 'name',
     },
     {
-      text: 'Пользователь: От Я до А',
+      id: 1,
       active: false,
       OrderType: 2,
       FieldName: 'name',
     },
     {
-      text: 'По убыванию баланса',
+      id: 2,
       active: false,
       OrderType: 2,
       FieldName: 'balances',
     },
     {
-      text: 'По возрастанию баланса',
+      id: 3,
       active: false,
       OrderType: 1,
       FieldName: 'balances',
     },
     {
-      text: 'По убыванию даты создания',
+      id: 4,
       active: false,
       OrderType: 2,
       FieldName: 'creationDate',
     },
     {
-      text: 'По возрастанию даты создания',
+      id: 5,
       active: false,
       OrderType: 1,
       FieldName: 'creationDate',
     },
-
     {
-      text: 'По убыванию суммы депозита',
+      id: 6,
       active: false,
       OrderType: 2,
       FieldName: 'depositsAmount',
     },
     {
-      text: 'По возрастанию суммы депозита',
+      id: 7,
       active: false,
       OrderType: 1,
       FieldName: 'depositsAmount',
@@ -558,7 +560,7 @@ export const AdminUsers = () => {
                 />
               </BurgerButton>
               <Window open={sortingWindowOpen}>
-                <WindowTitle>Сортировка</WindowTitle>
+                <WindowTitle>{t("sorting")}</WindowTitle>
                 <WindowBody>
                   {listForSorting.map((obj, index) => (
                     <Sort
@@ -566,7 +568,7 @@ export const AdminUsers = () => {
                       key={index}
                       onClick={() => getActiveSort(index)}
                     >
-                      {obj.text}
+                      {sortings[obj.id]} 
                     </Sort>
                   ))}
                 </WindowBody>
