@@ -443,70 +443,54 @@ export const Approval: FC<Props> = ({
     setNotifications([item]);
   };
 
-  const paymentsConfirm = () => {
-    console.log({
-      NAMEAPPROVAL: nameApproval ? nameApproval.toLowerCase() : null,
-      OPENDATEAPPROVAL_FROM: openDateApproval.from ? openDateApproval.from : null,
-      OPENDATEAPPROVAL_TO: openDateApproval.to ? openDateApproval.to : null,
-      DEPOSITS: checkListApproval ? checkListApproval : null,
-      PROCENT: procent ? +procent / 100 : null
-    })
-    if (depositList.some((item: any) => item.state === 6)) {
-      if (hubConnection) {
-        hubConnection 
-          .invoke(
-            'ConfirmAllDepositsPayment',
-            nameApproval ? nameApproval.toLowerCase() : null,
-            openDateApproval.from
-            ? moment(openDateApproval.from)
-                .utcOffset('+00:00')
-                .set({ hour: 0, minute: 0, second: 0 })
-                .toDate()
-            : null,
-            openDateApproval.to
-            ? moment(openDateApproval.to)
-                .utcOffset('+00:00')
-                .set({ hour: 23, minute: 59, second: 59 })
-                .toDate()
-            : openDateApproval.from
-            ? moment(openDateApproval.from)
-                .utcOffset('+00:00')
-                .set({ hour: 23, minute: 59, second: 59 })
-                .toDate()
-            : null,
-            checkListApproval ? checkListApproval : null,
-            procent ? +procent / 100 : null
-          )
-          .then((res) => {
-            createNotify({
-              text: t('adminPay.success'),
-              error: false,
-              timeleft: 5,
-              id: notifications.length,
-            });
-
-            getPaymentsOverview();
-            submitApproval();
-          })
-          .catch((err: Error) => {
-            console.error(err);
-            createNotify({
-              text: t('adminPay.error'),
-              error: true,
-              timeleft: 5,
-              id: notifications.length,
-            });
+  function paymentsConfirm() {
+    if (hubConnection) {
+      hubConnection 
+        .invoke(
+          'ConfirmAllDepositsPayment',
+          nameApproval ? nameApproval.toLowerCase() : null,
+          openDateApproval.from
+          ? moment(openDateApproval.from)
+              .utcOffset('+00:00')
+              .set({ hour: 0, minute: 0, second: 0 })
+              .toDate()
+          : null,
+          openDateApproval.to
+          ? moment(openDateApproval.to)
+              .utcOffset('+00:00')
+              .set({ hour: 23, minute: 59, second: 59 })
+              .toDate()
+          : openDateApproval.from
+          ? moment(openDateApproval.from)
+              .utcOffset('+00:00')
+              .set({ hour: 23, minute: 59, second: 59 })
+              .toDate()
+          : null,
+          checkListApproval ? checkListApproval : null,
+          procent ? +procent / 100 : null
+        )
+        .then((res) => {
+          createNotify({
+            text: t('adminPay.success'),
+            error: false,
+            timeleft: 5,
+            id: notifications.length,
           });
-      }
-    } else {
-      createNotify({
-        text: t('adminPay.notPays'),
-        error: true,
-        timeleft: 5,
-        id: notifications.length,
-      });
+
+          getPaymentsOverview();
+          submitApproval();
+        })
+        .catch((err: Error) => {
+          console.error(err);
+          createNotify({
+            text: t('adminPay.error'),
+            error: true,
+            timeleft: 5,
+            id: notifications.length,
+          });
+        });
     }
-  };
+  }
 
   return (
     <>
