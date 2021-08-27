@@ -467,7 +467,7 @@ export const InfoMain = () => {
                         </Styled.Warning>
                         <Styled.ModalButton
                           blue
-                          href={`https://cwd.global/account/${user}/portfolio`}
+                          href={`https://backup.cwd.global/account/${user}/portfolio`}
                           target="_blank"
                         >
                           {t('depositSelect.transferButton')}
@@ -504,7 +504,7 @@ export const InfoMain = () => {
                       {!balanceAsset && (
                         <Styled.ToLink
                           target="_blank"
-                          href={`https://cwd.global/shopping/payment?to_name=${depositSelect.account}&amount=${depositSelect.minAmount}`}
+                          href={`https://backup.cwd.global/shopping/payment?to_name=${depositSelect.account}&amount=${depositSelect.minAmount}`}
                         >
                           Приобрести
                         </Styled.ToLink>
