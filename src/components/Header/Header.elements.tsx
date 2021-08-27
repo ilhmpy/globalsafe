@@ -1,8 +1,8 @@
-import { Link } from "react-scroll";
-import styled from "styled-components/macro";
-import { Button } from "../Button/Button";
-import { NavHashLink } from "react-router-hash-link";
-import { ReactComponent as DarkTheme } from "../../assets/svg/theme.svg";
+import { Link } from 'react-scroll';
+import styled from 'styled-components/macro';
+import { Button } from '../Button/Button';
+import { NavHashLink } from 'react-router-hash-link';
+import { ReactComponent as DarkTheme } from '../../assets/svg/theme.svg';
 
 export const Text = styled.p`
   font-weight: 500;
@@ -14,7 +14,7 @@ export const Text = styled.p`
   transition: all 0.3s;
 `;
 
-export const SwitchTheme = styled.div<{ mob?: boolean; }>`
+export const SwitchTheme = styled.div<{ mob?: boolean }>`
   width: 28px;
   height: 28px;
 
@@ -79,10 +79,10 @@ export const HeaderWrap = styled.header<{ header?: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 9999;
+  z-index: 99999;
   padding: 28px 0;
   transition: all 0.3s ease 0s;
-  background: ${(props) => (props.header ? props.theme.header : "transparent")};
+  background: ${(props) => (props.header ? props.theme.header : 'transparent')};
 `;
 
 export const HeaderInner = styled.div`
@@ -123,7 +123,7 @@ export const HeaderMenu = styled.div<{ open?: boolean }>`
     background: ${(props) => props.theme.modal};
     width: 100%;
     height: 100%;
-    left: ${(props) => (props.open ? "0" : "-100%")};
+    left: ${(props) => (props.open ? '0' : '-100%')};
     top: 0;
     padding: 0 50px;
     overflow: auto;
@@ -153,21 +153,21 @@ export const MenuBtn = styled.span<{ open?: boolean }>`
     position: absolute;
   }
   span:first-child {
-    top: ${(props) => (props.open ? "calc(50% - 2px)" : "0px")};
+    top: ${(props) => (props.open ? 'calc(50% - 2px)' : '0px')};
     width: 24px;
     height: 3px;
     border-radius: 2px;
     background-color: #ff416e;
-    transform: ${(props) => (props.open ? "rotate(-45deg)" : "rotate(0deg)")};
+    transform: ${(props) => (props.open ? 'rotate(-45deg)' : 'rotate(0deg)')};
   }
   span:last-child {
     top: auto;
-    bottom: ${(props) => (props.open ? "calc(50% - 1px)" : "0px")};
-    width: ${(props) => (props.open ? "24px" : "12px")};
+    bottom: ${(props) => (props.open ? 'calc(50% - 1px)' : '0px')};
+    width: ${(props) => (props.open ? '24px' : '12px')};
     height: 3px;
     border-radius: 2px;
     background-color: #ff416e;
-    transform: ${(props) => (props.open ? "rotate(45deg)" : "rotate(0deg)")};
+    transform: ${(props) => (props.open ? 'rotate(45deg)' : 'rotate(0deg)')};
   }
 `;
 
@@ -185,9 +185,9 @@ export const List = styled.ul`
   }
 `;
 
-export const ListItem = styled.li<{ mob?: boolean; without?: boolean; last?: boolean; }>`
+export const ListItem = styled.li<{ mob?: boolean; without?: boolean; last?: boolean }>`
   padding: 0px 12px;
-  display: ${(props) => props.mob && "none"};
+  display: ${(props) => props.mob && 'none'};
   position: relative;
   ${Languale} {
     display: none;
@@ -199,7 +199,7 @@ export const ListItem = styled.li<{ mob?: boolean; without?: boolean; last?: boo
     &:last-child {
       display: block;
     }
-    display: ${(props) => props.mob && "block"};
+    display: ${(props) => props.mob && 'block'};
     width: 100%;
     padding: 20px 0px;
     border-top: 1px solid ${(props) => props.theme.listBorder};
@@ -217,7 +217,7 @@ export const ListItem = styled.li<{ mob?: boolean; without?: boolean; last?: boo
           max-width: 30px;
           margin-right: 10px;
         `;
-      };
+      }
     }}
 
     ${({ without }) => {
@@ -238,7 +238,7 @@ export const ListItem = styled.li<{ mob?: boolean; without?: boolean; last?: boo
   }
 `;
 
-const activeclassname = "active";
+const activeclassname = 'active';
 
 export const StyledLink = styled(NavHashLink).attrs({ activeclassname })`
   &.${activeclassname} {
