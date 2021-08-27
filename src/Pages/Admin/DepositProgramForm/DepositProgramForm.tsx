@@ -1,3 +1,4 @@
+import { HubConnectionState } from '@microsoft/signalr';
 import { FC, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
@@ -7,7 +8,10 @@ import { Modal } from '../../../components/Modal/Modal';
 import { Select } from '../../../components/Select/Select';
 import { Switcher } from '../../../components/Switcher';
 import { AppContext } from '../../../context/HubContext';
-import { DepositProgramFormPropsType } from './types';
+import { BalanceKind } from '../../../enums/balanceKind';
+import { DepositKind } from '../../../enums/depositKind';
+import { LanguageCode } from '../../../enums/languageCode';
+import { DepositProgramFormPropsType, AddDepositModel, ViewDepositModel } from './types';
 
 // eslint-disable-next-line react/prop-types
 export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNewProgram }) => {
@@ -32,73 +36,47 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
   const [programList, setProgramList] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  interface ICreateDepositProgram {
-      id?: number;
-      name: string;
-      description:string;
-      minAmount: number;
-      maxAmount?: number;
-      duration: number;
-      paymentsInterval: number;
-      paymentsOffset: number;
-      paymentsDays?: string;
-      ratio: number;
-      isActive: boolean;
-      affiliateRatio: string;
-      referenceAccount: string;
-      referenceCode?: string;
-      memoWif?: string;
-      language: number;
-      balanceKind: number;
-      exchanges?: string[];
-      depositKind: number;
-      priceKind?: number;
-      price?: number;
-      isPublic: boolean;
-      isInstant: boolean;
-  }
-
-  const createProgram = () => {
+  async function createProgram(){
     console.log('1111111111~~~~~~~~~~~~~~~~~~start');
-    if (hubConnection) {
-      setProgramList([]);
-      setLoading(true);
-
-      hubConnection
-        .invoke(
-          'CreateDeposit',
-          0,
-          'dfgdfv',
-          'ererg kbkj ewgrgegr ergerge rgsdbvatn mdtrsgfwe',
-          1000000,
-          100000000,
-          90,
-          10,
-          0,
-          '10',
-          5,
-          true,
-          'referge',
-          'rgg45g4',
-          'ergergeg',
-          'efegerg',
-          1,
-          1,
-          ['hjyjrt'],
-          1,
-          1,
-          10000000,
-          true,
-          true
-        )
-        .then((res) => {
-          console.log('.then ~ res', res);
-        })
-        .catch((err: Error) => {
-          console.log(err);
-          setLoading(false);
-        });
+    
+    if (!hubConnection || hubConnection.state != HubConnectionState.Connected){
+      return;
     }
+
+    setProgramList([]);
+    setLoading(true);
+
+    try{
+    const program : AddDepositModel = {
+      Language : LanguageCode.Russian,
+      activeWif : "",
+      affiliateRatio : null,
+      balanceKind : BalanceKind.CWD,
+      depositKind : DepositKind.Fixed,
+      description : "test description",
+      duration : 30,
+      exchanges : [],
+      isActive : true,
+      isInstant : true,
+      isPublic : true,
+      maxAmount : 1_000_000,
+      memoWif : "",
+      minAmount : 1_00_000,
+      name : "test program",
+      paymentsDays : null,
+      paymentsInterval : 30,
+      paymentsOffset : 0,
+      price : null,
+      priceKind : null,
+      ratio : 1.1,
+      referenceAccount : "ugl-test",
+      referenceCode : null,
+    }; 
+      const res = await hubConnection.invoke<ViewDepositModel>('CreateDeposit', program);
+    }
+    catch(err){
+      console.log(err);
+    }    
   };
 
   // useEffect(() => {
@@ -447,9 +425,9 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
           <Button
             danger
             maxWidth={130}
-            onClick={() => {
+            onClick={async () => {
               // setIsOpenSaveConfirm(true);
-              createProgram();
+              await createProgram();
             }}
           >
             {t('depositsPrograms.save')}
