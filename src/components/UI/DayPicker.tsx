@@ -1112,6 +1112,15 @@ const AdminInputsContainer = styled.div`
     @media (max-width: 992px) {
       top: 40px;
       width: auto;
+      .DayPicker-Day {
+        font-weight: normal;
+        font-size: 16px;
+        line-height: 19px;
+        padding: 0.5em;
+        width: 32px;
+        height: 32px;
+        margin: 5px;
+      }
     }
     @media (max-width: 576px) {
       right: 0px;
