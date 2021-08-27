@@ -49,7 +49,7 @@ export const Select: FC<SelectProps> = ({
       const value = options[activeList];
       onOptionClicked(value);
     }
-  };
+  }; 
 
   return (
     <div>
