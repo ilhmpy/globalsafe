@@ -1,7 +1,7 @@
 import { FC, useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { APP_SAFARI_ID } from './constantes/onesignal';
+import { APP_ID, APP_SAFARI_ID } from './constantes/onesignal';
 import { AppContext } from './context/HubContext';
 import GlobalStyle from './globalStyles';
 import { Admin } from './Pages/Admin';
@@ -10,7 +10,6 @@ import { Main } from './Pages/Main/Main';
 import { InfoMain } from './Pages/PrivateArea';
 import PageNotFound from './Pages/Tech/PageNotFound';
 import TechWorks from './Pages/Tech/TechWorks';
-
 declare global {
   interface Window {
     OneSignal: any;
@@ -25,6 +24,7 @@ const App: FC = () => {
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const user = appContext.user;
+  const [isSubscribed, setIsSubscribed] = useState(false);
   const isFailed = appContext.isFailed;
   const [online, setOnline] = useState<boolean | null>(null);
   const { t } = useTranslation();
@@ -63,7 +63,7 @@ const App: FC = () => {
       if (hubConnection) {
         hubConnection
           .invoke('RegisterDevice', id)
-          .then(() => undefined)
+          .then(() => setIsSubscribed(true))
           .catch((err) => console.log(err));
       }
     },
@@ -75,7 +75,7 @@ const App: FC = () => {
       if (hubConnection) {
         hubConnection
           .invoke('UnregisterDevice', id)
-          .then(() => undefined)
+          .then(() => setIsSubscribed(false))
           .catch((err) => console.log(err));
       }
     },
@@ -90,8 +90,7 @@ const App: FC = () => {
         OneSignal.SERVICE_WORKER_UPDATER_PATH = 'push/onesignal/OneSignalSDKUpdaterWorker.js';
 
         OneSignal.init({
-          appId: 'f6bd054b-e35f-43b0-b74f-70ec77dac183',
-          allowLocalhostAsSecureOrigin: true,
+          appId: APP_ID,
           safari_web_id: APP_SAFARI_ID,
           notifyButton: {
             enable: true,
@@ -137,73 +136,28 @@ const App: FC = () => {
 
   useEffect(() => {
     if (token && user) {
-      OneSignal.push([
-        'addListenerForNotificationOpened',
-        function (event: any) {
-          console.log('OneSignal notification clicked:', event);
-          OneSignal.init({
-            appId: 'f6bd054b-e35f-43b0-b74f-70ec77dac183',
-            safari_web_id: APP_SAFARI_ID,
-            notifyButton: {
-              enable: true,
-              text: {
-                'tip.state.unsubscribed': t('text.tip_state_unsubscribed'),
-                'tip.state.subscribed': t('text.tip_state_subscribed'),
-                'tip.state.blocked': t('text.tip_state_blocked'),
-                'message.prenotify': t('text.message_prenotify'),
-                'message.action.subscribed': t('text.message_action_subscribed'),
-                'message.action.resubscribed': t('text.message_action_resubscribed'),
-                'message.action.unsubscribed': t('text.message_action_unsubscribed'),
-                'dialog.main.title': t('text.dialog_main_title'),
-                'dialog.main.button.subscribe': t('text.dialog_main_button_subscribe'),
-                'dialog.main.button.unsubscribe': t('text.dialog_main_button_unsubscribe'),
-                'dialog.blocked.title': t('text.dialog_blocked_title'),
-                'dialog.blocked.message': t('text.dialog_blocked_message'),
-              },
-            },
-          });
-        },
-      ]);
-    }
-
-    OneSignal.push(function () {
-      // If we're on an unsupported browser, do nothing
-      if (!OneSignal.isPushNotificationsSupported()) {
-        return;
+      if (!isSubscribed) {
+        document.getElementsByClassName('onesignal-bell-launcher-message-body')[0].innerHTML = t(
+          'text.tip_state_unsubscribed'
+        );
+        document.getElementsByClassName(
+          'onesignal-bell-launcher-dialog-body'
+        )[0].children[0].innerHTML = t('text.dialog_main_title');
+        document.getElementsByClassName('action')[0].innerHTML = t(
+          'text.dialog_main_button_subscribe'
+        );
+      } else {
+        document.getElementsByClassName('onesignal-bell-launcher-message-body')[0].innerHTML = t(
+          'text.tip_state_subscribed'
+        );
+        document.getElementsByClassName(
+          'onesignal-bell-launcher-dialog-body'
+        )[0].children[0].innerHTML = t('text.dialog_main_title');
+        document.getElementsByClassName('action')[0].innerHTML = t(
+          'text.dialog_main_button_unsubscribe'
+        );
       }
-      OneSignal.isPushNotificationsEnabled(function (isEnabled: any) {
-        console.log('isEnabled', isEnabled);
-        if (isEnabled) {
-          // The user is subscribed to notifications
-          // Don't show anything
-        } else {
-          const btn = document.getElementById('subscribe-link');
-          console.log('btn', btn);
-          // if(btn) btn.style.display = '';
-        }
-      });
-    });
-
-    OneSignal.push([
-      'addListenerForNotificationOpened',
-      function (event: any) {
-        console.log('OneSignal notification clicked:', event);
-        const isNewsFeatureNotification =
-          event.data && event.data.notificationType === 'news-feature';
-        if (isNewsFeatureNotification) {
-          if (event.action === '') {
-          } else if (event.action === 'like-button') {
-            alert("Glad you liked it! We'll show you similar stories in the future");
-          } else if (event.action === 'read-more-button') {
-            alert('Showing you the full news article...');
-          }
-        }
-      },
-    ]);
-
-    OneSignal.on('notificationClick', function (event: any) {
-      console.warn('OneSignal notification displayed:', event);
-    });
+    }
   }, [localStorage.getItem('i18nextLng')]);
 
   return (
