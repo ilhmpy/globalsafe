@@ -947,7 +947,7 @@ export const RadialBar: FC<RadialProps> = ({
   );
 };
 
-export const RadialBarRound = () => {
+export const RadialBarRound: FC = () => {
   const data = {
     series: [100],
     options: {
@@ -993,7 +993,7 @@ export const RadialBarRound = () => {
   );
 };
 
-export const RadialBarHalf = () => {
+export const RadialBarHalf: FC = () => {
   const data = {
     series: [67],
     options: {
