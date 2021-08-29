@@ -114,7 +114,6 @@ const CustomDatePickers = styled(DayPicker)`
     font-size: 16px;
     line-height: 24px;
     padding: 4px 7px;
-    min-width: 48px;
     width: 48px;
     height: 48px;
     margin: 5px;
@@ -327,13 +326,14 @@ export const TestInput: FC<TestInputProps> = ({ label, openDate, setOpenDate }: 
                 const arr = e.target.value.split('-');
                 const fromSplitted = arr[0].split('.');
                 const toSplitted = arr.length === 2 ? arr[1].split('.') : '';
-                const validValue = e.target.value.replace(/[^0-9\-\.]/gi, "");6
+                const validValue = e.target.value.replace(/[^0-9\-\.]/gi, '');
+                6;
 
                 setInputString(validValue);
 
                 setOpenDate({
                   from: moment(`${fromSplitted[1]}.${fromSplitted[0]}.${fromSplitted[2]}`)
-                    .set({ hour: 12, minute: 0, second: 0 })                                                                                                                                        
+                    .set({ hour: 12, minute: 0, second: 0 })
                     .toDate(),
                   to: toSplitted
                     ? moment(`${toSplitted[1]}.${toSplitted[0]}.${toSplitted[2]}`)
@@ -905,7 +905,6 @@ const CustomDatePicker = styled(DayPicker)`
     padding: 4px 7px;
     width: 48px;
     height: 48px;
-    min-width: 48px;
     margin: 5px;
     &:focus {
       outline: none;
@@ -917,7 +916,8 @@ const CustomDatePicker = styled(DayPicker)`
       width: 32px;
       height: 32px;
       margin: 0px;
-      padding: 5px 0px;
+      line-height: 18px;
+      padding: 0.5em;
     }
   }
   .DayPicker-Day--selected:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside) {
@@ -993,8 +993,12 @@ const DatePickerContainer = styled.div`
     right: 0;
     left: 0;
     z-index: 9999;
+    @media (max-width: 992px) {
+      width: 370px;
+    }
     @media (max-width: 576px) {
       bottom: -60px;
+      width: 100%;
     }
     .DayPicker-Months {
       height: 395px;
@@ -1108,6 +1112,15 @@ const AdminInputsContainer = styled.div`
     @media (max-width: 992px) {
       top: 40px;
       width: auto;
+      .DayPicker-Day {
+        font-weight: normal;
+        font-size: 16px;
+        line-height: 19px;
+        padding: 0.5em;
+        width: 32px;
+        height: 32px;
+        margin: 5px;
+      }
     }
     @media (max-width: 576px) {
       right: 0px;

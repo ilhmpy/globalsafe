@@ -19,34 +19,27 @@ export const Notification = styled.div<{ error?: boolean }>`
   margin-bottom: 10px;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
-  background: ${(props) => props.theme.card.background};
+  opacity: 80%;
+  background: ${(props) => props.error ? '#ED4C5C' : '#BCD476'};
   position: relative;
-  &:before {
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: 10px;
-    content: '';
-    background: ${(props) =>
-      props.error ? 'rgba(237, 76, 92, 0.8)' : 'rgba(188, 212, 118, .8)'};
-    border-radius: 8px 0px 0px 8px;
-  }
 `;
 
 export const NotificationInner = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 9px 20px 9px 45px;
+  padding: 9px 20px 9px 30px;
 `;
 
-export const Text = styled.div`
+export const Text = styled.div<{ error?: boolean; }>`
   font-size: 14px;
   line-height: 16px;
   display: flex;
+  color: ${({ error }) => error ? "#fff" : "#0E0D3D"};
+  font-weight: 500;
   align-items: center;
   letter-spacing: 0.1px;
+  margin-top: 3px;
 `;
 
 export const CountContainer = styled.div`
@@ -60,7 +53,7 @@ export const CountContainer = styled.div`
 `;
 
 export const CountValue = styled.p<{ strokeColor: string }>`
-  color: ${(props) => props.strokeColor};
+  color: #fff;
   font-size: 12px;
   padding-top: 7px;
   padding-left: 5px;

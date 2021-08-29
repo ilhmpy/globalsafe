@@ -105,8 +105,16 @@ export const Tariffs = () => {
       hubConnection
         .invoke<ListDeposits>('GetDeposits', languale, true, 0, 40)
         .then((res) => {
-          // console.log("GetDeposits", res);
-          setListDeposits(res.collection);
+          const sortedList = [...res.collection].sort((a, b) => {
+            if(a.name === "GOLD") {
+              return -1;
+            } else if(a.name === "LIDER") {
+              return 1;
+            } else {
+              return 0;
+            }
+          })
+          setListDeposits(sortedList);
         })
         .catch((err: Error) => console.log(err));
     }
@@ -116,9 +124,11 @@ export const Tariffs = () => {
     setIsNormalOpen(true);
     setValue('');
     // setLink(str);
-    const newLink = `https://cwd.global/shopping/payment?to_name=${str}&amount=${num / 100000}`;
+    const newLink = `https://backup.cwd.global/shopping/payment?to_name=${str}&amount=${
+      num / 100000
+    }`;
     setLink(newLink);
-    setOldLink(`https://cwd.global/shopping/payment?to_name=${str}&amount=`);
+    setOldLink(`https://backup.cwd.global/shopping/payment?to_name=${str}&amount=`);
     const val: any = /\d{3,}/g.exec(str);
     setMin(num / 100000);
     setValue((num / 100000).toString());

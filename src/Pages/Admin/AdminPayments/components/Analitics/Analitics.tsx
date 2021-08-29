@@ -51,48 +51,65 @@ export const Analitics: FC<Props> = ({ listDeposits }: Props) => {
   const [totalList, setTotalList] = useState(0);
   const [open, setOpen] = useState<CollectionAnalitics | null>(null);
   const [pageLength, setPageLength] = useState<number>(10);
+
+  const { t } = useTranslation();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
+
+  const sortings = [t("userSort"), t("userSort2"), t("nameSort"), t("nameSort2"), t("descendDatePay"), t("ascendDatePay"), t("descendSumСontribution"), t("ascendSumContribution")];
+
 
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
   const [sorting, setSorting] = useState<SortingType[]>([]);
   const [listForSorting, setListForSorting] = useState<SelectValues[]>([
     {
-      text: 'Название: От А до Я',
-      active: false,
-      OrderType: 2,
-      FieldName: 'depositId',
-    },
-    {
-      text: 'Название: От Я до А',
+      id: 0,
       active: false,
       OrderType: 1,
-      FieldName: 'depositId',
+      FieldName: 'userId',
     },
     {
-      text: 'По убыванию даты',
+      id: 1,
       active: false,
       OrderType: 2,
-      FieldName: 'payoutDate',
+      FieldName: 'userId',
     },
     {
-      text: 'По возрастанию даты',
-      active: false,
-      OrderType: 1,
-      FieldName: 'payoutDate',
-    },
-    {
-      text: 'По убыванию суммы выплаты',
+      id: 2,
       active: false,
       OrderType: 2,
-      FieldName: 'amount',
+      FieldName: 'DepositId',
     },
     {
-      text: 'По возрастанию суммы выплаты',
+      id: 3,
       active: false,
       OrderType: 1,
-      FieldName: 'amount',
+      FieldName: 'DepositId',
+    },
+    {
+      id: 4,
+      active: false,
+      OrderType: 2,
+      FieldName: 'creationDate',
+    },
+    {
+      id: 5,
+      active: false,
+      OrderType: 1,
+      FieldName: 'creationDate',
+    },
+    {
+      id: 6,
+      active: false,
+      OrderType: 2,
+      FieldName: 'baseAmount',
+    },
+    {
+      id: 7,
+      active: false,
+      OrderType: 1,
+      FieldName: 'baseAmount',
     },
   ]);
 
@@ -174,8 +191,6 @@ export const Analitics: FC<Props> = ({ listDeposits }: Props) => {
         });
     }
   };
-
-  const { t } = useTranslation();
 
   const namesProgram = checkList.map((i: any) => i.safeId);
   const idProgram = listDeposits.filter((i) => namesProgram.includes(i.safeId));
@@ -268,7 +283,7 @@ export const Analitics: FC<Props> = ({ listDeposits }: Props) => {
                 />
               </BurgerButton>
               <Window open={sortingWindowOpen}>
-                <WindowTitle>Сортировка</WindowTitle>
+                <WindowTitle>{t("sorting")}</WindowTitle>
                 <WindowBody>
                   {listForSorting.map((obj, index) => (
                     <Sort
@@ -276,7 +291,7 @@ export const Analitics: FC<Props> = ({ listDeposits }: Props) => {
                       key={index}
                       onClick={() => getActiveSort(index)}
                     >
-                      {obj.text}
+                      {sortings[obj.id]} 
                     </Sort>
                   ))}
                 </WindowBody>

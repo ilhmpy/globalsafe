@@ -4,7 +4,6 @@ import { ReactComponent as PresentIcon } from '../../../../assets/svg/present.sv
 import * as Styled from './Lottery.elements';
 import { Wheel } from './Wheel';
 import { Slots } from './Slots';
-import { Timer } from './Timer';
 import { RootClock } from '../../../../types/clock';
 import { Prize, Winner, Users } from '../../../../types/drawResult';
 import { Balance } from '../../../../types/balance';
@@ -12,9 +11,9 @@ import { Card } from '../../../../globalStyles';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useTranslation } from 'react-i18next';
 import brand from '../../../../assets/svg/Gs.svg';
-import { ReactComponent as PrizeSVG } from "../../../../assets/svg/prize.svg";
-import { ReactComponent as PrizeLottery } from "../../../../assets/svg/PrizeLottery.svg";
-import { OldTimer } from "./Timer";
+import { ReactComponent as PrizeSVG } from '../../../../assets/svg/prize.svg';
+import { ReactComponent as PrizeLottery } from '../../../../assets/svg/PrizeLottery.svg';
+import { Timer } from './Timer';
 
 type Props = {
   clock: number | null;
@@ -92,11 +91,11 @@ export const ModalLottery: FC<Props> = ({
   // !!drawResult
 
   return (
-    <Modal width={1100} onClose={onCloseModal} mobMarg lottery withoutClose={isMobile}>
+    <Modal width={1100} onClose={onCloseModal} mobMarg withoutClose>
       <>
         {!!drawResult ? (
           <>
-            <Styled.Container lotteryModal>
+            <Styled.Container>
               <CSSTransition in={true} timeout={300} classNames="alert" unmountOnExit>
                 <>
                   <Styled.ContainerItem>
@@ -116,22 +115,28 @@ export const ModalLottery: FC<Props> = ({
           </>
         ) : (
           <>
-            <Styled.Container before={true}>
-              <Styled.ContainerItem>
-                <CSSTransition in={true} timeout={300} classNames="alert" unmountOnExit>
-                    <div>
-                      <Styled.LotteryModalDesc><PrizeSVG /> <span>{t("time.yourPrize")}</span></Styled.LotteryModalDesc>
-                      <Styled.LotteryFlexBox>
-                          <PrizeLottery />
-                          <OldTimer modalTimer />
-                      </Styled.LotteryFlexBox>
-                    </div>
-                </CSSTransition>
-              </Styled.ContainerItem> 
+            <Styled.Container>
+              <CSSTransition in={true} timeout={300} classNames="alert" unmountOnExit>
+                <>
+                  <Styled.ContainerItem>
+                    <Styled.LotteryLeft>
+                      <Styled.LotteryModalDesc>
+                        <PrizeSVG /> <span>{t('time.yourPrize')}</span>
+                      </Styled.LotteryModalDesc>
+                      <PrizeLottery />
+                    </Styled.LotteryLeft>
+                  </Styled.ContainerItem>
+                  <Styled.ContainerItem>
+                    <Styled.LotteryFlexBox>
+                      <Timer modalTimer history modalPrize />
+                    </Styled.LotteryFlexBox>
+                  </Styled.ContainerItem>
+                </>
+              </CSSTransition>
             </Styled.Container>
           </>
         )}
-       </>
+      </>
     </Modal>
   );
 };

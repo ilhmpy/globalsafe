@@ -171,6 +171,9 @@ const ChartWrap = styled.div`
     width: 125px;
     text-align: right;
   }
+  .apexcharts-legend-text {
+    margin-left: 20px;
+  }
 `;
 
 type PropsColumn = {

@@ -214,7 +214,6 @@ export const InfoMain = () => {
       hubConnection
         .invoke<Commisions>('GetWithdrawFee', 1, Number(value))
         .then((res: any) => {
-          console.log('commisions', res);
           setBlockchainCommision((res.networkFee / 100000).toString());
           setServiceCommision((res.serviceFee / 100000).toString());
         })
@@ -467,7 +466,7 @@ export const InfoMain = () => {
                         </Styled.Warning>
                         <Styled.ModalButton
                           blue
-                          href={`https://cwd.global/account/${user}/portfolio`}
+                          href={`https://backup.cwd.global/account/${user}/portfolio`}
                           target="_blank"
                         >
                           {t('depositSelect.transferButton')}
@@ -492,7 +491,7 @@ export const InfoMain = () => {
                         {t('depositSelect.bill')}
                       </Styled.Warning>
                     ) : null}
-                    <Styled.ModalButton blue>Перевести</Styled.ModalButton>
+                    <Styled.ModalButton blue>{t("depositSelect.translate")}</Styled.ModalButton>
                   </div>
                   {/* {depositSelect ? (
                     <Styled.Conditions>
@@ -504,7 +503,7 @@ export const InfoMain = () => {
                       {!balanceAsset && (
                         <Styled.ToLink
                           target="_blank"
-                          href={`https://cwd.global/shopping/payment?to_name=${depositSelect.account}&amount=${depositSelect.minAmount}`}
+                          href={`https://backup.cwd.global/shopping/payment?to_name=${depositSelect.account}&amount=${depositSelect.minAmount}`}
                         >
                           Приобрести
                         </Styled.ToLink>

@@ -54,9 +54,21 @@ export const TH = styled.th`
   span {
     display: none;
   }
-  @media (max-width: 500px) {
+
+  @media (max-width: 992px) {
     &:nth-child(1) {
-      width: 100px;
+      width: auto;
+    }
+    &:last-child {
+      width: 154px;
+    }
+  }
+  @media (max-width: 500px) {
+    &:nth-child(5) {
+      width: 74px;
+    }
+    &:last-child {
+      width: 72px;
     }
     p {
       display: none;
@@ -86,11 +98,6 @@ export const TD = styled.td`
   }
   &:nth-child(4) {
     width: 90px;
-  }
-  @media (max-width: 500px) {
-    &:nth-child(1) {
-      width: 100px;
-    }
   }
 `;
 
@@ -127,10 +134,8 @@ export const TR = styled.tr<{ disactive?: boolean }>`
     ${TD}:last-child {
       text-align: right;
     }
-    ${TH}:last-child {
-      display: flex;
-      justify-content: flex-end;
-    }
+    ${TH}:last-child {}
+
     ${TH}:nth-child(2),
     ${TH}:nth-child(3),
     ${TH}:nth-child(4),

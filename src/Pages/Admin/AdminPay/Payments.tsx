@@ -247,12 +247,11 @@ export const ModalDeposit: FC<PaidProps> = ({ data, onClose }: PaidProps) => {
       <Center onClick={handleContainerClick}>
         <PayCard>
           <PayCardBlock>
-            <PayName>{data.deposit.name}</PayName>
-            <PayText>
-              {moment(data.creationDate).format('DD/MM/YYYY') +
-                '-' +
-                moment(data.endDate).format('DD/MM/YYYY')}
-            </PayText>
+            <PayText>{data.deposit.name}</PayText>
+          </PayCardBlock>
+          <PayCardBlock>
+            <PayText small>{t("adminPay.table.date")}</PayText>
+            <PayText>{`${moment(data.creationDate).format("DD/MM/YYYY")} - ${moment(data.endDate).format("DD/MM/YYYY")}`}</PayText>
           </PayCardBlock>
           <PayCardBlock>
             <PayText small>{t('adminPay.table.user')}</PayText>
@@ -631,8 +630,11 @@ export const ModalUsersContent: FC<ModalUsersContentProps> = ({
     });
   }, [dataTwo]);
 
-  // console.log("Robert:::::dataTwo", dataTwo)
-  // console.log("Robert:::::dataOne", dataOne)
+
+  // Base Percentage
+  const baseCurrencyRate = (item: PaymentsCollection): number => {
+    return item.amount / item.baseAmount;
+  };
 
   return (
     <>
@@ -765,7 +767,10 @@ export const ModalUsersContent: FC<ModalUsersContentProps> = ({
                               selfData[item.safeId][0].userDeposit
                                 .payedAmountView}
                             <br /> */}
-                            {item.payedAmountView.toLocaleString('ru-RU', {
+                            {/* {item.payedAmountView.toLocaleString('ru-RU', {
+                              maximumFractionDigits: 4,
+                            })} */}
+                            {Number((item.payedAmount / baseCurrencyRate(item) / 100000).toFixed(4)).toLocaleString('ru-RU', {
                               maximumFractionDigits: 4,
                             })}
                           </PayText>
@@ -773,7 +778,8 @@ export const ModalUsersContent: FC<ModalUsersContentProps> = ({
                         <PayCardBlock>
                           <PayText small>{t('adminUsers.modal.totalDeposit')}</PayText>
                           <PayText>
-                            {((item.payedAmountView / item.baseAmountView) * 100).toFixed(1)}%
+                            {/* {((item.payedAmountView / item.baseAmountView) * 100).toFixed(1)}% */}
+                            {((item.payedAmountView / item.amountView) * 100).toFixed(1)}%
                           </PayText>
                         </PayCardBlock>
                       </PayCardInner> 

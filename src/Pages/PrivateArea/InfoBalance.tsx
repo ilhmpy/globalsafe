@@ -160,7 +160,7 @@ export const InfoBalance = () => {
   const rangeDate = (from: Date, to: Date) => {
     setOpenDate({
       from: from,
-      to: to,
+      to: moment(to).utcOffset('+00:00').set({ hour: 23, minute: 59, second: 59 }).toDate(),
     });
     setSelected(`${moment(from).format('DD.MM.YY')} - ${moment(to).format('DD.MM.YY')}`);
     onClose();
@@ -176,8 +176,6 @@ export const InfoBalance = () => {
   };
 
   useEffect(() => {
-    console.log('selected', selected);
-    console.log('privateArea.allTime', t('privateArea.allTime'));
     if (selected === 'За все время' || selected === 'For all the time') {
       setSelected(t('privateArea.allTime'));
       allDate();
@@ -195,6 +193,7 @@ export const InfoBalance = () => {
   useEffect(() => {
     setBalanceLog(null);
     if (hubConnection) {
+      setLoading(true);
       hubConnection
         .invoke(
           'GetUserDepositsCharges',
@@ -205,10 +204,9 @@ export const InfoBalance = () => {
           20
         )
         .then((res: any) => {
-          console.log('GetUserDepositsCharges', res);
           setTotalDeposit(res.totalRecords);
           setNum(20);
-          setLoading(false);
+
           function getFormatedDate(dateStr: Date) {
             const date = moment(dateStr).format('DD MMMM YYYY');
             return date;
@@ -238,6 +236,7 @@ export const InfoBalance = () => {
           } else {
             setBalanceLog(null);
           }
+          setLoading(false);
         })
         .catch((err: Error) => {
           setLoading(false);
@@ -299,7 +298,6 @@ export const InfoBalance = () => {
           [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         )
         .then((res) => {
-          console.log('responce', res);
           const result: any = {};
           // eslint-disable-next-line max-len
           for (const key in res) {

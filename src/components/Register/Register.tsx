@@ -164,7 +164,7 @@ export const RegisterComponent: FC = () => {
             <Submit as="button" danger type="submit" disabled={password === ''}>
               {t('login.in')}
             </Submit>
-            <LinkTo href={`https://cwd.global/account/${value}`} target="_blank">
+            <LinkTo href={`https://backup.cwd.global/account/${value}`} target="_blank">
               {t('login.goTo')}
             </LinkTo>
           </FormBlock>
