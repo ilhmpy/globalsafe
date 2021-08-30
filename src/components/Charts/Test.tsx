@@ -1,7 +1,8 @@
 import moment from 'moment';
 import 'moment/locale/ru';
-import React, { FC, useContext } from 'react';
+import { FC, useContext } from 'react';
 import Chart from 'react-apexcharts';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components/macro';
 import { ThemeContext } from '../../context/ThemeContext';
 
@@ -22,6 +23,7 @@ export const TestChart: FC<Props> = ({
 }: Props) => {
   const themeContext = useContext(ThemeContext);
   const theme = themeContext.theme;
+  const { t } = useTranslation();
 
   const colors = theme === 'light' ? '#fff' : '#000';
 
@@ -146,6 +148,13 @@ export const TestChart: FC<Props> = ({
         width: 2,
         dashArray: 1,
       },
+      noData: {
+        text: t('privateArea.notData'),
+        align: 'center',
+        verticalAlign: 'middle',
+        offsetX: 0,
+        offsetY: 0,
+      },
     },
   };
 
@@ -185,6 +194,7 @@ export const ColumnChart: FC<PropsColumn> = ({ date, value }: PropsColumn) => {
   const themeContext = useContext(ThemeContext);
   const theme = themeContext.theme;
   const color = theme === 'light' ? '#222' : '#fff';
+  const { t } = useTranslation();
 
   const data = {
     series: [
@@ -297,6 +307,13 @@ export const ColumnChart: FC<PropsColumn> = ({ date, value }: PropsColumn) => {
       dataLabels: {
         enabled: false,
       },
+      noData: {
+        text: t('privateArea.notData'),
+        align: 'center',
+        verticalAlign: 'middle',
+        offsetX: 0,
+        offsetY: 0,
+      },
     },
   };
 
@@ -311,6 +328,7 @@ export const ColumnChartCwd: FC<PropsColumn> = ({ date = [''], value = [''] }: P
   const themeContext = useContext(ThemeContext);
   const theme = themeContext.theme;
   const color = theme === 'light' ? '#222' : '#fff';
+  const { t } = useTranslation();
 
   const data = {
     series: [
@@ -415,6 +433,13 @@ export const ColumnChartCwd: FC<PropsColumn> = ({ date = [''], value = [''] }: P
       dataLabels: {
         enabled: false,
       },
+      noData: {
+        text: t('privateArea.notData'),
+        align: 'center',
+        verticalAlign: 'middle',
+        offsetX: 0,
+        offsetY: 0,
+      },
     },
   };
 
@@ -429,6 +454,7 @@ export const ColumnChartThree: FC<PropsColumn> = ({ date, value }: PropsColumn) 
   const themeContext = useContext(ThemeContext);
   const theme = themeContext.theme;
   const color = theme === 'light' ? '#222' : '#fff';
+  const { t } = useTranslation();
 
   const data = {
     series: [
@@ -541,6 +567,13 @@ export const ColumnChartThree: FC<PropsColumn> = ({ date, value }: PropsColumn) 
           },
         },
       },
+      noData: {
+        text: t('privateArea.notData'),
+        align: 'center',
+        verticalAlign: 'middle',
+        offsetX: 0,
+        offsetY: 0,
+      },
     },
   };
 
@@ -555,6 +588,7 @@ export const ColumnChartTwo: FC<PropsColumn> = ({ date, value }: PropsColumn) =>
   const themeContext = useContext(ThemeContext);
   const theme = themeContext.theme;
   const color = theme === 'light' ? '#222' : '#fff';
+  const { t } = useTranslation();
 
   const data = {
     series: [
@@ -677,6 +711,13 @@ export const ColumnChartTwo: FC<PropsColumn> = ({ date, value }: PropsColumn) =>
       dataLabels: {
         enabled: false,
       },
+      noData: {
+        text: t('privateArea.notData'),
+        align: 'center',
+        verticalAlign: 'middle',
+        offsetX: 0,
+        offsetY: 0,
+      },
     },
   };
 
@@ -691,6 +732,7 @@ export const ColumnChartAnalitic: FC<PropsColumn> = ({ date, value }: PropsColum
   const themeContext = useContext(ThemeContext);
   const theme = themeContext.theme;
   const color = theme === 'light' ? '#222' : '#fff';
+  const { t } = useTranslation();
 
   moment.locale(localStorage.getItem('i18nextLng') || 'ru');
 
@@ -814,6 +856,13 @@ export const ColumnChartAnalitic: FC<PropsColumn> = ({ date, value }: PropsColum
       dataLabels: {
         enabled: false,
       },
+      noData: {
+        text: t('privateArea.notData'),
+        align: 'center',
+        verticalAlign: 'middle',
+        offsetX: 0,
+        offsetY: 0,
+      },
     },
   };
 
@@ -898,7 +947,7 @@ export const RadialBar: FC<RadialProps> = ({
   );
 };
 
-export const RadialBarRound = () => {
+export const RadialBarRound: FC = () => {
   const data = {
     series: [100],
     options: {
@@ -944,7 +993,7 @@ export const RadialBarRound = () => {
   );
 };
 
-export const RadialBarHalf = () => {
+export const RadialBarHalf: FC = () => {
   const data = {
     series: [67],
     options: {

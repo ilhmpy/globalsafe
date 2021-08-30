@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { FC, useRef, useState, useEffect } from 'react';
+import React, { FC, useRef, useState } from 'react';
 import DayPicker, { DateUtils } from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 import { useTranslation } from 'react-i18next';
@@ -503,8 +503,8 @@ export const MainAdminInput: FC<MainAdminProps> = ({
     from: undefined,
     to: undefined,
   });
-
   const ref = useRef(null);
+  const backDays: any = moment().subtract(30, 'days');
 
   const handleClickOutside = () => {
     setShowOpen(false);
@@ -517,6 +517,11 @@ export const MainAdminInput: FC<MainAdminProps> = ({
     setSelfDate({ from: range.from, to: range.to });
     if (range.from && range.to) {
       setOpenDate({ from: range.from, to: range.to });
+    } else {
+      setOpenDate({
+        from: backDays._d,
+        to: new Date(),
+      });
     }
   };
 
