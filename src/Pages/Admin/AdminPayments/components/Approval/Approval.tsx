@@ -90,7 +90,15 @@ export const Approval: FC<Props> = ({
   const [sorting, setSorting] = useState<SortingType[]>([]);
   const [acceptAll, setAcceptAll] = useState<boolean>(false);
 
-  const sortings = [t("userSort"), t("userSort2"), t("nameSort"), t("nameSort2"), t("descendOpenDate"), t("ascendOpenDate"), t("descendSumСontribution", t("ascendSumContribution"))];
+  const sortings = [
+    t('userSort'),
+    t('userSort2'),
+    t('nameSort'),
+    t('nameSort2'),
+    t('descendOpenDate'),
+    t('ascendOpenDate'),
+    t('descendSumСontribution', t('ascendSumContribution')),
+  ];
 
   const [listForSorting, setListForSorting] = useState<SelectValues[]>([
     {
@@ -190,10 +198,12 @@ export const Approval: FC<Props> = ({
           nameApproval ? nameApproval.toLowerCase() : null,
           searchSafeIDApproval.length ? searchSafeIDApproval : null,
           openDateApproval.from
-            ? moment(openDateApproval.from).set({ hour: 12, minute: 0, second: 0 }).toDate()
+            ? moment(openDateApproval.from).set({ hour: 0, minute: 0, second: 0 }).toDate()
             : null,
           openDateApproval.to
-            ? moment(openDateApproval.to).set({ hour: 12, minute: 0, second: 0 }).toDate()
+            ? moment(openDateApproval.to).set({ hour: 23, minute: 59, second: 59 }).toDate()
+            : openDateApproval.from
+            ? new Date()
             : null,
           null,
           null,
@@ -291,10 +301,18 @@ export const Approval: FC<Props> = ({
           nameApproval ? nameApproval.toLowerCase() : null,
           searchSafeIDApproval.length ? searchSafeIDApproval : null,
           openDateApproval.from
-            ? moment(openDateApproval.from).set({ hour: 12, minute: 0, second: 0 }).toDate()
+            ? moment(openDateApproval.from)
+                .utcOffset('+00:00')
+                .set({ hour: 0, minute: 0, second: 0 })
+                .toDate()
             : null,
           openDateApproval.to
-            ? moment(openDateApproval.to).set({ hour: 12, minute: 0, second: 0 }).toDate()
+            ? moment(openDateApproval.to)
+                .utcOffset('+00:00')
+                .set({ hour: 23, minute: 59, second: 59 })
+                .toDate()
+            : openDateApproval.from
+            ? new Date()
             : null,
           null,
           null,
@@ -549,7 +567,7 @@ export const Approval: FC<Props> = ({
                   onChange={(e) => setNameApproval(e.target.value.toLowerCase())}
                 />
               </SelectWrapTwo>
-              <SelectWrapTwo mWidth="210px">
+              <SelectWrapTwo mWidth="184px">
                 <TestInput
                   setOpenDate={setOpenDateApproval}
                   openDate={openDateApproval}
@@ -569,8 +587,8 @@ export const Approval: FC<Props> = ({
                 <SelectOne
                   checkList={checkList}
                   setCheckList={setCheckList}
-                  idx={6}
-                  values={[t('adminPay.filter.disagree'), t('adminPay.filter.agree')]}
+                  idx={5}
+                  values={[t('adminPay.filter.agree'), t('adminPay.filter.disagree')]}
                 />
               </SelectWrapTwo>
             </SelectContainerInnerPaid>
@@ -607,7 +625,7 @@ export const Approval: FC<Props> = ({
                 />
               </BurgerButton>
               <Window open={sortingWindowOpen}>
-                <WindowTitle>{t("sorting")}</WindowTitle>
+                <WindowTitle>{t('sorting')}</WindowTitle>
                 <WindowBody>
                   {listForSorting.map((obj, index) => (
                     <Sort

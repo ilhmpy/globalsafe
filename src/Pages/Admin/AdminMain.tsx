@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import 'react-day-picker/lib/style.css';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
@@ -250,7 +250,7 @@ export const AdminMain = () => {
                     value={
                       Object.values(depositsCreationStat).length
                         ? Object.values(depositsCreationStat).map((i: any) => i[0])
-                        : ['']
+                        : []
                     }
                   />
                 </CSSTransition>
@@ -266,7 +266,7 @@ export const AdminMain = () => {
                     value={
                       Object.values(depositsCreationStat).length
                         ? Object.values(depositsCreationStat).map((i: any) => i[1] / 100000)
-                        : ['']
+                        : []
                     }
                   />
                 </CSSTransition>
@@ -309,7 +309,7 @@ export const AdminMain = () => {
                       value={
                         Object.values(depositsClosedStat).length
                           ? Object.values(depositsClosedStat).map((i: any) => i[0])
-                          : ['']
+                          : []
                       }
                     />
                   </CSSTransition>
@@ -330,7 +330,7 @@ export const AdminMain = () => {
                       value={
                         Object.values(depositsClosedStat).length
                           ? Object.values(depositsClosedStat).map((i: any) => i[1] / 100000)
-                          : ['']
+                          : []
                       }
                     />
                   </CSSTransition>
@@ -357,7 +357,7 @@ export const AdminMain = () => {
               value={
                 Object.values(paymentsStat).length
                   ? Object.values(paymentsStat).map((i) => i / 100000)
-                  : ['']
+                  : []
               }
             />
           </ChartItem>
@@ -376,7 +376,7 @@ export const AdminMain = () => {
                 value={
                   Object.values(revenueStat).length
                     ? Object.values(revenueStat).map((i) => i / 100000)
-                    : ['']
+                    : []
                 }
               />
             </ChartItem>

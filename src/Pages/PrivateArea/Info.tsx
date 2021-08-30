@@ -1,22 +1,22 @@
-﻿import React, { useState, useContext, useEffect, useRef } from "react";
-import * as Styled from "./Styles.elements";
-import { Card, Container } from "../../globalStyles";
-import { Redirect } from "react-router-dom";
-import { AppContext } from "../../context/HubContext";
-import { TestChart } from "../../components/Charts/Test";
-import { CSSTransition } from "react-transition-group";
-import useWindowSize from "../../hooks/useWindowSize";
-import { Collection, RootList } from "../../types/info";
-import { Modal } from "../../components/Modal/Modal";
-import { ReactComponent as Left } from "../../assets/svg/arrowLeftModal.svg";
-import moment from "moment";
-import { ModalRangeInput } from "../../components/UI/DayPicker";
-import { Input } from "../../components/UI/Input";
-import { OpenDate } from "../../types/dates";
-import { RootDeposits, DepositsCollection } from "../../types/info";
-import { DepositListModal } from "./Modals";
-import { Loading } from "../../components/UI/Loading";
-import { useTranslation } from "react-i18next";
+﻿import React, { useState, useContext, useEffect, useRef } from 'react';
+import * as Styled from './Styles.elements';
+import { Card, Container } from '../../globalStyles';
+import { Redirect } from 'react-router-dom';
+import { AppContext } from '../../context/HubContext';
+import { TestChart } from '../../components/Charts/Test';
+import { CSSTransition } from 'react-transition-group';
+import useWindowSize from '../../hooks/useWindowSize';
+import { Collection, RootList } from '../../types/info';
+import { Modal } from '../../components/Modal/Modal';
+import { ReactComponent as Left } from '../../assets/svg/arrowLeftModal.svg';
+import moment from 'moment';
+import { ModalRangeInput } from '../../components/UI/DayPicker';
+import { Input } from '../../components/UI/Input';
+import { OpenDate } from '../../types/dates';
+import { RootDeposits, DepositsCollection } from '../../types/info';
+import { DepositListModal } from './Modals';
+import { Loading } from '../../components/UI/Loading';
+import { useTranslation } from 'react-i18next';
 
 type Obj = {
   id: string;
@@ -41,19 +41,17 @@ export const Info = () => {
   const [open, setOpen] = useState(false);
   const [withdraw, setWithdraw] = useState(false);
   const [addDeposit, setAddDeposit] = useState(false);
-  const [withdrawValue, setWithdrawValue] = useState("");
-  const [addDepositValue, setAddDepositValue] = useState("");
+  const [withdrawValue, setWithdrawValue] = useState('');
+  const [addDepositValue, setAddDepositValue] = useState('');
   const [depositListModal, setDepositListModal] = useState(false);
-  const [selectedYear, setSelectedYear] = useState<any>("2021");
-  const [selectedMonth, setSelectedMonth] = useState<any>("3");
+  const [selectedYear, setSelectedYear] = useState<any>('2021');
+  const [selectedMonth, setSelectedMonth] = useState<any>('3');
   const [depositTotal, setDepositTotal] = useState(0);
   const [totalPayed, setTotalPayed] = useState(0);
-  const [depositSelect, setDepositSelect] =
-    useState<null | DepositsCollection>(null);
-  const [depositsList, setDepositsList] =
-    useState<DepositsCollection[] | null>(null);
+  const [depositSelect, setDepositSelect] = useState<null | DepositsCollection>(null);
+  const [depositsList, setDepositsList] = useState<DepositsCollection[] | null>(null);
   const [openDate, setOpenDate] = useState<OpenDate>({
-    from: new Date("2019-01-01T00:47:45"),
+    from: new Date('2019-01-01T00:47:45'),
     to: new Date(),
   });
   const { t, i18n } = useTranslation();
@@ -70,7 +68,7 @@ export const Info = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke("GetTotalPayedAmount")
+        .invoke('GetTotalPayedAmount')
         .then((res) => {
           setTotalPayed(res);
         })
@@ -81,7 +79,7 @@ export const Info = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke("GetTotalDepositsAmount")
+        .invoke('GetTotalDepositsAmount')
         .then((res) => {
           setDepositTotal(res);
         })
@@ -98,7 +96,7 @@ export const Info = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<RootList>("GetUserDeposits", [1, 2, 3, 4, 5, 6, 7, 8], 0, 20)
+        .invoke<RootList>('GetUserDeposits', [1, 2, 3, 4, 5, 6, 7, 8], 0, 20)
         .then((res) => {
           setList(res.collection);
         })
@@ -109,7 +107,7 @@ export const Info = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke("GetUserNextPaymentDate")
+        .invoke('GetUserNextPaymentDate')
         .then((res) => {
           setNextDate(res);
         })
@@ -120,7 +118,7 @@ export const Info = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke("GetActiveDepositsCount")
+        .invoke('GetActiveDepositsCount')
         .then((res: any) => {
           setActiveDeposite(res);
         })
@@ -152,28 +150,18 @@ export const Info = () => {
           <Card>
             <Styled.Deposit>
               <Styled.DepositItem>
-                <Styled.DepositName>
-                  {t("privateArea.openDeposits")}
-                </Styled.DepositName>
-                <Styled.DepositValue>
-                  {activeDeposite ? activeDeposite : "-"}
-                </Styled.DepositValue>
+                <Styled.DepositName>{t('privateArea.openDeposits')}</Styled.DepositName>
+                <Styled.DepositValue>{activeDeposite ? activeDeposite : '-'}</Styled.DepositValue>
               </Styled.DepositItem>
               <Styled.DepositItem>
-                <Styled.DepositName>
-                  {t("privateArea.sumDeposits")}
-                </Styled.DepositName>
+                <Styled.DepositName>{t('privateArea.sumDeposits')}</Styled.DepositName>
                 <Styled.DepositValue>
                   {(depositTotal / 100000).toLocaleString()}
                 </Styled.DepositValue>
               </Styled.DepositItem>
               <Styled.DepositItem>
-                <Styled.DepositName>
-                  {t("privateArea.allPay")}
-                </Styled.DepositName>
-                <Styled.DepositValue>
-                  {(totalPayed / 100000).toLocaleString()}
-                </Styled.DepositValue>
+                <Styled.DepositName>{t('privateArea.allPay')}</Styled.DepositName>
+                <Styled.DepositValue>{(totalPayed / 100000).toLocaleString()}</Styled.DepositValue>
               </Styled.DepositItem>
             </Styled.Deposit>
           </Card>
@@ -182,7 +170,7 @@ export const Info = () => {
           <Styled.ContainerRow>
             <Styled.Half>
               <Styled.HalfHead>
-                <Styled.HalfTitle>{t("privateArea.pay")}</Styled.HalfTitle>
+                <Styled.HalfTitle>{t('privateArea.pay')}</Styled.HalfTitle>
                 <Styled.HalfTabs>
                   <Styled.HalfTab onClick={() => setCard(0)} card={card === 0}>
                     %
@@ -194,53 +182,31 @@ export const Info = () => {
                 </Styled.HalfTabs>
               </Styled.HalfHead>
               <Styled.HalfContent card={card === 0}>
-                <CSSTransition
-                  in={card === 0}
-                  timeout={300}
-                  classNames="chart"
-                  unmountOnExit
-                >
+                <CSSTransition in={card === 0} timeout={300} classNames="chart" unmountOnExit>
                   <TestChart
                     percent
-                    labels={
-                      list.length ? list.map((i: any) => i.deposit.name) : [""]
-                    }
-                    series={
-                      list.length
-                        ? list.map((i: any) => i.payedAmountView)
-                        : [""]
-                    }
+                    labels={list.length ? list.map((i: any) => i.deposit.name) : ['']}
+                    series={list.length ? list.map((i: any) => i.payedAmountView) : ['']}
                   />
                 </CSSTransition>
                 <Styled.NextPay>
-                  {t("privateArea.nextPay")}:{" "}
+                  {t('privateArea.nextPay')}:{' '}
                   <Styled.Date>
-                    {nextDate ? moment(nextDate).format("DD MMMM YYYY") : "-"}
+                    {nextDate ? moment(nextDate).format('DD MMMM YYYY') : '-'}
                   </Styled.Date>
                 </Styled.NextPay>
               </Styled.HalfContent>
               <Styled.HalfContent card={card === 1}>
-                <CSSTransition
-                  in={card === 1}
-                  timeout={300}
-                  classNames="chart"
-                  unmountOnExit
-                >
+                <CSSTransition in={card === 1} timeout={300} classNames="chart" unmountOnExit>
                   <TestChart
-                    labels={
-                      list.length ? list.map((i: any) => i.deposit.name) : [""]
-                    }
-                    series={
-                      list.length
-                        ? list.map((i: any) => i.payedAmountView)
-                        : [""]
-                    }
+                    labels={list.length ? list.map((i: any) => i.deposit.name) : ['']}
+                    series={list.length ? list.map((i: any) => i.payedAmountView) : ['']}
                   />
                 </CSSTransition>
                 <Styled.NextPay>
-                  {t("privateArea.nextPay")}:{" "}
+                  {t('privateArea.nextPay')}:{' '}
                   <Styled.Date>
-                    {nextDate ? moment(nextDate).format("DD MMMM YYYY") : "-"}
+                    {nextDate ? moment(nextDate).format('DD MMMM YYYY') : '-'}
                   </Styled.Date>
                 </Styled.NextPay>
               </Styled.HalfContent>
@@ -248,59 +214,31 @@ export const Info = () => {
 
             <Styled.Half>
               <Styled.HalfHead>
-                <Styled.HalfTitle>{t("privateArea.take")}</Styled.HalfTitle>
+                <Styled.HalfTitle>{t('privateArea.take')}</Styled.HalfTitle>
                 <Styled.HalfTabs>
-                  <Styled.HalfTab
-                    onClick={() => setCard2(0)}
-                    card={card2 === 0}
-                  >
+                  <Styled.HalfTab onClick={() => setCard2(0)} card={card2 === 0}>
                     %
                   </Styled.HalfTab>
                   <Styled.HalfTab>/</Styled.HalfTab>
-                  <Styled.HalfTab
-                    onClick={() => setCard2(1)}
-                    card={card2 === 1}
-                  >
+                  <Styled.HalfTab onClick={() => setCard2(1)} card={card2 === 1}>
                     CWD
                   </Styled.HalfTab>
                 </Styled.HalfTabs>
               </Styled.HalfHead>
               <Styled.HalfContent card={card2 === 0}>
-                <CSSTransition
-                  in={card2 === 0}
-                  timeout={300}
-                  classNames="chart"
-                  unmountOnExit
-                >
+                <CSSTransition in={card2 === 0} timeout={300} classNames="chart" unmountOnExit>
                   <TestChart
                     percent
-                    labels={
-                      list.length ? list.map((i: any) => i.deposit.name) : [""]
-                    }
-                    series={
-                      list.length
-                        ? list.map((i: any) => i.baseAmountView)
-                        : [""]
-                    }
+                    labels={list.length ? list.map((i: any) => i.deposit.name) : ['']}
+                    series={list.length ? list.map((i: any) => i.baseAmountView) : ['']}
                   />
                 </CSSTransition>
               </Styled.HalfContent>
               <Styled.HalfContent card={card2 === 1}>
-                <CSSTransition
-                  in={card2 === 1}
-                  timeout={300}
-                  classNames="chart"
-                  unmountOnExit
-                >
+                <CSSTransition in={card2 === 1} timeout={300} classNames="chart" unmountOnExit>
                   <TestChart
-                    labels={
-                      list.length ? list.map((i: any) => i.deposit.name) : [""]
-                    }
-                    series={
-                      list.length
-                        ? list.map((i: any) => i.baseAmountView)
-                        : [""]
-                    }
+                    labels={list.length ? list.map((i: any) => i.deposit.name) : ['']}
+                    series={list.length ? list.map((i: any) => i.baseAmountView) : ['']}
                   />
                 </CSSTransition>
               </Styled.HalfContent>
@@ -312,62 +250,32 @@ export const Info = () => {
           <Container>
             <Card>
               <Styled.HalfTabs>
-                <Styled.MobHalfTab
-                  onClick={() => setActiveMob(0)}
-                  card={activMob === 0}
-                >
-                  {t("privateArea.pay")}
+                <Styled.MobHalfTab onClick={() => setActiveMob(0)} card={activMob === 0}>
+                  {t('privateArea.pay')}
                 </Styled.MobHalfTab>
-                <Styled.MobHalfTab
-                  onClick={() => setActiveMob(1)}
-                  card={activMob === 1}
-                >
-                  {t("privateArea.take")}
+                <Styled.MobHalfTab onClick={() => setActiveMob(1)} card={activMob === 1}>
+                  {t('privateArea.take')}
                 </Styled.MobHalfTab>
               </Styled.HalfTabs>
               <Styled.Content active={activMob === 0}>
-                <CSSTransition
-                  in={activMob === 0}
-                  timeout={300}
-                  classNames="chart"
-                  unmountOnExit
-                >
+                <CSSTransition in={activMob === 0} timeout={300} classNames="chart" unmountOnExit>
                   <>
                     <Styled.HalfTabs>
-                      <Styled.HalfTab
-                        onClick={() => setCard(0)}
-                        card={card === 0}
-                      >
+                      <Styled.HalfTab onClick={() => setCard(0)} card={card === 0}>
                         %
                       </Styled.HalfTab>
                       <Styled.HalfTab>/</Styled.HalfTab>
-                      <Styled.HalfTab
-                        onClick={() => setCard(1)}
-                        card={card === 1}
-                      >
+                      <Styled.HalfTab onClick={() => setCard(1)} card={card === 1}>
                         CWD
                       </Styled.HalfTab>
                     </Styled.HalfTabs>
                     <Styled.HalfContent card={card === 0}>
-                      <CSSTransition
-                        in={card === 0}
-                        timeout={300}
-                        classNames="chart"
-                        unmountOnExit
-                      >
+                      <CSSTransition in={card === 0} timeout={300} classNames="chart" unmountOnExit>
                         <TestChart
                           percent
                           mobHeight={list.length ? 150 : 0}
-                          labels={
-                            list.length
-                              ? list.map((i: any) => i.deposit.name)
-                              : [""]
-                          }
-                          series={
-                            list.length
-                              ? list.map((i: any) => i.payedAmountView)
-                              : [""]
-                          }
+                          labels={list.length ? list.map((i: any) => i.deposit.name) : ['']}
+                          series={list.length ? list.map((i: any) => i.payedAmountView) : ['']}
                         />
                       </CSSTransition>
                       <Styled.NextPay>
@@ -376,58 +284,32 @@ export const Info = () => {
                     </Styled.HalfContent>
 
                     <Styled.HalfContent card={card === 1}>
-                      <CSSTransition
-                        in={card === 1}
-                        timeout={300}
-                        classNames="chart"
-                        unmountOnExit
-                      >
+                      <CSSTransition in={card === 1} timeout={300} classNames="chart" unmountOnExit>
                         <TestChart
                           mobHeight={list.length ? 150 : 0}
-                          labels={
-                            list.length
-                              ? list.map((i: any) => i.deposit.name)
-                              : [""]
-                          }
-                          series={
-                            list.length
-                              ? list.map((i: any) => i.payedAmountView)
-                              : [""]
-                          }
+                          labels={list.length ? list.map((i: any) => i.deposit.name) : ['']}
+                          series={list.length ? list.map((i: any) => i.payedAmountView) : ['']}
                         />
                       </CSSTransition>
                     </Styled.HalfContent>
                     <Styled.NextPay>
-                      {t("privateArea.nextPay")}:{" "}
+                      {t('privateArea.nextPay')}:{' '}
                       <Styled.Date>
-                        {nextDate
-                          ? moment(nextDate).format("DD MMMM YYYY")
-                          : "-"}
+                        {nextDate ? moment(nextDate).format('DD MMMM YYYY') : '-'}
                       </Styled.Date>
                     </Styled.NextPay>
                   </>
                 </CSSTransition>
               </Styled.Content>
               <Styled.Content active={activMob === 1}>
-                <CSSTransition
-                  in={activMob === 1}
-                  timeout={300}
-                  classNames="chart"
-                  unmountOnExit
-                >
+                <CSSTransition in={activMob === 1} timeout={300} classNames="chart" unmountOnExit>
                   <>
                     <Styled.HalfTabs>
-                      <Styled.HalfTab
-                        onClick={() => setCard2(0)}
-                        card={card2 === 0}
-                      >
+                      <Styled.HalfTab onClick={() => setCard2(0)} card={card2 === 0}>
                         %
                       </Styled.HalfTab>
                       <Styled.HalfTab>/</Styled.HalfTab>
-                      <Styled.HalfTab
-                        onClick={() => setCard2(1)}
-                        card={card2 === 1}
-                      >
+                      <Styled.HalfTab onClick={() => setCard2(1)} card={card2 === 1}>
                         CWD
                       </Styled.HalfTab>
                     </Styled.HalfTabs>
@@ -442,16 +324,8 @@ export const Info = () => {
                         <TestChart
                           percent
                           mobHeight={list.length ? 150 : 0}
-                          labels={
-                            list.length
-                              ? list.map((i: any) => i.deposit.name)
-                              : [""]
-                          }
-                          series={
-                            list.length
-                              ? list.map((i: any) => i.baseAmountView)
-                              : [""]
-                          }
+                          labels={list.length ? list.map((i: any) => i.deposit.name) : ['']}
+                          series={list.length ? list.map((i: any) => i.baseAmountView) : ['']}
                         />
                       </CSSTransition>
                       <Styled.NextPay>
@@ -468,16 +342,8 @@ export const Info = () => {
                       >
                         <TestChart
                           mobHeight={list.length ? 150 : 0}
-                          labels={
-                            list.length
-                              ? list.map((i: any) => i.deposit.name)
-                              : [""]
-                          }
-                          series={
-                            list.length
-                              ? list.map((i: any) => i.baseAmountView)
-                              : [""]
-                          }
+                          labels={list.length ? list.map((i: any) => i.deposit.name) : ['']}
+                          series={list.length ? list.map((i: any) => i.baseAmountView) : ['']}
                         />
                       </CSSTransition>
                       <Styled.NextPay>
