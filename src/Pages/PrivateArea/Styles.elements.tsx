@@ -78,7 +78,7 @@ export const TopUpButton = styled(Button)`
   &:hover {
     background: ${(props) => props.theme.topUpButton};
   }
-  @media (max-width: 992px) {
+  @media (max-width: 767px) {
     margin-left: auto;
   }
 `;
@@ -204,6 +204,7 @@ export const ModalBack = styled(BackIcon)`
 
 export const DateButton = styled(Button)`
   padding: 12px 15px;
+  flex: none;
 `;
 
 export const IconRotate = styled.div<{ rights?: boolean }>`
@@ -308,10 +309,10 @@ export const InfoButtons = styled.div`
 
 export const Deposit = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   padding: 50px;
   justify-content: space-around;
-  @media (max-width: 992px) {
+  @media (max-width: 767px) {
     flex-wrap: wrap;
   }
 `;
@@ -321,8 +322,9 @@ export const DepositItem = styled.div`
   align-items: center;
   flex-direction: column;
   width: 230px;
-  @media (max-width: 992px) {
+  @media (max-width: 767px) {
     margin-bottom: 40px;
+    width: 100%;
   }
 `;
 
@@ -334,12 +336,13 @@ export const DepositName = styled.h4`
   margin-bottom: 20px;
 `;
 
-export const DepositValue = styled.h4`
+export const DepositValue = styled.p`
   font-weight: 500;
   font-size: 36px;
   line-height: 42px;
   text-align: center;
   color: #ff416e;
+  word-break: break-all;
 `;
 
 export const Half = styled(Card)`
@@ -460,14 +463,23 @@ export const BalanceList = styled.div`
   max-width: 470px;
   justify-content: space-between;
   align-items: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin: 20px 30px;
+  @media (max-width: 767px) {
+    margin: 20px 0;
+  }
 `;
 
 export const BalanceItem = styled.div`
   display: flex;
   justify-content: flex-start;
   flex-direction: column;
+  padding: 0 10px;
+  &:first-child {
+    padding-left: 0;
+  }
+  &:last-child {
+    padding-right: 0;
+  }
 `;
 
 export const BalanceItemName = styled.p`
@@ -486,6 +498,8 @@ export const BalanceItemValue = styled.p<{ pink?: boolean }>`
   font-size: 24px;
   line-height: 28px;
   color: ${(props) => (props.pink ? '#FF416E' : props.theme.text)};
+  word-break: break-all;
+
   @media (max-width: 992px) {
     font-size: 18px;
     line-height: 21px;
@@ -499,13 +513,13 @@ export const BalanceWrap = styled.div`
   align-items: center;
   justify-content: flex-end;
   ${DateButton} {
-    margin-left: 180px;
-    @media (max-width: 992px) {
+    margin-left: auto;
+    @media (max-width: 767px) {
       margin-left: 0;
       width: 158px;
     }
   }
-  @media (max-width: 992px) {
+  @media (max-width: 767px) {
     flex-direction: column;
     justify-content: center;
     margin-bottom: 20px;

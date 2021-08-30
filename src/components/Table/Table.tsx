@@ -29,100 +29,88 @@ const Row = ({ data }: any) => {
     <>
       {size < 992 ? (
         <>
-        <Styled.TR key={data.safeId} disactive={data.state === 4}>
-          <Styled.TD>
-            <Link
-              key={data.safeId}
-              to={{
-                pathname: '/info/deposits/' + data.safeId,
-                state: data,
-              }}>
-              <Styled.Name>{data.deposit.name}</Styled.Name>
-            </Link>
-            <Styled.NameData>
+          <Styled.TR key={data.safeId} disactive={data.state === 4}>
+            <Styled.TD>
+              <Link
+                key={data.safeId}
+                to={{
+                  pathname: '/info/deposits/' + data.safeId,
+                  state: data,
+                }}
+              >
+                <Styled.Name>{data.deposit.name}</Styled.Name>
+              </Link>
               <Styled.NameData>
-                {moment(data.creationDate).format('MM/YYYY')}
+                <Styled.NameData>{moment(data.creationDate).format('MM/YYYY')}</Styled.NameData>
+                <Styled.NameData>&nbsp; - &nbsp;</Styled.NameData>
               </Styled.NameData>
-              <Styled.NameData>&nbsp; - &nbsp;</Styled.NameData>
-            </Styled.NameData>
-            <Styled.NameData
-                green={moment.valueOf() > moment(data.endDate).valueOf()}>
+              <Styled.NameData green={moment.valueOf() > moment(data.endDate).valueOf()}>
                 {moment(data.endDate).format('DD/MM/YYYY')}
               </Styled.NameData>
-          </Styled.TD>
-          
-          <Styled.TD>
-            <Styled.Text
-              dangerouslySetInnerHTML={{ __html: data.deposit.description }}
-            />
-          </Styled.TD>
-          
+            </Styled.TD>
 
-          <Styled.TD>
-            <Styled.Text>{data.amountView}</Styled.Text>
-            <Styled.Text>{Balance[data.deposit.asset]}</Styled.Text>
-          </Styled.TD>
+            <Styled.TD>
+              <Styled.Text dangerouslySetInnerHTML={{ __html: data.deposit.description }} />
+            </Styled.TD>
 
-          <Styled.TD>
-            <Styled.Text>
-              {data.paymentAmountView
-                ? data.paymentAmountView.toString().length > 15
-                  ? data.paymentAmountView.toFixed(7)
-                  : data.paymentAmountView
-                : '-'}
-            </Styled.Text>
-            {data.paymentAmountView ? (
+            <Styled.TD>
+              <Styled.Text>{data.amountView}</Styled.Text>
               <Styled.Text>{Balance[data.deposit.asset]}</Styled.Text>
-            ) : (
-              <Styled.Text></Styled.Text>
-            )}
-          </Styled.TD>
+            </Styled.TD>
 
-          <Styled.TD>
-            <Styled.Text>{data.pendingAmount}</Styled.Text>
-          </Styled.TD>
-          
-
-          <Styled.TD>
-            <Link
-              key={data.safeId}
-              to={{
-                pathname: '/info/deposits/' + data.safeId,
-                state: data,
-              }}>
+            <Styled.TD>
               <Styled.Text>
-                {data.paymentDate
-                  ? moment(data.paymentDate).format('DD/MM/YYYY')
+                {data.paymentAmountView
+                  ? data.paymentAmountView.toString().length > 15
+                    ? data.paymentAmountView.toFixed(7)
+                    : data.paymentAmountView
                   : '-'}
               </Styled.Text>
-            </Link>
-          </Styled.TD>
+              {data.paymentAmountView ? (
+                <Styled.Text>{Balance[data.deposit.asset]}</Styled.Text>
+              ) : (
+                <Styled.Text></Styled.Text>
+              )}
+            </Styled.TD>
 
-        </Styled.TR>
-      </>
+            <Styled.TD>
+              <Styled.Text>{data.pendingAmount}</Styled.Text>
+            </Styled.TD>
+
+            <Styled.TD>
+              <Link
+                key={data.safeId}
+                to={{
+                  pathname: '/info/deposits/' + data.safeId,
+                  state: data,
+                }}
+              >
+                <Styled.Text>
+                  {data.paymentDate ? moment(data.paymentDate).format('DD/MM/YYYY') : '-'}
+                </Styled.Text>
+              </Link>
+            </Styled.TD>
+          </Styled.TR>
+        </>
       ) : (
         <>
           <Styled.TR
             key={data.safeId}
             onClick={() => onClick(data.safeId)}
-            disactive={data.state === 4}>
+            disactive={data.state === 4}
+          >
             <Styled.TD>
               <Styled.Name>{data.deposit.name}</Styled.Name>
               <Styled.NameData>
-                <Styled.NameData>
-                  {moment(data.creationDate).format('DD/MM/YYYY')}
-                </Styled.NameData>{' '}
+                <Styled.NameData>{moment(data.creationDate).format('DD/MM/YYYY')}</Styled.NameData>{' '}
                 <Styled.NameData>&nbsp; - &nbsp;</Styled.NameData>
-                <Styled.NameData
-                  green={moment.valueOf() > moment(data.endDate).valueOf()}>
+                <Styled.NameData green={moment.valueOf() > moment(data.endDate).valueOf()}>
                   {moment(data.endDate).format('DD/MM/YYYY')}
                 </Styled.NameData>
               </Styled.NameData>
             </Styled.TD>
             <Styled.TD>
-              <Styled.Text
-                dangerouslySetInnerHTML={{ __html: data.deposit.description }}
-              />
+              <Styled.Text dangerouslySetInnerHTML={{ __html: data.deposit.description }} />
             </Styled.TD>
             <Styled.TD>
               <Styled.Text>{data.amountView}</Styled.Text>
@@ -147,9 +135,7 @@ const Row = ({ data }: any) => {
             </Styled.TD>
             <Styled.TD>
               <Styled.Text>
-                {data.paymentDate
-                  ? moment(data.paymentDate).format('DD MMMM YYYY')
-                  : '-'}
+                {data.paymentDate ? moment(data.paymentDate).format('DD MMMM YYYY') : '-'}
               </Styled.Text>
             </Styled.TD>
           </Styled.TR>
@@ -161,13 +147,7 @@ const Row = ({ data }: any) => {
 };
 
 export const Tables = ({ list }: any) => {
-  const [num, setNum] = useState(5);
   const { t } = useTranslation();
-  const appContext = useContext(AppContext);
-  const hubConnection = appContext.hubConnection;
-  const filterClick = (id: number) => {
-    console.log('click', id);
-  };
 
   return (
     <Styled.TableWrap>
@@ -197,4 +177,4 @@ export const Tables = ({ list }: any) => {
       </Styled.Table>
     </Styled.TableWrap>
   );
-}; 
+};
