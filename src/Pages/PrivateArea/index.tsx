@@ -1,6 +1,6 @@
 ﻿import moment from 'moment';
 import 'moment/locale/ru';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
@@ -25,7 +25,7 @@ import { DepositListModal } from './Modals';
 import { OnePage } from './OnePage';
 import * as Styled from './Styles.elements';
 
-export const InfoMain = () => {
+export const InfoMain: FC = () => {
   const { t } = useTranslation();
   const [notifications, setNotifications] = useState<Notify[]>([]);
   const [addDeposit, setAddDeposit] = useState(false);
@@ -446,9 +446,7 @@ export const InfoMain = () => {
                     </Styled.ModalButton>
                     {depositSelect?.description ? (
                       <Tooltip text={depositSelect.description}>
-                        <Styled.Program onClick={() => setContition(true)}>
-                          {t('depositSelect.condition')}
-                        </Styled.Program>
+                        <Styled.Program>{t('depositSelect.condition')}</Styled.Program>
                       </Tooltip>
                     ) : (
                       <Styled.Program show>{t('depositSelect.showCondition')}</Styled.Program>
@@ -491,7 +489,7 @@ export const InfoMain = () => {
                         {t('depositSelect.bill')}
                       </Styled.Warning>
                     ) : null}
-                    <Styled.ModalButton blue>{t("depositSelect.translate")}</Styled.ModalButton>
+                    <Styled.ModalButton blue>{t('depositSelect.translate')}</Styled.ModalButton>
                   </div>
                   {/* {depositSelect ? (
                     <Styled.Conditions>

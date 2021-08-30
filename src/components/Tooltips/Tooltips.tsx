@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext, useEffect, FC } from 'react';
+import { useRef, useState } from 'react';
 import { Portal } from '../Portal/Portal';
 
 export const Tooltip = (props: any) => {
@@ -7,10 +7,8 @@ export const Tooltip = (props: any) => {
   const width = props.width || 256;
   const space = props.space || 16;
   const el = useRef<any>(null);
-  console.log(el);
   const showTooltip = () => {
     const styles: any = {};
-    console.log('true');
     if (el && el.current) {
       const dimensions = el.current.getBoundingClientRect();
 
