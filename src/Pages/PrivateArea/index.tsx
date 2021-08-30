@@ -28,17 +28,17 @@ import * as Styled from './Styles.elements';
 export const InfoMain = () => {
   const { t } = useTranslation();
   const [notifications, setNotifications] = useState<Notify[]>([]);
-  const [addDeposit, setAddDeposit] = useState(false);
-  const [depositListModal, setDepositListModal] = useState(false);
-  const [addDepositValue, setAddDepositValue] = useState('');
+  const [addDeposit, setAddDeposit] = useState<boolean>(false);
+  const [depositListModal, setDepositListModal] = useState<boolean>(false);
+  const [addDepositValue, setAddDepositValue] = useState<string>('');
   const [depositSelect, setDepositSelect] = useState<null | DepositsCollection>(null);
   const [depositsList, setDepositsList] = useState<DepositsCollection[] | null>(null);
-  const [withdraw, setWithdraw] = useState(false);
-  const [loadDeposit, setLoadDeposit] = useState(false);
-  const [withdrawValueLoad, setWithdrawValueLoad] = useState(false);
-  const [condition, setContition] = useState(false);
-  const [depositSuccess, setDepositSuccess] = useState(false);
-  const [depositError, setDepositError] = useState(false);
+  const [withdraw, setWithdraw] = useState<boolean>(false);
+  const [loadDeposit, setLoadDeposit] = useState<boolean>(false);
+  const [withdrawValueLoad, setWithdrawValueLoad] = useState<boolean>(false);
+  const [condition, setContition] = useState<boolean>(false);
+  const [depositSuccess, setDepositSuccess] = useState<boolean>(false);
+  const [depositError, setDepositError] = useState<boolean>(false);
   const [withdrawValue, setWithdrawValue] = useState('');
   const [account, setAccount] = useState('');
   const appContext = useContext(AppContext);
@@ -104,6 +104,15 @@ export const InfoMain = () => {
         });
     }
   };
+  
+  useEffect(() => {
+if(!addDeposit){
+    setDepositSelect(null)
+                  console.log(2);
+                  setAddDepositValue('')
+                  console.log(3);
+}
+  },[addDeposit])
 
   useEffect(() => {
     if (hubConnection) {
@@ -236,6 +245,10 @@ export const InfoMain = () => {
   const createNotify = (item: Notify) => {
     setNotifications([item]);
   };
+
+
+
+
 
   return (
     <>
@@ -419,7 +432,12 @@ export const InfoMain = () => {
             unmountOnExit
           >
             <Styled.ModalDepositsWrap>
-              <Modal onClose={() => setAddDeposit(false)} width={384} paddingTop={34}>
+              <Modal onClose={() => {
+                  setAddDeposit(false)
+                  console.log(1);
+                  
+                }
+                  } width={384} paddingTop={34}>
                 <Styled.ModalTitle mt>{t('privateArea.addDeposit')}</Styled.ModalTitle>
                 <Styled.ModalDeposits>
                   <div>
