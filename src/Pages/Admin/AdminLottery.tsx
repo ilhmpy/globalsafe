@@ -6,7 +6,7 @@ import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
 import burgerGroup from '../../assets/img/burgerGroup.png';
 import { Button } from '../../components/Button/Button';
-import { Select } from '../../components/Select/Select'; 
+import { Select } from '../../components/Select/Select';
 import { SliderComponent } from '../../components/Slider/Slider';
 import { DateInput } from '../../components/UI/DatePicker';
 import { TestInput } from '../../components/UI/DayPicker';
@@ -53,13 +53,22 @@ export const AdminLottery = () => {
 
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
 
-  const sortings = [t("descendDate"), t("ascendDate"), t("typeWin"), t("typeWin2"), t("descendWinSum"), t("ascendWinSum"), t("winners"), t("winners2")];
+  const sortings = [
+    t('descendDate'),
+    t('ascendDate'),
+    t('typeWin'),
+    t('typeWin2'),
+    t('descendWinSum'),
+    t('ascendWinSum'),
+    t('winners'),
+    t('winners2'),
+  ];
 
   const [sorting, setSorting] = useState<SortingType[]>([]);
   const [listForSorting, setListForSorting] = useState<SelectValues[]>([
     {
       id: 0,
-     // text: 'По убыванию даты',
+      // text: 'По убыванию даты',
       active: false,
       OrderType: 2,
       FieldName: 'viewPrizeDrawLogModel.drawDate',
@@ -78,9 +87,9 @@ export const AdminLottery = () => {
       OrderType: 1,
       FieldName: 'viewPrizeDefinitionModel.kind',
     },
-    { 
+    {
       id: 3,
-     // text: 'Тип выигрыша: От Я до А',
+      // text: 'Тип выигрыша: От Я до А',
       active: false,
       OrderType: 2,
       FieldName: 'viewPrizeDefinitionModel.kind',
@@ -92,16 +101,16 @@ export const AdminLottery = () => {
       OrderType: 2,
       FieldName: 'viewPrizeDefinitionModel.volume',
     },
-    { 
+    {
       id: 5,
-     // text: 'По возрастанию суммы выигрыша',
+      // text: 'По возрастанию суммы выигрыша',
       active: false,
       OrderType: 1,
       FieldName: 'viewPrizeDefinitionModel.volume',
     },
     {
       id: 6,
-     // text: 'Победители: От А до Я',
+      // text: 'Победители: От А до Я',
       active: false,
       OrderType: 1,
       FieldName: 'userName',
@@ -337,7 +346,7 @@ export const AdminLottery = () => {
                     onChange={(e) => setName(e.target.value.toLowerCase())}
                   />
                 </Styled.SelectWrap>
-                <Styled.SelectWrap input>
+                <Styled.SelectWrap>
                   <TestInput
                     setOpenDate={setOpenDate}
                     openDate={openDate}
@@ -377,7 +386,7 @@ export const AdminLottery = () => {
                         />
                       </BurgerButton>
                       <Window open={sortingWindowOpen}>
-                        <WindowTitle>{t("sorting")}</WindowTitle>
+                        <WindowTitle>{t('sorting')}</WindowTitle>
                         <WindowBody>
                           {listForSorting.map((obj, index) => (
                             <SortingItem

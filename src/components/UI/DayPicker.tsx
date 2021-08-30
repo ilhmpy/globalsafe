@@ -267,11 +267,22 @@ export const TestInput: FC<TestInputProps> = ({ label, openDate, setOpenDate }: 
     from: undefined,
     to: undefined,
   });
+  const [inputString, setInputString] = useState(
+    `${openDate.from ? moment(openDate.from).format('DD.MM.YY') : ''} ${
+      openDate.to ? `-${moment(openDate.to).format('DD.MM.YY')}` : ''
+    }`
+  );
   const ref = useRef(null);
   const { t } = useTranslation();
   const handleClickOutside = () => {
     setShowOpen(false);
   };
+
+  useEffect(() => {
+    if (!openDate.from && !openDate.to) {
+      setInputString('');
+    }
+  }, [openDate]);
 
   useOnClickOutside(ref, handleClickOutside);
 
@@ -304,12 +315,6 @@ export const TestInput: FC<TestInputProps> = ({ label, openDate, setOpenDate }: 
 
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   const modifiers = { start: openDate.from, end: openDate.to };
-
-  const [inputString, setInputString] = useState(
-    `${openDate.from ? moment(openDate.from).format('DD.MM.YY') : ''} ${
-      openDate.to ? `-${moment(openDate.to).format('DD.MM.YY')}` : ''
-    }`
-  );
 
   const dateRangeRegEx = /^(0[1-9]|[12][0-9]|3[01])[.](0[1-9]|1[012])[.]\d\d$/gm;
 

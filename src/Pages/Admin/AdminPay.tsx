@@ -92,7 +92,16 @@ export const AdminPay = () => {
   const { lang } = useContext(LangualeContext);
   const { t } = useTranslation();
 
-  const sortings = [t("userSort"), t("userSort2"), t("nameSort"), t("nameSort2"), t("descendDatePay"), t("ascendDatePay"), t("descendSumСontribution"), t("ascendSumContribution")];
+  const sortings = [
+    t('userSort'),
+    t('userSort2'),
+    t('nameSort'),
+    t('nameSort2'),
+    t('descendDatePay'),
+    t('ascendDatePay'),
+    t('descendSumСontribution'),
+    t('ascendSumContribution'),
+  ];
 
   const getPaymentsOverview = () => {
     if (hubConnection) {
@@ -324,8 +333,8 @@ export const AdminPay = () => {
           setTotalPayDeposits(res.totalRecords);
           if (res.collection.length) {
             setDepositPayList(res.collection);
-            setLoading(false);
           }
+          setLoading(false);
         })
         .catch((err: Error) => {
           setLoading(false);
@@ -338,16 +347,16 @@ export const AdminPay = () => {
     getPaymentsOverview();
   }, [hubConnection]);
 
-  console.log(
-    openDate.from
-      ? moment(openDate.from).utcOffset('+00:00').set({ hour: 0, minute: 0, second: 0 }).toDate()
-      : null,
-    openDate.to
-      ? moment(openDate.to).utcOffset('+00:00').set({ hour: 23, minute: 59, second: 59 }).toDate()
-      : openDate.from
-      ? moment(openDate.from).utcOffset('+00:00').set({ hour: 23, minute: 59, second: 59 }).toDate()
-      : null
-  );
+  // console.log(
+  //   openDate.from
+  //     ? moment(openDate.from).utcOffset('+00:00').set({ hour: 0, minute: 0, second: 0 }).toDate()
+  //     : null,
+  //   openDate.to
+  //     ? moment(openDate.to).utcOffset('+00:00').set({ hour: 23, minute: 59, second: 59 }).toDate()
+  //     : openDate.from
+  //     ? moment(openDate.from).utcOffset('+00:00').set({ hour: 23, minute: 59, second: 59 }).toDate()
+  //     : null
+  // );
 
   const submit = () => {
     console.log({
@@ -615,7 +624,7 @@ export const AdminPay = () => {
                     onChange={(e) => setName(e.target.value.toLowerCase())}
                   />
                 </Styled.SelectWrap>
-                <Styled.SelectWrap input>
+                <Styled.SelectWrap>
                   <TestInput
                     setOpenDate={setOpenDate}
                     openDate={openDate}
@@ -710,7 +719,7 @@ export const AdminPay = () => {
                 </BurgerButton>
               </TableHeadItemPaid>
               <Window open={sortingWindowOpenForPay}>
-                <WindowTitle>{t("sorting")}</WindowTitle> 
+                <WindowTitle>{t('sorting')}</WindowTitle>
                 <WindowBody>
                   {listForSortingForPay.map((obj, index) => (
                     <Sort
