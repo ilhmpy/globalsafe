@@ -10,7 +10,6 @@ import { Main } from './Pages/Main/Main';
 import { InfoMain } from './Pages/PrivateArea';
 import PageNotFound from './Pages/Tech/PageNotFound';
 import TechWorks from './Pages/Tech/TechWorks';
-
 declare global {
   interface Window {
     OneSignal: any;
@@ -25,6 +24,7 @@ const App: FC = () => {
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const user = appContext.user;
+  const [isSubscribed, setIsSubscribed] = useState(false);
   const isFailed = appContext.isFailed;
   const [online, setOnline] = useState<boolean | null>(null);
   const { t } = useTranslation();
@@ -63,7 +63,7 @@ const App: FC = () => {
       if (hubConnection) {
         hubConnection
           .invoke('RegisterDevice', id)
-          .then(() => undefined)
+          .then(() => setIsSubscribed(true))
           .catch((err) => console.log(err));
       }
     },
@@ -75,7 +75,7 @@ const App: FC = () => {
       if (hubConnection) {
         hubConnection
           .invoke('UnregisterDevice', id)
-          .then(() => undefined)
+          .then(() => setIsSubscribed(false))
           .catch((err) => console.log(err));
       }
     },
@@ -132,31 +132,31 @@ const App: FC = () => {
     if (token && user) {
       activateBellPush();
     }
-  }, [token, user]);
+  }, [token, user, localStorage.getItem('i18nextLng')]);
 
   useEffect(() => {
     if (token && user) {
-      OneSignal.push(function () {
-        OneSignal.sendTags({
-          notifyButton: {
-            enable: true,
-            text: {
-              'tip.state.unsubscribed': t('text.tip_state_unsubscribed'),
-              'tip.state.subscribed': t('text.tip_state_subscribed'),
-              'tip.state.blocked': t('text.tip_state_blocked'),
-              'message.prenotify': t('text.message_prenotify'),
-              'message.action.subscribed': t('text.message_action_subscribed'),
-              'message.action.resubscribed': t('text.message_action_resubscribed'),
-              'message.action.unsubscribed': t('text.message_action_unsubscribed'),
-              'dialog.main.title': t('text.dialog_main_title'),
-              'dialog.main.button.subscribe': t('text.dialog_main_button_subscribe'),
-              'dialog.main.button.unsubscribe': t('text.dialog_main_button_unsubscribe'),
-              'dialog.blocked.title': t('text.dialog_blocked_title'),
-              'dialog.blocked.message': t('text.dialog_blocked_message'),
-            },
-          },
-        });
-      });
+      if (!isSubscribed) {
+        document.getElementsByClassName('onesignal-bell-launcher-message-body')[0].innerHTML = t(
+          'text.tip_state_unsubscribed'
+        );
+        document.getElementsByClassName(
+          'onesignal-bell-launcher-dialog-body'
+        )[0].children[0].innerHTML = t('text.dialog_main_title');
+        document.getElementsByClassName('action')[0].innerHTML = t(
+          'text.dialog_main_button_subscribe'
+        );
+      } else {
+        document.getElementsByClassName('onesignal-bell-launcher-message-body')[0].innerHTML = t(
+          'text.tip_state_subscribed'
+        );
+        document.getElementsByClassName(
+          'onesignal-bell-launcher-dialog-body'
+        )[0].children[0].innerHTML = t('text.dialog_main_title');
+        document.getElementsByClassName('action')[0].innerHTML = t(
+          'text.dialog_main_button_unsubscribe'
+        );
+      }
     }
   }, [localStorage.getItem('i18nextLng')]);
 
