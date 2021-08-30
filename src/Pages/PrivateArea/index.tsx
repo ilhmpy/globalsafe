@@ -104,15 +104,6 @@ export const InfoMain = () => {
         });
     }
   };
-  
-  useEffect(() => {
-if(!addDeposit){
-    setDepositSelect(null)
-                  console.log(2);
-                  setAddDepositValue('')
-                  console.log(3);
-}
-  },[addDeposit])
 
   useEffect(() => {
     if (hubConnection) {
@@ -246,10 +237,6 @@ if(!addDeposit){
     setNotifications([item]);
   };
 
-
-
-
-
   return (
     <>
       {withdrawValueLoad && (
@@ -306,7 +293,14 @@ if(!addDeposit){
                 </Styled.SmallButtonsWrapDesc>
               </Styled.UserBlock>
               <Styled.InfoButtons>
-                <Button dangerOutline onClick={() => setAddDeposit(true)}>
+                <Button
+                  dangerOutline
+                  onClick={() => {
+                    setDepositSelect(null);
+                    setAddDepositValue('');
+                    setAddDeposit(true);
+                  }}
+                >
                   {t('privateArea.newDeposit')}
                 </Button>
                 <Button danger onClick={() => setWithdraw(true)}>
@@ -432,12 +426,7 @@ if(!addDeposit){
             unmountOnExit
           >
             <Styled.ModalDepositsWrap>
-              <Modal onClose={() => {
-                  setAddDeposit(false)
-                  console.log(1);
-                  
-                }
-                  } width={384} paddingTop={34}>
+              <Modal onClose={() => setAddDeposit(false)} width={384} paddingTop={34}>
                 <Styled.ModalTitle mt>{t('privateArea.addDeposit')}</Styled.ModalTitle>
                 <Styled.ModalDeposits>
                   <div>
@@ -509,7 +498,7 @@ if(!addDeposit){
                         {t('depositSelect.bill')}
                       </Styled.Warning>
                     ) : null}
-                    <Styled.ModalButton blue>{t("depositSelect.translate")}</Styled.ModalButton>
+                    <Styled.ModalButton blue>{t('depositSelect.translate')}</Styled.ModalButton>
                   </div>
                   {/* {depositSelect ? (
                     <Styled.Conditions>
