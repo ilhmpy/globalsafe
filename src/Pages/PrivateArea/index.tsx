@@ -28,17 +28,17 @@ import * as Styled from './Styles.elements';
 export const InfoMain: FC = () => {
   const { t } = useTranslation();
   const [notifications, setNotifications] = useState<Notify[]>([]);
-  const [addDeposit, setAddDeposit] = useState(false);
-  const [depositListModal, setDepositListModal] = useState(false);
-  const [addDepositValue, setAddDepositValue] = useState('');
+  const [addDeposit, setAddDeposit] = useState<boolean>(false);
+  const [depositListModal, setDepositListModal] = useState<boolean>(false);
+  const [addDepositValue, setAddDepositValue] = useState<string>('');
   const [depositSelect, setDepositSelect] = useState<null | DepositsCollection>(null);
   const [depositsList, setDepositsList] = useState<DepositsCollection[] | null>(null);
-  const [withdraw, setWithdraw] = useState(false);
-  const [loadDeposit, setLoadDeposit] = useState(false);
-  const [withdrawValueLoad, setWithdrawValueLoad] = useState(false);
-  const [condition, setContition] = useState(false);
-  const [depositSuccess, setDepositSuccess] = useState(false);
-  const [depositError, setDepositError] = useState(false);
+  const [withdraw, setWithdraw] = useState<boolean>(false);
+  const [loadDeposit, setLoadDeposit] = useState<boolean>(false);
+  const [withdrawValueLoad, setWithdrawValueLoad] = useState<boolean>(false);
+  const [condition, setContition] = useState<boolean>(false);
+  const [depositSuccess, setDepositSuccess] = useState<boolean>(false);
+  const [depositError, setDepositError] = useState<boolean>(false);
   const [withdrawValue, setWithdrawValue] = useState('');
   const [account, setAccount] = useState('');
   const appContext = useContext(AppContext);
@@ -293,7 +293,14 @@ export const InfoMain: FC = () => {
                 </Styled.SmallButtonsWrapDesc>
               </Styled.UserBlock>
               <Styled.InfoButtons>
-                <Button dangerOutline onClick={() => setAddDeposit(true)}>
+                <Button
+                  dangerOutline
+                  onClick={() => {
+                    setDepositSelect(null);
+                    setAddDepositValue('');
+                    setAddDeposit(true);
+                  }}
+                >
                   {t('privateArea.newDeposit')}
                 </Button>
                 <Button danger onClick={() => setWithdraw(true)}>
