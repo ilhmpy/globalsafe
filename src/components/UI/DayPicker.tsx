@@ -507,24 +507,6 @@ export const MainAdminInput: FC<MainAdminProps> = ({
   const { t } = useTranslation();
   useOnClickOutside(ref, handleClickOutside);
 
-  // openDateApproval.from
-  //           ? moment(openDateApproval.from)
-  //               .utcOffset('+00:00')
-  //               .set({ hour: 0, minute: 0, second: 0 })
-  //               .toDate()
-  //           : null,
-  //         openDateApproval.to
-  //           ? moment(openDateApproval.to)
-  //               .utcOffset('+00:00')
-  //               .set({ hour: 23, minute: 59, second: 59 })
-  //               .toDate()
-  //           : openDateApproval.from
-  //           ? moment(openDateApproval.from)
-  //               .utcOffset('+00:00')
-  //               .set({ hour: 23, minute: 59, second: 59 })
-  //               .toDate()
-  //           : null,
-
   const handleDayClick = (day: Date) => {
     const { from, to } = DateUtils.addDayToRange(day, selfDate);
     setSelfDate({ from: from, to: to });
