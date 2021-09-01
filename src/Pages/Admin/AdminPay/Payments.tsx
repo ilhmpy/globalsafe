@@ -247,11 +247,12 @@ export const ModalDeposit: FC<PaidProps> = ({ data, onClose }: PaidProps) => {
       <Center onClick={handleContainerClick}>
         <PayCard>
           <PayCardBlock>
-            <PayText>{data.deposit.name}</PayText>
-          </PayCardBlock>
-          <PayCardBlock>
-            <PayText small>{t("adminPay.table.date")}</PayText>
-            <PayText>{`${moment(data.creationDate).format("DD/MM/YYYY")} - ${moment(data.endDate).format("DD/MM/YYYY")}`}</PayText>
+            <PayName>{data.deposit.name}</PayName>
+            <PayText>
+              {moment(data.creationDate).format('DD/MM/YYYY') +
+                '-' +
+                moment(data.endDate).format('DD/MM/YYYY')}
+            </PayText>
           </PayCardBlock>
           <PayCardBlock>
             <PayText small>{t('adminPay.table.user')}</PayText>
