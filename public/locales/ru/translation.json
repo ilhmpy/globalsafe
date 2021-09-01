@@ -253,7 +253,8 @@
     "balanceOff": "При активации депозита будет списано",
     "condition": "Условия программы",
     "add": "Добавить",
-    "showCondition": "Показать условия"
+    "showCondition": "Показать условия",
+    "translate": "Перевод"
   },
   "depositSuccess": {
     "title": "Депозит успешно создан",
@@ -313,7 +314,8 @@
     "dateEnd": "Дата завершения депозита",
     "contrAmount": "Сумма взноса",
     "blockchainCommision": "Комиссия блокчейн",
-    "serviceCommision": "Комиссия сервиса"
+    "serviceCommision": "Комиссия сервиса",
+    "undr": "Понятно"
   },
   "alert": {
     "success": "Успешно",
