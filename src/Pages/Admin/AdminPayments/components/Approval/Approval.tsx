@@ -282,8 +282,6 @@ export const Approval: FC<Props> = ({
       setDepositList([]);
       setLoading(true);
 
-      // console.log(moment(openDateApproval.from).set({ hour: 12, minute: 0, second: 0 }).toDate());
-
       hubConnection
         .invoke<RootPayments>(
           'GetUsersDeposits',

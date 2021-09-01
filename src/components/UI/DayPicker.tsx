@@ -493,7 +493,6 @@ export const MainAdminInput: FC<MainAdminProps> = ({
   setOpenDate,
   label,
 }: MainAdminProps) => {
-  console.log('openDate---------->', openDate);
   const [showOpen, setShowOpen] = useState(false);
   const [selfDate, setSelfDate] = useState<any>({
     from: undefined,
