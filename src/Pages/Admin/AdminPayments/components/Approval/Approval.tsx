@@ -434,45 +434,36 @@ export const Approval: FC<Props> = ({
   };
 
   const paymentsConfirm = () => {
-    if (depositList.some((item: any) => item.state === 6)) {
-      if (hubConnection) {
-        hubConnection
-          .invoke(
-            'ConfirmAllDepositsPayment',
-            nameApproval ? nameApproval.toLowerCase() : null,
-            openDateApproval.from ? openDateApproval.from : null,
-            openDateApproval.to ? openDateApproval.to : null,
-            checkListApproval ? checkListApproval : null,
-            procent ? +procent / 100 : null
-          )
-          .then((res) => {
-            createNotify({
-              text: t('adminPay.success'),
-              error: false,
-              timeleft: 5,
-              id: notifications.length,
-            });
-
-            getPaymentsOverview();
-            submitApproval();
-          })
-          .catch((err: Error) => {
-            console.error(err);
-            createNotify({
-              text: t('adminPay.error'),
-              error: true,
-              timeleft: 5,
-              id: notifications.length,
-            });
+    if (hubConnection) {
+      hubConnection
+        .invoke(
+          'ConfirmAllDepositsPayment',
+          nameApproval ? nameApproval.toLowerCase() : null,
+          openDateApproval.from ? openDateApproval.from : null,
+          openDateApproval.to ? openDateApproval.to : null,
+          checkListApproval ? checkListApproval : null,
+          procent ? +procent / 100 : null
+        )
+        .then((res) => {
+          createNotify({
+            text: t('adminPay.success'),
+            error: false,
+            timeleft: 5,
+            id: notifications.length,
           });
-      }
-    } else {
-      createNotify({
-        text: t('adminPay.notPays'),
-        error: true,
-        timeleft: 5,
-        id: notifications.length,
-      });
+
+          getPaymentsOverview();
+          submitApproval();
+        })
+        .catch((err: Error) => {
+          console.error(err);
+          createNotify({
+            text: t('adminPay.error'),
+            error: true,
+            timeleft: 5,
+            id: notifications.length,
+          });
+        });
     }
   };
 
