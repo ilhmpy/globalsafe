@@ -202,8 +202,6 @@ export const Approval: FC<Props> = ({
             : null,
           openDateApproval.to
             ? moment(openDateApproval.to).set({ hour: 23, minute: 59, second: 59 }).toDate()
-            : openDateApproval.from
-            ? new Date()
             : null,
           null,
           null,
@@ -311,8 +309,6 @@ export const Approval: FC<Props> = ({
                 .utcOffset('+00:00')
                 .set({ hour: 23, minute: 59, second: 59 })
                 .toDate()
-            : openDateApproval.from
-            ? new Date()
             : null,
           null,
           null,
@@ -438,13 +434,6 @@ export const Approval: FC<Props> = ({
   };
 
   const paymentsConfirm = () => {
-    // console.log({
-    //   NAMEAPPROVAL: nameApproval ? nameApproval.toLowerCase() : null,
-    //   OPENDATEAPPROVAL_FROM: openDateApproval.from ? openDateApproval.from : null,
-    //   OPENDATEAPPROVAL_TO: openDateApproval.to ? openDateApproval.to : null,
-    //   DEPOSITS: checkListApproval ? checkListApproval : null,
-    //   PROCENT: procent ? +procent / 100 : null
-    // })
     if (depositList.some((item: any) => item.state === 6)) {
       if (hubConnection) {
         hubConnection
