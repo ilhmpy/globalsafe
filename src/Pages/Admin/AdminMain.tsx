@@ -47,7 +47,7 @@ export const AdminMain = () => {
     to: new Date(),
   });
 
-  const [depositsDate, setDepositsDate] = useState<OpenDate>({
+  const [depositsDate, setDepositsDate] = useState<any>({
     from: backDays._d,
     to: new Date(),
   });
@@ -88,7 +88,7 @@ export const AdminMain = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<PaymentsStat>('GetDepositsClosingStat', closeDate.from, closeDate.to)
+        .invoke<PaymentsStat>('GetDepositsClosingStat', closeDate.from, closeDate.to ? closeDate.to : closeDate.from)
         .then((res) => {
           setDepositsClosedStat(res);
         })

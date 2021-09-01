@@ -483,7 +483,7 @@ export const TestInputAnalitic: FC<TestInputAnaliticProps> = ({
 
 type MainAdminProps = {
   label: string;
-  openDate: OpenDate;
+  openDate: any;
   setOpenDate: (openDate: OpenDate) => void;
   onClose?: () => void;
 };
@@ -493,6 +493,7 @@ export const MainAdminInput: FC<MainAdminProps> = ({
   setOpenDate,
   label,
 }: MainAdminProps) => {
+  console.log('openDate---------->', openDate);
   const [showOpen, setShowOpen] = useState(false);
   const [selfDate, setSelfDate] = useState<any>({
     from: undefined,
@@ -507,11 +508,42 @@ export const MainAdminInput: FC<MainAdminProps> = ({
   const { t } = useTranslation();
   useOnClickOutside(ref, handleClickOutside);
 
+  // openDateApproval.from
+  //           ? moment(openDateApproval.from)
+  //               .utcOffset('+00:00')
+  //               .set({ hour: 0, minute: 0, second: 0 })
+  //               .toDate()
+  //           : null,
+  //         openDateApproval.to
+  //           ? moment(openDateApproval.to)
+  //               .utcOffset('+00:00')
+  //               .set({ hour: 23, minute: 59, second: 59 })
+  //               .toDate()
+  //           : openDateApproval.from
+  //           ? moment(openDateApproval.from)
+  //               .utcOffset('+00:00')
+  //               .set({ hour: 23, minute: 59, second: 59 })
+  //               .toDate()
+  //           : null,
+
   const handleDayClick = (day: Date) => {
+    const { from, to } = DateUtils.addDayToRange(day, selfDate);
     const range = DateUtils.addDayToRange(day, selfDate);
-    setSelfDate({ from: range.from, to: range.to });
-    if (range.from && range.to) {
-      setOpenDate({ from: range.from, to: range.to });
+    setSelfDate({
+      from: moment(from).utcOffset('+00:00').set({ hour: 0, minute: 0, second: 0 }).toDate(),
+      to: to
+        ? moment(to).set({ hour: 23, minute: 59, second: 59 }).toDate()
+        : moment(from).set({ hour: 23, minute: 59, second: 59 }).toDate(),
+    });
+
+    if (from && to) {
+      setOpenDate({
+        from: moment(from).utcOffset('+00:00').set({ hour: 0, minute: 0, second: 0 }).toDate(),
+
+        to: to
+          ? moment(to).set({ hour: 23, minute: 59, second: 59 }).toDate()
+          : moment(from).set({ hour: 23, minute: 59, second: 59 }).toDate(),
+      });
     } else {
       setOpenDate({
         from: backDays._d,
