@@ -55,7 +55,7 @@ export const Select: FC<Props> = ({ placeholder, values, setCheckList, checkList
     let id = idx ? idx : 0;
     if ((values && list.length === 0) || !checkList.length) {
       const arr = values!.map((i) => ({
-        id: id--,
+        id: id++,
         label: i,
         checked: false,
       }));

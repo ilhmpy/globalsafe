@@ -1,19 +1,14 @@
-import React, { useState, FC, useEffect } from 'react';
-import { Modal } from '../../../../components/Modal/Modal';
-import { ReactComponent as PresentIcon } from '../../../../assets/svg/present.svg';
-import * as Styled from './Lottery.elements';
-import { Wheel } from './Wheel';
-import { Slots } from './Slots';
-import { RootClock } from '../../../../types/clock';
-import { Prize, Winner, Users } from '../../../../types/drawResult';
-import { Balance } from '../../../../types/balance';
-import { Card } from '../../../../globalStyles';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import React, { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import brand from '../../../../assets/svg/Gs.svg';
+import { CSSTransition } from 'react-transition-group';
 import { ReactComponent as PrizeSVG } from '../../../../assets/svg/prize.svg';
 import { ReactComponent as PrizeLottery } from '../../../../assets/svg/PrizeLottery.svg';
+import { Modal } from '../../../../components/Modal/Modal';
+import { Prize, Users, Winner } from '../../../../types/drawResult';
+import * as Styled from './Lottery.elements';
+import { Slots } from './Slots';
 import { Timer } from './Timer';
+import { Wheel } from './Wheel';
 
 type Props = {
   clock: number | null;

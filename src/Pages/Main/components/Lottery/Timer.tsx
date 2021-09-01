@@ -2,10 +2,10 @@ import moment from 'moment';
 import 'moment-duration-format';
 import React, { FC, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ReactComponent as Prize } from '../../../../assets/svg/prize.svg';
 import { AppContext } from '../../../../context/HubContext';
 import { RootClock } from '../../../../types/clock';
 import * as Styled from './Lottery.elements';
-import { ReactComponent as Prize } from '../../../../assets/svg/prize.svg';
 
 type Props = {
   last?: string;
@@ -65,7 +65,6 @@ export const Timer: FC<Props> = ({
   }, [hubConnection]);
 
   function getNextDraw(res: any) {
-    console.log(res);
     if (res != null) {
       setProgressTotal(res[0].totalSeconds);
       setDeadline(res[1].totalSeconds);
