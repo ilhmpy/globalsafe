@@ -69,7 +69,7 @@ export const Timer: FC<Props> = ({
       setProgressTotal(res[0].totalSeconds);
       setDeadline(res[1].totalSeconds);
       setClock(res[1]);
-      openWindow();
+      // openWindow();
     }
   }
 
@@ -144,22 +144,23 @@ export const Timer: FC<Props> = ({
 
   const openWindow = () => {
     setDisplay(true);
-    if (stateData !== null) {
-      setTimeout(() => setTimerProgress(100), 1000);
-      setTimeout(() => {
-        setDisplay(false);
-        setTimerProgress(0);
-      }, 7000);
-    }
+    setTimeout(() => {
+      setDisplay(false);
+      setTimerProgress(0);
+    }, 5000);
+    setTimeout(() => setTimerProgress(100), 2000);
   };
 
   const openPopup = () => {
+    let timer: any;
+    let timer1: any;
     if (!display) {
       setDisplay(true);
-      setTimeout(() => setTimerProgress(100), 1000);
-    } else {
-      setDisplay(false);
-      setTimerProgress(0);
+      timer = setTimeout(() => setTimerProgress(100), 1000);
+      timer1 = setTimeout(() => {
+        setDisplay(false);
+        setTimerProgress(0);
+      }, 5000);
     }
   };
 

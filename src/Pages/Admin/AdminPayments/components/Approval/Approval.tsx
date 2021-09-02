@@ -190,7 +190,7 @@ export const Approval: FC<Props> = ({
     setDepositList([]);
     setLoading(true);
 
-    if (hubConnection && depositList.length < totalDeposits) {
+    if (hubConnection) {
       hubConnection
         .invoke<RootPayments>(
           'GetUsersDeposits',
