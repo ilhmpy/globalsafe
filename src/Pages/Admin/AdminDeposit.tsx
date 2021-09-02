@@ -158,7 +158,7 @@ export const AdminDeposit = () => {
   const sortings = [t("userSort"), t("userSort2"), t("nameSort"), t("nameSort2"), t("descend"), t("ascend"), t("nextPayDescend"), t("nextPayAscend")];
 
   const myLoad = () => {
-    setCount(false);
+    setCount(false); 
     setDepositsList([]);
     setLoading(true);
 

@@ -36,7 +36,7 @@ import {
   SortingWindow,
   WindowBody,
   WindowTitle,
-} from '../../../Styled.elements';
+} from '../../../Styled.elements'; 
 import * as Styled from './Styled.elements';
 import { Notify } from '../../../../../types/notify';
 import { Modal } from '../../../../../components/Modal/Modal';
@@ -288,7 +288,7 @@ export const Approval: FC<Props> = ({
     if (hubConnection) {
       setCurrentPage(1);
       setDepositList([]);
-      setLoading(true);
+      setLoading(true); 
 
       hubConnection
         .invoke<RootPayments>(
@@ -310,7 +310,7 @@ export const Approval: FC<Props> = ({
             : null,
           null,
           null,
-          null,
+          null, 
           null,
           null,
           null,
@@ -432,6 +432,7 @@ export const Approval: FC<Props> = ({
   };
 
   const paymentsConfirm = () => {
+    setAcceptAll(false);
     if (hubConnection) {
       hubConnection
         .invoke(
@@ -463,11 +464,11 @@ export const Approval: FC<Props> = ({
           });
         });
     }
-  };
+  }
 
   return (
     <>
-      <Modal style={{ display: acceptAll ? 'block' : 'none' }} onClose={() => setAcceptAll(false)}>
+      <Modal style={{ display: acceptAll ? "block" : "none"}} onClose={() => setAcceptAll(false)}>
         <div className="wrap">
           <Styled.ModalTitle>{t('acceptAll.title')}</Styled.ModalTitle>
           <Styled.ModalDescription>{t('acceptAll.users')}:</Styled.ModalDescription>
@@ -486,16 +487,12 @@ export const Approval: FC<Props> = ({
           </div>
           <Styled.ModalDescription>{t('acceptAll.range')}</Styled.ModalDescription>
           <Styled.ModalItem>
-            {openDateApproval.from && openDateApproval.to && (
+            {openDateApproval.from && (
               <>
                 {`${moment(openDateApproval.from).format('DD.MM.YYYY')} - ${moment(
                   openDateApproval.to
                 ).format('DD.MM.YYYY')}`}
               </>
-            )}
-
-            {openDateApproval.from && !openDateApproval.to && (
-              <>{moment(openDateApproval.from).format('DD.MM.YY')}</>
             )}
 
             {!openDateApproval.from && !openDateApproval.to && <>{t('all')}</>}
