@@ -11,7 +11,7 @@ import { AppContext } from '../../../context/HubContext';
 import { BalanceKind } from '../../../enums/balanceKind';
 import { DepositKind } from '../../../enums/depositKind';
 import { LanguageCode } from '../../../enums/languageCode';
-import { DepositProgramFormPropsType, AddDepositModel, ViewDepositModel } from './types';
+import { AddDepositModel, DepositProgramFormPropsType, ViewDepositModel } from './types';
 
 // eslint-disable-next-line react/prop-types
 export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNewProgram }) => {
@@ -36,48 +36,50 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
   const [programList, setProgramList] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  async function createProgram(){
+  const [program, setProgram] = useState<AddDepositModel>({
+    Language: LanguageCode.Russian,
+    activeWif: '',
+    affiliateRatio: '',
+    balanceKind: BalanceKind.CWD,
+    depositKind: DepositKind.Fixed,
+    description: 'test description',
+    duration: 30,
+    exchanges: [],
+    isActive: true,
+    isInstant: true,
+    isPublic: true,
+    maxAmount: 1000000,
+    memoWif: '',
+    minAmount: 100000,
+    name: 'test program',
+    paymentsDays: null,
+    paymentsInterval: 30,
+    paymentsOffset: 0,
+    price: null,
+    priceKind: null,
+    ratio: 1.1,
+    referenceAccount: 'ugl-test',
+    referenceCode: null,
+  });
+
+  async function createProgram() {
     console.log('1111111111~~~~~~~~~~~~~~~~~~start');
-    
-    if (!hubConnection || hubConnection.state != HubConnectionState.Connected){
+    console.log(program);
+
+    if (!hubConnection || hubConnection.state != HubConnectionState.Connected) {
       return;
     }
 
     setProgramList([]);
     setLoading(true);
 
-    try{
-    const program : AddDepositModel = {
-      Language : LanguageCode.Russian,
-      activeWif : "",
-      affiliateRatio : null,
-      balanceKind : BalanceKind.CWD,
-      depositKind : DepositKind.Fixed,
-      description : "test description",
-      duration : 30,
-      exchanges : [],
-      isActive : true,
-      isInstant : true,
-      isPublic : true,
-      maxAmount : 1_000_000,
-      memoWif : "",
-      minAmount : 1_00_000,
-      name : "test program",
-      paymentsDays : null,
-      paymentsInterval : 30,
-      paymentsOffset : 0,
-      price : null,
-      priceKind : null,
-      ratio : 1.1,
-      referenceAccount : "ugl-test",
-      referenceCode : null,
-    }; 
+    try {
       const res = await hubConnection.invoke<ViewDepositModel>('CreateDeposit', program);
-    }
-    catch(err){
+      console.log('createProgram ~ res', res);
+    } catch (err) {
       console.log(err);
-    }    
-  };
+    }
+  }
 
   // useEffect(() => {
   //   getPrograms();
@@ -93,11 +95,21 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
         <Row>
           <InputGroup>
             <Label>{t('depositsPrograms.programName')}</Label>
-            <Input />
+            <Input
+              name="name"
+              value={program.name}
+              onChange={({ target: { name, value } }) => setProgram({ ...program, [name]: value })}
+            />
           </InputGroup>
           <InputGroup>
             <Label>{t('depositsPrograms.language')}</Label>
-            <Select checkList={[checkList]} setCheckList={setCheckList} values={list} />
+            {console.log('LanguageCode', Object.keys(LanguageCode))}
+            <Select
+              checkList={[Object.keys(LanguageCode)]}
+              setCheckList={setCheckList}
+              values={Object.keys(LanguageCode)}
+              // value={}
+            />
           </InputGroup>
         </Row>
 

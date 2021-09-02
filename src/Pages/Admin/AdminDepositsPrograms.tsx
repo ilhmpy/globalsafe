@@ -147,12 +147,12 @@ export const AdminDepositsPrograms = () => {
       setLoading(true);
 
       hubConnection
-        .invoke<any>('GetDepositDefinitions', 0, 10)
+        .invoke<any>('GetDepositDefinitions', 0, 20)
         .then((res) => {
           if (res.collection.length) {
             setProgramList(res.collection);
           }
-          console.log('.then ~~~~~~~~ res', res);
+          console.log('--------------------------------------->>>>>>>', res);
           setTotalProps(res.totalRecords);
           setLoading(false);
         })
