@@ -2161,7 +2161,8 @@ export const Main = () => {
         {/* <Assets /> */}
 
         <DrawHistory onOpenModal={onOpenModal} clock={clock} />
-        <About />
+       
+        {/* <About /> */}
         <Footer />
       </MainPage>
     </div>

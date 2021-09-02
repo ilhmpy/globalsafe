@@ -14,8 +14,8 @@ export const TableHead = styled.ul`
   justify-content: space-between;
   padding-bottom: 6px;
   border-bottom: 1px solid rgba(81, 81, 114, 0.2);
-`;
-
+`; 
+ 
 export const TableHeadItem = styled.li`
   font-weight: normal;
   font-size: 12px;

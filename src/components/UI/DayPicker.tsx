@@ -263,7 +263,7 @@ type TestInputProps = {
 
 export const TestInput: FC<TestInputProps> = ({ label, openDate, setOpenDate }: TestInputProps) => {
   const [showOpen, setShowOpen] = useState(false);
-  const [selfDate, setSelfDate] = useState<any>({
+  const [selfDate, setSelfDate] = useState<OpenDate>({
     from: undefined,
     to: undefined,
   });
@@ -399,7 +399,7 @@ export const TestInputAnalitic: FC<TestInputAnaliticProps> = ({
   setOpenDate,
 }: TestInputAnaliticProps) => {
   const [showOpen, setShowOpen] = useState(false);
-  const [selfDate, setSelfDate] = useState<any>({
+  const [selfDate, setSelfDate] = useState<OpenDate>({
     from: undefined,
     to: undefined,
   });
@@ -488,7 +488,7 @@ export const TestInputAnalitic: FC<TestInputAnaliticProps> = ({
 
 type MainAdminProps = {
   label: string;
-  openDate: OpenDate;
+  openDate: any;
   setOpenDate: (openDate: OpenDate) => void;
   onClose?: () => void;
 };
@@ -513,10 +513,16 @@ export const MainAdminInput: FC<MainAdminProps> = ({
   useOnClickOutside(ref, handleClickOutside);
 
   const handleDayClick = (day: Date) => {
-    const range = DateUtils.addDayToRange(day, selfDate);
-    setSelfDate({ from: range.from, to: range.to });
-    if (range.from && range.to) {
-      setOpenDate({ from: range.from, to: range.to });
+    const { from, to } = DateUtils.addDayToRange(day, selfDate);
+    setSelfDate({ from: from, to: to });
+    if (from) {
+      setOpenDate({
+        from: moment(from).utcOffset('+00:00').set({ hour: 0, minute: 0, second: 0 }).toDate(),
+
+        to: to
+          ? moment(to).utcOffset('+00:00').set({ hour: 23, minute: 59, second: 59 }).toDate()
+          : moment(from).utcOffset('+00:00').set({ hour: 23, minute: 59, second: 59 }).toDate(),
+      });
     } else {
       setOpenDate({
         from: backDays._d,
@@ -538,7 +544,7 @@ export const MainAdminInput: FC<MainAdminProps> = ({
       <AdminInputsContainer ref={ref}>
         <BoxInput onClick={() => setShowOpen(!showOpen)}>
           <DateInput>
-            {selfDate.from && selfDate.to ? (
+            {selfDate.from ? (
               <>
                 <span>{selfDate.from ? moment(selfDate.from).format('DD.MM.YY') : ''}</span>
                 <span>{selfDate.to ? `-${moment(selfDate.to).format('DD.MM.YY')} ` : ''}</span>
@@ -584,8 +590,8 @@ export const MainAnaliticInput: FC<MainAnaliticInputProps> = ({
   label,
   pastDay,
 }: MainAnaliticInputProps) => {
-  const [showOpen, setShowOpen] = useState(false);
-  const [selfDate, setSelfDate] = useState<any>({
+  const [showOpen, setShowOpen] = useState<boolean>(false);
+  const [selfDate, setSelfDate] = useState<OpenDate>({
     from: undefined,
     to: undefined,
   });
