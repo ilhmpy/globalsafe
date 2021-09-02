@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import 'react-day-picker/lib/style.css';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
@@ -168,18 +168,6 @@ export const AdminMain = () => {
         <Calendar selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
 
         <Deposites>
-          {/* <DepositItem>
-            <DepositTitle>{t("adminMain.depositsCount")}</DepositTitle>
-            <DepositValue>{depositsCount}</DepositValue>
-          </DepositItem>
-          <DepositItem>
-            <DepositTitle>{t("adminMain.depositsAmount")}</DepositTitle>
-            <DepositValue>
-              {depositsAmount.toLocaleString("ru-RU", {
-                maximumFractionDigits: 1,
-              })}
-            </DepositValue>
-          </DepositItem> */}
           <RoundWrapeer>
             <RoundItem>
               <ChartItemTitle>{t('adminMain.openDeposit')}</ChartItemTitle>
@@ -262,7 +250,7 @@ export const AdminMain = () => {
                     value={
                       Object.values(depositsCreationStat).length
                         ? Object.values(depositsCreationStat).map((i: any) => i[0])
-                        : ['']
+                        : []
                     }
                   />
                 </CSSTransition>
@@ -278,7 +266,7 @@ export const AdminMain = () => {
                     value={
                       Object.values(depositsCreationStat).length
                         ? Object.values(depositsCreationStat).map((i: any) => i[1] / 100000)
-                        : ['']
+                        : []
                     }
                   />
                 </CSSTransition>
@@ -321,7 +309,7 @@ export const AdminMain = () => {
                       value={
                         Object.values(depositsClosedStat).length
                           ? Object.values(depositsClosedStat).map((i: any) => i[0])
-                          : ['']
+                          : []
                       }
                     />
                   </CSSTransition>
@@ -342,7 +330,7 @@ export const AdminMain = () => {
                       value={
                         Object.values(depositsClosedStat).length
                           ? Object.values(depositsClosedStat).map((i: any) => i[1] / 100000)
-                          : ['']
+                          : []
                       }
                     />
                   </CSSTransition>
@@ -369,7 +357,7 @@ export const AdminMain = () => {
               value={
                 Object.values(paymentsStat).length
                   ? Object.values(paymentsStat).map((i) => i / 100000)
-                  : ['']
+                  : []
               }
             />
           </ChartItem>
@@ -388,7 +376,7 @@ export const AdminMain = () => {
                 value={
                   Object.values(revenueStat).length
                     ? Object.values(revenueStat).map((i) => i / 100000)
-                    : ['']
+                    : []
                 }
               />
             </ChartItem>
@@ -571,9 +559,6 @@ const ChartItem = styled.div`
     padding-right: 0;
     background: ${(props) => props.theme.card.background};
   }
-  @media (max-width: 340px) {
-    max-width: 280px;
-  }
 `;
 
 const LastChartItem = styled.div`
@@ -583,6 +568,9 @@ const LastChartItem = styled.div`
 
   ${ChartItem} {
     max-width: 410px;
+    @media (max-width: 800px) {
+      max-width: 100%;
+    }
   }
 
   @media (max-width: 992px) {

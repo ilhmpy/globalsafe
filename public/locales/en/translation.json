@@ -545,5 +545,6 @@
   "descendDateCreate": "By descending date of create",
   "ascendDateCreate": "By ascending date of create",
   "descendSumDeposit": "By descending sum of deposit",
-  "ascendSumDeposit": "By ascending sum of deposit"
+  "ascendSumDeposit": "By ascending sum of deposit",
+  "unders": "Got it"
 }

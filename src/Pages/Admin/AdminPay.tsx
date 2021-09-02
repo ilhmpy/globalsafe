@@ -92,7 +92,16 @@ export const AdminPay = () => {
   const { lang } = useContext(LangualeContext);
   const { t } = useTranslation();
 
-  const sortings = [t("userSort"), t("userSort2"), t("nameSort"), t("nameSort2"), t("descendDatePay"), t("ascendDatePay"), t("descendSumСontribution"), t("ascendSumContribution")];
+  const sortings = [
+    t('userSort'),
+    t('userSort2'),
+    t('nameSort'),
+    t('nameSort2'),
+    t('descendDatePay'),
+    t('ascendDatePay'),
+    t('descendSumСontribution'),
+    t('ascendSumContribution'),
+  ];
 
   const getPaymentsOverview = () => {
     if (hubConnection) {
@@ -282,16 +291,16 @@ export const AdminPay = () => {
       setLoading(true);
       setDepositPayList([]);
 
-    // GetDepositsCharges Model
-    // Task<CollectionResult> GetDepositsCharges(
-    //   string? userName,
-    //   DateTime? from,
-    //   DateTime? to,
-    //   string[]? usersDepositsSafeIds,
-    //   string[]? depositsSafeIds,
-    //   BalanceOperationKind[] kinds,
-    //   long skip,
-    //   long take);
+      // GetDepositsCharges Model
+      // Task<CollectionResult> GetDepositsCharges(
+      //   string? userName,
+      //   DateTime? from,
+      //   DateTime? to,
+      //   string[]? usersDepositsSafeIds,
+      //   string[]? depositsSafeIds,
+      //   BalanceOperationKind[] kinds,
+      //   long skip,
+      //   long take);
 
       hubConnection
         .invoke<RootCharges>(
@@ -324,8 +333,8 @@ export const AdminPay = () => {
           setTotalPayDeposits(res.totalRecords);
           if (res.collection.length) {
             setDepositPayList(res.collection);
-            setLoading(false);
           }
+          setLoading(false);
         })
         .catch((err: Error) => {
           setLoading(false);
@@ -338,42 +347,36 @@ export const AdminPay = () => {
     getPaymentsOverview();
   }, [hubConnection]);
 
-  console.log(
-    openDate.from
-      ? moment(openDate.from).utcOffset('+00:00').set({ hour: 0, minute: 0, second: 0 }).toDate()
-      : null,
-    openDate.to
-      ? moment(openDate.to).utcOffset('+00:00').set({ hour: 23, minute: 59, second: 59 }).toDate()
-      : openDate.from
-      ? moment(openDate.from).utcOffset('+00:00').set({ hour: 23, minute: 59, second: 59 }).toDate()
-      : null
-  );
+  // console.log(
+  //   openDate.from
+  //     ? moment(openDate.from).utcOffset('+00:00').set({ hour: 0, minute: 0, second: 0 }).toDate()
+  //     : null,
+  //   openDate.to
+  //     ? moment(openDate.to).utcOffset('+00:00').set({ hour: 23, minute: 59, second: 59 }).toDate()
+  //     : openDate.from
+  //     ? moment(openDate.from).utcOffset('+00:00').set({ hour: 23, minute: 59, second: 59 }).toDate()
+  //     : null
+  // );
 
   const submit = () => {
     console.log({
       NAME: name,
       openDate,
-      searchSafeID
-    })
+      searchSafeID,
+    });
     console.log(
       openDate.from
-      ? moment(openDate.from)
-          .utcOffset('+00:00')
-          .set({ hour: 0, minute: 0, second: 0 })
-          .toDate()
-      : null,
-    openDate.to
-      ? moment(openDate.to)
-          .utcOffset('+00:00')
-          .set({ hour: 23, minute: 59, second: 59 })
-          .toDate()
-      : openDate.from
-      ? moment(openDate.from)
-          .utcOffset('+00:00')
-          .set({ hour: 23, minute: 59, second: 59 })
-          .toDate()
-      : null,
-    )
+        ? moment(openDate.from).utcOffset('+00:00').set({ hour: 0, minute: 0, second: 0 }).toDate()
+        : null,
+      openDate.to
+        ? moment(openDate.to).utcOffset('+00:00').set({ hour: 23, minute: 59, second: 59 }).toDate()
+        : openDate.from
+        ? moment(openDate.from)
+            .utcOffset('+00:00')
+            .set({ hour: 23, minute: 59, second: 59 })
+            .toDate()
+        : null
+    );
     if (hubConnection) {
       setLoading(true);
       setCurrentPagePay(1);
@@ -523,7 +526,13 @@ export const AdminPay = () => {
               <Styled.Radial
                 bg={theme === 'light' ? 'rgba(255, 65, 110, 0.2)' : 'rgba(255, 65, 110, 1)'}
               >
-                <span>{sum ? (sum[2] / 100000).toLocaleString('ru-RU') : '-'}</span>
+                <span>
+                  {sum
+                    ? (sum[2] / 100000).toLocaleString('ru-RU', {
+                        maximumFractionDigits: 1,
+                      })
+                    : '-'}
+                </span>
                 <span>CWD</span>
               </Styled.Radial>
             </Styled.PayItem>
@@ -615,7 +624,7 @@ export const AdminPay = () => {
                     onChange={(e) => setName(e.target.value.toLowerCase())}
                   />
                 </Styled.SelectWrap>
-                <Styled.SelectWrap input>
+                <Styled.SelectWrap>
                   <TestInput
                     setOpenDate={setOpenDate}
                     openDate={openDate}
@@ -710,7 +719,7 @@ export const AdminPay = () => {
                 </BurgerButton>
               </TableHeadItemPaid>
               <Window open={sortingWindowOpenForPay}>
-                <WindowTitle>{t("sorting")}</WindowTitle> 
+                <WindowTitle>{t('sorting')}</WindowTitle>
                 <WindowBody>
                   {listForSortingForPay.map((obj, index) => (
                     <Sort
@@ -837,6 +846,7 @@ const PayTab = styled(Tab)`
   }
   @media (max-width: 768px) {
     width: 110px !important;
+    margin-right: 10px;
   }
   @media (max-width: 576px) {
     width: 100px !important;
