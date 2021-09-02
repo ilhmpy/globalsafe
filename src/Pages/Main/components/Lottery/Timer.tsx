@@ -144,13 +144,11 @@ export const Timer: FC<Props> = ({
 
   const openWindow = () => {
     setDisplay(true);
-    if (stateData !== null) {
-      setTimeout(() => setTimerProgress(100), 1000);
-      setTimeout(() => {
-        setDisplay(false);
-        setTimerProgress(0);
-      }, 7000);
-    }
+    setTimeout(() => {
+      setDisplay(false);
+      setTimerProgress(0);
+    }, 5000);
+    setTimeout(() => setTimerProgress(100), 2000);
   };
 
   const openPopup = () => {
