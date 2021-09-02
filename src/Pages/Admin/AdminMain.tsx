@@ -18,21 +18,13 @@ import { AppContext } from '../../context/HubContext';
 import { Card } from '../../globalStyles';
 import useWindowSize from '../../hooks/useWindowSize';
 import { OpenDate } from '../../types/dates';
-import { PaymentsStat } from '../../types/main';
+import { DepositsStat, PaymentsStat } from '../../types/main';
 import * as Styled from './Styled.elements';
 
 export const AdminMain = () => {
   const currentMonth = moment().format('MMYYYY');
   const year = moment().format('YYYY');
   const prevMonth = moment().subtract(1, 'months').date(1).format('MMYYYY');
-  // let currentMonthStart: any = moment(currentMonth, "M.YYYY").startOf("month");
-  // let currentMonthEnd: any = moment(currentMonth, "M.YYYY").endOf("month");
-
-  // let prevMonthStart: any = moment(prevMonth, "M.YYYY").startOf("month");
-  // let prevMonthEnd: any = moment(prevMonth, "M.YYYY").endOf("month");
-
-  // let yearStart: any = moment(year, "YYYY").startOf("month");
-  // let yearEnd: any = moment(year, "YYYY").endOf("year");
 
   const backDays: any = moment().subtract(30, 'days');
   const sizes = useWindowSize();
@@ -47,7 +39,7 @@ export const AdminMain = () => {
     to: new Date(),
   });
 
-  const [depositsDate, setDepositsDate] = useState<OpenDate>({
+  const [depositsDate, setDepositsDate] = useState<any>({
     from: backDays._d,
     to: new Date(),
   });
@@ -64,8 +56,8 @@ export const AdminMain = () => {
 
   const [revenueStat, setRevenueStat] = useState<PaymentsStat>({});
   const [paymentsStat, setPaymentsStat] = useState<PaymentsStat>({});
-  const [depositsCreationStat, setDepositsCreationStat] = useState<any>({});
-  const [depositsClosedStat, setDepositsClosedStat] = useState<any>({});
+  const [depositsCreationStat, setDepositsCreationStat] = useState<DepositsStat>({});
+  const [depositsClosedStat, setDepositsClosedStat] = useState<DepositsStat>({});
   const [selectedDay, setSelectedDay] = useState<any>(new Date());
   const [depositsCount, setDepositsCount] = useState(0);
   const [depositsAmount, setDepositsAmount] = useState(0);
@@ -88,7 +80,7 @@ export const AdminMain = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<PaymentsStat>('GetDepositsClosingStat', closeDate.from, closeDate.to)
+        .invoke<PaymentsStat>('GetDepositsClosingStat', closeDate.from, closeDate.to ? closeDate.to : closeDate.from)
         .then((res) => {
           setDepositsClosedStat(res);
         })

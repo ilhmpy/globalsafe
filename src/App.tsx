@@ -132,33 +132,33 @@ const App: FC = () => {
     if (token && user) {
       activateBellPush();
     }
-  }, [token, user, localStorage.getItem('i18nextLng')]);
+  }, [token, user]);
 
-  useEffect(() => {
-    if (token && user) {
-      if (!isSubscribed) {
-        document.getElementsByClassName('onesignal-bell-launcher-message-body')[0].innerHTML = t(
-          'text.tip_state_unsubscribed'
-        );
-        document.getElementsByClassName(
-          'onesignal-bell-launcher-dialog-body'
-        )[0].children[0].innerHTML = t('text.dialog_main_title');
-        document.getElementsByClassName('action')[0].innerHTML = t(
-          'text.dialog_main_button_subscribe'
-        );
-      } else {
-        document.getElementsByClassName('onesignal-bell-launcher-message-body')[0].innerHTML = t(
-          'text.tip_state_subscribed'
-        );
-        document.getElementsByClassName(
-          'onesignal-bell-launcher-dialog-body'
-        )[0].children[0].innerHTML = t('text.dialog_main_title');
-        document.getElementsByClassName('action')[0].innerHTML = t(
-          'text.dialog_main_button_unsubscribe'
-        );
-      }
-    }
-  }, [localStorage.getItem('i18nextLng')]);
+  // useEffect(() => {
+  //   if (token && user) {
+  //     if (!isSubscribed) {
+  //       document.getElementsByClassName('onesignal-bell-launcher-message-body')[0].innerHTML = t(
+  //         'text.tip_state_unsubscribed'
+  //       );
+  //       document.getElementsByClassName(
+  //         'onesignal-bell-launcher-dialog-body'
+  //       )[0].children[0].innerHTML = t('text.dialog_main_title');
+  //       document.getElementsByClassName('action')[0].innerHTML = t(
+  //         'text.dialog_main_button_subscribe'
+  //       );
+  //     } else {
+  //       document.getElementsByClassName('onesignal-bell-launcher-message-body')[0].innerHTML = t(
+  //         'text.tip_state_subscribed'
+  //       );
+  //       document.getElementsByClassName(
+  //         'onesignal-bell-launcher-dialog-body'
+  //       )[0].children[0].innerHTML = t('text.dialog_main_title');
+  //       document.getElementsByClassName('action')[0].innerHTML = t(
+  //         'text.dialog_main_button_unsubscribe'
+  //       );
+  //     }
+  //   }
+  // }, [localStorage.getItem('i18nextLng')]);
 
   return (
     <div style={{ position: 'relative' }}>
