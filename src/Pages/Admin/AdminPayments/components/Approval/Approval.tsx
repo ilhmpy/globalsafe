@@ -541,6 +541,7 @@ export const Approval: FC<Props> = ({
             });
           };
         } else {
+          setAcceptAll(false);
           createNotify({
             text: t("adminPay.notPays"),
             error: true,
