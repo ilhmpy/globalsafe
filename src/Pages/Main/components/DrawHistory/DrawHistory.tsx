@@ -108,7 +108,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
   };
 
   return (
-    <Page id="lottery">
+    <Page id="lottery" margin>
       <Container>
         <UpTitle small>{t('draws')}</UpTitle>
       </Container>
