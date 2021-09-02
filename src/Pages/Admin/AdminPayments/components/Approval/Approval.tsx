@@ -433,48 +433,6 @@ export const Approval: FC<Props> = ({
     setNotifications([item]);
   };
 
-  const checkStatePayments = () => {
-    if (hubConnection) {
-      hubConnection
-      .invoke<RootPayments>(
-        'GetUsersDeposits',
-        [6],
-        nameApproval ? nameApproval.toLowerCase() : null,
-        searchSafeIDApproval.length ? searchSafeIDApproval : null,
-        openDateApproval.from
-          ? moment(openDateApproval.from)
-              .utcOffset('+00:00')
-              .set({ hour: 0, minute: 0, second: 0 })
-              .toDate()
-          : null,
-        openDateApproval.to
-          ? moment(openDateApproval.to)
-              .utcOffset('+00:00')
-              .set({ hour: 23, minute: 59, second: 59 })
-              .toDate()
-          : null,
-        null,
-        null,
-        null, 
-        null,
-        null,
-        null,
-        1,
-        1,
-        []
-      )
-       .then((res) => {
-        console.log(res.collection); 
-        if (res.totalRecords > 0) {
-          console.log("payments have")
-        } else {
-          console.log("not payments")
-        }
-       })
-       .catch((e) => console.error(e))
-    };
-  };
-
   const paymentsConfirm = () => {
     if (hubConnection) {
       hubConnection
