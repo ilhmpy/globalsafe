@@ -15,11 +15,16 @@ export const InfoDeposits = () => {
   const hubConnection = appContext.hubConnection;
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   const languale = lang === 'ru' ? 1 : 0;
+  const [sorting, setSorting] = useState([{
+    ConditionWeight: 1,
+    OrderType: 2,
+    FieldName: 'paymentDate'
+  }])
 
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<RootList>('GetUserDeposits', [1, 2, 3, 4, 5, 6, 7, 8], 0, 20)
+        .invoke<RootList>('GetUserDeposits', [1, 2, 3, 4, 5, 6, 7, 8], 0, 20, sorting)
         .then((res) => {
           setList(res.collection);
           setTotalList(res.totalRecords);
