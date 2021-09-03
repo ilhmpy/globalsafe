@@ -63,7 +63,7 @@ const AdminDepositList: FC<PayProps> = ({ data }: PayProps) => {
         <TableBodyItem>{moment(data.creationDate).format('DD/MM/YYYY')}</TableBodyItem>
         <TableBodyItem>{moment(data.endDate).format('DD/MM/YYYY')}</TableBodyItem>
         <TableBodyItem>{data.amountView ? data.amountView : '-'}</TableBodyItem>
-        <TableBodyItem>{moment(data.paymentDate).format('DD/MM/YYYY')}</TableBodyItem>
+        <TableBodyItem>{data.paymentDate ? moment(data.paymentDate).format('DD/MM/YYYY') : '-'}</TableBodyItem>
         <TableBodyItem>{data.payedAmountView}</TableBodyItem>
         <TableBodyItem></TableBodyItem>
       </TableBody>
