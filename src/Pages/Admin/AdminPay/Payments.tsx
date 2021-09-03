@@ -260,7 +260,7 @@ export const ModalDeposit: FC<PaidProps> = ({ data, onClose }: PaidProps) => {
           </PayCardBlock>
           <PayCardBlock>
             <PayText small>{t('adminPay.table.nextDate')}</PayText>
-            <PayText>{moment(data.paymentDate).format('DD/MM/YYYY')}</PayText>
+            <PayText>{data.paymentDate ? moment(data.paymentDate).format('DD/MM/YYYY') : '-'}</PayText>
           </PayCardBlock>
           <PayCardBlock>
             <PayText small>{t('adminPay.table.paid')}</PayText>

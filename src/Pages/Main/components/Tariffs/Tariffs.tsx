@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import { Container } from '../../../../globalStyles';
-import { H1 } from '../../../../components/UI/MainStyled';
+import { H1, H2 } from '../../../../components/UI/MainStyled';
 import { UpTitle } from '../../../../components/UI/UpTitle';
 import { Button } from '../../../../components/Button/Button';
 import {
@@ -39,6 +39,7 @@ import { AppContext } from '../../../../context/HubContext';
 import { ListDeposits, CollectionListDeposits } from '../../../../types/deposits';
 import { useTranslation } from 'react-i18next';
 import { Page } from '../../../../components/UI/Page';
+import styled from 'styled-components';
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
@@ -367,6 +368,10 @@ export const Tariffs = () => {
         </Modal>
       )}
       <BlockContainers>
+        <DepositsCardsTitleContainer bigMargin>
+          <H2>{t('payments.open')}</H2>
+        </DepositsCardsTitleContainer>
+
         {listDeposits.map((item, idx) => (
           <BlockItem key={item.safeId}>
             <BlockTitle>{item.name}</BlockTitle>
@@ -395,3 +400,9 @@ export const Tariffs = () => {
     </Page>
   );
 };
+
+const DepositsCardsTitleContainer = styled(Container)`
+  margin-top: 60px;
+`;
+
+
