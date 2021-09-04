@@ -13,6 +13,7 @@ import { Card } from '../../globalStyles';
 import { Balance } from '../../types/balance';
 import { DepositProgramForm } from './DepositProgramForm';
 import * as Styled from './Styled.elements';
+import { AddDepositModel, DepositProgramFormPropsType, ViewDepositModel } from './DepositProgramForm/types';
 
 export const AdminDepositsPrograms = () => {
   const { t } = useTranslation();
@@ -132,7 +133,7 @@ export const AdminDepositsPrograms = () => {
   ]);
   const [loading, setLoading] = useState(true);
 
-  const [openNewProgram, setOpenNewProgram] = useState(false);
+  const [openNewProgram, setOpenNewProgram] = useState(true);
 
   const [totalProps, setTotalProps] = useState<number>(0);
   const [programList, setProgramList] = useState<any[]>([]);

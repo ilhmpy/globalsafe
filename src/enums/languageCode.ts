@@ -1,11 +1,11 @@
 export enum LanguageCode {
-    // <summary>
-    // English language
-    // </summary>
-    English,
+  // <summary>
+  // English language
+  // </summary>
+  English,
 
-    // <summary>
-    // Swedish language
-    // </summary>
-    Russian,
+  // <summary>
+  // Swedish language
+  // </summary>
+  Russian,
 }

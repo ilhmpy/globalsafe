@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { ReactComponent as Stroke } from '../../../assets/svg/leftStroke.svg';
 import { Button } from '../../../components/Button/Button';
 import { Modal } from '../../../components/Modal/Modal';
-import { Select } from '../../../components/Select/Select';
+import { Select } from '../../../components/Select/Select3';
 import { Switcher } from '../../../components/Switcher';
 import { AppContext } from '../../../context/HubContext';
 import { BalanceKind } from '../../../enums/balanceKind';
@@ -17,8 +17,8 @@ import { AddDepositModel, DepositProgramFormPropsType, ViewDepositModel } from '
 export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNewProgram }) => {
   const [checkList, setCheckList] = useState<any>([]);
   const { t } = useTranslation();
-  const list = ['Ru', 'En'];
-  const [checked, setChecked] = useState(false);
+  const langList: string[] = ['English', 'Russian'];
+  const [language, setLanguage] = useState<any>('');
   const [delayedDepositChecked, setDelayedDepositChecked] = useState(false);
   const [programIsActiveChecked, setProgramIsActiveChecked] = useState(true);
   const [publishingProgramChecked, setPublishingProgramChecked] = useState(false);
@@ -39,7 +39,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
   const [program, setProgram] = useState<AddDepositModel>({
     Language: LanguageCode.Russian,
     activeWif: '',
-    affiliateRatio: '',
+    affiliateRatio: [],
     balanceKind: BalanceKind.CWD,
     depositKind: DepositKind.Fixed,
     description: 'test description',
@@ -103,12 +103,12 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
           </InputGroup>
           <InputGroup>
             <Label>{t('depositsPrograms.language')}</Label>
-            {console.log('LanguageCode', Object.keys(LanguageCode))}
             <Select
-              checkList={[Object.keys(LanguageCode)]}
-              setCheckList={setCheckList}
-              values={Object.keys(LanguageCode)}
-              // value={}
+              options={langList}
+              selectedOption={langList[program.Language]}
+              setSelectedOption={(val: any) => {
+                setProgram({ ...program, Language: langList.indexOf(val) });
+              }}
             />
           </InputGroup>
         </Row>
@@ -116,72 +116,142 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
         <Row>
           <InputGroup>
             <Label>{t('depositsPrograms.description')}</Label>
-            <Text />
+            <Text
+              name="description"
+              value={program.description}
+              onChange={(e) => {
+                setProgram({ ...program, description: e.target.value });
+              }}
+            />
           </InputGroup>
         </Row>
 
         <Row hr>
           <InputGroup>
             <Label>{t('depositsPrograms.currencyDeposit')}</Label>
-            <Select checkList={[checkList]} setCheckList={setCheckList} values={list} />
+            <Select
+              options={
+                Object.keys(BalanceKind)
+                  .map((key: any) => BalanceKind[key])
+                  .filter((value) => typeof value === 'string') as string[]
+              }
+              selectedOption={BalanceKind[program.balanceKind]}
+              setSelectedOption={(value: any) => {
+                console.log(typeof value);
+                setProgram({
+                  ...program,
+                  balanceKind: +BalanceKind[value],
+                });
+              }}
+            />
           </InputGroup>
 
           <Hr />
-
-          <InputGroup disabled>
+          {console.log(BalanceKind[program.balanceKind] === 'CWD')}
+          <InputGroup disabled={BalanceKind[program.balanceKind] === 'CWD'}>
             <Label>{t('depositsPrograms.exchangeRate')}</Label>
-            <Input placeholder="&mdash;" CWD disabled />
+            <Input
+              placeholder="&mdash;"
+              CWD
+              disabled={BalanceKind[program.balanceKind] === 'CWD'}
+            />
           </InputGroup>
         </Row>
 
         <Row>
           <InputGroup>
             <Label>{t('depositsPrograms.minAmount')}</Label>
-            <Input />
+            <Input
+              name="minAmount"
+              value={program.minAmount}
+              onChange={({ target: { name, value } }) => {
+                setProgram({ ...program, [name]: +value });
+              }}
+            />
           </InputGroup>
           <InputGroup>
             <Label>{t('depositsPrograms.maxAmount')}</Label>
-            <Input />
+            <Input
+              name="maxAmount"
+              value={program.maxAmount}
+              onChange={({ target: { name, value } }) => {
+                setProgram({ ...program, [name]: +value });
+              }}
+            />
           </InputGroup>
         </Row>
 
         <Row>
           <InputGroup>
             <Label>{t('depositsPrograms.depositTerm')}</Label>
-            <Input />
+            <Input
+              name="duration"
+              value={program.duration}
+              onChange={({ target: { name, value } }) => {
+                setProgram({ ...program, [name]: +value });
+              }}
+            />
           </InputGroup>
         </Row>
 
         <Row>
           <InputGroup>
             <Label>{t('depositsPrograms.startPayments')}</Label>
-            <Input />
+            <Input
+              name="paymentsOffset"
+              value={program.paymentsOffset}
+              onChange={({ target: { name, value } }) => {
+                setProgram({ ...program, [name]: +value });
+              }}
+            />
           </InputGroup>
         </Row>
 
         <Row>
           <InputGroup>
             <Label>{t('depositsPrograms.paymentInterval')}</Label>
-            <Input />
+            <Input
+              name="paymentsInterval"
+              value={program.paymentsInterval}
+              onChange={({ target: { name, value } }) => {
+                setProgram({ ...program, [name]: +value });
+              }}
+            />
           </InputGroup>
         </Row>
 
         <Row>
           <InputGroup>
             <Label>{t('depositsPrograms.paymentsDays')}</Label>
-            <Input />
+            <Input
+              name="paymentsDays"
+              value={program.paymentsDays as string}
+              onChange={({ target: { name, value } }) => {
+                setProgram({ ...program, [name]: value });
+              }}
+            />
           </InputGroup>
         </Row>
 
         <Row hr>
           <InputGroup>
             <Label>{t('depositsPrograms.payment')}</Label>
-            <Select checkList={[checkList]} setCheckList={setCheckList} values={list} />
+            <Select
+              options={langList}
+              selectedOption={checkList}
+              setSelectedOption={setCheckList}
+            />
           </InputGroup>
           <Hr />
           <InputGroup>
             <Label>{t('depositsPrograms.clientYield')}</Label>
-            <Input />
+            <Input
+              name="ratio"
+              value={program.ratio}
+              onChange={({ target: { name, value } }) => {
+                setProgram({ ...program, [name]: +value });
+              }}
+            />
           </InputGroup>
         </Row>
 
@@ -190,11 +260,13 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
             <Label>{t('depositsPrograms.delayedDeposit')}</Label>
             <StatusGroup>
               <Switcher
-                onChange={() => setDelayedDepositChecked(!delayedDepositChecked)}
-                checked={delayedDepositChecked}
+                checked={program.isInstant}
+                onChange={() => {
+                  setProgram({ ...program, isInstant: !program.isInstant });
+                }}
               />
-              <Status checked={delayedDepositChecked}>
-                {t(delayedDepositChecked ? 'depositsPrograms.yes' : 'depositsPrograms.no')}
+              <Status checked={program.isInstant}>
+                {t(program.isInstant ? 'depositsPrograms.yes' : 'depositsPrograms.no')}
               </Status>
             </StatusGroup>
           </InputGroup>
@@ -370,32 +442,60 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
         <Row>
           <InputGroup>
             <Label>{t('depositsPrograms.depositAccount')}</Label>
-            <Input />
+            <Input
+              name="referenceAccount"
+              value={program.referenceAccount}
+              onChange={({ target: { name, value } }) => {
+                setProgram({ ...program, [name]: value });
+              }}
+            />
           </InputGroup>
         </Row>
         <Row>
           <InputGroup>
             <Label>{t('depositsPrograms.transferCode')}</Label>
-            <Input />
+            <Input
+              name="referenceCode"
+              value={program.referenceCode as string}
+              onChange={({ target: { name, value } }) => {
+                setProgram({ ...program, [name]: value });
+              }}
+            />
           </InputGroup>
         </Row>
         <Row>
           <InputGroup lg>
             <Label>{t('depositsPrograms.activeKey')}</Label>
-            <Input />
+            <Input
+              name="activeWif"
+              value={program.activeWif}
+              onChange={({ target: { name, value } }) => {
+                setProgram({ ...program, [name]: value });
+              }}
+            />
           </InputGroup>
         </Row>
         <Row>
           <InputGroup lg>
             <Label>{t('depositsPrograms.keyNotes')}</Label>
-            <Input />
+            <Input
+              name="memoWif"
+              value={program.memoWif}
+              onChange={({ target: { name, value } }) => {
+                setProgram({ ...program, [name]: value });
+              }}
+            />
           </InputGroup>
         </Row>
 
         <Row hr>
           <InputGroup>
             <Label>{t('depositsPrograms.depositActivationCost')}</Label>
-            <Select checkList={[checkList]} setCheckList={setCheckList} values={list} />
+            <Select
+              options={langList}
+              selectedOption={checkList}
+              setSelectedOption={setCheckList}
+            />
           </InputGroup>
           <Hr />
           <InputGroup>
@@ -409,11 +509,13 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
             <Label>{t('depositsPrograms.programIsActive')}</Label>
             <StatusGroup>
               <Switcher
-                onChange={() => setProgramIsActiveChecked(!programIsActiveChecked)}
-                checked={programIsActiveChecked}
+                checked={program.isActive}
+                onChange={() => {
+                  setProgram({ ...program, isActive: !program.isActive });
+                }}
               />
-              <Status checked={programIsActiveChecked}>
-                {t(programIsActiveChecked ? 'depositsPrograms.yes' : 'depositsPrograms.no')}
+              <Status checked={program.isActive}>
+                {t(program.isActive ? 'depositsPrograms.yes' : 'depositsPrograms.no')}
               </Status>
             </StatusGroup>
           </InputGroup>
@@ -424,11 +526,13 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
             <Label>{t('depositsPrograms.publishingProgram')}</Label>
             <StatusGroup>
               <Switcher
-                onChange={() => setPublishingProgramChecked(!publishingProgramChecked)}
-                checked={publishingProgramChecked}
+                checked={program.isPublic}
+                onChange={() => {
+                  setProgram({ ...program, isPublic: !program.isPublic });
+                }}
               />
-              <Status checked={publishingProgramChecked}>
-                {t(publishingProgramChecked ? 'depositsPrograms.yes' : 'depositsPrograms.no')}
+              <Status checked={program.isPublic}>
+                {t(program.isPublic ? 'depositsPrograms.yes' : 'depositsPrograms.no')}
               </Status>
             </StatusGroup>
           </InputGroup>
@@ -525,6 +629,31 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
   );
 };
 
+const ddd = {
+  // Language --- 'Язык'
+  // activeWif --- 'Активный ключ (WIF)'
+  // affiliateRatio --- 'Коэффициент партнерской комиссии (%)'
+  // balanceKind --- 'Валюта депозита'
+  // depositKind --- 'Выплата'
+  // description --- 'Описание'
+  // duration --- 'Срок депозита (в днях)'
+  // exchanges --- ???
+  // isActive --- 'Программа активна'
+  // isInstant --- 'Отложенный депозит'
+  // isPublic --- 'Публикация программы на титульной странице'
+  // maxAmount --- 'Максимальная сумма'
+  // memoWif --- 'Ключ примечания (WIF)'
+  // minAmount --- 'Минимальная сумма'
+  // name --- 'Название программы'
+  // paymentsDays --- 'Дни выплат'
+  // paymentsInterval --- 'Интервал выплаты дохода (в днях)'
+  // paymentsOffset --- 'Начало выплат через (в днях)'
+  // price --- 'Значение'
+  // priceKind --- 'Стоимость активации депозита'
+  // ratio --- 'Доходность для клиента (%)'
+  // referenceAccount --- 'Депозитный аккаунт для открытия депозитов'
+  // referenceCode --- 'Код перевода'
+};
 const ModalBlock = styled.div<{ sm?: boolean }>`
   display: flex;
   flex-direction: column;
