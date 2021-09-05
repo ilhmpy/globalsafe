@@ -18,7 +18,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
   const [checkList, setCheckList] = useState<any>([]);
   const { t } = useTranslation();
   const langList: string[] = ['English', 'Russian'];
-  const [language, setLanguage] = useState<any>('');
+  const [language, setLanguage] = useState<string>('');
   const [delayedDepositChecked, setDelayedDepositChecked] = useState(false);
   const [programIsActiveChecked, setProgramIsActiveChecked] = useState(true);
   const [publishingProgramChecked, setPublishingProgramChecked] = useState(false);
@@ -35,6 +35,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
   const hubConnection = appContext.hubConnection;
   const [programList, setProgramList] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const depositKindList: string[] = ['Рассчетная', 'Фиксированная'];
 
   const [program, setProgram] = useState<AddDepositModel>({
     Language: LanguageCode.Russian,
@@ -106,7 +107,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
             <Select
               options={langList}
               selectedOption={langList[program.Language]}
-              setSelectedOption={(val: any) => {
+              setSelectedOption={(val: string) => {
                 setProgram({ ...program, Language: langList.indexOf(val) });
               }}
             />
@@ -147,7 +148,6 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
           </InputGroup>
 
           <Hr />
-          {console.log(BalanceKind[program.balanceKind] === 'CWD')}
           <InputGroup disabled={BalanceKind[program.balanceKind] === 'CWD'}>
             <Label>{t('depositsPrograms.exchangeRate')}</Label>
             <Input
@@ -237,9 +237,15 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
           <InputGroup>
             <Label>{t('depositsPrograms.payment')}</Label>
             <Select
-              options={langList}
-              selectedOption={checkList}
-              setSelectedOption={setCheckList}
+              options={depositKindList}
+              selectedOption={depositKindList[program.depositKind]}
+              setSelectedOption={(value: string) => {
+                console.log(value);
+                setProgram({
+                  ...program,
+                  depositKind: +depositKindList.indexOf(value),
+                });
+              }}
             />
           </InputGroup>
           <Hr />

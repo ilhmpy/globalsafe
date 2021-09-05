@@ -7,7 +7,7 @@ type Props = {
   options: string[];
   label?: string;
   selectedOption: null | string;
-  setSelectedOption: (selectedOption: null | string) => void;
+  setSelectedOption: (selectedOption: string) => void;
 };
 
 export const Select: FC<Props> = ({ options, label, selectedOption, setSelectedOption }: Props) => {
