@@ -1,5 +1,4 @@
-export enum DepositKind{
-        RevenueShare,
-
-        Fixed,
-    }
+export enum DepositKind {
+  RevenueShare,
+  Fixed,
+}

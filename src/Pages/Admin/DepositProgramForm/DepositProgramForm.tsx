@@ -150,10 +150,19 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
           <Hr />
           <InputGroup disabled={BalanceKind[program.balanceKind] === 'CWD'}>
             <Label>{t('depositsPrograms.exchangeRate')}</Label>
+            {program.exchanges.length ? console.log(program.exchanges[0]) : ''}
             <Input
               placeholder="&mdash;"
               CWD
               disabled={BalanceKind[program.balanceKind] === 'CWD'}
+              name="exchanges"
+              value={program.exchanges.length && program.exchanges[0].Rate}
+              onChange={({ target: { name, value } }) => {
+                setProgram({
+                  ...program,
+                  [name]: [{ assetId: String(program.balanceKind), Rate: +value }],
+                });
+              }}
             />
           </InputGroup>
         </Row>

@@ -148,7 +148,7 @@ export const AdminDepositsPrograms = () => {
       setLoading(true);
 
       hubConnection
-        .invoke<any>('GetDepositDefinitions', 0, 20)
+        .invoke<any>('GetDepositDefinitions', 0, 40)
         .then((res) => {
           if (res.collection.length) {
             setProgramList(res.collection);
