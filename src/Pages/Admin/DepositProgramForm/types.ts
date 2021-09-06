@@ -71,7 +71,7 @@ export type AddDepositModel = {
   // <summary>
   // Ratio to calculate affiliate commission. For ex.: 5% = 0.05.
   // </summary>
-  affiliateRatio: string[] | null;
+  affiliateRatio: any;
 
   // <summary>
   // Deposit reference account. How can deposit be associated with payment.

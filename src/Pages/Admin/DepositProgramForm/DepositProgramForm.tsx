@@ -40,7 +40,48 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
   const [program, setProgram] = useState<AddDepositModel>({
     Language: LanguageCode.Russian,
     activeWif: '',
-    affiliateRatio: [],
+    affiliateRatio: [
+      [
+        [4, 0.033],
+        [2, 0.05],
+        [1, 0.04],
+      ],
+      [
+        [4, 0.033],
+        [2, 0.05],
+        [1, 0.04],
+      ],
+      [
+        [4, 0.033],
+        [2, 0.05],
+        [1, 0.04],
+      ],
+      [
+        [4, 0.033],
+        [2, 0.05],
+        [1, 0.04],
+      ],
+      [
+        [4, 0.033],
+        [2, 0.05],
+        [1, 0.04],
+      ],
+      [
+        [4, 0.033],
+        [2, 0.05],
+        [1, 0.04],
+      ],
+      [
+        [4, 0.033],
+        [2, 0.05],
+        [1, 0.04],
+      ],
+      [
+        [4, 0.033],
+        [2, 0.05],
+        [1, 0.04],
+      ],
+    ],
     balanceKind: BalanceKind.CWD,
     depositKind: DepositKind.Fixed,
     description: 'test description',
@@ -73,18 +114,78 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
 
     setProgramList([]);
     setLoading(true);
+    console.log(getArr(tableState));
+    // try {
+    //   const res = await hubConnection.invoke<ViewDepositModel>('CreateDeposit', {
+    //     ...program,
+    //     affiliateRatio: getArr(tableState),
+    //   });
 
-    try {
-      const res = await hubConnection.invoke<ViewDepositModel>('CreateDeposit', program);
-      console.log('createProgram ~ res', res);
-    } catch (err) {
-      console.log(err);
-    }
+    //   console.log('createProgram ~ res', res);
+    // } catch (err) {
+    //   console.log(err);
+    // }
   }
+  type ColumnObjectType = {
+    '0': string;
+    '1': string;
+    '2': string;
+    '3': string;
+    '4': string;
+    '5': string;
+    '6': string;
+    '7': string;
+  };
 
-  // useEffect(() => {
-  //   getPrograms();
-  // }, []);
+  type ColumnsObjType = {
+    start: ColumnObjectType;
+    expert: ColumnObjectType;
+    infinity: ColumnObjectType;
+  };
+  const getObj = (arr: any) => {
+    const columnsObj: any = {
+      start: { '0': '', '1': '', '2': '', '3': '', '4': '', '5': '', '6': '', '7': '' },
+      expert: { '0': '', '1': '', '2': '', '3': '', '4': '', '5': '', '6': '', '7': '' },
+      infinity: { '0': '', '1': '', '2': '', '3': '', '4': '', '5': '', '6': '', '7': '' },
+    };
+
+    arr.forEach((it: any, i: number) => {
+      it.forEach((items: number[]) => {
+        if (items[0] === 1) columnsObj.start[i] = items[1];
+        if (items[0] === 2) columnsObj.expert[i] = items[1];
+        if (items[0] === 4) columnsObj.infinity[i] = items[1];
+      });
+    });
+
+    return columnsObj;
+  };
+
+  const getArr = (obj: any) => {
+    const affilateArray = new Array(8).fill([]);
+    const startArr = Object.values(obj.start);
+    startArr.forEach((value, i) => {
+      affilateArray[i].push([1, value]);
+      console.log(affilateArray[i]);
+    });
+
+    // for (let index = 0; index < startArr.length; index++) {
+    //   const element = startArr[index];
+    //   affilateArray[index].push([1, element]);
+    // }
+
+    Object.values(obj.expert).forEach((value, i) => {
+      affilateArray[i].push([2, value]);
+    });
+
+    Object.values(obj.infinity).forEach((value, i) => {
+      affilateArray[i].push([4, value]);
+    });
+
+    return affilateArray;
+  };
+
+  const [tableState, setTableState] = useState(getObj(program.affiliateRatio));
+  console.log('tableState', tableState);
 
   return (
     <Container>
@@ -297,49 +398,137 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
               <Row>
                 <InputGroup>
                   <Label>1 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    value={tableState.start[0]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        start: {
+                          ...tableState.start,
+                          '0': +value,
+                        },
+                      })
+                    }
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>2 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    value={tableState.start[1]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        start: {
+                          ...tableState.start,
+                          '1': +value,
+                        },
+                      })
+                    }
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>3 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    value={tableState.start[2]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        start: {
+                          ...tableState.start,
+                          '2': +value,
+                        },
+                      })
+                    }
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>4 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    value={tableState.start[3]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        start: {
+                          ...tableState.start,
+                          '3': +value,
+                        },
+                      })
+                    }
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>5 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    value={tableState.start[4]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        start: {
+                          ...tableState.start,
+                          '4': +value,
+                        },
+                      })
+                    }
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>6 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    value={tableState.start[5]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        start: {
+                          ...tableState.start,
+                          '5': +value,
+                        },
+                      })
+                    }
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>7 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    value={tableState.start[6]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        start: {
+                          ...tableState.start,
+                          '6': +value,
+                        },
+                      })
+                    }
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>8 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    value={tableState.start[7]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        start: {
+                          ...tableState.start,
+                          '7': +value,
+                        },
+                      })
+                    }
+                  />
                 </InputGroup>
               </Row>
             </ColumnGroup>
@@ -351,49 +540,137 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
               <Row>
                 <InputGroup>
                   <Label>1 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    value={tableState.expert[0]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        expert: {
+                          ...tableState.expert,
+                          '0': +value,
+                        },
+                      })
+                    }
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>2 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    value={tableState.expert[1]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        expert: {
+                          ...tableState.expert,
+                          '1': +value,
+                        },
+                      })
+                    }
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>3 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    value={tableState.expert[2]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        expert: {
+                          ...tableState.expert,
+                          '2': +value,
+                        },
+                      })
+                    }
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>4 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    value={tableState.expert[3]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        expert: {
+                          ...tableState.expert,
+                          '3': +value,
+                        },
+                      })
+                    }
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>5 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    value={tableState.expert[4]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        expert: {
+                          ...tableState.expert,
+                          '4': +value,
+                        },
+                      })
+                    }
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>6 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    value={tableState.expert[5]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        expert: {
+                          ...tableState.expert,
+                          '5': +value,
+                        },
+                      })
+                    }
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>7 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    value={tableState.expert[6]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        expert: {
+                          ...tableState.expert,
+                          '6': +value,
+                        },
+                      })
+                    }
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>8 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    value={tableState.expert[7]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        expert: {
+                          ...tableState.expert,
+                          '7': +value,
+                        },
+                      })
+                    }
+                  />
                 </InputGroup>
               </Row>
             </ColumnGroup>
@@ -405,49 +682,137 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
               <Row>
                 <InputGroup>
                   <Label>1 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    value={tableState.infinity[0]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        infinity: {
+                          ...tableState.infinity,
+                          '0': +value,
+                        },
+                      })
+                    }
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>2 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    value={tableState.infinity[1]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        infinity: {
+                          ...tableState.infinity,
+                          '1': +value,
+                        },
+                      })
+                    }
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>3 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    value={tableState.infinity[2]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        infinity: {
+                          ...tableState.infinity,
+                          '2': +value,
+                        },
+                      })
+                    }
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>4 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    value={tableState.infinity[3]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        infinity: {
+                          ...tableState.infinity,
+                          '3': +value,
+                        },
+                      })
+                    }
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>5 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    value={tableState.infinity[4]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        infinity: {
+                          ...tableState.infinity,
+                          '4': +value,
+                        },
+                      })
+                    }
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>6 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    value={tableState.infinity[5]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        infinity: {
+                          ...tableState.infinity,
+                          '5': +value,
+                        },
+                      })
+                    }
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>7 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    value={tableState.infinity[6]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        infinity: {
+                          ...tableState.infinity,
+                          '6': +value,
+                        },
+                      })
+                    }
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>8 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    value={tableState.infinity[7]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        infinity: {
+                          ...tableState.infinity,
+                          '7': +value,
+                        },
+                      })
+                    }
+                  />
                 </InputGroup>
               </Row>
             </ColumnGroup>
@@ -642,32 +1007,6 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
       </ContentWrapper>
     </Container>
   );
-};
-
-const ddd = {
-  // Language --- 'Язык'
-  // activeWif --- 'Активный ключ (WIF)'
-  // affiliateRatio --- 'Коэффициент партнерской комиссии (%)'
-  // balanceKind --- 'Валюта депозита'
-  // depositKind --- 'Выплата'
-  // description --- 'Описание'
-  // duration --- 'Срок депозита (в днях)'
-  // exchanges --- ???
-  // isActive --- 'Программа активна'
-  // isInstant --- 'Отложенный депозит'
-  // isPublic --- 'Публикация программы на титульной странице'
-  // maxAmount --- 'Максимальная сумма'
-  // memoWif --- 'Ключ примечания (WIF)'
-  // minAmount --- 'Минимальная сумма'
-  // name --- 'Название программы'
-  // paymentsDays --- 'Дни выплат'
-  // paymentsInterval --- 'Интервал выплаты дохода (в днях)'
-  // paymentsOffset --- 'Начало выплат через (в днях)'
-  // price --- 'Значение'
-  // priceKind --- 'Стоимость активации депозита'
-  // ratio --- 'Доходность для клиента (%)'
-  // referenceAccount --- 'Депозитный аккаунт для открытия депозитов'
-  // referenceCode --- 'Код перевода'
 };
 const ModalBlock = styled.div<{ sm?: boolean }>`
   display: flex;
