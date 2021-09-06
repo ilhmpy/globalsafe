@@ -18,7 +18,7 @@ export const InfoDeposits = () => {
   const [sorting, setSorting] = useState([{
     ConditionWeight: 1,
     OrderType: 2,
-    FieldName: 'paymentDate'
+    FieldName: 'creationDate'
   }])
 
   useEffect(() => {
@@ -39,7 +39,7 @@ export const InfoDeposits = () => {
     setCount(false);
     if (hubConnection && list.length < totalList) {
       hubConnection
-        .invoke<RootList>('GetUserDeposits', [1, 2, 3, 4, 5, 6, 7, 8], num, 20)
+        .invoke<RootList>('GetUserDeposits', [1, 2, 3, 4, 5, 6, 7, 8], num, 20, sorting)
         .then((res) => {
           if (res.collection.length) {
             setList([...list, ...res.collection]);
