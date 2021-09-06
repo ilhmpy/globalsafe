@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { FC, useRef, useState, useEffect } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import DayPicker, { DateUtils } from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 import { useTranslation } from 'react-i18next';
@@ -114,7 +114,6 @@ const CustomDatePickers = styled(DayPicker)`
     font-size: 16px;
     line-height: 24px;
     padding: 4px 7px;
-    min-width: 48px;
     width: 48px;
     height: 48px;
     margin: 5px;
@@ -264,15 +263,26 @@ type TestInputProps = {
 
 export const TestInput: FC<TestInputProps> = ({ label, openDate, setOpenDate }: TestInputProps) => {
   const [showOpen, setShowOpen] = useState(false);
-  const [selfDate, setSelfDate] = useState<any>({
+  const [selfDate, setSelfDate] = useState<OpenDate>({
     from: undefined,
     to: undefined,
   });
+  const [inputString, setInputString] = useState(
+    `${openDate.from ? moment(openDate.from).format('DD.MM.YY') : ''} ${
+      openDate.to ? `-${moment(openDate.to).format('DD.MM.YY')}` : ''
+    }`
+  );
   const ref = useRef(null);
   const { t } = useTranslation();
   const handleClickOutside = () => {
     setShowOpen(false);
   };
+
+  useEffect(() => {
+    if (!openDate.from && !openDate.to) {
+      setInputString('');
+    }
+  }, [openDate]);
 
   useOnClickOutside(ref, handleClickOutside);
 
@@ -306,12 +316,6 @@ export const TestInput: FC<TestInputProps> = ({ label, openDate, setOpenDate }: 
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   const modifiers = { start: openDate.from, end: openDate.to };
 
-  const [inputString, setInputString] = useState(
-    `${openDate.from ? moment(openDate.from).format('DD.MM.YY') : ''} ${
-      openDate.to ? `-${moment(openDate.to).format('DD.MM.YY')}` : ''
-    }`
-  );
-
   const dateRangeRegEx = /^(0[1-9]|[12][0-9]|3[01])[.](0[1-9]|1[012])[.]\d\d$/gm;
 
   return (
@@ -324,10 +328,13 @@ export const TestInput: FC<TestInputProps> = ({ label, openDate, setOpenDate }: 
               type="text"
               value={inputString}
               onChange={(e) => {
-                setInputString(e.target.value);
                 const arr = e.target.value.split('-');
                 const fromSplitted = arr[0].split('.');
                 const toSplitted = arr.length === 2 ? arr[1].split('.') : '';
+                const validValue = e.target.value.replace(/[^0-9\-\.]/gi, '');
+                6;
+
+                setInputString(validValue);
 
                 setOpenDate({
                   from: moment(`${fromSplitted[1]}.${fromSplitted[0]}.${fromSplitted[2]}`)
@@ -392,7 +399,7 @@ export const TestInputAnalitic: FC<TestInputAnaliticProps> = ({
   setOpenDate,
 }: TestInputAnaliticProps) => {
   const [showOpen, setShowOpen] = useState(false);
-  const [selfDate, setSelfDate] = useState<any>({
+  const [selfDate, setSelfDate] = useState<OpenDate>({
     from: undefined,
     to: undefined,
   });
@@ -481,7 +488,7 @@ export const TestInputAnalitic: FC<TestInputAnaliticProps> = ({
 
 type MainAdminProps = {
   label: string;
-  openDate: OpenDate;
+  openDate: any;
   setOpenDate: (openDate: OpenDate) => void;
   onClose?: () => void;
 };
@@ -496,8 +503,8 @@ export const MainAdminInput: FC<MainAdminProps> = ({
     from: undefined,
     to: undefined,
   });
-
   const ref = useRef(null);
+  const backDays: any = moment().subtract(30, 'days');
 
   const handleClickOutside = () => {
     setShowOpen(false);
@@ -506,10 +513,21 @@ export const MainAdminInput: FC<MainAdminProps> = ({
   useOnClickOutside(ref, handleClickOutside);
 
   const handleDayClick = (day: Date) => {
-    const range = DateUtils.addDayToRange(day, selfDate);
-    setSelfDate({ from: range.from, to: range.to });
-    if (range.from && range.to) {
-      setOpenDate({ from: range.from, to: range.to });
+    const { from, to } = DateUtils.addDayToRange(day, selfDate);
+    setSelfDate({ from: from, to: to });
+    if (from) {
+      setOpenDate({
+        from: moment(from).utcOffset('+00:00').set({ hour: 0, minute: 0, second: 0 }).toDate(),
+
+        to: to
+          ? moment(to).utcOffset('+00:00').set({ hour: 23, minute: 59, second: 59 }).toDate()
+          : moment(from).utcOffset('+00:00').set({ hour: 23, minute: 59, second: 59 }).toDate(),
+      });
+    } else {
+      setOpenDate({
+        from: backDays._d,
+        to: new Date(),
+      });
     }
   };
 
@@ -526,7 +544,7 @@ export const MainAdminInput: FC<MainAdminProps> = ({
       <AdminInputsContainer ref={ref}>
         <BoxInput onClick={() => setShowOpen(!showOpen)}>
           <DateInput>
-            {selfDate.from && selfDate.to ? (
+            {selfDate.from ? (
               <>
                 <span>{selfDate.from ? moment(selfDate.from).format('DD.MM.YY') : ''}</span>
                 <span>{selfDate.to ? `-${moment(selfDate.to).format('DD.MM.YY')} ` : ''}</span>
@@ -572,8 +590,8 @@ export const MainAnaliticInput: FC<MainAnaliticInputProps> = ({
   label,
   pastDay,
 }: MainAnaliticInputProps) => {
-  const [showOpen, setShowOpen] = useState(false);
-  const [selfDate, setSelfDate] = useState<any>({
+  const [showOpen, setShowOpen] = useState<boolean>(false);
+  const [selfDate, setSelfDate] = useState<OpenDate>({
     from: undefined,
     to: undefined,
   });
@@ -903,7 +921,6 @@ const CustomDatePicker = styled(DayPicker)`
     padding: 4px 7px;
     width: 48px;
     height: 48px;
-    min-width: 48px;
     margin: 5px;
     &:focus {
       outline: none;
@@ -915,7 +932,8 @@ const CustomDatePicker = styled(DayPicker)`
       width: 32px;
       height: 32px;
       margin: 0px;
-      padding: 5px 0px;
+      line-height: 18px;
+      padding: 0.5em;
     }
   }
   .DayPicker-Day--selected:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside) {
@@ -991,8 +1009,12 @@ const DatePickerContainer = styled.div`
     right: 0;
     left: 0;
     z-index: 9999;
+    @media (max-width: 992px) {
+      width: 370px;
+    }
     @media (max-width: 576px) {
       bottom: -60px;
+      width: 100%;
     }
     .DayPicker-Months {
       height: 395px;
@@ -1106,6 +1128,15 @@ const AdminInputsContainer = styled.div`
     @media (max-width: 992px) {
       top: 40px;
       width: auto;
+      .DayPicker-Day {
+        font-weight: normal;
+        font-size: 16px;
+        line-height: 19px;
+        padding: 0.5em;
+        width: 32px;
+        height: 32px;
+        margin: 5px;
+      }
     }
     @media (max-width: 576px) {
       right: 0px;

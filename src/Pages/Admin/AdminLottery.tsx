@@ -49,54 +49,75 @@ export const AdminLottery = () => {
     to: undefined,
   });
 
+  const { t } = useTranslation();
+
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
+
+  const sortings = [
+    t('descendDate'),
+    t('ascendDate'),
+    t('typeWin'),
+    t('typeWin2'),
+    t('descendWinSum'),
+    t('ascendWinSum'),
+    t('winners'),
+    t('winners2'),
+  ];
 
   const [sorting, setSorting] = useState<SortingType[]>([]);
   const [listForSorting, setListForSorting] = useState<SelectValues[]>([
     {
-      text: 'По убыванию даты',
+      id: 0,
+      // text: 'По убыванию даты',
       active: false,
       OrderType: 2,
       FieldName: 'viewPrizeDrawLogModel.drawDate',
     },
     {
-      text: 'По возрастанию даты',
+      id: 1,
+      // text: 'По возрастанию даты',
       active: false,
       OrderType: 1,
       FieldName: 'viewPrizeDrawLogModel.drawDate',
     },
     {
-      text: 'Тип выигрыша: От А до Я',
+      id: 2,
+      // text: 'Тип выигрыша: От А до Я',
       active: false,
       OrderType: 1,
       FieldName: 'viewPrizeDefinitionModel.kind',
     },
     {
-      text: 'Тип выигрыша: От Я до А',
+      id: 3,
+      // text: 'Тип выигрыша: От Я до А',
       active: false,
       OrderType: 2,
       FieldName: 'viewPrizeDefinitionModel.kind',
     },
     {
-      text: 'По убыванию суммы выигрыша',
+      id: 4,
+      // text: 'По убыванию суммы выигрыша',
       active: false,
       OrderType: 2,
       FieldName: 'viewPrizeDefinitionModel.volume',
     },
     {
-      text: 'По возрастанию суммы выигрыша',
+      id: 5,
+      // text: 'По возрастанию суммы выигрыша',
       active: false,
       OrderType: 1,
       FieldName: 'viewPrizeDefinitionModel.volume',
     },
     {
-      text: 'Победители: От А до Я',
+      id: 6,
+      // text: 'Победители: От А до Я',
       active: false,
       OrderType: 1,
       FieldName: 'userName',
     },
     {
-      text: 'Победители: От Я до А',
+      id: 7,
+      // text: 'Победители: От Я до А',
       active: false,
       OrderType: 2,
       FieldName: 'userName',
@@ -117,7 +138,6 @@ export const AdminLottery = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
-  const { t } = useTranslation();
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   const languale = lang === 'ru' ? 1 : 0;
   const list = [t('win.one'), t('win.two'), t('win.three')];
@@ -151,8 +171,23 @@ export const AdminLottery = () => {
         .invoke<RootLottery>(
           'GetAllPrizes',
           name ? name : null,
-          openDate.from ? openDate.from : null,
-          openDate.to ? openDate.to : null,
+          openDate.from
+          ? moment(openDate.from)
+              .utcOffset('+00:00')
+              .set({ hour: 0, minute: 0, second: 0 })
+              .toDate()
+          : null,
+          openDate.to
+          ? moment(openDate.to)
+              .utcOffset('+00:00')
+              .set({ hour: 23, minute: 59, second: 59 })
+              .toDate()
+          : openDate.from
+          ? moment(openDate.from)
+              .utcOffset('+00:00')
+              .set({ hour: 23, minute: 59, second: 59 })
+              .toDate()
+          : null,
           checkList.length ? checkList.map((i: any) => i.id) : null,
           (currentPage - 1) * pageLength,
           pageLength,
@@ -326,11 +361,11 @@ export const AdminLottery = () => {
                     onChange={(e) => setName(e.target.value.toLowerCase())}
                   />
                 </Styled.SelectWrap>
-                <Styled.SelectWrap input>
+                <Styled.SelectWrap>
                   <TestInput
                     setOpenDate={setOpenDate}
                     openDate={openDate}
-                    label={t('adminPay.filter.date')}
+                    label={t('lotteryTable.date')}
                   />
                 </Styled.SelectWrap>
                 <Styled.SelectWrap style={{ minWidth: 240 }}>
@@ -366,7 +401,7 @@ export const AdminLottery = () => {
                         />
                       </BurgerButton>
                       <Window open={sortingWindowOpen}>
-                        <WindowTitle>Сортировка</WindowTitle>
+                        <WindowTitle>{t('sorting')}</WindowTitle>
                         <WindowBody>
                           {listForSorting.map((obj, index) => (
                             <SortingItem
@@ -374,7 +409,7 @@ export const AdminLottery = () => {
                               key={index}
                               onClick={() => getActiveSort(index)}
                             >
-                              {obj.text}
+                              {sortings[obj.id]}
                             </SortingItem>
                           ))}
                         </WindowBody>
@@ -407,7 +442,7 @@ export const AdminLottery = () => {
               ) : loading ? (
                 <Loading />
               ) : (
-                <Styled.NotFound>{t('notFound')}</Styled.NotFound>
+                <NotFound>{t('notFound')}</NotFound>
               )}
             </>
           </Styled.LotteryTable>
@@ -431,4 +466,13 @@ const Window = styled(SortingWindow)`
   @media (max-width: 694px) {
     top: 73px;
   }
+`;
+
+const NotFound = styled.div`
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 21px;
+  padding: 30px;
+  letter-spacing: 0.1px;
+  min-height: 250px;
 `;

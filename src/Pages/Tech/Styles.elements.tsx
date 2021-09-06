@@ -33,6 +33,15 @@ export const TechDescription = styled.div<{ bold?: boolean; }>`
             `;
         }
     }}
+
+    @media only screen and (max-device-width: 620px) {
+        width: 90%;
+        font-size: ${({ bold }) => {
+          if (bold) {
+              return `1.60em`
+          };
+        }};
+    }
 `;
 
 export const TechLink = styled.a`
@@ -42,8 +51,24 @@ export const TechLink = styled.a`
 
 export const Page404 = styled(P404)`
     margin-bottom: 60px;
+    
+    @media only screen and (max-device-width: 620px) {
+        width: 90%;
+        margin: 0 auto;
+        display: block;
+        margin-bottom: 50px;
+        height: inherit;
+     } 
 `;
 
 export const Tech = styled(tech)`
     margin-bottom: 60px;
+    
+    @media only screen and (max-device-width: 620px) {
+       width: 90%;
+       margin: 0 auto;
+       display: block;
+       margin-bottom: 50px;
+       height: inherit;
+    } 
 `;

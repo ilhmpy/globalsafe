@@ -4,18 +4,19 @@ import { Link, NavLink } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import { ReactComponent as Briefcase } from '../../assets/svg/briefcase.svg';
 import { ReactComponent as DashBoard } from '../../assets/svg/dashboard.svg';
+import { ReactComponent as Deposits } from '../../assets/svg/depositsPrograms.svg';
 import { ReactComponent as Exit } from '../../assets/svg/exit.svg';
 import logo from '../../assets/svg/logo.svg';
 import logoWhite from '../../assets/svg/logoWhite.svg';
 import { ReactComponent as Lottery } from '../../assets/svg/lottery.svg';
 import { ReactComponent as Peppa } from '../../assets/svg/peppa.svg';
-import { ReactComponent as Deposits } from '../../assets/svg/depositsPrograms.svg';
 import ru from '../../assets/svg/russia.svg';
 import { ReactComponent as DarkTheme } from '../../assets/svg/theme.svg';
 import { ReactComponent as LightTheme } from '../../assets/svg/themeLight.svg';
 import usa from '../../assets/svg/usa.svg';
 import { ReactComponent as Users } from '../../assets/svg/users.svg';
 import { ReactComponent as Wallet } from '../../assets/svg/wallet.svg';
+import { ReactComponent as Wallets } from '../../assets/svg/wallets.svg';
 import { AppContext } from '../../context/HubContext';
 import { ThemeContext } from '../../context/ThemeContext';
 import { Languale } from '../Header/Header.elements';
@@ -104,6 +105,14 @@ export const SideNavbar: FC<Props> = ({ navWidth, navShow }: Props) => {
                 <Deposits />
               </div>
               <Text>{t('sideNav.depositsPrograms')}</Text>
+            </StyledLink>
+          </Li>
+          <Li>
+            <StyledLink to="/admin/wallets">
+              <div>
+                <Wallets />
+              </div>
+              <Text>{t('sideNav.wallets')}</Text>
             </StyledLink>
           </Li>
         </Ul>
@@ -292,7 +301,7 @@ const StyledLink = styled(NavLink).attrs({ activeclassname })`
     & > * {
       opacity: 100%;
     }
-  } 
+  }
 
   & > * {
     opacity: 30%;

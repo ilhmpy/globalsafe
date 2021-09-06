@@ -1,8 +1,7 @@
-import React, { useState, useRef, useEffect, FC } from "react";
-import { ReactComponent as Pen } from "../../../assets/svg/pen.svg";
-import { Checkbox } from "../../../components/UI/Checkbox";
-import styled from "styled-components/macro";
-import { RoundButton } from "../../../components/UI/RoundButton";
+import React, { FC, useEffect, useRef, useState } from 'react';
+import styled from 'styled-components/macro';
+import { ReactComponent as Pen } from '../../../assets/svg/pen.svg';
+import { RoundButton } from '../../../components/UI/RoundButton';
 
 export const InputWrap: FC<{
   val: any;
@@ -28,7 +27,7 @@ export const InputWrap: FC<{
   }, [inputRef, showCheck]);
 
   const handleChange = (e: any) => {
-    console.log("handleChange");
+    console.log('handleChange');
     e.stopPropagation();
 
     paymentsAdjust();
@@ -36,14 +35,14 @@ export const InputWrap: FC<{
   };
 
   const onBlur = (e: any) => {
-    console.log("blur", e.target.localName != "input");
+    console.log('blur', e.target.localName != 'input');
     setShowCheck(false);
   };
 
   const onKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Escape") {
+    if (e.key === 'Escape') {
       setShowCheck(false);
-    } else if (e.key === "Enter") {
+    } else if (e.key === 'Enter') {
       setShowCheck(false);
       paymentsAdjust();
     }
@@ -66,32 +65,31 @@ export const InputWrap: FC<{
         <Text
           dis={done}
           title={
-            typeof +val === "number" && +val >= 0
-              ? Number(val).toLocaleString("ru-RU", {
+            typeof +val === 'number' && +val >= 0
+              ? Number(val).toLocaleString('ru-RU', {
                   maximumFractionDigits: 5,
                 })
-              : typeof +placeholder === "number" && +placeholder >= 0
-              ? Number(placeholder).toLocaleString("ru-RU", {
+              : typeof +placeholder === 'number' && +placeholder >= 0
+              ? Number(placeholder).toLocaleString('ru-RU', {
                   maximumFractionDigits: 5,
                 })
-              : "0"
+              : '0'
           }
         >
-          {typeof +val === "number" && +val >= 0
-            ? Number(val).toLocaleString("ru-RU", {
+          {typeof +val === 'number' && +val >= 0
+            ? Number(val).toLocaleString('ru-RU', {
                 maximumFractionDigits: 5,
               })
-            : typeof +placeholder === "number" && +placeholder >= 0
-            ? Number(placeholder).toLocaleString("ru-RU", {
+            : typeof +placeholder === 'number' && +placeholder >= 0
+            ? Number(placeholder).toLocaleString('ru-RU', {
                 maximumFractionDigits: 5,
               })
-            : "0"}
+            : '0'}
         </Text>
       )}
       {showCheck && !done ? (
         <RoundButton onClick={(e) => handleChange(e)} />
       ) : (
-        // <Checkbox checked={true} onChange={handleChange} />
         <Pen onClick={focusField} />
       )}
     </InputIcon>
@@ -99,7 +97,7 @@ export const InputWrap: FC<{
 };
 
 const Text = styled.div<{ dis?: boolean }>`
-  color: ${(props) => (props.dis ? "#c4c4c4" : props.theme.text2)};
+  color: ${(props) => (props.dis ? '#c4c4c4' : props.theme.text2)};
   width: 75px;
   white-space: nowrap;
   overflow: hidden;
@@ -119,10 +117,10 @@ const InputIcon = styled.div<{ dis?: boolean }>`
     cursor: pointer;
     path {
       transition: 0.3s;
-      fill: ${(props) => (props.dis ? "#C4C4C4" : props.theme.text2)};
+      fill: ${(props) => (props.dis ? '#C4C4C4' : props.theme.text2)};
     }
     &:hover path {
-      fill: ${(props) => (props.dis ? "#C4C4C4" : props.theme.text2)};
+      fill: ${(props) => (props.dis ? '#C4C4C4' : props.theme.text2)};
     }
     @media (max-width: 576px) {
       display: none;
@@ -142,7 +140,7 @@ const Input = styled.input<{ dis?: boolean }>`
     background: ${(props) => props.theme.card.background};
   }
   &::placeholder {
-    color: ${(props) => (props.dis ? "#c4c4c4" : props.theme.text2)};
+    color: ${(props) => (props.dis ? '#c4c4c4' : props.theme.text2)};
   }
   &:focus {
     background: ${(props) => props.theme.inputBg};

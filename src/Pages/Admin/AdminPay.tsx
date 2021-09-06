@@ -92,6 +92,17 @@ export const AdminPay = () => {
   const { lang } = useContext(LangualeContext);
   const { t } = useTranslation();
 
+  const sortings = [
+    t('userSort'),
+    t('userSort2'),
+    t('nameSort'),
+    t('nameSort2'),
+    t('descendDatePay'),
+    t('ascendDatePay'),
+    t('descendSumСontribution'),
+    t('ascendSumContribution'),
+  ];
+
   const getPaymentsOverview = () => {
     if (hubConnection) {
       hubConnection
@@ -119,49 +130,49 @@ export const AdminPay = () => {
 
   const [listForSorting, setListForSorting] = useState<SelectValues[]>([
     {
-      text: 'Пользователь: От А до Я',
+      id: 0,
       active: false,
       OrderType: 1,
       FieldName: 'userId',
     },
     {
-      text: 'Пользователь: От Я до А',
+      id: 1,
       active: false,
       OrderType: 2,
       FieldName: 'userId',
     },
     {
-      text: 'Название: От А до Я',
+      id: 2,
       active: false,
       OrderType: 2,
       FieldName: 'DepositId',
     },
     {
-      text: 'Название: От Я до А',
+      id: 3,
       active: false,
       OrderType: 1,
       FieldName: 'DepositId',
     },
     {
-      text: 'По убыванию даты выплаты',
+      id: 4,
       active: false,
       OrderType: 2,
       FieldName: 'creationDate',
     },
     {
-      text: 'По возрастанию даты выплаты',
+      id: 5,
       active: false,
       OrderType: 1,
       FieldName: 'creationDate',
     },
     {
-      text: 'По убыванию суммы вклада',
+      id: 6,
       active: false,
       OrderType: 2,
       FieldName: 'baseAmount',
     },
     {
-      text: 'По возрастанию суммы вклада',
+      id: 7,
       active: false,
       OrderType: 1,
       FieldName: 'baseAmount',
@@ -173,49 +184,49 @@ export const AdminPay = () => {
 
   const [listForSortingForPay, setListForSortingForPay] = useState<SelectValues[]>([
     {
-      text: 'Пользователь: От А до Я',
+      id: 0,
       active: false,
       OrderType: 1,
-      FieldName: 'userName',
+      FieldName: 'userId',
     },
     {
-      text: 'Пользователь: От Я до А',
+      id: 1,
       active: false,
       OrderType: 2,
-      FieldName: 'userName',
+      FieldName: 'userId',
     },
     {
-      text: 'Название: От А до Я',
+      id: 2,
       active: false,
       OrderType: 2,
       FieldName: 'DepositId',
     },
     {
-      text: 'Название: От Я до А',
+      id: 3,
       active: false,
       OrderType: 1,
       FieldName: 'DepositId',
     },
     {
-      text: 'По убыванию даты выплаты',
+      id: 4,
       active: false,
       OrderType: 2,
       FieldName: 'creationDate',
     },
     {
-      text: 'По возрастанию даты выплаты',
+      id: 5,
       active: false,
       OrderType: 1,
       FieldName: 'creationDate',
     },
     {
-      text: 'По убыванию суммы вклада',
+      id: 6,
       active: false,
       OrderType: 2,
       FieldName: 'baseAmount',
     },
     {
-      text: 'По возрастанию суммы вклада',
+      id: 7,
       active: false,
       OrderType: 1,
       FieldName: 'baseAmount',
@@ -278,6 +289,19 @@ export const AdminPay = () => {
   useEffect(() => {
     if (hubConnection && active === 1) {
       setLoading(true);
+      setDepositPayList([]);
+
+      // GetDepositsCharges Model
+      // Task<CollectionResult> GetDepositsCharges(
+      //   string? userName,
+      //   DateTime? from,
+      //   DateTime? to,
+      //   string[]? usersDepositsSafeIds,
+      //   string[]? depositsSafeIds,
+      //   BalanceOperationKind[] kinds,
+      //   long skip,
+      //   long take);
+
       hubConnection
         .invoke<RootCharges>(
           'GetDepositsCharges',
@@ -299,8 +323,8 @@ export const AdminPay = () => {
                 .set({ hour: 23, minute: 59, second: 59 })
                 .toDate()
             : null,
-          searchSafeID.length ? searchSafeID : null,
           null,
+          searchSafeID.length ? searchSafeID : null,
           [7, 8],
           (currentPagePay - 1) * pageLengthPay,
           pageLengthPay
@@ -309,8 +333,8 @@ export const AdminPay = () => {
           setTotalPayDeposits(res.totalRecords);
           if (res.collection.length) {
             setDepositPayList(res.collection);
-            setLoading(false);
           }
+          setLoading(false);
         })
         .catch((err: Error) => {
           setLoading(false);
@@ -323,20 +347,40 @@ export const AdminPay = () => {
     getPaymentsOverview();
   }, [hubConnection]);
 
-  console.log(
-    openDate.from
-      ? moment(openDate.from).utcOffset('+00:00').set({ hour: 0, minute: 0, second: 0 }).toDate()
-      : null,
-    openDate.to
-      ? moment(openDate.to).utcOffset('+00:00').set({ hour: 23, minute: 59, second: 59 }).toDate()
-      : openDate.from
-      ? moment(openDate.from).utcOffset('+00:00').set({ hour: 23, minute: 59, second: 59 }).toDate()
-      : null
-  );
+  // console.log(
+  //   openDate.from
+  //     ? moment(openDate.from).utcOffset('+00:00').set({ hour: 0, minute: 0, second: 0 }).toDate()
+  //     : null,
+  //   openDate.to
+  //     ? moment(openDate.to).utcOffset('+00:00').set({ hour: 23, minute: 59, second: 59 }).toDate()
+  //     : openDate.from
+  //     ? moment(openDate.from).utcOffset('+00:00').set({ hour: 23, minute: 59, second: 59 }).toDate()
+  //     : null
+  // );
 
   const submit = () => {
+    console.log({
+      NAME: name,
+      openDate,
+      searchSafeID,
+    });
+    console.log(
+      openDate.from
+        ? moment(openDate.from).utcOffset('+00:00').set({ hour: 0, minute: 0, second: 0 }).toDate()
+        : null,
+      openDate.to
+        ? moment(openDate.to).utcOffset('+00:00').set({ hour: 23, minute: 59, second: 59 }).toDate()
+        : openDate.from
+        ? moment(openDate.from)
+            .utcOffset('+00:00')
+            .set({ hour: 23, minute: 59, second: 59 })
+            .toDate()
+        : null
+    );
     if (hubConnection) {
+      setLoading(true);
       setCurrentPagePay(1);
+      setDepositPayList([]);
       hubConnection
         .invoke<RootCharges>(
           'GetDepositsCharges',
@@ -358,8 +402,8 @@ export const AdminPay = () => {
                 .set({ hour: 23, minute: 59, second: 59 })
                 .toDate()
             : null,
-          searchSafeID.length ? searchSafeID : null,
           null,
+          searchSafeID.length ? searchSafeID : null,
           [7, 8],
           (currentPagePay - 1) * pageLengthPay,
           pageLengthPay
@@ -469,10 +513,10 @@ export const AdminPay = () => {
           <Exit onClick={logOut} />
         </Styled.UserName>
       </Styled.HeadBlock>
-      {active === 3 && (
+      {active === 4 && (
         <Chart depositsDate={depositsDate} setDepositsDate={setDepositsDate} stats={stats} />
       )}
-      {active !== 3 && (
+      {active !== 4 && (
         <Card>
           <Styled.PayList>
             <Styled.PayItem>
@@ -482,7 +526,13 @@ export const AdminPay = () => {
               <Styled.Radial
                 bg={theme === 'light' ? 'rgba(255, 65, 110, 0.2)' : 'rgba(255, 65, 110, 1)'}
               >
-                <span>{sum ? (sum[2] / 100000).toLocaleString('ru-RU') : '-'}</span>
+                <span>
+                  {sum
+                    ? (sum[2] / 100000).toLocaleString('ru-RU', {
+                        maximumFractionDigits: 1,
+                      })
+                    : '-'}
+                </span>
                 <span>CWD</span>
               </Styled.Radial>
             </Styled.PayItem>
@@ -574,7 +624,7 @@ export const AdminPay = () => {
                     onChange={(e) => setName(e.target.value.toLowerCase())}
                   />
                 </Styled.SelectWrap>
-                <Styled.SelectWrap input>
+                <Styled.SelectWrap>
                   <TestInput
                     setOpenDate={setOpenDate}
                     openDate={openDate}
@@ -669,7 +719,7 @@ export const AdminPay = () => {
                 </BurgerButton>
               </TableHeadItemPaid>
               <Window open={sortingWindowOpenForPay}>
-                <WindowTitle>Сортировка</WindowTitle>
+                <WindowTitle>{t('sorting')}</WindowTitle>
                 <WindowBody>
                   {listForSortingForPay.map((obj, index) => (
                     <Sort
@@ -677,7 +727,7 @@ export const AdminPay = () => {
                       key={index}
                       onClick={() => getActiveSortForPay(index)}
                     >
-                      {obj.text}
+                      {sortings[obj.id]}
                     </Sort>
                   ))}
                 </WindowBody>
@@ -796,6 +846,7 @@ const PayTab = styled(Tab)`
   }
   @media (max-width: 768px) {
     width: 110px !important;
+    margin-right: 10px;
   }
   @media (max-width: 576px) {
     width: 100px !important;

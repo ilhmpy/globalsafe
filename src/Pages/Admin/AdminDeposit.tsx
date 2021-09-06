@@ -15,7 +15,7 @@ import { Button } from '../../components/Button/Button';
 import { Select } from '../../components/Select/Select2';
 import { TestInput } from '../../components/UI/DayPicker';
 import { Loading } from '../../components/UI/Loading';
-import { UpTitle } from '../../components/UI/UpTitle';
+import { UpTitle } from '../../components/UI/UpTitle'; 
 import { AppContext } from '../../context/HubContext';
 import { Card } from '../../globalStyles';
 import { OpenDate } from '../../types/dates';
@@ -63,7 +63,7 @@ const AdminDepositList: FC<PayProps> = ({ data }: PayProps) => {
         <TableBodyItem>{moment(data.creationDate).format('DD/MM/YYYY')}</TableBodyItem>
         <TableBodyItem>{moment(data.endDate).format('DD/MM/YYYY')}</TableBodyItem>
         <TableBodyItem>{data.amountView ? data.amountView : '-'}</TableBodyItem>
-        <TableBodyItem>{moment(data.paymentDate).format('DD/MM/YYYY')}</TableBodyItem>
+        <TableBodyItem>{data.paymentDate ? moment(data.paymentDate).format('DD/MM/YYYY') : '-'}</TableBodyItem>
         <TableBodyItem>{data.payedAmountView}</TableBodyItem>
         <TableBodyItem></TableBodyItem>
       </TableBody>
@@ -106,57 +106,59 @@ export const AdminDeposit = () => {
   const [sorting, setSorting] = useState<SortingType[]>([]);
   const [listForSorting, setListForSorting] = useState<SelectValues[]>([
     {
-      text: 'Пользователь: От А до Я',
+      id: 0,
       active: false,
       OrderType: 1,
       FieldName: 'userName',
     },
     {
-      text: 'Пользователь: От Я до А',
+      id: 1,
       active: false,
       OrderType: 2,
       FieldName: 'userName',
     },
     {
-      text: 'Название: От А до Я',
+      id: 2,
       active: false,
       OrderType: 2,
       FieldName: 'depositId',
     },
     {
-      text: 'Название: От Я до А',
+      id: 3,
       active: false,
       OrderType: 1,
       FieldName: 'depositId',
     },
     {
-      text: 'По убыванию суммы депозита',
+      id: 4,
       active: false,
       OrderType: 2,
       FieldName: 'amount',
     },
     {
-      text: 'По возрастанию суммы депозита',
+      id: 5,
       active: false,
       OrderType: 1,
       FieldName: 'amount',
     },
     {
-      text: 'По убыванию даты след.  выплаты',
+      id: 5,
       active: false,
       OrderType: 2,
       FieldName: 'paymentDate',
     },
     {
-      text: 'По возрастанию даты след.  выплаты',
+      id: 6,
       active: false,
       OrderType: 1,
       FieldName: 'paymentDate',
     },
   ]);
 
+  const sortings = [t("userSort"), t("userSort2"), t("nameSort"), t("nameSort2"), t("descend"), t("ascend"), t("nextPayDescend"), t("nextPayAscend")];
+
   const myLoad = () => {
-    setCount(false);
+    setCount(false); 
     setDepositsList([]);
     setLoading(true);
 
@@ -197,6 +199,9 @@ export const AdminDeposit = () => {
                 .toDate()
             : null,
 
+          null,
+          null,
+
           closeDate.from
             ? moment(closeDate.from)
                 .utcOffset('+00:00')
@@ -214,8 +219,7 @@ export const AdminDeposit = () => {
                 .set({ hour: 23, minute: 59, second: 59 })
                 .toDate()
             : null,
-          null,
-          null,
+
           null,
           null,
           (currentPage - 1) * pageLength,
@@ -254,6 +258,25 @@ export const AdminDeposit = () => {
     myLoad();
   }, [currentPage, hubConnection, pageLength, sorting]);
 
+  // Request Params Model for 'GetUsersDeposits'
+  // Task<CollectionResult> GetUsersDeposits(
+  //   DepositState[] states,
+  //   string? account,
+  //   string[]? depositsSafeIds,
+  //   DateTime? createdFrom,
+  //   DateTime? createdTo,
+  //   DateTime? closedFrom,
+  //   DateTime? closedTo,
+  //   DateTime? payedFrom,
+  //   DateTime? payedTo,
+  //   bool? hasPayments,
+  //   bool? isPostponed,
+  //   long skip,
+  //   long take,
+  //   QuerySorting[] sorting)
+
+  // ## Attention ## payedFrom = closeDate.from | payedTo = closeDate.to
+
   const submit = () => {
     if (hubConnection) {
       setCurrentPage(1);
@@ -285,6 +308,9 @@ export const AdminDeposit = () => {
                 .toDate()
             : null,
 
+          null,
+          null,
+
           closeDate.from
             ? moment(closeDate.from)
                 .utcOffset('+00:00')
@@ -303,8 +329,6 @@ export const AdminDeposit = () => {
                 .toDate()
             : null,
 
-          null,
-          null,
           null,
           null,
           (currentPage - 1) * pageLength,
@@ -365,7 +389,7 @@ export const AdminDeposit = () => {
       <Styled.TitleHead>{t('adminDeposit.headTitle')}</Styled.TitleHead>
       <Rounds />
 
-      <Styled.FilterBlock>
+      <CustomFilterBlock>
         <Styled.FilterHeader>
           <FilterName>{t('adminDeposit.filter')}</FilterName>
           <Styled.ShowHide onClick={() => setOpen(!open)}>
@@ -383,14 +407,14 @@ export const AdminDeposit = () => {
                 <Styled.Label>{t('adminDeposit.labelProgram')}</Styled.Label>
                 <Select checkList={checkList} setCheckList={setCheckList} values={listDeposits} />
               </Styled.SelectWrap>
-              <Styled.SelectWrap input>
+              <Styled.SelectWrap>
                 <TestInput
                   setOpenDate={setOpenDate}
                   openDate={openDate}
                   label={t('adminDeposit.labelOpen')}
                 />
               </Styled.SelectWrap>
-              <Styled.SelectWrap input>
+              <Styled.SelectWrap>
                 <TestInput
                   setOpenDate={setCloseDate}
                   openDate={closeDate}
@@ -403,7 +427,8 @@ export const AdminDeposit = () => {
             </Button>
           </Styled.SelectContainer>
         </CSSTransition>
-      </Styled.FilterBlock>
+      </CustomFilterBlock>
+
       <Card>
         <PaymentsTable>
           <TableHead>
@@ -424,7 +449,7 @@ export const AdminDeposit = () => {
                 />
               </BurgerButton>
               <Window open={sortingWindowOpen}>
-                <WindowTitle>Сортировка</WindowTitle>
+                <WindowTitle>{t("sorting")}</WindowTitle>
                 <WindowBody>
                   {listForSorting.map((obj, index) => (
                     <Sort
@@ -432,7 +457,7 @@ export const AdminDeposit = () => {
                       key={index}
                       onClick={() => getActiveSort(index)}
                     >
-                      {obj.text}
+                      {sortings[obj.id]}
                     </Sort>
                   ))}
                 </WindowBody>
@@ -488,6 +513,13 @@ const Sort = styled(SortingItem)`
     @media (max-width: 576px) {
       display: none;
     }
+  }
+`;
+
+const CustomFilterBlock = styled(Styled.FilterBlock)`
+  margin-bottom: 30px;
+  @media (max-width: 576px) {
+    margin-bottom: 20px;
   }
 `;
 

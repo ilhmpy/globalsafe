@@ -1,10 +1,17 @@
 import styled from "styled-components/macro";
 
-export const Page = styled.div`
+export const Page = styled.div<{ margin?: boolean; }>`
   padding-top: 100px;
   @media (max-width: 992px) {
     padding-top: 75px;
   }
+  ${({ margin }) => {
+    if (margin) {
+      return `
+        margin-bottom: 120px;
+      `;
+    };
+  }}
   /* @media (max-width: 768px) {
     margin-top: 60px;
   } */

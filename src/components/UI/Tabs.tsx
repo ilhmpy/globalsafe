@@ -1,4 +1,4 @@
-import styled from "styled-components/macro";
+import styled from 'styled-components/macro';
 
 export const Tabs = styled.div`
   overflow: hidden;
@@ -18,7 +18,7 @@ export const Tab = styled.button<{ active: boolean }>`
   outline: none;
   cursor: pointer;
   position: relative;
-  font-weight: ${(props) => (props.active ? "600" : "400")};
+  font-weight: ${(props) => (props.active ? '600' : '400')};
   font-size: 14px;
   line-height: 16px;
   padding: 12px 0;
@@ -38,20 +38,23 @@ export const Tab = styled.button<{ active: boolean }>`
     }
   }
   &:before {
-    content: "";
+    content: '';
     position: absolute;
     bottom: 0;
-    display: ${(props) => (props.active ? "block" : "none")};
+    display: ${(props) => (props.active ? 'block' : 'none')};
     left: 0;
     height: 1px;
     width: 46px;
     background: #ff416e;
     border-radius: 0px 2px 2px 0px;
   }
+  @media (max-width: 768px) {
+    text-align: center;
+  }
 `;
 
 export const Content = styled.div<{ active?: boolean }>`
-  ${(props) => (props.active ? "" : "display:none")};
+  ${(props) => (props.active ? '' : 'display:none')};
   /* @media (max-width: 992px) {
     height: 100%;
     min-height: 350px;

@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import 'react-day-picker/lib/style.css';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
@@ -18,21 +18,13 @@ import { AppContext } from '../../context/HubContext';
 import { Card } from '../../globalStyles';
 import useWindowSize from '../../hooks/useWindowSize';
 import { OpenDate } from '../../types/dates';
-import { PaymentsStat } from '../../types/main';
+import { DepositsStat, PaymentsStat } from '../../types/main';
 import * as Styled from './Styled.elements';
 
 export const AdminMain = () => {
   const currentMonth = moment().format('MMYYYY');
   const year = moment().format('YYYY');
   const prevMonth = moment().subtract(1, 'months').date(1).format('MMYYYY');
-  // let currentMonthStart: any = moment(currentMonth, "M.YYYY").startOf("month");
-  // let currentMonthEnd: any = moment(currentMonth, "M.YYYY").endOf("month");
-
-  // let prevMonthStart: any = moment(prevMonth, "M.YYYY").startOf("month");
-  // let prevMonthEnd: any = moment(prevMonth, "M.YYYY").endOf("month");
-
-  // let yearStart: any = moment(year, "YYYY").startOf("month");
-  // let yearEnd: any = moment(year, "YYYY").endOf("year");
 
   const backDays: any = moment().subtract(30, 'days');
   const sizes = useWindowSize();
@@ -47,7 +39,7 @@ export const AdminMain = () => {
     to: new Date(),
   });
 
-  const [depositsDate, setDepositsDate] = useState<OpenDate>({
+  const [depositsDate, setDepositsDate] = useState<any>({
     from: backDays._d,
     to: new Date(),
   });
@@ -64,8 +56,8 @@ export const AdminMain = () => {
 
   const [revenueStat, setRevenueStat] = useState<PaymentsStat>({});
   const [paymentsStat, setPaymentsStat] = useState<PaymentsStat>({});
-  const [depositsCreationStat, setDepositsCreationStat] = useState<any>({});
-  const [depositsClosedStat, setDepositsClosedStat] = useState<any>({});
+  const [depositsCreationStat, setDepositsCreationStat] = useState<DepositsStat>({});
+  const [depositsClosedStat, setDepositsClosedStat] = useState<DepositsStat>({});
   const [selectedDay, setSelectedDay] = useState<any>(new Date());
   const [depositsCount, setDepositsCount] = useState(0);
   const [depositsAmount, setDepositsAmount] = useState(0);
@@ -88,7 +80,7 @@ export const AdminMain = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<PaymentsStat>('GetDepositsClosingStat', closeDate.from, closeDate.to)
+        .invoke<PaymentsStat>('GetDepositsClosingStat', closeDate.from, closeDate.to ? closeDate.to : closeDate.from)
         .then((res) => {
           setDepositsClosedStat(res);
         })
@@ -168,18 +160,6 @@ export const AdminMain = () => {
         <Calendar selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
 
         <Deposites>
-          {/* <DepositItem>
-            <DepositTitle>{t("adminMain.depositsCount")}</DepositTitle>
-            <DepositValue>{depositsCount}</DepositValue>
-          </DepositItem>
-          <DepositItem>
-            <DepositTitle>{t("adminMain.depositsAmount")}</DepositTitle>
-            <DepositValue>
-              {depositsAmount.toLocaleString("ru-RU", {
-                maximumFractionDigits: 1,
-              })}
-            </DepositValue>
-          </DepositItem> */}
           <RoundWrapeer>
             <RoundItem>
               <ChartItemTitle>{t('adminMain.openDeposit')}</ChartItemTitle>
@@ -262,7 +242,7 @@ export const AdminMain = () => {
                     value={
                       Object.values(depositsCreationStat).length
                         ? Object.values(depositsCreationStat).map((i: any) => i[0])
-                        : ['']
+                        : []
                     }
                   />
                 </CSSTransition>
@@ -278,7 +258,7 @@ export const AdminMain = () => {
                     value={
                       Object.values(depositsCreationStat).length
                         ? Object.values(depositsCreationStat).map((i: any) => i[1] / 100000)
-                        : ['']
+                        : []
                     }
                   />
                 </CSSTransition>
@@ -321,7 +301,7 @@ export const AdminMain = () => {
                       value={
                         Object.values(depositsClosedStat).length
                           ? Object.values(depositsClosedStat).map((i: any) => i[0])
-                          : ['']
+                          : []
                       }
                     />
                   </CSSTransition>
@@ -342,7 +322,7 @@ export const AdminMain = () => {
                       value={
                         Object.values(depositsClosedStat).length
                           ? Object.values(depositsClosedStat).map((i: any) => i[1] / 100000)
-                          : ['']
+                          : []
                       }
                     />
                   </CSSTransition>
@@ -369,7 +349,7 @@ export const AdminMain = () => {
               value={
                 Object.values(paymentsStat).length
                   ? Object.values(paymentsStat).map((i) => i / 100000)
-                  : ['']
+                  : []
               }
             />
           </ChartItem>
@@ -388,7 +368,7 @@ export const AdminMain = () => {
                 value={
                   Object.values(revenueStat).length
                     ? Object.values(revenueStat).map((i) => i / 100000)
-                    : ['']
+                    : []
                 }
               />
             </ChartItem>
@@ -571,9 +551,6 @@ const ChartItem = styled.div`
     padding-right: 0;
     background: ${(props) => props.theme.card.background};
   }
-  @media (max-width: 340px) {
-    max-width: 280px;
-  }
 `;
 
 const LastChartItem = styled.div`
@@ -583,6 +560,9 @@ const LastChartItem = styled.div`
 
   ${ChartItem} {
     max-width: 410px;
+    @media (max-width: 800px) {
+      max-width: 100%;
+    }
   }
 
   @media (max-width: 992px) {

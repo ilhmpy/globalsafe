@@ -75,11 +75,6 @@ export const Nav: FC<Props> = ({
           </StyledLink>
         </ListItem>
         <ListItem>
-          <StyledLink to="/#about" onClick={onClose}>
-            {t("header.item3")}
-          </StyledLink>
-        </ListItem>
-        <ListItem>
           <StyledLink to="/#lottery" onClick={onClose}>
             {t("sideNav.lottery")}
           </StyledLink>

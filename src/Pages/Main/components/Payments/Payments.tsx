@@ -18,10 +18,7 @@ import { Page } from '../../../../components/UI/Page';
 import { AppContext } from '../../../../context/HubContext';
 import { Card, Container } from '../../../../globalStyles';
 import { Pokedex, RootPayDeposit } from '../../../../types/payouts';
-import {
-  ModalBlock,
-  ModalTitle
-} from '../Tariffs/Tariffs.elements';
+import { ModalBlock, ModalTitle } from '../Tariffs/Tariffs.elements';
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
@@ -47,9 +44,11 @@ const RadialComponent: FC<RadialComponentProps> = ({ data, height }: RadialCompo
     setIsNormalOpen(true);
     onClose();
     setValue('');
-    const newLink = `https://cwd.global/shopping/payment?to_name=${str}&amount=${num / 100000}`;
+    const newLink = `https://backup.cwd.global/shopping/payment?to_name=${str}&amount=${
+      num / 100000
+    }`;
     setLink(newLink);
-    setOldLink(`https://cwd.global/shopping/payment?to_name=${str}&amount=`);
+    setOldLink(`https://backup.cwd.global/shopping/payment?to_name=${str}&amount=`);
     const val: any = /\d{3,}/g.exec(str);
     setMin(num / 100000);
     setValue((num / 100000).toString());
@@ -169,7 +168,7 @@ const RadialComponent: FC<RadialComponentProps> = ({ data, height }: RadialCompo
   );
 };
 
-export const Payments = () => {
+export const Payments: FC = () => {
   const [statsDeposit, setStatsDeposit] = useState<RootPayDeposit[]>([]);
   const [bigArr, setBigArr] = useState<any>([]);
   const [smallArr, setSmallArr] = useState<any>([]);

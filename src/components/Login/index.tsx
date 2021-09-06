@@ -164,7 +164,7 @@ export const LoginComponent = () => {
             )}
             <TimerButton tryCode={tryCode} setTryCode={setTryCode} password={password} />
 
-            <LinkTo href={`https://cwd.global/account/${value}`} target="_blank">
+            <LinkTo href={`https://backup.cwd.global/account/${value}`} target="_blank">
               {t('login.goTo')}
             </LinkTo>
           </FormBlock>

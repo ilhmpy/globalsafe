@@ -107,7 +107,8 @@
     "portfolio": "Portfolio",
     "toHome": "To the main",
     "lottery": "Lottery",
-    "depositsPrograms": "Deposits programs"
+    "depositsPrograms": "Deposits programs",
+    "wallets": "Wallets"
   },
   "adminDeposit": {
     "uptitle": "Payouts",
@@ -202,7 +203,9 @@
       "openDate": "Opening date",
       "paid": "Paid",
       "amount": "Current number of",
-      "cost": "Unit cost"
+      "cost": "Unit cost",
+      "program": "Program",
+      "date": "Date of open and close deposit"
     },
     "filter": {
       "user": "User",
@@ -250,7 +253,8 @@
     "balanceOff": "Upon activation, the deposit will be debited",
     "condition": "Program conditions",
     "add": "Add",
-    "showCondition": "Show condition"
+    "showCondition": "Show condition",
+    "translate": "Translate"
   },
   "depositSuccess": {
     "title": "Deposit created successfully",
@@ -310,7 +314,8 @@
     "dateEnd": "Deposit completion date",
     "contrAmount": "Contribution amount",
     "blockchainCommision": "Blockchain commision",
-    "serviceCommision": "Service commision"
+    "serviceCommision": "Service commision",
+    "undr": "Understand"
   },
   "alert": {
     "success": "Successfully",
@@ -401,9 +406,11 @@
   "line": "line",
   "partnersTitle": "Partners programs",
   "time": {
-    "d": "d",
-    "h": "h",
-    "m": "min"
+    "title": "Start of the drawing in",
+    "days": "days",
+    "hours": "hours",
+    "minutes": "minutes",
+    "yourPrize": "Your prize will be here"
   },
   "acceptAll": {
     "title": "Accept all",
@@ -464,6 +471,20 @@
     "changesCanceledSuccessfully": "Changes have been successfully canceled.",
     "days": "days"
   },
+  "wallets": {
+    "refreshAll": "Refresh all",
+    "newWallet": "New wallet",
+    "name": "Name",
+    "activeKey": "Active key",
+    "keyNotes": "Key notes",
+    "create": "Create",
+    "for": "for",
+    "transferFunds": "Transfer funds",
+    "from": "From",
+    "where": "Where",
+    "enrollmentAccount": "Enrollment account",
+    "available": "Available"
+  },
   "text": {
     "tip_state_unsubscribed": "Subscribe to notifications",
     "tip_state_subscribed": "You're subscribed to notifications",
@@ -482,5 +503,49 @@
     "desc": "The requested page has been removed or is temporarily unavailable. Go to ",
     "main": "home page",
     "tech": "Technical work in progress"
-  }
+  },
+  "all": "All",
+  "d": "d",
+  "h": "h",
+  "m": "m",
+  "sorting": "Sorting",
+  "userSort": "User: From A to Z",
+  "userSort2": "User: From Z to A",
+  "nameSort": "Name: From A to Z",
+  "nameSort2": "Name: From Z to A",
+  "descend": "Descending deposit amount",
+  "ascend": "Ascending the amount of the deposit",
+  "nextPayDescend": "Descending date of next pay",
+  "nextPayAscend": "Ascending date of next pay",
+  "descendDate": "By descending date",
+  "ascendDate": "By ascending date",
+  "typeWin": "Type win: From A to Z",
+  "typeWin2": "Type win: From Z to A",
+  "descendWinSum": "By descending sum of win",
+  "ascendWinSum": "By ascending sum of win", 
+  "winners": "Winners: From A to Z",
+  "winners2": "Winners: From Z to A",
+  "descendDatePay": "By descending date of pay",
+  "ascendDatePay": "By ascending date of pay",
+  "descendSumСontribution": "By descending sum of contribution",
+  "ascendSumContribution": "By ascending sum of contribution",
+  "descendOpenDate": "By descending of open date",
+  "ascendOpenDate": "By ascending of open date",
+  "descendOpenDateDeposit": "By descending of open date deposit",
+  "ascendOpenDateDeposit": "By ascending of open date deposit",
+  "descendCloseDateDeposit": "By descending of close date deposit",
+  "ascendCloseDateDeposit": "By ascending of close date deposit",
+  "descendPaySum": "By descending pay sum",
+  "ascendPaySum": "By ascending pay sum",
+  "descendDateBuy": "By desceding date buy",
+  "ascendDateBuy": "By ascending date buy",
+  "descendUnit": "Descending unit cost",
+  "ascendUnit": "Ascending unit cost",
+  "descendBalance": "By descending sum of balance",
+  "ascendBalance": "By ascending su of balance",
+  "descendDateCreate": "By descending date of create",
+  "ascendDateCreate": "By ascending date of create",
+  "descendSumDeposit": "By descending sum of deposit",
+  "ascendSumDeposit": "By ascending sum of deposit",
+  "unders": "Got it"
 }

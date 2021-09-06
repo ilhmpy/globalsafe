@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import styled from 'styled-components/macro';
 import { Button } from '../../../../components/Button/Button';
-import { Item } from '../../../../components/FilterMenu/Styled.elements';
 import { H2 } from '../../../../components/UI/MainStyled';
 import { Page } from '../../../../components/UI/Page';
 import { UpTitle } from '../../../../components/UI/UpTitle';
@@ -109,7 +108,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
   };
 
   return (
-    <Page id="lottery">
+    <Page id="lottery" margin>
       <Container>
         <UpTitle small>{t('draws')}</UpTitle>
       </Container>
@@ -119,7 +118,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
 
       <Container>
         <TimerHistoryContainer alfa onClick={onOpenModal}>
-          <Timer icon={false} timerHistory clock={clock} />
+          <Timer modalTimer />
           <Button danger>{t('goDraw')}</Button>
         </TimerHistoryContainer>
       </Container>
@@ -135,7 +134,6 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
           {notifyList.length &&
             notifyList.map((item, idx) => {
               if (!isMobile) {
-                console.log('DESCTOP');
                 return (
                   <CSSTransition key={idx} timeout={500} classNames="item">
                     <TableList card>
@@ -146,7 +144,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
                           ? (item.volume / 100000).toLocaleString('ru-RU', {
                               maximumFractionDigits: 5,
                             })
-                          : Item.kind === 1
+                          : item.kind === 1
                           ? t('win.two')
                           : item.volume}
                         &nbsp;
@@ -159,12 +157,22 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
                   </CSSTransition>
                 );
               } else {
-                console.log('item data', item.name, item.volume, typeWin(Number(item.kind)));
                 return (
                   <CSSTransition key={idx} timeout={500} classNames="item">
                     <TableList card>
                       <TableItem>{moment(item.date).format('DD.MM.YYYY')}</TableItem>
                       <TableItem>
+                        {item.kind === 0
+                          ? (item.volume / 100000).toLocaleString('ru-RU', {
+                              maximumFractionDigits: 5,
+                            })
+                          : item.kind === 1
+                          ? t('win.two')
+                          : item.volume}
+                        &nbsp;
+                        {item.volume ? Balance[item.balanceKind] : '-'}
+                      </TableItem>
+                      {/* <TableItem>
                         {item.volume
                           ? (item.volume / 100000).toLocaleString('ru-RU', {
                               maximumFractionDigits: 5,
@@ -172,7 +180,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
                             ' ' +
                             'CWD'
                           : typeWin(Number(item.kind))}
-                      </TableItem>
+                      </TableItem> */}
                       <TableItem>
                         <Value data-title={item.name}>{item.name}</Value>
                       </TableItem>
@@ -199,10 +207,8 @@ const TimerHistoryContainer = styled(Card)`
   align-items: center;
   justify-content: space-between;
   margin-bottom: 30px;
-  ${Button} {
-    @media (max-width: 768px) {
-      display: none;
-    }
+  @media (max-width: 768px) {
+    display: none;
   }
   @media (max-width: 768px) {
     justify-content: center;
@@ -344,6 +350,7 @@ const Value = styled.div`
     padding-left: 25px;
     padding-right: 25px;
     border-radius: 5px;
+    display: none;
   }
 
   @media (max-width: 768px) {

@@ -4,8 +4,8 @@ export type SortingType = {
   FieldName: string;
 };
 export type SelectValues = {
-  text: string;
+  id: number;
   active: boolean;
-  OrderType: number;
+  OrderType: number; 
   FieldName: string;
 };

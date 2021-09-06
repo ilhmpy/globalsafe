@@ -126,11 +126,15 @@ export const Buttons = styled.div`
   ${Button} {
     padding-left: 10px;
     padding-right: 10px;
+    min-width: 140px;
     &:first-child {
       margin-right: 15px;
       @media (max-width: 576px) {
         margin: 0 auto 20px;
       }
+    }
+    &:last-child {
+      min-width: 120px;
     }
   }
 `;

@@ -5,9 +5,10 @@ export const Name = styled.div`
   font-weight: 500;
   font-size: 14px;
   line-height: 16px;
+  color: ${(props) => props.theme.text};
   @media (max-width: 992px) {
     font-weight: 400;
-  }
+  } ;
 `;
 
 export const NameData = styled.div<{ green?: boolean }>`
@@ -53,7 +54,22 @@ export const TH = styled.th`
   span {
     display: none;
   }
+
+  /* @media (max-width: 992px) {
+    &:nth-child(1) {
+      width: auto;
+    }
+    &:last-child {
+      width: 154px;
+    }
+  } */
   @media (max-width: 500px) {
+    &:nth-child(5) {
+      width: 74px;
+    }
+    &:last-child {
+      width: 72px;
+    }
     p {
       display: none;
     }
@@ -68,19 +84,33 @@ export const TH = styled.th`
 export const TD = styled.td`
   padding: 9px 0 10px 0;
   &:nth-child(1) {
-    width: 188px;
+    max-width: 188px;
+    @media (max-width: 992px) {
+      max-width: 100px;
+    }
+    @media (max-width: 767px) {
+    }
   }
   &:nth-child(2) {
     width: 250px;
+    @media (max-width: 992px) {
+      width: auto;
+    }
   }
   &:nth-child(3) {
     width: 130px;
     padding-left: 10px;
+    @media (max-width: 992px) {
+      width: auto;
+    }
   }
   &:nth-child(4) {
     width: 123px;
+    @media (max-width: 992px) {
+      width: auto;
+    }
   }
-  &:nth-child(4) {
+  &:nth-child(5) {
     width: 90px;
   }
 `;
@@ -113,21 +143,25 @@ export const TR = styled.tr<{ disactive?: boolean }>`
   &:not(thead tr):hover {
     background: rgba(0, 0, 0, 0.05);
   }
-  @media (max-width: 992px) {
+  @media (max-width: 767px) {
     ${TH}:last-child,
     ${TD}:last-child {
       text-align: right;
     }
-    ${TH}:last-child {
-      display: flex;
-      justify-content: flex-end;
-    }
-    ${TH}:nth-child(2),
-    ${TH}:nth-child(3),
     ${TH}:nth-child(4),
-    ${TD}:nth-child(2),
-    ${TD}:nth-child(3),
     ${TD}:nth-child(4) {
+      display: none;
+    }
+  }
+  @media (max-width: 600px) {
+    ${TD}:nth-child(2),
+    ${TH}:nth-child(2) {
+      display: none;
+    }
+  }
+  @media (max-width: 3800px) {
+    ${TD}:nth-child(3),
+    ${TH}:nth-child(3) {
       display: none;
     }
   }
@@ -137,7 +171,7 @@ export const Table = styled.table`
   width: 100%;
   display: table;
   border-collapse: collapse;
-  table-layout: fixed;
+  /* table-layout: fixed; */
 `;
 
 export const StyledFilter = styled(Filter)`

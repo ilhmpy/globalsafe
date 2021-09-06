@@ -156,11 +156,10 @@ const UserTable: FC<PropsTable> = ({ data, unLockAccount, lockAccount }: PropsTa
   };
 
   const balance = data.balances ? data.balances.filter((item) => item.balanceKind === 1) : null;
-
   return (
     <div>
       <CSSTransition in={open} timeout={300} classNames="modal" unmountOnExit>
-        <ModalUsers
+        <ModalUsers 
           onClose={onClose}
           data={data}
           lock={lock}
@@ -243,52 +242,54 @@ export const AdminUsers = () => {
 
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
   const [sorting, setSorting] = useState<SortingType[]>([]);
+
+  const sortings = [t("userSort"), t("userSort2"), t("descendBalance"), t("ascendBalance"), t("descendDateCreate"), t("ascendDateCreate"), t("descendSumDeposit"), t("ascendSumDeposit")];
+
   const [listForSorting, setListForSorting] = useState<SelectValues[]>([
     {
-      text: 'Пользователь: От А до Я',
+      id: 0,
       active: false,
       OrderType: 1,
       FieldName: 'name',
     },
     {
-      text: 'Пользователь: От Я до А',
+      id: 1,
       active: false,
       OrderType: 2,
       FieldName: 'name',
     },
     {
-      text: 'По убыванию баланса',
+      id: 2,
       active: false,
       OrderType: 2,
       FieldName: 'balances',
     },
     {
-      text: 'По возрастанию баланса',
+      id: 3,
       active: false,
       OrderType: 1,
       FieldName: 'balances',
     },
     {
-      text: 'По убыванию даты создания',
+      id: 4,
       active: false,
       OrderType: 2,
       FieldName: 'creationDate',
     },
     {
-      text: 'По возрастанию даты создания',
+      id: 5,
       active: false,
       OrderType: 1,
       FieldName: 'creationDate',
     },
-
     {
-      text: 'По убыванию суммы депозита',
+      id: 6,
       active: false,
       OrderType: 2,
       FieldName: 'depositsAmount',
     },
     {
-      text: 'По возрастанию суммы депозита',
+      id: 7,
       active: false,
       OrderType: 1,
       FieldName: 'depositsAmount',
@@ -357,7 +358,8 @@ export const AdminUsers = () => {
                   exhaustRatio,
                   id,
                   safeId,
-                  volume: (volume / 100000).toString(),
+                  // volume: (volume / 100000).toString(),
+                  volume
                 },
               ];
             });
@@ -558,7 +560,7 @@ export const AdminUsers = () => {
                 />
               </BurgerButton>
               <Window open={sortingWindowOpen}>
-                <WindowTitle>Сортировка</WindowTitle>
+                <WindowTitle>{t("sorting")}</WindowTitle>
                 <WindowBody>
                   {listForSorting.map((obj, index) => (
                     <Sort
@@ -566,7 +568,7 @@ export const AdminUsers = () => {
                       key={index}
                       onClick={() => getActiveSort(index)}
                     >
-                      {obj.text}
+                      {sortings[obj.id]} 
                     </Sort>
                   ))}
                 </WindowBody>
@@ -723,8 +725,10 @@ const TableHeadItem = styled.li`
   &:nth-child(7) {
     max-width: 130px;
     text-align: right;
+    margin-right: 16px;
     @media (max-width: 992px) {
       max-width: 80px;
+      margin-right: 0;
     }
   }
   &:last-child {

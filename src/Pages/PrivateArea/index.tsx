@@ -1,6 +1,6 @@
 ﻿import moment from 'moment';
 import 'moment/locale/ru';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
@@ -25,20 +25,20 @@ import { DepositListModal } from './Modals';
 import { OnePage } from './OnePage';
 import * as Styled from './Styles.elements';
 
-export const InfoMain = () => {
+export const InfoMain: FC = () => {
   const { t } = useTranslation();
   const [notifications, setNotifications] = useState<Notify[]>([]);
-  const [addDeposit, setAddDeposit] = useState(false);
-  const [depositListModal, setDepositListModal] = useState(false);
-  const [addDepositValue, setAddDepositValue] = useState('');
+  const [addDeposit, setAddDeposit] = useState<boolean>(false);
+  const [depositListModal, setDepositListModal] = useState<boolean>(false);
+  const [addDepositValue, setAddDepositValue] = useState<string>('');
   const [depositSelect, setDepositSelect] = useState<null | DepositsCollection>(null);
   const [depositsList, setDepositsList] = useState<DepositsCollection[] | null>(null);
-  const [withdraw, setWithdraw] = useState(false);
-  const [loadDeposit, setLoadDeposit] = useState(false);
-  const [withdrawValueLoad, setWithdrawValueLoad] = useState(false);
-  const [condition, setContition] = useState(false);
-  const [depositSuccess, setDepositSuccess] = useState(false);
-  const [depositError, setDepositError] = useState(false);
+  const [withdraw, setWithdraw] = useState<boolean>(false);
+  const [loadDeposit, setLoadDeposit] = useState<boolean>(false);
+  const [withdrawValueLoad, setWithdrawValueLoad] = useState<boolean>(false);
+  const [condition, setContition] = useState<boolean>(false);
+  const [depositSuccess, setDepositSuccess] = useState<boolean>(false);
+  const [depositError, setDepositError] = useState<boolean>(false);
   const [withdrawValue, setWithdrawValue] = useState('');
   const [account, setAccount] = useState('');
   const appContext = useContext(AppContext);
@@ -214,7 +214,6 @@ export const InfoMain = () => {
       hubConnection
         .invoke<Commisions>('GetWithdrawFee', 1, Number(value))
         .then((res: any) => {
-          console.log('commisions', res);
           setBlockchainCommision((res.networkFee / 100000).toString());
           setServiceCommision((res.serviceFee / 100000).toString());
         })
@@ -294,7 +293,14 @@ export const InfoMain = () => {
                 </Styled.SmallButtonsWrapDesc>
               </Styled.UserBlock>
               <Styled.InfoButtons>
-                <Button dangerOutline onClick={() => setAddDeposit(true)}>
+                <Button
+                  dangerOutline
+                  onClick={() => {
+                    setDepositSelect(null);
+                    setAddDepositValue('');
+                    setAddDeposit(true);
+                  }}
+                >
                   {t('privateArea.newDeposit')}
                 </Button>
                 <Button danger onClick={() => setWithdraw(true)}>
@@ -447,9 +453,7 @@ export const InfoMain = () => {
                     </Styled.ModalButton>
                     {depositSelect?.description ? (
                       <Tooltip text={depositSelect.description}>
-                        <Styled.Program onClick={() => setContition(true)}>
-                          {t('depositSelect.condition')}
-                        </Styled.Program>
+                        <Styled.Program>{t('depositSelect.condition')}</Styled.Program>
                       </Tooltip>
                     ) : (
                       <Styled.Program show>{t('depositSelect.showCondition')}</Styled.Program>
@@ -467,7 +471,7 @@ export const InfoMain = () => {
                         </Styled.Warning>
                         <Styled.ModalButton
                           blue
-                          href={`https://cwd.global/account/${user}/portfolio`}
+                          href={`https://backup.cwd.global/account/${user}/portfolio`}
                           target="_blank"
                         >
                           {t('depositSelect.transferButton')}
@@ -492,7 +496,7 @@ export const InfoMain = () => {
                         {t('depositSelect.bill')}
                       </Styled.Warning>
                     ) : null}
-                    <Styled.ModalButton blue>Перевести</Styled.ModalButton>
+                    <Styled.ModalButton blue>{t('depositSelect.translate')}</Styled.ModalButton>
                   </div>
                   {/* {depositSelect ? (
                     <Styled.Conditions>
@@ -504,7 +508,7 @@ export const InfoMain = () => {
                       {!balanceAsset && (
                         <Styled.ToLink
                           target="_blank"
-                          href={`https://cwd.global/shopping/payment?to_name=${depositSelect.account}&amount=${depositSelect.minAmount}`}
+                          href={`https://backup.cwd.global/shopping/payment?to_name=${depositSelect.account}&amount=${depositSelect.minAmount}`}
                         >
                           Приобрести
                         </Styled.ToLink>

@@ -2,17 +2,21 @@ import moment from 'moment';
 import 'moment-duration-format';
 import React, { FC, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ReactComponent as Prize } from '../../../../assets/svg/prize.svg';
 import { AppContext } from '../../../../context/HubContext';
 import { RootClock } from '../../../../types/clock';
 import * as Styled from './Lottery.elements';
-import { ReactComponent as Prize } from '../../../../assets/svg/prize.svg';
 
 type Props = {
   last?: string;
   clock?: any;
-  icon: boolean;
+  icon?: boolean;
   closeTimer?: (e: React.MouseEvent) => void;
   timerHistory?: boolean;
+  setShowModal?: (value: boolean) => void;
+  modalTimer?: boolean;
+  history?: boolean;
+  modalPrize?: boolean;
 };
 
 export const Timer: FC<Props> = ({
@@ -20,31 +24,75 @@ export const Timer: FC<Props> = ({
   icon,
   closeTimer,
   timerHistory,
+  history,
+  setShowModal,
+  modalTimer,
+  modalPrize,
 }: Props) => {
-  const [state, setState] = useState<null | string>(null);
   const [deadline, setDeadline] = useState(-1);
-  const [clock, setClock] = useState<RootClock | null>(null);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const { t } = useTranslation();
-  const [clickOnIcon, setClickOnIcon] = useState<boolean>(false);
+  const [display, setDisplay] = useState<boolean>(false);
+  const [state, setState] = useState<any>(null);
+  const [timerProgress, setTimerProgress] = useState<string | number>(0);
+  const [progressTotal, setProgressTotal] = useState<number>(100);
+  const [clock, setClock] = useState<RootClock | null>(null);
+
+  const data = {
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  };
+  const [stateData, setStateData] = useState(data);
 
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   const languale = lang === 'ru' ? 1 : 0;
 
   useEffect(() => {
     let cancel = false;
+    const cb = (data: any[]) => {
+      !cancel && repeat();
+    };
+    if (hubConnection) {
+      !cancel && hubConnection.on('DrawResult', cb);
+    }
+    return () => {
+      hubConnection?.off('DrawResult', cb);
+      cancel = true;
+    };
+  }, [hubConnection]);
+
+  function getNextDraw(res: any) {
+    if (res != null) {
+      setProgressTotal(res[0].totalSeconds);
+      setDeadline(res[1].totalSeconds);
+      setClock(res[1]);
+      // openWindow();
+    }
+  }
+
+  useEffect(() => {
+    let cancel = false;
+
     const cb = (data: any) => {
-      setDeadline(data.totalSeconds);
+      if (data != null) {
+        setDeadline(data.totalSeconds);
+        const seconds = Math.floor(data.totalSeconds % 60);
+        const minutes = Math.floor((data.totalSeconds / 60) % 60);
+        const hours = Math.floor((data.totalSeconds / (60 * 60)) % 24);
+        const days = Math.floor(data.totalSeconds / (60 * 60 * 24));
+        setStateData({ days, hours, minutes, seconds });
+      }
     };
     if (hubConnection && !cancel) {
       hubConnection.on('DrawCountdown', cb);
+
       hubConnection
-        .invoke<RootClock>('GetNextDraw')
+        .invoke('GetNextDraw')
         .then((res) => {
-          setClock(res);
-          setDeadline(res.totalSeconds);
-          setState('0');
+          getNextDraw(res);
         })
         .catch((e) => console.log(e));
     }
@@ -57,56 +105,209 @@ export const Timer: FC<Props> = ({
   const repeat = () => {
     if (hubConnection) {
       hubConnection
-        .invoke<RootClock>('GetNextDraw')
+        .invoke('GetNextDraw')
         .then((res) => {
-          setDeadline(res.totalSeconds);
-          setClock(res);
+          console.log(res);
+          if (res != null) {
+            setDeadline(res[1].totalSeconds);
+            setProgressTotal(res[0].totalSeconds);
+            setClock(res[1]);
+          }
         })
         .catch((e) => console.log(e));
     }
   };
 
   useEffect(() => {
-    let cancel = false;
-    if (deadline < 1 && !cancel) {
-      setState(null);
-      // repeat();
-      return;
-    }
-
-    const timer = setInterval(() => {
-      const durations = moment.duration(deadline, 'seconds');
-      let formatted;
-      if (languale === 1) {
-        formatted = durations.format('d [дн] h [ч] m [мин]', { trim: false });
+    const getTimeUntil = (time: any) => {
+      if (time < 1) {
+        setStateData({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        setState(null);
       } else {
-        formatted = durations.format('d [d] h [h] m [m]', { trim: false });
+        const durations = moment.duration(time, 'seconds');
+        const seconds = Math.floor(deadline % 60);
+        const minutes = Math.floor((deadline / 60) % 60);
+        const hours = Math.floor((deadline / (60 * 60)) % 24);
+        const days = Math.floor(deadline / (60 * 60 * 24));
+        setStateData({ days, hours, minutes, seconds });
+        setState(
+          languale === 1
+            ? durations.format('d [дн] h [ч] m [мин]', { trim: false })
+            : durations.format('d [d] h [h] m [m]', { trim: false })
+        );
+        setDeadline(deadline - 1);
       }
-      !cancel && setState(formatted);
-      !cancel && setDeadline(deadline - 1);
-    }, 1000);
-
-    return () => {
-      clearInterval(timer);
-      cancel = true;
     };
-  }, [state, deadline]);
+    const timer = setInterval(() => getTimeUntil(deadline), 1000);
+    return () => clearInterval(timer);
+  }, [deadline]);
+
+  const openWindow = () => {
+    setDisplay(true);
+    setTimeout(() => {
+      setDisplay(false);
+      setTimerProgress(0);
+    }, 5000);
+    setTimeout(() => setTimerProgress(100), 2000);
+  };
+
+  const openPopup = () => {
+    let timer: any;
+    let timer1: any;
+    if (!display) {
+      setDisplay(true);
+      timer = setTimeout(() => setTimerProgress(100), 1000);
+      timer1 = setTimeout(() => {
+        setDisplay(false);
+        setTimerProgress(0);
+      }, 5000);
+    }
+  };
+
+  const radius = 30 / 2;
+  const circumference = 30 * Math.PI;
+
+  const prg = () => {
+    const progress1 = circumference - (deadline / progressTotal) * circumference;
+    if (progress1 > 0) {
+      return progress1;
+    } else {
+      return 0;
+    }
+  };
 
   return (
     <>
-      {!timerHistory ? (
-        <Styled.TimerContainer>
-          {icon && <Styled.CloseIcon onClick={closeTimer} />}
-          <Styled.TimerTitle>{t('timerStart')}</Styled.TimerTitle>
-          <Styled.TimerValue nodata={clock === null || state === '0'}>{state}</Styled.TimerValue>
-        </Styled.TimerContainer>
-      ) : (
-        <Styled.TimerHistoryInner>
-          <Styled.TimerHisroryTitle>{t('newDraw')}</Styled.TimerHisroryTitle>
+      {modalTimer ? (
+        <Styled.TimerHistoryInner history={history}>
+          <Styled.TimerHisroryTitle>
+            {history ? t('newDraw') : t('timerStart')}
+          </Styled.TimerHisroryTitle>
           <Styled.TimerHistoryValue nodata={clock === null || state === '0'}>
-            {state}
+            {modalPrize ? (
+              <>
+                <Styled.TimerHistoryValueDesc>
+                  <span>
+                    {stateData.days} {t('d')}{' '}
+                  </span>
+                  <span>
+                    {stateData.hours} {t('h')}{' '}
+                  </span>
+                  <span>
+                    {stateData.minutes} {t('m')}
+                  </span>
+                </Styled.TimerHistoryValueDesc>
+                <Styled.TimerHistoryValueMob>
+                  <div className="timer_content">
+                    {stateData && (
+                      <Styled.TimerModalDuration>
+                        <span>{stateData.days}</span> : <span>{stateData.hours}</span> :{' '}
+                        <span>{stateData.minutes}</span>
+                      </Styled.TimerModalDuration>
+                    )}
+                    <Styled.TimerModalUnits>
+                      <span>{t('time.days')}</span> <span>{t('time.hours')}</span>{' '}
+                      <span>{t('time.minutes')}</span>
+                    </Styled.TimerModalUnits>
+                  </div>
+                </Styled.TimerHistoryValueMob>
+              </>
+            ) : (
+              <>
+                {' '}
+                <span>
+                  {stateData.days} {t('d')}{' '}
+                </span>
+                <span>
+                  {stateData.hours} {t('h')}{' '}
+                </span>
+                <span>
+                  {stateData.minutes} {t('m')}
+                </span>
+              </>
+            )}
           </Styled.TimerHistoryValue>
         </Styled.TimerHistoryInner>
+      ) : (
+        <Styled.TimerModalWrap>
+          <Styled.TimerModalInner>
+            {setShowModal ? (
+              <Styled.TimerModal display={display} onClick={() => setShowModal(true)}>
+                {state !== null ? (
+                  <>
+                    <Styled.TimerLoadingWrap>
+                      <Styled.TimerLoading progress={timerProgress} />
+                    </Styled.TimerLoadingWrap>
+                    <Styled.TimerModalTitle>{t('time.title')}</Styled.TimerModalTitle>
+                    <div className="timer_content">
+                      {stateData && (
+                        <Styled.TimerModalDuration>
+                          <span>{stateData.days}</span> : <span>{stateData.hours}</span> :{' '}
+                          <span>{stateData.minutes}</span>
+                        </Styled.TimerModalDuration>
+                      )}
+                      <Styled.TimerModalUnits>
+                        <span>{t('time.days')}</span> <span>{t('time.hours')}</span>{' '}
+                        <span>{t('time.minutes')}</span>
+                      </Styled.TimerModalUnits>
+                    </div>
+                  </>
+                ) : (
+                  <Styled.LoadingBeforeData>
+                    <Styled.LoadingBeforeItem
+                      width="90%"
+                      height="19px"
+                      style={{ margin: '0 auto', marginTop: '10px' }}
+                    />
+                    <div className="flex_loading">
+                      <Styled.LoadingBeforeItem width="30px" height="19px" />
+                      <Styled.LoadingBeforeItem width="30px" height="19px" />
+                      <Styled.LoadingBeforeItem width="30px" height="19px" />
+                    </div>
+                    <div className="flex_loading">
+                      <Styled.LoadingBeforeItem circle width="30px" height="10px" />
+                      <Styled.LoadingBeforeItem circle width="30px" height="10px" />
+                      <Styled.LoadingBeforeItem circle width="30px" height="10px" />
+                    </div>
+                  </Styled.LoadingBeforeData>
+                )}
+              </Styled.TimerModal>
+            ) : null}
+            <Styled.TimerCircle onClick={openPopup}>
+              <Styled.Progress>
+                <Styled.CountContainer>
+                  <Styled.CountValue strokeColor={'#ff416e'}>
+                    <Prize />
+                  </Styled.CountValue>
+                  <svg
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '100%',
+                      margin: '0 auto',
+                      transform: 'rotateY(-180deg) rotateZ(-90deg)',
+                      overflow: 'visible',
+                    }}
+                  >
+                    <circle
+                      strokeDasharray={circumference}
+                      strokeDashoffset={progressTotal > 0 ? prg() : 0}
+                      r={radius}
+                      cx={radius}
+                      cy={radius}
+                      fill="none"
+                      strokeLinecap="round"
+                      stroke={'#ff416e'}
+                      strokeWidth={'2px'}
+                    ></circle>
+                  </svg>
+                </Styled.CountContainer>
+              </Styled.Progress>
+            </Styled.TimerCircle>
+          </Styled.TimerModalInner>
+        </Styled.TimerModalWrap>
       )}
     </>
   );

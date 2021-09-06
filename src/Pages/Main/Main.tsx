@@ -6,9 +6,7 @@ import { Header } from '../../components/Header/Header';
 import { Page } from '../../components/UI/Page';
 import { AppContext } from '../../context/HubContext';
 import { Prize } from '../../types/drawResult';
-import { ArrList } from '../../types/lottery';
 import { About } from './components/About/About';
-import { Assets } from './components/Assets';
 import { Banner } from './components/Banner/Banner';
 import { DrawHistory } from './components/DrawHistory/DrawHistory';
 import { ModalLottery } from './components/Lottery/Modal';
@@ -2046,7 +2044,6 @@ export const Main = () => {
 
   const [result, setResult] = useState<Prize | null>(null);
   const [winName, setWinName] = useState<string | null>(null);
-  const [notifyList, setNotifyList] = useState<ArrList[]>([]);
   const { t } = useTranslation();
 
   const appContext = useContext(AppContext);
@@ -2059,7 +2056,6 @@ export const Main = () => {
 
   const winnerResult = (res: Prize) => {
     setResult(res);
-    console.log('result', result);
   };
 
   const closeTimer = (e: React.MouseEvent) => {
@@ -2118,21 +2114,21 @@ export const Main = () => {
     setShowModal(true);
   };
 
-  const [testModal, setTestModal] = useState(false);
-  const [testModal1, setTestModal1] = useState(false);
-
-  const test = () => {
-    setTestModal(true);
-  };
-
   return (
     <div>
       <Header />
       <MainPage id="banner">
         {showTimer && (
-          <TimerPopup onClick={onShowModal}>
-            <Timer closeTimer={closeTimer} icon={true} clock={clock} />
-          </TimerPopup>
+          <FixedBlock>
+            <div>
+              <Timer
+                closeTimer={closeTimer}
+                icon={true}
+                clock={clock}
+                setShowModal={setShowModal}
+              />
+            </div>
+          </FixedBlock>
         )}
 
         {showModal && (
@@ -2165,7 +2161,8 @@ export const Main = () => {
         {/* <Assets /> */}
 
         <DrawHistory onOpenModal={onOpenModal} clock={clock} />
-        <About />
+       
+        {/* <About /> */}
         <Footer />
       </MainPage>
     </div>
@@ -2200,11 +2197,9 @@ const Center = styled.div`
 `;
 
 const MainPage = styled(Page)`
+  position: relative;
   //margin-top: 200px;
   margin-top: 171px;
-  /* @media (max-width: 1060px) {
-    margin-top: 140px;
-  } */
   @media only screen and (min-width: 577px) and (max-width: 768px) {
     margin-top: 0px;
     padding-top: 250px;
@@ -2228,5 +2223,24 @@ const TimerPopup = styled.div`
     position: static;
     margin-top: 0;
     top: 0;
+  }
+`;
+
+export const FixedBlock = styled.div`
+  width: 100%;
+  height: 5px;
+  max-width: 1280px;
+  margin-left: auto;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  margin-right: auto;
+  right: 0;
+  left: 0;
+  position: fixed;
+  top: 630px;
+
+  & > div {
+    position: relative;
   }
 `;
