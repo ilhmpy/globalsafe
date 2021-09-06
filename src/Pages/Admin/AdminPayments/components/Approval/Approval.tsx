@@ -534,7 +534,7 @@ export const Approval: FC<Props> = ({
             {openDateApproval.from && (
               <>
                 {`${moment(openDateApproval.from).format('DD.MM.YYYY')} - ${moment(
-                  openDateApproval.to
+                  openDateApproval.to || new Date()
                 ).format('DD.MM.YYYY')}`}
               </>
             )}
