@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
+import React, { FC, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -15,6 +15,7 @@ import { UpTitle } from '../../components/UI/UpTitle';
 // import { Checkbox } from "../../components/UI/Checkbox";
 import { AppContext } from '../../context/HubContext';
 import { Card } from '../../globalStyles';
+import useOnClickOutside from '../../hooks/useOutsideHook';
 import useWindowSize from '../../hooks/useWindowSize';
 import { OpenDate } from '../../types/dates';
 import {
@@ -241,6 +242,9 @@ export const AdminUsers = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
+  const sortingWindowRef = useRef<HTMLDivElement | null>(null);
+
+  useOnClickOutside(sortingWindowRef, () => setSortingWindowOpen(false));
   const [sorting, setSorting] = useState<SortingType[]>([]);
 
   const sortings = [t("userSort"), t("userSort2"), t("descendBalance"), t("ascendBalance"), t("descendDateCreate"), t("ascendDateCreate"), t("descendSumDeposit"), t("ascendSumDeposit")];
@@ -299,30 +303,53 @@ export const AdminUsers = () => {
   useEffect(() => {
     if (hubConnection) {
       setLoading(true);
+      // Add Sorting condition if CreationDate Filter field has value
+      const modifiedSorting = [...sorting];
+      if(openDate.to || openDate.from) {
+        if(!modifiedSorting.some(sortItem => sortItem.FieldName === 'creationDate')) {
+          modifiedSorting.push({
+            ConditionWeight: 2,
+            OrderType: 1,
+            FieldName: 'creationDate',
+          })
+        }
+      };
       hubConnection
         .invoke<RootUsers>(
           'GetUsers',
           name.toLowerCase() || null,
           openDate.from
-            ? moment(openDate.from)
-                .utcOffset('+00:00')
-                .set({ hour: 0, minute: 0, second: 0 })
-                .toDate()
-            : null,
+          ? moment(openDate.from)
+              .utcOffset('+00:00')
+              .set({ hour: 0, minute: 0, second: 0 })
+              .toDate()
+          : null,
           openDate.to
-            ? moment(openDate.to)
-                .utcOffset('+00:00')
-                .set({ hour: 23, minute: 59, second: 59 })
-                .toDate()
-            : openDate.from
-            ? moment(openDate.from)
-                .utcOffset('+00:00')
-                .set({ hour: 23, minute: 59, second: 59 })
-                .toDate()
-            : null,
+          ? moment(openDate.to)
+              .utcOffset('+00:00')
+              .set({ hour: 23, minute: 59, second: 59 })
+              .toDate()
+          : null,
+          // openDate.from
+          //   ? moment(openDate.from)
+          //       .utcOffset('+00:00')
+          //       .set({ hour: 0, minute: 0, second: 0 })
+          //       .toDate()
+          //   : null,
+          // openDate.to
+          //   ? moment(openDate.to)
+          //       .utcOffset('+00:00')
+          //       .set({ hour: 23, minute: 59, second: 59 })
+          //       .toDate()
+          //   : openDate.from
+          //   ? moment(openDate.from)
+          //       .utcOffset('+00:00')
+          //       .set({ hour: 23, minute: 59, second: 59 })
+          //       .toDate()
+          //   : null,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting
+          modifiedSorting
         )
         .then((res) => {
           let divisionSums: any[] = [];
@@ -417,22 +444,17 @@ export const AdminUsers = () => {
           'GetUsers',
           name.toLowerCase() || null,
           openDate.from
-            ? moment(openDate.from)
-                .utcOffset('+00:00')
-                .set({ hour: 0, minute: 0, second: 0 })
-                .toDate()
-            : null,
+          ? moment(openDate.from)
+              .utcOffset('+00:00')
+              .set({ hour: 0, minute: 0, second: 0 })
+              .toDate()
+          : null,
           openDate.to
-            ? moment(openDate.to)
-                .utcOffset('+00:00')
-                .set({ hour: 23, minute: 59, second: 59 })
-                .toDate()
-            : openDate.from
-            ? moment(openDate.from)
-                .utcOffset('+00:00')
-                .set({ hour: 23, minute: 59, second: 59 })
-                .toDate()
-            : null,
+          ? moment(openDate.to)
+              .utcOffset('+00:00')
+              .set({ hour: 23, minute: 59, second: 59 })
+              .toDate()
+          : null,
           (currentPage - 1) * pageLength,
           pageLength,
           sorting
@@ -559,7 +581,7 @@ export const AdminUsers = () => {
                   onClick={() => setSortingWindowOpen((prev) => !prev)}
                 />
               </BurgerButton>
-              <Window open={sortingWindowOpen}>
+              <Window ref={sortingWindowRef} open={sortingWindowOpen}>
                 <WindowTitle>{t("sorting")}</WindowTitle>
                 <WindowBody>
                   {listForSorting.map((obj, index) => (

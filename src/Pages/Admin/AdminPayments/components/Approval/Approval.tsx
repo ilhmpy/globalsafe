@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { FC, useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
@@ -40,6 +40,7 @@ import {
 import * as Styled from './Styled.elements';
 import { Notify } from '../../../../../types/notify';
 import { Modal } from '../../../../../components/Modal/Modal';
+import useOnClickOutside from '../../../../../hooks/useOutsideHook';
 
 type Props = {
   listDeposits: CollectionListDeposits[];
@@ -87,6 +88,9 @@ export const Approval: FC<Props> = ({
   const [notifications, setNotifications] = useState<Notify[]>([]);
 
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
+  const sortingWindowRef = useRef<HTMLDivElement | null>(null);
+
+  useOnClickOutside(sortingWindowRef, () => setSortingWindowOpen(false));
   const [sorting, setSorting] = useState<SortingType[]>([]);
   const [acceptAll, setAcceptAll] = useState<boolean>(false);
 
@@ -643,7 +647,7 @@ export const Approval: FC<Props> = ({
                   onClick={() => setSortingWindowOpen((prev) => !prev)}
                 />
               </BurgerButton>
-              <Window open={sortingWindowOpen}>
+              <Window ref={sortingWindowRef} open={sortingWindowOpen}>
                 <WindowTitle>{t('sorting')}</WindowTitle>
                 <WindowBody>
                   {listForSorting.map((obj, index) => (

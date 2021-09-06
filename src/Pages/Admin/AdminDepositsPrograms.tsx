@@ -12,7 +12,6 @@ import { AppContext } from '../../context/HubContext';
 import { Card } from '../../globalStyles';
 import { DepositProgramForm } from './DepositProgramForm';
 import * as Styled from './Styled.elements';
-import { SortingWindow } from './Styled.elements';
 
 export const AdminDepositsPrograms = () => {
   const { t } = useTranslation();

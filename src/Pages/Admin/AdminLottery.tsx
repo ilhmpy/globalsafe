@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
@@ -14,6 +14,7 @@ import { FakeInput } from '../../components/UI/FakeInput';
 import { Loading } from '../../components/UI/Loading';
 import { AppContext } from '../../context/HubContext';
 import { Card } from '../../globalStyles';
+import useOnClickOutside from '../../hooks/useOutsideHook';
 import { OpenDate } from '../../types/dates';
 import {
   CollectionGetDraw,
@@ -52,6 +53,9 @@ export const AdminLottery = () => {
   const { t } = useTranslation();
 
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
+  const sortingWindowRef = useRef<HTMLDivElement | null>(null);
+
+  useOnClickOutside(sortingWindowRef, () => setSortingWindowOpen(false))
 
   const sortings = [
     t('descendDate'),
@@ -385,7 +389,7 @@ export const AdminLottery = () => {
                           onClick={() => setSortingWindowOpen((prev) => !prev)}
                         />
                       </BurgerButton>
-                      <Window open={sortingWindowOpen}>
+                      <Window ref={sortingWindowRef} open={sortingWindowOpen}>
                         <WindowTitle>{t('sorting')}</WindowTitle>
                         <WindowBody>
                           {listForSorting.map((obj, index) => (

@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { FC, useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
@@ -26,6 +26,7 @@ import {
   WindowTitle,
 } from './Styled.elements';
 import { SelectValues, SortingType } from '../../types/sorting';
+import useOnClickOutside from '../../hooks/useOutsideHook';
 
 type Props = {
   data: CollectionPortfolio;
@@ -97,6 +98,14 @@ export const AdminPortfolio = () => {
   const [sortingWindowOpenGCWD, setSortingWindowOpenGCWD] = useState(false);
   const [sortingWindowOpenMGCWD, setSortingWindowOpenMGCWD] = useState(false);
   const [sortingWindowOpenDIAMOND, setSortingWindowOpenDIAMOND] = useState(false);
+
+  const sortingWindowRefGCWD = useRef<HTMLDivElement | null>(null);
+  const sortingWindowRefMGCWD = useRef<HTMLDivElement | null>(null);
+  const sortingWindowRefDIAMOND = useRef<HTMLDivElement | null>(null);
+
+  useOnClickOutside(sortingWindowRefGCWD, () => setSortingWindowOpenGCWD(false));
+  useOnClickOutside(sortingWindowRefMGCWD, () => setSortingWindowOpenMGCWD(false));
+  useOnClickOutside(sortingWindowRefDIAMOND, () => setSortingWindowOpenDIAMOND(false));
 
   const [sortingGCWD, setSortingGCWD] = useState<SortingType[]>([]);
 
@@ -449,7 +458,7 @@ export const AdminPortfolio = () => {
                     alt="burger"
                     onClick={() => setSortingWindowOpenGCWD((prev) => !prev)}
                   />
-                  <Window open={sortingWindowOpenGCWD}>
+                  <Window ref={sortingWindowRefGCWD} open={sortingWindowOpenGCWD}>
                     <WindowTitle>{t("sorting")}</WindowTitle>
                     <WindowBody>
                       {listForSortingGCWD.map((obj, index) => (
@@ -505,7 +514,7 @@ export const AdminPortfolio = () => {
                     onClick={() => setSortingWindowOpenMGCWD((prev) => !prev)}
                   />
                 </BurgerButton>
-                <Window open={sortingWindowOpenMGCWD}>
+                <Window ref={sortingWindowRefMGCWD} open={sortingWindowOpenMGCWD}>
                   <WindowTitle>Сортировка</WindowTitle>
                   <WindowBody>
                     {listForSortingMGCWD.map((obj, index) => (
@@ -558,7 +567,7 @@ export const AdminPortfolio = () => {
                     onClick={() => setSortingWindowOpenDIAMOND((prev) => !prev)}
                   />
                 </BurgerButton>
-                <Window open={sortingWindowOpenDIAMOND}>
+                <Window ref={sortingWindowRefDIAMOND} open={sortingWindowOpenDIAMOND}>
                   <WindowTitle>Сортировка</WindowTitle>
                   <WindowBody>
                     {listForSortingDIAMOND.map((obj, index) => (

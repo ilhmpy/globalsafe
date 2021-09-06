@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { FC, useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
@@ -11,6 +11,7 @@ import { TestInputAnalitic } from '../../../../../components/UI/DayPicker';
 import { Loading } from '../../../../../components/UI/Loading';
 import { AppContext } from '../../../../../context/HubContext';
 import { Card } from '../../../../../globalStyles';
+import useOnClickOutside from '../../../../../hooks/useOutsideHook';
 import { CollectionAnalitics, RootAnalitics } from '../../../../../types/analitics';
 import { OpenDate } from '../../../../../types/dates';
 import { CollectionListDeposits } from '../../../../../types/deposits';
@@ -61,6 +62,9 @@ export const Analitics: FC<Props> = ({ listDeposits }: Props) => {
 
 
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
+  const sortingWindowRef = useRef<HTMLDivElement | null>(null);
+
+  useOnClickOutside(sortingWindowRef, () => setSortingWindowOpen(false));
   const [sorting, setSorting] = useState<SortingType[]>([]);
   const [listForSorting, setListForSorting] = useState<SelectValues[]>([
     {
@@ -165,17 +169,23 @@ export const Analitics: FC<Props> = ({ listDeposits }: Props) => {
                 .set({ hour: 0, minute: 0, second: 0 })
                 .toDate()
             : null,
-          openDate.to
+            openDate.to
             ? moment(openDate.to)
                 .utcOffset('+00:00')
                 .set({ hour: 23, minute: 59, second: 59 })
                 .toDate()
-            : openDate.from
-            ? moment(openDate.from)
-                .utcOffset('+00:00')
-                .set({ hour: 23, minute: 59, second: 59 })
-                .toDate()
             : null,
+          // openDate.to
+          //   ? moment(openDate.to)
+          //       .utcOffset('+00:00')
+          //       .set({ hour: 23, minute: 59, second: 59 })
+          //       .toDate()
+          //   : openDate.from
+          //   ? moment(openDate.from)
+          //       .utcOffset('+00:00')
+          //       .set({ hour: 23, minute: 59, second: 59 })
+          //       .toDate()
+          //   : null,
           (currentPage - 1) * pageLength,
           pageLength,
           sorting
@@ -282,7 +292,7 @@ export const Analitics: FC<Props> = ({ listDeposits }: Props) => {
                   onClick={() => setSortingWindowOpen((prev) => !prev)}
                 />
               </BurgerButton>
-              <Window open={sortingWindowOpen}>
+              <Window ref={sortingWindowRef} open={sortingWindowOpen}>
                 <WindowTitle>{t("sorting")}</WindowTitle>
                 <WindowBody>
                   {listForSorting.map((obj, index) => (
