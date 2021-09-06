@@ -13,7 +13,6 @@ import { Card } from '../../globalStyles';
 import { Balance } from '../../types/balance';
 import { DepositProgramForm } from './DepositProgramForm';
 import * as Styled from './Styled.elements';
-import { AddDepositModel, DepositProgramFormPropsType, ViewDepositModel } from './DepositProgramForm/types';
 
 export const AdminDepositsPrograms = () => {
   const { t } = useTranslation();
@@ -133,7 +132,7 @@ export const AdminDepositsPrograms = () => {
   ]);
   const [loading, setLoading] = useState(true);
 
-  const [openNewProgram, setOpenNewProgram] = useState(true);
+  const [openNewProgram, setOpenNewProgram] = useState(false);
 
   const [totalProps, setTotalProps] = useState<number>(0);
   const [programList, setProgramList] = useState<any[]>([]);
@@ -376,6 +375,9 @@ const TableHeadItem = styled.li`
   }
   &:nth-child(4) {
     max-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     @media (max-width: 480px) {
       display: none;
     }

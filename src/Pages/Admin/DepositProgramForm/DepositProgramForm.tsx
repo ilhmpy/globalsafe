@@ -9,9 +9,8 @@ import { Select } from '../../../components/Select/Select3';
 import { Switcher } from '../../../components/Switcher';
 import { AppContext } from '../../../context/HubContext';
 import { BalanceKind } from '../../../enums/balanceKind';
-import { DepositKind } from '../../../enums/depositKind';
-import { LanguageCode } from '../../../enums/languageCode';
-import { AddDepositModel, DepositProgramFormPropsType, ViewDepositModel } from './types';
+import { defaultFormState } from './helpers';
+import { AddDepositModel, DepositProgramFormPropsType } from './types';
 
 // eslint-disable-next-line react/prop-types
 export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNewProgram }) => {
@@ -37,72 +36,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
   const [loading, setLoading] = useState(true);
   const depositKindList: string[] = ['Рассчетная', 'Фиксированная'];
 
-  const [program, setProgram] = useState<AddDepositModel>({
-    Language: LanguageCode.Russian,
-    activeWif: '',
-    affiliateRatio: [
-      [
-        [4, 0.033],
-        [2, 0.05],
-        [1, 0.04],
-      ],
-      [
-        [4, 0.033],
-        [2, 0.05],
-        [1, 0.04],
-      ],
-      [
-        [4, 0.033],
-        [2, 0.05],
-        [1, 0.04],
-      ],
-      [
-        [4, 0.033],
-        [2, 0.05],
-        [1, 0.04],
-      ],
-      [
-        [4, 0.033],
-        [2, 0.05],
-        [1, 0.04],
-      ],
-      [
-        [4, 0.033],
-        [2, 0.05],
-        [1, 0.04],
-      ],
-      [
-        [4, 0.033],
-        [2, 0.05],
-        [1, 0.04],
-      ],
-      [
-        [4, 0.033],
-        [2, 0.05],
-        [1, 0.04],
-      ],
-    ],
-    balanceKind: BalanceKind.CWD,
-    depositKind: DepositKind.Fixed,
-    description: 'test description',
-    duration: 30,
-    exchanges: [],
-    isActive: true,
-    isInstant: true,
-    isPublic: true,
-    maxAmount: 1000000,
-    memoWif: '',
-    minAmount: 100000,
-    name: 'test program',
-    paymentsDays: null,
-    paymentsInterval: 30,
-    paymentsOffset: 0,
-    price: null,
-    priceKind: null,
-    ratio: 1.1,
-    referenceAccount: 'ugl-test',
-    referenceCode: null,
-  });
+  const [program, setProgram] = useState<AddDepositModel>(defaultFormState);
 
   async function createProgram() {
     console.log('1111111111~~~~~~~~~~~~~~~~~~start');
@@ -114,17 +48,18 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
 
     setProgramList([]);
     setLoading(true);
-    console.log(getArr(tableState));
-    // try {
-    //   const res = await hubConnection.invoke<ViewDepositModel>('CreateDeposit', {
-    //     ...program,
-    //     affiliateRatio: getArr(tableState),
-    //   });
+    
+    try {
+      const res = await hubConnection.invoke<any>('CreateDeposit', {
+        ...program,
+        affiliateRatio: getArr(tableState),
+      });
 
-    //   console.log('createProgram ~ res', res);
-    // } catch (err) {
-    //   console.log(err);
-    // }
+      console.log('createProgram ~ res', res);
+    } catch (err) {
+      setIsModalError(true);
+      console.log(err);
+    }
   }
   type ColumnObjectType = {
     '0': string;
@@ -161,31 +96,19 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
   };
 
   const getArr = (obj: any) => {
-    const affilateArray = new Array(8).fill([]);
+    const affilateArray = [];
     const startArr = Object.values(obj.start);
-    startArr.forEach((value, i) => {
-      affilateArray[i].push([1, value]);
-      console.log(affilateArray[i]);
-    });
+    const expertArr = Object.values(obj.expert);
+    const infinityArr = Object.values(obj.infinity);
 
-    // for (let index = 0; index < startArr.length; index++) {
-    //   const element = startArr[index];
-    //   affilateArray[index].push([1, element]);
-    // }
-
-    Object.values(obj.expert).forEach((value, i) => {
-      affilateArray[i].push([2, value]);
-    });
-
-    Object.values(obj.infinity).forEach((value, i) => {
-      affilateArray[i].push([4, value]);
-    });
-
+    for (let i = 0; i < 8; i++) {
+      affilateArray.push([[1, startArr[i]],[2, expertArr[i]],[4, infinityArr[i]]]);
+    }
+    
     return affilateArray;
   };
 
   const [tableState, setTableState] = useState(getObj(program.affiliateRatio));
-  console.log('tableState', tableState);
 
   return (
     <Container>
@@ -198,6 +121,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
           <InputGroup>
             <Label>{t('depositsPrograms.programName')}</Label>
             <Input
+              placeholder="-"
               name="name"
               value={program.name}
               onChange={({ target: { name, value } }) => setProgram({ ...program, [name]: value })}
@@ -219,6 +143,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
           <InputGroup>
             <Label>{t('depositsPrograms.description')}</Label>
             <Text
+              placeholder="-"
               name="description"
               value={program.description}
               onChange={(e) => {
@@ -257,7 +182,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
               CWD
               disabled={BalanceKind[program.balanceKind] === 'CWD'}
               name="exchanges"
-              value={program.exchanges.length && program.exchanges[0].Rate}
+              value={program.exchanges.length ? program.exchanges[0].Rate : ""}
               onChange={({ target: { name, value } }) => {
                 setProgram({
                   ...program,
@@ -272,6 +197,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
           <InputGroup>
             <Label>{t('depositsPrograms.minAmount')}</Label>
             <Input
+              placeholder="-"
               name="minAmount"
               value={program.minAmount}
               onChange={({ target: { name, value } }) => {
@@ -282,6 +208,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
           <InputGroup>
             <Label>{t('depositsPrograms.maxAmount')}</Label>
             <Input
+              placeholder="-"
               name="maxAmount"
               value={program.maxAmount}
               onChange={({ target: { name, value } }) => {
@@ -295,6 +222,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
           <InputGroup>
             <Label>{t('depositsPrograms.depositTerm')}</Label>
             <Input
+              placeholder="-"
               name="duration"
               value={program.duration}
               onChange={({ target: { name, value } }) => {
@@ -308,6 +236,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
           <InputGroup>
             <Label>{t('depositsPrograms.startPayments')}</Label>
             <Input
+              placeholder="-"
               name="paymentsOffset"
               value={program.paymentsOffset}
               onChange={({ target: { name, value } }) => {
@@ -321,6 +250,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
           <InputGroup>
             <Label>{t('depositsPrograms.paymentInterval')}</Label>
             <Input
+              placeholder="-"
               name="paymentsInterval"
               value={program.paymentsInterval}
               onChange={({ target: { name, value } }) => {
@@ -334,6 +264,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
           <InputGroup>
             <Label>{t('depositsPrograms.paymentsDays')}</Label>
             <Input
+              placeholder="-"
               name="paymentsDays"
               value={program.paymentsDays as string}
               onChange={({ target: { name, value } }) => {
@@ -362,6 +293,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
           <InputGroup>
             <Label>{t('depositsPrograms.clientYield')}</Label>
             <Input
+              placeholder="-"
               name="ratio"
               value={program.ratio}
               onChange={({ target: { name, value } }) => {
@@ -399,6 +331,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 <InputGroup>
                   <Label>1 {t('depositsPrograms.line')}</Label>
                   <Input
+                    placeholder="-"
                     value={tableState.start[0]}
                     onChange={({ target: { value } }) =>
                       setTableState({
@@ -416,6 +349,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 <InputGroup>
                   <Label>2 {t('depositsPrograms.line')}</Label>
                   <Input
+                    placeholder="-"
                     value={tableState.start[1]}
                     onChange={({ target: { value } }) =>
                       setTableState({
@@ -433,6 +367,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 <InputGroup>
                   <Label>3 {t('depositsPrograms.line')}</Label>
                   <Input
+                    placeholder="-"
                     value={tableState.start[2]}
                     onChange={({ target: { value } }) =>
                       setTableState({
@@ -450,6 +385,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 <InputGroup>
                   <Label>4 {t('depositsPrograms.line')}</Label>
                   <Input
+                    placeholder="-"
                     value={tableState.start[3]}
                     onChange={({ target: { value } }) =>
                       setTableState({
@@ -467,6 +403,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 <InputGroup>
                   <Label>5 {t('depositsPrograms.line')}</Label>
                   <Input
+                    placeholder="-"
                     value={tableState.start[4]}
                     onChange={({ target: { value } }) =>
                       setTableState({
@@ -484,6 +421,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 <InputGroup>
                   <Label>6 {t('depositsPrograms.line')}</Label>
                   <Input
+                    placeholder="-"
                     value={tableState.start[5]}
                     onChange={({ target: { value } }) =>
                       setTableState({
@@ -501,6 +439,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 <InputGroup>
                   <Label>7 {t('depositsPrograms.line')}</Label>
                   <Input
+                    placeholder="-"
                     value={tableState.start[6]}
                     onChange={({ target: { value } }) =>
                       setTableState({
@@ -518,6 +457,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 <InputGroup>
                   <Label>8 {t('depositsPrograms.line')}</Label>
                   <Input
+                    placeholder="-"
                     value={tableState.start[7]}
                     onChange={({ target: { value } }) =>
                       setTableState({
@@ -541,6 +481,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 <InputGroup>
                   <Label>1 {t('depositsPrograms.line')}</Label>
                   <Input
+                    placeholder="-"
                     value={tableState.expert[0]}
                     onChange={({ target: { value } }) =>
                       setTableState({
@@ -558,6 +499,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 <InputGroup>
                   <Label>2 {t('depositsPrograms.line')}</Label>
                   <Input
+                    placeholder="-"
                     value={tableState.expert[1]}
                     onChange={({ target: { value } }) =>
                       setTableState({
@@ -575,6 +517,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 <InputGroup>
                   <Label>3 {t('depositsPrograms.line')}</Label>
                   <Input
+                    placeholder="-"
                     value={tableState.expert[2]}
                     onChange={({ target: { value } }) =>
                       setTableState({
@@ -592,6 +535,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 <InputGroup>
                   <Label>4 {t('depositsPrograms.line')}</Label>
                   <Input
+                    placeholder="-"
                     value={tableState.expert[3]}
                     onChange={({ target: { value } }) =>
                       setTableState({
@@ -609,6 +553,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 <InputGroup>
                   <Label>5 {t('depositsPrograms.line')}</Label>
                   <Input
+                    placeholder="-"
                     value={tableState.expert[4]}
                     onChange={({ target: { value } }) =>
                       setTableState({
@@ -626,6 +571,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 <InputGroup>
                   <Label>6 {t('depositsPrograms.line')}</Label>
                   <Input
+                    placeholder="-"
                     value={tableState.expert[5]}
                     onChange={({ target: { value } }) =>
                       setTableState({
@@ -643,6 +589,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 <InputGroup>
                   <Label>7 {t('depositsPrograms.line')}</Label>
                   <Input
+                    placeholder="-"
                     value={tableState.expert[6]}
                     onChange={({ target: { value } }) =>
                       setTableState({
@@ -660,6 +607,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 <InputGroup>
                   <Label>8 {t('depositsPrograms.line')}</Label>
                   <Input
+                    placeholder="-"
                     value={tableState.expert[7]}
                     onChange={({ target: { value } }) =>
                       setTableState({
@@ -683,6 +631,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 <InputGroup>
                   <Label>1 {t('depositsPrograms.line')}</Label>
                   <Input
+                    placeholder="-"
                     value={tableState.infinity[0]}
                     onChange={({ target: { value } }) =>
                       setTableState({
@@ -700,6 +649,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 <InputGroup>
                   <Label>2 {t('depositsPrograms.line')}</Label>
                   <Input
+                    placeholder="-"
                     value={tableState.infinity[1]}
                     onChange={({ target: { value } }) =>
                       setTableState({
@@ -717,6 +667,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 <InputGroup>
                   <Label>3 {t('depositsPrograms.line')}</Label>
                   <Input
+                    placeholder="-"
                     value={tableState.infinity[2]}
                     onChange={({ target: { value } }) =>
                       setTableState({
@@ -734,6 +685,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 <InputGroup>
                   <Label>4 {t('depositsPrograms.line')}</Label>
                   <Input
+                    placeholder="-"
                     value={tableState.infinity[3]}
                     onChange={({ target: { value } }) =>
                       setTableState({
@@ -751,6 +703,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 <InputGroup>
                   <Label>5 {t('depositsPrograms.line')}</Label>
                   <Input
+                    placeholder="-"
                     value={tableState.infinity[4]}
                     onChange={({ target: { value } }) =>
                       setTableState({
@@ -768,6 +721,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 <InputGroup>
                   <Label>6 {t('depositsPrograms.line')}</Label>
                   <Input
+                    placeholder="-"
                     value={tableState.infinity[5]}
                     onChange={({ target: { value } }) =>
                       setTableState({
@@ -785,6 +739,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 <InputGroup>
                   <Label>7 {t('depositsPrograms.line')}</Label>
                   <Input
+                    placeholder="-"
                     value={tableState.infinity[6]}
                     onChange={({ target: { value } }) =>
                       setTableState({
@@ -802,6 +757,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 <InputGroup>
                   <Label>8 {t('depositsPrograms.line')}</Label>
                   <Input
+                    placeholder="-"
                     value={tableState.infinity[7]}
                     onChange={({ target: { value } }) =>
                       setTableState({
@@ -823,6 +779,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
           <InputGroup>
             <Label>{t('depositsPrograms.depositAccount')}</Label>
             <Input
+              placeholder="-"
               name="referenceAccount"
               value={program.referenceAccount}
               onChange={({ target: { name, value } }) => {
@@ -835,6 +792,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
           <InputGroup>
             <Label>{t('depositsPrograms.transferCode')}</Label>
             <Input
+              placeholder="-"
               name="referenceCode"
               value={program.referenceCode as string}
               onChange={({ target: { name, value } }) => {
@@ -847,6 +805,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
           <InputGroup lg>
             <Label>{t('depositsPrograms.activeKey')}</Label>
             <Input
+              placeholder="-"
               name="activeWif"
               value={program.activeWif}
               onChange={({ target: { name, value } }) => {
@@ -859,6 +818,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
           <InputGroup lg>
             <Label>{t('depositsPrograms.keyNotes')}</Label>
             <Input
+              placeholder="-"
               name="memoWif"
               value={program.memoWif}
               onChange={({ target: { name, value } }) => {
@@ -872,15 +832,31 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
           <InputGroup>
             <Label>{t('depositsPrograms.depositActivationCost')}</Label>
             <Select
-              options={langList}
-              selectedOption={checkList}
-              setSelectedOption={setCheckList}
+              options={
+                Object.keys(BalanceKind)
+                  .map((key: any) => BalanceKind[key])
+                  .filter((value) => typeof value === 'string') as string[]
+              }
+              selectedOption={program.priceKind ? BalanceKind[program.priceKind] : ''}
+              setSelectedOption={(value: any) => {
+                setProgram({
+                  ...program,
+                  priceKind: +BalanceKind[value],
+                });
+              }}
             />
           </InputGroup>
           <Hr />
           <InputGroup>
             <Label>{t('depositsPrograms.value')}</Label>
-            <Input />
+            <Input 
+              placeholder="-"
+              name="price"
+              value={program.price ? program.price : ''}
+              onChange={({ target: { name, value } }) => {
+                setProgram({ ...program, [name]: +value });
+              }}
+            />
           </InputGroup>
         </Row>
 
@@ -922,8 +898,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
             danger
             maxWidth={130}
             onClick={async () => {
-              // setIsOpenSaveConfirm(true);
-              await createProgram();
+              setIsOpenSaveConfirm(true);
             }}
           >
             {t('depositsPrograms.save')}
@@ -944,6 +919,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                   onClick={() => {
                     setIsOpenSaveConfirm(false);
                     setIsSavingSuccess(true);
+                    createProgram();
                   }}
                 >
                   {t('depositsPrograms.save')}
@@ -968,11 +944,14 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                   onClick={() => {
                     setIsOpenCancelConfirm(false);
                     setIsSavingCanceled(true);
+                    setProgram(defaultFormState);
                   }}
                 >
                   {t('depositsPrograms.dontSave')}
                 </Button>
-                <Button dangerOutline maxWidth={200} onClick={() => setIsOpenCancelConfirm(false)}>
+                <Button dangerOutline maxWidth={200} onClick={() => {
+                      setIsOpenCancelConfirm(false);
+                    }}>
                   {t('depositsPrograms.return')}
                 </Button>
               </ModalButtons>
@@ -981,7 +960,10 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
         )}
 
         {isSavingSuccess && (
-          <Modal onClose={() => setIsSavingSuccess(false)}>
+          <Modal onClose={() => {
+            setIsSavingSuccess(false);
+            setOpenNewProgram(false);
+          }}>
             <ModalBlock sm>
               <ModalTitle>{t('alert.success')} !</ModalTitle>
               <ModalContent>{t('depositsPrograms.depositProgramSuccessfullySaved')}</ModalContent>
@@ -989,7 +971,10 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
           </Modal>
         )}
         {isSavingCanceled && (
-          <Modal onClose={() => setIsSavingCanceled(false)}>
+          <Modal onClose={() => {
+              setIsSavingCanceled(false);
+              setOpenNewProgram(false);
+            }}>
             <ModalBlock sm>
               <ModalTitle>{t('depositsPrograms.changesCanceled')}</ModalTitle>
               <ModalContent>{t('depositsPrograms.changesCanceledSuccessfully')}</ModalContent>
