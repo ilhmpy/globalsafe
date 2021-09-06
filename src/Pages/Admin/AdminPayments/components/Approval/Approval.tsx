@@ -510,6 +510,7 @@ export const Approval: FC<Props> = ({
     };
   }
 
+  console.log("Robert______________________:::", openDateApproval)
   return (
     <>
       <Modal style={{ display: acceptAll ? "block" : "none"}} onClose={() => setAcceptAll(false)}>
@@ -534,7 +535,7 @@ export const Approval: FC<Props> = ({
             {openDateApproval.from && (
               <>
                 {`${moment(openDateApproval.from).format('DD.MM.YYYY')} - ${moment(
-                  openDateApproval.to
+                  openDateApproval.to || new Date()
                 ).format('DD.MM.YYYY')}`}
               </>
             )}
