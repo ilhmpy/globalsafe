@@ -21,7 +21,9 @@ export const Select: FC<SelectProps> = ({
   const [activeList, setActiveList] = useState(0);
 
   const ref = useRef<HTMLDivElement>(null);
-  const toggling = () => {setIsOpen(!isOpen)};
+  const toggling = () => {
+    setIsOpen(!isOpen);
+  };
 
   const onOptionClicked = (value: string) => {
     setSelectedOption(value);
@@ -49,10 +51,10 @@ export const Select: FC<SelectProps> = ({
       const value = options[activeList];
       onOptionClicked(value);
     }
-  }; 
+  };
 
   return (
-    <div>
+    <div style={{ position: 'relative' }}>
       <Styled.DropDownContainer ref={ref}>
         <Styled.DropDownHeader tabIndex={0} onClick={toggling} onKeyDown={onKeyDown}>
           {selectedOption || ''}

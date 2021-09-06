@@ -2,6 +2,7 @@ import { HubConnectionState } from '@microsoft/signalr';
 import { FC, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+import { ReactComponent as CircleOk } from '../../../assets/svg/circleOk.svg';
 import { ReactComponent as Stroke } from '../../../assets/svg/leftStroke.svg';
 import { Button } from '../../../components/Button/Button';
 import { Modal } from '../../../components/Modal/Modal';
@@ -48,7 +49,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
 
     setProgramList([]);
     setLoading(true);
-    
+
     try {
       const res = await hubConnection.invoke<any>('CreateDeposit', {
         ...program,
@@ -102,9 +103,13 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
     const infinityArr = Object.values(obj.infinity);
 
     for (let i = 0; i < 8; i++) {
-      affilateArray.push([[1, startArr[i]],[2, expertArr[i]],[4, infinityArr[i]]]);
+      affilateArray.push([
+        [1, startArr[i]],
+        [2, expertArr[i]],
+        [4, infinityArr[i]],
+      ]);
     }
-    
+
     return affilateArray;
   };
 
@@ -126,6 +131,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
               value={program.name}
               onChange={({ target: { name, value } }) => setProgram({ ...program, [name]: value })}
             />
+            <Circle hide={true} onClick={undefined} />
           </InputGroup>
           <InputGroup>
             <Label>{t('depositsPrograms.language')}</Label>
@@ -136,6 +142,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 setProgram({ ...program, Language: langList.indexOf(val) });
               }}
             />
+            <Circle hide onClick={undefined} />
           </InputGroup>
         </Row>
 
@@ -150,6 +157,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 setProgram({ ...program, description: e.target.value });
               }}
             />
+            <Circle lg onClick={undefined} />
           </InputGroup>
         </Row>
 
@@ -171,6 +179,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 });
               }}
             />
+            <Circle onClick={undefined} />
           </InputGroup>
 
           <Hr />
@@ -182,7 +191,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
               CWD
               disabled={BalanceKind[program.balanceKind] === 'CWD'}
               name="exchanges"
-              value={program.exchanges.length ? program.exchanges[0].Rate : ""}
+              value={program.exchanges.length ? program.exchanges[0].Rate : ''}
               onChange={({ target: { name, value } }) => {
                 setProgram({
                   ...program,
@@ -190,6 +199,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 });
               }}
             />
+            {/* <Circle onClick={undefined} /> */}
           </InputGroup>
         </Row>
 
@@ -204,6 +214,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 setProgram({ ...program, [name]: +value });
               }}
             />
+            <Circle onClick={undefined} />
           </InputGroup>
           <InputGroup>
             <Label>{t('depositsPrograms.maxAmount')}</Label>
@@ -229,6 +240,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 setProgram({ ...program, [name]: +value });
               }}
             />
+            <Circle onClick={undefined} />
           </InputGroup>
         </Row>
 
@@ -243,6 +255,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 setProgram({ ...program, [name]: +value });
               }}
             />
+            <Circle onClick={undefined} />
           </InputGroup>
         </Row>
 
@@ -257,6 +270,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 setProgram({ ...program, [name]: +value });
               }}
             />
+            <Circle onClick={undefined} />
           </InputGroup>
         </Row>
 
@@ -271,6 +285,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 setProgram({ ...program, [name]: value });
               }}
             />
+            <Circle onClick={undefined} />
           </InputGroup>
         </Row>
 
@@ -288,6 +303,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 });
               }}
             />
+            <Circle onClick={undefined} />
           </InputGroup>
           <Hr />
           <InputGroup>
@@ -300,6 +316,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 setProgram({ ...program, [name]: +value });
               }}
             />
+            <Circle onClick={undefined} />
           </InputGroup>
         </Row>
 
@@ -343,6 +360,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
+                  <Circle tb onClick={undefined} />
                 </InputGroup>
               </Row>
               <Row>
@@ -361,6 +379,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
+                  <Circle tb onClick={undefined} />
                 </InputGroup>
               </Row>
               <Row>
@@ -379,6 +398,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
+                  <Circle tb onClick={undefined} />
                 </InputGroup>
               </Row>
               <Row>
@@ -397,6 +417,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
+                  <Circle tb onClick={undefined} />
                 </InputGroup>
               </Row>
               <Row>
@@ -415,6 +436,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
+                  <Circle tb onClick={undefined} />
                 </InputGroup>
               </Row>
               <Row>
@@ -433,6 +455,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
+                  <Circle tb onClick={undefined} />
                 </InputGroup>
               </Row>
               <Row>
@@ -451,6 +474,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
+                  <Circle tb onClick={undefined} />
                 </InputGroup>
               </Row>
               <Row>
@@ -469,6 +493,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
+                  <Circle tb onClick={undefined} />
                 </InputGroup>
               </Row>
             </ColumnGroup>
@@ -493,6 +518,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
+                  <Circle tb onClick={undefined} />
                 </InputGroup>
               </Row>
               <Row>
@@ -511,6 +537,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
+                  <Circle tb onClick={undefined} />
                 </InputGroup>
               </Row>
               <Row>
@@ -529,6 +556,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
+                  <Circle tb onClick={undefined} />
                 </InputGroup>
               </Row>
               <Row>
@@ -547,6 +575,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
+                  <Circle tb onClick={undefined} />
                 </InputGroup>
               </Row>
               <Row>
@@ -565,6 +594,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
+                  <Circle tb onClick={undefined} />
                 </InputGroup>
               </Row>
               <Row>
@@ -583,6 +613,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
+                  <Circle tb onClick={undefined} />
                 </InputGroup>
               </Row>
               <Row>
@@ -601,6 +632,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
+                  <Circle tb onClick={undefined} />
                 </InputGroup>
               </Row>
               <Row>
@@ -619,6 +651,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
+                  <Circle tb onClick={undefined} />
                 </InputGroup>
               </Row>
             </ColumnGroup>
@@ -643,6 +676,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
+                  <Circle tb onClick={undefined} />
                 </InputGroup>
               </Row>
               <Row>
@@ -661,6 +695,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
+                  <Circle tb onClick={undefined} />
                 </InputGroup>
               </Row>
               <Row>
@@ -679,6 +714,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
+                  <Circle tb onClick={undefined} />
                 </InputGroup>
               </Row>
               <Row>
@@ -697,6 +733,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
+                  <Circle tb onClick={undefined} />
                 </InputGroup>
               </Row>
               <Row>
@@ -715,6 +752,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
+                  <Circle tb onClick={undefined} />
                 </InputGroup>
               </Row>
               <Row>
@@ -733,6 +771,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
+                  <Circle tb onClick={undefined} />
                 </InputGroup>
               </Row>
               <Row>
@@ -751,6 +790,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
+                  <Circle tb onClick={undefined} />
                 </InputGroup>
               </Row>
               <Row>
@@ -769,6 +809,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
+                  <Circle tb onClick={undefined} />
                 </InputGroup>
               </Row>
             </ColumnGroup>
@@ -786,6 +827,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 setProgram({ ...program, [name]: value });
               }}
             />
+            <Circle bld onClick={undefined} />
           </InputGroup>
         </Row>
         <Row>
@@ -799,6 +841,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 setProgram({ ...program, [name]: value });
               }}
             />
+            <Circle onClick={undefined} />
           </InputGroup>
         </Row>
         <Row>
@@ -812,6 +855,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 setProgram({ ...program, [name]: value });
               }}
             />
+            <Circle lg onClick={undefined} />
           </InputGroup>
         </Row>
         <Row>
@@ -825,6 +869,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 setProgram({ ...program, [name]: value });
               }}
             />
+            <Circle lg onClick={undefined} />
           </InputGroup>
         </Row>
 
@@ -845,11 +890,12 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 });
               }}
             />
+            <Circle onClick={undefined} />
           </InputGroup>
           <Hr />
           <InputGroup>
             <Label>{t('depositsPrograms.value')}</Label>
-            <Input 
+            <Input
               placeholder="-"
               name="price"
               value={program.price ? program.price : ''}
@@ -857,6 +903,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 setProgram({ ...program, [name]: +value });
               }}
             />
+            <Circle onClick={undefined} />
           </InputGroup>
         </Row>
 
@@ -949,9 +996,13 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 >
                   {t('depositsPrograms.dontSave')}
                 </Button>
-                <Button dangerOutline maxWidth={200} onClick={() => {
-                      setIsOpenCancelConfirm(false);
-                    }}>
+                <Button
+                  dangerOutline
+                  maxWidth={200}
+                  onClick={() => {
+                    setIsOpenCancelConfirm(false);
+                  }}
+                >
                   {t('depositsPrograms.return')}
                 </Button>
               </ModalButtons>
@@ -960,10 +1011,12 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
         )}
 
         {isSavingSuccess && (
-          <Modal onClose={() => {
-            setIsSavingSuccess(false);
-            setOpenNewProgram(false);
-          }}>
+          <Modal
+            onClose={() => {
+              setIsSavingSuccess(false);
+              setOpenNewProgram(false);
+            }}
+          >
             <ModalBlock sm>
               <ModalTitle>{t('alert.success')} !</ModalTitle>
               <ModalContent>{t('depositsPrograms.depositProgramSuccessfullySaved')}</ModalContent>
@@ -971,10 +1024,12 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
           </Modal>
         )}
         {isSavingCanceled && (
-          <Modal onClose={() => {
+          <Modal
+            onClose={() => {
               setIsSavingCanceled(false);
               setOpenNewProgram(false);
-            }}>
+            }}
+          >
             <ModalBlock sm>
               <ModalTitle>{t('depositsPrograms.changesCanceled')}</ModalTitle>
               <ModalContent>{t('depositsPrograms.changesCanceledSuccessfully')}</ModalContent>
@@ -1098,6 +1153,13 @@ const ColumnHead = styled.p`
   }
 `;
 
+const Circle = styled(CircleOk)<{ tb?: boolean; lg?: boolean; bld?: boolean; hide?: boolean }>`
+  position: absolute;
+  display: ${(props) => (props.hide ? 'none' : 'block')};
+  left: ${(props) => (props.lg ? '79%' : props.tb ? '101%' : '34%')};
+  top: ${(props) => (props.bld ? '55px' : '35px')};
+`;
+
 const Table = styled.div`
   display: flex;
   flex-direction: column;
@@ -1207,6 +1269,7 @@ const Label = styled.span`
 `;
 
 const Input = styled.input<{ CWD?: boolean }>`
+  position: relative;
   width: 100%;
   border: 1px solid rgba(86, 101, 127, 0.3);
   box-sizing: border-box;
@@ -1236,6 +1299,7 @@ const Input = styled.input<{ CWD?: boolean }>`
 `;
 
 const Text = styled.textarea`
+  position: relative;
   resize: none;
   width: 100%;
   border: 1px solid rgba(86, 101, 127, 0.3);
