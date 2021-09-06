@@ -510,7 +510,6 @@ export const Approval: FC<Props> = ({
     };
   }
 
-  console.log("Robert______________________:::", openDateApproval)
   return (
     <>
       <Modal style={{ display: acceptAll ? "block" : "none"}} onClose={() => setAcceptAll(false)}>
