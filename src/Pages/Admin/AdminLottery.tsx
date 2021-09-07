@@ -186,8 +186,18 @@ export const AdminLottery = () => {
         .invoke<RootLottery>(
           'GetAllPrizes',
           name ? name : null,
-          openDate.from ? openDate.from : null,
-          openDate.to ? openDate.to : null,
+          openDate.from
+          ? moment(openDate.from)
+              .utcOffset('+00:00')
+              .set({ hour: 0, minute: 0, second: 0 })
+              .toDate()
+          : null,
+          openDate.to
+          ? moment(openDate.to)
+              .utcOffset('+00:00')
+              .set({ hour: 23, minute: 59, second: 59 })
+              .toDate()
+          : null,
           checkList.length ? checkList.map((i: any) => i.id) : null,
           (currentPage - 1) * pageLength,
           pageLength,
