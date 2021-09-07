@@ -179,6 +179,18 @@ export const AdminDeposit = () => {
     }
 
     if (hubConnection) {
+      const modifiedSorting = [...sorting];
+      if(openDate.from || openDate.to || closeDate.from || closeDate.to) {
+        if(!modifiedSorting.some(sortItem => sortItem.FieldName === 'paymentDate')) {
+          modifiedSorting.push({
+            ConditionWeight: 2,
+            OrderType: 1,
+            FieldName: 'paymentDate',
+          })
+        }
+      };
+
+
       hubConnection
         .invoke<RootPayments>(
           'GetUsersDeposits',
@@ -218,7 +230,7 @@ export const AdminDeposit = () => {
           null,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting
+          modifiedSorting
         )
         .then((res) => {
           setTotalList(res.totalRecords);
