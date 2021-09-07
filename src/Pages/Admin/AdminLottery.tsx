@@ -176,7 +176,7 @@ export const AdminLottery = () => {
       if(!modifiedSorting.some(sortItem => sortItem.FieldName === 'viewPrizeDrawLogModel.drawDate')) {
         modifiedSorting.push({
           ConditionWeight: 2,
-          OrderType: 1,
+          OrderType: 2,
           FieldName: 'viewPrizeDrawLogModel.drawDate',
         })
       }
