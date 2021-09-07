@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
@@ -14,6 +14,7 @@ import { FakeInput } from '../../components/UI/FakeInput';
 import { Loading } from '../../components/UI/Loading';
 import { AppContext } from '../../context/HubContext';
 import { Card } from '../../globalStyles';
+import useOnClickOutside from '../../hooks/useOutsideHook';
 import { OpenDate } from '../../types/dates';
 import {
   CollectionGetDraw,
@@ -52,6 +53,9 @@ export const AdminLottery = () => {
   const { t } = useTranslation();
 
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
+  const sortingWindowRef = useRef<HTMLDivElement | null>(null);
+
+  useOnClickOutside(sortingWindowRef, () => setSortingWindowOpen(false))
 
   const sortings = [
     t('descendDate'),
@@ -166,6 +170,17 @@ export const AdminLottery = () => {
     setLoading(true);
     setLotteryList(null);
     setLotteryArrList([]);
+    // Add Sorting condition if viewPrizeDrawLogModel.drawDate Filter field has value
+    const modifiedSorting = [...sorting];
+    if(openDate.to || openDate.from) {
+      if(!modifiedSorting.some(sortItem => sortItem.FieldName === 'viewPrizeDrawLogModel.drawDate')) {
+        modifiedSorting.push({
+          ConditionWeight: 2,
+          OrderType: 1,
+          FieldName: 'viewPrizeDrawLogModel.drawDate',
+        })
+      }
+    };
     if (hubConnection) {
       hubConnection
         .invoke<RootLottery>(
@@ -182,16 +197,11 @@ export const AdminLottery = () => {
               .utcOffset('+00:00')
               .set({ hour: 23, minute: 59, second: 59 })
               .toDate()
-          : openDate.from
-          ? moment(openDate.from)
-              .utcOffset('+00:00')
-              .set({ hour: 23, minute: 59, second: 59 })
-              .toDate()
           : null,
           checkList.length ? checkList.map((i: any) => i.id) : null,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting
+          modifiedSorting
         )
         .then((res) => {
           setTotalLottery(res.totalRecords);
@@ -400,7 +410,7 @@ export const AdminLottery = () => {
                           onClick={() => setSortingWindowOpen((prev) => !prev)}
                         />
                       </BurgerButton>
-                      <Window open={sortingWindowOpen}>
+                      <Window ref={sortingWindowRef} open={sortingWindowOpen}>
                         <WindowTitle>{t('sorting')}</WindowTitle>
                         <WindowBody>
                           {listForSorting.map((obj, index) => (

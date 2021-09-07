@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useState } from 'react';
+import { FC, useContext, useEffect, useRef, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
@@ -11,6 +11,7 @@ import { TestInput } from '../../../../../components/UI/DayPicker';
 import { Loading } from '../../../../../components/UI/Loading';
 import { AppContext } from '../../../../../context/HubContext';
 import { Card } from '../../../../../globalStyles';
+import useOnClickOutside from '../../../../../hooks/useOutsideHook';
 import { CollectionAnalitics } from '../../../../../types/analitics';
 import { OpenDate } from '../../../../../types/dates';
 import { CollectionListDeposits } from '../../../../../types/deposits';
@@ -69,6 +70,9 @@ export const Delayed: FC<Props> = ({ listDeposits }: Props) => {
   const sortings = [t("nameSort"), t("nameSort2"), t("descendOpenDateDeposit"), t("ascendOpenDateDeposit"), t("descendCloseDateDeposit"), t("ascendCloseDateDeposit"), t("descendPaySum"), t("ascendPaySum")];
 
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
+  const sortingWindowRef = useRef<HTMLDivElement | null>(null);
+
+  useOnClickOutside(sortingWindowRef, () => setSortingWindowOpen(false));
   const [sorting, setSorting] = useState<SortingType[]>([]);
   const [listForSorting, setListForSorting] = useState<SelectValues[]>([
     {
@@ -159,6 +163,27 @@ export const Delayed: FC<Props> = ({ listDeposits }: Props) => {
     setList([]);
     setCurrentPage(1);
 
+     // Add Sorting condition if viewPrizeDrawLogModel.drawDate Filter field has value
+     const modifiedSorting = [...sorting];
+     if(openDate.from || openDate.to) {
+       if(!modifiedSorting.some(sortItem => sortItem.FieldName === 'creationDate')) {
+         modifiedSorting.push({
+           ConditionWeight: 2,
+           OrderType: 1,
+           FieldName: 'creationDate',
+         })
+       }
+     };
+     if(closeDate.from || closeDate.to) {
+      if(!modifiedSorting.some(sortItem => sortItem.FieldName === 'endDate')) {
+        modifiedSorting.push({
+          ConditionWeight: 1,
+          OrderType: 1,
+          FieldName: 'endDate',
+        })
+      }
+    };
+
     if (hubConnection) {
       setLoading(true);
       hubConnection
@@ -177,7 +202,7 @@ export const Delayed: FC<Props> = ({ listDeposits }: Props) => {
           true,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting
+          modifiedSorting
         )
         .then((res) => {
           setList(res.collection);
@@ -357,7 +382,7 @@ export const Delayed: FC<Props> = ({ listDeposits }: Props) => {
                   onClick={() => setSortingWindowOpen((prev) => !prev)}
                 />
               </BurgerButton>
-              <Window open={sortingWindowOpen}>
+              <Window ref={sortingWindowRef} open={sortingWindowOpen}>
                 <WindowTitle>{t("sorting")}</WindowTitle>
                 <WindowBody>
                   {listForSorting.map((obj, index) => (

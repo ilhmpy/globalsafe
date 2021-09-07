@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { FC, useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
@@ -40,6 +40,7 @@ import {
 import * as Styled from './Styled.elements';
 import { Notify } from '../../../../../types/notify';
 import { Modal } from '../../../../../components/Modal/Modal';
+import useOnClickOutside from '../../../../../hooks/useOutsideHook';
 
 type Props = {
   listDeposits: CollectionListDeposits[];
@@ -87,6 +88,9 @@ export const Approval: FC<Props> = ({
   const [notifications, setNotifications] = useState<Notify[]>([]);
 
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
+  const sortingWindowRef = useRef<HTMLDivElement | null>(null);
+
+  useOnClickOutside(sortingWindowRef, () => setSortingWindowOpen(false));
   const [sorting, setSorting] = useState<SortingType[]>([]);
   const [acceptAll, setAcceptAll] = useState<boolean>(false);
 
@@ -190,6 +194,18 @@ export const Approval: FC<Props> = ({
     setDepositList([]);
     setLoading(true);
 
+    // Add Sorting condition if viewPrizeDrawLogModel.drawDate Filter field has value
+    const modifiedSorting = [...sorting];
+    if(openDateApproval.from || openDateApproval.to) {
+      if(!modifiedSorting.some(sortItem => sortItem.FieldName === 'creationDate')) {
+        modifiedSorting.push({
+          ConditionWeight: 2,
+          OrderType: 1,
+          FieldName: 'creationDate',
+        })
+      }
+    };
+
     if (hubConnection) {
       hubConnection
         .invoke<RootPayments>(
@@ -211,7 +227,7 @@ export const Approval: FC<Props> = ({
           null,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting
+          modifiedSorting
         )
         .then((res) => {
           setTotalDeposits(res.totalRecords);
@@ -290,6 +306,18 @@ export const Approval: FC<Props> = ({
       setDepositList([]);
       setLoading(true); 
 
+      // Add Sorting condition if viewPrizeDrawLogModel.drawDate Filter field has value
+      const modifiedSorting = [...sorting];
+      if(openDateApproval.from || openDateApproval.to) {
+        if(!modifiedSorting.some(sortItem => sortItem.FieldName === 'creationDate')) {
+          modifiedSorting.push({
+            ConditionWeight: 2,
+            OrderType: 1,
+            FieldName: 'creationDate',
+          })
+        }
+      };
+
       hubConnection
         .invoke<RootPayments>(
           'GetUsersDeposits',
@@ -316,7 +344,7 @@ export const Approval: FC<Props> = ({
           null,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting
+          modifiedSorting
         )
         .then((res) => {
           setTotalDeposits(res.totalRecords);
@@ -643,7 +671,7 @@ export const Approval: FC<Props> = ({
                   onClick={() => setSortingWindowOpen((prev) => !prev)}
                 />
               </BurgerButton>
-              <Window open={sortingWindowOpen}>
+              <Window ref={sortingWindowRef} open={sortingWindowOpen}>
                 <WindowTitle>{t('sorting')}</WindowTitle>
                 <WindowBody>
                   {listForSorting.map((obj, index) => (

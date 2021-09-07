@@ -1,5 +1,5 @@
 ﻿import moment from 'moment';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
@@ -16,6 +16,7 @@ import { AppContext } from '../../context/HubContext';
 import { LangualeContext } from '../../context/LangualeContext';
 import { ThemeContext } from '../../context/ThemeContext';
 import { Card } from '../../globalStyles';
+import useOnClickOutside from '../../hooks/useOutsideHook';
 import useWindowSize from '../../hooks/useWindowSize';
 import { OpenDate } from '../../types/dates';
 import { CollectionListDeposits, ListDeposits } from '../../types/deposits';
@@ -180,6 +181,10 @@ export const AdminPay = () => {
   ]);
 
   const [sortingWindowOpenForPay, setSortingWindowOpenForPay] = useState(false);
+  const sortingWindowRefForPay = useRef<HTMLDivElement | null>(null);
+
+  useOnClickOutside(sortingWindowRefForPay, () => setSortingWindowOpenForPay(false));
+
   const [sortingForPay, setSortingForPay] = useState<SortingType[]>([]);
 
   const [listForSortingForPay, setListForSortingForPay] = useState<SelectValues[]>([
@@ -301,7 +306,7 @@ export const AdminPay = () => {
       //   BalanceOperationKind[] kinds,
       //   long skip,
       //   long take);
-
+       
       hubConnection
         .invoke<RootCharges>(
           'GetDepositsCharges',
@@ -314,11 +319,6 @@ export const AdminPay = () => {
             : null,
           openDate.to
             ? moment(openDate.to)
-                .utcOffset('+00:00')
-                .set({ hour: 23, minute: 59, second: 59 })
-                .toDate()
-            : openDate.from
-            ? moment(openDate.from)
                 .utcOffset('+00:00')
                 .set({ hour: 23, minute: 59, second: 59 })
                 .toDate()
@@ -393,11 +393,6 @@ export const AdminPay = () => {
             : null,
           openDate.to
             ? moment(openDate.to)
-                .utcOffset('+00:00')
-                .set({ hour: 23, minute: 59, second: 59 })
-                .toDate()
-            : openDate.from
-            ? moment(openDate.from)
                 .utcOffset('+00:00')
                 .set({ hour: 23, minute: 59, second: 59 })
                 .toDate()
@@ -662,7 +657,7 @@ export const AdminPay = () => {
                   />
                 </BurgerButton>
               </TableHeadItemPaid>
-              <Window open={sortingWindowOpen}>
+              <Window ref={sortingWindowRef} open={sortingWindowOpen}>
                 <WindowTitle>Сортировка</WindowTitle>
                 <WindowBody>
                   {listForSorting.map((obj, index) => (
@@ -718,7 +713,7 @@ export const AdminPay = () => {
                   />
                 </BurgerButton>
               </TableHeadItemPaid>
-              <Window open={sortingWindowOpenForPay}>
+              <Window ref={sortingWindowRefForPay} open={sortingWindowOpenForPay}>
                 <WindowTitle>{t('sorting')}</WindowTitle>
                 <WindowBody>
                   {listForSortingForPay.map((obj, index) => (
