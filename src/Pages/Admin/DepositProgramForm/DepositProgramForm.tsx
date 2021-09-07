@@ -131,7 +131,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
               value={program.name}
               onChange={({ target: { name, value } }) => setProgram({ ...program, [name]: value })}
             />
-            <Circle hide={true} onClick={undefined} />
+            <Circle onClick={undefined} />
           </InputGroup>
           <InputGroup>
             <Label>{t('depositsPrograms.language')}</Label>
@@ -142,7 +142,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 setProgram({ ...program, Language: langList.indexOf(val) });
               }}
             />
-            <Circle hide onClick={undefined} />
+            <Circle onClick={undefined} />
           </InputGroup>
         </Row>
 
@@ -157,7 +157,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 setProgram({ ...program, description: e.target.value });
               }}
             />
-            <Circle lg onClick={undefined} />
+            <Circle txt onClick={undefined} />
           </InputGroup>
         </Row>
 
@@ -199,7 +199,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 });
               }}
             />
-            {/* <Circle onClick={undefined} /> */}
+            <Circle onClick={undefined} />
           </InputGroup>
         </Row>
 
@@ -226,6 +226,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 setProgram({ ...program, [name]: +value });
               }}
             />
+            <Circle onClick={undefined} />
           </InputGroup>
         </Row>
 
@@ -855,7 +856,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 setProgram({ ...program, [name]: value });
               }}
             />
-            <Circle lg onClick={undefined} />
+            <Circle onClick={undefined} />
           </InputGroup>
         </Row>
         <Row>
@@ -869,7 +870,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 setProgram({ ...program, [name]: value });
               }}
             />
-            <Circle lg onClick={undefined} />
+            <Circle onClick={undefined} />
           </InputGroup>
         </Row>
 
@@ -1153,11 +1154,17 @@ const ColumnHead = styled.p`
   }
 `;
 
-const Circle = styled(CircleOk)<{ tb?: boolean; lg?: boolean; bld?: boolean; hide?: boolean }>`
+const Circle = styled(CircleOk)<{ tb?: boolean; txt?: boolean; bld?: boolean; hide?: boolean }>`
   position: absolute;
   display: ${(props) => (props.hide ? 'none' : 'block')};
-  left: ${(props) => (props.lg ? '79%' : props.tb ? '101%' : '34%')};
+  left: ${(props) => (props.txt ? '231%' : '101%')};
   top: ${(props) => (props.bld ? '55px' : '35px')};
+  @media (max-width: 768px) {
+    left: ${(props) => (props.txt ? '172%' : '101%')};
+  }
+  @media (max-width: 576px) {
+    left: 101%;
+  }
 `;
 
 const Table = styled.div`
@@ -1247,6 +1254,7 @@ const Row = styled.div<{ hr?: boolean }>`
 `;
 
 const InputGroup = styled.div<{ lg?: boolean; disabled?: boolean }>`
+  position: relative;
   max-width: ${(props) => (props.lg ? '650px' : '280px')};
   width: 100%;
   display: flex;
@@ -1269,7 +1277,6 @@ const Label = styled.span`
 `;
 
 const Input = styled.input<{ CWD?: boolean }>`
-  position: relative;
   width: 100%;
   border: 1px solid rgba(86, 101, 127, 0.3);
   box-sizing: border-box;
@@ -1299,7 +1306,6 @@ const Input = styled.input<{ CWD?: boolean }>`
 `;
 
 const Text = styled.textarea`
-  position: relative;
   resize: none;
   width: 100%;
   border: 1px solid rgba(86, 101, 127, 0.3);
