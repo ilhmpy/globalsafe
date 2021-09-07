@@ -63,53 +63,53 @@ export const Analitics: FC<Props> = ({ listDeposits }: Props) => {
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
   const [sorting, setSorting] = useState<SortingType[]>([]);
   const [listForSorting, setListForSorting] = useState<SelectValues[]>([
-    {
-      id: 0,
-      active: false,
-      OrderType: 1,
-      FieldName: 'userId',
-    },
-    {
-      id: 1,
-      active: false,
-      OrderType: 2,
-      FieldName: 'userId',
-    },
-    {
-      id: 2,
-      active: false,
-      OrderType: 2,
-      FieldName: 'DepositId',
-    },
-    {
-      id: 3,
-      active: false,
-      OrderType: 1,
-      FieldName: 'DepositId',
-    },
+    // {
+    //   id: 0,
+    //   active: false,
+    //   OrderType: 1,
+    //   FieldName: 'userName',
+    // },
+    // {
+    //   id: 1,
+    //   active: false,
+    //   OrderType: 2,
+    //   FieldName: 'userId',
+    // },
+    // {
+    //   id: 2,
+    //   active: false,
+    //   OrderType: 2,
+    //   FieldName: 'DepositId',
+    // },
+    // {
+    //   id: 3,
+    //   active: false,
+    //   OrderType: 1,
+    //   FieldName: 'Deposit',
+    // },
     {
       id: 4,
       active: false,
       OrderType: 2,
-      FieldName: 'creationDate',
+      FieldName: 'payoutDate',
     },
     {
       id: 5,
       active: false,
       OrderType: 1,
-      FieldName: 'creationDate',
+      FieldName: 'payoutDate',
     },
     {
       id: 6,
       active: false,
       OrderType: 2,
-      FieldName: 'baseAmount',
+      FieldName: 'amount',
     },
     {
       id: 7,
       active: false,
       OrderType: 1,
-      FieldName: 'baseAmount',
+      FieldName: 'amount',
     },
   ]);
 

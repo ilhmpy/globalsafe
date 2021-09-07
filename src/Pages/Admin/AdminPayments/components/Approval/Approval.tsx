@@ -116,14 +116,14 @@ export const Approval: FC<Props> = ({
     {
       id: 2,
       active: false,
-      OrderType: 2,
-      FieldName: 'DepositId',
+      OrderType: 1,
+      FieldName: 'DepositName',
     },
     {
       id: 3,
       active: false,
-      OrderType: 1,
-      FieldName: 'DepositId',
+      OrderType: 2,
+      FieldName: 'DepositName',
     },
     {
       id: 4,
