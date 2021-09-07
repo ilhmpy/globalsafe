@@ -306,7 +306,7 @@ export const AdminPay = () => {
       //   BalanceOperationKind[] kinds,
       //   long skip,
       //   long take);
-
+       
       hubConnection
         .invoke<RootCharges>(
           'GetDepositsCharges',
@@ -323,17 +323,6 @@ export const AdminPay = () => {
                 .set({ hour: 23, minute: 59, second: 59 })
                 .toDate()
             : null,
-          // openDate.to
-          //   ? moment(openDate.to)
-          //       .utcOffset('+00:00')
-          //       .set({ hour: 23, minute: 59, second: 59 })
-          //       .toDate()
-          //   : openDate.from
-          //   ? moment(openDate.from)
-          //       .utcOffset('+00:00')
-          //       .set({ hour: 23, minute: 59, second: 59 })
-          //       .toDate()
-          //   : null,
           null,
           searchSafeID.length ? searchSafeID : null,
           [7, 8],
@@ -408,17 +397,6 @@ export const AdminPay = () => {
                 .set({ hour: 23, minute: 59, second: 59 })
                 .toDate()
             : null,
-          // openDate.to
-          //   ? moment(openDate.to)
-          //       .utcOffset('+00:00')
-          //       .set({ hour: 23, minute: 59, second: 59 })
-          //       .toDate()
-          //   : openDate.from
-          //   ? moment(openDate.from)
-          //       .utcOffset('+00:00')
-          //       .set({ hour: 23, minute: 59, second: 59 })
-          //       .toDate()
-          //   : null,
           null,
           searchSafeID.length ? searchSafeID : null,
           [7, 8],

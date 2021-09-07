@@ -330,12 +330,6 @@ export const AdminUsers = () => {
               .set({ hour: 23, minute: 59, second: 59 })
               .toDate()
           : null,
-          // openDate.from
-          //   ? moment(openDate.from)
-          //       .utcOffset('+00:00')
-          //       .set({ hour: 0, minute: 0, second: 0 })
-          //       .toDate()
-          //   : null,
           // openDate.to
           //   ? moment(openDate.to)
           //       .utcOffset('+00:00')
@@ -439,6 +433,17 @@ export const AdminUsers = () => {
     if (hubConnection) {
       setLoading(true);
       setCurrentPage(1);
+      // Add Sorting condition if CreationDate Filter field has value
+      const modifiedSorting = [...sorting];
+      if(openDate.to || openDate.from) {
+        if(!modifiedSorting.some(sortItem => sortItem.FieldName === 'creationDate')) {
+          modifiedSorting.push({
+            ConditionWeight: 2,
+            OrderType: 1,
+            FieldName: 'creationDate',
+          })
+        }
+      };
       hubConnection
         .invoke<RootUsers>(
           'GetUsers',
@@ -457,7 +462,7 @@ export const AdminUsers = () => {
           : null,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting
+          modifiedSorting
         )
         .then((res) => {
           setListDeposits([]);

@@ -197,23 +197,6 @@ export const AdminDeposit = () => {
                 .set({ hour: 23, minute: 59, second: 59 })
                 .toDate()
             : null,
-          // openDate.from
-          //   ? moment(openDate.from)
-          //       .utcOffset('+00:00')
-          //       .set({ hour: 0, minute: 0, second: 0 })
-          //       .toDate()
-          //   : null,
-          // openDate.to
-          //   ? moment(openDate.to)
-          //       .utcOffset('+00:00')
-          //       .set({ hour: 23, minute: 59, second: 59 })
-          //       .toDate()
-          //   : openDate.from
-          //   ? moment(openDate.from)
-          //       .utcOffset('+00:00')
-          //       .set({ hour: 23, minute: 59, second: 59 })
-          //       .toDate()
-          //   : null,
 
           null,
           null,
@@ -230,23 +213,6 @@ export const AdminDeposit = () => {
                 .set({ hour: 23, minute: 59, second: 59 })
                 .toDate()
             : null,
-          // closeDate.from
-          //   ? moment(closeDate.from)
-          //       .utcOffset('+00:00')
-          //       .set({ hour: 0, minute: 0, second: 0 })
-          //       .toDate()
-          //   : null,
-          // closeDate.to
-          //   ? moment(closeDate.to)
-          //       .utcOffset('+00:00')
-          //       .set({ hour: 23, minute: 59, second: 59 })
-          //       .toDate()
-          //   : closeDate.from
-          //   ? moment(closeDate.from)
-          //       .utcOffset('+00:00')
-          //       .set({ hour: 23, minute: 59, second: 59 })
-          //       .toDate()
-          //   : null,
 
           null,
           null,
@@ -310,6 +276,17 @@ export const AdminDeposit = () => {
       setCurrentPage(1);
       setDepositsList([]);
       setLoading(true);
+      // Add Sorting condition if viewPrizeDrawLogModel.drawDate Filter field has value
+      const modifiedSorting = [...sorting];
+      if(openDate.from || openDate.to || closeDate.from || closeDate.to) {
+        if(!modifiedSorting.some(sortItem => sortItem.FieldName === 'paymentDate')) {
+          modifiedSorting.push({
+            ConditionWeight: 2,
+            OrderType: 1,
+            FieldName: 'paymentDate',
+          })
+        }
+      };
 
       hubConnection
         .invoke<RootPayments>(
@@ -330,24 +307,7 @@ export const AdminDeposit = () => {
                 .set({ hour: 23, minute: 59, second: 59 })
                 .toDate()
             : null,
-          //   openDate.from
-          //   ? moment(openDate.from)
-          //       .utcOffset('+00:00')
-          //       .set({ hour: 0, minute: 0, second: 0 })
-          //       .toDate()
-          //   : null,
-          //   openDate.to
-          //   ? moment(openDate.to)
-          //       .utcOffset('+00:00')
-          //       .set({ hour: 23, minute: 59, second: 59 })
-          //       .toDate()
-          //   : openDate.from
-          //   ? moment(openDate.from)
-          //       .utcOffset('+00:00')
-          //       .set({ hour: 23, minute: 59, second: 59 })
-          //       .toDate()
-          // : null,
-
+        
           null,
           null,
 
@@ -363,29 +323,12 @@ export const AdminDeposit = () => {
                 .set({ hour: 23, minute: 59, second: 59 })
                 .toDate()
             : null,
-          // closeDate.from
-          //   ? moment(closeDate.from)
-          //       .utcOffset('+00:00')
-          //       .set({ hour: 0, minute: 0, second: 0 })
-          //       .toDate()
-          //   : null,
-          // closeDate.to
-          //   ? moment(closeDate.to)
-          //       .utcOffset('+00:00')
-          //       .set({ hour: 23, minute: 59, second: 59 })
-          //       .toDate()
-          //   : closeDate.from
-          //   ? moment(closeDate.from)
-          //       .utcOffset('+00:00')
-          //       .set({ hour: 23, minute: 59, second: 59 })
-          //       .toDate()
-          //   : null,
 
           null,
           null,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting
+          modifiedSorting
         )
         .then((res) => {
           setTotalList(res.totalRecords);

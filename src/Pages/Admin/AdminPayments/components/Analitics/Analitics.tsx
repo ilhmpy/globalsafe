@@ -175,17 +175,6 @@ export const Analitics: FC<Props> = ({ listDeposits }: Props) => {
                 .set({ hour: 23, minute: 59, second: 59 })
                 .toDate()
             : null,
-          // openDate.to
-          //   ? moment(openDate.to)
-          //       .utcOffset('+00:00')
-          //       .set({ hour: 23, minute: 59, second: 59 })
-          //       .toDate()
-          //   : openDate.from
-          //   ? moment(openDate.from)
-          //       .utcOffset('+00:00')
-          //       .set({ hour: 23, minute: 59, second: 59 })
-          //       .toDate()
-          //   : null,
           (currentPage - 1) * pageLength,
           pageLength,
           sorting

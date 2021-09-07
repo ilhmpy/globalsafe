@@ -194,6 +194,18 @@ export const Approval: FC<Props> = ({
     setDepositList([]);
     setLoading(true);
 
+    // Add Sorting condition if viewPrizeDrawLogModel.drawDate Filter field has value
+    const modifiedSorting = [...sorting];
+    if(openDateApproval.from || openDateApproval.to) {
+      if(!modifiedSorting.some(sortItem => sortItem.FieldName === 'creationDate')) {
+        modifiedSorting.push({
+          ConditionWeight: 2,
+          OrderType: 1,
+          FieldName: 'creationDate',
+        })
+      }
+    };
+
     if (hubConnection) {
       hubConnection
         .invoke<RootPayments>(
@@ -215,7 +227,7 @@ export const Approval: FC<Props> = ({
           null,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting
+          modifiedSorting
         )
         .then((res) => {
           setTotalDeposits(res.totalRecords);
@@ -294,6 +306,18 @@ export const Approval: FC<Props> = ({
       setDepositList([]);
       setLoading(true); 
 
+      // Add Sorting condition if viewPrizeDrawLogModel.drawDate Filter field has value
+      const modifiedSorting = [...sorting];
+      if(openDateApproval.from || openDateApproval.to) {
+        if(!modifiedSorting.some(sortItem => sortItem.FieldName === 'creationDate')) {
+          modifiedSorting.push({
+            ConditionWeight: 2,
+            OrderType: 1,
+            FieldName: 'creationDate',
+          })
+        }
+      };
+
       hubConnection
         .invoke<RootPayments>(
           'GetUsersDeposits',
@@ -320,7 +344,7 @@ export const Approval: FC<Props> = ({
           null,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting
+          modifiedSorting
         )
         .then((res) => {
           setTotalDeposits(res.totalRecords);

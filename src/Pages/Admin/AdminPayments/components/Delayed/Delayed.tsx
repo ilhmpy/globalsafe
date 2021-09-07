@@ -163,6 +163,27 @@ export const Delayed: FC<Props> = ({ listDeposits }: Props) => {
     setList([]);
     setCurrentPage(1);
 
+     // Add Sorting condition if viewPrizeDrawLogModel.drawDate Filter field has value
+     const modifiedSorting = [...sorting];
+     if(openDate.from || openDate.to) {
+       if(!modifiedSorting.some(sortItem => sortItem.FieldName === 'creationDate')) {
+         modifiedSorting.push({
+           ConditionWeight: 2,
+           OrderType: 1,
+           FieldName: 'creationDate',
+         })
+       }
+     };
+     if(closeDate.from || closeDate.to) {
+      if(!modifiedSorting.some(sortItem => sortItem.FieldName === 'endDate')) {
+        modifiedSorting.push({
+          ConditionWeight: 1,
+          OrderType: 1,
+          FieldName: 'endDate',
+        })
+      }
+    };
+
     if (hubConnection) {
       setLoading(true);
       hubConnection
@@ -181,7 +202,7 @@ export const Delayed: FC<Props> = ({ listDeposits }: Props) => {
           true,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting
+          modifiedSorting
         )
         .then((res) => {
           setList(res.collection);

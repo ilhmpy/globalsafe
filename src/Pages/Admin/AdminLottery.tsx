@@ -170,6 +170,17 @@ export const AdminLottery = () => {
     setLoading(true);
     setLotteryList(null);
     setLotteryArrList([]);
+    // Add Sorting condition if viewPrizeDrawLogModel.drawDate Filter field has value
+    const modifiedSorting = [...sorting];
+    if(openDate.to || openDate.from) {
+      if(!modifiedSorting.some(sortItem => sortItem.FieldName === 'viewPrizeDrawLogModel.drawDate')) {
+        modifiedSorting.push({
+          ConditionWeight: 2,
+          OrderType: 1,
+          FieldName: 'viewPrizeDrawLogModel.drawDate',
+        })
+      }
+    };
     if (hubConnection) {
       hubConnection
         .invoke<RootLottery>(
@@ -180,7 +191,7 @@ export const AdminLottery = () => {
           checkList.length ? checkList.map((i: any) => i.id) : null,
           (currentPage - 1) * pageLength,
           pageLength,
-          sorting
+          modifiedSorting
         )
         .then((res) => {
           setTotalLottery(res.totalRecords);
