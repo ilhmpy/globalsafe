@@ -199,7 +199,7 @@ export const Approval: FC<Props> = ({
     if(openDateApproval.from || openDateApproval.to) {
       if(!modifiedSorting.some(sortItem => sortItem.FieldName === 'creationDate')) {
         modifiedSorting.push({
-          ConditionWeight: 2,
+          ConditionWeight: 1,
           OrderType: 1,
           FieldName: 'creationDate',
         })
@@ -311,7 +311,7 @@ export const Approval: FC<Props> = ({
       if(openDateApproval.from || openDateApproval.to) {
         if(!modifiedSorting.some(sortItem => sortItem.FieldName === 'creationDate')) {
           modifiedSorting.push({
-            ConditionWeight: 2,
+            ConditionWeight: 1,
             OrderType: 1,
             FieldName: 'creationDate',
           })

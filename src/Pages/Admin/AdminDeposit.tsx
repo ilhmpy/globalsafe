@@ -183,7 +183,7 @@ export const AdminDeposit = () => {
       if(openDate.from || openDate.to || closeDate.from || closeDate.to) {
         if(!modifiedSorting.some(sortItem => sortItem.FieldName === 'paymentDate')) {
           modifiedSorting.push({
-            ConditionWeight: 2,
+            ConditionWeight: 1,
             OrderType: 1,
             FieldName: 'paymentDate',
           })
@@ -293,7 +293,7 @@ export const AdminDeposit = () => {
       if(openDate.from || openDate.to || closeDate.from || closeDate.to) {
         if(!modifiedSorting.some(sortItem => sortItem.FieldName === 'paymentDate')) {
           modifiedSorting.push({
-            ConditionWeight: 2,
+            ConditionWeight: 1,
             OrderType: 1,
             FieldName: 'paymentDate',
           })
