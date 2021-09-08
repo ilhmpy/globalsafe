@@ -14,12 +14,13 @@ import { Balance } from '../../types/balance';
 import { DepositProgramForm } from './DepositProgramForm';
 import * as Styled from './Styled.elements';
 
-export const AdminDepositsPrograms = () => {
+export const AdminDepositsPrograms: FC = () => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
 
-  const [openNewProgram, setOpenNewProgram] = useState(true);
+  const [openNewProgram, setOpenNewProgram] = useState(false);
 
+  const [chosen, setChosen] = useState<any>();
   const [totalProps, setTotalProps] = useState<number>(0);
   const [programList, setProgramList] = useState<any[]>([]);
   const appContext = useContext(AppContext);
@@ -66,7 +67,7 @@ export const AdminDepositsPrograms = () => {
       <Content active={true}>
         <CardTable>
           {openNewProgram ? (
-            <DepositProgramForm setOpenNewProgram={setOpenNewProgram} />
+            <DepositProgramForm setOpenNewProgram={setOpenNewProgram} chosen={chosen} />
           ) : (
             <PaymentsTable>
               <TableHeader>
@@ -86,9 +87,14 @@ export const AdminDepositsPrograms = () => {
                 <TableHeadItem>{t('depositsPrograms.programActivity')}</TableHeadItem>
               </TableHead>
               {programList.length ? (
-                <Scrollbars style={{ height: '450px' }}>
+                <Scrollbars style={{ height: '600px' }}>
                   {programList.map((program, index) => (
-                    <TableList key={index} data={program} />
+                    <TableList
+                      key={index}
+                      data={program}
+                      setOpenNewProgram={setOpenNewProgram}
+                      setChosen={setChosen}
+                    />
                   ))}
                 </Scrollbars>
               ) : loading ? (
@@ -104,9 +110,16 @@ export const AdminDepositsPrograms = () => {
   );
 };
 
-const TableList: FC<{ data: any }> = ({ data }: any) => {
+const TableList: FC<{
+  setChosen: (type: any) => void;
+  data: any;
+  setOpenNewProgram?: (active: boolean) => void;
+}> = ({ data, setOpenNewProgram, setChosen }: any) => {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
+  const appContext = useContext(AppContext);
+  const hubConnection = appContext.hubConnection;
+  const [program, setProgram] = useState(data);
 
   const onClose = () => {
     setOpen(false);
@@ -119,21 +132,58 @@ const TableList: FC<{ data: any }> = ({ data }: any) => {
 
   const [checked, setChecked] = useState(true);
 
+  // Task PatchDeposit(ulong depositId, Dictionary<string, object?> data) - изменение депозита
+  const updateProgram = async () => {
+    if (hubConnection) {
+      try {
+        console.log('updating............');
+        const response = await hubConnection.invoke('PatchDeposit', program.id, {
+          isActive: false,
+          name: 'eeeeeeee',
+        });
+        console.log('updateProgram ~ response', response);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  // useEffect(() => {
+  //   updateProgram();
+  // }, [program]);
+
   return (
-    <TableBody onClick={modalOpen}>
-      <TableBodyItem>{data.name}</TableBodyItem>
-      <TableBodyItem>{Balance[data.balanceKind]}</TableBodyItem>
+    <TableBody
+      onClick={() => {
+        setChosen(program);
+        setOpenNewProgram(true);
+      }}
+    >
+      <TableBodyItem>{program.name}</TableBodyItem>
+      <TableBodyItem>{Balance[program.balanceKind]}</TableBodyItem>
       <TableBodyItem>
-        {data.minAmount ? data.minAmount : '0'} - {data.maxAmount ? data.maxAmount : data.minAmount}
+        {program.minAmount ? program.minAmount : '0'} -{' '}
+        {program.maxAmount ? program.maxAmount : program.minAmount}
       </TableBodyItem>
-      <TableBodyItem>{data.ratio * 100}%</TableBodyItem>
-      <TableBodyItem>{data.depositKind}</TableBodyItem>
+      <TableBodyItem>{program.ratio * 100}%</TableBodyItem>
+      <TableBodyItem>{program.depositKind}</TableBodyItem>
       <TableBodyItem>
-        {data.duration} {t('depositsPrograms.days')}
+        {program.duration} {t('depositsPrograms.days')}
       </TableBodyItem>
-      <TableBodyItem checked={checked}>
-        <Switcher onChange={() => setChecked(!checked)} checked={data.isActive} />
-        <span>{t(data.isActive ? 'depositsPrograms.on' : 'depositsPrograms.off')}</span>
+      <TableBodyItem
+        checked={program.isActive}
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+      >
+        <Switcher
+          onChange={() => {
+            setProgram({ ...program, isActive: !program.isActive });
+            updateProgram();
+          }}
+          checked={program.isActive}
+        />
+        <span>{t(program.isActive ? 'depositsPrograms.on' : 'depositsPrograms.off')}</span>
       </TableBodyItem>
     </TableBody>
   );

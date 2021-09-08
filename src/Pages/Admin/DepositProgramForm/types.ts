@@ -4,6 +4,7 @@ import { LanguageCode } from '../../../enums/languageCode';
 
 export type DepositProgramFormPropsType = {
   setOpenNewProgram: (status: boolean) => void;
+  chosen: any;
 };
 
 export type Exchange = {

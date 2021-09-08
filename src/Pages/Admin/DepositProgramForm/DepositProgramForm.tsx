@@ -14,7 +14,9 @@ import { defaultFormState } from './helpers';
 import { AddDepositModel, DepositProgramFormPropsType } from './types';
 
 // eslint-disable-next-line react/prop-types
-export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNewProgram }) => {
+export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({setOpenNewProgram,chosen,
+}) => {
+  console.log('chosen', chosen);
   const [checkList, setCheckList] = useState<any>([]);
   const { t } = useTranslation();
   const langList: string[] = ['English', 'Russian'];
@@ -37,7 +39,8 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
   const [loading, setLoading] = useState(true);
   const depositKindList: string[] = ['Рассчетная', 'Фиксированная'];
 
-  const [program, setProgram] = useState<AddDepositModel>(defaultFormState);
+  const [storage, setStorage] = useState<AddDepositModel>(chosen ? chosen : defaultFormState);
+  const [program, setProgram] = useState<AddDepositModel>(chosen ? chosen : defaultFormState);
 
   async function createProgram() {
     console.log('1111111111~~~~~~~~~~~~~~~~~~start');
@@ -84,14 +87,15 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
       expert: { '0': '', '1': '', '2': '', '3': '', '4': '', '5': '', '6': '', '7': '' },
       infinity: { '0': '', '1': '', '2': '', '3': '', '4': '', '5': '', '6': '', '7': '' },
     };
-
-    arr.forEach((it: any, i: number) => {
-      it.forEach((items: number[]) => {
-        if (items[0] === 1) columnsObj.start[i] = items[1];
-        if (items[0] === 2) columnsObj.expert[i] = items[1];
-        if (items[0] === 4) columnsObj.infinity[i] = items[1];
+console.log(arr);
+    arr.length &&
+      arr?.forEach((it: any, i: number) => {
+        it.forEach((items: number[]) => {
+          if (items[0] === 1) columnsObj.start[i] = items[1];
+          if (items[0] === 2) columnsObj.expert[i] = items[1];
+          if (items[0] === 4) columnsObj.infinity[i] = items[1];
+        });
       });
-    });
 
     return columnsObj;
   };
@@ -113,13 +117,16 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
     return affilateArray;
   };
 
-  const [tableState, setTableState] = useState(getObj(program.affiliateRatio));
-
+  const [tableState, setTableState] = useState(getObj(program?.affiliateRatio));
+  const [tableStateCopy, setTableStateCopy] = useState(getObj(program?.affiliateRatio));
+  console.log(chosen);
   return (
     <Container>
       <Header>
         <Stroke onClick={() => setOpenNewProgram(false)} />
-        <Title>{t('depositsPrograms.creationDepositProgram')}</Title>
+        <Title>
+          {t(`depositsPrograms.${chosen ? 'editingDepositProgram' : 'creationDepositProgram'}`)}
+        </Title>
       </Header>
       <ContentWrapper>
         <Row>
@@ -131,7 +138,9 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
               value={program.name}
               onChange={({ target: { name, value } }) => setProgram({ ...program, [name]: value })}
             />
-            <Circle onClick={undefined} />
+            {/* {console.log(program.name !== storage.name)} */}
+            {console.log(program.name === storage.name)}
+            <Circle hide={program.name === storage.name} onClick={undefined} />
           </InputGroup>
           <InputGroup>
             <Label>{t('depositsPrograms.language')}</Label>
@@ -142,7 +151,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 setProgram({ ...program, Language: langList.indexOf(val) });
               }}
             />
-            <Circle onClick={undefined} />
+            <Circle hide={program.Language === storage.Language} onClick={undefined} />
           </InputGroup>
         </Row>
 
@@ -157,7 +166,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 setProgram({ ...program, description: e.target.value });
               }}
             />
-            <Circle txt onClick={undefined} />
+            <Circle hide={program.description === storage.description} txt onClick={undefined} />
           </InputGroup>
         </Row>
 
@@ -179,7 +188,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 });
               }}
             />
-            <Circle onClick={undefined} />
+            <Circle hide={program.balanceKind === storage.balanceKind} onClick={undefined} />
           </InputGroup>
 
           <Hr />
@@ -199,7 +208,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 });
               }}
             />
-            <Circle onClick={undefined} />
+            <Circle hide={program.exchanges === storage.exchanges} onClick={undefined} />
           </InputGroup>
         </Row>
 
@@ -214,7 +223,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 setProgram({ ...program, [name]: +value });
               }}
             />
-            <Circle onClick={undefined} />
+            <Circle hide={program.minAmount === storage.minAmount} onClick={undefined} />
           </InputGroup>
           <InputGroup>
             <Label>{t('depositsPrograms.maxAmount')}</Label>
@@ -226,7 +235,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 setProgram({ ...program, [name]: +value });
               }}
             />
-            <Circle onClick={undefined} />
+            <Circle hide={program.maxAmount === storage.maxAmount} onClick={undefined} />
           </InputGroup>
         </Row>
 
@@ -241,7 +250,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 setProgram({ ...program, [name]: +value });
               }}
             />
-            <Circle onClick={undefined} />
+            <Circle hide={program.duration === storage.duration} onClick={undefined} />
           </InputGroup>
         </Row>
 
@@ -256,7 +265,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 setProgram({ ...program, [name]: +value });
               }}
             />
-            <Circle onClick={undefined} />
+            <Circle hide={program.paymentsOffset === storage.paymentsOffset} onClick={undefined} />
           </InputGroup>
         </Row>
 
@@ -271,7 +280,10 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 setProgram({ ...program, [name]: +value });
               }}
             />
-            <Circle onClick={undefined} />
+            <Circle
+              hide={program.paymentsInterval === storage.paymentsInterval}
+              onClick={undefined}
+            />
           </InputGroup>
         </Row>
 
@@ -286,7 +298,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 setProgram({ ...program, [name]: value });
               }}
             />
-            <Circle onClick={undefined} />
+            <Circle hide={program.paymentsDays === storage.paymentsDays} onClick={undefined} />
           </InputGroup>
         </Row>
 
@@ -304,7 +316,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 });
               }}
             />
-            <Circle onClick={undefined} />
+            <Circle hide={program.depositKind === storage.depositKind} onClick={undefined} />
           </InputGroup>
           <Hr />
           <InputGroup>
@@ -317,7 +329,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 setProgram({ ...program, [name]: +value });
               }}
             />
-            <Circle onClick={undefined} />
+            <Circle hide={program.ratio === storage.ratio} onClick={undefined} />
           </InputGroup>
         </Row>
 
@@ -361,7 +373,11 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
-                  <Circle tb onClick={undefined} />
+                  <Circle
+                    hide={tableState.start[0] === tableStateCopy.start[0]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
@@ -380,7 +396,11 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
-                  <Circle tb onClick={undefined} />
+                  <Circle
+                    hide={tableState.start[1] === tableStateCopy.start[1]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
@@ -399,7 +419,11 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
-                  <Circle tb onClick={undefined} />
+                  <Circle
+                    hide={tableState.start[2] === tableStateCopy.start[2]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
@@ -418,7 +442,11 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
-                  <Circle tb onClick={undefined} />
+                  <Circle
+                    hide={tableState.start[3] === tableStateCopy.start[3]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
@@ -437,7 +465,11 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
-                  <Circle tb onClick={undefined} />
+                  <Circle
+                    hide={tableState.start[4] === tableStateCopy.start[4]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
@@ -456,7 +488,11 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
-                  <Circle tb onClick={undefined} />
+                  <Circle
+                    hide={tableState.start[5] === tableStateCopy.start[5]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
@@ -475,7 +511,11 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
-                  <Circle tb onClick={undefined} />
+                  <Circle
+                    hide={tableState.start[6] === tableStateCopy.start[6]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
@@ -494,7 +534,11 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
-                  <Circle tb onClick={undefined} />
+                  <Circle
+                    hide={tableState.start[7] === tableStateCopy.start[7]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
             </ColumnGroup>
@@ -519,7 +563,11 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
-                  <Circle tb onClick={undefined} />
+                  <Circle
+                    hide={tableState.expert[0] === tableStateCopy.expert[0]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
@@ -538,7 +586,11 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
-                  <Circle tb onClick={undefined} />
+                  <Circle
+                    hide={tableState.expert[1] === tableStateCopy.expert[1]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
@@ -557,7 +609,11 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
-                  <Circle tb onClick={undefined} />
+                  <Circle
+                    hide={tableState.expert[2] === tableStateCopy.expert[2]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
@@ -576,7 +632,11 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
-                  <Circle tb onClick={undefined} />
+                  <Circle
+                    hide={tableState.expert[3] === tableStateCopy.expert[3]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
@@ -595,7 +655,11 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
-                  <Circle tb onClick={undefined} />
+                  <Circle
+                    hide={tableState.expert[4] === tableStateCopy.expert[4]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
@@ -614,7 +678,11 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
-                  <Circle tb onClick={undefined} />
+                  <Circle
+                    hide={tableState.expert[5] === tableStateCopy.expert[5]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
@@ -633,7 +701,11 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
-                  <Circle tb onClick={undefined} />
+                  <Circle
+                    hide={tableState.expert[6] === tableStateCopy.expert[6]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
@@ -652,7 +724,11 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
-                  <Circle tb onClick={undefined} />
+                  <Circle
+                    hide={tableState.expert[7] === tableStateCopy.expert[7]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
             </ColumnGroup>
@@ -677,7 +753,11 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
-                  <Circle tb onClick={undefined} />
+                  <Circle
+                    hide={tableState.infinity[0] === tableStateCopy.infinity[0]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
@@ -696,7 +776,11 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
-                  <Circle tb onClick={undefined} />
+                  <Circle
+                    hide={tableState.infinity[1] === tableStateCopy.infinity[1]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
@@ -715,7 +799,11 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
-                  <Circle tb onClick={undefined} />
+                  <Circle
+                    hide={tableState.infinity[2] === tableStateCopy.infinity[2]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
@@ -734,7 +822,11 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
-                  <Circle tb onClick={undefined} />
+                  <Circle
+                    hide={tableState.infinity[3] === tableStateCopy.infinity[3]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
@@ -753,7 +845,11 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
-                  <Circle tb onClick={undefined} />
+                  <Circle
+                    hide={tableState.infinity[4] === tableStateCopy.infinity[4]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
@@ -772,7 +868,11 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
-                  <Circle tb onClick={undefined} />
+                  <Circle
+                    hide={tableState.infinity[5] === tableStateCopy.infinity[5]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
@@ -791,7 +891,11 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
-                  <Circle tb onClick={undefined} />
+                  <Circle
+                    hide={tableState.infinity[6] === tableStateCopy.infinity[6]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
@@ -810,7 +914,11 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                       })
                     }
                   />
-                  <Circle tb onClick={undefined} />
+                  <Circle
+                    hide={tableState.infinity[7] === tableStateCopy.infinity[7]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
             </ColumnGroup>
@@ -828,7 +936,11 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 setProgram({ ...program, [name]: value });
               }}
             />
-            <Circle bld onClick={undefined} />
+            <Circle
+              hide={program.referenceAccount === storage.referenceAccount}
+              bld
+              onClick={undefined}
+            />
           </InputGroup>
         </Row>
         <Row>
@@ -842,7 +954,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 setProgram({ ...program, [name]: value });
               }}
             />
-            <Circle onClick={undefined} />
+            <Circle hide={program.referenceCode === storage.referenceCode} onClick={undefined} />
           </InputGroup>
         </Row>
         <Row>
@@ -856,7 +968,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 setProgram({ ...program, [name]: value });
               }}
             />
-            <Circle onClick={undefined} />
+            <Circle hide={program.activeWif === storage.activeWif} onClick={undefined} />
           </InputGroup>
         </Row>
         <Row>
@@ -870,7 +982,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 setProgram({ ...program, [name]: value });
               }}
             />
-            <Circle onClick={undefined} />
+            <Circle hide={program.memoWif === storage.memoWif} onClick={undefined} />
           </InputGroup>
         </Row>
 
@@ -891,7 +1003,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 });
               }}
             />
-            <Circle onClick={undefined} />
+            <Circle hide={program.priceKind === storage.priceKind} onClick={undefined} />
           </InputGroup>
           <Hr />
           <InputGroup>
@@ -904,7 +1016,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                 setProgram({ ...program, [name]: +value });
               }}
             />
-            <Circle onClick={undefined} />
+            <Circle hide={program.price === storage.price} onClick={undefined} />
           </InputGroup>
         </Row>
 

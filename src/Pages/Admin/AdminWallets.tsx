@@ -1,7 +1,7 @@
+import moment from 'moment';
 import React, { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components/macro';
-import moment from 'moment';
 import { ReactComponent as CircleOk } from '../../assets/svg/circleOk.svg';
 import { ReactComponent as Exit } from '../../assets/svg/exit.svg';
 import { ReactComponent as Pen } from '../../assets/svg/pen.svg';
@@ -14,12 +14,15 @@ import { Loading } from '../../components/UI/Loading';
 import { UpTitle } from '../../components/UI/UpTitle';
 import { AppContext } from '../../context/HubContext';
 import { Balance, Notify } from '../../types/balance';
-import { AddCompanyAccountModel, BalanceModel, CompanyAccountModel, CompanyAccountModelCollectionResult } from '../../types/balanceModel';
+import {
+  AddCompanyAccountModel,
+  BalanceModel,
+  CompanyAccountModel,
+  CompanyAccountModelCollectionResult,
+} from '../../types/balanceModel';
 import { SortingType } from '../../types/sorting';
-import { CollectionUsers } from '../../types/users';
 import { Pagination } from './Pagination';
 import * as Styled from './Styled.elements';
-import { Input } from './Styled.elements';
 
 export const AdminWallets = () => {
   const [name, setName] = useState('');
@@ -60,13 +63,12 @@ export const AdminWallets = () => {
   const [newWallet, setNewWallet] = useState({
     name: '',
     activeKey: '',
-    keyNotes: ''
+    keyNotes: '',
   });
 
   useEffect(() => {
     handleGetCompanyAccounts();
   }, [hubConnection, currentPage, pageLength]);
-
 
   const createNotify = (item: Notify) => {
     setNotifications([item]);
@@ -89,7 +91,7 @@ export const AdminWallets = () => {
         )
         .then((res) => {
           setLoading(false);
-          console.log("Wallet List:::", res);
+          console.log('Wallet List:::', res);
           setCompanyAccountsList(res.collection);
           setTotalCompanyAccounts(res.totalRecords);
           setLoading(false);
@@ -103,17 +105,16 @@ export const AdminWallets = () => {
             timeleft: 5,
             id: notifications.length,
           });
-          console.error("Wallet List ERR :::", err);
+          console.error('Wallet List ERR :::', err);
         });
     }
   };
 
-
   // Create Company Account
   const handleAddCompanyAccount = () => {
-    if(hubConnection) {
+    if (hubConnection) {
       // Check if there is NO empty values
-      if(!newWallet.name || !newWallet.activeKey || !newWallet.keyNotes) {
+      if (!newWallet.name || !newWallet.activeKey || !newWallet.keyNotes) {
         return;
       }
 
@@ -122,21 +123,18 @@ export const AdminWallets = () => {
       const newCompanyAccount: AddCompanyAccountModel = {
         name: newWallet.name,
         activeWif: newWallet.activeKey,
-        memoWif: newWallet.keyNotes
+        memoWif: newWallet.keyNotes,
       };
 
       hubConnection
-        .invoke<CompanyAccountModel>(
-          'AddCompanyAccount',
-          newCompanyAccount
-        )
+        .invoke<CompanyAccountModel>('AddCompanyAccount', newCompanyAccount)
         .then((res) => {
           setNewWalletLoading(false);
           setIsOpenNewForm(false);
           setNewWallet({
             name: '',
             activeKey: '',
-            keyNotes: ''
+            keyNotes: '',
           });
 
           // Fetch Company Accounts List
@@ -152,7 +150,7 @@ export const AdminWallets = () => {
         })
         .catch((err: Error) => {
           setNewWalletLoading(false);
-          console.error("Wallet Create Err", err);
+          console.error('Wallet Create Err', err);
           createNotify({
             text: err.message,
             error: true,
@@ -165,35 +163,30 @@ export const AdminWallets = () => {
 
   // Handle Update Company Account Data
   const handleUpdateCompanyAccount = () => {
-    if(hubConnection) {
+    if (hubConnection) {
       setEditWalletLoading(true);
 
       const updateData = {
         activeWif: editActiveKeyValue,
         memoWif: editKeyNotesValue,
       };
-
       hubConnection
-        .invoke<null>(
-          'AdjustCompanyAccount',
-          selectedAccount?.safeId,
-          updateData
-        )
+        .invoke<null>('AdjustCompanyAccount', selectedAccount?.safeId, updateData)
         .then((res) => {
           setEditWalletLoading(false);
           // Fetch List With updated Data
           handleGetCompanyAccounts();
 
-          // Update Selected Account 
-          setSelectedAccount((acc) => (
-            acc ? {
-              ...acc, 
-              activeWif: editActiveKeyValue, 
-              memoWif: editKeyNotesValue
-            } 
-            : 
-            null
-          ));
+          // Update Selected Account
+          setSelectedAccount((acc) =>
+            acc
+              ? {
+                  ...acc,
+                  activeWif: editActiveKeyValue,
+                  memoWif: editKeyNotesValue,
+                }
+              : null
+          );
 
           // Set state to NON edit mode
           setIsActiveKeyActive(false);
@@ -210,33 +203,29 @@ export const AdminWallets = () => {
 
   // Refetch Selected Account Balance Data
   const handleRefreshAccountBalance = () => {
-    if(hubConnection) {
+    if (hubConnection) {
       setRefreshAccountBalanceLoading(true);
       hubConnection
-        .invoke<BalanceModel[]>(
-          'RefreshAccountBalance',
-          selectedAccount?.safeId
-        )
+        .invoke<BalanceModel[]>('RefreshAccountBalance', selectedAccount?.safeId)
         .then((res) => {
-          setSelectedAccount((state) => state ? {...state, balances: res} : null);
+          setSelectedAccount((state) => (state ? { ...state, balances: res } : null));
           setRefreshAccountBalanceLoading(false);
         })
         .catch((err: Error) => {
-          console.log(" RefreshAccountBalance:::", err.message);
+          console.log(' RefreshAccountBalance:::', err.message);
           setRefreshAccountBalanceLoading(false);
         });
     }
   };
 
-
   // Transfer Between Company Accounts
   const handleAccountsTransfer = () => {
     // AccountsTransfer(string accountSafeIdFrom, string accountSafeIdTo, string volume, BalanceKind balanceKind)
-    if(hubConnection) {
-      console.log("accountSafeIdFrom", selectedAccount?.safeId);
-      console.log("accountSafeIdTo", transferToAccount?.safeId);
-      console.log("volume", transferAmount);
-      console.log("BalanceKind", selectedBalance?.balanceKind);
+    if (hubConnection) {
+      console.log('accountSafeIdFrom', selectedAccount?.safeId);
+      console.log('accountSafeIdTo', transferToAccount?.safeId);
+      console.log('volume', transferAmount);
+      console.log('BalanceKind', selectedBalance?.balanceKind);
       setAccountsTransferLoading(true);
       hubConnection
         .invoke<any>(
@@ -248,7 +237,7 @@ export const AdminWallets = () => {
         )
         .then((res) => {
           setAccountsTransferLoading(false);
-          console.log("AccountsTransfer:::", res);
+          console.log('AccountsTransfer:::', res);
           // TODO: update Success message
           // createNotify({
           //   text: "Success",
@@ -262,7 +251,7 @@ export const AdminWallets = () => {
         })
         .catch((err: Error) => {
           setAccountsTransferLoading(false);
-          console.log(" AccountsTransfer ERR:::", err.message);
+          console.log(' AccountsTransfer ERR:::', err.message);
           // TODO: update error message
           createNotify({
             text: err.message,
@@ -271,12 +260,11 @@ export const AdminWallets = () => {
             id: notifications.length,
           });
 
-           // Close Transfer Confirm Modal
-           handleCloseConfirmTransferModal()
+          // Close Transfer Confirm Modal
+          handleCloseConfirmTransferModal();
         });
     }
   };
-
 
   const handleShowCompanyAccount = (accountToShow: CompanyAccountModel) => {
     setSelectedAccount(accountToShow);
@@ -285,7 +273,7 @@ export const AdminWallets = () => {
   };
 
   useEffect(() => {
-    if(selectedAccount) {
+    if (selectedAccount) {
       setIsOpenShowForm(true);
     }
   }, [selectedAccount]);
@@ -308,13 +296,13 @@ export const AdminWallets = () => {
   };
 
   const handleGoBackFromTransferModal = () => {
-     // Show Account Details Modal
-     setIsOpenShowForm(true);
+    // Show Account Details Modal
+    setIsOpenShowForm(true);
 
-     setSelectedBalance(null);
-     setTransferAmount('');
-     setTransferToAccount(null);
-     setIsOpenTransferForm(false);
+    setSelectedBalance(null);
+    setTransferAmount('');
+    setTransferToAccount(null);
+    setIsOpenTransferForm(false);
   };
 
   const handleCloseTransferModal = () => {
@@ -328,7 +316,7 @@ export const AdminWallets = () => {
   };
 
   const handleShowConfirmTransferModal = () => {
-    if(!transferAmount || !transferToAccount) {
+    if (!transferAmount || !transferToAccount) {
       return;
     }
     // Close Transfer Modal
@@ -362,31 +350,33 @@ export const AdminWallets = () => {
         </Styled.UserName>
       </Styled.HeadBlock>
 
-      {
-        companyAccountsList.length > 0 ? 
-            (
-              <WalletTable>
-                {companyAccountsList.map((companyAccount) => (
-                  <Wallet key={companyAccount.id} onClick={() => handleShowCompanyAccount(companyAccount)}>
-                    <Name>{companyAccount.name}</Name>
-                    <BalanceText>Баланс, CWD</BalanceText>
-                    <AmountGroup>
-                      <Count>{companyAccount.balances.find(b => b.balanceKind === 1)?.safeAmount || "0"}</Count>
-                      <PlusNumber>
-                        {(companyAccount.balances.length - 1) > 0 ? `+${companyAccount.balances.length - 1}` : ''}
-                      </PlusNumber>
-                    </AmountGroup>
-                  </Wallet>
-                ))}
-              </WalletTable>
-            )
-          :
-            loading ? (
-              <Loading />
-          ) : (
-            <NotFound>{t('notFound')}</NotFound>
-          )
-      }
+      {companyAccountsList.length > 0 ? (
+        <WalletTable>
+          {companyAccountsList.map((companyAccount) => (
+            <Wallet
+              key={companyAccount.id}
+              onClick={() => handleShowCompanyAccount(companyAccount)}
+            >
+              <Name>{companyAccount.name}</Name>
+              <BalanceText>Баланс, CWD</BalanceText>
+              <AmountGroup>
+                <Count>
+                  {companyAccount.balances.find((b) => b.balanceKind === 1)?.safeAmount || '0'}
+                </Count>
+                <PlusNumber>
+                  {companyAccount.balances.length - 1 > 0
+                    ? `+${companyAccount.balances.length - 1}`
+                    : ''}
+                </PlusNumber>
+              </AmountGroup>
+            </Wallet>
+          ))}
+        </WalletTable>
+      ) : loading ? (
+        <Loading />
+      ) : (
+        <NotFound>{t('notFound')}</NotFound>
+      )}
 
       {/* {selectedAccount && (
         <Modal onClose={() => setSelectedAccount(null)}>
@@ -551,29 +541,25 @@ export const AdminWallets = () => {
         <Modal onClose={() => setIsOpenNewForm(false)}>
           <ModalBlock sm>
             <NewWalletTitle>{t('wallets.newWallet')}</NewWalletTitle>
-            <RoundInput 
+            <RoundInput
               value={newWallet.name}
-              onChange={(e) => setNewWallet((state) => ({...state, 'name': e.target.value}))}
-              spellCheck="false" 
-              placeholder={t('wallets.name')} 
+              onChange={(e) => setNewWallet((state) => ({ ...state, name: e.target.value }))}
+              spellCheck="false"
+              placeholder={t('wallets.name')}
             />
-            <RoundInput 
+            <RoundInput
               value={newWallet.activeKey}
-              onChange={(e) => setNewWallet((state) => ({...state, 'activeKey': e.target.value}))}
-              spellCheck="false" 
-              placeholder={t('wallets.activeKey')} 
+              onChange={(e) => setNewWallet((state) => ({ ...state, activeKey: e.target.value }))}
+              spellCheck="false"
+              placeholder={t('wallets.activeKey')}
             />
-            <RoundInput 
+            <RoundInput
               value={newWallet.keyNotes}
-              onChange={(e) => setNewWallet((state) => ({...state, 'keyNotes': e.target.value}))}
-              spellCheck="false" 
-              placeholder={t('wallets.keyNotes')} 
+              onChange={(e) => setNewWallet((state) => ({ ...state, keyNotes: e.target.value }))}
+              spellCheck="false"
+              placeholder={t('wallets.keyNotes')}
             />
-            <Button
-              danger
-              maxWidth={200}
-              onClick={handleAddCompanyAccount}
-            >
+            <Button danger maxWidth={200} onClick={handleAddCompanyAccount}>
               {t('wallets.create')}
             </Button>
           </ModalBlock>
@@ -600,7 +586,11 @@ export const AdminWallets = () => {
                   {isActiveKeyActive ? (
                     <CircleOk onClick={handleUpdateCompanyAccount} />
                   ) : (
-                    <Pen onClick={() => {setIsActiveKeyActive(true)}} />
+                    <Pen
+                      onClick={() => {
+                        setIsActiveKeyActive(true);
+                      }}
+                    />
                   )}
                 </KeyWrapper>
               </div>
@@ -619,20 +609,22 @@ export const AdminWallets = () => {
                   {isKeyNotesActive ? (
                     <CircleOk onClick={handleUpdateCompanyAccount} />
                   ) : (
-                    <Pen onClick={() => {setIsKeyNotesActive(true)}} />
+                    <Pen
+                      onClick={() => {
+                        setIsKeyNotesActive(true);
+                      }}
+                    />
                   )}
                 </KeyWrapper>
               </div>
             </KeysBLock>
 
             <ChipContent>
-              {
-                selectedAccount?.balances.map((balance, i) => (
-                  <Chip key={`balance-item-${i}`} onClick={() => handleShowTransferModal(balance)}>
-                    {`${Balance[balance.balanceKind]} - ${balance.safeAmount}`}
-                  </Chip>
-                ))
-              }
+              {selectedAccount?.balances.map((balance, i) => (
+                <Chip key={`balance-item-${i}`} onClick={() => handleShowTransferModal(balance)}>
+                  {`${Balance[balance.balanceKind]} - ${balance.safeAmount}`}
+                </Chip>
+              ))}
               {/* <Chip>Na - 0</Chip>
               <Chip>CWD - 235 468</Chip>
               <Chip>MGCWD - 235 468</Chip>
@@ -648,7 +640,9 @@ export const AdminWallets = () => {
               <Chip>GLOBALSAFE - 235 468</Chip> */}
 
               <ChipRefresh refresh={refreshAccountBalanceLoading}>
-                <Label>{t('wallets.for')} {moment(new Date()).format('DD.MM.YYYY')}</Label>
+                <Label>
+                  {t('wallets.for')} {moment(new Date()).format('DD.MM.YYYY')}
+                </Label>
                 <UpdateCircle onClick={handleRefreshAccountBalance} />
               </ChipRefresh>
             </ChipContent>
@@ -656,40 +650,41 @@ export const AdminWallets = () => {
         </Modal>
       )}
 
-
       {isOpenTransferForm && selectedBalance && (
         <Modal onClose={handleCloseTransferModal}>
           <ModalBlock>
-            <ModalTitle>{`${selectedAccount?.name}, ${Balance[selectedBalance?.balanceKind]}`}</ModalTitle>
+            <ModalTitle>{`${selectedAccount?.name}, ${
+              Balance[selectedBalance?.balanceKind]
+            }`}</ModalTitle>
             <ContentRow>
               <Label>{t('wallets.available')}</Label>
-              <p>{selectedBalance?.amount} {Balance[selectedBalance?.balanceKind]}</p>
+              <p>
+                {selectedBalance?.amount} {Balance[selectedBalance?.balanceKind]}
+              </p>
             </ContentRow>
 
             <SelectGroup>
               {/* <span>{t('wallets.enrollmentAccount')}</span> */}
               {/* <Select checkList={checkList} setCheckList={setCheckList} values={selectList} /> */}
-              <Select 
+              <Select
                 label={t('wallets.enrollmentAccount')}
-                selectedOption={transferToAccount?.name || null} 
-                setSelectedOption={(val) => setTransferToAccount(companyAccountsList.find(acc => acc.name === val) || null)} 
-                options={
-                  companyAccountsList.filter(account => account.id !== selectedAccount?.id).map(account => account.name)
-                } 
+                selectedOption={transferToAccount?.name || null}
+                setSelectedOption={(val) =>
+                  setTransferToAccount(companyAccountsList.find((acc) => acc.name === val) || null)
+                }
+                options={companyAccountsList
+                  .filter((account) => account.id !== selectedAccount?.id)
+                  .map((account) => account.name)}
               />
             </SelectGroup>
-            
+
             <TransferButtonGroup>
-              <RoundInput 
+              <RoundInput
                 placeholder={t('depositsPrograms.amount')}
                 value={transferAmount}
-                onChange={(e) => setTransferAmount(e.target.value)} 
+                onChange={(e) => setTransferAmount(e.target.value)}
               />
-              <Button
-                danger
-                maxWidth={200}
-                onClick={handleShowConfirmTransferModal}
-              >
+              <Button danger maxWidth={200} onClick={handleShowConfirmTransferModal}>
                 {t('depositSelect.transferButton')}
               </Button>
               <Button dangerOutline maxWidth={200} onClick={handleGoBackFromTransferModal}>
@@ -705,28 +700,26 @@ export const AdminWallets = () => {
           <ModalBlock sm confirm>
             <ConfirmTitle>{t('wallets.transferFunds')}</ConfirmTitle>
             <ConfirmContent>
-              {`Вы уверены, что хотите перевести с ${selectedAccount?.name} ${transferAmount} ${Balance[selectedBalance.balanceKind]} на ${transferToAccount?.name}?`}
+              {`Вы уверены, что хотите перевести с ${selectedAccount?.name} ${transferAmount} ${
+                Balance[selectedBalance.balanceKind]
+              } на ${transferToAccount?.name}?`}
             </ConfirmContent>
-            <Button
-              danger
-              maxWidth={200}
-              onClick={handleAccountsTransfer}
-            >
+            <Button danger maxWidth={200} onClick={handleAccountsTransfer}>
               {t('acceptAll.accept')}
             </Button>
           </ModalBlock>
         </Modal>
       )}
 
-    <PaginationContainer>
-      <Pagination
-        pageLength={pageLength}
-        setPageLength={setPageLength}
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        totalLottery={totalCompanyAccounts}
-      />
-    </PaginationContainer>
+      <PaginationContainer>
+        <Pagination
+          pageLength={pageLength}
+          setPageLength={setPageLength}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalLottery={totalCompanyAccounts}
+        />
+      </PaginationContainer>
 
       <Notification onDelete={onDelete} data={notifications} />
     </WalletsPageWrapper>

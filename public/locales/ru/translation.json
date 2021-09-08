@@ -437,6 +437,7 @@
     "save": "Сохранить",
     "cancel": "Отмена",
     "creationDepositProgram": "Создание программы депозита",
+    "editingDepositProgram": "Редактирование программы депозита",
     "programName": "Название программы",
     "language": "Язык",
     "description": "Описание",
