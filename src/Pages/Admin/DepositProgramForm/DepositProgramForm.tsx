@@ -40,8 +40,23 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({setOpenNewP
   const depositKindList: string[] = ['Рассчетная', 'Фиксированная'];
 
   const [storage, setStorage] = useState<AddDepositModel>(chosen ? chosen : defaultFormState);
-  const [program, setProgram] = useState<AddDepositModel>(chosen ? chosen : defaultFormState);
+  const [program, setProgram] = useState<any>(chosen ? chosen : defaultFormState);
 
+  const updateProgram = async () => {
+    if (hubConnection) {
+      try {
+        console.log('updating............');
+        const response = await hubConnection.invoke('PatchDeposit', program.id, {
+            ...program,
+            affiliateRatio: getArr(tableState),
+          });
+        console.log('updateProgram ~ response', response);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+  
   async function createProgram() {
     console.log('1111111111~~~~~~~~~~~~~~~~~~start');
     console.log(program);
@@ -137,10 +152,9 @@ console.log(arr);
               name="name"
               value={program.name}
               onChange={({ target: { name, value } }) => setProgram({ ...program, [name]: value })}
+              onBlur={() => program.name !== storage.name ? setIsOpenCancelConfirm(true) : null}
             />
-            {/* {console.log(program.name !== storage.name)} */}
-            {console.log(program.name === storage.name)}
-            <Circle hide={program.name === storage.name} onClick={undefined} />
+            <Circle hide={program.name === storage.name} onClick={updateProgram} />
           </InputGroup>
           <InputGroup>
             <Label>{t('depositsPrograms.language')}</Label>
