@@ -156,7 +156,6 @@ export const Analitics: FC<Props> = ({ listDeposits }: Props) => {
   const submit = () => {
     setList([]);
     setCurrentPage(1);
-
     if (hubConnection) {
       setLoading(true);
       hubConnection
@@ -248,7 +247,7 @@ export const Analitics: FC<Props> = ({ listDeposits }: Props) => {
                 <Select checkList={checkList} setCheckList={setCheckList} values={listDeposits} />
               </SelectWrap>
               <SelectWrap input>
-                <TestInputAnalitic
+                <TestInputAnalitic 
                   setOpenDate={setOpenDate}
                   openDate={openDate}
                   label={t('adminPay.filter.date')}

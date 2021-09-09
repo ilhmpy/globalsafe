@@ -308,7 +308,7 @@ export const AdminUsers = () => {
       if(openDate.to || openDate.from) {
         if(!modifiedSorting.some(sortItem => sortItem.FieldName === 'creationDate')) {
           modifiedSorting.push({
-            ConditionWeight: 2,
+            ConditionWeight: 1,
             OrderType: 1,
             FieldName: 'creationDate',
           })
@@ -438,7 +438,7 @@ export const AdminUsers = () => {
       if(openDate.to || openDate.from) {
         if(!modifiedSorting.some(sortItem => sortItem.FieldName === 'creationDate')) {
           modifiedSorting.push({
-            ConditionWeight: 2,
+            ConditionWeight: 1,
             OrderType: 1,
             FieldName: 'creationDate',
           })
