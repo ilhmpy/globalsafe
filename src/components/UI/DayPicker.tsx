@@ -403,14 +403,26 @@ export const TestInputAnalitic: FC<TestInputAnaliticProps> = ({
     from: undefined,
     to: undefined,
   });
+  const [inputString, setInputString] = useState(
+    `${openDate.from ? moment(openDate.from).format('DD.MM.YY') : ''} ${
+      openDate.to ? `-${moment(openDate.to).format('DD.MM.YY')}` : ''
+    }`
+  );
   const ref = useRef(null);
   const { t } = useTranslation();
+  
   const handleClickOutside = () => {
     setShowOpen(false);
   };
 
   useOnClickOutside(ref, handleClickOutside);
 
+  useEffect(() => {
+    if (!openDate.from && !openDate.to) {
+      setInputString('');
+    }
+  }, [openDate]);
+  
   // const handleDayClick = (day: Date) => {
   //   const range = DateUtils.addDayToRange(day, selfDate);
   //   if (
@@ -425,10 +437,22 @@ export const TestInputAnalitic: FC<TestInputAnaliticProps> = ({
   //   }
   // };
 
+  // const handleDayClick = (day: Date) => {
+  //   const range: any = DateUtils.addDayToRange(day, selfDate);
+  //   setSelfDate({ from: range.from, to: range.to });
+  //   setOpenDate({ from: range.from, to: range.to });
+  // };
+
   const handleDayClick = (day: Date) => {
-    const range: any = DateUtils.addDayToRange(day, selfDate);
+    const range: any = DateUtils.addDayToRange(day, openDate as any);
     setSelfDate({ from: range.from, to: range.to });
     setOpenDate({ from: range.from, to: range.to });
+
+    setInputString(
+      `${range.from ? moment(range.from).format('DD.MM.YY') : ''}${
+        range.to ? `-${moment(range.to).format('DD.MM.YY')}` : ''
+      }`
+    );
   };
 
   const handleChange = () => {
@@ -445,6 +469,7 @@ export const TestInputAnalitic: FC<TestInputAnaliticProps> = ({
       from: undefined,
       to: undefined,
     });
+    setInputString('');
   };
 
   const lang = localStorage.getItem('i18nextLng') || 'ru';
@@ -454,13 +479,46 @@ export const TestInputAnalitic: FC<TestInputAnaliticProps> = ({
     <>
       <RangeInputs ref={ref}>
         <BoxInput onClick={() => setShowOpen(!showOpen)}>
+            <DateLabel>{label}</DateLabel>
+            <DateInput>
+              <InputDate
+                type="text"
+                value={inputString}
+                onChange={(e) => {
+                  const arr = e.target.value.split('-');
+                  const fromSplitted = arr[0].split('.');
+                  const toSplitted = arr.length === 2 ? arr[1].split('.') : '';
+                  const validValue = e.target.value.replace(/[^0-9\-\.]/gi, '');
+                  6;
+
+                  setInputString(validValue);
+
+                  setOpenDate({
+                    from: moment(`${fromSplitted[1]}.${fromSplitted[0]}.${fromSplitted[2]}`)
+                      .set({ hour: 12, minute: 0, second: 0 })
+                      .toDate(),
+                    to: toSplitted
+                      ? moment(`${toSplitted[1]}.${toSplitted[0]}.${toSplitted[2]}`)
+                          .set({ hour: 12, minute: 0, second: 0 })
+                          .toDate()
+                      : undefined,
+                  });
+                }}
+              />
+
+              {/* <span>{openDate.from ? moment(openDate.from).format('DD.MM.YY') : ''}</span>
+              <span>{openDate.to ? `-${moment(openDate.to).format('DD.MM.YY')} ` : ''}</span> */}
+              {openDate.from && <Close onClick={reset}>&times;</Close>}
+            </DateInput>
+          </BoxInput>
+        {/* <BoxInput onClick={() => setShowOpen(!showOpen)}>
           <DateLabel>{label}</DateLabel>
           <DateInput>
             <span>{selfDate.from ? moment(selfDate.from).format('DD.MM.YY') : ''}</span>
             <span>{selfDate.to ? `-${moment(selfDate.to).format('DD.MM.YY')} ` : ''}</span>
             {selfDate.from && <Close onClick={reset}>&times;</Close>}
           </DateInput>
-        </BoxInput>
+        </BoxInput> */}
 
         {showOpen && (
           <CustomDatePicker
@@ -1093,7 +1151,7 @@ const DateInput = styled.div`
   color: ${(props) => props.theme.text2};
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   position: relative;
   @media (max-width: 576px) {
     width: 100%;

@@ -1,11 +1,12 @@
 ﻿import moment from 'moment';
-import React, { FC, useContext, useEffect, useRef, useState } from 'react';
+import React, { FC, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTranslation } from 'react-i18next';
 import InfiniteScroll from 'react-infinite-scroller';
 import { CSSTransition } from 'react-transition-group';
 import { StackedColumn } from '../../components/Charts/StackedColumn';
 import { Modal } from '../../components/Modal/Modal';
+import { Select } from '../../components/Select/Select4';
 import { ModalRangeInput } from '../../components/UI/DayPicker';
 import { Input } from '../../components/UI/Input';
 import { Loading } from '../../components/UI/Loading';
@@ -102,11 +103,16 @@ export const InfoBalance = () => {
   const [loading, setLoading] = useState(true);
   const [addBalance, setAddBalance] = useState(false);
   const [balanceValue, setBalanceValue] = useState('');
+  const [currencyValue, setCurrencyValue] = useState<string | Balance>('');
   const [loadDeposit, setLoadDeposit] = useState(false);
   const [totalDeposit, setTotalDeposit] = useState(0);
   const [depositList, setDepositList] = useState<any>([]);
   const [chartList, setChartList] = useState<any>({});
   const inputRef = useRef<any>(null);
+
+  const balancesList = useMemo(() => {
+    return Object.values(Balance).filter(item => typeof item === 'string');
+  }, []);
 
   useEffect(() => {
     if (hubConnection) {
@@ -364,10 +370,15 @@ export const InfoBalance = () => {
   }
 
   const getTopUp = () => {
+    // GetTopUpUrl(BalanceKind balanceKind, ulong volume)
     const newWindow = window.open();
     if (hubConnection) {
       hubConnection
-        .invoke('GetTopUpUrl', +balanceValue * 100000)
+        .invoke(
+          'GetTopUpUrl', 
+          balancesList.findIndex((val) => val === currencyValue), 
+          +balanceValue * 100000
+        )
         .then((res: string) => {
           newWindow && (newWindow.location.href = res);
         })
@@ -383,6 +394,21 @@ export const InfoBalance = () => {
     if (e.target.value === '' || pattern.test(e.target.value)) {
       setBalanceValue(e.target.value);
     }
+  };
+
+  const onChangeCurrencyValue = (balanceKind: null | (string | Balance)) => {
+    if (!balanceKind) {
+      setCurrencyValue('');
+      return;
+    }
+
+    setCurrencyValue(balanceKind);
+  };
+
+  const handleCloseAddBalanceModal = () => {
+    setAddBalance(false);
+    setBalanceValue('');
+    setCurrencyValue('');
   };
 
   return (
@@ -514,9 +540,15 @@ export const InfoBalance = () => {
       </CSSTransition>
 
       <CSSTransition in={addBalance} timeout={300} classNames="modal" unmountOnExit>
-        <Modal onClose={() => setAddBalance(false)}>
+        <Modal onClose={handleCloseAddBalanceModal}>
           <Styled.ModalBlock>
             <Styled.ModalTitle>{t('privateArea.topUpBalance')}</Styled.ModalTitle>
+            <Select
+              placeholder={'Выберите Валюту'}
+              options={balancesList}
+              selectedOption={currencyValue}
+              setSelectedOption={onChangeCurrencyValue}
+            />
             <Input
               onChange={onChangeBalanceValue}
               placeholder={t('privateArea.amountEnter')}
@@ -524,7 +556,7 @@ export const InfoBalance = () => {
               ref={inputRef}
               value={balanceValue}
             />
-            <Styled.ModalButton as="button" disabled={!balanceValue} onClick={getTopUp} danger>
+            <Styled.ModalButton as="button" disabled={!balanceValue || !currencyValue} onClick={getTopUp} danger>
               {t('privateArea.topUp')}
             </Styled.ModalButton>
           </Styled.ModalBlock>
