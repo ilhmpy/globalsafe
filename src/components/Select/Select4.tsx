@@ -5,11 +5,12 @@ import styled from "styled-components";
 
 import { ReactComponent as Icon } from "../../assets/svg/selectArrow.svg";
 import useOnClickOutside from "../../hooks/useOutsideHook";
+import { Balance } from "../../types/balance";
 
 type SelectProps = {
-  options: string[];
-  selectedOption: null | string;
-  setSelectedOption: (selectedOption: null | string) => void;
+  options: (string | Balance)[];
+  selectedOption: null | (string | Balance);
+  setSelectedOption: (selectedOption: null | (string | Balance)) => void;
   placeholder?: string;
 };
 
@@ -26,7 +27,7 @@ export const Select: FC<SelectProps> = ({
   const ref = useRef<HTMLDivElement>(null);
   const toggling = () => {setIsOpen(!isOpen)};
 
-  const onOptionClicked = (value: string) => {
+  const onOptionClicked = (value: (string | Balance)) => {
     setSelectedOption(value);
     setIsOpen(false);
   };

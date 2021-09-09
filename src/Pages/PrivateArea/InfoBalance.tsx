@@ -103,7 +103,7 @@ export const InfoBalance = () => {
   const [loading, setLoading] = useState(true);
   const [addBalance, setAddBalance] = useState(false);
   const [balanceValue, setBalanceValue] = useState('');
-  const [currencyValue, setCurrencyValue] = useState('');
+  const [currencyValue, setCurrencyValue] = useState<string | Balance>('');
   const [loadDeposit, setLoadDeposit] = useState(false);
   const [totalDeposit, setTotalDeposit] = useState(0);
   const [depositList, setDepositList] = useState<any>([]);
@@ -111,50 +111,7 @@ export const InfoBalance = () => {
   const inputRef = useRef<any>(null);
 
   const balancesList = useMemo(() => {
-    return [
-      'Na',
-      'CWD',
-      'MGCWD',
-      'GCWD',
-      'DIAMOND',
-      'CROWD_BTC',
-      'CWDBONUS',
-      'CARBONE',
-      'BRONZE',
-      'FUTURE4',
-      'FUTURE5',
-      'FUTURE6',
-      'MCENT',
-      'PRIDE',
-      'GLOBALSAFE',
-      'CROWD',
-      'SILVER',
-      'ALTER',
-      'SILVER_I3700820',
-      'SILVER_I61900820',
-      'SILVER_I3100INF',
-      'SILVER_I12150820',
-      'CARBON',
-      'PLATINUM',
-      'MG621P600',
-      'D621P6000',
-      'G621P25000',
-      'CWDPOLIS',
-      'CWDHOME',
-      'INDEX',
-      'INDEX_SHARE',
-      'INDEX_CWD',
-      'MG721P7500',
-      'MG921P18000',
-      'D721P25000',
-      'D921P60000',
-      'G721P42000',
-      'G921P64000',
-      'INDEX_MSHARE',
-      'MG821P15000',
-      'D821P50000',
-      'GARANT',
-    ]
+    return Object.values(Balance).filter(item => typeof item === 'string');
   }, []);
 
   useEffect(() => {
@@ -439,7 +396,7 @@ export const InfoBalance = () => {
     }
   };
 
-  const onChangeCurrencyValue = (balanceKind: null | string) => {
+  const onChangeCurrencyValue = (balanceKind: null | (string | Balance)) => {
     if (!balanceKind) {
       setCurrencyValue('');
       return;
