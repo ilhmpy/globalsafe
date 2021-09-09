@@ -449,9 +449,9 @@ export const InfoBalance = () => {
   };
 
   const handleCloseAddBalanceModal = () => {
+    setAddBalance(false);
     setBalanceValue('');
     setCurrencyValue('');
-    setAddBalance(false);
   };
 
   return (
