@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import burgerGroup from '../../../../../assets/img/burgerGroup.png';
 import { Button } from '../../../../../components/Button/Button';
 import { Select } from '../../../../../components/Select/Select2';
-import { TestInput } from '../../../../../components/UI/DayPicker';
+import { TestInputAnalitic } from '../../../../../components/UI/DayPicker';
 import { Loading } from '../../../../../components/UI/Loading';
 import { AppContext } from '../../../../../context/HubContext';
 import { Card } from '../../../../../globalStyles';
@@ -248,7 +248,7 @@ export const Analitics: FC<Props> = ({ listDeposits }: Props) => {
                 <Select checkList={checkList} setCheckList={setCheckList} values={listDeposits} />
               </SelectWrap>
               <SelectWrap input>
-                <TestInput
+                <TestInputAnalitic
                   setOpenDate={setOpenDate}
                   openDate={openDate}
                   label={t('adminPay.filter.date')}

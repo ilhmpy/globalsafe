@@ -307,6 +307,14 @@ export const AdminPay = () => {
       //   long skip,
       //   long take);
        
+      // const modifiedSorting: SortingType[] = [];
+      // if(openDate.from || openDate.to) {
+      //     modifiedSorting.push({
+      //       ConditionWeight: 1,
+      //       OrderType: 1,
+      //       FieldName: 'paymentDate',
+      //     })
+      // };
       hubConnection
         .invoke<RootCharges>(
           'GetDepositsCharges',
@@ -327,7 +335,7 @@ export const AdminPay = () => {
           searchSafeID.length ? searchSafeID : null,
           [7, 8],
           (currentPagePay - 1) * pageLengthPay,
-          pageLengthPay
+          pageLengthPay,
         )
         .then((res) => {
           setTotalPayDeposits(res.totalRecords);
@@ -381,6 +389,15 @@ export const AdminPay = () => {
       setLoading(true);
       setCurrentPagePay(1);
       setDepositPayList([]);
+      // const modifiedSorting: SortingType[] = [];
+      // if(openDate.from || openDate.to) {
+      //     modifiedSorting.push({
+      //       ConditionWeight: 1,
+      //       OrderType: 1,
+      //       FieldName: 'paymentDate',
+      //     })
+      // };
+
       hubConnection
         .invoke<RootCharges>(
           'GetDepositsCharges',
