@@ -1,4 +1,4 @@
-import React, { FC, useContext, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
@@ -10,133 +10,49 @@ import { Content } from '../../components/UI/Tabs';
 import { UpTitle } from '../../components/UI/UpTitle';
 import { AppContext } from '../../context/HubContext';
 import { Card } from '../../globalStyles';
+import { Balance } from '../../types/balance';
 import { DepositProgramForm } from './DepositProgramForm';
 import * as Styled from './Styled.elements';
 
-export const AdminDepositsPrograms = () => {
+export const AdminDepositsPrograms: FC = () => {
   const { t } = useTranslation();
-  const [depositsPrograms, setDepositsPrograms] = useState([
-    {
-      name: 'Start',
-      currency: 'CWD',
-      amount: '1 000.0 - 10 000.0',
-      profitability: '10 %',
-      payment: 'Фиксированная',
-      depositPeriod: '180 дней',
-    },
-    {
-      name: 'Start +',
-      currency: 'CWD',
-      amount: '2 000.0 - 20 000.0',
-      profitability: '10 %',
-      payment: 'Фиксированная',
-      depositPeriod: '180 дней',
-    },
-    {
-      name: 'Classic',
-      currency: 'CWD',
-      amount: '5 000.0 - 50 000.0',
-      profitability: '10 %',
-      payment: 'Фиксированная',
-      depositPeriod: '180 дней',
-    },
-    {
-      name: 'Gold',
-      currency: 'CWD',
-      amount: '10 000.0 - 100 000.0',
-      profitability: '10 %',
-      payment: 'Фиксированная',
-      depositPeriod: '180 дней',
-    },
-    {
-      name: 'Premium',
-      currency: 'CWD',
-      amount: '50 000.0 - 500 000.0',
-      profitability: '10 %',
-      payment: 'Фиксированная',
-      depositPeriod: '180 дней',
-    },
-    {
-      name: 'VIP',
-      currency: 'CWD',
-      amount: '100 000.0 - 1 000 000.0',
-      profitability: '10 %',
-      payment: 'Фиксированная',
-      depositPeriod: '180 дней',
-    },
-    {
-      name: 'Platinum',
-      currency: 'CWD',
-      amount: '500 000.0 - 5 000 000.0',
-      profitability: '10 %',
-      payment: 'Фиксированная',
-      depositPeriod: '180 дней',
-    },
-    {
-      name: 'Start',
-      currency: 'CWD',
-      amount: '500 000.0 - 5 000 000.0',
-      profitability: '10 %',
-      payment: 'Фиксированная',
-      depositPeriod: '180 дней',
-    },
-    {
-      name: 'Start +',
-      currency: 'CWD',
-      amount: '500 000.0 - 5 000 000.0',
-      profitability: '10 %',
-      payment: 'Фиксированная',
-      depositPeriod: '180 дней',
-    },
-    {
-      name: 'Classic',
-      currency: 'CWD',
-      amount: '500 000.0 - 5 000 000.0',
-      profitability: '10 %',
-      payment: 'Фиксированная',
-      depositPeriod: '180 дней',
-    },
-    {
-      name: 'Gold',
-      currency: 'CWD',
-      amount: '500 000.0 - 5 000 000.0',
-      profitability: '10 %',
-      payment: 'Фиксированная',
-      depositPeriod: '180 дней',
-    },
-    {
-      name: 'Premium',
-      currency: 'CWD',
-      amount: '500 000.0 - 5 000 000.0',
-      profitability: '10 %',
-      payment: 'Фиксированная',
-      depositPeriod: '180 дней',
-    },
-    {
-      name: 'VIP',
-      currency: 'CWD',
-      amount: '500 000.0 - 5 000 000.0',
-      profitability: '10 %',
-      payment: 'Фиксированная',
-      depositPeriod: '180 дней',
-    },
-    {
-      name: 'Platinum',
-      currency: 'CWD',
-      amount: '500 000.0 - 5 000 000.0',
-      profitability: '10 %',
-      payment: 'Фиксированная',
-      depositPeriod: '180 дней',
-    },
-  ]);
   const [loading, setLoading] = useState(true);
 
   const [openNewProgram, setOpenNewProgram] = useState(false);
 
+  const [chosen, setChosen] = useState<any>();
+  const [totalProps, setTotalProps] = useState<number>(0);
+  const [programList, setProgramList] = useState<any[]>([]);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const user = appContext.user;
   const logOut = appContext.logOut;
+
+  const getPrograms = () => {
+    if (hubConnection) {
+      setProgramList([]);
+      setLoading(true);
+
+      hubConnection
+        .invoke<any>('GetDepositDefinitions', 0, 40)
+        .then((res) => {
+          if (res.collection.length) {
+            setProgramList(res.collection);
+          }
+          console.log('--------------------------------------->>>>>>>', res);
+          setTotalProps(res.totalRecords);
+          setLoading(false);
+        })
+        .catch((err: Error) => {
+          console.log(err);
+          setLoading(false);
+        });
+    }
+  };
+
+  useEffect(() => {
+    getPrograms();
+  }, []);
 
   return (
     <>
@@ -151,7 +67,7 @@ export const AdminDepositsPrograms = () => {
       <Content active={true}>
         <CardTable>
           {openNewProgram ? (
-            <DepositProgramForm setOpenNewProgram={setOpenNewProgram} />
+            <DepositProgramForm setOpenNewProgram={setOpenNewProgram} chosen={chosen} />
           ) : (
             <PaymentsTable>
               <TableHeader>
@@ -170,10 +86,15 @@ export const AdminDepositsPrograms = () => {
                 <TableHeadItem>{t('depositsPrograms.depositPeriod')}</TableHeadItem>
                 <TableHeadItem>{t('depositsPrograms.programActivity')}</TableHeadItem>
               </TableHead>
-              {depositsPrograms.length ? (
-                <Scrollbars style={{ height: '450px' }}>
-                  {depositsPrograms.map((program, idx) => (
-                    <TableList key={depositsPrograms.indexOf(program)} data={program} />
+              {programList.length ? (
+                <Scrollbars style={{ height: '600px' }}>
+                  {programList.map((program, index) => (
+                    <TableList
+                      key={index}
+                      data={program}
+                      setOpenNewProgram={setOpenNewProgram}
+                      setChosen={setChosen}
+                    />
                   ))}
                 </Scrollbars>
               ) : loading ? (
@@ -189,9 +110,16 @@ export const AdminDepositsPrograms = () => {
   );
 };
 
-const TableList: FC<{ data: any }> = ({ data }: any) => {
+const TableList: FC<{
+  setChosen: (type: any) => void;
+  data: any;
+  setOpenNewProgram?: (active: boolean) => void;
+}> = ({ data, setOpenNewProgram, setChosen }: any) => {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
+  const appContext = useContext(AppContext);
+  const hubConnection = appContext.hubConnection;
+  const [program, setProgram] = useState(data);
 
   const onClose = () => {
     setOpen(false);
@@ -204,17 +132,58 @@ const TableList: FC<{ data: any }> = ({ data }: any) => {
 
   const [checked, setChecked] = useState(true);
 
+  // Task PatchDeposit(ulong depositId, Dictionary<string, object?> data) - изменение депозита
+  const updateProgram = async () => {
+    if (hubConnection) {
+      try {
+        console.log('updating............');
+        const response = await hubConnection.invoke('PatchDeposit', program.id, {
+          isActive: false,
+          name: 'eeeeeeee',
+        });
+        console.log('updateProgram ~ response', response);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  // useEffect(() => {
+  //   updateProgram();
+  // }, [program]);
+
   return (
-    <TableBody onClick={modalOpen}>
-      <TableBodyItem>{data.name}</TableBodyItem>
-      <TableBodyItem>{data.currency}</TableBodyItem>
-      <TableBodyItem>{data.amount}</TableBodyItem>
-      <TableBodyItem>{data.profitability}</TableBodyItem>
-      <TableBodyItem>{data.payment}</TableBodyItem>
-      <TableBodyItem>{data.depositPeriod}</TableBodyItem>
-      <TableBodyItem checked={checked}>
-        <Switcher onChange={() => setChecked(!checked)} checked={checked} />
-        <span>{t(checked ? 'depositsPrograms.on' : 'depositsPrograms.off')}</span>
+    <TableBody
+      onClick={() => {
+        setChosen(program);
+        setOpenNewProgram(true);
+      }}
+    >
+      <TableBodyItem>{program.name}</TableBodyItem>
+      <TableBodyItem>{Balance[program.balanceKind]}</TableBodyItem>
+      <TableBodyItem>
+        {program.minAmount ? program.minAmount : '0'} -{' '}
+        {program.maxAmount ? program.maxAmount : program.minAmount}
+      </TableBodyItem>
+      <TableBodyItem>{program.ratio * 100}%</TableBodyItem>
+      <TableBodyItem>{program.depositKind}</TableBodyItem>
+      <TableBodyItem>
+        {program.duration} {t('depositsPrograms.days')}
+      </TableBodyItem>
+      <TableBodyItem
+        checked={program.isActive}
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+      >
+        <Switcher
+          onChange={() => {
+            setProgram({ ...program, isActive: !program.isActive });
+            updateProgram();
+          }}
+          checked={program.isActive}
+        />
+        <span>{t(program.isActive ? 'depositsPrograms.on' : 'depositsPrograms.off')}</span>
       </TableBodyItem>
     </TableBody>
   );
@@ -342,6 +311,9 @@ const TableHeadItem = styled.li`
   }
   &:nth-child(4) {
     max-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     @media (max-width: 480px) {
       display: none;
     }
@@ -380,5 +352,11 @@ const TableBodyItem = styled(TableHeadItem)<{ checked?: boolean }>`
   width: 100%;
   > span {
     color: ${(props) => (props.checked ? '#FF416E' : '')};
+  }
+  &:nth-child(1) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
   }
 `;

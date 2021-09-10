@@ -1,18 +1,26 @@
-import { FC, useState } from 'react';
+import { HubConnectionState } from '@microsoft/signalr';
+import { FC, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+import { ReactComponent as CircleOk } from '../../../assets/svg/circleOk.svg';
 import { ReactComponent as Stroke } from '../../../assets/svg/leftStroke.svg';
 import { Button } from '../../../components/Button/Button';
 import { Modal } from '../../../components/Modal/Modal';
-import { Select } from '../../../components/Select/Select';
+import { Select } from '../../../components/Select/Select3';
 import { Switcher } from '../../../components/Switcher';
-import { DepositProgramFormPropsType } from './types';
+import { AppContext } from '../../../context/HubContext';
+import { BalanceKind } from '../../../enums/balanceKind';
+import { defaultFormState } from './helpers';
+import { AddDepositModel, DepositProgramFormPropsType } from './types';
 
 // eslint-disable-next-line react/prop-types
-export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNewProgram }) => {
+export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({setOpenNewProgram,chosen,
+}) => {
+  console.log('chosen', chosen);
   const [checkList, setCheckList] = useState<any>([]);
   const { t } = useTranslation();
-  const list = ['Ru', 'En'];
+  const langList: string[] = ['English', 'Russian'];
+  const [language, setLanguage] = useState<string>('');
   const [delayedDepositChecked, setDelayedDepositChecked] = useState(false);
   const [programIsActiveChecked, setProgramIsActiveChecked] = useState(true);
   const [publishingProgramChecked, setPublishingProgramChecked] = useState(false);
@@ -25,93 +33,317 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
   const [isSavingCanceled, setIsSavingCanceled] = useState(false);
   const [isModalError, setIsModalError] = useState(false);
 
+  const appContext = useContext(AppContext);
+  const hubConnection = appContext.hubConnection;
+  const [programList, setProgramList] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const depositKindList: string[] = ['Рассчетная', 'Фиксированная'];
+
+  const [storage, setStorage] = useState<AddDepositModel>(chosen ? chosen : defaultFormState);
+  const [program, setProgram] = useState<any>(chosen ? chosen : defaultFormState);
+
+  const updateProgram = async () => {
+    if (hubConnection) {
+      try {
+        console.log('updating............');
+        const response = await hubConnection.invoke('PatchDeposit', program.id, {
+            ...program,
+            affiliateRatio: getArr(tableState),
+          });
+        console.log('updateProgram ~ response', response);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+  
+  async function createProgram() {
+    console.log('1111111111~~~~~~~~~~~~~~~~~~start');
+    console.log(program);
+
+    if (!hubConnection || hubConnection.state != HubConnectionState.Connected) {
+      return;
+    }
+
+    setProgramList([]);
+    setLoading(true);
+
+    try {
+      const res = await hubConnection.invoke<any>('CreateDeposit', {
+        ...program,
+        affiliateRatio: getArr(tableState),
+      });
+
+      console.log('createProgram ~ res', res);
+    } catch (err) {
+      setIsModalError(true);
+      console.log(err);
+    }
+  }
+  type ColumnObjectType = {
+    '0': string;
+    '1': string;
+    '2': string;
+    '3': string;
+    '4': string;
+    '5': string;
+    '6': string;
+    '7': string;
+  };
+
+  type ColumnsObjType = {
+    start: ColumnObjectType;
+    expert: ColumnObjectType;
+    infinity: ColumnObjectType;
+  };
+  const getObj = (arr: any) => {
+    const columnsObj: any = {
+      start: { '0': '', '1': '', '2': '', '3': '', '4': '', '5': '', '6': '', '7': '' },
+      expert: { '0': '', '1': '', '2': '', '3': '', '4': '', '5': '', '6': '', '7': '' },
+      infinity: { '0': '', '1': '', '2': '', '3': '', '4': '', '5': '', '6': '', '7': '' },
+    };
+console.log(arr);
+    arr.length &&
+      arr?.forEach((it: any, i: number) => {
+        it.forEach((items: number[]) => {
+          if (items[0] === 1) columnsObj.start[i] = items[1];
+          if (items[0] === 2) columnsObj.expert[i] = items[1];
+          if (items[0] === 4) columnsObj.infinity[i] = items[1];
+        });
+      });
+
+    return columnsObj;
+  };
+
+  const getArr = (obj: any) => {
+    const affilateArray = [];
+    const startArr = Object.values(obj.start);
+    const expertArr = Object.values(obj.expert);
+    const infinityArr = Object.values(obj.infinity);
+
+    for (let i = 0; i < 8; i++) {
+      affilateArray.push([
+        [1, startArr[i]],
+        [2, expertArr[i]],
+        [4, infinityArr[i]],
+      ]);
+    }
+
+    return affilateArray;
+  };
+
+  const [tableState, setTableState] = useState(getObj(program?.affiliateRatio));
+  const [tableStateCopy, setTableStateCopy] = useState(getObj(program?.affiliateRatio));
+  console.log(chosen);
   return (
     <Container>
       <Header>
         <Stroke onClick={() => setOpenNewProgram(false)} />
-        <Title>{t('depositsPrograms.creationDepositProgram')}</Title>
+        <Title>
+          {t(`depositsPrograms.${chosen ? 'editingDepositProgram' : 'creationDepositProgram'}`)}
+        </Title>
       </Header>
       <ContentWrapper>
         <Row>
           <InputGroup>
             <Label>{t('depositsPrograms.programName')}</Label>
-            <Input />
+            <Input
+              placeholder="-"
+              name="name"
+              value={program.name}
+              onChange={({ target: { name, value } }) => setProgram({ ...program, [name]: value })}
+              onBlur={() => program.name !== storage.name ? setIsOpenCancelConfirm(true) : null}
+            />
+            <Circle hide={program.name === storage.name} onClick={updateProgram} />
           </InputGroup>
           <InputGroup>
             <Label>{t('depositsPrograms.language')}</Label>
-            <Select checkList={[checkList]} setCheckList={setCheckList} values={list} />
+            <Select
+              options={langList}
+              selectedOption={langList[program.Language]}
+              setSelectedOption={(val: string) => {
+                setProgram({ ...program, Language: langList.indexOf(val) });
+              }}
+            />
+            <Circle hide={program.Language === storage.Language} onClick={undefined} />
           </InputGroup>
         </Row>
 
         <Row>
           <InputGroup>
             <Label>{t('depositsPrograms.description')}</Label>
-            <Text />
+            <Text
+              placeholder="-"
+              name="description"
+              value={program.description}
+              onChange={(e) => {
+                setProgram({ ...program, description: e.target.value });
+              }}
+            />
+            <Circle hide={program.description === storage.description} txt onClick={undefined} />
           </InputGroup>
         </Row>
 
         <Row hr>
           <InputGroup>
             <Label>{t('depositsPrograms.currencyDeposit')}</Label>
-            <Select checkList={[checkList]} setCheckList={setCheckList} values={list} />
+            <Select
+              options={
+                Object.keys(BalanceKind)
+                  .map((key: any) => BalanceKind[key])
+                  .filter((value) => typeof value === 'string') as string[]
+              }
+              selectedOption={BalanceKind[program.balanceKind]}
+              setSelectedOption={(value: any) => {
+                console.log(typeof value);
+                setProgram({
+                  ...program,
+                  balanceKind: +BalanceKind[value],
+                });
+              }}
+            />
+            <Circle hide={program.balanceKind === storage.balanceKind} onClick={undefined} />
           </InputGroup>
 
           <Hr />
-
-          <InputGroup disabled>
+          <InputGroup disabled={BalanceKind[program.balanceKind] === 'CWD'}>
             <Label>{t('depositsPrograms.exchangeRate')}</Label>
-            <Input placeholder="&mdash;" CWD disabled />
+            {program.exchanges.length ? console.log(program.exchanges[0]) : ''}
+            <Input
+              placeholder="&mdash;"
+              CWD
+              disabled={BalanceKind[program.balanceKind] === 'CWD'}
+              name="exchanges"
+              value={program.exchanges.length ? program.exchanges[0].Rate : ''}
+              onChange={({ target: { name, value } }) => {
+                setProgram({
+                  ...program,
+                  [name]: [{ assetId: String(program.balanceKind), Rate: +value }],
+                });
+              }}
+            />
+            <Circle hide={program.exchanges === storage.exchanges} onClick={undefined} />
           </InputGroup>
         </Row>
 
         <Row>
           <InputGroup>
             <Label>{t('depositsPrograms.minAmount')}</Label>
-            <Input />
+            <Input
+              placeholder="-"
+              name="minAmount"
+              value={program.minAmount}
+              onChange={({ target: { name, value } }) => {
+                setProgram({ ...program, [name]: +value });
+              }}
+            />
+            <Circle hide={program.minAmount === storage.minAmount} onClick={undefined} />
           </InputGroup>
           <InputGroup>
             <Label>{t('depositsPrograms.maxAmount')}</Label>
-            <Input />
+            <Input
+              placeholder="-"
+              name="maxAmount"
+              value={program.maxAmount}
+              onChange={({ target: { name, value } }) => {
+                setProgram({ ...program, [name]: +value });
+              }}
+            />
+            <Circle hide={program.maxAmount === storage.maxAmount} onClick={undefined} />
           </InputGroup>
         </Row>
 
         <Row>
           <InputGroup>
             <Label>{t('depositsPrograms.depositTerm')}</Label>
-            <Input />
+            <Input
+              placeholder="-"
+              name="duration"
+              value={program.duration}
+              onChange={({ target: { name, value } }) => {
+                setProgram({ ...program, [name]: +value });
+              }}
+            />
+            <Circle hide={program.duration === storage.duration} onClick={undefined} />
           </InputGroup>
         </Row>
 
         <Row>
           <InputGroup>
             <Label>{t('depositsPrograms.startPayments')}</Label>
-            <Input />
+            <Input
+              placeholder="-"
+              name="paymentsOffset"
+              value={program.paymentsOffset}
+              onChange={({ target: { name, value } }) => {
+                setProgram({ ...program, [name]: +value });
+              }}
+            />
+            <Circle hide={program.paymentsOffset === storage.paymentsOffset} onClick={undefined} />
           </InputGroup>
         </Row>
 
         <Row>
           <InputGroup>
             <Label>{t('depositsPrograms.paymentInterval')}</Label>
-            <Input />
+            <Input
+              placeholder="-"
+              name="paymentsInterval"
+              value={program.paymentsInterval}
+              onChange={({ target: { name, value } }) => {
+                setProgram({ ...program, [name]: +value });
+              }}
+            />
+            <Circle
+              hide={program.paymentsInterval === storage.paymentsInterval}
+              onClick={undefined}
+            />
           </InputGroup>
         </Row>
 
         <Row>
           <InputGroup>
             <Label>{t('depositsPrograms.paymentsDays')}</Label>
-            <Input />
+            <Input
+              placeholder="-"
+              name="paymentsDays"
+              value={program.paymentsDays as string}
+              onChange={({ target: { name, value } }) => {
+                setProgram({ ...program, [name]: value });
+              }}
+            />
+            <Circle hide={program.paymentsDays === storage.paymentsDays} onClick={undefined} />
           </InputGroup>
         </Row>
 
         <Row hr>
           <InputGroup>
             <Label>{t('depositsPrograms.payment')}</Label>
-            <Select checkList={[checkList]} setCheckList={setCheckList} values={list} />
+            <Select
+              options={depositKindList}
+              selectedOption={depositKindList[program.depositKind]}
+              setSelectedOption={(value: string) => {
+                console.log(value);
+                setProgram({
+                  ...program,
+                  depositKind: +depositKindList.indexOf(value),
+                });
+              }}
+            />
+            <Circle hide={program.depositKind === storage.depositKind} onClick={undefined} />
           </InputGroup>
           <Hr />
           <InputGroup>
             <Label>{t('depositsPrograms.clientYield')}</Label>
-            <Input />
+            <Input
+              placeholder="-"
+              name="ratio"
+              value={program.ratio}
+              onChange={({ target: { name, value } }) => {
+                setProgram({ ...program, [name]: +value });
+              }}
+            />
+            <Circle hide={program.ratio === storage.ratio} onClick={undefined} />
           </InputGroup>
         </Row>
 
@@ -120,11 +352,13 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
             <Label>{t('depositsPrograms.delayedDeposit')}</Label>
             <StatusGroup>
               <Switcher
-                onChange={() => setDelayedDepositChecked(!delayedDepositChecked)}
-                checked={delayedDepositChecked}
+                checked={program.isInstant}
+                onChange={() => {
+                  setProgram({ ...program, isInstant: !program.isInstant });
+                }}
               />
-              <Status checked={delayedDepositChecked}>
-                {t(delayedDepositChecked ? 'depositsPrograms.yes' : 'depositsPrograms.no')}
+              <Status checked={program.isInstant}>
+                {t(program.isInstant ? 'depositsPrograms.yes' : 'depositsPrograms.no')}
               </Status>
             </StatusGroup>
           </InputGroup>
@@ -140,49 +374,185 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
               <Row>
                 <InputGroup>
                   <Label>1 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    placeholder="-"
+                    value={tableState.start[0]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        start: {
+                          ...tableState.start,
+                          '0': +value,
+                        },
+                      })
+                    }
+                  />
+                  <Circle
+                    hide={tableState.start[0] === tableStateCopy.start[0]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>2 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    placeholder="-"
+                    value={tableState.start[1]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        start: {
+                          ...tableState.start,
+                          '1': +value,
+                        },
+                      })
+                    }
+                  />
+                  <Circle
+                    hide={tableState.start[1] === tableStateCopy.start[1]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>3 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    placeholder="-"
+                    value={tableState.start[2]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        start: {
+                          ...tableState.start,
+                          '2': +value,
+                        },
+                      })
+                    }
+                  />
+                  <Circle
+                    hide={tableState.start[2] === tableStateCopy.start[2]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>4 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    placeholder="-"
+                    value={tableState.start[3]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        start: {
+                          ...tableState.start,
+                          '3': +value,
+                        },
+                      })
+                    }
+                  />
+                  <Circle
+                    hide={tableState.start[3] === tableStateCopy.start[3]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>5 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    placeholder="-"
+                    value={tableState.start[4]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        start: {
+                          ...tableState.start,
+                          '4': +value,
+                        },
+                      })
+                    }
+                  />
+                  <Circle
+                    hide={tableState.start[4] === tableStateCopy.start[4]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>6 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    placeholder="-"
+                    value={tableState.start[5]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        start: {
+                          ...tableState.start,
+                          '5': +value,
+                        },
+                      })
+                    }
+                  />
+                  <Circle
+                    hide={tableState.start[5] === tableStateCopy.start[5]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>7 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    placeholder="-"
+                    value={tableState.start[6]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        start: {
+                          ...tableState.start,
+                          '6': +value,
+                        },
+                      })
+                    }
+                  />
+                  <Circle
+                    hide={tableState.start[6] === tableStateCopy.start[6]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>8 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    placeholder="-"
+                    value={tableState.start[7]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        start: {
+                          ...tableState.start,
+                          '7': +value,
+                        },
+                      })
+                    }
+                  />
+                  <Circle
+                    hide={tableState.start[7] === tableStateCopy.start[7]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
             </ColumnGroup>
@@ -194,49 +564,185 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
               <Row>
                 <InputGroup>
                   <Label>1 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    placeholder="-"
+                    value={tableState.expert[0]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        expert: {
+                          ...tableState.expert,
+                          '0': +value,
+                        },
+                      })
+                    }
+                  />
+                  <Circle
+                    hide={tableState.expert[0] === tableStateCopy.expert[0]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>2 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    placeholder="-"
+                    value={tableState.expert[1]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        expert: {
+                          ...tableState.expert,
+                          '1': +value,
+                        },
+                      })
+                    }
+                  />
+                  <Circle
+                    hide={tableState.expert[1] === tableStateCopy.expert[1]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>3 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    placeholder="-"
+                    value={tableState.expert[2]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        expert: {
+                          ...tableState.expert,
+                          '2': +value,
+                        },
+                      })
+                    }
+                  />
+                  <Circle
+                    hide={tableState.expert[2] === tableStateCopy.expert[2]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>4 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    placeholder="-"
+                    value={tableState.expert[3]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        expert: {
+                          ...tableState.expert,
+                          '3': +value,
+                        },
+                      })
+                    }
+                  />
+                  <Circle
+                    hide={tableState.expert[3] === tableStateCopy.expert[3]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>5 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    placeholder="-"
+                    value={tableState.expert[4]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        expert: {
+                          ...tableState.expert,
+                          '4': +value,
+                        },
+                      })
+                    }
+                  />
+                  <Circle
+                    hide={tableState.expert[4] === tableStateCopy.expert[4]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>6 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    placeholder="-"
+                    value={tableState.expert[5]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        expert: {
+                          ...tableState.expert,
+                          '5': +value,
+                        },
+                      })
+                    }
+                  />
+                  <Circle
+                    hide={tableState.expert[5] === tableStateCopy.expert[5]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>7 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    placeholder="-"
+                    value={tableState.expert[6]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        expert: {
+                          ...tableState.expert,
+                          '6': +value,
+                        },
+                      })
+                    }
+                  />
+                  <Circle
+                    hide={tableState.expert[6] === tableStateCopy.expert[6]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>8 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    placeholder="-"
+                    value={tableState.expert[7]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        expert: {
+                          ...tableState.expert,
+                          '7': +value,
+                        },
+                      })
+                    }
+                  />
+                  <Circle
+                    hide={tableState.expert[7] === tableStateCopy.expert[7]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
             </ColumnGroup>
@@ -248,49 +754,185 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
               <Row>
                 <InputGroup>
                   <Label>1 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    placeholder="-"
+                    value={tableState.infinity[0]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        infinity: {
+                          ...tableState.infinity,
+                          '0': +value,
+                        },
+                      })
+                    }
+                  />
+                  <Circle
+                    hide={tableState.infinity[0] === tableStateCopy.infinity[0]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>2 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    placeholder="-"
+                    value={tableState.infinity[1]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        infinity: {
+                          ...tableState.infinity,
+                          '1': +value,
+                        },
+                      })
+                    }
+                  />
+                  <Circle
+                    hide={tableState.infinity[1] === tableStateCopy.infinity[1]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>3 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    placeholder="-"
+                    value={tableState.infinity[2]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        infinity: {
+                          ...tableState.infinity,
+                          '2': +value,
+                        },
+                      })
+                    }
+                  />
+                  <Circle
+                    hide={tableState.infinity[2] === tableStateCopy.infinity[2]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>4 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    placeholder="-"
+                    value={tableState.infinity[3]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        infinity: {
+                          ...tableState.infinity,
+                          '3': +value,
+                        },
+                      })
+                    }
+                  />
+                  <Circle
+                    hide={tableState.infinity[3] === tableStateCopy.infinity[3]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>5 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    placeholder="-"
+                    value={tableState.infinity[4]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        infinity: {
+                          ...tableState.infinity,
+                          '4': +value,
+                        },
+                      })
+                    }
+                  />
+                  <Circle
+                    hide={tableState.infinity[4] === tableStateCopy.infinity[4]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>6 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    placeholder="-"
+                    value={tableState.infinity[5]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        infinity: {
+                          ...tableState.infinity,
+                          '5': +value,
+                        },
+                      })
+                    }
+                  />
+                  <Circle
+                    hide={tableState.infinity[5] === tableStateCopy.infinity[5]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>7 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    placeholder="-"
+                    value={tableState.infinity[6]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        infinity: {
+                          ...tableState.infinity,
+                          '6': +value,
+                        },
+                      })
+                    }
+                  />
+                  <Circle
+                    hide={tableState.infinity[6] === tableStateCopy.infinity[6]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
               <Row>
                 <InputGroup>
                   <Label>8 {t('depositsPrograms.line')}</Label>
-                  <Input />
+                  <Input
+                    placeholder="-"
+                    value={tableState.infinity[7]}
+                    onChange={({ target: { value } }) =>
+                      setTableState({
+                        ...tableState,
+                        infinity: {
+                          ...tableState.infinity,
+                          '7': +value,
+                        },
+                      })
+                    }
+                  />
+                  <Circle
+                    hide={tableState.infinity[7] === tableStateCopy.infinity[7]}
+                    tb
+                    onClick={undefined}
+                  />
                 </InputGroup>
               </Row>
             </ColumnGroup>
@@ -300,37 +942,95 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
         <Row>
           <InputGroup>
             <Label>{t('depositsPrograms.depositAccount')}</Label>
-            <Input />
+            <Input
+              placeholder="-"
+              name="referenceAccount"
+              value={program.referenceAccount}
+              onChange={({ target: { name, value } }) => {
+                setProgram({ ...program, [name]: value });
+              }}
+            />
+            <Circle
+              hide={program.referenceAccount === storage.referenceAccount}
+              bld
+              onClick={undefined}
+            />
           </InputGroup>
         </Row>
         <Row>
           <InputGroup>
             <Label>{t('depositsPrograms.transferCode')}</Label>
-            <Input />
+            <Input
+              placeholder="-"
+              name="referenceCode"
+              value={program.referenceCode as string}
+              onChange={({ target: { name, value } }) => {
+                setProgram({ ...program, [name]: value });
+              }}
+            />
+            <Circle hide={program.referenceCode === storage.referenceCode} onClick={undefined} />
           </InputGroup>
         </Row>
         <Row>
           <InputGroup lg>
             <Label>{t('depositsPrograms.activeKey')}</Label>
-            <Input />
+            <Input
+              placeholder="-"
+              name="activeWif"
+              value={program.activeWif}
+              onChange={({ target: { name, value } }) => {
+                setProgram({ ...program, [name]: value });
+              }}
+            />
+            <Circle hide={program.activeWif === storage.activeWif} onClick={undefined} />
           </InputGroup>
         </Row>
         <Row>
           <InputGroup lg>
             <Label>{t('depositsPrograms.keyNotes')}</Label>
-            <Input />
+            <Input
+              placeholder="-"
+              name="memoWif"
+              value={program.memoWif}
+              onChange={({ target: { name, value } }) => {
+                setProgram({ ...program, [name]: value });
+              }}
+            />
+            <Circle hide={program.memoWif === storage.memoWif} onClick={undefined} />
           </InputGroup>
         </Row>
 
         <Row hr>
           <InputGroup>
             <Label>{t('depositsPrograms.depositActivationCost')}</Label>
-            <Select checkList={[checkList]} setCheckList={setCheckList} values={list} />
+            <Select
+              options={
+                Object.keys(BalanceKind)
+                  .map((key: any) => BalanceKind[key])
+                  .filter((value) => typeof value === 'string') as string[]
+              }
+              selectedOption={program.priceKind ? BalanceKind[program.priceKind] : ''}
+              setSelectedOption={(value: any) => {
+                setProgram({
+                  ...program,
+                  priceKind: +BalanceKind[value],
+                });
+              }}
+            />
+            <Circle hide={program.priceKind === storage.priceKind} onClick={undefined} />
           </InputGroup>
           <Hr />
           <InputGroup>
             <Label>{t('depositsPrograms.value')}</Label>
-            <Input />
+            <Input
+              placeholder="-"
+              name="price"
+              value={program.price ? program.price : ''}
+              onChange={({ target: { name, value } }) => {
+                setProgram({ ...program, [name]: +value });
+              }}
+            />
+            <Circle hide={program.price === storage.price} onClick={undefined} />
           </InputGroup>
         </Row>
 
@@ -339,11 +1039,13 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
             <Label>{t('depositsPrograms.programIsActive')}</Label>
             <StatusGroup>
               <Switcher
-                onChange={() => setProgramIsActiveChecked(!programIsActiveChecked)}
-                checked={programIsActiveChecked}
+                checked={program.isActive}
+                onChange={() => {
+                  setProgram({ ...program, isActive: !program.isActive });
+                }}
               />
-              <Status checked={programIsActiveChecked}>
-                {t(programIsActiveChecked ? 'depositsPrograms.yes' : 'depositsPrograms.no')}
+              <Status checked={program.isActive}>
+                {t(program.isActive ? 'depositsPrograms.yes' : 'depositsPrograms.no')}
               </Status>
             </StatusGroup>
           </InputGroup>
@@ -354,17 +1056,25 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
             <Label>{t('depositsPrograms.publishingProgram')}</Label>
             <StatusGroup>
               <Switcher
-                onChange={() => setPublishingProgramChecked(!publishingProgramChecked)}
-                checked={publishingProgramChecked}
+                checked={program.isPublic}
+                onChange={() => {
+                  setProgram({ ...program, isPublic: !program.isPublic });
+                }}
               />
-              <Status checked={publishingProgramChecked}>
-                {t(publishingProgramChecked ? 'depositsPrograms.yes' : 'depositsPrograms.no')}
+              <Status checked={program.isPublic}>
+                {t(program.isPublic ? 'depositsPrograms.yes' : 'depositsPrograms.no')}
               </Status>
             </StatusGroup>
           </InputGroup>
         </Row>
         <ButtonGroup>
-          <Button danger maxWidth={130} onClick={() => setIsOpenSaveConfirm(true)}>
+          <Button
+            danger
+            maxWidth={130}
+            onClick={async () => {
+              setIsOpenSaveConfirm(true);
+            }}
+          >
             {t('depositsPrograms.save')}
           </Button>
           <Button dangerOutline maxWidth={130} onClick={() => setIsOpenCancelConfirm(true)}>
@@ -383,6 +1093,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                   onClick={() => {
                     setIsOpenSaveConfirm(false);
                     setIsSavingSuccess(true);
+                    createProgram();
                   }}
                 >
                   {t('depositsPrograms.save')}
@@ -407,11 +1118,18 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
                   onClick={() => {
                     setIsOpenCancelConfirm(false);
                     setIsSavingCanceled(true);
+                    setProgram(defaultFormState);
                   }}
                 >
                   {t('depositsPrograms.dontSave')}
                 </Button>
-                <Button dangerOutline maxWidth={200} onClick={() => setIsOpenCancelConfirm(false)}>
+                <Button
+                  dangerOutline
+                  maxWidth={200}
+                  onClick={() => {
+                    setIsOpenCancelConfirm(false);
+                  }}
+                >
                   {t('depositsPrograms.return')}
                 </Button>
               </ModalButtons>
@@ -420,7 +1138,12 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
         )}
 
         {isSavingSuccess && (
-          <Modal onClose={() => setIsSavingSuccess(false)}>
+          <Modal
+            onClose={() => {
+              setIsSavingSuccess(false);
+              setOpenNewProgram(false);
+            }}
+          >
             <ModalBlock sm>
               <ModalTitle>{t('alert.success')} !</ModalTitle>
               <ModalContent>{t('depositsPrograms.depositProgramSuccessfullySaved')}</ModalContent>
@@ -428,7 +1151,12 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
           </Modal>
         )}
         {isSavingCanceled && (
-          <Modal onClose={() => setIsSavingCanceled(false)}>
+          <Modal
+            onClose={() => {
+              setIsSavingCanceled(false);
+              setOpenNewProgram(false);
+            }}
+          >
             <ModalBlock sm>
               <ModalTitle>{t('depositsPrograms.changesCanceled')}</ModalTitle>
               <ModalContent>{t('depositsPrograms.changesCanceledSuccessfully')}</ModalContent>
@@ -447,7 +1175,6 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({ setOpenNew
     </Container>
   );
 };
-
 const ModalBlock = styled.div<{ sm?: boolean }>`
   display: flex;
   flex-direction: column;
@@ -553,6 +1280,19 @@ const ColumnHead = styled.p`
   }
 `;
 
+const Circle = styled(CircleOk)<{ tb?: boolean; txt?: boolean; bld?: boolean; hide?: boolean }>`
+  position: absolute;
+  display: ${(props) => (props.hide ? 'none' : 'block')};
+  left: ${(props) => (props.txt ? '231%' : '101%')};
+  top: ${(props) => (props.bld ? '55px' : '35px')};
+  @media (max-width: 768px) {
+    left: ${(props) => (props.txt ? '172%' : '101%')};
+  }
+  @media (max-width: 576px) {
+    left: 101%;
+  }
+`;
+
 const Table = styled.div`
   display: flex;
   flex-direction: column;
@@ -640,6 +1380,7 @@ const Row = styled.div<{ hr?: boolean }>`
 `;
 
 const InputGroup = styled.div<{ lg?: boolean; disabled?: boolean }>`
+  position: relative;
   max-width: ${(props) => (props.lg ? '650px' : '280px')};
   width: 100%;
   display: flex;

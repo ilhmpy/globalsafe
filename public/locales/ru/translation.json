@@ -437,6 +437,7 @@
     "save": "Сохранить",
     "cancel": "Отмена",
     "creationDepositProgram": "Создание программы депозита",
+    "editingDepositProgram": "Редактирование программы депозита",
     "programName": "Название программы",
     "language": "Язык",
     "description": "Описание",
@@ -467,7 +468,8 @@
     "dontSave": "Не сохранять",
     "depositProgramSuccessfullySaved": "Программа депозита успешно сохранена.",
     "changesCanceled": "Изменения отменены !",
-    "changesCanceledSuccessfully": "Изменения успешно отменены."
+    "changesCanceledSuccessfully": "Изменения успешно отменены.",
+    "days": "дней"
   },
   "wallets": {
     "refreshAll": "Обновить все",

@@ -438,6 +438,7 @@
     "save": "Save",
     "cancel": "Cancel",
     "creationDepositProgram": "Creation of a deposit program",
+    "editingDepositProgram": "Editing of a deposit program",
     "programName": "The name of the program",
     "language": "Language",
     "description": "Description",
@@ -468,7 +469,8 @@
     "dontSave": "Do not save",
     "depositProgramSuccessfullySaved": "The deposit program has been successfully saved.",
     "changesCanceled": "Changes canceled!",
-    "changesCanceledSuccessfully": "Changes have been successfully canceled."
+    "changesCanceledSuccessfully": "Changes have been successfully canceled.",
+    "days": "days"
   },
   "wallets": {
     "refreshAll": "Refresh all",
@@ -521,7 +523,7 @@
   "typeWin": "Type win: From A to Z",
   "typeWin2": "Type win: From Z to A",
   "descendWinSum": "By descending sum of win",
-  "ascendWinSum": "By ascending sum of win", 
+  "ascendWinSum": "By ascending sum of win",
   "winners": "Winners: From A to Z",
   "winners2": "Winners: From Z to A",
   "descendDatePay": "By descending date of pay",
