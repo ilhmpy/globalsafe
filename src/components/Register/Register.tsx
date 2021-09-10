@@ -222,8 +222,7 @@ const H4 = styled.h4`
   font-weight: 500;
   font-size: 24px;
   line-height: 28px;
-  color: #0e0d3d;
-  margin-bottom: 20px;
+  margin-bottom: 23px;
 `;
 
 const FormBlock = styled.form`
@@ -231,6 +230,7 @@ const FormBlock = styled.form`
   width: 200px;
   display: flex;
   flex-direction: column;
+  position: relative;
 `;
 
 const Submit = styled(Button)<{ mb?: boolean }>`
@@ -240,20 +240,24 @@ const Submit = styled(Button)<{ mb?: boolean }>`
 `;
 
 const CardContainer = styled(Card)`
-  padding-top: 160px;
-  padding-bottom: 160px;
   display: flex;
+  align-items: center;
+  position: relative;
+  height: 482px;
   @media (max-width: 992px) {
-    padding-top: 125px;
-    padding-bottom: 125px;
+    height: 410px;
   }
 `;
 
 export const StyledInlineErrorMessage = styled.div`
   color: #ff416e;
   display: block;
-  font-size: 14px;
-  line-height: 16px;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 14px;
+  position: absolute;
+  width: 100%;
+  top: 98px;
   white-space: pre-line;
   margin-bottom: 15px;
   text-align: center;
