@@ -208,6 +208,7 @@ export const LoginComponent = () => {
                 </Submit>
               )}
             </Timer>
+            <LinkToPage to="/register">{t('headerButton.register')}</LinkToPage>
           </FormBlock>
         </CSSTransition>
 
