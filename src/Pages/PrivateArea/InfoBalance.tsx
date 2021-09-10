@@ -12,7 +12,7 @@ import { Input } from '../../components/UI/Input';
 import { Loading } from '../../components/UI/Loading';
 import { AppContext } from '../../context/HubContext';
 import { Card, Container } from '../../globalStyles';
-import { Balance } from '../../types/balance';
+import { Balance, BalanceKind } from '../../types/balance';
 import { OpenDate } from '../../types/dates';
 import { ModalDividends } from './Modals';
 import * as Styled from './Styles.elements';
@@ -103,15 +103,16 @@ export const InfoBalance = () => {
   const [loading, setLoading] = useState(true);
   const [addBalance, setAddBalance] = useState(false);
   const [balanceValue, setBalanceValue] = useState('');
-  const [currencyValue, setCurrencyValue] = useState<string | Balance>('');
+  const [currencyValue, setCurrencyValue] = useState<string | BalanceKind>('');
   const [loadDeposit, setLoadDeposit] = useState(false);
   const [totalDeposit, setTotalDeposit] = useState(0);
   const [depositList, setDepositList] = useState<any>([]);
   const [chartList, setChartList] = useState<any>({});
   const inputRef = useRef<any>(null);
 
+  // Get Balance Kinds List as an Array
   const balancesList = useMemo(() => {
-    return Object.values(Balance).filter(item => typeof item === 'string');
+    return Object.values(BalanceKind).filter(item => typeof item === 'string');
   }, []);
 
   useEffect(() => {
@@ -396,7 +397,7 @@ export const InfoBalance = () => {
     }
   };
 
-  const onChangeCurrencyValue = (balanceKind: null | (string | Balance)) => {
+  const onChangeCurrencyValue = (balanceKind: null | (string | BalanceKind)) => {
     if (!balanceKind) {
       setCurrencyValue('');
       return;
@@ -544,7 +545,7 @@ export const InfoBalance = () => {
           <Styled.ModalBlock>
             <Styled.ModalTitle>{t('privateArea.topUpBalance')}</Styled.ModalTitle>
             <Select
-              placeholder={'Выберите Валюту'}
+              placeholder={t('privateArea.selectCurrency')}
               options={balancesList}
               selectedOption={currencyValue}
               setSelectedOption={onChangeCurrencyValue}

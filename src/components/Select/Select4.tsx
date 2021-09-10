@@ -5,12 +5,12 @@ import styled from "styled-components";
 
 import { ReactComponent as Icon } from "../../assets/svg/selectArrow.svg";
 import useOnClickOutside from "../../hooks/useOutsideHook";
-import { Balance } from "../../types/balance";
+import { BalanceKind } from "../../types/balance";
 
 type SelectProps = {
-  options: (string | Balance)[];
-  selectedOption: null | (string | Balance);
-  setSelectedOption: (selectedOption: null | (string | Balance)) => void;
+  options: (string | BalanceKind)[];
+  selectedOption: null | (string | BalanceKind);
+  setSelectedOption: (selectedOption: null | (string | BalanceKind)) => void;
   placeholder?: string;
 };
 
@@ -27,7 +27,7 @@ export const Select: FC<SelectProps> = ({
   const ref = useRef<HTMLDivElement>(null);
   const toggling = () => {setIsOpen(!isOpen)};
 
-  const onOptionClicked = (value: (string | Balance)) => {
+  const onOptionClicked = (value: (string | BalanceKind)) => {
     setSelectedOption(value);
     setIsOpen(false);
   };
@@ -70,7 +70,7 @@ export const Select: FC<SelectProps> = ({
         </CustomDropDownHeader>
         {isOpen && (
           <CustomSelectList>
-            <Scrollbars style={{ height: '240px' }}>
+            <Scrollbars style={{ height: '160px' }}>
             {options.map((option, idx) => (
               <Styled.ListItem
                 active={activeList === idx}
@@ -89,7 +89,7 @@ export const Select: FC<SelectProps> = ({
 };
 
 const CustomSelectList = styled(Styled.SelectList)`
-    margin: 0 20px;
+    margin: 2px 20px 0 20px;
     overflow: hidden;
 `;
 
