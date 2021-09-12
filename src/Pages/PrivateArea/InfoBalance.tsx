@@ -373,11 +373,12 @@ export const InfoBalance = () => {
   const getTopUp = () => {
     // GetTopUpUrl(BalanceKind balanceKind, ulong volume)
     const newWindow = window.open();
+    
     if (hubConnection) {
       hubConnection
         .invoke(
           'GetTopUpUrl', 
-          balancesList.findIndex((val) => val === currencyValue), 
+          Balance[currencyValue as keyof typeof Balance],
           +balanceValue * 100000
         )
         .then((res: string) => {
