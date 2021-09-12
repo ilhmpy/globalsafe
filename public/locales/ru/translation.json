@@ -293,6 +293,7 @@
     "allPay": "Всего выплачено",
     "nextPay": "Следующая выплата",
     "selectPeriod": "Выберите период",
+    "selectCurrency": "Выберите валюту",
     "thisMonth": "Этот месяц",
     "thisYear": "Этот год",
     "amountEnter": "Введите сумму",

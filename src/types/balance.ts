@@ -43,6 +43,16 @@
   GARANT,
 }
 
+export enum BalanceKind {
+  CWD,
+  GLOBAL,
+  GLOBAL_FUTURE,
+  FUTUREFORFUTURE,
+}
+    
+      
+
+
 export type BalanceList = {
     balanceKind: number;
     volume: number;
