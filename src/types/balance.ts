@@ -41,21 +41,29 @@
   MG821P15000,
   D821P50000,
   GARANT,
+  UGLTEST,
+  GLOBAL,
+  GF,
+  FF,
+  GF5,
+  GF6,
+  FF5,
+  FF6,
 }
 
 export enum BalanceKind {
   CWD,
   GLOBAL,
-  GLOBAL_FUTURE,
-  FUTUREFORFUTURE,
+  GF,
+  FF,
 }
     
       
 
 
 export type BalanceList = {
-    balanceKind: number;
-    volume: number;
+  balanceKind: number;
+  volume: number;
 }
 export type Notify = {
   text: string;
