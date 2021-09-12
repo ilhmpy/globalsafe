@@ -126,7 +126,7 @@ export const Buttons = styled.div`
   ${Button} {
     padding-left: 10px;
     padding-right: 10px;
-    min-width: 140px;
+    min-width: 134px;
     &:first-child {
       margin-right: 15px;
       @media (max-width: 576px) {
@@ -134,7 +134,7 @@ export const Buttons = styled.div`
       }
     }
     &:last-child {
-      min-width: 120px;
+      min-width: 117px;
     }
   }
 `;

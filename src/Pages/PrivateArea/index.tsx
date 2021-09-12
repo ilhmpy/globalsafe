@@ -499,7 +499,6 @@ export const InfoMain: FC = () => {
                         {t('depositSelect.bill')}
                       </Styled.Warning>
                     ) : null}
-                    <Styled.ModalButton blue>{t('depositSelect.translate')}</Styled.ModalButton>
                   </div>
                   {/* {depositSelect ? (
                     <Styled.Conditions>
