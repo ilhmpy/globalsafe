@@ -39,8 +39,6 @@ export const Modal: React.FC<ModalProps> = ({
     }
   };
 
-  console.log(withoutClose)
-
   const [isMobile, setIsMobile] = useState<boolean>(false);
 
   useEffect(() => {

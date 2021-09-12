@@ -478,7 +478,10 @@ export const InfoMain: FC = () => {
                         </Styled.ModalButton>
                       </>
                     ) : null}
-                    {depositSelect && depositSelect.priceKind && asset ? (
+                    {depositSelect &&
+                    depositSelect.priceKind &&
+                    depositSelect.price2Kind &&
+                    asset ? (
                       <Styled.Warning choice>
                         {t('depositSelect.willActiv')}&nbsp;{' '}
                         <span>
