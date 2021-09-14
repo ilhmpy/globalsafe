@@ -478,15 +478,13 @@ export const InfoMain: FC = () => {
                         </Styled.ModalButton>
                       </>
                     ) : null}
-                    {depositSelect &&
-                    (depositSelect.priceKind ||
-                    depositSelect.price2Kind) &&
-                    asset ? (
+                    {depositSelect && depositSelect.priceKind  && asset ? (
                       <Styled.Warning choice>
                         {t('depositSelect.willActiv')}&nbsp;{' '}
                         <span>
                           {depositSelect.price}{' '}
                           {depositSelect.priceKind ? Balance[depositSelect.priceKind] : 'CWD'}
+                          {` и ${depositSelect.price2} ${depositSelect.price2Kind ? Balance[depositSelect.price2Kind] : 'CWD'}`}
                         </span>
                         <br />
                         {t('depositSelect.bill')}
