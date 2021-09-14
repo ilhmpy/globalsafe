@@ -388,7 +388,7 @@ export const InfoBalance = () => {
         .invoke(
           'GetTopUpUrl', 
           Balance[currencyValue as keyof typeof Balance],
-          +balanceValue * 100000
+          currencyValue === 'CWD' ? +balanceValue * 100000 : currencyValue === 'GLOBAL' ? +balanceValue * 10000 : +balanceValue
         )
         .then((res: string) => {
           newWindow && (newWindow.location.href = res);
