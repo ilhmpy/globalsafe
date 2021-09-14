@@ -58,9 +58,10 @@ export const InfoMain: FC = () => {
 
   // Get Balance Kinds List as an Array
   const balancesList = useMemo(() => {
-    return Object.values(Balance).filter(item => typeof item === 'string').slice(1);
-  }, []);
-  
+    const removeNa = balanceList?.filter(b => b.balanceKind !== 0) || [];
+    const sorted = removeNa.sort((a, b) => a.balanceKind - b.balanceKind);
+    return sorted.map(b => Balance[b.balanceKind]);
+  }, [balanceList]);
 
   const handleDepositModal = () => {
     setAddDeposit(false);
@@ -147,7 +148,7 @@ export const InfoMain: FC = () => {
       hubConnection
         .invoke(
           'Withdraw', 
-          balancesList.indexOf(currencyValue) + 1,
+          Balance[currencyValue as keyof typeof Balance],
           +withdrawValue * 100000
         )
         .then((res) => {
