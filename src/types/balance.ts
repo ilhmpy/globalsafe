@@ -51,16 +51,6 @@
   FF6,
 }
 
-export enum BalanceKind {
-  CWD,
-  GLOBAL,
-  GF,
-  FF,
-}
-    
-      
-
-
 export type BalanceList = {
   balanceKind: number;
   volume: number;

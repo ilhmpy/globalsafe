@@ -12,7 +12,7 @@ import { Input } from '../../components/UI/Input';
 import { Loading } from '../../components/UI/Loading';
 import { AppContext } from '../../context/HubContext';
 import { Card, Container } from '../../globalStyles';
-import { Balance, BalanceKind } from '../../types/balance';
+import { Balance } from '../../types/balance';
 import { OpenDate } from '../../types/dates';
 import { ModalDividends } from './Modals';
 import * as Styled from './Styles.elements';
@@ -103,7 +103,7 @@ export const InfoBalance = () => {
   const [loading, setLoading] = useState(true);
   const [addBalance, setAddBalance] = useState(false);
   const [balanceValue, setBalanceValue] = useState('');
-  const [currencyValue, setCurrencyValue] = useState<string | BalanceKind>('');
+  const [currencyValue, setCurrencyValue] = useState<string | Balance>('');
   const [loadDeposit, setLoadDeposit] = useState(false);
   const [totalDeposit, setTotalDeposit] = useState(0);
   const [depositList, setDepositList] = useState<any>([]);
@@ -112,7 +112,7 @@ export const InfoBalance = () => {
 
   // Get Balance Kinds List as an Array
   const balancesList = useMemo(() => {
-    return Object.values(BalanceKind).filter(item => typeof item === 'string');
+    return Object.values(Balance).filter(item => typeof item === 'string');
   }, []);
 
   useEffect(() => {
@@ -373,7 +373,6 @@ export const InfoBalance = () => {
   const getTopUp = () => {
     // GetTopUpUrl(BalanceKind balanceKind, ulong volume)
     const newWindow = window.open();
-    
     if (hubConnection) {
       hubConnection
         .invoke(
@@ -398,7 +397,7 @@ export const InfoBalance = () => {
     }
   };
 
-  const onChangeCurrencyValue = (balanceKind: null | (string | BalanceKind)) => {
+  const onChangeCurrencyValue = (balanceKind: null | (string | Balance)) => {
     if (!balanceKind) {
       setCurrencyValue('');
       return;
