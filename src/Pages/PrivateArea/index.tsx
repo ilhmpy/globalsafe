@@ -180,7 +180,9 @@ export const InfoMain: FC = () => {
         balanseType[0].volume >= depositSelect?.price
       : false;
 
-  const balanceChips = balanceList?.filter((item) => item.balanceKind !== 1);
+  const balanceChips = balanceList?.filter((item) => item.balanceKind !== 1)
+  .sort((a, b) => a.balanceKind - b.balanceKind)
+  .map((obj) => obj.volume > 10000 ? {...obj, volume: (obj.volume / 10000)} : obj);
 
   if (user === null) {
     return null;
