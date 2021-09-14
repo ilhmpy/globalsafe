@@ -479,8 +479,8 @@ export const InfoMain: FC = () => {
                       </>
                     ) : null}
                     {depositSelect &&
-                    depositSelect.priceKind &&
-                    depositSelect.price2Kind &&
+                    (depositSelect.priceKind ||
+                    depositSelect.price2Kind) &&
                     asset ? (
                       <Styled.Warning choice>
                         {t('depositSelect.willActiv')}&nbsp;{' '}
