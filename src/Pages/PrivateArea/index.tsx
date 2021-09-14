@@ -58,9 +58,9 @@ export const InfoMain: FC = () => {
 
   // Get Balance Kinds List as an Array
   const balancesList = useMemo(() => {
-    const removeNa = balanceList?.filter(b => b.balanceKind !== 0) || [];
-    const sorted = removeNa.sort((a, b) => a.balanceKind - b.balanceKind);
-    return sorted.map(b => Balance[b.balanceKind]);
+    const list = ['CWD', 'GLOBAL', 'GF', 'FF', 'GF5', 'GF6', 'FF5', 'FF6'];
+    const sorted = balanceList?.sort((a, b) => a.balanceKind - b.balanceKind) || [];
+    return sorted.filter(b => list.includes(Balance[b.balanceKind])).map(b => Balance[b.balanceKind]);
   }, [balanceList]);
 
   const handleDepositModal = () => {
@@ -191,7 +191,20 @@ export const InfoMain: FC = () => {
         balanseType[0].volume >= depositSelect?.price
       : false;
 
-  const balanceChips = balanceList?.filter((item) => item.balanceKind !== 1)
+  // Get Better Logic To get Clear List
+  const balanceChips = balanceList?.filter((item) => {
+    if(item.balanceKind === 0) {
+      return false;
+    }
+    if(item.balanceKind === 1) {
+      return false;
+    }
+    if(item.balanceKind === 9) {
+      return false;
+    }
+
+    return true;
+  })
   .sort((a, b) => a.balanceKind - b.balanceKind)
   .map((obj) => obj.volume > 10000 ? {...obj, volume: (obj.volume / 10000)} : obj);
 
