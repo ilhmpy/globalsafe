@@ -112,7 +112,7 @@ export const InfoBalance = () => {
 
   // Get Balance Kinds List as an Array
   const balancesList = useMemo(() => {
-    return Object.values(Balance).filter(item => typeof item === 'string');
+    return Object.values(Balance).filter(item => typeof item === 'string').slice(1);
   }, []);
 
   useEffect(() => {
@@ -377,7 +377,7 @@ export const InfoBalance = () => {
       hubConnection
         .invoke(
           'GetTopUpUrl', 
-          Balance[currencyValue as keyof typeof Balance],
+          balancesList.indexOf(currencyValue) + 1,
           +balanceValue * 100000
         )
         .then((res: string) => {
