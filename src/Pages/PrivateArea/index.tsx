@@ -149,7 +149,7 @@ export const InfoMain: FC = () => {
         .invoke(
           'Withdraw', 
           Balance[currencyValue as keyof typeof Balance],
-          +withdrawValue * 100000
+          currencyValue === 'CWD' ? +withdrawValue * 100000 : currencyValue === 'GLOBAL' ? +withdrawValue * 10000 : +withdrawValue
         )
         .then((res) => {
           handleCloseWithdrawModal();
