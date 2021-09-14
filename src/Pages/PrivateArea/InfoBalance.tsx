@@ -111,12 +111,19 @@ export const InfoBalance = () => {
   const [chartList, setChartList] = useState<any>({});
   const inputRef = useRef<any>(null);
 
-    // Get Balance Kinds List as an Array
+  // Get Balance Kinds List as an Array
   const balancesList = useMemo(() => {
-    const removeNa = balanceList?.filter(b => b.balanceKind !== 0) || [];
-    const sorted = removeNa.sort((a, b) => a.balanceKind - b.balanceKind);
-    return sorted.map(b => Balance[b.balanceKind]);
-  }, [balanceList]);
+    return [
+      'CWD',
+      'GLOBAL',
+      'GF',
+      'FF',
+      'GF5',
+      'GF6',
+      'FF5',
+      'FF6',
+    ];
+  }, []);
 
   useEffect(() => {
     if (hubConnection) {
