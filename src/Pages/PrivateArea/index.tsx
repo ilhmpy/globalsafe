@@ -202,6 +202,12 @@ export const InfoMain: FC = () => {
     if(item.balanceKind === 9) {
       return false;
     }
+    if(item.balanceKind === 10) {
+      return false;
+    }
+    if(item.balanceKind === 11) {
+      return false;
+    }
 
     return true;
   })
