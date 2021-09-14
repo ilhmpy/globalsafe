@@ -1,6 +1,6 @@
 ﻿import moment from 'moment';
 import 'moment/locale/ru';
-import React, { FC, useContext, useEffect, useRef, useState } from 'react';
+import React, { FC, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
@@ -9,6 +9,7 @@ import { Button } from '../../components/Button/Button';
 import { Header } from '../../components/Header/Header';
 import { Modal } from '../../components/Modal/Modal';
 import { Notification } from '../../components/Notify/Notification';
+import { Select } from '../../components/Select/Select4';
 import { Tooltip } from '../../components/Tooltips/Tooltips';
 import { Input } from '../../components/UI/Input';
 import { Loading } from '../../components/UI/Loading';
@@ -39,6 +40,7 @@ export const InfoMain: FC = () => {
   const [condition, setContition] = useState<boolean>(false);
   const [depositSuccess, setDepositSuccess] = useState<boolean>(false);
   const [depositError, setDepositError] = useState<boolean>(false);
+  const [currencyValue, setCurrencyValue] = useState<string | Balance>('');
   const [withdrawValue, setWithdrawValue] = useState('');
   const [account, setAccount] = useState('');
   const appContext = useContext(AppContext);
@@ -53,6 +55,12 @@ export const InfoMain: FC = () => {
   moment.locale(lang);
   const [blockchainCommision, setBlockchainCommision] = useState<string>('0');
   const [serviceCommision, setServiceCommision] = useState<string>('0');
+
+  // Get Balance Kinds List as an Array
+  const balancesList = useMemo(() => {
+    return Object.values(Balance).filter(item => typeof item === 'string').slice(1);
+  }, []);
+  
 
   const handleDepositModal = () => {
     setAddDeposit(false);
@@ -137,10 +145,13 @@ export const InfoMain: FC = () => {
     if (hubConnection) {
       setWithdrawValueLoad(true);
       hubConnection
-        .invoke('Withdraw', 1, +withdrawValue * 100000)
+        .invoke(
+          'Withdraw', 
+          balancesList.indexOf(currencyValue) + 1,
+          +withdrawValue * 100000
+        )
         .then((res) => {
-          setWithdraw(false);
-          setWithdrawValue('');
+          handleCloseWithdrawModal();
           createNotify({
             text: t('alert.successMsg'),
             error: false,
@@ -150,8 +161,7 @@ export const InfoMain: FC = () => {
           setWithdrawValueLoad(false);
         })
         .catch((err: Error) => {
-          setWithdraw(false);
-          setWithdrawValue('');
+          handleCloseWithdrawModal();
           console.log(err);
           createNotify({
             text: t('alert.errorMsg'),
@@ -237,6 +247,21 @@ export const InfoMain: FC = () => {
 
   const createNotify = (item: Notify) => {
     setNotifications([item]);
+  };
+
+  const onChangeCurrencyValue = (balanceKind: null | (string | Balance)) => {
+    if (!balanceKind) {
+      setCurrencyValue('');
+      return;
+    }
+
+    setCurrencyValue(balanceKind);
+  };
+
+  const handleCloseWithdrawModal = () => {
+    setWithdraw(false)
+    setWithdrawValue('');
+    setCurrencyValue('');
   };
 
   return (
@@ -373,9 +398,15 @@ export const InfoMain: FC = () => {
         </CSSTransition>
         <div>
           {withdraw && (
-            <Modal onClose={() => setWithdraw(false)}>
+            <Modal onClose={handleCloseWithdrawModal}>
               <Styled.ModalBlock>
                 <Styled.ModalTitle>{t('privateArea.withdraw')}</Styled.ModalTitle>
+                <Select
+                  placeholder={t('privateArea.selectCurrency')}
+                  options={balancesList}
+                  selectedOption={currencyValue}
+                  setSelectedOption={onChangeCurrencyValue}
+                />
                 <Input
                   onChange={onChangeWithdraw}
                   placeholder={t('privateArea.amountEnter')}
@@ -385,10 +416,10 @@ export const InfoMain: FC = () => {
                 />
                 <Styled.ModalButton
                   as="button"
-                  disabled={!withdrawValue}
+                  disabled={!withdrawValue || !currencyValue}
                   onClick={withdrawBalance}
                   danger
-                >
+                > 
                   {t('privateArea.withdraw')}
                 </Styled.ModalButton>
                 <Styled.ModalCommisionBox>
