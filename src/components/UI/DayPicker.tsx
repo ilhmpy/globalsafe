@@ -522,7 +522,7 @@ export const TestInputAnalitic: FC<TestInputAnaliticProps> = ({
 
         {showOpen && (
           <CustomDatePicker
-            selectedDays={[selfDate.from, selfDate]}
+            selectedDays={[selfDate.from, selfDate.to]}
             months={lang === 'en' ? MONTHS_ENG : MONTHS}
             onDayClick={handleDayClick}
             firstDayOfWeek={1}
@@ -649,11 +649,11 @@ export const MainAnaliticInput: FC<MainAnaliticInputProps> = ({
   pastDay,
 }: MainAnaliticInputProps) => {
   const [showOpen, setShowOpen] = useState<boolean>(false);
-  const [selfDate, setSelfDate] = useState<OpenDate>({
+  const [selfDate, setSelfDate] = useState<any>({
     from: undefined,
     to: undefined,
   });
-
+ 
   const ref = useRef(null);
 
   const handleClickOutside = () => {
@@ -674,7 +674,7 @@ export const MainAnaliticInput: FC<MainAnaliticInputProps> = ({
         setOpenDate({ from: range.from, to: range.to });
       }
     }
-  };
+  }; 
 
   const handleChange = () => {
     if (selfDate.from && selfDate.to) {

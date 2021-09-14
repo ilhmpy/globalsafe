@@ -60,7 +60,7 @@ export const lightTheme = {
   },
   acceptAll: {
     bg: '#fff',
-    desc: '#56657F',
+    desc: '#56657F',  
     opacity: '60%',
     item: '#515172',
   },
@@ -82,6 +82,7 @@ export const lightTheme = {
   },
   pink: '#FF416E',
   rounIputBackground: '#FFF0F0',
+  titles: "#3F3E4E"
 };
 
 export const darkTheme = {
@@ -160,4 +161,6 @@ export const darkTheme = {
   },
   pink: '#FF416E',
   rounIputBackground: '#ffffff',
+  titles: "#fff" 
 };
+ 
