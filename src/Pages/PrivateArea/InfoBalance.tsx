@@ -96,6 +96,7 @@ export const InfoBalance = () => {
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const balance = appContext.balance;
+  const balanceList = appContext.balanceList;
   const [depositTotal, setDepositTotal] = useState(0);
   const [totalPayed, setTotalPayed] = useState(0);
   const [count, setCount] = useState(true);
@@ -110,10 +111,12 @@ export const InfoBalance = () => {
   const [chartList, setChartList] = useState<any>({});
   const inputRef = useRef<any>(null);
 
-  // Get Balance Kinds List as an Array
+    // Get Balance Kinds List as an Array
   const balancesList = useMemo(() => {
-    return Object.values(Balance).filter(item => typeof item === 'string').slice(1);
-  }, []);
+    const removeNa = balanceList?.filter(b => b.balanceKind !== 0) || [];
+    const sorted = removeNa.sort((a, b) => a.balanceKind - b.balanceKind);
+    return sorted.map(b => Balance[b.balanceKind]);
+  }, [balanceList]);
 
   useEffect(() => {
     if (hubConnection) {
@@ -377,7 +380,7 @@ export const InfoBalance = () => {
       hubConnection
         .invoke(
           'GetTopUpUrl', 
-          balancesList.indexOf(currencyValue) + 1,
+          Balance[currencyValue as keyof typeof Balance],
           +balanceValue * 100000
         )
         .then((res: string) => {
