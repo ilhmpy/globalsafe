@@ -59,6 +59,7 @@ const BalanceTable: FC<BalanceTableProps> = ({ balanceLog }: BalanceTableProps) 
     setDivModal(false);
   };
 
+  console.log("Robert::::::::balanceLog", balanceLog)
   return (
     <>
       <div>
@@ -70,7 +71,13 @@ const BalanceTable: FC<BalanceTableProps> = ({ balanceLog }: BalanceTableProps) 
           <Styled.DataListName>{operation(balanceLog.operationKind)}</Styled.DataListName>
           <Styled.DataListSum plus={balanceLog.balance >= 0}>
             {balanceLog.balance < 0 ? '' : balanceLog.operationKind !== 6 ? '+' : '-'}{' '}
-            {(balanceLog.balance / 100000).toLocaleString('ru-RU', {
+            {(
+              balanceLog.asset === 1 ? 
+                balanceLog.balance / 100000 
+              : balanceLog.asset === 43 ? 
+                balanceLog.balance / 10000 :
+              balanceLog.balance
+              ).toLocaleString('ru-RU', {
               maximumFractionDigits: 5,
             })}
             <br />
