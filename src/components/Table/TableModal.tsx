@@ -68,7 +68,9 @@ export const InfoBlock = ({ data }: any) => {
             <Text>
               {data.paymentAmountView
                 ? data.paymentAmountView.toString().length > 15
-                  ? data.paymentAmountView.toFixed(7)
+                  ? data.paymentAmountView.toLocaleString('ru-RU', {
+                      maximumFractionDigits: 7,
+                    })
                   : data.paymentAmountView
                 : '-'}
             </Text>
