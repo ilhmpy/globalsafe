@@ -82,6 +82,14 @@ export const lightTheme = {
   },
   pink: '#FF416E',
   rounIputBackground: '#FFF0F0',
+  v2:{
+    text: "#3F3E4E",
+    body: "#E5E5E5",
+    header:{
+      background: "#fff",
+      burger: "#000"
+    }
+  }
 };
 
 export const darkTheme = {
@@ -160,4 +168,12 @@ export const darkTheme = {
   },
   pink: '#FF416E',
   rounIputBackground: '#ffffff',
+  v2:{
+    text: "#3F3E4E",
+    body: "#E5E5E5",
+    header:{
+      background: "#fff",
+      burger: "#FFF"
+    }
+  }
 };

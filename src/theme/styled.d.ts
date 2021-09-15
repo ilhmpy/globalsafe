@@ -76,5 +76,13 @@ declare module 'styled-components' {
     };
     pink: string;
     rounIputBackground: string;
+    v2:{
+      text: string;
+      body: string;
+      header:{
+        background: string;
+        burger: string;
+      }
+    }
   }
 }

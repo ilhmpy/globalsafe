@@ -8,6 +8,7 @@ import { AppContext } from '../../context/HubContext';
 import { Prize } from '../../types/drawResult';
 import { About } from './components/About/About';
 import { Banner } from './components/Banner/Banner';
+import { Carousel } from './components/Carousel/Carousel';
 import { DrawHistory } from './components/DrawHistory/DrawHistory';
 import { ModalLottery } from './components/Lottery/Modal';
 import { ModalCongrats } from './components/Lottery/ModalCongrats';
@@ -2117,6 +2118,7 @@ export const Main = () => {
   return (
     <div>
       <Header />
+      <Carousel />
       <MainPage id="banner">
         {showTimer && (
           <FixedBlock>
@@ -2161,7 +2163,7 @@ export const Main = () => {
         {/* <Assets /> */}
 
         <DrawHistory onOpenModal={onOpenModal} clock={clock} />
-       
+
         {/* <About /> */}
         <Footer />
       </MainPage>
