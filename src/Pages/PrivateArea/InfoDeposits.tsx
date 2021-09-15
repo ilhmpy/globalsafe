@@ -11,6 +11,7 @@ export const InfoDeposits = () => {
   const appContext = useContext(AppContext);
   const [count, setCount] = useState(true);
   const [num, setNum] = useState(20);
+  const [loading, setLoading] = useState(true);
   const [totalList, setTotalList] = useState(0);
   const hubConnection = appContext.hubConnection;
   const lang = localStorage.getItem('i18nextLng') || 'ru';
@@ -28,12 +29,14 @@ export const InfoDeposits = () => {
       hubConnection
         .invoke<RootList>('GetUserDeposits', [1, 2, 3, 4, 5, 6, 7, 8], 0, 20, sorting)
         .then((res) => {
+          console.log('GetUserDeposits', res);
           setList(res.collection);
           setTotalList(res.totalRecords);
         })
         .catch((err: Error) => {
           console.log(err);
-        });
+        })
+        .finally(() => setLoading(false));
     }
   }, [hubConnection, languale]);
 
@@ -45,9 +48,10 @@ export const InfoDeposits = () => {
         .then((res) => {
           if (res.collection.length) {
             setList([...list, ...res.collection]);
-            setCount(true);
+
             setNum(num + 20);
           }
+          setCount(true);
         })
         .catch((err: Error) => console.log(err));
     }
@@ -58,19 +62,21 @@ export const InfoDeposits = () => {
       <Container>
         <Card>
           <Scrollbars style={{ height: '500px' }}>
-            <InfiniteScroll
-              pageStart={10}
-              loadMore={myLoad}
-              hasMore={count}
-              useWindow={false}
-              loader={
-                <div className="loader" key={0}>
-                  Loading ...
-                </div>
-              }
-            >
-              <Tables list={list} />
-            </InfiniteScroll>
+            {!loading ? (
+              <InfiniteScroll
+                pageStart={0}
+                loadMore={myLoad}
+                hasMore={count}
+                useWindow={false}
+                loader={
+                  <div className="loader" key={0}>
+                    Loading ...
+                  </div>
+                }
+              >
+                <Tables list={list} />
+              </InfiniteScroll>
+            ) : null}
           </Scrollbars>
         </Card>
       </Container>

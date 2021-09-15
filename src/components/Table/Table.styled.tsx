@@ -148,8 +148,8 @@ export const TR = styled.tr<{ disactive?: boolean }>`
     ${TD}:last-child {
       text-align: right;
     }
-    ${TH}:nth-child(4),
-    ${TD}:nth-child(4) {
+    ${TH}:nth-child(5),
+    ${TD}:nth-child(5) {
       display: none;
     }
   }
