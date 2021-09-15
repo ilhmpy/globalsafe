@@ -15,11 +15,13 @@ export const InfoDeposits = () => {
   const hubConnection = appContext.hubConnection;
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   const languale = lang === 'ru' ? 1 : 0;
-  const [sorting, setSorting] = useState([{
-    ConditionWeight: 1,
-    OrderType: 2,
-    FieldName: 'creationDate'
-  }])
+  const [sorting, setSorting] = useState([
+    {
+      ConditionWeight: 1,
+      OrderType: 2,
+      FieldName: 'creationDate',
+    },
+  ]);
 
   useEffect(() => {
     if (hubConnection) {

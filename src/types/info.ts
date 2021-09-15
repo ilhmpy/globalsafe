@@ -30,6 +30,8 @@ export interface Collection {
     state: number;
     deposit: Deposit;
     prevPayedAmountView: number;
+    loanVolume: number;
+    pendingAmount: number;
 }
 
 export interface RootList {
