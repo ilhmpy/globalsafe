@@ -74,7 +74,7 @@ const BalanceTable: FC<BalanceTableProps> = ({ balanceLog }: BalanceTableProps) 
             {(
               balanceLog.asset === 1 ? 
                 balanceLog.balance / 100000 
-              : balanceLog.asset === 1 ? 
+              : balanceLog.asset === 43 ? 
                 balanceLog.balance / 10000 :
               balanceLog.balance
               ).toLocaleString('ru-RU', {
