@@ -153,8 +153,8 @@ export const TR = styled.tr<{ disactive?: boolean }>`
     ${TD}:last-child {
       text-align: right;
     }
-    ${TH}:nth-child(5),
-    ${TD}:nth-child(5) {
+    ${TH}:nth-child(4),
+    ${TD}:nth-child(4) {
       display: none;
     }
   }
@@ -164,12 +164,12 @@ export const TR = styled.tr<{ disactive?: boolean }>`
       display: none;
     }
   }
-  @media (max-width: 3800px) {
+  /* @media (max-width: 380px) {
     ${TD}:nth-child(3),
     ${TH}:nth-child(3) {
       display: none;
     }
-  }
+  } */
 `;
 
 export const Table = styled.table`
