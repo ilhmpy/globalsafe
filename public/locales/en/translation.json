@@ -316,7 +316,9 @@
     "contrAmount": "Contribution amount",
     "blockchainCommision": "Blockchain commision",
     "serviceCommision": "Service commision",
-    "undr": "Understand"
+    "undr": "Understand",
+    "pendingPay": "Deferred payment",
+    "pledge": "Pledge"
   },
   "alert": {
     "success": "Successfully",

@@ -316,7 +316,9 @@
     "contrAmount": "Сумма взноса",
     "blockchainCommision": "Комиссия блокчейн",
     "serviceCommision": "Комиссия сервиса",
-    "undr": "Понятно"
+    "undr": "Понятно",
+    "pendingPay": "Отложенная выплата",
+    "pledge": "Залог"
   },
   "alert": {
     "success": "Успешно",
