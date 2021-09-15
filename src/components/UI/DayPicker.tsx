@@ -410,7 +410,7 @@ export const TestInputAnalitic: FC<TestInputAnaliticProps> = ({
   );
   const ref = useRef(null);
   const { t } = useTranslation();
-
+  
   const handleClickOutside = () => {
     setShowOpen(false);
   };
@@ -422,7 +422,7 @@ export const TestInputAnalitic: FC<TestInputAnaliticProps> = ({
       setInputString('');
     }
   }, [openDate]);
-
+  
   // const handleDayClick = (day: Date) => {
   //   const range = DateUtils.addDayToRange(day, selfDate);
   //   if (
@@ -479,38 +479,38 @@ export const TestInputAnalitic: FC<TestInputAnaliticProps> = ({
     <>
       <RangeInputs ref={ref}>
         <BoxInput onClick={() => setShowOpen(!showOpen)}>
-          <DateLabel>{label}</DateLabel>
-          <DateInput>
-            <InputDate
-              type="text"
-              value={inputString}
-              onChange={(e) => {
-                const arr = e.target.value.split('-');
-                const fromSplitted = arr[0].split('.');
-                const toSplitted = arr.length === 2 ? arr[1].split('.') : '';
-                const validValue = e.target.value.replace(/[^0-9\-\.]/gi, '');
-                6;
+            <DateLabel>{label}</DateLabel>
+            <DateInput>
+              <InputDate
+                type="text"
+                value={inputString}
+                onChange={(e) => {
+                  const arr = e.target.value.split('-');
+                  const fromSplitted = arr[0].split('.');
+                  const toSplitted = arr.length === 2 ? arr[1].split('.') : '';
+                  const validValue = e.target.value.replace(/[^0-9\-\.]/gi, '');
+                  6;
 
-                setInputString(validValue);
+                  setInputString(validValue);
 
-                setOpenDate({
-                  from: moment(`${fromSplitted[1]}.${fromSplitted[0]}.${fromSplitted[2]}`)
-                    .set({ hour: 12, minute: 0, second: 0 })
-                    .toDate(),
-                  to: toSplitted
-                    ? moment(`${toSplitted[1]}.${toSplitted[0]}.${toSplitted[2]}`)
-                        .set({ hour: 12, minute: 0, second: 0 })
-                        .toDate()
-                    : undefined,
-                });
-              }}
-            />
+                  setOpenDate({
+                    from: moment(`${fromSplitted[1]}.${fromSplitted[0]}.${fromSplitted[2]}`)
+                      .set({ hour: 12, minute: 0, second: 0 })
+                      .toDate(),
+                    to: toSplitted
+                      ? moment(`${toSplitted[1]}.${toSplitted[0]}.${toSplitted[2]}`)
+                          .set({ hour: 12, minute: 0, second: 0 })
+                          .toDate()
+                      : undefined,
+                  });
+                }}
+              />
 
-            {/* <span>{openDate.from ? moment(openDate.from).format('DD.MM.YY') : ''}</span>
+              {/* <span>{openDate.from ? moment(openDate.from).format('DD.MM.YY') : ''}</span>
               <span>{openDate.to ? `-${moment(openDate.to).format('DD.MM.YY')} ` : ''}</span> */}
-            {openDate.from && <Close onClick={reset}>&times;</Close>}
-          </DateInput>
-        </BoxInput>
+              {openDate.from && <Close onClick={reset}>&times;</Close>}
+            </DateInput>
+          </BoxInput>
         {/* <BoxInput onClick={() => setShowOpen(!showOpen)}>
           <DateLabel>{label}</DateLabel>
           <DateInput>
@@ -522,7 +522,7 @@ export const TestInputAnalitic: FC<TestInputAnaliticProps> = ({
 
         {showOpen && (
           <CustomDatePicker
-            selectedDays={[selfDate.from, selfDate]}
+            selectedDays={[selfDate.from, selfDate.to]}
             months={lang === 'en' ? MONTHS_ENG : MONTHS}
             onDayClick={handleDayClick}
             firstDayOfWeek={1}
@@ -649,11 +649,11 @@ export const MainAnaliticInput: FC<MainAnaliticInputProps> = ({
   pastDay,
 }: MainAnaliticInputProps) => {
   const [showOpen, setShowOpen] = useState<boolean>(false);
-  const [selfDate, setSelfDate] = useState<OpenDate>({
+  const [selfDate, setSelfDate] = useState<any>({
     from: undefined,
     to: undefined,
   });
-
+ 
   const ref = useRef(null);
 
   const handleClickOutside = () => {
@@ -674,7 +674,7 @@ export const MainAnaliticInput: FC<MainAnaliticInputProps> = ({
         setOpenDate({ from: range.from, to: range.to });
       }
     }
-  };
+  }; 
 
   const handleChange = () => {
     if (selfDate.from && selfDate.to) {
@@ -847,6 +847,7 @@ const InputCustom = styled.div`
     padding: 4px 7px;
     width: 48px;
     height: 48px;
+    min-width: 48px;
     margin: 5px;
     &:focus {
       outline: none;
@@ -1073,6 +1074,12 @@ const DatePickerContainer = styled.div`
       bottom: -60px;
       width: 100%;
     }
+    .DayPicker-Months {
+      height: 395px;
+      @media (max-width: 576px) {
+        height: 314px;
+      }
+    }
   }
 `;
 
@@ -1144,7 +1151,7 @@ const DateInput = styled.div`
   color: ${(props) => props.theme.text2};
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   position: relative;
   @media (max-width: 576px) {
     width: 100%;
