@@ -5,6 +5,8 @@ export const Name = styled.div`
   font-weight: 500;
   font-size: 14px;
   line-height: 16px;
+  text-overflow: ellipsis;
+  overflow: hidden;
   color: ${(props) => props.theme.text};
   @media (max-width: 992px) {
     font-weight: 400;
@@ -83,6 +85,7 @@ export const TH = styled.th`
 
 export const TD = styled.td`
   padding: 9px 0 10px 0;
+
   &:nth-child(1) {
     max-width: 188px;
     @media (max-width: 992px) {
@@ -120,6 +123,8 @@ export const Text = styled.div`
   font-size: 14px;
   line-height: 16px;
   letter-spacing: 0.1px;
+  text-overflow: ellipsis;
+  overflow: hidden;
   color: ${(props) => props.theme.text2};
   p {
     padding-bottom: 3px;
@@ -148,8 +153,8 @@ export const TR = styled.tr<{ disactive?: boolean }>`
     ${TD}:last-child {
       text-align: right;
     }
-    ${TH}:nth-child(4),
-    ${TD}:nth-child(4) {
+    ${TH}:nth-child(5),
+    ${TD}:nth-child(5) {
       display: none;
     }
   }
