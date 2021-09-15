@@ -26,6 +26,7 @@ export const Button = styled.a<Props>`
   line-height: 14px;
   text-transform: uppercase;
   color: #ffffff;
+  border: none;
   &:hover {
     box-shadow: 0px 4px 10px ${(props) => props.theme.buttonBorder};
     border-color: ${(props) => props.theme.buttonBorder};
@@ -33,7 +34,6 @@ export const Button = styled.a<Props>`
   &:focus,
   &:active {
     outline: none;
-    background: inherit;
   }
   ${(props) => {
     if (props.primary) {

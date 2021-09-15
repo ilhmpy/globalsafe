@@ -5,6 +5,7 @@ import { CurrencyValues } from '../../../../components/CurrencyValues';
 import { H2 } from '../../../../components/UI/Heading';
 import { Container } from '../../../../components/UI/Container';
 import { Button } from '../../../../components/Button/V2/Button';
+import { Carousel } from '../Carousel/Carousel';
 import * as S from './S.elements';
 
 export const Banner: FC = () => {
@@ -12,6 +13,7 @@ export const Banner: FC = () => {
 
   return (
     <>
+      <Carousel />
       <Container>
         <H2>Приумножайте правильно</H2>
         <S.Desc>
