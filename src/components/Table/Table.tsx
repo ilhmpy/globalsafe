@@ -117,6 +117,10 @@ const Row = ({ data }: any) => {
               <Styled.Text>{Balance[data.deposit.asset]}</Styled.Text>
             </Styled.TD>
             <Styled.TD>
+              <Styled.Text>{data.amountView}</Styled.Text>
+              <Styled.Text>{Balance[data.deposit.asset]}</Styled.Text>
+            </Styled.TD>
+            <Styled.TD>
               <Styled.Text>
                 {data.paymentAmountView
                   ? data.paymentAmountView.toString().length > 15
@@ -124,14 +128,6 @@ const Row = ({ data }: any) => {
                     : data.paymentAmountView
                   : '-'}
               </Styled.Text>
-              {data.paymentAmountView ? (
-                <Styled.Text>{Balance[data.deposit.asset]}</Styled.Text>
-              ) : (
-                <Styled.Text></Styled.Text>
-              )}
-            </Styled.TD>
-            <Styled.TD>
-              <Styled.Text>{data.pendingAmount}</Styled.Text>
             </Styled.TD>
             <Styled.TD>
               <Styled.Text>
@@ -158,8 +154,8 @@ export const Tables = ({ list }: any) => {
             <Styled.TH>{t('privateArea.name')}</Styled.TH>
             <Styled.TH>{t('privateArea.desc')}</Styled.TH>
             <Styled.TH>{t('privateArea.deposit')}</Styled.TH>
-            <Styled.TH>{t('privateArea.toPay')}</Styled.TH>
-            <Styled.TH>{t('privateArea.delayed')}</Styled.TH>
+            <Styled.TH>{t('privateArea.sumDeposit')}</Styled.TH>
+            <Styled.TH>{t('privateArea.amountPay')}</Styled.TH>
             <Styled.TH>
               <p>{t('privateArea.nextDate')}</p>
               <span>{t('adminPay.table.nextDate')}</span>

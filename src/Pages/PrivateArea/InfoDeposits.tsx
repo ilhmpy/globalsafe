@@ -23,8 +23,6 @@ export const InfoDeposits = () => {
     },
   ]);
 
-  console.log('list', list);
-
   useEffect(() => {
     if (hubConnection) {
       hubConnection
