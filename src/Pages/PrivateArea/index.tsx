@@ -531,13 +531,14 @@ export const InfoMain: FC = () => {
                         </Styled.ModalButton>
                       </>
                     ) : null}
+                    {console.log(depositSelect)}
                     {depositSelect && depositSelect.priceKind  && asset ? (
                       <Styled.Warning choice>
                         {t('depositSelect.willActiv')}&nbsp;{' '}
                         <span>
                           {depositSelect.price}{' '}
                           {depositSelect.priceKind ? Balance[depositSelect.priceKind] : 'CWD'}
-                          {` и ${depositSelect.price2} ${depositSelect.price2Kind ? Balance[depositSelect.price2Kind] : 'CWD'}`}
+                          {depositSelect.price2Kind && ` и ${depositSelect.price2} ${depositSelect.price2Kind ? Balance[depositSelect.price2Kind] : 'CWD'}`}
                         </span>
                         <br />
                         {t('depositSelect.bill')}
@@ -546,6 +547,7 @@ export const InfoMain: FC = () => {
                       <Styled.Warning>
                         {t('depositSelect.willActiv')}&nbsp; {depositSelect.price}{' '}
                         {depositSelect.priceKind ? Balance[depositSelect.priceKind] : 'CWD'}
+                        {depositSelect.price2Kind && ` и ${depositSelect.price2} ${depositSelect.price2Kind ? Balance[depositSelect.price2Kind] : 'CWD'}`}
                         <br />
                         {t('depositSelect.bill')}
                       </Styled.Warning>
