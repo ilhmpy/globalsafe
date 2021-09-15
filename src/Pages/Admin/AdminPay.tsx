@@ -306,7 +306,7 @@ export const AdminPay = () => {
       //   BalanceOperationKind[] kinds,
       //   long skip,
       //   long take);
-       
+
       // const modifiedSorting: SortingType[] = [];
       // if(openDate.from || openDate.to) {
       //     modifiedSorting.push({
@@ -335,7 +335,7 @@ export const AdminPay = () => {
           searchSafeID.length ? searchSafeID : null,
           [7, 8],
           (currentPagePay - 1) * pageLengthPay,
-          pageLengthPay,
+          pageLengthPay
         )
         .then((res) => {
           setTotalPayDeposits(res.totalRecords);
