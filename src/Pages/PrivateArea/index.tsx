@@ -180,10 +180,7 @@ export const InfoMain: FC = () => {
       ? balanceList?.some((item) => item.balanceKind === depositSelect?.priceKind)
       : true;
 
-  const balanseType =
-    depositSelect && depositSelect?.priceKind !== null
-      ? balanceList?.filter((i) => i.balanceKind === depositSelect?.priceKind)
-      : balanceList?.filter((i) => i.balanceKind === 1);
+  const balanseType = balanceList?.filter((i) => i.balanceKind === 1);
 
   const asset =
     balanseType && depositSelect && balanseType.length
