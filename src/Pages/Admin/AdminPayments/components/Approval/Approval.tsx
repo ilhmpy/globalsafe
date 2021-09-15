@@ -36,7 +36,7 @@ import {
   SortingWindow,
   WindowBody,
   WindowTitle,
-} from '../../../Styled.elements'; 
+} from '../../../Styled.elements';
 import * as Styled from './Styled.elements';
 import { Notify } from '../../../../../types/notify';
 import { Modal } from '../../../../../components/Modal/Modal';
@@ -196,15 +196,15 @@ export const Approval: FC<Props> = ({
 
     // Add Sorting condition if viewPrizeDrawLogModel.drawDate Filter field has value
     const modifiedSorting = [...sorting];
-    if(openDateApproval.from || openDateApproval.to) {
-      if(!modifiedSorting.some(sortItem => sortItem.FieldName === 'creationDate')) {
+    if (openDateApproval.from || openDateApproval.to) {
+      if (!modifiedSorting.some((sortItem) => sortItem.FieldName === 'creationDate')) {
         modifiedSorting.push({
           ConditionWeight: 1,
           OrderType: 1,
           FieldName: 'creationDate',
-        })
+        });
       }
-    };
+    }
 
     if (hubConnection) {
       hubConnection
@@ -304,19 +304,19 @@ export const Approval: FC<Props> = ({
     if (hubConnection) {
       setCurrentPage(1);
       setDepositList([]);
-      setLoading(true); 
+      setLoading(true);
 
       // Add Sorting condition if viewPrizeDrawLogModel.drawDate Filter field has value
       const modifiedSorting = [...sorting];
-      if(openDateApproval.from || openDateApproval.to) {
-        if(!modifiedSorting.some(sortItem => sortItem.FieldName === 'creationDate')) {
+      if (openDateApproval.from || openDateApproval.to) {
+        if (!modifiedSorting.some((sortItem) => sortItem.FieldName === 'creationDate')) {
           modifiedSorting.push({
             ConditionWeight: 1,
             OrderType: 1,
             FieldName: 'creationDate',
-          })
+          });
         }
-      };
+      }
 
       hubConnection
         .invoke<RootPayments>(
@@ -338,7 +338,7 @@ export const Approval: FC<Props> = ({
             : null,
           null,
           null,
-          null, 
+          null,
           null,
           null,
           null,
@@ -462,85 +462,42 @@ export const Approval: FC<Props> = ({
   const paymentsConfirm = () => {
     if (hubConnection) {
       hubConnection
-      .invoke<RootPayments>(
-        'GetUsersDeposits',
-        [6],
-        nameApproval ? nameApproval.toLowerCase() : null,
-        searchSafeIDApproval.length ? searchSafeIDApproval : null,
-        openDateApproval.from
-          ? moment(openDateApproval.from)
-              .utcOffset('+00:00')
-              .set({ hour: 0, minute: 0, second: 0 })
-              .toDate()
-          : null,
-        openDateApproval.to
-          ? moment(openDateApproval.to)
-              .utcOffset('+00:00')
-              .set({ hour: 23, minute: 59, second: 59 })
-              .toDate()
-          : null,
-        null,
-        null,
-        null, 
-        null,
-        null,
-        null,
-        1,
-        1,
-        []
-      )
-       .then((res) => {
-        console.log(res.collection); 
-        if (res.totalRecords > 0) {
-          setAcceptAll(false);
-          if (hubConnection) {
-            hubConnection
-            .invoke(
-              'ConfirmAllDepositsPayment',
-              nameApproval ? nameApproval.toLowerCase() : null,
-              openDateApproval.from ? openDateApproval.from : null,
-              openDateApproval.to ? openDateApproval.to : null,
-              checkListApproval ? checkListApproval : null,
-              procent ? +procent / 100 : null
-            )
-            .then((res) => {
-              createNotify({
-                text: t('adminPay.success'),
-                error: false,
-                timeleft: 5,
-                id: notifications.length,
-              });
-    
-              getPaymentsOverview();
-              submitApproval();
-            })
-            .catch((err: Error) => {
-              console.error(err);
-              createNotify({
-                text: t('adminPay.error'),
-                error: true,
-                timeleft: 5,
-                id: notifications.length,
-              });
-            });
-          };
-        } else {
-          setAcceptAll(false);
+        .invoke(
+          'ConfirmAllDepositsPayment',
+          nameApproval ? nameApproval.toLowerCase() : null,
+          openDateApproval.from ? openDateApproval.from : null,
+          openDateApproval.to ? openDateApproval.to : null,
+          namesProgramApproval.length ? namesProgramApproval : null,
+          procent ? +procent / 100 : null
+        )
+        .then((res) => {
           createNotify({
-            text: t("adminPay.notPays"),
+            text: t('adminPay.success'),
+            error: false,
+            timeleft: 5,
+            id: notifications.length,
+          });
+
+          getPaymentsOverview();
+          submitApproval();
+        })
+        .catch((err: Error) => {
+          console.error(err);
+          createNotify({
+            text: t('adminPay.error'),
             error: true,
             timeleft: 5,
-            id: notifications.length
+            id: notifications.length,
           });
-        };
-       })
-       .catch((e) => console.error(e))
-    };
-  }
+        });
+    }
+  };
+
+  const isConfirmAll = depositList.filter((i) => i.state === 6);
 
   return (
     <>
-      <Modal style={{ display: acceptAll ? "block" : "none"}} onClose={() => setAcceptAll(false)}>
+      <Modal style={{ display: acceptAll ? 'block' : 'none' }} onClose={() => setAcceptAll(false)}>
         <div className="wrap">
           <Styled.ModalTitle>{t('acceptAll.title')}</Styled.ModalTitle>
           <Styled.ModalDescription>{t('acceptAll.users')}:</Styled.ModalDescription>
@@ -569,7 +526,13 @@ export const Approval: FC<Props> = ({
 
             {!openDateApproval.from && !openDateApproval.to && <>{t('all')}</>}
           </Styled.ModalItem>
-          <Button style={{ margin: '0 auto' }} danger onClick={paymentsConfirm}>
+          <Button
+            as="button"
+            disabled={!isConfirmAll.length}
+            style={{ margin: '0 auto' }}
+            danger
+            onClick={paymentsConfirm}
+          >
             {t('acceptAll.accept')} {procent ? procent + '%' : t('all').toLowerCase()}
           </Button>
         </div>
