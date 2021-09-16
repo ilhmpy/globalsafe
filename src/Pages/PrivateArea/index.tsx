@@ -344,7 +344,7 @@ export const InfoMain: FC = () => {
                           <Styled.SmallButton color={color} key={idx}>
                             <span>
                               {i.volume.toLocaleString('ru-RU', {
-                                maximumFractionDigits: 5,
+                                maximumFractionDigits: 4,
                               })}
                             </span>
                             &nbsp;
@@ -390,7 +390,7 @@ export const InfoMain: FC = () => {
                       <Styled.SmallButton color={color} key={idx}>
                         <span>
                           {i.volume.toLocaleString('ru-RU', {
-                            maximumFractionDigits: 5,
+                            maximumFractionDigits: 4,
                           })}
                         </span>
                         &nbsp;
