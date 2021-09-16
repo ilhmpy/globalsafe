@@ -60,7 +60,9 @@ export const InfoMain: FC = () => {
   const balancesList = useMemo(() => {
     const list = ['CWD', 'GLOBAL', 'GF', 'FF', 'GF5', 'GF6', 'FF5', 'FF6'];
     const sorted = balanceList?.sort((a, b) => a.balanceKind - b.balanceKind) || [];
-    return sorted.filter(b => list.includes(Balance[b.balanceKind])).map(b => Balance[b.balanceKind]);
+    return sorted
+      .filter((b) => list.includes(Balance[b.balanceKind]))
+      .map((b) => Balance[b.balanceKind]);
   }, [balanceList]);
 
   const handleDepositModal = () => {
@@ -147,9 +149,13 @@ export const InfoMain: FC = () => {
       setWithdrawValueLoad(true);
       hubConnection
         .invoke(
-          'Withdraw', 
+          'Withdraw',
           Balance[currencyValue as keyof typeof Balance],
-          currencyValue === 'CWD' ? +withdrawValue * 100000 : currencyValue === 'GLOBAL' ? +withdrawValue * 10000 : +withdrawValue
+          currencyValue === 'CWD'
+            ? +withdrawValue * 100000
+            : currencyValue === 'GLOBAL'
+            ? +withdrawValue * 10000
+            : +withdrawValue
         )
         .then((res) => {
           handleCloseWithdrawModal();
@@ -180,10 +186,7 @@ export const InfoMain: FC = () => {
       ? balanceList?.some((item) => item.balanceKind === depositSelect?.priceKind)
       : true;
 
-  const balanseType =
-    depositSelect && depositSelect?.priceKind !== null
-      ? balanceList?.filter((i) => i.balanceKind === depositSelect?.priceKind)
-      : balanceList?.filter((i) => i.balanceKind === 1);
+  const balanseType = balanceList?.filter((i) => i.balanceKind === 1);
 
   const asset =
     balanseType && depositSelect && balanseType.length
@@ -192,27 +195,27 @@ export const InfoMain: FC = () => {
       : false;
 
   // Get Better Logic To get Clear List
-  const balanceChips = balanceList?.filter((item) => {
-    if(item.balanceKind === 0) {
-      return false;
-    }
-    if(item.balanceKind === 1) {
-      return false;
-    }
-    if(item.balanceKind === 9) {
-      return false;
-    }
-    if(item.balanceKind === 10) {
-      return false;
-    }
-    if(item.balanceKind === 11) {
-      return false;
-    }
-
-    return true;
-  })
-  .sort((a, b) => a.balanceKind - b.balanceKind)
-  .map((obj) => obj.volume > 10000 ? {...obj, volume: (obj.volume / 10000)} : obj);
+  const balanceChips = balanceList
+    ?.filter((item) => {
+      if (item.balanceKind === 0) {
+        return false;
+      }
+      if (item.balanceKind === 1) {
+        return false;
+      }
+      if (item.balanceKind === 9) {
+        return false;
+      }
+      if (item.balanceKind === 10) {
+        return false;
+      }
+      if (item.balanceKind === 11) {
+        return false;
+      }
+      return true;
+    })
+    .sort((a, b) => a.balanceKind - b.balanceKind)
+    .map((obj) => (obj.balanceKind === 43 ? { ...obj, volume: obj.volume / 10000 } : obj));
 
   if (user === null) {
     return null;
@@ -279,7 +282,7 @@ export const InfoMain: FC = () => {
   };
 
   const handleCloseWithdrawModal = () => {
-    setWithdraw(false)
+    setWithdraw(false);
     setWithdrawValue('');
     setCurrencyValue('');
   };
@@ -309,7 +312,11 @@ export const InfoMain: FC = () => {
                 <Styled.BalanceItem>
                   <Styled.BalanceItemName>{t('privateArea.balance')}</Styled.BalanceItemName>
                   <Styled.BalanceItemValue pink>
-                    {balance ? (balance / 100000).toLocaleString() : '0'}
+                    {balance
+                      ? (balance / 100000).toLocaleString('ru-RU', {
+                          maximumFractionDigits: 5,
+                        })
+                      : '0'}
                   </Styled.BalanceItemValue>
                 </Styled.BalanceItem>
                 <Styled.SmallButtonsWrapDesc>
@@ -331,7 +338,12 @@ export const InfoMain: FC = () => {
 
                         return (
                           <Styled.SmallButton color={color} key={idx}>
-                            <span>{i.volume}</span>&nbsp;
+                            <span>
+                              {i.volume.toLocaleString('ru-RU', {
+                                maximumFractionDigits: 3,
+                              })}
+                            </span>
+                            &nbsp;
                             {Balance[i.balanceKind]}
                           </Styled.SmallButton>
                         );
@@ -439,7 +451,7 @@ export const InfoMain: FC = () => {
                   disabled={!withdrawValue || !currencyValue}
                   onClick={withdrawBalance}
                   danger
-                > 
+                >
                   {t('privateArea.withdraw')}
                 </Styled.ModalButton>
                 <Styled.ModalCommisionBox>
@@ -532,13 +544,16 @@ export const InfoMain: FC = () => {
                       </>
                     ) : null}
                     {console.log(depositSelect)}
-                    {depositSelect && depositSelect.priceKind  && asset ? (
+                    {depositSelect && depositSelect.priceKind && asset ? (
                       <Styled.Warning choice>
                         {t('depositSelect.willActiv')}&nbsp;{' '}
                         <span>
                           {depositSelect.price}{' '}
                           {depositSelect.priceKind ? Balance[depositSelect.priceKind] : 'CWD'}
-                          {depositSelect.price2Kind && ` и ${depositSelect.price2} ${depositSelect.price2Kind ? Balance[depositSelect.price2Kind] : 'CWD'}`}
+                          {depositSelect.price2Kind &&
+                            ` и ${depositSelect.price2} ${
+                              depositSelect.price2Kind ? Balance[depositSelect.price2Kind] : 'CWD'
+                            }`}
                         </span>
                         <br />
                         {t('depositSelect.bill')}
@@ -547,7 +562,10 @@ export const InfoMain: FC = () => {
                       <Styled.Warning>
                         {t('depositSelect.willActiv')}&nbsp; {depositSelect.price}{' '}
                         {depositSelect.priceKind ? Balance[depositSelect.priceKind] : 'CWD'}
-                        {depositSelect.price2Kind && ` и ${depositSelect.price2} ${depositSelect.price2Kind ? Balance[depositSelect.price2Kind] : 'CWD'}`}
+                        {depositSelect.price2Kind &&
+                          ` и ${depositSelect.price2} ${
+                            depositSelect.price2Kind ? Balance[depositSelect.price2Kind] : 'CWD'
+                          }`}
                         <br />
                         {t('depositSelect.bill')}
                       </Styled.Warning>
