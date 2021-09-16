@@ -215,7 +215,11 @@ export const InfoMain: FC = () => {
       return true;
     })
     .sort((a, b) => a.balanceKind - b.balanceKind)
-    .map((obj) => (obj.balanceKind === 43 ? { ...obj, volume: obj.volume / 10000 } : obj));
+    .map((obj) =>
+      obj.balanceKind === 43
+        ? { ...obj, volume: obj.volume > 1 ? obj.volume / 10000 : obj.volume }
+        : obj
+    );
 
   if (user === null) {
     return null;
@@ -340,7 +344,7 @@ export const InfoMain: FC = () => {
                           <Styled.SmallButton color={color} key={idx}>
                             <span>
                               {i.volume.toLocaleString('ru-RU', {
-                                maximumFractionDigits: 3,
+                                maximumFractionDigits: 4,
                               })}
                             </span>
                             &nbsp;
@@ -384,7 +388,12 @@ export const InfoMain: FC = () => {
 
                     return (
                       <Styled.SmallButton color={color} key={idx}>
-                        <span>{i.volume}</span>&nbsp;
+                        <span>
+                          {i.volume.toLocaleString('ru-RU', {
+                            maximumFractionDigits: 4,
+                          })}
+                        </span>
+                        &nbsp;
                         {Balance[i.balanceKind]}
                       </Styled.SmallButton>
                     );
