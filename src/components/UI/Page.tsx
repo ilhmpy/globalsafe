@@ -21,4 +21,14 @@ export const Page = styled.div<{ margin?: boolean; abs?: boolean; }>`
   @media only screen and (max-device-width: 767px) {
     position: relative;
   }
+  ${({ abs }) => {
+    if (abs) {
+      return `
+        & > * {
+          padding-right: 0px;
+          padding-left: 0px;
+        }
+      `;
+    };
+  }}
 `;

@@ -20,6 +20,7 @@ import { Card, Container } from '../../../../globalStyles';
 import { Pokedex, RootPayDeposit } from '../../../../types/payouts';
 import { ModalBlock, ModalTitle } from '../Tariffs/Tariffs.elements';
 import { ReactComponent as Reload } from "../../../../assets/svg/reload.svg";
+import { AnyMxRecord } from 'dns';
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
@@ -175,15 +176,19 @@ export const Payments: FC = () => {
   const [smallArr, setSmallArr] = useState<any>([]);
   const [loadReset, setLoadReset] = useState(false);
   const arrSizeBig = 10;
-  const arrSizeMob = 4;
+  const arrSizeMob = 6;
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
+  const [isMobile, setIsMobile] = useState<boolean | undefined>();
   const { t } = useTranslation();
+
+  useEffect(() => setIsMobile(screen.width <= 480), []);
 
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   const languale = lang === 'ru' ? 1 : 0;
 
   const stats = useCallback(() => {
+    localStorage.removeItem("last");
     const newStats = statsDeposit.map((i) => {
       const color =
         '#' +
@@ -203,7 +208,6 @@ export const Payments: FC = () => {
     for (let i = 0; i < Math.ceil(newStats.length / arrSizeBig); i++) {
       newArrayBig[i] = newStats.slice(i * arrSizeBig, i * arrSizeBig + arrSizeBig);
     }
-
     setBigArr(newArrayBig);
     const newArrayMob: any[] = [];
     for (let i = 0; i < Math.ceil(newStats.length / arrSizeMob); i++) {
@@ -211,6 +215,8 @@ export const Payments: FC = () => {
     }
     setSmallArr(newArrayMob);
   }, [statsDeposit]);
+
+
 
   useEffect(() => {
     stats();
@@ -236,9 +242,60 @@ export const Payments: FC = () => {
     }
   };
 
-  const [last, setLast] = useState(localStorage.getItem("last") || undefined);
+  const [last, setLast] = useState(localStorage.getItem("last") || "");
+  const [lastTime, setLastTime] = useState<string | null>(null);
+  const [timeInterval, setTimeInterval] = useState<any>();
+  const [actualDate, setActualDate] = useState(new Date());
 
-  console.log(bigArr)
+  function lastUpdate() {
+    stats();
+    clearInterval(timeInterval);
+    setTimeInterval(setInterval(() => update(), 60000)); 
+    const date = new Date();
+    const newDate = { time: { hours: date.getHours(), minutes: date.getMinutes() }, date: { day: date.getDate(), month: date.getMonth() + 1, year: date.getFullYear()}};
+    localStorage.setItem("last", JSON.stringify(newDate));
+    getLastUpdate(newDate);
+    const update = () => {
+      console.log("yes");
+      getLastUpdate(newDate);
+    };
+  };
+
+  function getLastUpdate(last: any) {
+    const currentDate = new Date();
+    const updateTime = last;
+    
+    if (updateTime.date.year == currentDate.getFullYear()) {
+      if (updateTime.date.month == currentDate.getMonth() + 1) {
+        if (updateTime.date.day == currentDate.getDate()) {
+          const time = ((currentDate.getHours() * 60) + currentDate.getMinutes()) - ((updateTime.time.hours * 60) + updateTime.time.minutes);
+          if (time >= 60) {
+            console.log("hours", `${Math.floor(time / 60)} часов`)
+            return setLastTime(`${Math.floor(time / 60)} часов`);
+          } else {
+            console.log("minutes", `${time} минут`)
+            if (time > 0) {
+              setLastTime(`${time} минут`);
+            } else {
+              setLastTime(null);
+            };
+          };
+        } else {
+          setActualDate(new Date());
+          console.log("not current day", `${currentDate.getDate() - updateTime.date.day} дней`);
+          return setLastTime(`${currentDate.getDate() - updateTime.date.day} дней`);
+        };
+      } else {
+        setActualDate(new Date());
+        console.log("not current month", `${(currentDate.getMonth() + 1) - updateTime.date.month} месяцев`);
+        return setLastTime(`${(currentDate.getMonth() + 1) - updateTime.date.month} месяцев`);
+      };
+    } else {
+      setActualDate(new Date());
+      console.log("not current year: ", `${currentDate.getFullYear() - updateTime.date.year} лет`);
+      return setLastTime(`${currentDate.getFullYear() - updateTime.date.year} лет`);
+    };
+  };
 
   return (
     <Page abs>
@@ -252,30 +309,53 @@ export const Payments: FC = () => {
       <Container>
         <WhiteBox>
           <WhiteIntf>
-            <Title>{t("payments2.actual")} {moment(new Date()).format("DD.MM.YYYY")}</Title>
+            <Title>{t("payments2.actual")} {moment(actualDate).format("DD.MM.YYYY")}</Title>
             <Title right>
-              {t("payments2.last")} {last ? ( <> 5 минут {t("payments2.ago")} </> ) : t("payments2.now")} <Reload style={{ cursor: "pointer" }} />
-            </Title>
+              {t("payments2.last")} {lastTime != null ? ( <> {lastTime} {t("payments2.ago")} </> ) : t("payments2.now")} <Reload style={{ cursor: "pointer" }} onClick={() => lastUpdate()} />
+            </Title> 
           </WhiteIntf>
           <WhiteMap>
-            {statsDeposit.length ? (
+            {isMobile ? (
               <>
-              {bigArr.map((i: any, idx: any) => {
-                return (
-                  <>
-                    {i.map((item: any, idx: any) => (
-                      <WhiteItem key={idx}>
-                        <WhiteItemText>{item.deposit.name}</WhiteItemText>
-                        <WhiteItemText bold>{(item.procent).toFixed(0)}%</WhiteItemText>
-                        <WhiteItemText>{moment(item.date).format("DD.MM.YYYY")}</WhiteItemText>
-                        <WhiteItemLine procent={(item.procent).toFixed(0)} />
-                      </WhiteItem>
+                <Swiper spaceBetween={10} slidesPerView={1} pagination={{ clickable: true }}>
+                    {smallArr.map((i: any, idx: number) => (
+                      <SwiperSlide key={idx}>                                       
+                        <>
+                          {i.map((item: any, idx: any) => (
+                            <WhiteItem key={idx}>
+                              <WhiteItemText>{item.deposit.name}</WhiteItemText>
+                              <WhiteItemText bold>{(item.procent).toFixed(0)}%</WhiteItemText>
+                              <WhiteItemText>{moment(item.date).format("DD.MM.YYYY")}</WhiteItemText>
+                              <WhiteItemLine procent={(item.procent).toFixed(0)} />
+                            </WhiteItem>
+                          ))}
+                        </>
+                      </SwiperSlide>
                     ))}
+                </Swiper>
+              </>
+            ) : (
+              <>
+                {statsDeposit.length ? (
+                    <>
+                    {bigArr.map((i: any, idx: any) => {
+                      return (
+                        <>
+                          {i.map((item: any, idx: any) => (
+                            <WhiteItem key={idx}>
+                              <WhiteItemText>{item.deposit.name}</WhiteItemText>
+                              <WhiteItemText bold>{(item.procent).toFixed(0)}%</WhiteItemText>
+                              <WhiteItemText>{moment(item.date).format("DD.MM.YYYY")}</WhiteItemText>
+                              <WhiteItemLine procent={(item.procent).toFixed(0)} />
+                            </WhiteItem>
+                          ))}
+                        </>
+                      )
+                    })}
                   </>
-                )
-              })}
-            </>
-            ) : ( "" )}
+               ) : ( "" )}
+              </>
+            )}
           </WhiteMap>
         </WhiteBox>
       </Container> 
@@ -541,9 +621,11 @@ const WhiteBox = styled.div`
   min-height: 612px;
   background: #FFFFFF;
   border-radius: 4px;
-  box-shadow: 0px, 80px, rgba(220, 220, 232, 0.5);
-  padding: 25px;
-  padding-top: 25px;
+  -webkit-box-shadow: 0px 80px 80px -40px #DCDCE880;
+  -moz-box-shadow: 0px 80px 80px -40px #DCDCE880;
+  box-shadow: 0px 80px 80px -40px #DCDCE880;
+  padding: 30px;
+  padding-top: 40px;
 
   @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
     padding: 20px;
@@ -554,6 +636,11 @@ const WhiteBox = styled.div`
   @media only screen and (max-device-width: 767px) {
     width: 100%;
     max-width: 100%;
+    padding: 20px;
+    height: 480px;
+    min-height: 480px;
+    padding-bottom: 0px;
+    padding-right: 0px;
   }
 `;
 
@@ -564,6 +651,7 @@ const Title = styled.div<{ right?: boolean; }>`
   color: ${({ theme }) => theme.titles};
   align-items: center;
   display: flex;
+  margin-bottom: 10px;
 
   ${({ right }) => {
     if (right) {
@@ -588,7 +676,7 @@ const WhiteIntf = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 0px;
 
   @media only screen and (max-device-width: 767px) { 
     flex-direction: column;
@@ -599,6 +687,27 @@ const WhiteMap = styled.div`
   width: 100%;
   display: flex;
   flex-wrap: wrap;
+
+  .swiper-container {
+    width: 100%;
+  }
+
+  .swiper-slide {
+    display: flex;
+    flex-wrap: wrap;
+    min-height: 370px;
+  }
+
+  .swiper-pagination-bullets > .swiper-pagination-bullet-active {
+    width: 20px;
+    height: 6px;
+    border-radius: 6px;
+  }
+
+  .swiper-pagination {
+    bottom: -3px;
+    z-index: 99999999;
+  }
 `;
 
 const WhiteItem = styled.div`
@@ -610,6 +719,7 @@ const WhiteItem = styled.div`
   border-radius: 4px;
   margin-bottom: 20px;
   padding: 20px;
+  padding-left: 25px;
   position: relative;
 
   @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
@@ -620,12 +730,28 @@ const WhiteItem = styled.div`
   @media only screen and (max-device-width: 767px) {
     width: 135px;
     min-width: 135px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+
+    &:last-child {
+      margin-bottom: 40px;
+    }
   }
+
+  @media only screen and (min-device-width: 360px) and (max-device-width: 409px) {
+    max-width: 180px;
+    width: 45%;
+  }
+
+  @media only screen and (min-device-width: 410px) and (max-device-width: 480px) {
+    max-width: 200px; 
+    width: 45%;    
+  } 
 `;
 
 const WhiteItemText = styled.div<{ bold?: boolean; }>`
-  color: #000;
-  font-weight: 400;
+  color: #000000;
+  font-weight: 500;
   font-size: 12px;
   line-height: 14px;
 

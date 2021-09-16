@@ -1,9 +1,5 @@
 export const lightTheme = {
-  body: `linear-gradient(
-    0deg
-    , rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)), linear-gradient(
-    82.3deg
-    , #effff9 3.67%, #f3f9ff 22.57%, #fffdf0 44.98%, #fff0f0 73%, #f0f0ff 95.88% ), #ffffff`,
+  body: `#E5E5E5`,
   text: '#0E0D3D',
   text2: '#515172',
   text3: '#333',
