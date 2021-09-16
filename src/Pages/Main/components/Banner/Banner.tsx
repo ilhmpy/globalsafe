@@ -14,19 +14,20 @@ export const Banner: FC = () => {
   return (
     <>
       <Carousel />
-      <Container>
-        <H2>Приумножайте правильно</H2>
-        <S.Desc>
-          GlobalSafe - Это современный криптофонд для управления и приумножения ваших средств под
-          контролем лучших специалистов!
-        </S.Desc>
-        <Button as="button">
-          <Link to="tariffs" spy={true} smooth={true} offset={-50} duration={500}>
-            программы депозитов
-          </Link>
-        </Button>
-      </Container>
-
+      <S.DescWrap>
+        <Container>
+          <H2>Приумножайте правильно</H2>
+          <S.Desc>
+            GlobalSafe - Это современный криптофонд для управления и приумножения ваших средств под
+            контролем лучших специалистов!
+          </S.Desc>
+          <Button as="button">
+            <Link to="tariffs" spy={true} smooth={true} offset={-50} duration={500}>
+              программы депозитов
+            </Link>
+          </Button>
+        </Container>
+      </S.DescWrap>
       {/* <CurrencyValues /> */}
     </>
   );

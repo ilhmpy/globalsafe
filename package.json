@@ -17,6 +17,8 @@
     "cross-spawn": "^7.0.3",
     "date-fns": "^2.21.3",
     "formik": "^2.2.6",
+    "highcharts": "^9.2.2",
+    "highcharts-react-official": "^3.0.0",
     "i18next": "^20.1.0",
     "i18next-browser-languagedetector": "^6.1.0",
     "i18next-http-backend": "^1.2.1",
