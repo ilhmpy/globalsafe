@@ -11,6 +11,7 @@ declare module 'styled-components' {
     gradient: string;
     link: string;
     buttonBorder: string;
+    dangerButtonText: string;
     modal: string;
     header: string;
     listBorder: string;

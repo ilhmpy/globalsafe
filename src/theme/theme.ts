@@ -11,6 +11,7 @@ export const lightTheme = {
   modal: '#fff',
   toggleBorder: '#FFF',
   buttonBorder: '#0E0D3D',
+  dangerButtonText:'#FFF',
   inputBg: '#fff',
   repeatCode: '#212121',
   header: `linear-gradient(
@@ -89,6 +90,7 @@ export const darkTheme = {
   text: '#FFF',
   toggleBorder: '#6B8096',
   buttonBorder: '#FF416E',
+  dangerButtonText:'#FFF',
   text2: '#E2E2E2',
   text3: '#fff',
   text3Hover: '#fff',
