@@ -30,7 +30,9 @@
     "incorrectLogin": "Login is not correct",
     "getCode": "To get the code",
     "repeat": "Request the code again",
-    "over": "in"
+    "over": "in",
+    "enter": "Enter",
+    "loginAccount": "Enter account"
   },
   "banner": {
     "uptitle": "About fund ",

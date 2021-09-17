@@ -222,6 +222,7 @@ export const LoginComponent = () => {
             op={login && !user && !where}
             onClick={onSubmit}
             disabled={stateRepeat !== null}
+            hasUnderline={stateRepeat === null}
           >
             <>
               {t('login.repeat')} {stateRepeat && t('login.over') + ' ' + stateRepeat}
@@ -237,7 +238,7 @@ const SelfInput = styled(Input)`
   margin-bottom: 30px;
 `;
 
-const RepeatCode = styled.button<{ op?: boolean }>`
+const RepeatCode = styled.button<{ op?: boolean; hasUnderline?: boolean; }>`
   opacity: ${(props) => (props.op ? '1' : '0')};
   cursor: pointer;
   appearance: none;
@@ -249,11 +250,12 @@ const RepeatCode = styled.button<{ op?: boolean }>`
   font-size: 12px;
   line-height: 14px;
   text-align: center;
-  text-decoration-line: underline;
+  text-decoration-line: ${props => props.hasUnderline ? 'underline' : 'none'};
   position: absolute;
   left: 0px;
   right: 0px;
   width: 100%;
+  max-width: 200px;
   bottom: 40px;
   /* display: flex;
   align-items: center;
@@ -305,7 +307,7 @@ const FormBlock = styled.form`
 export const Submit = styled(Button)<{ mb?: boolean }>`
   max-width: 100%;
   margin-bottom: ${(props) => (props.mb ? '20px' : '0')};
-  color: ${(props) => props.theme.text};
+  color: ${props => props.theme.dangerButtonText};
 `;
 
 const CardContainer = styled(Card)`
@@ -315,6 +317,7 @@ const CardContainer = styled(Card)`
   align-items: center;
   position: relative;
   height: 482px;
+  border-radius: 10px;
   @media (max-width: 992px) {
     /* padding-top: 125px;
     padding-bottom: 125px; */
