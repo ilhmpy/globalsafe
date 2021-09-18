@@ -1,4 +1,4 @@
-﻿import React from 'react';
+﻿import React, { useMemo } from 'react';
 import styled from 'styled-components/macro';
 import { Modal } from '../Modal/Modal';
 import moment from 'moment';
@@ -26,6 +26,19 @@ export const TableModal = ({ onClose, open, data }: Props) => {
 
 export const InfoBlock = ({ data }: any) => {
   const { t } = useTranslation();
+
+  const convertedLoanValue = useMemo(() => {
+    if(data.deposit.loanKind === 1) {
+      return `${(data.loanVolume / 100000).toLocaleString('ru-RU', {maximumFractionDigits: 2})} ${Balance[data.deposit.loanKind]}`;
+    }
+
+    if(data.deposit.loanKind === 43) {
+      return `${(data.loanVolume / 10000).toLocaleString('ru-RU', {maximumFractionDigits: 2})} ${Balance[data.deposit.loanKind]}`;
+    }
+
+    return `${data.loanVolume} ${Balance[data.deposit.loanKind]}`;
+  }, [data]);
+  
   return (
     <>
       {data && (
@@ -81,11 +94,11 @@ export const InfoBlock = ({ data }: any) => {
             <Text>{t('privateArea.pledge')}</Text>
             <Text>
               {data.loanVolume
-                ? (data.loanVolume / 100000).toLocaleString('ru-RU', {
-                    maximumFractionDigits: 2,
-                  })
-                : 0}
-              &nbsp; CWD
+                ? 
+                  convertedLoanValue
+                : 
+                  '0 CWD'
+              }
             </Text>
           </LI>
           <LI>
