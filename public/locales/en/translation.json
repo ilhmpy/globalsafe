@@ -553,5 +553,11 @@
   "ascendDateCreate": "By ascending date of create",
   "descendSumDeposit": "By descending sum of deposit",
   "ascendSumDeposit": "By ascending sum of deposit",
-  "unders": "Got it"
+  "unders": "Got it",
+  "payments2": {
+    "actual": "Actuality on",
+    "last": "Updated",
+    "ago": "ago",
+    "now": "now"
+  }
 }

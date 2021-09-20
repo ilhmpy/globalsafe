@@ -77,5 +77,6 @@ declare module 'styled-components' {
     };
     pink: string;
     rounIputBackground: string;
+    titles: string;
   }
 }

@@ -551,5 +551,11 @@
   "descendDateCreate": "По убыванию даты создания",
   "ascendDateCreate": "По возрастанию даты создания",
   "descendSumDeposit": "По убыванию суммы депозита",
-  "ascendSumDeposit": "По возростанию суммы депозита"
+  "ascendSumDeposit": "По возростанию суммы депозита",
+  "payments2": {
+    "actual": "Актуально на",
+    "last": "Обновленно",
+    "ago": "назад",
+    "now": "сейчас"
+  }
 }
