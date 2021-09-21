@@ -53,7 +53,7 @@ export const OnePage = ({ match }: RouteComponentProps<PropsMatch>) => {
   const depositExchange = async (amountId: string, kind: number) => {
     if (hubConnection) {
       try {
-        const res = await hubConnection.invoke('CalculateDepositExchange', amountId, kind);
+        const res = await hubConnection.invoke('DepositExchange', amountId, kind);
         console.log('res', res);
         setCancelModal(false);
         history.push('/info/deposits');
