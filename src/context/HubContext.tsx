@@ -96,7 +96,9 @@ export const HubProvider: FC = ({ children }: any) => {
           setLoading(false);
           if (res.balances.length) {
             const newArr = res.balances.filter((item: any) => item.balanceKind === 1);
-            setBalance(newArr[0].volume);
+            setBalance(newArr[0].volume); 
+ 
+            console.log(res.balances)
 
             if (!localStorage.getItem('i18nextLng')) {
               i18n.changeLanguage(res.languageCode === 1 ? 'ru' : 'en');
@@ -105,6 +107,7 @@ export const HubProvider: FC = ({ children }: any) => {
               balanceKind: item.balanceKind,
               volume: item.volume,
             }));
+            console.log(res.balances);
             setBalanceList(res.balances);
           }
           if (res.roles.length && res.roles[0].name === 'administrator') {

@@ -320,7 +320,10 @@
     "serviceCommision": "Service commision",
     "undr": "Understand",
     "pendingPay": "Deferred payment",
-    "pledge": "Pledge"
+    "pledge": "Pledge",
+    "toToken": "Exchange to token",
+    "translate": "Exchange",
+    "sumIn": "Sum in MULTICS"
   },
   "alert": {
     "success": "Successfully",

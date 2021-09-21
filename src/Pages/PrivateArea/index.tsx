@@ -22,7 +22,7 @@ import { Commisions, DepositsCollection, RootDeposits } from '../../types/info';
 import { Info } from './Info';
 import { InfoBalance } from './InfoBalance';
 import { InfoDeposits } from './InfoDeposits';
-import { DepositListModal } from './Modals';
+import { DepositListModal, TokenModal } from './Modals';
 import { OnePage } from './OnePage';
 import * as Styled from './Styles.elements';
 
@@ -42,6 +42,7 @@ export const InfoMain: FC = () => {
   const [depositError, setDepositError] = useState<boolean>(false);
   const [currencyValue, setCurrencyValue] = useState<string | Balance>('');
   const [withdrawValue, setWithdrawValue] = useState('');
+  const [switchType, setSwitchType] = useState<boolean>(false);
   const [account, setAccount] = useState('');
   const appContext = useContext(AppContext);
   const user = appContext.user;
@@ -55,6 +56,8 @@ export const InfoMain: FC = () => {
   moment.locale(lang);
   const [blockchainCommision, setBlockchainCommision] = useState<string>('0');
   const [serviceCommision, setServiceCommision] = useState<string>('0');
+  const [toTokenModal, setToTokenModal] = useState<boolean>(false);
+  const [countToTranslate, setCountToTranslate] = useState<any>("");
 
   // Get Balance Kinds List as an Array
   const balancesList = useMemo(() => {
@@ -291,6 +294,8 @@ export const InfoMain: FC = () => {
     setCurrencyValue('');
   };
 
+  console.log(balance);
+
   return (
     <>
       {withdrawValueLoad && (
@@ -303,6 +308,15 @@ export const InfoMain: FC = () => {
           <Loading />
         </Styled.Loader>
       )}
+
+      <TokenModal 
+        block={toTokenModal} 
+        setBlock={setToTokenModal}
+        setToTranslate={setCountToTranslate}
+        onButton={() => {
+          return;
+        }} 
+      />
       <Header />
       <Styled.Page>
         <Container>
@@ -319,8 +333,8 @@ export const InfoMain: FC = () => {
                     {balance
                       ? (balance / 100000).toLocaleString('ru-RU', {
                           maximumFractionDigits: 5,
-                        })
-                      : '0'}
+                        }) 
+                      : '0'} CWD
                   </Styled.BalanceItemValue>
                 </Styled.BalanceItem>
                 <Styled.SmallButtonsWrapDesc>
@@ -343,7 +357,7 @@ export const InfoMain: FC = () => {
                         return (
                           <Styled.SmallButton color={color} key={idx}>
                             <span>
-                              {i.volume.toLocaleString('ru-RU', {
+                              {(i.volume / 100).toLocaleString('ru-RU', {
                                 maximumFractionDigits: 4,
                               })}
                             </span>
@@ -366,10 +380,20 @@ export const InfoMain: FC = () => {
                 >
                   {t('privateArea.newDeposit')}
                 </Button>
-                <Button danger onClick={() => setWithdraw(true)}>
+                <Button danger onClick={() => setSwitchType(!switchType)}>
                   {t('privateArea.withdraw')}
                 </Button>
               </Styled.InfoButtons>
+              <Styled.SwitchBlock block={switchType}>
+                <Button dangerOutline onClick={() => {
+                  setToTokenModal(true);
+                  setSwitchType(false);
+                }} style={{ width: 130, height: 35 }}>{t("privateArea.toToken")}</Button>
+                <Button dangerOutline onClick={() => {
+                  setSwitchType(false);
+                  setWithdraw(true);
+                }} style={{ width: 130, height: 35 }}>{t('privateArea.withdraw')}</Button>
+              </Styled.SwitchBlock>
             </Styled.InfoWrap>
             <Styled.SmallButtonsWrapMob>
               <Styled.SmallButtonsWrap>
@@ -522,7 +546,7 @@ export const InfoMain: FC = () => {
                       disabled={!asset || !addDepositValue}
                       onClick={openNewDeposit}
                       danger
-                    >
+                    > 
                       {t('depositSelect.add')}
                     </Styled.ModalButton>
                     {depositSelect?.description ? (

@@ -271,6 +271,7 @@ export const Page = styled.div`
 export const InfoWrap = styled.div`
   padding: 30px 90px 0px;
   display: flex;
+  position: relative;
   align-items: flex-start;
   @media (max-width: 992px) {
     padding: 20px 20px 0px;
@@ -283,7 +284,7 @@ export const InfoTitle = styled.h4`
   font-weight: 500;
   font-size: 18px;
   line-height: 21px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -473,7 +474,6 @@ export const BalanceItem = styled.div`
   display: flex;
   justify-content: flex-start;
   flex-direction: column;
-  padding: 0 10px;
   &:first-child {
     padding-left: 0;
   }
@@ -486,7 +486,7 @@ export const BalanceItemName = styled.p`
   font-weight: normal;
   font-size: 14px;
   line-height: 16px;
-  margin-bottom: 5px;
+  margin-bottom: 3px;
   @media (max-width: 992px) {
     font-size: 14px;
     line-height: 16px;
@@ -495,10 +495,11 @@ export const BalanceItemName = styled.p`
 
 export const BalanceItemValue = styled.p<{ pink?: boolean }>`
   font-weight: 500;
-  font-size: 24px;
-  line-height: 28px;
-  color: ${(props) => (props.pink ? '#FF416E' : props.theme.text)};
+  font-size: 18px;
+  line-height: 21px;
+  color: ${(props) => (props.pink ? '#FF416E' : "#212121")};
   word-break: break-all;
+  margin-bottom: 5px;
 
   @media (max-width: 992px) {
     font-size: 18px;
@@ -979,4 +980,25 @@ export const ModalCommisionCount = styled.h3`
 export const ModalCommisionBox = styled.div`
   width: 100%;
   padding-top: 1px;
+`;
+
+export const SwitchBlock = styled.div<{ block: boolean; }>`
+  display: ${({ block }) => block ? "block" : "none"};
+  position: absolute;
+  background: ${({ theme }) => theme.toToken.background};
+  padding-top: 20px;
+  -webkit-box-shadow: 4px 4px 8px -3px rgba(34, 60, 80, 0.2);
+  -moz-box-shadow: 4px 4px 8px -3px rgba(34, 60, 80, 0.2);
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  width: 180px;
+  height: 120px;
+  right: 90px;
+  top: 136px;
+
+  & > * {
+    margin: 0 auto;
+    margin-bottom: 10px;
+    font-size: 12px;
+  }
 `;

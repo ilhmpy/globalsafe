@@ -83,7 +83,11 @@ export const lightTheme = {
   },
   pink: '#FF416E',
   rounIputBackground: '#FFF0F0',
-  titles: "#3F3E4E"
+  titles: "#3F3E4E",
+  toToken: {
+    color: "rgba(14, 13, 61, 0.5)",
+    background: "#fff"
+  }
 };
 
 export const darkTheme = {
@@ -163,6 +167,10 @@ export const darkTheme = {
   },
   pink: '#FF416E',
   rounIputBackground: '#ffffff',
-  titles: "#fff" 
+  titles: "#fff",
+  toToken: {
+    color: "#fff",
+    background: "#212121"
+  } 
 };
  

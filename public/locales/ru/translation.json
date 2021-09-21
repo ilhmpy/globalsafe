@@ -320,7 +320,10 @@
     "serviceCommision": "Комиссия сервиса",
     "undr": "Понятно",
     "pendingPay": "Отложенная выплата",
-    "pledge": "Залог"
+    "pledge": "Залог",
+    "toToken": "Перевод в токен",
+    "translate": "Перевести",
+    "sumIn": "Сумма в MULTICS"
   },
   "alert": {
     "success": "Успешно",

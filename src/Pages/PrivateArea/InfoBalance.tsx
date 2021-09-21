@@ -58,8 +58,7 @@ const BalanceTable: FC<BalanceTableProps> = ({ balanceLog }: BalanceTableProps) 
   const onClose = () => {
     setDivModal(false);
   };
-
-  console.log("Robert::::::::balanceLog", balanceLog)
+  
   return (
     <>
       <div>

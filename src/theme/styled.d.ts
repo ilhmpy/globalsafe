@@ -78,5 +78,9 @@ declare module 'styled-components' {
     pink: string;
     rounIputBackground: string;
     titles: string;
+    toToken: {
+      background: string;
+      color: string;
+    }
   }
 }
