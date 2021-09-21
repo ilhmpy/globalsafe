@@ -225,7 +225,7 @@ type Props = {
 
 export const Tables: FC<Props> = ({ list, removeItem }: Props) => {
   const { t } = useTranslation();
-
+  // console.log('list', list);
   return (
     <Styled.TableWrap>
       {/* <FilterMenu filterClick={filterClick} /> */}
