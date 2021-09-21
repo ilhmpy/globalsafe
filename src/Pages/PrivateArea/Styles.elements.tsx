@@ -994,6 +994,7 @@ export const SwitchBlock = styled.div<{ block: boolean; }>`
   width: 180px;
   height: 120px;
   right: 90px;
+  z-index: 9999;
   top: 136px;
 
   & > * {

@@ -61,7 +61,7 @@ export const InfoMain: FC = () => {
 
   // Get Balance Kinds List as an Array
   const balancesList = useMemo(() => {
-    const list = ['CWD', 'GLOBAL', 'GF', 'FF', 'GF5', 'GF6', 'FF5', 'FF6'];
+    const list = ['CWD', 'GLOBAL', 'GF', 'FF', 'GF5', 'GF6', 'FF5', 'FF6', "MULTICS"];
     const sorted = balanceList?.sort((a, b) => a.balanceKind - b.balanceKind) || [];
     return sorted
       .filter((b) => list.includes(Balance[b.balanceKind]))
@@ -198,31 +198,32 @@ export const InfoMain: FC = () => {
       : false;
 
   // Get Better Logic To get Clear List
-  const balanceChips = balanceList
-    ?.filter((item) => {
-      if (item.balanceKind === 0) {
-        return false;
-      }
-      if (item.balanceKind === 1) {
-        return false;
-      }
-      if (item.balanceKind === 9) {
-        return false;
-      }
-      if (item.balanceKind === 10) {
-        return false;
-      }
-      if (item.balanceKind === 11) {
-        return false;
-      }
-      return true;
-    })
-    .sort((a, b) => a.balanceKind - b.balanceKind)
-    .map((obj) =>
-      obj.balanceKind === 43
-        ? { ...obj, volume: obj.volume > 1 ? obj.volume / 10000 : obj.volume }
-        : obj
-    );
+  /*
+
+  const balanceChips = balanceList?.filter((item) => {
+    if (item.balanceKind === 0) {
+      return false;
+    }
+    if (item.balanceKind === 1) {
+      return false;
+    }
+    if (item.balanceKind === 9) {
+      return false;
+    }
+    if (item.balanceKind === 10) {
+      return false;
+    }
+    if (item.balanceKind === 11) {
+      return false;
+    }
+    return true;
+  })
+  .sort((a, b) => a.balanceKind - b.balanceKind)
+  .map((obj) =>
+    obj.balanceKind === 43
+      ? { ...obj, volume: obj.volume > 1 ? obj.volume / 10000 : obj.volume }
+      : obj
+  ); */
 
   if (user === null) {
     return null;
@@ -294,7 +295,7 @@ export const InfoMain: FC = () => {
     setCurrencyValue('');
   };
 
-  console.log(balance);
+  console.log(balanceList);
 
   return (
     <>
@@ -339,19 +340,35 @@ export const InfoMain: FC = () => {
                 </Styled.BalanceItem>
                 <Styled.SmallButtonsWrapDesc>
                   <Styled.SmallButtonsWrap>
-                    {balanceChips &&
-                      balanceChips.map((i, idx) => {
+                    {balanceList && (
+                      balanceList.map((i: any, idx: any) => {
                         let color = '#6DB9FF';
                         if (i.balanceKind === 9) {
                           color = '#FF416E';
                         } else if (i.balanceKind === 10) {
-                          color = '#6DB9FF';
+                          color = '#6DB9FF'; 
                         } else if (i.balanceKind === 11) {
                           color = '#BCD476';
                         } else if (i.balanceKind === 12) {
                           color = '#A78CF2';
                         } else {
                           color = '#6DB9FF';
+                        }
+
+                        if (i.balanceKind === 0) {
+                          return false;
+                        }
+                        if (i.balanceKind === 1) {
+                          return false;
+                        }
+                        if (i.balanceKind === 9) {
+                          return false;
+                        }
+                        if (i.balanceKind === 10) {
+                          return false;
+                        }
+                        if (i.balanceKind === 11) {
+                          return false;
                         }
 
                         return (
@@ -365,7 +382,7 @@ export const InfoMain: FC = () => {
                             {Balance[i.balanceKind]}
                           </Styled.SmallButton>
                         );
-                      })}
+                      }))}
                   </Styled.SmallButtonsWrap>
                 </Styled.SmallButtonsWrapDesc>
               </Styled.UserBlock>
@@ -397,8 +414,8 @@ export const InfoMain: FC = () => {
             </Styled.InfoWrap>
             <Styled.SmallButtonsWrapMob>
               <Styled.SmallButtonsWrap>
-                {balanceChips &&
-                  balanceChips.map((i, idx) => {
+                {balanceList &&
+                  balanceList.map((i: any, idx: any) => { 
                     let color = '#6DB9FF';
                     if (i.balanceKind === 9) {
                       color = '#FF416E';

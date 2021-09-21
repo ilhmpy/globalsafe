@@ -79,7 +79,7 @@ export const HubProvider: FC = ({ children }: any) => {
     const cb = (data: any) => {
       console.log('BalanceUpdate', data);
       if (balanceList) {
-        const idx = balanceList.findIndex((item) => item.balanceKind === data.balanceKind);
+        const idx = balanceList.findIndex((item: any) => item.balanceKind === data.balanceKind);
         setBalanceList([...balanceList.slice(0, idx), data, ...balanceList.slice(idx + 1)]);
       }
       if (data.balanceKind === 1) {
@@ -107,8 +107,8 @@ export const HubProvider: FC = ({ children }: any) => {
               balanceKind: item.balanceKind,
               volume: item.volume,
             }));
-            console.log(res.balances);
             setBalanceList(res.balances);
+            console.log(res.balances);
           }
           if (res.roles.length && res.roles[0].name === 'administrator') {
             setIsAdmin(true);
