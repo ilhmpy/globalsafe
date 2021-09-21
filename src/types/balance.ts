@@ -58,7 +58,7 @@
   FF13,
   FF14,
   FF15,
-  MULTICS
+  MULTICS = 59
 }
 
 export type BalanceList = {

@@ -562,5 +562,13 @@
     "last": "Updated",
     "ago": "ago",
     "now": "now"
+  },
+  "cancelDeposit":{
+    "closeDeposit": "Close deposit",
+    "sumAndProcent": "The amount of conversion of the body of the deposit and the remaining interest",
+    "convert": "conversion at the rate",
+    "getSum": "Amount receivable",
+    "confirm": "Confirm",
+    "close": "Close"
   }
 }

@@ -80,6 +80,7 @@ export const HubProvider: FC = ({ children }: any) => {
       console.log('BalanceUpdate', data);
       if (balanceList) {
         const idx = balanceList.findIndex((item: any) => item.safeId === data.safeId);
+
         if (idx !== -1) {
           setBalanceList([...balanceList.slice(0, idx), data, ...balanceList.slice(idx + 1)]);
         } else {
