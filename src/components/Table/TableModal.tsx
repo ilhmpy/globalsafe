@@ -185,6 +185,7 @@ const LI = styled.li`
     padding: 4px;
     font-weight: normal;
     margin: 0 auto;
+    color: ${(props) => props.theme.text};
   }
 `;
 

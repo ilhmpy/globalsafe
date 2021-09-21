@@ -146,7 +146,8 @@ export const InfoMain: FC = () => {
         .catch((err: Error) => console.log(err));
     }
   }, [hubConnection, languale]);
-
+  // console.log('+withdrawValue', +withdrawValue);
+  // console.log('currencyValue', currencyValue);
   const withdrawBalance = () => {
     if (hubConnection) {
       setWithdrawValueLoad(true);
@@ -158,6 +159,8 @@ export const InfoMain: FC = () => {
             ? +withdrawValue * 100000
             : currencyValue === 'GLOBAL'
             ? +withdrawValue * 10000
+            : currencyValue === 'MULTICS'
+            ? +withdrawValue * 100
             : +withdrawValue
         )
         .then((res) => {
@@ -436,14 +439,32 @@ export const InfoMain: FC = () => {
                       color = '#6DB9FF';
                     } else if (i.balanceKind === 11) {
                       color = '#BCD476';
+                    } else if (i.balanceKind === 12) {
+                      color = '#A78CF2';
                     } else {
                       color = '#6DB9FF';
+                    }
+
+                    if (i.balanceKind === 0) {
+                      return false;
+                    }
+                    if (i.balanceKind === 1) {
+                      return false;
+                    }
+                    if (i.balanceKind === 9) {
+                      return false;
+                    }
+                    if (i.balanceKind === 10) {
+                      return false;
+                    }
+                    if (i.balanceKind === 11) {
+                      return false;
                     }
 
                     return (
                       <Styled.SmallButton color={color} key={idx}>
                         <span>
-                          {i.volume.toLocaleString('ru-RU', {
+                          {(i.volume / 100).toLocaleString('ru-RU', {
                             maximumFractionDigits: 4,
                           })}
                         </span>

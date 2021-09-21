@@ -2,7 +2,7 @@ import React, { FC, useState, useContext } from 'react';
 import * as Styled from './Styles.elements';
 import { CSSTransition } from 'react-transition-group';
 import { Modal } from '../../components/Modal/Modal';
-import { Input } from "../../components/UI/Input";
+import { Input } from '../../components/UI/Input';
 import { DepositsCollection } from '../../types/info';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
@@ -54,7 +54,7 @@ export const DepositListModal: FC<Props> = ({
             : ''}
         </Styled.ModalList>
         <Styled.ModalListButton onClick={() => setDepositListModal(false)} danger>
-          {t("privateArea.undr")}
+          {t('privateArea.undr')}
         </Styled.ModalListButton>
       </Modal>
     </CSSTransition>
@@ -135,30 +135,34 @@ export const ModalDividends: FC<DividendsProps> = ({ onClose, data, open }: Divi
 };
 
 export const TokenModal = ({ block, setBlock, setToTranslate, onButton }: any) => {
-  const { t } = useTranslation(); 
-  const [value, setValue] = useState("");
-  const [mscValue, setMscValue] = useState<number | string>("");
+  const { t } = useTranslation();
+  const [value, setValue] = useState('');
+  const [mscValue, setMscValue] = useState<number | string>('');
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
 
   return (
     <CSSTransition in={block} timeout={300} unmountOnExit>
       <Modal onClose={() => setBlock(false)}>
-        <Styled.ModalTitle style={{ marginTop: "30px" }}>{t("privateArea.toToken")}</Styled.ModalTitle>
+        <Styled.ModalTitle style={{ marginTop: '30px' }}>
+          {t('privateArea.toToken')}
+        </Styled.ModalTitle>
         <ModalCurrencyDiv>
-          <Input maxLength={6} 
+          <Input
+            maxLength={6}
             onChange={(e) => {
               const arr = e.target.value.split('-');
               const fromSplitted = arr[0].split('.');
               const toSplitted = arr.length === 2 ? arr[1].split('.') : '';
               const validValue = e.target.value.replace(/[^0-9]/gi, '');
 
-              if (hubConnection) { 
-                hubConnection.invoke("CalculateBalanceExchange", (Number(validValue) * 100000).toString(), 59)
-                  .then(res => {
+              if (hubConnection) {
+                hubConnection
+                  .invoke('CalculateBalanceExchange', (Number(validValue) * 100000).toString(), 59)
+                  .then((res) => {
                     console.log(res);
                     setMscValue(res[1] / 100);
-                  }) 
+                  })
                   .catch((e) => console.error(e));
               }
 
@@ -170,28 +174,28 @@ export const TokenModal = ({ block, setBlock, setToTranslate, onButton }: any) =
           <span>CWD</span>
         </ModalCurrencyDiv>
         <DIV>
-          <Input
-              disabled={true} value={mscValue} 
-              placeholder={t("privateArea.sumIn")}
-          /> 
+          <Input disabled={true} value={mscValue} placeholder={t('privateArea.sumIn')} />
         </DIV>
-        <Button 
-          style={{ margin: "0 auto", width: "200px", maxWidth: "200px", marginBottom: "30px" }} 
+        <Button
+          style={{ margin: '0 auto', width: '200px', maxWidth: '200px', marginBottom: '30px' }}
           danger
           onClick={() => {
             async function req() {
-              if (hubConnection) { 
-                hubConnection.invoke("BalanceExchange", (Number(value) * 100000).toString(), 59)
-                  .then(res => {
+              if (hubConnection) {
+                hubConnection
+                  .invoke('BalanceExchange', (Number(value) * 100000).toString(), 59)
+                  .then((res) => {
                     console.log(res);
                     setBlock(false);
-                  }) 
+                  })
                   .catch((e) => console.error(e));
               }
             }
             req();
           }}
-        >{t("privateArea.translate")}</Button>
+        >
+          {t('privateArea.translate')}
+        </Button>
       </Modal>
     </CSSTransition>
   );
@@ -227,18 +231,17 @@ const ModalCurrencyDiv = styled.div`
   }
 `;
 
-
 export const DIV = styled.div`
   width: 100%;
   max-width: 200px;
   margin: 0 auto;
 
   & > input {
-    max-Width: 200px; 
+    max-width: 200px;
     margin: 0 auto;
-    margin-bottom: 20px; 
+    margin-bottom: 20px;
     color: ${({ theme }) => theme.toToken.color};
-    
+
     &::placeholder {
       color: ${({ theme }) => theme.toToken.color};
     }
