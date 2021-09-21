@@ -49,6 +49,7 @@
   GF6,
   FF5,
   FF6,
+  MULTICS = 59
 }
 
 export type BalanceList = {

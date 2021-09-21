@@ -57,6 +57,10 @@ export const InfoDeposits = () => {
     }
   };
 
+  const removeItem = (safeId: string) => {
+    setList(list.filter((i) => i.safeId !== safeId));
+  };
+
   return (
     <>
       <Container>
@@ -74,7 +78,7 @@ export const InfoDeposits = () => {
                   </div>
                 }
               >
-                <Tables list={list} />
+                <Tables list={list} removeItem={removeItem} />
               </InfiniteScroll>
             ) : null}
           </Scrollbars>

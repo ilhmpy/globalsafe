@@ -22,10 +22,10 @@ export const CurrencyValues = () => {
   const mob = size <= 768;
 
   useEffect(() => {
-    const dateFrom: any = moment().subtract(7, 'days');
+    const dateFrom = moment().subtract(7, 'days').format();
     if (hubConnection) {
       hubConnection
-        .invoke<RootChange>('GetMarket', 4, dateFrom._d, new Date(), numDIAMOND, 100)
+        .invoke<RootChange>('GetMarket', 4, dateFrom, new Date(), numDIAMOND, 100)
         .then((res) => {
           // console.log("res diamond", res);
           if (res.totalRecords > listDIAMOND.length) {
@@ -38,10 +38,10 @@ export const CurrencyValues = () => {
   }, [hubConnection, numDIAMOND]);
 
   useEffect(() => {
-    const dateFrom: any = moment().subtract(7, 'days');
+    const dateFrom = moment().subtract(7, 'days').format();
     if (hubConnection) {
       hubConnection
-        .invoke<RootChange>('GetMarket', 2, dateFrom._d, new Date(), numMGCWD, 100)
+        .invoke<RootChange>('GetMarket', 2, dateFrom, new Date(), numMGCWD, 100)
         .then((res) => {
           if (res.totalRecords > listMGCWD.length) {
             setNumMGCWD((numMGCWD) => numMGCWD + 100);
@@ -53,10 +53,10 @@ export const CurrencyValues = () => {
   }, [hubConnection]);
 
   useEffect(() => {
-    const dateFrom: any = moment().subtract(7, 'days');
+    const dateFrom = moment().subtract(7, 'days').format();
     if (hubConnection) {
       hubConnection
-        .invoke<RootChange>('GetMarket', 3, dateFrom._d, new Date(), numGCWD, 100)
+        .invoke<RootChange>('GetMarket', 3, dateFrom, new Date(), numGCWD, 100)
         .then((res) => {
           if (res.totalRecords > listGCWD.length) {
             setNumGCWD((numGCWD) => numGCWD + 100);

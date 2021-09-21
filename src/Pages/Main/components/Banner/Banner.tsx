@@ -64,7 +64,7 @@ const TextBlock = styled.div`
   color: ${({ theme }) => theme.descFund};
   margin-bottom: 60px;
   line-height: 28px;
-  & >* {
+  & > * {
     font-weight: 300;
   }
   span {
@@ -74,8 +74,6 @@ const TextBlock = styled.div`
     margin-bottom: calc(40px + 38 * ((100vw - 320px) / 740));
     font-size: calc(12px + 4 * ((100vw - 320px) / 740));
     line-height: calc(18px + 10 * ((100vw - 320px) / 740));
-}
-
   }
 `;
 

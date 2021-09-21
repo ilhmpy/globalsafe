@@ -549,5 +549,13 @@
   "descendDateCreate": "По убыванию даты создания",
   "ascendDateCreate": "По возрастанию даты создания",
   "descendSumDeposit": "По убыванию суммы депозита",
-  "ascendSumDeposit": "По возростанию суммы депозита"
+  "ascendSumDeposit": "По возростанию суммы депозита",
+  "cancelDeposit":{
+    "closeDeposit": "Закрыть депозит",
+    "sumAndProcent": "Сумма конвертации тела депозита и оставшихся процентов",
+    "convert": "конвертация по курсу",
+    "getSum": "Сумма к получению",
+    "confirm": "Подтвердить",
+    "close": "Закрыть"
+  }
 }
