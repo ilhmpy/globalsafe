@@ -72,12 +72,18 @@ const Row: FC<RowProps> = ({ data, removeItem }: RowProps) => {
       }
     }
   };
-
+  const to = () => {
+    const location = {
+      pathname: '/info/deposits/' + data.safeId,
+      state: data,
+    };
+    history.push(location);
+  };
   return (
     <>
-      {size < 992 ? (
+      {size < 768 ? (
         <>
-          <Styled.TR key={data.safeId} disactive={data.state === 4}>
+          <Styled.TR key={data.safeId} onClick={to} disactive={data.state === 4}>
             <Styled.TD>
               <Link
                 key={data.safeId}
