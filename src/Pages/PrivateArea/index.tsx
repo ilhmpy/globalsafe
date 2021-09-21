@@ -57,11 +57,11 @@ export const InfoMain: FC = () => {
   const [blockchainCommision, setBlockchainCommision] = useState<string>('0');
   const [serviceCommision, setServiceCommision] = useState<string>('0');
   const [toTokenModal, setToTokenModal] = useState<boolean>(false);
-  const [countToTranslate, setCountToTranslate] = useState<any>("");
+  const [countToTranslate, setCountToTranslate] = useState<any>('');
 
   // Get Balance Kinds List as an Array
   const balancesList = useMemo(() => {
-    const list = ['CWD', 'GLOBAL', 'GF', 'FF', 'GF5', 'GF6', 'FF5', 'FF6', "MULTICS"];
+    const list = ['CWD', 'GLOBAL', 'GF', 'FF', 'GF5', 'GF6', 'FF5', 'FF6', 'MULTICS'];
     const sorted = balanceList?.sort((a, b) => a.balanceKind - b.balanceKind) || [];
     return sorted
       .filter((b) => list.includes(Balance[b.balanceKind]))
@@ -310,13 +310,13 @@ export const InfoMain: FC = () => {
         </Styled.Loader>
       )}
 
-      <TokenModal 
-        block={toTokenModal} 
+      <TokenModal
+        block={toTokenModal}
         setBlock={setToTokenModal}
         setToTranslate={setCountToTranslate}
         onButton={() => {
           return;
-        }} 
+        }}
       />
       <Header />
       <Styled.Page>
@@ -334,19 +334,20 @@ export const InfoMain: FC = () => {
                     {balance
                       ? (balance / 100000).toLocaleString('ru-RU', {
                           maximumFractionDigits: 5,
-                        }) 
-                      : '0'} CWD
+                        })
+                      : '0'}{' '}
+                    CWD
                   </Styled.BalanceItemValue>
                 </Styled.BalanceItem>
                 <Styled.SmallButtonsWrapDesc>
                   <Styled.SmallButtonsWrap>
-                    {balanceList && (
+                    {balanceList &&
                       balanceList.map((i: any, idx: any) => {
                         let color = '#6DB9FF';
                         if (i.balanceKind === 9) {
                           color = '#FF416E';
                         } else if (i.balanceKind === 10) {
-                          color = '#6DB9FF'; 
+                          color = '#6DB9FF';
                         } else if (i.balanceKind === 11) {
                           color = '#BCD476';
                         } else if (i.balanceKind === 12) {
@@ -382,7 +383,7 @@ export const InfoMain: FC = () => {
                             {Balance[i.balanceKind]}
                           </Styled.SmallButton>
                         );
-                      }))}
+                      })}
                   </Styled.SmallButtonsWrap>
                 </Styled.SmallButtonsWrapDesc>
               </Styled.UserBlock>
@@ -402,20 +403,32 @@ export const InfoMain: FC = () => {
                 </Button>
               </Styled.InfoButtons>
               <Styled.SwitchBlock block={switchType}>
-                <Button dangerOutline onClick={() => {
-                  setToTokenModal(true);
-                  setSwitchType(false);
-                }} style={{ width: 130, height: 35 }}>{t("privateArea.toToken")}</Button>
-                <Button dangerOutline onClick={() => {
-                  setSwitchType(false);
-                  setWithdraw(true);
-                }} style={{ width: 130, height: 35 }}>{t('privateArea.withdraw')}</Button>
+                <Button
+                  dangerOutline
+                  onClick={() => {
+                    setToTokenModal(true);
+                    setSwitchType(false);
+                  }}
+                  style={{ width: 130, height: 35 }}
+                >
+                  {t('privateArea.toToken')}
+                </Button>
+                <Button
+                  dangerOutline
+                  onClick={() => {
+                    setSwitchType(false);
+                    setWithdraw(true);
+                  }}
+                  style={{ width: 130, height: 35 }}
+                >
+                  {t('privateArea.withdraw')}
+                </Button>
               </Styled.SwitchBlock>
             </Styled.InfoWrap>
             <Styled.SmallButtonsWrapMob>
               <Styled.SmallButtonsWrap>
                 {balanceList &&
-                  balanceList.map((i: any, idx: any) => { 
+                  balanceList.map((i: any, idx: any) => {
                     let color = '#6DB9FF';
                     if (i.balanceKind === 9) {
                       color = '#FF416E';
@@ -563,7 +576,7 @@ export const InfoMain: FC = () => {
                       disabled={!asset || !addDepositValue}
                       onClick={openNewDeposit}
                       danger
-                    > 
+                    >
                       {t('depositSelect.add')}
                     </Styled.ModalButton>
                     {depositSelect?.description ? (
