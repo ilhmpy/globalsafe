@@ -5,40 +5,47 @@ import moment from 'moment';
 import { Name, NameData } from './Table.styled';
 import { Balance } from '../../types/balance';
 import { useTranslation } from 'react-i18next';
+import { Button } from '../Button/Button';
+import { Collection } from '../../types/info';
 
 type Props = {
-  data: any;
+  data: Collection;
   onClose: () => void;
   open: boolean | string;
+  showModalCancel: () => void;
 };
 
-export const TableModal = ({ onClose, open, data }: Props) => {
+export const TableModal = ({ onClose, open, data, showModalCancel }: Props) => {
   return (
     <>
       {!!(open === data.safeId) && (
         <Modal onClose={onClose} withoutClose>
-          <InfoBlock data={data} />
+          <InfoBlock data={data} showModalCancel={showModalCancel} />
         </Modal>
       )}
     </>
   );
 };
 
-export const InfoBlock = ({ data }: any) => {
+export const InfoBlock = ({ data, showModalCancel }: any) => {
   const { t } = useTranslation();
 
   const convertedLoanValue = useMemo(() => {
-    if(data.deposit.loanKind === 1) {
-      return `${(data.loanVolume / 100000).toLocaleString('ru-RU', {maximumFractionDigits: 2})} ${Balance[data.deposit.loanKind]}`;
+    if (data.deposit.loanKind === 1) {
+      return `${(data.loanVolume / 100000).toLocaleString('ru-RU', { maximumFractionDigits: 2 })} ${
+        Balance[data.deposit.loanKind]
+      }`;
     }
 
-    if(data.deposit.loanKind === 43) {
-      return `${(data.loanVolume / 10000).toLocaleString('ru-RU', {maximumFractionDigits: 2})} ${Balance[data.deposit.loanKind]}`;
+    if (data.deposit.loanKind === 43) {
+      return `${(data.loanVolume / 10000).toLocaleString('ru-RU', { maximumFractionDigits: 2 })} ${
+        Balance[data.deposit.loanKind]
+      }`;
     }
 
     return `${data.loanVolume} ${Balance[data.deposit.loanKind]}`;
   }, [data]);
-  
+
   return (
     <>
       {data && (
@@ -92,14 +99,7 @@ export const InfoBlock = ({ data }: any) => {
 
           <LI>
             <Text>{t('privateArea.pledge')}</Text>
-            <Text>
-              {data.loanVolume
-                ? 
-                  convertedLoanValue
-                : 
-                  '0 CWD'
-              }
-            </Text>
+            <Text>{data.loanVolume ? convertedLoanValue : '0 CWD'}</Text>
           </LI>
           <LI>
             <Text>{t('privateArea.pendingPay')}</Text>
@@ -141,7 +141,16 @@ export const InfoBlock = ({ data }: any) => {
               %
             </Text>
           </LI>
-          <LI></LI>
+          <LI>
+            <Button
+              as="button"
+              disabled={!data.deposit.isExchangeable}
+              dangerOutline
+              onClick={showModalCancel}
+            >
+              {t('cancelDeposit.closeDeposit')}
+            </Button>
+          </LI>
         </List>
       )}
     </>
@@ -164,9 +173,18 @@ const Text = styled.p<{ bold?: boolean }>`
 
 const LI = styled.li`
   margin-bottom: 20px;
-
   ${Text}:last-child {
     color: ${(props) => props.theme.text2};
+  }
+  &:last-child {
+    margin-bottom: 0;
+  }
+  ${Button} {
+    width: 135px;
+    height: 40px;
+    padding: 4px;
+    font-weight: normal;
+    margin: 0 auto;
   }
 `;
 

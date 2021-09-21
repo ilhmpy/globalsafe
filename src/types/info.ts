@@ -12,6 +12,7 @@ export interface Deposit {
     account: string;
     asset: number;
     depositKind: number;
+    isExchangeable: boolean;
 }
 
 export interface Collection {
@@ -32,6 +33,7 @@ export interface Collection {
     prevPayedAmountView: number;
     loanVolume: number;
     pendingAmount: number;
+    
 }
 
 export interface RootList {
