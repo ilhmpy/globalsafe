@@ -5,8 +5,11 @@ import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components/macro';
 import { Button } from '../../components/Button/Button';
 import { Input } from '../../components/UI/Input';
+import { Input as InputV4 } from '../../components/UI/V4';
 import { AppContext } from '../../context/HubContext';
 import { Card, Container } from '../../globalStyles';
+import { PrimaryButton } from '../UI/V4';
+import { ReactComponent as QuestionIcon } from '../../assets/svg/question14.svg'
 
 export const RegisterComponent: FC = () => {
   const [error, setError] = useState(true);
@@ -134,9 +137,9 @@ export const RegisterComponent: FC = () => {
   };
 
   return (
-    <Container>
-      <CardContainer>
-        <CSSTransition in={where || !!user} timeout={300} classNames="alert" unmountOnExit>
+    <AuthContainer>
+      <AuthCardContainer>
+        {/* <CSSTransition in={where || !!user} timeout={300} classNames="alert" unmountOnExit>
           <FormBlock>
             <H4>{t('login.where')}</H4>
 
@@ -147,8 +150,9 @@ export const RegisterComponent: FC = () => {
               {t('headerButton.admin')}
             </Submit>
           </FormBlock>
-        </CSSTransition>
-        <CSSTransition in={login && !user && !where} timeout={300} classNames="alert" unmountOnExit>
+        </CSSTransition> */}
+
+        {/* <CSSTransition in={login && !user && !where} timeout={300} classNames="alert" unmountOnExit>
           <FormBlock onSubmit={onSubmitCode}>
             <H4>{t('headerButton.register')}</H4>
             <SelfInput
@@ -165,11 +169,11 @@ export const RegisterComponent: FC = () => {
               {t('login.in')}
             </Submit>
             <LinkToPage to="/login">{t('login.enter')}</LinkToPage>
-            {/* <LinkTo href={`https://backup.cwd.global/account/${value}`} target="_blank">
+            <LinkTo href={`https://backup.cwd.global/account/${value}`} target="_blank">
               {t('login.goTo')}
-            </LinkTo> */}
+            </LinkTo>
           </FormBlock>
-        </CSSTransition>
+        </CSSTransition> */}
 
         <CSSTransition
           in={!login && !user && !where}
@@ -179,64 +183,157 @@ export const RegisterComponent: FC = () => {
         >
           <FormBlock onSubmit={checkCwdAccount}>
             <H4>{t('headerButton.register')}</H4>
-            <SelfInput
+            {/* <SelfInput
               value={value}
               name="login"
               placeholder={t('login.loginAccount')}
               onChange={onChangeValue}
               autoComplete="off"
+            /> */}
+            <InputV4 
+              value={value}
+              name="login"
+              // placeholder={t('login.loginAccount')}
+              placeholder={'Логин (cwd.global)'}
+              onChange={onChangeValue}
+              autoComplete="off"
+              error={'Логин не верный'}
+              mb={10}
             />
-            {!error && (
+            <InputV4 
+                value={password}
+                name="password"
+                // placeholder={t('login.code')}
+                placeholder={'Одноразовый код'}
+                onChange={onChangeNumber}
+                autoComplete="new-password"
+                isValid={password.length > 3}
+                mb={20}
+            />
+            {/* {!error && (
               <StyledInlineErrorMessage>{t('login.incorrectLogin')}</StyledInlineErrorMessage>
-            )}
-            <Submit as="button" danger type="submit" disabled={value === ''}>
+            )} */}
+            <PrimaryButton 
+              title={t('login.getCode')}
+              type="submit"
+              disabled={value === ''}
+            />
+
+            <LinkToBlock>
+              <LinkTo href={`https://backup.cwd.global/account/${value}`} target="_blank">
+                {/* {t('login.goTo')} */}
+                {'Активность на cwd.global'}
+              </LinkTo>
+              <QuestionIcon />
+            </LinkToBlock>
+
+
+            {/* <Submit as="button" danger type="submit" disabled={value === ''}>
               {t('login.getCode')}
-            </Submit>
-            <LinkToPage to="/login">{t('login.enter')}</LinkToPage>
+            </Submit> */}
+            {/* <LinkToPage to="/login">{t('login.enter')}</LinkToPage> */}
+            <LinkToPage to="/login">Авторизация</LinkToPage>
           </FormBlock>
         </CSSTransition>
-      </CardContainer>
-    </Container>
+      </AuthCardContainer>
+    </AuthContainer>
   );
 };
+
+
+
+const AuthContainer = styled(Container)`
+  margin: 0 auto;
+  padding: 0;
+  padding-top: 40px;
+
+  @media (max-width: 768px) {
+    padding-top: 80px;
+  }
+  @media (max-width: 425px) {
+    padding-top: 20px;
+  }
+`;
+
+const AuthCardContainer = styled(Card)`
+  display: flex;
+  justify-content: center;
+  padding-top: 40px;
+  position: relative;
+  width: 480px;
+  height: 444px;
+  border-radius: 8px;
+  box-shadow: none;
+
+  @media (max-width: 768px) {
+    width: 500px;
+  }
+  @media (max-width: 425px) {
+    width: 320px;
+    height: 302px;
+    padding-top: 20px;
+  }
+`;
+
+const H4 = styled.h4`
+  text-align: center;
+  color: ${props => props.theme.black};
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 42px;
+  margin-bottom: 40px;
+
+  @media (max-width: 425px) {
+    font-size: 18px;
+    line-height: 21px;
+    margin-bottom: 20px;
+  }
+`;
+
+const FormBlock = styled.form`
+  width: 320px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  @media (max-width: 768px) {
+    width: 340px;
+  }
+  @media (max-width: 425px) {
+    width: 280px;
+  }
+`;
+
 
 const SelfInput = styled(Input)`
   margin-bottom: 26px;
 `;
 
-
 const LinkToPage = styled(Link)`
-  font-weight: 500;
   font-size: 14px;
   line-height: 16px;
+  text-decoration-line: underline;
+  color: ${(props) => props.theme.black};
+`;
+
+const LinkToBlock = styled.div`
+  display: flex;
+  align-items: center;
   margin-top: 20px;
-  text-align: center;
-  color: ${(props) => props.theme.text};
+  margin-bottom: 40px;
+
+  @media (max-width: 425px) {
+    margin-bottom: 20px;
+  }
 `;
 
 const LinkTo = styled.a`
-  margin-top: 20px;
-  font-size: 12px;
-  line-height: 14px;
-  text-align: center;
+  font-size: 14px;
+  line-height: 16px;
   text-decoration-line: underline;
-  color: ${(props) => props.theme.text2};
-`;
-
-const H4 = styled.h4`
-  text-align: center;
-  font-weight: 500;
-  font-size: 24px;
-  line-height: 28px;
-  margin-bottom: 23px;
-`;
-
-const FormBlock = styled.form`
-  margin: 0 auto;
-  width: 200px;
-  display: flex;
-  flex-direction: column;
-  position: relative;
+  color: ${(props) => props.theme.black};
+  margin-right: 5px;
 `;
 
 const Submit = styled(Button)<{ mb?: boolean }>`
@@ -245,16 +342,16 @@ const Submit = styled(Button)<{ mb?: boolean }>`
   color: ${props => props.theme.dangerButtonText};
 `;
 
-const CardContainer = styled(Card)`
-  display: flex;
-  align-items: center;
-  position: relative;
-  height: 482px;
-  border-radius: 10px;
-  @media (max-width: 992px) {
-    height: 410px;
-  }
-`;
+// const CardContainer = styled(Card)`
+//   display: flex;
+//   align-items: center;
+//   position: relative;
+//   height: 482px;
+//   border-radius: 10px;
+//   @media (max-width: 992px) {
+//     height: 410px;
+//   }
+// `;
 
 export const StyledInlineErrorMessage = styled.div`
   color: #ff416e;

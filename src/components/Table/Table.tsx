@@ -13,6 +13,7 @@ const Row = ({ data }: any) => {
   const [open, setOpen] = useState<boolean | string>(false);
   const size = useWindowSize();
   const history = useHistory();
+
   const onClose = () => {
     setOpen(false);
   };
