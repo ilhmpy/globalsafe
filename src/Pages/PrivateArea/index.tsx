@@ -146,8 +146,7 @@ export const InfoMain: FC = () => {
         .catch((err: Error) => console.log(err));
     }
   }, [hubConnection, languale]);
-  // console.log('+withdrawValue', +withdrawValue);
-  // console.log('currencyValue', currencyValue);
+
   const withdrawBalance = () => {
     if (hubConnection) {
       setWithdrawValueLoad(true);

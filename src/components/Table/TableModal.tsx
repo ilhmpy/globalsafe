@@ -144,7 +144,7 @@ export const InfoBlock = ({ data, showModalCancel }: any) => {
           <LI>
             <Button
               as="button"
-              disabled={!data.deposit.isExchangeable}
+              disabled={!data.deposit.isExchangeable || data.state !== 2}
               dangerOutline
               onClick={showModalCancel}
             >
