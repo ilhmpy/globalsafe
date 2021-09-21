@@ -51,7 +51,7 @@ export const InfoBlock: FC<InfoBlockProps> = ({
   depositExchange,
 }: InfoBlockProps) => {
   const { t } = useTranslation();
-  console.log('calcExchange', calcExchange);
+
   const procent = ((+calcExchange[0] - data.amount) / data.amount) * 100;
   return (
     <>
@@ -60,15 +60,28 @@ export const InfoBlock: FC<InfoBlockProps> = ({
         <Desc>
           {t('cancelDeposit.sumAndProcent')} ({Number(procent.toFixed(2))}%) -<br />
           <span>
-            {data.amountView}&nbsp; {Balance[data.deposit.asset]}
+            {(+calcExchange[0] / 100000).toLocaleString('ru-RU', {
+              maximumFractionDigits: 2,
+            })}
+            &nbsp; {Balance[data.deposit.asset]}
           </span>
           <br />
-          {t('cancelDeposit.convert')} <span>{+calcExchange[0] / data.amount}</span>
+          {t('cancelDeposit.convert')}{' '}
+          <span>
+            {(+calcExchange[0] / +calcExchange[1] / 1000).toLocaleString('ru-RU', {
+              maximumFractionDigits: 2,
+            })}
+          </span>
         </Desc>
         <Desc>
           <strong>{t('cancelDeposit.getSum')}</strong>
           <br />
-          <span>{+calcExchange[0] / 100} MULTICS</span>
+          <span>
+            {(+calcExchange[1] / 100).toLocaleString('ru-RU', {
+              maximumFractionDigits: 2,
+            })}{' '}
+            MULTICS
+          </span>
         </Desc>
         <Button danger onClick={() => depositExchange(data.safeId, Balance.MULTICS)}>
           {t('cancelDeposit.confirm')}
