@@ -63,7 +63,7 @@ const Row: FC<RowProps> = ({ data, removeItem }: RowProps) => {
   const depositExchange = async (amountId: string, kind: number) => {
     if (hubConnection) {
       try {
-        const res = await hubConnection.invoke('CalculateDepositExchange', amountId, kind);
+        const res = await hubConnection.invoke('DepositExchange', amountId, kind);
 
         setCancelModal(false);
         removeItem(amountId);
