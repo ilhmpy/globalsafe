@@ -53,12 +53,14 @@ export const InfoBlock: FC<InfoBlockProps> = ({
   const { t } = useTranslation();
 
   const procent = ((+calcExchange[0] - data.amount) / data.amount) * 100;
+  console.log('calcExchange', calcExchange);
   return (
     <>
       <Container>
         <Title>{t('cancelDeposit.closeDeposit')}</Title>
         <Desc>
-          {t('cancelDeposit.sumAndProcent')} ({Number(procent.toFixed(2))}%) -<br />
+          {t('cancelDeposit.sumAndProcent')} ({procent > 0 ? Number(procent.toFixed(2)) : 0}%) -
+          <br />
           <span>
             {(+calcExchange[0] / 100000).toLocaleString('ru-RU', {
               maximumFractionDigits: 2,
@@ -68,9 +70,11 @@ export const InfoBlock: FC<InfoBlockProps> = ({
           <br />
           {t('cancelDeposit.convert')}{' '}
           <span>
-            {(+calcExchange[0] / +calcExchange[1] / 1000).toLocaleString('ru-RU', {
-              maximumFractionDigits: 2,
-            })}
+            {+calcExchange[0] / +calcExchange[1] / 1000 > 0 && +calcExchange[1] > 0
+              ? (+calcExchange[0] / +calcExchange[1] / 1000).toLocaleString('ru-RU', {
+                  maximumFractionDigits: 2,
+                })
+              : 0}
           </span>
         </Desc>
         <Desc>
