@@ -112,7 +112,7 @@ export const InfoBalance = () => {
 
   // Get Balance Kinds List as an Array
   const balancesList = useMemo(() => {
-    return Object.values(BalanceKind).filter(item => typeof item === 'string');
+    return Object.values(BalanceKind).filter((item) => typeof item === 'string');
   }, []);
 
   useEffect(() => {
@@ -373,11 +373,11 @@ export const InfoBalance = () => {
   const getTopUp = () => {
     // GetTopUpUrl(BalanceKind balanceKind, ulong volume)
     const newWindow = window.open();
-    
+
     if (hubConnection) {
       hubConnection
         .invoke(
-          'GetTopUpUrl', 
+          'GetTopUpUrl',
           Balance[currencyValue as keyof typeof Balance],
           +balanceValue * 100000
         )
@@ -558,7 +558,12 @@ export const InfoBalance = () => {
               ref={inputRef}
               value={balanceValue}
             />
-            <Styled.ModalButton as="button" disabled={!balanceValue || !currencyValue} onClick={getTopUp} danger>
+            <Styled.ModalButton
+              as="button"
+              disabled={!balanceValue || !currencyValue}
+              onClick={getTopUp}
+              danger
+            >
               {t('privateArea.topUp')}
             </Styled.ModalButton>
           </Styled.ModalBlock>

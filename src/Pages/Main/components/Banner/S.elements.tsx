@@ -17,6 +17,7 @@ export const Desc = styled.p`
 export const DescWrap = styled.div`
   width: 100%;
   margin-top: -80px;
+  margin-bottom: 40px;
   @media (max-width: 992px) {
     margin-top: -45px;
   }

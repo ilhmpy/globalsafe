@@ -9,6 +9,7 @@ import { Prize } from '../../types/drawResult';
 import { About } from './components/About/About';
 import { Banner } from './components/Banner/Banner';
 import { Carousel } from './components/Carousel/Carousel';
+import { ExchangeChart } from './components/ChartActiv';
 import { ChartActiv } from './components/ChartActiv/ChartActiv';
 import { DrawHistory } from './components/DrawHistory/DrawHistory';
 import { ModalLottery } from './components/Lottery/Modal';
@@ -2157,7 +2158,7 @@ export const Main = () => {
         )}
 
         <Banner />
-        <ChartActiv />
+        <ExchangeChart />
         <Payments />
         <Operations />
         <Tariffs />
