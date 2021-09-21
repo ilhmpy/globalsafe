@@ -19,7 +19,6 @@ import { AppContext } from '../../../../context/HubContext';
 import { Card, Container } from '../../../../globalStyles';
 import { Pokedex, RootPayDeposit } from '../../../../types/payouts';
 import { ModalBlock, ModalTitle } from '../Tariffs/Tariffs.elements';
-import { ReactComponent as Reload } from "../../../../assets/svg/reload.svg";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
@@ -236,49 +235,61 @@ export const Payments: FC = () => {
     }
   };
 
-  const [last, setLast] = useState(localStorage.getItem("last") || undefined);
-
-  console.log(bigArr)
-
   return (
-    <Page abs>
+    <Page>
       {statsDeposit.length ? (
         <Container>
-          <H2 center>{t('payments.currPay')}</H2>
+          <H2>{t('payments.currPay')}</H2>
         </Container>
       ) : (
         ''
       )}
+
       <Container>
-        <WhiteBox>
-          <WhiteIntf>
-            <Title>{t("payments2.actual")} {moment(new Date()).format("DD.MM.YYYY")}</Title>
-            <Title right>
-              {t("payments2.last")} {last ? ( <> 5 минут {t("payments2.ago")} </> ) : t("payments2.now")} <Reload style={{ cursor: "pointer" }} />
-            </Title>
-          </WhiteIntf>
-          <WhiteMap>
-            {statsDeposit.length ? (
-              <>
-              {bigArr.map((i: any, idx: any) => {
-                return (
-                  <>
-                    {i.map((item: any, idx: any) => (
-                      <WhiteItem key={idx}>
-                        <WhiteItemText>{item.deposit.name}</WhiteItemText>
-                        <WhiteItemText bold>{(item.procent).toFixed(0)}%</WhiteItemText>
-                        <WhiteItemText>{moment(item.date).format("DD.MM.YYYY")}</WhiteItemText>
-                        <WhiteItemLine procent={(item.procent).toFixed(0)} />
-                      </WhiteItem>
-                    ))}
-                  </>
-                )
-              })}
-            </>
-            ) : ( "" )}
-          </WhiteMap>
-        </WhiteBox>
-      </Container> 
+        {statsDeposit.length ? (
+          <>
+            <SwiperContainer alfa>
+              <Swiper spaceBetween={10} slidesPerView={1} pagination={{ clickable: true }}>
+                {bigArr.map((i: any, idx: number) => (
+                  <SwiperSlide key={idx} style={{ maxWidth: 1130 }}>
+                    <RadialWrap>
+                      {i.map((item: Pokedex, idx: number) => (
+                        <RadialComponent height={210} key={idx} data={item} />
+                      ))}
+                    </RadialWrap>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+              <OnDate rtt={loadReset}>
+                {t('payments.on')} {moment(statsDeposit[0].payoutDate).format('DD.MM.YYYY')}{' '}
+                <Refresh onClick={reset} />
+              </OnDate>
+            </SwiperContainer>
+
+            <SwiperContainerMob alfa>
+              {statsDeposit.length && (
+                <Swiper spaceBetween={10} slidesPerView={1} pagination={{ clickable: true }}>
+                  {smallArr.map((i: any, idx: number) => (
+                    <SwiperSlide key={idx}>
+                      <RadialWrap>
+                        {i.map((item: Pokedex, idx: number) => (
+                          <RadialComponent height={170} key={idx} data={item} />
+                        ))}
+                      </RadialWrap>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              )}
+              <OnDate rtt={loadReset}>
+                {t('payments.on')} {moment(statsDeposit[0].payoutDate).format('DD.MM.YYYY')}{' '}
+                <Refresh onClick={reset} />
+              </OnDate>
+            </SwiperContainerMob>
+          </>
+        ) : (
+          ''
+        )}
+      </Container>
     </Page>
   );
 };
@@ -533,128 +544,4 @@ const ProgramCard = styled.div`
 
 const RoundInsideItem = styled.div`
   width: 100%;
-`;
-
-
-const WhiteBox = styled.div`
-  width: 100%;
-  min-height: 612px;
-  background: #FFFFFF;
-  border-radius: 4px;
-  box-shadow: 0px, 80px, rgba(220, 220, 232, 0.5);
-  padding: 25px;
-  padding-top: 25px;
-
-  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
-    padding: 20px;
-    padding-top: 25px;
-    max-width: 700px;
-  }
-  
-  @media only screen and (max-device-width: 767px) {
-    width: 100%;
-    max-width: 100%;
-  }
-`;
-
-const Title = styled.div<{ right?: boolean; }>`
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 20px;
-  color: ${({ theme }) => theme.titles};
-  align-items: center;
-  display: flex;
-
-  ${({ right }) => {
-    if (right) {
-      return `
-        margin-right: 20px;
-      `;
-    };
-  }}
-
-  & > svg {
-    margin-left: 8px;
-  }
-
-  @media only screen and (max-device-width: 767px) {
-    &:last-child {
-      margin-bottom: 10px;
-    }
-  }
-`;
-
-const WhiteIntf = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-
-  @media only screen and (max-device-width: 767px) { 
-    flex-direction: column;
-  }
-`;
-
-const WhiteMap = styled.div`
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-`;
-
-const WhiteItem = styled.div`
-  width: 180px;
-  height: 108px;
-  min-width: 180px;
-  background: #F8F7FC;
-  margin-right: 20px;
-  border-radius: 4px;
-  margin-bottom: 20px;
-  padding: 20px;
-  position: relative;
-
-  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
-    width: 150px;
-    min-width: 150px;
-  }
-
-  @media only screen and (max-device-width: 767px) {
-    width: 135px;
-    min-width: 135px;
-  }
-`;
-
-const WhiteItemText = styled.div<{ bold?: boolean; }>`
-  color: #000;
-  font-weight: 400;
-  font-size: 12px;
-  line-height: 14px;
-
-  ${({ bold }) => {
-      if (bold) {
-        return `
-          font-weight: 700;
-          color: #3F3E4E;
-          font-size: 18px;
-          line-height: 30px;
-        `;
-      };
-   }}
-`;
-
-const WhiteItemLine = styled.div<{ procent: number | string; }>`
-   width: 100%;
-   background: #DCDCE8;
-   dispay: block;
-   height: 2px;
-   margin-top: 13px;
-   position: relative;
-
-   &::after {
-     display: inline;
-     content: "";
-     background: #0094FF;
-     position: absolute;
-     width: ${({ procent }) => procent}%;
-     height: inherit;
-   }
 `;
