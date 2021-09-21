@@ -30,7 +30,9 @@
     "incorrectLogin": "Login is not correct",
     "getCode": "To get the code",
     "repeat": "Request the code again",
-    "over": "in"
+    "over": "in",
+    "enter": "Enter",
+    "loginAccount": "Enter account"
   },
   "banner": {
     "uptitle": "About fund ",
@@ -318,7 +320,10 @@
     "serviceCommision": "Service commision",
     "undr": "Understand",
     "pendingPay": "Deferred payment",
-    "pledge": "Pledge"
+    "pledge": "Pledge",
+    "toToken": "Exchange to token",
+    "translate": "Exchange",
+    "sumIn": "Sum in MULTICS"
   },
   "alert": {
     "success": "Successfully",
@@ -552,6 +557,12 @@
   "descendSumDeposit": "By descending sum of deposit",
   "ascendSumDeposit": "By ascending sum of deposit",
   "unders": "Got it",
+  "payments2": {
+    "actual": "Actuality on",
+    "last": "Updated",
+    "ago": "ago",
+    "now": "now"
+  },
   "cancelDeposit":{
     "closeDeposit": "Close deposit",
     "sumAndProcent": "The amount of conversion of the body of the deposit and the remaining interest",

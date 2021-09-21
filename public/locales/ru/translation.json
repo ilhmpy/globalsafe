@@ -30,7 +30,9 @@
     "incorrectLogin": "Логин не верный",
     "getCode": "Получить код",
     "repeat": "Запросить код повторно",
-    "over": "через"
+    "over": "можно через",
+    "enter": "Вход",
+    "loginAccount": "Введите аккаунт"
   },
   "banner": {
     "uptitle": "Емко и по-делу",
@@ -318,7 +320,10 @@
     "serviceCommision": "Комиссия сервиса",
     "undr": "Понятно",
     "pendingPay": "Отложенная выплата",
-    "pledge": "Залог"
+    "pledge": "Залог",
+    "toToken": "Перевод в токен",
+    "translate": "Перевести",
+    "sumIn": "Сумма в MULTICS"
   },
   "alert": {
     "success": "Успешно",
@@ -550,6 +555,12 @@
   "ascendDateCreate": "По возрастанию даты создания",
   "descendSumDeposit": "По убыванию суммы депозита",
   "ascendSumDeposit": "По возростанию суммы депозита",
+  "payments2": {
+    "actual": "Актуально на",
+    "last": "Обновленно",
+    "ago": "назад",
+    "now": "сейчас"
+  },
   "cancelDeposit":{
     "closeDeposit": "Закрыть депозит",
     "sumAndProcent": "Сумма конвертации тела депозита и оставшихся процентов",

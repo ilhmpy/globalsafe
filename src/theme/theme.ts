@@ -11,6 +11,7 @@ export const lightTheme = {
   modal: '#fff',
   toggleBorder: '#FFF',
   buttonBorder: '#0E0D3D',
+  dangerButtonText:'#FFF',
   inputBg: '#fff',
   repeatCode: '#212121',
   header: `linear-gradient(
@@ -60,7 +61,7 @@ export const lightTheme = {
   },
   acceptAll: {
     bg: '#fff',
-    desc: '#56657F',
+    desc: '#56657F',  
     opacity: '60%',
     item: '#515172',
   },
@@ -82,6 +83,11 @@ export const lightTheme = {
   },
   pink: '#FF416E',
   rounIputBackground: '#FFF0F0',
+  titles: "#3F3E4E",
+  toToken: {
+    color: "rgba(14, 13, 61, 0.5)",
+    background: "#fff"
+  }
 };
 
 export const darkTheme = {
@@ -89,6 +95,7 @@ export const darkTheme = {
   text: '#FFF',
   toggleBorder: '#6B8096',
   buttonBorder: '#FF416E',
+  dangerButtonText:'#FFF',
   text2: '#E2E2E2',
   text3: '#fff',
   text3Hover: '#fff',
@@ -160,4 +167,10 @@ export const darkTheme = {
   },
   pink: '#FF416E',
   rounIputBackground: '#ffffff',
+  titles: "#fff",
+  toToken: {
+    color: "#fff",
+    background: "#212121"
+  } 
 };
+ 

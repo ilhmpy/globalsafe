@@ -79,7 +79,8 @@ export const HubProvider: FC = ({ children }: any) => {
     const cb = (data: any) => {
       console.log('BalanceUpdate', data);
       if (balanceList) {
-        const idx = balanceList.findIndex((item) => item.balanceKind === data.balanceKind);
+        const idx = balanceList.findIndex((item: any) => item.safeId === data.safeId);
+
         if (idx !== -1) {
           setBalanceList([...balanceList.slice(0, idx), data, ...balanceList.slice(idx + 1)]);
         } else {
@@ -92,6 +93,14 @@ export const HubProvider: FC = ({ children }: any) => {
     };
     if (hubConnection) {
       hubConnection.on('BalanceUpdate', cb);
+    }
+    return () => {
+      hubConnection?.off('BalanceUpdate', cb);
+    };
+  }, [hubConnection, balanceList]);
+
+  useEffect(() => {
+    if (hubConnection) {
       hubConnection
         .invoke('GetSigned')
         .then((res) => {
@@ -102,6 +111,8 @@ export const HubProvider: FC = ({ children }: any) => {
             const newArr = res.balances.filter((item: any) => item.balanceKind === 1);
             setBalance(newArr[0].volume);
 
+            console.log(res.balances);
+
             if (!localStorage.getItem('i18nextLng')) {
               i18n.changeLanguage(res.languageCode === 1 ? 'ru' : 'en');
             }
@@ -110,6 +121,7 @@ export const HubProvider: FC = ({ children }: any) => {
               volume: item.volume,
             }));
             setBalanceList(res.balances);
+            console.log(res.balances);
           }
           if (res.roles.length && res.roles[0].name === 'administrator') {
             setIsAdmin(true);
@@ -125,7 +137,6 @@ export const HubProvider: FC = ({ children }: any) => {
         });
     }
     return function cleanup() {
-      hubConnection?.off('BalanceUpdate', cb);
       if (hubConnection !== null) {
         hubConnection.stop();
       }
