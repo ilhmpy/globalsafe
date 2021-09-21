@@ -28,6 +28,7 @@ export const ModalCancel = ({
   useEffect(() => {
     if (data && open) calculateBalanceExchange(data.safeId, Balance.MULTICS);
   }, [data, open]);
+  // console.log('data.safeId', data.safeId);
   return (
     <>
       {open && calcExchange ? (
@@ -53,7 +54,7 @@ export const InfoBlock: FC<InfoBlockProps> = ({
   const { t } = useTranslation();
 
   const procent = ((+calcExchange[0] - data.amount) / data.amount) * 100;
-  console.log('calcExchange', calcExchange);
+  // console.log('calcExchange', calcExchange);
   return (
     <>
       <Container>
@@ -87,7 +88,12 @@ export const InfoBlock: FC<InfoBlockProps> = ({
             MULTICS
           </span>
         </Desc>
-        <Button danger onClick={() => depositExchange(data.safeId, Balance.MULTICS)}>
+        <Button
+          as="button"
+          disabled={+calcExchange[1] <= 0}
+          danger
+          onClick={() => depositExchange(data.safeId, Balance.MULTICS)}
+        >
           {t('cancelDeposit.confirm')}
         </Button>
       </Container>
