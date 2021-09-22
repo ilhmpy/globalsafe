@@ -1,5 +1,5 @@
 ﻿import moment from 'moment';
-import React, { FC, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { FC, useContext, useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTranslation } from 'react-i18next';
 import InfiniteScroll from 'react-infinite-scroller';
@@ -230,63 +230,76 @@ export const InfoBalance = () => {
     }
   }, [addBalance]);
 
+  const fetchHistory = useCallback(
+    async (bType: number[]) => {
+      let arrList: Collection[] = [];
+      const result: any = {};
+      let isFetching = true;
+      let totalNum = 0;
+      function getFormatedDate(dateStr: Date) {
+        const date = moment(dateStr).format('DD MMMM YYYY');
+        return date;
+      }
+      if (hubConnection) {
+        while (isFetching) {
+          try {
+            const res = await hubConnection.invoke<RootBalanceList>(
+              'GetBalanceLog',
+              bType,
+              balanceLogs,
+              openDate.from || new Date('2020-12-02T00:47:45'),
+              openDate.to || new Date(),
+              totalNum,
+              100
+            );
+
+            if (res) {
+              if (arrList.length < res.totalRecords) {
+                arrList = [...arrList, ...res.collection];
+                totalNum += 100;
+                if (res.collection.length) {
+                  res.collection.forEach((item: Collection) => {
+                    const d = getFormatedDate(item.operationDate);
+                    const balAsset = balanceList?.filter((i) => i.safeId === item.balanceSafeId);
+                    const obj = {
+                      id: item.safeId,
+                      operationKind: item.operationKind,
+                      balance: item.balanceDelta,
+                      date: item.operationDate,
+                      asset: balAsset?.length ? balAsset[0].balanceKind : 1,
+                    };
+
+                    if (result[d]) {
+                      result[d].push(obj);
+                    } else {
+                      result[d] = [obj];
+                    }
+                  });
+                }
+              } else {
+                isFetching = false;
+                break;
+              }
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        }
+        setBalanceLog(result);
+        setLoading(false);
+      }
+    },
+    [hubConnection, openDate, balanceLogs, languale, balanceList]
+  );
+
   useEffect(() => {
     setBalanceLog(null);
     const bType = balanceList ? balanceList.map((i) => i.balanceKind) : [];
     if (hubConnection && bType.length) {
       setLoading(true);
-      hubConnection
-        .invoke<RootBalanceList>(
-          'GetBalanceLog',
-          bType,
-          balanceLogs,
-          openDate.from || new Date('2020-12-02T00:47:45'),
-          openDate.to || new Date(),
-          0,
-          100
-        )
-        .then((res: any) => {
-          setTotalDeposit(res.totalRecords);
-          setNum(100);
-
-          function getFormatedDate(dateStr: Date) {
-            const date = moment(dateStr).format('DD MMMM YYYY');
-            return date;
-          }
-          if (res.collection.length) {
-            setDepositList(res.collection);
-            const result: any = {};
-            res.collection.forEach((item: Collection) => {
-              const d = getFormatedDate(item.operationDate);
-              const balAsset = balanceList?.filter((i) => i.safeId === item.balanceSafeId);
-              const obj = {
-                id: item.safeId,
-                operationKind: item.operationKind,
-                balance: item.balanceDelta,
-                date: item.operationDate,
-                asset: balAsset?.length ? balAsset[0].balanceKind : 1,
-              };
-
-              if (result[d]) {
-                result[d].push(obj);
-              } else {
-                result[d] = [obj];
-              }
-            });
-            setBalanceLog(result);
-          } else {
-            setBalanceLog(null);
-          }
-          setLoading(false);
-        })
-        .catch((err: Error) => {
-          setLoading(false);
-          console.log(err);
-        });
+      fetchHistory(bType);
     }
   }, [hubConnection, openDate, balanceLogs, languale, balanceList]);
-
-  // console.log('depositList', depositList);
 
   const myLoad = () => {
     setCount(false);
@@ -536,7 +549,7 @@ export const InfoBalance = () => {
               </Styled.DataListHead>
               {balanceLog && !loading ? (
                 <Scrollbars style={{ height: '500px' }}>
-                  <InfiniteScroll
+                  {/* <InfiniteScroll
                     pageStart={0}
                     loadMore={myLoad}
                     hasMore={count}
@@ -546,17 +559,17 @@ export const InfoBalance = () => {
                         Loading ...
                       </div>
                     }
-                  >
-                    {Object.keys(balanceLog).map((key) => (
-                      <div key={key}>
-                        <Styled.DataListDate>{key}</Styled.DataListDate>
+                  > */}
+                  {Object.keys(balanceLog).map((key) => (
+                    <div key={key}>
+                      <Styled.DataListDate>{key}</Styled.DataListDate>
 
-                        {balanceLog[key].map((item, idx) => (
-                          <BalanceTable key={item.id} balanceLog={item} />
-                        ))}
-                      </div>
-                    ))}
-                  </InfiniteScroll>
+                      {balanceLog[key].map((item, idx) => (
+                        <BalanceTable key={item.id} balanceLog={item} />
+                      ))}
+                    </div>
+                  ))}
+                  {/* </InfiniteScroll> */}
                 </Scrollbars>
               ) : loading ? (
                 <Loading />
