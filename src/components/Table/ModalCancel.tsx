@@ -54,7 +54,7 @@ export const InfoBlock: FC<InfoBlockProps> = ({
   const { t } = useTranslation();
 
   const procent = ((+calcExchange[0] - data.amount) / data.amount) * 100;
-  // console.log('calcExchange', calcExchange);
+  console.log('calcExchange', calcExchange);
   return (
     <>
       <Container>
@@ -71,8 +71,8 @@ export const InfoBlock: FC<InfoBlockProps> = ({
           <br />
           {t('cancelDeposit.convert')}{' '}
           <span>
-            {+calcExchange[0] / +calcExchange[1] / 1000 > 0 && +calcExchange[1] > 0
-              ? (+calcExchange[0] / +calcExchange[1] / 1000).toLocaleString('ru-RU', {
+            {+calcExchange[1] / +calcExchange[2] / 1000 > 0 && +calcExchange[2] > 0
+              ? (+calcExchange[1] / +calcExchange[2] / 1000).toLocaleString('ru-RU', {
                   maximumFractionDigits: 2,
                 })
               : 0}
@@ -82,7 +82,7 @@ export const InfoBlock: FC<InfoBlockProps> = ({
           <strong>{t('cancelDeposit.getSum')}</strong>
           <br />
           <span>
-            {(+calcExchange[1] / 100).toLocaleString('ru-RU', {
+            {(+calcExchange[2] / 100).toLocaleString('ru-RU', {
               maximumFractionDigits: 2,
             })}{' '}
             MULTICS
@@ -90,7 +90,7 @@ export const InfoBlock: FC<InfoBlockProps> = ({
         </Desc>
         <Button
           as="button"
-          disabled={+calcExchange[1] <= 0}
+          disabled={+calcExchange[2] <= 0}
           danger
           onClick={() => depositExchange(data.safeId, Balance.MULTICS)}
         >
