@@ -58,7 +58,7 @@ export const InfoDeposits = () => {
   };
 
   const removeItem = (safeId: string) => {
-    // console.log('safeId', safeId);
+    console.log('safeId', safeId);
     const key = list.findIndex((i) => i.safeId === safeId);
     const item = list.filter((i) => i.safeId === safeId)[0];
     if (key !== 1) {
