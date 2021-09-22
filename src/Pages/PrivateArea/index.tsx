@@ -363,14 +363,14 @@ export const InfoMain: FC = () => {
                   </Styled.SmallButtonsWrap>
                 </Styled.SmallButtonsWrapDesc>
               </Styled.UserBlock>
-              <Styled.InfoButtons>
+              <Styled.InfoButtons> 
                 <Button
-                  dangerOutline
+                  dangerOutline 
                   onClick={() => {
                     setDepositSelect(null);
                     setAddDepositValue('');
                     setAddDeposit(true);
-                  }}
+                  }} 
                 >
                   {t('privateArea.newDeposit')}
                 </Button>

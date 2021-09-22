@@ -14,7 +14,7 @@ import { AppContext } from '../../context/HubContext';
 import { Card, Container } from '../../globalStyles';
 import { Balance } from '../../types/balance';
 import { OpenDate } from '../../types/dates';
-import { ModalDividends } from './Modals';
+import { ModalDividends } from './Modals'; 
 import * as Styled from './Styles.elements';
 
 type Obj = {
