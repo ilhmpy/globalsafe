@@ -226,6 +226,7 @@ export const Payments: FC = () => {
       hubConnection
         .invoke<RootPayDeposit[]>('GetDayPayouts', languale)
         .then((res) => {
+          console.log(res);
           setStatsDeposit(res);
           setLoadReset(false);
         })
@@ -237,48 +238,48 @@ export const Payments: FC = () => {
   };
 
   const [last, setLast] = useState(localStorage.getItem("last") || undefined);
-
-  console.log(bigArr)
-
+  
   return (
     <Page abs>
       {statsDeposit.length ? (
-        <Container>
-          <H2 center>{t('payments.currPay')}</H2>
-        </Container>
+        <>
+          <Container>
+            <H2 center>{t('payments.currPay')}</H2>
+          </Container>
+          <Container>
+            <WhiteBox>
+              <WhiteIntf>
+                <Title>{t("payments2.actual")} {moment(new Date()).format("DD.MM.YYYY")}</Title>
+                <Title right>
+                  {t("payments2.last")} {last ? ( <> 5 минут {t("payments2.ago")} </> ) : t("payments2.now")} <Reload style={{ cursor: "pointer" }} />
+                </Title>
+              </WhiteIntf>
+              <WhiteMap>
+                {statsDeposit.length ? (
+                  <>
+                  {bigArr.map((i: any, idx: any) => {
+                    return (
+                      <>
+                        {i.map((item: any, idx: any) => (
+                          <WhiteItem key={idx}>
+                            <WhiteItemText>{item.deposit.name}</WhiteItemText>
+                            <WhiteItemText bold>{(item.procent).toFixed(0)}%</WhiteItemText>
+                            <WhiteItemText>{moment(item.date).format("DD.MM.YYYY")}</WhiteItemText>
+                            <WhiteItemLine procent={(item.procent).toFixed(0)} />
+                          </WhiteItem>
+                        ))}
+                      </>
+                    )
+                  })}
+                </>
+                ) : ( "" )}
+              </WhiteMap>
+            </WhiteBox>
+        </Container> 
+       </>
       ) : (
         ''
       )}
-      <Container>
-        <WhiteBox>
-          <WhiteIntf>
-            <Title>{t("payments2.actual")} {moment(new Date()).format("DD.MM.YYYY")}</Title>
-            <Title right>
-              {t("payments2.last")} {last ? ( <> 5 минут {t("payments2.ago")} </> ) : t("payments2.now")} <Reload style={{ cursor: "pointer" }} />
-            </Title>
-          </WhiteIntf>
-          <WhiteMap>
-            {statsDeposit.length ? (
-              <>
-              {bigArr.map((i: any, idx: any) => {
-                return (
-                  <>
-                    {i.map((item: any, idx: any) => (
-                      <WhiteItem key={idx}>
-                        <WhiteItemText>{item.deposit.name}</WhiteItemText>
-                        <WhiteItemText bold>{(item.procent).toFixed(0)}%</WhiteItemText>
-                        <WhiteItemText>{moment(item.date).format("DD.MM.YYYY")}</WhiteItemText>
-                        <WhiteItemLine procent={(item.procent).toFixed(0)} />
-                      </WhiteItem>
-                    ))}
-                  </>
-                )
-              })}
-            </>
-            ) : ( "" )}
-          </WhiteMap>
-        </WhiteBox>
-      </Container> 
     </Page>
   );
 };

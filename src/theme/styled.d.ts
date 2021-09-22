@@ -78,5 +78,13 @@ declare module 'styled-components' {
     pink: string;
     rounIputBackground: string;
     titles: string;
+    operations: {
+      descClr: string;
+      headBg: string;
+      headClr: string;
+      ich1: string;
+      ich2: string;
+      tableBg: string;
+    }
   }
 }

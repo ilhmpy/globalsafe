@@ -353,6 +353,7 @@ export const Container = styled.div<{ pNone?: boolean; bigMargin?: boolean }>`
   padding-right: 10px;
   padding-left: 10px;
   display: flex;
+  flex-direction: column;
   justify-content: space-around;
   @media screen and (max-width: 992px) {
     padding-right: ${(props) => (props.pNone ? '0' : '20px')};

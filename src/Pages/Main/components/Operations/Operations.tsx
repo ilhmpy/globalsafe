@@ -18,7 +18,7 @@ export const Operations = () => {
   const [maxItems, setMaxItems] = useState(4);
   const hubConnection = appContext.hubConnection;
 
-  useEffect(() => {
+  function req() {
     let clean = false;
     const cb = (data: Collection) => {
       !clean && setNotifyList((notifyList) => [data, ...notifyList.slice(0, -1)]);
@@ -26,7 +26,7 @@ export const Operations = () => {
     if (hubConnection) {
       hubConnection.on('OperationNotification', cb);
       hubConnection
-        .invoke<RootOperations>('GetOperationsNotifications', [2, 4, 5, 6, 7, 8], 0, 4)
+        .invoke<RootOperations>('GetOperationsNotifications', [2, 4, 5, 6, 7, 8], 10, 10)
         .then((res) => {
           !clean && setNotifyList(res.collection);
         })
@@ -36,6 +36,10 @@ export const Operations = () => {
       clean = true;
       hubConnection?.off('OperationNotification', cb);
     };
+  };
+
+  useEffect(() => {
+    req();
   }, [hubConnection]);
 
   const { t } = useTranslation();
@@ -83,53 +87,32 @@ export const Operations = () => {
     setShowLess(false);
   };
 
+  useEffect(() => {
+    setInterval(() => {
+      req();
+    }, 300000)
+  }, []);
+
   return (
     <Page>
       <Container>
         <H2>{t('operation.last')}</H2>
+        <Description>{t("operations2.desc")}</Description>
+        <TableHead>
+          <TableHeadItem>{t("operations2.head1")}</TableHeadItem>
+          <TableHeadItem>{t("operations2.head2")}</TableHeadItem>
+          <TableHeadItem>{t("operations2.head3")}</TableHeadItem>
+        </TableHead>
+        <TableMapBlock>
+          {notifyList.map((itm, idx) => (
+            <TableMapItem key={idx}>
+              <TableInnerItem>{moment(itm.date).format("DD.MM.YYYY")} {t("in")} {moment(itm.date).format("HH:MM")}</TableInnerItem>
+              <TableInnerItem>{operation(itm.operationKind)}</TableInnerItem>
+              <TableInnerItem>{itm.amount / 100000}</TableInnerItem>
+            </TableMapItem>
+          ))}
+        </TableMapBlock>
       </Container>
-      <TableContainer>
-        <TableList dn>
-          <TableItemHead>{t('operation.date')}</TableItemHead>
-          <TableItemHead>{t('operation.type')}</TableItemHead>
-          <TableItemHead>{t('operation.sum')}</TableItemHead>
-        </TableList>
-        <TransitionGroup>
-          {notifyList.length &&
-            notifyList.map((item, idx) => {
-              return (
-                <CSSTransition key={item.date.toString() + idx} timeout={500} classNames="item">
-                  <TableList card className="operations-item">
-                    <TableItem>{moment(item.date).format('DD.MM.YYYY')}</TableItem>
-                    <TableItem>
-                      {item.depositName ? (
-                        <Text>
-                          {operation(item.operationKind)} {t('operation.byProgramm')}
-                          <span>&nbsp;{item.depositName}</span>
-                        </Text>
-                      ) : (
-                        <Text>{operation(item.operationKind)}</Text>
-                      )}
-                    </TableItem>
-                    <TableItem>
-                      <Value>
-                        {(item.amount / 100000).toLocaleString('ru-RU', {
-                          maximumFractionDigits: 2,
-                        })}{' '}
-                        CWD
-                      </Value>
-                    </TableItem>
-                  </TableList>
-                </CSSTransition>
-              );
-            })}
-        </TransitionGroup>
-        {
-          <Button dangerOutline onClick={!showLess ? add : less}>
-            {!showLess ? t('operation.showMore') : t('operation.showLess')}
-          </Button>
-        }
-      </TableContainer>
     </Page>
   );
 };
@@ -261,4 +244,85 @@ const Text = styled.div`
     font-size: 14px;
     line-height: 16px;
   }
+`;
+
+const Description = styled.h3`
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: ${({ theme }) => theme.operations.descClr};
+  max-width: 367px;
+  margin-bottom: 30px;
+`;
+
+const TableHead = styled.div<{ item?: boolean; }>`
+  width: 100%;
+  height: 60px;
+  background: ${({ theme }) => theme.operations.headBg}; 
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding: 0px 0px 0px 40px;
+`;
+
+const TableHeadItem = styled.div`
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: ${({ theme }) => theme.operations.headClr};
+  width: 100%;
+
+  &:nth-child(1) {
+    max-width: 330px;
+  }
+
+  &:nth-child(2) {
+    max-width: 400px;
+  }
+
+  &:nth-child(3) {
+    max-width: 100px;
+  }
+`;  
+
+const TableMapItem = styled.div`
+  width: 100%;
+  height: 60px;
+  background: ${({ theme }) => theme.operations.ich1}; 
+  display: flex;
+  align-items: center;
+  padding: 0px 0px 0px 40px;
+
+  &:nth-child(2n) {
+    background: ${({ theme }) => theme.operations.ich2};
+  }
+`;
+
+const TableInnerItem = styled.div`
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: ${({ theme }) => theme.operations.headClr};
+  width: 100%;
+
+  &:nth-child(1) {
+    max-width: 330px;
+  }
+
+  &:nth-child(2) {
+    max-width: 400px;
+  }
+
+  &:nth-child(3) {
+    max-width: 100px;
+  }
+`;
+
+const TableMapBlock = styled.div`
+  width: 100%;
+  padding: 1px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  background: ${({ theme }) => theme.operations.tableBg};
 `;
