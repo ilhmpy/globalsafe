@@ -13,8 +13,9 @@ import { Loading } from '../../components/UI/Loading';
 import { AppContext } from '../../context/HubContext';
 import { Card, Container } from '../../globalStyles';
 import { Balance } from '../../types/balance';
+import { RootBalanceList, Collection } from '../../types/balanceHistory';
 import { OpenDate } from '../../types/dates';
-import { ModalDividends } from './Modals'; 
+import { ModalDividends } from './Modals';
 import * as Styled from './Styles.elements';
 
 type Obj = {
@@ -105,7 +106,7 @@ export const InfoBalance = () => {
   const [depositTotal, setDepositTotal] = useState(0);
   const [totalPayed, setTotalPayed] = useState(0);
   const [count, setCount] = useState(true);
-  const [num, setNum] = useState(20);
+  const [num, setNum] = useState(100);
   const [loading, setLoading] = useState(true);
   const [addBalance, setAddBalance] = useState(false);
   const [balanceValue, setBalanceValue] = useState('');
@@ -120,6 +121,10 @@ export const InfoBalance = () => {
   const balancesList = useMemo(() => {
     return ['CWD', 'GLOBAL', 'GF', 'FF', 'GF5', 'GF6', 'FF5', 'FF6'];
   }, []);
+
+  const bType = useMemo(() => {
+    return balanceList?.map((i) => i.balanceKind);
+  }, [balanceList]);
 
   useEffect(() => {
     if (hubConnection) {
@@ -205,20 +210,22 @@ export const InfoBalance = () => {
 
   useEffect(() => {
     setBalanceLog(null);
-    if (hubConnection) {
+    const bType = balanceList ? balanceList.map((i) => i.balanceKind) : [];
+    if (hubConnection && bType.length) {
       setLoading(true);
       hubConnection
-        .invoke(
-          'GetUserDepositsCharges',
+        .invoke<RootBalanceList>(
+          'GetBalanceLog',
+          bType,
           balanceLogs,
           openDate.from || new Date('2020-12-02T00:47:45'),
           openDate.to || new Date(),
           0,
-          20
+          100
         )
         .then((res: any) => {
           setTotalDeposit(res.totalRecords);
-          setNum(20);
+          setNum(100);
 
           function getFormatedDate(dateStr: Date) {
             const date = moment(dateStr).format('DD MMMM YYYY');
@@ -227,16 +234,15 @@ export const InfoBalance = () => {
           if (res.collection.length) {
             setDepositList(res.collection);
             const result: any = {};
-            res.collection.forEach((item: any) => {
+            res.collection.forEach((item: Collection) => {
               const d = getFormatedDate(item.operationDate);
-
+              const balAsset = balanceList?.filter((i) => i.safeId === item.balanceSafeId);
               const obj = {
                 id: item.safeId,
                 operationKind: item.operationKind,
-                balance: item.amount,
+                balance: item.balanceDelta,
                 date: item.operationDate,
-                userDeposit: item.userDeposit,
-                asset: item.balanceKind,
+                asset: balAsset?.length ? balAsset[0].balanceKind : 1,
               };
 
               if (result[d]) {
@@ -256,28 +262,42 @@ export const InfoBalance = () => {
           console.log(err);
         });
     }
-  }, [hubConnection, openDate, balanceLogs, languale]);
+  }, [hubConnection, openDate, balanceLogs, languale, balanceList]);
+
+  // console.log('depositList', depositList);
 
   const myLoad = () => {
     setCount(false);
+    // console.log('load');
+
     if (hubConnection && depositList.length < totalDeposit) {
       hubConnection
-        .invoke('GetUserDepositsCharges', balanceLogs, openDate.from, openDate.to, num, 20)
+        .invoke<RootBalanceList>(
+          'GetBalanceLog',
+          bType,
+          balanceLogs,
+          openDate.from || new Date('2020-12-02T00:47:45'),
+          openDate.to || new Date(),
+          num,
+          100
+        )
         .then((res) => {
+          // console.log('load', res);
           setLoading(false);
           if (res.collection.length) {
             if (res.collection.length) {
-              setDepositList([...depositList, res.collection]);
+              setDepositList([...depositList, ...res.collection]);
               const result: any = { ...balanceLog };
+
               res.collection.forEach((item: any) => {
+                const balAsset = balanceList?.filter((i) => i.safeId === item.balanceSafeId);
                 const d = moment(item.operationDate).format('DD MMMM YYYY');
                 const obj = {
                   id: item.safeId,
                   operationKind: item.operationKind,
-                  balance: item.amount,
+                  balance: item.balanceDelta,
                   date: item.operationDate,
-                  userDeposit: item.userDeposit,
-                  asset: item.balanceKind,
+                  asset: balAsset?.length ? balAsset[0].balanceKind : 1,
                 };
 
                 if (result[d]) {
@@ -286,13 +306,13 @@ export const InfoBalance = () => {
                   result[d] = [obj];
                 }
               });
+              setNum(num + 100);
               setBalanceLog(result);
             } else {
               setBalanceLog(null);
             }
-            setCount(true);
-            setNum(num + 20);
           }
+          setCount(true);
         })
         .catch((err: Error) => {
           setLoading(false);
@@ -492,7 +512,7 @@ export const InfoBalance = () => {
                   <Styled.DataListName>{t('privateArea.sum')}</Styled.DataListName>
                 </Styled.DataListItem>
               </Styled.DataListHead>
-              {balanceLog ? (
+              {balanceLog && !loading ? (
                 <Scrollbars style={{ height: '500px' }}>
                   <InfiniteScroll
                     pageStart={0}
