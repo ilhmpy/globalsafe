@@ -72,6 +72,7 @@ const Row: FC<RowProps> = ({ data, removeItem }: RowProps) => {
       }
     }
   };
+
   const to = () => {
     const location = {
       pathname: '/info/deposits/' + data.safeId,
