@@ -26,7 +26,13 @@ export const RegisterComponent: FC = () => {
   const history = useHistory();
   const { t } = useTranslation();
 
+  const [loginError, setLoginError] = useState(false);
+  const [loginSuccessed, setLoginSuccessed] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+  const [passwordSuccessed, setPasswordSuccessed] = useState(false);
+
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLoginError(false)
     setError(true);
     setValue(e.target.value);
   };
@@ -48,15 +54,23 @@ export const RegisterComponent: FC = () => {
         .then((res: boolean) => {
           console.log('CheckAccount', res);
           if (res) {
+            setLoginError(false);
+            setLoginSuccessed(true);
+            //
             setError(true);
             loginSubmit();
           } else {
+            
             createAccount();
             // setError(false);
             // setValue("");
           }
         })
-        .catch((err: Error) => console.log(err));
+        .catch((err: Error) => {
+          setLoginError(true);
+          setLoginSuccessed(false);
+          console.log(err)
+      });
     }
   };
 
@@ -83,7 +97,7 @@ export const RegisterComponent: FC = () => {
       hubConnection
         .invoke('SendAuthCode', value)
         .then((res: boolean) => {
-          // console.log("res", res);
+          console.log("SendAuthCode res", res);
           setError(true);
           setLogin(true);
         })
@@ -121,15 +135,22 @@ export const RegisterComponent: FC = () => {
         .then((res: boolean) => {
           console.log('CheckCwdAccount', res);
           if (res) {
+            setLoginError(false);
+            //
             setError(true);
             setCwdAccount(true);
+
             onSubmit();
           } else {
+            setLoginError(true);
+            //
             setError(false);
             setCwdAccount(false);
           }
         })
         .catch((err: Error) => {
+          setLoginError(true);
+          //
           setError(false);
           console.log(err);
         });
@@ -189,7 +210,7 @@ export const RegisterComponent: FC = () => {
               placeholder={t('login.loginCWD')}
               onChange={onChangeValue}
               autoComplete="off"
-              error={!error ? t('login.incorrectLogin') : undefined}
+              error={loginError ? t('login.incorrectLogin') : undefined}
               mb={10}
             />
             <InputV4 
@@ -199,7 +220,7 @@ export const RegisterComponent: FC = () => {
                 onChange={onChangeNumber}
                 autoComplete="new-password"
                 isValid={password.length > 3}
-                error={!error ? t('login.incorrectLogin') : undefined}
+                // error={!error ? t('login.incorrectLogin') : undefined}
                 mb={20}
             />
            

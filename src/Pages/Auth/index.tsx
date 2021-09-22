@@ -13,9 +13,9 @@ export const Authentication = () => {
   return (
     <AuthPage>
       <Header />
-      <Container>
+      {/* <Container>
         <UpTitle>{t("headerButton.personalArea")}</UpTitle>
-      </Container>
+      </Container> */}
       <LoginComponent />
     </AuthPage>
   );
