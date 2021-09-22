@@ -151,7 +151,7 @@ export const RegisterComponent: FC = () => {
         <CSSTransition in={login && !user && !where} timeout={300} classNames="alert" unmountOnExit>
           <FormBlock onSubmit={onSubmitCode}>
             <H4>{t('headerButton.register')}</H4>
-            <Input
+            <SelfInput
               value={password}
               name="password"
               placeholder={t('login.code')}
@@ -164,9 +164,10 @@ export const RegisterComponent: FC = () => {
             <Submit as="button" danger type="submit" disabled={password === ''}>
               {t('login.in')}
             </Submit>
-            <LinkTo href={`https://backup.cwd.global/account/${value}`} target="_blank">
+            <LinkToPage to="/login">{t('login.enter')}</LinkToPage>
+            {/* <LinkTo href={`https://backup.cwd.global/account/${value}`} target="_blank">
               {t('login.goTo')}
-            </LinkTo>
+            </LinkTo> */}
           </FormBlock>
         </CSSTransition>
 
@@ -178,10 +179,10 @@ export const RegisterComponent: FC = () => {
         >
           <FormBlock onSubmit={checkCwdAccount}>
             <H4>{t('headerButton.register')}</H4>
-            <Input
+            <SelfInput
               value={value}
               name="login"
-              placeholder={t('login.login')}
+              placeholder={t('login.loginAccount')}
               onChange={onChangeValue}
               autoComplete="off"
             />
@@ -191,13 +192,18 @@ export const RegisterComponent: FC = () => {
             <Submit as="button" danger type="submit" disabled={value === ''}>
               {t('login.getCode')}
             </Submit>
-            <LinkToPage to="/login">{t('login.in')}</LinkToPage>
+            <LinkToPage to="/login">{t('login.enter')}</LinkToPage>
           </FormBlock>
         </CSSTransition>
       </CardContainer>
     </Container>
   );
 };
+
+const SelfInput = styled(Input)`
+  margin-bottom: 26px;
+`;
+
 
 const LinkToPage = styled(Link)`
   font-weight: 500;
@@ -236,7 +242,7 @@ const FormBlock = styled.form`
 const Submit = styled(Button)<{ mb?: boolean }>`
   max-width: 100%;
   margin-bottom: ${(props) => (props.mb ? '20px' : '0')};
-  color: ${(props) => props.theme.text};
+  color: ${props => props.theme.dangerButtonText};
 `;
 
 const CardContainer = styled(Card)`
@@ -244,6 +250,7 @@ const CardContainer = styled(Card)`
   align-items: center;
   position: relative;
   height: 482px;
+  border-radius: 10px;
   @media (max-width: 992px) {
     height: 410px;
   }

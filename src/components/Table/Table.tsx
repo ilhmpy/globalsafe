@@ -24,7 +24,7 @@ const Row = ({ data }: any) => {
       setOpen(data.safeId);
     }
   };
-  // console.log("data", data);
+  console.log('data', data);
   return (
     <>
       {size < 992 ? (
@@ -53,6 +53,11 @@ const Row = ({ data }: any) => {
               <Styled.Text dangerouslySetInnerHTML={{ __html: data.deposit.description }} />
             </Styled.TD>
 
+            {/* <Styled.TD>
+              <Styled.Text>{data.amountView}</Styled.Text>
+              <Styled.Text>{Balance[data.deposit.asset]}</Styled.Text>
+            </Styled.TD> */}
+
             <Styled.TD>
               <Styled.Text>{data.amountView}</Styled.Text>
               <Styled.Text>{Balance[data.deposit.asset]}</Styled.Text>
@@ -62,19 +67,12 @@ const Row = ({ data }: any) => {
               <Styled.Text>
                 {data.paymentAmountView
                   ? data.paymentAmountView.toString().length > 15
-                    ? data.paymentAmountView.toFixed(7)
+                    ? data.paymentAmountView.toLocaleString('ru-RU', {
+                        maximumFractionDigits: 7,
+                      })
                     : data.paymentAmountView
                   : '-'}
               </Styled.Text>
-              {data.paymentAmountView ? (
-                <Styled.Text>{Balance[data.deposit.asset]}</Styled.Text>
-              ) : (
-                <Styled.Text></Styled.Text>
-              )}
-            </Styled.TD>
-
-            <Styled.TD>
-              <Styled.Text>{data.pendingAmount}</Styled.Text>
             </Styled.TD>
 
             <Styled.TD>
@@ -112,6 +110,10 @@ const Row = ({ data }: any) => {
             <Styled.TD>
               <Styled.Text dangerouslySetInnerHTML={{ __html: data.deposit.description }} />
             </Styled.TD>
+            {/* <Styled.TD>
+              <Styled.Text>{data.amountView}</Styled.Text>
+              <Styled.Text>{Balance[data.deposit.asset]}</Styled.Text>
+            </Styled.TD> */}
             <Styled.TD>
               <Styled.Text>{data.amountView}</Styled.Text>
               <Styled.Text>{Balance[data.deposit.asset]}</Styled.Text>
@@ -120,18 +122,12 @@ const Row = ({ data }: any) => {
               <Styled.Text>
                 {data.paymentAmountView
                   ? data.paymentAmountView.toString().length > 15
-                    ? data.paymentAmountView.toFixed(7)
+                    ? data.paymentAmountView.toLocaleString('ru-RU', {
+                        maximumFractionDigits: 7,
+                      })
                     : data.paymentAmountView
                   : '-'}
               </Styled.Text>
-              {data.paymentAmountView ? (
-                <Styled.Text>{Balance[data.deposit.asset]}</Styled.Text>
-              ) : (
-                <Styled.Text></Styled.Text>
-              )}
-            </Styled.TD>
-            <Styled.TD>
-              <Styled.Text>{data.pendingAmount}</Styled.Text>
             </Styled.TD>
             <Styled.TD>
               <Styled.Text>
@@ -157,9 +153,9 @@ export const Tables = ({ list }: any) => {
           <Styled.TR>
             <Styled.TH>{t('privateArea.name')}</Styled.TH>
             <Styled.TH>{t('privateArea.desc')}</Styled.TH>
-            <Styled.TH>{t('privateArea.deposit')}</Styled.TH>
-            <Styled.TH>{t('privateArea.toPay')}</Styled.TH>
-            <Styled.TH>{t('privateArea.delayed')}</Styled.TH>
+            {/* <Styled.TH>{t('privateArea.deposit')}</Styled.TH> */}
+            <Styled.TH>{t('privateArea.sumDeposit')}</Styled.TH>
+            <Styled.TH>{t('privateArea.amountPay')}</Styled.TH>
             <Styled.TH>
               <p>{t('privateArea.nextDate')}</p>
               <span>{t('adminPay.table.nextDate')}</span>

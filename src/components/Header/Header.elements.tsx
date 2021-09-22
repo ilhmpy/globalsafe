@@ -246,4 +246,7 @@ export const Switch = styled.div`
   position: absolute;
   bottom: 5px;
   align-items: center;
+  @media (max-width: 992px) {
+    position: relative;
+  }
 `;
