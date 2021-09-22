@@ -252,11 +252,18 @@ export const InfoMain: FC = () => {
   };
 
   const onChangeWithdraw = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const pattern = /^[1-9][0-9]*$/;
-    if (e.target.value === '' || pattern.test(e.target.value)) {
+    // const pattern = /^[1-9][^0-9\.]*$/;
+    const pattern = /^[0-9][0-9.]*$/;
+    const value = e.target.value;
+
+    if (value.split('.').length > 2 || value[0] === '.') {
+      return;
+    }
+
+    if (value === '' || pattern.test(value)) {
       // call function to get commisions
-      getCommisions(e.target.value);
-      setWithdrawValue(e.target.value);
+      getCommisions(value);
+      setWithdrawValue(value);
     }
   };
   const onDelete = (id: number) => {
@@ -471,7 +478,7 @@ export const InfoMain: FC = () => {
                 <Styled.ModalTitle>{t('privateArea.withdraw')}</Styled.ModalTitle>
                 <Select
                   placeholder={t('privateArea.selectCurrency')}
-                  options={balancesList}
+                  options={['CWD', 'GLOBAL', 'MULTICS']}
                   selectedOption={currencyValue}
                   setSelectedOption={onChangeCurrencyValue}
                 />
@@ -484,7 +491,7 @@ export const InfoMain: FC = () => {
                 />
                 <Styled.ModalButton
                   as="button"
-                  disabled={!withdrawValue || !currencyValue}
+                  disabled={!withdrawValue || !currencyValue || +withdrawValue <= 0}
                   onClick={withdrawBalance}
                   danger
                 >
