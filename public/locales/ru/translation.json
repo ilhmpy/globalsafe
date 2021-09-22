@@ -323,7 +323,7 @@
     "pledge": "Залог",
     "toToken": "Перевод в токен",
     "translate": "Перевести",
-    "sumIn": "Сумма в MULTICS"
+    "sumIn": "Сумма в MULTICS" 
   },
   "alert": {
     "success": "Успешно",

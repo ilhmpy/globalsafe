@@ -497,7 +497,7 @@ export const BalanceItemValue = styled.p<{ pink?: boolean }>`
   font-weight: 500;
   font-size: 18px;
   line-height: 21px;
-  color: ${(props) => (props.pink ? '#FF416E' : "#212121")};
+  color: ${(props) => (props.pink ? '#FF416E' : props.theme.repeatCode)};
   word-break: break-all;
   margin-bottom: 5px;
 
@@ -982,8 +982,8 @@ export const ModalCommisionBox = styled.div`
   padding-top: 1px;
 `;
 
-export const SwitchBlock = styled.div<{ block: boolean; }>`
-  display: ${({ block }) => block ? "block" : "none"};
+export const SwitchBlock = styled.div<{ block: boolean }>`
+  display: ${({ block }) => (block ? 'block' : 'none')};
   position: absolute;
   background: ${({ theme }) => theme.toToken.background};
   padding-top: 20px;
