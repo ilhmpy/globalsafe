@@ -46,7 +46,7 @@ export const Input = ({
             /> 
             {error && (
                     <IconBlock>
-                        <Tooltip label="Пароль не верный" direction="left">
+                        <Tooltip label={error} direction="left">
                             <ErrorIcon />
                         </Tooltip>
                     </IconBlock>
@@ -63,7 +63,7 @@ export const Input = ({
 Input.defaultProps = {
     // eslint-disable-next-line
     onBlur: () => {},
-    error: '',
+    error: undefined,
     isValid: false,
 }
 

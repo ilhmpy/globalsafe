@@ -175,44 +175,34 @@ export const RegisterComponent: FC = () => {
           </FormBlock>
         </CSSTransition> */}
 
-        <CSSTransition
+        {/* <CSSTransition
           in={!login && !user && !where}
           timeout={300}
           classNames="alert"
           unmountOnExit
-        >
+        > */}
           <FormBlock onSubmit={checkCwdAccount}>
             <H4>{t('headerButton.register')}</H4>
-            {/* <SelfInput
-              value={value}
-              name="login"
-              placeholder={t('login.loginAccount')}
-              onChange={onChangeValue}
-              autoComplete="off"
-            /> */}
             <InputV4 
               value={value}
               name="login"
-              // placeholder={t('login.loginAccount')}
-              placeholder={'Логин (cwd.global)'}
+              placeholder={t('login.loginCWD')}
               onChange={onChangeValue}
               autoComplete="off"
-              error={'Логин не верный'}
+              error={!error ? t('login.incorrectLogin') : undefined}
               mb={10}
             />
             <InputV4 
                 value={password}
                 name="password"
-                // placeholder={t('login.code')}
-                placeholder={'Одноразовый код'}
+                placeholder={t('login.oneTimeCode')}
                 onChange={onChangeNumber}
                 autoComplete="new-password"
                 isValid={password.length > 3}
+                error={!error ? t('login.incorrectLogin') : undefined}
                 mb={20}
             />
-            {/* {!error && (
-              <StyledInlineErrorMessage>{t('login.incorrectLogin')}</StyledInlineErrorMessage>
-            )} */}
+           
             <PrimaryButton 
               title={t('login.getCode')}
               type="submit"
@@ -221,20 +211,14 @@ export const RegisterComponent: FC = () => {
 
             <LinkToBlock>
               <LinkTo href={`https://backup.cwd.global/account/${value}`} target="_blank">
-                {/* {t('login.goTo')} */}
-                {'Активность на cwd.global'}
+                {`${t('login.activityOn')} cwd.global`}
               </LinkTo>
               <QuestionIcon />
             </LinkToBlock>
 
-
-            {/* <Submit as="button" danger type="submit" disabled={value === ''}>
-              {t('login.getCode')}
-            </Submit> */}
-            {/* <LinkToPage to="/login">{t('login.enter')}</LinkToPage> */}
-            <LinkToPage to="/login">Авторизация</LinkToPage>
+            <LinkToPage to="/login">{t('login.authorize')}</LinkToPage>
           </FormBlock>
-        </CSSTransition>
+        {/* </CSSTransition> */}
       </AuthCardContainer>
     </AuthContainer>
   );
@@ -263,6 +247,8 @@ const AuthCardContainer = styled(Card)`
   width: 480px;
   height: 444px;
   border-radius: 8px;
+  background-color: ${props => props.theme.white};
+  border-color: ${props => props.theme.white};
   box-shadow: none;
 
   @media (max-width: 768px) {

@@ -32,7 +32,11 @@
     "repeat": "Request the code again",
     "over": "in",
     "enter": "Enter",
-    "loginAccount": "Enter account"
+    "loginAccount": "Enter account",
+    "authorize": "Authorization",
+    "activityOn": "Activity on",
+    "loginCWD": "Login (cwd.global)",
+    "oneTimeCode": "One time code"
   },
   "banner": {
     "uptitle": "About fund ",

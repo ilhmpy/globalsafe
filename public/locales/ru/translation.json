@@ -32,7 +32,11 @@
     "repeat": "Запросить код повторно",
     "over": "можно через",
     "enter": "Вход",
-    "loginAccount": "Введите аккаунт"
+    "loginAccount": "Введите аккаунт",
+    "authorize": "Авторизация",
+    "activityOn": "Активность на",
+    "loginCWD": "Логин (cwd.global)",
+    "oneTimeCode": "Одноразовый код"
   },
   "banner": {
     "uptitle": "Емко и по-делу",
