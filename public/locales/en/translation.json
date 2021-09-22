@@ -565,10 +565,12 @@
   },
   "cancelDeposit":{
     "closeDeposit": "Close deposit",
-    "sumAndProcent": "The amount of conversion of the body of the deposit and the remaining interest",
-    "convert": "conversion at the rate",
+    "sumAndProcent": "Conversion amount",
+    "convert": "Exchange rate",
     "getSum": "Amount receivable",
     "confirm": "Confirm",
-    "close": "Close"
+    "close": "Close",
+    "sumToPay": "The amount of payments on the deposit",
+    "sumBetween": "the difference in the amount of conversion and the amount paid will be credited to the globalsafe balance"
   }
 }

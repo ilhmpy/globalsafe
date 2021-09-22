@@ -289,8 +289,6 @@ export const InfoMain: FC = () => {
     setCurrencyValue('');
   };
 
-  console.log(balanceList);
-
   return (
     <>
       {withdrawValueLoad && (
@@ -586,7 +584,7 @@ export const InfoMain: FC = () => {
                         </Styled.ModalButton>
                       </>
                     ) : null}
-                    {console.log(depositSelect)}
+                    {/* {console.log(depositSelect)} */}
                     {depositSelect && depositSelect.priceKind && asset ? (
                       <Styled.Warning choice>
                         {t('depositSelect.willActiv')}&nbsp;{' '}

@@ -53,13 +53,42 @@ export const InfoBlock: FC<InfoBlockProps> = ({
 }: InfoBlockProps) => {
   const { t } = useTranslation();
 
-  const procent = ((+calcExchange[0] - data.amount) / data.amount) * 100;
-  console.log('calcExchange', calcExchange);
+  // const procent = ((+calcExchange[0] - data.amount) / data.amount) * 100;
+  // console.log('calcExchange', calcExchange);
   return (
     <>
       <Container>
         <Title>{t('cancelDeposit.closeDeposit')}</Title>
         <Desc>
+          {t('cancelDeposit.sumToPay')} -<br />
+          <span>
+            {(+calcExchange[0] / 100000).toLocaleString('ru-RU', {
+              maximumFractionDigits: 2,
+            })}
+            &nbsp; {Balance[data.deposit.asset]}
+          </span>
+        </Desc>
+        <Desc>
+          {t('cancelDeposit.sumAndProcent')} -<br />
+          <span>
+            {(+calcExchange[1] / 100000).toLocaleString('ru-RU', {
+              maximumFractionDigits: 2,
+            })}
+            &nbsp; {Balance[data.deposit.asset]}*
+          </span>
+          <Small>{t('cancelDeposit.sumBetween')}</Small>
+        </Desc>
+        <Desc>
+          {t('cancelDeposit.convert')} -{' '}
+          <span>
+            {+calcExchange[1] / +calcExchange[2] / 1000 > 0 && +calcExchange[2] > 0
+              ? (+calcExchange[1] / +calcExchange[2] / 1000).toLocaleString('ru-RU', {
+                  maximumFractionDigits: 2,
+                })
+              : 0}
+          </span>
+        </Desc>
+        {/* <Desc>
           {t('cancelDeposit.sumAndProcent')} ({procent > 0 ? Number(procent.toFixed(2)) : 0}%) -
           <br />
           <span>
@@ -77,7 +106,7 @@ export const InfoBlock: FC<InfoBlockProps> = ({
                 })
               : 0}
           </span>
-        </Desc>
+        </Desc> */}
         <Desc>
           <strong>{t('cancelDeposit.getSum')}</strong>
           <br />
@@ -102,7 +131,7 @@ export const InfoBlock: FC<InfoBlockProps> = ({
 };
 
 const Container = styled.div`
-  padding: 50px;
+  padding: 50px 80px;
   ${Button} {
     margin: 0 auto;
   }
@@ -123,6 +152,7 @@ const Desc = styled.div`
   color: ${(props) => props.theme.text2};
   font-size: 14px;
   line-height: 16px;
+  font-weight: 500;
   text-align: center;
   letter-spacing: 0.1px;
   margin-bottom: 20px;
@@ -130,4 +160,11 @@ const Desc = styled.div`
     color: #ff416e;
     font-weight: 500;
   }
+`;
+
+export const Small = styled.p`
+  font-size: 12px;
+  line-height: 14px;
+  letter-spacing: 0.1px;
+  font-weight: 400;
 `;
