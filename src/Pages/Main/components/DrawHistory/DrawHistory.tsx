@@ -109,11 +109,11 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
 
   return (
     <Page id="lottery" margin>
-      <Container>
+      {/* <Container>
         <UpTitle small>{t('draws')}</UpTitle>
-      </Container>
+      </Container> */}
       <Container bigMargin>
-        <H2>{t('historyLottery')}</H2>
+        <H2>{'Розыгрыши'}</H2>
       </Container>
 
       <Container>
@@ -172,15 +172,6 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
                         &nbsp;
                         {item.volume ? Balance[item.balanceKind] : '-'}
                       </TableItem>
-                      {/* <TableItem>
-                        {item.volume
-                          ? (item.volume / 100000).toLocaleString('ru-RU', {
-                              maximumFractionDigits: 5,
-                            }) +
-                            ' ' +
-                            'CWD'
-                          : typeWin(Number(item.kind))}
-                      </TableItem> */}
                       <TableItem>
                         <Value data-title={item.name}>{item.name}</Value>
                       </TableItem>
@@ -190,11 +181,11 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
               }
             })}
         </TransitionGroup>
-        {show && (
+        {/* {show && (
           <Button dangerOutline onClick={add}>
             {t('operation.showMore')}
           </Button>
-        )}
+        )} */}
       </TableContainer>
     </Page>
   );

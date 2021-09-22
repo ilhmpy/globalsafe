@@ -18,6 +18,14 @@ export const H2 = styled.h2<{ center?: boolean }>`
   text-align: left;
   margin-right: auto;
   margin-bottom: 30px;
+
+  font-family: Roboto;
+font-style: normal;
+font-weight: 500;
+font-size: 48px;
+line-height: 56px;
+
+color: #3F3E4E;
   @media (max-width: 1060px) {
     font-size: calc(26px + 60 * ((100vw - 320px) / 740));
   }
