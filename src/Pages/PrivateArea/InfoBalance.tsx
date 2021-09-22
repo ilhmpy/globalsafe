@@ -95,6 +95,8 @@ const BalanceTable: FC<BalanceTableProps> = ({ balanceLog }: BalanceTableProps) 
               ? balanceLog.balance / 100000
               : balanceLog.asset === 43
               ? balanceLog.balance / 10000
+              : balanceLog.asset === 59
+              ? balanceLog.balance / 100
               : balanceLog.balance
             ).toLocaleString('ru-RU', {
               maximumFractionDigits: 5,
@@ -568,7 +570,7 @@ export const InfoBalance = () => {
                       <div key={key}>
                         <Styled.DataListDate>{key}</Styled.DataListDate>
 
-                        {balanceLog[key].map((item, idx) => (
+                        {balanceLog[key].reverse().map((item, idx) => (
                           <BalanceTable key={item.id} balanceLog={item} />
                         ))}
                       </div>
