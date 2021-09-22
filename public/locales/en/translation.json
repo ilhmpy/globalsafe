@@ -351,7 +351,14 @@
     "sum": "Transaction amount",
     "byProgramm": "by program",
     "showMore": "Show more",
-    "showLess": "Show less"
+    "showLess": "Show less",
+    "adjustemnt": "Balance operation adjustemnt.",
+    "prizeAdjustment": "Balance prize adjustment",
+    "transactionNetworkFee": "Network commission from the transaction amount",
+    "transactionServiceFee": "Service commission from the transaction amount",
+    "depositLoan": "Deposit loan",
+    "balanceExchange": "Transfer between balances",
+    "depositExchange": "Exchange deposit"
   },
   "copy": {
     "copy": "Copied",
