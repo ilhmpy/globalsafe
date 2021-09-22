@@ -160,7 +160,7 @@ export const TokenModal = ({ block, setBlock, setToTranslate, onButton }: any) =
                 hubConnection
                   .invoke('CalculateBalanceExchange', (Number(validValue) * 100000).toString(), 59)
                   .then((res) => {
-                    console.log(res);
+                    // console.log(res);
                     setMscValue(res[1] / 100);
                   })
                   .catch((e) => console.error(e));
@@ -185,7 +185,7 @@ export const TokenModal = ({ block, setBlock, setToTranslate, onButton }: any) =
                 hubConnection
                   .invoke('BalanceExchange', (Number(value) * 100000).toString(), 59)
                   .then((res) => {
-                    console.log(res);
+                    // console.log(res);
                     setBlock(false);
                   })
                   .catch((e) => console.error(e));

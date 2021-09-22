@@ -42,7 +42,7 @@ export const OnePage = ({ match }: RouteComponentProps<PropsMatch>) => {
     if (hubConnection) {
       try {
         const res = await hubConnection.invoke<string[]>('CalculateDepositExchange', amount, kind);
-        console.log('res', res);
+        // console.log('res', res);
         setCalcExchange(res);
       } catch (e) {
         console.log(e);
@@ -54,7 +54,7 @@ export const OnePage = ({ match }: RouteComponentProps<PropsMatch>) => {
     if (hubConnection) {
       try {
         const res = await hubConnection.invoke('DepositExchange', amountId, kind);
-        console.log('res', res);
+        // console.log('res', res);
         setCancelModal(false);
         history.push('/info/deposits');
       } catch (e) {
