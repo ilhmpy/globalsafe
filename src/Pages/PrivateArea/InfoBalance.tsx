@@ -14,7 +14,7 @@ import { AppContext } from '../../context/HubContext';
 import { Card, Container } from '../../globalStyles';
 import { Balance } from '../../types/balance';
 import { OpenDate } from '../../types/dates';
-import { ModalDividends } from './Modals';
+import { ModalDividends } from './Modals'; 
 import * as Styled from './Styles.elements';
 
 type Obj = {
@@ -58,7 +58,7 @@ const BalanceTable: FC<BalanceTableProps> = ({ balanceLog }: BalanceTableProps) 
   const onClose = () => {
     setDivModal(false);
   };
-  
+
   return (
     <>
       <div>
@@ -70,13 +70,12 @@ const BalanceTable: FC<BalanceTableProps> = ({ balanceLog }: BalanceTableProps) 
           <Styled.DataListName>{operation(balanceLog.operationKind)}</Styled.DataListName>
           <Styled.DataListSum plus={balanceLog.balance >= 0}>
             {balanceLog.balance < 0 ? '' : balanceLog.operationKind !== 6 ? '+' : '-'}{' '}
-            {(
-              balanceLog.asset === 1 ? 
-                balanceLog.balance / 100000 
-              : balanceLog.asset === 43 ? 
-                balanceLog.balance / 10000 :
-              balanceLog.balance
-              ).toLocaleString('ru-RU', {
+            {(balanceLog.asset === 1
+              ? balanceLog.balance / 100000
+              : balanceLog.asset === 43
+              ? balanceLog.balance / 10000
+              : balanceLog.balance
+            ).toLocaleString('ru-RU', {
               maximumFractionDigits: 5,
             })}
             <br />
@@ -119,16 +118,7 @@ export const InfoBalance = () => {
 
   // Get Balance Kinds List as an Array
   const balancesList = useMemo(() => {
-    return [
-      'CWD',
-      'GLOBAL',
-      'GF',
-      'FF',
-      'GF5',
-      'GF6',
-      'FF5',
-      'FF6',
-    ];
+    return ['CWD', 'GLOBAL', 'GF', 'FF', 'GF5', 'GF6', 'FF5', 'FF6'];
   }, []);
 
   useEffect(() => {
@@ -287,6 +277,7 @@ export const InfoBalance = () => {
                   balance: item.amount,
                   date: item.operationDate,
                   userDeposit: item.userDeposit,
+                  asset: item.balanceKind,
                 };
 
                 if (result[d]) {
@@ -392,9 +383,13 @@ export const InfoBalance = () => {
     if (hubConnection) {
       hubConnection
         .invoke(
-          'GetTopUpUrl', 
+          'GetTopUpUrl',
           Balance[currencyValue as keyof typeof Balance],
-          currencyValue === 'CWD' ? +balanceValue * 100000 : currencyValue === 'GLOBAL' ? +balanceValue * 10000 : +balanceValue
+          currencyValue === 'CWD'
+            ? +balanceValue * 100000
+            : currencyValue === 'GLOBAL'
+            ? +balanceValue * 10000
+            : +balanceValue
         )
         .then((res: string) => {
           newWindow && (newWindow.location.href = res);
@@ -573,7 +568,12 @@ export const InfoBalance = () => {
               ref={inputRef}
               value={balanceValue}
             />
-            <Styled.ModalButton as="button" disabled={!balanceValue || !currencyValue} onClick={getTopUp} danger>
+            <Styled.ModalButton
+              as="button"
+              disabled={!balanceValue || !currencyValue}
+              onClick={getTopUp}
+              danger
+            >
               {t('privateArea.topUp')}
             </Styled.ModalButton>
           </Styled.ModalBlock>

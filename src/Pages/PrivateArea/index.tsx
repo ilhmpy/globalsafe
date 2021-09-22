@@ -57,11 +57,11 @@ export const InfoMain: FC = () => {
   const [blockchainCommision, setBlockchainCommision] = useState<string>('0');
   const [serviceCommision, setServiceCommision] = useState<string>('0');
   const [toTokenModal, setToTokenModal] = useState<boolean>(false);
-  const [countToTranslate, setCountToTranslate] = useState<any>("");
+  const [countToTranslate, setCountToTranslate] = useState<any>('');
 
   // Get Balance Kinds List as an Array
   const balancesList = useMemo(() => {
-    const list = ['CWD', 'GLOBAL', 'GF', 'FF', 'GF5', 'GF6', 'FF5', 'FF6', "MULTICS"];
+    const list = ['CWD', 'GLOBAL', 'GF', 'FF', 'GF5', 'GF6', 'FF5', 'FF6', 'MULTICS'];
     const sorted = balanceList?.sort((a, b) => a.balanceKind - b.balanceKind) || [];
     return sorted
       .filter((b) => list.includes(Balance[b.balanceKind]))
@@ -158,6 +158,8 @@ export const InfoMain: FC = () => {
             ? +withdrawValue * 100000
             : currencyValue === 'GLOBAL'
             ? +withdrawValue * 10000
+            : currencyValue === 'MULTICS'
+            ? +withdrawValue * 100
             : +withdrawValue
         )
         .then((res) => {
@@ -197,33 +199,18 @@ export const InfoMain: FC = () => {
         balanseType[0].volume >= depositSelect?.price
       : false;
 
-  // Get Better Logic To get Clear List
-  /*
+  const blackList = [0, 1, 9, 10, 11];
 
-  const balanceChips = balanceList?.filter((item) => {
-    if (item.balanceKind === 0) {
-      return false;
-    }
-    if (item.balanceKind === 1) {
-      return false;
-    }
-    if (item.balanceKind === 9) {
-      return false;
-    }
-    if (item.balanceKind === 10) {
-      return false;
-    }
-    if (item.balanceKind === 11) {
-      return false;
-    }
-    return true;
-  })
-  .sort((a, b) => a.balanceKind - b.balanceKind)
-  .map((obj) =>
-    obj.balanceKind === 43
-      ? { ...obj, volume: obj.volume > 1 ? obj.volume / 10000 : obj.volume }
-      : obj
-  ); */
+  const balanceChips = balanceList
+    ?.filter((item) => !blackList.includes(item.balanceKind))
+    .sort((a, b) => a.balanceKind - b.balanceKind)
+    .map((obj) =>
+      obj.balanceKind === 43
+        ? { ...obj, volume: obj.volume > 1 ? obj.volume / 10000 : obj.volume }
+        : obj.balanceKind === 59
+        ? { ...obj, volume: obj.volume > 1 ? obj.volume / 100 : obj.volume }
+        : obj
+    );
 
   if (user === null) {
     return null;
@@ -265,11 +252,18 @@ export const InfoMain: FC = () => {
   };
 
   const onChangeWithdraw = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const pattern = /^[1-9][0-9]*$/;
-    if (e.target.value === '' || pattern.test(e.target.value)) {
+    // const pattern = /^[1-9][^0-9\.]*$/;
+    const pattern = /^[0-9][0-9.]*$/;
+    const value = e.target.value;
+
+    if (value.split('.').length > 2 || value[0] === '.') {
+      return;
+    }
+
+    if (value === '' || pattern.test(value)) {
       // call function to get commisions
-      getCommisions(e.target.value);
-      setWithdrawValue(e.target.value);
+      getCommisions(value);
+      setWithdrawValue(value);
     }
   };
   const onDelete = (id: number) => {
@@ -295,8 +289,6 @@ export const InfoMain: FC = () => {
     setCurrencyValue('');
   };
 
-  console.log(balanceList);
-
   return (
     <>
       {withdrawValueLoad && (
@@ -310,13 +302,13 @@ export const InfoMain: FC = () => {
         </Styled.Loader>
       )}
 
-      <TokenModal 
-        block={toTokenModal} 
+      <TokenModal
+        block={toTokenModal}
         setBlock={setToTokenModal}
         setToTranslate={setCountToTranslate}
         onButton={() => {
           return;
-        }} 
+        }}
       />
       <Header />
       <Styled.Page>
@@ -334,19 +326,20 @@ export const InfoMain: FC = () => {
                     {balance
                       ? (balance / 100000).toLocaleString('ru-RU', {
                           maximumFractionDigits: 5,
-                        }) 
-                      : '0'} CWD
+                        })
+                      : '0'}{' '}
+                    CWD
                   </Styled.BalanceItemValue>
                 </Styled.BalanceItem>
                 <Styled.SmallButtonsWrapDesc>
                   <Styled.SmallButtonsWrap>
-                    {balanceList && (
-                      balanceList.map((i: any, idx: any) => {
+                    {balanceChips &&
+                      balanceChips.map((i: any, idx: any) => {
                         let color = '#6DB9FF';
                         if (i.balanceKind === 9) {
                           color = '#FF416E';
                         } else if (i.balanceKind === 10) {
-                          color = '#6DB9FF'; 
+                          color = '#6DB9FF';
                         } else if (i.balanceKind === 11) {
                           color = '#BCD476';
                         } else if (i.balanceKind === 12) {
@@ -355,26 +348,10 @@ export const InfoMain: FC = () => {
                           color = '#6DB9FF';
                         }
 
-                        if (i.balanceKind === 0) {
-                          return false;
-                        }
-                        if (i.balanceKind === 1) {
-                          return false;
-                        }
-                        if (i.balanceKind === 9) {
-                          return false;
-                        }
-                        if (i.balanceKind === 10) {
-                          return false;
-                        }
-                        if (i.balanceKind === 11) {
-                          return false;
-                        }
-
                         return (
                           <Styled.SmallButton color={color} key={idx}>
                             <span>
-                              {(i.volume / 100).toLocaleString('ru-RU', {
+                              {i.volume.toLocaleString('ru-RU', {
                                 maximumFractionDigits: 4,
                               })}
                             </span>
@@ -382,18 +359,18 @@ export const InfoMain: FC = () => {
                             {Balance[i.balanceKind]}
                           </Styled.SmallButton>
                         );
-                      }))}
+                      })}
                   </Styled.SmallButtonsWrap>
                 </Styled.SmallButtonsWrapDesc>
               </Styled.UserBlock>
-              <Styled.InfoButtons>
+              <Styled.InfoButtons> 
                 <Button
-                  dangerOutline
+                  dangerOutline 
                   onClick={() => {
                     setDepositSelect(null);
                     setAddDepositValue('');
                     setAddDeposit(true);
-                  }}
+                  }} 
                 >
                   {t('privateArea.newDeposit')}
                 </Button>
@@ -402,20 +379,32 @@ export const InfoMain: FC = () => {
                 </Button>
               </Styled.InfoButtons>
               <Styled.SwitchBlock block={switchType}>
-                <Button dangerOutline onClick={() => {
-                  setToTokenModal(true);
-                  setSwitchType(false);
-                }} style={{ width: 130, height: 35 }}>{t("privateArea.toToken")}</Button>
-                <Button dangerOutline onClick={() => {
-                  setSwitchType(false);
-                  setWithdraw(true);
-                }} style={{ width: 130, height: 35 }}>{t('privateArea.withdraw')}</Button>
+                <Button
+                  dangerOutline
+                  onClick={() => {
+                    setToTokenModal(true);
+                    setSwitchType(false);
+                  }}
+                  style={{ width: 130, height: 35 }}
+                >
+                  {t('privateArea.toToken')}
+                </Button>
+                <Button
+                  dangerOutline
+                  onClick={() => {
+                    setSwitchType(false);
+                    setWithdraw(true);
+                  }}
+                  style={{ width: 130, height: 35 }}
+                >
+                  {t('privateArea.withdraw')}
+                </Button>
               </Styled.SwitchBlock>
             </Styled.InfoWrap>
             <Styled.SmallButtonsWrapMob>
               <Styled.SmallButtonsWrap>
-                {balanceList &&
-                  balanceList.map((i: any, idx: any) => { 
+                {balanceChips &&
+                  balanceChips.map((i: any, idx: any) => {
                     let color = '#6DB9FF';
                     if (i.balanceKind === 9) {
                       color = '#FF416E';
@@ -423,6 +412,8 @@ export const InfoMain: FC = () => {
                       color = '#6DB9FF';
                     } else if (i.balanceKind === 11) {
                       color = '#BCD476';
+                    } else if (i.balanceKind === 12) {
+                      color = '#A78CF2';
                     } else {
                       color = '#6DB9FF';
                     }
@@ -485,7 +476,7 @@ export const InfoMain: FC = () => {
                 <Styled.ModalTitle>{t('privateArea.withdraw')}</Styled.ModalTitle>
                 <Select
                   placeholder={t('privateArea.selectCurrency')}
-                  options={balancesList}
+                  options={['CWD', 'GLOBAL', 'MULTICS']}
                   selectedOption={currencyValue}
                   setSelectedOption={onChangeCurrencyValue}
                 />
@@ -498,7 +489,7 @@ export const InfoMain: FC = () => {
                 />
                 <Styled.ModalButton
                   as="button"
-                  disabled={!withdrawValue || !currencyValue}
+                  disabled={!withdrawValue || !currencyValue || +withdrawValue <= 0}
                   onClick={withdrawBalance}
                   danger
                 >
@@ -563,7 +554,7 @@ export const InfoMain: FC = () => {
                       disabled={!asset || !addDepositValue}
                       onClick={openNewDeposit}
                       danger
-                    > 
+                    >
                       {t('depositSelect.add')}
                     </Styled.ModalButton>
                     {depositSelect?.description ? (
@@ -593,7 +584,7 @@ export const InfoMain: FC = () => {
                         </Styled.ModalButton>
                       </>
                     ) : null}
-                    {console.log(depositSelect)}
+                    {/* {console.log(depositSelect)} */}
                     {depositSelect && depositSelect.priceKind && asset ? (
                       <Styled.Warning choice>
                         {t('depositSelect.willActiv')}&nbsp;{' '}

@@ -79,8 +79,13 @@ export const HubProvider: FC = ({ children }: any) => {
     const cb = (data: any) => {
       console.log('BalanceUpdate', data);
       if (balanceList) {
-        const idx = balanceList.findIndex((item: any) => item.balanceKind === data.balanceKind);
-        setBalanceList([...balanceList.slice(0, idx), data, ...balanceList.slice(idx + 1)]);
+        const idx = balanceList.findIndex((item: any) => item.safeId === data.safeId);
+
+        if (idx !== -1) {
+          setBalanceList([...balanceList.slice(0, idx), data, ...balanceList.slice(idx + 1)]);
+        } else {
+          setBalanceList([...balanceList, data]);
+        }
       }
       if (data.balanceKind === 1) {
         setBalance(data.volume);
@@ -88,6 +93,14 @@ export const HubProvider: FC = ({ children }: any) => {
     };
     if (hubConnection) {
       hubConnection.on('BalanceUpdate', cb);
+    }
+    return () => {
+      hubConnection?.off('BalanceUpdate', cb);
+    };
+  }, [hubConnection, balanceList]);
+
+  useEffect(() => {
+    if (hubConnection) {
       hubConnection
         .invoke('GetSigned')
         .then((res) => {
@@ -96,9 +109,9 @@ export const HubProvider: FC = ({ children }: any) => {
           setLoading(false);
           if (res.balances.length) {
             const newArr = res.balances.filter((item: any) => item.balanceKind === 1);
-            setBalance(newArr[0].volume); 
- 
-            console.log(res.balances)
+            setBalance(newArr[0].volume);
+
+            console.log(res.balances);
 
             if (!localStorage.getItem('i18nextLng')) {
               i18n.changeLanguage(res.languageCode === 1 ? 'ru' : 'en');
@@ -124,7 +137,6 @@ export const HubProvider: FC = ({ children }: any) => {
         });
     }
     return function cleanup() {
-      hubConnection?.off('BalanceUpdate', cb);
       if (hubConnection !== null) {
         hubConnection.stop();
       }

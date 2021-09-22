@@ -1,5 +1,6 @@
 import styled from 'styled-components/macro';
 import { ReactComponent as Filter } from '../../assets/svg/filter.svg';
+import { Button } from '../Button/Button';
 
 export const Name = styled.div`
   font-weight: 500;
@@ -116,6 +117,12 @@ export const TD = styled.td`
   &:nth-child(5) {
     width: 90px;
   }
+  &:nth-child(6) {
+    width: 90px;
+    @media (max-width: 767px) {
+      display: none;
+    }
+  }
 `;
 
 export const Text = styled.div`
@@ -134,10 +141,17 @@ export const Text = styled.div`
 export const TableWrap = styled.div`
   width: 100%;
   position: relative;
-  padding: 34px 90px;
+  padding: 34px 35px;
   @media (max-width: 992px) {
     padding: 15px 10px;
   }
+`;
+
+export const Btn = styled(Button)`
+  width: 85px;
+  height: 40px;
+  color: ${(props) => props.theme.text};
+  margin-left: auto;
 `;
 
 export const TR = styled.tr<{ disactive?: boolean }>`
@@ -161,6 +175,11 @@ export const TR = styled.tr<{ disactive?: boolean }>`
   @media (max-width: 600px) {
     ${TD}:nth-child(2),
     ${TH}:nth-child(2) {
+      display: none;
+    }
+  }
+  ${TH}:nth-child(6) {
+    @media (max-width: 767px) {
       display: none;
     }
   }
