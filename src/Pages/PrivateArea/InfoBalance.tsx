@@ -47,6 +47,26 @@ const BalanceTable: FC<BalanceTableProps> = ({ balanceLog }: BalanceTableProps) 
       return t('operation.withdraw');
     } else if (id === 1) {
       return t('operation.add');
+    } else if (id === 3) {
+      return t('operation.rollback');
+    } else if (id === 4) {
+      return t('operation.balance');
+    } else if (id === 5) {
+      return t('operation.partners');
+    } else if (id === 9) {
+      return t('operation.adjustemnt');
+    } else if (id === 10) {
+      return t('operation.prizeAdjustment');
+    } else if (id === 11) {
+      return t('operation.transactionNetworkFee');
+    } else if (id === 12) {
+      return t('operation.transactionNetworkFee');
+    } else if (id === 13) {
+      return t('operation.depositLoan');
+    } else if (id === 14) {
+      return t('operation.balanceExchange');
+    } else if (id === 15) {
+      return t('operation.depositExchange');
     }
   };
 
@@ -91,7 +111,9 @@ const BalanceTable: FC<BalanceTableProps> = ({ balanceLog }: BalanceTableProps) 
 export const InfoBalance = () => {
   const [balanceLog, setBalanceLog] = useState<Deposit | null>(null);
   const [depositTabs, setDepositTabs] = useState(0);
-  const [balanceLogs, setBalanceLogs] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+  const [balanceLogs, setBalanceLogs] = useState([
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15,
+  ]);
   const [open, setOpen] = useState(false);
   const [openDate, setOpenDate] = useState<OpenDate>({
     from: new Date('2020-12-02T00:47:45'),
@@ -373,7 +395,7 @@ export const InfoBalance = () => {
     if (id !== depositTabs) {
       setDepositTabs(id);
       if (id === 0) {
-        setBalanceLogs([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+        setBalanceLogs([0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15]);
       } else if (id === 1) {
         setBalanceLogs([1, 7, 8]);
       } else if (id === 2) {
