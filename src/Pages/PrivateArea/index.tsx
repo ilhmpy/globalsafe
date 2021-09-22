@@ -199,33 +199,18 @@ export const InfoMain: FC = () => {
         balanseType[0].volume >= depositSelect?.price
       : false;
 
-  // Get Better Logic To get Clear List
-  /*
+  const blackList = [0, 1, 9, 10, 11];
 
-  const balanceChips = balanceList?.filter((item) => {
-    if (item.balanceKind === 0) {
-      return false;
-    }
-    if (item.balanceKind === 1) {
-      return false;
-    }
-    if (item.balanceKind === 9) {
-      return false;
-    }
-    if (item.balanceKind === 10) {
-      return false;
-    }
-    if (item.balanceKind === 11) {
-      return false;
-    }
-    return true;
-  })
-  .sort((a, b) => a.balanceKind - b.balanceKind)
-  .map((obj) =>
-    obj.balanceKind === 43
-      ? { ...obj, volume: obj.volume > 1 ? obj.volume / 10000 : obj.volume }
-      : obj
-  ); */
+  const balanceChips = balanceList
+    ?.filter((item) => !blackList.includes(item.balanceKind))
+    .sort((a, b) => a.balanceKind - b.balanceKind)
+    .map((obj) =>
+      obj.balanceKind === 43
+        ? { ...obj, volume: obj.volume > 1 ? obj.volume / 10000 : obj.volume }
+        : obj.balanceKind === 59
+        ? { ...obj, volume: obj.volume > 1 ? obj.volume / 100 : obj.volume }
+        : obj
+    );
 
   if (user === null) {
     return null;
@@ -343,8 +328,8 @@ export const InfoMain: FC = () => {
                 </Styled.BalanceItem>
                 <Styled.SmallButtonsWrapDesc>
                   <Styled.SmallButtonsWrap>
-                    {balanceList &&
-                      balanceList.map((i: any, idx: any) => {
+                    {balanceChips &&
+                      balanceChips.map((i: any, idx: any) => {
                         let color = '#6DB9FF';
                         if (i.balanceKind === 9) {
                           color = '#FF416E';
@@ -358,26 +343,10 @@ export const InfoMain: FC = () => {
                           color = '#6DB9FF';
                         }
 
-                        if (i.balanceKind === 0) {
-                          return false;
-                        }
-                        if (i.balanceKind === 1) {
-                          return false;
-                        }
-                        if (i.balanceKind === 9) {
-                          return false;
-                        }
-                        if (i.balanceKind === 10) {
-                          return false;
-                        }
-                        if (i.balanceKind === 11) {
-                          return false;
-                        }
-
                         return (
                           <Styled.SmallButton color={color} key={idx}>
                             <span>
-                              {(i.volume / 100).toLocaleString('ru-RU', {
+                              {i.volume.toLocaleString('ru-RU', {
                                 maximumFractionDigits: 4,
                               })}
                             </span>
@@ -429,8 +398,8 @@ export const InfoMain: FC = () => {
             </Styled.InfoWrap>
             <Styled.SmallButtonsWrapMob>
               <Styled.SmallButtonsWrap>
-                {balanceList &&
-                  balanceList.map((i: any, idx: any) => {
+                {balanceChips &&
+                  balanceChips.map((i: any, idx: any) => {
                     let color = '#6DB9FF';
                     if (i.balanceKind === 9) {
                       color = '#FF416E';
@@ -444,26 +413,10 @@ export const InfoMain: FC = () => {
                       color = '#6DB9FF';
                     }
 
-                    if (i.balanceKind === 0) {
-                      return false;
-                    }
-                    if (i.balanceKind === 1) {
-                      return false;
-                    }
-                    if (i.balanceKind === 9) {
-                      return false;
-                    }
-                    if (i.balanceKind === 10) {
-                      return false;
-                    }
-                    if (i.balanceKind === 11) {
-                      return false;
-                    }
-
                     return (
                       <Styled.SmallButton color={color} key={idx}>
                         <span>
-                          {(i.volume / 100).toLocaleString('ru-RU', {
+                          {i.volume.toLocaleString('ru-RU', {
                             maximumFractionDigits: 4,
                           })}
                         </span>
