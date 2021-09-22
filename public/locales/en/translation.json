@@ -325,7 +325,12 @@
     "serviceCommision": "Service commision",
     "undr": "Understand",
     "pendingPay": "Deferred payment",
-    "pledge": "Pledge"
+    "pledge": "Pledge",
+    "toToken": "Exchange to token",
+    "translate": "Exchange",
+    "sumIn": "Amount receivable",
+    "rate": "Exchange rate",
+    "convert": "Conversion amount"
   },
   "alert": {
     "success": "Successfully",
@@ -564,5 +569,15 @@
     "last": "Updated",
     "ago": "ago",
     "now": "now"
+  },
+  "cancelDeposit":{
+    "closeDeposit": "Close deposit",
+    "sumAndProcent": "Conversion amount",
+    "convert": "Exchange rate",
+    "getSum": "Amount receivable",
+    "confirm": "Confirm",
+    "close": "Close",
+    "sumToPay": "The amount of payments on the deposit",
+    "sumBetween": "the difference in the amount of conversion and the amount paid will be credited to the globalsafe balance"
   }
 }

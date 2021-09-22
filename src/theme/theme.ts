@@ -85,6 +85,11 @@ export const lightTheme = {
   rounIputBackground: '#FFF0F0',
   titles: "#3F3E4E",
   authBgGray: '#E5E5E5',
+  toToken: {
+    color: "rgba(14, 13, 61, 0.5)",
+    background: "#fff",
+    convertColor: "#0E0D3D"
+  },
   black: '#000000',
   white: '#ffffff',
   blue: '#0094FF',
@@ -168,6 +173,11 @@ export const darkTheme = {
   pink: '#FF416E',
   rounIputBackground: '#ffffff',
   titles: "#fff",
+  toToken: {
+    color: "#fff",
+    background: "#212121",
+    convertColor: "#fff"
+  },
   authBgGray: '#E5E5E5',
   black: '#000000',
   white: '#ffffff',
