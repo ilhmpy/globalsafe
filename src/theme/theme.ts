@@ -86,7 +86,8 @@ export const lightTheme = {
   titles: "#3F3E4E",
   toToken: {
     color: "rgba(14, 13, 61, 0.5)",
-    background: "#fff"
+    background: "#fff",
+    convertColor: "#0E0D3D"
   }
 };
 
@@ -170,7 +171,8 @@ export const darkTheme = {
   titles: "#fff",
   toToken: {
     color: "#fff",
-    background: "#212121"
+    background: "#212121",
+    convertColor: "#fff"
   } 
 };
  

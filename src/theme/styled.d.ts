@@ -81,6 +81,7 @@ declare module 'styled-components' {
     toToken: {
       background: string;
       color: string;
+      convertColor: string;
     }
   }
 }

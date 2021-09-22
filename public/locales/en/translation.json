@@ -323,7 +323,9 @@
     "pledge": "Pledge",
     "toToken": "Exchange to token",
     "translate": "Exchange",
-    "sumIn": "Sum in MULTICS"
+    "sumIn": "Amount receivable",
+    "rate": "Exchange rate",
+    "convert": "Conversion amount"
   },
   "alert": {
     "success": "Successfully",

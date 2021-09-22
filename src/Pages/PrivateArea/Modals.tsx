@@ -137,7 +137,7 @@ export const ModalDividends: FC<DividendsProps> = ({ onClose, data, open }: Divi
 export const TokenModal = ({ block, setBlock, setToTranslate, onButton }: any) => {
   const { t } = useTranslation();
   const [value, setValue] = useState('');
-  const [mscValue, setMscValue] = useState<number | string>('');
+  const [mscValue, setMscValue] = useState<any[] | null>(null);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
 
@@ -150,18 +150,25 @@ export const TokenModal = ({ block, setBlock, setToTranslate, onButton }: any) =
         <ModalCurrencyDiv>
           <Input
             maxLength={6}
+            onKeyUp={(e) => {
+              if (e.keyCode == 8) {
+                console.log('backspace');
+                setMscValue([0, 0, 0]);
+              }
+            }}
             onChange={(e) => {
               const arr = e.target.value.split('-');
               const fromSplitted = arr[0].split('.');
               const toSplitted = arr.length === 2 ? arr[1].split('.') : '';
               const validValue = e.target.value.replace(/[^0-9]/gi, '');
+              setMscValue([0, 0, 0]);
 
-              if (hubConnection) {
+              if (hubConnection && validValue.length > 0) {
                 hubConnection
                   .invoke('CalculateBalanceExchange', (Number(validValue) * 100000).toString(), 59)
                   .then((res) => {
-                    // console.log(res);
-                    setMscValue(res[1] / 100);
+                    console.log(res);
+                    setMscValue(res);
                   })
                   .catch((e) => console.error(e));
               }
@@ -173,25 +180,41 @@ export const TokenModal = ({ block, setBlock, setToTranslate, onButton }: any) =
           />
           <span>CWD</span>
         </ModalCurrencyDiv>
-        <DIV>
-          <Input disabled={true} value={mscValue} placeholder={t('privateArea.sumIn')} />
-        </DIV>
+        <H3>
+          {t('privateArea.convert')} -{' '}
+          <H3 red>
+            {mscValue
+              ? (mscValue[1] / 100000).toLocaleString('ru-RU', { maximumFractionDigits: 2 })
+              : 0}{' '}
+            CWD
+          </H3>
+        </H3>
+        <H3>
+          {t('privateArea.rate')} -{' '}
+          <H3 red>
+            {mscValue && mscValue[1] > 0
+              ? (+mscValue[1] / +mscValue[2] / 1000.0).toLocaleString('ru-RU', {
+                  maximumFractionDigits: 2,
+                })
+              : 0}
+          </H3>
+        </H3>
+        <H3 bold>
+          {t('privateArea.sumIn')} - <H3 red>{mscValue ? mscValue[2] / 100 : 0} MULTICS</H3>
+        </H3>
         <Button
           style={{ margin: '0 auto', width: '200px', maxWidth: '200px', marginBottom: '30px' }}
           danger
           onClick={() => {
-            async function req() {
-              if (hubConnection) {
-                hubConnection
-                  .invoke('BalanceExchange', (Number(value) * 100000).toString(), 59)
-                  .then((res) => {
-                    // console.log(res);
-                    setBlock(false);
-                  })
-                  .catch((e) => console.error(e));
-              }
+            if (hubConnection) {
+              hubConnection
+                .invoke('BalanceExchange', (Number(value) * 100000).toString(), 59)
+                .then((res) => {
+                  // console.log(res);
+                  setBlock(false);
+                })
+                .catch((e) => console.error(e));
             }
-            req();
           }}
         >
           {t('privateArea.translate')}
@@ -246,4 +269,27 @@ export const DIV = styled.div`
       color: ${({ theme }) => theme.toToken.color};
     }
   }
+`;
+
+export const H3 = styled.div<{ red?: boolean; bold?: boolean }>`
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
+  text-align: center;
+  color: ${({ theme }) => theme.toToken.convertColor};
+  margin-bottom: 8px;
+
+  ${({ red, bold }) => {
+    if (red) {
+      return `
+          font-weight: 500;
+          color: #FF416E;
+        `;
+    }
+    if (bold) {
+      return `
+          font-weight: 500;
+        `;
+    }
+  }}
 `;
