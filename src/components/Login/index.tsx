@@ -115,7 +115,6 @@ export const LoginComponent = () => {
     if (hubConnection) {
       hubConnection
         .invoke('SendAuthCode', value)
-        
         .then((res: boolean) => {
           // console.log("SendAuthCode", res);
           setLoginError(false);
@@ -172,9 +171,11 @@ export const LoginComponent = () => {
     e.preventDefault();
     if(value && !password) {
       onSubmit();
+      return;
     }
     if(value && passwordError) {
       onSubmit();
+      return;
     } 
     if(value && password) {
       singIn();

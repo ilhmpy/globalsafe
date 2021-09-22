@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { Link, useHistory } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components/macro';
+import moment from 'moment';
+
 import { Button } from '../../components/Button/Button';
 import { Input } from '../../components/UI/Input';
 import { Input as InputV4 } from '../../components/UI/V4';
@@ -10,6 +12,7 @@ import { AppContext } from '../../context/HubContext';
 import { Card, Container } from '../../globalStyles';
 import { PrimaryButton } from '../UI/V4';
 import { ReactComponent as QuestionIcon } from '../../assets/svg/question14.svg'
+import { Timer } from '../Login/Timer';
 
 export const RegisterComponent: FC = () => {
   const [error, setError] = useState(true);
@@ -26,6 +29,8 @@ export const RegisterComponent: FC = () => {
   const history = useHistory();
   const { t } = useTranslation();
 
+  const [tryCode, setTryCode] = useState(0);
+  const [stateRepeat, setStateRepeat] = useState<null | string>(null);
   const [loginError, setLoginError] = useState(false);
   const [loginSuccessed, setLoginSuccessed] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
@@ -43,35 +48,9 @@ export const RegisterComponent: FC = () => {
   }, []);
 
   const onChangeNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPasswordError(false);
     setError(true);
     setPassword(e.target.value);
-  };
-
-  const onSubmit = () => {
-    if (hubConnection) {
-      hubConnection
-        .invoke('CheckAccount', value)
-        .then((res: boolean) => {
-          console.log('CheckAccount', res);
-          if (res) {
-            setLoginError(false);
-            setLoginSuccessed(true);
-            //
-            setError(true);
-            loginSubmit();
-          } else {
-            
-            createAccount();
-            // setError(false);
-            // setValue("");
-          }
-        })
-        .catch((err: Error) => {
-          setLoginError(true);
-          setLoginSuccessed(false);
-          console.log(err)
-      });
-    }
   };
 
   const singIn = () => {
@@ -79,16 +58,28 @@ export const RegisterComponent: FC = () => {
       hubConnection
         .invoke('SignIn', { login: value, password: password, signInMethod: 3 })
         .then((res: any) => {
-          // console.log("res", res);
+          setTryCode((tryCode) => tryCode + 1);
+          console.log("SignIn", res);
           if (res.token !== null) {
+            setPasswordError(false);
+            setPasswordSuccessed(true);
             logIn(res.token);
             setWhere(true);
             setLogin(false);
+
+            setTryCode(0);
           } else {
+            setPasswordError(true);
+            setPasswordSuccessed(false);
             setError(false);
           }
         })
-        .catch((err: Error) => setError(false));
+        .catch((err: Error) => {
+          setPasswordError(true);
+          setPasswordSuccessed(false);
+
+          setError(false)
+        });
     }
   };
 
@@ -107,9 +98,24 @@ export const RegisterComponent: FC = () => {
     }
   };
 
-  const onSubmitCode = (e: React.FormEvent<HTMLFormElement>) => {
+  // const onSubmitCode = (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   singIn();
+  // };
+
+  const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    singIn();
+    if(value && !password) {
+      checkCwdAccount();
+      return;
+    }
+    if(value && passwordError) {
+      loginSubmit();
+      return;
+    } 
+    if(value && password) {
+      singIn();
+    }
   };
 
   const createAccount = () => {
@@ -117,6 +123,7 @@ export const RegisterComponent: FC = () => {
       hubConnection
         .invoke('CreateAccount', value, 1)
         .then((res: boolean) => {
+          console.log('CreateAccount', res);
           setError(true);
           loginSubmit();
         })
@@ -127,8 +134,8 @@ export const RegisterComponent: FC = () => {
     }
   };
 
-  const checkCwdAccount = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  // Check Cwd Account exists
+  const checkCwdAccount = () => {
     if (hubConnection) {
       hubConnection
         .invoke('CheckCwdAccount', value)
@@ -136,6 +143,7 @@ export const RegisterComponent: FC = () => {
           console.log('CheckCwdAccount', res);
           if (res) {
             setLoginError(false);
+            setLoginSuccessed(true);
             //
             setError(true);
             setCwdAccount(true);
@@ -143,6 +151,7 @@ export const RegisterComponent: FC = () => {
             onSubmit();
           } else {
             setLoginError(true);
+            setLoginSuccessed(false);
             //
             setError(false);
             setCwdAccount(false);
@@ -150,12 +159,48 @@ export const RegisterComponent: FC = () => {
         })
         .catch((err: Error) => {
           setLoginError(true);
+          setLoginSuccessed(false);
           //
           setError(false);
           console.log(err);
         });
     }
   };
+
+  // Check Account Exists or NOT
+  const onSubmit = () => {
+    if (hubConnection) {
+      hubConnection
+        .invoke('CheckAccount', value)
+        .then((res: boolean) => {
+          console.log('CheckAccount', res);
+          if (res) {
+            setLoginError(false);
+            setLoginSuccessed(true);
+            setTryCode(0);
+            //
+
+            setTryCode(0);
+            setStateRepeat('-');
+            localStorage.setItem('timeRepeat', moment().toISOString());
+
+            setError(true);
+            loginSubmit();
+          } else {
+            
+            createAccount();
+            // setError(false);
+            // setValue("");
+          }
+        })
+        .catch((err: Error) => {
+          setLoginError(true);
+          setLoginSuccessed(false);
+          console.log(err)
+      });
+    }
+  };
+
 
   return (
     <AuthContainer>
@@ -202,7 +247,7 @@ export const RegisterComponent: FC = () => {
           classNames="alert"
           unmountOnExit
         > */}
-          <FormBlock onSubmit={checkCwdAccount}>
+          <FormBlock onSubmit={onFormSubmit}>
             <H4>{t('headerButton.register')}</H4>
             <InputV4 
               value={value}
@@ -219,16 +264,39 @@ export const RegisterComponent: FC = () => {
                 placeholder={t('login.oneTimeCode')}
                 onChange={onChangeNumber}
                 autoComplete="new-password"
-                isValid={password.length > 3}
-                // error={!error ? t('login.incorrectLogin') : undefined}
+                disabled={!loginSuccessed}
+                isValid={passwordSuccessed}
+                error={passwordError ? t('login.incorrectPassword') : undefined}
                 mb={20}
             />
            
-            <PrimaryButton 
-              title={t('login.getCode')}
-              type="submit"
-              disabled={value === ''}
-            />
+           <Timer
+              last={localStorage.getItem('timeRepeat') || ''}
+              setTryCode={setTryCode}
+              state={stateRepeat}
+              setState={setStateRepeat}
+            >
+              {stateRepeat === null ? (
+                <PrimaryButton 
+                  title={t('login.getCode')}
+                  type="submit"
+                  disabled={value === ''}
+                />
+              ) : 
+              (password && !passwordError)
+                ?
+                  <PrimaryButton 
+                    title={`${t('login.in')}`}
+                    type="submit"
+                  />
+                :
+                  <PrimaryButton 
+                    title={`${t('login.repeat')} ${stateRepeat}`}
+                    type="submit"
+                    disabled={true}
+                  />
+              }
+            </Timer>
 
             <LinkToBlock>
               <LinkTo href={`https://backup.cwd.global/account/${value}`} target="_blank">
