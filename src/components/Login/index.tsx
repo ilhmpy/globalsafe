@@ -83,7 +83,7 @@ export const LoginComponent = () => {
   };
 
   const onSubmit = () => {
-    console.log('CheckAccount param', value);
+    // console.log('CheckAccount param', value);
     if (hubConnection) {
       hubConnection
         .invoke('CheckAccount', value)
@@ -91,7 +91,7 @@ export const LoginComponent = () => {
           if (res) {
             setLoginError(false);
             setLoginSuccessed(true);
-            console.log("CheckAccount", res)
+            // console.log("CheckAccount", res)
 
             setTryCode(0);
             setStateRepeat('-');
@@ -117,7 +117,7 @@ export const LoginComponent = () => {
         .invoke('SendAuthCode', value)
         
         .then((res: boolean) => {
-          console.log("SendAuthCode", res);
+          // console.log("SendAuthCode", res);
           setLoginError(false);
           setLoginSuccessed(true);
           //
@@ -135,12 +135,10 @@ export const LoginComponent = () => {
 
   const singIn = () => {
     if (hubConnection) {
-      console.log("SignIn res", value);
-      console.log("SignIn res", password);
       hubConnection
         .invoke('SignIn', { login: value, password: password, signInMethod: 3 })
         .then((res: any) => {
-          console.log("SignIn res", res);
+          // console.log("SignIn res", res);
           setTryCode((tryCode) => tryCode + 1);
           localStorage.setItem('time', moment().toISOString());
           if (res.token !== null) {
@@ -148,6 +146,8 @@ export const LoginComponent = () => {
             setPasswordSuccessed(true);
             //
             logIn(res.token);
+            history.push('/info')
+
             setWhere(true);
             setLogin(false);
             setTryCode(0);
