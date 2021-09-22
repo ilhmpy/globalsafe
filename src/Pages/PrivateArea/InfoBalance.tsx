@@ -292,6 +292,8 @@ export const InfoBalance = () => {
     [hubConnection, openDate, balanceLogs, languale, balanceList]
   );
 
+  console.log('BalanceLog', balanceLog);
+
   useEffect(() => {
     setBalanceLog(null);
     const bType = balanceList ? balanceList.map((i) => i.balanceKind) : [];
@@ -560,15 +562,17 @@ export const InfoBalance = () => {
                       </div>
                     }
                   > */}
-                  {Object.keys(balanceLog).map((key) => (
-                    <div key={key}>
-                      <Styled.DataListDate>{key}</Styled.DataListDate>
+                  {Object.keys(balanceLog)
+                    .reverse()
+                    .map((key) => (
+                      <div key={key}>
+                        <Styled.DataListDate>{key}</Styled.DataListDate>
 
-                      {balanceLog[key].map((item, idx) => (
-                        <BalanceTable key={item.id} balanceLog={item} />
-                      ))}
-                    </div>
-                  ))}
+                        {balanceLog[key].map((item, idx) => (
+                          <BalanceTable key={item.id} balanceLog={item} />
+                        ))}
+                      </div>
+                    ))}
                   {/* </InfiniteScroll> */}
                 </Scrollbars>
               ) : loading ? (
