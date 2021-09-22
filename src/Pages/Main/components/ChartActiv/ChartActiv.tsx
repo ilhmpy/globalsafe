@@ -226,7 +226,7 @@ export const ChartActiv: FC<Props> = ({ data, type }: Props) => {
 
   const changeValue = (data: Collection[]) => {
     const currValue = data[data.length - 1].latestBid;
-    const prevValue = data[1].latestBid;
+
     const filterPrevValues = data.filter((item) => item.latestBid !== currValue);
     const value =
       ((currValue - filterPrevValues[filterPrevValues.length - 1].latestBid) / currValue) * 100;
