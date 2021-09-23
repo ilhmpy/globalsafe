@@ -94,38 +94,42 @@ export const Operations = () => {
   }, []);
 
   return (
-    <Page>
-      <Container ppNone>
-        <Container>
-          <H2>{t('operation.last')}</H2>
-          <Description>{t("operations2.desc")}</Description>
-        </Container>
-        <TableHead>
-          <TableHeadItem>{screen.width > 480 ? t("operations2.head1") : t("operations2.time")}</TableHeadItem>
-          <TableHeadItem>{screen.width > 480 ? t("operations2.head2") : t("operations2.name")}</TableHeadItem>
-          <TableHeadItem>{t("operations2.head3")}</TableHeadItem>
-        </TableHead>
-        <TableMapBlock>
-          {notifyList.map((itm, idx) => (
-            <TableMapItem key={idx}>
-              <TableInnerItem>
-                {screen.width > 480 ? (
-                  <>
-                    {moment(itm.date).format("DD.MM.YYYY")} {t("in")} {moment(itm.date).format("HH:MM")}
-                  </>
-                ) : (
-                  <>
-                    {moment(itm.date).format("HH:MM")}
-                  </>
-                )}
-              </TableInnerItem>
-              <TableInnerItem><span>{operation(itm.operationKind)} {screen.width > 480 ? ( <> {itm.depositName ? itm.depositName : ""} </> ) : ( <><br /> {itm.depositName ? itm.depositName : ""}</>)}</span></TableInnerItem>
-              <TableInnerItem>{itm.amount / 100000}</TableInnerItem>
-            </TableMapItem>
-          ))}
-        </TableMapBlock>
-      </Container>
-    </Page>
+    <>
+      {notifyList.length > 0 ? (
+         <Page>
+          <Container>
+              <H2>{t('operation.last')}</H2>
+              <Description>{t("operations2.desc")}</Description>
+          </Container>
+          <Container ppNone>
+            <TableHead>
+              <TableHeadItem>{screen.width > 480 ? t("operations2.head1") : t("operations2.time")}</TableHeadItem>
+              <TableHeadItem>{screen.width > 480 ? t("operations2.head2") : t("operations2.name")}</TableHeadItem>
+              <TableHeadItem>{t("operations2.head3")}</TableHeadItem>
+            </TableHead>
+            <TableMapBlock>
+              {notifyList.map((itm, idx) => (
+                <TableMapItem key={idx}>
+                  <TableInnerItem>
+                    {screen.width > 480 ? (
+                      <>
+                        {moment(itm.date).format("DD.MM.YYYY")} {t("in")} {moment(itm.date).format("HH:MM")}
+                      </>
+                    ) : (
+                      <>
+                        {moment(itm.date).format("HH:MM")}
+                      </>
+                    )}
+                  </TableInnerItem>
+                  <TableInnerItem><span>{operation(itm.operationKind)} {screen.width > 480 ? ( <> {itm.depositName ? itm.depositName : ""} </> ) : ( <><br /> {itm.depositName ? itm.depositName : ""}</>)}</span></TableInnerItem>
+                  <TableInnerItem>{(itm.amount / 100000).toLocaleString("ru-RU", { maximumFractionDigits: 5 })}</TableInnerItem>
+                </TableMapItem>
+              ))}
+           </TableMapBlock>
+         </Container>
+       </Page>
+      ) : ( "" )}
+    </>
   );
 };
 
@@ -323,8 +327,8 @@ const TableHeadItem = styled.div`
   }
 
   @media only screen and (max-device-width: 480px) {
-    font-weight: 600;
-    font-size: 12px;
+    font-weight: 500;
+    font-size: 13px;
 
     &:nth-child(1) {
       max-width: 61px;
@@ -416,7 +420,7 @@ const TableInnerItem = styled.div`
 
   @media only screen and (max-device-width: 480px) {
     font-weight: 500;
-    font-size: 12px;
+    font-size: 13px;
 
     & > span {
       width: 120px;
