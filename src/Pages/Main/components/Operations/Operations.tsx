@@ -4,10 +4,10 @@ import { useTranslation } from 'react-i18next';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import styled from 'styled-components/macro';
 import { Button } from '../../../../components/Button/Button';
-import { H2 } from '../../../../components/UI/MainStyled';
+import { H2 } from '../../../../components/UI/Heading';
 import { Page } from '../../../../components/UI/Page';
 import { AppContext } from '../../../../context/HubContext';
-import { Container } from '../../../../globalStyles';
+import { Container } from '../../../../components/UI/Container';
 import { Collection, RootOperations } from '../../../../types/operations';
 
 export const Operations = () => {
@@ -101,7 +101,7 @@ export const Operations = () => {
               <H2>{t('operation.last')}</H2>
               <Description>{t("operations2.desc")}</Description>
           </Container>
-          <Container ppNone>
+          <Container pNone>
             <TableHead>
               <TableHeadItem>{screen.width > 480 ? t("operations2.head1") : t("operations2.time")}</TableHeadItem>
               <TableHeadItem>{screen.width > 480 ? t("operations2.head2") : t("operations2.name")}</TableHeadItem>
