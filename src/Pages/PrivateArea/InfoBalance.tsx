@@ -201,7 +201,7 @@ export const InfoBalance = () => {
 
   const rangeDate = (from: Date, to: Date) => {
     setOpenDate({
-      from: from,
+      from: moment(from).utcOffset('+00:00').set({ hour: 0, minute: 0, second: 0 }).toDate(),
       to: moment(to).utcOffset('+00:00').set({ hour: 23, minute: 59, second: 59 }).toDate(),
     });
     setSelected(`${moment(from).format('DD.MM.YY')} - ${moment(to).format('DD.MM.YY')}`);
