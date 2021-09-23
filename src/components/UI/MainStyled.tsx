@@ -26,6 +26,8 @@ export const H2 = styled.h2<{ center?: boolean }>`
   color: ${(props) => props.theme.titles};
   @media (max-width: 576px) {
     margin-bottom: 10px;
+    font-size: 18px;
+    line-height: 21px;
   }
 
   @media only screen and (max-device-width: 767px) {

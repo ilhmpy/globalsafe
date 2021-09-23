@@ -89,7 +89,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
   };
 
   return (
-    <Page id="lottery" margin>
+    <MainPage id="lottery" margin>
       <TitleContainer bigMargin>
         <H2>{'Розыгрыши'}</H2>
         <Subtitle>
@@ -165,9 +165,16 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
             })}
         </TransitionGroup>
       </TableContainer>
-    </Page>
+    </MainPage>
   );
 };
+
+const MainPage = styled(Page)`
+  margin-bottom: 80px;
+  @media (max-width: 768px) {
+    margin-bottom: 20px;
+  }
+`;
 
 const TitleContainer = styled(Container)`
   display: flex;
@@ -185,6 +192,10 @@ const Subtitle = styled.p`
   font-size: 14px;
   line-height: 20px;
   max-width: 373px;
+  @media (max-width: 576px) {
+    font-size: 12px;
+    line-height: 18px;
+  }
 `;
 
 const TimerHistoryContainer = styled(Card)`
@@ -204,6 +215,9 @@ const TimerHistoryContainer = styled(Card)`
   @media (max-width: 768px) {
     justify-content: center;
     padding: 20px;
+  }
+  @media (max-width: 576px) {
+    align-items: center;
   }
 `;
 
@@ -276,6 +290,8 @@ const TableItem = styled.li`
   @media (max-width: 576px) {
     padding-bottom: 12px;
     text-align: left;
+    font-size: 12px;
+    line-height: 18px;
   }
   &:nth-child(1) {
     max-width: 150px;
@@ -355,5 +371,7 @@ const Value = styled.div`
       display: block;
       width: 100%;
     }
+    font-size: 12px;
+    line-height: 18px;
   }
 `;

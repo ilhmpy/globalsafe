@@ -1,6 +1,5 @@
 import styled, { css, keyframes } from 'styled-components/macro';
 import { ReactComponent as Close } from '../../../../assets/svg/close.svg';
-import flat from '../../../../assets/svg/flat.svg';
 import { Button } from '../../../../components/Button/Button';
 import { Card } from '../../../../globalStyles';
 
@@ -27,6 +26,8 @@ export const TimerHisroryTitle = styled.div`
   @media (max-width: 576px) {
     font-size: 14px;
     line-height: 17px;
+    display: flex;
+    justify-content: center;
   }
 `;
 
@@ -507,6 +508,7 @@ export const TimerHistoryValue = styled.div<{ nodata?: boolean }>`
   line-height: 28px;
 
   color: #3f3e4e;
+
   ${(props) => {
     if (props.nodata) {
       return MyCss;
@@ -515,6 +517,8 @@ export const TimerHistoryValue = styled.div<{ nodata?: boolean }>`
   @media (max-width: 576px) {
     font-size: 25px;
     line-height: 29px;
+    display: flex;
+    justify-content: center;
   }
 `;
 
