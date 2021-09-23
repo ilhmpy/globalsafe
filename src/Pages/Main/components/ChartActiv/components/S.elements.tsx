@@ -57,7 +57,7 @@ export const ActionItem = styled.div<{ mN?: boolean }>`
   font-size: 14px;
   line-height: 16px;
   position: relative;
-  margin-bottom: 15px;
+  margin-bottom: 8px;
   padding: 0 6px;
   &:focus {
     outline: none;

@@ -9,155 +9,165 @@ import { ChartActiv } from './ChartActiv';
 import { SmallChart } from './SmallChart';
 
 export const ExchangeChart = () => {
-  const [active, setActive] = useState(0);
   const [listDIAMOND, setListDIAMOND] = useState<Collection[]>([]);
   const [listGLOBAL, setListGLOBAL] = useState<Collection[]>([]);
   const [listMGCWD, setListMGCWD] = useState<Collection[]>([]);
   const [listGCWD, setListGCWD] = useState<Collection[]>([]);
-  const [numDIAMOND, setNumDIAMOND] = useState<number>(0);
-  const [numMGCWD, setNumMGCWD] = useState(0);
-  const [numGCWD, setNumGCWD] = useState(0);
 
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
 
-  useEffect(() => {
-    const dateFrom: any = moment().subtract(3, 'years');
+  const fetchGLOBAL = async (date: string) => {
+    let arrList: Collection[] = [];
+    let isFetching = true;
+    let totalNum = 0;
     if (hubConnection) {
-      hubConnection
-        .invoke<RootChange>('GetMarket', 14, dateFrom._d, new Date(), 0, 100)
-        .then((res) => {
-          console.log('res listGLOBAL', res);
-          if (res.totalRecords > listGLOBAL.length) {
-            // setNumMGCWD((numMGCWD) => numMGCWD + 100);
+      while (isFetching) {
+        try {
+          const res = await hubConnection.invoke<RootChange>(
+            'GetMarket',
+            14,
+            date,
+            new Date(),
+            totalNum,
+            100
+          );
+          if (res) {
+            if (arrList.length < res.totalRecords) {
+              totalNum += 100;
+              arrList = [...arrList, ...res.collection];
+            } else {
+              isFetching = false;
+              break;
+            }
           }
-          setListGLOBAL((listGLOBAL) => [...listGLOBAL, ...res.collection]);
-        })
-        .catch((e) => console.log(e));
+        } catch (e) {
+          console.log(e);
+        }
+      }
+      setListGLOBAL(arrList);
+    }
+  };
+
+  useEffect(() => {
+    const dateFrom = moment().subtract(1, 'days').format();
+    if (hubConnection) {
+      fetchGLOBAL(dateFrom);
     }
   }, [hubConnection]);
 
-  const fetchDIAMOND = useCallback(
-    async (date: string) => {
-      let arrList: Collection[] = [];
-      let isFetching = true;
-      let totalNum = 0;
-      if (hubConnection) {
-        while (isFetching) {
-          try {
-            const res = await hubConnection.invoke<RootChange>(
-              'GetMarket',
-              4,
-              date,
-              new Date(),
-              totalNum,
-              100
-            );
-            if (res) {
-              if (arrList.length < res.totalRecords) {
-                totalNum += 100;
-                arrList = [...arrList, ...res.collection];
-              } else {
-                isFetching = false;
-                break;
-              }
+  const fetchDIAMOND = async (date: string) => {
+    let arrList: Collection[] = [];
+    let isFetching = true;
+    let totalNum = 0;
+    if (hubConnection) {
+      while (isFetching) {
+        try {
+          const res = await hubConnection.invoke<RootChange>(
+            'GetMarket',
+            4,
+            date,
+            new Date(),
+            totalNum,
+            100
+          );
+          if (res) {
+            if (arrList.length < res.totalRecords) {
+              totalNum += 100;
+              arrList = [...arrList, ...res.collection];
+            } else {
+              isFetching = false;
+              break;
             }
-          } catch (e) {
-            console.log(e);
           }
+        } catch (e) {
+          console.log(e);
         }
-        setListDIAMOND(arrList);
       }
-    },
-    [hubConnection]
-  );
+      setListDIAMOND(arrList);
+    }
+  };
 
   useEffect(() => {
-    const dateFrom = moment().subtract(1, 'years').format();
+    const dateFrom = moment().subtract(1, 'days').format();
     if (hubConnection) {
       fetchDIAMOND(dateFrom);
     }
   }, [hubConnection]);
 
-  const fetchMGCWD = useCallback(
-    async (date: string) => {
-      let arrList: Collection[] = [];
-      let isFetching = true;
-      let totalNum = 0;
-      if (hubConnection) {
-        while (isFetching) {
-          try {
-            const res = await hubConnection.invoke<RootChange>(
-              'GetMarket',
-              2,
-              date,
-              new Date(),
-              totalNum,
-              100
-            );
-            if (res) {
-              if (arrList.length < res.totalRecords) {
-                totalNum += 100;
-                arrList = [...arrList, ...res.collection];
-              } else {
-                isFetching = false;
-                break;
-              }
+  const fetchMGCWD = async (date: string) => {
+    let arrList: Collection[] = [];
+    let isFetching = true;
+    let totalNum = 0;
+    if (hubConnection) {
+      while (isFetching) {
+        try {
+          const res = await hubConnection.invoke<RootChange>(
+            'GetMarket',
+            2,
+            date,
+            new Date(),
+            totalNum,
+            100
+          );
+          if (res) {
+            if (arrList.length < res.totalRecords) {
+              totalNum += 100;
+              arrList = [...arrList, ...res.collection];
+            } else {
+              isFetching = false;
+              break;
             }
-          } catch (e) {
-            console.log(e);
           }
+        } catch (e) {
+          console.log(e);
         }
-        setListMGCWD(arrList);
       }
-    },
-    [hubConnection]
-  );
+      setListMGCWD(arrList);
+    }
+  };
 
   useEffect(() => {
-    const dateFrom = moment().subtract(7, 'days').format();
+    const dateFrom = moment().subtract(1, 'days').format();
     if (hubConnection) {
       fetchMGCWD(dateFrom);
     }
   }, [hubConnection]);
 
-  const fetchGCWD = useCallback(
-    async (date: string) => {
-      let arrList: Collection[] = [];
-      let isFetching = true;
-      let totalNum = 0;
-      if (hubConnection) {
-        while (isFetching) {
-          try {
-            const res = await hubConnection.invoke<RootChange>(
-              'GetMarket',
-              3,
-              date,
-              new Date(),
-              totalNum,
-              100
-            );
-            if (res) {
-              if (arrList.length < res.totalRecords) {
-                totalNum += 100;
-                arrList = [...arrList, ...res.collection];
-              } else {
-                isFetching = false;
-                break;
-              }
+  const fetchGCWD = async (date: string) => {
+    let arrList: Collection[] = [];
+    let isFetching = true;
+    let totalNum = 0;
+    if (hubConnection) {
+      while (isFetching) {
+        try {
+          const res = await hubConnection.invoke<RootChange>(
+            'GetMarket',
+            3,
+            date,
+            new Date(),
+            totalNum,
+            100
+          );
+          if (res) {
+            if (arrList.length < res.totalRecords) {
+              totalNum += 100;
+              arrList = [...arrList, ...res.collection];
+            } else {
+              isFetching = false;
+              break;
             }
-          } catch (e) {
-            console.log(e);
           }
+        } catch (e) {
+          console.log(e);
         }
-        setListGCWD(arrList);
       }
-    },
-    [hubConnection]
-  );
+      setListGCWD(arrList);
+    }
+  };
 
   useEffect(() => {
-    const dateFrom = moment().subtract(7, 'days').format();
+    const dateFrom = moment().subtract(1, 'days').format();
     if (hubConnection) {
       fetchGCWD(dateFrom);
     }
@@ -189,6 +199,10 @@ export const ExchangeChart = () => {
         listGLOBAL={listGLOBAL}
         listMGCWD={listMGCWD}
         listGCWD={listGCWD}
+        fetchMGCWD={fetchMGCWD}
+        fetchGCWD={fetchGCWD}
+        fetchDIAMOND={fetchDIAMOND}
+        fetchGLOBAL={fetchGLOBAL}
       />
     </>
   );

@@ -6,8 +6,12 @@ export const ChartContainer = styled.div`
   box-shadow: 0px 80px 80px -40px rgba(220, 220, 232, 0.5);
   border-radius: 4px;
   margin-bottom: 20px;
+  @media (max-width: 992px) {
+    padding: 20px 20px 60px;
+  }
   @media (max-width: 767px) {
     padding: 20px 0;
+    margin-bottom: 9px;
   }
 `;
 
@@ -27,6 +31,7 @@ export const PriceChanges = styled.div`
     width: 100%;
     padding: 0 20px;
     justify-content: center;
+    margin-bottom: 8px;
   }
 `;
 
@@ -81,8 +86,8 @@ export const Date = styled.div`
   @media (max-width: 767px) {
     padding: 0 20px 20px;
     border-bottom: 1px solid #eaeff8;
-    text-align: center;
-    margin: 0 auto 20px;
+    text-align: left;
+    margin: 0 auto 8px;
     width: 100%;
   }
 `;
@@ -144,6 +149,7 @@ export const ChartItem = styled.div<{ active?: boolean }>`
   border-radius: 4px;
   padding: 20px;
   cursor: pointer;
+  height: 94px;
   user-select: none;
   position: relative;
   /* &:last-child {
@@ -171,6 +177,10 @@ export const ChartValue = styled.div`
   font-size: 18px;
   line-height: 24px;
   margin-bottom: 2px;
+  @media (max-width: 992px) {
+    font-size: 16px;
+    line-height: 22px;
+  }
 `;
 
 export const ChartProcent = styled.div<{ red: boolean }>`
@@ -232,6 +242,7 @@ export const SwiperContainer = styled.div`
     display: none;
     @media (max-width: 767px) {
       display: block;
+      bottom: 14px;
     }
   }
 `;
@@ -270,4 +281,11 @@ export const TooltipsDate = styled.div`
 export const TooltipsValue = styled.div`
   font-size: 18px;
   line-height: 24px;
+`;
+
+export const MobChartBlock = styled.div<{ mob?: boolean }>`
+  display: ${(props) => (props.mob ? 'none' : 'block')};
+  @media (max-width: 768px) {
+    display: ${(props) => (props.mob ? 'block' : 'none')};
+  }
 `;
