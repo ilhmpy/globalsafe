@@ -2,50 +2,117 @@ import React from 'react';
 import { Container } from '../../globalStyles';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
+import { ReactComponent as FooterLogo } from "../../assets/svg/whiteFooterLogo.svg";
+import { ReactComponent as Tg } from "../../assets/svg/tg2.svg";
 
 export const Footer = () => {
   const { t } = useTranslation();
 
   return (
-    <DIV>
+    <FooterBlock>
       <Container>
-        <Text>
-          {t('footer.title')} <A href="://t.me/joinchat/E_Acz5BKQnJlNTVi">{t('footer.link')}</A>
-        </Text>
-        <Text>Globalsafe © 2021</Text>
+        <FooterHeader>
+          <FooterLogo className="logo" />
+          <FooterLinks>
+            <FooterLink>Тарифы и программы</FooterLink>
+            <FooterLink>Розыгрыши</FooterLink>
+            <FooterLink>Обмены</FooterLink>
+            <FooterLink>Правила</FooterLink>
+          </FooterLinks>
+        </FooterHeader>
+        <FooterDesc>2021 © Globalsafe v2.0. Все права защищены.</FooterDesc>
+        <a href="://t.me/joinchat/E_Acz5BKQnJlNTVi"><Tg className="tg" /></a>
       </Container>
-    </DIV>
+    </FooterBlock>
   );
 };
 
-export const Text = styled.p`
-  display: block;
-  font-size: 0.8em;
-  font-weight: 300;
-  line-height: 22px;
-  color: ${({ theme }) => theme.footer.color};
+
+const FooterBlock = styled.footer`
+  width: 100%;
+  min-height: 217px;
+  background: #3F3E4E;
+  padding-top: 40px;
+  padding-bottom: 40px;
+
+  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+    padding-left: 20px;
+  }
+
+  @media only screen and (max-device-width: 480px) {
+    .logo {
+      display: none;
+    }
+    
+    .tg {
+      position: absolute;
+      margin-left: auto;
+      margin-right: auto;
+      right: 0;
+      left: 0;
+      bottom: 100px;
+    }
+  }
 `;
 
-export const A = styled.a`
-  color: ${({ theme }) => theme.footer.color};
-  text-decoration: underline;
-`;
-
-export const DIV = styled.div`
+const FooterHeader = styled.header`
   width: 100%;
   display: flex;
-  align-items: center;
-  border-top: 1px solid #ffffff;
+  position: relative;
+  margin-bottom: 38px;
 
-  & > * {
+  @media only screen and (max-device-width: 480px) {
+    margin: 0 auto;
+    margin-bottom: 38px;
+    max-width: 145px;
+  }
+`;
+
+const FooterLinks = styled.div`
+  display: flex;
+  position: absolute;
+  right: 0;
+
+  @media only screen and (max-device-width: 480px) {
+    position: relative;
+    flex-wrap: wrap;
+    text-align: center;
+    margin: 0 auto;
+  }
+`;
+
+const FooterLink = styled.a`
+  color: #fff;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  text-decoration: underline;
+  margin-right: 38px;
+  cursor: pointer;
+
+  @media only screen and (max-device-width: 480px) {
+    text-align: center;
     display: block;
-  }
-
-  ${Container} {
-    padding-top: 30px;
-  }
-
-  ${Text}:nth-child(2) {
+    width: 145px;
     margin-bottom: 20px;
+  }
+`;
+
+const FooterDesc = styled.h3`
+  margin-bottom: 38px;
+  color: #fff;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  
+  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+    width: 178px;
+  }
+
+  @media only screen and (max-device-width: 480px) {
+    text-align: center;
+    width: 178px;
+    margin: 0 auto;
+    margin-top: 20px;
   }
 `;
