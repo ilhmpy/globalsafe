@@ -86,7 +86,7 @@ export const lightTheme = {
   titles: "#3F3E4E",
   operations: {
     descClr: "#3F3E4E",
-    headBg: "rgba(220, 220, 232, 0.5)",
+    headBg: "rgba(220, 220, 232, 100%)",
     headClr: "#3F3E4E",
     ich1: "#fff",
     ich2: "#F8F7FC",

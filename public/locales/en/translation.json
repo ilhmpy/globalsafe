@@ -564,7 +564,9 @@
     "desc": "Below the extreme representative operations of users, data is updated automatically every 5 minutes",
     "head1": "Date and time",
     "head2": "Name of operation",
-    "head3": "Sum (CWD)"
+    "head3": "Sum (CWD)",
+    "time": "Time",
+    "name": "Name"
   },
   "in": "in"
 }

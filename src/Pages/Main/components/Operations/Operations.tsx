@@ -95,19 +95,31 @@ export const Operations = () => {
 
   return (
     <Page>
-      <Container>
-        <H2>{t('operation.last')}</H2>
-        <Description>{t("operations2.desc")}</Description>
+      <Container ppNone>
+        <Container>
+          <H2>{t('operation.last')}</H2>
+          <Description>{t("operations2.desc")}</Description>
+        </Container>
         <TableHead>
-          <TableHeadItem>{t("operations2.head1")}</TableHeadItem>
-          <TableHeadItem>{t("operations2.head2")}</TableHeadItem>
+          <TableHeadItem>{screen.width > 480 ? t("operations2.head1") : t("operations2.time")}</TableHeadItem>
+          <TableHeadItem>{screen.width > 480 ? t("operations2.head2") : t("operations2.name")}</TableHeadItem>
           <TableHeadItem>{t("operations2.head3")}</TableHeadItem>
         </TableHead>
         <TableMapBlock>
           {notifyList.map((itm, idx) => (
             <TableMapItem key={idx}>
-              <TableInnerItem>{moment(itm.date).format("DD.MM.YYYY")} {t("in")} {moment(itm.date).format("HH:MM")}</TableInnerItem>
-              <TableInnerItem>{operation(itm.operationKind)}</TableInnerItem>
+              <TableInnerItem>
+                {screen.width > 480 ? (
+                  <>
+                    {moment(itm.date).format("DD.MM.YYYY")} {t("in")} {moment(itm.date).format("HH:MM")}
+                  </>
+                ) : (
+                  <>
+                    {moment(itm.date).format("HH:MM")}
+                  </>
+                )}
+              </TableInnerItem>
+              <TableInnerItem><span>{operation(itm.operationKind)} {screen.width > 480 ? ( <> {itm.depositName ? itm.depositName : ""} </> ) : ( <><br /> {itm.depositName ? itm.depositName : ""}</>)}</span></TableInnerItem>
               <TableInnerItem>{itm.amount / 100000}</TableInnerItem>
             </TableMapItem>
           ))}
@@ -264,6 +276,11 @@ const TableHead = styled.div<{ item?: boolean; }>`
   display: flex;
   align-items: center;
   padding: 0px 0px 0px 40px;
+
+  @media only screen and (max-device-width: 480px) {
+    padding-left: 20px;
+    border-radius: 0;
+  }
 `;
 
 const TableHeadItem = styled.div`
@@ -284,6 +301,57 @@ const TableHeadItem = styled.div`
   &:nth-child(3) {
     max-width: 100px;
   }
+
+  @media only screen and (min-device-width: 481px) and (max-device-width: 849px) {
+    &:nth-child(1) {
+      max-width: 250px;
+    }
+
+    &:nth-child(2) {
+      max-width: 303px;
+    }
+  } 
+
+  @media only screen and (min-device-width: 850px) and (max-device-width: 949px) {
+    &:nth-child(1) {
+      max-width: 250px;
+    }
+
+    &:nth-child(2) {
+      max-width: 325px;
+    }
+  }
+
+  @media only screen and (max-device-width: 480px) {
+    font-weight: 600;
+    font-size: 12px;
+
+    &:nth-child(1) {
+      max-width: 61px;
+    }
+  }
+
+  @media only screen and (max-device-width: 359px) {
+    &:nth-child(3) {
+      max-width: 89px;
+    }
+  }
+
+  @media only screen and (min-device-width: 360px) and (max-device-width: 434px) {
+    &:nth-child(1) {
+      max-width: 65px;
+    }
+  }
+
+  @media only screen and (min-device-width: 435px) and (max-device-width: 480px) {
+    &:nth-child(1) {
+      max-width: 71px;
+    }
+
+    &:nth-child(3) {
+      max-width: 114px;
+    }
+  }
 `;  
 
 const TableMapItem = styled.div`
@@ -297,10 +365,17 @@ const TableMapItem = styled.div`
   &:nth-child(2n) {
     background: ${({ theme }) => theme.operations.ich2};
   }
+
+  @media only screen and (max-device-width: 480px) {
+    padding-left: 20px;
+    padding-top: 10px;
+    height: 74px;
+    align-items: start;
+  }
 `;
 
 const TableInnerItem = styled.div`
-  font-weight: 500;
+  font-weight: 400;
   font-size: 14px;
   line-height: 20px;
   color: ${({ theme }) => theme.operations.headClr};
@@ -316,6 +391,64 @@ const TableInnerItem = styled.div`
 
   &:nth-child(3) {
     max-width: 100px;
+  }
+
+  @media only screen and (min-device-width: 481px) and (max-device-width: 849px) {
+    &:nth-child(1) {
+      max-width: 250px;
+    }
+
+    &:nth-child(2) {
+      max-width: 303px;
+    }
+  } 
+
+  
+  @media only screen and (min-device-width: 850px) and (max-device-width: 949px) {
+    &:nth-child(1) {
+      max-width: 250px;
+    }
+
+    &:nth-child(2) {
+      max-width: 325px;
+    }
+  }
+
+  @media only screen and (max-device-width: 480px) {
+    font-weight: 500;
+    font-size: 12px;
+
+    & > span {
+      width: 120px;
+      max-width: 120px;
+      word-wrap: break-word;
+    }
+
+    &:nth-child(1) {
+      max-width: 61px;
+    }
+  }
+
+  @media only screen and (max-device-width: 359px) {
+    &:nth-child(3) {
+      max-width: 89px;
+    }
+  }
+
+  @media only screen and (min-device-width: 360px) and (max-device-width: 434px) {
+    &:nth-child(1) {
+      max-width: 65px;
+    }
+  }
+
+  @media only screen and (min-device-width: 435px) and (max-device-width: 480px) {
+    &:nth-child(1) {
+      max-width: 71px;
+    }
+
+    &:nth-child(3) {
+      max-width: 114px;
+    }
   }
 `;
 
