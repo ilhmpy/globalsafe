@@ -5,7 +5,7 @@ export const CardBox = styled.div`
     display: flex;
     flex-wrap: wrap;
     margin-top: 40px;
-    height: 250px;
+    min-height: 250px;
 
     @media only screen and (max-device-width: 480px) {
       margin-top: 10px;
@@ -43,7 +43,7 @@ export const Card = styled.div`
        padding: 20px;
     }
 
-    @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+    @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
       min-width: 220px;
       max-width: 220px;
       height: 218px;  
@@ -103,5 +103,11 @@ export const CardButton = styled.button`
     &:hover {
         box-shadow: 0px 4px 10px #515172;
         border: 1px solid #515172;
+    }
+
+    @media only screen and (max-device-width: 480px) {
+        width: 100%;
+        max-width: 240px;
+        margin: 0 auto;
     }
 `;

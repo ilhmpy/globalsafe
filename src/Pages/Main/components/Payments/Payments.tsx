@@ -629,7 +629,7 @@ const WhiteBox = styled.div`
   padding: 30px;
   padding-top: 40px;
 
-  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
     padding: 20px;
     padding-top: 25px;
     max-width: 700px;
@@ -724,7 +724,7 @@ const WhiteItem = styled.div`
   padding-left: 25px;
   position: relative;
 
-  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
     width: 150px;
     min-width: 150px;
   }
