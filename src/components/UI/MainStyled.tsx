@@ -14,16 +14,20 @@ export const H1 = styled.div`
 export const H2 = styled.h2<{ center?: boolean }>`
   font-weight: 500;
   font-size: 48px;
-  line-height: 57px;
   text-align: left;
   margin-right: auto;
-  margin-bottom: 30px;
-  @media (max-width: 1060px) {
-    font-size: calc(26px + 60 * ((100vw - 320px) / 740));
+  margin-bottom: 20px;
+  font-style: normal;
+  line-height: 56px;
+  @media (max-width: 992px) {
+    font-size: 36px;
+    line-height: 42px;
   }
   color: ${(props) => props.theme.titles};
   @media (max-width: 576px) {
     margin-bottom: 10px;
+    font-size: 18px;
+    line-height: 21px;
   }
 
   @media only screen and (max-device-width: 767px) {

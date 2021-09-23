@@ -384,7 +384,7 @@
     "date": "Date",
     "typeWin": "Win type",
     "sumWin": "Winning amount",
-    "winners": "Winners",
+    "winner": "Winner",
     "status": "Status",
     "done": "Done",
     "error": "Error"

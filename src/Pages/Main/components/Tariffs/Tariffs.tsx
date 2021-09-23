@@ -178,7 +178,7 @@ export const Tariffs = () => {
   };
 
   return (
-    <Page id="tariffs">
+    <Page id="tariffs" style={{ marginBottom: "20px" }}>
       <Container pNone>
         <H2 center>{t("partnersTitle")}</H2>
         <PartnersBlock>
@@ -230,7 +230,7 @@ const PartnersHeader = styled.header`
     height: 60px;
   }
 
-  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
     padding-left: 30%;
   }
 `; 
@@ -250,7 +250,7 @@ const PartnersHeaderItem = styled.div`
     width: 60px;
   }
 
-  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
     width: 160px;
     margin-right: 0px;
   }
@@ -305,7 +305,7 @@ const PartnersItemTitle = styled.div`
     margin-right: 53px;
   }
 
-  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
     margin-right: 20%;
   }
 
@@ -353,7 +353,7 @@ const PartnersItemData = styled.div`
     }
   }
   
-  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
     font-size: 14px;
     font-weight: 400;
     &:nth-child(2) {
