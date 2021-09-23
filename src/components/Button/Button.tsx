@@ -1,4 +1,4 @@
-import styled from "styled-components/macro";
+import styled from 'styled-components/macro';
 
 type Props = {
   danger?: boolean;
@@ -32,7 +32,7 @@ export const Button = styled.a<Props>`
   border-color: ${(props) => props.theme.buttonBorder};
   box-sizing: border-box;
   border-radius: 24px;
-  margin-bottom: ${(props) => (props.mb ? "20px" : "0")};
+  margin-bottom: ${(props) => (props.mb ? '20px' : '0')};
   cursor: pointer;
   transition: all 0.3s ease 0s;
   -webkit-appearance: none;
@@ -83,6 +83,14 @@ export const Button = styled.a<Props>`
       &:hover{
         box-shadow: 0px 4px 10px #FF416E;
         border-color: #FF416E;
+      }
+      &:disabled {
+        background: rgba(14, 13, 61, .2);
+        box-shadow: none;
+        color: #fff;
+        border-color: rgba(14, 13, 61, .1);
+        outline: none;
+        cursor: initial;
       }
       `;
     } else if (props.green) {
@@ -208,7 +216,7 @@ export const Button = styled.a<Props>`
     return `
       max-width: ${maxWidth}px;
       min-width: ${maxWidth}px;
-    `
+    `;
   }};
   &:disabled {
     cursor: initial;

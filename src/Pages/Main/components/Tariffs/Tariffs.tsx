@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
-import { Container } from '../../../../globalStyles';
-import { H1, H2 } from '../../../../components/UI/MainStyled';
+import { Container } from '../../../../components/UI/Container';
+import { H2 } from '../../../../components/UI/Heading';
 import { UpTitle } from '../../../../components/UI/UpTitle';
 import { Button } from '../../../../components/Button/Button';
 import {
@@ -57,48 +57,14 @@ export const Tariffs = () => {
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   const languale = lang === 'ru' ? 1 : 0;
   const [programs, setPrograms] = useState([
-    {
-      name: 'start',
-      color: '#BCD476',
-      lines: [
-        { id: '1', count: '4%' },
-        { id: '2', count: '1,6%' },
-        { id: '3', count: '0,8%' },
-        { id: '4', count: '' },
-        { id: '5', count: '' },
-        { id: '6', count: '' },
-        { id: '7', count: '' },
-        { id: '8', count: '' },
-      ],
-    },
-    {
-      name: 'expert',
-      color: '#6DB9FF',
-      lines: [
-        { id: '1', count: '5%' },
-        { id: '2', count: '2%' },
-        { id: '3', count: '1%' },
-        { id: '4', count: '1%' },
-        { id: '5', count: '1%' },
-        { id: '6', count: '' },
-        { id: '7', count: '' },
-        { id: '8', count: '' },
-      ],
-    },
-    {
-      name: 'infinity',
-      color: '#FF416E',
-      lines: [
-        { id: '1', count: '5%' },
-        { id: '2', count: '2%' },
-        { id: '3', count: '1%' },
-        { id: '4', count: '1%' },
-        { id: '5', count: '1%' },
-        { id: '6', count: '1%' },
-        { id: '7', count: '1%' },
-        { id: '8', count: '1%' },
-      ],
-    },
+    { line: 1, data: ["4%", "5%", "5%"] },
+    { line: 2, data: ["1,6%", "2%", "2%"] },
+    { line: 3, data: ["0,8%", "1%", "1%"] },
+    { line: 4, data: ["", "1%", "1%"] },
+    { line: 5, data: ["", "1%", "1%"] },
+    { line: 6, data: ["", "", "1%"] },
+    { line: 7, data: ["", "", "1%"] },
+    { line: 8, data: ["", "", "1%"] },
   ]);
 
   useEffect(() => {
@@ -212,191 +178,25 @@ export const Tariffs = () => {
   };
 
   return (
-    <Page id="tariffs">
-      <Container>
-        <UpTitle small>{t('tariffs.uptitle')}</UpTitle>
-      </Container>
-      <Container>
-        <H1>{t('tariffs.H1')}</H1>
-      </Container>
-      <PartnerProgramContainer>
-        <PartnerProgramTitle phone={true}>{t('partnersTitle')}</PartnerProgramTitle>
-      </PartnerProgramContainer>
-      <DescContainerInner>
-        <PartnerProgramBlock phone={true}>
-          <PartnerProgramContainer>
-            <Swiper spaceBetween={10} slidesPerView={1} pagination={{ clickable: true }}>
-              {programs.map((program: any) => {
-                return (
-                  <SwiperSlide key={programs.indexOf(program)}>
-                    <PartnerProgramHeaderItem color={program.color}>
-                      {program.name}
-                    </PartnerProgramHeaderItem>
-                    {program.lines.map((line: any, idx: number) => {
-                      const { id, count } = line;
-                      return (
-                        <PartnerProgramLine key={idx}>
-                          <PartnerProgramLineNumber>
-                            {id} {t('line')}
-                          </PartnerProgramLineNumber>
-                          <div className="inner">
-                            <PartnerProgramLineItem>{count}</PartnerProgramLineItem>
-                          </div>
-                        </PartnerProgramLine>
-                      );
-                    })}
-                  </SwiperSlide>
-                );
-              })}
-            </Swiper>
-            <PartnerProgramPagination></PartnerProgramPagination>
-          </PartnerProgramContainer>
-        </PartnerProgramBlock>
-      </DescContainerInner>
-      <DescContainerInner>
-        <PartnerProgramBlock>
-          <PartnerProgramContainer>
-            <PartnerProgramTitle>{t('partnersTitle')}</PartnerProgramTitle>
-          </PartnerProgramContainer>
-          <PartnerProgramHeader>
-            <div>
-              <PartnerProgramHeaderItem green={true}>start</PartnerProgramHeaderItem>
-              <PartnerProgramHeaderItem blue={true}>expert</PartnerProgramHeaderItem>
-              <PartnerProgramHeaderItem red={true}>infinity</PartnerProgramHeaderItem>
-            </div>
-          </PartnerProgramHeader>
-          <PartnerProgramData>
-            <PartnerProgramLine>
-              <PartnerProgramContainer>
-                <PartnerProgramLineNumber>1 {t('line')}</PartnerProgramLineNumber>
-                <div className="inner">
-                  <PartnerProgramLineItem>4%</PartnerProgramLineItem>
-                  <PartnerProgramLineItem>5%</PartnerProgramLineItem>
-                  <PartnerProgramLineItem>5%</PartnerProgramLineItem>
-                </div>
-              </PartnerProgramContainer>
-            </PartnerProgramLine>
-            <PartnerProgramLine>
-              <PartnerProgramContainer>
-                <PartnerProgramLineNumber>2 {t('line')}</PartnerProgramLineNumber>
-                <div className="inner">
-                  <PartnerProgramLineItem>1,6%</PartnerProgramLineItem>
-                  <PartnerProgramLineItem>2%</PartnerProgramLineItem>
-                  <PartnerProgramLineItem>2%</PartnerProgramLineItem>
-                </div>
-              </PartnerProgramContainer>
-            </PartnerProgramLine>
-            <PartnerProgramLine>
-              <PartnerProgramContainer>
-                <PartnerProgramLineNumber>3 {t('line')}</PartnerProgramLineNumber>
-                <div className="inner">
-                  <PartnerProgramLineItem>0,8%</PartnerProgramLineItem>
-                  <PartnerProgramLineItem>1%</PartnerProgramLineItem>
-                  <PartnerProgramLineItem>1%</PartnerProgramLineItem>
-                </div>
-              </PartnerProgramContainer>
-            </PartnerProgramLine>
-            <PartnerProgramLine>
-              <PartnerProgramContainer>
-                <PartnerProgramLineNumber>4 {t('line')}</PartnerProgramLineNumber>
-                <div className="inner">
-                  <PartnerProgramLineItem></PartnerProgramLineItem>
-                  <PartnerProgramLineItem>1%</PartnerProgramLineItem>
-                  <PartnerProgramLineItem>1%</PartnerProgramLineItem>
-                </div>
-              </PartnerProgramContainer>
-            </PartnerProgramLine>
-            <PartnerProgramLine>
-              <PartnerProgramContainer>
-                <PartnerProgramLineNumber>5 {t('line')}</PartnerProgramLineNumber>
-                <div className="inner">
-                  <PartnerProgramLineItem></PartnerProgramLineItem>
-                  <PartnerProgramLineItem>1%</PartnerProgramLineItem>
-                  <PartnerProgramLineItem>1%</PartnerProgramLineItem>
-                </div>
-              </PartnerProgramContainer>
-            </PartnerProgramLine>
-            <PartnerProgramLine>
-              <PartnerProgramContainer>
-                <PartnerProgramLineNumber>6 {t('line')}</PartnerProgramLineNumber>
-                <div className="inner">
-                  <PartnerProgramLineItem></PartnerProgramLineItem>
-                  <PartnerProgramLineItem></PartnerProgramLineItem>
-                  <PartnerProgramLineItem>1%</PartnerProgramLineItem>
-                </div>
-              </PartnerProgramContainer>
-            </PartnerProgramLine>
-            <PartnerProgramLine>
-              <PartnerProgramContainer>
-                <PartnerProgramLineNumber>7 {t('line')}</PartnerProgramLineNumber>
-                <div className="inner">
-                  <PartnerProgramLineItem></PartnerProgramLineItem>
-                  <PartnerProgramLineItem></PartnerProgramLineItem>
-                  <PartnerProgramLineItem>1%</PartnerProgramLineItem>
-                </div>
-              </PartnerProgramContainer>
-            </PartnerProgramLine>
-            <PartnerProgramLine>
-              <PartnerProgramContainer>
-                <PartnerProgramLineNumber>8 {t('line')}</PartnerProgramLineNumber>
-                <div className="inner">
-                  <PartnerProgramLineItem></PartnerProgramLineItem>
-                  <PartnerProgramLineItem></PartnerProgramLineItem>
-                  <PartnerProgramLineItem>1%</PartnerProgramLineItem>
-                </div>
-              </PartnerProgramContainer>
-            </PartnerProgramLine>
-          </PartnerProgramData>
-        </PartnerProgramBlock>
-      </DescContainerInner>
-      {isNormalOpen && (
-        <Modal onClose={() => setIsNormalOpen(false)}>
-          <ModalBlock>
-            <ModalTitle>{t('tariffs.depositSize')}</ModalTitle>
-            <Input
-              onChange={onChange}
-              // placeholder={min.toString()}
-              type="number"
-              ref={inputRef}
-              value={value}
-            />
-
-            <ModalButton as="button" onClick={toLink} danger disabled={+value < min}>
-              {t('tariffs.ok')}
-            </ModalButton>
-          </ModalBlock>
-        </Modal>
-      )}
-      <BlockContainers>
-        <DepositsCardsTitleContainer bigMargin>
-          <H2>{t('payments.open')}</H2>
-        </DepositsCardsTitleContainer>
-
-        {listDeposits.map((item, idx) => (
-          <BlockItem key={item.safeId}>
-            <BlockTitle>{item.name}</BlockTitle>
-            <div className="item__subtitle">
-              <Text dangerouslySetInnerHTML={{ __html: item.description }} />
-            </div>
-            {colors(item, idx)}
-          </BlockItem>
-        ))}
-      </BlockContainers>
-      <SwiperContainer>
-        <Swiper spaceBetween={50} slidesPerView={1} loop pagination={{ clickable: true }}>
-          {listDeposits.map((item, idx) => (
-            <SwiperSlide key={item.safeId}>
-              <BlockItem>
-                <BlockTitle>{item.name}</BlockTitle>
-                <div className="item__subtitle">
-                  <Text dangerouslySetInnerHTML={{ __html: item.description }} />
-                </div>
-                {colors(item, idx)}
-              </BlockItem>
-            </SwiperSlide>
+    <Page id="tariffs" style={{ marginBottom: "20px" }}>
+      <Container pNone>
+        <H2 center>{t("partnersTitle")}</H2>
+        <PartnersBlock>
+          <PartnersHeader>
+            <PartnersHeaderItem>START</PartnersHeaderItem>
+            <PartnersHeaderItem>EXPERT</PartnersHeaderItem>
+            <PartnersHeaderItem>INFINITY</PartnersHeaderItem>
+          </PartnersHeader>
+          {programs.map((item, idx) => (
+            <PartnersItem key={idx}>
+              <PartnersItemTitle>{item.line} линия:</PartnersItemTitle>
+              {item.data.map((dt, idx) => (
+                <PartnersItemData key={idx}>{dt}</PartnersItemData>
+              ))}
+            </PartnersItem>
           ))}
-        </Swiper>
-      </SwiperContainer>
+        </PartnersBlock>
+      </Container>
     </Page>
   );
 };
@@ -405,4 +205,163 @@ const DepositsCardsTitleContainer = styled(Container)`
   margin-top: 60px;
 `;
 
+const PartnersBlock = styled.div`
+  width: 100%;
+  min-height: 544px;
+  background: #fff;
+  border-radius: 4px;
+  padding: 1px;
+  box-shadow: 0px 80px 80px -40px rgba(220, 220, 232, 0.5);
+  
+  @media only screen and (max-device-width: 480px) {
+    min-height: 345px;
+  }
+`;
 
+const PartnersHeader = styled.header`
+  width: 100%;
+  height: 100px;
+  padding-left: 270px;
+  display: flex;
+  align-items: center;
+
+  @media only screen and (max-device-width: 480px) {
+    padding-left: 25%;
+    height: 60px;
+  }
+
+  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+    padding-left: 30%;
+  }
+`; 
+
+const PartnersHeaderItem = styled.div`
+  width: 74px;
+  color: #000;
+  line-height: 24px;
+  font-size: 18px;
+  font-weight: 700;
+  margin-right: 230px;
+
+  @media only screen and (max-device-width: 480px) {
+    margin-right: 45px;
+    font-weight: 700;
+    font-size: 12px;
+    width: 60px;
+  }
+
+  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+    width: 160px;
+    margin-right: 0px;
+  }
+`;
+
+const PartnersItem = styled.div`
+  width: 100%;
+  height: 60px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+  color: #000;
+
+  &:nth-child(2n) {
+    background: #F8F7FC;
+  }
+
+  @media only screen and (max-device-width: 480px) {
+    height: 38px;
+  }
+`;
+
+const PartnersItemTitle = styled.div`
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  margin-right: 200px;
+
+  @media only screen and (max-device-width: 480px) {
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  @media only screen and (max-device-width: 359px) {
+    margin-right: 13px;
+  }
+
+  @media only screen and (min-device-width: 360px) and (max-device-width: 399px) {
+    margin-right: 23px;
+  }
+
+  @media only screen and (min-device-width: 400px) and (max-device-width: 449px) {
+    margin-right: 35px;
+  }
+
+  @media only screen and (min-device-width: 450px) and (max-device-width: 480px) {
+    margin-right: 45px;
+  }
+
+  @media only screen and (min-device-width: 470px) and (max-device-width: 480px) {
+    margin-right: 53px;
+  }
+
+  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+    margin-right: 20%;
+  }
+
+  @media only screen and (min-device-width: 900px) and (max-device-width: 1024px) {
+    margin-right: 23%;
+  }
+`;
+
+const PartnersItemData = styled.div`
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 20px;
+
+  &:nth-child(2) {
+    width: 285px;
+  }
+
+  &:nth-child(3) {
+    width: 300px;
+  }
+
+  @media only screen and (max-device-width: 480px) {
+    &:nth-child(2) {
+      width: 85px;
+    }
+
+    &:nth-child(3) {
+      width: 90px;
+    }
+  }
+
+  @media only screen and (min-device-width: 400px) and (max-device-width: 480px) {
+    &:nth-child(2) {
+      width: 98px;
+    }
+
+    &:nth-child(3) {
+      width: 100px;
+    }
+  }
+
+  @media only screen and (min-device-width: 450px) and (max-device-width: 480px) {
+    &:nth-child(2) {
+      width: 107px;
+    }
+  }
+  
+  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+    font-size: 14px;
+    font-weight: 400;
+    &:nth-child(2) {
+      width: 160px
+    }
+
+    &:nth-child(3) {
+      width: 160px;
+    }
+  }
+`;

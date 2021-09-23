@@ -49,6 +49,16 @@
   GF6,
   FF5,
   FF6,
+  FF7,
+  FF8,
+  FF9,
+  FF10,
+  FF11,
+  FF12,
+  FF13,
+  FF14,
+  FF15,
+  MULTICS = 59
 }
 
 export type BalanceList = {

@@ -1,6 +1,6 @@
 import styled from 'styled-components/macro';
 
-export const H2 = styled.h2`
+export const H2 = styled.h2<{ center?: boolean; }>` 
   font-weight: 500;
   font-size: 48px;
   line-height: 56px;
@@ -15,5 +15,19 @@ export const H2 = styled.h2`
     line-height: 21px;
     margin-bottom: 10px;
     font-weight: 700;
+  }
+
+  @media only screen and (max-device-width: 767px) {
+    ${({ center }) => {
+      if (center) {
+        return `
+          margin: 0 auto;
+          text-align: center;
+          margin-bottom: 20px;
+          font-weight: 700;
+          font-size: 18px;
+        `;
+      }
+    }}
   }
 `;

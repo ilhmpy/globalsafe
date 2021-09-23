@@ -29,7 +29,7 @@ export const InfoDeposits = () => {
       hubConnection
         .invoke<RootList>('GetUserDeposits', [1, 2, 3, 4, 5, 6, 7, 8], 0, 20, sorting)
         .then((res) => {
-          console.log('GetUserDeposits', res);
+          // console.log('GetUserDeposits', res);
           setList(res.collection);
           setTotalList(res.totalRecords);
         })
@@ -57,6 +57,12 @@ export const InfoDeposits = () => {
     }
   };
 
+  const removeItem = (safeId: string) => {
+    const key = list.findIndex((i) => i.safeId === safeId);
+    const item = list.filter((i) => i.safeId === safeId)[0];
+    setList([...list.slice(0, key), { ...item, state: 4 }, ...list.slice(key + 1)]);
+  };
+
   return (
     <>
       <Container>
@@ -74,7 +80,7 @@ export const InfoDeposits = () => {
                   </div>
                 }
               >
-                <Tables list={list} />
+                <Tables list={list} removeItem={removeItem} />
               </InfiniteScroll>
             ) : null}
           </Scrollbars>

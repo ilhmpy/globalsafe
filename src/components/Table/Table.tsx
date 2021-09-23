@@ -1,18 +1,31 @@
 import moment from 'moment';
 import 'moment/locale/ru';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory } from 'react-router-dom';
 import { AppContext } from '../../context/HubContext';
 import useWindowSize from '../../hooks/useWindowSize';
 import { Balance } from '../../types/balance';
+import { Button } from '../Button/Button';
+import { ModalCancel } from './ModalCancel';
 import * as Styled from './Table.styled';
 import { TableModal } from './TableModal';
+import { Collection } from '../../types/info';
 
-const Row = ({ data }: any) => {
+type RowProps = {
+  data: Collection;
+  removeItem: (id: string) => void;
+};
+
+const Row: FC<RowProps> = ({ data, removeItem }: RowProps) => {
   const [open, setOpen] = useState<boolean | string>(false);
+  const [cancelModal, setCancelModal] = useState<boolean>(false);
+  const [calcExchange, setCalcExchange] = useState<null | string[]>(null);
   const size = useWindowSize();
   const history = useHistory();
+  const { t } = useTranslation();
+  const { hubConnection } = useContext(AppContext);
+
   const onClose = () => {
     setOpen(false);
   };
@@ -24,12 +37,54 @@ const Row = ({ data }: any) => {
       setOpen(data.safeId);
     }
   };
-  console.log('data', data);
+
+  const cancelDeposit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCancelModal(true);
+  };
+
+  const showModalCancel = () => {
+    onClose();
+    setCancelModal(true);
+  };
+
+  const calculateBalanceExchange = async (amount: string, kind: number) => {
+    if (hubConnection) {
+      try {
+        const res = await hubConnection.invoke<string[]>('CalculateDepositExchange', amount, kind);
+
+        setCalcExchange(res);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+
+  const depositExchange = async (amountId: string, kind: number) => {
+    if (hubConnection) {
+      try {
+        const res = await hubConnection.invoke('DepositExchange', amountId, kind);
+
+        setCancelModal(false);
+        removeItem(amountId);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+
+  const to = () => {
+    const location = {
+      pathname: '/info/deposits/' + data.safeId,
+      state: data,
+    };
+    history.push(location);
+  };
   return (
     <>
-      {size < 992 ? (
+      {size < 768 ? (
         <>
-          <Styled.TR key={data.safeId} disactive={data.state === 4}>
+          <Styled.TR key={data.safeId} onClick={to} disactive={data.state === 4}>
             <Styled.TD>
               <Link
                 key={data.safeId}
@@ -88,6 +143,16 @@ const Row = ({ data }: any) => {
                 </Styled.Text>
               </Link>
             </Styled.TD>
+            <Styled.TD>
+              <Styled.Btn
+                as="button"
+                disabled={!data.deposit.isExchangeable || data.state !== 2}
+                dangerOutline
+                onClick={cancelDeposit}
+              >
+                {t('cancelDeposit.close')}
+              </Styled.Btn>
+            </Styled.TD>
           </Styled.TR>
         </>
       ) : (
@@ -134,17 +199,40 @@ const Row = ({ data }: any) => {
                 {data.paymentDate ? moment(data.paymentDate).format('DD MMMM YYYY') : '-'}
               </Styled.Text>
             </Styled.TD>
+            <Styled.TD>
+              <Styled.Btn
+                as="button"
+                disabled={!data.deposit.isExchangeable || data.state !== 2}
+                dangerOutline
+                onClick={cancelDeposit}
+              >
+                {t('cancelDeposit.close')}
+              </Styled.Btn>
+            </Styled.TD>
           </Styled.TR>
-          <TableModal onClose={onClose} open={open} data={data} />
+          <ModalCancel
+            depositExchange={depositExchange}
+            calcExchange={calcExchange}
+            calculateBalanceExchange={calculateBalanceExchange}
+            data={data}
+            open={cancelModal}
+            onClose={() => setCancelModal(false)}
+          />
+          <TableModal showModalCancel={showModalCancel} onClose={onClose} open={open} data={data} />
         </>
       )}
     </>
   );
 };
 
-export const Tables = ({ list }: any) => {
-  const { t } = useTranslation();
+type Props = {
+  list: Collection[];
+  removeItem: (id: string) => void;
+};
 
+export const Tables: FC<Props> = ({ list, removeItem }: Props) => {
+  const { t } = useTranslation();
+  // console.log('list', list);
   return (
     <Styled.TableWrap>
       {/* <FilterMenu filterClick={filterClick} /> */}
@@ -161,11 +249,12 @@ export const Tables = ({ list }: any) => {
               <span>{t('adminPay.table.nextDate')}</span>
               {/* <Styled.StyledFilter /> */}
             </Styled.TH>
+            <Styled.TH></Styled.TH>
           </Styled.TR>
         </thead>
         <tbody>
           {list.length ? (
-            list.map((item: any) => <Row key={item.safeId} data={item} />)
+            list.map((item: any) => <Row key={item.safeId} data={item} removeItem={removeItem} />)
           ) : (
             <Styled.TR></Styled.TR>
           )}
