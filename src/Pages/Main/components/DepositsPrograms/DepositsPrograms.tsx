@@ -9,6 +9,7 @@ import { AppContext } from '../../../../context/HubContext';
 import { Container } from '../../../../components/UI/Container';
 import { Collection, RootOperations } from '../../../../types/operations';
 import * as Styled from "./Styles.elements"; 
+import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper.scss';
 import SwiperCore, { A11y, Navigation, Pagination, Scrollbar } from 'swiper';
 import 'swiper/components/navigation/navigation.scss';
@@ -41,7 +42,21 @@ export const DepositsPrograms = () => {
                             ))}
                         </Styled.CardBox>
                     ) : (
-                    <div></div>
+                      <>
+                        <Styled.CardBox>
+                            <Swiper spaceBetween={10} slidesPerView={1} pagination={{ clickable: true }}>
+                                {deposits.map((item, idx) => (
+                                    <SwiperSlide key={idx}>
+                                        <Styled.Card key={idx}>
+                                            <Styled.CardName>{item.name}</Styled.CardName>
+                                            <Styled.CardDesc>{item.desc}</Styled.CardDesc>
+                                            <Styled.CardButton>{(t("payments.open")).toUpperCase()}</Styled.CardButton>
+                                        </Styled.Card>
+                                    </SwiperSlide>
+                                ))}
+                            </Swiper>
+                        </Styled.CardBox>
+                      </>
                     )}
                 </Container>
             )}

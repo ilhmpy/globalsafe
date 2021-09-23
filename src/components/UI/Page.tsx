@@ -3,7 +3,7 @@ import styled from "styled-components/macro";
 export const Page = styled.div<{ margin?: boolean; abs?: boolean; }>`
   padding-top: 100px;
   @media (max-width: 992px) {
-    padding-top: 75px;
+    padding-top: 19px;
   }
   ${({ margin }) => {
     if (margin) {
