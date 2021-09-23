@@ -76,6 +76,12 @@ export const LoginComponent = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if(user) {
+      history.replace('/info');
+    }
+  }, [user]);
+
   const onChangeNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPasswordError(false);
     setError(true);
@@ -145,8 +151,6 @@ export const LoginComponent = () => {
             setPasswordSuccessed(true);
             //
             logIn(res.token);
-            history.push('/info')
-
             setWhere(true);
             setLogin(false);
             setTryCode(0);
@@ -179,6 +183,7 @@ export const LoginComponent = () => {
     } 
     if(value && password) {
       singIn();
+      return;
     }
   };
 

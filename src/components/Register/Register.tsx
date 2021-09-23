@@ -47,6 +47,12 @@ export const RegisterComponent: FC = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if(user) {
+      history.replace('/info');
+    }
+  }, [user]);
+
   const onChangeNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPasswordError(false);
     setError(true);
@@ -59,6 +65,7 @@ export const RegisterComponent: FC = () => {
         .invoke('SignIn', { login: value, password: password, signInMethod: 3 })
         .then((res: any) => {
           setTryCode((tryCode) => tryCode + 1);
+          localStorage.setItem('time', moment().toISOString());
           console.log("SignIn", res);
           if (res.token !== null) {
             setPasswordError(false);
@@ -286,7 +293,7 @@ export const RegisterComponent: FC = () => {
               (password && !passwordError)
                 ?
                   <PrimaryButton 
-                    title={`${t('login.in')}`}
+                    title={`${t('login.register')}`}
                     type="submit"
                   />
                 :

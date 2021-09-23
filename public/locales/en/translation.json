@@ -37,7 +37,8 @@
     "authorize": "Authorization",
     "activityOn": "Activity on",
     "loginCWD": "Login (cwd.global)",
-    "oneTimeCode": "One time code"
+    "oneTimeCode": "One time code",
+    "register": "Sign Up"
   },
   "banner": {
     "uptitle": "About fund ",

@@ -37,7 +37,8 @@
     "authorize": "Авторизация",
     "activityOn": "Активность на",
     "loginCWD": "Логин (cwd.global)",
-    "oneTimeCode": "Одноразовый код"
+    "oneTimeCode": "Одноразовый код",
+    "register": "Зарегистрироваться"
   },
   "banner": {
     "uptitle": "Емко и по-делу",
