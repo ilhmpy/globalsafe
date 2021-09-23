@@ -414,9 +414,9 @@ export const InfoBalance = () => {
       if (id === 0) {
         setBalanceLogs([0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15]);
       } else if (id === 1) {
-        setBalanceLogs([1, 7, 8]);
+        setBalanceLogs([6, 7, 8, 15]);
       } else if (id === 2) {
-        setBalanceLogs([2]);
+        setBalanceLogs([2, 3]);
       }
     }
   };
