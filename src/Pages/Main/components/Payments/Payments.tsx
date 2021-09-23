@@ -171,7 +171,11 @@ const RadialComponent: FC<RadialComponentProps> = ({ data, height }: RadialCompo
 
 export const Payments: FC = () => {
   const [statsDeposit, setStatsDeposit] = useState<RootPayDeposit[]>([]);
-  const [bigArr, setBigArr] = useState<any>([]);
+  const [bigArr, setBigArr] = useState<any>([[{
+    deposit: { name: "ss" },
+    procent: 20,
+    date: '23.09.2021'
+  }]]);
   const [smallArr, setSmallArr] = useState<any>([]);
   const [loadReset, setLoadReset] = useState(false);
   const arrSizeBig = 10;
@@ -237,10 +241,10 @@ export const Payments: FC = () => {
   };
 
   const [last, setLast] = useState(localStorage.getItem("last") || undefined);
-  
+
   return (
     <Page>
-      {statsDeposit.length ? (
+      {bigArr.length ? (
         <>
           <Container>
             <H2 center>{t('payments.currPay')}</H2>
@@ -254,7 +258,7 @@ export const Payments: FC = () => {
                 </Title>
               </WhiteIntf>
               <WhiteMap>
-                {statsDeposit.length ? (
+                {bigArr.length ? (
                   <>
                   {bigArr.map((i: any, idx: any) => {
                     return (

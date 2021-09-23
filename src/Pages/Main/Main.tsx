@@ -18,6 +18,7 @@ import { Timer } from './components/Lottery/Timer';
 import { Operations } from './components/Operations/Operations';
 import { Payments } from './components/Payments/Payments';
 import { Tariffs } from './components/Tariffs/Tariffs';
+import { DepositsPrograms } from "./components/DepositsPrograms/DepositsPrograms";
 
 const fakeData = [
   [
@@ -2160,9 +2161,9 @@ export const Main = () => {
         <Banner />
         <ExchangeChart />
         <Payments />
-        <Operations />
+        <DepositsPrograms />
         <Tariffs />
-
+        <Operations />
         {/* <Assets /> */}
 
         <DrawHistory onOpenModal={onOpenModal} clock={clock} />
