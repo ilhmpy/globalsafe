@@ -20,6 +20,7 @@ export const DescWrap = styled.div`
   margin-bottom: 40px;
   @media (max-width: 992px) {
     margin-top: -45px;
+    margin-bottom: 20px;
   }
   @media (max-width: 870px) {
     margin-top: -37px;
@@ -27,6 +28,7 @@ export const DescWrap = styled.div`
   @media (max-width: 576px) {
     margin-top: 0px;
     text-align: center;
+    margin-bottom: 10px;
     ${Button} {
       width: 100%;
     }

@@ -10,9 +10,10 @@ import 'moment/locale/ru';
 import { ReactComponent as Arrow } from '../../../../assets/v2/svg/arrow-exchange.svg';
 import { SmallChart } from './SmallChart';
 import useWindowSize from '../../../../hooks/useWindowSize';
-import { Dropdown } from './components/Dropdown'; 
+import { Dropdown } from './components/Dropdown';
+import { MobChart } from './MobChart';
 
-require('highcharts/modules/exporting')(Highcharts); 
+require('highcharts/modules/exporting')(Highcharts);
 
 function opt(H: any) {
   H.setOptions({
@@ -97,15 +98,34 @@ function opt1(H: any) {
 type Props = {
   data: Collection[];
   type: string;
+  fetchMGCWD: (d: string) => void;
+  fetchGCWD: (d: string) => void;
+  fetchDIAMOND: (d: string) => void;
+  fetchGLOBAL: (d: string) => void;
 };
 
-export const ChartActiv: FC<Props> = ({ data, type }: Props) => {
+export const ChartActiv: FC<Props> = ({
+  data,
+  type,
+  fetchMGCWD,
+  fetchGCWD,
+  fetchDIAMOND,
+  fetchGLOBAL,
+}: Props) => {
   localStorage.getItem('i18nextLng') === 'ru' ? opt(Highcharts) : opt1(Highcharts);
   moment.locale(localStorage.getItem('i18nextLng') || 'ru');
   const size = useWindowSize();
+
   const data1 = () => {
-    const value = data.map((i) => [new Date(i.date).valueOf(), i.latestBid / 100]);
-    return value;
+    if (type === 'GCWD') {
+      return data.map((i) => [new Date(i.date).valueOf(), i.latestBid / 100000]);
+    } else if (type === 'MGCWD') {
+      return data.map((i) => [new Date(i.date).valueOf(), i.latestBid / 100000]);
+    } else if (type === 'DIAMOND') {
+      return data.map((i) => [new Date(i.date).valueOf(), i.latestBid / 1000]);
+    } else {
+      return data.map((i) => [new Date(i.date).valueOf(), i.latestBid]);
+    }
   };
 
   const [date, setDate] = useState(0);
@@ -117,13 +137,14 @@ export const ChartActiv: FC<Props> = ({ data, type }: Props) => {
         {
           data: data1(),
           color: '#0094FF',
+          type: 'spline',
         },
       ],
       chart: {
         marginLeft: size < 768 ? 0 : 50,
         marginRight: size < 768 ? 30 : 5,
         backgroundColor: '#F7F8FA',
-        height: 345,
+        height: size < 768 ? 288 : 345,
         // spacingTop: 50,
         spacingBottom: 0,
       },
@@ -139,6 +160,7 @@ export const ChartActiv: FC<Props> = ({ data, type }: Props) => {
             setValCWD((this as any).y);
             return '';
           }
+
           return `
           <b style="font-size: 18px; font-weight: bold; line-height: 24px; font-family: 'Roboto', sans-serif;">${
             (this as any).y
@@ -162,7 +184,6 @@ export const ChartActiv: FC<Props> = ({ data, type }: Props) => {
                 fillColor: '#3F3E4E',
                 lineWidth: 2,
                 lineColor: '#DCDCE8',
-                // radius: 3,
               },
             },
           },
@@ -252,7 +273,7 @@ export const ChartActiv: FC<Props> = ({ data, type }: Props) => {
   const btns = ['День', 'Месяц', 'Квартал', 'Год', 'Все время'];
 
   const [selected, setSelected] = useState(btns[0]);
-  const [active, setActive] = useState(0);
+  const [active, setActive] = useState('День');
 
   const changeValue = (data: Collection[]) => {
     const currValue = data[data.length - 1].latestBid;
@@ -342,35 +363,72 @@ export const ChartActiv: FC<Props> = ({ data, type }: Props) => {
     }
   };
 
+  const dateFetch = (day: string) => {
+    switch (day) {
+      case 'День':
+        return moment().subtract(1, 'days').format();
+      case 'Месяц':
+        return moment().subtract(1, 'months').format();
+      case 'Квартал':
+        return moment().subtract(3, 'months').format();
+      case 'Год':
+        return moment().subtract(1, 'years').format();
+      case 'Все время':
+        return moment().subtract(1, 'years').format();
+      default:
+        return moment().subtract(1, 'days').format();
+    }
+  };
+
+  const typeSelected = (str: string) => {
+    console.log('str', str);
+    setActive(str);
+    setSelected(str);
+    if (type === 'GCWD') {
+      console.log('gcwd');
+      fetchGCWD(dateFetch(str));
+    } else if (type === 'MGCWD') {
+      fetchMGCWD(dateFetch(str));
+    } else if (type === 'DIAMOND') {
+      fetchDIAMOND(dateFetch(str));
+    } else if (type === 'GLOBAL') {
+      fetchGLOBAL(dateFetch(str));
+    }
+  };
+
   return (
     <>
       <S.ChartContainer>
         <S.ChartHeader>
-          {data.length && typesBalanceInfo(type)}
+          {data.length ? typesBalanceInfo(type) : null}
 
           <S.ButtonsList>
-            <Dropdown selected={selected} setSelected={setSelected} options={btns} />
+            <Dropdown selected={selected} setSelected={typeSelected} options={btns} />
           </S.ButtonsList>
           <S.MobTooltips>
             <S.TooltipsDate>
-              {date ? moment(date).format('DD.MM.YYYY, dddd, hh:mm') : ''}
+              {date ? moment(date).format('DD.MM.YYYY, dd, hh:mm') : ''}
             </S.TooltipsDate>
             <S.TooltipsValue>{valCWD ? valCWD.toLocaleString() + ' CWD' : ''}</S.TooltipsValue>
           </S.MobTooltips>
           <S.Buttons>
-            {btns.map((i, id) => (
-              <S.Button active={id === active} key={id} onClick={() => setActive(id)}>
+            {btns.map((i) => (
+              <S.Button active={i === active} key={i} onClick={() => typeSelected(i)}>
                 {i}
               </S.Button>
             ))}
           </S.Buttons>
         </S.ChartHeader>
-
-        <HighchartsReact
-          constructorType={'stockChart'}
-          highcharts={Highcharts}
-          options={state.options}
-        />
+        <S.MobChartBlock mob>
+          <MobChart data={data1()} setDate={setDate} setValCWD={setValCWD} />
+        </S.MobChartBlock>
+        <S.MobChartBlock>
+          <HighchartsReact
+            constructorType={'stockChart'}
+            highcharts={Highcharts}
+            options={state.options}
+          />
+        </S.MobChartBlock>
       </S.ChartContainer>
     </>
   );
