@@ -86,6 +86,15 @@ declare module 'styled-components' {
       }
     },
     titles: string;
+    toToken: {
+      background: string;
+      color: string;
+      convertColor: string;
+    };
+    authBgGray: string;
+    black: string;
+    white: string;
+    blue: string;
     operations: {
       descClr: string;
       headBg: string;

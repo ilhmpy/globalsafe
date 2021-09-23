@@ -28,11 +28,17 @@
     "goTo": "Go to Activity",
     "login": "Enter login",
     "incorrectLogin": "Login is not correct",
-    "getCode": "To get the code",
-    "repeat": "Request the code again",
+    "incorrectPassword": "Password is not correct",
+    "getCode": "Get the code",
+    "repeat": "Request the code again in",
     "over": "in",
     "enter": "Enter",
-    "loginAccount": "Enter account"
+    "loginAccount": "Enter account",
+    "authorize": "Authorization",
+    "activityOn": "Activity on",
+    "loginCWD": "Login (cwd.global)",
+    "oneTimeCode": "One time code",
+    "register": "Sign Up"
   },
   "banner": {
     "uptitle": "About fund ",
@@ -320,7 +326,12 @@
     "serviceCommision": "Service commision",
     "undr": "Understand",
     "pendingPay": "Deferred payment",
-    "pledge": "Pledge"
+    "pledge": "Pledge",
+    "toToken": "Exchange to token",
+    "translate": "Exchange",
+    "sumIn": "Amount receivable",
+    "rate": "Exchange rate",
+    "convert": "Conversion amount"
   },
   "alert": {
     "success": "Successfully",

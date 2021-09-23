@@ -239,7 +239,7 @@ export const Payments: FC = () => {
   const [last, setLast] = useState(localStorage.getItem("last") || undefined);
   
   return (
-    <Page abs>
+    <Page>
       {statsDeposit.length ? (
         <>
           <Container>
