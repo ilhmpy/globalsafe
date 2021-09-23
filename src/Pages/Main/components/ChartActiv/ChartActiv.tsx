@@ -121,10 +121,11 @@ export const ChartActiv: FC<Props> = ({ data, type }: Props) => {
       ],
       chart: {
         marginLeft: size < 768 ? 0 : 50,
-        marginRight: size < 768 ? 30 : 10,
+        marginRight: size < 768 ? 30 : 5,
         backgroundColor: '#F7F8FA',
-        height: 340,
-        // marginBottom: 0,
+        height: 345,
+        // spacingTop: 50,
+        spacingBottom: 0,
       },
       tooltip: {
         borderRadius: 4,
@@ -149,8 +150,22 @@ export const ChartActiv: FC<Props> = ({ data, type }: Props) => {
         },
       },
       plotOptions: {
-        line: {
-          color: '#000',
+        series: {
+          lineWidth: 2,
+          marker: {
+            fillColor: '#3F3E4E',
+            lineWidth: 2,
+            lineColor: '#DCDCE8',
+            radius: 3,
+            states: {
+              hover: {
+                fillColor: '#3F3E4E',
+                lineWidth: 2,
+                lineColor: '#DCDCE8',
+                // radius: 3,
+              },
+            },
+          },
         },
       },
       rangeSelector: {
@@ -189,8 +204,16 @@ export const ChartActiv: FC<Props> = ({ data, type }: Props) => {
         },
         xAxis: {
           gridLineWidth: 0,
+          height: 10,
+          top: 2,
+          tickColor: '#DCDCE8',
+          lineColor: '#fff',
+          gridLineColor: '#FF0000',
+          lineWidth: 0,
         },
         yAxis: {
+          lineColor: '#fff',
+          gridLineWidth: 0,
           plotBands: [
             {
               color: 'rgba(115, 113, 115, 0.2)',
@@ -218,6 +241,10 @@ export const ChartActiv: FC<Props> = ({ data, type }: Props) => {
             },
           },
         ],
+      },
+      xAxis: {
+        tickColor: '#DCDCE8',
+        lineColor: '#F7F8FA',
       },
     },
   };

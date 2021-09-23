@@ -73,7 +73,7 @@ export const ExchangeChart = () => {
   );
 
   useEffect(() => {
-    const dateFrom = moment().subtract(7, 'days').format();
+    const dateFrom = moment().subtract(1, 'years').format();
     if (hubConnection) {
       fetchDIAMOND(dateFrom);
     }
