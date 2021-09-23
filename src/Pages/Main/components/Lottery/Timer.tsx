@@ -181,17 +181,17 @@ export const Timer: FC<Props> = ({
       {modalTimer ? (
         <Styled.TimerHistoryInner history={history}>
           <Styled.TimerHisroryTitle>
-            {history ? t('newDraw') : t('timerStart')}
+            {history ? t('newDraw') : 'Новый розыгрыш через:'}
           </Styled.TimerHisroryTitle>
           <Styled.TimerHistoryValue nodata={clock === null || state === '0'}>
             {modalPrize ? (
               <>
                 <Styled.TimerHistoryValueDesc>
                   <span>
-                    {stateData.days} {t('d')}{' '}
+                    {stateData.days} {t('d')}.{' '}
                   </span>
                   <span>
-                    {stateData.hours} {t('h')}{' '}
+                    {stateData.hours} {t('h')}.{' '}
                   </span>
                   <span>
                     {stateData.minutes} {t('m')}
@@ -216,13 +216,13 @@ export const Timer: FC<Props> = ({
               <>
                 {' '}
                 <span>
-                  {stateData.days} {t('d')}{' '}
+                  {stateData.days} {t('d')}.{' '}
                 </span>
                 <span>
-                  {stateData.hours} {t('h')}{' '}
+                  {stateData.hours} {t('h')}.{' '}
                 </span>
                 <span>
-                  {stateData.minutes} {t('m')}
+                  {stateData.minutes} {t('m')}.
                 </span>
               </>
             )}

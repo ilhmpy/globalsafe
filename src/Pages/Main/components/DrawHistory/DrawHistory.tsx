@@ -3,7 +3,7 @@ import React, { FC, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import styled from 'styled-components/macro';
-import { Button } from '../../../../components/Button/Button';
+// import { Button } from '../../../../components/Button/Button';
 import { H2 } from '../../../../components/UI/MainStyled';
 import { Page } from '../../../../components/UI/Page';
 import { UpTitle } from '../../../../components/UI/UpTitle';
@@ -12,6 +12,7 @@ import { Card, Container } from '../../../../globalStyles';
 import { Balance } from '../../../../types/balance';
 import { ArrList, RootLottery } from '../../../../types/lottery';
 import { Timer } from '../Lottery/Timer';
+import { Button } from '../../../../components/Button/V2/Button';
 
 type Props = {
   onOpenModal: () => void;
@@ -112,14 +113,18 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
       {/* <Container>
         <UpTitle small>{t('draws')}</UpTitle>
       </Container> */}
-      <Container bigMargin>
+      <TitleContainer bigMargin>
         <H2>{'Розыгрыши'}</H2>
-      </Container>
+        <Subtitle>
+          Ниже представлены победители прошлых розыгрышей, испытайте удачу, в этом списке можете
+          оказаться вы !
+        </Subtitle>
+      </TitleContainer>
 
       <Container>
         <TimerHistoryContainer alfa onClick={onOpenModal}>
           <Timer modalTimer />
-          <Button danger>{t('goDraw')}</Button>
+          <Button as="button">{'Перейти к розыгрышу'}</Button>
         </TimerHistoryContainer>
       </Container>
 
@@ -128,7 +133,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
           <TableItemHead>{t('lotteryTable.date')}</TableItemHead>
           <TableItemHead>{t('lotteryTable.typeWin')}</TableItemHead>
           <TableItemHead>{t('lotteryTable.sumWin')}</TableItemHead>
-          <TableItemHead> {t('lotteryTable.winners')}</TableItemHead>
+          <TableItemHead> {t('lotteryTable.winner')}</TableItemHead>
         </TableList>
         <TransitionGroup>
           {notifyList.length &&
@@ -182,7 +187,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
             })}
         </TransitionGroup>
         {/* {show && (
-          <Button dangerOutline onClick={add}>
+            <Button onClick={add}>
             {t('operation.showMore')}
           </Button>
         )} */}
@@ -191,13 +196,33 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
   );
 };
 
+const TitleContainer = styled(Container)`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 40px;
+`;
+
+const Subtitle = styled.p`
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  max-width: 373px;
+`;
+
 const TimerHistoryContainer = styled(Card)`
   width: 100%;
-  padding: 20px 45px;
+  padding: 20px;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 30px;
+  flex-direction: column;
+  gap: 20px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  background: #ffffff;
+  & > button {
+    width: 100%;
+    max-width: 190px;
+  }
   @media (max-width: 768px) {
     display: none;
   }
@@ -210,6 +235,9 @@ const TimerHistoryContainer = styled(Card)`
 const TableContainer = styled(Container)`
   display: flex;
   flex-direction: column;
+  background-color: #ffffff;
+  border-radius: 4px;
+
   ${Button} {
     margin: 30px auto;
     width: 160px;
@@ -222,12 +250,16 @@ const TableList = styled.ul<{ card?: boolean; dn?: boolean }>`
   align-items: center;
   width: 100%;
   justify-content: space-between;
-  padding: 10px 50px;
-  margin-bottom: 18px;
-  background: ${(props) => (props.card ? props.theme.card.backgroundAlfa : 'transparent')};
-  box-shadow: ${(props) => (props.card ? '0px 1px 3px rgba(0, 0, 0, 0.25)' : 'none')};
-  border-radius: 20px;
+  padding: 20px 40px;
+  /* margin-bottom: 18px; */
+  background: ${(props) => (props.card ? props.theme.card.backgroundAlfa : '#dcdce8')};
+  /* box-shadow: ${(props) =>
+    props.card
+      ? '0px 1px 3px rgba(0, 0, 0, 0.25)'
+      : '0px 80px 80px -40px rgba(220, 220, 232, 0.5)'}; */
   border: ${(props) => (props.card ? props.theme.card.border : 'none')};
+
+  border-radius: 4px 4px 0px 0px;
   @media (max-width: 992px) {
     padding: 10px 15px;
   }
@@ -249,8 +281,7 @@ const TableList = styled.ul<{ card?: boolean; dn?: boolean }>`
     if (props.card) {
       return `
             background: ${({ theme }: any) => theme.card.backgroundAlfa};
-            box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
-            border-radius: 20px;
+            border-radius: 4px;
             border: ${({ theme }: any) => theme.card.border};
           `;
     }
@@ -258,13 +289,14 @@ const TableList = styled.ul<{ card?: boolean; dn?: boolean }>`
 `;
 
 const TableItem = styled.li`
-  letter-spacing: 0.1px;
+  /* letter-spacing: 0.1px; */
   font-weight: normal;
-  font-size: 18px;
-  line-height: 21px;
+  font-size: 14px;
+  line-height: 20px;
   width: 100%;
   color: ${(props) => props.theme.text2};
   padding-right: 10px;
+
   @media (max-width: 768px) {
     font-size: 14px;
     line-height: 16px;
@@ -306,23 +338,24 @@ const TableItem = styled.li`
 
 const TableItemHead = styled(TableItem)`
   color: ${(props) => props.theme.text2};
+  font-weight: 500;
+
   @media (max-width: 576px) {
     display: none;
   }
 `;
 
 const Value = styled.div`
-  font-weight: 500;
-  font-size: 24px;
-  line-height: 28px;
-  // display: flex;
   align-items: center;
-  letter-spacing: 0.1px;
   text-transform: uppercase;
-  color: #ff416e;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  color: #3f3e4e;
 
   &:hover {
     cursor: pointer;

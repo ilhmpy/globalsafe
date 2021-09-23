@@ -20,10 +20,10 @@ export const CloseIcon = styled(Close)`
 
 export const TimerHisroryTitle = styled.div`
   font-weight: normal;
-  font-size: 18px;
-  line-height: 21px;
+  font-style: normal;
+  font-size: 14px;
   letter-spacing: 0.1px;
-  margin-bottom: 10px;
+  line-height: 20px;
   @media (max-width: 576px) {
     font-size: 14px;
     line-height: 17px;
@@ -49,16 +49,13 @@ export const TimerContainer = styled.div`
 `;
 
 export const TimerHistoryInner = styled.div<{ mt?: boolean; history?: boolean }>`
-  margin-right: 80px;
   width: 80%;
   max-width: 341px;
-  height: 123px;
+  /* height: 123px; */
   display: flex;
   justify-content: center;
-  padding-left: 30px;
-  padding-right: 20px;
   flex-direction: column;
-
+  gap: 20px;
   @media (max-width: 768px) {
     margin-right: 0px;
   }
@@ -70,7 +67,7 @@ export const TimerHistoryInner = styled.div<{ mt?: boolean; history?: boolean }>
         margin-top: 35px;
         margin-left: auto;
         border-radius: 20px;
-  box-shadow: 1px 0px 12px 1px rgba(34, 60, 80, 0.2);
+        box-shadow: 1px 0px 12px 1px rgba(34, 60, 80, 0.2);
       `;
     }
   }}
@@ -503,7 +500,13 @@ export const TimerHistoryValue = styled.div<{ nodata?: boolean }>`
   font-size: 36px;
   line-height: 42px;
   letter-spacing: 0.1px;
-  color: #ff416e;
+
+  font-style: normal;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 28px;
+
+  color: #3f3e4e;
   ${(props) => {
     if (props.nodata) {
       return MyCss;
