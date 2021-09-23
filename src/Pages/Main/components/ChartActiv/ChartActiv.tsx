@@ -123,6 +123,8 @@ export const ChartActiv: FC<Props> = ({ data, type }: Props) => {
         marginLeft: size < 768 ? 0 : 50,
         marginRight: size < 768 ? 30 : 10,
         backgroundColor: '#F7F8FA',
+        height: 340,
+        // marginBottom: 0,
       },
       tooltip: {
         borderRadius: 4,
@@ -172,6 +174,7 @@ export const ChartActiv: FC<Props> = ({ data, type }: Props) => {
         maskFill: 'rgba(0, 148, 255, 0.2)',
         maskInside: true,
         outlineWidth: 0,
+        marginBottom: 0,
         handles: {
           backgroundColor: '#FFFFFF',
           borderColor: '#9E9EB8',

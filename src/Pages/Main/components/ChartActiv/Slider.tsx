@@ -152,7 +152,7 @@ export const SliderChart: FC<Props> = ({ listDIAMOND, listGLOBAL, listMGCWD, lis
         <S.ThumbSlider>
           <Swiper
             onSwiper={setThumbsSwiper}
-            spaceBetween={10}
+            spaceBetween={20}
             slidesPerView={4}
             freeMode={true}
             loop={false}
