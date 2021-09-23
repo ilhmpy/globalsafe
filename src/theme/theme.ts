@@ -74,7 +74,7 @@ export const lightTheme = {
   },
   loader: {
     bg: 'rgba(0, 0, 0, 0.2)',
-    pointsColor: '#2b3595',
+    pointsColor: '#2b3595', 
   },
   timer: {
     bg: '#fff',
@@ -91,7 +91,15 @@ export const lightTheme = {
     ich1: "#fff",
     ich2: "#F8F7FC",
     tableBg: "#fff"
-  }
+  },
+  v2:{
+    text: "#3F3E4E",
+    body: "#E5E5E5",
+    header:{
+      background: "#fff",
+      burger: "#000"
+    }
+  },
 };
 
 export const darkTheme = {
@@ -179,6 +187,14 @@ export const darkTheme = {
     ich1: "#1D1D21",
     ich2: "#28282F",
     tableBg: "#2A2A31"
-  } 
+  },
+  v2:{
+    text: "#3F3E4E",
+    body: "#E5E5E5",
+    header:{
+      background: "#fff",
+      burger: "#FFF"
+    }
+  },
 };
  

@@ -556,7 +556,7 @@
   "unders": "Got it",
   "payments2": {
     "actual": "Actuality on",
-    "last": "Updated",
+    "last": "Updated", 
     "ago": "ago",
     "now": "now"
   },
