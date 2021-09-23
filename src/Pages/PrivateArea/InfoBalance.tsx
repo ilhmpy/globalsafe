@@ -14,7 +14,7 @@ import { AppContext } from '../../context/HubContext';
 import { Card, Container } from '../../globalStyles';
 import { Balance } from '../../types/balance';
 import { OpenDate } from '../../types/dates';
-import { ModalDividends } from './Modals';
+import { ModalDividends } from './Modals'; 
 import * as Styled from './Styles.elements';
 
 type Obj = {
@@ -59,7 +59,6 @@ const BalanceTable: FC<BalanceTableProps> = ({ balanceLog }: BalanceTableProps) 
     setDivModal(false);
   };
 
-  console.log('Robert::::::::balanceLog', balanceLog);
   return (
     <>
       <div>
@@ -278,6 +277,7 @@ export const InfoBalance = () => {
                   balance: item.amount,
                   date: item.operationDate,
                   userDeposit: item.userDeposit,
+                  asset: item.balanceKind,
                 };
 
                 if (result[d]) {

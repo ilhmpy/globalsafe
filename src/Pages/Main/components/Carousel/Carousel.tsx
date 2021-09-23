@@ -10,7 +10,7 @@ import { Button } from '../../../../components/Button/V2/Button';
 
 const settings = {
   //   autoplay: true,
-  //   autoplaySpeed: 5000,
+  //   autoplaySpeed: 5000, 
   focusOnSelect: true,
   dots: true,
   infinite: true,

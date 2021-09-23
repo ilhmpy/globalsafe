@@ -19,7 +19,7 @@ import { AppContext } from '../../../../context/HubContext';
 import { Card, Container } from '../../../../globalStyles';
 import { Pokedex, RootPayDeposit } from '../../../../types/payouts';
 import { ModalBlock, ModalTitle } from '../Tariffs/Tariffs.elements';
-import { ReactComponent as Reload } from '../../../../assets/svg/reload.svg';
+import { ReactComponent as Reload } from "../../../../assets/svg/reload.svg";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
@@ -236,55 +236,49 @@ export const Payments: FC = () => {
     }
   };
 
-  const [last, setLast] = useState(localStorage.getItem('last') || undefined);
-
-  console.log(bigArr);
-
+  const [last, setLast] = useState(localStorage.getItem("last") || undefined);
+  
   return (
-    <Page abs>
+    <Page>
       {statsDeposit.length ? (
-        <Container>
-          <H2 center>{t('payments.currPay')}</H2>
-        </Container>
+        <>
+          <Container>
+            <H2 center>{t('payments.currPay')}</H2>
+          </Container>
+          <Container>
+            <WhiteBox>
+              <WhiteIntf>
+                <Title>{t("payments2.actual")} {moment(new Date()).format("DD.MM.YYYY")}</Title>
+                <Title right>
+                  {t("payments2.last")} {last ? ( <> 5 минут {t("payments2.ago")} </> ) : t("payments2.now")} <Reload style={{ cursor: "pointer" }} />
+                </Title>
+              </WhiteIntf>
+              <WhiteMap>
+                {statsDeposit.length ? (
+                  <>
+                  {bigArr.map((i: any, idx: any) => {
+                    return (
+                      <>
+                        {i.map((item: any, idx: any) => (
+                          <WhiteItem key={idx}>
+                            <WhiteItemText>{item.deposit.name}</WhiteItemText>
+                            <WhiteItemText bold>{(item.procent).toFixed(0)}%</WhiteItemText>
+                            <WhiteItemText>{moment(item.date).format("DD.MM.YYYY")}</WhiteItemText>
+                            <WhiteItemLine procent={(item.procent).toFixed(0)} />
+                          </WhiteItem>
+                        ))}
+                      </>
+                    )
+                  })}
+                </>
+                ) : ( "" )}
+              </WhiteMap>
+            </WhiteBox>
+        </Container> 
+       </>
       ) : (
         ''
       )}
-      <Container>
-        <WhiteBox>
-          <WhiteIntf>
-            <Title>
-              {t('payments2.actual')} {moment(new Date()).format('DD.MM.YYYY')}
-            </Title>
-            <Title right>
-              {t('payments2.last')}{' '}
-              {last ? <> 5 минут {t('payments2.ago')} </> : t('payments2.now')}{' '}
-              <Reload style={{ cursor: 'pointer' }} />
-            </Title>
-          </WhiteIntf>
-          <WhiteMap>
-            {statsDeposit.length ? (
-              <>
-                {bigArr.map((i: any, idx: any) => {
-                  return (
-                    <>
-                      {i.map((item: any, idx: any) => (
-                        <WhiteItem key={idx}>
-                          <WhiteItemText>{item.deposit.name}</WhiteItemText>
-                          <WhiteItemText bold>{item.procent.toFixed(0)}%</WhiteItemText>
-                          <WhiteItemText>{moment(item.date).format('DD.MM.YYYY')}</WhiteItemText>
-                          <WhiteItemLine procent={item.procent.toFixed(0)} />
-                        </WhiteItem>
-                      ))}
-                    </>
-                  );
-                })}
-              </>
-            ) : (
-              ''
-            )}
-          </WhiteMap>
-        </WhiteBox>
-      </Container>
     </Page>
   );
 };
@@ -541,10 +535,11 @@ const RoundInsideItem = styled.div`
   width: 100%;
 `;
 
+
 const WhiteBox = styled.div`
   width: 100%;
   min-height: 612px;
-  background: #ffffff;
+  background: #FFFFFF;
   border-radius: 4px;
   box-shadow: 0px, 80px, rgba(220, 220, 232, 0.5);
   padding: 25px;
@@ -555,18 +550,18 @@ const WhiteBox = styled.div`
     padding-top: 25px;
     max-width: 700px;
   }
-
+  
   @media only screen and (max-device-width: 767px) {
     width: 100%;
     max-width: 100%;
   }
 `;
 
-const Title = styled.div<{ right?: boolean }>`
+const Title = styled.div<{ right?: boolean; }>`
   font-weight: 400;
   font-size: 14px;
   line-height: 20px;
-  color: ${(props) => props.theme.titles};
+  color: ${({ theme }) => theme.titles};
   align-items: center;
   display: flex;
 
@@ -575,7 +570,7 @@ const Title = styled.div<{ right?: boolean }>`
       return `
         margin-right: 20px;
       `;
-    }
+    };
   }}
 
   & > svg {
@@ -595,7 +590,7 @@ const WhiteIntf = styled.div`
   justify-content: space-between;
   margin-bottom: 20px;
 
-  @media only screen and (max-device-width: 767px) {
+  @media only screen and (max-device-width: 767px) { 
     flex-direction: column;
   }
 `;
@@ -610,7 +605,7 @@ const WhiteItem = styled.div`
   width: 180px;
   height: 108px;
   min-width: 180px;
-  background: #f8f7fc;
+  background: #F8F7FC;
   margin-right: 20px;
   border-radius: 4px;
   margin-bottom: 20px;
@@ -628,38 +623,38 @@ const WhiteItem = styled.div`
   }
 `;
 
-const WhiteItemText = styled.div<{ bold?: boolean }>`
+const WhiteItemText = styled.div<{ bold?: boolean; }>`
   color: #000;
   font-weight: 400;
   font-size: 12px;
   line-height: 14px;
 
   ${({ bold }) => {
-    if (bold) {
-      return `
+      if (bold) {
+        return `
           font-weight: 700;
           color: #3F3E4E;
           font-size: 18px;
           line-height: 30px;
         `;
-    }
-  }}
+      };
+   }}
 `;
 
-const WhiteItemLine = styled.div<{ procent: number | string }>`
-  width: 100%;
-  background: #dcdce8;
-  dispay: block;
-  height: 2px;
-  margin-top: 13px;
-  position: relative;
+const WhiteItemLine = styled.div<{ procent: number | string; }>`
+   width: 100%;
+   background: #DCDCE8;
+   dispay: block;
+   height: 2px;
+   margin-top: 13px;
+   position: relative;
 
-  &::after {
-    display: inline;
-    content: '';
-    background: #0094ff;
-    position: absolute;
-    width: ${({ procent }) => procent}%;
-    height: inherit;
-  }
+   &::after {
+     display: inline;
+     content: "";
+     background: #0094FF;
+     position: absolute;
+     width: ${({ procent }) => procent}%;
+     height: inherit;
+   }
 `;

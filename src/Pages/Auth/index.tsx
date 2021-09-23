@@ -13,9 +13,9 @@ export const Authentication = () => {
   return (
     <AuthPage>
       <Header />
-      <Container>
+      {/* <Container>
         <UpTitle>{t("headerButton.personalArea")}</UpTitle>
-      </Container>
+      </Container> */}
       <LoginComponent />
     </AuthPage>
   );
@@ -26,9 +26,9 @@ export const Register = () => {
   return (
     <AuthPage>
       <Header />
-      <Container>
+      {/* <Container>
         <UpTitle>{t("headerButton.register")}</UpTitle>
-      </Container>
+      </Container> */}
       <RegisterComponent />
     </AuthPage>
   );
@@ -36,4 +36,5 @@ export const Register = () => {
 
 const AuthPage = styled(Page)`
   height: 100vh;
+  background-color: ${props => props.theme.authBgGray};
 `;

@@ -4,10 +4,10 @@ import { useTranslation } from 'react-i18next';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import styled from 'styled-components/macro';
 import { Button } from '../../../../components/Button/Button';
-import { H2 } from '../../../../components/UI/MainStyled';
+import { H2 } from '../../../../components/UI/Heading';
 import { Page } from '../../../../components/UI/Page';
 import { AppContext } from '../../../../context/HubContext';
-import { Container } from '../../../../globalStyles';
+import { Container } from '../../../../components/UI/Container';
 import { Collection, RootOperations } from '../../../../types/operations';
 
 export const Operations = () => {
@@ -18,7 +18,7 @@ export const Operations = () => {
   const [maxItems, setMaxItems] = useState(4);
   const hubConnection = appContext.hubConnection;
 
-  useEffect(() => {
+  function req() {
     let clean = false;
     const cb = (data: Collection) => {
       !clean && setNotifyList((notifyList) => [data, ...notifyList.slice(0, -1)]);
@@ -26,7 +26,7 @@ export const Operations = () => {
     if (hubConnection) {
       hubConnection.on('OperationNotification', cb);
       hubConnection
-        .invoke<RootOperations>('GetOperationsNotifications', [2, 4, 5, 6, 7, 8], 0, 4)
+        .invoke<RootOperations>('GetOperationsNotifications', [2, 4, 5, 6, 7, 8], 10, 10)
         .then((res) => {
           !clean && setNotifyList(res.collection);
         })
@@ -36,6 +36,10 @@ export const Operations = () => {
       clean = true;
       hubConnection?.off('OperationNotification', cb);
     };
+  };
+
+  useEffect(() => {
+    req();
   }, [hubConnection]);
 
   const { t } = useTranslation();
@@ -83,54 +87,49 @@ export const Operations = () => {
     setShowLess(false);
   };
 
+  useEffect(() => {
+    setInterval(() => {
+      req();
+    }, 300000)
+  }, []);
+
   return (
-    <Page>
-      <Container>
-        <H2>{t('operation.last')}</H2>
-      </Container>
-      <TableContainer>
-        <TableList dn>
-          <TableItemHead>{t('operation.date')}</TableItemHead>
-          <TableItemHead>{t('operation.type')}</TableItemHead>
-          <TableItemHead>{t('operation.sum')}</TableItemHead>
-        </TableList>
-        <TransitionGroup>
-          {notifyList.length &&
-            notifyList.map((item, idx) => {
-              return (
-                <CSSTransition key={item.date.toString() + idx} timeout={500} classNames="item">
-                  <TableList card className="operations-item">
-                    <TableItem>{moment(item.date).format('DD.MM.YYYY')}</TableItem>
-                    <TableItem>
-                      {item.depositName ? (
-                        <Text>
-                          {operation(item.operationKind)} {t('operation.byProgramm')}
-                          <span>&nbsp;{item.depositName}</span>
-                        </Text>
-                      ) : (
-                        <Text>{operation(item.operationKind)}</Text>
-                      )}
-                    </TableItem>
-                    <TableItem>
-                      <Value>
-                        {(item.amount / 100000).toLocaleString('ru-RU', {
-                          maximumFractionDigits: 2,
-                        })}{' '}
-                        CWD
-                      </Value>
-                    </TableItem>
-                  </TableList>
-                </CSSTransition>
-              );
-            })}
-        </TransitionGroup>
-        {
-          <Button dangerOutline onClick={!showLess ? add : less}>
-            {!showLess ? t('operation.showMore') : t('operation.showLess')}
-          </Button>
-        }
-      </TableContainer>
-    </Page>
+    <>
+      {notifyList.length > 0 ? (
+         <Page>
+          <Container>
+              <H2>{t('operation.last')}</H2>
+              <Description>{t("operations2.desc")}</Description>
+          </Container>
+          <Container pNone>
+            <TableHead>
+              <TableHeadItem>{screen.width > 480 ? t("operations2.head1") : t("operations2.time")}</TableHeadItem>
+              <TableHeadItem>{screen.width > 480 ? t("operations2.head2") : t("operations2.name")}</TableHeadItem>
+              <TableHeadItem>{t("operations2.head3")}</TableHeadItem>
+            </TableHead>
+            <TableMapBlock>
+              {notifyList.map((itm, idx) => (
+                <TableMapItem key={idx}>
+                  <TableInnerItem>
+                    {screen.width > 480 ? (
+                      <>
+                        {moment(itm.date).format("DD.MM.YYYY")} {t("in")} {moment(itm.date).format("HH:MM")}
+                      </>
+                    ) : (
+                      <>
+                        {moment(itm.date).format("HH:MM")}
+                      </>
+                    )}
+                  </TableInnerItem>
+                  <TableInnerItem><span>{operation(itm.operationKind)} {screen.width > 480 ? ( <> {itm.depositName ? itm.depositName : ""} </> ) : ( <><br /> {itm.depositName ? itm.depositName : ""}</>)}</span></TableInnerItem>
+                  <TableInnerItem>{(itm.amount / 100000).toLocaleString("ru-RU", { maximumFractionDigits: 5 })}</TableInnerItem>
+                </TableMapItem>
+              ))}
+           </TableMapBlock>
+         </Container>
+       </Page>
+      ) : ( "" )}
+    </>
   );
 };
 
@@ -261,4 +260,206 @@ const Text = styled.div`
     font-size: 14px;
     line-height: 16px;
   }
+`;
+
+const Description = styled.h3`
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: ${({ theme }) => theme.operations.descClr};
+  max-width: 367px;
+  margin-bottom: 30px;
+`;
+
+const TableHead = styled.div<{ item?: boolean; }>`
+  width: 100%;
+  height: 60px;
+  background: ${({ theme }) => theme.operations.headBg}; 
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding: 0px 0px 0px 40px;
+
+  @media only screen and (max-device-width: 480px) {
+    padding-left: 20px;
+    border-radius: 0;
+  }
+`;
+
+const TableHeadItem = styled.div`
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: ${({ theme }) => theme.operations.headClr};
+  width: 100%;
+
+  &:nth-child(1) {
+    max-width: 330px;
+  }
+
+  &:nth-child(2) {
+    max-width: 400px;
+  }
+
+  &:nth-child(3) {
+    max-width: 100px;
+  }
+
+  @media only screen and (min-device-width: 481px) and (max-device-width: 849px) {
+    &:nth-child(1) {
+      max-width: 250px;
+    }
+
+    &:nth-child(2) {
+      max-width: 303px;
+    }
+  } 
+
+  @media only screen and (min-device-width: 850px) and (max-device-width: 949px) {
+    &:nth-child(1) {
+      max-width: 250px;
+    }
+
+    &:nth-child(2) {
+      max-width: 325px;
+    }
+  }
+
+  @media only screen and (max-device-width: 480px) {
+    font-weight: 500;
+    font-size: 13px;
+
+    &:nth-child(1) {
+      max-width: 61px;
+    }
+  }
+
+  @media only screen and (max-device-width: 359px) {
+    &:nth-child(3) {
+      max-width: 89px;
+    }
+  }
+
+  @media only screen and (min-device-width: 360px) and (max-device-width: 434px) {
+    &:nth-child(1) {
+      max-width: 65px;
+    }
+  }
+
+  @media only screen and (min-device-width: 435px) and (max-device-width: 480px) {
+    &:nth-child(1) {
+      max-width: 71px;
+    }
+
+    &:nth-child(3) {
+      max-width: 114px;
+    }
+  }
+`;  
+
+const TableMapItem = styled.div`
+  width: 100%;
+  height: 60px;
+  background: ${({ theme }) => theme.operations.ich1}; 
+  display: flex;
+  align-items: center;
+  padding: 0px 0px 0px 40px;
+
+  &:nth-child(2n) {
+    background: ${({ theme }) => theme.operations.ich2};
+  }
+
+  @media only screen and (max-device-width: 480px) {
+    padding-left: 20px;
+    padding-top: 10px;
+    height: 74px;
+    align-items: start;
+  }
+`;
+
+const TableInnerItem = styled.div`
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: ${({ theme }) => theme.operations.headClr};
+  width: 100%;
+
+  &:nth-child(1) {
+    max-width: 330px;
+  }
+
+  &:nth-child(2) {
+    max-width: 400px;
+  }
+
+  &:nth-child(3) {
+    max-width: 100px;
+  }
+
+  @media only screen and (min-device-width: 481px) and (max-device-width: 849px) {
+    &:nth-child(1) {
+      max-width: 250px;
+    }
+
+    &:nth-child(2) {
+      max-width: 303px;
+    }
+  } 
+
+  
+  @media only screen and (min-device-width: 850px) and (max-device-width: 949px) {
+    &:nth-child(1) {
+      max-width: 250px;
+    }
+
+    &:nth-child(2) {
+      max-width: 325px;
+    }
+  }
+
+  @media only screen and (max-device-width: 480px) {
+    font-weight: 500;
+    font-size: 13px;
+
+    & > span {
+      width: 120px;
+      max-width: 120px;
+      word-wrap: break-word;
+    }
+
+    &:nth-child(1) {
+      max-width: 61px;
+    }
+  }
+
+  @media only screen and (max-device-width: 359px) {
+    &:nth-child(3) {
+      max-width: 89px;
+    }
+  }
+
+  @media only screen and (min-device-width: 360px) and (max-device-width: 434px) {
+    &:nth-child(1) {
+      max-width: 65px;
+    }
+  }
+
+  @media only screen and (min-device-width: 435px) and (max-device-width: 480px) {
+    &:nth-child(1) {
+      max-width: 71px;
+    }
+
+    &:nth-child(3) {
+      max-width: 114px;
+    }
+  }
+`;
+
+const TableMapBlock = styled.div`
+  width: 100%;
+  padding: 1px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  background: ${({ theme }) => theme.operations.tableBg};
 `;

@@ -10,9 +10,9 @@ import 'moment/locale/ru';
 import { ReactComponent as Arrow } from '../../../../assets/v2/svg/arrow-exchange.svg';
 import { SmallChart } from './SmallChart';
 import useWindowSize from '../../../../hooks/useWindowSize';
-import { Dropdown } from './components/Dropdown';
+import { Dropdown } from './components/Dropdown'; 
 
-require('highcharts/modules/exporting')(Highcharts);
+require('highcharts/modules/exporting')(Highcharts); 
 
 function opt(H: any) {
   H.setOptions({
