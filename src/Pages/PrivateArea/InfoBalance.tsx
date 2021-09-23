@@ -201,7 +201,7 @@ export const InfoBalance = () => {
 
   const rangeDate = (from: Date, to: Date) => {
     setOpenDate({
-      from: from,
+      from: moment(from).utcOffset('+00:00').set({ hour: 0, minute: 0, second: 0 }).toDate(),
       to: moment(to).utcOffset('+00:00').set({ hour: 23, minute: 59, second: 59 }).toDate(),
     });
     setSelected(`${moment(from).format('DD.MM.YY')} - ${moment(to).format('DD.MM.YY')}`);
@@ -414,9 +414,9 @@ export const InfoBalance = () => {
       if (id === 0) {
         setBalanceLogs([0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15]);
       } else if (id === 1) {
-        setBalanceLogs([1, 7, 8]);
+        setBalanceLogs([6, 7, 8, 15]);
       } else if (id === 2) {
-        setBalanceLogs([2]);
+        setBalanceLogs([2, 3]);
       }
     }
   };

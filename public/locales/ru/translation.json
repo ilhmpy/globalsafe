@@ -358,7 +358,7 @@
     "transactionServiceFee": "Комиссия сервиса от суммы транзакции",
     "depositLoan": "Кредит на депозит",
     "balanceExchange": "Перевод между балансами",
-    "depositExchange": "Обменный депозит"
+    "depositExchange": "Обмен депозита"
   },
   "copy": {
     "copy": "Скопировано",
