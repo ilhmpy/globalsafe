@@ -8,6 +8,9 @@ import { AppContext } from '../../context/HubContext';
 import { Prize } from '../../types/drawResult';
 import { About } from './components/About/About';
 import { Banner } from './components/Banner/Banner';
+import { Carousel } from './components/Carousel/Carousel';
+import { ExchangeChart } from './components/ChartActiv';
+import { ChartActiv } from './components/ChartActiv/ChartActiv';
 import { DrawHistory } from './components/DrawHistory/DrawHistory';
 import { ModalLottery } from './components/Lottery/Modal';
 import { ModalCongrats } from './components/Lottery/ModalCongrats';
@@ -2117,6 +2120,7 @@ export const Main = () => {
   return (
     <div>
       <Header />
+      {/* <Carousel /> */}
       <MainPage id="banner">
         {showTimer && (
           <FixedBlock>
@@ -2154,6 +2158,7 @@ export const Main = () => {
         )}
 
         <Banner />
+        <ExchangeChart />
         <Payments />
         <Operations />
         <Tariffs />
@@ -2161,7 +2166,7 @@ export const Main = () => {
         {/* <Assets /> */}
 
         <DrawHistory onOpenModal={onOpenModal} clock={clock} />
-       
+
         {/* <About /> */}
         <Footer />
       </MainPage>
@@ -2199,11 +2204,12 @@ const Center = styled.div`
 const MainPage = styled(Page)`
   position: relative;
   //margin-top: 200px;
-  margin-top: 171px;
-  @media only screen and (min-width: 577px) and (max-width: 768px) {
+  padding-top: 0px;
+  margin-top: 94px;
+  /* @media only screen and (min-width: 577px) and (max-width: 768px) {
     margin-top: 0px;
     padding-top: 250px;
-  }
+  } */
   @media only screen and (max-width: 576px) {
     margin-top: 0px;
   }

@@ -93,10 +93,26 @@ export const lightTheme = {
   black: '#000000',
   white: '#ffffff',
   blue: '#0094FF',
+  operations: {
+    descClr: "#3F3E4E",
+    headBg: "rgba(220, 220, 232, 100%)",
+    headClr: "#3F3E4E",
+    ich1: "#fff",
+    ich2: "#F8F7FC",
+    tableBg: "#fff"
+  },
+  v2:{
+    text: "#3F3E4E",
+    body: "#E5E5E5",
+    header:{
+      background: "#fff",
+      burger: "#000"
+    }
+  },
 };
 
 export const darkTheme = {
-  body: 'rgba(48,48,48,1)',
+  body: '#28282F',
   text: '#FFF',
   toggleBorder: '#6B8096',
   buttonBorder: '#FF416E',
@@ -182,5 +198,21 @@ export const darkTheme = {
   black: '#000000',
   white: '#ffffff',
   blue: '#0094FF',
+  operations: {
+    descClr: "#fff",
+    headBg: "#131317",
+    headClr: "#fff",
+    ich1: "#1D1D21",
+    ich2: "#28282F",
+    tableBg: "#2A2A31"
+  },
+  v2:{
+    text: "#3F3E4E",
+    body: "#E5E5E5",
+    header:{
+      background: "#fff",
+      burger: "#FFF"
+    }
+  },
 };
  

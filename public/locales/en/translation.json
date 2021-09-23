@@ -1,9 +1,9 @@
 {
   "header": {
-    "item1": "About fund",
-    "item2": "Our tariffs",
-    "item3": "About us",
-    "item4": "Contacts"
+    "item1": "Tariffs and programs",
+    "item2": "Lottery",
+    "item3": "Exchanges",
+    "item4": "Rules" 
   },
   "themeDark": "Dark theme",
   "themeLight": "Light theme",
@@ -571,14 +571,13 @@
     "ago": "ago",
     "now": "now"
   },
-  "cancelDeposit":{
-    "closeDeposit": "Close deposit",
-    "sumAndProcent": "Conversion amount",
-    "convert": "Exchange rate",
-    "getSum": "Amount receivable",
-    "confirm": "Confirm",
-    "close": "Close",
-    "sumToPay": "The amount of payments on the deposit",
-    "sumBetween": "the difference in the amount of conversion and the amount paid will be credited to the globalsafe balance"
-  }
+  "operations2": {
+    "desc": "Below the extreme representative operations of users, data is updated automatically every 5 minutes",
+    "head1": "Date and time",
+    "head2": "Name of operation",
+    "head3": "Sum (CWD)",
+    "time": "Time",
+    "name": "Name"
+  },
+  "in": "in"
 }

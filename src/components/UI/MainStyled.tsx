@@ -1,4 +1,4 @@
-import styled from "styled-components/macro";
+import styled from 'styled-components/macro';
 
 export const H1 = styled.div`
   font-weight: 900;
@@ -11,7 +11,7 @@ export const H1 = styled.div`
   }
 `;
 
-export const H2 = styled.h2<{ center?: boolean; }>`
+export const H2 = styled.h2<{ center?: boolean }>`
   font-weight: 500;
   font-size: 48px;
   line-height: 57px;
@@ -21,7 +21,7 @@ export const H2 = styled.h2<{ center?: boolean; }>`
   @media (max-width: 1060px) {
     font-size: calc(26px + 60 * ((100vw - 320px) / 740));
   }
-  color: ${({ theme }) => theme.titles};
+  color: ${(props) => props.theme.titles};
   @media (max-width: 576px) {
     margin-bottom: 10px;
   }

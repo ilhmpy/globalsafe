@@ -319,6 +319,7 @@ const AuthContainer = styled(Container)`
   margin: 0 auto;
   padding: 0;
   padding-top: 40px;
+  align-items: center;
 
   @media (max-width: 768px) {
     padding-top: 80px;

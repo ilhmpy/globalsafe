@@ -342,7 +342,7 @@ input[type=number] {
 
 `;
 
-export const Container = styled.div<{ pNone?: boolean; bigMargin?: boolean }>`
+export const Container = styled.div<{ pNone?: boolean; bigMargin?: boolean; ppNone?: boolean; }>`
   -webkit-background-clip: content-box;
   background-clip: content-box;
   z-index: 1;
@@ -353,10 +353,22 @@ export const Container = styled.div<{ pNone?: boolean; bigMargin?: boolean }>`
   padding-right: 10px;
   padding-left: 10px;
   display: flex;
+  flex-direction: column;
   justify-content: space-around;
   @media screen and (max-width: 992px) {
     padding-right: ${(props) => (props.pNone ? '0' : '20px')};
     padding-left: ${(props) => (props.pNone ? '0' : '20px')};
+  }
+
+  @media only screen and (max-device-width: 480px) {
+    ${({ ppNone }) => {
+      if (ppNone) {
+        return `
+          padding-left: 0;
+          padding-right: 0;
+        `;
+      };
+    }}
   }
 `;
 
