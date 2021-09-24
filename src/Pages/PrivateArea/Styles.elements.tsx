@@ -1005,7 +1005,7 @@ export const SwitchBlock = styled.div<{ block: boolean }>`
 `;
 
 
-export const Desc = styled.h3<{ bold?: boolean; danger?: boolean; mMore?: boolean; }>`
+export const Desc = styled.h3<{ bold?: boolean; danger?: boolean; mMore?: boolean; mLess?: boolean; }>`
   font-weight: 400;
   font-size: 14px;
   line-height: 20px;
@@ -1029,9 +1029,34 @@ export const Desc = styled.h3<{ bold?: boolean; danger?: boolean; mMore?: boolea
 
   ${({ mMore }) => {
     if (mMore) {
-      return `        
-        margin-bottom: 20px;
+      return `
+        margin-top: 10px;        
+        margin-bottom: 10px;
       `;
     };
   }}
+
+  ${({ mLess }) => {
+    if (mLess) {
+      return `
+        margin-bottom: 2px;
+      `;
+    }
+  }}
 `; 
+
+export const Commision = styled.h3<{ marginT?: number; marginB?: number; }>`
+  width: 100%;
+  position: relative;
+  font-size: 14px;
+  font-weight: 400;
+  margin-bottom: 10px;
+  color: #000;
+  margin-top: ${({ marginT }) => marginT}px;
+  margin-bottom: ${({ marginB }) => marginB}px;
+
+  & > span {
+    position: absolute;
+    right: 0;
+  }
+`;
