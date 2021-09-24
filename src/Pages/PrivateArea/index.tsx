@@ -377,7 +377,7 @@ export const InfoMain: FC = () => {
 
 
 
-      <CSSTransition in={true} timeout={0} unmountOnExit>
+      <CSSTransition in={false} timeout={0} unmountOnExit>
         <Modal onClose={() => false} width={420} withClose>
           <H3 center>Вывод средств</H3>
           <div style={{ width: "100%", maxWidth: "340px", margin: "0 auto" }}>
