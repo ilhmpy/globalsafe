@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 import { ReactComponent as Copy } from '../../assets/svg/copy.svg';
-import { Button } from '../../components/Button/Button';
+// import { Button } from '../../components/Button/Button';
 import { Header } from '../../components/Header/Header';
 import { Modal } from '../../components/Modal/Modal';
 import { Notification } from '../../components/Notify/Notification';
@@ -25,9 +25,12 @@ import { InfoDeposits } from './InfoDeposits';
 import { DepositListModal, TokenModal } from './Modals';
 import { OnePage } from './OnePage';
 import * as Styled from './Styles.elements';
+import { ConvertingModal } from './ConvertingModal';
+import { Button } from '../../components/Button/V2/Button';
 
 export const InfoMain: FC = () => {
   const { t } = useTranslation();
+  const [openConverting, setOpenConverting] = useState<boolean>(false);
   const [notifications, setNotifications] = useState<Notify[]>([]);
   const [addDeposit, setAddDeposit] = useState<boolean>(false);
   const [depositListModal, setDepositListModal] = useState<boolean>(false);
@@ -310,6 +313,8 @@ export const InfoMain: FC = () => {
           return;
         }}
       />
+
+      <ConvertingModal open={openConverting} setOpen={setOpenConverting} />
       <Header />
       <Styled.Page>
         <Container>
@@ -363,24 +368,25 @@ export const InfoMain: FC = () => {
                   </Styled.SmallButtonsWrap>
                 </Styled.SmallButtonsWrapDesc>
               </Styled.UserBlock>
-              <Styled.InfoButtons> 
+              <Styled.InfoButtons>
                 <Button
-                  dangerOutline 
                   onClick={() => {
                     setDepositSelect(null);
                     setAddDepositValue('');
                     setAddDeposit(true);
-                  }} 
+                  }}
                 >
                   {t('privateArea.newDeposit')}
                 </Button>
-                <Button danger onClick={() => setSwitchType(!switchType)}>
+                <Button onClick={() => setSwitchType(!switchType)}>
                   {t('privateArea.withdraw')}
+                </Button>
+                <Button onClick={() => setOpenConverting(true)}>
+                  {t('privateArea.converting')}
                 </Button>
               </Styled.InfoButtons>
               <Styled.SwitchBlock block={switchType}>
                 <Button
-                  dangerOutline
                   onClick={() => {
                     setToTokenModal(true);
                     setSwitchType(false);
@@ -390,7 +396,7 @@ export const InfoMain: FC = () => {
                   {t('privateArea.toToken')}
                 </Button>
                 <Button
-                  dangerOutline
+                  as="button"
                   onClick={() => {
                     setSwitchType(false);
                     setWithdraw(true);

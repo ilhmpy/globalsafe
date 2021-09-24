@@ -3,7 +3,7 @@
     "item1": "Tariffs and programs",
     "item2": "Lottery",
     "item3": "Exchanges",
-    "item4": "Rules" 
+    "item4": "Rules"
   },
   "themeDark": "Dark theme",
   "themeLight": "Light theme",
@@ -280,6 +280,7 @@
     "balance": "Balance",
     "newDeposit": "New deposit",
     "withdraw": "Withdraw funds",
+    "converting": "Converting",
     "prevPay": "Previous payout",
     "procentPrevPay": "Percentage of the previous payment",
     "tabs": {
@@ -567,7 +568,7 @@
   "unders": "Got it",
   "payments2": {
     "actual": "Actuality on",
-    "last": "Updated", 
+    "last": "Updated",
     "ago": "ago",
     "now": "now"
   },
