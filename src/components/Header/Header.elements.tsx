@@ -32,10 +32,24 @@ export const SwitchTheme = styled.div<{ mob?: boolean }>`
   }
 `;
 
-export const AdminButton = styled(Button)`
-  min-width: 110px;
-  max-width: 110px;
-  padding: 12px 0px;
+export const AdminButton = styled.button`
+  padding: 12px 12px;
+  font-weight: 500;
+  font-family: 'Roboto', sans-serif;
+  background: transparent;
+  font-size: 12px;
+  line-height: 14px;
+  border: none;
+  cursor: pointer;
+  margin-right: 28px;
+  color: ${(props) => props.theme.v2.text};
+  text-transform: uppercase;
+  &:focus {
+    outline: none;
+  }
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 export const Languale = styled.div`
