@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { BaseButton, Title } from './Button.style';
 import { ButtonProps } from './index'
 
-export const PrimaryButton = ({
+export const SecondaryButton = ({
     className,
     title,
     onClick,
@@ -14,7 +14,7 @@ export const PrimaryButton = ({
     block = false,
 }: ButtonProps) => {
     return (
-        <Primary
+        <Secondary
             className={className}
             disabled={disabled}
             onClick={onClick}
@@ -22,16 +22,16 @@ export const PrimaryButton = ({
             block={block}
         >
             <Title>{title}</Title>
-        </Primary>
+        </Secondary>
     )
 };
 
-PrimaryButton.defaultProps = {
+SecondaryButton.defaultProps = {
     // eslint-disable-next-line
     onClick: () => {},
-}
+};
 
-const Primary = styled(BaseButton)`
-    height: 40px;
-    background-color: ${props => props.theme.blue};
+const Secondary = styled(BaseButton)`
+    height: 38px;
+    background-color: #515172;
 `;

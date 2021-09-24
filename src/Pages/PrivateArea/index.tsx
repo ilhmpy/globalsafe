@@ -2,8 +2,9 @@
 import 'moment/locale/ru';
 import React, { FC, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
+import { NavLink, Redirect, Route, Switch, useHistory } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
+import styled from 'styled-components';
 import { ReactComponent as Copy } from '../../assets/svg/copy.svg';
 import { Button } from '../../components/Button/Button';
 import { Header } from '../../components/Header/Header';
@@ -15,6 +16,7 @@ import { Input } from '../../components/UI/Input';
 import { Loading } from '../../components/UI/Loading';
 import { Tabs } from '../../components/UI/Tabs';
 import { UpTitle } from '../../components/UI/UpTitle';
+import { Chip, SecondaryButton } from '../../components/UI/V4';
 import { AppContext } from '../../context/HubContext';
 import { Card, Container } from '../../globalStyles';
 import { Balance, Notify } from '../../types/balance';
@@ -25,6 +27,8 @@ import { InfoDeposits } from './InfoDeposits';
 import { DepositListModal, TokenModal } from './Modals';
 import { OnePage } from './OnePage';
 import * as Styled from './Styles.elements';
+import { ReactComponent as LockIcon } from '../../assets/v2/svg/lock.svg'
+import { ReactComponent as LogOutIcon } from '../../assets/v2/svg/logOut.svg'
 
 export const InfoMain: FC = () => {
   const { t } = useTranslation();
@@ -289,6 +293,30 @@ export const InfoMain: FC = () => {
     setCurrencyValue('');
   };
 
+  // Get balance Chip Color
+  const getChipColor = (i: any) => {
+    let color = '#E0F8FF';
+    if(i.balanceKind === 1) {
+      color = '#FFF4D9';
+    } else if (i.balanceKind === 9) {
+      color = '#FF416E';
+    } else if (i.balanceKind === 10) {
+      color = '#6DB9FF';
+    } else if (i.balanceKind === 11) {
+      color = '#BCD476';
+    } else if (i.balanceKind === 12) {
+      color = '#A78CF2';
+    } else if (i.balanceKind === 43) {
+      color = '#EFECFF';
+    } else if (i.balanceKind === 44) {
+      color = '#DAFFE2';
+    } else if (i.balanceKind === 47) {
+      color = '#E0F8FF';
+    } else {
+      color = '#E0F8FF';
+    }
+    return color;
+  }
   return (
     <>
       {withdrawValueLoad && (
@@ -312,12 +340,89 @@ export const InfoMain: FC = () => {
       />
       <Header />
       <Styled.Page>
-        <Container>
+        {/* <Container>
           <UpTitle>{t('privateArea.uptitle')}</UpTitle>
-        </Container>
-        <Container>
-          <Card>
-            <Styled.InfoWrap>
+        </Container> */}
+
+        <DepositsPanelContainer>
+          <PanelTitleBlock>
+            <H4>Личный кабинет</H4>
+            <LogoutButton>
+              <UsernameText>{user}</UsernameText>
+              <LogOutIcon />
+            </LogoutButton>
+          </PanelTitleBlock>
+          <PanelCard>
+            <PanelHeader>
+              <PanelInfoBlock>
+                <BalanceInfoText>Баланс аккаунта:</BalanceInfoText>
+                <BalanceValueText>
+                  {balance
+                      ? (balance / 100000).toLocaleString('ru-RU', {
+                          maximumFractionDigits: 5,
+                        })
+                      : '0'}{' '}
+                    CWD
+                </BalanceValueText>
+              </PanelInfoBlock>
+              <PanelActionsBlock>
+                  <SecondaryButton 
+                    title={'Конвертация'}
+                    // eslint-disable-next-line
+                    onClick={() => {}}
+                  />
+                  <SecondaryButton 
+                    title={'Пополнить баланс'}
+                    // eslint-disable-next-line
+                    onClick={() => {}}
+                  />
+                   <SecondaryButton 
+                    title={'Вывести средства'}
+                    // eslint-disable-next-line
+                    onClick={() => {}}
+                  />
+              </PanelActionsBlock>
+            </PanelHeader>
+            <BalanceChipsBlock>
+              {balanceChips &&
+                  balanceChips.map((i: any, idx: number) => {
+                    return (
+                      <Chip
+                        key={`chip-item-${idx}`}
+                        leftIcon={() => <LockIcon />}
+                        bgColor={getChipColor(i)}
+                      >
+                         <span>
+                          {i.volume.toLocaleString('ru-RU', {
+                            maximumFractionDigits: 4,
+                          })}
+                        </span>
+                        &nbsp;
+                        {Balance[i.balanceKind]}
+                      </Chip>
+                    );
+                })}
+            </BalanceChipsBlock>
+
+            <TabsBlock>
+              <TabNavItem to="/info" exact>
+                <div>Мои депозиты</div>
+              </TabNavItem>
+              <TabNavItem to="/ads">
+                <div>Объявления</div>
+              </TabNavItem>
+              <TabNavItem to="/certificates">
+                <div>Сертификаты</div>
+              </TabNavItem>
+              <TabNavItem to="/operationsHistory">
+                <div>История операций</div>
+              </TabNavItem>
+              <TabNavItem to="/settings">
+                <div>Настройки</div>
+              </TabNavItem>
+            </TabsBlock>
+
+            {/* <Styled.InfoWrap>
               <Styled.UserBlock>
                 <Styled.InfoTitle>{user}</Styled.InfoTitle>
                 <Styled.BalanceItem>
@@ -442,9 +547,11 @@ export const InfoMain: FC = () => {
               <Styled.NavTabs to="/info/balance">
                 <div>{t('privateArea.tabs.tab3')}</div>{' '}
               </Styled.NavTabs>
-            </Tabs>
-          </Card>
-        </Container>
+            </Tabs> */}
+          </PanelCard>
+        </DepositsPanelContainer>
+
+
         <Switch>
           <Route path="/info" component={Info} exact />
           <Route path="/info/deposits" component={InfoDeposits} exact />
@@ -650,3 +757,112 @@ export const InfoMain: FC = () => {
     </>
   );
 };
+
+
+const DepositsPanelContainer = styled(Container)`
+  display: flex;
+  flex-direction: column;
+`;
+
+const PanelTitleBlock = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  margin-top: 40px;
+`;
+
+const H4 = styled.h4`
+  color: ${props => props.theme.titles};
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 42px;
+
+  @media (max-width: 425px) {
+    font-size: 18px;
+    line-height: 21px;
+  }
+`;
+
+const LogoutButton = styled.button`
+  display: flex;
+  align-items: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+`;
+
+const UsernameText = styled.span`
+  margin-right: 6px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+`;
+
+const PanelCard = styled(Card)`
+  border-radius: 4px;
+  box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
+  padding: 20px;
+`;
+
+const PanelHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+`;
+
+const PanelInfoBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const PanelActionsBlock = styled.div`
+  display: flex;
+  align-items-center;
+  gap: 20px;
+`;
+
+const BalanceInfoText = styled.div`
+  color: ${props => props.theme.titles};
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
+  margin-bottom: 10px;
+`;
+
+const BalanceValueText = styled.div`
+  color: ${props => props.theme.titles};
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 28px;
+`;
+
+const BalanceChipsBlock = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #EBEBF2;
+`;
+
+const TabsBlock = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 40px;
+`;
+
+const TabNavItem = styled(NavLink)`
+  color: ${props => props.theme.black};
+  opacity: 0.6;
+  font-size: 14px;
+  line-height: 16px;
+  padding-bottom: 10px;
+
+  &.active {
+    font-weight: 500;
+    opacity: 1;
+
+    border-bottom: 2px solid ${props => props.theme.blue};
+  }
+`;

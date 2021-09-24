@@ -323,16 +323,18 @@ export const RegisterComponent: FC = () => {
 
 
 const AuthContainer = styled(Container)`
+  justify-content: flex-start;
+  flex: 1;
   margin: 0 auto;
   padding: 0;
-  padding-top: 40px;
+  padding-top: 80px;
   align-items: center;
 
   @media (max-width: 768px) {
-    padding-top: 80px;
+    padding-top: 150px;
   }
   @media (max-width: 425px) {
-    padding-top: 20px;
+    padding-top: 80px;
   }
 `;
 
