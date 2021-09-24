@@ -31,3 +31,21 @@ export const H2 = styled.h2<{ center?: boolean; }>`
     }}
   }
 `;
+
+
+export const H3 = styled.h3<{ center?: boolean; }>`
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 28px;
+  color: #3F3E4E;
+
+  ${({ center }) => {
+    if (center) {
+      return `
+        text-align: center;
+        margin-top: 32px;
+        margin-bottom: 32px;
+      `;
+    };
+  }}
+`;

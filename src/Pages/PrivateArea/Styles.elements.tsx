@@ -1003,3 +1003,35 @@ export const SwitchBlock = styled.div<{ block: boolean }>`
     font-size: 12px;
   }
 `;
+
+
+export const Desc = styled.h3<{ bold?: boolean; danger?: boolean; mMore?: boolean; }>`
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #000;
+  margin-bottom: 10px;
+  margin-left: 20px;
+
+  ${({ bold, danger }) => {
+    if (bold) {
+      return `
+        font-weight: 700;
+      `;
+    };
+
+    if (danger) {
+      return `  
+        color: #FF4A31;
+      `;
+    };
+  }}
+
+  ${({ mMore }) => {
+    if (mMore) {
+      return `        
+        margin-bottom: 20px;
+      `;
+    };
+  }}
+`; 

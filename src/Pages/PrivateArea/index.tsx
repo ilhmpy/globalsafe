@@ -25,6 +25,10 @@ import { InfoDeposits } from './InfoDeposits';
 import { DepositListModal, TokenModal } from './Modals';
 import { OnePage } from './OnePage';
 import * as Styled from './Styles.elements';
+import { H3 } from "../../components/UI/Heading";
+import { Select as Selectv2 } from "../../components/UI/Select";
+import { Input as Inputv2 } from "../../components/UI/V4/Inputs/Input";
+import { PAButton } from "../../components/UI/V4/Buttons/PAButton";
 
 export const InfoMain: FC = () => {
   const { t } = useTranslation();
@@ -58,6 +62,11 @@ export const InfoMain: FC = () => {
   const [serviceCommision, setServiceCommision] = useState<string>('0');
   const [toTokenModal, setToTokenModal] = useState<boolean>(false);
   const [countToTranslate, setCountToTranslate] = useState<any>('');
+  const [currency, setCurrency] = useState<string>("");
+  const [ed, setEd] = useState<string>("");
+  const [error, setError] = useState<boolean | undefined>();
+  const [errorReason, setErrorReason] = useState<string>("");
+  const [outPutCurrency, setOutPutCurrency] = useState<string>("");
 
   // Get Balance Kinds List as an Array
   const balancesList = useMemo(() => {
@@ -289,6 +298,10 @@ export const InfoMain: FC = () => {
     setCurrencyValue('');
   };
 
+  const changeBalance = () => {
+    console.log(ed, currency);
+  };
+
   return (
     <>
       {withdrawValueLoad && (
@@ -301,6 +314,34 @@ export const InfoMain: FC = () => {
           <Loading />
         </Styled.Loader>
       )}
+
+      <CSSTransition in={true} timeout={0} unmountOnExit>
+        <Modal onClose={() => false} width={420} withClose>
+          <H3 center>Пополнение баланса</H3>
+          <div style={{ width: "100%", maxWidth: "340px", margin: "0 auto" }}>
+            <Selectv2 data={["CWD", "GLOBAL", "GLOBAL.FUTURE"]} setSwitch={setCurrency} />
+            <Inputv2 placeholder="Сумма пополнения" onChange={(e) => setEd(e.currentTarget.value)} />
+            <PAButton onClick={changeBalance}>Пополнить баланс</PAButton>
+          </div>
+        </Modal>
+      </CSSTransition> 
+
+      <CSSTransition in={error === false ? true : false } timeout={0} unmountOnExit>
+        <Modal onClose={() => false} width={420} withClose>
+          <H3 center>Успешное пополнение</H3>
+          <Styled.Desc>Баланс личного кабинета успешно пополнен на:</Styled.Desc>
+          <Styled.Desc bold mMore>{ed} {currency}</Styled.Desc>
+        </Modal>
+      </CSSTransition>
+
+      <CSSTransition in={error} timeout={0} unmountOnExit>
+        <Modal onClose={() => false} width={420} withClose>
+          <H3 center>Ошибка пополнения</H3>
+          <Styled.Desc>Баланс личного кабинета не был пополнен на:</Styled.Desc>
+          <Styled.Desc bold>{ed} {currency}</Styled.Desc>
+          <Styled.Desc danger mMore>{errorReason}</Styled.Desc>
+        </Modal>
+      </CSSTransition>
 
       <TokenModal
         block={toTokenModal}
