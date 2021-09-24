@@ -19,6 +19,7 @@ import { AppContext } from '../../context/HubContext';
 import { Card, Container } from '../../globalStyles';
 import { Balance, Notify } from '../../types/balance';
 import { Commisions, DepositsCollection, RootDeposits } from '../../types/info';
+import { Deposits } from './Deposits/Deposits';
 import { Info } from './Info';
 import { InfoBalance } from './InfoBalance';
 import { InfoDeposits } from './InfoDeposits';
@@ -363,14 +364,14 @@ export const InfoMain: FC = () => {
                   </Styled.SmallButtonsWrap>
                 </Styled.SmallButtonsWrapDesc>
               </Styled.UserBlock>
-              <Styled.InfoButtons> 
+              <Styled.InfoButtons>
                 <Button
-                  dangerOutline 
+                  dangerOutline
                   onClick={() => {
                     setDepositSelect(null);
                     setAddDepositValue('');
                     setAddDeposit(true);
-                  }} 
+                  }}
                 >
                   {t('privateArea.newDeposit')}
                 </Button>
@@ -447,7 +448,8 @@ export const InfoMain: FC = () => {
         </Container>
         <Switch>
           <Route path="/info" component={Info} exact />
-          <Route path="/info/deposits" component={InfoDeposits} exact />
+          {/* <Route path="/info/deposits" component={InfoDeposits} exact /> */}
+          <Route path="/info/deposits" component={Deposits} exact />
           <Route path="/info/balance" component={InfoBalance} exact />
           <Route path="/info/deposits/:slug" component={OnePage} />
         </Switch>
