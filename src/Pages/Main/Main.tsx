@@ -18,7 +18,7 @@ import { Timer } from './components/Lottery/Timer';
 import { Operations } from './components/Operations/Operations';
 import { Payments } from './components/Payments/Payments';
 import { Tariffs } from './components/Tariffs/Tariffs';
-import { DepositsPrograms } from "./components/DepositsPrograms/DepositsPrograms";
+import { DepositsPrograms } from './components/DepositsPrograms/DepositsPrograms';
 
 const fakeData = [
   [
@@ -2211,7 +2211,10 @@ const MainPage = styled(Page)`
     margin-top: 0px;
     padding-top: 250px;
   } */
-  @media only screen and (max-width: 576px) {
+  @media (max-width: 767px) {
+    margin-top: 87px;
+  }
+  @media (max-width: 576px) {
     margin-top: 0px;
   }
 `;
