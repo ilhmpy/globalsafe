@@ -204,7 +204,6 @@ const SelfInput = styled(Input)`
   margin-bottom: 26px;
 `;
 
-
 const LinkToPage = styled(Link)`
   font-weight: 500;
   font-size: 14px;
@@ -242,7 +241,7 @@ const FormBlock = styled.form`
 const Submit = styled(Button)<{ mb?: boolean }>`
   max-width: 100%;
   margin-bottom: ${(props) => (props.mb ? '20px' : '0')};
-  color: ${props => props.theme.dangerButtonText};
+  color: ${(props) => props.theme.text};
 `;
 
 const CardContainer = styled(Card)`
