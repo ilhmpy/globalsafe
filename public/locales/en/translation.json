@@ -273,6 +273,9 @@
     "desc": "Funds will not be debited from your personal account. Please contact your administrator."
   },
   "privateArea": {
+    "convertingSuccess": "Successful conversion",
+    "convertingFail": "Conversion error",
+    "convert2": "Convert",
     "delayed": "Delayed payment",
     "at": "Behind",
     "allTime": "For all the time",

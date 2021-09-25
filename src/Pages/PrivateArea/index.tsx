@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 import { ReactComponent as Copy } from '../../assets/svg/copy.svg';
+import { Button } from '../../components/Button/V2/Button';
 // import { Button } from '../../components/Button/Button';
 import { Header } from '../../components/Header/Header';
 import { Modal } from '../../components/Modal/Modal';
@@ -19,18 +20,21 @@ import { AppContext } from '../../context/HubContext';
 import { Card, Container } from '../../globalStyles';
 import { Balance, Notify } from '../../types/balance';
 import { Commisions, DepositsCollection, RootDeposits } from '../../types/info';
+import { ConvertingModalSuccess } from './ConveringSuccessModal';
+import { ConvertingModal } from './ConvertingModal';
+import { ConvertingModalFail } from './ConvertingModalFail';
 import { Info } from './Info';
 import { InfoBalance } from './InfoBalance';
 import { InfoDeposits } from './InfoDeposits';
 import { DepositListModal, TokenModal } from './Modals';
 import { OnePage } from './OnePage';
 import * as Styled from './Styles.elements';
-import { ConvertingModal } from './ConvertingModal';
-import { Button } from '../../components/Button/V2/Button';
 
 export const InfoMain: FC = () => {
   const { t } = useTranslation();
   const [openConverting, setOpenConverting] = useState<boolean>(false);
+  const [isSuccessConverting, setIsSuccessConverting] = useState<boolean>(false);
+  const [isFailConverting, setIsFailConverting] = useState<boolean>(false);
   const [notifications, setNotifications] = useState<Notify[]>([]);
   const [addDeposit, setAddDeposit] = useState<boolean>(false);
   const [depositListModal, setDepositListModal] = useState<boolean>(false);
@@ -315,6 +319,9 @@ export const InfoMain: FC = () => {
       />
 
       <ConvertingModal open={openConverting} setOpen={setOpenConverting} />
+      <ConvertingModalSuccess open={isSuccessConverting} setOpen={setIsSuccessConverting} />
+      <ConvertingModalFail open={isFailConverting} setOpen={setIsFailConverting} />
+
       <Header />
       <Styled.Page>
         <Container>
