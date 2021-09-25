@@ -6,27 +6,23 @@ type Props = {
 };
 
 export const Button = styled.a<Props>`
-  padding: 12px 20px 11px;
+  font-size: 12px;
   font-weight: 500;
-  font-size: 14px;
-  line-height: 16px;
-  display: inline-block;
+  padding: 12px 20px 11px;
   text-align: center;
   text-decoration: none;
-  user-select: none;
-  text-align: center;
+  text-transform: uppercase;
+  line-height: 14px;
+  display: inline-block;
   box-sizing: border-box;
   cursor: pointer;
-  transition: all 0.3s ease 0s;
   appearance: none;
-  background: #515172;
+  user-select: none;
   border-radius: 4px;
-  font-weight: 500;
-  font-size: 12px;
-  line-height: 14px;
-  text-transform: uppercase;
-  color: #ffffff;
   border: none;
+  transition: all 0.3s ease 0s;
+  background: #515172;
+  color: #ffffff;
   &:hover {
     box-shadow: 0px 4px 10px ${(props) => props.theme.buttonBorder};
     border-color: ${(props) => props.theme.buttonBorder};
