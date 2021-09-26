@@ -122,7 +122,6 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
                       <TableItem>{moment(item.date).format('DD.MM.YYYY')}</TableItem>
                       <TableItem>{typeWin(item.kind)}</TableItem>
                       <TableItem>
-                        kvebkrverkv
                         {item.kind === 0
                           ? (item.volume / 100000).toLocaleString('ru-RU', {
                               maximumFractionDigits: 5,
@@ -192,6 +191,8 @@ const Subtitle = styled.p`
   font-size: 14px;
   line-height: 20px;
   max-width: 373px;
+  color: #3f3e4e;
+
   @media (max-width: 576px) {
     font-size: 12px;
     line-height: 18px;
@@ -281,7 +282,9 @@ const TableItem = styled.li`
   font-size: 14px;
   line-height: 20px;
   width: 100%;
-  color: ${(props) => props.theme.text2};
+  /* color: ${(props) => props.theme.text2}; */
+  color: #3f3e4e;
+
   padding-right: 10px;
 
   @media (max-width: 768px) {
@@ -323,7 +326,7 @@ const TableItem = styled.li`
 `;
 
 const TableItemHead = styled(TableItem)`
-  color: ${(props) => props.theme.text2};
+  /* color: ${(props) => props.theme.text2}; */
   font-weight: 500;
 `;
 
