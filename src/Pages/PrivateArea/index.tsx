@@ -213,16 +213,16 @@ export const InfoMain: FC = () => {
         : obj
     );
 
-  if (user === null) {
-    return null;
-  }
+  // if (user === null) {
+  //   return null;
+  // }
 
   const balanceFuture =
     depositSelect && [9, 10, 11].includes(depositSelect.priceKind) && depositSelect.priceKind !== 1;
 
-  if (user === false) {
-    return <Redirect to="/" />;
-  }
+  // if (user === false) {
+  //   return <Redirect to="/" />;
+  // }
   const copy = (text: string) => {
     createNotify({
       text: t('copy.text'),

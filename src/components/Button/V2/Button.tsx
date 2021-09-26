@@ -3,13 +3,11 @@ import styled from 'styled-components/macro';
 type Props = {
   primary?: boolean;
   yellow?: boolean;
+  bigSize?: boolean;
 };
 
 export const Button = styled.a<Props>`
   padding: 12px 20px 11px;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 16px;
   display: inline-block;
   text-align: center;
   text-decoration: none;
@@ -22,9 +20,9 @@ export const Button = styled.a<Props>`
   background: #515172;
   border-radius: 4px;
   font-weight: 500;
-  font-size: 12px;
-  line-height: 14px;
-  text-transform: uppercase;
+  font-size: ${(props) => (props.bigSize ? 14 : 12)}px;
+  line-height: ${(props) => (props.bigSize ? 16 : 14)}px;
+  text-transform: ${(props) => (props.bigSize ? 'none' : 'uppercase')};
   color: #ffffff;
   border: none;
   &:hover {
