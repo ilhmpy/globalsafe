@@ -25,6 +25,7 @@
     "mkcert": "^1.4.0",
     "moment": "^2.29.1",
     "moment-duration-format": "^2.3.2",
+    "moment-timezone": "^0.5.33",
     "node-sass": "^5.0.0",
     "online-js": "^1.0.2",
     "openssl": "^1.1.0",

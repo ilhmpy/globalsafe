@@ -107,7 +107,7 @@ export const SliderChart: FC<Props> = ({
                     </S.ChartValue>
                     {changeValue(listGCWD)}
                     <S.ChartGraph>
-                      <SmallChart values={listGCWD.slice(-20).map((i) => i.latestBid / 100)} />
+                      <SmallChart values={listGCWD.slice(0).map((i) => i.latestBid / 100)} />
                     </S.ChartGraph>
                   </>
                 ) : null}
@@ -139,7 +139,7 @@ export const SliderChart: FC<Props> = ({
                     </S.ChartValue>
                     {changeValue(listMGCWD)}
                     <S.ChartGraph>
-                      <SmallChart values={listMGCWD.slice(-20).map((i) => i.latestBid / 100)} />
+                      <SmallChart values={listMGCWD.slice(0).map((i) => i.latestBid / 100)} />
                     </S.ChartGraph>
                   </>
                 ) : null}
@@ -171,7 +171,7 @@ export const SliderChart: FC<Props> = ({
                     </S.ChartValue>
                     {changeValue(listDIAMOND)}
                     <S.ChartGraph>
-                      <SmallChart values={listDIAMOND.slice(-20).map((i) => i.latestBid / 100)} />
+                      <SmallChart values={listDIAMOND.slice(0).map((i) => i.latestBid / 100)} />
                     </S.ChartGraph>
                   </>
                 ) : null}
@@ -207,7 +207,7 @@ export const SliderChart: FC<Props> = ({
                   ) : null}
                   {listGLOBAL.length ? (
                     <S.ChartGraph>
-                      <SmallChart values={listGLOBAL.slice(-20).map((i) => i.latestBid / 100)} />
+                      <SmallChart values={listGLOBAL.slice(0).map((i) => i.latestBid / 100)} />
                     </S.ChartGraph>
                   ) : null}
                 </>
@@ -248,7 +248,7 @@ export const SliderChart: FC<Props> = ({
                     </S.ChartValue>
                     {changeValue(listGCWD)}
                     <S.ChartGraph>
-                      <SmallChart values={listGCWD.slice(-20).map((i) => i.latestBid / 100)} />
+                      <SmallChart values={listGCWD.slice(0).map((i) => i.latestBid / 100)} />
                     </S.ChartGraph>
                   </>
                 ) : null}
@@ -270,7 +270,7 @@ export const SliderChart: FC<Props> = ({
                     </S.ChartValue>
                     {changeValue(listMGCWD)}
                     <S.ChartGraph>
-                      <SmallChart values={listMGCWD.slice(-20).map((i) => i.latestBid / 100)} />
+                      <SmallChart values={listMGCWD.slice(0).map((i) => i.latestBid / 100)} />
                     </S.ChartGraph>
                   </>
                 ) : null}
@@ -292,7 +292,7 @@ export const SliderChart: FC<Props> = ({
                     </S.ChartValue>
                     {changeValue(listDIAMOND)}
                     <S.ChartGraph>
-                      <SmallChart values={listDIAMOND.slice(-20).map((i) => i.latestBid / 100)} />
+                      <SmallChart values={listDIAMOND.slice(0).map((i) => i.latestBid / 100)} />
                     </S.ChartGraph>
                   </>
                 ) : null}
@@ -318,7 +318,7 @@ export const SliderChart: FC<Props> = ({
                   ) : null}
                   {listGLOBAL.length ? (
                     <S.ChartGraph>
-                      <SmallChart values={listGLOBAL.slice(-20).map((i) => i.latestBid / 100)} />
+                      <SmallChart values={listGLOBAL.slice(0).map((i) => i.latestBid / 100)} />
                     </S.ChartGraph>
                   ) : null}
                 </>
