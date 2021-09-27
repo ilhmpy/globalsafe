@@ -109,7 +109,7 @@ export const AdminPortfolio = () => {
 
   const [sortingGCWD, setSortingGCWD] = useState<SortingType[]>([]);
 
-  const sortings = [t("descendDateBuy"), t("ascendDateBuy"), t("descendUnit"), t("ascendUnit")];
+  const sortings = [t('descendDateBuy'), t('ascendDateBuy'), t('descendUnit'), t('ascendUnit')];
 
   const [listForSortingGCWD, setListForSortingGCWD] = useState<SelectValues[]>([
     {
@@ -124,7 +124,7 @@ export const AdminPortfolio = () => {
       OrderType: 1,
       FieldName: 'creationDate',
     },
-    { 
+    {
       id: 2,
       active: false,
       OrderType: 2,
@@ -153,7 +153,7 @@ export const AdminPortfolio = () => {
       OrderType: 1,
       FieldName: 'creationDate',
     },
-    { 
+    {
       id: 2,
       active: false,
       OrderType: 2,
@@ -168,8 +168,6 @@ export const AdminPortfolio = () => {
   ]);
 
   const [sortingDIAMOND, setSortingDIAMOND] = useState<SortingType[]>([]);
-
-  const sortingsDiamond = [];
 
   const [listForSortingDIAMOND, setListForSortingDIAMOND] = useState<SelectValues[]>([
     {
@@ -188,14 +186,14 @@ export const AdminPortfolio = () => {
     },
     {
       id: 2,
-     // text: 'По убыванию стоимости за единицу',
+      // text: 'По убыванию стоимости за единицу',
       active: false,
       OrderType: 2,
       FieldName: 'unitPrice',
     },
     {
       id: 3,
-    //  text: 'По возрастанию стоимости за единицу',
+      //  text: 'По возрастанию стоимости за единицу',
       active: false,
       OrderType: 1,
       FieldName: 'unitPrice',
@@ -209,80 +207,87 @@ export const AdminPortfolio = () => {
   };
 
   useEffect(() => {
-    if (hubConnection) {
-      hubConnection
-        .invoke<Portfolio>('GetBasketsOverview')
-        .then((res) => {
-          setBasket(res);
-        })
-        .catch((err: Error) => console.log(err));
-    }
+    const getBasketsOverview = async () => {
+      if (hubConnection) {
+        try {
+          const response = await hubConnection.invoke<Portfolio>('GetBasketsOverview');
+          setBasket(response);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    };
+    getBasketsOverview();
   }, [hubConnection]);
 
   useEffect(() => {
-    if (hubConnection) {
-      hubConnection
-        .invoke<RootPortfolio>(
-          'GetBaskets',
-          3,
-          (currentPageGCWD - 1) * pageLengthGCWD,
-          pageLengthGCWD,
-          sortingGCWD
-        )
-        .then((res) => {
+    const getBaskets = async () => {
+      if (hubConnection) {
+        try {
+          const res = await hubConnection.invoke<RootPortfolio>(
+            'GetBaskets',
+            3,
+            (currentPageGCWD - 1) * pageLengthGCWD,
+            pageLengthGCWD,
+            sortingGCWD
+          );
+
           setLoading(false);
           setBasketGCWD(res.collection);
           setTotalGCWD(res.totalRecords);
-        })
-        .catch((err: Error) => {
+        } catch (error) {
           setLoading(false);
-          console.log(err);
-        });
-    }
+          console.log(error);
+        }
+      }
+    };
+    getBaskets();
   }, [hubConnection, pageLengthGCWD, currentPageGCWD, sortingGCWD]);
 
   useEffect(() => {
-    if (hubConnection) {
-      hubConnection
-        .invoke<RootPortfolio>(
-          'GetBaskets',
-          2,
-          (currentPageMGCWD - 1) * pageLengthMGCWD,
-          pageLengthMGCWD,
-          sortingMGCWD
-        )
-        .then((res) => {
+    const getBaskets = async () => {
+      if (hubConnection) {
+        try {
+          const res = await hubConnection.invoke<RootPortfolio>(
+            'GetBaskets',
+            2,
+            (currentPageMGCWD - 1) * pageLengthMGCWD,
+            pageLengthMGCWD,
+            sortingMGCWD
+          );
           setLoading(false);
           setBasketMGCWD(res.collection);
           setTotalMGCWD(res.totalRecords);
-        })
-        .catch((err: Error) => {
+        } catch (error) {
           setLoading(false);
-          console.log(err);
-        });
-    }
+          console.log(error);
+        }
+      }
+    };
+    getBaskets();
   }, [hubConnection, pageLengthMGCWD, currentPageMGCWD, sortingMGCWD]);
 
   useEffect(() => {
-    if (hubConnection) {
-      hubConnection
-        .invoke<RootPortfolio>(
-          'GetBaskets',
-          4,
-          (currentPageDIAMOND - 1) * pageLengthDIAMOND,
-          pageLengthDIAMOND,
-          sortingDIAMOND
-        )
-        .then((res) => {
+    const getBaskets = async () => {
+      if (hubConnection) {
+        try {
+          const res = await hubConnection.invoke<RootPortfolio>(
+            'GetBaskets',
+            4,
+            (currentPageDIAMOND - 1) * pageLengthDIAMOND,
+            pageLengthDIAMOND,
+            sortingDIAMOND
+          );
           setLoading(false);
           setBasketDIAMOND(res.collection);
           setTotalDIAMOND(res.totalRecords);
-        })
-        .catch((err: Error) => {
+        } catch (error) {
           setLoading(false);
-          console.log(err);
-        });
-    }
+          console.log(error);
+        }
+      }
+    };
+    getBaskets();
   }, [hubConnection, pageLengthDIAMOND, currentPageDIAMOND, sortingDIAMOND]);
 
   const getActiveSortGCWD = (index: number) => {
@@ -459,7 +464,7 @@ export const AdminPortfolio = () => {
                     onClick={() => setSortingWindowOpenGCWD((prev) => !prev)}
                   />
                   <Window ref={sortingWindowRefGCWD} open={sortingWindowOpenGCWD}>
-                    <WindowTitle>{t("sorting")}</WindowTitle>
+                    <WindowTitle>{t('sorting')}</WindowTitle>
                     <WindowBody>
                       {listForSortingGCWD.map((obj, index) => (
                         <SortingItem
@@ -477,7 +482,7 @@ export const AdminPortfolio = () => {
             </TableHead>
             {basketGCWD.length ? (
               <Scrollbars style={{ height: '500px' }}>
-                {basketGCWD.map((item, idx) => (
+                {basketGCWD.map((item) => (
                   <TableList key={item.safeId} data={item} />
                 ))}
               </Scrollbars>
@@ -532,7 +537,7 @@ export const AdminPortfolio = () => {
             </TableHead>
             {basketMGCWD.length ? (
               <Scrollbars style={{ height: '500px' }}>
-                {basketMGCWD.map((item, idx) => (
+                {basketMGCWD.map((item) => (
                   <TableList key={item.safeId} data={item} />
                 ))}
               </Scrollbars>
@@ -576,7 +581,7 @@ export const AdminPortfolio = () => {
                         key={index}
                         onClick={() => getActiveSortDIAMOND(index)}
                       >
-                        {sortings[obj.id]} 
+                        {sortings[obj.id]}
                       </SortingItem>
                     ))}
                   </WindowBody>
@@ -585,7 +590,7 @@ export const AdminPortfolio = () => {
             </TableHead>
             {basketDIAMOND.length ? (
               <Scrollbars style={{ height: '500px' }}>
-                {basketDIAMOND.map((item, idx) => (
+                {basketDIAMOND.map((item) => (
                   <TableList key={item.safeId} data={item} />
                 ))}
               </Scrollbars>
