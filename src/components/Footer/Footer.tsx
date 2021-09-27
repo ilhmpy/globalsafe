@@ -106,12 +106,12 @@ const FooterDesc = styled.h3`
   line-height: 17px;
   
   @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
-    width: 178px;
+    width: 170px;
   }
 
   @media only screen and (max-device-width: 480px) {
     text-align: center;
-    width: 178px;
+    width: 170px;
     margin: 0 auto;
     margin-top: 20px;
   }
