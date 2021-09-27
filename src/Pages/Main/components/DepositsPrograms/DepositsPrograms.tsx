@@ -22,7 +22,7 @@ export const DepositsPrograms = () => {
   ]);
 
   return (
-    <Page id="deposits">
+    <Page id="deposits" smallPad>
       {deposits.length > 0 && (
         <Container>
           <H2>{t('sideNav.depositsPrograms')}</H2>
