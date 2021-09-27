@@ -173,7 +173,7 @@ const App: FC = () => {
             <Route path="/login" component={Authentication} />
             <Route path="/register" component={Register} />
             <Route path="/tech" component={TechWorks} />
-            <Route component={PageNotFound} />
+            <Route path="/404" component={PageNotFound} /> 
           </Switch>
         </div>
       </Router>
