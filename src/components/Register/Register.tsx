@@ -56,7 +56,12 @@ export const RegisterComponent: FC = () => {
   const onChangeNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPasswordError(false);
     setError(true);
-    setPassword(e.target.value);
+
+    let val = e.target.value;
+    if(e.target.value.length >= 4 && password.length < 4) {
+      val = [val.slice(0, 3), ' ', val.slice(3)].join('')
+    }
+    setPassword(val);
   };
 
   const singIn = () => {
@@ -197,7 +202,6 @@ export const RegisterComponent: FC = () => {
             
             createAccount();
             // setError(false);
-            // setValue("");
           }
         })
         .catch((err: Error) => {
@@ -298,7 +302,7 @@ export const RegisterComponent: FC = () => {
                   />
                 :
                   <PrimaryButton 
-                    title={`${t('login.repeat')} ${stateRepeat}`}
+                    title={`${t('login.repeat')} ${stateRepeat}.`}
                     type="submit"
                     disabled={true}
                   />

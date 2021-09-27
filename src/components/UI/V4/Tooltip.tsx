@@ -14,7 +14,7 @@ export const Tooltip = ({
     className,
     children,
     label,
-    direction
+    direction = 'right'
 }: TooltipProps) => {
     const [show, setShow] = useState(false);
 
@@ -55,7 +55,7 @@ const Wrapper = styled.div`
 
 const TooltipContainer = styled.div<{direction: 'left' | 'right'}>`
     position: absolute;
-    bottom: 30px;
+    bottom: 32px;
     
     ${props => props.direction === 'right' ? 'left: -10px;' : 'right: -10px;'}
     z-index: 999;
@@ -64,6 +64,19 @@ const TooltipContainer = styled.div<{direction: 'left' | 'right'}>`
     background-color: #fff;
     border: 1px solid #EDF0F7;
     padding: 12px 20px;
+
+    &::after {
+        content: "";
+        position: absolute;
+        width: 0px;
+        height: 0px;
+        border-width: 7px;
+        border-style: solid;
+        border-color: transparent #fff transparent transparent;
+        ${props => props.direction === 'right' ? 'left: 12px;' : 'right: 12px;'}
+        bottom: -14px;
+        transform: rotate(270deg);
+  }
 `;
 
 const TooltipText = styled.div`
