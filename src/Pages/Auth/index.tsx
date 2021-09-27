@@ -39,7 +39,6 @@ export const Register = () => {
 
 const AuthPage = styled(Page)`
   height: 100vh;
-  background-color: ${props => props.theme.authBgGray};
   display: flex;
   flex-direction: column;
 `;

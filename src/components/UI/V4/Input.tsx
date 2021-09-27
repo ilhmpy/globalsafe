@@ -46,7 +46,7 @@ export const Input = ({
             /> 
             {error && (
                     <IconBlock>
-                        <Tooltip label={error} direction="left">
+                        <Tooltip label={error} direction="right">
                             <ErrorIcon />
                         </Tooltip>
                     </IconBlock>
@@ -86,10 +86,10 @@ const BaseInput = styled.input<{hasError: boolean}>`
     line-height: 16px;
     border-radius: 4px;
     background-color: #F9FAFB;
-    border: 1px solid ${props => props.hasError ? ' #FF4A31' : '#EDF0F7'};
+    border: 1px solid ${props => props.hasError ? '#FF4A31' : '#EDF0F7'};
     outline: none;
     width: 100%;
-    color: ${props => props.theme.black};
+    color: ${props => props.hasError ? '#FF4A31' : props.theme.black};
 
     &::placeholder {
         color: ${props => props.theme.black};

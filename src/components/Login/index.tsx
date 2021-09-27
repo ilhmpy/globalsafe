@@ -85,7 +85,14 @@ export const LoginComponent = () => {
   const onChangeNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPasswordError(false);
     setError(true);
-    setPassword(e.target.value);
+
+    let val = e.target.value;
+    console.log("robert", val)
+
+    if(e.target.value.length >= 4 && password.length < 4) {
+      val = [val.slice(0, 3), ' ', val.slice(3)].join('')
+    }
+    setPassword(val);
   };
 
   const onSubmit = () => {
@@ -109,7 +116,6 @@ export const LoginComponent = () => {
             setLoginSuccessed(false);
             //
             setError(false);
-            setValue('');
           }
         })
         .catch((err: Error) => console.log(err));
@@ -273,7 +279,7 @@ export const LoginComponent = () => {
                   />
                 :
                   <PrimaryButton 
-                    title={`${t('login.repeat')} ${stateRepeat}`}
+                    title={`${t('login.repeat')} ${stateRepeat}.`}
                     type="submit"
                     disabled={true}
                   />
