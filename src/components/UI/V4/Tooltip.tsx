@@ -6,7 +6,8 @@ import styled from 'styled-components';
 interface TooltipProps {
     className?: string;
     children: React.ReactNode;
-    label: string;
+    label?: string;
+    renderLabel?: () => React.ReactNode;
     direction: 'left' | 'right';
 }
 
@@ -14,6 +15,7 @@ export const Tooltip = ({
     className,
     children,
     label,
+    renderLabel,
     direction = 'right'
 }: TooltipProps) => {
     const [show, setShow] = useState(false);
@@ -35,7 +37,8 @@ export const Tooltip = ({
             {
                 show && (
                     <TooltipContainer direction={direction}>
-                        <TooltipText>{label}</TooltipText>
+                        {label && <TooltipText>{label}</TooltipText>}
+                        {renderLabel && <TooltipText>{renderLabel()}</TooltipText>}
                     </TooltipContainer>
                 )
             }

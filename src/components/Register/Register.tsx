@@ -10,7 +10,7 @@ import { Input } from '../../components/UI/Input';
 import { Input as InputV4 } from '../../components/UI/V4';
 import { AppContext } from '../../context/HubContext';
 import { Card, Container } from '../../globalStyles';
-import { PrimaryButton } from '../UI/V4';
+import { PrimaryButton, Tooltip } from '../UI/V4';
 import { ReactComponent as QuestionIcon } from '../../assets/svg/question14.svg'
 import { Timer } from '../Login/Timer';
 
@@ -277,7 +277,7 @@ export const RegisterComponent: FC = () => {
                 autoComplete="new-password"
                 disabled={!loginSuccessed}
                 isValid={passwordSuccessed}
-                error={passwordError ? t('login.incorrectPassword') : undefined}
+                error={passwordError ? t('login.incorrectCode') : undefined}
                 mb={20}
             />
            
@@ -313,7 +313,20 @@ export const RegisterComponent: FC = () => {
               <LinkTo href={`https://backup.cwd.global/account/${value}`} target="_blank">
                 {`${t('login.activityOn')} cwd.global`}
               </LinkTo>
-              <QuestionIcon />
+              <Tooltip 
+                renderLabel={() => (
+                  <div>
+                    <span>Откроется в новом окне.</span><br />
+                    <span>Код доступа приходит в раздел</span><br />
+                    <div>Активность на 
+                      <LinkToSmall href={`https://backup.cwd.global/account/${value}`} target="_blank">cwd.global</LinkToSmall>
+                    </div>
+                  </div>
+                )} 
+                direction="right"
+              >
+                <QuestionIcon />
+              </Tooltip>
             </LinkToBlock>
 
             <LinkToPage to="/login">{t('login.authorize')}</LinkToPage>
@@ -423,6 +436,14 @@ const LinkTo = styled.a`
   text-decoration-line: underline;
   color: ${(props) => props.theme.black};
   margin-right: 5px;
+`;
+
+const LinkToSmall = styled.a`
+  font-size: 12px;
+  line-height: 20px;
+  text-decoration-line: underline;
+  color: #3F3E4E;
+  margin-left: 5px;
 `;
 
 const Submit = styled(Button)<{ mb?: boolean }>`
