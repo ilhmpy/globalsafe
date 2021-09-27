@@ -2,7 +2,7 @@ import styled from 'styled-components/macro';
 import { Button } from '../../../../components/Button/V2/Button';
 
 export const SliderContainer = styled.div`
-  margin-top: 93px;
+  margin-top: 94px;
   @media (max-width: 767px) {
     margin-top: 87px;
   }
@@ -36,7 +36,7 @@ export const SliderContainer = styled.div`
       bottom: 170px;
     }
     @media (max-width: 870px) {
-      bottom: 112px;
+      bottom: 114px;
     }
     @media (max-width: 576px) {
       justify-content: center;
@@ -85,11 +85,11 @@ export const SlideItemWrap = styled.div`
 
 export const SlideItem = styled.div<{ bg: string }>`
   width: 100%;
-  height: 720px;
+  height: 724px;
   position: relative;
   background: #3f3e4e url(${(props) => props.bg}) no-repeat center;
   background-size: cover;
-  padding-top: 200px;
+  padding-top: 204px;
   @media (max-width: 1100px) {
     height: 610px;
   }
@@ -98,8 +98,8 @@ export const SlideItem = styled.div<{ bg: string }>`
     padding-top: 130px;
   }
   @media (max-width: 870px) {
-    height: 384px;
-    padding-top: 41px;
+    height: 388px;
+    padding-top: 46px;
   }
   @media (max-width: 576px) {
     height: 240px;

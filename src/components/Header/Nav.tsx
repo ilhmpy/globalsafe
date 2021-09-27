@@ -44,17 +44,17 @@ export const Nav: FC<Props> = ({
     <HeaderNav>
       <List>
         <ListItem>
-          <StyledLink to="/#banner" onClick={onClose}>
+          <StyledLink to="/#deposits" onClick={onClose}>
             {t('header.item1')}
           </StyledLink>
         </ListItem>
         <ListItem>
-          <StyledLink to="/#tariffs" onClick={onClose}>
+          <StyledLink to="/#lottery" onClick={onClose}>
             {t('header.item2')}
           </StyledLink>
         </ListItem>
         <ListItem>
-          <StyledLink to="/#lottery" onClick={onClose}>
+          <StyledLink to="/#" onClick={onClose}>
             {t('header.item3')}
           </StyledLink>
         </ListItem>

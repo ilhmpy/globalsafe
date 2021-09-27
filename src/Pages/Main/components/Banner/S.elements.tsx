@@ -6,6 +6,7 @@ export const Desc = styled.p`
   line-height: 20px;
   max-width: 610px;
   width: 100%;
+  color: ${(props) => props.theme.v2.text};
   margin-bottom: 20px;
   @media (max-width: 576px) {
     font-size: 12px;

@@ -83,7 +83,8 @@ export const HeaderWrap = styled.header<{ header?: boolean }>`
   top: 0;
   left: 0;
   z-index: 99999;
-  padding: 28px 0;
+  padding: 30px 0;
+  height: 98px;
   transition: all 0.3s ease 0s;
   background: ${(props) => props.theme.v2.header.background};
   /* background: ${(props) =>
