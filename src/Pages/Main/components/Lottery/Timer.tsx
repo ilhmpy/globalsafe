@@ -165,8 +165,8 @@ export const Timer: FC<Props> = ({
     }
   };
 
-  const radius = 30 / 2;
-  const circumference = 30 * Math.PI;
+  const radius = 32 / 2;
+  const circumference = 32 * Math.PI;
 
   const prg = () => {
     const progress1 = circumference - (deadline / progressTotal) * circumference;
@@ -240,12 +240,14 @@ export const Timer: FC<Props> = ({
                     <div className="timer_content">
                       {stateData && (
                         <Styled.TimerModalDuration>
-                          <span>{stateData.days}</span> : <span>{stateData.hours}</span> :{' '}
+                          <span>{stateData.days}</span>
+                          <span>{stateData.hours}</span>
                           <span>{stateData.minutes}</span>
                         </Styled.TimerModalDuration>
                       )}
                       <Styled.TimerModalUnits>
-                        <span>{t('time.days')}</span> <span>{t('time.hours')}</span>{' '}
+                        <span>{t('time.days')}</span>
+                        <span>{t('time.hours')}</span>
                         <span>{t('time.minutes')}</span>
                       </Styled.TimerModalUnits>
                     </div>
@@ -274,7 +276,7 @@ export const Timer: FC<Props> = ({
             <Styled.TimerCircle onClick={openPopup}>
               <Styled.Progress>
                 <Styled.CountContainer>
-                  <Styled.CountValue strokeColor={'#ff416e'}>
+                  <Styled.CountValue strokeColor={'#0094FF'}>
                     <Prize />
                   </Styled.CountValue>
                   <svg
@@ -285,7 +287,7 @@ export const Timer: FC<Props> = ({
                       width: '100%',
                       height: '100%',
                       margin: '0 auto',
-                      transform: 'rotateY(-180deg) rotateZ(-90deg)',
+                      transform: 'rotateY(-180deg) rotateZ(240deg)',
                       overflow: 'visible',
                     }}
                   >
@@ -297,7 +299,7 @@ export const Timer: FC<Props> = ({
                       cy={radius}
                       fill="none"
                       strokeLinecap="round"
-                      stroke={'#ff416e'}
+                      stroke={'#0094FF'}
                       strokeWidth={'2px'}
                     ></circle>
                   </svg>

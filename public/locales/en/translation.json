@@ -3,7 +3,7 @@
     "item1": "Tariffs and programs",
     "item2": "Lottery",
     "item3": "Exchanges",
-    "item4": "Rules" 
+    "item4": "Rules"
   },
   "themeDark": "Dark theme",
   "themeLight": "Light theme",
@@ -273,6 +273,9 @@
     "desc": "Funds will not be debited from your personal account. Please contact your administrator."
   },
   "privateArea": {
+    "convertingSuccess": "Successful conversion",
+    "convertingFail": "Conversion error",
+    "convert2": "Convert",
     "delayed": "Delayed payment",
     "at": "Behind",
     "allTime": "For all the time",
@@ -280,6 +283,7 @@
     "balance": "Balance",
     "newDeposit": "New deposit",
     "withdraw": "Withdraw funds",
+    "converting": "Converting",
     "prevPay": "Previous payout",
     "procentPrevPay": "Percentage of the previous payment",
     "tabs": {
@@ -422,7 +426,7 @@
   "line": "line",
   "partnersTitle": "Partners programs",
   "time": {
-    "title": "Start of the drawing in",
+    "title": "The new drawing start in:",
     "days": "days",
     "hours": "hours",
     "minutes": "minutes",
@@ -567,7 +571,7 @@
   "unders": "Got it",
   "payments2": {
     "actual": "Actuality on",
-    "last": "Updated", 
+    "last": "Updated",
     "ago": "ago",
     "now": "now"
   },

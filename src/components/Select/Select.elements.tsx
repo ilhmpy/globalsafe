@@ -46,7 +46,7 @@ export const Container = styled.div`
 
 export const Arrow = styled.div<{ rotat?: boolean }>`
   margin-right: 0px;
-  transform: ${(props) => (props.rotat ? 'rotate(0deg)' : 'rotate(-90deg)')};
+  transform: ${(props) => (props.rotat ? 'rotate(90deg)' : 'rotate(0deg)')};
   transition: 0.2s ease;
 `;
 
@@ -232,7 +232,7 @@ export const DropDownContainer = styled.div`
 `;
 
 export const DropDownHeader = styled.div`
-  border: 1px solid rgba(81, 81, 114, 0.3);
+  border: 1px solid #edf0f7;
   border-radius: 4px;
   position: relative;
   height: 40px;
@@ -240,9 +240,14 @@ export const DropDownHeader = styled.div`
   line-height: 21px;
   letter-spacing: 0.25px;
   padding: 8px;
-  position: relative;
   width: 100%;
   transition: 200ms ease-in-out;
+  display: flex;
+  align-items: center;
+  background: #f9fafb;
+  box-sizing: border-box;
+  color: ${(props) => props.theme.text2};
+
   ${Arrow} {
     position: absolute;
     right: 10px;

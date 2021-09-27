@@ -3,4 +3,5 @@ export const routers = {
     depositsProgram: '/info/deposits/programs',
     depositsOpen: '/info/deposits/new-deposit',
     depositsView: '/info/deposits/view',
+    
 }
