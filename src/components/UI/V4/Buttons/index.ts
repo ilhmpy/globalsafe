@@ -1,4 +1,3 @@
-
 export interface ButtonProps {
     className?: string;
     title: string;
@@ -10,3 +9,4 @@ export interface ButtonProps {
 }
 
 export { PrimaryButton } from './PrimaryButton';
+export { SecondaryButton } from './SecondaryButton';
