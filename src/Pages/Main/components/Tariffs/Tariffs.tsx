@@ -57,14 +57,14 @@ export const Tariffs = () => {
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   const languale = lang === 'ru' ? 1 : 0;
   const [programs, setPrograms] = useState([
-    { line: 1, data: ["4%", "5%", "5%"] },
-    { line: 2, data: ["1,6%", "2%", "2%"] },
-    { line: 3, data: ["0,8%", "1%", "1%"] },
-    { line: 4, data: ["", "1%", "1%"] },
-    { line: 5, data: ["", "1%", "1%"] },
-    { line: 6, data: ["", "", "1%"] },
-    { line: 7, data: ["", "", "1%"] },
-    { line: 8, data: ["", "", "1%"] },
+    { line: 1, data: ["4 %", "5 %", "5 %"] },
+    { line: 2, data: ["1,6 %", "2 %", "2 %"] },
+    { line: 3, data: ["0,8 %", "1 %", "1 %"] },
+    { line: 4, data: ["", "1 %", "1 %"] },
+    { line: 5, data: ["", "1 %", "1 %"] },
+    { line: 6, data: ["", "", "1 %"] },
+    { line: 7, data: ["", "", "1 %"] },
+    { line: 8, data: ["", "", "1 %"] },
   ]);
 
   useEffect(() => {
@@ -238,10 +238,10 @@ const PartnersHeader = styled.header`
 const PartnersHeaderItem = styled.div`
   width: 74px;
   color: #000;
-  line-height: 24px;
-  font-size: 18px;
+  line-height: 28px;
+  font-size: 24px;
   font-weight: 700;
-  margin-right: 230px;
+  margin-right: 217px;
 
   @media only screen and (max-device-width: 480px) {
     margin-right: 45px;
@@ -316,7 +316,7 @@ const PartnersItemTitle = styled.div`
 
 const PartnersItemData = styled.div`
   font-weight: 400;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 20px;
 
   &:nth-child(2) {
