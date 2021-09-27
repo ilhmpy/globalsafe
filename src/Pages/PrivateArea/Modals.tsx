@@ -219,6 +219,9 @@ export const TokenModal = ({ block, setBlock, setToTranslate, onButton }: any) =
         >
           {t('privateArea.translate')}
         </Button>
+        <Button primary onClick={() => undefined}>
+              {t('logout')}
+            </Button>
       </Modal>
     </CSSTransition>
   );

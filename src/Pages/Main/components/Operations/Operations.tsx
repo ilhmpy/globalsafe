@@ -98,7 +98,7 @@ export const Operations = () => {
       {notifyList.length > 0 ? (
          <Page>
           <Container>
-              <H2>{t('operation.last')}</H2>
+              <H2 mb>{t('operation.last')}</H2>
               <Description>{t("operations2.desc")}</Description>
           </Container>
           <Container pNone>
@@ -268,7 +268,7 @@ const Description = styled.h3`
   line-height: 20px;
   color: ${({ theme }) => theme.operations.descClr};
   max-width: 367px;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
 `;
 
 const TableHead = styled.div<{ item?: boolean; }>`

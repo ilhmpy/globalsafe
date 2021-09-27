@@ -7,6 +7,7 @@ import { Header } from "../../components/Header/Header";
 import { LoginComponent } from "../../components/Login";
 import { RegisterComponent } from "../../components/Register/Register";
 import { useTranslation } from "react-i18next";
+import { Footer } from "../../components/Footer/Footer";
 
 export const Authentication = () => {
   const { t } = useTranslation();
@@ -17,6 +18,7 @@ export const Authentication = () => {
         <UpTitle>{t("headerButton.personalArea")}</UpTitle>
       </Container> */}
       <LoginComponent />
+      <Footer />
     </AuthPage>
   );
 };
@@ -30,11 +32,13 @@ export const Register = () => {
         <UpTitle>{t("headerButton.register")}</UpTitle>
       </Container> */}
       <RegisterComponent />
+      <Footer />
     </AuthPage>
   );
 };
 
 const AuthPage = styled(Page)`
   height: 100vh;
-  background-color: ${props => props.theme.authBgGray};
+  display: flex;
+  flex-direction: column;
 `;

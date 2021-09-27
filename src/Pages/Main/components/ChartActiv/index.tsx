@@ -26,7 +26,7 @@ export const ExchangeChart = () => {
         try {
           const res = await hubConnection.invoke<RootChange>(
             'GetMarket',
-            14,
+            43,
             date,
             new Date(),
             totalNum,

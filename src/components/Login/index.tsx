@@ -85,7 +85,14 @@ export const LoginComponent = () => {
   const onChangeNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPasswordError(false);
     setError(true);
-    setPassword(e.target.value);
+
+    let val = e.target.value;
+    console.log("robert", val)
+
+    if(e.target.value.length >= 4 && password.length < 4) {
+      val = [val.slice(0, 3), ' ', val.slice(3)].join('')
+    }
+    setPassword(val);
   };
 
   const onSubmit = () => {
@@ -109,7 +116,6 @@ export const LoginComponent = () => {
             setLoginSuccessed(false);
             //
             setError(false);
-            setValue('');
           }
         })
         .catch((err: Error) => console.log(err));
@@ -273,7 +279,7 @@ export const LoginComponent = () => {
                   />
                 :
                   <PrimaryButton 
-                    title={`${t('login.repeat')} ${stateRepeat}`}
+                    title={`${t('login.repeat')} ${stateRepeat}.`}
                     type="submit"
                     disabled={true}
                   />
@@ -316,16 +322,18 @@ export const LoginComponent = () => {
 
 
 const AuthContainer = styled(Container)`
+  justify-content: flex-start;
+  flex: 1;
   margin: 0 auto;
   padding: 0;
-  padding-top: 40px;
+  padding-top: 80px;
   align-items: center;
 
-  @media (max-width: 768px) {
-    padding-top: 80px;
+  @media (max-width: 1024px) {
+    padding-top: 150px;
   }
   @media (max-width: 425px) {
-    padding-top: 20px;
+    padding-top: 80px;
   }
 `;
 

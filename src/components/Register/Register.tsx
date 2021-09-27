@@ -56,7 +56,12 @@ export const RegisterComponent: FC = () => {
   const onChangeNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPasswordError(false);
     setError(true);
-    setPassword(e.target.value);
+
+    let val = e.target.value;
+    if(e.target.value.length >= 4 && password.length < 4) {
+      val = [val.slice(0, 3), ' ', val.slice(3)].join('')
+    }
+    setPassword(val);
   };
 
   const singIn = () => {
@@ -197,7 +202,6 @@ export const RegisterComponent: FC = () => {
             
             createAccount();
             // setError(false);
-            // setValue("");
           }
         })
         .catch((err: Error) => {
@@ -298,7 +302,7 @@ export const RegisterComponent: FC = () => {
                   />
                 :
                   <PrimaryButton 
-                    title={`${t('login.repeat')} ${stateRepeat}`}
+                    title={`${t('login.repeat')} ${stateRepeat}.`}
                     type="submit"
                     disabled={true}
                   />
@@ -323,16 +327,18 @@ export const RegisterComponent: FC = () => {
 
 
 const AuthContainer = styled(Container)`
+  justify-content: flex-start;
+  flex: 1;
   margin: 0 auto;
   padding: 0;
-  padding-top: 40px;
+  padding-top: 80px;
   align-items: center;
 
   @media (max-width: 768px) {
-    padding-top: 80px;
+    padding-top: 150px;
   }
   @media (max-width: 425px) {
-    padding-top: 20px;
+    padding-top: 80px;
   }
 `;
 

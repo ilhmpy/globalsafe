@@ -9,7 +9,7 @@ type ModalProps = {
   zIndex?: string;
   mobMarg?: boolean;
   children: ReactNode;
-  paddingTop?: number;
+  paddingTop?: number; 
   style?: any;
   styles?: string;
   lottery?: boolean;
@@ -27,7 +27,7 @@ export const Modal: React.FC<ModalProps> = ({
   style,
   styles,
   lottery,
-  withClose,
+  withClose, 
   withoutClose,
 }: ModalProps) => {
   const handleContainerClick = (e: React.MouseEvent) => {
@@ -45,13 +45,13 @@ export const Modal: React.FC<ModalProps> = ({
   return (
     <Portal>
       <ModalContainer zIndex={zIndex} style={style} className="bbg" lottery={lottery}>
-        <Center styles={styles}  onClick={handleContainerClick} lottery={lottery}>
+        <Center styles={styles} onClick={handleContainerClick} lottery={lottery}>
           <ModalComponent width={width} mobMarg={mobMarg} paddingTop={paddingTop}>
               {withClose && (<span className="close" onClick={handleContainerClick}><Times /></span>)}
               {children}
           </ModalComponent>
         </Center>
-      </ModalContainer>
+      </ModalContainer>  
     </Portal>
   );
 };
@@ -63,7 +63,7 @@ const Main = styled.div`
   align-items: center;
 `;
 
-const Center = styled.div<{ styles?: string; lottery?: boolean; }>`
+const Center = styled.div<{ styles?: string; lottery?: boolean }>`
   min-height: calc(100% - 3.5rem);
   margin: 1.75rem auto;
   display: flex;
@@ -73,7 +73,7 @@ const Center = styled.div<{ styles?: string; lottery?: boolean; }>`
   ${({ styles }) => {
     if (styles) {
       return styles;
-    };
+    }
   }}
 
   ${({ lottery }) => {
@@ -90,27 +90,33 @@ const Center = styled.div<{ styles?: string; lottery?: boolean; }>`
           }
         }
       `;
-    };
+    }
   }}
 `;
 
-const ModalContainer = styled.div<{ zIndex: string, lottery?: boolean; }>`
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.2);
-    display: block;
-    transition: 0.3s;
-    z-index: ${(props) => props.zIndex};
-    overflow: auto;
-    @media (max-width: 576px) {
-      padding: 20px;
-    }
+const ModalContainer = styled.div<{ zIndex: string; lottery?: boolean }>`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: block;
+  transition: 0.3s;
+  z-index: ${(props) => props.zIndex};
+  overflow: auto;
+  @media (max-width: 576px) {
+    padding: 20px;
+  }
 `;
 
-const ModalComponent = styled.div<{ width?: number; mobMarg?: boolean; paddingTop?: number; styles?: string; lottery?: boolean; }>`
+const ModalComponent = styled.div<{
+  width?: number;
+  mobMarg?: boolean;
+  paddingTop?: number;
+  styles?: string;
+  lottery?: boolean;
+}>`
   display: flex;
   flex-direction: column;
   margin: 50px auto;
@@ -163,7 +169,7 @@ const ModalComponent = styled.div<{ width?: number; mobMarg?: boolean; paddingTo
   ${({ styles }) => {
     if (styles) {
       return styles;
-    };
+    }
   }}
 
   @media (max-width: 768px) {

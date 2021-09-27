@@ -14,14 +14,14 @@ export const Footer = () => {
         <FooterHeader>
           <FooterLogo className="logo" />
           <FooterLinks>
-            <FooterLink>Тарифы и программы</FooterLink>
-            <FooterLink>Розыгрыши</FooterLink>
-            <FooterLink>Обмены</FooterLink>
+            <FooterLink href="/#banner">Тарифы и программы</FooterLink>
+            <FooterLink href="/#lottery">Розыгрыши</FooterLink>
+            <FooterLink href="/#lottery">Обмены</FooterLink>
             <FooterLink>Правила</FooterLink>
           </FooterLinks>
         </FooterHeader>
         <FooterDesc>2021 © Globalsafe v2.0. Все права защищены.</FooterDesc>
-        <a href="://t.me/joinchat/E_Acz5BKQnJlNTVi"><Tg className="tg" /></a>
+        <a target="_blank" href="::t.me/joinchat/E_Acz5BKQnJlNTVi"><Tg className="tg" /></a>
       </Container>
     </FooterBlock>
   );
@@ -106,12 +106,12 @@ const FooterDesc = styled.h3`
   line-height: 17px;
   
   @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
-    width: 178px;
+    width: 170px;
   }
 
   @media only screen and (max-device-width: 480px) {
     text-align: center;
-    width: 178px;
+    width: 170px;
     margin: 0 auto;
     margin-top: 20px;
   }

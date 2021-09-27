@@ -23,5 +23,5 @@
   },
   "include": [
     "src"
-  ]
+, "src/Pages/PrivateArea/ConveringSuccessModal.tsx"  ]
 }

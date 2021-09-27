@@ -2,10 +2,12 @@
 import 'moment/locale/ru';
 import React, { FC, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
+import { NavLink, Redirect, Route, Switch, useHistory } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
+import styled from 'styled-components';
 import { ReactComponent as Copy } from '../../assets/svg/copy.svg';
-import { Button } from '../../components/Button/Button';
+import { Button } from '../../components/Button/V2/Button';
+// import { Button } from '../../components/Button/Button';
 import { Header } from '../../components/Header/Header';
 import { Modal } from '../../components/Modal/Modal';
 import { Notification } from '../../components/Notify/Notification';
@@ -15,23 +17,37 @@ import { Input } from '../../components/UI/Input';
 import { Loading } from '../../components/UI/Loading';
 import { Tabs } from '../../components/UI/Tabs';
 import { UpTitle } from '../../components/UI/UpTitle';
+import { Chip, SecondaryButton } from '../../components/UI/V4';
 import { AppContext } from '../../context/HubContext';
 import { Card, Container } from '../../globalStyles';
 import { Balance, Notify } from '../../types/balance';
 import { Commisions, DepositsCollection, RootDeposits } from '../../types/info';
+import { Deposits } from './Deposits/Deposits';
+import { ConvertingModalSuccess } from './ConveringSuccessModal';
+import { ConvertingModal } from './ConvertingModal';
+import { ConvertingModalFail } from './ConvertingModalFail';
+
 import { Info } from './Info';
 import { InfoBalance } from './InfoBalance';
 import { InfoDeposits } from './InfoDeposits';
 import { DepositListModal, TokenModal } from './Modals';
-import { OnePage } from './OnePage';
+import { OnePage } from './OnePage'; 
 import * as Styled from './Styles.elements';
 import { H3 } from "../../components/UI/Heading";
 import { Select as Selectv2 } from "../../components/UI/Select";
 import { Input as Inputv2 } from "../../components/UI/V4/Inputs/Input";
 import { PAButton } from "../../components/UI/V4/Buttons/PAButton";
+import { ReactComponent as LockIcon } from '../../assets/v2/svg/lock.svg'
+import { ReactComponent as LogOutIcon } from '../../assets/v2/svg/logOut.svg'
+import { routers } from '../../constantes/routers';
+import { DepositProgram } from './Deposits/DepositProgram';
+import { DepositOpen } from './Deposits/DepositOpen';
 
 export const InfoMain: FC = () => {
   const { t } = useTranslation();
+  const [openConverting, setOpenConverting] = useState<boolean>(false);
+  const [isSuccessConverting, setIsSuccessConverting] = useState<boolean>(false);
+  const [isFailConverting, setIsFailConverting] = useState<boolean>(false);
   const [notifications, setNotifications] = useState<Notify[]>([]);
   const [addDeposit, setAddDeposit] = useState<boolean>(false);
   const [depositListModal, setDepositListModal] = useState<boolean>(false);
@@ -73,6 +89,8 @@ export const InfoMain: FC = () => {
   const [currencies, setCurrencies] = useState<any[]>(['CWD', 'GLOBAL', 'GF', 'FF', 'GF5', 'GF6', 'FF5', 'FF6', 'MULTICS']);
   const [outPutError, setOutPutError] = useState<boolean | undefined>();
   const [outPutErrorReason, setOutPutErrorReason] = useState<string>("На балансе аккаунта недостаточно средств");
+  const [withDrawModal, setWithDrawModal] = useState<boolean>(false);
+  const [addDrawModal, setAddDrawModal] = useState<boolean>(false);
 
   // Get Balance Kinds List as an Array
   const balancesList = useMemo(() => {
@@ -212,16 +230,16 @@ export const InfoMain: FC = () => {
         : obj
     );
 
-  if (user === null) {
-    return null;
-  }
+  // if (user === null) {
+  //   return null;
+  // }
 
   const balanceFuture =
     depositSelect && [9, 10, 11].includes(depositSelect.priceKind) && depositSelect.priceKind !== 1;
 
-  if (user === false) {
-    return <Redirect to="/" />;
-  }
+  // if (user === false) {
+  //   return <Redirect to="/" />;
+  // }
   const copy = (text: string) => {
     createNotify({
       text: t('copy.text'),
@@ -295,14 +313,6 @@ export const InfoMain: FC = () => {
 
   const outPutBalance = () => {
     if (hubConnection && outPutCurrency.length > 0 && outPutEd.length > 0) {
-      console.log(Balance[outPutCurrency as keyof typeof Balance],
-        outPutCurrency === 'CWD'
-          ? Number(+outPutEd) * 100000
-          : outPutCurrency === 'GLOBAL'
-          ? Number(+outPutEd) * 10000
-          : outPutCurrency === 'MULTICS'
-          ? Number(+outPutEd) * 100
-          : Number(+outPutEd));
       setWithdrawValueLoad(true);
       hubConnection
         .invoke(
@@ -320,20 +330,47 @@ export const InfoMain: FC = () => {
           console.log(res);
           setWithdrawValueLoad(false);
           setOutPutError(false);
+          setWithDrawModal(false);
         })
         .catch((err: Error) => {
           console.log(err);
           setWithdrawValueLoad(false);
           setOutPutError(true);
+          setWithDrawModal(false);
           if (balance != null) {
-            if (balance > Number(outPutEd)) {
-              setOutPutErrorReason("Достигнут лимит транзакций");
+            console.log(Number(outPutEd) * 100000)
+            if (balance > Number(outPutEd)) { 
+    
             }
           }
         });
     }
   };
 
+  const getChipColor = (i: any) => {
+    let color = '#E0F8FF';
+    if(i.balanceKind === 1) {
+      color = '#FFF4D9';
+    } else if (i.balanceKind === 9) {
+      color = '#FF416E';
+    } else if (i.balanceKind === 10) {
+      color = '#6DB9FF';
+    } else if (i.balanceKind === 11) {
+      color = '#BCD476';
+    } else if (i.balanceKind === 12) {
+      color = '#A78CF2';
+    } else if (i.balanceKind === 43) {
+      color = '#EFECFF';
+    } else if (i.balanceKind === 44) {
+      color = '#DAFFE2';
+    } else if (i.balanceKind === 47) {
+      color = '#E0F8FF';
+    } else {
+      color = '#E0F8FF';
+    }
+    return color;
+  }
+  
   return (
     <>
       {withdrawValueLoad && (
@@ -347,8 +384,8 @@ export const InfoMain: FC = () => {
         </Styled.Loader>
       )}
 
-      <CSSTransition in={false} timeout={0} unmountOnExit>
-        <Modal onClose={() => false} width={420} withClose>
+      <CSSTransition in={addDrawModal} timeout={0} unmountOnExit>
+        <Modal onClose={() => setAddDrawModal(false)} width={420} withClose>
           <H3 center>Пополнение баланса</H3>
           <div style={{ width: "100%", maxWidth: "340px", margin: "0 auto" }}>
             <Selectv2 data={currencies} setSwitch={setCurrency} />
@@ -377,8 +414,8 @@ export const InfoMain: FC = () => {
 
 
 
-      <CSSTransition in={true} timeout={0} unmountOnExit>
-        <Modal onClose={() => false} width={420} withClose>
+      <CSSTransition in={withDrawModal} timeout={0} unmountOnExit>
+        <Modal onClose={() => setWithDrawModal(false)} width={420} withClose>
           <H3 center>Вывод средств</H3>
           <div style={{ width: "100%", maxWidth: "340px", margin: "0 auto" }}>
             <Selectv2 data={currencies} setSwitch={setOutPutCurrency} />
@@ -438,14 +475,96 @@ export const InfoMain: FC = () => {
           return;
         }}
       />
+
+      <ConvertingModal open={openConverting} setOpen={setOpenConverting} />
+      <ConvertingModalSuccess open={isSuccessConverting} setOpen={setIsSuccessConverting} />
+      <ConvertingModalFail open={isFailConverting} setOpen={setIsFailConverting} />
+
       <Header />
       <Styled.Page>
-        <Container>
+        {/* <Container>
           <UpTitle>{t('privateArea.uptitle')}</UpTitle>
-        </Container>
-        <Container>
-          <Card>
-            <Styled.InfoWrap>
+        </Container> */}
+
+        <DepositsPanelContainer>
+          <PanelTitleBlock>
+            <H4>Личный кабинет</H4>
+            <LogoutButton>
+              <UsernameText>{user}</UsernameText>
+              <LogOutIcon />
+            </LogoutButton>
+          </PanelTitleBlock>
+          <PanelCard>
+            <PanelHeader>
+              <PanelInfoBlock>
+                <BalanceInfoText>Баланс аккаунта:</BalanceInfoText>
+                <BalanceValueText>
+                  {balance
+                      ? (balance / 100000).toLocaleString('ru-RU', {
+                          maximumFractionDigits: 5,
+                        })
+                      : '0'}{' '}
+                    CWD
+                </BalanceValueText>
+              </PanelInfoBlock>
+              <PanelActionsBlock>
+                  <SecondaryButton 
+                    title={'Конвертация'}
+                    // eslint-disable-next-line
+                    onClick={() => {}}
+                  />
+                  <SecondaryButton 
+                    title={'Пополнить баланс'}
+                    // eslint-disable-next-line
+                    onClick={() => setAddDrawModal(true)}
+                  />
+                   <SecondaryButton 
+                    title={'Вывести средства'}
+                    // eslint-disable-next-line
+                    onClick={() => setWithDrawModal(true)}
+                  />
+              </PanelActionsBlock>
+            </PanelHeader>
+            <BalanceChipsBlock>
+              {balanceChips &&
+                  balanceChips.map((i: any, idx: number) => {
+                    return (
+                      <Chip
+                        key={`chip-item-${idx}`}
+                        leftIcon={() => <LockIcon />}
+                        bgColor={getChipColor(i)}
+                      >
+                         <span>
+                          {i.volume.toLocaleString('ru-RU', {
+                            maximumFractionDigits: 4,
+                          })}
+                        </span>
+                        &nbsp;
+                        {Balance[i.balanceKind]}
+                      </Chip>
+                    );
+                })}
+            </BalanceChipsBlock>
+
+            <TabsBlock>
+              <TabNavItem to="/info" exact>
+                <div>Мои депозиты</div>
+              </TabNavItem>
+              <TabNavItem to="/ads">
+                <div>Объявления</div>
+              </TabNavItem>
+              <TabNavItem to="/certificates">
+                <div>Сертификаты</div>
+              </TabNavItem>
+              <TabNavItem to="/operationsHistory">
+                <div>История операций</div>
+              </TabNavItem>
+              <TabNavItem to="/settings">
+                <div>Настройки</div>
+              </TabNavItem>
+            </TabsBlock>
+
+            {/* <Styled.InfoWrap>
               <Styled.UserBlock>
                 <Styled.InfoTitle>{user}</Styled.InfoTitle>
                 <Styled.BalanceItem>
@@ -491,24 +610,25 @@ export const InfoMain: FC = () => {
                   </Styled.SmallButtonsWrap>
                 </Styled.SmallButtonsWrapDesc>
               </Styled.UserBlock>
-              <Styled.InfoButtons> 
+              <Styled.InfoButtons>
                 <Button
-                  dangerOutline 
                   onClick={() => {
                     setDepositSelect(null);
                     setAddDepositValue('');
                     setAddDeposit(true);
-                  }} 
+                  }}
                 >
                   {t('privateArea.newDeposit')}
                 </Button>
-                <Button danger onClick={() => setSwitchType(!switchType)}>
+                <Button onClick={() => setSwitchType(!switchType)}>
                   {t('privateArea.withdraw')}
+                </Button>
+                <Button onClick={() => setOpenConverting(true)}>
+                  {t('privateArea.converting')}
                 </Button>
               </Styled.InfoButtons>
               <Styled.SwitchBlock block={switchType}>
                 <Button
-                  dangerOutline
                   onClick={() => {
                     setToTokenModal(true);
                     setSwitchType(false);
@@ -518,7 +638,7 @@ export const InfoMain: FC = () => {
                   {t('privateArea.toToken')}
                 </Button>
                 <Button
-                  dangerOutline
+                  as="button"
                   onClick={() => {
                     setSwitchType(false);
                     setWithdraw(true);
@@ -564,18 +684,23 @@ export const InfoMain: FC = () => {
               <Styled.NavTabs to="/info" exact>
                 <div>{t('privateArea.tabs.tab1')}</div>{' '}
               </Styled.NavTabs>
-              <Styled.NavTabs to="/info/deposits">
+              <Styled.NavTabs to={routers.deposits}>
                 <div>{t('privateArea.tabs.tab2')}</div>{' '}
               </Styled.NavTabs>
               <Styled.NavTabs to="/info/balance">
                 <div>{t('privateArea.tabs.tab3')}</div>{' '}
               </Styled.NavTabs>
-            </Tabs>
-          </Card>
-        </Container>
+            </Tabs> */}
+          </PanelCard>
+        </DepositsPanelContainer>
+
+
         <Switch>
           <Route path="/info" component={Info} exact />
-          <Route path="/info/deposits" component={InfoDeposits} exact />
+          {/* <Route path="/info/deposits" component={InfoDeposits} exact /> */}
+          <Route path={routers.deposits} component={Deposits} exact />
+          <Route path={routers.depositsProgram} component={DepositProgram} exact />
+          <Route path={routers.depositsOpen} component={DepositOpen} exact />
           <Route path="/info/balance" component={InfoBalance} exact />
           <Route path="/info/deposits/:slug" component={OnePage} />
         </Switch>
@@ -778,3 +903,112 @@ export const InfoMain: FC = () => {
     </>
   );
 };
+
+
+const DepositsPanelContainer = styled(Container)`
+  display: flex;
+  flex-direction: column;
+`;
+
+const PanelTitleBlock = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  margin-top: 40px;
+`;
+
+const H4 = styled.h4`
+  color: ${props => props.theme.titles};
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 42px;
+
+  @media (max-width: 425px) {
+    font-size: 18px;
+    line-height: 21px;
+  }
+`;
+
+const LogoutButton = styled.button`
+  display: flex;
+  align-items: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+`;
+
+const UsernameText = styled.span`
+  margin-right: 6px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+`;
+
+const PanelCard = styled(Card)`
+  border-radius: 4px;
+  box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
+  padding: 20px;
+`;
+
+const PanelHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+`;
+
+const PanelInfoBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const PanelActionsBlock = styled.div`
+  display: flex;
+  align-items-center;
+  gap: 20px;
+`;
+
+const BalanceInfoText = styled.div`
+  color: ${props => props.theme.titles};
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
+  margin-bottom: 10px;
+`;
+
+const BalanceValueText = styled.div`
+  color: ${props => props.theme.titles};
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 28px;
+`;
+
+const BalanceChipsBlock = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #EBEBF2;
+`;
+
+const TabsBlock = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 40px;
+`;
+
+const TabNavItem = styled(NavLink)`
+  color: ${props => props.theme.black};
+  opacity: 0.6;
+  font-size: 14px;
+  line-height: 16px;
+  padding-bottom: 10px;
+
+  &.active {
+    font-weight: 500;
+    opacity: 1;
+
+    border-bottom: 2px solid ${props => props.theme.blue};
+  }
+`;

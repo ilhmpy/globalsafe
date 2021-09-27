@@ -195,7 +195,7 @@ export const Table = styled.table`
   width: 100%;
   display: table;
   border-collapse: collapse;
-  /* table-layout: fixed; */
+  table-layout: fixed;
 `;
 
 export const StyledFilter = styled(Filter)`
