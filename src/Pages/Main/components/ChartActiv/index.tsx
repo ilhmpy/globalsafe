@@ -7,6 +7,7 @@ import { Collection, RootChange } from '../../../../types/currency';
 import moment from 'moment';
 import { ChartActiv } from './ChartActiv';
 import { SmallChart } from './SmallChart';
+import { Page } from '../../../../components/UI/Page';
 
 export const ExchangeChart = () => {
   const [listDIAMOND, setListDIAMOND] = useState<Collection[]>([]);
@@ -193,7 +194,7 @@ export const ExchangeChart = () => {
   }, [hubConnection]);
 
   return (
-    <>
+    <Page>
       <SliderChart
         listDIAMOND={listDIAMOND}
         listGLOBAL={listGLOBAL}
@@ -204,6 +205,6 @@ export const ExchangeChart = () => {
         fetchDIAMOND={fetchDIAMOND}
         fetchGLOBAL={fetchGLOBAL}
       />
-    </>
+    </Page>
   );
 };
