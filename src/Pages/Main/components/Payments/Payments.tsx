@@ -234,6 +234,7 @@ export const Payments: FC = () => {
         .then((res) => {
           setStatsDeposit(res);
           setLoadReset(false);
+          console.log(res);
         })
         .catch((e) => {
           setLoadReset(false);
@@ -322,7 +323,7 @@ export const Payments: FC = () => {
                         {i.map((item: any, idx: any) => (
                           <WhiteItem key={idx}>
                             <WhiteItemText>{item.deposit.name}</WhiteItemText>
-                            <WhiteItemText bold>{(item.procent).toFixed(0)}%</WhiteItemText>
+                            <WhiteItemText bold>{(item.procent).toFixed(0)} %</WhiteItemText>
                             <WhiteItemText>{moment(item.date).format("DD.MM.YYYY")}</WhiteItemText>
                             <WhiteItemLine procent={(item.procent).toFixed(0)} />
                           </WhiteItem>
@@ -342,7 +343,7 @@ export const Payments: FC = () => {
                         {i.map((item: any, idx: any) => (
                           <WhiteItem key={idx}>
                             <WhiteItemText>{item.deposit.name}</WhiteItemText>
-                            <WhiteItemText bold>{(item.procent).toFixed(0)}%</WhiteItemText>
+                            <WhiteItemText bold>{(item.procent).toFixed(0)} %</WhiteItemText>
                             <WhiteItemText>{moment(item.date).format("DD.MM.YYYY")}</WhiteItemText>
                             <WhiteItemLine procent={(item.procent).toFixed(0)} />
                           </WhiteItem>
@@ -716,13 +717,16 @@ const WhiteItem = styled.div`
   width: 180px;
   height: 108px;
   min-width: 180px;
+  min-height: 108px;
   background: #F8F7FC;
   margin-right: 20px;
   border-radius: 4px;
   margin-bottom: 20px;
   padding: 20px;
-  padding-left: 25px;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
 
   @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
     width: 150px;
@@ -763,7 +767,7 @@ const WhiteItemText = styled.div<{ bold?: boolean; }>`
           font-weight: 700;
           color: #3F3E4E;
           font-size: 18px;
-          line-height: 30px;
+          line-height: 24px;
         `;
       };
    }}
@@ -772,10 +776,10 @@ const WhiteItemText = styled.div<{ bold?: boolean; }>`
 const WhiteItemLine = styled.div<{ procent: number | string; }>`
    width: 100%;
    background: #DCDCE8;
-   dispay: block;
    height: 2px;
    margin-top: 13px;
    position: relative;
+   min-width: 140px;
 
    &::after {
      display: inline;

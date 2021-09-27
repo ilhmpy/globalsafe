@@ -76,7 +76,6 @@ export const CardDesc = styled.h3`
     line-height: 20px;
     color: #000;
     width: 100%;
-    min-width: 149px;
     max-width: 160px;
     height: 60px;
     margin-bottom: 40px;
