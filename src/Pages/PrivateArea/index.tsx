@@ -20,15 +20,20 @@ import { AppContext } from '../../context/HubContext';
 import { Card, Container } from '../../globalStyles';
 import { Balance, Notify } from '../../types/balance';
 import { Commisions, DepositsCollection, RootDeposits } from '../../types/info';
+import { Deposits } from './Deposits/Deposits';
 import { ConvertingModalSuccess } from './ConveringSuccessModal';
 import { ConvertingModal } from './ConvertingModal';
 import { ConvertingModalFail } from './ConvertingModalFail';
+
 import { Info } from './Info';
 import { InfoBalance } from './InfoBalance';
 import { InfoDeposits } from './InfoDeposits';
 import { DepositListModal, TokenModal } from './Modals';
 import { OnePage } from './OnePage';
 import * as Styled from './Styles.elements';
+import { routers } from '../../constantes/routers';
+import { DepositProgram } from './Deposits/DepositProgram';
+import { DepositOpen } from './Deposits/DepositOpen';
 
 export const InfoMain: FC = () => {
   const { t } = useTranslation();
@@ -219,16 +224,16 @@ export const InfoMain: FC = () => {
         : obj
     );
 
-  if (user === null) {
-    return null;
-  }
+  // if (user === null) {
+  //   return null;
+  // }
 
   const balanceFuture =
     depositSelect && [9, 10, 11].includes(depositSelect.priceKind) && depositSelect.priceKind !== 1;
 
-  if (user === false) {
-    return <Redirect to="/" />;
-  }
+  // if (user === false) {
+  //   return <Redirect to="/" />;
+  // }
   const copy = (text: string) => {
     createNotify({
       text: t('copy.text'),
@@ -449,7 +454,7 @@ export const InfoMain: FC = () => {
               <Styled.NavTabs to="/info" exact>
                 <div>{t('privateArea.tabs.tab1')}</div>{' '}
               </Styled.NavTabs>
-              <Styled.NavTabs to="/info/deposits">
+              <Styled.NavTabs to={routers.deposits}>
                 <div>{t('privateArea.tabs.tab2')}</div>{' '}
               </Styled.NavTabs>
               <Styled.NavTabs to="/info/balance">
@@ -460,7 +465,10 @@ export const InfoMain: FC = () => {
         </Container>
         <Switch>
           <Route path="/info" component={Info} exact />
-          <Route path="/info/deposits" component={InfoDeposits} exact />
+          {/* <Route path="/info/deposits" component={InfoDeposits} exact /> */}
+          <Route path={routers.deposits} component={Deposits} exact />
+          <Route path={routers.depositsProgram} component={DepositProgram} exact />
+          <Route path={routers.depositsOpen} component={DepositOpen} exact />
           <Route path="/info/balance" component={InfoBalance} exact />
           <Route path="/info/deposits/:slug" component={OnePage} />
         </Switch>

@@ -45,6 +45,7 @@
     "react-scripts": "^4.0.3",
     "react-scroll": "^1.8.1",
     "react-slick": "^0.28.1",
+    "react-spring": "^9.2.4",
     "react-switch": "^6.0.0",
     "react-transition-group": "^4.4.1",
     "react-virtualized": "^9.22.3",

@@ -17,8 +17,8 @@ body{
     color:${(props) => props.theme.text};
     position: relative;
     font-weight: 400;
-    background: #E5E5E5;
-    background:${(props) => props.theme.body} ;
+    background: #f9fafb;
+    /* background:${(props) => props.theme.body} ; */
     background-repeat: no-repeat;
     height: 100%;
     scrollbar-width: none;
@@ -342,7 +342,7 @@ input[type=number] {
 
 `;
 
-export const Container = styled.div<{ pNone?: boolean; bigMargin?: boolean; ppNone?: boolean; }>`
+export const Container = styled.div<{ pNone?: boolean; bigMargin?: boolean; ppNone?: boolean }>`
   -webkit-background-clip: content-box;
   background-clip: content-box;
   z-index: 1;
@@ -367,7 +367,7 @@ export const Container = styled.div<{ pNone?: boolean; bigMargin?: boolean; ppNo
           padding-left: 0;
           padding-right: 0;
         `;
-      };
+      }
     }}
   }
 `;

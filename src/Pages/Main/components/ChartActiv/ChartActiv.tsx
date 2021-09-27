@@ -206,7 +206,7 @@ export const ChartActiv: FC<Props> = ({
       },
       navigator: {
         enabled: size < 768 ? false : true,
-        adaptToUpdatedData: true,
+        adaptToUpdatedData: false,
         maskFill: 'rgba(0, 148, 255, 0.2)',
         maskInside: true,
         outlineWidth: 0,
