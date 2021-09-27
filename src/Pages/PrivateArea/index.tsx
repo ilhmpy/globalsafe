@@ -385,11 +385,20 @@ export const InfoMain: FC = () => {
       )}
 
       <CSSTransition in={addDrawModal} timeout={0} unmountOnExit>
-        <Modal onClose={() => setAddDrawModal(false)} width={420} withClose>
+        <Modal onClose={() => {
+          setAddDrawModal(false);
+          setEd("");
+        }} width={420} withClose>
           <H3 center>Пополнение баланса</H3>
           <div style={{ width: "100%", maxWidth: "340px", margin: "0 auto" }}>
             <Selectv2 data={currencies} setSwitch={setCurrency} />
-            <Inputv2 placeholder="Сумма пополнения" onChange={(e) => setEd(e.currentTarget.value)} />
+            <Inputv2 placeholder="Сумма пополнения" value={ed} onChange={(e) => {
+              const arr = e.currentTarget.value.split('-');
+              const fromSplitted = arr[0].split('.');
+              const toSplitted = arr.length === 2 ? arr[1].split('.') : '';
+              const validValue = e.currentTarget.value.replace(/[^0-9]/gi, '');
+              setEd(validValue);
+            }} />
             <PAButton onClick={changeBalance}>Пополнить баланс</PAButton>
           </div>
         </Modal>
@@ -415,7 +424,10 @@ export const InfoMain: FC = () => {
 
 
       <CSSTransition in={withDrawModal} timeout={0} unmountOnExit>
-        <Modal onClose={() => setWithDrawModal(false)} width={420} withClose>
+        <Modal onClose={() => {
+           setWithDrawModal(false);
+           setOutPutEd("");
+        }} width={420} withClose>
           <H3 center>Вывод средств</H3>
           <div style={{ width: "100%", maxWidth: "340px", margin: "0 auto" }}>
             <Selectv2 data={currencies} setSwitch={setOutPutCurrency} />
