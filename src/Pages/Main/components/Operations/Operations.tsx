@@ -25,12 +25,21 @@ export const Operations = () => {
     };
     if (hubConnection) {
       hubConnection.on('OperationNotification', cb);
-      hubConnection
+      if (screen.width > 480) {
+        hubConnection
         .invoke<RootOperations>('GetOperationsNotifications', [2, 4, 5, 6, 7, 8], 10, 10)
         .then((res) => {
           !clean && setNotifyList(res.collection);
         })
         .catch((e) => console.log(e));
+      } else {
+        hubConnection
+        .invoke<RootOperations>('GetOperationsNotifications', [1, 2, 3, 4, 5], 5, 5)
+        .then((res) => {
+          !clean && setNotifyList(res.collection);
+        })
+        .catch((e) => console.log(e));
+      }
     }
     return () => {
       clean = true;
@@ -97,7 +106,7 @@ export const Operations = () => {
     <>
       {notifyList.length > 0 ? (
          <Page>
-          <Container>
+          <Container page>
               <H2 mb>{t('operation.last')}</H2>
               <Description>{t("operations2.desc")}</Description>
           </Container>
@@ -269,6 +278,14 @@ const Description = styled.h3`
   color: ${({ theme }) => theme.operations.descClr};
   max-width: 367px;
   margin-bottom: 40px;
+
+  @media only screen and (max-device-width: 480px) {
+    margin-bottom: 10px;
+  }
+  
+  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+    margin-bottom: 20px;
+  }
 `;
 
 const TableHead = styled.div<{ item?: boolean; }>`

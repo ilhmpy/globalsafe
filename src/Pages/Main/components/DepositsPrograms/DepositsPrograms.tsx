@@ -24,7 +24,7 @@ export const DepositsPrograms = () => {
   return (
     <Page id="deposits">
       {deposits.length > 0 && (
-        <Container>
+        <Container page>
           <H2>{t('sideNav.depositsPrograms')}</H2>
           {screen.width > 480 ? (
             <Styled.CardBox>

@@ -35,7 +35,7 @@ export const H2 = styled.h2<{ center?: boolean }>`
       if (center) {
         return `
           margin: 0 auto;
-          margin-bottom: 1px;
+          margin-bottom: 10px;
           font-weight: 700;
           font-size: 18px;
         `;

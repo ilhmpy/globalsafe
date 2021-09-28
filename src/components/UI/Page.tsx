@@ -26,4 +26,17 @@ export const Page = styled.div<{
   @media only screen and (max-device-width: 767px) {
     position: relative;
   }
+
+  @media only screen and (max-device-width: 480px) {
+    ${({ abs }) => {
+      if (abs) {
+        return `
+          & > * {
+            padding-right: 0px;
+            padding-left: 0px;
+          }
+        `;
+      };
+    }}
+  }
 `;

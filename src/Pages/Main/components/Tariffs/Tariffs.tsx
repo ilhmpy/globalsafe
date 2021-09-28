@@ -179,7 +179,7 @@ export const Tariffs = () => {
 
   return (
     <Page id="tariffs" smallPad>
-      <Container pNone>
+      <Container pNone page>
         <H2 center>{t('partnersTitle')}</H2>
         <PartnersBlock>
           <PartnersHeader>
@@ -215,6 +215,7 @@ const PartnersBlock = styled.div`
 
   @media only screen and (max-device-width: 480px) {
     min-height: 345px;
+    margin-bottom: 20px;
   }
 `;
 

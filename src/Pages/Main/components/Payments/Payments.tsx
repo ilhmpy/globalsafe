@@ -13,10 +13,11 @@ import { Button } from '../../../../components/Button/Button';
 import { RadialBar } from '../../../../components/Charts/Test';
 import { Modal } from '../../../../components/Modal/Modal';
 import { Input } from '../../../../components/UI/Input';
-import { H2 } from '../../../../components/UI/MainStyled';
+import { H2 } from '../../../../components/UI/Heading';
 import { Page } from '../../../../components/UI/Page';
 import { AppContext } from '../../../../context/HubContext';
-import { Card, Container } from '../../../../globalStyles';
+import { Card } from '../../../../globalStyles';
+import { Container } from '../../../../components/UI/Container';
 import { Pokedex, RootPayDeposit } from '../../../../types/payouts';
 import { ModalBlock, ModalTitle } from '../Tariffs/Tariffs.elements';
 import { ReactComponent as Reload } from "../../../../assets/svg/reload.svg";
@@ -271,10 +272,8 @@ export const Payments: FC = () => {
         if (updateTime.date.day == currentDate.getDate()) {
           const time = ((currentDate.getHours() * 60) + currentDate.getMinutes()) - ((updateTime.time.hours * 60) + updateTime.time.minutes);
           if (time >= 60) {
-            console.log("hours", `${Math.floor(time / 60)} часов`)
-            return setLastTime(`${Math.floor(time / 60)} часов`);
+             return setLastTime(`${Math.floor(time / 60)} часов`);
           } else {
-            console.log("minutes", `${time} минут`)
             if (time > 0) {
               setLastTime(`${time} минут`);
             } else {
@@ -283,29 +282,23 @@ export const Payments: FC = () => {
           };
         } else {
           setActualDate(new Date());
-          console.log("not current day", `${currentDate.getDate() - updateTime.date.day} дней`);
           return setLastTime(`${currentDate.getDate() - updateTime.date.day} дней`);
         };
       } else {
         setActualDate(new Date());
-        console.log("not current month", `${(currentDate.getMonth() + 1) - updateTime.date.month} месяцев`);
         return setLastTime(`${(currentDate.getMonth() + 1) - updateTime.date.month} месяцев`);
       };
     } else {
       setActualDate(new Date());
-      console.log("not current year: ", `${currentDate.getFullYear() - updateTime.date.year} лет`);
       return setLastTime(`${currentDate.getFullYear() - updateTime.date.year} лет`);
     };
   };
 
   return (
-    <Page abs>
+    <Container page pNone>
       {statsDeposit.length ? (
         <>
-        <Container>
-          <H2 center>{t('payments.currPay')}</H2>
-        </Container>
-      <Container>
+      <H2 center>{t('payments.currPay')}</H2>
       <WhiteBox>
         <WhiteIntf>
           <Title>{t("payments2.actual")} {moment(actualDate).format("DD.MM.YYYY")}</Title>
@@ -316,7 +309,11 @@ export const Payments: FC = () => {
         <WhiteMap>
           {isMobile ? (
             <>
-              <Swiper spaceBetween={10} slidesPerView={1} pagination={{ clickable: true }}>
+              <Swiper 
+                  spaceBetween={10} 
+                  slidesPerView={1} 
+                  pagination={{ clickable: true }}
+                >
                   {smallArr.map((i: any, idx: number) => (
                     <SwiperSlide key={idx}>                                       
                       <>
@@ -357,12 +354,9 @@ export const Payments: FC = () => {
             )}
           </WhiteMap>
         </WhiteBox>
-      </Container> 
         </>
-      ) : (
-        ''
-      )}
-    </Page>
+      ) : ( '' )}
+    </Container>
   );
 };
 
@@ -633,7 +627,6 @@ const WhiteBox = styled.div`
   @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
     padding: 20px;
     padding-top: 25px;
-    max-width: 700px;
   }
   
   @media only screen and (max-device-width: 767px) {
@@ -644,6 +637,7 @@ const WhiteBox = styled.div`
     min-height: 480px;
     padding-bottom: 0px;
     padding-right: 0px;
+    margin-bottom: 20px;
   }
 `;
 
@@ -740,7 +734,13 @@ const WhiteItem = styled.div`
     margin-bottom: 10px;
 
     &:last-child {
-      margin-bottom: 40px;
+      margin-bottom: 37px;
+    }
+  }
+
+  @media only screen and (max-device-width: 480px) {
+    &:nth-child(2n) {
+      margin-right: 0px;
     }
   }
 
@@ -757,7 +757,7 @@ const WhiteItem = styled.div`
 
 const WhiteItemText = styled.div<{ bold?: boolean; }>`
   color: #000000;
-  font-weight: 500;
+  font-weight: 400;
   font-size: 12px;
   line-height: 14px;
 
@@ -780,6 +780,14 @@ const WhiteItemLine = styled.div<{ procent: number | string; }>`
    margin-top: 13px;
    position: relative;
    min-width: 140px;
+
+   @media only screen and (max-device-width: 480px) {
+     min-width: 95px;
+   }
+
+   @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+     min-width: 110px;
+   }
 
    &::after {
      display: inline;

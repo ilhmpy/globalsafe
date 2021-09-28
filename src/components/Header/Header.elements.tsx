@@ -92,6 +92,9 @@ export const HeaderWrap = styled.header<{ header?: boolean }>`
   @media (max-width: 576px) {
     padding: 15px 0;
   }
+  @media only screen and (max-device-width: 480px) {
+    height: 60px;
+  }
 `;
 
 export const HeaderInner = styled.div`
