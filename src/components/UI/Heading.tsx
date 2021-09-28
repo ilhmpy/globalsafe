@@ -38,4 +38,8 @@ export const H2 = styled.h2<{ center?: boolean; mb?: boolean; }>`
       }
     }}
   }
+
+  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+    margin-bottom: 20px;
+  }
 `;
