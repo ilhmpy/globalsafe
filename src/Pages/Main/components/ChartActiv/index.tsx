@@ -7,6 +7,7 @@ import { Collection, RootChange } from '../../../../types/currency';
 import moment from 'moment';
 import { ChartActiv } from './ChartActiv';
 import { SmallChart } from './SmallChart';
+import { Page } from '../../../../components/UI/Page';
 
 export const ExchangeChart = () => {
   const [listDIAMOND, setListDIAMOND] = useState<Collection[]>([]);
@@ -170,6 +171,18 @@ export const ExchangeChart = () => {
     const dateFrom = moment().subtract(1, 'days').format();
     if (hubConnection) {
       fetchGCWD(dateFrom);
+    }
+  }, [hubConnection]);
+
+  useEffect(() => {
+    const dateFrom = moment().subtract(1, 'days').format();
+    if (hubConnection) {
+      hubConnection
+        .invoke('GetMarket', [3, 2], dateFrom, new Date())
+        .then((res) => {
+          console.log('new res', res);
+        })
+        .catch((e) => console.log(e));
     }
   }, [hubConnection]);
 

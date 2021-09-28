@@ -62,11 +62,11 @@ export const Price = styled.span<{ red?: boolean; green?: boolean }>`
   ${(props) => {
     if (props.red) {
       return `
-      color: #FF4A31;
+      color: #FF5454;
       svg{
         transform: rotate(180deg);
         path{
-          fill: #FF4A31;
+          fill: #FF5454;
         }
       }
       `;
@@ -285,7 +285,10 @@ export const TooltipsValue = styled.div`
 
 export const MobChartBlock = styled.div<{ mob?: boolean }>`
   display: ${(props) => (props.mob ? 'none' : 'block')};
-  @media (max-width: 768px) {
+  @media (max-width: 767px) {
     display: ${(props) => (props.mob ? 'block' : 'none')};
+  }
+  .highcharts-plot-background {
+    fill: #f7f8fa;
   }
 `;

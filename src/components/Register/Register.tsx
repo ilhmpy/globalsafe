@@ -315,13 +315,13 @@ export const RegisterComponent: FC = () => {
               </LinkTo>
               <Tooltip 
                 renderLabel={() => (
-                  <div>
+                  <InfoLinkBlock>
                     <span>Откроется в новом окне.</span><br />
                     <span>Код доступа приходит в раздел</span><br />
                     <div>Активность на 
                       <LinkToSmall href={`https://backup.cwd.global/account/${value}`} target="_blank">cwd.global</LinkToSmall>
                     </div>
-                  </div>
+                  </InfoLinkBlock>
                 )} 
                 direction="right"
               >
@@ -342,13 +342,14 @@ export const RegisterComponent: FC = () => {
 const AuthContainer = styled(Container)`
   justify-content: flex-start;
   flex: 1;
-  margin: 0 auto;
+  margin: 38px auto 0 auto;
+  
   padding: 0;
   padding-top: 80px;
   align-items: center;
 
   @media (max-width: 768px) {
-    padding-top: 150px;
+    padding-top: 80px;
   }
   @media (max-width: 425px) {
     padding-top: 80px;
@@ -445,6 +446,11 @@ const LinkToSmall = styled.a`
   color: #3F3E4E;
   margin-left: 5px;
 `;
+
+const InfoLinkBlock = styled.div`
+  padding: 7px 0;
+`;
+
 
 const Submit = styled(Button)<{ mb?: boolean }>`
   max-width: 100%;

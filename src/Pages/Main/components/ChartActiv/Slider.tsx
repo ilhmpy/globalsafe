@@ -107,7 +107,7 @@ export const SliderChart: FC<Props> = ({
                     </S.ChartValue>
                     {changeValue(listGCWD)}
                     <S.ChartGraph>
-                      <SmallChart values={listGCWD.slice(-20).map((i) => i.latestBid / 100)} />
+                      <SmallChart values={listGCWD.slice(0).map((i) => i.latestBid / 100)} />
                     </S.ChartGraph>
                   </>
                 ) : null}
@@ -139,7 +139,7 @@ export const SliderChart: FC<Props> = ({
                     </S.ChartValue>
                     {changeValue(listMGCWD)}
                     <S.ChartGraph>
-                      <SmallChart values={listMGCWD.slice(-20).map((i) => i.latestBid / 100)} />
+                      <SmallChart values={listMGCWD.slice(0).map((i) => i.latestBid / 100)} />
                     </S.ChartGraph>
                   </>
                 ) : null}
@@ -171,7 +171,7 @@ export const SliderChart: FC<Props> = ({
                     </S.ChartValue>
                     {changeValue(listDIAMOND)}
                     <S.ChartGraph>
-                      <SmallChart values={listDIAMOND.slice(-20).map((i) => i.latestBid / 100)} />
+                      <SmallChart values={listDIAMOND.slice(0).map((i) => i.latestBid / 100)} />
                     </S.ChartGraph>
                   </>
                 ) : null}
@@ -189,28 +189,28 @@ export const SliderChart: FC<Props> = ({
             />
             <S.SubChartMob>
               <S.ChartItem>
-                <>
-                  <S.ChartName>GLOBAL</S.ChartName>
-                  <S.ChartValue>
-                    {listGLOBAL.length
-                      ? (listGLOBAL[listGLOBAL.length - 1].latestBid / 100).toLocaleString(
-                          'ru-RU',
-                          {
-                            maximumFractionDigits: 2,
-                          }
-                        )
-                      : 0}{' '}
-                    CWD
-                  </S.ChartValue>
-                  {listGLOBAL.length ? (
+                {listGLOBAL.length ? (
+                  <>
+                    <S.ChartName>GLOBAL</S.ChartName>
+                    <S.ChartValue>
+                      {listGLOBAL.length
+                        ? (listGLOBAL[listGLOBAL.length - 1].latestBid / 100).toLocaleString(
+                            'ru-RU',
+                            {
+                              maximumFractionDigits: 2,
+                            }
+                          )
+                        : 0}{' '}
+                      CWD
+                    </S.ChartValue>
+
                     <S.ChartProcent red={false}>{changeValue(listGLOBAL)}</S.ChartProcent>
-                  ) : null}
-                  {listGLOBAL.length ? (
+
                     <S.ChartGraph>
-                      <SmallChart values={listGLOBAL.slice(-20).map((i) => i.latestBid / 100)} />
+                      <SmallChart values={listGLOBAL.slice(0).map((i) => i.latestBid / 100)} />
                     </S.ChartGraph>
-                  ) : null}
-                </>
+                  </>
+                ) : null}
               </S.ChartItem>
             </S.SubChartMob>
           </SwiperSlide>
@@ -248,7 +248,7 @@ export const SliderChart: FC<Props> = ({
                     </S.ChartValue>
                     {changeValue(listGCWD)}
                     <S.ChartGraph>
-                      <SmallChart values={listGCWD.slice(-20).map((i) => i.latestBid / 100)} />
+                      <SmallChart values={listGCWD.slice(0).map((i) => i.latestBid / 100)} />
                     </S.ChartGraph>
                   </>
                 ) : null}
@@ -270,7 +270,7 @@ export const SliderChart: FC<Props> = ({
                     </S.ChartValue>
                     {changeValue(listMGCWD)}
                     <S.ChartGraph>
-                      <SmallChart values={listMGCWD.slice(-20).map((i) => i.latestBid / 100)} />
+                      <SmallChart values={listMGCWD.slice(0).map((i) => i.latestBid / 100)} />
                     </S.ChartGraph>
                   </>
                 ) : null}
@@ -292,7 +292,7 @@ export const SliderChart: FC<Props> = ({
                     </S.ChartValue>
                     {changeValue(listDIAMOND)}
                     <S.ChartGraph>
-                      <SmallChart values={listDIAMOND.slice(-20).map((i) => i.latestBid / 100)} />
+                      <SmallChart values={listDIAMOND.slice(0).map((i) => i.latestBid / 100)} />
                     </S.ChartGraph>
                   </>
                 ) : null}
@@ -300,28 +300,28 @@ export const SliderChart: FC<Props> = ({
             </SwiperSlide>
             <SwiperSlide>
               <S.ChartItem>
-                <>
-                  <S.ChartName>GLOBAL</S.ChartName>
-                  <S.ChartValue>
-                    {listGLOBAL.length
-                      ? (listGLOBAL[listGLOBAL.length - 1].latestBid / 100).toLocaleString(
-                          'ru-RU',
-                          {
-                            maximumFractionDigits: 2,
-                          }
-                        )
-                      : 0}{' '}
-                    CWD
-                  </S.ChartValue>
-                  {listGLOBAL.length ? (
+                {listGLOBAL.length ? (
+                  <>
+                    <S.ChartName>GLOBAL</S.ChartName>
+                    <S.ChartValue>
+                      {listGLOBAL.length
+                        ? (listGLOBAL[listGLOBAL.length - 1].latestBid / 100).toLocaleString(
+                            'ru-RU',
+                            {
+                              maximumFractionDigits: 2,
+                            }
+                          )
+                        : 0}{' '}
+                      CWD
+                    </S.ChartValue>
+
                     <S.ChartProcent red={false}>{changeValue(listGLOBAL)}</S.ChartProcent>
-                  ) : null}
-                  {listGLOBAL.length ? (
+
                     <S.ChartGraph>
-                      <SmallChart values={listGLOBAL.slice(-20).map((i) => i.latestBid / 100)} />
+                      <SmallChart values={listGLOBAL.slice(0).map((i) => i.latestBid / 100)} />
                     </S.ChartGraph>
-                  ) : null}
-                </>
+                  </>
+                ) : null}
               </S.ChartItem>
             </SwiperSlide>
           </Swiper>

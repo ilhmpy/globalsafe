@@ -50,13 +50,13 @@ export const Deposits = () => {
 
   const getFilterCode = (key: 'active' | 'archived' | 'hold') => {
     if(key === 'active') {
-      return 2;
+      return [2];
     }
     if(key === 'archived') {
-      return 4;
+      return [4];
     }
     if(key === 'hold') {
-      return 99;
+      return [];
     }
   }
 
@@ -73,7 +73,8 @@ export const Deposits = () => {
       hubConnection
       .invoke<RootList>(
         'GetUserDeposits', 
-        [getFilterCode(activeFilter)], 
+        getFilterCode(activeFilter), 
+        activeFilter === 'hold' ? false : null,
         0, 
         20, 
         sorting
@@ -133,7 +134,8 @@ export const Deposits = () => {
       hubConnection
       .invoke<RootList>(
         'GetUserDeposits', 
-        [getFilterCode(activeFilter)], 
+        getFilterCode(activeFilter), 
+        activeFilter === 'hold' ? false : null,
         skip, 
         20, 
         sorting
@@ -142,7 +144,7 @@ export const Deposits = () => {
           if(res.collection.length) {
             setDepositsList(state => [...state, ...res.collection]);
             setDepositsTotalCount(res.totalRecords);
-            console.log("Robert res.collection", res.collection);
+            console.log("GetUserDeposits res.collection", res.collection);
             setSkip((state) => state + 20);
           }
 
