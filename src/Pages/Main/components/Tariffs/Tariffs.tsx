@@ -179,7 +179,7 @@ export const Tariffs = () => {
 
   return (
     <Page id="tariffs" smallPad>
-      <Container pNone>
+      <Container pNone page>
         <H2 center>{t('partnersTitle')}</H2>
         <PartnersBlock>
           <PartnersHeader>

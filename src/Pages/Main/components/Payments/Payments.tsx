@@ -295,7 +295,7 @@ export const Payments: FC = () => {
   };
 
   return (
-    <Container style={{ marginTop: "25px" }}>
+    <Container page>
       {statsDeposit.length ? (
         <>
       <H2 center>{t('payments.currPay')}</H2>

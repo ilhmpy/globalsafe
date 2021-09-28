@@ -106,7 +106,7 @@ export const Operations = () => {
     <>
       {notifyList.length > 0 ? (
          <Page>
-          <Container>
+          <Container page>
               <H2 mb>{t('operation.last')}</H2>
               <Description>{t("operations2.desc")}</Description>
           </Container>
