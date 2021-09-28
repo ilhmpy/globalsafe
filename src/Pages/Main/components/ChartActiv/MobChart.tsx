@@ -113,7 +113,7 @@ export const MobChart: FC<Props> = ({ data, type, setValCWD, setDate }: Props) =
     series: [
       {
         data: data,
-        type: 'spline',
+        type: 'line',
         color: '#0094FF',
       },
     ],
@@ -131,18 +131,47 @@ export const MobChart: FC<Props> = ({ data, type, setValCWD, setDate }: Props) =
     exporting: {
       enabled: false,
     },
+    // xAxis: {
+    //   type: 'datetime',
+    //   min: null,
+    //   max: null,
+    //   title: {
+    //     text: '',
+    //   },
+    // },
     xAxis: {
+      ordinal: false,
+      startOnTick: false,
       type: 'datetime',
       min: null,
       max: null,
       title: {
         text: '',
       },
+      tickColor: '#DCDCE8',
+      lineColor: '#F7F8FA',
+      dateTimeLabelFormats: {
+        day: {
+          main: '%e %b',
+        },
+      },
+      crosshair: {
+        color: '#DCDCE8',
+        // dashStyle:Solid,
+        snap: true,
+        width: 3,
+        zIndex: 2,
+      },
+      labels: {
+        style: {
+          color: '#3F3E4E',
+        },
+      },
     },
     yAxis: {
       gridLineDashStyle: 'Dash',
-      left: '100%',
-      opposite: false,
+      left: 0,
+      opposite: true,
       labels: {
         align: 'left',
         x: 0,
@@ -200,6 +229,14 @@ export const MobChart: FC<Props> = ({ data, type, setValCWD, setDate }: Props) =
         setDate((this as any).x);
         setValCWD((this as any).y);
         return '';
+      },
+    },
+    time: {
+      useUTC: false,
+      getTimezoneOffset: function (timestamp: any) {
+        const zone = 'Europe/Moscow';
+        const timezoneOffset = -moment.tz(timestamp, zone).utcOffset();
+        return timezoneOffset;
       },
     },
   };
