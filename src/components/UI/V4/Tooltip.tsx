@@ -58,7 +58,7 @@ const Wrapper = styled.div`
 
 const TooltipContainer = styled.div<{direction: 'left' | 'right'}>`
     position: absolute;
-    bottom: 32px;
+    bottom: 36px;
     
     ${props => props.direction === 'right' ? 'left: -10px;' : 'right: -10px;'}
     z-index: 999;
@@ -71,14 +71,17 @@ const TooltipContainer = styled.div<{direction: 'left' | 'right'}>`
     &::after {
         content: "";
         position: absolute;
-        width: 0px;
-        height: 0px;
-        border-width: 7px;
-        border-style: solid;
-        border-color: transparent #fff transparent transparent;
-        ${props => props.direction === 'right' ? 'left: 12px;' : 'right: 12px;'}
-        bottom: -14px;
-        transform: rotate(270deg);
+       
+
+        ${props => props.direction === 'right' ? 'left: 13px;' : 'right: 13px;'}
+        left: 13px;
+        bottom: -8px;
+        transform: rotate(316deg);
+        background-color: ${props => props.theme.white};
+        width: 14px;
+        height: 14px;
+        border-bottom: 1px solid #EDF0F7;
+        border-left: 1px solid #EDF0F7;
   }
 `;
 
