@@ -276,25 +276,38 @@ export const Payments: FC = () => {
           } else {
             console.log("minutes", `${time} минут`)
             if (time > 0) {
-              setLastTime(`${time} минут`);
+              if (time > 5) {
+                setLastTime(`${time} минут`);
+              } else {
+                setLastTime(`${time} минуты`);
+              };
             } else {
               setLastTime(null);
             };
           };
         } else {
           setActualDate(new Date());
-          console.log("not current day", `${currentDate.getDate() - updateTime.date.day} дней`);
-          return setLastTime(`${currentDate.getDate() - updateTime.date.day} дней`);
+          if (Number(updateTime.date.day) > 5) {
+            return setLastTime(`${currentDate.getDate() - updateTime.date.day} дней`);
+          } else {
+            return setLastTime(`${currentDate.getDate() - updateTime.date.day} дня`);
+          }
         };
       } else {
         setActualDate(new Date());
-        console.log("not current month", `${(currentDate.getMonth() + 1) - updateTime.date.month} месяцев`);
-        return setLastTime(`${(currentDate.getMonth() + 1) - updateTime.date.month} месяцев`);
+        if (Number(updateTime.date.month) > 5) {
+          return setLastTime(`${(currentDate.getMonth() + 1) - updateTime.date.month} месяцев`);
+        } else {
+          return setLastTime(`${(currentDate.getMonth() + 1) - updateTime.date.month} месяца`);
+        };
       };
     } else {
       setActualDate(new Date());
-      console.log("not current year: ", `${currentDate.getFullYear() - updateTime.date.year} лет`);
-      return setLastTime(`${currentDate.getFullYear() - updateTime.date.year} лет`);
+      if (Number(updateTime.date.year) > 5) {
+        return setLastTime(`${currentDate.getFullYear() - updateTime.date.year} лет`);
+      } else {
+        return setLastTime(`${currentDate.getFullYear() - updateTime.date.year} года`);
+      };
     };
   };
 

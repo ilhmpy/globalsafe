@@ -308,7 +308,32 @@ export const InfoMain: FC = () => {
   };
 
   const changeBalance = () => {
-    console.log(ed, currency);
+    const newWindow = window.open();
+
+    if (hubConnection && currency.length > 0 && ed.length > 0) {
+      hubConnection
+        .invoke(
+          'GetTopUpUrl',
+          Balance[currency as keyof typeof Balance],
+          currency === 'CWD'
+            ? +ed * 100000
+            : currency === 'GLOBAL'
+            ? +ed * 10000
+            : +ed
+        )
+        .then((res: string) => {
+          newWindow && (newWindow.location.href = res);
+          setError(false);
+          setAddDrawModal(false);
+        })
+        .catch((err: Error) => {
+          console.log(err);
+          newWindow && newWindow.close();
+          setError(true);
+          setErrorReason("Недостаточно средств на балансе.");
+          setAddDrawModal(false);
+        });
+    }
   };
 
   const outPutBalance = () => {
@@ -337,12 +362,7 @@ export const InfoMain: FC = () => {
           setWithdrawValueLoad(false);
           setOutPutError(true);
           setWithDrawModal(false);
-          if (balance != null) {
-            console.log(Number(outPutEd) * 100000)
-            if (balance > Number(outPutEd)) { 
-    
-            }
-          }
+          setOutPutErrorReason("Недостаточно средств на балансе.");
         });
     }
   };
@@ -370,7 +390,7 @@ export const InfoMain: FC = () => {
     }
     return color;
   }
-  
+
   return (
     <>
       {withdrawValueLoad && (
@@ -389,7 +409,7 @@ export const InfoMain: FC = () => {
           setAddDrawModal(false);
           setEd("");
         }} width={420} withClose>
-          <H3 center>Пополнение баланса</H3>
+          <H3 center style={{ marginTop: "24px" }}>Пополнение баланса</H3>
           <div style={{ width: "100%", maxWidth: "340px", margin: "0 auto" }}>
             <Selectv2 data={currencies} setSwitch={setCurrency} />
             <Inputv2 placeholder="Сумма пополнения" value={ed} onChange={(e) => {
@@ -406,18 +426,18 @@ export const InfoMain: FC = () => {
 
       <CSSTransition in={error === undefined ? false : error === false ? true : false} timeout={0} unmountOnExit>
         <Modal onClose={() => setError(undefined)} width={420} withClose>
-          <H3 center>Успешное пополнение</H3>
-          <Styled.Desc>Баланс личного кабинета успешно пополнен на:</Styled.Desc>
-          <Styled.Desc bold mMore>{ed} {currency}</Styled.Desc>
+          <H3 center style={{ marginTop: "24px" }}>Успешное пополнение</H3>
+          <Styled.Desc>Баланс личного кабинета успешно будет пополнен на:</Styled.Desc>
+          <Styled.Desc bold mMore style={{ marginTop: "0px" }}>{ed} {currency}</Styled.Desc>
         </Modal>
       </CSSTransition>
 
       <CSSTransition in={error === undefined ? false : error} timeout={0} unmountOnExit>
         <Modal onClose={() => setError(undefined)} width={420} withClose>
-          <H3 center>Ошибка пополнения</H3>
+          <H3 center style={{ marginTop: "24px" }}>Ошибка пополнения</H3>
           <Styled.Desc>Баланс личного кабинета не был пополнен на:</Styled.Desc>
           <Styled.Desc bold>{ed} {currency}</Styled.Desc>
-          <Styled.Desc danger mMore>{errorReason}</Styled.Desc>
+          <Styled.Desc danger mMore style={{ marginTop: "0px" }}>{errorReason}</Styled.Desc>
         </Modal>
       </CSSTransition>
 
@@ -428,7 +448,7 @@ export const InfoMain: FC = () => {
            setWithDrawModal(false);
            setOutPutEd("");
         }} width={420} withClose>
-          <H3 center>Вывод средств</H3>
+          <H3 center style={{ marginTop: "24px" }}>Вывод средств</H3>
           <div style={{ width: "100%", maxWidth: "340px", margin: "0 auto" }}>
             <Selectv2 data={currencies} setSwitch={setOutPutCurrency} />
             <Inputv2 value={outPutEd} placeholder="Сумма вывода" 
@@ -457,10 +477,10 @@ export const InfoMain: FC = () => {
 
       <CSSTransition in={outPutError === false ? true : false} timeout={0} unmountOnExit>
         <Modal onClose={() => setOutPutError(undefined)} width={420} withClose>
-          <H3 center>Успешный вывод средств</H3>
+          <H3 center style={{ marginTop: "24px" }}>Успешный вывод средств</H3>
           <Styled.Desc>С баланса личного кабинета успешно выведены средства в размере:</Styled.Desc>
           <Styled.Desc bold mMore>{outPutEd} {outPutCurrency}</Styled.Desc>
-          <Styled.Desc mLess>К зачислению: 90000</Styled.Desc>
+          <Styled.Desc mLess>К выводу: 0</Styled.Desc>
           <Styled.Desc mLess>Комиссия блокчейн: {blockchain}</Styled.Desc>
           <Styled.Desc mLess>Комиссия сервиса: {service}</Styled.Desc>
         </Modal>
@@ -468,10 +488,10 @@ export const InfoMain: FC = () => {
 
       <CSSTransition in={outPutError} timeout={0} unmountOnExit>
         <Modal onClose={() => setOutPutError(undefined)} width={420} withClose>
-          <H3 center>Ошибка вывода</H3>
+          <H3 center style={{ marginTop: "24px" }}>Ошибка вывода средств</H3>
           <Styled.Desc>С баланса личного кабинета не были выведены средства в размере:</Styled.Desc>
           <Styled.Desc bold>{outPutEd} {outPutCurrency}</Styled.Desc>
-          <Styled.Desc mLess>К выводу: 90000</Styled.Desc>
+          <Styled.Desc mLess>К выводу: 0</Styled.Desc>
           <Styled.Desc mLess>Комиссия блокчейн: {blockchain}</Styled.Desc>
           <Styled.Desc mLess>Комиссия сервиса: {service}</Styled.Desc>
           <Styled.Desc danger mMore>{outPutErrorReason}</Styled.Desc>
