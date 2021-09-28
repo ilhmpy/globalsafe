@@ -295,7 +295,7 @@ export const Payments: FC = () => {
   };
 
   return (
-    <Container page>
+    <Container page pNone>
       {statsDeposit.length ? (
         <>
       <H2 center>{t('payments.currPay')}</H2>
@@ -310,7 +310,68 @@ export const Payments: FC = () => {
           {isMobile ? (
             <>
               <Swiper spaceBetween={10} slidesPerView={1} pagination={{ clickable: true }}>
-                  {smallArr.map((i: any, idx: number) => (
+                  {[[ { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 }, ],
+                  [ { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 }, ],
+                  [ { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 }, ],
+                  [ { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 }, ],
+                  [ { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 }, ],
+                  [ { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 }, ],
+                  [ { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 }, ],
+                  [ { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 }, ],
+                  [ { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 }, ],
+                  [ { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 },
+                  { deposit: { name: "TEST" }, date: new Date(), procent: 0 }, ],
+                  
+                ].map((i: any, idx: number) => (
                     <SwiperSlide key={idx}>                                       
                       <>
                         {i.map((item: any, idx: any) => (
@@ -731,6 +792,12 @@ const WhiteItem = styled.div`
 
     &:last-child {
       margin-bottom: 40px;
+    }
+  }
+
+  @media only screen and (max-device-width: 480px) {
+    &:nth-child(2n) {
+      margin-right: 0px;
     }
   }
 
