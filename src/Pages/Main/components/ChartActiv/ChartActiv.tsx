@@ -7,12 +7,12 @@ import * as S from './S.elements';
 import { Collection, RootChange } from '../../../../types/currency';
 import moment from 'moment';
 import 'moment/locale/ru';
+import momenttz from 'moment-timezone';
 import { ReactComponent as Arrow } from '../../../../assets/v2/svg/arrow-exchange.svg';
 import { SmallChart } from './SmallChart';
 import useWindowSize from '../../../../hooks/useWindowSize';
 import { Dropdown } from './components/Dropdown';
 import { MobChart } from './MobChart';
-import momenttz from 'moment-timezone';
 
 require('highcharts/modules/exporting')(Highcharts);
 
@@ -532,16 +532,21 @@ export const ChartActiv: FC<Props> = ({
           </S.ButtonsList>
           <S.MobTooltips>
             <S.TooltipsDate>
-              {date
-                ? momenttz.utc(date).tz('Europe/Moscow').format('DD.MM.YYYY, dd, HH:mm')
-                : momenttz
+              {date > 1
+                ? momenttz
+                    .utc(moment(date).format('DD.MM.YYYY'))
+                    .tz('Europe/Moscow')
+                    .format('DD.MM.YYYY, dd, HH:mm')
+                : data.length
+                ? momenttz
                     .utc(data[data.length - 1].date)
                     .tz('Europe/Moscow')
-                    .format('DD.MM.YYYY, dd, HH:mm')}
+                    .format('DD.MM.YYYY, dd, HH:mm')
+                : null}
               &nbsp; MCK
             </S.TooltipsDate>
             <S.TooltipsValue>
-              {valCWD ? valCWD.toLocaleString() : returnValues()} CWD
+              {valCWD ? valCWD.toLocaleString() : data.length ? returnValues() : 0} CWD
             </S.TooltipsValue>
           </S.MobTooltips>
           <S.Buttons>

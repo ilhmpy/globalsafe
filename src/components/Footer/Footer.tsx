@@ -4,9 +4,17 @@ import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as FooterLogo } from "../../assets/svg/whiteFooterLogo.svg";
 import { ReactComponent as Tg } from "../../assets/svg/tg2.svg";
+import { Link } from 'react-scroll';
+import { NavHashLink } from 'react-router-hash-link';
 
 export const Footer = () => {
   const { t } = useTranslation();
+
+  const scrollWidthOffset = (el: any) => {
+    const yCoordinate = el.getBoundingClientRect().top + window.pageYOffset;
+    const yOffset = -80;
+    window.scrollTo({ top: yCoordinate + yOffset, behavior: 'smooth' });
+  };
 
   return (
     <FooterBlock>
@@ -14,10 +22,10 @@ export const Footer = () => {
         <FooterHeader>
           <FooterLogo className="logo" />
           <FooterLinks>
-            <FooterLink href="/#banner">Тарифы и программы</FooterLink>
-            <FooterLink href="/#lottery">Розыгрыши</FooterLink>
-            <FooterLink href="/#lottery">Обмены</FooterLink>
-            <FooterLink>Правила</FooterLink>
+            <FooterLink to="/#deposits" scroll={(el) => scrollWidthOffset(el)}>Тарифы и программы</FooterLink>
+            <FooterLink to="/#lottery" scroll={(el) => scrollWidthOffset(el)}>Розыгрыши</FooterLink>
+            <FooterLink to="/#lottery" scroll={(el) => scrollWidthOffset(el)}>Обмены</FooterLink>
+            <FooterLink to="/#banner" scroll={(el) => scrollWidthOffset(el)}>Правила</FooterLink>
           </FooterLinks>
         </FooterHeader>
         <FooterDesc>2021 © Globalsafe v2.0. Все права защищены.</FooterDesc>
@@ -31,15 +39,21 @@ export const Footer = () => {
 const FooterBlock = styled.footer`
   width: 100%;
   min-height: 217px;
+  max-height: 217px;
   background: #3F3E4E;
   padding-top: 40px;
   padding-bottom: 40px;
 
   @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
     padding-left: 20px;
+    min-height: 188px;
+    max-height: 188px;
   }
 
   @media only screen and (max-device-width: 480px) {
+    min-height: 320px;
+    max-height: 320px;
+    
     .logo {
       display: none;
     }
@@ -66,6 +80,10 @@ const FooterHeader = styled.header`
     margin-bottom: 38px;
     max-width: 145px;
   }
+
+  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+    margin-bottom: 20px;
+  }
 `;
 
 const FooterLinks = styled.div`
@@ -81,7 +99,7 @@ const FooterLinks = styled.div`
   }
 `;
 
-const FooterLink = styled.a`
+const FooterLink = styled(NavHashLink)`
   color: #fff;
   font-weight: 500;
   font-size: 14px;
@@ -107,6 +125,7 @@ const FooterDesc = styled.h3`
   
   @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
     width: 170px;
+    margin-bottom: 20px;
   }
 
   @media only screen and (max-device-width: 480px) {

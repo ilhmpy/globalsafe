@@ -60,8 +60,8 @@ export const Card = styled.div`
 export const CardName = styled.h3`
     color: #000;
     font-weight: 700;
-    font-size: 24px;
-    line-height: 28px;
+    font-size: 18px;
+    line-height: 24px;
     margin-bottom: 40px;
 
     

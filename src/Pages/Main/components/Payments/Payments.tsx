@@ -13,11 +13,11 @@ import { Button } from '../../../../components/Button/Button';
 import { RadialBar } from '../../../../components/Charts/Test';
 import { Modal } from '../../../../components/Modal/Modal';
 import { Input } from '../../../../components/UI/Input';
-import { H2 } from '../../../../components/UI/MainStyled';
+import { H2 } from '../../../../components/UI/Heading';
 import { Page } from '../../../../components/UI/Page';
 import { AppContext } from '../../../../context/HubContext';
-import { Container } from '../../../../components/UI/Container';
 import { Card } from '../../../../globalStyles';
+import { Container } from '../../../../components/UI/Container';
 import { Pokedex, RootPayDeposit } from '../../../../types/payouts';
 import { ModalBlock, ModalTitle } from '../Tariffs/Tariffs.elements';
 import { ReactComponent as Reload } from '../../../../assets/svg/reload.svg';
@@ -276,10 +276,8 @@ export const Payments: FC = () => {
             currentDate.getMinutes() -
             (updateTime.time.hours * 60 + updateTime.time.minutes);
           if (time >= 60) {
-            console.log('hours', `${Math.floor(time / 60)} часов`);
             return setLastTime(`${Math.floor(time / 60)} часов`);
           } else {
-            console.log('minutes', `${time} минут`);
             if (time > 0) {
               setLastTime(`${time} минут`);
             } else {
@@ -288,56 +286,69 @@ export const Payments: FC = () => {
           }
         } else {
           setActualDate(new Date());
-          console.log('not current day', `${currentDate.getDate() - updateTime.date.day} дней`);
           return setLastTime(`${currentDate.getDate() - updateTime.date.day} дней`);
         }
       } else {
         setActualDate(new Date());
-        console.log(
-          'not current month',
-          `${currentDate.getMonth() + 1 - updateTime.date.month} месяцев`
-        );
         return setLastTime(`${currentDate.getMonth() + 1 - updateTime.date.month} месяцев`);
       }
     } else {
       setActualDate(new Date());
-      console.log('not current year: ', `${currentDate.getFullYear() - updateTime.date.year} лет`);
       return setLastTime(`${currentDate.getFullYear() - updateTime.date.year} лет`);
     }
   }
 
   return (
-    <>
+    <Container page pNone>
       {statsDeposit.length ? (
-        <Page>
-          <Container>
-            <H2 center>{t('payments.currPay')}</H2>
-          </Container>
-          <Container>
-            <WhiteBox>
-              <WhiteIntf>
-                <Title>
-                  {t('payments2.actual')} {moment(actualDate).format('DD.MM.YYYY')}
-                </Title>
-                <Title right>
-                  {t('payments2.last')}{' '}
-                  {lastTime != null ? (
-                    <>
-                      {' '}
-                      {lastTime} {t('payments2.ago')}{' '}
-                    </>
-                  ) : (
-                    t('payments2.now')
-                  )}{' '}
-                  <Reload style={{ cursor: 'pointer' }} onClick={() => lastUpdate()} />
-                </Title>
-              </WhiteIntf>
-              <WhiteMap>
-                {isMobile ? (
+        <>
+          <H2 center>{t('payments.currPay')}</H2>
+          <WhiteBox>
+            <WhiteIntf>
+              <Title>
+                {t('payments2.actual')} {moment(actualDate).format('DD.MM.YYYY')}
+              </Title>
+              <Title right>
+                {t('payments2.last')}{' '}
+                {lastTime != null ? (
                   <>
-                    <Swiper spaceBetween={10} slidesPerView={1} pagination={{ clickable: true }}>
-                      {smallArr.map((i: any, idx: number) => (
-                        <SwiperSlide key={idx}>
+                    {' '}
+                    {lastTime} {t('payments2.ago')}{' '}
+                  </>
+                ) : (
+                  t('payments2.now')
+                )}{' '}
+                <Reload style={{ cursor: 'pointer' }} onClick={() => lastUpdate()} />
+              </Title>
+            </WhiteIntf>
+            <WhiteMap>
+              {isMobile ? (
+                <>
+                  <Swiper spaceBetween={10} slidesPerView={1} pagination={{ clickable: true }}>
+                    {smallArr.map((i: any, idx: number) => (
+                      <SwiperSlide key={idx}>
+                        <>
+                          {i.map((item: any, idx: any) => (
+                            <WhiteItem key={idx}>
+                              <WhiteItemText>{item.deposit.name}</WhiteItemText>
+                              <WhiteItemText bold>{item.procent.toFixed(0)} %</WhiteItemText>
+                              <WhiteItemText>
+                                {moment(item.date).format('DD.MM.YYYY')}
+                              </WhiteItemText>
+                              <WhiteItemLine procent={item.procent.toFixed(0)} />
+                            </WhiteItem>
+                          ))}
+                        </>
+                      </SwiperSlide>
+                    ))}
+                  </Swiper>
+                </>
+              ) : (
+                <>
+                  {statsDeposit.length ? (
+                    <>
+                      {bigArr.map((i: any, idx: any) => {
+                        return (
                           <>
                             {i.map((item: any, idx: any) => (
                               <WhiteItem key={idx}>
@@ -350,42 +361,21 @@ export const Payments: FC = () => {
                               </WhiteItem>
                             ))}
                           </>
-                        </SwiperSlide>
-                      ))}
-                    </Swiper>
-                  </>
-                ) : (
-                  <>
-                    {statsDeposit.length ? (
-                      <>
-                        {bigArr.map((i: any, idx: any) => {
-                          return (
-                            <>
-                              {i.map((item: any, idx: any) => (
-                                <WhiteItem key={idx}>
-                                  <WhiteItemText>{item.deposit.name}</WhiteItemText>
-                                  <WhiteItemText bold>{item.procent.toFixed(0)} %</WhiteItemText>
-                                  <WhiteItemText>
-                                    {moment(item.date).format('DD.MM.YYYY')}
-                                  </WhiteItemText>
-                                  <WhiteItemLine procent={item.procent.toFixed(0)} />
-                                </WhiteItem>
-                              ))}
-                            </>
-                          );
-                        })}
-                      </>
-                    ) : (
-                      ''
-                    )}
-                  </>
-                )}
-              </WhiteMap>
-            </WhiteBox>
-          </Container>
-        </Page>
-      ) : null}
-    </>
+                        );
+                      })}
+                    </>
+                  ) : (
+                    ''
+                  )}
+                </>
+              )}
+            </WhiteMap>
+          </WhiteBox>
+        </>
+      ) : (
+        ''
+      )}
+    </Container>
   );
 };
 
@@ -655,7 +645,6 @@ const WhiteBox = styled.div`
   @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
     padding: 20px;
     padding-top: 25px;
-    max-width: 700px;
   }
 
   @media only screen and (max-device-width: 767px) {
@@ -666,6 +655,7 @@ const WhiteBox = styled.div`
     min-height: 480px;
     padding-bottom: 0px;
     padding-right: 0px;
+    margin-bottom: 20px;
   }
 `;
 
@@ -762,7 +752,13 @@ const WhiteItem = styled.div`
     margin-bottom: 10px;
 
     &:last-child {
-      margin-bottom: 40px;
+      margin-bottom: 37px;
+    }
+  }
+
+  @media only screen and (max-device-width: 480px) {
+    &:nth-child(2n) {
+      margin-right: 0px;
     }
   }
 
@@ -779,7 +775,7 @@ const WhiteItem = styled.div`
 
 const WhiteItemText = styled.div<{ bold?: boolean }>`
   color: #000000;
-  font-weight: 500;
+  font-weight: 400;
   font-size: 12px;
   line-height: 14px;
 
@@ -802,6 +798,14 @@ const WhiteItemLine = styled.div<{ procent: number | string }>`
   margin-top: 13px;
   position: relative;
   min-width: 140px;
+
+  @media only screen and (max-device-width: 480px) {
+    min-width: 95px;
+  }
+
+  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+    min-width: 110px;
+  }
 
   &::after {
     display: inline;

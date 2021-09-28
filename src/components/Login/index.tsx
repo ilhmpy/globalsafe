@@ -292,13 +292,13 @@ export const LoginComponent = () => {
               </LinkTo>
               <Tooltip 
                 renderLabel={() => (
-                  <div>
+                  <InfoLinkBlock>
                     <span>Откроется в новом окне.</span><br />
                     <span>Код доступа приходит в раздел</span><br />
                     <div>Активность на 
                       <LinkToSmall href={`https://backup.cwd.global/account/${value}`} target="_blank">cwd.global</LinkToSmall>
                     </div>
-                  </div>
+                  </InfoLinkBlock>
                 )} 
                 direction="right"
               >
@@ -337,13 +337,13 @@ export const LoginComponent = () => {
 const AuthContainer = styled(Container)`
   justify-content: flex-start;
   flex: 1;
-  margin: 0 auto;
+  margin: 38px auto 0 auto;
   padding: 0;
   padding-top: 80px;
   align-items: center;
 
   @media (max-width: 1024px) {
-    padding-top: 150px;
+    padding-top: 80px;
   }
   @media (max-width: 425px) {
     padding-top: 80px;
@@ -462,6 +462,10 @@ const LinkTo = styled.a`
   text-decoration-line: underline;
   color: ${(props) => props.theme.black};
   margin-right: 5px;
+`;
+
+const InfoLinkBlock = styled.div`
+  padding: 7px 0;
 `;
 
 const LinkToSmall = styled.a`
