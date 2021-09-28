@@ -57,14 +57,14 @@ export const Tariffs = () => {
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   const languale = lang === 'ru' ? 1 : 0;
   const [programs, setPrograms] = useState([
-    { line: 1, data: ["4 %", "5 %", "5 %"] },
-    { line: 2, data: ["1,6 %", "2 %", "2 %"] },
-    { line: 3, data: ["0,8 %", "1 %", "1 %"] },
-    { line: 4, data: ["", "1 %", "1 %"] },
-    { line: 5, data: ["", "1 %", "1 %"] },
-    { line: 6, data: ["", "", "1 %"] },
-    { line: 7, data: ["", "", "1 %"] },
-    { line: 8, data: ["", "", "1 %"] },
+    { line: 1, data: ['4 %', '5 %', '5 %'] },
+    { line: 2, data: ['1,6 %', '2 %', '2 %'] },
+    { line: 3, data: ['0,8 %', '1 %', '1 %'] },
+    { line: 4, data: ['', '1 %', '1 %'] },
+    { line: 5, data: ['', '1 %', '1 %'] },
+    { line: 6, data: ['', '', '1 %'] },
+    { line: 7, data: ['', '', '1 %'] },
+    { line: 8, data: ['', '', '1 %'] },
   ]);
 
   useEffect(() => {
@@ -73,14 +73,14 @@ export const Tariffs = () => {
         .invoke<ListDeposits>('GetDeposits', languale, true, 0, 40)
         .then((res) => {
           const sortedList = [...res.collection].sort((a, b) => {
-            if(a.name === "GOLD") {
+            if (a.name === 'GOLD') {
               return -1;
-            } else if(a.name === "LIDER") {
+            } else if (a.name === 'LIDER') {
               return 1;
             } else {
               return 0;
             }
-          })
+          });
           setListDeposits(sortedList);
         })
         .catch((err: Error) => console.log(err));
@@ -178,9 +178,9 @@ export const Tariffs = () => {
   };
 
   return (
-    <Page id="tariffs" style={{ marginBottom: "20px" }}>
+    <Page id="tariffs" smallPad>
       <Container pNone>
-        <H2 center>{t("partnersTitle")}</H2>
+        <H2 center>{t('partnersTitle')}</H2>
         <PartnersBlock>
           <PartnersHeader>
             <PartnersHeaderItem>START</PartnersHeaderItem>
@@ -212,7 +212,7 @@ const PartnersBlock = styled.div`
   border-radius: 4px;
   padding: 1px;
   box-shadow: 0px 80px 80px -40px rgba(220, 220, 232, 0.5);
-  
+
   @media only screen and (max-device-width: 480px) {
     min-height: 345px;
   }
@@ -233,7 +233,7 @@ const PartnersHeader = styled.header`
   @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
     padding-left: 30%;
   }
-`; 
+`;
 
 const PartnersHeaderItem = styled.div`
   width: 74px;
@@ -266,7 +266,7 @@ const PartnersItem = styled.div`
   color: #000;
 
   &:nth-child(2n) {
-    background: #F8F7FC;
+    background: #f8f7fc;
   }
 
   @media only screen and (max-device-width: 480px) {
@@ -352,12 +352,12 @@ const PartnersItemData = styled.div`
       width: 107px;
     }
   }
-  
+
   @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
     font-size: 14px;
     font-weight: 400;
     &:nth-child(2) {
-      width: 160px
+      width: 160px;
     }
 
     &:nth-child(3) {
