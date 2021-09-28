@@ -175,6 +175,18 @@ export const ExchangeChart = () => {
   }, [hubConnection]);
 
   useEffect(() => {
+    const dateFrom = moment().subtract(1, 'days').format();
+    if (hubConnection) {
+      hubConnection
+        .invoke('GetMarket', [3, 2], dateFrom, new Date())
+        .then((res) => {
+          console.log('new res', res);
+        })
+        .catch((e) => console.log(e));
+    }
+  }, [hubConnection]);
+
+  useEffect(() => {
     const cb = (data: Collection) => {
       console.log('MarketNotification', data);
       if (data.assetKind === 3) {
@@ -194,7 +206,7 @@ export const ExchangeChart = () => {
   }, [hubConnection]);
 
   return (
-    <Page>
+    <>
       <SliderChart
         listDIAMOND={listDIAMOND}
         listGLOBAL={listGLOBAL}
@@ -205,6 +217,6 @@ export const ExchangeChart = () => {
         fetchDIAMOND={fetchDIAMOND}
         fetchGLOBAL={fetchGLOBAL}
       />
-    </Page>
+    </>
   );
 };

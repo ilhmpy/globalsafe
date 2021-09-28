@@ -89,7 +89,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
   };
 
   return (
-    <Page id="lottery">
+    <Page id="lottery" pBottom>
       <TitleContainer bigMargin>
         <H2>{'Розыгрыши'}</H2>
         <Subtitle>

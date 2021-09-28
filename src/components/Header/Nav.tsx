@@ -40,21 +40,27 @@ export const Nav: FC<Props> = ({
   const swithTheme = themeContext.toggleTheme;
   const theme = themeContext.theme;
 
+  const scrollWidthOffset = (el: any) => {
+    const yCoordinate = el.getBoundingClientRect().top + window.pageYOffset;
+    const yOffset = -80;
+    window.scrollTo({ top: yCoordinate + yOffset, behavior: 'smooth' });
+  };
+
   return (
     <HeaderNav>
       <List>
         <ListItem>
-          <StyledLink to="/#deposits" onClick={onClose}>
+          <StyledLink to="/#deposits" onClick={onClose} scroll={(el) => scrollWidthOffset(el)}>
             {t('header.item1')}
           </StyledLink>
         </ListItem>
         <ListItem>
-          <StyledLink to="/#lottery" onClick={onClose}>
+          <StyledLink to="/#lottery" onClick={onClose} scroll={(el) => scrollWidthOffset(el)}>
             {t('header.item2')}
           </StyledLink>
         </ListItem>
         <ListItem>
-          <StyledLink to="/#" onClick={onClose}>
+          <StyledLink to="/#" onClick={onClose} scroll={(el) => scrollWidthOffset(el)}>
             {t('header.item3')}
           </StyledLink>
         </ListItem>
