@@ -288,4 +288,7 @@ export const MobChartBlock = styled.div<{ mob?: boolean }>`
   @media (max-width: 767px) {
     display: ${(props) => (props.mob ? 'block' : 'none')};
   }
+  .highcharts-plot-background {
+    fill: #f7f8fa;
+  }
 `;
