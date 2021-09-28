@@ -7,12 +7,12 @@ import * as S from './S.elements';
 import { Collection, RootChange } from '../../../../types/currency';
 import moment from 'moment';
 import 'moment/locale/ru';
+import momenttz from 'moment-timezone';
 import { ReactComponent as Arrow } from '../../../../assets/v2/svg/arrow-exchange.svg';
 import { SmallChart } from './SmallChart';
 import useWindowSize from '../../../../hooks/useWindowSize';
 import { Dropdown } from './components/Dropdown';
 import { MobChart } from './MobChart';
-import momenttz from 'moment-timezone';
 
 require('highcharts/modules/exporting')(Highcharts);
 
