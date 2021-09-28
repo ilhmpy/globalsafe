@@ -345,7 +345,8 @@ const TableHeadItem = styled.div`
 
   @media only screen and (max-device-width: 480px) {
     font-weight: 500;
-    font-size: 13px;
+    font-size: 12px;
+    line-height: 18px;
 
     &:nth-child(1) {
       max-width: 61px;
@@ -436,8 +437,9 @@ const TableInnerItem = styled.div`
   }
 
   @media only screen and (max-device-width: 480px) {
-    font-weight: 500;
-    font-size: 13px;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 18px;
 
     & > span {
       width: 120px;
