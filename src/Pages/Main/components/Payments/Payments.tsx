@@ -13,10 +13,11 @@ import { Button } from '../../../../components/Button/Button';
 import { RadialBar } from '../../../../components/Charts/Test';
 import { Modal } from '../../../../components/Modal/Modal';
 import { Input } from '../../../../components/UI/Input';
-import { H2 } from '../../../../components/UI/MainStyled';
+import { H2 } from '../../../../components/UI/Heading';
 import { Page } from '../../../../components/UI/Page';
 import { AppContext } from '../../../../context/HubContext';
-import { Card, Container } from '../../../../globalStyles';
+import { Card } from '../../../../globalStyles';
+import { Container } from '../../../../components/UI/Container';
 import { Pokedex, RootPayDeposit } from '../../../../types/payouts';
 import { ModalBlock, ModalTitle } from '../Tariffs/Tariffs.elements';
 import { ReactComponent as Reload } from "../../../../assets/svg/reload.svg";
@@ -294,13 +295,10 @@ export const Payments: FC = () => {
   };
 
   return (
-    <Page abs>
+    <Container style={{ marginTop: "25px" }}>
       {statsDeposit.length ? (
         <>
-        <Container>
-          <H2 center>{t('payments.currPay')}</H2>
-        </Container>
-      <Container>
+      <H2 center>{t('payments.currPay')}</H2>
       <WhiteBox>
         <WhiteIntf>
           <Title>{t("payments2.actual")} {moment(actualDate).format("DD.MM.YYYY")}</Title>
@@ -352,12 +350,9 @@ export const Payments: FC = () => {
             )}
           </WhiteMap>
         </WhiteBox>
-      </Container> 
         </>
-      ) : (
-        ''
-      )}
-    </Page>
+      ) : ( '' )}
+    </Container>
   );
 };
 
@@ -628,7 +623,6 @@ const WhiteBox = styled.div`
   @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
     padding: 20px;
     padding-top: 25px;
-    max-width: 700px;
   }
   
   @media only screen and (max-device-width: 767px) {
@@ -639,6 +633,7 @@ const WhiteBox = styled.div`
     min-height: 480px;
     padding-bottom: 0px;
     padding-right: 0px;
+    margin-bottom: 20px;
   }
 `;
 
@@ -718,7 +713,6 @@ const WhiteItem = styled.div`
   border-radius: 4px;
   margin-bottom: 20px;
   padding: 20px;
-  padding-left: 25px;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -776,6 +770,14 @@ const WhiteItemLine = styled.div<{ procent: number | string; }>`
    margin-top: 13px;
    position: relative;
    min-width: 140px;
+
+   @media only screen and (max-device-width: 480px) {
+     min-width: 95px;
+   }
+
+   @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+     min-width: 110px;
+   }
 
    &::after {
      display: inline;

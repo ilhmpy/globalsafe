@@ -31,7 +31,7 @@ export const H2 = styled.h2<{ center?: boolean; mb?: boolean; }>`
         return `
           margin: 0 auto;
           text-align: center;
-          margin-bottom: 20px;
+          margin-bottom: 10px;
           font-weight: 700;
           font-size: 18px;
         `;

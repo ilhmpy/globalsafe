@@ -215,6 +215,7 @@ const PartnersBlock = styled.div`
 
   @media only screen and (max-device-width: 480px) {
     min-height: 345px;
+    margin-bottom: 20px;
   }
 `;
 
