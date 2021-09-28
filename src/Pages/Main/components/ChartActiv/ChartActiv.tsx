@@ -305,7 +305,7 @@ export const ChartActiv: FC<Props> = ({
       },
       xAxis: {
         ordinal: false,
-        startOnTick: true,
+        startOnTick: false,
         type: 'datetime',
         min: null,
         max: null,
@@ -394,7 +394,11 @@ export const ChartActiv: FC<Props> = ({
               {changeValue(data)}
             </S.PriceChanges>
             <S.Date>
-              {moment(data[data.length - 1].date).format('DD.MM.YYYY, dddd, HH:mm')} MCK
+              {momenttz
+                .utc(data[data.length - 1].date)
+                .tz('Europe/Moscow')
+                .format('DD.MM.YYYY, dddd, HH:mm')}
+              MCK
             </S.Date>
           </S.PriceChangesWrap>
         );
@@ -411,7 +415,11 @@ export const ChartActiv: FC<Props> = ({
               {changeValue(data)}
             </S.PriceChanges>
             <S.Date>
-              {moment(data[data.length - 1].date).format('DD.MM.YYYY, dddd, HH:mm')} MCK
+              {momenttz
+                .utc(data[data.length - 1].date)
+                .tz('Europe/Moscow')
+                .format('DD.MM.YYYY, dddd, HH:mm')}{' '}
+              MCK
             </S.Date>
           </S.PriceChangesWrap>
         );
@@ -428,7 +436,11 @@ export const ChartActiv: FC<Props> = ({
               {changeValue(data)}
             </S.PriceChanges>
             <S.Date>
-              {moment(data[data.length - 1].date).format('DD.MM.YYYY, dddd, HH:mm')} MCK
+              {momenttz
+                .utc(data[data.length - 1].date)
+                .tz('Europe/Moscow')
+                .format('DD.MM.YYYY, dddd, HH:mm')}{' '}
+              MCK
             </S.Date>
           </S.PriceChangesWrap>
         );
@@ -445,10 +457,35 @@ export const ChartActiv: FC<Props> = ({
               {changeValue(data)}
             </S.PriceChanges>
             <S.Date>
-              {moment(data[data.length - 1].date).format('DD.MM.YYYY, dddd, HH:mm')} MCK
+              {momenttz
+                .utc(data[data.length - 1].date)
+                .tz('Europe/Moscow')
+                .format('DD.MM.YYYY, dddd, HH:mm')}{' '}
+              MCK
             </S.Date>
           </S.PriceChangesWrap>
         );
+    }
+  };
+
+  const returnValues = () => {
+    switch (type) {
+      case 'GCWD':
+        return (data[data.length - 1].latestBid / 100000).toLocaleString('ru-RU', {
+          maximumFractionDigits: 2,
+        });
+      case 'MGCWD':
+        return (data[data.length - 1].latestBid / 100000).toLocaleString('ru-RU', {
+          maximumFractionDigits: 2,
+        });
+      case 'DIAMOND':
+        return (data[data.length - 1].latestBid / 100).toLocaleString('ru-RU', {
+          maximumFractionDigits: 2,
+        });
+      case 'GLOBAL':
+        return (data[data.length - 1].latestBid / 10000).toLocaleString('ru-RU', {
+          maximumFractionDigits: 2,
+        });
     }
   };
 
@@ -470,7 +507,6 @@ export const ChartActiv: FC<Props> = ({
   };
 
   const typeSelected = (str: string) => {
-    console.log('str', str);
     setActive(str);
     setSelected(str);
     if (type === 'GCWD') {
@@ -496,9 +532,22 @@ export const ChartActiv: FC<Props> = ({
           </S.ButtonsList>
           <S.MobTooltips>
             <S.TooltipsDate>
-              {date ? moment(date).format('DD.MM.YYYY, dd, HH:mm') : ''}
+              {date > 1
+                ? momenttz
+                    .utc(moment(date).format('DD.MM.YYYY'))
+                    .tz('Europe/Moscow')
+                    .format('DD.MM.YYYY, dd, HH:mm')
+                : data.length
+                ? momenttz
+                    .utc(data[data.length - 1].date)
+                    .tz('Europe/Moscow')
+                    .format('DD.MM.YYYY, dd, HH:mm')
+                : null}
+              &nbsp; MCK
             </S.TooltipsDate>
-            <S.TooltipsValue>{valCWD ? valCWD.toLocaleString() + ' CWD' : ''}</S.TooltipsValue>
+            <S.TooltipsValue>
+              {valCWD ? valCWD.toLocaleString() : data.length ? returnValues() : 0} CWD
+            </S.TooltipsValue>
           </S.MobTooltips>
           <S.Buttons>
             {btns.map((i) => (

@@ -39,7 +39,7 @@ export const ActionMenuItem = styled.li`
   max-width: 100vw;
   text-decoration: none;
   display: flex;
-  align-items: center;
+  /* align-items: center; */
   text-align: left;
   &:hover {
     background: rgba(90, 143, 213, 0.15);
@@ -58,7 +58,7 @@ export const ActionItem = styled.div<{ mN?: boolean }>`
   line-height: 16px;
   position: relative;
   margin-bottom: 8px;
-  padding: 0 6px;
+
   &:focus {
     outline: none;
   }
@@ -80,6 +80,7 @@ export const ActionItem = styled.div<{ mN?: boolean }>`
 export const Head = styled.div<{ blue?: boolean }>`
   font-weight: ${(props) => (props.blue ? 500 : 400)};
   position: relative;
+  font-size: 12px;
   color: #fff;
   &:focus {
     outline: none;

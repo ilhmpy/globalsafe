@@ -30,7 +30,6 @@ export const PriceChanges = styled.div`
   @media (max-width: 767px) {
     width: 100%;
     padding: 0 20px;
-    justify-content: center;
     margin-bottom: 8px;
   }
 `;
@@ -58,6 +57,9 @@ export const Price = styled.span<{ red?: boolean; green?: boolean }>`
     font-size: 14px;
     line-height: 20px;
     text-align: center;
+    &:last-child {
+      margin-left: auto;
+    }
   }
   ${(props) => {
     if (props.red) {

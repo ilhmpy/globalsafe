@@ -8,7 +8,8 @@ import { Button } from '../../../../components/Button/V2/Button';
 import { H2 } from '../../../../components/UI/MainStyled';
 import { Page } from '../../../../components/UI/Page';
 import { AppContext } from '../../../../context/HubContext';
-import { Card, Container } from '../../../../globalStyles';
+import { Card } from '../../../../globalStyles';
+import { Container } from '../../../../components/UI/Container';
 import { Balance } from '../../../../types/balance';
 import { ArrList, RootLottery } from '../../../../types/lottery';
 import { Timer } from '../Lottery/Timer';
@@ -90,7 +91,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
 
   return (
     <Page id="lottery" pBottom>
-      <TitleContainer bigMargin>
+      <TitleContainer>
         <H2>{'Розыгрыши'}</H2>
         <Subtitle>
           Ниже представлены победители прошлых розыгрышей, испытайте удачу, в этом списке можете
