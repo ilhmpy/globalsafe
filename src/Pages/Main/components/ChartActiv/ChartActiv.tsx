@@ -153,7 +153,7 @@ export const ChartActiv: FC<Props> = ({
       chart: {
         marginLeft: size < 768 ? 0 : 50,
         marginRight: size < 768 ? 30 : 5,
-        backgroundColor: '#F7F8FA',
+        // backgroundColor: '#F7F8FA',
         height: size < 768 ? 288 : 345,
         // spacingTop: 50,
         spacingBottom: 0,
