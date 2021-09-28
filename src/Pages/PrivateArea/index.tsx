@@ -337,7 +337,8 @@ export const InfoMain: FC = () => {
   };
 
   const outPutBalance = () => {
-    if (hubConnection && outPutCurrency.length > 0 && outPutEd.length > 0) {
+    console.log(hubConnection && outPutCurrency.length > 0 && outPutEd.length > 0 && Number(outPutEd) > ((Number(blockchain) + Number(service)) + 1))
+    if (hubConnection && outPutCurrency.length > 0 && outPutEd.length > 0 && Number(outPutEd) > ((Number(blockchain) + Number(service)) + 1)) {
       setWithdrawValueLoad(true);
       hubConnection
         .invoke(
@@ -464,7 +465,6 @@ export const InfoMain: FC = () => {
               const fromSplitted = arr[0].split('.');
               const toSplitted = arr.length === 2 ? arr[1].split('.') : '';
               const validValue = e.currentTarget.value.replace(/[^0-9]/gi, '');
-
               setOutPutEd(validValue);
               getCommisions(validValue);
             }} />
@@ -480,7 +480,7 @@ export const InfoMain: FC = () => {
           <H3 center style={{ marginTop: "24px" }}>Успешный вывод средств</H3>
           <Styled.Desc>С баланса личного кабинета успешно выведены средства в размере:</Styled.Desc>
           <Styled.Desc bold mMore>{outPutEd} {outPutCurrency}</Styled.Desc>
-          <Styled.Desc mLess>К выводу: 0</Styled.Desc>
+          <Styled.Desc mLess>К выводу: {outPutEd ? (Number(outPutEd) - (Number(blockchain) + Number(service))) : 0}</Styled.Desc>
           <Styled.Desc mLess>Комиссия блокчейн: {blockchain}</Styled.Desc>
           <Styled.Desc mLess>Комиссия сервиса: {service}</Styled.Desc>
         </Modal>
@@ -491,7 +491,7 @@ export const InfoMain: FC = () => {
           <H3 center style={{ marginTop: "24px" }}>Ошибка вывода средств</H3>
           <Styled.Desc>С баланса личного кабинета не были выведены средства в размере:</Styled.Desc>
           <Styled.Desc bold>{outPutEd} {outPutCurrency}</Styled.Desc>
-          <Styled.Desc mLess>К выводу: 0</Styled.Desc>
+          <Styled.Desc mLess>К выводу: {outPutEd ? (Number(outPutEd) - (Number(blockchain) + Number(service))) : 0}</Styled.Desc>
           <Styled.Desc mLess>Комиссия блокчейн: {blockchain}</Styled.Desc>
           <Styled.Desc mLess>Комиссия сервиса: {service}</Styled.Desc>
           <Styled.Desc danger mMore>{outPutErrorReason}</Styled.Desc>
