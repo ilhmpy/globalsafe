@@ -1,10 +1,13 @@
 import styled from 'styled-components/macro';
 import { ReactComponent as Filter } from '../../assets/svg/filter.svg';
+import { Button } from '../Button/Button';
 
 export const Name = styled.div`
   font-weight: 500;
   font-size: 14px;
   line-height: 16px;
+  text-overflow: ellipsis;
+  overflow: hidden;
   color: ${(props) => props.theme.text};
   @media (max-width: 992px) {
     font-weight: 400;
@@ -83,6 +86,7 @@ export const TH = styled.th`
 
 export const TD = styled.td`
   padding: 9px 0 10px 0;
+
   &:nth-child(1) {
     max-width: 188px;
     @media (max-width: 992px) {
@@ -113,6 +117,12 @@ export const TD = styled.td`
   &:nth-child(5) {
     width: 90px;
   }
+  &:nth-child(6) {
+    width: 90px;
+    @media (max-width: 767px) {
+      display: none;
+    }
+  }
 `;
 
 export const Text = styled.div`
@@ -120,6 +130,8 @@ export const Text = styled.div`
   font-size: 14px;
   line-height: 16px;
   letter-spacing: 0.1px;
+  text-overflow: ellipsis;
+  overflow: hidden;
   color: ${(props) => props.theme.text2};
   p {
     padding-bottom: 3px;
@@ -129,10 +141,17 @@ export const Text = styled.div`
 export const TableWrap = styled.div`
   width: 100%;
   position: relative;
-  padding: 34px 90px;
+  padding: 34px 35px;
   @media (max-width: 992px) {
     padding: 15px 10px;
   }
+`;
+
+export const Btn = styled(Button)`
+  width: 85px;
+  height: 40px;
+  color: ${(props) => props.theme.text};
+  margin-left: auto;
 `;
 
 export const TR = styled.tr<{ disactive?: boolean }>`
@@ -159,19 +178,24 @@ export const TR = styled.tr<{ disactive?: boolean }>`
       display: none;
     }
   }
-  @media (max-width: 3800px) {
+  ${TH}:nth-child(6) {
+    @media (max-width: 767px) {
+      display: none;
+    }
+  }
+  /* @media (max-width: 380px) {
     ${TD}:nth-child(3),
     ${TH}:nth-child(3) {
       display: none;
     }
-  }
+  } */
 `;
 
 export const Table = styled.table`
   width: 100%;
   display: table;
   border-collapse: collapse;
-  /* table-layout: fixed; */
+  table-layout: fixed;
 `;
 
 export const StyledFilter = styled(Filter)`

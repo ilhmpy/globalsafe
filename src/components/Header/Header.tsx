@@ -2,15 +2,15 @@ import React, { FC, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
 import styled from 'styled-components/macro';
-import { ReactComponent as Logo } from '../../assets/svg/logo.svg';
+import { ReactComponent as Logo } from '../../assets/v2/svg/logo.svg';
 import ru from '../../assets/svg/russia.svg';
-import { ReactComponent as DarkTheme } from '../../assets/svg/theme.svg';
+import { ReactComponent as DarkTheme } from '../../assets/v2/svg/dark-theme.svg';
 import { ReactComponent as LightTheme } from '../../assets/svg/themeLight.svg';
 import usa from '../../assets/svg/usa.svg';
 import { AppContext } from '../../context/HubContext';
 import { ThemeContext } from '../../context/ThemeContext';
-import { Container } from '../../globalStyles';
-import { Button } from '../Button/Button';
+import { Container } from '../../components/UI/Container';
+import { Button } from '../Button/V2/Button';
 import {
   AdminButton,
   HeaderInner,
@@ -106,31 +106,28 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
               />
             )}
           </HeaderMenu>
+
+          {lang === 'ru' ? (
+            <Languale onClick={() => i18n.changeLanguage('en')}>EN</Languale>
+          ) : (
+            <Languale onClick={() => i18n.changeLanguage('ru')}>RU</Languale>
+          )}
           <SwitchTheme onClick={swithTheme}>
             {theme === 'light' ? <DarkTheme /> : <LightTheme />}
           </SwitchTheme>
-          {lang === 'ru' ? (
-            <Languale onClick={() => i18n.changeLanguage('en')}>
-              EN
-              <img src={usa} alt="en" />
-            </Languale>
-          ) : (
-            <Languale onClick={() => i18n.changeLanguage('ru')}>
-              RU
-              <img src={ru} alt="ru" />
-            </Languale>
-          )}
-          {admin && (
-            <AdminButton danger onClick={toAdmin}>
-              {t('headerButton.admin')}
-            </AdminButton>
-          )}
+          {admin && <AdminButton onClick={toAdmin}>{t('headerButton.admin')}</AdminButton>}
           {location.pathname === '/' ? (
-            <Button onClick={handleClick}>{t('headerButton.personalArea')}</Button>
+            <Button primary onClick={handleClick}>
+              {t('headerButton.personalArea')}
+            </Button>
           ) : user ? (
-            <Button onClick={logOut}>{t('logout')}</Button>
+            <Button primary onClick={logOut}>
+              {t('logout')}
+            </Button>
           ) : (
-            <Button onClick={handleClick}>{t('headerButton.personalArea')}</Button>
+            <Button primary onClick={handleClick}>
+              {t('headerButton.personalArea')}
+            </Button>
           )}
         </HeaderInner>
       </Container>

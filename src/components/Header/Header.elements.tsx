@@ -1,6 +1,6 @@
 import { Link } from 'react-scroll';
 import styled from 'styled-components/macro';
-import { Button } from '../Button/Button';
+import { Button } from '../Button/V2/Button';
 import { NavHashLink } from 'react-router-hash-link';
 import { ReactComponent as DarkTheme } from '../../assets/svg/theme.svg';
 
@@ -15,54 +15,57 @@ export const Text = styled.p`
 `;
 
 export const SwitchTheme = styled.div<{ mob?: boolean }>`
-  width: 28px;
-  height: 28px;
-
+  width: 20px;
+  height: 20px;
+  margin-right: 40px;
   border-radius: 50%;
   /* background: ${(props) => props.theme.switch}; */
-
   cursor: pointer;
   @media (max-width: 1100px) {
-    width: 100%;
     div {
       display: flex;
       align-items: center;
-      width: 100%;
       svg {
         flex: none;
       }
     }
-
-    ${({ mob }) => {
-      if (mob) {
-        return `
-          & > div > svg {
-            width: 28px;
-            height: 28px;
-          }
-        `;
-      }
-    }}
   }
 `;
 
-export const AdminButton = styled(Button)`
-  min-width: 110px;
-  max-width: 110px;
-  padding: 12px 0px;
+export const AdminButton = styled.button`
+  padding: 12px 12px;
+  font-weight: 500;
+  font-family: 'Roboto', sans-serif;
+  background: transparent;
+  font-size: 12px;
+  line-height: 14px;
+  border: none;
+  cursor: pointer;
+  margin-right: 28px;
+  color: ${(props) => props.theme.v2.text};
+  text-transform: uppercase;
+  &:focus {
+    outline: none;
+  }
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 export const Languale = styled.div`
   display: flex;
   align-items: center;
   font-weight: 500;
-  font-size: 14px;
-  line-height: 16px;
-  margin-right: 10px;
+  font-size: 12px;
+  line-height: 14px;
+  margin-right: 40px;
   color: ${(props) => props.theme.text};
   cursor: pointer;
   @media (max-width: 1100px) {
-    display: none;
+    margin-left: auto;
+  }
+  @media (max-width: 767px) {
+    margin-right: 20px;
   }
   img {
     margin-left: 6px;
@@ -80,9 +83,15 @@ export const HeaderWrap = styled.header<{ header?: boolean }>`
   top: 0;
   left: 0;
   z-index: 99999;
-  padding: 28px 0;
+  padding: 30px 0;
+  height: 98px;
   transition: all 0.3s ease 0s;
-  background: ${(props) => (props.header ? props.theme.header : 'transparent')};
+  background: ${(props) => props.theme.v2.header.background};
+  /* background: ${(props) =>
+    props.header ? props.theme.header : props.theme.v2.header.background}; */
+  @media (max-width: 576px) {
+    padding: 15px 0;
+  }
 `;
 
 export const HeaderInner = styled.div`
@@ -93,9 +102,11 @@ export const HeaderInner = styled.div`
   position: relative;
   @media (max-width: 1100px) {
     ${Button} {
-      display: none;
+      margin-right: 70px;
     }
-    ${SwitchTheme} {
+  }
+  @media (max-width: 767px) {
+    ${Button} {
       display: none;
     }
   }
@@ -115,6 +126,7 @@ export const HeaderMenu = styled.div<{ open?: boolean }>`
   ${SwitchTheme} {
     display: none;
   }
+  margin-left: auto;
   @media (max-width: 1100px) {
     ${SwitchTheme} {
       display: block;
@@ -124,12 +136,10 @@ export const HeaderMenu = styled.div<{ open?: boolean }>`
     width: 100%;
     height: 100%;
     left: ${(props) => (props.open ? '0' : '-100%')};
-    top: 0;
+    top: 67px;
     padding: 0 50px;
     overflow: auto;
     z-index: 4;
-    -webkit-transition: all 0.3s ease 0s;
-    -o-transition: all 0.3s ease 0s;
     transition: all 0.3s ease 0s;
   }
 `;
@@ -151,13 +161,13 @@ export const MenuBtn = styled.span<{ open?: boolean }>`
     top: calc(50% - 1px);
     right: 0px;
     position: absolute;
+    background-color: ${(props) => props.theme.v2.header.burger};
   }
   span:first-child {
     top: ${(props) => (props.open ? 'calc(50% - 2px)' : '0px')};
     width: 24px;
     height: 3px;
     border-radius: 2px;
-    background-color: #ff416e;
     transform: ${(props) => (props.open ? 'rotate(-45deg)' : 'rotate(0deg)')};
   }
   span:last-child {
@@ -166,7 +176,6 @@ export const MenuBtn = styled.span<{ open?: boolean }>`
     width: ${(props) => (props.open ? '24px' : '12px')};
     height: 3px;
     border-radius: 2px;
-    background-color: #ff416e;
     transform: ${(props) => (props.open ? 'rotate(45deg)' : 'rotate(0deg)')};
   }
 `;
@@ -180,29 +189,30 @@ export const List = styled.ul`
   @media (max-width: 1100px) {
     flex-direction: column;
     align-items: flex-start;
-    padding-top: 90px;
+    padding-top: 20px;
     padding-bottom: 40px;
   }
 `;
 
-export const ListItem = styled.li<{ mob?: boolean; without?: boolean; last?: boolean }>`
-  padding: 0px 12px;
+export const ListItem = styled.li<{ mob?: boolean }>`
   display: ${(props) => props.mob && 'none'};
   position: relative;
+  padding-right: 40px;
   ${Languale} {
     display: none;
+  }
+  &:nth-child(4) {
+    padding-right: 0;
   }
   &:last-child {
     display: none;
   }
   @media (max-width: 1100px) {
-    &:last-child {
-      display: block;
-    }
-    display: ${(props) => props.mob && 'block'};
+    display: ${(props) => props.mob && 'none'};
     width: 100%;
     padding: 20px 0px;
     border-top: 1px solid ${(props) => props.theme.listBorder};
+    text-align: center;
     ${Languale} {
       display: flex;
       cursor: initial;
@@ -211,30 +221,12 @@ export const ListItem = styled.li<{ mob?: boolean; without?: boolean; last?: boo
       display: block;
       cursor: initial;
     }
-    ${({ mob }) => {
-      if (mob) {
-        return `
-          max-width: 30px;
-          margin-right: 10px;
-        `;
-      }
-    }}
-
-    ${({ without }) => {
-      if (without) {
-        return `
-          border-top: 0;
-        `;
-      }
-    }}
-
-    ${({ last }) => {
-      if (last) {
-        return `
-          border-bottom: 1px solid ${({ theme }: any) => theme.listBorder};
-        `;
-      }
-    }}
+  }
+  @media (max-width: 767px) {
+    display: ${(props) => props.mob && 'block'};
+    &:last-child {
+      display: block;
+    }
   }
 `;
 
@@ -246,10 +238,11 @@ export const StyledLink = styled(NavHashLink).attrs({ activeclassname })`
   }
   color: ${(props) => props.theme.text};
   font-weight: 500;
-  font-size: 14px;
-  line-height: 16px;
+  font-size: 12px;
+  line-height: 14px;
   cursor: pointer;
   transition: all 0.3s ease 0s;
+  text-transform: uppercase;
   &:hover {
     color: #ff416e;
   }
@@ -257,9 +250,10 @@ export const StyledLink = styled(NavHashLink).attrs({ activeclassname })`
 
 export const LinkButton = styled.div`
   font-weight: 500;
-  font-size: 14px;
-  line-height: 16px;
+  font-size: 12px;
+  line-height: 14px;
   color: ${(props) => props.theme.text};
+  text-transform: uppercase;
 `;
 
 export const Switch = styled.div`
@@ -267,4 +261,7 @@ export const Switch = styled.div`
   position: absolute;
   bottom: 5px;
   align-items: center;
+  @media (max-width: 992px) {
+    position: relative;
+  }
 `;

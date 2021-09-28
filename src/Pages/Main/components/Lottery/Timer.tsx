@@ -2,6 +2,7 @@ import moment from 'moment';
 import 'moment-duration-format';
 import React, { FC, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import styled from 'styled-components';
 import { ReactComponent as Prize } from '../../../../assets/svg/prize.svg';
 import { AppContext } from '../../../../context/HubContext';
 import { RootClock } from '../../../../types/clock';
@@ -164,8 +165,8 @@ export const Timer: FC<Props> = ({
     }
   };
 
-  const radius = 30 / 2;
-  const circumference = 30 * Math.PI;
+  const radius = 32 / 2;
+  const circumference = 32 * Math.PI;
 
   const prg = () => {
     const progress1 = circumference - (deadline / progressTotal) * circumference;
@@ -181,21 +182,20 @@ export const Timer: FC<Props> = ({
       {modalTimer ? (
         <Styled.TimerHistoryInner history={history}>
           <Styled.TimerHisroryTitle>
-            {history ? t('newDraw') : t('timerStart')}
+            {history ? t('newDraw') : 'Новый розыгрыш через:'}
           </Styled.TimerHisroryTitle>
           <Styled.TimerHistoryValue nodata={clock === null || state === '0'}>
             {modalPrize ? (
               <>
                 <Styled.TimerHistoryValueDesc>
-                  <span>
-                    {stateData.days} {t('d')}{' '}
-                  </span>
-                  <span>
-                    {stateData.hours} {t('h')}{' '}
-                  </span>
-                  <span>
-                    {stateData.minutes} {t('m')}
-                  </span>
+                  <TimerBlock>
+                    <span>{stateData.days}</span>
+                    <span>{t('d')}. </span>
+                    <span>{stateData.hours}</span>
+                    <span>{t('h')}. </span>
+                    <span>{stateData.minutes}</span>
+                    <span>{t('m')}.</span>
+                  </TimerBlock>
                 </Styled.TimerHistoryValueDesc>
                 <Styled.TimerHistoryValueMob>
                   <div className="timer_content">
@@ -214,16 +214,14 @@ export const Timer: FC<Props> = ({
               </>
             ) : (
               <>
-                {' '}
-                <span>
-                  {stateData.days} {t('d')}{' '}
-                </span>
-                <span>
-                  {stateData.hours} {t('h')}{' '}
-                </span>
-                <span>
-                  {stateData.minutes} {t('m')}
-                </span>
+                <TimerBlock>
+                  <span>{stateData.days}</span>
+                  <span>{t('d')}. </span>
+                  <span>{stateData.hours}</span>
+                  <span>{t('h')}. </span>
+                  <span>{stateData.minutes}</span>
+                  <span>{t('m')}.</span>
+                </TimerBlock>
               </>
             )}
           </Styled.TimerHistoryValue>
@@ -242,12 +240,14 @@ export const Timer: FC<Props> = ({
                     <div className="timer_content">
                       {stateData && (
                         <Styled.TimerModalDuration>
-                          <span>{stateData.days}</span> : <span>{stateData.hours}</span> :{' '}
+                          <span>{stateData.days}</span>
+                          <span>{stateData.hours}</span>
                           <span>{stateData.minutes}</span>
                         </Styled.TimerModalDuration>
                       )}
                       <Styled.TimerModalUnits>
-                        <span>{t('time.days')}</span> <span>{t('time.hours')}</span>{' '}
+                        <span>{t('time.days')}</span>
+                        <span>{t('time.hours')}</span>
                         <span>{t('time.minutes')}</span>
                       </Styled.TimerModalUnits>
                     </div>
@@ -276,7 +276,7 @@ export const Timer: FC<Props> = ({
             <Styled.TimerCircle onClick={openPopup}>
               <Styled.Progress>
                 <Styled.CountContainer>
-                  <Styled.CountValue strokeColor={'#ff416e'}>
+                  <Styled.CountValue strokeColor={'#0094FF'}>
                     <Prize />
                   </Styled.CountValue>
                   <svg
@@ -287,7 +287,7 @@ export const Timer: FC<Props> = ({
                       width: '100%',
                       height: '100%',
                       margin: '0 auto',
-                      transform: 'rotateY(-180deg) rotateZ(-90deg)',
+                      transform: 'rotateY(-180deg) rotateZ(240deg)',
                       overflow: 'visible',
                     }}
                   >
@@ -299,7 +299,7 @@ export const Timer: FC<Props> = ({
                       cy={radius}
                       fill="none"
                       strokeLinecap="round"
-                      stroke={'#ff416e'}
+                      stroke={'#0094FF'}
                       strokeWidth={'2px'}
                     ></circle>
                   </svg>
@@ -312,3 +312,15 @@ export const Timer: FC<Props> = ({
     </>
   );
 };
+
+const TimeSector = styled.div``;
+const TimerBlock = styled.div`
+  display: flex;
+  & > span {
+    &:nth-child(2n) {
+      font-size: 22px;
+      font-weight: 400;
+      margin-right: 10px;
+    }
+  }
+`;

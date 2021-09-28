@@ -11,6 +11,7 @@ declare module 'styled-components' {
     gradient: string;
     link: string;
     buttonBorder: string;
+    dangerButtonText: string;
     modal: string;
     header: string;
     listBorder: string;
@@ -76,6 +77,31 @@ declare module 'styled-components' {
     };
     pink: string;
     rounIputBackground: string;
+    v2:{
+      text: string;
+      body: string;
+      header:{
+        background: string;
+        burger: string;
+      }
+    },
     titles: string;
+    toToken: {
+      background: string;
+      color: string;
+      convertColor: string;
+    };
+    authBgGray: string;
+    black: string;
+    white: string;
+    blue: string;
+    operations: {
+      descClr: string;
+      headBg: string;
+      headClr: string;
+      ich1: string;
+      ich2: string;
+      tableBg: string;
+    }
   }
 }

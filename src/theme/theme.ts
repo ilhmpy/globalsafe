@@ -7,6 +7,7 @@ export const lightTheme = {
   modal: '#fff',
   toggleBorder: '#FFF',
   buttonBorder: '#0E0D3D',
+  dangerButtonText:'#FFF',
   inputBg: '#fff',
   repeatCode: '#212121',
   header: `linear-gradient(
@@ -69,7 +70,7 @@ export const lightTheme = {
   },
   loader: {
     bg: 'rgba(0, 0, 0, 0.2)',
-    pointsColor: '#2b3595',
+    pointsColor: '#2b3595', 
   },
   timer: {
     bg: '#fff',
@@ -78,14 +79,40 @@ export const lightTheme = {
   },
   pink: '#FF416E',
   rounIputBackground: '#FFF0F0',
-  titles: "#3F3E4E"
+  titles: "#3F3E4E",
+  authBgGray: '#E5E5E5',
+  toToken: {
+    color: "rgba(14, 13, 61, 0.5)",
+    background: "#fff",
+    convertColor: "#0E0D3D"
+  },
+  black: '#000000',
+  white: '#ffffff',
+  blue: '#0094FF',
+  operations: {
+    descClr: "#3F3E4E",
+    headBg: "rgba(220, 220, 232, 100%)",
+    headClr: "#3F3E4E",
+    ich1: "#fff",
+    ich2: "#F8F7FC",
+    tableBg: "#fff"
+  },
+  v2:{
+    text: "#3F3E4E",
+    body: "#E5E5E5",
+    header:{
+      background: "#fff",
+      burger: "#000"
+    }
+  },
 };
 
 export const darkTheme = {
-  body: 'rgba(48,48,48,1)',
+  body: '#28282F',
   text: '#FFF',
   toggleBorder: '#6B8096',
   buttonBorder: '#FF416E',
+  dangerButtonText:'#FFF',
   text2: '#E2E2E2',
   text3: '#fff',
   text3Hover: '#fff',
@@ -157,6 +184,31 @@ export const darkTheme = {
   },
   pink: '#FF416E',
   rounIputBackground: '#ffffff',
-  titles: "#fff" 
+  titles: "#fff",
+  toToken: {
+    color: "#fff",
+    background: "#212121",
+    convertColor: "#fff"
+  },
+  authBgGray: '#E5E5E5',
+  black: '#000000',
+  white: '#ffffff',
+  blue: '#0094FF',
+  operations: {
+    descClr: "#fff",
+    headBg: "#131317",
+    headClr: "#fff",
+    ich1: "#1D1D21",
+    ich2: "#28282F",
+    tableBg: "#2A2A31"
+  },
+  v2:{
+    text: "#3F3E4E",
+    body: "#E5E5E5",
+    header:{
+      background: "#fff",
+      burger: "#FFF"
+    }
+  },
 };
  

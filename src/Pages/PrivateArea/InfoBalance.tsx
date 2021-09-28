@@ -12,9 +12,9 @@ import { Input } from '../../components/UI/Input';
 import { Loading } from '../../components/UI/Loading';
 import { AppContext } from '../../context/HubContext';
 import { Card, Container } from '../../globalStyles';
-import { Balance, BalanceKind } from '../../types/balance';
+import { Balance } from '../../types/balance';
 import { OpenDate } from '../../types/dates';
-import { ModalDividends } from './Modals';
+import { ModalDividends } from './Modals'; 
 import * as Styled from './Styles.elements';
 
 type Obj = {
@@ -70,7 +70,12 @@ const BalanceTable: FC<BalanceTableProps> = ({ balanceLog }: BalanceTableProps) 
           <Styled.DataListName>{operation(balanceLog.operationKind)}</Styled.DataListName>
           <Styled.DataListSum plus={balanceLog.balance >= 0}>
             {balanceLog.balance < 0 ? '' : balanceLog.operationKind !== 6 ? '+' : '-'}{' '}
-            {(balanceLog.balance / 100000).toLocaleString('ru-RU', {
+            {(balanceLog.asset === 1
+              ? balanceLog.balance / 100000
+              : balanceLog.asset === 43
+              ? balanceLog.balance / 10000
+              : balanceLog.balance
+            ).toLocaleString('ru-RU', {
               maximumFractionDigits: 5,
             })}
             <br />
@@ -96,6 +101,7 @@ export const InfoBalance = () => {
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const balance = appContext.balance;
+  const balanceList = appContext.balanceList;
   const [depositTotal, setDepositTotal] = useState(0);
   const [totalPayed, setTotalPayed] = useState(0);
   const [count, setCount] = useState(true);
@@ -103,7 +109,7 @@ export const InfoBalance = () => {
   const [loading, setLoading] = useState(true);
   const [addBalance, setAddBalance] = useState(false);
   const [balanceValue, setBalanceValue] = useState('');
-  const [currencyValue, setCurrencyValue] = useState<string | BalanceKind>('');
+  const [currencyValue, setCurrencyValue] = useState<string | Balance>('');
   const [loadDeposit, setLoadDeposit] = useState(false);
   const [totalDeposit, setTotalDeposit] = useState(0);
   const [depositList, setDepositList] = useState<any>([]);
@@ -112,7 +118,7 @@ export const InfoBalance = () => {
 
   // Get Balance Kinds List as an Array
   const balancesList = useMemo(() => {
-    return Object.values(BalanceKind).filter(item => typeof item === 'string');
+    return ['CWD', 'GLOBAL', 'GF', 'FF', 'GF5', 'GF6', 'FF5', 'FF6'];
   }, []);
 
   useEffect(() => {
@@ -271,6 +277,7 @@ export const InfoBalance = () => {
                   balance: item.amount,
                   date: item.operationDate,
                   userDeposit: item.userDeposit,
+                  asset: item.balanceKind,
                 };
 
                 if (result[d]) {
@@ -373,13 +380,17 @@ export const InfoBalance = () => {
   const getTopUp = () => {
     // GetTopUpUrl(BalanceKind balanceKind, ulong volume)
     const newWindow = window.open();
-    
+
     if (hubConnection) {
       hubConnection
         .invoke(
-          'GetTopUpUrl', 
+          'GetTopUpUrl',
           Balance[currencyValue as keyof typeof Balance],
-          +balanceValue * 100000
+          currencyValue === 'CWD'
+            ? +balanceValue * 100000
+            : currencyValue === 'GLOBAL'
+            ? +balanceValue * 10000
+            : +balanceValue
         )
         .then((res: string) => {
           newWindow && (newWindow.location.href = res);
@@ -398,7 +409,7 @@ export const InfoBalance = () => {
     }
   };
 
-  const onChangeCurrencyValue = (balanceKind: null | (string | BalanceKind)) => {
+  const onChangeCurrencyValue = (balanceKind: null | (string | Balance)) => {
     if (!balanceKind) {
       setCurrencyValue('');
       return;
@@ -558,7 +569,12 @@ export const InfoBalance = () => {
               ref={inputRef}
               value={balanceValue}
             />
-            <Styled.ModalButton as="button" disabled={!balanceValue || !currencyValue} onClick={getTopUp} danger>
+            <Styled.ModalButton
+              as="button"
+              disabled={!balanceValue || !currencyValue}
+              onClick={getTopUp}
+              danger
+            >
               {t('privateArea.topUp')}
             </Styled.ModalButton>
           </Styled.ModalBlock>

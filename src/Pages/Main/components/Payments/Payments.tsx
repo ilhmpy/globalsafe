@@ -171,7 +171,7 @@ const RadialComponent: FC<RadialComponentProps> = ({ data, height }: RadialCompo
 };
 
 export const Payments: FC = () => {
-  const [statsDeposit, setStatsDeposit] = useState<RootPayDeposit[]>([]);
+  const [statsDeposit, setStatsDeposit] = useState<RootPayDeposit[]>([]); 
   const [bigArr, setBigArr] = useState<any>([]);
   const [smallArr, setSmallArr] = useState<any>([]);
   const [loadReset, setLoadReset] = useState(false);
@@ -234,6 +234,7 @@ export const Payments: FC = () => {
         .then((res) => {
           setStatsDeposit(res);
           setLoadReset(false);
+          console.log(res);
         })
         .catch((e) => {
           setLoadReset(false);
@@ -270,10 +271,8 @@ export const Payments: FC = () => {
         if (updateTime.date.day == currentDate.getDate()) {
           const time = ((currentDate.getHours() * 60) + currentDate.getMinutes()) - ((updateTime.time.hours * 60) + updateTime.time.minutes);
           if (time >= 60) {
-            console.log("hours", `${Math.floor(time / 60)} часов`)
-            return setLastTime(`${Math.floor(time / 60)} часов`);
+             return setLastTime(`${Math.floor(time / 60)} часов`);
           } else {
-            console.log("minutes", `${time} минут`)
             if (time > 0) {
               setLastTime(`${time} минут`);
             } else {
@@ -282,17 +281,14 @@ export const Payments: FC = () => {
           };
         } else {
           setActualDate(new Date());
-          console.log("not current day", `${currentDate.getDate() - updateTime.date.day} дней`);
           return setLastTime(`${currentDate.getDate() - updateTime.date.day} дней`);
         };
       } else {
         setActualDate(new Date());
-        console.log("not current month", `${(currentDate.getMonth() + 1) - updateTime.date.month} месяцев`);
         return setLastTime(`${(currentDate.getMonth() + 1) - updateTime.date.month} месяцев`);
       };
     } else {
       setActualDate(new Date());
-      console.log("not current year: ", `${currentDate.getFullYear() - updateTime.date.year} лет`);
       return setLastTime(`${currentDate.getFullYear() - updateTime.date.year} лет`);
     };
   };
@@ -300,65 +296,67 @@ export const Payments: FC = () => {
   return (
     <Page abs>
       {statsDeposit.length ? (
+        <>
         <Container>
           <H2 center>{t('payments.currPay')}</H2>
         </Container>
-      ) : (
-        ''
-      )}
       <Container>
-        <WhiteBox>
-          <WhiteIntf>
-            <Title>{t("payments2.actual")} {moment(actualDate).format("DD.MM.YYYY")}</Title>
-            <Title right>
-              {t("payments2.last")} {lastTime != null ? ( <> {lastTime} {t("payments2.ago")} </> ) : t("payments2.now")} <Reload style={{ cursor: "pointer" }} onClick={() => lastUpdate()} />
-            </Title> 
-          </WhiteIntf>
-          <WhiteMap>
-            {isMobile ? (
-              <>
-                <Swiper spaceBetween={10} slidesPerView={1} pagination={{ clickable: true }}>
-                    {smallArr.map((i: any, idx: number) => (
-                      <SwiperSlide key={idx}>                                       
-                        <>
-                          {i.map((item: any, idx: any) => (
-                            <WhiteItem key={idx}>
-                              <WhiteItemText>{item.deposit.name}</WhiteItemText>
-                              <WhiteItemText bold>{(item.procent).toFixed(0)}%</WhiteItemText>
-                              <WhiteItemText>{moment(item.date).format("DD.MM.YYYY")}</WhiteItemText>
-                              <WhiteItemLine procent={(item.procent).toFixed(0)} />
-                            </WhiteItem>
-                          ))}
-                        </>
-                      </SwiperSlide>
-                    ))}
-                </Swiper>
-              </>
-            ) : (
-              <>
-                {statsDeposit.length ? (
-                    <>
-                    {bigArr.map((i: any, idx: any) => {
-                      return (
-                        <>
-                          {i.map((item: any, idx: any) => (
-                            <WhiteItem key={idx}>
-                              <WhiteItemText>{item.deposit.name}</WhiteItemText>
-                              <WhiteItemText bold>{(item.procent).toFixed(0)}%</WhiteItemText>
-                              <WhiteItemText>{moment(item.date).format("DD.MM.YYYY")}</WhiteItemText>
-                              <WhiteItemLine procent={(item.procent).toFixed(0)} />
-                            </WhiteItem>
-                          ))}
-                        </>
-                      )
-                    })}
-                  </>
-               ) : ( "" )}
+      <WhiteBox>
+        <WhiteIntf>
+          <Title>{t("payments2.actual")} {moment(actualDate).format("DD.MM.YYYY")}</Title>
+          <Title right>
+            {t("payments2.last")} {lastTime != null ? ( <> {lastTime} {t("payments2.ago")} </> ) : t("payments2.now")} <Reload style={{ cursor: "pointer" }} onClick={() => lastUpdate()} />
+          </Title> 
+        </WhiteIntf>
+        <WhiteMap>
+          {isMobile ? (
+            <>
+              <Swiper spaceBetween={10} slidesPerView={1} pagination={{ clickable: true }}>
+                  {smallArr.map((i: any, idx: number) => (
+                    <SwiperSlide key={idx}>                                       
+                      <>
+                        {i.map((item: any, idx: any) => (
+                          <WhiteItem key={idx}>
+                            <WhiteItemText>{item.deposit.name}</WhiteItemText>
+                            <WhiteItemText bold>{(item.procent).toFixed(0)} %</WhiteItemText>
+                            <WhiteItemText>{moment(item.date).format("DD.MM.YYYY")}</WhiteItemText>
+                            <WhiteItemLine procent={(item.procent).toFixed(0)} />
+                          </WhiteItem>
+                        ))}
+                      </>
+                    </SwiperSlide>
+                  ))}
+              </Swiper>
+            </>
+          ) : (
+            <>
+              {statsDeposit.length ? (
+                  <>
+                  {bigArr.map((i: any, idx: any) => {
+                    return (
+                      <>
+                        {i.map((item: any, idx: any) => (
+                          <WhiteItem key={idx}>
+                            <WhiteItemText>{item.deposit.name}</WhiteItemText>
+                            <WhiteItemText bold>{(item.procent).toFixed(0)} %</WhiteItemText>
+                            <WhiteItemText>{moment(item.date).format("DD.MM.YYYY")}</WhiteItemText>
+                            <WhiteItemLine procent={(item.procent).toFixed(0)} />
+                          </WhiteItem>
+                        ))}
+                      </>
+                    )
+                  })}
+                </>
+                ) : ( "" )}
               </>
             )}
           </WhiteMap>
         </WhiteBox>
       </Container> 
+        </>
+      ) : (
+        ''
+      )}
     </Page>
   );
 };
@@ -627,7 +625,7 @@ const WhiteBox = styled.div`
   padding: 30px;
   padding-top: 40px;
 
-  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
     padding: 20px;
     padding-top: 25px;
     max-width: 700px;
@@ -714,6 +712,7 @@ const WhiteItem = styled.div`
   width: 180px;
   height: 108px;
   min-width: 180px;
+  min-height: 108px;
   background: #F8F7FC;
   margin-right: 20px;
   border-radius: 4px;
@@ -721,8 +720,11 @@ const WhiteItem = styled.div`
   padding: 20px;
   padding-left: 25px;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
 
-  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
     width: 150px;
     min-width: 150px;
   }
@@ -751,7 +753,7 @@ const WhiteItem = styled.div`
 
 const WhiteItemText = styled.div<{ bold?: boolean; }>`
   color: #000000;
-  font-weight: 500;
+  font-weight: 400;
   font-size: 12px;
   line-height: 14px;
 
@@ -761,7 +763,7 @@ const WhiteItemText = styled.div<{ bold?: boolean; }>`
           font-weight: 700;
           color: #3F3E4E;
           font-size: 18px;
-          line-height: 30px;
+          line-height: 24px;
         `;
       };
    }}
@@ -770,10 +772,10 @@ const WhiteItemText = styled.div<{ bold?: boolean; }>`
 const WhiteItemLine = styled.div<{ procent: number | string; }>`
    width: 100%;
    background: #DCDCE8;
-   dispay: block;
    height: 2px;
    margin-top: 13px;
    position: relative;
+   min-width: 140px;
 
    &::after {
      display: inline;

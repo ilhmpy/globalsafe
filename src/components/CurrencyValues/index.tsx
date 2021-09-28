@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { FC, useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState, useCallback } from 'react';
 import Chart from 'react-apexcharts';
 import { CSSTransition } from 'react-transition-group';
 import styled, { css, keyframes } from 'styled-components/macro';
@@ -21,49 +21,129 @@ export const CurrencyValues = () => {
   const size = useWindowSize();
   const mob = size <= 768;
 
-  useEffect(() => {
-    const dateFrom: any = moment().subtract(7, 'days');
-    if (hubConnection) {
-      hubConnection
-        .invoke<RootChange>('GetMarket', 4, dateFrom._d, new Date(), numDIAMOND, 100)
-        .then((res) => {
-          // console.log("res diamond", res);
-          if (res.totalRecords > listDIAMOND.length) {
-            setNumDIAMOND((numDIAMOND) => numDIAMOND + 100);
+  const fetchDIAMOND = useCallback(
+    async (date: string) => {
+      let arrList: Collection[] = [];
+      let isFetching = true;
+      let totalNum = 0;
+      if (hubConnection) {
+        while (isFetching) {
+          try {
+            const res = await hubConnection.invoke<RootChange>(
+              'GetMarket',
+              4,
+              date,
+              new Date(),
+              totalNum,
+              100
+            );
+            if (res) {
+              if (arrList.length < res.totalRecords) {
+                totalNum += 100;
+                arrList = [...arrList, ...res.collection];
+              } else {
+                isFetching = false;
+                break;
+              }
+            }
+          } catch (e) {
+            console.log(e);
           }
-          setListDIAMOND((listDIAMOND) => [...listDIAMOND, ...res.collection]);
-        })
-        .catch((e) => console.log(e));
-    }
-  }, [hubConnection, numDIAMOND]);
+        }
+        setListDIAMOND(arrList);
+      }
+    },
+    [hubConnection]
+  );
 
   useEffect(() => {
-    const dateFrom: any = moment().subtract(7, 'days');
+    const dateFrom = moment().subtract(7, 'days').format();
     if (hubConnection) {
-      hubConnection
-        .invoke<RootChange>('GetMarket', 2, dateFrom._d, new Date(), numMGCWD, 100)
-        .then((res) => {
-          if (res.totalRecords > listMGCWD.length) {
-            setNumMGCWD((numMGCWD) => numMGCWD + 100);
-          }
-          setListMGCWD((listMGCWD) => [...listMGCWD, ...res.collection]);
-        })
-        .catch((e) => console.log(e));
+      fetchDIAMOND(dateFrom);
     }
   }, [hubConnection]);
 
-  useEffect(() => {
-    const dateFrom: any = moment().subtract(7, 'days');
-    if (hubConnection) {
-      hubConnection
-        .invoke<RootChange>('GetMarket', 3, dateFrom._d, new Date(), numGCWD, 100)
-        .then((res) => {
-          if (res.totalRecords > listGCWD.length) {
-            setNumGCWD((numGCWD) => numGCWD + 100);
+  const fetchMGCWD = useCallback(
+    async (date: string) => {
+      let arrList: Collection[] = [];
+      let isFetching = true;
+      let totalNum = 0;
+      if (hubConnection) {
+        while (isFetching) {
+          try {
+            const res = await hubConnection.invoke<RootChange>(
+              'GetMarket',
+              2,
+              date,
+              new Date(),
+              totalNum,
+              100
+            );
+            if (res) {
+              if (arrList.length < res.totalRecords) {
+                totalNum += 100;
+                arrList = [...arrList, ...res.collection];
+              } else {
+                isFetching = false;
+                break;
+              }
+            }
+          } catch (e) {
+            console.log(e);
           }
-          setListGCWD((listGCWD) => [...listGCWD, ...res.collection]);
-        })
-        .catch((e) => console.log(e));
+        }
+        setListMGCWD(arrList);
+      }
+    },
+    [hubConnection]
+  );
+
+  useEffect(() => {
+    const dateFrom = moment().subtract(7, 'days').format();
+    if (hubConnection) {
+      fetchMGCWD(dateFrom);
+    }
+  }, [hubConnection]);
+
+  const fetchGCWD = useCallback(
+    async (date: string) => {
+      let arrList: Collection[] = [];
+      let isFetching = true;
+      let totalNum = 0;
+      if (hubConnection) {
+        while (isFetching) {
+          try {
+            const res = await hubConnection.invoke<RootChange>(
+              'GetMarket',
+              3,
+              date,
+              new Date(),
+              totalNum,
+              100
+            );
+            if (res) {
+              if (arrList.length < res.totalRecords) {
+                totalNum += 100;
+                arrList = [...arrList, ...res.collection];
+              } else {
+                isFetching = false;
+                break;
+              }
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        }
+        setListGCWD(arrList);
+      }
+    },
+    [hubConnection]
+  );
+
+  useEffect(() => {
+    const dateFrom = moment().subtract(7, 'days').format();
+    if (hubConnection) {
+      fetchGCWD(dateFrom);
     }
   }, [hubConnection]);
 

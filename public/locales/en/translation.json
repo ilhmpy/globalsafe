@@ -1,9 +1,9 @@
 {
   "header": {
-    "item1": "About fund",
-    "item2": "Our tariffs",
-    "item3": "About us",
-    "item4": "Contacts"
+    "item1": "Tariffs and programs",
+    "item2": "Lottery",
+    "item3": "Exchanges",
+    "item4": "Rules"
   },
   "themeDark": "Dark theme",
   "themeLight": "Light theme",
@@ -28,9 +28,17 @@
     "goTo": "Go to Activity",
     "login": "Enter login",
     "incorrectLogin": "Login is not correct",
-    "getCode": "To get the code",
-    "repeat": "Request the code again",
-    "over": "in"
+    "incorrectPassword": "Password is not correct",
+    "getCode": "Get the code",
+    "repeat": "Request the code again in",
+    "over": "in",
+    "enter": "Enter",
+    "loginAccount": "Enter account",
+    "authorize": "Authorization",
+    "activityOn": "Activity on",
+    "loginCWD": "Login (cwd.global)",
+    "oneTimeCode": "One time code",
+    "register": "Sign Up"
   },
   "banner": {
     "uptitle": "About fund ",
@@ -265,6 +273,9 @@
     "desc": "Funds will not be debited from your personal account. Please contact your administrator."
   },
   "privateArea": {
+    "convertingSuccess": "Successful conversion",
+    "convertingFail": "Conversion error",
+    "convert2": "Convert",
     "delayed": "Delayed payment",
     "at": "Behind",
     "allTime": "For all the time",
@@ -272,6 +283,7 @@
     "balance": "Balance",
     "newDeposit": "New deposit",
     "withdraw": "Withdraw funds",
+    "converting": "Converting",
     "prevPay": "Previous payout",
     "procentPrevPay": "Percentage of the previous payment",
     "tabs": {
@@ -316,7 +328,14 @@
     "contrAmount": "Contribution amount",
     "blockchainCommision": "Blockchain commision",
     "serviceCommision": "Service commision",
-    "undr": "Understand"
+    "undr": "Understand",
+    "pendingPay": "Deferred payment",
+    "pledge": "Pledge",
+    "toToken": "Exchange to token",
+    "translate": "Exchange",
+    "sumIn": "Amount receivable",
+    "rate": "Exchange rate",
+    "convert": "Conversion amount"
   },
   "alert": {
     "success": "Successfully",
@@ -369,7 +388,7 @@
     "date": "Date",
     "typeWin": "Win type",
     "sumWin": "Winning amount",
-    "winners": "Winners",
+    "winner": "Winner",
     "status": "Status",
     "done": "Done",
     "error": "Error"
@@ -407,7 +426,7 @@
   "line": "line",
   "partnersTitle": "Partners programs",
   "time": {
-    "title": "Start of the drawing in",
+    "title": "The new drawing start in:",
     "days": "days",
     "hours": "hours",
     "minutes": "minutes",
@@ -555,5 +574,14 @@
     "last": "Updated",
     "ago": "ago",
     "now": "now"
-  }
+  },
+  "operations2": {
+    "desc": "Below the extreme representative operations of users, data is updated automatically every 5 minutes",
+    "head1": "Date and time",
+    "head2": "Name of operation",
+    "head3": "Sum (CWD)",
+    "time": "Time",
+    "name": "Name"
+  },
+  "in": "in"
 }

@@ -60,13 +60,13 @@ export const NavAdmin: FC<Props> = ({ onClose, lang }: Props) => {
           {t('sideNav.wallets')}
         </StyledLink>
       </ListItem>
-      <ListItem last>
+      <ListItem>
         <StyledLink to="/" onClick={onClose}>
           {t('sideNav.toHome')}
         </StyledLink>
       </ListItem>
       <Switch>
-        <ListItem mob without>
+        <ListItem mob>
           <SwitchTheme mob onClick={swithTheme}>
             {theme === 'light' ? (
               <div>
@@ -79,7 +79,7 @@ export const NavAdmin: FC<Props> = ({ onClose, lang }: Props) => {
             )}
           </SwitchTheme>
         </ListItem>
-        <ListItem without>
+        <ListItem>
           {lang === 'ru' ? (
             <Languale onClick={() => i18n.changeLanguage('en')}>
               EN

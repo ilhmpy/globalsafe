@@ -38,6 +38,7 @@ export const TestChart: FC<Props> = ({
         enabled: false,
       },
       plotOptions: {
+        borderRadius: 0,
         pie: {
           width: 500,
           donut: {
@@ -299,7 +300,7 @@ export const ColumnChart: FC<PropsColumn> = ({ date, value }: PropsColumn) => {
       },
       plotOptions: {
         bar: {
-          borderRadius: 6,
+          borderRadius: 0,
           columnWidth: '45%',
           distributed: false,
         },
@@ -425,7 +426,7 @@ export const ColumnChartCwd: FC<PropsColumn> = ({ date = [''], value = [''] }: P
       },
       plotOptions: {
         bar: {
-          borderRadius: 6,
+          borderRadius: 0,
           columnWidth: '45%',
           distributed: false,
         },
@@ -475,6 +476,7 @@ export const ColumnChartThree: FC<PropsColumn> = ({ date, value }: PropsColumn) 
       },
       plotOptions: {
         bar: {
+          borderRadius: 0,
           horizontal: false,
           columnWidth: '45%',
           endingShape: 'rounded',
@@ -703,7 +705,7 @@ export const ColumnChartTwo: FC<PropsColumn> = ({ date, value }: PropsColumn) =>
       },
       plotOptions: {
         bar: {
-          borderRadius: 6,
+          borderRadius: 0,
           columnWidth: '45%',
           distributed: false,
         },
@@ -848,7 +850,7 @@ export const ColumnChartAnalitic: FC<PropsColumn> = ({ date, value }: PropsColum
       },
       plotOptions: {
         bar: {
-          borderRadius: 6,
+          borderRadius: 0,
           columnWidth: '45%',
           distributed: false,
         },
@@ -895,6 +897,7 @@ export const RadialBar: FC<RadialProps> = ({
       },
       colors: [color],
       plotOptions: {
+        borderRadius: 0,
         radialBar: {
           hollow: {
             size: size,

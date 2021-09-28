@@ -1,4 +1,4 @@
-import React, { FC, useContext } from "react";
+import React, { FC, useContext } from 'react';
 import {
   HeaderNav,
   List,
@@ -8,13 +8,13 @@ import {
   Languale,
   SwitchTheme,
   Text,
-} from "./Header.elements";
-import { useTranslation } from "react-i18next";
-import usa from "../../assets/svg/usa.svg";
-import ru from "../../assets/svg/russia.svg";
-import { ThemeContext } from "../../context/ThemeContext";
-import { ReactComponent as DarkTheme } from "../../assets/svg/theme.svg";
-import { ReactComponent as LightTheme } from "../../assets/svg/themeLight.svg";
+} from './Header.elements';
+import { useTranslation } from 'react-i18next';
+import usa from '../../assets/svg/usa.svg';
+import ru from '../../assets/svg/russia.svg';
+import { ThemeContext } from '../../context/ThemeContext';
+import { ReactComponent as DarkTheme } from '../../assets/svg/theme.svg';
+import { ReactComponent as LightTheme } from '../../assets/svg/themeLight.svg';
 
 type Props = {
   onClose: () => void;
@@ -40,53 +40,59 @@ export const Nav: FC<Props> = ({
   const swithTheme = themeContext.toggleTheme;
   const theme = themeContext.theme;
 
+  const scrollWidthOffset = (el: any) => {
+    const yCoordinate = el.getBoundingClientRect().top + window.pageYOffset;
+    const yOffset = -80;
+    window.scrollTo({ top: yCoordinate + yOffset, behavior: 'smooth' });
+  };
+
   return (
     <HeaderNav>
       <List>
+        <ListItem>
+          <StyledLink to="/#deposits" onClick={onClose} scroll={(el) => scrollWidthOffset(el)}>
+            {t('header.item1')}
+          </StyledLink>
+        </ListItem>
+        <ListItem>
+          <StyledLink to="/#lottery" onClick={onClose} scroll={(el) => scrollWidthOffset(el)}>
+            {t('header.item2')}
+          </StyledLink>
+        </ListItem>
+        <ListItem>
+          <StyledLink to="/#" onClick={onClose} scroll={(el) => scrollWidthOffset(el)}>
+            {t('header.item3')}
+          </StyledLink>
+        </ListItem>
         <ListItem mob>
-          {location === "/" ? (
-            <LinkButton onClick={handleClick}>
-              {t("headerButton.personalArea")}
-            </LinkButton>
+          <StyledLink to="/#lottery" onClick={onClose}>
+            {t('header.item4')}
+          </StyledLink>
+        </ListItem>
+        <ListItem mob>
+          {location === '/' ? (
+            <LinkButton onClick={handleClick}>{t('headerButton.personalArea')}</LinkButton>
           ) : user ? (
-            <LinkButton onClick={logOut}>{t("logout")}</LinkButton>
+            <LinkButton onClick={logOut}>{t('logout')}</LinkButton>
           ) : (
-            <LinkButton onClick={handleClick}>
-              {t("headerButton.personalArea")}
-            </LinkButton>
+            <LinkButton onClick={handleClick}>{t('headerButton.personalArea')}</LinkButton>
           )}
         </ListItem>
         {admin && (
           <ListItem mob>
             <StyledLink to="/admin" onClick={onClose}>
-              {t("headerButton.admin")}
+              {t('headerButton.admin')}
             </StyledLink>
           </ListItem>
         )}
-
-        <ListItem>
-          <StyledLink to="/#banner" onClick={onClose}>
-            {t("header.item1")}
-          </StyledLink>
-        </ListItem>
-        <ListItem>
-          <StyledLink to="/#tariffs" onClick={onClose}>
-            {t("header.item2")}
-          </StyledLink>
-        </ListItem>
-        <ListItem>
-          <StyledLink to="/#lottery" onClick={onClose}>
-            {t("sideNav.lottery")}
-          </StyledLink>
-        </ListItem>
-        <ListItem>
-          {lang === "ru" ? (
-            <Languale onClick={() => i18n.changeLanguage("en")}>
+        {/* <ListItem>
+          {lang === 'ru' ? (
+            <Languale onClick={() => i18n.changeLanguage('en')}>
               en
               <img src={usa} alt="en" />
             </Languale>
           ) : (
-            <Languale onClick={() => i18n.changeLanguage("ru")}>
+            <Languale onClick={() => i18n.changeLanguage('ru')}>
               ru
               <img src={ru} alt="ru" />
             </Languale>
@@ -94,19 +100,19 @@ export const Nav: FC<Props> = ({
         </ListItem>
         <ListItem>
           <SwitchTheme onClick={swithTheme}>
-            {theme === "light" ? (
+            {theme === 'light' ? (
               <div>
                 <DarkTheme />
-                <Text>{t("themeDark")}</Text>
+                <Text>{t('themeDark')}</Text>
               </div>
             ) : (
               <div>
                 <LightTheme />
-                <Text>{t("themeLight")}</Text>
+                <Text>{t('themeLight')}</Text>
               </div>
             )}
           </SwitchTheme>
-        </ListItem>
+        </ListItem> */}
       </List>
     </HeaderNav>
   );
