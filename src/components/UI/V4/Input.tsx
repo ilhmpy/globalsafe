@@ -46,7 +46,7 @@ export const Input = ({
             /> 
             {error && (
                     <IconBlock>
-                        <Tooltip label={error} direction="right">
+                        <Tooltip label={error} direction="right" revertOnMobile={true}>
                             <ErrorIcon />
                         </Tooltip>
                     </IconBlock>
