@@ -2,7 +2,7 @@
 import 'moment/locale/ru';
 import React, { FC, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { NavLink, Redirect, Route, Switch, useHistory } from 'react-router-dom';
+import { NavLink, Redirect, BrowserRouter as Router, Route, Switch, useHistory } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
 import { ReactComponent as Copy } from '../../assets/svg/copy.svg';
@@ -38,6 +38,7 @@ import { ReactComponent as LogOutIcon } from '../../assets/v2/svg/logOut.svg'
 import { routers } from '../../constantes/routers';
 import { DepositProgram } from './Deposits/DepositProgram';
 import { DepositOpen } from './Deposits/DepositOpen';
+import { HistoryOperations } from "./HistoryOperations";
 
 export const InfoMain: FC = () => {
   const { t } = useTranslation();
@@ -329,6 +330,8 @@ export const InfoMain: FC = () => {
     }
     return color;
   }
+
+  console.log(routers.operations)
   return (
     <>
       {withdrawValueLoad && (
@@ -428,154 +431,24 @@ export const InfoMain: FC = () => {
               <TabNavItem to="/p2p-changes">
                 <div>P2P обмены</div>
               </TabNavItem>
-              <TabNavItem to="/operations-history">
+              <TabNavItem to="/info/operations">
                 <div>История операций</div>
               </TabNavItem>
               <TabNavItem to="/settings">
                 <div>Настройки</div>
               </TabNavItem>
             </TabsBlock>
-
-            {/* <Styled.InfoWrap>
-              <Styled.UserBlock>
-                <Styled.InfoTitle>{user}</Styled.InfoTitle>
-                <Styled.BalanceItem>
-                  <Styled.BalanceItemName>{t('privateArea.balance')}</Styled.BalanceItemName>
-                  <Styled.BalanceItemValue pink>
-                    {balance
-                      ? (balance / 100000).toLocaleString('ru-RU', {
-                          maximumFractionDigits: 5,
-                        })
-                      : '0'}{' '}
-                    CWD
-                  </Styled.BalanceItemValue>
-                </Styled.BalanceItem>
-                <Styled.SmallButtonsWrapDesc>
-                  <Styled.SmallButtonsWrap>
-                    {balanceChips &&
-                      balanceChips.map((i: any, idx: any) => {
-                        let color = '#6DB9FF';
-                        if (i.balanceKind === 9) {
-                          color = '#FF416E';
-                        } else if (i.balanceKind === 10) {
-                          color = '#6DB9FF';
-                        } else if (i.balanceKind === 11) {
-                          color = '#BCD476';
-                        } else if (i.balanceKind === 12) {
-                          color = '#A78CF2';
-                        } else {
-                          color = '#6DB9FF';
-                        }
-
-                        return (
-                          <Styled.SmallButton color={color} key={idx}>
-                            <span>
-                              {i.volume.toLocaleString('ru-RU', {
-                                maximumFractionDigits: 4,
-                              })}
-                            </span>
-                            &nbsp;
-                            {Balance[i.balanceKind]}
-                          </Styled.SmallButton>
-                        );
-                      })}
-                  </Styled.SmallButtonsWrap>
-                </Styled.SmallButtonsWrapDesc>
-              </Styled.UserBlock>
-              <Styled.InfoButtons>
-                <Button
-                  onClick={() => {
-                    setDepositSelect(null);
-                    setAddDepositValue('');
-                    setAddDeposit(true);
-                  }}
-                >
-                  {t('privateArea.newDeposit')}
-                </Button>
-                <Button onClick={() => setSwitchType(!switchType)}>
-                  {t('privateArea.withdraw')}
-                </Button>
-                <Button onClick={() => setOpenConverting(true)}>
-                  {t('privateArea.converting')}
-                </Button>
-              </Styled.InfoButtons>
-              <Styled.SwitchBlock block={switchType}>
-                <Button
-                  onClick={() => {
-                    setToTokenModal(true);
-                    setSwitchType(false);
-                  }}
-                  style={{ width: 130, height: 35 }}
-                >
-                  {t('privateArea.toToken')}
-                </Button>
-                <Button
-                  as="button"
-                  onClick={() => {
-                    setSwitchType(false);
-                    setWithdraw(true);
-                  }}
-                  style={{ width: 130, height: 35 }}
-                >
-                  {t('privateArea.withdraw')}
-                </Button>
-              </Styled.SwitchBlock>
-            </Styled.InfoWrap>
-            <Styled.SmallButtonsWrapMob>
-              <Styled.SmallButtonsWrap>
-                {balanceChips &&
-                  balanceChips.map((i: any, idx: any) => {
-                    let color = '#6DB9FF';
-                    if (i.balanceKind === 9) {
-                      color = '#FF416E';
-                    } else if (i.balanceKind === 10) {
-                      color = '#6DB9FF';
-                    } else if (i.balanceKind === 11) {
-                      color = '#BCD476';
-                    } else if (i.balanceKind === 12) {
-                      color = '#A78CF2';
-                    } else {
-                      color = '#6DB9FF';
-                    }
-
-                    return (
-                      <Styled.SmallButton color={color} key={idx}>
-                        <span>
-                          {i.volume.toLocaleString('ru-RU', {
-                            maximumFractionDigits: 4,
-                          })}
-                        </span>
-                        &nbsp;
-                        {Balance[i.balanceKind]}
-                      </Styled.SmallButton>
-                    );
-                  })}
-              </Styled.SmallButtonsWrap>
-            </Styled.SmallButtonsWrapMob>
-            <Tabs>
-              <Styled.NavTabs to="/info" exact>
-                <div>{t('privateArea.tabs.tab1')}</div>{' '}
-              </Styled.NavTabs>
-              <Styled.NavTabs to={routers.deposits}>
-                <div>{t('privateArea.tabs.tab2')}</div>{' '}
-              </Styled.NavTabs>
-              <Styled.NavTabs to="/info/balance">
-                <div>{t('privateArea.tabs.tab3')}</div>{' '}
-              </Styled.NavTabs>
-            </Tabs> */}
           </PanelCard>
         </DepositsPanelContainer>
 
-
         <Switch>
-          {/* <Route path="/info" component={Info} exact /> */}
-          {/* <Route path="/info/deposits" component={InfoDeposits} exact /> */}
           <Route path={routers.deposits} component={Deposits} exact />
-          <Route path={routers.depositsProgram} component={DepositProgram} exact />
-          <Route path={routers.depositsOpen} component={DepositOpen} exact />
-          <Route path="/info/balance" component={InfoBalance} exact />
+          <Route path={routers.depositsProgram} component={DepositProgram} />
+          <Route path={routers.depositsOpen} component={DepositOpen} />
           <Route path="/info/deposits/:slug" component={OnePage} />
+          <Route path="/info/operations" component={HistoryOperations} />
         </Switch>
+
         <CSSTransition in={depositSuccess} timeout={0} classNames="modal" unmountOnExit>
           <Modal width={540} onClose={() => setDepositSuccess(false)}>
             <Styled.ModalBlock>

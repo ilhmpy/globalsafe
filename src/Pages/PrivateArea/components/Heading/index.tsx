@@ -4,17 +4,20 @@ import * as S from './S.el';
 
 type Props = {
   title: string;
-  btnText: string;
-  onClick: () => void;
+  btnText?: string;
+  onClick?: () => void;
+  withoutBtn?: boolean;
 };
 
-export const Heading: FC<Props> = ({ title, onClick, btnText }: Props) => {
+export const Heading: FC<Props> = ({ title, onClick, btnText, withoutBtn }: Props) => {
   return (
     <S.Container>
       <S.Title>{title}</S.Title>
-      <Button primary onClick={onClick}>
-        {btnText}
-      </Button>
+      {!withoutBtn && (
+        <Button primary onClick={onClick}>
+          {btnText}
+        </Button>
+      )}
     </S.Container>
   );
 };

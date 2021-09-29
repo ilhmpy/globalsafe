@@ -8,11 +8,17 @@ import * as S from './S.el';
 interface FilterProps {
   activeFilter: 'active' | 'archived' | 'hold';
   setActiveFilter: (value: 'active' | 'archived' | 'hold') => void;
+  buttons?: any[];
+  withCustomButtons?: boolean;
+  withoutViewType?: boolean;
 };
 
 export const Filter: FC<FilterProps> = ({
   activeFilter,
   setActiveFilter,
+  buttons,
+  withCustomButtons,
+  withoutViewType
 }) => {
   const [active, setActive] = useState('list');
 
@@ -23,30 +29,48 @@ export const Filter: FC<FilterProps> = ({
   return (
     <S.Container>
       <S.Buttons>
-        <S.Button active={activeFilter === 'active'} onClick={() => setActiveFilter('active')}>
-          Активные
-        </S.Button>
-        <S.Button 
-          active={activeFilter === 'hold'}
-          onClick={() => setActiveFilter('hold')}
-        >
-            С отложенными выплатами
-        </S.Button>
-        <S.Button 
-          active={activeFilter === 'archived'}
-          onClick={() => setActiveFilter('archived')}
-        >
-          В архиве
-        </S.Button>
+        {!withCustomButtons ? (
+          <>
+            <S.Button active={activeFilter === 'active'} onClick={() => setActiveFilter('active')}>
+              Активные
+            </S.Button>
+            <S.Button 
+              active={activeFilter === 'hold'}
+              onClick={() => setActiveFilter('hold')}
+            >
+                С отложенными выплатами
+            </S.Button>
+            <S.Button 
+              active={activeFilter === 'archived'}
+              onClick={() => setActiveFilter('archived')}
+            >
+              В архиве
+            </S.Button>
+          </>
+        ) : (
+          <>
+            {buttons && buttons.map((button, idx) => (
+              <S.Button
+                key={idx}
+                active={activeFilter === button.active}
+                onClick={() => setActiveFilter(button.active)}
+              >
+                {button.text} 
+              </S.Button>
+            ))}
+          </>
+        )}
       </S.Buttons>
-      <S.FilterTypes>
-        <S.FilterTypeList onClick={() => handleActive('list')}>
-          {active === 'list' ? <ListFillIcon /> : <ListIcon />}
-        </S.FilterTypeList>
-        <S.FilterTypeTile onClick={() => handleActive('tile')}>
-          {active === 'tile' ? <TileFillIcon /> : <TileIcon />}
-        </S.FilterTypeTile>
-      </S.FilterTypes>
+      {!withoutViewType && (
+          <S.FilterTypes>
+            <S.FilterTypeList onClick={() => handleActive('list')}>
+              {active === 'list' ? <ListFillIcon /> : <ListIcon />}
+            </S.FilterTypeList>
+            <S.FilterTypeTile onClick={() => handleActive('tile')}>
+              {active === 'tile' ? <TileFillIcon /> : <TileIcon />}
+            </S.FilterTypeTile>
+          </S.FilterTypes>
+      )}
     </S.Container>
   );
 };

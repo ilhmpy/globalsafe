@@ -301,6 +301,7 @@ const TableHead = styled.div<{ item?: boolean; }>`
   @media only screen and (max-device-width: 480px) {
     padding-left: 20px;
     border-radius: 0;
+    height: 38px;
   }
 `;
 
