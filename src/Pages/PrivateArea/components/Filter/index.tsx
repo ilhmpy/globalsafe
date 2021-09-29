@@ -5,9 +5,19 @@ import { ReactComponent as ListFillIcon } from '../../../../assets/v2/svg/listfi
 import { ReactComponent as TileFillIcon } from '../../../../assets/v2/svg/tilefill.svg';
 import * as S from './S.el';
 
-type Props = {};
+interface FilterProps {
+  activeFilter: string;
+  setActiveFilter: (value: string) => void;
+  filterTypesIsShown?: boolean;
+  buttonValues: string[];
+}
 
-export const Filter: FC<Props> = ({}) => {
+export const Filter: FC<FilterProps> = ({
+  activeFilter,
+  setActiveFilter,
+  filterTypesIsShown,
+  buttonValues,
+}: FilterProps) => {
   const [active, setActive] = useState('list');
 
   const handleActive = (type: string) => {
@@ -17,18 +27,22 @@ export const Filter: FC<Props> = ({}) => {
   return (
     <S.Container>
       <S.Buttons>
-        <S.Button active>Активные</S.Button>
-        <S.Button>С отложенными выплатами</S.Button>
-        <S.Button>В архиве</S.Button>
+        {buttonValues.map((value: string, i: number) => (
+          <S.Button key={i} active={activeFilter === value} onClick={() => setActiveFilter(value)}>
+            {value}
+          </S.Button>
+        ))}
       </S.Buttons>
-      <S.FilterTypes>
-        <S.FilterTypeList onClick={() => handleActive('list')}>
-          {active === 'list' ? <ListFillIcon /> : <ListIcon />}
-        </S.FilterTypeList>
-        <S.FilterTypeTile onClick={() => handleActive('tile')}>
-          {active === 'tile' ? <TileFillIcon /> : <TileIcon />}
-        </S.FilterTypeTile>
-      </S.FilterTypes>
+      {filterTypesIsShown && (
+        <S.FilterTypes>
+          <S.FilterTypeList onClick={() => handleActive('list')}>
+            {active === 'list' ? <ListFillIcon /> : <ListIcon />}
+          </S.FilterTypeList>
+          <S.FilterTypeTile onClick={() => handleActive('tile')}>
+            {active === 'tile' ? <TileFillIcon /> : <TileIcon />}
+          </S.FilterTypeTile>
+        </S.FilterTypes>
+      )}
     </S.Container>
   );
 };

@@ -33,6 +33,7 @@ import { InfoBalance } from './InfoBalance';
 import { DepositListModal, TokenModal } from './Modals';
 import { OnePage } from './OnePage';
 import { Settings } from './Settings';
+import { NewPayMethod } from './Settings/NewPayMethod';
 import * as Styled from './Styles.elements';
 
 export const InfoMain: FC = () => {
@@ -413,16 +414,13 @@ export const InfoMain: FC = () => {
               <TabNavItem to="/info" exact>
                 <div>Мои депозиты</div>
               </TabNavItem>
-              <TabNavItem to="/ads">
-                <div>Объявления</div>
+              <TabNavItem to="/p2p-changes">
+                <div>P2P обмены</div>
               </TabNavItem>
-              <TabNavItem to="/certificates">
-                <div>Сертификаты</div>
-              </TabNavItem>
-              <TabNavItem to="/operationsHistory">
+              <TabNavItem to="/operations-history">
                 <div>История операций</div>
               </TabNavItem>
-              <TabNavItem to="/info/settings">
+              <TabNavItem to={routers.settings}>
                 <div>Настройки</div>
               </TabNavItem>
             </TabsBlock>
@@ -430,14 +428,15 @@ export const InfoMain: FC = () => {
         </DepositsPanelContainer>
 
         <Switch>
-          <Route path="/info" component={Info} exact />
+          {/* <Route path="/info" component={Info} exact /> */}
           {/* <Route path="/info/deposits" component={InfoDeposits} exact /> */}
           <Route path={routers.deposits} component={Deposits} exact />
           <Route path={routers.depositsProgram} component={DepositProgram} exact />
           <Route path={routers.depositsOpen} component={DepositOpen} exact />
           <Route path="/info/balance" component={InfoBalance} exact />
           <Route path="/info/deposits/:slug" component={OnePage} exact />
-          <Route path="/info/settings" component={Settings} exact />
+          <Route path={routers.settings} component={Settings} exact />
+          <Route path={routers.settingsNewPayMethod} component={NewPayMethod} exact />
         </Switch>
         <CSSTransition in={depositSuccess} timeout={0} classNames="modal" unmountOnExit>
           <Modal width={540} onClose={() => setDepositSuccess(false)}>
@@ -678,7 +677,7 @@ const PanelInfoBlock = styled.div`
 
 const PanelActionsBlock = styled.div`
   display: flex;
-  align-items-center;
+  align-items: center;
   gap: 20px;
 `;
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import { Container } from '../../globalStyles';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
@@ -7,7 +7,11 @@ import { ReactComponent as Tg } from "../../assets/svg/tg2.svg";
 import { Link } from 'react-scroll';
 import { NavHashLink } from 'react-router-hash-link';
 
-export const Footer = () => {
+type FooterType = {
+  other?: boolean;
+}
+
+export const Footer: FC<FooterType> = ({ other }: FooterType) => {
   const { t } = useTranslation();
 
   const scrollWidthOffset = (el: any) => {
@@ -17,7 +21,7 @@ export const Footer = () => {
   };
 
   return (
-    <FooterBlock>
+    <FooterBlock other={other}>
       <Container>
         <FooterHeader>
           <FooterLogo className="logo" />
@@ -36,7 +40,7 @@ export const Footer = () => {
 };
 
 
-const FooterBlock = styled.footer`
+const FooterBlock = styled.footer<{ other?: boolean; }>`
   width: 100%;
   min-height: 217px;
   max-height: 217px;
@@ -67,6 +71,24 @@ const FooterBlock = styled.footer`
       bottom: 100px;
     }
   }
+
+  ${({ other }) => {
+    if (other) {
+      return `
+        @media only screen and (min-device-width: 320px) and (max-device-width: 429px) {
+          .tg {
+            bottom: 15px;
+          }
+        }
+      
+        @media only screen and (min-device-width: 430px) and (max-device-width: 480px) {
+          .tg {
+            bottom: -126px;
+          }
+        }
+      `;
+    };
+  }}
 `;
 
 const FooterHeader = styled.header`

@@ -1,17 +1,25 @@
 import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import { Switcher } from '../../components/Switcher';
-import { Card, Container } from '../../globalStyles';
+import { Switcher } from '../../../components/Switcher';
+import { routers } from '../../../constantes/routers';
+import { Card, Container } from '../../../globalStyles';
+import { Filter } from '../components/Filter';
+import { Heading } from '../components/Heading';
 
-interface IProps {
-  prop?: any;
-}
+type TableRowType = {
+  method?: string;
+  cardHolder?: string;
+  currency?: string;
+  isActive: boolean;
+};
 
-export const Settings: FC<IProps> = () => {
+export const Settings: FC = () => {
   const { t } = useTranslation();
-
-  const [tableData, setTableData] = useState([
+  const [activeFilter, setActiveFilter] = useState<string>('Все');
+  const history = useHistory();
+  const [tableData, setTableData] = useState<TableRowType[]>([
     {
       method: 'АО «Альфа-Банк»',
       cardHolder: 'VYACHESLAV TROSCHIN',
@@ -70,6 +78,26 @@ export const Settings: FC<IProps> = () => {
 
   return (
     <Container>
+      <Heading
+        onClick={() => history.push(routers.settingsNewPayMethod)}
+        title="Настройки"
+        btnText="Добавить платежный метод"
+      />
+      <Filter
+        activeFilter={activeFilter}
+        setActiveFilter={setActiveFilter}
+        buttonValues={[
+          'Все',
+          'АО «Альфа-Банк»',
+          'АО «Тинькофф Банк»',
+          'ПАО Сбербанк',
+          'ERC 20',
+          'TRC 20',
+          'BEP 20',
+          'Все валюты',
+        ]}
+      />
+
       <TableCard>
         <TableHeader>
           <Ceil>Платежный метод</Ceil>
@@ -78,7 +106,7 @@ export const Settings: FC<IProps> = () => {
           <Ceil>Активность</Ceil>
         </TableHeader>
 
-        {tableData.map((row: any, i: number) => (
+        {tableData.map((row: TableRowType, i: number) => (
           <>
             <TableRow>
               <Ceil>{row.method}</Ceil>
@@ -88,16 +116,11 @@ export const Settings: FC<IProps> = () => {
                 <Switcher
                   onChange={() => {
                     console.log(row.isActive);
-                    setTableData((prev: any) => {
-                      const rest = prev.filter((obj: any, index: number) => index !== i);
-                      const found = prev.find((obj: any, index: number) => index === i);
-                      // console.log('setTableData ~ found', found)
-                      console.log(
-                        'setTableData ~ [...prev, { ...found, isActive: !found.isActive }]',
-                        [...prev, { ...found, isActive: !found?.isActive }]
-                      );
-                      return [...rest, { ...found, isActive: !found?.isActive }];
-                    });
+                    setTableData((prev: TableRowType[]) =>
+                      prev.map((obj: TableRowType, index: number) =>
+                        index === i ? { ...obj, isActive: !obj.isActive } : obj
+                      )
+                    );
                   }}
                   checked={row.isActive}
                 />
@@ -110,6 +133,9 @@ export const Settings: FC<IProps> = () => {
     </Container>
   );
 };
+
+const Hat = styled.div``;
+const Title = styled.p``;
 
 const Ceil = styled.li<{ checked?: boolean }>`
   display: flex;
