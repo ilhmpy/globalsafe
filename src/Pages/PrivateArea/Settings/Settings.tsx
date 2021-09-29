@@ -108,7 +108,7 @@ export const Settings: FC = () => {
 
         {tableData.map((row: TableRowType, i: number) => (
           <>
-            <TableRow>
+            <TableRow onClick={() => history.push(routers.settingsViewPayMethod)}>
               <Ceil>{row.method}</Ceil>
               <Ceil>{row.cardHolder}</Ceil>
               <Ceil>{row.currency}</Ceil>
@@ -179,9 +179,11 @@ const TableRow = styled.ul`
   color: #000000;
   background: #ffffff;
   margin-bottom: 2px;
+  cursor: pointer;
 `;
 
 const TableHeader = styled(TableRow)`
+  cursor: auto;
   font-style: normal;
   font-weight: 300;
   font-size: 14px;

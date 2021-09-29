@@ -34,6 +34,7 @@ import { DepositListModal, TokenModal } from './Modals';
 import { OnePage } from './OnePage';
 import { Settings } from './Settings';
 import { NewPayMethod } from './Settings/NewPayMethod';
+import { ViewPayMethod } from './Settings/ViewPayMethod';
 import * as Styled from './Styles.elements';
 
 export const InfoMain: FC = () => {
@@ -437,6 +438,7 @@ export const InfoMain: FC = () => {
           <Route path="/info/deposits/:slug" component={OnePage} exact />
           <Route path={routers.settings} component={Settings} exact />
           <Route path={routers.settingsNewPayMethod} component={NewPayMethod} exact />
+          <Route path={routers.settingsViewPayMethod} component={ViewPayMethod} exact />
         </Switch>
         <CSSTransition in={depositSuccess} timeout={0} classNames="modal" unmountOnExit>
           <Modal width={540} onClose={() => setDepositSuccess(false)}>

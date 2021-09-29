@@ -5,4 +5,5 @@ export const routers = {
   depositsView: '/info/deposits/view',
   settings: '/info/settings',
   settingsNewPayMethod: '/info/settings/new-pay-method',
+  settingsViewPayMethod: '/info/settings/view-pay-method',
 };
