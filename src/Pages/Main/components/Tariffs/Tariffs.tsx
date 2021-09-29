@@ -179,7 +179,7 @@ export const Tariffs = () => {
 
   return (
     <Page id="tariffs" smallPad>
-      <Container pNone>
+      <Container pNone page>
         <H2 center>{t('partnersTitle')}</H2>
         <PartnersBlock>
           <PartnersHeader>
@@ -215,6 +215,7 @@ const PartnersBlock = styled.div`
 
   @media only screen and (max-device-width: 480px) {
     min-height: 345px;
+    margin-bottom: 20px;
   }
 `;
 
@@ -248,11 +249,14 @@ const PartnersHeaderItem = styled.div`
     font-weight: 700;
     font-size: 12px;
     width: 60px;
+    line-height: 20px;
   }
 
   @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
     width: 160px;
     margin-right: 0px;
+    line-height: 24px;
+    font-size: 18px;
   }
 `;
 
@@ -275,7 +279,7 @@ const PartnersItem = styled.div`
 `;
 
 const PartnersItemTitle = styled.div`
-  font-weight: 500;
+  font-weight: 400;
   font-size: 14px;
   line-height: 20px;
   margin-right: 200px;
@@ -283,6 +287,7 @@ const PartnersItemTitle = styled.div`
   @media only screen and (max-device-width: 480px) {
     font-size: 12px;
     font-weight: 400;
+    line-height: 18px;
   }
 
   @media only screen and (max-device-width: 359px) {
@@ -328,6 +333,8 @@ const PartnersItemData = styled.div`
   }
 
   @media only screen and (max-device-width: 480px) {
+    font-size: 12px;
+    line-height: 18px;
     &:nth-child(2) {
       width: 85px;
     }

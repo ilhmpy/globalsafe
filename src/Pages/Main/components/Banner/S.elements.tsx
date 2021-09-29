@@ -24,7 +24,7 @@ export const DescWrap = styled.div`
     margin-bottom: 20px;
   }
   @media (max-width: 870px) {
-    margin-top: -37px;
+    margin-top: -40px;
   }
   @media (max-width: 576px) {
     margin-top: 0px;

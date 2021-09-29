@@ -116,7 +116,6 @@ export const ChartActiv: FC<Props> = ({
   localStorage.getItem('i18nextLng') === 'ru' ? opt(Highcharts) : opt1(Highcharts);
   moment.locale(localStorage.getItem('i18nextLng') || 'ru');
   const size = useWindowSize();
-
   const data1 = () => {
     if (type === 'GCWD') {
       return data.map((i) => [
@@ -138,7 +137,15 @@ export const ChartActiv: FC<Props> = ({
     }
   };
 
+  const [chartData, setChartData] = useState<number[][]>();
+
+  useEffect(() => {
+    if (!data) return;
+    setChartData(data1());
+  }, [data]);
+
   const [date, setDate] = useState(0);
+
   const [valCWD, setValCWD] = useState(0);
 
   const state = {
@@ -147,16 +154,21 @@ export const ChartActiv: FC<Props> = ({
         {
           data: data1(),
           color: '#0094FF',
-          type: 'line',
+          // type: 'line',
         },
       ],
       chart: {
-        marginLeft: size < 768 ? 0 : 50,
-        marginRight: size < 768 ? 30 : 5,
+        marginLeft: 50,
+        marginRight: 5,
         // backgroundColor: '#F7F8FA',
-        height: size < 768 ? 288 : 345,
+        height: 345,
         // spacingTop: 50,
         spacingBottom: 0,
+        // events: {
+        //   load: function (e: any) {
+        //     e.get('highcharts-navigator-series').show();
+        //   },
+        // },
       },
       legend: {
         enabled: false,
@@ -172,12 +184,6 @@ export const ChartActiv: FC<Props> = ({
         backgroundColor: '#fff',
         // enabled: false,
         formatter: function () {
-          if (size < 767) {
-            setDate((this as any).x);
-            setValCWD((this as any).y);
-            return '';
-          }
-
           return `
           <b style="font-size: 18px; font-weight: bold; line-height: 24px; font-family: 'Roboto', sans-serif; color: #3F3E4E;">${
             (this as any).y
@@ -223,7 +229,7 @@ export const ChartActiv: FC<Props> = ({
         enabled: false,
       },
       navigator: {
-        enabled: size < 768 ? false : true,
+        enabled: true,
         adaptToUpdatedData: false,
         maskFill: 'rgba(0, 148, 255, 0.2)',
         maskInside: true,
@@ -234,12 +240,13 @@ export const ChartActiv: FC<Props> = ({
           borderColor: '#9E9EB8',
         },
         series: {
+          id: 'nav',
           type: 'areaspline',
           fillOpacity: 0.1,
           lineWidth: 0,
         },
         credits: {
-          enabled: false,
+          enabled: true,
         },
         xAxis: {
           gridLineWidth: 0,
@@ -249,16 +256,25 @@ export const ChartActiv: FC<Props> = ({
           lineColor: '#fff',
           gridLineColor: '#FF0000',
           lineWidth: 0,
+          width: '100%',
           labels: {
             style: {
               color: '#888',
             },
             y: -15,
           },
+          dateTimeLabelFormats: {
+            day: '%e  %b',
+          },
         },
         yAxis: {
           lineColor: '#fff',
           gridLineWidth: 0,
+          dateTimeLabelFormats: {
+            day: {
+              main: '%e %b',
+            },
+          },
           plotBands: [
             {
               color: 'rgba(115, 113, 115, 0.2)',
@@ -289,7 +305,7 @@ export const ChartActiv: FC<Props> = ({
       },
       xAxis: {
         ordinal: false,
-        startOnTick: true,
+        startOnTick: false,
         type: 'datetime',
         min: null,
         max: null,
@@ -299,7 +315,6 @@ export const ChartActiv: FC<Props> = ({
         tickColor: '#DCDCE8',
         lineColor: '#F7F8FA',
         dateTimeLabelFormats: {
-          minTickInterval: 24 * 3600 * 1000,
           day: {
             main: '%e %b',
           },
@@ -322,12 +337,19 @@ export const ChartActiv: FC<Props> = ({
         getTimezoneOffset: function (timestamp: any) {
           const zone = 'Europe/Moscow';
           const timezoneOffset = -moment.tz(timestamp, zone).utcOffset();
-
           return timezoneOffset;
         },
       },
     },
   };
+
+  const [dateState, setDateState] = useState<any>({});
+
+  useEffect(() => {
+    setDateState(null);
+    if (!data) return;
+    setDateState(state);
+  }, [data]);
 
   const btns = ['День', 'Месяц', 'Квартал', 'Год', 'Все время'];
 
@@ -372,7 +394,11 @@ export const ChartActiv: FC<Props> = ({
               {changeValue(data)}
             </S.PriceChanges>
             <S.Date>
-              {moment(data[data.length - 1].date).format('DD.MM.YYYY, dddd, HH:mm')} MCK
+              {momenttz
+                .utc(data[data.length - 1].date)
+                .tz('Europe/Moscow')
+                .format('DD.MM.YYYY, dddd, HH:mm')}
+              MCK
             </S.Date>
           </S.PriceChangesWrap>
         );
@@ -389,7 +415,11 @@ export const ChartActiv: FC<Props> = ({
               {changeValue(data)}
             </S.PriceChanges>
             <S.Date>
-              {moment(data[data.length - 1].date).format('DD.MM.YYYY, dddd, HH:mm')} MCK
+              {momenttz
+                .utc(data[data.length - 1].date)
+                .tz('Europe/Moscow')
+                .format('DD.MM.YYYY, dddd, HH:mm')}{' '}
+              MCK
             </S.Date>
           </S.PriceChangesWrap>
         );
@@ -406,7 +436,11 @@ export const ChartActiv: FC<Props> = ({
               {changeValue(data)}
             </S.PriceChanges>
             <S.Date>
-              {moment(data[data.length - 1].date).format('DD.MM.YYYY, dddd, HH:mm')} MCK
+              {momenttz
+                .utc(data[data.length - 1].date)
+                .tz('Europe/Moscow')
+                .format('DD.MM.YYYY, dddd, HH:mm')}{' '}
+              MCK
             </S.Date>
           </S.PriceChangesWrap>
         );
@@ -423,10 +457,35 @@ export const ChartActiv: FC<Props> = ({
               {changeValue(data)}
             </S.PriceChanges>
             <S.Date>
-              {moment(data[data.length - 1].date).format('DD.MM.YYYY, dddd, HH:mm')} MCK
+              {momenttz
+                .utc(data[data.length - 1].date)
+                .tz('Europe/Moscow')
+                .format('DD.MM.YYYY, dddd, HH:mm')}{' '}
+              MCK
             </S.Date>
           </S.PriceChangesWrap>
         );
+    }
+  };
+
+  const returnValues = () => {
+    switch (type) {
+      case 'GCWD':
+        return (data[data.length - 1].latestBid / 100000).toLocaleString('ru-RU', {
+          maximumFractionDigits: 2,
+        });
+      case 'MGCWD':
+        return (data[data.length - 1].latestBid / 100000).toLocaleString('ru-RU', {
+          maximumFractionDigits: 2,
+        });
+      case 'DIAMOND':
+        return (data[data.length - 1].latestBid / 100).toLocaleString('ru-RU', {
+          maximumFractionDigits: 2,
+        });
+      case 'GLOBAL':
+        return (data[data.length - 1].latestBid / 10000).toLocaleString('ru-RU', {
+          maximumFractionDigits: 2,
+        });
     }
   };
 
@@ -448,7 +507,6 @@ export const ChartActiv: FC<Props> = ({
   };
 
   const typeSelected = (str: string) => {
-    console.log('str', str);
     setActive(str);
     setSelected(str);
     if (type === 'GCWD') {
@@ -474,9 +532,22 @@ export const ChartActiv: FC<Props> = ({
           </S.ButtonsList>
           <S.MobTooltips>
             <S.TooltipsDate>
-              {date ? moment(date).format('DD.MM.YYYY, dd, HH:mm') : ''}
+              {date > 1
+                ? momenttz
+                    .utc(moment(date).format('DD.MM.YYYY'))
+                    .tz('Europe/Moscow')
+                    .format('DD.MM.YYYY, dd, HH:mm')
+                : data.length
+                ? momenttz
+                    .utc(data[data.length - 1].date)
+                    .tz('Europe/Moscow')
+                    .format('DD.MM.YYYY, dd, HH:mm')
+                : null}
+              &nbsp; MCK
             </S.TooltipsDate>
-            <S.TooltipsValue>{valCWD ? valCWD.toLocaleString() + ' CWD' : ''}</S.TooltipsValue>
+            <S.TooltipsValue>
+              {valCWD ? valCWD.toLocaleString() : data.length ? returnValues() : 0} CWD
+            </S.TooltipsValue>
           </S.MobTooltips>
           <S.Buttons>
             {btns.map((i) => (
