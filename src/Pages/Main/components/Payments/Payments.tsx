@@ -645,6 +645,7 @@ const WhiteBox = styled.div`
   @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
     padding: 20px;
     padding-top: 25px;
+    min-height: 572px;
   }
 
   @media only screen and (max-device-width: 767px) {
