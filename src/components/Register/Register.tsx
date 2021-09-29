@@ -361,7 +361,8 @@ const AuthCardContainer = styled(Card)`
   justify-content: center;
   padding-top: 40px;
   position: relative;
-  width: 480px;
+  max-width: 480px;
+  width: 100%;
   height: 444px;
   border-radius: 8px;
   background-color: ${props => props.theme.white};
@@ -369,10 +370,10 @@ const AuthCardContainer = styled(Card)`
   box-shadow: none;
 
   @media (max-width: 768px) {
-    width: 500px;
+    max-width: 500px;
   }
   @media (max-width: 425px) {
-    width: 320px;
+    max-width: 320px;
     height: 302px;
     padding-top: 20px;
   }
