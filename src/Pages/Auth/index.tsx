@@ -18,7 +18,7 @@ export const Authentication = () => {
         <UpTitle>{t("headerButton.personalArea")}</UpTitle>
       </Container> */}
       <LoginComponent />
-      <Footer />
+      <Footer other />
     </AuthPage>
   );
 };
@@ -32,7 +32,7 @@ export const Register = () => {
         <UpTitle>{t("headerButton.register")}</UpTitle>
       </Container> */}
       <RegisterComponent />
-      <Footer />
+      <Footer other />
     </AuthPage>
   );
 };
