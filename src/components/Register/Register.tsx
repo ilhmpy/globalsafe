@@ -67,7 +67,7 @@ export const RegisterComponent: FC = () => {
   const singIn = () => {
     if (hubConnection) {
       hubConnection
-        .invoke('SignIn', { login: value, password: password, signInMethod: 3 })
+        .invoke('SignIn', { login: value, password: password.replace(/\s/g, ""), signInMethod: 3 })
         .then((res: any) => {
           setTryCode((tryCode) => tryCode + 1);
           localStorage.setItem('time', moment().toISOString());

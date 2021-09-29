@@ -9,7 +9,7 @@ type Props = {
 };
 
 export const Button = styled.a<Props>`
-  padding: 12px 20px 11px;
+  padding: 11px 20px 11px;
   display: inline-block;
   text-align: center;
   text-decoration: none;
