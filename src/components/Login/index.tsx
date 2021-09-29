@@ -87,7 +87,6 @@ export const LoginComponent = () => {
     setError(true);
 
     let val = e.target.value;
-    console.log("robert", val)
 
     if(e.target.value.length >= 4 && password.length < 4) {
       val = [val.slice(0, 3), ' ', val.slice(3)].join('')
@@ -147,7 +146,7 @@ export const LoginComponent = () => {
   const singIn = () => {
     if (hubConnection) {
       hubConnection
-        .invoke('SignIn', { login: value, password: password, signInMethod: 3 })
+        .invoke('SignIn', { login: value, password: password.replace(/\s/g, ""), signInMethod: 3 })
         .then((res: any) => {
           // console.log("SignIn res", res);
           setTryCode((tryCode) => tryCode + 1);

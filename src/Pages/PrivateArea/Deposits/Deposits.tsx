@@ -8,7 +8,6 @@ import { Back } from '../components/Back';
 import { Filter } from '../components/Filter';
 import { Heading } from '../components/Heading';
 import { OpenDeposit } from '../components/OpenDeposits';
-import { Program } from '../components/Program';
 import { ShowDeposit } from '../components/ShowDeposit';
 import { Table } from '../components/Table';
 import { TableHistory } from '../components/Table/History';
@@ -24,11 +23,10 @@ import { CloseDepositError } from '../components/Modals/CloseDepositError';
 import { AppContext } from '../../../context/HubContext';
 import { Collection, RootList } from '../../../types/info';
 
-
 export const Deposits = () => {
   const [openModal, setOpenModal] = useState(false);
   const [depositsList, setDepositsList] = useState<Collection[]>([]);
-  const [getDepositsLoading, setGetDepositsLoading] = useState(false);
+  const [getDepositsLoading, setGetDepositsLoading] = useState(true);
   const [depositsTotalCount, setDepositsTotalCount] = useState(0);
   const [depositsListHasMore, setDepositsListHasMore] = useState(true);
   const [skip, setSkip] = useState(0);
@@ -56,7 +54,7 @@ export const Deposits = () => {
       return [4];
     }
     if(key === 'hold') {
-      return [];
+      return [2];
     }
   }
 
@@ -80,17 +78,14 @@ export const Deposits = () => {
         sorting
       )
         .then((res) => {
-            console.log("GetUserDeposits res", res);
-            console.log("GetUserDeposits res.collection", res.collection);
-            console.log("GetUserDeposits res.totalRecords", res.totalRecords);
-            setDepositsList(state => [...state, ...res.collection]);
-            setDepositsTotalCount(res.totalRecords);
-           
-            setSkip((state) => state + 20);
-
-          if(res.totalRecords === res.collection.length) {
+          if(res.totalRecords === [...depositsList, ...res.collection].length) {
             setDepositsListHasMore(false);
           }
+          setDepositsList(state => [...state, ...res.collection]);
+          setDepositsTotalCount(res.totalRecords);
+          
+          setSkip((state) => state + 20);
+  
         })
         .catch((err: Error) => {
           console.log(err)
@@ -102,7 +97,7 @@ export const Deposits = () => {
   }, [hubConnection, activeFilter, languale]);
 
 
-  //   Task<CollectionResult> GetUserDeposits(DepositState[] states, long skip, long take, QuerySorting[] sorting)
+  //   Task<CollectionResult> GetUserDeposits(DepositState[] states, bool | null isInstant, long skip, long take, QuerySorting[] sorting)
   // фильтрация по полю state в параметре states
   // public enum DepositState
   // {
@@ -128,9 +123,7 @@ export const Deposits = () => {
   //     PaymentConfirmation,
   // }
   const handleGetDepositsList = () => {
-    setDepositsListHasMore(false)
     if (hubConnection && depositsList.length < depositsTotalCount) {
-      setGetDepositsLoading(true);
       hubConnection
       .invoke<RootList>(
         'GetUserDeposits', 
@@ -144,7 +137,6 @@ export const Deposits = () => {
           if(res.collection.length) {
             setDepositsList(state => [...state, ...res.collection]);
             setDepositsTotalCount(res.totalRecords);
-            console.log("GetUserDeposits res.collection", res.collection);
             setSkip((state) => state + 20);
           }
 
@@ -153,10 +145,32 @@ export const Deposits = () => {
         .catch((err: Error) => {
           console.log(err)
         })
-        .finally(() => {
-          setGetDepositsLoading(false);
-        });
     }
+  };
+
+
+  if(getDepositsLoading) {
+    return (
+      <S.Container>
+        <Container>
+          <S.NotDeposits>
+            Загрузка...
+          </S.NotDeposits>
+        </Container>
+      </S.Container>
+    )
+  };
+
+  if(depositsList.length === 0) {
+    return (
+      <S.Container>
+        <Container>
+          <S.NotDeposits>
+              У вас пока нет депозитов. Откройте свой первый депозит !
+          </S.NotDeposits>
+        </Container>
+      </S.Container>
+    )
   };
 
   return (
@@ -172,24 +186,18 @@ export const Deposits = () => {
         <Filter activeFilter={activeFilter} setActiveFilter={setActiveFilter} /> 
       </Container>
       <Container>
-        <Scrollbars style={{ height: '500px' }}>
-            {!getDepositsLoading ? (
+        <Scrollbars style={{ height: '240px' }}>
+          {depositsList.length > 0 &&
               <InfiniteScroll
-                pageStart={0}
-                loadMore={handleGetDepositsList}
-                hasMore={depositsListHasMore}
-                useWindow={false}
-                loader={
-                  <div className="loader" key={0}>
-                    Loading ...
-                  </div>
-                }
-              >
-                <Table depositsList={depositsList} />
+                  pageStart={0}
+                  loadMore={handleGetDepositsList}
+                  hasMore={depositsListHasMore}
+                  useWindow={false}
+                >
+                  <Table depositsList={depositsList} />
               </InfiniteScroll>
-            ) : null}
-          </Scrollbars>
-        
+          }
+        </Scrollbars>
       </Container>
       {/* <Container>
         <Back text="Назад" onClick={() => undefined} />
