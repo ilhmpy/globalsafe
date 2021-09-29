@@ -332,7 +332,6 @@ export const LoginComponent = () => {
 };
 
 
-
 const AuthContainer = styled(Container)`
   justify-content: flex-start;
   flex: 1;
@@ -345,7 +344,7 @@ const AuthContainer = styled(Container)`
     padding-top: 80px;
   }
   @media (max-width: 425px) {
-    padding-top: 80px;
+    padding-top: 20px;
   }
 `;
 
