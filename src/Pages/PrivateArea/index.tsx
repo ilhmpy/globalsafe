@@ -2,11 +2,12 @@
 import 'moment/locale/ru';
 import React, { FC, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { NavLink, Redirect, Route, Switch, useHistory } from 'react-router-dom';
+import { NavLink, Route, Switch, useHistory } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
 import { ReactComponent as Copy } from '../../assets/svg/copy.svg';
-import { Button } from '../../components/Button/V2/Button';
+import { ReactComponent as LockIcon } from '../../assets/v2/svg/lock.svg';
+import { ReactComponent as LogOutIcon } from '../../assets/v2/svg/logOut.svg';
 // import { Button } from '../../components/Button/Button';
 import { Header } from '../../components/Header/Header';
 import { Modal } from '../../components/Modal/Modal';
@@ -15,29 +16,24 @@ import { Select } from '../../components/Select/Select4';
 import { Tooltip } from '../../components/Tooltips/Tooltips';
 import { Input } from '../../components/UI/Input';
 import { Loading } from '../../components/UI/Loading';
-import { Tabs } from '../../components/UI/Tabs';
-import { UpTitle } from '../../components/UI/UpTitle';
 import { Chip, SecondaryButton } from '../../components/UI/V4';
+import { routers } from '../../constantes/routers';
 import { AppContext } from '../../context/HubContext';
 import { Card, Container } from '../../globalStyles';
 import { Balance, Notify } from '../../types/balance';
 import { Commisions, DepositsCollection, RootDeposits } from '../../types/info';
-import { Deposits } from './Deposits/Deposits';
 import { ConvertingModalSuccess } from './ConveringSuccessModal';
 import { ConvertingModal } from './ConvertingModal';
 import { ConvertingModalFail } from './ConvertingModalFail';
-
+import { DepositOpen } from './Deposits/DepositOpen';
+import { DepositProgram } from './Deposits/DepositProgram';
+import { Deposits } from './Deposits/Deposits';
 import { Info } from './Info';
 import { InfoBalance } from './InfoBalance';
-import { InfoDeposits } from './InfoDeposits';
 import { DepositListModal, TokenModal } from './Modals';
 import { OnePage } from './OnePage';
+import { Settings } from './Settings';
 import * as Styled from './Styles.elements';
-import { ReactComponent as LockIcon } from '../../assets/v2/svg/lock.svg'
-import { ReactComponent as LogOutIcon } from '../../assets/v2/svg/logOut.svg'
-import { routers } from '../../constantes/routers';
-import { DepositProgram } from './Deposits/DepositProgram';
-import { DepositOpen } from './Deposits/DepositOpen';
 
 export const InfoMain: FC = () => {
   const { t } = useTranslation();
@@ -308,7 +304,7 @@ export const InfoMain: FC = () => {
   // Get balance Chip Color
   const getChipColor = (i: any) => {
     let color = '#E0F8FF';
-    if(i.balanceKind === 1) {
+    if (i.balanceKind === 1) {
       color = '#FFF4D9';
     } else if (i.balanceKind === 9) {
       color = '#FF416E';
@@ -328,7 +324,7 @@ export const InfoMain: FC = () => {
       color = '#E0F8FF';
     }
     return color;
-  }
+  };
   return (
     <>
       {withdrawValueLoad && (
@@ -357,10 +353,6 @@ export const InfoMain: FC = () => {
 
       <Header />
       <Styled.Page>
-        {/* <Container>
-          <UpTitle>{t('privateArea.uptitle')}</UpTitle>
-        </Container> */}
-
         <DepositsPanelContainer>
           <PanelTitleBlock>
             <H4>Личный кабинет</H4>
@@ -375,49 +367,45 @@ export const InfoMain: FC = () => {
                 <BalanceInfoText>Баланс аккаунта:</BalanceInfoText>
                 <BalanceValueText>
                   {balance
-                      ? (balance / 100000).toLocaleString('ru-RU', {
-                          maximumFractionDigits: 5,
-                        })
-                      : '0'}{' '}
-                    CWD
+                    ? (balance / 100000).toLocaleString('ru-RU', {
+                        maximumFractionDigits: 5,
+                      })
+                    : '0'}{' '}
+                  CWD
                 </BalanceValueText>
               </PanelInfoBlock>
               <PanelActionsBlock>
-                  <SecondaryButton 
-                    title={'Конвертация'}
-                    // eslint-disable-next-line
-                    onClick={() => {}}
-                  />
-                  <SecondaryButton 
-                    title={'Пополнить баланс'}
-                    // eslint-disable-next-line
-                    onClick={() => {}}
-                  />
-                   <SecondaryButton 
-                    title={'Вывести средства'}
-                    // eslint-disable-next-line
-                    onClick={() => {}}
-                  />
+                <SecondaryButton title={'Конвертация'} onClick={() => setOpenConverting(true)} />
+                <SecondaryButton
+                  title={'Пополнить баланс'}
+                  // eslint-disable-next-line
+                  onClick={() => {}}
+                />
+                <SecondaryButton
+                  title={'Вывести средства'}
+                  // eslint-disable-next-line
+                  onClick={() => {}}
+                />
               </PanelActionsBlock>
             </PanelHeader>
             <BalanceChipsBlock>
               {balanceChips &&
-                  balanceChips.map((i: any, idx: number) => {
-                    return (
-                      <Chip
-                        key={`chip-item-${idx}`}
-                        leftIcon={() => <LockIcon />}
-                        bgColor={getChipColor(i)}
-                      >
-                         <span>
-                          {i.volume.toLocaleString('ru-RU', {
-                            maximumFractionDigits: 4,
-                          })}
-                        </span>
-                        &nbsp;
-                        {Balance[i.balanceKind]}
-                      </Chip>
-                    );
+                balanceChips.map((i: any, idx: number) => {
+                  return (
+                    <Chip
+                      key={`chip-item-${idx}`}
+                      leftIcon={() => <LockIcon />}
+                      bgColor={getChipColor(i)}
+                    >
+                      <span>
+                        {i.volume.toLocaleString('ru-RU', {
+                          maximumFractionDigits: 4,
+                        })}
+                      </span>
+                      &nbsp;
+                      {Balance[i.balanceKind]}
+                    </Chip>
+                  );
                 })}
             </BalanceChipsBlock>
 
@@ -434,141 +422,12 @@ export const InfoMain: FC = () => {
               <TabNavItem to="/operationsHistory">
                 <div>История операций</div>
               </TabNavItem>
-              <TabNavItem to="/settings">
+              <TabNavItem to="/info/settings">
                 <div>Настройки</div>
               </TabNavItem>
             </TabsBlock>
-
-            {/* <Styled.InfoWrap>
-              <Styled.UserBlock>
-                <Styled.InfoTitle>{user}</Styled.InfoTitle>
-                <Styled.BalanceItem>
-                  <Styled.BalanceItemName>{t('privateArea.balance')}</Styled.BalanceItemName>
-                  <Styled.BalanceItemValue pink>
-                    {balance
-                      ? (balance / 100000).toLocaleString('ru-RU', {
-                          maximumFractionDigits: 5,
-                        })
-                      : '0'}{' '}
-                    CWD
-                  </Styled.BalanceItemValue>
-                </Styled.BalanceItem>
-                <Styled.SmallButtonsWrapDesc>
-                  <Styled.SmallButtonsWrap>
-                    {balanceChips &&
-                      balanceChips.map((i: any, idx: any) => {
-                        let color = '#6DB9FF';
-                        if (i.balanceKind === 9) {
-                          color = '#FF416E';
-                        } else if (i.balanceKind === 10) {
-                          color = '#6DB9FF';
-                        } else if (i.balanceKind === 11) {
-                          color = '#BCD476';
-                        } else if (i.balanceKind === 12) {
-                          color = '#A78CF2';
-                        } else {
-                          color = '#6DB9FF';
-                        }
-
-                        return (
-                          <Styled.SmallButton color={color} key={idx}>
-                            <span>
-                              {i.volume.toLocaleString('ru-RU', {
-                                maximumFractionDigits: 4,
-                              })}
-                            </span>
-                            &nbsp;
-                            {Balance[i.balanceKind]}
-                          </Styled.SmallButton>
-                        );
-                      })}
-                  </Styled.SmallButtonsWrap>
-                </Styled.SmallButtonsWrapDesc>
-              </Styled.UserBlock>
-              <Styled.InfoButtons>
-                <Button
-                  onClick={() => {
-                    setDepositSelect(null);
-                    setAddDepositValue('');
-                    setAddDeposit(true);
-                  }}
-                >
-                  {t('privateArea.newDeposit')}
-                </Button>
-                <Button onClick={() => setSwitchType(!switchType)}>
-                  {t('privateArea.withdraw')}
-                </Button>
-                <Button onClick={() => setOpenConverting(true)}>
-                  {t('privateArea.converting')}
-                </Button>
-              </Styled.InfoButtons>
-              <Styled.SwitchBlock block={switchType}>
-                <Button
-                  onClick={() => {
-                    setToTokenModal(true);
-                    setSwitchType(false);
-                  }}
-                  style={{ width: 130, height: 35 }}
-                >
-                  {t('privateArea.toToken')}
-                </Button>
-                <Button
-                  as="button"
-                  onClick={() => {
-                    setSwitchType(false);
-                    setWithdraw(true);
-                  }}
-                  style={{ width: 130, height: 35 }}
-                >
-                  {t('privateArea.withdraw')}
-                </Button>
-              </Styled.SwitchBlock>
-            </Styled.InfoWrap>
-            <Styled.SmallButtonsWrapMob>
-              <Styled.SmallButtonsWrap>
-                {balanceChips &&
-                  balanceChips.map((i: any, idx: any) => {
-                    let color = '#6DB9FF';
-                    if (i.balanceKind === 9) {
-                      color = '#FF416E';
-                    } else if (i.balanceKind === 10) {
-                      color = '#6DB9FF';
-                    } else if (i.balanceKind === 11) {
-                      color = '#BCD476';
-                    } else if (i.balanceKind === 12) {
-                      color = '#A78CF2';
-                    } else {
-                      color = '#6DB9FF';
-                    }
-
-                    return (
-                      <Styled.SmallButton color={color} key={idx}>
-                        <span>
-                          {i.volume.toLocaleString('ru-RU', {
-                            maximumFractionDigits: 4,
-                          })}
-                        </span>
-                        &nbsp;
-                        {Balance[i.balanceKind]}
-                      </Styled.SmallButton>
-                    );
-                  })}
-              </Styled.SmallButtonsWrap>
-            </Styled.SmallButtonsWrapMob>
-            <Tabs>
-              <Styled.NavTabs to="/info" exact>
-                <div>{t('privateArea.tabs.tab1')}</div>{' '}
-              </Styled.NavTabs>
-              <Styled.NavTabs to={routers.deposits}>
-                <div>{t('privateArea.tabs.tab2')}</div>{' '}
-              </Styled.NavTabs>
-              <Styled.NavTabs to="/info/balance">
-                <div>{t('privateArea.tabs.tab3')}</div>{' '}
-              </Styled.NavTabs>
-            </Tabs> */}
           </PanelCard>
         </DepositsPanelContainer>
-
 
         <Switch>
           <Route path="/info" component={Info} exact />
@@ -577,7 +436,8 @@ export const InfoMain: FC = () => {
           <Route path={routers.depositsProgram} component={DepositProgram} exact />
           <Route path={routers.depositsOpen} component={DepositOpen} exact />
           <Route path="/info/balance" component={InfoBalance} exact />
-          <Route path="/info/deposits/:slug" component={OnePage} />
+          <Route path="/info/deposits/:slug" component={OnePage} exact />
+          <Route path="/info/settings" component={Settings} exact />
         </Switch>
         <CSSTransition in={depositSuccess} timeout={0} classNames="modal" unmountOnExit>
           <Modal width={540} onClose={() => setDepositSuccess(false)}>
@@ -712,7 +572,6 @@ export const InfoMain: FC = () => {
                         </Styled.ModalButton>
                       </>
                     ) : null}
-                    {/* {console.log(depositSelect)} */}
                     {depositSelect && depositSelect.priceKind && asset ? (
                       <Styled.Warning choice>
                         {t('depositSelect.willActiv')}&nbsp;{' '}
@@ -740,25 +599,6 @@ export const InfoMain: FC = () => {
                       </Styled.Warning>
                     ) : null}
                   </div>
-                  {/* {depositSelect ? (
-                    <Styled.Conditions>
-                      <p
-                        dangerouslySetInnerHTML={{
-                          __html: depositSelect.description,
-                        }}
-                      />
-                      {!balanceAsset && (
-                        <Styled.ToLink
-                          target="_blank"
-                          href={`https://backup.cwd.global/shopping/payment?to_name=${depositSelect.account}&amount=${depositSelect.minAmount}`}
-                        >
-                          Приобрести
-                        </Styled.ToLink>
-                      )}
-                    </Styled.Conditions>
-                  ) : (
-                    ""
-                  )} */}
                 </Styled.ModalDeposits>
               </Modal>
             </Styled.ModalDepositsWrap>
@@ -779,7 +619,6 @@ export const InfoMain: FC = () => {
   );
 };
 
-
 const DepositsPanelContainer = styled(Container)`
   display: flex;
   flex-direction: column;
@@ -794,7 +633,7 @@ const PanelTitleBlock = styled.div`
 `;
 
 const H4 = styled.h4`
-  color: ${props => props.theme.titles};
+  color: ${(props) => props.theme.titles};
   font-weight: 700;
   font-size: 36px;
   line-height: 42px;
@@ -844,7 +683,7 @@ const PanelActionsBlock = styled.div`
 `;
 
 const BalanceInfoText = styled.div`
-  color: ${props => props.theme.titles};
+  color: ${(props) => props.theme.titles};
   font-weight: 400;
   font-size: 14px;
   line-height: 16px;
@@ -852,19 +691,19 @@ const BalanceInfoText = styled.div`
 `;
 
 const BalanceValueText = styled.div`
-  color: ${props => props.theme.titles};
+  color: ${(props) => props.theme.titles};
   font-weight: 700;
   font-size: 24px;
   line-height: 28px;
 `;
 
 const BalanceChipsBlock = styled.div`
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #EBEBF2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #ebebf2;
 `;
 
 const TabsBlock = styled.div`
@@ -874,7 +713,7 @@ const TabsBlock = styled.div`
 `;
 
 const TabNavItem = styled(NavLink)`
-  color: ${props => props.theme.black};
+  color: ${(props) => props.theme.black};
   opacity: 0.6;
   font-size: 14px;
   line-height: 16px;
@@ -884,6 +723,6 @@ const TabNavItem = styled(NavLink)`
     font-weight: 500;
     opacity: 1;
 
-    border-bottom: 2px solid ${props => props.theme.blue};
+    border-bottom: 2px solid ${(props) => props.theme.blue};
   }
 `;
