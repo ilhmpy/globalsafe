@@ -39,6 +39,7 @@ import { routers } from '../../constantes/routers';
 import { DepositProgram } from './Deposits/DepositProgram';
 import { DepositOpen } from './Deposits/DepositOpen';
 import { HistoryOperations } from "./HistoryOperations";
+import { Footer } from "../../components/Footer/Footer";
 
 export const InfoMain: FC = () => {
   const { t } = useTranslation();
@@ -331,7 +332,6 @@ export const InfoMain: FC = () => {
     return color;
   }
 
-  console.log(routers.operations)
   return (
     <>
       {withdrawValueLoad && (
@@ -448,6 +448,7 @@ export const InfoMain: FC = () => {
           <Route path="/info/deposits/:slug" component={OnePage} />
           <Route path="/info/operations" component={HistoryOperations} />
         </Switch>
+        <Footer />
 
         <CSSTransition in={depositSuccess} timeout={0} classNames="modal" unmountOnExit>
           <Modal width={540} onClose={() => setDepositSuccess(false)}>
