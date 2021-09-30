@@ -1,13 +1,13 @@
 import { FC } from 'react';
-import { routers } from '../../../constantes/routers';
-import { Card, Container } from '../../../globalStyles';
-import { Back } from '../components/Back';
-import { useHistory } from 'react-router-dom';
-import { Title } from '../components/ui/Title';
-import styled from 'styled-components';
-import { Switcher } from '../../../components/Switcher';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
+import styled from 'styled-components';
 import { Button } from '../../../components/Button/V2/Button';
+import { Switcher } from '../../../components/Switcher';
+import { routers } from '../../../constantes/routers';
+import { Container } from '../../../globalStyles';
+import { Back } from '../components/Back';
+import { Title } from '../components/ui/Title';
 
 export const ViewPayMethod: FC = () => {
   const { t } = useTranslation();

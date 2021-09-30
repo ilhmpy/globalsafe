@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import { Container } from '../../../../components/UI/Container';
-import { H2 } from '../../../../components/UI/Heading';
+import { H2 } from '../../../../components/UI/Heading'; 
 import { UpTitle } from '../../../../components/UI/UpTitle';
 import { Button } from '../../../../components/Button/Button';
 import {
@@ -178,7 +178,6 @@ export const Tariffs = () => {
   };
 
   return (
-    <Page id="tariffs" smallPad>
       <Container pNone page>
         <H2 center>{t('partnersTitle')}</H2>
         <PartnersBlock>
@@ -197,7 +196,6 @@ export const Tariffs = () => {
           ))}
         </PartnersBlock>
       </Container>
-    </Page>
   );
 };
 

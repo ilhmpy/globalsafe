@@ -11,16 +11,15 @@ import 'swiper/swiper.scss';
 import { ReactComponent as Refresh } from '../../../../assets/svg/refresh.svg';
 import { Button } from '../../../../components/Button/Button';
 import { RadialBar } from '../../../../components/Charts/Test';
-import { Modal } from '../../../../components/Modal/Modal';
+import { Modal } from '../../../../components/Modal/Modal'; 
 import { Input } from '../../../../components/UI/Input';
-import { H2 } from '../../../../components/UI/Heading';
+import { H2 } from '../../../../components/UI/MainStyled';
 import { Page } from '../../../../components/UI/Page';
 import { AppContext } from '../../../../context/HubContext';
-import { Card } from '../../../../globalStyles';
-import { Container } from '../../../../components/UI/Container';
+import { Card, Container } from '../../../../globalStyles';
 import { Pokedex, RootPayDeposit } from '../../../../types/payouts';
 import { ModalBlock, ModalTitle } from '../Tariffs/Tariffs.elements';
-import { ReactComponent as Reload } from '../../../../assets/svg/reload.svg';
+import { ReactComponent as Reload } from "../../../../assets/svg/reload.svg";
 import { AnyMxRecord } from 'dns';
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
@@ -172,7 +171,7 @@ const RadialComponent: FC<RadialComponentProps> = ({ data, height }: RadialCompo
 };
 
 export const Payments: FC = () => {
-  const [statsDeposit, setStatsDeposit] = useState<RootPayDeposit[]>([]);
+  const [statsDeposit, setStatsDeposit] = useState<RootPayDeposit[]>([]); 
   const [bigArr, setBigArr] = useState<any>([]);
   const [smallArr, setSmallArr] = useState<any>([]);
   const [loadReset, setLoadReset] = useState(false);
@@ -189,7 +188,7 @@ export const Payments: FC = () => {
   const languale = lang === 'ru' ? 1 : 0;
 
   const stats = useCallback(() => {
-    localStorage.removeItem('last');
+    localStorage.removeItem("last");
     const newStats = statsDeposit.map((i) => {
       const color =
         '#' +
@@ -217,6 +216,8 @@ export const Payments: FC = () => {
     setSmallArr(newArrayMob);
   }, [statsDeposit]);
 
+
+
   useEffect(() => {
     stats();
   }, [stats]);
@@ -242,7 +243,7 @@ export const Payments: FC = () => {
     }
   };
 
-  const [last, setLast] = useState(localStorage.getItem('last') || '');
+  const [last, setLast] = useState(localStorage.getItem("last") || "");
   const [lastTime, setLastTime] = useState<string | null>(null);
   const [timeInterval, setTimeInterval] = useState<any>();
   const [actualDate, setActualDate] = useState(new Date());
@@ -250,132 +251,90 @@ export const Payments: FC = () => {
   function lastUpdate() {
     stats();
     clearInterval(timeInterval);
-    setTimeInterval(setInterval(() => update(), 60000));
+    setTimeInterval(setInterval(() => update(), 60000)); 
     const date = new Date();
-    const newDate = {
-      time: { hours: date.getHours(), minutes: date.getMinutes() },
-      date: { day: date.getDate(), month: date.getMonth() + 1, year: date.getFullYear() },
-    };
-    localStorage.setItem('last', JSON.stringify(newDate));
+    const newDate = { time: { hours: date.getHours(), minutes: date.getMinutes() }, date: { day: date.getDate(), month: date.getMonth() + 1, year: date.getFullYear()}};
+    localStorage.setItem("last", JSON.stringify(newDate));
     getLastUpdate(newDate);
     const update = () => {
-      console.log('yes');
       getLastUpdate(newDate);
     };
-  }
+  };
 
   function getLastUpdate(last: any) {
-    const currentDate = new Date();
     const updateTime = last;
-
-    if (updateTime.date.year == currentDate.getFullYear()) {
-      if (updateTime.date.month == currentDate.getMonth() + 1) {
-        if (updateTime.date.day == currentDate.getDate()) {
-          const time =
-            currentDate.getHours() * 60 +
-            currentDate.getMinutes() -
-            (updateTime.time.hours * 60 + updateTime.time.minutes);
-          if (time >= 60) {
-            return setLastTime(`${Math.floor(time / 60)} часов`);
-          } else {
-            if (time > 0) {
-              setLastTime(`${time} минут`);
-            } else {
-              setLastTime(null);
-            }
-          }
-        } else {
-          setActualDate(new Date());
-          return setLastTime(`${currentDate.getDate() - updateTime.date.day} дней`);
-        }
-      } else {
-        setActualDate(new Date());
-        return setLastTime(`${currentDate.getMonth() + 1 - updateTime.date.month} месяцев`);
-      }
-    } else {
-      setActualDate(new Date());
-      return setLastTime(`${currentDate.getFullYear() - updateTime.date.year} лет`);
-    }
-  }
+    const time = moment(
+      new Date(updateTime.date.year, updateTime.date.month - 1, updateTime.date.day, updateTime.time.hours, updateTime.time.minutes))
+      .fromNow(true);
+    setActualDate(new Date());
+    setLastTime(time);
+  };
 
   return (
-    <Container page pNone>
+    <Page abs>
       {statsDeposit.length ? (
         <>
+        <Container>
           <H2 center>{t('payments.currPay')}</H2>
-          <WhiteBox>
-            <WhiteIntf>
-              <Title>
-                {t('payments2.actual')} {moment(actualDate).format('DD.MM.YYYY')}
-              </Title>
-              <Title right>
-                {t('payments2.last')}{' '}
-                {lastTime != null ? (
+        </Container>
+      <Container>
+      <WhiteBox>
+        <WhiteIntf>
+          <Title>{t("payments2.actual")} {moment(actualDate).format("DD.MM.YYYY")}</Title>
+          <Title right>
+            {t("payments2.last")} {lastTime != null ? ( <> {lastTime} {t("payments2.ago")} </> ) : t("payments2.now")} <Reload style={{ cursor: "pointer" }} onClick={() => lastUpdate()} />
+          </Title> 
+        </WhiteIntf>
+        <WhiteMap>
+          {isMobile ? (
+            <>
+              <Swiper spaceBetween={10} slidesPerView={1} pagination={{ clickable: true }}>
+                  {smallArr.map((i: any, idx: number) => (
+                    <SwiperSlide key={idx}>                                       
+                      <>
+                        {i.map((item: any, idx: any) => (
+                          <WhiteItem key={idx}>
+                            <WhiteItemText>{item.deposit.name}</WhiteItemText>
+                            <WhiteItemText bold>{(item.procent).toFixed(0)} %</WhiteItemText>
+                            <WhiteItemText>{moment(item.date).format("DD.MM.YYYY")}</WhiteItemText>
+                            <WhiteItemLine procent={(item.procent).toFixed(0)} />
+                          </WhiteItem>
+                        ))}
+                      </>
+                    </SwiperSlide>
+                  ))}
+              </Swiper>
+            </>
+          ) : (
+            <>
+              {statsDeposit.length ? (
                   <>
-                    {' '}
-                    {lastTime} {t('payments2.ago')}{' '}
-                  </>
-                ) : (
-                  t('payments2.now')
-                )}{' '}
-                <Reload style={{ cursor: 'pointer' }} onClick={() => lastUpdate()} />
-              </Title>
-            </WhiteIntf>
-            <WhiteMap>
-              {isMobile ? (
-                <>
-                  <Swiper spaceBetween={10} slidesPerView={1} pagination={{ clickable: true }}>
-                    {smallArr.map((i: any, idx: number) => (
-                      <SwiperSlide key={idx}>
-                        <>
-                          {i.map((item: any, idx: any) => (
-                            <WhiteItem key={idx}>
-                              <WhiteItemText>{item.deposit.name}</WhiteItemText>
-                              <WhiteItemText bold>{item.procent.toFixed(0)} %</WhiteItemText>
-                              <WhiteItemText>
-                                {moment(item.date).format('DD.MM.YYYY')}
-                              </WhiteItemText>
-                              <WhiteItemLine procent={item.procent.toFixed(0)} />
-                            </WhiteItem>
-                          ))}
-                        </>
-                      </SwiperSlide>
-                    ))}
-                  </Swiper>
+                  {bigArr.map((i: any, idx: any) => {
+                    return (
+                      <>
+                        {i.map((item: any, idx: any) => (
+                          <WhiteItem key={idx}>
+                            <WhiteItemText>{item.deposit.name}</WhiteItemText>
+                            <WhiteItemText bold>{(item.procent).toFixed(0)} %</WhiteItemText>
+                            <WhiteItemText>{moment(item.date).format("DD.MM.YYYY")}</WhiteItemText>
+                            <WhiteItemLine procent={(item.procent).toFixed(0)} />
+                          </WhiteItem>
+                        ))}
+                      </>
+                    )
+                  })}
                 </>
-              ) : (
-                <>
-                  {statsDeposit.length ? (
-                    <>
-                      {bigArr.map((i: any, idx: any) => {
-                        return (
-                          <>
-                            {i.map((item: any, idx: any) => (
-                              <WhiteItem key={idx}>
-                                <WhiteItemText>{item.deposit.name}</WhiteItemText>
-                                <WhiteItemText bold>{item.procent.toFixed(0)} %</WhiteItemText>
-                                <WhiteItemText>
-                                  {moment(item.date).format('DD.MM.YYYY')}
-                                </WhiteItemText>
-                                <WhiteItemLine procent={item.procent.toFixed(0)} />
-                              </WhiteItem>
-                            ))}
-                          </>
-                        );
-                      })}
-                    </>
-                  ) : (
-                    ''
-                  )}
-                </>
-              )}
-            </WhiteMap>
-          </WhiteBox>
+                ) : ( "" )}
+              </>
+            )}
+          </WhiteMap>
+        </WhiteBox>
+      </Container> 
         </>
       ) : (
         ''
       )}
-    </Container>
+    </Page>
   );
 };
 
@@ -631,22 +590,24 @@ const RoundInsideItem = styled.div`
   width: 100%;
 `;
 
+
 const WhiteBox = styled.div`
   width: 100%;
   min-height: 612px;
-  background: #ffffff;
+  background: #FFFFFF;
   border-radius: 4px;
-  -webkit-box-shadow: 0px 80px 80px -40px #dcdce880;
-  -moz-box-shadow: 0px 80px 80px -40px #dcdce880;
-  box-shadow: 0px 80px 80px -40px #dcdce880;
+  -webkit-box-shadow: 0px 80px 80px -40px #DCDCE880;
+  -moz-box-shadow: 0px 80px 80px -40px #DCDCE880;
+  box-shadow: 0px 80px 80px -40px #DCDCE880;
   padding: 30px;
   padding-top: 40px;
 
   @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
     padding: 20px;
     padding-top: 25px;
+    max-width: 700px;
   }
-
+  
   @media only screen and (max-device-width: 767px) {
     width: 100%;
     max-width: 100%;
@@ -655,11 +616,10 @@ const WhiteBox = styled.div`
     min-height: 480px;
     padding-bottom: 0px;
     padding-right: 0px;
-    margin-bottom: 20px;
   }
 `;
 
-const Title = styled.div<{ right?: boolean }>`
+const Title = styled.div<{ right?: boolean; }>`
   font-weight: 400;
   font-size: 14px;
   line-height: 20px;
@@ -673,7 +633,7 @@ const Title = styled.div<{ right?: boolean }>`
       return `
         margin-right: 20px;
       `;
-    }
+    };
   }}
 
   & > svg {
@@ -693,7 +653,7 @@ const WhiteIntf = styled.div`
   justify-content: space-between;
   margin-bottom: 0px;
 
-  @media only screen and (max-device-width: 767px) {
+  @media only screen and (max-device-width: 767px) { 
     flex-direction: column;
   }
 `;
@@ -730,7 +690,7 @@ const WhiteItem = styled.div`
   height: 108px;
   min-width: 180px;
   min-height: 108px;
-  background: #f8f7fc;
+  background: #F8F7FC;
   margin-right: 20px;
   border-radius: 4px;
   margin-bottom: 20px;
@@ -752,13 +712,7 @@ const WhiteItem = styled.div`
     margin-bottom: 10px;
 
     &:last-child {
-      margin-bottom: 37px;
-    }
-  }
-
-  @media only screen and (max-device-width: 480px) {
-    &:nth-child(2n) {
-      margin-right: 0px;
+      margin-bottom: 40px;
     }
   }
 
@@ -768,51 +722,43 @@ const WhiteItem = styled.div`
   }
 
   @media only screen and (min-device-width: 410px) and (max-device-width: 480px) {
-    max-width: 200px;
-    width: 45%;
-  }
+    max-width: 200px; 
+    width: 45%;    
+  } 
 `;
 
-const WhiteItemText = styled.div<{ bold?: boolean }>`
+const WhiteItemText = styled.div<{ bold?: boolean; }>`
   color: #000000;
-  font-weight: 400;
+  font-weight: 500;
   font-size: 12px;
   line-height: 14px;
 
   ${({ bold }) => {
-    if (bold) {
-      return `
+      if (bold) {
+        return `
           font-weight: 700;
           color: #3F3E4E;
           font-size: 18px;
           line-height: 24px;
         `;
-    }
-  }}
+      };
+   }}
 `;
 
-const WhiteItemLine = styled.div<{ procent: number | string }>`
-  width: 100%;
-  background: #dcdce8;
-  height: 2px;
-  margin-top: 13px;
-  position: relative;
-  min-width: 140px;
+const WhiteItemLine = styled.div<{ procent: number | string; }>`
+   width: 100%;
+   background: #DCDCE8;
+   height: 2px;
+   margin-top: 13px;
+   position: relative;
+   min-width: 140px;
 
-  @media only screen and (max-device-width: 480px) {
-    min-width: 95px;
-  }
-
-  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
-    min-width: 110px;
-  }
-
-  &::after {
-    display: inline;
-    content: '';
-    background: #0094ff;
-    position: absolute;
-    width: ${({ procent }) => procent}%;
-    height: inherit;
-  }
+   &::after {
+     display: inline;
+     content: "";
+     background: #0094FF;
+     position: absolute;
+     width: ${({ procent }) => procent}%;
+     height: inherit;
+   }
 `;

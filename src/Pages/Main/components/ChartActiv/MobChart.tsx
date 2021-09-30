@@ -119,7 +119,7 @@ export const MobChart: FC<Props> = ({ data, type, setValCWD, setDate }: Props) =
     ],
     chart: {
       marginLeft: 0,
-      marginRight: 30,
+      spacingRight: 0,
       backgroundColor: '#F7F8FA',
       height: 288,
       // spacingTop: 50,
@@ -165,6 +165,7 @@ export const MobChart: FC<Props> = ({ data, type, setValCWD, setDate }: Props) =
       labels: {
         style: {
           color: '#3F3E4E',
+          fontSize: '12px',
         },
       },
     },

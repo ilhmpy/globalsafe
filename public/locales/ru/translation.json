@@ -361,7 +361,14 @@
     "sum": "Сумма операции",
     "byProgramm": "по программе",
     "showMore": "Показать еще",
-    "showLess": "Показать меньше"
+    "showLess": "Показать меньше",
+    "adjustemnt": "Регулировка баланса",
+    "prizeAdjustment": "Корректировка призового баланса",
+    "transactionNetworkFee": "Комиссия сети от суммы транзакции",
+    "transactionServiceFee": "Комиссия сервиса от суммы транзакции",
+    "depositLoan": "Кредит на депозит",
+    "balanceExchange": "Перевод между балансами",
+    "depositExchange": "Обмен депозита"
   },
   "copy": {
     "copy": "Скопировано",

@@ -105,7 +105,7 @@ export const Operations = () => {
   return (
     <>
       {notifyList.length > 0 ? (
-         <Page>
+        <>
           <Container page>
               <H2 mb>{t('operation.last')}</H2>
               <Description>{t("operations2.desc")}</Description>
@@ -136,7 +136,7 @@ export const Operations = () => {
               ))}
            </TableMapBlock>
          </Container>
-       </Page>
+      </>
       ) : ( "" )}
     </>
   );
@@ -281,6 +281,9 @@ const Description = styled.h3`
 
   @media only screen and (max-device-width: 480px) {
     margin-bottom: 10px;
+    font-size: 12px;
+    line-height: 18px;
+    margin-bottom: 10px;
   }
   
   @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
@@ -292,8 +295,8 @@ const TableHead = styled.div<{ item?: boolean; }>`
   width: 100%;
   height: 60px;
   background: ${({ theme }) => theme.operations.headBg}; 
-  border-top-right-radius: 10px;
-  border-top-left-radius: 10px;
+  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
   display: flex;
   align-items: center;
   padding: 0px 0px 0px 40px;
@@ -301,6 +304,7 @@ const TableHead = styled.div<{ item?: boolean; }>`
   @media only screen and (max-device-width: 480px) {
     padding-left: 20px;
     border-radius: 0;
+    height: 38px;
   }
 `;
 

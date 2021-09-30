@@ -64,6 +64,10 @@
 export type BalanceList = {
   balanceKind: number;
   volume: number;
+  safeId: string;
+  id: number;
+  exhaustRatio: number;
+  exhaustBalanceKind: number;
 }
 export type Notify = {
   text: string;

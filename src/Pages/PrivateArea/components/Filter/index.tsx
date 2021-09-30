@@ -1,22 +1,26 @@
 import React, { FC, useState } from 'react';
 import { ReactComponent as ListIcon } from '../../../../assets/v2/svg/list.svg';
-import { ReactComponent as TileIcon } from '../../../../assets/v2/svg/tile.svg';
 import { ReactComponent as ListFillIcon } from '../../../../assets/v2/svg/listfill.svg';
+import { ReactComponent as TileIcon } from '../../../../assets/v2/svg/tile.svg';
 import { ReactComponent as TileFillIcon } from '../../../../assets/v2/svg/tilefill.svg';
 import * as S from './S.el';
 
 interface FilterProps {
-  activeFilter: string;
-  setActiveFilter: (value: string) => void;
-  filterTypesIsShown?: boolean;
-  buttonValues: string[];
+  activeFilter: 'active' | 'archived' | 'hold';
+  setActiveFilter: (value: 'active' | 'archived' | 'hold') => void;
+  buttons?: any[];
+  withCustomButtons?: boolean;
+  withoutViewType?: boolean;
+  withoutContainer?: boolean;
 }
 
 export const Filter: FC<FilterProps> = ({
   activeFilter,
   setActiveFilter,
-  filterTypesIsShown,
-  buttonValues,
+  buttons,
+  withCustomButtons,
+  withoutViewType,
+  withoutContainer,
 }: FilterProps) => {
   const [active, setActive] = useState('list');
 
@@ -25,15 +29,39 @@ export const Filter: FC<FilterProps> = ({
   };
 
   return (
-    <S.Container>
+    <S.Container without={withoutContainer}>
       <S.Buttons>
-        {buttonValues.map((value: string, i: number) => (
-          <S.Button key={i} active={activeFilter === value} onClick={() => setActiveFilter(value)}>
-            {value}
-          </S.Button>
-        ))}
+        {!withCustomButtons ? (
+          <>
+            <S.Button active={activeFilter === 'active'} onClick={() => setActiveFilter('active')}>
+              Активные
+            </S.Button>
+            <S.Button active={activeFilter === 'hold'} onClick={() => setActiveFilter('hold')}>
+              С отложенными выплатами
+            </S.Button>
+            <S.Button
+              active={activeFilter === 'archived'}
+              onClick={() => setActiveFilter('archived')}
+            >
+              В архиве
+            </S.Button>
+          </>
+        ) : (
+          <>
+            {buttons &&
+              buttons.map((button, idx) => (
+                <S.Button
+                  key={idx}
+                  active={activeFilter === button.active}
+                  onClick={() => setActiveFilter(button.active)}
+                >
+                  {button.text}
+                </S.Button>
+              ))}
+          </>
+        )}
       </S.Buttons>
-      {filterTypesIsShown && (
+      {!withoutViewType && (
         <S.FilterTypes>
           <S.FilterTypeList onClick={() => handleActive('list')}>
             {active === 'list' ? <ListFillIcon /> : <ListIcon />}

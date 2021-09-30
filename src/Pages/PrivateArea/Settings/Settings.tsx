@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Switcher } from '../../../components/Switcher';
 import { routers } from '../../../constantes/routers';
 import { Card, Container } from '../../../globalStyles';
-import { Filter } from '../components/Filter';
+import * as S from '../components/Filter/S.el';
 import { Heading } from '../components/Heading';
 
 type TableRowType = {
@@ -94,7 +94,7 @@ export const Settings: FC = () => {
         title="Настройки"
         btnText="Добавить платежный метод"
       />
-      <Filter
+      {/* <Filter
         activeFilter={activeFilter}
         setActiveFilter={setActiveFilter}
         buttonValues={[
@@ -107,7 +107,30 @@ export const Settings: FC = () => {
           'BEP 20',
           'Все валюты',
         ]}
-      />
+      /> */}
+
+      <S.Container>
+        <S.Buttons>
+          {[
+            'Все',
+            'АО «Альфа-Банк»',
+            'АО «Тинькофф Банк»',
+            'ПАО Сбербанк',
+            'ERC 20',
+            'TRC 20',
+            'BEP 20',
+            'Все валюты',
+          ].map((value: string, i: number) => (
+            <S.Button
+              key={i}
+              active={activeFilter === value}
+              onClick={() => setActiveFilter(value)}
+            >
+              {value}
+            </S.Button>
+          ))}
+        </S.Buttons>
+      </S.Container>
 
       <TableCard>
         <TableHeader>

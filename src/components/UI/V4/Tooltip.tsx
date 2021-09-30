@@ -1,7 +1,6 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
-
-
+import useWindowSize from '../../../hooks/useWindowSize';
 
 interface TooltipProps {
     className?: string;
@@ -9,6 +8,7 @@ interface TooltipProps {
     label?: string;
     renderLabel?: () => React.ReactNode;
     direction: 'left' | 'right';
+    revertOnMobile?: boolean;
 }
 
 export const Tooltip = ({
@@ -16,9 +16,13 @@ export const Tooltip = ({
     children,
     label,
     renderLabel,
-    direction = 'right'
+    direction = 'right',
+    revertOnMobile = false,
 }: TooltipProps) => {
+    const windowSize = useWindowSize();
+
     const [show, setShow] = useState(false);
+    const [ownDir, setOwnDir] = useState(direction);
 
     const handleShow = useCallback(() => {
         setShow(true);
@@ -28,6 +32,17 @@ export const Tooltip = ({
         setShow(false);
     }, []);
 
+    useEffect(() => {
+        if(revertOnMobile) {
+            if(windowSize > 100 && windowSize < 600) {
+                setOwnDir(direction === 'right' ? 'left' : 'right');
+            }
+            if(windowSize > 600) {
+                setOwnDir(direction);
+            }
+        }
+    }, [revertOnMobile, windowSize]);
+    
     return (
         <Wrapper 
             className={className}
@@ -36,7 +51,7 @@ export const Tooltip = ({
         >
             {
                 show && (
-                    <TooltipContainer direction={direction}>
+                    <TooltipContainer direction={ownDir}>
                         {label && <TooltipText>{label}</TooltipText>}
                         {renderLabel && <TooltipText>{renderLabel()}</TooltipText>}
                     </TooltipContainer>
@@ -74,7 +89,6 @@ const TooltipContainer = styled.div<{direction: 'left' | 'right'}>`
        
 
         ${props => props.direction === 'right' ? 'left: 13px;' : 'right: 13px;'}
-        left: 13px;
         bottom: -8px;
         transform: rotate(316deg);
         background-color: ${props => props.theme.white};

@@ -10,6 +10,7 @@ import { Main } from './Pages/Main/Main';
 import { InfoMain } from './Pages/PrivateArea';
 import PageNotFound from './Pages/Tech/PageNotFound';
 import TechWorks from './Pages/Tech/TechWorks';
+import { HistoryOperations } from "./Pages/PrivateArea/HistoryOperations"; 
 declare global {
   interface Window {
     OneSignal: any;
@@ -164,8 +165,8 @@ const App: FC = () => {
     <div style={{ position: 'relative' }}>
       <Router>
         <div className="App">
-          <GlobalStyle />
-
+          <GlobalStyle /> 
+ 
           <Switch>
             <Route path="/" component={Main} exact />
             <Route path="/admin" component={Admin} />
@@ -173,7 +174,7 @@ const App: FC = () => {
             <Route path="/login" component={Authentication} />
             <Route path="/register" component={Register} />
             <Route path="/tech" component={TechWorks} />
-            <Route path="/404" component={PageNotFound} /> 
+            <Route path="/404" component={PageNotFound} />
           </Switch>
         </div>
       </Router>

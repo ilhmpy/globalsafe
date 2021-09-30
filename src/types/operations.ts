@@ -9,4 +9,3 @@ export interface RootOperations {
     totalRecords: number;
     collection: Collection[];
 }
-
