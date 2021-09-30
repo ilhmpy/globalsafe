@@ -431,7 +431,7 @@ export const InfoMain: FC = () => {
               <TabNavItem to="/p2p-changes">
                 <div>P2P обмены</div>
               </TabNavItem>
-              <TabNavItem to="/info/operations" exact>
+              <TabNavItem to="/info/operations-history">
                 <div>История операций</div>
               </TabNavItem>
               <TabNavItem to="/settings">
@@ -446,7 +446,7 @@ export const InfoMain: FC = () => {
           <Route path={routers.depositsProgram} component={DepositProgram} exact />
           <Route path={routers.depositsOpen} component={DepositOpen} exact />
           <Route path="/info/deposits/:slug" component={OnePage} />
-          <Route path="/info/operations" component={HistoryOperations} exact />
+          <Route path="/info/operations-history" component={HistoryOperations} exact />
         </Switch>
         <Footer />
 

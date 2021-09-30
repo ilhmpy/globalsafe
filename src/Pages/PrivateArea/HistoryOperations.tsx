@@ -27,8 +27,8 @@ export const HistoryOperations = () => {
     const balances = appContext.balanceList;
     const { t } = useTranslation();
     const [loading, setLoading] = useState<boolean>(false);
-    const [allCurrency, setAllCurrency] = useState<boolean>(false);
-    const [nowMonth, setNowMonth] = useState<boolean>(false);
+    const [allCurrency, setAllCurrency] = useState<boolean>(true);
+    const [nowMonth, setNowMonth] = useState<boolean>(true);
     const [not, setNot] = useState<boolean>(false);
 
     const filter = [1, 2];
@@ -106,49 +106,37 @@ export const HistoryOperations = () => {
     /// Exchange deposit.
     DepositExchange, */
 
-    function reqHistory() {
+    useEffect(() => {
         if (hubConnection) {
-          setLoading(true);
-          console.log("WORK")
-          hubConnection.invoke(
-              "GetBalanceLog", 
-              [1], 
-              [], 
-              new Date(2013, 5, 13, 10, 0, 0),
-              new Date(), 
-              0, 10
-          )
-            .then(res => {
-              setLoading(false);
-              console.log("rees", res, balances);
-              let add: any[] = [];
-              const addField = res.collection.map((item: any) => {
-                if (balances) {
-                    for (let i = 0; i < balances.length; i++) {
-                        if (Number(item.balanceSafeId) == balances[i].id) {
-                            add = [...add, {
-                                balanceDelta: item.balanceDelta,
-                                operationDate: item.operationDate,
-                                operationKind: item.operationKind,
-                                currency: Balance[balances[i].balanceKind]
-                            }];
-                        };
+            const date = new Date();
+            console.log(nowMonth ? new Date(date.getFullYear(), date.getMonth(), 1, 0, 0) : new Date(2018, 5, 13, 10, 0, 0),
+            new Date())
+            setLoading(true);
+            hubConnection.invoke(
+                "GetBalanceLog", 
+                [1], 
+                getFilter(activeFilter), 
+                nowMonth ? new Date(date.getFullYear(), date.getMonth(), 1, 0, 0) : new Date(2013, 5, 13, 10, 0, 0),
+                new Date(), 
+                0, 10
+            )
+              .then(res => {
+                setLoading(false);
+                console.log(res.collection, activeFilter);
+                if (allCurrency) {
+                   setOperations(res.collection);
+                } else {
+                    if (balances) {
+                        setOperations(res.collection.filter((i: any) => Number(i.balanceSafeId) === balances[1].id));
                     };
                 };
-              });
-              setOperations(add);
-     
-            })
-            .catch(err => {
+              })
+              .catch(err => {
                 console.log(err);
                 setLoading(false);
-            });
-      };
-  }
-  
-  useEffect(() => {
-     // reqHistory();
-  }, []);
+              });
+        };
+    }, [activeFilter, hubConnection, nowMonth, allCurrency]);
 
     function addMore() {
         if (hubConnection) {
@@ -211,57 +199,20 @@ export const HistoryOperations = () => {
         }
       }
 
-    useEffect(() => {
-        if (hubConnection) {
-            const date = new Date();
-            console.log(nowMonth ? new Date(date.getFullYear(), date.getMonth(), 1, 0, 0) : new Date(2018, 5, 13, 10, 0, 0),
-            new Date())
-            setLoading(true);
-            hubConnection.invoke(
-                "GetBalanceLog", 
-                [1], 
-                getFilter(activeFilter), 
-                nowMonth ? new Date(date.getFullYear(), date.getMonth(), 1, 0, 0) : new Date(2013, 5, 13, 10, 0, 0),
-                new Date(), 
-                0, 10
-            )
-              .then(res => {
-                setLoading(false);
-                console.log(res.collection, activeFilter);
-                let add: any[] = [];
-                const addField = res.collection.map((item: any) => {
-                  if (balances) {
-                      for (let i = 0; i < balances.length; i++) {
-                          if (Number(item.balanceSafeId) == balances[i].id) {
-                              add = [...add, {
-                                  balanceDelta: item.balanceDelta,
-                                  operationDate: item.operationDate,
-                                  operationKind: item.operationKind,
-                                  balanceKind: balances[i].balanceKind,
-                                  currency: Balance[balances[i].balanceKind],
-                              }];
-                          };
-                      };
-                  };
-                });
-                if (allCurrency) {
-                    setOperations(add);
-                } else {
-                    setOperations(add.filter((i: any) => i.balanceKind === 1));
-                };
-                console.log(add);
-              })
-              .catch(err => {
-                console.log(err);
-                setLoading(false);
-              });
-        };
-    }, [activeFilter, hubConnection, nowMonth, allCurrency]);
-
     if (loading) {
         return (
             <Loading />
         )
+    };
+
+    function getCurrency(id: number) {
+        if (balances) {
+            for (let i = 0; i < balances.length; i++) {
+                if (Number(id) == balances[i].id) {
+                    return Balance[balances[i].balanceKind];
+                };
+            };
+        };
     };
 
     return (
@@ -290,12 +241,12 @@ export const HistoryOperations = () => {
                     <Styled.TableInnerItem head>Сумма</Styled.TableInnerItem>
                 </Styled.TableItem>
                 <Styled.TableMap>
-                    {operations.map((item, idx) => (
+                    {operations && operations.map((item, idx) => (
                         <Styled.TableItem item key={idx}>
                             <Styled.TableInnerItem item>{moment(item.operationDate).format("DD.MM.YYYY")} в {moment(item.operationDate).format("HH:MM")}</Styled.TableInnerItem>
                             <Styled.TableInnerItem item>{operation(item.operationKind)}</Styled.TableInnerItem>
                             <Styled.TableInnerItem item income={item.balanceDelta >= 0}>
-                                {sign(item.balanceDelta)} {(item.balanceDelta).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {item.currency}
+                                {sign(item.balanceDelta)} {(item.balanceDelta).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {item.balanceSafeId && getCurrency(item.balanceSafeId)}
                             </Styled.TableInnerItem>
                         </Styled.TableItem>
                     ))}
