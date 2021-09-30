@@ -226,12 +226,16 @@ const TimerHistoryContainer = styled(Card)`
 const TableContainer = styled(Container)`
   display: flex;
   flex-direction: column;
-  background-color: #ffffff;
   border-radius: 4px;
 
   ${Button} {
     margin: 30px auto;
     width: 160px;
+  }
+
+  @media only screen and (max-device-width: 480px) {
+    padding-right: 0px;
+    padding-left: 0px;
   }
 `;
 
@@ -318,7 +322,9 @@ const TableItem = styled.li`
   &:nth-child(4) {
     max-width: 200px;
     @media (max-width: 576px) {
-      max-width: 100%;
+      width: 100px;
+      position: absolute;
+      right: 0px;
     }
   }
   @media only screen and (max-device-width: 600px) {

@@ -683,7 +683,7 @@ const Title = styled.div<{ right?: boolean }>`
 
   @media only screen and (max-device-width: 767px) {
     &:last-child {
-      margin-bottom: 10px;
+      margin-bottom: 20px;
     }
   }
 `;
@@ -723,6 +723,12 @@ const WhiteMap = styled.div`
   .swiper-pagination {
     bottom: -3px;
     z-index: 99999999;
+  }
+
+  @media only screen and (max-device-width: 480px) {
+    .swiper-pagination {
+      bottom: 20px;
+    }
   }
 `;
 
