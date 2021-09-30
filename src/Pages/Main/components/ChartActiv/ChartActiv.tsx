@@ -164,11 +164,16 @@ export const ChartActiv: FC<Props> = ({
         height: 345,
         // spacingTop: 50,
         spacingBottom: 0,
+        spacingRight: 0,
+        // width: '100%',
         // events: {
         //   load: function (e: any) {
         //     e.get('highcharts-navigator-series').show();
         //   },
         // },
+        style: {
+          fontFamily: 'Roboto',
+        },
       },
       legend: {
         enabled: false,
@@ -286,13 +291,18 @@ export const ChartActiv: FC<Props> = ({
       },
       exporting: { enabled: false },
       yAxis: {
-        left: size < 768 ? '100%' : 0,
+        left: '0',
         opposite: false,
         gridLineDashStyle: 'Dash',
         labels: {
           align: 'left',
+
           x: 0,
           y: -2,
+          style: {
+            fontSize: '14px',
+            color: '#3F3E4E',
+          },
         },
         plotBands: [
           {
@@ -329,6 +339,8 @@ export const ChartActiv: FC<Props> = ({
         labels: {
           style: {
             color: '#3F3E4E',
+            fontSize: '12px',
+            fontFamily: 'Roboto',
           },
         },
       },
@@ -533,10 +545,7 @@ export const ChartActiv: FC<Props> = ({
           <S.MobTooltips>
             <S.TooltipsDate>
               {date > 1
-                ? momenttz
-                    .utc(moment(date).format('DD.MM.YYYY'))
-                    .tz('Europe/Moscow')
-                    .format('DD.MM.YYYY, dd, HH:mm')
+                ? momenttz.utc(date).tz('Europe/Moscow').format('DD.MM.YYYY, dd, HH:mm')
                 : data.length
                 ? momenttz
                     .utc(data[data.length - 1].date)

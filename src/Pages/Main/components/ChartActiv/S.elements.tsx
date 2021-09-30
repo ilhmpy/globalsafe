@@ -7,7 +7,7 @@ export const ChartContainer = styled.div`
   border-radius: 4px;
   margin-bottom: 20px;
   @media (max-width: 992px) {
-    padding: 20px 20px 60px;
+    padding: 20px 15px 60px 15px;
   }
   @media (max-width: 767px) {
     padding: 20px 0;
@@ -19,8 +19,14 @@ export const ChartHeader = styled.div`
   display: flex;
   width: 100%;
   justify-content: space-between;
+  @media (max-width: 992px) {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
   @media (max-width: 767px) {
     flex-wrap: wrap;
+    padding-left: 0;
+    padding-right: 0;
   }
 `;
 
@@ -227,6 +233,7 @@ export const SwiperContainer = styled.div`
     box-shadow: 0px 16px 30px -8px rgba(220, 220, 232, 0.5);
     border-radius: 4px;
   }
+
   .swiper-container-horizontal > .swiper-pagination-bullets .swiper-pagination-bullet-active {
     background: #0094ff !important;
     border-radius: 6px !important;
@@ -292,5 +299,9 @@ export const MobChartBlock = styled.div<{ mob?: boolean }>`
   }
   .highcharts-plot-background {
     fill: #f7f8fa;
+  }
+  .highcharts-yaxis-labels,
+  .highcharts-xaxis-labels {
+    font-family: 'Roboto', sans-serif;
   }
 `;
