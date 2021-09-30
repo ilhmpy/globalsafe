@@ -10,12 +10,15 @@ import { Heading } from './components/Heading';
 import * as FilterS from './components/Filter/S.el';
 import { Filter } from "./components/Filter/index";
 import { AppContext } from '../../context/HubContext';
+import { Balance } from "../../types/balance";
 
 export const HistoryOperations = () => {
     const history = useHistory();
     const [activeFilter, setActiveFilter] = useState<'active' | 'archived' | 'hold'>('active');
     const months = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
-    const [buttons, setButtons] = useState<any[]>([{ text: "Все типы", active: "active" }, { text: "Пополнение", active: "hold" }, { text: "Списание", active: "archived" }]);
+    const [buttons, setButtons] = useState<any[]>([
+        { text: "Все типы", active: "active" }, { text: "Пополнение", active: "hold" }, { text: "Списание", active: "archived" }
+    ]);
     const appContext = useContext(AppContext);
     const user = appContext.user;
     const balance = appContext.balance;
@@ -96,8 +99,8 @@ export const HistoryOperations = () => {
             return "+";
         } else {
             return "";
-        }
-    }
+        };
+    };
 
     return (
         <Container>
@@ -130,7 +133,7 @@ export const HistoryOperations = () => {
                             <Styled.TableInnerItem item>{moment(item.operationDate).format("DD.MM.YYYY")} в {moment(item.operationDate).format("HH:MM")}</Styled.TableInnerItem>
                             <Styled.TableInnerItem item>{operation(item.operationKind)}</Styled.TableInnerItem>
                             <Styled.TableInnerItem item income={item.balanceDelta >= 0}>
-                                {sign(item.balanceDelta)}{(item.balanceDelta).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {item.currency}
+                                {sign(item.balanceDelta)}{(item.balanceDelta).toLocaleString("ru-RU", { maximumFractionDigits: 2 })}
                             </Styled.TableInnerItem>
                         </Styled.TableItem>
                     ))}

@@ -400,7 +400,7 @@ export const InfoMain: FC = () => {
                     title={'Вывести средства'}
                     // eslint-disable-next-line
                     onClick={() => {}}
-                  />
+                  /> 
               </PanelActionsBlock>
             </PanelHeader>
             <BalanceChipsBlock>
@@ -443,10 +443,10 @@ export const InfoMain: FC = () => {
 
         <Switch>
           <Route path={routers.deposits} component={Deposits} exact />
-          <Route path={routers.depositsProgram} component={DepositProgram} />
-          <Route path={routers.depositsOpen} component={DepositOpen} />
+          <Route path={routers.depositsProgram} component={DepositProgram} exact />
+          <Route path={routers.depositsOpen} component={DepositOpen} exact />
           <Route path="/info/deposits/:slug" component={OnePage} />
-          <Route path="/info/operations" component={HistoryOperations} />
+          <Route path="/info/operations" component={HistoryOperations} exact />
         </Switch>
         <Footer />
 
