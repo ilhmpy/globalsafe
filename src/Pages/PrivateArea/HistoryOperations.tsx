@@ -26,10 +26,10 @@ export const HistoryOperations = () => {
     const hubConnection = appContext.hubConnection;
     const balances = appContext.balanceList;
     const { t } = useTranslation();
-    const [add, setAdd] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [allCurrency, setAllCurrency] = useState<boolean>(false);
     const [nowMonth, setNowMonth] = useState<boolean>(false);
+    const [not, setNot] = useState<boolean>(false);
 
     const filter = [1, 2];
     const operation = (id: number) => {
@@ -114,7 +114,7 @@ export const HistoryOperations = () => {
               "GetBalanceLog", 
               [1], 
               [], 
-              new Date(2018, 5, 13, 10, 0, 0),
+              new Date(2013, 5, 13, 10, 0, 0),
               new Date(), 
               0, 10
           )
@@ -157,7 +157,7 @@ export const HistoryOperations = () => {
                 "GetBalanceLog", 
                 [1], 
                 getFilter(activeFilter), 
-                nowMonth ? new Date(date.getFullYear(), date.getMonth(), 1, 0, 0) : new Date(2018, 5, 13, 10, 0, 0),
+                nowMonth ? new Date(date.getFullYear(), date.getMonth(), 1, 0, 0) : new Date(2013, 5, 13, 10, 0, 0),
                 new Date(), 
                 operations.length + 1, 5
             )
@@ -172,13 +172,18 @@ export const HistoryOperations = () => {
                                     balanceDelta: item.balanceDelta,
                                     operationDate: item.operationDate,
                                     operationKind: item.operationKind,
+                                    balanceKind: balances[i].balanceKind,
                                     currency: Balance[balances[i].balanceKind]
                                 }];
                             };
                         };
                     };
                   });
-                setOperations((data: any) => [...data, ...add]);
+                if (allCurrency) {
+                    setOperations((data: any) => [...data, ...add]);
+                } else {
+                    setOperations((data: any) => [...data, ...add.filter((i: any) => i.balanceKind === 1)]);
+                };
               })
               .catch(err => {
                   console.log(err);
@@ -216,7 +221,7 @@ export const HistoryOperations = () => {
                 "GetBalanceLog", 
                 [1], 
                 getFilter(activeFilter), 
-                nowMonth ? new Date(date.getFullYear(), date.getMonth(), 1, 0, 0) : new Date(2018, 5, 13, 10, 0, 0),
+                nowMonth ? new Date(date.getFullYear(), date.getMonth(), 1, 0, 0) : new Date(2013, 5, 13, 10, 0, 0),
                 new Date(), 
                 0, 10
             )
@@ -232,14 +237,18 @@ export const HistoryOperations = () => {
                                   balanceDelta: item.balanceDelta,
                                   operationDate: item.operationDate,
                                   operationKind: item.operationKind,
-                                  currency: Balance[balances[i].balanceKind]
+                                  balanceKind: balances[i].balanceKind,
+                                  currency: Balance[balances[i].balanceKind],
                               }];
                           };
                       };
                   };
                 });
-                setOperations(add);
-                setOperations((item: any) => item.map((i: any) => i));
+                if (allCurrency) {
+                    setOperations(add);
+                } else {
+                    setOperations(add.filter((i: any) => i.balanceKind === 1));
+                };
                 console.log(add);
               })
               .catch(err => {
@@ -247,11 +256,7 @@ export const HistoryOperations = () => {
                 setLoading(false);
               });
         };
-    }, [activeFilter, hubConnection, nowMonth]);
-
-    useEffect(() => {
-        console.log(loading)
-    }, [loading]);
+    }, [activeFilter, hubConnection, nowMonth, allCurrency]);
 
     if (loading) {
         return (
@@ -278,7 +283,7 @@ export const HistoryOperations = () => {
                     buttons={buttons}
                 />
             </Styled.FilterAllBlock>
-            <Styled.Table>
+            <Styled.Table none={not}>
                 <Styled.TableItem head>
                     <Styled.TableInnerItem head>Дата и время</Styled.TableInnerItem>
                     <Styled.TableInnerItem head>Категория</Styled.TableInnerItem>
