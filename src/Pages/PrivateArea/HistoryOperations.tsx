@@ -25,6 +25,7 @@ export const HistoryOperations = () => {
     const hubConnection = appContext.hubConnection;
     const balances = appContext.balanceList;
     const { t } = useTranslation();
+    const [add, setAdd] = useState<any[]>([]);
 
     /* 
     "TopUp", "Withdraw", "Rollback", "Promo", "AffiliateCharges", "DepositOpen", "DepositPayments", 
@@ -53,6 +54,23 @@ export const HistoryOperations = () => {
 
     const [operations, setOperations] = useState<any[]>([]);
 
+    function convert(res: any) {
+        const addField = res.collection.map((item: any) => {
+            if (balances) {
+                for (let i = 0; i < balances.length; i++) {
+                    if (Number(item.balanceSafeId) == balances[i].id) {
+                        setAdd((data: any) => [...data, {
+                            balanceDelta: item.balanceDelta,
+                            operationDate: item.operationDate,
+                            operationKind: item.operationKind,
+                            currency: Balance[balances[i].balanceKind]
+                        }]);
+                    };
+                };
+            };
+          });
+    };
+
     function reqHistory() {
       if (hubConnection) {
           console.log("WORK")
@@ -65,20 +83,24 @@ export const HistoryOperations = () => {
               0, 10
           )
             .then(res => {
-              console.log("rees", res);
-              setOperations(res.collection);
-              const add = res.collection.map((item: any) => {
-                const add = balances && balances.find((balance: any) => {
-                    if (balance.id == item.id) {
-                        return {
-                            ...item,
-                            currency: Balance[balance.balanceKind]
+              console.log("rees", res, balances);
+              const addField = res.collection.map((item: any) => {
+                if (balances) {
+                    for (let i = 0; i < balances.length; i++) {
+                        if (Number(item.balanceSafeId) == balances[i].id) {
+                            setAdd((data: any) => [...data, {
+                                balanceDelta: item.balanceDelta,
+                                operationDate: item.operationDate,
+                                operationKind: item.operationKind,
+                                currency: Balance[balances[i].balanceKind]
+                            }]);
                         };
                     };
-                });
-                console.log(add);
+                };
               });
               console.log(add);
+              setOperations(add);
+     
             })
             .catch(err => console.log(err));
       };
@@ -101,6 +123,7 @@ export const HistoryOperations = () => {
             )
               .then(res => {
                 console.log("rees", res);
+                convert(res);
                 setOperations((data: any) => [...data, ...res.collection]);
               })
               .catch(err => console.log(err));
@@ -146,7 +169,7 @@ export const HistoryOperations = () => {
                             <Styled.TableInnerItem item>{moment(item.operationDate).format("DD.MM.YYYY")} в {moment(item.operationDate).format("HH:MM")}</Styled.TableInnerItem>
                             <Styled.TableInnerItem item>{operation(item.operationKind)}</Styled.TableInnerItem>
                             <Styled.TableInnerItem item income={item.balanceDelta >= 0}>
-                                {sign(item.balanceDelta)}{(item.balanceDelta).toLocaleString("ru-RU", { maximumFractionDigits: 2 })}
+                                {sign(item.balanceDelta)} {(item.balanceDelta).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {item.currency}
                             </Styled.TableInnerItem>
                         </Styled.TableItem>
                     ))}
