@@ -28,6 +28,8 @@ export const HistoryOperations = () => {
     const { t } = useTranslation();
     const [add, setAdd] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
+    const [allCurrency, setAllCurrency] = useState<boolean>(false);
+    const [nowMonth, setNowMonth] = useState<boolean>(false);
 
     const filter = [1, 2];
     const operation = (id: number) => {
@@ -150,11 +152,12 @@ export const HistoryOperations = () => {
 
     function addMore() {
         if (hubConnection) {
+            const date = new Date();
             hubConnection.invoke(
                 "GetBalanceLog", 
                 [1], 
                 getFilter(activeFilter), 
-                new Date(2018, 5, 13, 10, 0, 0),
+                nowMonth ? new Date(date.getFullYear(), date.getMonth(), 1, 0, 0) : new Date(2018, 5, 13, 10, 0, 0),
                 new Date(), 
                 operations.length + 1, 5
             )
@@ -205,12 +208,15 @@ export const HistoryOperations = () => {
 
     useEffect(() => {
         if (hubConnection) {
+            const date = new Date();
+            console.log(nowMonth ? new Date(date.getFullYear(), date.getMonth(), 1, 0, 0) : new Date(2018, 5, 13, 10, 0, 0),
+            new Date())
             setLoading(true);
             hubConnection.invoke(
                 "GetBalanceLog", 
                 [1], 
                 getFilter(activeFilter), 
-                new Date(2018, 5, 13, 10, 0, 0),
+                nowMonth ? new Date(date.getFullYear(), date.getMonth(), 1, 0, 0) : new Date(2018, 5, 13, 10, 0, 0),
                 new Date(), 
                 0, 10
             )
@@ -233,14 +239,15 @@ export const HistoryOperations = () => {
                   };
                 });
                 setOperations(add);
-       
+                setOperations((item: any) => item.map((i: any) => i));
+                console.log(add);
               })
               .catch(err => {
                 console.log(err);
                 setLoading(false);
               });
         };
-    }, [activeFilter, hubConnection]);
+    }, [activeFilter, hubConnection, nowMonth]);
 
     useEffect(() => {
         console.log(loading)
@@ -257,10 +264,10 @@ export const HistoryOperations = () => {
             <Heading title="История операций" withoutBtn />
             <Styled.FilterAllBlock>
                 <Styled.FilterDivision>
-                    <FilterS.Button active={true}>{months[moment().month()]} {new Date().getFullYear()}</FilterS.Button>
+                    <FilterS.Button active={nowMonth} onClick={() => setNowMonth(!nowMonth)}>{months[moment().month()]} {new Date().getFullYear()}</FilterS.Button>
                 </Styled.FilterDivision>
                 <Styled.FilterDivision>
-                    <FilterS.Button active={true}>Все валюты</FilterS.Button>
+                    <FilterS.Button active={allCurrency} onClick={() => setAllCurrency(!allCurrency)}>Все валюты</FilterS.Button>
                 </Styled.FilterDivision>
                 <Filter 
                     activeFilter={activeFilter}

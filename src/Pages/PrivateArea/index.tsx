@@ -431,7 +431,7 @@ export const InfoMain: FC = () => {
               <TabNavItem to="/p2p-changes">
                 <div>P2P обмены</div>
               </TabNavItem>
-              <TabNavItem to="/info/operations">
+              <TabNavItem to="/info/operations" exact>
                 <div>История операций</div>
               </TabNavItem>
               <TabNavItem to="/settings">
