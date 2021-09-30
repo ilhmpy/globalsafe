@@ -17,7 +17,10 @@ export const Container = styled.div<{ pNone?: boolean; page?: boolean; }>`
       return `
         margin-top: 60px;
         @media only screen and (max-device-width: 480px) {
-          margin-top: 25px;
+          margin-top: 20px;
+        }
+        @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+          margin-top: 40px;
         }
       `;
     }

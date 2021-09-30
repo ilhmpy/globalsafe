@@ -22,9 +22,9 @@ export const DepositsPrograms = () => {
   ]);
 
   return (
-    <Page id="deposits">
+    <>
       {deposits.length > 0 && (
-        <Container page>
+        <Container page id="deposits">
           <H2>{t('sideNav.depositsPrograms')}</H2>
           {screen.width > 480 ? (
             <Styled.CardBox>
@@ -55,6 +55,6 @@ export const DepositsPrograms = () => {
           )}
         </Container>
       )}
-    </Page>
+      </>
   );
 };

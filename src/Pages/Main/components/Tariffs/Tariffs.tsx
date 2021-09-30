@@ -178,7 +178,6 @@ export const Tariffs = () => {
   };
 
   return (
-    <Page id="tariffs" smallPad>
       <Container pNone page>
         <H2 center>{t('partnersTitle')}</H2>
         <PartnersBlock>
@@ -197,7 +196,6 @@ export const Tariffs = () => {
           ))}
         </PartnersBlock>
       </Container>
-    </Page>
   );
 };
 

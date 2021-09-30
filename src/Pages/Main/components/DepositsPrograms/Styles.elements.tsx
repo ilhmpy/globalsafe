@@ -10,6 +10,10 @@ export const CardBox = styled.div`
     @media only screen and (max-device-width: 480px) {
       margin-top: 10px;
     }
+
+    @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+      min-height: 218px;
+    }
     
     .swiper-slide {
         display: flex;
@@ -41,6 +45,7 @@ export const Card = styled.div`
 
     @media only screen and (max-device-width: 1024px) {
        padding: 20px;
+       margin-bottom: 0px;
     }
 
     @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
