@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components/macro';
 
 export const Wrapper = styled.div`
-  margin: 0 auto 40px;
+  margin: 0 auto;
   width: 100%;
   background: #ffffff;
   box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);

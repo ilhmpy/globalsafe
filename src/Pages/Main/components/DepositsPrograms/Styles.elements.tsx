@@ -10,6 +10,10 @@ export const CardBox = styled.div`
     @media only screen and (max-device-width: 480px) {
       margin-top: 10px;
     }
+
+    @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+      min-height: 218px;
+    }
     
     .swiper-slide {
         display: flex;
@@ -41,6 +45,7 @@ export const Card = styled.div`
 
     @media only screen and (max-device-width: 1024px) {
        padding: 20px;
+       margin-bottom: 0px;
     }
 
     @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
@@ -60,13 +65,14 @@ export const Card = styled.div`
 export const CardName = styled.h3`
     color: #000;
     font-weight: 700;
-    font-size: 18px;
-    line-height: 24px;
+    font-size: 24px;
+    line-height: 28px;
     margin-bottom: 40px;
 
-    
     @media only screen and (max-device-width: 1024px) {
-        margin-bottom: 10px;
+      margin-bottom: 10px;
+      font-size: 18px;
+      line-height: 24px;
     }
 `;
 

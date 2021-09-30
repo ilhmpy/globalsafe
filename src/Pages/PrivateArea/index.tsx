@@ -425,13 +425,10 @@ export const InfoMain: FC = () => {
               <TabNavItem to="/info" exact>
                 <div>Мои депозиты</div>
               </TabNavItem>
-              <TabNavItem to="/ads">
-                <div>Объявления</div>
+              <TabNavItem to="/p2p-changes">
+                <div>P2P обмены</div>
               </TabNavItem>
-              <TabNavItem to="/certificates">
-                <div>Сертификаты</div>
-              </TabNavItem>
-              <TabNavItem to="/operationsHistory">
+              <TabNavItem to="/operations-history">
                 <div>История операций</div>
               </TabNavItem>
               <TabNavItem to="/settings">
@@ -571,7 +568,7 @@ export const InfoMain: FC = () => {
 
 
         <Switch>
-          <Route path="/info" component={Info} exact />
+          {/* <Route path="/info" component={Info} exact /> */}
           {/* <Route path="/info/deposits" component={InfoDeposits} exact /> */}
           <Route path={routers.deposits} component={Deposits} exact />
           <Route path={routers.depositsProgram} component={DepositProgram} exact />

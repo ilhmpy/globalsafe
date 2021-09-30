@@ -645,6 +645,7 @@ const WhiteBox = styled.div`
   @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
     padding: 20px;
     padding-top: 25px;
+    min-height: 572px;
   }
 
   @media only screen and (max-device-width: 767px) {
@@ -682,7 +683,7 @@ const Title = styled.div<{ right?: boolean }>`
 
   @media only screen and (max-device-width: 767px) {
     &:last-child {
-      margin-bottom: 10px;
+      margin-bottom: 20px;
     }
   }
 `;
@@ -722,6 +723,12 @@ const WhiteMap = styled.div`
   .swiper-pagination {
     bottom: -3px;
     z-index: 99999999;
+  }
+
+  @media only screen and (max-device-width: 480px) {
+    .swiper-pagination {
+      bottom: 20px;
+    }
   }
 `;
 
