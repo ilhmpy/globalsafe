@@ -300,7 +300,7 @@ export const ChartActiv: FC<Props> = ({
           x: 0,
           y: -2,
           style: {
-            fontSize: '14px',
+            fontSize: '12px',
             color: '#3F3E4E',
           },
         },
