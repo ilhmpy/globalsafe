@@ -13,7 +13,7 @@ export const DepositShow = () => {
   return (
     <S.Container>
       <Container>
-        <Back text="Назад" onClick={() => history.push(routers.deposits)} />
+        <Back text="Назад" onGoBackClick={() => history.push(routers.deposits)} />
         <ShowDeposit />
       </Container>
       <Container>
