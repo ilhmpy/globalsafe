@@ -11,6 +11,7 @@ import * as FilterS from './components/Filter/S.el';
 import { Filter } from "./components/Filter/index";
 import { AppContext } from '../../context/HubContext';
 import { Balance } from "../../types/balance";
+import { Loading, NotItems } from "./components/Loading/Loading";
 
 export const HistoryOperations = () => {
     const history = useHistory();
@@ -26,9 +27,9 @@ export const HistoryOperations = () => {
     const balances = appContext.balanceList;
     const { t } = useTranslation();
     const [add, setAdd] = useState<any[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
 
-    const filter = ["BalanceExchange", "Withdraw"];
-
+    const filter = [1, 2];
     const operation = (id: number) => {
         if (id === 6) {
         return t('operation.open');
@@ -51,8 +52,57 @@ export const HistoryOperations = () => {
 
     const [operations, setOperations] = useState<any[]>([]);
 
+    /*    /// NA.
+    Null,
+
+    /// Top-up operation.
+    TopUp,
+
+    /// Withdraw operation.
+    Withdraw,
+
+    /// Balance rollback due to transaction failure.
+    Rollback,
+
+    /// Promo balance adjustment.
+    Promo,
+
+    /// Affiliate charges.
+    AffiliateCharges,
+
+    /// Open new user deposit.
+    DepositOpen,
+
+    /// Deposit charges.
+    DepositPayments,
+
+    /// Return deposit body on expiry.
+    DepositClose,
+
+    /// Balance operation adjustemnt.
+    Adjustment,
+
+    /// Balance prize adjustment.
+    Prize,
+
+    /// Network commission from the transaction amount
+    TransactionNetworkFee,
+
+    /// Service commission from the transaction amount
+    TransactionServiceFee,
+
+    /// Deposit loan.
+    DepositLoan,
+
+    /// Transfer between balances.
+    BalanceExchange,
+
+    /// Exchange deposit.
+    DepositExchange, */
+
     function reqHistory() {
-      if (hubConnection) {
+        if (hubConnection) {
+          setLoading(true);
           console.log("WORK")
           hubConnection.invoke(
               "GetBalanceLog", 
@@ -63,6 +113,7 @@ export const HistoryOperations = () => {
               0, 10
           )
             .then(res => {
+              setLoading(false);
               console.log("rees", res, balances);
               let add: any[] = [];
               const addField = res.collection.map((item: any) => {
@@ -79,29 +130,33 @@ export const HistoryOperations = () => {
                     };
                 };
               });
-              console.log(add);
               setOperations(add);
      
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                console.log(err);
+                setLoading(false);
+            });
       };
   }
   
   useEffect(() => {
-      reqHistory();
+     // reqHistory();
   }, []);
 
     function addMore() {
         if (hubConnection) {
+            setLoading(true);
             hubConnection.invoke(
                 "GetBalanceLog", 
                 [1], 
-                [], 
+                getFilter(activeFilter), 
                 new Date(2018, 5, 13, 10, 0, 0),
                 new Date(), 
                 operations.length + 1, 5
             )
               .then(res => {
+                setLoading(false);
                 console.log("rees", res);
                 let add: any[] = [];
                 const addField = res.collection.map((item: any) => {
@@ -120,7 +175,10 @@ export const HistoryOperations = () => {
                   });
                 setOperations((data: any) => [...data, ...add]);
               })
-              .catch(err => console.log(err));
+              .catch(err => {
+                  console.log(err);
+                  setLoading(false);
+              });
         };
     };
 
@@ -132,22 +190,32 @@ export const HistoryOperations = () => {
         };
     };
 
+    const getFilter = (key: 'active' | 'archived' | 'hold') => {
+        if(key === 'active') {
+          return [];
+        }
+        if(key === 'archived') {
+          return [2];
+        }
+        if(key === 'hold') {
+          return [1];
+        }
+      }
+
     useEffect(() => {
-        console.log("CHANGE FILTER")
         if (hubConnection) {
-            console.log("WORK")
+            setLoading(true);
             hubConnection.invoke(
                 "GetBalanceLog", 
                 [1], 
-                activeFilter == "active" ? 
-                [] : activeFilter == "hold" ?
-                filter[0] : activeFilter == "archived" ? 
-                filter[1] : [], 
+                getFilter(activeFilter), 
                 new Date(2018, 5, 13, 10, 0, 0),
                 new Date(), 
                 0, 10
             )
               .then(res => {
+                setLoading(false);
+                console.log(res.collection, activeFilter);
                 let add: any[] = [];
                 const addField = res.collection.map((item: any) => {
                   if (balances) {
@@ -166,9 +234,22 @@ export const HistoryOperations = () => {
                 setOperations(add);
        
               })
-              .catch(err => console.log(err));
+              .catch(err => {
+                console.log(err);
+                setLoading(false);
+              });
         };
-    }, [activeFilter]);
+    }, [activeFilter, hubConnection]);
+
+    useEffect(() => {
+        console.log(loading)
+    }, [loading]);
+
+    if (loading) {
+        return (
+            <Loading />
+        )
+    };
 
     return (
         <Container>
@@ -196,7 +277,7 @@ export const HistoryOperations = () => {
                     <Styled.TableInnerItem head>Сумма</Styled.TableInnerItem>
                 </Styled.TableItem>
                 <Styled.TableMap>
-                    {operations && operations.map((item, idx) => (
+                    {operations.map((item, idx) => (
                         <Styled.TableItem item key={idx}>
                             <Styled.TableInnerItem item>{moment(item.operationDate).format("DD.MM.YYYY")} в {moment(item.operationDate).format("HH:MM")}</Styled.TableInnerItem>
                             <Styled.TableInnerItem item>{operation(item.operationKind)}</Styled.TableInnerItem>
