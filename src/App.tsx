@@ -2,6 +2,7 @@ import { FC, useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { APP_ID, APP_SAFARI_ID } from './constantes/onesignal';
+import { ChartProvider } from './context/ChartContext';
 import { AppContext } from './context/HubContext';
 import GlobalStyle from './globalStyles';
 import { Admin } from './Pages/Admin';
@@ -167,13 +168,15 @@ const App: FC = () => {
           <GlobalStyle />
 
           <Switch>
-            <Route path="/" component={Main} exact />
+            <ChartProvider>
+              <Route path="/" component={Main} exact />
+            </ChartProvider>
             <Route path="/admin" component={Admin} />
             <Route path="/info" component={InfoMain} />
             <Route path="/login" component={Authentication} />
             <Route path="/register" component={Register} />
             <Route path="/tech" component={TechWorks} />
-            <Route path="/404" component={PageNotFound} /> 
+            <Route path="/404" component={PageNotFound} />
           </Switch>
         </div>
       </Router>
