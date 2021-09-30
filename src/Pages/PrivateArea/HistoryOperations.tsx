@@ -27,10 +27,7 @@ export const HistoryOperations = () => {
     const { t } = useTranslation();
     const [add, setAdd] = useState<any[]>([]);
 
-    /* 
-    "TopUp", "Withdraw", "Rollback", "Promo", "AffiliateCharges", "DepositOpen", "DepositPayments", 
-                "DepositClose", "Adjusment", "Prize", "TransactionNetworkFee", "DepositLoan", "BalanceExchange", 
-                "DepositExchange" */
+    const filter = ["BalanceExchange", "Withdraw"];
 
     const operation = (id: number) => {
         if (id === 6) {
@@ -54,23 +51,6 @@ export const HistoryOperations = () => {
 
     const [operations, setOperations] = useState<any[]>([]);
 
-    function convert(res: any) {
-        const addField = res.collection.map((item: any) => {
-            if (balances) {
-                for (let i = 0; i < balances.length; i++) {
-                    if (Number(item.balanceSafeId) == balances[i].id) {
-                        setAdd((data: any) => [...data, {
-                            balanceDelta: item.balanceDelta,
-                            operationDate: item.operationDate,
-                            operationKind: item.operationKind,
-                            currency: Balance[balances[i].balanceKind]
-                        }]);
-                    };
-                };
-            };
-          });
-    };
-
     function reqHistory() {
       if (hubConnection) {
           console.log("WORK")
@@ -84,16 +64,17 @@ export const HistoryOperations = () => {
           )
             .then(res => {
               console.log("rees", res, balances);
+              let add: any[] = [];
               const addField = res.collection.map((item: any) => {
                 if (balances) {
                     for (let i = 0; i < balances.length; i++) {
                         if (Number(item.balanceSafeId) == balances[i].id) {
-                            setAdd((data: any) => [...data, {
+                            add = [...add, {
                                 balanceDelta: item.balanceDelta,
                                 operationDate: item.operationDate,
                                 operationKind: item.operationKind,
                                 currency: Balance[balances[i].balanceKind]
-                            }]);
+                            }];
                         };
                     };
                 };
@@ -112,7 +93,6 @@ export const HistoryOperations = () => {
 
     function addMore() {
         if (hubConnection) {
-            console.log("WORK")
             hubConnection.invoke(
                 "GetBalanceLog", 
                 [1], 
@@ -123,8 +103,22 @@ export const HistoryOperations = () => {
             )
               .then(res => {
                 console.log("rees", res);
-                convert(res);
-                setOperations((data: any) => [...data, ...res.collection]);
+                let add: any[] = [];
+                const addField = res.collection.map((item: any) => {
+                    if (balances) {
+                        for (let i = 0; i < balances.length; i++) {
+                            if (Number(item.balanceSafeId) == balances[i].id) {
+                                add = [...add, {
+                                    balanceDelta: item.balanceDelta,
+                                    operationDate: item.operationDate,
+                                    operationKind: item.operationKind,
+                                    currency: Balance[balances[i].balanceKind]
+                                }];
+                            };
+                        };
+                    };
+                  });
+                setOperations((data: any) => [...data, ...add]);
               })
               .catch(err => console.log(err));
         };
@@ -137,6 +131,44 @@ export const HistoryOperations = () => {
             return "";
         };
     };
+
+    useEffect(() => {
+        console.log("CHANGE FILTER")
+        if (hubConnection) {
+            console.log("WORK")
+            hubConnection.invoke(
+                "GetBalanceLog", 
+                [1], 
+                activeFilter == "active" ? 
+                [] : activeFilter == "hold" ?
+                filter[0] : activeFilter == "archived" ? 
+                filter[1] : [], 
+                new Date(2018, 5, 13, 10, 0, 0),
+                new Date(), 
+                0, 10
+            )
+              .then(res => {
+                let add: any[] = [];
+                const addField = res.collection.map((item: any) => {
+                  if (balances) {
+                      for (let i = 0; i < balances.length; i++) {
+                          if (Number(item.balanceSafeId) == balances[i].id) {
+                              add = [...add, {
+                                  balanceDelta: item.balanceDelta,
+                                  operationDate: item.operationDate,
+                                  operationKind: item.operationKind,
+                                  currency: Balance[balances[i].balanceKind]
+                              }];
+                          };
+                      };
+                  };
+                });
+                setOperations(add);
+       
+              })
+              .catch(err => console.log(err));
+        };
+    }, [activeFilter]);
 
     return (
         <Container>
