@@ -11,6 +11,7 @@ import { Heading } from '../components/Heading';
 type TableRowType = {
   method?: string;
   cardHolder?: string;
+  cardNumber?: string;
   currency?: string;
   isActive: boolean;
 };
@@ -23,58 +24,68 @@ export const Settings: FC = () => {
     {
       method: 'АО «Альфа-Банк»',
       cardHolder: 'VYACHESLAV TROSCHIN',
+      cardNumber: '5536 9137 9922 7240',
       currency: 'RUB',
       isActive: true,
     },
     {
       method: 'АО «Тинькофф Банк»',
       cardHolder: 'VYACHESLAV TROSCHIN',
+      cardNumber: '5536 9137 9922 7240',
       currency: 'RUB',
       isActive: true,
     },
     {
       method: 'ПАО Сбербанк',
       cardHolder: 'SVETLANA TROSCHINA',
+      cardNumber: '5536 9137 9922 7240',
       currency: 'RUB',
       isActive: true,
     },
     {
       method: 'АО «Альфа-Банк»',
       cardHolder: 'VYACHESLAV TROSCHIN',
+      cardNumber: '5536 9137 9922 7240',
       currency: 'USD',
       isActive: false,
     },
     {
       method: 'АО «Тинькофф Банк»',
       cardHolder: 'SVETLANA TROSCHINA',
+      cardNumber: '5536 9137 9922 7240',
       currency: 'USD',
       isActive: true,
     },
     {
       method: 'ПАО Сбербанк',
       cardHolder: 'SVETLANA TROSCHINA',
+      cardNumber: '5536 9137 9922 7240',
       currency: 'EUR',
       isActive: false,
     },
     {
       method: 'ERC 20',
       cardHolder: '-',
+      cardNumber: '5536 9137 9922 7240',
       currency: 'USDT',
       isActive: true,
     },
     {
       method: 'TRC 20',
       cardHolder: '-',
+      cardNumber: '5536 9137 9922 7240',
       currency: 'USDT',
       isActive: true,
     },
     {
       method: 'BEP 20',
       cardHolder: '-',
+      cardNumber: '5536 9137 9922 7240',
       currency: 'USDT',
       isActive: false,
     },
   ]);
+  const [chosenItem, setChosenItem] = useState<TableRowType>();
 
   return (
     <Container>
@@ -112,7 +123,12 @@ export const Settings: FC = () => {
               <Ceil>{row.method}</Ceil>
               <Ceil>{row.cardHolder}</Ceil>
               <Ceil>{row.currency}</Ceil>
-              <Ceil checked={row.isActive}>
+              <Ceil
+                checked={row.isActive}
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
                 <Switcher
                   onChange={() => {
                     console.log(row.isActive);

@@ -11,11 +11,19 @@ import { AppContext } from '../../context/HubContext';
 
 interface Props {
   open: boolean;
-  setOpen: (open: boolean) => void;
   converting?: boolean;
+  setOpen: (open: boolean) => void;
+  setIsSuccessConverting: (status: boolean) => void;
+  setIsFailConverting: (status: boolean) => void;
 }
 
-export const ConvertingModal: FC<Props> = ({ open, setOpen, converting }: Props) => {
+export const ConvertingModal: FC<Props> = ({
+  open,
+  setOpen,
+  converting,
+  setIsSuccessConverting,
+  setIsFailConverting,
+}: Props) => {
   const { t } = useTranslation();
   const [fromSum, setFromSum] = useState('');
   const [toSum, setToSum] = useState('');
@@ -64,7 +72,13 @@ export const ConvertingModal: FC<Props> = ({ open, setOpen, converting }: Props)
                 <Rate>Курс:</Rate>
                 <Rate>0</Rate>
               </RateRow>
-              <Button primary onClick={() => undefined}>
+              <Button
+                primary
+                onClick={() => {
+                  setOpen(false);
+                  setTimeout(() => setIsSuccessConverting(true), 500);
+                }}
+              >
                 {converting ? t('privateArea.convert2') : t('privateArea.topUpBalance')}
               </Button>
             </InnerBlock>

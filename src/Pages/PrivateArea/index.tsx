@@ -349,7 +349,7 @@ export const InfoMain: FC = () => {
         }}
       />
 
-      <ConvertingModal open={openConverting} setOpen={setOpenConverting} />
+      <ConvertingModal open={openConverting} setOpen={setOpenConverting} setIsSuccessConverting={setIsSuccessConverting} setIsFailConverting={setIsFailConverting} />
       <ConvertingModalSuccess open={isSuccessConverting} setOpen={setIsSuccessConverting} />
       <ConvertingModalFail open={isFailConverting} setOpen={setIsFailConverting} />
 
