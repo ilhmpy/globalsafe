@@ -32,21 +32,25 @@ export const HistoryOperations = () => {
     const filter = [1, 2];
     const operation = (id: number) => {
         if (id === 6) {
-        return t('operation.open');
+            return t('operation.open');
         } else if (id === 7) {
-        return t('operation.divedents');
+            return t('operation.divedents');
         } else if (id === 8) {
-        return t('operation.close');
+            return t('operation.close');
         } else if (id === 2) {
-        return t('operation.withdraw');
+            return t('operation.withdraw');
         } else if (id === 1) {
-        return t('operation.add');
+            return t('operation.add');
         } else if (id === 3) {
-        return t('operation.failed');
+            return t('operation.failed');
         } else if (id === 4) {
-        return t('operation.balance');
+            return t('operation.balance');
         } else if (id === 5) {
-        return t('operation.partners');
+            return t('operation.partners');
+        } else if (id === 9) {
+            return "Регулировка балансировки"
+        } else if (id === 10) {
+            return "Приз"
         }
     };
 
@@ -146,7 +150,6 @@ export const HistoryOperations = () => {
 
     function addMore() {
         if (hubConnection) {
-            setLoading(true);
             hubConnection.invoke(
                 "GetBalanceLog", 
                 [1], 
@@ -156,7 +159,6 @@ export const HistoryOperations = () => {
                 operations.length + 1, 5
             )
               .then(res => {
-                setLoading(false);
                 console.log("rees", res);
                 let add: any[] = [];
                 const addField = res.collection.map((item: any) => {
@@ -177,7 +179,6 @@ export const HistoryOperations = () => {
               })
               .catch(err => {
                   console.log(err);
-                  setLoading(false);
               });
         };
     };
