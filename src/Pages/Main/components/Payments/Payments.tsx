@@ -257,58 +257,17 @@ export const Payments: FC = () => {
     localStorage.setItem("last", JSON.stringify(newDate));
     getLastUpdate(newDate);
     const update = () => {
-      console.log("yes");
       getLastUpdate(newDate);
     };
   };
 
   function getLastUpdate(last: any) {
-    const currentDate = new Date();
     const updateTime = last;
-    
-    if (updateTime.date.year == currentDate.getFullYear()) {
-      if (updateTime.date.month == currentDate.getMonth() + 1) {
-        if (updateTime.date.day == currentDate.getDate()) {
-          const time = ((currentDate.getHours() * 60) + currentDate.getMinutes()) - ((updateTime.time.hours * 60) + updateTime.time.minutes);
-          if (time >= 60) {
-            console.log("hours", `${Math.floor(time / 60)} часов`)
-            return setLastTime(`${Math.floor(time / 60)} часов`);
-          } else {
-            console.log("minutes", `${time} минут`)
-            if (time > 0) {
-              if (time > 5) {
-                setLastTime(`${time} минут`);
-              } else {
-                setLastTime(`${time} минуты`);
-              };
-            } else {
-              setLastTime(null);
-            };
-          };
-        } else {
-          setActualDate(new Date());
-          if (Number(updateTime.date.day) > 5) {
-            return setLastTime(`${currentDate.getDate() - updateTime.date.day} дней`);
-          } else {
-            return setLastTime(`${currentDate.getDate() - updateTime.date.day} дня`);
-          }
-        };
-      } else {
-        setActualDate(new Date());
-        if (Number(updateTime.date.month) > 5) {
-          return setLastTime(`${(currentDate.getMonth() + 1) - updateTime.date.month} месяцев`);
-        } else {
-          return setLastTime(`${(currentDate.getMonth() + 1) - updateTime.date.month} месяца`);
-        };
-      };
-    } else {
-      setActualDate(new Date());
-      if (Number(updateTime.date.year) > 5) {
-        return setLastTime(`${currentDate.getFullYear() - updateTime.date.year} лет`);
-      } else {
-        return setLastTime(`${currentDate.getFullYear() - updateTime.date.year} года`);
-      };
-    };
+    const time = moment(
+      new Date(updateTime.date.year, updateTime.date.month - 1, updateTime.date.day, updateTime.time.hours, updateTime.time.minutes))
+      .fromNow(true);
+    setActualDate(new Date());
+    setLastTime(time);
   };
 
   return (
