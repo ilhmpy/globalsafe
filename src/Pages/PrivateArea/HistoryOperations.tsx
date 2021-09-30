@@ -23,6 +23,7 @@ export const HistoryOperations = () => {
     const user = appContext.user;
     const balance = appContext.balance;
     const hubConnection = appContext.hubConnection;
+    const balances = appContext.balanceList;
     const { t } = useTranslation();
 
     /* 
@@ -66,6 +67,17 @@ export const HistoryOperations = () => {
             .then(res => {
               console.log("rees", res);
               setOperations(res.collection);
+              const add = res.collection.map((item: any) => {
+                balances && balances.filter((balance: any) => {
+                    if (balance.id == item.id) {
+                        return {
+                            ...item,
+                            balanceKind: balance.balanceKind
+                        };
+                    };
+                });
+              });
+              console.log(add);
             })
             .catch(err => console.log(err));
       };
