@@ -1,15 +1,19 @@
-import { FC } from 'react';
+import { FC, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { Button } from '../../../components/Button/V2/Button';
 import { Switcher } from '../../../components/Switcher';
 import { routers } from '../../../constantes/routers';
+import { AppContext } from '../../../context/HubContext';
 import { Container } from '../../../globalStyles';
 import { Back } from '../components/Back';
 import { Title } from '../components/ui/Title';
 
 export const ViewPayMethod: FC = () => {
+  const appContext = useContext(AppContext);
+  const { chosenMethod, setChosenMethod } = appContext;
+  const { method, cardHolder, cardNumber, currency, isActive } = chosenMethod;
   const { t } = useTranslation();
   const history = useHistory();
 
@@ -41,31 +45,32 @@ export const ViewPayMethod: FC = () => {
         <RightSide>
           <Entry>
             <span>Платежный метод:</span>
-            <span>АО «Тинькофф Банк»</span>
+            <span>{method}</span>
           </Entry>
           <Entry>
             <span>Валюта:</span>
-            <span>RUB</span>
+            <span>{currency}</span>
           </Entry>
           <Entry>
             <span>Номер карты:</span>
-            <span>5536 9137 9922 7240</span>
+            <span>{cardNumber}</span>
           </Entry>
           <Entry>
             <span>Держатель карты:</span>
-            <span>VYACHESLAV TROSCHIN</span>
+            <span>{cardHolder}</span>
           </Entry>
           <Entry>
             <span>Активность метода:</span>
 
-            <SwitcherRow checked>
+            <SwitcherRow checked={isActive}>
               <Switcher
                 onChange={() => {
                   console.log(111);
+                  setChosenMethod((prev: any) => ({ ...prev, isActive: !prev.isActive }));
                 }}
-                checked={true}
+                checked={isActive}
               />
-              <span>{t(true ? 'depositsPrograms.on' : 'depositsPrograms.off')}</span>
+              <span>{t(isActive ? 'depositsPrograms.on' : 'depositsPrograms.off')}</span>
             </SwitcherRow>
           </Entry>
 
