@@ -113,6 +113,8 @@ export const HubProvider: FC = ({ children }: any) => {
 
             console.log(res.balances);
 
+            console.log(newArr[0].volume)
+
             if (!localStorage.getItem('i18nextLng')) {
               i18n.changeLanguage(res.languageCode === 1 ? 'ru' : 'en');
             }

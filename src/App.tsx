@@ -164,8 +164,8 @@ const App: FC = () => {
     <div style={{ position: 'relative' }}>
       <Router>
         <div className="App">
-          <GlobalStyle />
-
+          <GlobalStyle /> 
+ 
           <Switch>
             <Route path="/" component={Main} exact />
             <Route path="/admin" component={Admin} />

@@ -31,8 +31,12 @@ import { Info } from './Info';
 import { InfoBalance } from './InfoBalance';
 import { InfoDeposits } from './InfoDeposits';
 import { DepositListModal, TokenModal } from './Modals';
-import { OnePage } from './OnePage';
+import { OnePage } from './OnePage'; 
 import * as Styled from './Styles.elements';
+import { H3 } from "../../components/UI/Heading";
+import { Select as Selectv2 } from "../../components/UI/Select";
+import { Input as Inputv2 } from "../../components/UI/V4/Inputs/Input";
+import { PAButton } from "../../components/UI/V4/Buttons/PAButton";
 import { ReactComponent as LockIcon } from '../../assets/v2/svg/lock.svg'
 import { ReactComponent as LogOutIcon } from '../../assets/v2/svg/logOut.svg'
 import { routers } from '../../constantes/routers';
@@ -74,6 +78,19 @@ export const InfoMain: FC = () => {
   const [serviceCommision, setServiceCommision] = useState<string>('0');
   const [toTokenModal, setToTokenModal] = useState<boolean>(false);
   const [countToTranslate, setCountToTranslate] = useState<any>('');
+  const [currency, setCurrency] = useState<string>("");
+  const [ed, setEd] = useState<string>("");
+  const [error, setError] = useState<boolean | undefined>();
+  const [errorReason, setErrorReason] = useState<string>("На балансе аккаунта недостаточно средств");
+  const [outPutCurrency, setOutPutCurrency] = useState<string>("");
+  const [outPutEd, setOutPutEd] = useState<string>("");
+  const [blockchain, setBlockchain] = useState<any>("0");
+  const [service, setService] = useState<any>("0");
+  const [currencies, setCurrencies] = useState<any[]>(['CWD', 'GLOBAL', 'GF', 'FF', 'GF5', 'GF6', 'FF5', 'FF6', 'MULTICS']);
+  const [outPutError, setOutPutError] = useState<boolean | undefined>();
+  const [outPutErrorReason, setOutPutErrorReason] = useState<string>("На балансе аккаунта недостаточно средств");
+  const [withDrawModal, setWithDrawModal] = useState<boolean>(false);
+  const [addDrawModal, setAddDrawModal] = useState<boolean>(false);
 
   // Get Balance Kinds List as an Array
   const balancesList = useMemo(() => {
@@ -169,35 +186,20 @@ export const InfoMain: FC = () => {
       hubConnection
         .invoke(
           'Withdraw',
-          Balance[currencyValue as keyof typeof Balance],
-          currencyValue === 'CWD'
-            ? +withdrawValue * 100000
-            : currencyValue === 'GLOBAL'
-            ? +withdrawValue * 10000
-            : currencyValue === 'MULTICS'
-            ? +withdrawValue * 100
-            : +withdrawValue
+          Balance[outPutCurrency as keyof typeof Balance],
+          outPutCurrency === 'CWD'
+            ? +outPutEd * 100000
+            : outPutCurrency === 'GLOBAL'
+            ? +outPutEd * 10000
+            : outPutCurrency === 'MULTICS'
+            ? +outPutEd * 100
+            : +outPutEd
         )
         .then((res) => {
-          handleCloseWithdrawModal();
-          createNotify({
-            text: t('alert.successMsg'),
-            error: false,
-            timeleft: 5,
-            id: notifications.length,
-          });
-          setWithdrawValueLoad(false);
+          console.log(res);
         })
         .catch((err: Error) => {
-          handleCloseWithdrawModal();
           console.log(err);
-          createNotify({
-            text: t('alert.errorMsg'),
-            error: true,
-            timeleft: 5,
-            id: notifications.length,
-          });
-          setWithdrawValueLoad(false);
         });
     }
   };
@@ -255,13 +257,13 @@ export const InfoMain: FC = () => {
   };
 
   const getCommisions = (value: string) => {
-    // get commisions from server
     if (hubConnection) {
       hubConnection
         .invoke<Commisions>('GetWithdrawFee', 1, Number(value))
         .then((res: any) => {
-          setBlockchainCommision((res.networkFee / 100000).toString());
-          setServiceCommision((res.serviceFee / 100000).toString());
+          console.log(res);
+          setBlockchain((res.networkFee / 100000).toString());
+          setService((res.serviceFee / 100000).toString());
         })
         .catch((err) => console.error(err));
     }
@@ -305,7 +307,67 @@ export const InfoMain: FC = () => {
     setCurrencyValue('');
   };
 
-  // Get balance Chip Color
+  const changeBalance = () => {
+    const newWindow = window.open();
+
+    if (hubConnection && currency.length > 0 && ed.length > 0) {
+      hubConnection
+        .invoke(
+          'GetTopUpUrl',
+          Balance[currency as keyof typeof Balance],
+          currency === 'CWD'
+            ? +ed * 100000
+            : currency === 'GLOBAL'
+            ? +ed * 10000
+            : +ed
+        )
+        .then((res: string) => {
+          newWindow && (newWindow.location.href = res);
+          setError(false);
+          setAddDrawModal(false);
+        })
+        .catch((err: Error) => {
+          console.log(err);
+          newWindow && newWindow.close();
+          setError(true);
+          setErrorReason("Недостаточно средств на балансе.");
+          setAddDrawModal(false);
+        });
+    }
+  };
+
+  const outPutBalance = () => {
+    console.log(hubConnection && outPutCurrency.length > 0 && outPutEd.length > 0 && Number(outPutEd) > ((Number(blockchain) + Number(service)) + 1))
+    if (hubConnection && outPutCurrency.length > 0 && outPutEd.length > 0 && Number(outPutEd) > ((Number(blockchain) + Number(service)) + 1)) {
+      setWithdrawValueLoad(true);
+      hubConnection
+        .invoke(
+          'Withdraw',
+          Balance[outPutCurrency as keyof typeof Balance],
+          outPutCurrency === 'CWD'
+            ? Number(+outPutEd) * 100000
+            : outPutCurrency === 'GLOBAL'
+            ? Number(+outPutEd) * 10000
+            : outPutCurrency === 'MULTICS'
+            ? Number(+outPutEd) * 100
+            : Number(+outPutEd)
+        )
+        .then((res) => {
+          console.log(res);
+          setWithdrawValueLoad(false);
+          setOutPutError(false);
+          setWithDrawModal(false);
+        })
+        .catch((err: Error) => {
+          console.log(err);
+          setWithdrawValueLoad(false);
+          setOutPutError(true);
+          setWithDrawModal(false);
+          setOutPutErrorReason("Недостаточно средств на балансе.");
+        });
+    }
+  };
+
   const getChipColor = (i: any) => {
     let color = '#E0F8FF';
     if(i.balanceKind === 1) {
@@ -329,6 +391,7 @@ export const InfoMain: FC = () => {
     }
     return color;
   }
+
   return (
     <>
       {withdrawValueLoad && (
@@ -341,6 +404,100 @@ export const InfoMain: FC = () => {
           <Loading />
         </Styled.Loader>
       )}
+
+      <CSSTransition in={addDrawModal} timeout={0} unmountOnExit>
+        <Modal onClose={() => {
+          setAddDrawModal(false);
+          setEd("");
+        }} width={420} withClose>
+          <H3 center style={{ marginTop: "24px" }}>Пополнение баланса</H3>
+          <div style={{ width: "100%", maxWidth: "340px", margin: "0 auto" }}>
+            <Selectv2 data={currencies} setSwitch={setCurrency} />
+            <Inputv2 placeholder="Сумма пополнения" value={ed} onChange={(e) => {
+              const arr = e.currentTarget.value.split('-');
+              const fromSplitted = arr[0].split('.');
+              const toSplitted = arr.length === 2 ? arr[1].split('.') : '';
+              const validValue = e.currentTarget.value.replace(/[^0-9]/gi, '');
+              setEd(validValue);
+            }} />
+            <PAButton onClick={changeBalance}>Пополнить баланс</PAButton>
+          </div>
+        </Modal>
+      </CSSTransition>
+
+      <CSSTransition in={error === undefined ? false : error === false ? true : false} timeout={0} unmountOnExit>
+        <Modal onClose={() => setError(undefined)} width={420} withClose>
+          <H3 center style={{ marginTop: "24px" }}>Успешное пополнение</H3>
+          <Styled.Desc>Баланс личного кабинета успешно будет пополнен на:</Styled.Desc>
+          <Styled.Desc bold mMore style={{ marginTop: "0px" }}>{ed} {currency}</Styled.Desc>
+        </Modal>
+      </CSSTransition>
+
+      <CSSTransition in={error === undefined ? false : error} timeout={0} unmountOnExit>
+        <Modal onClose={() => setError(undefined)} width={420} withClose>
+          <H3 center style={{ marginTop: "24px" }}>Ошибка пополнения</H3>
+          <Styled.Desc>Баланс личного кабинета не был пополнен на:</Styled.Desc>
+          <Styled.Desc bold>{ed} {currency}</Styled.Desc>
+          <Styled.Desc danger mMore style={{ marginTop: "0px" }}>{errorReason}</Styled.Desc>
+        </Modal>
+      </CSSTransition>
+
+
+
+      <CSSTransition in={withDrawModal} timeout={0} unmountOnExit>
+        <Modal onClose={() => {
+           setWithDrawModal(false);
+           setOutPutEd("");
+        }} width={420} withClose>
+          <H3 center style={{ marginTop: "24px" }}>Вывод средств</H3>
+          <div style={{ width: "100%", maxWidth: "340px", margin: "0 auto" }}>
+            <Selectv2 data={currencies} setSwitch={setOutPutCurrency} />
+            <Inputv2 value={outPutEd} placeholder="Сумма вывода" 
+            onKeyUp={(e) => {
+              if (e.keyCode === 8) {
+                setBlockchain("0");
+                setService("0");
+                setCurrency("");
+              };
+            }}
+            onChange={(e) => {
+              const arr = e.currentTarget.value.split('-');
+              const fromSplitted = arr[0].split('.');
+              const toSplitted = arr.length === 2 ? arr[1].split('.') : '';
+              const validValue = e.currentTarget.value.replace(/[^0-9]/gi, '');
+              setOutPutEd(validValue);
+              getCommisions(validValue);
+            }} />
+            <Styled.Commision marginT={20} marginB={10}>Комиссия блокчейна: <span>{blockchain} {blockchain.length != "0" ? outPutCurrency : ""}</span></Styled.Commision>
+            <Styled.Commision marginT={10} marginB={20}>Комиcсия сервиса: <span>{service} {service.length != "0" ? outPutCurrency : ""}</span></Styled.Commision>
+            <PAButton onClick={outPutBalance}>Вывести средства</PAButton>
+          </div>
+        </Modal>
+      </CSSTransition> 
+
+      <CSSTransition in={outPutError === false ? true : false} timeout={0} unmountOnExit>
+        <Modal onClose={() => setOutPutError(undefined)} width={420} withClose>
+          <H3 center style={{ marginTop: "24px" }}>Успешный вывод средств</H3>
+          <Styled.Desc>С баланса личного кабинета успешно выведены средства в размере:</Styled.Desc>
+          <Styled.Desc bold mMore>{outPutEd} {outPutCurrency}</Styled.Desc>
+          <Styled.Desc mLess>К выводу: {outPutEd ? (Number(outPutEd) - (Number(blockchain) + Number(service))) : 0}</Styled.Desc>
+          <Styled.Desc mLess>Комиссия блокчейн: {blockchain}</Styled.Desc>
+          <Styled.Desc mLess>Комиссия сервиса: {service}</Styled.Desc>
+        </Modal>
+      </CSSTransition>
+
+      <CSSTransition in={outPutError} timeout={0} unmountOnExit>
+        <Modal onClose={() => setOutPutError(undefined)} width={420} withClose>
+          <H3 center style={{ marginTop: "24px" }}>Ошибка вывода средств</H3>
+          <Styled.Desc>С баланса личного кабинета не были выведены средства в размере:</Styled.Desc>
+          <Styled.Desc bold>{outPutEd} {outPutCurrency}</Styled.Desc>
+          <Styled.Desc mLess>К выводу: {outPutEd ? (Number(outPutEd) - (Number(blockchain) + Number(service))) : 0}</Styled.Desc>
+          <Styled.Desc mLess>Комиссия блокчейн: {blockchain}</Styled.Desc>
+          <Styled.Desc mLess>Комиссия сервиса: {service}</Styled.Desc>
+          <Styled.Desc danger mMore>{outPutErrorReason}</Styled.Desc>
+        </Modal>
+      </CSSTransition>
+
 
       <TokenModal
         block={toTokenModal}
@@ -391,12 +548,12 @@ export const InfoMain: FC = () => {
                   <SecondaryButton 
                     title={'Пополнить баланс'}
                     // eslint-disable-next-line
-                    onClick={() => {}}
+                    onClick={() => setAddDrawModal(true)}
                   />
                    <SecondaryButton 
                     title={'Вывести средства'}
                     // eslint-disable-next-line
-                    onClick={() => {}}
+                    onClick={() => setWithDrawModal(true)}
                   />
               </PanelActionsBlock>
             </PanelHeader>
