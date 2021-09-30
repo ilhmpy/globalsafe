@@ -68,14 +68,15 @@ export const HistoryOperations = () => {
               console.log("rees", res);
               setOperations(res.collection);
               const add = res.collection.map((item: any) => {
-                balances && balances.filter((balance: any) => {
+                const add = balances && balances.find((balance: any) => {
                     if (balance.id == item.id) {
                         return {
                             ...item,
-                            balanceKind: balance.balanceKind
+                            currency: Balance[balance.balanceKind]
                         };
                     };
                 });
+                console.log(add);
               });
               console.log(add);
             })
