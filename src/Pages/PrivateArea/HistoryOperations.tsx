@@ -32,28 +32,39 @@ export const HistoryOperations = () => {
     const [not, setNot] = useState<boolean>(false);
 
     const filter = [1, 2];
+
     const operation = (id: number) => {
-        if (id === 6) {
-            return t('operation.open');
-        } else if (id === 7) {
-            return t('operation.divedents');
-        } else if (id === 8) {
-            return t('operation.close');
+        if (id === 1) {
+            return t('operation.add');
         } else if (id === 2) {
             return t('operation.withdraw');
-        } else if (id === 1) {
-            return t('operation.add');
         } else if (id === 3) {
             return t('operation.failed');
         } else if (id === 4) {
             return t('operation.balance');
         } else if (id === 5) {
             return t('operation.partners');
+        } else if (id === 6) {
+            return t('operation.open');
+        } else if (id === 7) {
+            return t('operation.divedents');
+        } else if (id === 8) {
+            return t('operation.close');
         } else if (id === 9) {
             return "Регулировка балансировки"
         } else if (id === 10) {
             return "Приз"
-        }
+        } else if (id === 11) {
+            return "Комиссия сети от суммы транзакции";
+        } else if (id === 12) {
+            return "Комиссия сервиса от суммы транзакции";
+        } else if (id === 13) {
+            return "Депозитный заем.";
+        } else if (id === 14) {
+            return "Перевод между балансами.";
+        } else if (id === 15) {
+            return "Обменный депозит.";
+        };
     };
 
     const [operations, setOperations] = useState<any[]>([]);
@@ -62,49 +73,50 @@ export const HistoryOperations = () => {
     Null,
 
     /// Top-up operation.
-    TopUp,
-
+    TopUp, 1
+ 
     /// Withdraw operation.
-    Withdraw,
+    Withdraw, 2
 
     /// Balance rollback due to transaction failure.
-    Rollback,
+    Rollback, 3
 
     /// Promo balance adjustment.
-    Promo,
+    Promo, 4
 
     /// Affiliate charges.
-    AffiliateCharges,
+    AffiliateCharges, 5 
 
     /// Open new user deposit.
-    DepositOpen,
+    DepositOpen, 6
 
     /// Deposit charges.
-    DepositPayments,
+    DepositPayments, 7
 
     /// Return deposit body on expiry.
-    DepositClose,
+    DepositClose, 8
 
     /// Balance operation adjustemnt.
-    Adjustment,
+    Adjustment, 9
 
     /// Balance prize adjustment.
-    Prize,
+    Prize, 10
 
     /// Network commission from the transaction amount
-    TransactionNetworkFee,
+    TransactionNetworkFee, 11
 
     /// Service commission from the transaction amount
-    TransactionServiceFee,
+    TransactionServiceFee, 12
 
     /// Deposit loan.
-    DepositLoan,
+    DepositLoan, 13
 
     /// Transfer between balances.
-    BalanceExchange,
+    BalanceExchange, 14
 
     /// Exchange deposit.
-    DepositExchange, */
+    DepositExchange, 15
+    */ 
 
     useEffect(() => {
         if (hubConnection) {
@@ -151,26 +163,12 @@ export const HistoryOperations = () => {
             )
               .then(res => {
                 console.log("rees", res);
-                let add: any[] = [];
-                const addField = res.collection.map((item: any) => {
-                    if (balances) {
-                        for (let i = 0; i < balances.length; i++) {
-                            if (Number(item.balanceSafeId) == balances[i].id) {
-                                add = [...add, {
-                                    balanceDelta: item.balanceDelta,
-                                    operationDate: item.operationDate,
-                                    operationKind: item.operationKind,
-                                    balanceKind: balances[i].balanceKind,
-                                    currency: Balance[balances[i].balanceKind]
-                                }];
-                            };
-                        };
-                    };
-                  });
                 if (allCurrency) {
-                    setOperations((data: any) => [...data, ...add]);
+                    setOperations((data: any) => [...data, ...res.collection]);
                 } else {
-                    setOperations((data: any) => [...data, ...add.filter((i: any) => i.balanceKind === 1)]);
+                    if (balances) {
+                        setOperations((data: any) => [...data, ...res.collection.filter((i: any) => Number(i.balanceSafeId) === balances[1].id)]);
+                    };
                 };
               })
               .catch(err => {
