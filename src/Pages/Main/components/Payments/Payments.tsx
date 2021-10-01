@@ -13,162 +13,17 @@ import { Button } from '../../../../components/Button/Button';
 import { RadialBar } from '../../../../components/Charts/Test';
 import { Modal } from '../../../../components/Modal/Modal'; 
 import { Input } from '../../../../components/UI/Input';
-import { H2 } from '../../../../components/UI/MainStyled';
+import { H2 } from '../../../../components/UI/Heading';
 import { Page } from '../../../../components/UI/Page';
 import { AppContext } from '../../../../context/HubContext';
-import { Card, Container } from '../../../../globalStyles';
+import { Card } from '../../../../globalStyles';
+import { Container } from "../../../../components/UI/Container";
 import { Pokedex, RootPayDeposit } from '../../../../types/payouts';
 import { ModalBlock, ModalTitle } from '../Tariffs/Tariffs.elements';
 import { ReactComponent as Reload } from "../../../../assets/svg/reload.svg";
 import { AnyMxRecord } from 'dns';
-
+ 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
-
-type RadialComponentProps = {
-  data: Pokedex;
-  height: number;
-};
-
-const RadialComponent: FC<RadialComponentProps> = ({ data, height }: RadialComponentProps) => {
-  const [show, setShow] = useState(false);
-  const [isNormalOpen, setIsNormalOpen] = useState(false);
-  const [oldLink, setOldLink] = useState('');
-  const [link, setLink] = useState('');
-  const [min, setMin] = useState(500);
-  const [value, setValue] = useState('');
-  const inputRef = useRef<HTMLInputElement>(null);
-  const { t } = useTranslation();
-  const onClose = () => {
-    setShow(false);
-  };
-
-  const handleClick = (str: string, num: number) => {
-    setIsNormalOpen(true);
-    onClose();
-    setValue('');
-    const newLink = `https://backup.cwd.global/shopping/payment?to_name=${str}&amount=${
-      num / 100000
-    }`;
-    setLink(newLink);
-    setOldLink(`https://backup.cwd.global/shopping/payment?to_name=${str}&amount=`);
-    const val: any = /\d{3,}/g.exec(str);
-    setMin(num / 100000);
-    setValue((num / 100000).toString());
-  };
-
-  useEffect(() => {
-    if (inputRef && inputRef.current && value) {
-      inputRef.current.focus();
-    }
-  }, [value, inputRef]);
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const id = e.target.value;
-    setValue(id);
-    const newLink = oldLink.replace(/\d{3,}/g, '');
-    if (id === '') {
-      setLink(newLink + min);
-    } else {
-      setLink(newLink + id);
-    }
-  };
-
-  const toLink = () => {
-    window.open(link);
-  };
-
-  useEffect(() => {
-    if (show) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-  }, [show]);
-
-  return (
-    <div>
-      {isNormalOpen && (
-        <Modal zIndex="999999" onClose={() => setIsNormalOpen(false)}>
-          <ModalBlock>
-            <ModalTitle>{t('tariffs.depositSize')}</ModalTitle>
-            <Input
-              onChange={onChange}
-              // placeholder={min.toString()}
-              type="number"
-              ref={inputRef}
-              value={value}
-            />
-            <ModalButton as="button" onClick={toLink} danger disabled={+value < min}>
-              {t('tariffs.ok')}
-            </ModalButton>
-          </ModalBlock>
-        </Modal>
-      )}
-      {show && (
-        <Modal width={1060} onClose={onClose}>
-          <ModalContainer>
-            <ProgramCard>
-              <BlockTitle>{data.deposit.name}</BlockTitle>
-              <div className="item__subtitle">
-                <Text dangerouslySetInnerHTML={{ __html: data.deposit.description }} />
-              </div>
-              <ModalButton
-                as="button"
-                disabled={!data.deposit.isActive}
-                blue
-                onClick={() => handleClick(data.deposit.account, data.deposit.minAmount)}
-              >
-                {t('payments.open')}
-              </ModalButton>
-            </ProgramCard>
-            <RadialModalItem
-              small={
-                data.deposit.name.split(' ')[0].length > 6 &&
-                data.deposit.name.split(' ').length > 1
-              }
-              flex={true}
-            >
-              <RadialBar
-                height={300}
-                values={Number((data.procent * 100).toFixed(0))}
-                color={data.deposit.isActive ? data.colors : '#666'}
-                size="60%"
-              />
-              <RoundInside>
-                <RoundInsideName>{data.deposit.name}</RoundInsideName>
-                <RoundInsideProcent>
-                  <RoundInsideItem>{(data.procent * 100).toFixed(2)}</RoundInsideItem>
-                  <Proc>%</Proc>
-                </RoundInsideProcent>
-              </RoundInside>
-            </RadialModalItem>
-          </ModalContainer>
-        </Modal>
-      )}
-      <RadialItem onClick={() => setShow(true)}>
-        <RadialBar
-          height={height}
-          values={data.procent * 100}
-          color={data.deposit.isActive ? data.colors : '#666'}
-        />
-        <RoundInside>
-          <RoundInsideName
-            small={
-              data.deposit.name.split(' ')[0].length > 6 && data.deposit.name.split(' ').length > 1
-            }
-          >
-            {data.depositName}
-          </RoundInsideName>
-          <RoundInsideDate>{moment(data.date).format('DD.MM.YYYY')}</RoundInsideDate>
-          <RoundInsideProcent>
-            {(data.procent * 100).toFixed(2)}
-            <Proc>%</Proc>
-          </RoundInsideProcent>
-        </RoundInside>
-      </RadialItem>
-    </div>
-  );
-};
 
 export const Payments: FC = () => {
   const [statsDeposit, setStatsDeposit] = useState<RootPayDeposit[]>([]); 
@@ -301,325 +156,70 @@ export const Payments: FC = () => {
   };
 
   return (
-    <Page abs>
+    <>
       {statsDeposit.length ? (
         <>
-        <Container>
-          <H2 center>{t('payments.currPay')}</H2>
-        </Container>
-      <Container>
-      <WhiteBox>
-        <WhiteIntf>
-          <Title>{t("payments2.actual")} {moment(actualDate).format("DD.MM.YYYY")}</Title>
-          <Title right>
-            {t("payments2.last")} {lastTime != null ? ( <> {lastTime} {t("payments2.ago")} </> ) : t("payments2.now")} <Reload style={{ cursor: "pointer" }} onClick={() => lastUpdate()} />
-          </Title> 
-        </WhiteIntf>
-        <WhiteMap>
-          {isMobile ? (
-            <>
-              <Swiper spaceBetween={10} slidesPerView={1} pagination={{ clickable: true }}>
-                  {smallArr.map((i: any, idx: number) => (
-                    <SwiperSlide key={idx}>                                       
-                      <>
-                        {i.map((item: any, idx: any) => (
-                          <WhiteItem key={idx} lastMargin={smallArr && smallArr[0].length}>
-                            <WhiteItemText>{item.deposit.name}</WhiteItemText>
-                            <WhiteItemText bold>{(item.procent).toFixed(0)} %</WhiteItemText>
-                            <WhiteItemText>{moment(item.date).format("DD.MM.YYYY")}</WhiteItemText>
-                            <WhiteItemLine procent={(item.procent).toFixed(0)} />
-                          </WhiteItem>
-                        ))}
-                      </>
-                    </SwiperSlide>
-                  ))}
-              </Swiper>
-            </>
-          ) : (
-            <>
-              {statsDeposit.length ? (
-                  <>
-                  {bigArr.map((i: any, idx: any) => {
-                    return (
-                      <>
-                        {i.map((item: any, idx: any) => (
-                          <WhiteItem key={idx}>
-                            <WhiteItemText>{item.deposit.name}</WhiteItemText>
-                            <WhiteItemText bold>{(item.procent).toFixed(0)} %</WhiteItemText>
-                            <WhiteItemText>{moment(item.date).format("DD.MM.YYYY")}</WhiteItemText>
-                            <WhiteItemLine procent={(item.procent).toFixed(0)} />
-                          </WhiteItem>
-                        ))}
-                      </>
-                    )
-                  })}
-                </>
-                ) : ( "" )}
+      <Container page pNone>
+        <H2 center>{t('payments.currPay')}</H2>
+        <WhiteBox>
+          <WhiteIntf>
+            <Title>{t("payments2.actual")} {moment(actualDate).format("DD.MM.YYYY")}</Title>
+            <Title right>
+              {t("payments2.last")} {lastTime != null ? ( <> {lastTime} {t("payments2.ago")} </> ) : t("payments2.now")} <Reload style={{ cursor: "pointer" }} onClick={() => lastUpdate()} />
+            </Title> 
+          </WhiteIntf>
+          <WhiteMap>
+            {isMobile ? (
+              <>
+                <Swiper spaceBetween={10} slidesPerView={1} pagination={{ clickable: true }}>
+                    {smallArr.map((i: any, idx: number) => (
+                      <SwiperSlide key={idx}>                                       
+                        <>
+                          {i.map((item: any, idx: any) => (
+                            <WhiteItem key={idx} lastMargin={smallArr && smallArr[0].length}>
+                              <WhiteItemText>{item.deposit.name}</WhiteItemText>
+                              <WhiteItemText bold>{(item.procent).toFixed(0)} %</WhiteItemText>
+                              <WhiteItemText>{moment(item.date).format("DD.MM.YYYY")}</WhiteItemText>
+                              <WhiteItemLine procent={(item.procent).toFixed(0)} />
+                            </WhiteItem>
+                          ))}
+                        </>
+                      </SwiperSlide>
+                    ))}
+                </Swiper>
               </>
-            )}
-          </WhiteMap>
+            ) : (
+              <>
+                {statsDeposit.length ? (
+                    <>
+                    {bigArr.map((i: any, idx: any) => {
+                      return (
+                        <>
+                          {i.map((item: any, idx: any) => (
+                            <WhiteItem key={idx}>
+                              <WhiteItemText>{item.deposit.name}</WhiteItemText>
+                              <WhiteItemText bold>{(item.procent).toFixed(0)} %</WhiteItemText>
+                              <WhiteItemText>{moment(item.date).format("DD.MM.YYYY")}</WhiteItemText>
+                              <WhiteItemLine procent={(item.procent).toFixed(0)} />
+                            </WhiteItem>
+                          ))}
+                        </>
+                      )
+                    })}
+                  </>
+                  ) : ( "" )}
+                </>
+              )}
+            </WhiteMap>
         </WhiteBox>
       </Container> 
         </>
       ) : (
         ''
       )}
-    </Page>
+    </>
   );
 };
-
-const ModalButton = styled(Button)`
-  width: 100%;
-  max-width: 100%;
-  &:disabled {
-    background: ${(props) => props.theme.bbdis};
-    border-color: ${(props) => props.theme.bbdis};
-    box-shadow: none;
-  }
-`;
-
-const Text = styled.div`
-  font-size: 14px;
-  font-weight: 400;
-  font-style: normal;
-  text-align: left;
-  letter-spacing: normal;
-  line-height: normal;
-  margin-bottom: 15px;
-  p {
-    padding-bottom: 10px;
-  }
-  @media (max-width: 768px) {
-    text-align: center;
-  }
-`;
-
-const ModalContainer = styled.div`
-  display: flex;
-  align-items: center;
-  width: 100%;
-  justify-content: space-between;
-  padding: 40px 120px;
-  @media (max-width: 992px) {
-    padding: 40px 60px;
-  }
-  @media (max-width: 768px) {
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 20px;
-  }
-`;
-
-const SwiperContainer = styled(Card)`
-  position: relative;
-  padding-bottom: 10px;
-  width: 100%;
-  .swiper-pagination-bullet:only-child {
-    visibility: hidden;
-  }
-  @media (max-width: 768px) {
-    display: none;
-  }
-`;
-
-const SwiperContainerMob = styled(Card)`
-  display: none;
-  position: relative;
-  .swiper-pagination-bullet:only-child {
-    visibility: hidden;
-  }
-  @media (max-width: 768px) {
-    display: block;
-    padding-bottom: 40px;
-    .swiper-container {
-      padding-bottom: 20px;
-    }
-  }
-`;
-
-const Move = keyframes`
-100% { transform: rotate(360deg); }
-`;
-
-const OnDate = styled.div<{ rtt?: boolean }>`
-  position: absolute;
-  bottom: 25px;
-  right: 25px;
-  text-align: right;
-  font-size: 14px;
-  line-height: 116.69%;
-  color: ${(props) => props.theme.text};
-  cursor: pointer;
-  z-index: 1;
-  svg {
-    animation: ${(props) => props.rtt && Move} 4s linear infinite;
-  }
-  @media (max-width: 768px) {
-    right: 0;
-    left: 0%;
-    text-align: center;
-    bottom: 15px;
-  }
-`;
-
-const RadialWrap = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  @media (max-width: 992px) {
-    flex-wrap: wrap;
-  }
-`;
-
-const RadialItem = styled.div`
-  position: relative;
-  width: 150px;
-  height: 188px;
-  margin: 30px 20px;
-  @media (max-width: 992px) {
-    margin: 15px;
-  }
-  @media (max-width: 768px) {
-    margin: 12px 8px;
-    width: 120px;
-    height: 120px;
-  }
-`;
-
-const RoundInside = styled.div`
-  position: absolute;
-  top: 31px;
-  left: 14px;
-  border-radius: 50%;
-  width: 125px;
-  height: 125px;
-  @media (max-width: 768px) {
-    top: 26px;
-    left: 14px;
-    width: 95px;
-    height: 95px;
-  }
-`;
-
-const RoundInsideName = styled.div<{ small?: boolean }>`
-  text-align: center;
-  font-weight: 500;
-  font-size: ${(props) => (props.small ? '16px' : '18px')};
-  line-height: ${(props) => (props.small ? '18px' : '21px')};
-  text-transform: uppercase;
-  padding-top: 26px;
-  padding-bottom: 4px;
-  text-overflow: ellipsis;
-  @media (max-width: 768px) {
-    font-size: 14px;
-    max-width: 85px;
-    line-height: 1;
-    padding-top: 10px;
-  }
-`;
-
-const RoundInsideDate = styled.div`
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 116.69%;
-  text-align: center;
-  text-transform: uppercase;
-  color: ${(props) => props.theme.text};
-  padding-bottom: 10px;
-  @media (max-width: 768px) {
-    font-size: 12px;
-  }
-`;
-
-const RoundInsideProcent = styled.div`
-  text-align: center;
-  font-weight: 900;
-  font-size: 28px;
-  line-height: 21px;
-  color: #ff416e;
-  @media (max-width: 768px) {
-    font-size: 26px;
-  }
-`;
-
-const RadialModalItem = styled.div<{ small?: boolean; flex?: boolean }>`
-  width: 280px;
-  flex: none;
-  position: relative;
-  ${RoundInside} {
-    top: 50%;
-    left: 50%;
-    margin-left: -60px;
-    margin-top: -66px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    @media (max-width: 768px) {
-      width: 125px;
-      height: 125px;
-      margin-left: -63px;
-    }
-  }
-  ${RoundInsideName} {
-    font-weight: 500;
-    line-height: 28px;
-    font-size: 1.8em;
-    @media (max-width: 768px) {
-      max-width: 100%;
-      padding-top: 23px;
-    }
-  }
-  ${RoundInsideProcent} {
-    font-size: 38px;
-    line-height: 48px;
-    display: ${({ flex }) => (flex != null && flex ? 'flex' : '')};
-  }
-  @media (max-width: 768px) {
-    width: 280px;
-  }
-`;
-
-export const BlockTitle = styled.div`
-  font-size: 18px;
-  font-weight: 900;
-  font-style: normal;
-  letter-spacing: normal;
-  line-height: normal;
-  text-align: left;
-  margin-bottom: 20px;
-  @media (max-width: 768px) {
-    text-align: center;
-  }
-`;
-
-const Proc = styled.div`
-  display: inline-block;
-  font-size: 16px;
-`;
-
-const ProgramCard = styled.div`
-  /* border: 1px solid #6db9ff; */
-  box-sizing: border-box;
-  max-width: 340px;
-  width: 100%;
-  backdrop-filter: blur(4px);
-  border-radius: 20px;
-  padding: 40px 20px;
-  @media (max-width: 768px) {
-    padding: 15px 20px;
-    ${Button} {
-      margin-left: auto;
-      margin-right: auto;
-    }
-  }
-`;
-
-const RoundInsideItem = styled.div`
-  width: 100%;
-`;
-
 
 const WhiteBox = styled.div`
   width: 100%;
@@ -636,7 +236,6 @@ const WhiteBox = styled.div`
     padding: 20px;
     padding-top: 25px;
     padding-bottom: 0px;
-    max-width: 700px;
   }
   
   @media only screen and (max-device-width: 767px) {
@@ -748,6 +347,10 @@ const WhiteItem = styled.div<{ lastMargin?: number; }>`
           if (lastMargin > 1) {
             return `
               margin-bottom: 35px;
+            `;
+          } else {
+            return `
+              margin-bottom: 0px;
             `;
           }
         }

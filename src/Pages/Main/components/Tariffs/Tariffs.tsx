@@ -288,7 +288,7 @@ const PartnersItemTitle = styled.div`
   @media only screen and (min-device-width: 410px) and (max-device-width: 420px) {
     margin-right: 9%;
   }
-  @media only screen and (min-device-width: 420px) and (max-device-width: 440px) {
+  @media only screen and (min-device-width: 420px) and (max-device-width: 448px) {
     margin-right: 10%;
   }
   @media only screen and (min-device-width: 445px) and (max-device-width: 449px) {
