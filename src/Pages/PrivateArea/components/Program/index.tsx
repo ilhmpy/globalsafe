@@ -5,7 +5,11 @@ import { AppContext } from '../../../../context/HubContext';
 import { DepositsCollection } from '../../../../types/info';
 import * as S from './S.el';
 
-export const Program = () => {
+interface ProgramProps {
+  className?: string;
+}
+
+export const Program = ({className = ''}: ProgramProps) => {
   const history = useHistory();
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
@@ -56,7 +60,7 @@ export const Program = () => {
   }
 
   return (
-    <S.CardContainer>
+    <S.CardContainer className={className}>
       {
         depositProgramsList.length > 0 && 
         depositProgramsList.map((program, i) => (
