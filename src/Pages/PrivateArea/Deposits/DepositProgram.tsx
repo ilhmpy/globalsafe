@@ -13,7 +13,7 @@ export const DepositProgram: FC = () => {
   return (
     <S.Container>
       <Container>
-        <Back text="Назад" onClick={() => history.push(routers.deposits)} />
+        <Back text="Назад" onGoBackClick={() => history.push(routers.deposits)} />
         <Title>Программы депозитов</Title>
       </Container>
       <Program />

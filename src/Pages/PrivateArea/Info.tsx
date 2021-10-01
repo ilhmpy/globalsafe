@@ -132,7 +132,7 @@ export const Info = () => {
 
   if (user === false) {
     return <Redirect to="/" />;
-  }
+  } 
 
   const onClose = () => {
     setOpen(false);

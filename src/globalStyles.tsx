@@ -340,6 +340,11 @@ input[type=number] {
     height: 36px !important;
 }
 
+button {
+  outline: none;
+  border: 0;
+}
+
 `;
 
 export const Container = styled.div<{ pNone?: boolean; bigMargin?: boolean; ppNone?: boolean }>`

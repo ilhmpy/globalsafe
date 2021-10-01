@@ -177,6 +177,10 @@ export const MobChart: FC<Props> = ({ data, type, setValCWD, setDate }: Props) =
         align: 'left',
         x: 0,
         y: -2,
+        style: {
+          color: '#3F3E4E',
+          fontSize: '14px',
+        },
       },
       title: {
         text: '',
