@@ -22,7 +22,7 @@ export const Banner: FC = () => {
             контролем лучших специалистов!
           </S.Desc>
           <Button as="button">
-            <Link to="tariffs" spy={true} smooth={true} offset={-50} duration={500}>
+            <Link to="#deposits" spy={true} smooth={true} offset={-50} duration={500}>
               программы депозитов
             </Link>
           </Button>

@@ -283,6 +283,7 @@ const Description = styled.h3`
     margin-bottom: 10px;
     font-size: 12px;
     line-height: 18px;
+    max-width: 280px;
     margin-bottom: 10px;
   }
   
@@ -382,7 +383,7 @@ const TableHeadItem = styled.div`
 
 const TableMapItem = styled.div`
   width: 100%;
-  height: 60px;
+  min-height: 60px;
   background: ${({ theme }) => theme.operations.ich1}; 
   display: flex;
   align-items: center;
@@ -395,7 +396,7 @@ const TableMapItem = styled.div`
   @media only screen and (max-device-width: 480px) {
     padding-left: 20px;
     padding-top: 10px;
-    height: 74px;
+    min-height: 38px;
     align-items: start;
   }
 `;

@@ -19,12 +19,16 @@ export const CardBox = styled.div`
         display: flex;
         flex-wrap: wrap;
     }
+
+    & > .swiper-pagination {
+      bottom: 17px;
+    }
     
-      .swiper-pagination-bullets > .swiper-pagination-bullet-active {
+    .swiper-pagination-bullets > .swiper-pagination-bullet-active {
         width: 20px;
         height: 6px;
         border-radius: 6px;
-      }
+    }
 `;
 
 export const Card = styled.div`
@@ -57,7 +61,7 @@ export const Card = styled.div`
     @media only screen and (max-device-width: 480px) {
       width: 280px;
       height: 194px;
-      margin: 0;
+      margin: 0 auto;
       min-width: 280px;
     }
 `;
