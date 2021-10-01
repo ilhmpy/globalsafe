@@ -123,7 +123,8 @@ export const ChartDesctop: FC<Props> = ({ data, setDate, setValCWD }: Props) => 
       chart: {
         marginLeft: 50,
         marginRight: 5,
-        height: 345,
+        spacingTop: 0,
+        height: 348,
         spacingBottom: 0,
         spacingRight: 0,
         style: {
@@ -265,7 +266,7 @@ export const ChartDesctop: FC<Props> = ({ data, setDate, setValCWD }: Props) => 
           align: 'left',
 
           x: 0,
-          y: -2,
+          y: 0,
           style: {
             fontSize: '12px',
             color: '#3F3E4E',
@@ -323,19 +324,17 @@ export const ChartDesctop: FC<Props> = ({ data, setDate, setValCWD }: Props) => 
 
   return (
     <>
-      <S.ChartContainer>
-        <S.MobChartBlock mob>
-          <MobChart data={data} setDate={setDate} setValCWD={setValCWD} />
-        </S.MobChartBlock>
-        <S.MobChartBlock>
-          <HighchartsReact
-            allowChartUpdate={update}
-            ref={ref}
-            highcharts={Highcharts}
-            options={state.options}
-          />
-        </S.MobChartBlock>
-      </S.ChartContainer>
+      <S.MobChartBlock mob>
+        <MobChart data={data} setDate={setDate} setValCWD={setValCWD} />
+      </S.MobChartBlock>
+      <S.MobChartBlock>
+        <HighchartsReact
+          allowChartUpdate={update}
+          ref={ref}
+          highcharts={Highcharts}
+          options={state.options}
+        />
+      </S.MobChartBlock>
     </>
   );
 };

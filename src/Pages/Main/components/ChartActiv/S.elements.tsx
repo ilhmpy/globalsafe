@@ -41,7 +41,7 @@ export const PriceChanges = styled.div`
 `;
 
 export const PriceChangesWrap = styled.div`
-  margin-bottom: 20px;
+  margin-bottom: 17px;
   @media (max-width: 767px) {
     width: 100%;
     margin-bottom: 0;
@@ -227,6 +227,9 @@ export const SliderNav = styled.div`
 `;
 
 export const SwiperContainer = styled.div`
+  .thumb {
+    border: 1px solid #fff;
+  }
   .mySwiper .swiper-slide-thumb-active {
     border: 1px solid #0094ff;
     box-sizing: border-box;
