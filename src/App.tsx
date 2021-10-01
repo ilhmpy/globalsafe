@@ -39,18 +39,18 @@ const App: FC = () => {
 
   function onlineState() {
     setOnline(window.navigator.onLine);
-    console.log('online update state event working, and set online/offline status');
+    // console.log('online update state event working, and set online/offline status');
   }
 
   useEffect(() => {
     if (isFailed != null) {
       if (online && window.location.pathname != '/tech') {
-        console.log('user online but server not working');
+        // console.log('user online but server not working');
         window.location.href = '/tech';
       }
 
       if (!online && window.location.pathname == '/tech') {
-        console.log('user offline');
+        // console.log('user offline');
         window.location.href = '/';
       }
 
@@ -114,7 +114,7 @@ const App: FC = () => {
         });
         try {
           OneSignal.on('subscriptionChange', (isSubscribed: boolean) => {
-            console.log('OneSignal.on ~ isSubscribed', isSubscribed);
+            // console.log('OneSignal.on ~ isSubscribed', isSubscribed);
             if (isSubscribed) {
               OneSignal.getUserId((id: string) => subscribe(id));
             } else {

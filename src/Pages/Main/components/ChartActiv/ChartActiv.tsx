@@ -37,7 +37,7 @@ export const ChartActiv: FC<Props> = ({
     useContext(ChartContext);
 
   moment.locale(localStorage.getItem('i18nextLng') || 'ru');
-  console.log('data', data);
+  // console.log('data', data);
   const data1 = () => {
     if (type === 'GCWD') {
       return data.map((i) => [
@@ -224,13 +224,14 @@ export const ChartActiv: FC<Props> = ({
         return 'day';
     }
   };
-
+  const loader = loadDIAMOND || loadGLOBAL || loadMGCWD || loadGCWD;
   const typeSelected = (str: string) => {
+    if (loader) return;
     setActive(str);
     setSelected(str);
     setActiveTab(str);
     if (type === 'GCWD') {
-      console.log('gcwd');
+      // console.log('gcwd');
       fetchGCWD(dateFetch(str));
     } else if (type === 'MGCWD') {
       fetchMGCWD(dateFetch(str));
@@ -240,8 +241,7 @@ export const ChartActiv: FC<Props> = ({
       fetchGLOBAL(dateFetch(str));
     }
   };
-  const loader = !loadDIAMOND && !loadGLOBAL && !loadMGCWD && !loadGCWD;
-  console.log('loader', loader);
+
   return (
     <>
       <S.ChartContainer>
@@ -275,7 +275,7 @@ export const ChartActiv: FC<Props> = ({
             ))}
           </S.Buttons>
         </S.ChartHeader>
-        {/* <ChartDesctop data={data1()} setDate={setDate} setValCWD={setValCWD} /> */}
+        {/* {data1().length && <ChartDesctop data={data1()} setDate={setDate} setValCWD={setValCWD} />} */}
         {activeTab === 'День' ? (
           <ChartDesctop data={data1()} setDate={setDate} setValCWD={setValCWD} />
         ) : null}

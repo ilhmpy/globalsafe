@@ -107,6 +107,7 @@ export const ChartDesctop: FC<Props> = ({ data, setDate, setValCWD }: Props) => 
   moment.locale(localStorage.getItem('i18nextLng') || 'ru');
   const ref = useRef<any>();
   const [update, setUpdate] = useState(false);
+
   useEffect(() => {
     setUpdate(!update);
   }, [data]);
@@ -203,11 +204,23 @@ export const ChartDesctop: FC<Props> = ({ data, setDate, setValCWD }: Props) => 
           type: 'areaspline',
           fillOpacity: 0.1,
           lineWidth: 0,
+
+          dataGrouping: {
+            anchor: 'start',
+            forced: true,
+            dateTimeLabelFormats: {
+              day: '%e  %b',
+            },
+          },
         },
         credits: {
           enabled: true,
         },
         xAxis: {
+          type: 'datetime',
+          // min: data[0][0],
+          // max: data[data.length - 1][0],
+          // range: data[0][0] - data[data.length - 1][0],
           gridLineWidth: 0,
           height: 10,
           top: 0,

@@ -64,10 +64,10 @@ export const ExchangeChart = () => {
 
   useEffect(() => {
     if (hubConnection) {
-      fetchGLOBAL('day');
-      fetchDIAMOND('day');
       fetchGCWD('day');
       fetchMGCWD('day');
+      fetchDIAMOND('day');
+      fetchGLOBAL('day');
     }
   }, [hubConnection]);
 
