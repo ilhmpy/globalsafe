@@ -1,6 +1,6 @@
 export const routers = {
   deposits: '/info',
-  operations: '/operations',
+  operations: '/info/operations',
   depositsProgram: '/info/deposits/programs',
   depositsOpen: '/info/deposits/new-deposit/:depositId',
   depositsView: '/info/deposits/view',

@@ -40,6 +40,7 @@ import { NewPayMethod } from './Settings/NewPayMethod';
 import { ViewPayMethod } from './Settings/ViewPayMethod';
 import * as Styled from './Styles.elements';
 import { Footer } from '../../components/Footer/Footer';
+import { HistoryOperations } from "./HistoryOperations";
 
 export const InfoMain: FC = () => {
   const { t } = useTranslation();
@@ -652,7 +653,7 @@ export const InfoMain: FC = () => {
               <TabNavItem to="/p2p-changes">
                 <div>P2P обмены</div>
               </TabNavItem>
-              <TabNavItem to="/operations-history">
+              <TabNavItem to={routers.operations}>
                 <div>История операций</div>
               </TabNavItem>
               <TabNavItem to={routers.settings}>
@@ -673,6 +674,7 @@ export const InfoMain: FC = () => {
           <Route path={routers.settings} component={Settings} exact />
           <Route path={routers.settingsNewPayMethod} component={NewPayMethod} exact />
           <Route path={routers.settingsViewPayMethod} component={ViewPayMethod} exact />
+          <Route path={routers.operations} component={HistoryOperations} exact />
         </Switch>
         <CSSTransition in={depositSuccess} timeout={0} classNames="modal" unmountOnExit>
           <Modal width={540} onClose={() => setDepositSuccess(false)}>
