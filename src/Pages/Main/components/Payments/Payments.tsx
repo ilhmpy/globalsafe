@@ -173,7 +173,29 @@ const RadialComponent: FC<RadialComponentProps> = ({ data, height }: RadialCompo
 export const Payments: FC = () => {
   const [statsDeposit, setStatsDeposit] = useState<RootPayDeposit[]>([]); 
   const [bigArr, setBigArr] = useState<any>([]);
-  const [smallArr, setSmallArr] = useState<any>([]);
+  const [smallArr, setSmallArr] = useState<any>(
+    [
+      [
+        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
+        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
+        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
+        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
+        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
+        { deposit: { name: "TEST" }, date: new Date(), procent: 85 }],
+       [{ deposit: { name: "TEST" }, date: new Date(), procent: 85 },
+        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
+        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
+        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
+        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
+        { deposit: { name: "TEST" }, date: new Date(), procent: 85 }],
+       [{ deposit: { name: "TEST" }, date: new Date(), procent: 85 },
+        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
+        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
+        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
+        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
+        { deposit: { name: "TEST" }, date: new Date(), procent: 85 }]
+      ]
+  );
   const [loadReset, setLoadReset] = useState(false);
   const arrSizeBig = 10;
   const arrSizeMob = 6;
@@ -213,7 +235,7 @@ export const Payments: FC = () => {
     for (let i = 0; i < Math.ceil(newStats.length / arrSizeMob); i++) {
       newArrayMob[i] = newStats.slice(i * arrSizeMob, i * arrSizeMob + arrSizeMob);
     }
-    setSmallArr(newArrayMob);
+    // setSmallArr(newArrayMob);
   }, [statsDeposit]);
 
 
@@ -225,6 +247,8 @@ export const Payments: FC = () => {
   useEffect(() => {
     reset();
   }, [hubConnection, languale]);
+
+  console.log(languale)
 
   const reset = () => {
     if (hubConnection) {
@@ -293,7 +317,7 @@ export const Payments: FC = () => {
                     <SwiperSlide key={idx}>                                       
                       <>
                         {i.map((item: any, idx: any) => (
-                          <WhiteItem key={idx}>
+                          <WhiteItem key={idx} lastMargin={smallArr && smallArr[0].length}>
                             <WhiteItemText>{item.deposit.name}</WhiteItemText>
                             <WhiteItemText bold>{(item.procent).toFixed(0)} %</WhiteItemText>
                             <WhiteItemText>{moment(item.date).format("DD.MM.YYYY")}</WhiteItemText>
@@ -593,7 +617,6 @@ const RoundInsideItem = styled.div`
 
 const WhiteBox = styled.div`
   width: 100%;
-  min-height: 612px;
   background: #FFFFFF;
   border-radius: 4px;
   -webkit-box-shadow: 0px 80px 80px -40px #DCDCE880;
@@ -601,10 +624,12 @@ const WhiteBox = styled.div`
   box-shadow: 0px 80px 80px -40px #DCDCE880;
   padding: 30px;
   padding-top: 40px;
+  padding-bottom: 0px;
 
   @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
     padding: 20px;
     padding-top: 25px;
+    padding-bottom: 0px;
     max-width: 700px;
   }
   
@@ -612,10 +637,10 @@ const WhiteBox = styled.div`
     width: 100%;
     max-width: 100%;
     padding: 20px;
-    height: 480px;
-    min-height: 480px;
-    padding-bottom: 0px;
     padding-right: 0px;
+    -webkit-box-shadow: 0;
+    -moz-box-shadow: 0;
+    box-shadow: 0;
   }
 `;
 
@@ -670,7 +695,7 @@ const WhiteMap = styled.div`
   .swiper-slide {
     display: flex;
     flex-wrap: wrap;
-    min-height: 370px;
+    padding-bottom: 0px;
   }
 
   .swiper-pagination-bullets > .swiper-pagination-bullet-active {
@@ -685,7 +710,7 @@ const WhiteMap = styled.div`
   }
 `;
 
-const WhiteItem = styled.div`
+const WhiteItem = styled.div<{ lastMargin?: number; }>`
   width: 180px;
   height: 108px;
   min-width: 180px;
@@ -712,7 +737,15 @@ const WhiteItem = styled.div`
     margin-bottom: 10px;
 
     &:last-child {
-      margin-bottom: 40px;
+      ${({ lastMargin }) => {
+        if (lastMargin) {
+          if (lastMargin > 1) {
+            return `
+              margin-bottom: 35px;
+            `;
+          }
+        }
+      }}
     }
   }
 
@@ -760,5 +793,9 @@ const WhiteItemLine = styled.div<{ procent: number | string; }>`
      position: absolute;
      width: ${({ procent }) => procent}%;
      height: inherit;
+   }
+
+   @media only screen and (max-device-width: 767px) {
+     min-width: 95px;
    }
 `;
