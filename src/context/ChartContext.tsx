@@ -297,7 +297,7 @@ export const ChartProvider: FC = ({ children }: any) => {
 
   const fetchGCWD = async (type: string) => {
     let date;
-    console.log('type', type);
+
     if (type === 'day' && daylistGCWD.length) {
       setListGCWD(daylistGCWD);
       return;
