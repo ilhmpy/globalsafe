@@ -11,6 +11,7 @@ import { Main } from './Pages/Main/Main';
 import { InfoMain } from './Pages/PrivateArea';
 import PageNotFound from './Pages/Tech/PageNotFound';
 import TechWorks from './Pages/Tech/TechWorks';
+import { HistoryOperations } from "./Pages/PrivateArea/HistoryOperations"; 
 declare global {
   interface Window {
     OneSignal: any;
@@ -165,8 +166,8 @@ const App: FC = () => {
     <div style={{ position: 'relative' }}>
       <Router>
         <div className="App">
-          <GlobalStyle />
-
+          <GlobalStyle /> 
+ 
           <Switch>
             <ChartProvider>
               <Route path="/" component={Main} exact />

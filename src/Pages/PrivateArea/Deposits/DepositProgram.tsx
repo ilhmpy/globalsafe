@@ -9,10 +9,11 @@ import * as S from './S.elements';
 
 export const DepositProgram: FC = () => {
   const history = useHistory();
+
   return (
     <S.Container>
       <Container>
-        <Back text="Назад" onClick={() => history.push(routers.deposits)} />
+        <Back text="Назад" onGoBackClick={() => history.push(routers.deposits)} />
         <Title>Программы депозитов</Title>
       </Container>
       <Program />

@@ -1,6 +1,7 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import { Portal } from '../Portal/Portal';
+import { ReactComponent as Times } from "../../assets/svg/times.svg";
 
 type ModalProps = {
   onClose: () => void;
@@ -8,10 +9,11 @@ type ModalProps = {
   zIndex?: string;
   mobMarg?: boolean;
   children: ReactNode;
-  paddingTop?: number;
+  paddingTop?: number; 
   style?: any;
   styles?: string;
   lottery?: boolean;
+  withClose?: boolean;
   withoutClose?: boolean;
 };
 
@@ -25,6 +27,7 @@ export const Modal: React.FC<ModalProps> = ({
   style,
   styles,
   lottery,
+  withClose, 
   withoutClose,
 }: ModalProps) => {
   const handleContainerClick = (e: React.MouseEvent) => {
@@ -44,17 +47,11 @@ export const Modal: React.FC<ModalProps> = ({
       <ModalContainer zIndex={zIndex} style={style} className="bbg" lottery={lottery}>
         <Center styles={styles} onClick={handleContainerClick} lottery={lottery}>
           <ModalComponent width={width} mobMarg={mobMarg} paddingTop={paddingTop}>
-            {withoutClose ? (
-              <span className="close" onClick={onClose}>
-                &times;
-              </span>
-            ) : (
-              <></>
-            )}
-            {children}
+              {withClose && (<span className="close" onClick={handleContainerClick}><Times /></span>)}
+              {children}
           </ModalComponent>
         </Center>
-      </ModalContainer>
+      </ModalContainer>  
     </Portal>
   );
 };
@@ -125,8 +122,8 @@ const ModalComponent = styled.div<{
   margin: 50px auto;
   cursor: auto;
   background: ${(props) => props.theme.modal};
-  border-radius: 10px;
-  padding: 40px;
+  border-radius: 8px;
+  padding: 1rem;
   max-width: ${(props) => (props.width ? props.width + 'px' : '400px')};
   display: flex;
   flex-direction: column;
@@ -149,19 +146,24 @@ const ModalComponent = styled.div<{
     display: flex;
   }
 
-  & > span {
-    color: ${(props) => props.theme.text3};
+  & > span > svg {
     position: absolute;
-    right: 15px;
-    top: -2px;
+    right: 20px;
+    top: 20px;
     cursor: pointer;
     z-index: 9999;
     font-size: 36px;
     opacity: 40%;
     font-weight: 100;
+    width: 12px;
+    height: 12px;
     &:hover {
       color: ${(props) => props.theme.text3Hover};
     }
+  }
+
+  & > span > svg > path {
+    fill: #000;
   }
 
   ${({ styles }) => {

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import { Container } from '../../../../components/UI/Container';
-import { H2 } from '../../../../components/UI/Heading';
+import { H2 } from '../../../../components/UI/Heading'; 
 import { UpTitle } from '../../../../components/UI/UpTitle';
 import { Button } from '../../../../components/Button/Button';
 import {
