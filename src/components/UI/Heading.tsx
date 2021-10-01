@@ -1,6 +1,6 @@
 import styled from 'styled-components/macro';
 
-export const H2 = styled.h2<{ center?: boolean; mb?: boolean; }>` 
+export const H2 = styled.h2<{ center?: boolean; mb?: boolean; mt?: boolean; }>` 
   font-weight: 500;
   font-size: 48px;
   line-height: 56px;
@@ -21,6 +21,16 @@ export const H2 = styled.h2<{ center?: boolean; mb?: boolean; }>`
     if (mb) {
       return `
         margin-bottom: 20px;
+      `;
+    };
+  }}
+
+  ${({ mt }) => {
+    if (mt) {
+      return `
+        @media only screen and (max-device-width: 480px) {
+          margin-top: 10px;
+        }
       `;
     };
   }}
