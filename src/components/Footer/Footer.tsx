@@ -33,9 +33,9 @@ export const Footer: FC<FooterType> = ({ other }: FooterType) => {
           </FooterLinks>
         </FooterHeader>
         <FooterDesc>2021 © Globalsafe v2.0. Все права защищены.</FooterDesc>
-        <a target="_blank" href="::t.me/joinchat/E_Acz5BKQnJlNTVi"><Tg className="tg" /></a>
+        <a target="_blank" rel="noreferrer" href="https:/t.me/joinchat/E_Acz5BKQnJlNTVi"><Tg className="tg" /></a>
       </Container>
-    </FooterBlock>
+    </FooterBlock> 
   );
 };
 

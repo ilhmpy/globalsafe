@@ -36,7 +36,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
     if (hubConnection) {
       hubConnection.on('DrawResult', cb);
       hubConnection
-        .invoke<RootLottery>('GetPrizes', 0, 10)
+        .invoke<RootLottery>('GetPrizes', [], 0, 10)
         .then((res) => {
           const arrList = res.collection.map((item) => ({
             name: item.userName,
@@ -144,7 +144,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
                   <CSSTransition key={idx} timeout={500} classNames="item">
                     <TableList card>
                       <TableItem>{moment(item.date).format('DD.MM.YYYY')}</TableItem>
-                      <TableItem>
+                      <TableItem style={{ display: "block", position: "absolute", right: "47px", maxWidth: "100px" }}>
                         <Value data-title={item.name}>{item.name}</Value>
                       </TableItem>
                     </TableList>
@@ -313,7 +313,7 @@ const TableItem = styled.li`
     @media (max-width: 576px) {
       width: 100px;
       position: absolute;
-      right: 0px;
+      right: 47px;
     }
   }
   @media only screen and (max-device-width: 600px) {
