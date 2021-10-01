@@ -121,8 +121,11 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
               {t('headerButton.personalArea')}
             </Button>
           ) : user ? (
-            <Button primary onClick={logOut}>
-              {t('logout')}
+            // <Button primary onClick={logOut}>
+            //   {t('logout')}
+            // </Button>
+            <Button primary onClick={handleClick}>
+              {t('headerButton.personalArea')}
             </Button>
           ) : (
             <Button primary onClick={handleClick}>
