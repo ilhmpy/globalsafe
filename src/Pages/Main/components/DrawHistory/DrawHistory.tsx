@@ -145,17 +145,6 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
                     <TableList card>
                       <TableItem>{moment(item.date).format('DD.MM.YYYY')}</TableItem>
                       <TableItem>
-                        {item.kind === 0
-                          ? (item.volume / 100000).toLocaleString('ru-RU', {
-                              maximumFractionDigits: 5,
-                            })
-                          : item.kind === 1
-                          ? t('win.two')
-                          : item.volume}
-                        &nbsp;
-                        {item.volume ? Balance[item.balanceKind] : '-'}
-                      </TableItem>
-                      <TableItem>
                         <Value data-title={item.name}>{item.name}</Value>
                       </TableItem>
                     </TableList>

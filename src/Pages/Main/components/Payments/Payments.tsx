@@ -174,9 +174,8 @@ export const Payments: FC = () => {
   const [statsDeposit, setStatsDeposit] = useState<RootPayDeposit[]>([]); 
   const [bigArr, setBigArr] = useState<any>([]);
   const [smallArr, setSmallArr] = useState<any>(
-    [
-      [
-        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
+    [ /*
+      [ { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
         { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
         { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
         { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
@@ -194,6 +193,7 @@ export const Payments: FC = () => {
         { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
         { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
         { deposit: { name: "TEST" }, date: new Date(), procent: 85 }]
+        */
       ]
   );
   const [loadReset, setLoadReset] = useState(false);
@@ -235,7 +235,7 @@ export const Payments: FC = () => {
     for (let i = 0; i < Math.ceil(newStats.length / arrSizeMob); i++) {
       newArrayMob[i] = newStats.slice(i * arrSizeMob, i * arrSizeMob + arrSizeMob);
     }
-    // setSmallArr(newArrayMob);
+    setSmallArr(newArrayMob);
   }, [statsDeposit]);
 
 
@@ -247,8 +247,6 @@ export const Payments: FC = () => {
   useEffect(() => {
     reset();
   }, [hubConnection, languale]);
-
-  console.log(languale)
 
   const reset = () => {
     if (hubConnection) {
@@ -277,7 +275,7 @@ export const Payments: FC = () => {
     clearInterval(timeInterval);
     setTimeInterval(setInterval(() => update(), 60000)); 
     const date = new Date();
-    const newDate = { time: { hours: date.getHours(), minutes: date.getMinutes() }, date: { day: date.getDate(), month: date.getMonth() + 1, year: date.getFullYear()}};
+    const newDate = { time: { hours: date.getHours(), minutes: date.getMinutes() }, date: { day: date.getDate(), month: date.getMonth(), year: date.getFullYear()}};
     localStorage.setItem("last", JSON.stringify(newDate));
     getLastUpdate(newDate);
     const update = () => {
@@ -287,9 +285,17 @@ export const Payments: FC = () => {
 
   function getLastUpdate(last: any) {
     const updateTime = last;
-    const time = moment(
-      new Date(updateTime.date.year, updateTime.date.month - 1, updateTime.date.day, updateTime.time.hours, updateTime.time.minutes))
-      .fromNow(true);
+    let time: string; 
+    if (updateTime.time.minutes == new Date().getMinutes()) {
+      time = moment(
+        new Date(updateTime.date.year, updateTime.date.month, updateTime.date.day, updateTime.time.hours, updateTime.time.minutes + 1))
+        .fromNow(true);
+    } else {
+      time = moment(
+        new Date(updateTime.date.year, updateTime.date.month, updateTime.date.day, updateTime.time.hours, updateTime.time.minutes))
+        .fromNow(true);
+    };
+    console.log(time, updateTime.time.minutes, updateTime.time.minutes == new Date().getMinutes());
     setActualDate(new Date());
     setLastTime(time);
   };
