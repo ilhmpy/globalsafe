@@ -11,7 +11,8 @@ import { Main } from './Pages/Main/Main';
 import { InfoMain } from './Pages/PrivateArea';
 import PageNotFound from './Pages/Tech/PageNotFound';
 import TechWorks from './Pages/Tech/TechWorks';
-import { HistoryOperations } from "./Pages/PrivateArea/HistoryOperations"; 
+import { HistoryOperations } from './Pages/PrivateArea/HistoryOperations';
+import { routers } from './constantes/routers';
 declare global {
   interface Window {
     OneSignal: any;
@@ -164,23 +165,23 @@ const App: FC = () => {
 
   return (
     <div style={{ position: 'relative' }}>
-      <Router>
-        <div className="App">
-          <GlobalStyle /> 
- 
-          <Switch>
-            <ChartProvider>
+      <ChartProvider>
+        <Router>
+          <div className="App">
+            <GlobalStyle />
+
+            <Switch>
               <Route path="/" component={Main} exact />
-            </ChartProvider>
-            <Route path="/admin" component={Admin} />
-            <Route path="/info" component={InfoMain} />
-            <Route path="/login" component={Authentication} />
-            <Route path="/register" component={Register} />
-            <Route path="/tech" component={TechWorks} />
-            <Route path="/404" component={PageNotFound} />
-          </Switch>
-        </div>
-      </Router>
+              <Route path="/admin" component={Admin} />
+              <Route path={routers.deposits} component={InfoMain} />
+              <Route path="/login" component={Authentication} />
+              <Route path="/register" component={Register} />
+              <Route path="/tech" component={TechWorks} />
+              <Route path="/404" component={PageNotFound} />
+            </Switch>
+          </div>
+        </Router>
+      </ChartProvider>
     </div>
   );
 };
