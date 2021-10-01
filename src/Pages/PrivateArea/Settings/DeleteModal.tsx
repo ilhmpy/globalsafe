@@ -2,28 +2,20 @@ import React, { FC, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
-import { ReactComponent as Close } from '../../assets/svg/close.svg';
-import { ReactComponent as FromTo } from '../../assets/svg/fromTo.svg';
-import { Button } from '../../components/Button/V2/Button';
-import { Modal } from '../../components/Modal/Modal';
-import { Select } from '../../components/Select/Select5';
-import { AppContext } from '../../context/HubContext';
+import { ReactComponent as Close } from '../../../assets/svg/close.svg';
+import { ReactComponent as FromTo } from '../../../assets/svg/fromTo.svg';
+import { Button } from '../../../components/Button/V2/Button';
+import { Modal } from '../../../components/Modal/Modal';
+import { Select } from '../../../components/Select/Select5';
+import { AppContext } from '../../../context/HubContext';
 
 interface Props {
   open: boolean;
-  converting?: boolean;
   setOpen: (open: boolean) => void;
-  setIsSuccessConverting: (status: boolean) => void;
-  setIsFailConverting: (status: boolean) => void;
+  converting?: boolean;
 }
 
-export const ConvertingModal: FC<Props> = ({
-  open,
-  setOpen,
-  converting,
-  setIsSuccessConverting,
-  setIsFailConverting,
-}: Props) => {
+export const DeleteModal: FC<Props> = ({ open, setOpen, converting }: Props) => {
   const { t } = useTranslation();
   const [fromSum, setFromSum] = useState('');
   const [toSum, setToSum] = useState('');
@@ -72,13 +64,7 @@ export const ConvertingModal: FC<Props> = ({
                 <Rate>Курс:</Rate>
                 <Rate>0</Rate>
               </RateRow>
-              <Button
-                primary
-                onClick={() => {
-                  setOpen(false);
-                  setTimeout(() => setIsSuccessConverting(true), 500);
-                }}
-              >
+              <Button primary onClick={() => undefined}>
                 {converting ? t('privateArea.convert2') : t('privateArea.topUpBalance')}
               </Button>
             </InnerBlock>

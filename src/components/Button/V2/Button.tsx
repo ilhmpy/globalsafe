@@ -13,7 +13,6 @@ export const Button = styled.a<Props>`
   display: inline-block;
   text-align: center;
   text-decoration: none;
-  text-transform: uppercase;
   display: inline-block;
   box-sizing: border-box;
   cursor: pointer;

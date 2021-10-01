@@ -9,92 +9,12 @@ import moment from 'moment';
 import 'moment/locale/ru';
 import momenttz from 'moment-timezone';
 import { ReactComponent as Arrow } from '../../../../assets/v2/svg/arrow-exchange.svg';
-import { SmallChart } from './SmallChart';
-import useWindowSize from '../../../../hooks/useWindowSize';
 import { Dropdown } from './components/Dropdown';
+import { ChartDesctop } from './ChartDesctop';
+import { ChartContext } from '../../../../context/ChartContext';
 import { MobChart } from './MobChart';
 
 require('highcharts/modules/exporting')(Highcharts);
-
-function opt(H: any) {
-  H.setOptions({
-    lang: {
-      loading: 'Загрузка...',
-      months: [
-        'Январь',
-        'Февраль',
-        'Март',
-        'Апрель',
-        'Май',
-        'Июнь',
-        'Июль',
-        'Август',
-        'Сентябрь',
-        'Октябрь',
-        'Ноябрь',
-        'Декабрь',
-      ],
-      weekdays: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
-      shortMonths: [
-        'Янв',
-        'Фев',
-        'Март',
-        'Апр',
-        'Май',
-        'Июнь',
-        'Июль',
-        'Авг',
-        'Сент',
-        'Окт',
-        'Нояб',
-        'Дек',
-      ],
-    },
-    credits: {
-      enabled: false,
-    },
-  });
-}
-
-function opt1(H: any) {
-  H.setOptions({
-    lang: {
-      loading: 'Загрузка...',
-      months: [
-        'Январь',
-        'Февраль',
-        'Март',
-        'Апрель',
-        'Май',
-        'Июнь',
-        'Июль',
-        'Август',
-        'Сентябрь',
-        'Октябрь',
-        'Ноябрь',
-        'Декабрь',
-      ],
-      weekdays: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
-      shortMonths: [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec',
-      ],
-    },
-    credits: {
-      enabled: false,
-    },
-  });
-}
 
 type Props = {
   data: Collection[];
@@ -113,9 +33,11 @@ export const ChartActiv: FC<Props> = ({
   fetchDIAMOND,
   fetchGLOBAL,
 }: Props) => {
-  localStorage.getItem('i18nextLng') === 'ru' ? opt(Highcharts) : opt1(Highcharts);
+  const { activeTab, setActiveTab, loadDIAMOND, loadGLOBAL, loadMGCWD, loadGCWD } =
+    useContext(ChartContext);
+
   moment.locale(localStorage.getItem('i18nextLng') || 'ru');
-  const size = useWindowSize();
+  // console.log('data', data);
   const data1 = () => {
     if (type === 'GCWD') {
       return data.map((i) => [
@@ -139,229 +61,14 @@ export const ChartActiv: FC<Props> = ({
 
   const [chartData, setChartData] = useState<number[][]>();
 
-  useEffect(() => {
-    if (!data) return;
-    setChartData(data1());
-  }, [data]);
+  // useEffect(() => {
+  //   if (!data) return;
+  //   setChartData(data1());
+  // }, [data]);
 
   const [date, setDate] = useState(0);
 
   const [valCWD, setValCWD] = useState(0);
-
-  const state = {
-    options: {
-      series: [
-        {
-          data: data1(),
-          color: '#0094FF',
-          // type: 'line',
-        },
-      ],
-      chart: {
-        marginLeft: 50,
-        marginRight: 5,
-        // backgroundColor: '#F7F8FA',
-        height: 345,
-        // spacingTop: 50,
-        spacingBottom: 0,
-        spacingRight: 0,
-        // width: '100%',
-        // events: {
-        //   load: function (e: any) {
-        //     e.get('highcharts-navigator-series').show();
-        //   },
-        // },
-        style: {
-          fontFamily: 'Roboto',
-        },
-      },
-      legend: {
-        enabled: false,
-      },
-      title: {
-        text: '',
-      },
-      tooltip: {
-        borderRadius: 4,
-        shape: 'rect',
-        crosshairs: true,
-        padding: 10,
-        backgroundColor: '#fff',
-        // enabled: false,
-        formatter: function () {
-          return `
-          <b style="font-size: 18px; font-weight: bold; line-height: 24px; font-family: 'Roboto', sans-serif; color: #3F3E4E;">${
-            (this as any).y
-          }  CWD </b> <br/> <b style="font-size: 12px; font-weight: normal; line-height: 14px; font-family: 'Roboto', sans-serif; color: #000000">${moment(
-            (this as any).x
-          ).format('DD.MM.YYYY, dddd, HH:mm')} MCK</b>
-          
-          `;
-        },
-      },
-      plotOptions: {
-        series: {
-          lineWidth: 2,
-          marker: {
-            enabled: false,
-            fillColor: ' #3F3E4E',
-            lineWidth: 2,
-            lineColor: '#DCDCE8',
-            radius: 3,
-            states: {
-              hover: {
-                fillColor: '#3F3E4E',
-                lineWidth: 2,
-                lineColor: '#DCDCE8',
-              },
-            },
-          },
-        },
-      },
-      rangeSelector: {
-        enabled: false,
-        buttonPosition: {
-          align: 'right',
-          x: 0,
-          y: 0,
-        },
-        buttonSpacing: 10,
-        labelStyle: {
-          visibility: 'hidden',
-        },
-      },
-      scrollbar: {
-        enabled: false,
-      },
-      navigator: {
-        enabled: true,
-        adaptToUpdatedData: false,
-        maskFill: 'rgba(0, 148, 255, 0.2)',
-        maskInside: true,
-        outlineWidth: 0,
-        marginBottom: 0,
-        handles: {
-          backgroundColor: '#FFFFFF',
-          borderColor: '#9E9EB8',
-        },
-        series: {
-          id: 'nav',
-          type: 'areaspline',
-          fillOpacity: 0.1,
-          lineWidth: 0,
-        },
-        credits: {
-          enabled: true,
-        },
-        xAxis: {
-          gridLineWidth: 0,
-          height: 10,
-          top: 0,
-          tickColor: '#DCDCE8',
-          lineColor: '#fff',
-          gridLineColor: '#FF0000',
-          lineWidth: 0,
-          width: '100%',
-          labels: {
-            style: {
-              color: '#888',
-            },
-            y: -15,
-          },
-          dateTimeLabelFormats: {
-            day: '%e  %b',
-          },
-        },
-        yAxis: {
-          lineColor: '#fff',
-          gridLineWidth: 0,
-          dateTimeLabelFormats: {
-            day: {
-              main: '%e %b',
-            },
-          },
-          plotBands: [
-            {
-              color: 'rgba(115, 113, 115, 0.2)',
-              from: 0,
-              to: 1,
-            },
-          ],
-        },
-      },
-      exporting: { enabled: false },
-      yAxis: {
-        left: '0',
-        opposite: false,
-        gridLineDashStyle: 'Dash',
-        labels: {
-          align: 'left',
-
-          x: 0,
-          y: -2,
-          style: {
-            fontSize: '12px',
-            color: '#3F3E4E',
-          },
-        },
-        plotBands: [
-          {
-            color: 'rgba(68, 170, 213, 0.2)',
-            label: {
-              text: '',
-            },
-          },
-        ],
-      },
-      xAxis: {
-        ordinal: false,
-        startOnTick: false,
-        type: 'datetime',
-        min: null,
-        max: null,
-        title: {
-          text: '',
-        },
-        tickColor: '#DCDCE8',
-        lineColor: '#F7F8FA',
-        dateTimeLabelFormats: {
-          day: {
-            main: '%e %b',
-          },
-        },
-        crosshair: {
-          color: '#DCDCE8',
-          // dashStyle:Solid,
-          snap: true,
-          width: 3,
-          zIndex: 2,
-        },
-        labels: {
-          style: {
-            color: '#3F3E4E',
-            fontSize: '12px',
-            fontFamily: 'Roboto',
-          },
-        },
-      },
-      time: {
-        useUTC: false,
-        getTimezoneOffset: function (timestamp: any) {
-          const zone = 'Europe/Moscow';
-          const timezoneOffset = -moment.tz(timestamp, zone).utcOffset();
-          return timezoneOffset;
-        },
-      },
-    },
-  };
-
-  const [dateState, setDateState] = useState<any>({});
-
-  useEffect(() => {
-    setDateState(null);
-    if (!data) return;
-    setDateState(state);
-  }, [data]);
 
   const btns = ['День', 'Месяц', 'Квартал', 'Год', 'Все время'];
 
@@ -504,25 +211,27 @@ export const ChartActiv: FC<Props> = ({
   const dateFetch = (day: string) => {
     switch (day) {
       case 'День':
-        return moment().subtract(1, 'days').format();
+        return 'day';
       case 'Месяц':
-        return moment().subtract(1, 'months').format();
+        return 'months';
       case 'Квартал':
-        return moment().subtract(3, 'months').format();
+        return '3months';
       case 'Год':
-        return moment().subtract(1, 'years').format();
+        return 'year';
       case 'Все время':
-        return moment().subtract(1, 'years').format();
+        return 'year';
       default:
-        return moment().subtract(1, 'days').format();
+        return 'day';
     }
   };
-
+  const loader = loadDIAMOND || loadGLOBAL || loadMGCWD || loadGCWD;
   const typeSelected = (str: string) => {
+    if (loader) return;
     setActive(str);
     setSelected(str);
+    setActiveTab(str);
     if (type === 'GCWD') {
-      console.log('gcwd');
+      // console.log('gcwd');
       fetchGCWD(dateFetch(str));
     } else if (type === 'MGCWD') {
       fetchMGCWD(dateFetch(str));
@@ -566,16 +275,25 @@ export const ChartActiv: FC<Props> = ({
             ))}
           </S.Buttons>
         </S.ChartHeader>
-        <S.MobChartBlock mob>
+        {/* {data1().length && <ChartDesctop data={data1()} setDate={setDate} setValCWD={setValCWD} />} */}
+        {activeTab === 'День' ? (
+          <ChartDesctop data={data1()} setDate={setDate} setValCWD={setValCWD} />
+        ) : null}
+        {activeTab === 'Месяц' ? (
+          <ChartDesctop data={data1()} setDate={setDate} setValCWD={setValCWD} />
+        ) : null}
+        {activeTab === 'Квартал' ? (
+          <ChartDesctop data={data1()} setDate={setDate} setValCWD={setValCWD} />
+        ) : null}
+        {activeTab === 'Год' ? (
+          <ChartDesctop data={data1()} setDate={setDate} setValCWD={setValCWD} />
+        ) : null}
+        {activeTab === 'Все время' ? (
+          <ChartDesctop data={data1()} setDate={setDate} setValCWD={setValCWD} />
+        ) : null}
+        {/* <S.MobChartBlock mob>
           <MobChart data={data1()} setDate={setDate} setValCWD={setValCWD} />
-        </S.MobChartBlock>
-        <S.MobChartBlock>
-          <HighchartsReact
-            // constructorType={'stockChart'}
-            highcharts={Highcharts}
-            options={state.options}
-          />
-        </S.MobChartBlock>
+        </S.MobChartBlock> */}
       </S.ChartContainer>
     </>
   );

@@ -31,6 +31,7 @@ SecondaryButton.defaultProps = {
     onClick: () => {},
 };
 
+
 const Secondary = styled(BaseButton)`
     height: 38px;
     background-color: #515172;

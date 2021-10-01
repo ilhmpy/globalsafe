@@ -1,9 +1,17 @@
 import styled from 'styled-components/macro';
 
-export const Container = styled.div`
+export const Container = styled.div<{ without?: boolean; }>`
   display: flex;
   justify-content: space-between;
   margin-bottom: 20px;
+
+  ${({ without }) => {
+    if (without) {
+      return `
+        margin-bottom: 0px;
+      `;
+    };
+  }}
 `;
 
 export const Button = styled.button<{ active?: boolean }>`
