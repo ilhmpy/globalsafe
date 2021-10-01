@@ -5,6 +5,8 @@ import { RightSide } from './RightSide';
 import { Name } from './Name';
 import { Title } from './Title';
 import { ProgramDescTitle, ProgramDesc, TitleWrap, TextValue } from './ProgramDescTitle';
+import { TabNavItem, TabsBlock } from './Tabs';
+import { Text } from './Text';
 
 export {
   Chip,
@@ -18,4 +20,7 @@ export {
   ProgramDesc,
   TitleWrap,
   TextValue,
+  TabNavItem,
+  TabsBlock,
+  Text,
 };

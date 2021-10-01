@@ -40,7 +40,8 @@ import { NewPayMethod } from './Settings/NewPayMethod';
 import { ViewPayMethod } from './Settings/ViewPayMethod';
 import * as Styled from './Styles.elements';
 import { Footer } from '../../components/Footer/Footer';
-import { HistoryOperations } from "./HistoryOperations";
+import { Advert } from './Exchanges/Advert';
+import { HistoryOperations } from './HistoryOperations';
 
 export const InfoMain: FC = () => {
   const { t } = useTranslation();
@@ -591,10 +592,8 @@ export const InfoMain: FC = () => {
       <ConvertingModalSuccess open={isSuccessConverting} setOpen={setIsSuccessConverting} />
       <ConvertingModalFail open={isFailConverting} setOpen={setIsFailConverting} />
 
-  <AppWrapper>
-
       <Header />
-      <CustomPage>
+      <Styled.Page>
         <DepositsPanelContainer>
           <PanelTitleBlock>
             <H4>Личный кабинет</H4>
@@ -647,10 +646,10 @@ export const InfoMain: FC = () => {
             </BalanceChipsBlock>
 
             <TabsBlock>
-              <TabNavItem to="/info" exact>
+              <TabNavItem to={routers.deposits} exact>
                 <div>Мои депозиты</div>
               </TabNavItem>
-              <TabNavItem to="/p2p-changes">
+              <TabNavItem to={routers.p2pchanges}>
                 <div>P2P обмены</div>
               </TabNavItem>
               <TabNavItem to={routers.operations}>
@@ -671,6 +670,7 @@ export const InfoMain: FC = () => {
           <Route path={routers.depositsOpen} component={DepositOpen} exact />
           {/* <Route path="/info/balance" component={InfoBalance} exact /> */}
           <Route path="/info/deposits/:slug" component={OnePage} exact />
+          <Route path={routers.p2pchanges} component={Advert} exact />
           <Route path={routers.settings} component={Settings} exact />
           <Route path={routers.settingsNewPayMethod} component={NewPayMethod} exact />
           <Route path={routers.settingsViewPayMethod} component={ViewPayMethod} exact />
@@ -848,10 +848,8 @@ export const InfoMain: FC = () => {
             selectDeposit={selectDeposit}
           />
         </div>
-      </CustomPage>
-
-      <Footer />
-    </AppWrapper>
+        <Footer />
+      </Styled.Page>
 
       <Styled.Note>
         <Notification onDelete={onDelete} data={notifications} />

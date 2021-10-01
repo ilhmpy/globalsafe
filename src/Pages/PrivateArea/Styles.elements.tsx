@@ -265,7 +265,9 @@ export const LeftIcon = styled(Left)`
 
 export const Page = styled.div`
   margin-top: 100px;
-  height: 100%;
+  flex-direction: column;
+  height: 100vh;
+  display: flex;
 `;
 
 export const InfoWrap = styled.div`
@@ -1004,8 +1006,12 @@ export const SwitchBlock = styled.div<{ block: boolean }>`
   }
 `;
 
-
-export const Desc = styled.h3<{ bold?: boolean; danger?: boolean; mMore?: boolean; mLess?: boolean; }>`
+export const Desc = styled.h3<{
+  bold?: boolean;
+  danger?: boolean;
+  mMore?: boolean;
+  mLess?: boolean;
+}>`
   font-weight: 400;
   font-size: 14px;
   line-height: 20px;
@@ -1018,13 +1024,13 @@ export const Desc = styled.h3<{ bold?: boolean; danger?: boolean; mMore?: boolea
       return `
         font-weight: 700;
       `;
-    };
+    }
 
     if (danger) {
       return `  
         color: #FF4A31;
       `;
-    };
+    }
   }}
 
   ${({ mMore }) => {
@@ -1033,7 +1039,7 @@ export const Desc = styled.h3<{ bold?: boolean; danger?: boolean; mMore?: boolea
         margin-top: 10px;        
         margin-bottom: 10px;
       `;
-    };
+    }
   }}
 
   ${({ mLess }) => {
@@ -1043,9 +1049,9 @@ export const Desc = styled.h3<{ bold?: boolean; danger?: boolean; mMore?: boolea
       `;
     }
   }}
-`; 
+`;
 
-export const Commision = styled.h3<{ marginT?: number; marginB?: number; }>`
+export const Commision = styled.h3<{ marginT?: number; marginB?: number }>`
   width: 100%;
   position: relative;
   font-size: 14px;
