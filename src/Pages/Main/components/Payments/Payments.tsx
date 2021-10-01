@@ -138,85 +138,104 @@ export const Payments: FC = () => {
     };
   };
 
-  function getLastUpdate(last: any) {
-    const updateTime = last;
-    let time: string; 
-    if (updateTime.time.minutes == new Date().getMinutes()) {
-      time = moment(
-        new Date(updateTime.date.year, updateTime.date.month, updateTime.date.day, updateTime.time.hours, updateTime.time.minutes + 1))
-        .fromNow(true);
+  /*  let time: string; 
+   . if (updateTime.time.minutes == new Date().getMinutes()) {
+      time = moment().fromNow(true);
     } else {
       time = moment(
         new Date(updateTime.date.year, updateTime.date.month, updateTime.date.day, updateTime.time.hours, updateTime.time.minutes))
         .fromNow(true);
     };
-    console.log(time, updateTime.time.minutes, updateTime.time.minutes == new Date().getMinutes());
     setActualDate(new Date());
     setLastTime(time);
+    */
+
+  function getLastUpdate(last: any) {
+    const updateTime = last;
+    const now = new Date();
+    const result: any = { date: { year: null, month: null, day: null, }, time: { hours: null, minutes: null }};
+    result.date.year = now.getFullYear() - updateTime.date.year;
+    result.date.month = now.getMonth() - updateTime.date.month;
+    result.date.day = now.getDate() - updateTime.date.day;
+    result.time.hours = now.getHours() - updateTime.time.hours;
+    result.time.minutes = now.getMinutes() - updateTime.time.minutes;
+    if (result.date.year != 0) {
+      setLastTime(result.date.year + " лет");
+    } else if (result.date.month != 0) {
+      setLastTime(result.date.month + " месяцев");
+    } else if (result.date.day != 0) {
+      setLastTime(result.date.day + " дней");
+    } else if (result.time.hours != 0) {  
+      setLastTime(result.time.hours + " часов");
+    } else if (result.time.minutes != 0) {
+      setLastTime(result.time.minutes + " минут");
+    } else {
+      setLastTime("несколько секунд");
+    };
   };
 
   return (
     <>
       {statsDeposit.length ? (
-        <>
-      <Container page pNone>
-        <H2 center>{t('payments.currPay')}</H2>
-        <WhiteBox>
-          <WhiteIntf>
-            <Title>{t("payments2.actual")} {moment(actualDate).format("DD.MM.YYYY")}</Title>
-            <Title right>
-              {t("payments2.last")} {lastTime != null ? ( <> {lastTime} {t("payments2.ago")} </> ) : t("payments2.now")} <Reload style={{ cursor: "pointer" }} onClick={() => lastUpdate()} />
-            </Title> 
-          </WhiteIntf>
-          <WhiteMap>
-            {isMobile ? (
-              <>
-                <Swiper spaceBetween={10} slidesPerView={1} pagination={{ clickable: true }}>
-                    {smallArr.map((i: any, idx: number) => (
-                      <SwiperSlide key={idx}>                                       
-                        <>
-                          {i.map((item: any, idx: any) => (
-                            <WhiteItem key={idx} lastMargin={smallArr && smallArr[0].length}>
-                              <WhiteItemText>{item.deposit.name}</WhiteItemText>
-                              <WhiteItemText bold>{(item.procent).toFixed(0)} %</WhiteItemText>
-                              <WhiteItemText>{moment(item.date).format("DD.MM.YYYY")}</WhiteItemText>
-                              <WhiteItemLine procent={(item.procent).toFixed(0)} />
-                            </WhiteItem>
-                          ))}
-                        </>
-                      </SwiperSlide>
-                    ))}
-                </Swiper>
-              </>
-            ) : (
-              <>
-                {statsDeposit.length ? (
-                    <>
-                    {bigArr.map((i: any, idx: any) => {
-                      return (
-                        <>
-                          {i.map((item: any, idx: any) => (
-                            <WhiteItem key={idx}>
-                              <WhiteItemText>{item.deposit.name}</WhiteItemText>
-                              <WhiteItemText bold>{(item.procent).toFixed(0)} %</WhiteItemText>
-                              <WhiteItemText>{moment(item.date).format("DD.MM.YYYY")}</WhiteItemText>
-                              <WhiteItemLine procent={(item.procent).toFixed(0)} />
-                            </WhiteItem>
-                          ))}
-                        </>
-                      )
-                    })}
+      <>
+        <Container page pNone>
+            <H2 center>{t('payments.currPay')}</H2>
+            <WhiteBox>
+              <WhiteIntf>
+                <Title>{t("payments2.actual")} {moment(actualDate).format("DD.MM.YYYY")}</Title>
+                <Title right>
+                  {t("payments2.last")} {lastTime != null ? ( <> {lastTime} {t("payments2.ago")} </> ) : t("payments2.now")} <Reload style={{ cursor: "pointer" }} onClick={() => lastUpdate()} />
+                </Title> 
+              </WhiteIntf>
+              <WhiteMap>
+                {isMobile ? (
+                  <>
+                    <Swiper spaceBetween={10} slidesPerView={1} pagination={{ clickable: true }}>
+                        {smallArr.map((i: any, idx: number) => (
+                          <SwiperSlide key={idx}>                                       
+                            <>
+                              {i.map((item: any, idx: any) => (
+                                <WhiteItem key={idx} lastMargin={smallArr && smallArr[0].length}>
+                                  <WhiteItemText>{item.deposit.name}</WhiteItemText>
+                                  <WhiteItemText bold>{(item.procent).toFixed(0)} %</WhiteItemText>
+                                  <WhiteItemText>{moment(item.date).format("DD.MM.YYYY")}</WhiteItemText>
+                                  <WhiteItemLine procent={(item.procent).toFixed(0)} />
+                                </WhiteItem>
+                              ))}
+                            </>
+                          </SwiperSlide>
+                        ))}
+                    </Swiper>
                   </>
-                  ) : ( "" )}
-                </>
-              )}
-            </WhiteMap>
-        </WhiteBox>
-      </Container> 
-        </>
-      ) : (
-        ''
-      )}
+                ) : (
+                  <>
+                    {statsDeposit.length ? (
+                        <>
+                        {bigArr.map((i: any, idx: any) => {
+                          return (
+                            <>
+                              {i.map((item: any, idx: any) => (
+                                <WhiteItem key={idx}>
+                                  <WhiteItemText>{item.deposit.name}</WhiteItemText>
+                                  <WhiteItemText bold>{(item.procent).toFixed(0)} %</WhiteItemText>
+                                  <WhiteItemText>{moment(item.date).format("DD.MM.YYYY")}</WhiteItemText>
+                                  <WhiteItemLine procent={(item.procent).toFixed(0)} />
+                                </WhiteItem>
+                              ))}
+                            </>
+                          )
+                          })}
+                        </>
+                        ) : ( "" )}
+                      </>
+                    )}
+                  </WhiteMap>
+              </WhiteBox>
+            </Container> 
+          </>
+        ) : (
+          ''
+        )}
     </>
   );
 };
