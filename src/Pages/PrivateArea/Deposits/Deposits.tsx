@@ -21,7 +21,8 @@ import { CloseDeposit } from '../components/Modals/CloseDeposit';
 import { CloseDepositSuccess } from '../components/Modals/CloseDepositSuccess';
 import { CloseDepositError } from '../components/Modals/CloseDepositError';
 import { AppContext } from '../../../context/HubContext';
-import { Collection, RootList } from '../../../types/info';
+import { Collection, DepositsCollection, RootList } from '../../../types/info';
+import { Program } from '../components/Program';
 
 export const Deposits = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -148,7 +149,6 @@ export const Deposits = () => {
     }
   };
 
-
   if(getDepositsLoading) {
     return (
       <S.Container>
@@ -168,6 +168,9 @@ export const Deposits = () => {
           <S.NotDeposits>
               У вас пока нет депозитов. Откройте свой первый депозит !
           </S.NotDeposits>
+
+          <Program />
+
         </Container>
       </S.Container>
     )

@@ -38,6 +38,7 @@ import { ReactComponent as LogOutIcon } from '../../assets/v2/svg/logOut.svg'
 import { routers } from '../../constantes/routers';
 import { DepositProgram } from './Deposits/DepositProgram';
 import { DepositOpen } from './Deposits/DepositOpen';
+import { Footer } from '../../components/Footer/Footer';
 
 export const InfoMain: FC = () => {
   const { t } = useTranslation();
@@ -65,6 +66,7 @@ export const InfoMain: FC = () => {
   const balance = appContext.balance;
   const hubConnection = appContext.hubConnection;
   const balanceList = appContext.balanceList;
+  const logOut = appContext.logOut;
   const inputRef = useRef<any>(null);
   const history = useHistory();
   const lang = localStorage.getItem('i18nextLng') || 'ru';
@@ -364,7 +366,7 @@ export const InfoMain: FC = () => {
         <DepositsPanelContainer>
           <PanelTitleBlock>
             <H4>Личный кабинет</H4>
-            <LogoutButton>
+            <LogoutButton onClick={() => logOut()}>
               <UsernameText>{user}</UsernameText>
               <LogOutIcon />
             </LogoutButton>
@@ -769,6 +771,9 @@ export const InfoMain: FC = () => {
           />
         </div>
       </Styled.Page>
+
+      <Footer />
+      
       <Styled.Note>
         <Notification onDelete={onDelete} data={notifications} />
       </Styled.Note>
