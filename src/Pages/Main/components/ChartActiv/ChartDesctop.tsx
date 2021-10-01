@@ -323,19 +323,17 @@ export const ChartDesctop: FC<Props> = ({ data, setDate, setValCWD }: Props) => 
 
   return (
     <>
-      <S.ChartContainer>
-        <S.MobChartBlock mob>
-          <MobChart data={data} setDate={setDate} setValCWD={setValCWD} />
-        </S.MobChartBlock>
-        <S.MobChartBlock>
-          <HighchartsReact
-            allowChartUpdate={update}
-            ref={ref}
-            highcharts={Highcharts}
-            options={state.options}
-          />
-        </S.MobChartBlock>
-      </S.ChartContainer>
+      <S.MobChartBlock mob>
+        <MobChart data={data} setDate={setDate} setValCWD={setValCWD} />
+      </S.MobChartBlock>
+      <S.MobChartBlock>
+        <HighchartsReact
+          allowChartUpdate={update}
+          ref={ref}
+          highcharts={Highcharts}
+          options={state.options}
+        />
+      </S.MobChartBlock>
     </>
   );
 };
