@@ -7,4 +7,6 @@ export const routers = {
   settings: '/info/settings',
   settingsNewPayMethod: '/info/settings/new-pay-method',
   settingsViewPayMethod: '/info/settings/view-pay-method',
+  p2pchanges: '/info/p2p-changes',
+  p2pchangesAdvert: '/info/p2p-changes/advert',
 };

@@ -40,6 +40,7 @@ import { NewPayMethod } from './Settings/NewPayMethod';
 import { ViewPayMethod } from './Settings/ViewPayMethod';
 import * as Styled from './Styles.elements';
 import { Footer } from '../../components/Footer/Footer';
+import { Advert } from './Exchanges/Advert';
 
 export const InfoMain: FC = () => {
   const { t } = useTranslation();
@@ -644,10 +645,10 @@ export const InfoMain: FC = () => {
             </BalanceChipsBlock>
 
             <TabsBlock>
-              <TabNavItem to="/info" exact>
+              <TabNavItem to={routers.deposits} exact>
                 <div>Мои депозиты</div>
               </TabNavItem>
-              <TabNavItem to="/p2p-changes">
+              <TabNavItem to={routers.p2pchanges}>
                 <div>P2P обмены</div>
               </TabNavItem>
               <TabNavItem to="/operations-history">
@@ -668,6 +669,7 @@ export const InfoMain: FC = () => {
           <Route path={routers.depositsOpen} component={DepositOpen} exact />
           {/* <Route path="/info/balance" component={InfoBalance} exact /> */}
           <Route path="/info/deposits/:slug" component={OnePage} exact />
+          <Route path={routers.p2pchanges} component={Advert} exact />
           <Route path={routers.settings} component={Settings} exact />
           <Route path={routers.settingsNewPayMethod} component={NewPayMethod} exact />
           <Route path={routers.settingsViewPayMethod} component={ViewPayMethod} exact />
@@ -844,9 +846,8 @@ export const InfoMain: FC = () => {
             selectDeposit={selectDeposit}
           />
         </div>
+        <Footer />
       </Styled.Page>
-
-      <Footer />
 
       <Styled.Note>
         <Notification onDelete={onDelete} data={notifications} />

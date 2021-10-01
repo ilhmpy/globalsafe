@@ -123,8 +123,7 @@ export const ChartDesctop: FC<Props> = ({ data, setDate, setValCWD }: Props) => 
       chart: {
         marginLeft: 50,
         marginRight: 5,
-        spacingTop: 0,
-        height: 348,
+        height: 358,
         spacingBottom: 0,
         spacingRight: 0,
         style: {
