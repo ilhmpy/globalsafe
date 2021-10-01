@@ -41,7 +41,7 @@ export const PriceChanges = styled.div`
 `;
 
 export const PriceChangesWrap = styled.div`
-  margin-bottom: 20px;
+  margin-bottom: 17px;
   @media (max-width: 767px) {
     width: 100%;
     margin-bottom: 0;
