@@ -227,6 +227,9 @@ export const SliderNav = styled.div`
 `;
 
 export const SwiperContainer = styled.div`
+  .thumb {
+    border: 1px solid #fff;
+  }
   .mySwiper .swiper-slide-thumb-active {
     border: 1px solid #0094ff;
     box-sizing: border-box;

@@ -235,7 +235,7 @@ export const SliderChart: FC<Props> = ({
               },
             }}
           >
-            <SwiperSlide>
+            <SwiperSlide className="thumb">
               <S.ChartItem>
                 {listGCWD.length ? (
                   <>
@@ -254,7 +254,7 @@ export const SliderChart: FC<Props> = ({
                 ) : null}
               </S.ChartItem>
             </SwiperSlide>
-            <SwiperSlide>
+            <SwiperSlide className="thumb">
               <S.ChartItem>
                 {listMGCWD.length ? (
                   <>
@@ -276,7 +276,7 @@ export const SliderChart: FC<Props> = ({
                 ) : null}
               </S.ChartItem>
             </SwiperSlide>
-            <SwiperSlide>
+            <SwiperSlide className="thumb">
               <S.ChartItem>
                 {listDIAMOND.length ? (
                   <>
@@ -298,7 +298,7 @@ export const SliderChart: FC<Props> = ({
                 ) : null}
               </S.ChartItem>
             </SwiperSlide>
-            <SwiperSlide>
+            <SwiperSlide className="thumb">
               <S.ChartItem>
                 {listGLOBAL.length ? (
                   <>
