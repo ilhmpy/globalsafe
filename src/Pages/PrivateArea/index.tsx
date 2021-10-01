@@ -590,8 +590,10 @@ export const InfoMain: FC = () => {
       <ConvertingModalSuccess open={isSuccessConverting} setOpen={setIsSuccessConverting} />
       <ConvertingModalFail open={isFailConverting} setOpen={setIsFailConverting} />
 
+  <AppWrapper>
+
       <Header />
-      <Styled.Page>
+      <CustomPage>
         <DepositsPanelContainer>
           <PanelTitleBlock>
             <H4>Личный кабинет</H4>
@@ -844,9 +846,10 @@ export const InfoMain: FC = () => {
             selectDeposit={selectDeposit}
           />
         </div>
-      </Styled.Page>
+      </CustomPage>
 
       <Footer />
+    </AppWrapper>
 
       <Styled.Note>
         <Notification onDelete={onDelete} data={notifications} />
@@ -854,6 +857,16 @@ export const InfoMain: FC = () => {
     </>
   );
 };
+
+const AppWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+`;
+
+const CustomPage = styled(Styled.Page)`
+  flex: 1;
+`;
 
 const DepositsPanelContainer = styled(Container)`
   display: flex;
