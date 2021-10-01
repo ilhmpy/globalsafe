@@ -21,7 +21,8 @@ import { CloseDeposit } from '../components/Modals/CloseDeposit';
 import { CloseDepositSuccess } from '../components/Modals/CloseDepositSuccess';
 import { CloseDepositError } from '../components/Modals/CloseDepositError';
 import { AppContext } from '../../../context/HubContext';
-import { Collection, RootList } from '../../../types/info';
+import { Collection, DepositsCollection, RootList } from '../../../types/info';
+import { Program } from '../components/Program';
 import { Loading, NotItems } from "../components/Loading/Loading";
 
 export const Deposits = () => {
@@ -149,7 +150,6 @@ export const Deposits = () => {
     }
   };
 
-
   if(getDepositsLoading) {
     return (
       <Loading />
@@ -158,7 +158,16 @@ export const Deposits = () => {
 
   if(depositsList.length === 0) {
     return (
-      <NotItems text="У вас пока не имеется депозитов." />
+      <S.Container>
+        <Container>
+          <S.NotDeposits>
+            У вас пока нет депозитов. Откройте свой первый депозит !
+          </S.NotDeposits>
+
+          <Program />
+
+        </Container>
+      </S.Container>
     )
   };
 
