@@ -13,4 +13,8 @@ export const FilterButton = styled.button<{ active?: boolean }>`
   border-radius: 2px;
   user-select: none;
   background: ${(props) => (props.active ? '#EBEBF2' : 'transparent')};
+  margin: 0 10px 10px 9px;
+  &:first-child {
+    margin-left: 0;
+  }
 `;
