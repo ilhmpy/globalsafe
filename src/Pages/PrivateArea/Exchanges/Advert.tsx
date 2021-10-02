@@ -3,8 +3,9 @@ import { Container } from '../../../components/UI/Container';
 import { Heading } from '../components/Heading';
 import { useHistory } from 'react-router-dom';
 import { routers } from '../../../constantes/routers';
-import { TabNavItem, TabsBlock, Text, Chip } from '../components/ui';
+import { TabNavItem, TabsBlock, Text, Chip, FilterButton } from '../components/ui';
 import * as S from './S.el';
+import { AdvertTable } from './components/AdvertTable/AdvertTable';
 
 export const Advert = () => {
   const history = useHistory();
@@ -21,9 +22,11 @@ export const Advert = () => {
             <TabNavItem to={routers.p2pchanges} exact>
               <div>Объявления</div>
             </TabNavItem>
+
             <TabNavItem to={routers.deposits} exact>
               <div>Мои обмены</div>
             </TabNavItem>
+
             <TabNavItem to={routers.deposits} exact>
               <div>Сертификаты</div>
             </TabNavItem>
@@ -33,8 +36,19 @@ export const Advert = () => {
           </Text>
         </S.SubHeader>
         <S.Filters>
-
+          <FilterButton active>Все объявления</FilterButton>
+          <S.Line />
+          <FilterButton active>Все валюты</FilterButton>
+          <S.Line />
+          <FilterButton active>Все методы оплаты</FilterButton>
+          <S.Line />
+          <FilterButton active>Все рейтинги</FilterButton>
+          <S.Line />
+          <FilterButton active>Покупка</FilterButton>
+          <S.Line />
+          <FilterButton>Продажа</FilterButton>
         </S.Filters>
+        <AdvertTable />
       </Container>
     </div>
   );
