@@ -49,7 +49,6 @@ export const Card = styled.div`
 
     @media only screen and (max-device-width: 1024px) {
        padding: 20px;
-       margin-bottom: 0px;
     }
 
     @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
@@ -86,10 +85,12 @@ export const CardDesc = styled.h3`
     line-height: 20px;
     color: #000;
     width: 100%;
-    max-width: 160px;
     height: 60px;
+    overflow: hidden;
+    width: 149px;
+    text-overflow: ellipsis;
     margin-bottom: 40px;
-
+    word-wrap: break-word;
     @media only screen and (max-device-width: 480px) {
         margin-bottom: 20px;
         max-width: 200px;
@@ -107,7 +108,7 @@ export const CardButton = styled.button`
     border: 0;
     font-size: 12px;
     font-weight: 500;
-    transtion: all 0.3s ease 0s;
+    transition: all 0.3s ease 0s;
 
     &:hover {
         box-shadow: 0px 4px 10px #515172;
