@@ -17,6 +17,8 @@ type Context = {
   isAdmin: boolean | null;
   balanceList: BalanceList[] | null;
   isFailed: boolean | null;
+  chosenMethod: any;
+  setChosenMethod: (state: any) => void;
 };
 
 export const AppContext = React.createContext<Context>({
@@ -29,6 +31,8 @@ export const AppContext = React.createContext<Context>({
   isAdmin: null,
   balanceList: null,
   isFailed: null,
+  chosenMethod: {},
+  setChosenMethod: () => undefined,
 });
 
 export const HubProvider: FC = ({ children }: any) => {
@@ -40,6 +44,7 @@ export const HubProvider: FC = ({ children }: any) => {
   const [myToken, setMyToken] = useLocalStorage('token');
   const [balanceList, setBalanceList] = useState<BalanceList[] | null>(null);
   const [isFailed, setIsFailed] = useState<boolean | null>(null);
+  const [chosenMethod, setChosenMethod] = useState<any>({});
   const history = useHistory();
   const { i18n } = useTranslation();
 
@@ -163,6 +168,8 @@ export const HubProvider: FC = ({ children }: any) => {
         isAdmin,
         balanceList,
         isFailed,
+        chosenMethod,
+        setChosenMethod,
       }}
     >
       {children}
