@@ -190,7 +190,10 @@ export const Payments: FC = () => {
               <WhiteMap>
                 {isMobile ? (
                   <>
-                    <Swiper spaceBetween={10} slidesPerView={1} pagination={{ clickable: true }}>
+                    <Swiper 
+                      slidesPerView={"auto"} 
+                      pagination={{ clickable: true, dynamicBullets: true }}
+                    >
                         {smallArr.map((i: any, idx: number) => (
                           <SwiperSlide key={idx}>                                       
                             <>

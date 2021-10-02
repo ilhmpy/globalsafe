@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
+import { useHistory } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import SwiperCore, { A11y, Navigation, Pagination, Scrollbar } from 'swiper';
 import 'swiper/components/navigation/navigation.scss';
@@ -19,6 +20,8 @@ export const DepositsPrograms = () => {
   const [deposits, setDeposits] = useState<any[]>([]); 
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
+  const user = appContext.user;
+  const history = useHistory();
 
   useEffect(() => {
     if (hubConnection) {
@@ -41,6 +44,11 @@ export const DepositsPrograms = () => {
         .catch((err) => console.log(err));
     }
   }, [hubConnection]);
+
+  function toDeposits() {
+    const token = localStorage.getItem("token");
+    history.push("/info");
+  };
  
   return (
     <>
@@ -53,20 +61,23 @@ export const DepositsPrograms = () => {
                 <Styled.Card key={idx}>
                   <Styled.CardName>{(item.deposit.name).toUpperCase()}</Styled.CardName>
                   <Styled.CardDesc>{item.deposit.description}</Styled.CardDesc>
-                  <Styled.CardButton>{t('payments.open').toUpperCase()}</Styled.CardButton>
+                  <Styled.CardButton onClick={toDeposits}>{t('payments.open').toUpperCase()}</Styled.CardButton>
                 </Styled.Card>
               ))}
             </Styled.CardBox>
           ) : (
             <>
               <Styled.CardBox>
-                <Swiper spaceBetween={10} slidesPerView={1} pagination={{ clickable: true }}>
+                <Swiper 
+                  slidesPerView={"auto"} 
+                  pagination={{ clickable: true, dynamicBullets: true }}
+                >
                   {deposits && deposits.map((item, idx) => (
                     <SwiperSlide key={idx}>
                       <Styled.Card key={idx}>
                         <Styled.CardName>{(item.deposit.name).toUpperCase()}</Styled.CardName>
                         <Styled.CardDesc>{item.deposit.description}</Styled.CardDesc>
-                        <Styled.CardButton>{t('payments.open').toUpperCase()}</Styled.CardButton>
+                        <Styled.CardButton onClick={toDeposits}>{t('payments.open').toUpperCase()}</Styled.CardButton>
                       </Styled.Card>
                     </SwiperSlide>
                   ))}

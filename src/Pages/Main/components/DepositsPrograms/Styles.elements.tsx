@@ -20,8 +20,8 @@ export const CardBox = styled.div`
         flex-wrap: wrap;
     }
 
-    & > .swiper-pagination {
-      bottom: 17px;
+    .swiper-pagination-fraction, .swiper-pagination-custom, .swiper-container-horizontal > .swiper-pagination-bullets {
+      bottom: 26px !important;
     }
     
     .swiper-pagination-bullets > .swiper-pagination-bullet-active {
