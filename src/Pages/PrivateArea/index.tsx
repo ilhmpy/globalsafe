@@ -532,6 +532,8 @@ export const InfoMain: FC = () => {
                 const validValue = e.currentTarget.value.replace(/[^0-9]/gi, '');
                 setOutPutEd(validValue);
                 getCommisions(validValue);
+                const test = (10000).toLocaleString("ru-RU", { maximumFractionDigits: 2 });
+                console.log(Number(test));
               }}
             />
             <Styled.Commision marginT={20} marginB={10}>

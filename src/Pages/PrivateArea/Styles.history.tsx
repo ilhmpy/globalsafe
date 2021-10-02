@@ -113,7 +113,7 @@ export const TableInnerItem = styled.div<TableProps>`
     }}
 `;
 
-export const Button = styled.button`
+export const Button = styled.button<{ newItems: boolean; }>`
     width: 134px;
     height: 38px;
     background: #515172;
@@ -126,4 +126,5 @@ export const Button = styled.button`
     display: block;
     cursor: pointer;
     font-weight: 500;
+    display: ${({ newItems }) => newItems ? "block" : "none"};
 `;
