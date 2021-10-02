@@ -13,7 +13,7 @@ export const Filters = styled.div`
   margin-bottom: 20px;
   margin-bottom: 10px;
   ${FilterButton} {
-    margin: 0 10px 10px;
+    margin: 0 10px 10px 9px;
     &:first-child {
       margin-left: 0;
     }
@@ -24,4 +24,9 @@ export const Line = styled.span`
   height: 26px;
   width: 1px;
   background: #ebebf2;
+`;
+
+export const ButtonWrap = styled.div`
+  text-align: center;
+  margin-bottom: 40px;
 `;
