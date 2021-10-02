@@ -323,7 +323,7 @@ export const InfoMain: FC = () => {
   };
 
   const changeBalance = () => {
-    if (hubConnection && currency.length > 0 && ed.length > 0) {
+    if (hubConnection && currency.length > 0 && ed.length > 0 && Number(ed) > 0) {
       const newWindow = window.open();
       hubConnection
         .invoke(
@@ -351,6 +351,7 @@ export const InfoMain: FC = () => {
       hubConnection &&
         outPutCurrency.length > 0 &&
         outPutEd.length > 0 &&
+        Number(outPutEd) > 0 &&
         Number(outPutEd) > Number(blockchain) + Number(service) + 1
     );
     console.log(outPutCurrency);
@@ -358,6 +359,7 @@ export const InfoMain: FC = () => {
       hubConnection &&
       outPutCurrency.length > 0 &&
       outPutEd.length > 0 &&
+      Number(outPutEd) > 0 &&
       Number(outPutEd) > Number(blockchain) + Number(service) + 1
     ) {
       setWithdrawValueLoad(true);
@@ -440,7 +442,7 @@ export const InfoMain: FC = () => {
             Пополнение баланса
           </H3>
           <div style={{ width: '100%', maxWidth: '340px', margin: '0 auto' }}>
-            <Selectv2 data={balanceList} setSwitch={setCurrency} />
+            <Selectv2 data={balanceList && balanceList} withoutVolume setSwitch={setCurrency} />
             <Inputv2
               placeholder="Сумма пополнения"
               value={ed}
@@ -471,7 +473,7 @@ export const InfoMain: FC = () => {
           <H3 center style={{ marginTop: '24px' }}>
             Успешное пополнение
           </H3>
-          <Styled.Desc>Баланс личного кабинета успешно будет пополнен на:</Styled.Desc>
+          <Styled.Desc>Баланс личного кабинета успешно пополнен на:</Styled.Desc>
           <Styled.Desc bold mMore style={{ marginTop: '0px' }}>
             {ed} {currency}
           </Styled.Desc>
@@ -511,7 +513,7 @@ export const InfoMain: FC = () => {
             Вывод средств
           </H3>
           <div style={{ width: '100%', maxWidth: '340px', margin: '0 auto' }}>
-            <Selectv2 data={balanceList} setSwitch={setOutPutCurrency} />
+            <Selectv2 data={balanceList && balanceList} setSwitch={setOutPutCurrency} />
             <Inputv2
               value={outPutEd}
               placeholder="Сумма вывода"
@@ -563,7 +565,7 @@ export const InfoMain: FC = () => {
             {outPutEd} {outPutCurrency}
           </Styled.Desc>
           <Styled.Desc mLess>
-            К выводу: {outPutEd ? (Number(outPutEd) - (Number(blockchain) + Number(service)) / 100000) : 0}
+            К выводу: {outPutEd ? (Number(outPutEd) - (Number(blockchain) + Number(service))) : 0}
           </Styled.Desc>
           <Styled.Desc mLess>Комиссия блокчейн: {blockchain}</Styled.Desc>
           <Styled.Desc mLess>Комиссия сервиса: {service}</Styled.Desc>
@@ -584,7 +586,7 @@ export const InfoMain: FC = () => {
             {outPutEd} {outPutCurrency}
           </Styled.Desc>
           <Styled.Desc mLess>
-            К выводу: {outPutEd ? (Number(outPutEd) - (Number(blockchain) + Number(service)) / 100) : 0}
+            К выводу: {outPutEd ? (Number(outPutEd) - (Number(blockchain) + Number(service))) : 0}
           </Styled.Desc>
           <Styled.Desc mLess>Комиссия блокчейн: {blockchain}</Styled.Desc>
           <Styled.Desc mLess>Комиссия сервиса: {service}</Styled.Desc>
