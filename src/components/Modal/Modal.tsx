@@ -47,7 +47,7 @@ export const Modal: React.FC<ModalProps> = ({
       <ModalContainer zIndex={zIndex} style={style} className="bbg" lottery={lottery}>
         <Center styles={styles} onClick={handleContainerClick} lottery={lottery}>
           <ModalComponent width={width} mobMarg={mobMarg} paddingTop={paddingTop}>
-              {withClose && (<span className="close" onClick={handleContainerClick}><Times /></span>)}
+              {withClose && (<span className="close"><Times onClick={handleContainerClick} /></span>)}
               {children}
           </ModalComponent>
         </Center>

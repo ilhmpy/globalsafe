@@ -2,13 +2,17 @@ import styled from 'styled-components/macro';
 import { FC, useState } from "react";
 import { ReactComponent as Arrow } from "../../assets/svg/selArrow.svg";
 import { Scrollbars } from 'react-custom-scrollbars';
+import { BalanceList, Balance } from "../../types/balance";
+import moment from 'moment';
+import 'moment/locale/ru';
 
 type SelectType = {
-  data: any[];
+  data: BalanceList[] | null;
   setSwitch: (value: string) => void;
+  withoutVolume?: boolean;
 };
 
-export const Select: FC<SelectType> = ({ data, setSwitch }: SelectType) => {
+export const Select: FC<SelectType> = ({ data, setSwitch, withoutVolume }: SelectType) => {
     const [value, setValue] = useState<string | undefined>();
     const [activeSwitch, setActiveSwitch] = useState<boolean>(false);
 
@@ -18,9 +22,11 @@ export const Select: FC<SelectType> = ({ data, setSwitch }: SelectType) => {
 
     const getSwitch = (e: any) => {
         hideList();
-        setValue(e.currentTarget.innerText);
-        setSwitch(e.currentTarget.innerText);
+        setValue(Balance[e.target.dataset.curr]);
+        setSwitch(Balance[e.target.dataset.curr]);
     };
+    
+    console.log(data);
 
     return (
       <Field onClick={hideList}>
@@ -28,8 +34,14 @@ export const Select: FC<SelectType> = ({ data, setSwitch }: SelectType) => {
           {value ? value : ( "Валюта не выбрана" )}
           <FieldList block={activeSwitch}>
             <Scrollbars>
-                {data.map((item, idx) => (
-                    <FieldListItem key={idx} onClick={getSwitch}>{item}</FieldListItem>
+                {data && data.map((item, idx) => (
+                    <FieldListItem 
+                        key={idx} 
+                        data-curr={item.balanceKind} 
+                        onClick={getSwitch}
+                    >
+                        {Balance[item.balanceKind]}{!withoutVolume && ` - ${(item.volume).toLocaleString("ru-RU", { maximumFractionDigits: 2 })}`}
+                    </FieldListItem>
                 ))}
             </Scrollbars>
           </FieldList>
