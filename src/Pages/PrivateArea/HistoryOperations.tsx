@@ -18,7 +18,9 @@ export const HistoryOperations = () => {
     const [activeFilter, setActiveFilter] = useState<'active' | 'archived' | 'hold'>('active');
     const months = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
     const [buttons, setButtons] = useState<any[]>([
-        { text: "Все типы", active: "active" }, { text: "Пополнение", active: "hold" }, { text: "Списание", active: "archived" }
+        { text: "Все типы", active: "active" }, 
+        { text: "Пополнение", active: "hold" }, 
+        { text: "Списание", active: "archived" }
     ]);
     const appContext = useContext(AppContext);
     const user = appContext.user;
