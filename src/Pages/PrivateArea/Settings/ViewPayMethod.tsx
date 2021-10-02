@@ -151,12 +151,16 @@ const Entry = styled.div`
 const RightSide = styled.div`
   max-width: 700px;
   width: 100%;
+  padding: 40px;
 
   display: flex;
   flex-direction: column;
   gap: 20px;
 
-  padding: 40px;
+  background: #ffffff;
+  box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
+  border-radius: 0px 4px 4px 0px;
+
   ${Entry} {
     gap: 4px;
     & > span {

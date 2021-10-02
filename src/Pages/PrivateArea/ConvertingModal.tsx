@@ -110,13 +110,13 @@ const RateRow = styled.div`
   min-height: 40px;
 `;
 
-const Input = styled.input<{ CWD?: boolean }>`
+export const Input = styled.input`
   width: 100%;
   border: 1px solid #edf0f7;
   box-sizing: border-box;
   border-radius: 2px;
   min-height: 40px;
-  padding: ${(props) => (props.CWD ? '8px 45px 8px 8px' : '8px')};
+  padding: 8px;
   font-weight: normal;
   background: #f9fafb;
   font-size: 14px;
@@ -136,12 +136,6 @@ const Input = styled.input<{ CWD?: boolean }>`
     opacity: 0.4;
     color: ${(props) => props.theme.text};
   }
-  background-image: ${(props) =>
-    props.CWD
-      ? `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='50px' width='120px'><text x='0' y='15' fill='${props.theme.thHead}' font-family='Roboto, Helvetica, sans-serif' font-size='14'>CWD</text></svg>")`
-      : ''};
-  background-position: ${(props) => (props.CWD ? 'top 8px right -50%' : '')};
-  background-repeat: ${(props) => (props.CWD ? 'no-repeat' : '')};
 `;
 
 const InnerBlock = styled.div`
@@ -206,22 +200,22 @@ const ModalCurrencyDiv = styled.div`
   }
 `;
 
-export const DIV = styled.div`
-  width: 100%;
-  max-width: 200px;
-  margin: 0 auto;
+// export const DIV = styled.div`
+//   width: 100%;
+//   max-width: 200px;
+//   margin: 0 auto;
 
-  & > input {
-    max-width: 200px;
-    margin: 0 auto;
-    margin-bottom: 20px;
-    color: ${({ theme }) => theme.toToken.color};
+//   & > input {
+//     max-width: 200px;
+//     margin: 0 auto;
+//     margin-bottom: 20px;
+//     color: ${({ theme }) => theme.toToken.color};
 
-    &::placeholder {
-      color: ${({ theme }) => theme.toToken.color};
-    }
-  }
-`;
+//     &::placeholder {
+//       color: ${({ theme }) => theme.toToken.color};
+//     }
+//   }
+// `;
 
 export const H3 = styled.div<{ red?: boolean; bold?: boolean }>`
   font-weight: 400;
