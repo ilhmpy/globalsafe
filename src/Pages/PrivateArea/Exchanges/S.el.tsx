@@ -12,12 +12,6 @@ export const Filters = styled.div`
   display: flex;
   margin-bottom: 20px;
   margin-bottom: 10px;
-  ${FilterButton} {
-    margin: 0 10px 10px 9px;
-    &:first-child {
-      margin-left: 0;
-    }
-  }
 `;
 
 export const Line = styled.span`
