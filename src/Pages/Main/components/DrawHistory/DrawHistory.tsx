@@ -60,10 +60,9 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
   const repeat = () => {
     if (hubConnection) {
       hubConnection
-        .invoke<RootLottery>('GetPrizes', 0, 10)
+        .invoke<RootLottery>('GetPrizes', [], 0, 10)
         .then((res) => {
           setShow(true);
-          console.log('GetPrizes res', res);
           const arrList = res.collection.map((item) => ({
             name: item.userName,
             kind: item.definition.kind,
@@ -128,7 +127,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
                               maximumFractionDigits: 5,
                             })
                           : item.kind === 1
-                          ? t('win.two')
+                          ? ''
                           : item.volume}
                         &nbsp;
                         {item.volume ? Balance[item.balanceKind] : '-'}
