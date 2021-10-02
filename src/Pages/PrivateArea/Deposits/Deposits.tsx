@@ -21,7 +21,7 @@ import { CloseDeposit } from '../components/Modals/CloseDeposit';
 import { CloseDepositSuccess } from '../components/Modals/CloseDepositSuccess';
 import { CloseDepositError } from '../components/Modals/CloseDepositError';
 import { AppContext } from '../../../context/HubContext';
-import { Collection, RootList } from '../../../types/info';
+import { Collection, DepositsCollection, RootList } from '../../../types/info';
 import { Loading, NotItems } from "../components/Loading/Loading";
 
 export const Deposits = () => {
@@ -149,16 +149,24 @@ export const Deposits = () => {
     }
   };
 
+  // if(getDepositsLoading) {
+  //   return (
+  //     <Loading />
+  //   )
+  // };
 
-  if(getDepositsLoading) {
+  if(!getDepositsLoading && depositsList.length === 0) {
     return (
-      <Loading />
-    )
-  };
+      <S.Container>
+        <Container>
+          <S.NotDeposits>
+            У вас пока нет депозитов. Откройте свой первый депозит !
+          </S.NotDeposits>
 
-  if(depositsList.length === 0) {
-    return (
-      <NotItems text="У вас пока не имеется депозитов." />
+          <S.StyledProgram />
+
+        </Container>
+      </S.Container>
     )
   };
 
@@ -175,8 +183,13 @@ export const Deposits = () => {
         <Filter activeFilter={activeFilter} setActiveFilter={setActiveFilter} /> 
       </Container>
       <Container>
-        <Scrollbars style={{ height: '240px' }}>
-          {depositsList.length > 0 &&
+        <Scrollbars style={{ height: '240px', minHeight: '240px' }}>
+          {
+          getDepositsLoading
+          ?
+            <Loading />
+          :
+            depositsList.length > 0 &&
               <InfiniteScroll
                   pageStart={0}
                   loadMore={handleGetDepositsList}

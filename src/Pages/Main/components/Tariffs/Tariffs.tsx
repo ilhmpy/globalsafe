@@ -178,7 +178,7 @@ export const Tariffs = () => {
   };
 
   return (
-      <Container pNone page>
+      <Container pNone page mtNone>
         <H2 center>{t('partnersTitle')}</H2>
         <PartnersBlock>
           <PartnersHeader>
@@ -199,10 +199,6 @@ export const Tariffs = () => {
   );
 };
 
-const DepositsCardsTitleContainer = styled(Container)`
-  margin-top: 60px;
-`;
-
 const PartnersBlock = styled.div`
   width: 100%;
   min-height: 544px;
@@ -210,7 +206,6 @@ const PartnersBlock = styled.div`
   border-radius: 4px;
   padding: 1px;
   box-shadow: 0px 80px 80px -40px rgba(220, 220, 232, 0.5);
-
   @media only screen and (max-device-width: 480px) {
     min-height: 345px;
     margin-bottom: 20px;
@@ -223,14 +218,13 @@ const PartnersHeader = styled.header`
   padding-left: 270px;
   display: flex;
   align-items: center;
-
   @media only screen and (max-device-width: 480px) {
     padding-left: 25%;
-    height: 60px;
+    height: 38px;
   }
-
   @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
     padding-left: 30%;
+    height: 60px;
   }
 `;
 
@@ -241,7 +235,6 @@ const PartnersHeaderItem = styled.div`
   font-size: 24px;
   font-weight: 700;
   margin-right: 217px;
-
   @media only screen and (max-device-width: 480px) {
     margin-right: 45px;
     font-weight: 700;
@@ -249,7 +242,6 @@ const PartnersHeaderItem = styled.div`
     width: 60px;
     line-height: 20px;
   }
-
   @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
     width: 160px;
     margin-right: 0px;
@@ -266,11 +258,9 @@ const PartnersItem = styled.div`
   align-items: center;
   padding-left: 20px;
   color: #000;
-
   &:nth-child(2n) {
     background: #f8f7fc;
   }
-
   @media only screen and (max-device-width: 480px) {
     height: 38px;
   }
@@ -282,37 +272,40 @@ const PartnersItemTitle = styled.div`
   line-height: 20px;
   margin-right: 200px;
 
-  @media only screen and (max-device-width: 480px) {
+  @media only screen and (max-device-width: 767px) {
     font-size: 12px;
     font-weight: 400;
     line-height: 18px;
+    margin-right: 5%;
   }
 
-  @media only screen and (max-device-width: 359px) {
-    margin-right: 13px;
+  @media only screen and (min-device-width: 360px) and (max-device-width: 400px) {
+    margin-right: 7%;
   }
-
-  @media only screen and (min-device-width: 360px) and (max-device-width: 399px) {
-    margin-right: 23px;
+  @media only screen and (min-device-width: 400px) and (max-device-width: 409px) {
+    margin-right: 8%;
   }
-
-  @media only screen and (min-device-width: 400px) and (max-device-width: 449px) {
-    margin-right: 35px;
+  @media only screen and (min-device-width: 410px) and (max-device-width: 420px) {
+    margin-right: 9%;
   }
-
-  @media only screen and (min-device-width: 450px) and (max-device-width: 480px) {
-    margin-right: 45px;
+  @media only screen and (min-device-width: 420px) and (max-device-width: 448px) {
+    margin-right: 10%;
   }
-
-  @media only screen and (min-device-width: 470px) and (max-device-width: 480px) {
-    margin-right: 53px;
+  @media only screen and (min-device-width: 445px) and (max-device-width: 449px) {
+    margin-right: 11%;
   }
-
-  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+  @media only screen and (min-device-width: 450px) and (max-device-width: 767px) {
+    margin-right: 11%;
+  }
+  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+    font-weight: 14px;
+    line-height: 20px;
     margin-right: 20%;
-  }
-
-  @media only screen and (min-device-width: 900px) and (max-device-width: 1024px) {
+  } 
+  @media only screen and (min-device-width: 850px) and (max-device-width: 999px) {
+    margin-right: 21%;
+  } 
+  @media only screen and (min-device-width: 1000px) and (max-device-width: 1024px) {
     margin-right: 23%;
   }
 `;
@@ -329,44 +322,70 @@ const PartnersItemData = styled.div`
   &:nth-child(3) {
     width: 300px;
   }
-
-  @media only screen and (max-device-width: 480px) {
+  @media only screen and (max-device-width: 767px) {
     font-size: 12px;
     line-height: 18px;
-    &:nth-child(2) {
-      width: 85px;
-    }
 
+    &:nth-child(2) {
+      width: 60px;
+    }
     &:nth-child(3) {
-      width: 90px;
+      width: 60px;
+    }
+    margin-right: 10%;
+  }
+  @media only screen and (max-device-width: 369px) {
+    &:nth-child(2) {
+      width: 36px;
+    }
+    margin-right: 15%;
+    &:nth-child(3) {
+      width: 36px;
     }
   }
-
-  @media only screen and (min-device-width: 400px) and (max-device-width: 480px) {
-    &:nth-child(2) {
-      width: 98px;
+  @media only screen and (max-device-width: 359px) {
+    &:nth-child(3) {
+      margin-right: 17%;
     }
-
+  }
+  @media only screen and (min-device-width: 370px) and (max-device-width: 449px) {
+    margin-right: 11%;
+  }
+  @media only screen and (min-device-width: 370px) and (max-device-width: 375px) {
+    margin-right: 9%;
+  }
+  @media only screen and (min-device-width: 376px) and (max-device-width: 379px) {
+    margin-right: 9%;
+    &:nth-child(2) {
+      margin-right: 10%;
+    }
+  }
+  @media only screen and (min-device-width: 380px) and (max-device-width: 389px) {
+    &:nth-child(3) {
+      margin-right: 9%;
+    }
+  }
+  @media only screen and (min-device-width: 450px) and (max-device-width: 767px) {
+    margin-right: 10%;
+  }
+  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+    font-size: 14px;
+    line-height: 20px;
+    margin-right: 9%;
+    &:nth-child(2) {
+      width: 100px;
+    }
     &:nth-child(3) {
       width: 100px;
     }
   }
-
-  @media only screen and (min-device-width: 450px) and (max-device-width: 480px) {
-    &:nth-child(2) {
-      width: 107px;
-    }
+  @media only screen and (min-device-width: 850px) and (max-device-width: 999px) {
+    margin-right: 8%;
   }
-
-  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
-    font-size: 14px;
-    font-weight: 400;
-    &:nth-child(2) {
-      width: 160px;
-    }
-
+  @media only screen and (min-device-width: 1000px) and (max-device-width: 1024px) {
+    margin-right: 6%;
     &:nth-child(3) {
-      width: 160px;
+      margin-right: 7%;
     }
   }
 `;

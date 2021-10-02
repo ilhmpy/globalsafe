@@ -2,14 +2,14 @@ import { FC } from 'react';
 import { Container } from '../../globalStyles';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
-import { ReactComponent as FooterLogo } from "../../assets/svg/whiteFooterLogo.svg";
-import { ReactComponent as Tg } from "../../assets/svg/tg2.svg";
+import { ReactComponent as FooterLogo } from '../../assets/svg/whiteFooterLogo.svg';
+import { ReactComponent as Tg } from '../../assets/svg/tg2.svg';
 import { Link } from 'react-scroll';
 import { NavHashLink } from 'react-router-hash-link';
 
 type FooterType = {
   other?: boolean;
-}
+};
 
 export const Footer: FC<FooterType> = ({ other }: FooterType) => {
   const { t } = useTranslation();
@@ -26,28 +26,37 @@ export const Footer: FC<FooterType> = ({ other }: FooterType) => {
         <FooterHeader>
           <FooterLogo className="logo" />
           <FooterLinks>
-            <FooterLink to="/#deposits" scroll={(el) => scrollWidthOffset(el)}>Тарифы и программы</FooterLink>
-            <FooterLink to="/#lottery" scroll={(el) => scrollWidthOffset(el)}>Розыгрыши</FooterLink>
-            <FooterLink to="/#lottery" scroll={(el) => scrollWidthOffset(el)}>Обмены</FooterLink>
-            <FooterLink to="/#banner" scroll={(el) => scrollWidthOffset(el)}>Правила</FooterLink>
+            <FooterLink to="/#deposits" scroll={(el) => scrollWidthOffset(el)}>
+              Тарифы и программы
+            </FooterLink>
+            <FooterLink to="/#lottery" scroll={(el) => scrollWidthOffset(el)}>
+              Розыгрыши
+            </FooterLink>
+            <FooterLink to="/#lottery" scroll={(el) => scrollWidthOffset(el)}>
+              Обмены
+            </FooterLink>
+            <FooterLink to="/#banner" scroll={(el) => scrollWidthOffset(el)}>
+              Правила
+            </FooterLink>
           </FooterLinks>
         </FooterHeader>
         <FooterDesc>2021 © Globalsafe v2.0. Все права защищены.</FooterDesc>
-        <a target="_blank" href="::t.me/joinchat/E_Acz5BKQnJlNTVi"><Tg className="tg" /></a>
+        <a target="_blank" rel="noreferrer" href="https:/t.me/joinchat/E_Acz5BKQnJlNTVi">
+          <Tg className="tg" />
+        </a>
       </Container>
     </FooterBlock>
   );
 };
 
-
-const FooterBlock = styled.footer<{ other?: boolean; }>`
+const FooterBlock = styled.footer<{ other?: boolean }>`
   width: 100%;
   min-height: 217px;
   max-height: 217px;
-  background: #3F3E4E;
+  background: #3f3e4e;
   padding-top: 40px;
   padding-bottom: 40px;
-
+  margin-top: auto;
   @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
     padding-left: 20px;
     min-height: 188px;
@@ -57,11 +66,11 @@ const FooterBlock = styled.footer<{ other?: boolean; }>`
   @media only screen and (max-device-width: 480px) {
     min-height: 320px;
     max-height: 320px;
-    
+
     .logo {
       display: none;
     }
-    
+
     .tg {
       position: absolute;
       margin-left: auto;
@@ -87,7 +96,7 @@ const FooterBlock = styled.footer<{ other?: boolean; }>`
           }
         }
       `;
-    };
+    }
   }}
 `;
 
@@ -144,7 +153,7 @@ const FooterDesc = styled.h3`
   font-weight: 400;
   font-size: 14px;
   line-height: 17px;
-  
+
   @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
     width: 170px;
     margin-bottom: 20px;

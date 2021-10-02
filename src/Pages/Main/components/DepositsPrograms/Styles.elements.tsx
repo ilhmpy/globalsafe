@@ -19,12 +19,16 @@ export const CardBox = styled.div`
         display: flex;
         flex-wrap: wrap;
     }
+
+    .swiper-pagination-fraction, .swiper-pagination-custom, .swiper-container-horizontal > .swiper-pagination-bullets {
+      bottom: 26px !important;
+    }
     
-      .swiper-pagination-bullets > .swiper-pagination-bullet-active {
+    .swiper-pagination-bullets > .swiper-pagination-bullet-active {
         width: 20px;
         height: 6px;
         border-radius: 6px;
-      }
+    }
 `;
 
 export const Card = styled.div`
@@ -45,7 +49,6 @@ export const Card = styled.div`
 
     @media only screen and (max-device-width: 1024px) {
        padding: 20px;
-       margin-bottom: 0px;
     }
 
     @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
@@ -57,7 +60,7 @@ export const Card = styled.div`
     @media only screen and (max-device-width: 480px) {
       width: 280px;
       height: 194px;
-      margin: 0;
+      margin: 0 auto;
       min-width: 280px;
     }
 `;
@@ -82,10 +85,12 @@ export const CardDesc = styled.h3`
     line-height: 20px;
     color: #000;
     width: 100%;
-    max-width: 160px;
     height: 60px;
+    overflow: hidden;
+    width: 149px;
+    text-overflow: ellipsis;
     margin-bottom: 40px;
-
+    word-wrap: break-word;
     @media only screen and (max-device-width: 480px) {
         margin-bottom: 20px;
         max-width: 200px;
@@ -103,7 +108,7 @@ export const CardButton = styled.button`
     border: 0;
     font-size: 12px;
     font-weight: 500;
-    transtion: all 0.3s ease 0s;
+    transition: all 0.3s ease 0s;
 
     &:hover {
         box-shadow: 0px 4px 10px #515172;

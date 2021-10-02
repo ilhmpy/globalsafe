@@ -23,6 +23,7 @@ import {
 } from './Header.elements';
 import { Nav } from './Nav';
 import { NavAdmin } from './NavAdmin';
+import { routers } from '../../constantes/routers';
 
 type Props = {
   admPanel?: boolean;
@@ -46,7 +47,7 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
     if (!user) {
       history.push('/login');
     } else {
-      history.push('/info');
+      history.push(routers.deposits);
     }
   }
 
@@ -121,8 +122,11 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
               {t('headerButton.personalArea')}
             </Button>
           ) : user ? (
-            <Button primary onClick={logOut}>
-              {t('logout')}
+            // <Button primary onClick={logOut}>
+            //   {t('logout')}
+            // </Button>
+            <Button primary onClick={handleClick}>
+              {t('headerButton.personalArea')}
             </Button>
           ) : (
             <Button primary onClick={handleClick}>

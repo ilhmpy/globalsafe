@@ -32,13 +32,16 @@ import { ConvertingModalFail } from './ConvertingModalFail';
 import { DepositOpen } from './Deposits/DepositOpen';
 import { DepositProgram } from './Deposits/DepositProgram';
 import { Deposits } from './Deposits/Deposits';
-import { InfoBalance } from './InfoBalance';
+// import { InfoBalance } from './InfoBalance';
 import { DepositListModal, TokenModal } from './Modals';
 import { OnePage } from './OnePage';
 import { Settings } from './Settings';
 import { NewPayMethod } from './Settings/NewPayMethod';
 import { ViewPayMethod } from './Settings/ViewPayMethod';
 import * as Styled from './Styles.elements';
+import { Footer } from '../../components/Footer/Footer';
+import { Advert } from './Exchanges/Advert';
+import { HistoryOperations } from './HistoryOperations';
 
 export const InfoMain: FC = () => {
   const { t } = useTranslation();
@@ -66,6 +69,7 @@ export const InfoMain: FC = () => {
   const balance = appContext.balance;
   const hubConnection = appContext.hubConnection;
   const balanceList = appContext.balanceList;
+  const logOut = appContext.logOut;
   const inputRef = useRef<any>(null);
   const history = useHistory();
   const lang = localStorage.getItem('i18nextLng') || 'ru';
@@ -319,9 +323,8 @@ export const InfoMain: FC = () => {
   };
 
   const changeBalance = () => {
-    const newWindow = window.open();
-
-    if (hubConnection && currency.length > 0 && ed.length > 0) {
+    if (hubConnection && currency.length > 0 && ed.length > 0 && Number(ed) > 0) {
+      const newWindow = window.open();
       hubConnection
         .invoke(
           'GetTopUpUrl',
@@ -337,9 +340,9 @@ export const InfoMain: FC = () => {
           console.log(err);
           newWindow && newWindow.close();
           setError(true);
-          setErrorReason('Недостаточно средств на балансе.');
+          setErrorReason('На балансе аккаунта недостаточно средств.');
           setAddDrawModal(false);
-        });
+        })
     }
   };
 
@@ -348,12 +351,15 @@ export const InfoMain: FC = () => {
       hubConnection &&
         outPutCurrency.length > 0 &&
         outPutEd.length > 0 &&
+        Number(outPutEd) > 0 &&
         Number(outPutEd) > Number(blockchain) + Number(service) + 1
     );
+    console.log(outPutCurrency);
     if (
       hubConnection &&
       outPutCurrency.length > 0 &&
       outPutEd.length > 0 &&
+      Number(outPutEd) > 0 &&
       Number(outPutEd) > Number(blockchain) + Number(service) + 1
     ) {
       setWithdrawValueLoad(true);
@@ -367,7 +373,7 @@ export const InfoMain: FC = () => {
             ? Number(+outPutEd) * 10000
             : outPutCurrency === 'MULTICS'
             ? Number(+outPutEd) * 100
-            : Number(+outPutEd)
+            : Number(+outPutEd),
         )
         .then((res) => {
           console.log(res);
@@ -380,8 +386,8 @@ export const InfoMain: FC = () => {
           setWithdrawValueLoad(false);
           setOutPutError(true);
           setWithDrawModal(false);
-          setOutPutErrorReason('Недостаточно средств на балансе.');
-        });
+          setOutPutErrorReason('На балансе аккаунта недостаточно средств.');
+        })
     }
   };
 
@@ -427,6 +433,7 @@ export const InfoMain: FC = () => {
           onClose={() => {
             setAddDrawModal(false);
             setEd('');
+            setCurrency("");
           }}
           width={420}
           withClose
@@ -435,10 +442,11 @@ export const InfoMain: FC = () => {
             Пополнение баланса
           </H3>
           <div style={{ width: '100%', maxWidth: '340px', margin: '0 auto' }}>
-            <Selectv2 data={currencies} setSwitch={setCurrency} />
+            <Selectv2 data={balanceList && balanceList} withoutVolume setSwitch={setCurrency} />
             <Inputv2
               placeholder="Сумма пополнения"
               value={ed}
+              maxLength={8}
               onChange={(e) => {
                 const arr = e.currentTarget.value.split('-');
                 const fromSplitted = arr[0].split('.');
@@ -457,11 +465,15 @@ export const InfoMain: FC = () => {
         timeout={0}
         unmountOnExit
       >
-        <Modal onClose={() => setError(undefined)} width={420} withClose>
+        <Modal onClose={() => {
+          setError(undefined);
+          setCurrency("");
+          setEd("");
+        }} width={420} withClose>
           <H3 center style={{ marginTop: '24px' }}>
             Успешное пополнение
           </H3>
-          <Styled.Desc>Баланс личного кабинета успешно будет пополнен на:</Styled.Desc>
+          <Styled.Desc>Баланс личного кабинета успешно пополнен на:</Styled.Desc>
           <Styled.Desc bold mMore style={{ marginTop: '0px' }}>
             {ed} {currency}
           </Styled.Desc>
@@ -469,7 +481,11 @@ export const InfoMain: FC = () => {
       </CSSTransition>
 
       <CSSTransition in={error === undefined ? false : error} timeout={0} unmountOnExit>
-        <Modal onClose={() => setError(undefined)} width={420} withClose>
+        <Modal onClose={() => {
+          setError(undefined);
+          setCurrency("");
+          setEd("");
+        }} width={420} withClose>
           <H3 center style={{ marginTop: '24px' }}>
             Ошибка пополнения
           </H3>
@@ -488,6 +504,7 @@ export const InfoMain: FC = () => {
           onClose={() => {
             setWithDrawModal(false);
             setOutPutEd('');
+            setOutPutCurrency("");
           }}
           width={420}
           withClose
@@ -496,10 +513,11 @@ export const InfoMain: FC = () => {
             Вывод средств
           </H3>
           <div style={{ width: '100%', maxWidth: '340px', margin: '0 auto' }}>
-            <Selectv2 data={currencies} setSwitch={setOutPutCurrency} />
+            <Selectv2 data={balanceList && balanceList} setSwitch={setOutPutCurrency} />
             <Inputv2
               value={outPutEd}
               placeholder="Сумма вывода"
+              maxLength={8}
               onKeyUp={(e) => {
                 if (e.keyCode === 8) {
                   setBlockchain('0');
@@ -514,6 +532,8 @@ export const InfoMain: FC = () => {
                 const validValue = e.currentTarget.value.replace(/[^0-9]/gi, '');
                 setOutPutEd(validValue);
                 getCommisions(validValue);
+                const test = (10000).toLocaleString("ru-RU", { maximumFractionDigits: 2 });
+                console.log(Number(test));
               }}
             />
             <Styled.Commision marginT={20} marginB={10}>
@@ -534,7 +554,11 @@ export const InfoMain: FC = () => {
       </CSSTransition>
 
       <CSSTransition in={outPutError === false ? true : false} timeout={0} unmountOnExit>
-        <Modal onClose={() => setOutPutError(undefined)} width={420} withClose>
+        <Modal onClose={() => {
+          setOutPutError(undefined);
+          setOutPutCurrency("");
+          setOutPutEd("");
+        }} width={420} withClose>
           <H3 center style={{ marginTop: '24px' }}>
             Успешный вывод средств
           </H3>
@@ -543,7 +567,7 @@ export const InfoMain: FC = () => {
             {outPutEd} {outPutCurrency}
           </Styled.Desc>
           <Styled.Desc mLess>
-            К выводу: {outPutEd ? Number(outPutEd) - (Number(blockchain) + Number(service)) : 0}
+            К выводу: {outPutEd ? (Number(outPutEd) - (Number(blockchain) + Number(service))) : 0}
           </Styled.Desc>
           <Styled.Desc mLess>Комиссия блокчейн: {blockchain}</Styled.Desc>
           <Styled.Desc mLess>Комиссия сервиса: {service}</Styled.Desc>
@@ -551,7 +575,11 @@ export const InfoMain: FC = () => {
       </CSSTransition>
 
       <CSSTransition in={outPutError} timeout={0} unmountOnExit>
-        <Modal onClose={() => setOutPutError(undefined)} width={420} withClose>
+        <Modal onClose={() => {
+          setOutPutError(undefined);
+          setOutPutCurrency("");
+          setOutPutEd("");
+        }} width={420} withClose>
           <H3 center style={{ marginTop: '24px' }}>
             Ошибка вывода средств
           </H3>
@@ -560,7 +588,7 @@ export const InfoMain: FC = () => {
             {outPutEd} {outPutCurrency}
           </Styled.Desc>
           <Styled.Desc mLess>
-            К выводу: {outPutEd ? Number(outPutEd) - (Number(blockchain) + Number(service)) : 0}
+            К выводу: {outPutEd ? (Number(outPutEd) - (Number(blockchain) + Number(service))) : 0}
           </Styled.Desc>
           <Styled.Desc mLess>Комиссия блокчейн: {blockchain}</Styled.Desc>
           <Styled.Desc mLess>Комиссия сервиса: {service}</Styled.Desc>
@@ -593,7 +621,7 @@ export const InfoMain: FC = () => {
         <DepositsPanelContainer>
           <PanelTitleBlock>
             <H4>Личный кабинет</H4>
-            <LogoutButton>
+            <LogoutButton onClick={() => logOut()}>
               <UsernameText>{user}</UsernameText>
               <LogOutIcon />
             </LogoutButton>
@@ -642,13 +670,13 @@ export const InfoMain: FC = () => {
             </BalanceChipsBlock>
 
             <TabsBlock>
-              <TabNavItem to="/info" exact>
+              <TabNavItem to={routers.deposits} exact>
                 <div>Мои депозиты</div>
               </TabNavItem>
-              <TabNavItem to="/p2p-changes">
+              <TabNavItem to={routers.p2pchanges}>
                 <div>P2P обмены</div>
               </TabNavItem>
-              <TabNavItem to="/operations-history">
+              <TabNavItem to={routers.operations}>
                 <div>История операций</div>
               </TabNavItem>
               <TabNavItem to={routers.settings}>
@@ -664,11 +692,13 @@ export const InfoMain: FC = () => {
           <Route path={routers.deposits} component={Deposits} exact />
           <Route path={routers.depositsProgram} component={DepositProgram} exact />
           <Route path={routers.depositsOpen} component={DepositOpen} exact />
-          <Route path="/info/balance" component={InfoBalance} exact />
+          {/* <Route path="/info/balance" component={InfoBalance} exact /> */}
           <Route path="/info/deposits/:slug" component={OnePage} exact />
+          <Route path={routers.p2pchanges} component={Advert} exact />
           <Route path={routers.settings} component={Settings} exact />
           <Route path={routers.settingsNewPayMethod} component={NewPayMethod} exact />
           <Route path={routers.settingsViewPayMethod} component={ViewPayMethod} exact />
+          <Route path={routers.operations} component={HistoryOperations} exact />
         </Switch>
         <CSSTransition in={depositSuccess} timeout={0} classNames="modal" unmountOnExit>
           <Modal width={540} onClose={() => setDepositSuccess(false)}>
@@ -842,13 +872,25 @@ export const InfoMain: FC = () => {
             selectDeposit={selectDeposit}
           />
         </div>
+        <Footer />
       </Styled.Page>
+
       <Styled.Note>
         <Notification onDelete={onDelete} data={notifications} />
       </Styled.Note>
     </>
   );
 };
+
+const AppWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+`;
+
+const CustomPage = styled(Styled.Page)`
+  flex: 1;
+`;
 
 const DepositsPanelContainer = styled(Container)`
   display: flex;

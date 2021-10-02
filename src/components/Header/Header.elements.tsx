@@ -139,7 +139,7 @@ export const HeaderMenu = styled.div<{ open?: boolean }>`
     width: 100%;
     height: 100%;
     left: ${(props) => (props.open ? '0' : '-100%')};
-    top: 67px;
+    top: 61px;
     padding: 0 50px;
     overflow: auto;
     z-index: 4;

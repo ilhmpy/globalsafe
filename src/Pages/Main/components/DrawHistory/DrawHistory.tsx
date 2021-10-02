@@ -36,7 +36,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
     if (hubConnection) {
       hubConnection.on('DrawResult', cb);
       hubConnection
-        .invoke<RootLottery>('GetPrizes', 0, 10)
+        .invoke<RootLottery>('GetPrizes', [], 0, 10)
         .then((res) => {
           const arrList = res.collection.map((item) => ({
             name: item.userName,
@@ -60,10 +60,9 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
   const repeat = () => {
     if (hubConnection) {
       hubConnection
-        .invoke<RootLottery>('GetPrizes', 0, 10)
+        .invoke<RootLottery>('GetPrizes', [], 0, 10)
         .then((res) => {
           setShow(true);
-          console.log('GetPrizes res', res);
           const arrList = res.collection.map((item) => ({
             name: item.userName,
             kind: item.definition.kind,
@@ -128,7 +127,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
                               maximumFractionDigits: 5,
                             })
                           : item.kind === 1
-                          ? t('win.two')
+                          ? ''
                           : item.volume}
                         &nbsp;
                         {item.volume ? Balance[item.balanceKind] : '-'}
@@ -144,18 +143,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
                   <CSSTransition key={idx} timeout={500} classNames="item">
                     <TableList card>
                       <TableItem>{moment(item.date).format('DD.MM.YYYY')}</TableItem>
-                      <TableItem>
-                        {item.kind === 0
-                          ? (item.volume / 100000).toLocaleString('ru-RU', {
-                              maximumFractionDigits: 5,
-                            })
-                          : item.kind === 1
-                          ? t('win.two')
-                          : item.volume}
-                        &nbsp;
-                        {item.volume ? Balance[item.balanceKind] : '-'}
-                      </TableItem>
-                      <TableItem>
+                      <TableItem style={{ display: "block", position: "absolute", right: "47px", maxWidth: "100px" }}>
                         <Value data-title={item.name}>{item.name}</Value>
                       </TableItem>
                     </TableList>
@@ -324,7 +312,7 @@ const TableItem = styled.li`
     @media (max-width: 576px) {
       width: 100px;
       position: absolute;
-      right: 0px;
+      right: 47px;
     }
   }
   @media only screen and (max-device-width: 600px) {

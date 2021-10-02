@@ -282,10 +282,10 @@ export const Timer: FC<Props> = ({
                   <svg
                     style={{
                       position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      width: '100%',
-                      height: '100%',
+                      top: 5,
+                      left: 2,
+                      width: '90%',
+                      height: '90%',
                       margin: '0 auto',
                       transform: 'rotateY(-180deg) rotateZ(240deg)',
                       overflow: 'visible',
