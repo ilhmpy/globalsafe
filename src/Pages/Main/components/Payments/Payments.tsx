@@ -190,7 +190,10 @@ export const Payments: FC = () => {
               <WhiteMap>
                 {isMobile ? (
                   <>
-                    <Swiper spaceBetween={10} slidesPerView={1} pagination={{ clickable: true }}>
+                    <Swiper 
+                      slidesPerView={"auto"} 
+                      pagination={{ clickable: true, dynamicBullets: true }}
+                    >
                         {smallArr.map((i: any, idx: number) => (
                           <SwiperSlide key={idx}>                                       
                             <>
@@ -412,7 +415,6 @@ const WhiteItemLine = styled.div<{ procent: number | string; }>`
    height: 2px;
    margin-top: 13px;
    position: relative;
-   min-width: 140px;
 
    &::after {
      display: inline;
@@ -424,6 +426,6 @@ const WhiteItemLine = styled.div<{ procent: number | string; }>`
    }
 
    @media only screen and (max-device-width: 767px) {
-     min-width: 95px;
+
    }
 `;

@@ -178,7 +178,7 @@ export const Tariffs = () => {
   };
 
   return (
-      <Container pNone page>
+      <Container pNone page mtNone>
         <H2 center>{t('partnersTitle')}</H2>
         <PartnersBlock>
           <PartnersHeader>
