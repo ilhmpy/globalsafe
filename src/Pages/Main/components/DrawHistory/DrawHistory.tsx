@@ -145,7 +145,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
                               maximumFractionDigits: 5,
                             })
                           : item.kind === 1
-                          ? t('win.two')
+                          ? ''
                           : item.volume}
                         &nbsp;
                         {item.volume ? Balance[item.balanceKind] : '-'}
