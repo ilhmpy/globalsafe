@@ -1,37 +1,51 @@
-import React, { FC, useContext } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
 import { ReactComponent as Close } from '../../../assets/svg/close.svg';
-import { Button } from '../../../components/Button/V2/Button';
 import { Modal } from '../../../components/Modal/Modal';
+import { routers } from '../../../constantes/routers';
 import { AppContext } from '../../../context/HubContext';
 
 interface IProps {
   open: boolean;
   setOpen: (open: boolean) => void;
-  setConfirm: (open: boolean) => void;
 }
 
-export const DeleteModal: FC<IProps> = ({ open, setOpen, setConfirm }: IProps) => {
+export const DeleteNotification: FC<IProps> = ({ open, setOpen }: IProps) => {
   const { t } = useTranslation();
+  const [fromSum, setFromSum] = useState('');
+  const [toSum, setToSum] = useState('');
+  const [fromCurrency, setFromCurrency] = useState('');
+  const [toCurrency, setToCurrency] = useState('');
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const history = useHistory();
 
   return (
     <CSSTransition in={open} timeout={300} unmountOnExit>
-      <Modal onClose={() => setOpen(false)} width={420}>
+      <Modal
+        onClose={() => {
+          setOpen(false);
+          history.push(routers.settings);
+        }}
+        width={420}
+      >
         <Container>
-          <ModalTitle>Удаление платежного метода</ModalTitle>
-          <CloseButton onClick={() => setOpen(false)} />
+          <ModalTitle>Платежный метод удален</ModalTitle>
+          <CloseButton
+            onClick={() => {
+              setOpen(false);
+              history.push(routers.settings);
+            }}
+          />
 
           <ContentWrapper>
             <InnerBlock>
-              <Row>Вы действительно хотите удалить платежный метод ?:</Row>
+              <Row>Успешно удален платежный метод:</Row>
               <Row>
-                <b>АО «Тинькофф Банк», RUR</b>
+                <b>Банковский перевод АО «Тинькофф Банк»</b>
               </Row>
               <Row>
                 <strong>VYACHESLAV TROSCHIN</strong>
@@ -40,43 +54,12 @@ export const DeleteModal: FC<IProps> = ({ open, setOpen, setConfirm }: IProps) =
                 <b>5536 9137 9922 7240</b>
               </Row>
             </InnerBlock>
-            <ButtonWrapper>
-              {/* <Button bigSize fullWidth primary onClick={() => history.push(routers.settings)}> */}
-              <Button
-                bigSize
-                fullWidth
-                primary
-                onClick={() => {
-                  setOpen(false);
-                  setConfirm(true);
-                }}
-              >
-                Удалить
-              </Button>
-              <Button
-                bigSize
-                fullWidth
-                outlinePrimary
-                onClick={() => {
-                  setOpen(false);
-                }}
-              >
-                Отмена
-              </Button>
-            </ButtonWrapper>
           </ContentWrapper>
         </Container>
       </Modal>
     </CSSTransition>
   );
 };
-
-const ButtonWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-`;
 
 const Row = styled.div`
   font-weight: normal;

@@ -102,10 +102,10 @@ export const NewPayMethod: FC = () => {
           </Entry>
 
           <ButtonWrapper>
-            <Button bigSize primary onClick={() => undefined}>
+            <Button bigSize primary onClick={() => history.push(routers.settings)}>
               Сохранить
             </Button>
-            <Button bigSize outlinePrimary onClick={() => undefined}>
+            <Button bigSize outlinePrimary onClick={() => history.push(routers.settings)}>
               Отмена
             </Button>
           </ButtonWrapper>

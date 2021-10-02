@@ -1,4 +1,4 @@
-import { FC, useContext } from 'react';
+import { FC, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
@@ -9,6 +9,8 @@ import { AppContext } from '../../../context/HubContext';
 import { Container } from '../../../globalStyles';
 import { Back } from '../components/Back';
 import { Title } from '../components/ui/Title';
+import { DeleteModal } from './DeleteModal';
+import { DeleteNotification } from './DeleteNotification';
 
 export const ViewPayMethod: FC = () => {
   const appContext = useContext(AppContext);
@@ -16,9 +18,18 @@ export const ViewPayMethod: FC = () => {
   const { method, cardHolder, cardNumber, currency, isActive } = chosenMethod;
   const { t } = useTranslation();
   const history = useHistory();
+  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
+  const [deleteNotificationIsOpen, setDeleteNotificationIsOpen] = useState(false);
 
   return (
     <Container>
+      <DeleteModal
+        open={deleteModalIsOpen}
+        setOpen={setDeleteModalIsOpen}
+        setConfirm={setDeleteNotificationIsOpen}
+      />
+      <DeleteNotification open={deleteNotificationIsOpen} setOpen={setDeleteNotificationIsOpen} />
+
       <Back
         text="К списку платежных методов"
         onGoBackClick={() => history.push(routers.settings)}
@@ -65,7 +76,6 @@ export const ViewPayMethod: FC = () => {
             <SwitcherRow checked={isActive}>
               <Switcher
                 onChange={() => {
-                  console.log(111);
                   setChosenMethod((prev: any) => ({ ...prev, isActive: !prev.isActive }));
                 }}
                 checked={isActive}
@@ -75,7 +85,7 @@ export const ViewPayMethod: FC = () => {
           </Entry>
 
           <ButtonWrapper>
-            <Button bigSize outlinePrimary onClick={() => undefined}>
+            <Button bigSize outlinePrimary onClick={() => setDeleteModalIsOpen(true)}>
               Удалить
             </Button>
           </ButtonWrapper>

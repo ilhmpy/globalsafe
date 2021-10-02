@@ -146,9 +146,10 @@ export const Settings: FC = () => {
           <Ceil>Активность</Ceil>
         </TableHeader>
 
-        {tableData.map((row: TableRowType, i: number) => (
-          <>
+        {tableData.map((row: TableRowType, i: number) => {
+          return (
             <TableRow
+              key={i}
               onClick={() => {
                 setChosenMethod(row);
                 history.push(routers.settingsViewPayMethod);
@@ -177,8 +178,8 @@ export const Settings: FC = () => {
                 <span>{t(row.isActive ? 'depositsPrograms.on' : 'depositsPrograms.off')}</span>
               </Ceil>
             </TableRow>
-          </>
-        ))}
+          );
+        })}
       </TableCard>
     </Container>
   );

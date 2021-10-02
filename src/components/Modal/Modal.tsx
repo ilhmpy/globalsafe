@@ -1,7 +1,7 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
+import { ReactComponent as Times } from '../../assets/svg/times.svg';
 import { Portal } from '../Portal/Portal';
-import { ReactComponent as Times } from "../../assets/svg/times.svg";
 
 type ModalProps = {
   onClose: () => void;
@@ -9,7 +9,7 @@ type ModalProps = {
   zIndex?: string;
   mobMarg?: boolean;
   children: ReactNode;
-  paddingTop?: number; 
+  paddingTop?: number;
   style?: any;
   styles?: string;
   lottery?: boolean;
@@ -27,7 +27,7 @@ export const Modal: React.FC<ModalProps> = ({
   style,
   styles,
   lottery,
-  withClose, 
+  withClose,
   withoutClose,
 }: ModalProps) => {
   const handleContainerClick = (e: React.MouseEvent) => {
@@ -47,11 +47,15 @@ export const Modal: React.FC<ModalProps> = ({
       <ModalContainer zIndex={zIndex} style={style} className="bbg" lottery={lottery}>
         <Center styles={styles} onClick={handleContainerClick} lottery={lottery}>
           <ModalComponent width={width} mobMarg={mobMarg} paddingTop={paddingTop}>
-              {withClose && (<span className="close" onClick={handleContainerClick}><Times /></span>)}
-              {children}
+            {withClose && (
+              <span className="close" onClick={handleContainerClick}>
+                <Times />
+              </span>
+            )}
+            {children}
           </ModalComponent>
         </Center>
-      </ModalContainer>  
+      </ModalContainer>
     </Portal>
   );
 };
@@ -123,7 +127,7 @@ const ModalComponent = styled.div<{
   cursor: auto;
   background: ${(props) => props.theme.modal};
   border-radius: 8px;
-  padding: 1rem;
+  padding: 40px;
   max-width: ${(props) => (props.width ? props.width + 'px' : '400px')};
   display: flex;
   flex-direction: column;
