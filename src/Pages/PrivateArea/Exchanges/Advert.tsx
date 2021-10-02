@@ -6,6 +6,7 @@ import { routers } from '../../../constantes/routers';
 import { TabNavItem, TabsBlock, Text, Chip, FilterButton } from '../components/ui';
 import * as S from './S.el';
 import { AdvertTable } from './components/AdvertTable/AdvertTable';
+import { Button } from '../../../components/Button/V2/Button';
 
 export const Advert = () => {
   const history = useHistory();
@@ -31,7 +32,7 @@ export const Advert = () => {
               <div>Сертификаты</div>
             </TabNavItem>
           </TabsBlock>
-          <Text size={16} weight={500}>
+          <Text size={14} lH={16} weight={500}>
             Рейтинг аккаунта: 5.0
           </Text>
         </S.SubHeader>
@@ -49,6 +50,9 @@ export const Advert = () => {
           <FilterButton>Продажа</FilterButton>
         </S.Filters>
         <AdvertTable />
+        <S.ButtonWrap>
+          <Button>Показать еще</Button>
+        </S.ButtonWrap>
       </Container>
     </div>
   );
