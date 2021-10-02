@@ -18,7 +18,9 @@ export const HistoryOperations = () => {
     const [activeFilter, setActiveFilter] = useState<'active' | 'archived' | 'hold'>('active');
     const months = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
     const [buttons, setButtons] = useState<any[]>([
-        { text: "Все типы", active: "active" }, { text: "Пополнение", active: "hold" }, { text: "Списание", active: "archived" }
+        { text: "Все типы", active: "active" }, 
+        { text: "Пополнение", active: "hold" }, 
+        { text: "Списание", active: "archived" }
     ]);
     const appContext = useContext(AppContext);
     const user = appContext.user;
@@ -30,6 +32,8 @@ export const HistoryOperations = () => {
     const [allCurrency, setAllCurrency] = useState<boolean>(true);
     const [nowMonth, setNowMonth] = useState<boolean>(true);
     const [not, setNot] = useState<boolean>(false);
+    const [newItems, setNewItems] = useState<boolean>(true);
+    const [emptyItems, setEmptyItems] = useState<boolean>(false);
 
     const filter = [1, 2];
 
@@ -120,6 +124,7 @@ export const HistoryOperations = () => {
 
     useEffect(() => {
         if (hubConnection) {
+            setNewItems(true);
             const date = new Date();
             console.log(nowMonth ? new Date(date.getFullYear(), date.getMonth(), 1, 0, 0) : new Date(2018, 5, 13, 10, 0, 0),
             new Date())
@@ -142,6 +147,11 @@ export const HistoryOperations = () => {
                         setOperations(res.collection.filter((i: any) => Number(i.balanceSafeId) === balances[1].id));
                     };
                 };
+                if (res.collection.length) {
+                    setEmptyItems(false);
+                } else {
+                    setEmptyItems(true);
+                }
               })
               .catch(err => {
                 console.log(err);
@@ -170,6 +180,11 @@ export const HistoryOperations = () => {
                         setOperations((data: any) => [...data, ...res.collection.filter((i: any) => Number(i.balanceSafeId) === balances[1].id)]);
                     };
                 };
+                if (res.collection.length > 0) {
+                    setNewItems(true);
+                } else {
+                    setNewItems(false);
+                }
               })
               .catch(err => {
                   console.log(err);
@@ -232,25 +247,31 @@ export const HistoryOperations = () => {
                     buttons={buttons}
                 />
             </Styled.FilterAllBlock>
-            <Styled.Table none={not}>
-                <Styled.TableItem head>
-                    <Styled.TableInnerItem head>Дата и время</Styled.TableInnerItem>
-                    <Styled.TableInnerItem head>Категория</Styled.TableInnerItem>
-                    <Styled.TableInnerItem head>Сумма</Styled.TableInnerItem>
-                </Styled.TableItem>
-                <Styled.TableMap>
-                    {operations && operations.map((item, idx) => (
-                        <Styled.TableItem item key={idx}>
-                            <Styled.TableInnerItem item>{moment(item.operationDate).format("DD.MM.YYYY")} в {moment(item.operationDate).format("HH:MM")}</Styled.TableInnerItem>
-                            <Styled.TableInnerItem item>{operation(item.operationKind)}</Styled.TableInnerItem>
-                            <Styled.TableInnerItem item income={item.balanceDelta >= 0}>
-                                {sign(item.balanceDelta)} {(item.balanceDelta).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {item.balanceSafeId && getCurrency(item.balanceSafeId)}
-                            </Styled.TableInnerItem>
+            {!emptyItems ? (
+                <>
+                    <Styled.Table none={not}>
+                        <Styled.TableItem head>
+                            <Styled.TableInnerItem head>Дата и время</Styled.TableInnerItem>
+                            <Styled.TableInnerItem head>Категория</Styled.TableInnerItem>
+                            <Styled.TableInnerItem head>Сумма</Styled.TableInnerItem>
                         </Styled.TableItem>
-                    ))}
-                </Styled.TableMap>
-            </Styled.Table>
-            <Styled.Button onClick={addMore}>Показать ещё</Styled.Button>
+                        <Styled.TableMap>
+                            {operations && operations.map((item, idx) => (
+                                <Styled.TableItem item key={idx}>
+                                    <Styled.TableInnerItem item>{moment(item.operationDate).format("DD.MM.YYYY")} в {moment(item.operationDate).format("HH:MM")}</Styled.TableInnerItem>
+                                    <Styled.TableInnerItem item>{operation(item.operationKind)}</Styled.TableInnerItem>
+                                    <Styled.TableInnerItem item income={item.balanceDelta >= 0}>
+                                        {sign(item.balanceDelta)} {(item.balanceDelta).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {item.balanceSafeId && getCurrency(item.balanceSafeId)}
+                                    </Styled.TableInnerItem>
+                                </Styled.TableItem>
+                            ))}
+                        </Styled.TableMap>
+                    </Styled.Table>
+                    <Styled.Button onClick={addMore} newItems={newItems}>Показать ещё</Styled.Button>
+                </>
+            ) : (
+                <NotItems text="Не имеется элементов. Попробуйте поменять фильтр." />
+            )}
         </Container>
     )
 }    

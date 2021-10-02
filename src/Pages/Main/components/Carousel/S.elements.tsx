@@ -160,33 +160,34 @@ export const Description = styled.p`
 export const Image = styled.img`
   position: absolute;
   right: -45px;
-  bottom: -166px;
+  bottom: -500px;
   max-width: 1036px;
   @media (max-width: 1100px) {
     right: -40px;
-    bottom: -142px;
+    bottom: -336px;
     max-width: 884px;
   }
   @media (max-width: 992px) {
     right: -30px;
-    bottom: -106px;
+    bottom: -236px;
     max-width: 692px;
   }
   @media (max-width: 870px) {
     right: 57px;
-    bottom: -91px;
+    bottom: -200px;
     max-width: 558px;
   }
   @media (max-width: 767px) {
-    right: -30px;
+    right: -20px;
+    bottom: -200px;
   }
   @media (max-width: 660px) {
-    bottom: -75px;
+    bottom: -150px;
     max-width: 488px;
   }
   @media (max-width: 576px) {
     right: -24px;
-    bottom: -54px;
+    bottom: -110px;
     max-width: 342px;
   }
   @media (max-width: 375px) {
