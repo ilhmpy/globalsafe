@@ -262,7 +262,7 @@ export const AdminLottery: FC = () => {
         try {
           const response = await hubConnection.invoke(
             'CreateDraw',
-            moment.utc(startDate),
+            moment.utc(startDate).format(),
             sliderValue
           );
           setDrawList([response, ...drawList]);
