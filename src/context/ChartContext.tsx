@@ -1,4 +1,4 @@
-import React, { FC, useState, useContext } from 'react';
+import React, { FC, useState, useContext, useEffect } from 'react';
 import { AppContext } from './HubContext';
 import { Collection, RootChange } from '../types/currency';
 import moment from 'moment';
@@ -454,6 +454,29 @@ export const ChartProvider: FC = ({ children }: any) => {
       setLoadGLOBAL(false);
     }
   };
+
+  useEffect(() => {
+    const cb = (data: Collection) => {
+      console.log('MarketNotification', data);
+      if (data.assetKind === 3) {
+        setListGCWD((listGCWD) => [...listGCWD, data]);
+      } else if (data.assetKind === 2) {
+        setListMGCWD((listMGCWD) => [...listMGCWD, data]);
+      } else if (data.assetKind === 43) {
+        setListGLOBAL((listGlobal) => [...listGlobal, data]);
+      } else if (data.assetKind === 4) {
+        setListDIAMOND((listDIAMOND) => [...listDIAMOND, data]);
+      } else {
+        return;
+      }
+    };
+    if (hubConnection) {
+      hubConnection.on('MarketNotification', cb);
+    }
+    return () => {
+      hubConnection?.off('MarketNotification', cb);
+    };
+  }, [hubConnection]);
 
   return (
     <ChartContext.Provider
