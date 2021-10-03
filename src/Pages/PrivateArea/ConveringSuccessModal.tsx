@@ -39,6 +39,7 @@ export const ConvertingModalSuccess: FC<Iprops> = ({ open, setOpen }: Iprops) =>
 
 const ContentTitle = styled.div`
   text-align: start;
+  color: #000000;
 `;
 
 const ContentBody = styled.div`
@@ -46,6 +47,8 @@ const ContentBody = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   text-align: start;
+  color: #000000;
+
 `;
 
 const ModalBlock = styled.div`
@@ -73,6 +76,7 @@ const ModalTitle = styled.h1`
   line-height: 28px;
   text-align: center;
   color: ${(props) => props.theme.text};
+  color: #000000;
 `;
 const ModalContent = styled.p`
   font-style: normal;
