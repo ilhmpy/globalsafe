@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
@@ -40,11 +40,13 @@ type LotteryTable = {
   [elemName: string]: CollectionLottery[];
 };
 
-export const AdminLottery = () => {
-  const [openFilter, setOpenFilter] = useState(false);
-  const [openFilterOne, setOpenFilterOne] = useState(false);
-  const [name, setName] = useState('');
-  const [checkList, setCheckList] = useState<any>([]);
+type CheckListType = { checked: boolean; id: number; label: string };
+
+export const AdminLottery: FC = () => {
+  const [openFilter, setOpenFilter] = useState<boolean>(false);
+  const [openFilterOne, setOpenFilterOne] = useState<boolean>(false);
+  const [name, setName] = useState<string>('');
+  const [checkList, setCheckList] = useState<CheckListType[]>([]);
   const [openDate, setOpenDate] = useState<OpenDate>({
     from: undefined,
     to: undefined,
@@ -55,7 +57,7 @@ export const AdminLottery = () => {
   const [sortingWindowOpen, setSortingWindowOpen] = useState(false);
   const sortingWindowRef = useRef<HTMLDivElement | null>(null);
 
-  useOnClickOutside(sortingWindowRef, () => setSortingWindowOpen(false))
+  useOnClickOutside(sortingWindowRef, () => setSortingWindowOpen(false));
 
   const sortings = [
     t('descendDate'),
@@ -152,14 +154,17 @@ export const AdminLottery = () => {
   };
 
   useEffect(() => {
-    if (hubConnection) {
-      hubConnection
-        .invoke<RootGetDraw>('GetDraws', [1], 0, 20)
-        .then((res) => {
-          setDrawList(res.collection);
-        })
-        .catch((e) => console.log(e));
-    }
+    const getDraws = async () => {
+      if (hubConnection) {
+        try {
+          const response = await hubConnection.invoke<RootGetDraw>('GetDraws', [1], 0, 20);
+          setDrawList(response.collection);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    };
+    getDraws();
   }, [hubConnection]);
 
   useEffect(() => {
@@ -172,53 +177,56 @@ export const AdminLottery = () => {
     setLotteryArrList([]);
     // Add Sorting condition if viewPrizeDrawLogModel.drawDate Filter field has value
     const modifiedSorting = [...sorting];
-    if(openDate.to || openDate.from) {
-      if(!modifiedSorting.some(sortItem => sortItem.FieldName === 'viewPrizeDrawLogModel.drawDate')) {
+    if (openDate.to || openDate.from) {
+      if (
+        !modifiedSorting.some((sortItem) => sortItem.FieldName === 'viewPrizeDrawLogModel.drawDate')
+      ) {
         modifiedSorting.push({
           ConditionWeight: 1,
           OrderType: 2,
           FieldName: 'viewPrizeDrawLogModel.drawDate',
-        })
+        });
       }
-    };
-    if (hubConnection) {
-      hubConnection
-        .invoke<RootLottery>(
-          'GetAllPrizes',
-          name ? name : null,
-          openDate.from
-          ? moment(openDate.from)
-              .utcOffset('+00:00')
-              .set({ hour: 0, minute: 0, second: 0 })
-              .toDate()
-          : null,
-          openDate.to
-          ? moment(openDate.to)
-              .utcOffset('+00:00')
-              .set({ hour: 23, minute: 59, second: 59 })
-              .toDate()
-          : null,
-          checkList.length ? checkList.map((i: any) => i.id) : null,
-          (currentPage - 1) * pageLength,
-          pageLength,
-          modifiedSorting
-        )
-        .then((res) => {
-          setTotalLottery(res.totalRecords);
+    }
+
+    const getAllPrizes = async () => {
+      if (hubConnection) {
+        try {
+          const response = await hubConnection.invoke<RootLottery>(
+            'GetAllPrizes',
+            name ? name : null,
+            openDate.from
+              ? moment(openDate.from)
+                  .utcOffset('+00:00')
+                  .set({ hour: 0, minute: 0, second: 0 })
+                  .toDate()
+              : null,
+            openDate.to
+              ? moment(openDate.to)
+                  .utcOffset('+00:00')
+                  .set({ hour: 23, minute: 59, second: 59 })
+                  .toDate()
+              : null,
+            checkList.length ? checkList.map((it: CheckListType) => it.id) : null,
+            (currentPage - 1) * pageLength,
+            pageLength,
+            modifiedSorting
+          );
+          setTotalLottery(response.totalRecords);
 
           setNum(20);
           const getFormatedDate = (dateStr: Date) => {
             const date = moment(dateStr).format('DD MMMM YYYY');
             return date;
           };
-          if (res.collection.length) {
-            setLotteryArrList(res.collection);
+          if (response.collection.length) {
+            setLotteryArrList(response.collection);
 
             const result: LotteryTable = {};
-            for (const key in res.collection) {
-              if (res.collection.length) {
-                const newArr = res.collection[key];
-                const d = getFormatedDate(res.collection[key].drawLog.drawDate);
+            for (const key in response.collection) {
+              if (response.collection.length) {
+                const newArr = response.collection[key];
+                const d = getFormatedDate(response.collection[key].drawLog.drawDate);
                 if (result[d]) {
                   result[d].push(newArr);
                 } else {
@@ -231,35 +239,45 @@ export const AdminLottery = () => {
             setLotteryList(null);
           }
           setLoading(false);
-        })
-        .catch((e) => console.log(e))
-        .finally(() => setLoading(false));
-    }
+        } catch (error) {
+          console.log(error);
+        }
+        setLoading(false);
+      }
+    };
+    getAllPrizes();
   };
 
-  const onAfterChange = (value: any) => {
+  const onAfterChange = (value: number) => {
     setSliderValue(value);
     if (startDate) {
-      const time: any = moment(startDate).add(sliderValue, 'hours');
-      setNextDate(time._d);
+      const time = moment(startDate).add(sliderValue, 'hours').toDate();
+      setNextDate(time);
     }
   };
 
   const createNewLottery = () => {
-    if (hubConnection && startDate !== null) {
-      hubConnection
-        .invoke('CreateDraw', moment.utc(startDate), sliderValue)
-        .then((res) => {
-          setDrawList([res, ...drawList]);
-        })
-        .catch((e) => console.log(e));
-    }
+    const createDraw = async () => {
+      if (hubConnection && startDate !== null) {
+        try {
+          const response = await hubConnection.invoke(
+            'CreateDraw',
+            moment.utc(startDate).format(),
+            sliderValue
+          );
+          setDrawList([response, ...drawList]);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    };
+    createDraw();
   };
 
   const dateChange = (startDate: Date | null) => {
     if (startDate) {
-      const time: any = moment(startDate).add(sliderValue, 'hours');
-      setNextDate(time._d);
+      const time = moment(startDate).add(sliderValue, 'hours').toDate();
+      setNextDate(time);
       setStartDate(startDate);
     }
   };
