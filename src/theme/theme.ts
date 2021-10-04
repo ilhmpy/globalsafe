@@ -1,7 +1,7 @@
 export const lightTheme = {
   body: `#E5E5E5`,
   text: '#0E0D3D',
-  text2: '#515172',
+  text2: '#000000',
   text3: '#333',
   text3Hover: '#000',
   modal: '#fff',
