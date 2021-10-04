@@ -530,7 +530,6 @@ export const InfoMain: FC = () => {
                 const fromSplitted = arr[0].split('.');
                 const toSplitted = arr.length === 2 ? arr[1].split('.') : '';
                 const validValue = e.currentTarget.value.replace(/[^0-9]/gi, '');
-
                 if (validValue[0] != "0") {
                   setOutPutEd(validValue);
                   getCommisions(validValue);
