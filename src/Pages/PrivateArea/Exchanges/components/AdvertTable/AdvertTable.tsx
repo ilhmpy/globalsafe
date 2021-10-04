@@ -4,11 +4,14 @@ import alfa1 from '../../../../../assets/v2/svg/banks/alfa1.svg';
 import sber from '../../../../../assets/v2/svg/banks/sber.svg';
 import tinkoff from '../../../../../assets/v2/svg/banks/tinkoff.svg';
 import { CurrencyPair } from '../modals/CurrencyPair';
+import { PaymentMethods } from '../modals/PaymentMethods';
+import { Rating } from '../modals/Rating';
 
 import * as S from './S.el';
 
 export const AdvertTable = () => {
   const [selectedOption, setSelectedOption] = useState<string | null>('Все валюты предложения');
+  const [ratingOption, setRatingOption] = useState<string | null>('Рейтинг участников 5.0');
   return (
     <>
       {/* <CurrencyPair
@@ -18,6 +21,14 @@ export const AdvertTable = () => {
         selectedOption={selectedOption}
         setSelectedOption={setSelectedOption}
       /> */}
+      {/* <Rating
+        open={true}
+        onClose={() => undefined}
+        options={['Рейтинг участников 5.0', 'Рейтинг участников 4.0', 'Рейтинг участников 3.0']}
+        selectedOption={ratingOption}
+        setSelectedOption={setRatingOption}
+      /> */}
+      {/* <PaymentMethods open={true} onClose={() => undefined} /> */}
       <S.Table>
         <S.Header>
           <S.Cell>

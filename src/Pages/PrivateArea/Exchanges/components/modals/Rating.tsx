@@ -12,7 +12,7 @@ type Props = {
   options: string[];
 };
 
-export const CurrencyPair: FC<Props> = ({
+export const Rating: FC<Props> = ({
   onClose,
   open,
   selectedOption,
@@ -24,14 +24,7 @@ export const CurrencyPair: FC<Props> = ({
       {open && (
         <Modal onClose={onClose} open={open}>
           <S.Container>
-            <S.Title>Выбор валютной пары</S.Title>
-            <S.DropdonwConatainer>
-              <Dropdown
-                selectedOption={selectedOption}
-                setSelectedOption={setSelectedOption}
-                options={options}
-              />
-            </S.DropdonwConatainer>
+            <S.Title>Выбор рейтинга</S.Title>
             <S.DropdonwConatainer big>
               <Dropdown
                 selectedOption={selectedOption}
