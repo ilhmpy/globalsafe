@@ -1,15 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Container } from '../../../components/UI/Container';
 import { Heading } from '../components/Heading';
 import { useHistory } from 'react-router-dom';
 import { routers } from '../../../constantes/routers';
-import { TabNavItem, TabsBlock, Text, Chip, FilterButton } from '../components/ui';
+import { TabNavItem, TabsBlock, Text, FilterButton } from '../components/ui';
 import * as S from './S.el';
-import { AdvertTable } from './components/AdvertTable/AdvertTable';
-import { Button } from '../../../components/Button/V2/Button';
+// import { Button } from '../../../components/Button/V2/Button';
+import { OwnActiveExchangesTable } from './components/OwnActiveExchangesTable/OwnActiveExchangesTable';
+import { OwnArchivedExchangesTable } from './components/OwnArchivedExchangeTable/OwnArchivedExchangeTable';
 
-export const Advert = () => {
+export const OwnExchanges = () => {
   const history = useHistory();
+  const [activeFilter, setActiveFilter] = useState<'active' | 'archived'>('active');
+
   return (
     <div>
       <Container>
@@ -36,23 +39,39 @@ export const Advert = () => {
             Рейтинг аккаунта: 5.0
           </Text>
         </S.SubHeader>
+
         <S.Filters>
-          <FilterButton active>Все объявления</FilterButton>
+            <FilterButton 
+                active={activeFilter === 'active'}
+                onClick={() => setActiveFilter('active')}
+            >
+                Активные
+            </FilterButton>
+            <FilterButton 
+                active={activeFilter === 'archived'}
+                onClick={() => setActiveFilter('archived')}
+            >
+              Архив
+            </FilterButton>
           <S.Line />
           <FilterButton active>Все валюты</FilterButton>
           <S.Line />
           <FilterButton active>Все методы оплаты</FilterButton>
           <S.Line />
-          <FilterButton active>Все рейтинги</FilterButton>
-          <S.Line />
-          <FilterButton active>Покупка</FilterButton>
-          <S.Line />
-          <FilterButton>Продажа</FilterButton>
+          <FilterButton active>Все Статусы</FilterButton>
         </S.Filters>
-        <AdvertTable />
-        <S.ButtonWrap>
+
+        {
+            activeFilter === 'active' &&
+            <OwnActiveExchangesTable />
+        }   
+        {
+            activeFilter === 'archived' &&
+            <OwnArchivedExchangesTable />
+        }
+        {/* <S.ButtonWrap>
           <Button>Показать еще</Button>
-        </S.ButtonWrap>
+        </S.ButtonWrap> */}
       </Container>
     </div>
   );
