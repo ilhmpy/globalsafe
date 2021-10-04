@@ -1,9 +1,10 @@
-import { FC, useState } from 'react';
+import { FC, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { Switcher } from '../../../components/Switcher';
 import { routers } from '../../../constantes/routers';
+import { AppContext } from '../../../context/HubContext';
 import { Card, Container } from '../../../globalStyles';
 import * as S from '../components/Filter/S.el';
 import { Heading } from '../components/Heading';
@@ -18,6 +19,11 @@ type TableRowType = {
 
 export const Settings: FC = () => {
   const { t } = useTranslation();
+
+  const appContext = useContext(AppContext);
+  const { chosenMethod, setChosenMethod } = appContext;
+  console.log('chosenMethod', chosenMethod);
+
   const [activeFilter, setActiveFilter] = useState<string>('Все');
   const history = useHistory();
   const [tableData, setTableData] = useState<TableRowType[]>([
@@ -140,9 +146,15 @@ export const Settings: FC = () => {
           <Ceil>Активность</Ceil>
         </TableHeader>
 
-        {tableData.map((row: TableRowType, i: number) => (
-          <>
-            <TableRow onClick={() => history.push(routers.settingsViewPayMethod)}>
+        {tableData.map((row: TableRowType, i: number) => {
+          return (
+            <TableRow
+              key={i}
+              onClick={() => {
+                setChosenMethod(row);
+                history.push(routers.settingsViewPayMethod);
+              }}
+            >
               <Ceil>{row.method}</Ceil>
               <Ceil>{row.cardHolder}</Ceil>
               <Ceil>{row.currency}</Ceil>
@@ -166,8 +178,8 @@ export const Settings: FC = () => {
                 <span>{t(row.isActive ? 'depositsPrograms.on' : 'depositsPrograms.off')}</span>
               </Ceil>
             </TableRow>
-          </>
-        ))}
+          );
+        })}
       </TableCard>
     </Container>
   );

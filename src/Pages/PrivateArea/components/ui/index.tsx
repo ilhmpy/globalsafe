@@ -5,6 +5,9 @@ import { RightSide } from './RightSide';
 import { Name } from './Name';
 import { Title } from './Title';
 import { ProgramDescTitle, ProgramDesc, TitleWrap, TextValue } from './ProgramDescTitle';
+import { TabNavItem, TabsBlock } from './Tabs';
+import { Text } from './Text';
+import { FilterButton } from './FilterButton';
 
 export {
   Chip,
@@ -18,4 +21,8 @@ export {
   ProgramDesc,
   TitleWrap,
   TextValue,
+  TabNavItem,
+  TabsBlock,
+  Text,
+  FilterButton,
 };

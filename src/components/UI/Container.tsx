@@ -4,7 +4,6 @@ export const Container = styled.div<{ pNone?: boolean; page?: boolean; mtNone?: 
   width: 100%;
   max-width: 1128px;
   margin: 0 auto;
-  height: 100%;
   padding: 0 34px;
   position: relative;
   @media (max-width: 576px) {

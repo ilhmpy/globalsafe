@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro';
+import styled from 'styled-components';
 
 export const Placeholder = styled.div`
   font-weight: normal;
@@ -75,8 +75,9 @@ export const Li = styled.li`
   flex-wrap: wrap;
   justify-content: space-between;
   letter-spacing: 0.1px;
-  color: ${(props) => props.theme.text2};
+  color: #000000;
   padding: 6px 20px;
+
   &:first-child {
     span {
       margin-left: auto;
@@ -216,14 +217,14 @@ export const ListItem = styled.li<{ active?: boolean }>`
 export const Text = styled.div`
   font-weight: normal;
   font-size: 14px;
-  line-height: 20px;
+  line-height: 16px;
 `;
 
 export const Value = styled.div`
-  color: rgba(38, 50, 56, 0.5);
+  color: #000000;
   font-weight: normal;
   font-size: 14px;
-  line-height: 20px;
+  line-height: 16px;
 `;
 
 export const DropDownContainer = styled.div`
@@ -237,21 +238,20 @@ export const DropDownHeader = styled.div`
   position: relative;
   height: 40px;
   font-size: 14px;
-  line-height: 21px;
-  letter-spacing: 0.25px;
-  padding: 8px;
+  line-height: 16px;
+  padding: 12px;
   width: 100%;
   transition: 200ms ease-in-out;
   display: flex;
   align-items: center;
   background: #f9fafb;
   box-sizing: border-box;
-  color: ${(props) => props.theme.text2};
+  color: #000000;
 
   ${Arrow} {
     position: absolute;
-    right: 10px;
-    top: 8px;
+    right: 15px;
+    top: 9px;
   }
   span {
     &::after,
@@ -274,7 +274,7 @@ export const DropDownHeader = styled.div`
       letter-spacing: 0.1px;
       position: absolute;
       left: 12px;
-      padding: 0 10px;
+      padding: 0 12px;
       top: -12px;
       z-index: 9;
       background: ${(props) => props.theme.card.background};

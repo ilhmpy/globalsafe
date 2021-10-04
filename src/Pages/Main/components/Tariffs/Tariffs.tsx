@@ -276,7 +276,7 @@ const PartnersItemTitle = styled.div`
     font-size: 12px;
     font-weight: 400;
     line-height: 18px;
-    margin-right 5%;
+    margin-right: 5%;
   }
 
   @media only screen and (min-device-width: 360px) and (max-device-width: 400px) {
