@@ -26,7 +26,7 @@ export const DepositsPrograms = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection.invoke(
-        "GetUserDeposits",
+        "GetUserDepositsInstant",
         [2],
         null,
         0,

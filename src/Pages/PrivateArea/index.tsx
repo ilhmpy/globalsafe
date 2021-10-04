@@ -233,7 +233,6 @@ export const InfoMain: FC = () => {
       : false;
 
   const blackList = [0, 1, 9, 10, 11];
-
   const balanceChips = balanceList
     ?.filter((item) => !blackList.includes(item.balanceKind))
     .sort((a, b) => a.balanceKind - b.balanceKind)
@@ -415,6 +414,12 @@ export const InfoMain: FC = () => {
     return color;
   };
 
+  const handleLogOut = () => {
+    logOut();
+    // TODO: Think better logic
+    history.push('/');
+    // window.location.reload();
+  }
   return (
     <>
       {withdrawValueLoad && (
@@ -621,7 +626,7 @@ export const InfoMain: FC = () => {
         <DepositsPanelContainer>
           <PanelTitleBlock>
             <H4>Личный кабинет</H4>
-            <LogoutButton onClick={() => logOut()}>
+            <LogoutButton onClick={handleLogOut}>
               <UsernameText>{user}</UsernameText>
               <LogOutIcon />
             </LogoutButton>

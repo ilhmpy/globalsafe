@@ -36,7 +36,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
     if (hubConnection) {
       hubConnection.on('DrawResult', cb);
       hubConnection
-        .invoke<RootLottery>('GetPrizes', [], 0, 10)
+        .invoke<RootLottery>('GetPrizesKinds', [], 0, 10)
         .then((res) => {
           const arrList = res.collection.map((item) => ({
             name: item.userName,
@@ -60,7 +60,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
   const repeat = () => {
     if (hubConnection) {
       hubConnection
-        .invoke<RootLottery>('GetPrizes', [], 0, 10)
+        .invoke<RootLottery>('GetPrizesKinds', [], 0, 10)
         .then((res) => {
           setShow(true);
           const arrList = res.collection.map((item) => ({
