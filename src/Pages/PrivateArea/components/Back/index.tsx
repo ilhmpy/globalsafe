@@ -18,7 +18,7 @@ export const Back: FC<Props> = ({ onGoBackClick, onButtonClick, text, btnText }:
         <span>{text}</span>
       </S.GoBack>
       {btnText && (
-        <Button primary onClick={onButtonClick}>
+        <Button bigSize primary onClick={onButtonClick}>
           {btnText}
         </Button>
       )}
