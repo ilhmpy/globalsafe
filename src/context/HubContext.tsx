@@ -1,7 +1,6 @@
 import * as signalR from '@microsoft/signalr';
 import React, { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
 import { API_URL } from '../constantes/api';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { BalanceList } from '../types/balance';
@@ -45,7 +44,6 @@ export const HubProvider: FC = ({ children }: any) => {
   const [balanceList, setBalanceList] = useState<BalanceList[] | null>(null);
   const [isFailed, setIsFailed] = useState<boolean | null>(null);
   const [chosenMethod, setChosenMethod] = useState<any>({});
-  const history = useHistory();
   const { i18n } = useTranslation();
 
   useEffect(() => {
@@ -149,7 +147,6 @@ export const HubProvider: FC = ({ children }: any) => {
     setMyToken(null);
     setUser(null);
     setIsAdmin(false);
-    // history.replace('/');
   };
 
   const login = (token: string) => {
