@@ -22,20 +22,16 @@ export const DepositsPrograms = () => {
   const hubConnection = appContext.hubConnection;
   const user = appContext.user;
   const history = useHistory();
+  const lang = localStorage.getItem("i18nextLng") === "en" ? 0 : 1;
 
   useEffect(() => {
     if (hubConnection) {
       hubConnection.invoke(
-        "GetUserDepositsInstant",
-        [2],
-        null,
-        0,
-        20,
-        [{
-          ConditionWeight: 1,
-          OrderType: 2,
-          FieldName: 'creationDate',
-        }]
+       "GetDeposits",
+       lang,
+       true,
+       0,
+       20 
       )
         .then((res) => {
           console.log("res", res);
@@ -47,9 +43,13 @@ export const DepositsPrograms = () => {
 
   function toDeposits() {
     const token = localStorage.getItem("token");
-    history.push("/info");
-  };
- 
+    if (token && user) {
+      history.push("/info");
+    } else {
+      history.push("/login");
+    };
+  }; 
+   
   return (
     <>
       {deposits.length > 0 && (
@@ -59,11 +59,11 @@ export const DepositsPrograms = () => {
             <Styled.CardBox>
               {deposits && deposits.map((item, idx) => (
                 <Styled.Card key={idx}>
-                  <Styled.CardName>{(item.deposit.name).toUpperCase()}</Styled.CardName>
-                  <Styled.CardDesc>{item.deposit.description}</Styled.CardDesc>
+                  <Styled.CardName>{item.name.length > 0 ? (item.name).toUpperCase() : "Имя депозита"}</Styled.CardName>
+                  <Styled.CardDesc>{item.description.length > 0 ? item.description : "Описание"}</Styled.CardDesc>
                   <Styled.CardButton onClick={toDeposits}>{t('payments.open').toUpperCase()}</Styled.CardButton>
                 </Styled.Card>
-              ))}
+              ))} 
             </Styled.CardBox>
           ) : (
             <>
@@ -75,8 +75,8 @@ export const DepositsPrograms = () => {
                   {deposits && deposits.map((item, idx) => (
                     <SwiperSlide key={idx}>
                       <Styled.Card key={idx}>
-                        <Styled.CardName>{(item.deposit.name).toUpperCase()}</Styled.CardName>
-                        <Styled.CardDesc>{item.deposit.description}</Styled.CardDesc>
+                        <Styled.CardName>{item.name.length > 0 ? (item.name).toUpperCase() : "Имя депозита"}</Styled.CardName>
+                        <Styled.CardDesc>{item.description.length > 0 ? item.description : "Описание"}</Styled.CardDesc>
                         <Styled.CardButton onClick={toDeposits}>{t('payments.open').toUpperCase()}</Styled.CardButton>
                       </Styled.Card>
                     </SwiperSlide>

@@ -21,7 +21,7 @@ export const CardBox = styled.div`
     }
 
     .swiper-pagination-fraction, .swiper-pagination-custom, .swiper-container-horizontal > .swiper-pagination-bullets {
-      bottom: 26px !important;
+      bottom: 28px !important;
     }
     
     .swiper-pagination-bullets > .swiper-pagination-bullet-active {

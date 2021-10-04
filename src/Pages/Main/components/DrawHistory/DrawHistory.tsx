@@ -104,17 +104,19 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
           <Button as="button">{'Перейти к розыгрышу'}</Button>
         </TimerHistoryContainer>
       </Container>
-
+    
       <TableContainer>
-        <TableList dn>
-          <TableItemHead>{t('lotteryTable.date')}</TableItemHead>
-          <TableItemHead>{t('lotteryTable.typeWin')}</TableItemHead>
-          <TableItemHead>{t('lotteryTable.sumWin')}</TableItemHead>
-          <TableItemHead>{t('lotteryTable.winner')}</TableItemHead>
+        {notifyList.length && (
+          <TableList dn>
+            <TableItemHead>{t('lotteryTable.date')}</TableItemHead>
+            <TableItemHead>{t('lotteryTable.typeWin')}</TableItemHead>
+            <TableItemHead>{t('lotteryTable.sumWin')}</TableItemHead>
+            <TableItemHead>{t('lotteryTable.winner')}</TableItemHead>
         </TableList>
+        )}
         <TransitionGroup>
-          {notifyList.length &&
-            notifyList.map((item, idx) => {
+        {notifyList.length && (
+          notifyList.map((item, idx) => {
               if (!isMobile) {
                 return (
                   <CSSTransition key={idx} timeout={500} classNames="item">
@@ -150,7 +152,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
                   </CSSTransition>
                 );
               }
-            })}
+          }))}
         </TransitionGroup>
       </TableContainer>
     </Page>
