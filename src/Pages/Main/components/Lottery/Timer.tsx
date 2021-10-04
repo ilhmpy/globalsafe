@@ -282,12 +282,12 @@ export const Timer: FC<Props> = ({
                   <svg
                     style={{
                       position: 'absolute',
-                      top: 5,
-                      left: 2,
+                      top: 4,
+                      right: 4,
                       width: '90%',
                       height: '90%',
                       margin: '0 auto',
-                      transform: 'rotateY(-180deg) rotateZ(240deg)',
+                      transform: 'rotateY(0deg) rotateZ(270deg)',
                       overflow: 'visible',
                     }}
                   >
@@ -301,7 +301,7 @@ export const Timer: FC<Props> = ({
                       strokeLinecap="round"
                       stroke={'#0094FF'}
                       strokeWidth={'2px'}
-                    ></circle>
+                    />
                   </svg>
                 </Styled.CountContainer>
               </Styled.Progress>
@@ -313,7 +313,6 @@ export const Timer: FC<Props> = ({
   );
 };
 
-const TimeSector = styled.div``;
 const TimerBlock = styled.div`
   display: flex;
   & > span {
