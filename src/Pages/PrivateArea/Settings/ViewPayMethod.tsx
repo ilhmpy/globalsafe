@@ -1,20 +1,35 @@
-import { FC } from 'react';
+import { FC, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { Button } from '../../../components/Button/V2/Button';
 import { Switcher } from '../../../components/Switcher';
 import { routers } from '../../../constantes/routers';
+import { AppContext } from '../../../context/HubContext';
 import { Container } from '../../../globalStyles';
 import { Back } from '../components/Back';
 import { Title } from '../components/ui/Title';
+import { DeleteModal } from './DeleteModal';
+import { DeleteNotification } from './DeleteNotification';
 
 export const ViewPayMethod: FC = () => {
+  const appContext = useContext(AppContext);
+  const { chosenMethod, setChosenMethod } = appContext;
+  const { method, cardHolder, cardNumber, currency, isActive } = chosenMethod;
   const { t } = useTranslation();
   const history = useHistory();
+  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
+  const [deleteNotificationIsOpen, setDeleteNotificationIsOpen] = useState(false);
 
   return (
     <Container>
+      <DeleteModal
+        open={deleteModalIsOpen}
+        setOpen={setDeleteModalIsOpen}
+        setConfirm={setDeleteNotificationIsOpen}
+      />
+      <DeleteNotification open={deleteNotificationIsOpen} setOpen={setDeleteNotificationIsOpen} />
+
       <Back
         text="К списку платежных методов"
         onGoBackClick={() => history.push(routers.settings)}
@@ -41,36 +56,36 @@ export const ViewPayMethod: FC = () => {
         <RightSide>
           <Entry>
             <span>Платежный метод:</span>
-            <span>АО «Тинькофф Банк»</span>
+            <span>{method}</span>
           </Entry>
           <Entry>
             <span>Валюта:</span>
-            <span>RUB</span>
+            <span>{currency}</span>
           </Entry>
           <Entry>
             <span>Номер карты:</span>
-            <span>5536 9137 9922 7240</span>
+            <span>{cardNumber}</span>
           </Entry>
           <Entry>
             <span>Держатель карты:</span>
-            <span>VYACHESLAV TROSCHIN</span>
+            <span>{cardHolder}</span>
           </Entry>
           <Entry>
             <span>Активность метода:</span>
 
-            <SwitcherRow checked>
+            <SwitcherRow checked={isActive}>
               <Switcher
                 onChange={() => {
-                  console.log(111);
+                  setChosenMethod((prev: any) => ({ ...prev, isActive: !prev.isActive }));
                 }}
-                checked={true}
+                checked={isActive}
               />
-              <span>{t(true ? 'depositsPrograms.on' : 'depositsPrograms.off')}</span>
+              <span>{t(isActive ? 'depositsPrograms.on' : 'depositsPrograms.off')}</span>
             </SwitcherRow>
           </Entry>
 
           <ButtonWrapper>
-            <Button bigSize outlinePrimary onClick={() => undefined}>
+            <Button bigSize outlinePrimary onClick={() => setDeleteModalIsOpen(true)}>
               Удалить
             </Button>
           </ButtonWrapper>
@@ -146,12 +161,16 @@ const Entry = styled.div`
 const RightSide = styled.div`
   max-width: 700px;
   width: 100%;
+  padding: 40px;
 
   display: flex;
   flex-direction: column;
   gap: 20px;
 
-  padding: 40px;
+  background: #ffffff;
+  box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
+  border-radius: 0px 4px 4px 0px;
+
   ${Entry} {
     gap: 4px;
     & > span {

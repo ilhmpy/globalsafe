@@ -71,7 +71,7 @@ export const Deposits = () => {
       setSkip(0);
       hubConnection
       .invoke<RootList>(
-        'GetUserDeposits', 
+        'GetUserDepositsInstant', 
         getFilterCode(activeFilter), 
         activeFilter === 'hold' ? false : null,
         0, 
@@ -127,7 +127,7 @@ export const Deposits = () => {
     if (hubConnection && depositsList.length < depositsTotalCount) {
       hubConnection
       .invoke<RootList>(
-        'GetUserDeposits', 
+        'GetUserDepositsInstant', 
         getFilterCode(activeFilter), 
         activeFilter === 'hold' ? false : null,
         skip, 
@@ -156,6 +156,7 @@ export const Deposits = () => {
   // };
 
   if(!getDepositsLoading && depositsList.length === 0) {
+    // history.replace(routers.depositsProgram);
     return (
       <S.Container>
         <Container>

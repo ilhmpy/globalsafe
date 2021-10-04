@@ -91,4 +91,5 @@ const Placeholder = styled.div`
   font-size: 14px;
   line-height: 16px;
   color: ${(props) => props.theme.text};
+  color: #000000;
 `;

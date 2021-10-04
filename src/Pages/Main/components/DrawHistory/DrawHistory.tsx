@@ -36,7 +36,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
     if (hubConnection) {
       hubConnection.on('DrawResult', cb);
       hubConnection
-        .invoke<RootLottery>('GetPrizes', [], 0, 10)
+        .invoke<RootLottery>('GetPrizesKinds', [], 0, 10)
         .then((res) => {
           const arrList = res.collection.map((item) => ({
             name: item.userName,
@@ -60,10 +60,9 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
   const repeat = () => {
     if (hubConnection) {
       hubConnection
-        .invoke<RootLottery>('GetPrizes', 0, 10)
+        .invoke<RootLottery>('GetPrizesKinds', [], 0, 10)
         .then((res) => {
           setShow(true);
-          console.log('GetPrizes res', res);
           const arrList = res.collection.map((item) => ({
             name: item.userName,
             kind: item.definition.kind,
@@ -105,17 +104,19 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
           <Button as="button">{'Перейти к розыгрышу'}</Button>
         </TimerHistoryContainer>
       </Container>
-
+    
       <TableContainer>
-        <TableList dn>
-          <TableItemHead>{t('lotteryTable.date')}</TableItemHead>
-          <TableItemHead>{t('lotteryTable.typeWin')}</TableItemHead>
-          <TableItemHead>{t('lotteryTable.sumWin')}</TableItemHead>
-          <TableItemHead>{t('lotteryTable.winner')}</TableItemHead>
+        {notifyList.length && (
+          <TableList dn>
+            <TableItemHead>{t('lotteryTable.date')}</TableItemHead>
+            <TableItemHead>{t('lotteryTable.typeWin')}</TableItemHead>
+            <TableItemHead>{t('lotteryTable.sumWin')}</TableItemHead>
+            <TableItemHead>{t('lotteryTable.winner')}</TableItemHead>
         </TableList>
+        )}
         <TransitionGroup>
-          {notifyList.length &&
-            notifyList.map((item, idx) => {
+        {notifyList.length && (
+          notifyList.map((item, idx) => {
               if (!isMobile) {
                 return (
                   <CSSTransition key={idx} timeout={500} classNames="item">
@@ -128,7 +129,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
                               maximumFractionDigits: 5,
                             })
                           : item.kind === 1
-                          ? t('win.two')
+                          ? ''
                           : item.volume}
                         &nbsp;
                         {item.volume ? Balance[item.balanceKind] : '-'}
@@ -151,7 +152,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
                   </CSSTransition>
                 );
               }
-            })}
+          }))}
         </TransitionGroup>
       </TableContainer>
     </Page>

@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { ReactComponent as Close } from '../../assets/svg/close.svg';
 import { ReactComponent as FromTo } from '../../assets/svg/fromTo.svg';
 import { Button } from '../../components/Button/V2/Button';
+import { Input } from '../../components/Input';
 import { Modal } from '../../components/Modal/Modal';
 import { Select } from '../../components/Select/Select5';
 import { AppContext } from '../../context/HubContext';
@@ -25,6 +26,12 @@ export const ConvertingModal: FC<Props> = ({
   setIsFailConverting,
 }: Props) => {
   const { t } = useTranslation();
+  const [defaultFormState, setDefaultFormState] = useState({
+    fromSum: '',
+    toSum: '',
+    fromCurrency: '',
+    toCurrency: '',
+  });
   const [fromSum, setFromSum] = useState('');
   const [toSum, setToSum] = useState('');
   const [fromCurrency, setFromCurrency] = useState('');
@@ -32,9 +39,24 @@ export const ConvertingModal: FC<Props> = ({
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
 
+  const resetStateValues = () => {
+    setDefaultFormState({
+      fromSum: '',
+      toSum: '',
+      fromCurrency: '',
+      toCurrency: '',
+    });
+  };
+
   return (
     <CSSTransition in={open} timeout={300} unmountOnExit>
-      <Modal onClose={() => setOpen(false)} width={420}>
+      <Modal
+        onClose={() => {
+          setOpen(false);
+          setTimeout(() => resetStateValues(), 500);
+        }}
+        width={420}
+      >
         <Container>
           <ModalTitle>{t('privateArea.converting')}</ModalTitle>
           <CloseButton onClick={() => setOpen(false)} />
@@ -44,14 +66,21 @@ export const ConvertingModal: FC<Props> = ({
               <Select
                 placeholder="Исходная валюта не выбрана"
                 options={['One', 'Two', 'Three']}
-                selectedOption={fromCurrency}
-                setSelectedOption={(val: string) => setFromCurrency(val)}
+                selectedOption={defaultFormState.fromCurrency}
+                setSelectedOption={(val: string) =>
+                  setDefaultFormState({ ...defaultFormState, fromCurrency: val })
+                }
               />
               <Input
                 placeholder="Сумма"
                 name="fromSum"
-                value={fromSum}
-                onChange={(e) => setFromSum(e.target.value)}
+                value={defaultFormState.fromSum}
+                onChange={(e) =>
+                  setDefaultFormState({
+                    ...defaultFormState,
+                    fromSum: e.target.value.replace(/\D/, ''),
+                  })
+                }
               />
             </InnerBlock>
             <FromToArrow />
@@ -59,24 +88,33 @@ export const ConvertingModal: FC<Props> = ({
               <Select
                 placeholder="Валюта к получению не выбрана"
                 options={['One', 'Two', 'Three']}
-                selectedOption={toCurrency}
-                setSelectedOption={(val: string) => setToCurrency(val)}
+                selectedOption={defaultFormState.toCurrency}
+                setSelectedOption={(val: string) =>
+                  setDefaultFormState({ ...defaultFormState, toCurrency: val })
+                }
               />
               <Input
                 placeholder="Сумма"
                 name="toSum"
-                value={toSum}
-                onChange={(e) => setToSum(e.target.value)}
+                value={defaultFormState.toSum}
+                onChange={(e) =>
+                  setDefaultFormState({
+                    ...defaultFormState,
+                    toSum: e.target.value.replace(/\D/, ''),
+                  })
+                }
               />
               <RateRow>
                 <Rate>Курс:</Rate>
                 <Rate>0</Rate>
               </RateRow>
+
               <Button
                 primary
                 onClick={() => {
                   setOpen(false);
                   setTimeout(() => setIsSuccessConverting(true), 500);
+                  setTimeout(() => resetStateValues(), 500);
                 }}
               >
                 {converting ? t('privateArea.convert2') : t('privateArea.topUpBalance')}
@@ -104,45 +142,42 @@ const Rate = styled.span`
 `;
 
 const RateRow = styled.div`
+  margin-top: 5px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   min-height: 40px;
 `;
 
-const Input = styled.input<{ CWD?: boolean }>`
-  width: 100%;
-  border: 1px solid #edf0f7;
-  box-sizing: border-box;
-  border-radius: 2px;
-  min-height: 40px;
-  padding: ${(props) => (props.CWD ? '8px 45px 8px 8px' : '8px')};
-  font-weight: normal;
-  background: #f9fafb;
-  font-size: 14px;
-  line-height: 21px;
-  letter-spacing: 0.1px;
-  color: ${(props) => props.theme.text2};
+// export const Input = styled.input`
+//   width: 100%;
+//   border: 1px solid #edf0f7;
+//   box-sizing: border-box;
+//   border-radius: 2px;
+//   min-height: 40px;
+//   padding: 8px;
+//   font-weight: normal;
+//   background: #f9fafb;
+//   font-size: 14px;
+//   line-height: 21px;
+//   letter-spacing: 0.1px;
+//   color: ${(props) => props.theme.text2};
+//   color: #000000;
 
-  &:focus {
-    outline: none;
-  }
-  ::placeholder,
-  ::-webkit-input-placeholder {
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 16px;
-    opacity: 0.4;
-    color: ${(props) => props.theme.text};
-  }
-  background-image: ${(props) =>
-    props.CWD
-      ? `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='50px' width='120px'><text x='0' y='15' fill='${props.theme.thHead}' font-family='Roboto, Helvetica, sans-serif' font-size='14'>CWD</text></svg>")`
-      : ''};
-  background-position: ${(props) => (props.CWD ? 'top 8px right -50%' : '')};
-  background-repeat: ${(props) => (props.CWD ? 'no-repeat' : '')};
-`;
+//   &:focus {
+//     outline: none;
+//   }
+//   ::placeholder,
+//   ::-webkit-input-placeholder {
+//     font-style: normal;
+//     font-weight: normal;
+//     font-size: 14px;
+//     line-height: 16px;
+//     opacity: 0.4;
+//     color: ${(props) => props.theme.text};
+//     color: #000000;
+//   }
+// `;
 
 const InnerBlock = styled.div`
   display: flex;
@@ -192,6 +227,7 @@ const ModalCurrencyDiv = styled.div`
     margin: 0 auto;
     margin-bottom: 20px;
     color: ${({ theme }) => theme.toToken.color};
+    color: #000000;
     padding-right: 103px;
     text-align: right;
   }
@@ -200,48 +236,9 @@ const ModalCurrencyDiv = styled.div`
     position: absolute;
 
     color: ${({ theme }) => theme.toToken.color};
+    color: #000000;
     font-size: 14px;
     top: 13px;
     right: 70px;
   }
-`;
-
-export const DIV = styled.div`
-  width: 100%;
-  max-width: 200px;
-  margin: 0 auto;
-
-  & > input {
-    max-width: 200px;
-    margin: 0 auto;
-    margin-bottom: 20px;
-    color: ${({ theme }) => theme.toToken.color};
-
-    &::placeholder {
-      color: ${({ theme }) => theme.toToken.color};
-    }
-  }
-`;
-
-export const H3 = styled.div<{ red?: boolean; bold?: boolean }>`
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 16px;
-  text-align: center;
-  color: ${({ theme }) => theme.toToken.convertColor};
-  margin-bottom: 8px;
-
-  ${({ red, bold }) => {
-    if (red) {
-      return `
-          font-weight: 500;
-          color: #FF416E;
-        `;
-    }
-    if (bold) {
-      return `
-          font-weight: 500;
-        `;
-    }
-  }}
 `;

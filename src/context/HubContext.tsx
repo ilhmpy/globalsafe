@@ -1,7 +1,6 @@
 import * as signalR from '@microsoft/signalr';
 import React, { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
 import { API_URL } from '../constantes/api';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { BalanceList } from '../types/balance';
@@ -17,6 +16,8 @@ type Context = {
   isAdmin: boolean | null;
   balanceList: BalanceList[] | null;
   isFailed: boolean | null;
+  chosenMethod: any;
+  setChosenMethod: (state: any) => void;
 };
 
 export const AppContext = React.createContext<Context>({
@@ -29,6 +30,8 @@ export const AppContext = React.createContext<Context>({
   isAdmin: null,
   balanceList: null,
   isFailed: null,
+  chosenMethod: {},
+  setChosenMethod: () => undefined,
 });
 
 export const HubProvider: FC = ({ children }: any) => {
@@ -40,7 +43,7 @@ export const HubProvider: FC = ({ children }: any) => {
   const [myToken, setMyToken] = useLocalStorage('token');
   const [balanceList, setBalanceList] = useState<BalanceList[] | null>(null);
   const [isFailed, setIsFailed] = useState<boolean | null>(null);
-  const history = useHistory();
+  const [chosenMethod, setChosenMethod] = useState<any>({});
   const { i18n } = useTranslation();
 
   useEffect(() => {
@@ -147,7 +150,6 @@ export const HubProvider: FC = ({ children }: any) => {
     setMyToken(null);
     setUser(null);
     setIsAdmin(false);
-    // history.replace('/');
   };
 
   const login = (token: string) => {
@@ -166,6 +168,8 @@ export const HubProvider: FC = ({ children }: any) => {
         isAdmin,
         balanceList,
         isFailed,
+        chosenMethod,
+        setChosenMethod,
       }}
     >
       {children}
