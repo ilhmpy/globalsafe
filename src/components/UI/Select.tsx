@@ -25,15 +25,13 @@ export const Select: FC<SelectType> = ({ data, setSwitch, withoutVolume }: Selec
         setValue(Balance[e.target.dataset.curr]);
         setSwitch(Balance[e.target.dataset.curr]);
     };
-    
-    console.log(data);
 
     return (
       <Field onClick={hideList}>
           <Arrow className="arrow" />
           {value ? value : ( "Валюта не выбрана" )}
           <FieldList block={activeSwitch}>
-            <Scrollbars>
+            <Scrollbars className="pagination">
                 {data && data.map((item, idx) => (
                     <FieldListItem 
                         key={idx} 

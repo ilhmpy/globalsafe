@@ -311,7 +311,6 @@ export const InfoMain: FC = () => {
       setCurrencyValue('');
       return;
     }
-
     setCurrencyValue(balanceKind);
   };
 
@@ -328,7 +327,7 @@ export const InfoMain: FC = () => {
         .invoke(
           'GetTopUpUrl',
           Balance[currency as keyof typeof Balance],
-          currency === 'CWD' ? +ed * 100000 : currency === 'GLOBAL' ? +ed * 10000 : +ed
+          currency === 'CWD' ? Number(+ed) * 100000 : currency === 'GLOBAL' ? Number(+ed) * 10000 : Number(+ed)
         )
         .then((res: string) => {
           newWindow && (newWindow.location.href = res);
@@ -346,14 +345,6 @@ export const InfoMain: FC = () => {
   };
 
   const outPutBalance = () => {
-    console.log(
-      hubConnection &&
-        outPutCurrency.length > 0 &&
-        outPutEd.length > 0 &&
-        Number(outPutEd) > 0 &&
-        Number(outPutEd) > Number(blockchain) + Number(service) + 1
-    );
-    console.log(outPutCurrency);
     if (
       hubConnection &&
       outPutCurrency.length > 0 &&
@@ -458,8 +449,10 @@ export const InfoMain: FC = () => {
                 const fromSplitted = arr[0].split('.');
                 const toSplitted = arr.length === 2 ? arr[1].split('.') : '';
                 const validValue = e.currentTarget.value.replace(/[^0-9]/gi, '');
-                setEd(validValue);
-              }}
+                if (validValue[0] != "0") {
+                  setEd(validValue);
+                };
+               }}
             />
             <PAButton onClick={changeBalance}>Пополнить баланс</PAButton>
           </div>
@@ -475,7 +468,7 @@ export const InfoMain: FC = () => {
           setError(undefined);
           setCurrency("");
           setEd("");
-        }} width={420} withClose ptl>
+        }} width={420} withClose p20>
           <H3 center style={{ marginTop: '24px' }}>
             Успешное пополнение
           </H3>
@@ -491,7 +484,7 @@ export const InfoMain: FC = () => {
           setError(undefined);
           setCurrency("");
           setEd("");
-        }} width={420} withClose ptl>
+        }} width={420} withClose p20>
           <H3 center style={{ marginTop: '24px' }}>
             Ошибка пополнения
           </H3>
@@ -537,10 +530,11 @@ export const InfoMain: FC = () => {
                 const fromSplitted = arr[0].split('.');
                 const toSplitted = arr.length === 2 ? arr[1].split('.') : '';
                 const validValue = e.currentTarget.value.replace(/[^0-9]/gi, '');
-                setOutPutEd(validValue);
-                getCommisions(validValue);
-                const test = (10000).toLocaleString("ru-RU", { maximumFractionDigits: 2 });
-                console.log(Number(test));
+
+                if (validValue[0] != "0") {
+                  setOutPutEd(validValue);
+                  getCommisions(validValue);
+                };
               }}
             />
             <Styled.Commision marginT={20} marginB={10}>
@@ -565,7 +559,7 @@ export const InfoMain: FC = () => {
           setOutPutError(undefined);
           setOutPutCurrency("");
           setOutPutEd("");
-        }} width={420} withClose ptl>
+        }} width={420} withClose p20>
           <H3 center style={{ marginTop: '24px' }}>
             Успешный вывод средств
           </H3>
@@ -586,7 +580,7 @@ export const InfoMain: FC = () => {
           setOutPutError(undefined);
           setOutPutCurrency("");
           setOutPutEd("");
-        }} width={420} withClose ptl>
+        }} width={420} withClose p20>
           <H3 center style={{ marginTop: '24px' }}>
             Ошибка вывода средств
           </H3>
