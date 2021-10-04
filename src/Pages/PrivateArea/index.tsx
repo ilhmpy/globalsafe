@@ -442,6 +442,7 @@ export const InfoMain: FC = () => {
           }}
           width={420}
           withClose
+          ptl
         >
           <H3 center style={{ marginTop: '24px' }}>
             Пополнение баланса
@@ -474,7 +475,7 @@ export const InfoMain: FC = () => {
           setError(undefined);
           setCurrency("");
           setEd("");
-        }} width={420} withClose>
+        }} width={420} withClose ptl>
           <H3 center style={{ marginTop: '24px' }}>
             Успешное пополнение
           </H3>
@@ -490,7 +491,7 @@ export const InfoMain: FC = () => {
           setError(undefined);
           setCurrency("");
           setEd("");
-        }} width={420} withClose>
+        }} width={420} withClose ptl>
           <H3 center style={{ marginTop: '24px' }}>
             Ошибка пополнения
           </H3>
@@ -513,6 +514,7 @@ export const InfoMain: FC = () => {
           }}
           width={420}
           withClose
+          ptl
         >
           <H3 center style={{ marginTop: '24px' }}>
             Вывод средств
@@ -563,7 +565,7 @@ export const InfoMain: FC = () => {
           setOutPutError(undefined);
           setOutPutCurrency("");
           setOutPutEd("");
-        }} width={420} withClose>
+        }} width={420} withClose ptl>
           <H3 center style={{ marginTop: '24px' }}>
             Успешный вывод средств
           </H3>
@@ -584,7 +586,7 @@ export const InfoMain: FC = () => {
           setOutPutError(undefined);
           setOutPutCurrency("");
           setOutPutEd("");
-        }} width={420} withClose>
+        }} width={420} withClose ptl>
           <H3 center style={{ marginTop: '24px' }}>
             Ошибка вывода средств
           </H3>

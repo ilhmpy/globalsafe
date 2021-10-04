@@ -15,6 +15,7 @@ type ModalProps = {
   lottery?: boolean;
   withClose?: boolean;
   withoutClose?: boolean;
+  ptl?: boolean;
 };
 
 export const Modal: React.FC<ModalProps> = ({
@@ -29,6 +30,7 @@ export const Modal: React.FC<ModalProps> = ({
   lottery,
   withClose,
   withoutClose,
+  ptl,
 }: ModalProps) => {
   const handleContainerClick = (e: React.MouseEvent) => {
     if (e.currentTarget == e.target) {
@@ -46,7 +48,7 @@ export const Modal: React.FC<ModalProps> = ({
     <Portal>
       <ModalContainer zIndex={zIndex} style={style} className="bbg" lottery={lottery}>
         <Center styles={styles} onClick={handleContainerClick} lottery={lottery}>
-          <ModalComponent width={width} mobMarg={mobMarg} paddingTop={paddingTop}>
+          <ModalComponent width={width} mobMarg={mobMarg} paddingTop={paddingTop} paddingsTopLess={ptl} >
               {withClose && (<span className="close"><Times onClick={handleContainerClick} /></span>)}
               {children}
           </ModalComponent>
@@ -116,6 +118,7 @@ const ModalComponent = styled.div<{
   paddingTop?: number;
   styles?: string;
   lottery?: boolean;
+  paddingsTopLess?: boolean;
 }>`
   display: flex;
   flex-direction: column;
@@ -136,6 +139,15 @@ const ModalComponent = styled.div<{
         padding-top: ${paddingTop}px;
       `;
     }
+  }}
+
+  ${({ paddingsTopLess }) => {
+    if (paddingsTopLess) {
+      return `
+        padding-top: 20px;
+        padding-bottom: 20px;
+      `;
+    };
   }}
 
   & > .wrap {
