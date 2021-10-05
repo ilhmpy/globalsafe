@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router';
 import alfa from '../../../../../assets/v2/svg/banks/alfa.svg';
 import alfa1 from '../../../../../assets/v2/svg/banks/alfa1.svg';
 import sber from '../../../../../assets/v2/svg/banks/sber.svg';
@@ -8,7 +9,13 @@ import { CurrencyPair } from '../modals/CurrencyPair';
 import * as S from './S.el';
 
 export const OwnActiveExchangesTable = () => {
+  const history = useHistory();
   const [selectedOption, setSelectedOption] = useState<string | null>('Все валюты предложения');
+
+  const handleNavigateToExchange = () => {
+    history.replace(`/info/p2p-changes/${Date.now().toString()}`)
+  };
+
   return (
     <>
       {/* <CurrencyPair
@@ -43,7 +50,7 @@ export const OwnActiveExchangesTable = () => {
           </S.Cell>
         </S.Header>
 
-        <S.BodyItem>
+        <S.BodyItem onClick={handleNavigateToExchange}>
           <S.Cell data-label="Тип">Покупка</S.Cell>
           <S.Cell data-label="Кол-во">20 000 CWD</S.Cell>
           <S.Cell data-label="Курс">25.31</S.Cell>
@@ -65,7 +72,7 @@ export const OwnActiveExchangesTable = () => {
           <S.Cell data-label="Статус">Ожидание подтверждения оплаты</S.Cell>
         </S.BodyItem>
 
-        <S.BodyItem>
+        <S.BodyItem onClick={handleNavigateToExchange}>
           <S.Cell data-label="Тип">Покупка</S.Cell>
           <S.Cell data-label="Кол-во">20 000 CWD</S.Cell>
           <S.Cell data-label="Курс">25.31</S.Cell>
@@ -87,7 +94,7 @@ export const OwnActiveExchangesTable = () => {
           <S.Cell data-label="Статус">Ожидание подтверждения оплаты</S.Cell>
         </S.BodyItem>
 
-        <S.BodyItem>
+        <S.BodyItem onClick={handleNavigateToExchange}>
           <S.Cell data-label="Тип">Покупка</S.Cell>
           <S.Cell data-label="Кол-во">20 000 CWD</S.Cell>
           <S.Cell data-label="Курс">25.31</S.Cell>
@@ -109,7 +116,7 @@ export const OwnActiveExchangesTable = () => {
           <S.Cell data-label="Статус">Ожидание подтверждения оплаты</S.Cell>
         </S.BodyItem>
 
-        <S.BodyItem active>
+        <S.BodyItem active onClick={handleNavigateToExchange}>
           <S.Cell data-label="Тип">Покупка</S.Cell>
           <S.Cell data-label="Кол-во">20 000 CWD</S.Cell>
           <S.Cell data-label="Курс">25.31</S.Cell>
@@ -131,7 +138,7 @@ export const OwnActiveExchangesTable = () => {
           <S.Cell data-label="Статус">Ожидание подтверждения оплаты</S.Cell>
         </S.BodyItem>
 
-        <S.BodyItem>
+        <S.BodyItem onClick={handleNavigateToExchange}>
           <S.Cell data-label="Тип">Покупка</S.Cell>
           <S.Cell data-label="Кол-во">20 000 CWD</S.Cell>
           <S.Cell data-label="Курс">25.31</S.Cell>

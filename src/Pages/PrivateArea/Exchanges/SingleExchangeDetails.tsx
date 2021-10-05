@@ -18,7 +18,7 @@ export const SingleExchangeDetails: FC = () => {
         <Back text="К списку обменов" onGoBackClick={() => history.replace(routers.p2pchangesOwn)} />
         <S.TitleContainer>
             <Title mB={0}>Обмен CWD-USD</Title>
-            <Text size={14} lH={20}>
+            <Text size={14} lH={20} black>
               № 4799646829
             </Text>
         </S.TitleContainer>
