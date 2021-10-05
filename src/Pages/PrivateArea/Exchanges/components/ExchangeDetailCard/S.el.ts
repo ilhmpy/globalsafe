@@ -19,7 +19,26 @@ export const TitleBlockWrapper = styled.div`
   margin-bottom: 40px;
 `;
 
-export const Space = styled.div`
+export const Space = styled.div<{gap?: number, justify?: string}>`
   display: flex;
-  gap: 10px;
+  justify-content: ${props => props.justify ? props.justify : 'flex-start'};
+  gap: ${props => props.gap ? `${props.gap}px` : '10px'};
+`;
+
+export const TransferInfoBlock = styled.div`
+  background: ${props => props.theme.white};
+  border: 1px solid #EAEFF4;
+  border-radius: 0px 4px 4px 0px;
+  padding: 20px;
+  margin: 40px 0;
+`;
+
+export const B = styled.span`
+    font-weight: 500;
+`;
+
+export const FeedbackBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 40px;
 `;

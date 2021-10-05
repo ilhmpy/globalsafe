@@ -9,6 +9,7 @@ import { TabNavItem, TabsBlock } from './Tabs';
 import { Text } from './Text';
 import { FilterButton } from './FilterButton';
 import { CopyIconButton } from './CopyIconButton';
+import { Radio } from './Radio';
 
 export {
   Chip,
@@ -27,4 +28,5 @@ export {
   Text,
   FilterButton,
   CopyIconButton,
+  Radio,
 };
