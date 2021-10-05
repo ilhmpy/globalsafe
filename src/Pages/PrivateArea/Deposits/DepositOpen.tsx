@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { Container } from '../../../components/UI/Container';
 import { Back } from '../components/Back';
 import { Title } from '../components/ui/Title';
@@ -9,7 +9,9 @@ import * as S from './S.elements';
 
 export const DepositOpen: FC = () => {
   const history = useHistory();
-
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <S.Container>
       <Container>

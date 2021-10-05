@@ -49,7 +49,7 @@ export const DepositsPrograms = () => {
     } else {
       history.push(`/login/${id}`);
     };
-  }; 
+  };
    
   return (
     <>
