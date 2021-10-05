@@ -10,5 +10,6 @@ export const routers = {
   p2pchanges: '/info/p2p-changes',
   p2pchangesAdvert: '/info/p2p-changes/advert',
   p2pchangesOwn: '/info/p2p-changes/own',
+  p2pchangesOrderToSell: '/info/p2p-changes/create-sell-order',
   p2pchangesSingleExchangeDetails: '/info/p2p-changes/:exchangeId',
 };

@@ -28,7 +28,7 @@ export const AdvertTable = () => {
         selectedOption={ratingOption}
         setSelectedOption={setRatingOption}
       /> */}
-      <PaymentMethods open={true} onClose={() => undefined} />
+      {/* <PaymentMethods open={true} onClose={() => undefined} /> */}
       <S.Table>
         <S.Header>
           <S.Cell>
