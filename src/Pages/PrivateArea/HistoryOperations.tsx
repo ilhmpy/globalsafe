@@ -260,8 +260,8 @@ export const HistoryOperations = () => {
                                 <Styled.TableItem item key={idx}>
                                     <Styled.TableInnerItem item>{moment(item.operationDate).format("DD.MM.YYYY")} в {moment(item.operationDate).format("HH:MM")}</Styled.TableInnerItem>
                                     <Styled.TableInnerItem item>{operation(item.operationKind)}</Styled.TableInnerItem>
-                                    <Styled.TableInnerItem item income={item.balanceDelta >= 0}>
-                                        {sign(item.balanceDelta)} {(item.balanceDelta).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {item.balanceSafeId && getCurrency(item.balanceSafeId)}
+                                    <Styled.TableInnerItem item income={item.balanceDelta > 0}>
+                                        {item.balanceDelta > 0 && (<>{sign(item.balanceDelta)} </>)} {(item.balanceDelta).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {item.balanceSafeId && getCurrency(item.balanceSafeId)}
                                     </Styled.TableInnerItem>
                                 </Styled.TableItem>
                             ))}

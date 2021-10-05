@@ -313,7 +313,6 @@ export const InfoMain: FC = () => {
       setCurrencyValue('');
       return;
     }
-
     setCurrencyValue(balanceKind);
   };
 
@@ -330,7 +329,7 @@ export const InfoMain: FC = () => {
         .invoke(
           'GetTopUpUrl',
           Balance[currency as keyof typeof Balance],
-          currency === 'CWD' ? +ed * 100000 : currency === 'GLOBAL' ? +ed * 10000 : +ed
+          currency === 'CWD' ? Number(+ed) * 100000 : currency === 'GLOBAL' ? Number(+ed) * 10000 : Number(+ed),
         )
         .then((res: string) => {
           newWindow && (newWindow.location.href = res);
@@ -348,14 +347,9 @@ export const InfoMain: FC = () => {
   };
 
   const outPutBalance = () => {
-    console.log(
-      hubConnection &&
-        outPutCurrency.length > 0 &&
-        outPutEd.length > 0 &&
-        Number(outPutEd) > 0 &&
-        Number(outPutEd) > Number(blockchain) + Number(service) + 1
-    );
-    console.log(outPutCurrency);
+    console.log( Balance[outPutCurrency as keyof typeof Balance],
+       Number(+outPutEd)
+    )
     if (
       hubConnection &&
       outPutCurrency.length > 0 &&
@@ -368,13 +362,14 @@ export const InfoMain: FC = () => {
         .invoke(
           'Withdraw',
           Balance[outPutCurrency as keyof typeof Balance],
-          outPutCurrency === 'CWD'
+          Number(outPutEd)
+         /* outPutCurrency === 'CWD'
             ? Number(+outPutEd) * 100000
             : outPutCurrency === 'GLOBAL'
             ? Number(+outPutEd) * 10000
             : outPutCurrency === 'MULTICS'
             ? Number(+outPutEd) * 100
-            : Number(+outPutEd),
+            : Number(+outPutEd), */
         )
         .then((res) => {
           console.log(res);
@@ -444,8 +439,9 @@ export const InfoMain: FC = () => {
           }}
           width={420}
           withClose
+          ptl
         >
-          <H3 center style={{ marginTop: '24px' }}>
+          <H3 center modalTitle>
             Пополнение баланса
           </H3>
           <div style={{ width: '100%', maxWidth: '340px', margin: '0 auto' }}>
@@ -459,8 +455,10 @@ export const InfoMain: FC = () => {
                 const fromSplitted = arr[0].split('.');
                 const toSplitted = arr.length === 2 ? arr[1].split('.') : '';
                 const validValue = e.currentTarget.value.replace(/[^0-9]/gi, '');
-                setEd(validValue);
-              }}
+                if (validValue[0] != "0") {
+                  setEd(validValue);
+                };
+               }}
             />
             <PAButton onClick={changeBalance}>Пополнить баланс</PAButton>
           </div>
@@ -476,8 +474,8 @@ export const InfoMain: FC = () => {
           setError(undefined);
           setCurrency("");
           setEd("");
-        }} width={420} withClose>
-          <H3 center style={{ marginTop: '24px' }}>
+        }} width={420} withClose p20>
+          <H3 center modalTitle>
             Успешное пополнение
           </H3>
           <Styled.Desc>Баланс личного кабинета успешно пополнен на:</Styled.Desc>
@@ -492,8 +490,8 @@ export const InfoMain: FC = () => {
           setError(undefined);
           setCurrency("");
           setEd("");
-        }} width={420} withClose>
-          <H3 center style={{ marginTop: '24px' }}>
+        }} width={420} withClose p20>
+          <H3 center modalTitle>
             Ошибка пополнения
           </H3>
           <Styled.Desc>Баланс личного кабинета не был пополнен на:</Styled.Desc>
@@ -512,11 +510,14 @@ export const InfoMain: FC = () => {
             setWithDrawModal(false);
             setOutPutEd('');
             setOutPutCurrency("");
+            setBlockchain("0");
+            setService("0");
           }}
           width={420}
           withClose
+          ptl
         >
-          <H3 center style={{ marginTop: '24px' }}>
+          <H3 center modalTitle>
             Вывод средств
           </H3>
           <div style={{ width: '100%', maxWidth: '340px', margin: '0 auto' }}>
@@ -537,10 +538,10 @@ export const InfoMain: FC = () => {
                 const fromSplitted = arr[0].split('.');
                 const toSplitted = arr.length === 2 ? arr[1].split('.') : '';
                 const validValue = e.currentTarget.value.replace(/[^0-9]/gi, '');
-                setOutPutEd(validValue);
-                getCommisions(validValue);
-                const test = (10000).toLocaleString("ru-RU", { maximumFractionDigits: 2 });
-                console.log(Number(test));
+                if (validValue[0] != "0") {
+                  setOutPutEd(validValue);
+                  getCommisions(validValue);
+                };
               }}
             />
             <Styled.Commision marginT={20} marginB={10}>
@@ -565,8 +566,8 @@ export const InfoMain: FC = () => {
           setOutPutError(undefined);
           setOutPutCurrency("");
           setOutPutEd("");
-        }} width={420} withClose>
-          <H3 center style={{ marginTop: '24px' }}>
+        }} width={420} withClose p20>
+          <H3 center modalTitle>
             Успешный вывод средств
           </H3>
           <Styled.Desc>С баланса личного кабинета успешно выведены средства в размере:</Styled.Desc>
@@ -586,19 +587,19 @@ export const InfoMain: FC = () => {
           setOutPutError(undefined);
           setOutPutCurrency("");
           setOutPutEd("");
-        }} width={420} withClose>
-          <H3 center style={{ marginTop: '24px' }}>
+        }} width={420} withClose p20>
+          <H3 center modalTitle>
             Ошибка вывода средств
           </H3>
           <Styled.Desc>С баланса личного кабинета не были выведены средства в размере:</Styled.Desc>
-          <Styled.Desc bold>
+          <Styled.Desc bold style={{ marginBottom: "10px" }}>
             {outPutEd} {outPutCurrency}
           </Styled.Desc>
           <Styled.Desc mLess>
             К выводу: {outPutEd ? (Number(outPutEd) - (Number(blockchain) + Number(service))) : 0}
           </Styled.Desc>
           <Styled.Desc mLess>Комиссия блокчейн: {blockchain}</Styled.Desc>
-          <Styled.Desc mLess>Комиссия сервиса: {service}</Styled.Desc>
+          <Styled.Desc mLess style={{ marginBottom: "0px" }}>Комиссия сервиса: {service}</Styled.Desc>
           <Styled.Desc danger mMore>
             {outPutErrorReason}
           </Styled.Desc>

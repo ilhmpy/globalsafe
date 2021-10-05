@@ -9,15 +9,13 @@ import { RegisterComponent } from "../../components/Register/Register";
 import { useTranslation } from "react-i18next";
 import { Footer } from "../../components/Footer/Footer";
 
-export const Authentication = () => {
+export const Authentication = ({ match }: any) => {
   const { t } = useTranslation();
+  const id = match.params.depositId;
   return (
     <AuthPage>
       <Header />
-      {/* <Container>
-        <UpTitle>{t("headerButton.personalArea")}</UpTitle>
-      </Container> */}
-      <LoginComponent />
+      <LoginComponent id={id} />
       <Footer other />
     </AuthPage>
   );

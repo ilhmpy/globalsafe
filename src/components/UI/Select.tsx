@@ -25,22 +25,26 @@ export const Select: FC<SelectType> = ({ data, setSwitch, withoutVolume }: Selec
         setValue(Balance[e.target.dataset.curr]);
         setSwitch(Balance[e.target.dataset.curr]);
     };
-    
-    console.log(data);
 
     return (
-      <Field onClick={hideList}>
+      <Field onClick={hideList} rotate={activeSwitch}>
           <Arrow className="arrow" />
           {value ? value : ( "Валюта не выбрана" )}
           <FieldList block={activeSwitch}>
-            <Scrollbars>
+            <Scrollbars className="pagination">
                 {data && data.map((item, idx) => (
                     <FieldListItem 
                         key={idx} 
                         data-curr={item.balanceKind} 
                         onClick={getSwitch}
                     >
-                        {Balance[item.balanceKind]}{!withoutVolume && ` - ${(item.volume).toLocaleString("ru-RU", { maximumFractionDigits: 2 })}`}
+                        {Balance[item.balanceKind]}{!withoutVolume && ` - ${(
+                                item.balanceKind === 1 ? 
+                                item.volume / 100000 : 
+                                item.balanceKind === 43 ?
+                                item.volume / 10000 : 
+                                item.balanceKind === 59 ? 
+                                item.volume / 100 : item.volume).toLocaleString("ru-RU", { maximumFractionDigits: 5 })}`}
                     </FieldListItem>
                 ))}
             </Scrollbars>
@@ -49,7 +53,7 @@ export const Select: FC<SelectType> = ({ data, setSwitch, withoutVolume }: Selec
     );
 };
 
-const Field = styled.div` 
+const Field = styled.div<{ rotate?: boolean; }>` 
     width: 100%;
     border: 1px solid #EDF0F6;
     border-radius: 4px;
@@ -69,7 +73,9 @@ const Field = styled.div`
 
     & > .arrow {
         position: absolute;
-        right: 12px;
+        right: 17px;
+        transform: ${({ rotate }) => `rotate(${rotate ? "90" : "0"}deg)`};
+        transition: .5s;
     } 
 `;
 

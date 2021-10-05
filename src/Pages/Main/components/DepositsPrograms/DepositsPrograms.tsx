@@ -31,7 +31,7 @@ export const DepositsPrograms = () => {
        lang,
        true,
        0,
-       20 
+       20,
       )
         .then((res) => {
           console.log("res", res);
@@ -41,12 +41,13 @@ export const DepositsPrograms = () => {
     }
   }, [hubConnection]);
 
-  function toDeposits() {
+  function toDeposits(id: string) {
+    console.log(id)
     const token = localStorage.getItem("token");
     if (token && user) {
-      history.push("/info");
+      history.push(`/info/deposits/new-deposit/${id}`);
     } else {
-      history.push("/login");
+      history.push(`/login/${id}`);
     };
   }; 
    
@@ -61,7 +62,7 @@ export const DepositsPrograms = () => {
                 <Styled.Card key={idx}>
                   <Styled.CardName>{item.name.length > 0 ? (item.name).toUpperCase() : "Имя депозита"}</Styled.CardName>
                   <Styled.CardDesc>{item.description.length > 0 ? item.description : "Описание"}</Styled.CardDesc>
-                  <Styled.CardButton onClick={toDeposits}>{t('payments.open').toUpperCase()}</Styled.CardButton>
+                  <Styled.CardButton onClick={() => toDeposits(item.id)}>{t('payments.open').toUpperCase()}</Styled.CardButton>
                 </Styled.Card>
               ))} 
             </Styled.CardBox>
@@ -77,7 +78,7 @@ export const DepositsPrograms = () => {
                       <Styled.Card key={idx}>
                         <Styled.CardName>{item.name.length > 0 ? (item.name).toUpperCase() : "Имя депозита"}</Styled.CardName>
                         <Styled.CardDesc>{item.description.length > 0 ? item.description : "Описание"}</Styled.CardDesc>
-                        <Styled.CardButton onClick={toDeposits}>{t('payments.open').toUpperCase()}</Styled.CardButton>
+                        <Styled.CardButton onClick={() => toDeposits(item.id)}>{t('payments.open').toUpperCase()}</Styled.CardButton>
                       </Styled.Card>
                     </SwiperSlide>
                   ))}
