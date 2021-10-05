@@ -5,6 +5,7 @@ type Props = {
   yellow?: boolean;
   bigSize?: boolean;
   outlinePrimary?: boolean;
+  outlineDanger?: boolean;
   fullWidth?: boolean;
 };
 
@@ -45,15 +46,22 @@ export const Button = styled.a<Props>`
     }
     if (props.yellow) {
       return `
-    background: #F6B817;
-    color: #0E0D3D;
+        background: #F6B817;
+        color: #0E0D3D;
     `;
     }
     if (props.outlinePrimary) {
       return `
-      border: 1px solid #0094FF;
-      background: transparent;
-      color: #0094FF;
+        border: 1px solid #0094FF;
+        background: transparent;
+        color: #0094FF;
+      `;
+    }
+    if (props.outlineDanger) {
+      return `
+        border: 1px solid #FF4A31;
+        background: transparent;
+        color: #FF4A31;
       `;
     }
   }}
