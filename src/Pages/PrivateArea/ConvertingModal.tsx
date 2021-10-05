@@ -12,7 +12,6 @@ import { AppContext } from '../../context/HubContext';
 
 interface Props {
   open: boolean;
-  converting?: boolean;
   setOpen: (open: boolean) => void;
   setIsSuccessConverting: (status: boolean) => void;
   setIsFailConverting: (status: boolean) => void;
@@ -21,7 +20,6 @@ interface Props {
 export const ConvertingModal: FC<Props> = ({
   open,
   setOpen,
-  converting,
   setIsSuccessConverting,
   setIsFailConverting,
 }: Props) => {
@@ -110,6 +108,7 @@ export const ConvertingModal: FC<Props> = ({
               </RateRow>
 
               <Button
+                bigSize
                 primary
                 onClick={() => {
                   setOpen(false);
@@ -117,7 +116,7 @@ export const ConvertingModal: FC<Props> = ({
                   setTimeout(() => resetStateValues(), 500);
                 }}
               >
-                {converting ? t('privateArea.convert2') : t('privateArea.topUpBalance')}
+                {t('privateArea.convert2')}
               </Button>
             </InnerBlock>
           </ContentWrapper>
@@ -149,36 +148,6 @@ const RateRow = styled.div`
   min-height: 40px;
 `;
 
-// export const Input = styled.input`
-//   width: 100%;
-//   border: 1px solid #edf0f7;
-//   box-sizing: border-box;
-//   border-radius: 2px;
-//   min-height: 40px;
-//   padding: 8px;
-//   font-weight: normal;
-//   background: #f9fafb;
-//   font-size: 14px;
-//   line-height: 21px;
-//   letter-spacing: 0.1px;
-//   color: ${(props) => props.theme.text2};
-//   color: #000000;
-
-//   &:focus {
-//     outline: none;
-//   }
-//   ::placeholder,
-//   ::-webkit-input-placeholder {
-//     font-style: normal;
-//     font-weight: normal;
-//     font-size: 14px;
-//     line-height: 16px;
-//     opacity: 0.4;
-//     color: ${(props) => props.theme.text};
-//     color: #000000;
-//   }
-// `;
-
 const InnerBlock = styled.div`
   display: flex;
   flex-direction: column;
@@ -202,6 +171,7 @@ const CloseButton = styled(Close)`
   position: absolute;
   right: 19px;
   top: 19px;
+  cursor: pointer;
 `;
 
 const ModalTitle = styled.h2`
