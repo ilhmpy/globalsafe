@@ -42,6 +42,8 @@ import * as Styled from './Styles.elements';
 import { Footer } from '../../components/Footer/Footer';
 import { Advert } from './Exchanges/Advert';
 import { HistoryOperations } from './HistoryOperations';
+import { OwnExchanges } from './Exchanges/OwnExchanges';
+import { SingleExchangeDetails } from './Exchanges/SingleExchangeDetails';
 
 export const InfoMain: FC = () => {
   const { t } = useTranslation();
@@ -700,6 +702,8 @@ export const InfoMain: FC = () => {
           {/* <Route path="/info/balance" component={InfoBalance} exact /> */}
           <Route path="/info/deposits/:slug" component={OnePage} exact />
           <Route path={routers.p2pchanges} component={Advert} exact />
+          <Route path={routers.p2pchangesOwn} component={OwnExchanges} exact />
+          <Route path={routers.p2pchangesSingleExchangeDetails} component={SingleExchangeDetails} exact />
           <Route path={routers.settings} component={Settings} exact />
           <Route path={routers.settingsNewPayMethod} component={NewPayMethod} exact />
           <Route path={routers.settingsViewPayMethod} component={ViewPayMethod} exact />

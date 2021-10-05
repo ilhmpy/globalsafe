@@ -8,6 +8,7 @@ import { ProgramDescTitle, ProgramDesc, TitleWrap, TextValue } from './ProgramDe
 import { TabNavItem, TabsBlock } from './Tabs';
 import { Text } from './Text';
 import { FilterButton } from './FilterButton';
+import { CopyIconButton } from './CopyIconButton';
 
 export {
   Chip,
@@ -25,4 +26,5 @@ export {
   TabsBlock,
   Text,
   FilterButton,
+  CopyIconButton,
 };

@@ -24,3 +24,11 @@ export const ButtonWrap = styled.div`
   text-align: center;
   margin-bottom: 40px;
 `;
+
+export const Container = styled.div`
+  margin-bottom: 40px;
+`;
+
+export const TitleContainer = styled.div`
+  margin-bottom: 20px;
+`;
