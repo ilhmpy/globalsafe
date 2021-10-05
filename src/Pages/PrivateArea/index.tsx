@@ -341,7 +341,7 @@ export const InfoMain: FC = () => {
           setError(true);
           setErrorReason('На балансе аккаунта недостаточно средств.');
           setAddDrawModal(false);
-        })
+        });
     }
   };
 
@@ -372,7 +372,7 @@ export const InfoMain: FC = () => {
             ? Number(+outPutEd) * 10000
             : outPutCurrency === 'MULTICS'
             ? Number(+outPutEd) * 100
-            : Number(+outPutEd),
+            : Number(+outPutEd)
         )
         .then((res) => {
           console.log(res);
@@ -386,7 +386,7 @@ export const InfoMain: FC = () => {
           setOutPutError(true);
           setWithDrawModal(false);
           setOutPutErrorReason('На балансе аккаунта недостаточно средств.');
-        })
+        });
     }
   };
 
@@ -419,7 +419,7 @@ export const InfoMain: FC = () => {
     // TODO: Think better logic
     history.push('/');
     // window.location.reload();
-  }
+  };
   return (
     <>
       {withdrawValueLoad && (
@@ -438,7 +438,7 @@ export const InfoMain: FC = () => {
           onClose={() => {
             setAddDrawModal(false);
             setEd('');
-            setCurrency("");
+            setCurrency('');
           }}
           width={420}
           withClose
@@ -470,11 +470,15 @@ export const InfoMain: FC = () => {
         timeout={0}
         unmountOnExit
       >
-        <Modal onClose={() => {
-          setError(undefined);
-          setCurrency("");
-          setEd("");
-        }} width={420} withClose>
+        <Modal
+          onClose={() => {
+            setError(undefined);
+            setCurrency('');
+            setEd('');
+          }}
+          width={420}
+          withClose
+        >
           <H3 center style={{ marginTop: '24px' }}>
             Успешное пополнение
           </H3>
@@ -486,11 +490,15 @@ export const InfoMain: FC = () => {
       </CSSTransition>
 
       <CSSTransition in={error === undefined ? false : error} timeout={0} unmountOnExit>
-        <Modal onClose={() => {
-          setError(undefined);
-          setCurrency("");
-          setEd("");
-        }} width={420} withClose>
+        <Modal
+          onClose={() => {
+            setError(undefined);
+            setCurrency('');
+            setEd('');
+          }}
+          width={420}
+          withClose
+        >
           <H3 center style={{ marginTop: '24px' }}>
             Ошибка пополнения
           </H3>
@@ -509,7 +517,7 @@ export const InfoMain: FC = () => {
           onClose={() => {
             setWithDrawModal(false);
             setOutPutEd('');
-            setOutPutCurrency("");
+            setOutPutCurrency('');
           }}
           width={420}
           withClose
@@ -537,7 +545,7 @@ export const InfoMain: FC = () => {
                 const validValue = e.currentTarget.value.replace(/[^0-9]/gi, '');
                 setOutPutEd(validValue);
                 getCommisions(validValue);
-                const test = (10000).toLocaleString("ru-RU", { maximumFractionDigits: 2 });
+                const test = (10000).toLocaleString('ru-RU', { maximumFractionDigits: 2 });
                 console.log(Number(test));
               }}
             />
@@ -559,11 +567,15 @@ export const InfoMain: FC = () => {
       </CSSTransition>
 
       <CSSTransition in={outPutError === false ? true : false} timeout={0} unmountOnExit>
-        <Modal onClose={() => {
-          setOutPutError(undefined);
-          setOutPutCurrency("");
-          setOutPutEd("");
-        }} width={420} withClose>
+        <Modal
+          onClose={() => {
+            setOutPutError(undefined);
+            setOutPutCurrency('');
+            setOutPutEd('');
+          }}
+          width={420}
+          withClose
+        >
           <H3 center style={{ marginTop: '24px' }}>
             Успешный вывод средств
           </H3>
@@ -572,7 +584,7 @@ export const InfoMain: FC = () => {
             {outPutEd} {outPutCurrency}
           </Styled.Desc>
           <Styled.Desc mLess>
-            К выводу: {outPutEd ? (Number(outPutEd) - (Number(blockchain) + Number(service))) : 0}
+            К выводу: {outPutEd ? Number(outPutEd) - (Number(blockchain) + Number(service)) : 0}
           </Styled.Desc>
           <Styled.Desc mLess>Комиссия блокчейн: {blockchain}</Styled.Desc>
           <Styled.Desc mLess>Комиссия сервиса: {service}</Styled.Desc>
@@ -580,11 +592,15 @@ export const InfoMain: FC = () => {
       </CSSTransition>
 
       <CSSTransition in={outPutError} timeout={0} unmountOnExit>
-        <Modal onClose={() => {
-          setOutPutError(undefined);
-          setOutPutCurrency("");
-          setOutPutEd("");
-        }} width={420} withClose>
+        <Modal
+          onClose={() => {
+            setOutPutError(undefined);
+            setOutPutCurrency('');
+            setOutPutEd('');
+          }}
+          width={420}
+          withClose
+        >
           <H3 center style={{ marginTop: '24px' }}>
             Ошибка вывода средств
           </H3>
@@ -593,7 +609,7 @@ export const InfoMain: FC = () => {
             {outPutEd} {outPutCurrency}
           </Styled.Desc>
           <Styled.Desc mLess>
-            К выводу: {outPutEd ? (Number(outPutEd) - (Number(blockchain) + Number(service))) : 0}
+            К выводу: {outPutEd ? Number(outPutEd) - (Number(blockchain) + Number(service)) : 0}
           </Styled.Desc>
           <Styled.Desc mLess>Комиссия блокчейн: {blockchain}</Styled.Desc>
           <Styled.Desc mLess>Комиссия сервиса: {service}</Styled.Desc>
@@ -611,12 +627,13 @@ export const InfoMain: FC = () => {
           return;
         }}
       />
-
+      {console.log(11111, balanceList)}
       <ConvertingModal
         open={openConverting}
         setOpen={setOpenConverting}
         setIsSuccessConverting={setIsSuccessConverting}
         setIsFailConverting={setIsFailConverting}
+        balanceList={balanceList}
       />
       <ConvertingModalSuccess open={isSuccessConverting} setOpen={setIsSuccessConverting} />
       <ConvertingModalFail open={isFailConverting} setOpen={setIsFailConverting} />

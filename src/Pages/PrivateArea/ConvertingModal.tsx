@@ -9,12 +9,14 @@ import { Input } from '../../components/Input';
 import { Modal } from '../../components/Modal/Modal';
 import { Select } from '../../components/Select/Select5';
 import { AppContext } from '../../context/HubContext';
+import { BalanceList, Balance } from '../../types/balance';
 
 interface Props {
   open: boolean;
   setOpen: (open: boolean) => void;
   setIsSuccessConverting: (status: boolean) => void;
   setIsFailConverting: (status: boolean) => void;
+  balanceList: BalanceList[] | null;
 }
 
 export const ConvertingModal: FC<Props> = ({
@@ -22,6 +24,7 @@ export const ConvertingModal: FC<Props> = ({
   setOpen,
   setIsSuccessConverting,
   setIsFailConverting,
+  balanceList,
 }: Props) => {
   const { t } = useTranslation();
   const [defaultFormState, setDefaultFormState] = useState({
@@ -63,7 +66,7 @@ export const ConvertingModal: FC<Props> = ({
             <InnerBlock>
               <Select
                 placeholder="Исходная валюта не выбрана"
-                options={['One', 'Two', 'Three']}
+                options={balanceList?.map((item, idx) => Balance[item.balanceKind]) || []}
                 selectedOption={defaultFormState.fromCurrency}
                 setSelectedOption={(val: string) =>
                   setDefaultFormState({ ...defaultFormState, fromCurrency: val })
@@ -85,7 +88,7 @@ export const ConvertingModal: FC<Props> = ({
             <InnerBlock>
               <Select
                 placeholder="Валюта к получению не выбрана"
-                options={['One', 'Two', 'Three']}
+                options={balanceList?.map((item, idx) => Balance[item.balanceKind]) || []}
                 selectedOption={defaultFormState.toCurrency}
                 setSelectedOption={(val: string) =>
                   setDefaultFormState({ ...defaultFormState, toCurrency: val })
