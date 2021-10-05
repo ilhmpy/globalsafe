@@ -8,6 +8,8 @@ import { ProgramDescTitle, ProgramDesc, TitleWrap, TextValue } from './ProgramDe
 import { TabNavItem, TabsBlock } from './Tabs';
 import { Text } from './Text';
 import { FilterButton } from './FilterButton';
+import { CopyIconButton } from './CopyIconButton';
+import { Radio } from './Radio';
 
 export {
   Chip,
@@ -25,4 +27,6 @@ export {
   TabsBlock,
   Text,
   FilterButton,
+  CopyIconButton,
+  Radio,
 };

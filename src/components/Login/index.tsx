@@ -44,7 +44,7 @@ const TimerButton: FC<TimerButtonProps> = ({ password, tryCode, setTryCode }: Ti
   );
 };
 
-export const LoginComponent = () => {
+export const LoginComponent = ({ id }: any) => {
   const [error, setError] = useState(true);
   const [login, setLogin] = useState(false);
   const [password, setPassword] = useState('');
@@ -154,11 +154,13 @@ export const LoginComponent = () => {
           if (res.token !== null) {
             setPasswordError(false)
             setPasswordSuccessed(true);
-            //
             logIn(res.token);
             setWhere(true);
             setLogin(false);
             setTryCode(0);
+            if (Number(id) != 0) {
+              history.push(`/info/deposits/new-deposit/${id}`);
+            };
           } else {
             setPasswordError(true)
             setPasswordSuccessed(false);

@@ -9,4 +9,6 @@ export const routers = {
   settingsViewPayMethod: '/info/settings/view-pay-method',
   p2pchanges: '/info/p2p-changes',
   p2pchangesAdvert: '/info/p2p-changes/advert',
+  p2pchangesOwn: '/info/p2p-changes/own',
+  p2pchangesSingleExchangeDetails: '/info/p2p-changes/:exchangeId',
 };

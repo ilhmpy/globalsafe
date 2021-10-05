@@ -20,56 +20,63 @@ export const Select: FC<SelectType> = ({ data, setSwitch, withoutVolume }: Selec
     setActiveSwitch(!activeSwitch);
   };
 
-  const getSwitch = (e: any) => {
-    hideList();
-    setValue(Balance[e.target.dataset.curr]);
-    setSwitch(Balance[e.target.dataset.curr]);
-  };
+    const getSwitch = (e: any) => {
+        hideList();
+        setValue(Balance[e.target.dataset.curr]);
+        setSwitch(Balance[e.target.dataset.curr]);
+    };
 
-  console.log(data);
-  console.log(data?.map((item, idx) => Balance[item.balanceKind]));
-  return (
-    <Field onClick={hideList}>
-      <Arrow className="arrow" />
-      {value ? value : 'Валюта не выбрана'}
-      <FieldList block={activeSwitch}>
-        <Scrollbars>
-          {data &&
-            data.map((item, idx) => (
-              <FieldListItem key={idx} data-curr={item.balanceKind} onClick={getSwitch}>
-                {Balance[item.balanceKind]}
-                {!withoutVolume &&
-                  ` - ${item.volume.toLocaleString('ru-RU', { maximumFractionDigits: 2 })}`}
-              </FieldListItem>
-            ))}
-        </Scrollbars>
-      </FieldList>
-    </Field>
-  );
+    return (
+      <Field onClick={hideList} rotate={activeSwitch}>
+          <Arrow className="arrow" />
+          {value ? value : ( "Валюта не выбрана" )}
+          <FieldList block={activeSwitch}>
+            <Scrollbars className="pagination">
+                {data && data.map((item, idx) => (
+                    <FieldListItem 
+                        key={idx} 
+                        data-curr={item.balanceKind} 
+                        onClick={getSwitch}
+                    >
+                        {Balance[item.balanceKind]}{!withoutVolume && ` - ${(
+                                item.balanceKind === 1 ? 
+                                item.volume / 100000 : 
+                                item.balanceKind === 43 ?
+                                item.volume / 10000 : 
+                                item.balanceKind === 59 ? 
+                                item.volume / 100 : item.volume).toLocaleString("ru-RU", { maximumFractionDigits: 5 })}`}
+                    </FieldListItem>
+                ))}
+            </Scrollbars>
+          </FieldList>
+      </Field>
+    );
 };
 
-const Field = styled.div`
-  width: 100%;
-  border: 1px solid #edf0f6;
-  border-radius: 4px;
-  height: 40px;
-  cursor: pointer;
-  background: #f9fafb;
-  display: flex;
-  align-items: center;
-  padding: 12px;
-  position: relative;
-  color: #000;
-  font-size: 14px;
-  line-height: 16px;
-  font-weight: 400;
-  user-select: none;
-  margin-bottom: 10px;
+const Field = styled.div<{ rotate?: boolean; }>` 
+    width: 100%;
+    border: 1px solid #EDF0F6;
+    border-radius: 4px;
+    height: 40px;
+    cursor: pointer;
+    background: #F9FAFB;
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    position: relative;
+    color: #000;
+    font-size: 14px;
+    line-height: 16px;
+    font-weight: 400;
+    user-select: none;
+    margin-bottom: 10px;
 
-  & > .arrow {
-    position: absolute;
-    right: 12px;
-  }
+    & > .arrow {
+        position: absolute;
+        right: 17px;
+        transform: ${({ rotate }) => `rotate(${rotate ? "90" : "0"}deg)`};
+        transition: .5s;
+    } 
 `;
 
 const FieldList = styled.div<{ block: boolean }>`
