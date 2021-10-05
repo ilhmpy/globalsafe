@@ -32,7 +32,7 @@ export const Rating: FC<Props> = ({
                 options={options}
               />
             </S.DropdonwConatainer>
-            <Button fullWidth primary>
+            <Button bigSize fullWidth primary>
               Применить
             </Button>
           </S.Container>

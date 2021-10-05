@@ -8,14 +8,15 @@ type Props = {
   value?: string;
   name?: string;
   children?: ReactNode;
+  dis?: boolean;
 };
 
 export const Checkbox: FC<Props> = (props: Props): ReactElement => {
-  const { checked, onChange, label, name, children } = props;
+  const { checked, onChange, label, name, children, dis } = props;
   return (
     <LabelContainer>
       <CheckboxInput name={name} type="checkbox" checked={checked} onChange={onChange} />
-      <CheckboxIcon />
+      <CheckboxIcon dis={dis} />
       {children}
     </LabelContainer>
   );
