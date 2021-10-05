@@ -108,6 +108,7 @@ export const InfoMain: FC = () => {
   );
   const [withDrawModal, setWithDrawModal] = useState<boolean>(false);
   const [addDrawModal, setAddDrawModal] = useState<boolean>(false);
+  const [convertedArray, setConvertedArray] = useState<number[]>([0, 0, 0]);
 
   // Get Balance Kinds List as an Array
   const balancesList = useMemo(() => {
@@ -342,7 +343,7 @@ export const InfoMain: FC = () => {
           setError(true);
           setErrorReason('На балансе аккаунта недостаточно средств.');
           setAddDrawModal(false);
-        })
+        });
     }
   };
 
@@ -383,7 +384,7 @@ export const InfoMain: FC = () => {
           setOutPutError(true);
           setWithDrawModal(false);
           setOutPutErrorReason('На балансе аккаунта недостаточно средств.');
-        })
+        });
     }
   };
 
@@ -416,7 +417,7 @@ export const InfoMain: FC = () => {
     // TODO: Think better logic
     history.push('/');
     // window.location.reload();
-  }
+  };
   return (
     <>
       {withdrawValueLoad && (
@@ -435,7 +436,7 @@ export const InfoMain: FC = () => {
           onClose={() => {
             setAddDrawModal(false);
             setEd('');
-            setCurrency("");
+            setCurrency('');
           }}
           width={420}
           withClose
@@ -575,7 +576,7 @@ export const InfoMain: FC = () => {
             {outPutEd} {outPutCurrency}
           </Styled.Desc>
           <Styled.Desc mLess>
-            К выводу: {outPutEd ? (Number(outPutEd) - (Number(blockchain) + Number(service))) : 0}
+            К выводу: {outPutEd ? Number(outPutEd) - (Number(blockchain) + Number(service)) : 0}
           </Styled.Desc>
           <Styled.Desc mLess>Комиссия блокчейн: {blockchain}</Styled.Desc>
           <Styled.Desc mLess>Комиссия сервиса: {service}</Styled.Desc>
@@ -596,7 +597,7 @@ export const InfoMain: FC = () => {
             {outPutEd} {outPutCurrency}
           </Styled.Desc>
           <Styled.Desc mLess>
-            К выводу: {outPutEd ? (Number(outPutEd) - (Number(blockchain) + Number(service))) : 0}
+            К выводу: {outPutEd ? Number(outPutEd) - (Number(blockchain) + Number(service)) : 0}
           </Styled.Desc>
           <Styled.Desc mLess>Комиссия блокчейн: {blockchain}</Styled.Desc>
           <Styled.Desc mLess style={{ marginBottom: "0px" }}>Комиссия сервиса: {service}</Styled.Desc>
@@ -614,14 +615,18 @@ export const InfoMain: FC = () => {
           return;
         }}
       />
-
       <ConvertingModal
         open={openConverting}
         setOpen={setOpenConverting}
         setIsSuccessConverting={setIsSuccessConverting}
         setIsFailConverting={setIsFailConverting}
+        setConvertedArray={setConvertedArray}
       />
-      <ConvertingModalSuccess open={isSuccessConverting} setOpen={setIsSuccessConverting} />
+      <ConvertingModalSuccess
+        open={isSuccessConverting}
+        setOpen={setIsSuccessConverting}
+        convertedArray={convertedArray}
+      />
       <ConvertingModalFail open={isFailConverting} setOpen={setIsFailConverting} />
 
       <Header />
