@@ -106,6 +106,7 @@ export const InfoMain: FC = () => {
   );
   const [withDrawModal, setWithDrawModal] = useState<boolean>(false);
   const [addDrawModal, setAddDrawModal] = useState<boolean>(false);
+  const [convertedArray, setConvertedArray] = useState<number[]>([0, 0, 0]);
 
   // Get Balance Kinds List as an Array
   const balancesList = useMemo(() => {
@@ -627,15 +628,18 @@ export const InfoMain: FC = () => {
           return;
         }}
       />
-      {console.log(11111, balanceList)}
       <ConvertingModal
         open={openConverting}
         setOpen={setOpenConverting}
         setIsSuccessConverting={setIsSuccessConverting}
         setIsFailConverting={setIsFailConverting}
-        balanceList={balanceList}
+        setConvertedArray={setConvertedArray}
       />
-      <ConvertingModalSuccess open={isSuccessConverting} setOpen={setIsSuccessConverting} />
+      <ConvertingModalSuccess
+        open={isSuccessConverting}
+        setOpen={setIsSuccessConverting}
+        convertedArray={convertedArray}
+      />
       <ConvertingModalFail open={isFailConverting} setOpen={setIsFailConverting} />
 
       <Header />
