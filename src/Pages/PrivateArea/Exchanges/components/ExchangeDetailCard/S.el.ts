@@ -18,3 +18,8 @@ export const BlockWrapper = styled.div`
 export const TitleBlockWrapper = styled.div`
   margin-bottom: 40px;
 `;
+
+export const Space = styled.div`
+  display: flex;
+  gap: 10px;
+`;

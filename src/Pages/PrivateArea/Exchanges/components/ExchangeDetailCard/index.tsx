@@ -2,6 +2,7 @@ import React, { FC, useState } from 'react';
 import * as S from './S.el';
 import {
   Chip,
+  CopyIconButton,
   LeftSide,
   RightSide,
   Text,
@@ -72,7 +73,10 @@ export const ExchangeDetailCard: FC = () => {
 
           <S.BlockWrapper>
             <Text size={14} lH={20} mB={4}>Номер карты:</Text>
-            <Text size={14} lH={20} weight={500}>5536 9137 9922 7240</Text>
+            <S.Space>
+              <Text size={14} lH={20} weight={500}>5536 9137 9922 7240</Text>
+              <CopyIconButton copyValue={'5536 9137 9922 7240'} />
+            </S.Space>
           </S.BlockWrapper>
 
           <S.BlockWrapper>
