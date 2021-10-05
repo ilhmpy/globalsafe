@@ -1037,7 +1037,7 @@ export const Desc = styled.h3<{
     if (mMore) {
       return `
         margin-top: 10px;        
-        margin-bottom: 10px;
+        margin-bottom: 20px;
       `;
     }
   }}
@@ -1045,7 +1045,7 @@ export const Desc = styled.h3<{
   ${({ mLess }) => {
     if (mLess) {
       return `
-        margin-bottom: 2px;
+        margin-bottom: 0px;
       `;
     }
   }}
@@ -1055,6 +1055,7 @@ export const Commision = styled.h3<{ marginT?: number; marginB?: number }>`
   width: 100%;
   position: relative;
   font-size: 14px;
+  line-height: 20px;
   font-weight: 400;
   margin-bottom: 10px;
   color: #000;

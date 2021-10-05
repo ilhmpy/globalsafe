@@ -182,9 +182,9 @@ const ModalComponent = styled.div<{
     }
   }
 
-  & > span > svg > path {
+  .close > svg > path {
     fill: #000;
-  }
+  } 
 
   ${({ styles }) => {
     if (styles) {

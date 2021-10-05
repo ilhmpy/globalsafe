@@ -27,7 +27,7 @@ export const Select: FC<SelectType> = ({ data, setSwitch, withoutVolume }: Selec
     };
 
     return (
-      <Field onClick={hideList}>
+      <Field onClick={hideList} rotate={activeSwitch}>
           <Arrow className="arrow" />
           {value ? value : ( "Валюта не выбрана" )}
           <FieldList block={activeSwitch}>
@@ -53,7 +53,7 @@ export const Select: FC<SelectType> = ({ data, setSwitch, withoutVolume }: Selec
     );
 };
 
-const Field = styled.div` 
+const Field = styled.div<{ rotate?: boolean; }>` 
     width: 100%;
     border: 1px solid #EDF0F6;
     border-radius: 4px;
@@ -73,7 +73,9 @@ const Field = styled.div`
 
     & > .arrow {
         position: absolute;
-        right: 12px;
+        right: 17px;
+        transform: ${({ rotate }) => `rotate(${rotate ? "90" : "0"}deg)`};
+        transition: .5s;
     } 
 `;
 
