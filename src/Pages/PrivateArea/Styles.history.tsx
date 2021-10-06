@@ -77,7 +77,6 @@ export const TableItem = styled.div<TableProps>`
         if (newItem) {
             return `
                 opacity: 10%;
-                transition: 3s;
             `;
         };
     }}

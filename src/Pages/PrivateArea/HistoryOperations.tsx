@@ -11,7 +11,7 @@ import * as FilterS from './components/Filter/S.el';
 import { Filter } from "./components/Filter/index";
 import { AppContext } from '../../context/HubContext';
 import { Balance } from "../../types/balance";
-import { Loading, NotItems } from "./components/Loading/Loading";
+import { Loading, NotItems, Spinner } from "./components/Loading/Loading";
 import formatRelativeWithOptions from 'date-fns/esm/fp/formatRelativeWithOptions/index.js';
 import { isObject } from 'highcharts';
 import { isTemplateSpan } from 'typescript';
@@ -74,7 +74,7 @@ export const HistoryOperations = () => {
         };
     };
 
-    const [operations, setOperations] = useState<any[]>([]);
+    const [operations, setOperations] = useState<any[] | null>(null);
     const [statusNew, setStatusNew] = useState<any>();
 
     /*    /// NA.
@@ -128,7 +128,6 @@ export const HistoryOperations = () => {
 
     useEffect(() => {
         if (hubConnection) {
-            console.log("REQ");
             setNewItems(true);
             const date = new Date();
             setLoading(true);
@@ -162,11 +161,11 @@ export const HistoryOperations = () => {
                         }));
                     };
                 };
-                if (res.collection.length) {
+                if (res.collection.length > 0) {
                     setEmptyItems(false);
                 } else {
                     setEmptyItems(true);
-                }
+                };
               })
               .catch(err => {
                 console.log(err);
@@ -176,7 +175,7 @@ export const HistoryOperations = () => {
     }, [activeFilter, hubConnection, nowMonth, allCurrency]);
 
     function changeNew() {
-        setOperations(items => items.map((i: any) => {
+        setOperations(items => items && items.map((i: any) => {
             return {
                 ...i,
                 new: false 
@@ -193,7 +192,7 @@ export const HistoryOperations = () => {
                 getFilter(activeFilter), 
                 nowMonth ? new Date(date.getFullYear(), date.getMonth(), 1, 0, 0) : new Date(2013, 5, 13, 10, 0, 0),
                 new Date(), 
-                operations.length + 1, 5
+                operations && operations.length + 1, 5
             )
               .then(res => {
                 console.log("rees", res);
@@ -215,7 +214,7 @@ export const HistoryOperations = () => {
                         })]);
                     };
                 };
-                setStatusNew(setTimeout(() => changeNew(), 3000));
+                setStatusNew(setTimeout(() => changeNew(), 1000));
                 if (res.collection.length > 0) {
                     setNewItems(true);
                 } else {
@@ -283,7 +282,7 @@ export const HistoryOperations = () => {
                     <Styled.TableInnerItem head>Категория</Styled.TableInnerItem>
                     <Styled.TableInnerItem head>Сумма</Styled.TableInnerItem>
                 </Styled.TableItem>
-                {operations.length > 0 ? (
+                {operations ? (
                     <>
                         {!emptyItems ? (
                             <>
@@ -305,7 +304,11 @@ export const HistoryOperations = () => {
                     </>
                 ) : ( <Loading /> )}
             </Styled.Table>
-          <Styled.Button onClick={addMore} newItems={operations.length > 0 ? newItems : false}>Показать ещё</Styled.Button>
+          <Styled.Button onClick={addMore} newItems={operations && operations.length > 0 ? newItems : false}>
+                {operations && operations[operations.length - 1].new ? 
+                    <Spinner style={{ width: 25, height: 25, borderTop: "2px solid #fff", margin: "0 auto" }} /> 
+                    : "Показать ещё"}
+          </Styled.Button>
         </Container>
     )
 }    
