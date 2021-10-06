@@ -324,13 +324,15 @@ export const InfoMain: FC = () => {
   };
 
   const changeBalance = () => {
-    if (hubConnection && currency.length > 0 && ed.length > 0 && Number(ed) > 0) {
+    const value = Number(ed.replace(/\s/g, ""));
+    if (hubConnection && currency.length > 0 && ed.length > 0 && value > 0) {
       const newWindow = window.open();
+      console.log("change", value);
       hubConnection
         .invoke(
           'GetTopUpUrl',
           Balance[currency as keyof typeof Balance],
-          currency === 'CWD' ? Number(+ed) * 100000 : currency === 'GLOBAL' ? Number(+ed) * 10000 : Number(+ed),
+          currency === 'CWD' ? value * 100000 : currency === 'GLOBAL' ? value * 10000 : value,
         )
         .then((res: string) => {
           newWindow && (newWindow.location.href = res);
@@ -348,22 +350,21 @@ export const InfoMain: FC = () => {
   };
 
   const outPutBalance = () => {
-    console.log( Balance[outPutCurrency as keyof typeof Balance],
-       Number(+outPutEd)
-    )
+    const value = Number(outPutEd.replace(/\s/g, ""));
     if (
       hubConnection &&
       outPutCurrency.length > 0 &&
       outPutEd.length > 0 &&
-      Number(outPutEd) > 0 &&
-      Number(outPutEd) > Number(blockchain) + Number(service) + 1
+      value > 0 &&
+      value > Number(blockchain) + Number(service) + 1
     ) {
       setWithdrawValueLoad(true);
+      console.log("withdraw", value)
       hubConnection
         .invoke(
           'Withdraw',
           Balance[outPutCurrency as keyof typeof Balance],
-          Number(outPutEd)
+          value
          /* outPutCurrency === 'CWD'
             ? Number(+outPutEd) * 100000
             : outPutCurrency === 'GLOBAL'
@@ -451,13 +452,17 @@ export const InfoMain: FC = () => {
               placeholder="Сумма пополнения"
               value={ed}
               maxLength={8}
+              onKeyDown={((e) => {
+                if (e.keyCode === 8 && ed.length === 1) {
+                  setEd("");
+                };
+              })}
               onChange={(e) => {
-                const arr = e.currentTarget.value.split('-');
-                const fromSplitted = arr[0].split('.');
-                const toSplitted = arr.length === 2 ? arr[1].split('.') : '';
                 const validValue = e.currentTarget.value.replace(/[^0-9]/gi, '');
                 if (validValue[0] != "0") {
-                  setEd(validValue);
+                  setEd((Number(validValue).toLocaleString("ru-RU", { maximumFractionDigits: 2 })));
+                } else {
+                  setEd("");
                 };
                }}
             />
@@ -527,21 +532,18 @@ export const InfoMain: FC = () => {
               value={outPutEd}
               placeholder="Сумма вывода"
               maxLength={8}
-              onKeyUp={(e) => {
-                if (e.keyCode === 8) {
-                  setBlockchain('0');
-                  setService('0');
-                  setCurrency('');
-                }
-              }}
+              onKeyDown={((e) => {
+                if (e.keyCode === 8 && outPutEd.length === 1) {
+                  setOutPutEd("");
+                };
+              })}
               onChange={(e) => {
-                const arr = e.currentTarget.value.split('-');
-                const fromSplitted = arr[0].split('.');
-                const toSplitted = arr.length === 2 ? arr[1].split('.') : '';
                 const validValue = e.currentTarget.value.replace(/[^0-9]/gi, '');
                 if (validValue[0] != "0") {
-                  setOutPutEd(validValue);
+                  setOutPutEd((Number(validValue).toLocaleString("ru-RU", { maximumFractionDigits: 2 })));
                   getCommisions(validValue);
+                } else {
+                  setOutPutEd("");
                 };
               }}
             />
@@ -576,7 +578,7 @@ export const InfoMain: FC = () => {
             {outPutEd} {outPutCurrency}
           </Styled.Desc>
           <Styled.Desc mLess>
-            К выводу: {outPutEd ? Number(outPutEd) - (Number(blockchain) + Number(service)) : 0}
+            К выводу: {Number(outPutEd.replace(/\s/g, "")) ? Number(outPutEd.replace(/\s/g, "")) - (Number(blockchain) + Number(service)) : 0}
           </Styled.Desc>
           <Styled.Desc mLess>Комиссия блокчейн: {blockchain}</Styled.Desc>
           <Styled.Desc mLess>Комиссия сервиса: {service}</Styled.Desc>
@@ -588,6 +590,8 @@ export const InfoMain: FC = () => {
           setOutPutError(undefined);
           setOutPutCurrency("");
           setOutPutEd("");
+          setService("0");
+          setBlockchain("0");
         }} width={420} withClose p20>
           <H3 center modalTitle>
             Ошибка вывода средств
@@ -597,7 +601,7 @@ export const InfoMain: FC = () => {
             {outPutEd} {outPutCurrency}
           </Styled.Desc>
           <Styled.Desc mLess>
-            К выводу: {outPutEd ? Number(outPutEd) - (Number(blockchain) + Number(service)) : 0}
+            К выводу: {Number(outPutEd.replace(/\s/g, "")) ? Number(outPutEd.replace(/\s/g, "")) - (Number(blockchain) + Number(service)) : 0}
           </Styled.Desc>
           <Styled.Desc mLess>Комиссия блокчейн: {blockchain}</Styled.Desc>
           <Styled.Desc mLess style={{ marginBottom: "0px" }}>Комиссия сервиса: {service}</Styled.Desc>

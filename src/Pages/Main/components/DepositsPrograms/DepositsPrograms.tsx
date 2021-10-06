@@ -39,7 +39,7 @@ export const DepositsPrograms = () => {
         })  
         .catch((err) => console.log(err));
     }
-  }, [hubConnection]);
+  }, [hubConnection, lang]);
 
   function toDeposits(id: string) {
     const token = localStorage.getItem("token");
