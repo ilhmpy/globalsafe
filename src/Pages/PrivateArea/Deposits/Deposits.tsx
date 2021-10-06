@@ -22,7 +22,7 @@ import { CloseDepositSuccess } from '../components/Modals/CloseDepositSuccess';
 import { CloseDepositError } from '../components/Modals/CloseDepositError';
 import { AppContext } from '../../../context/HubContext';
 import { Collection, DepositsCollection, RootList } from '../../../types/info';
-import { Loading, NotItems } from "../components/Loading/Loading";
+import { Loading, NotItems } from '../components/Loading/Loading';
 
 export const Deposits = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -48,16 +48,16 @@ export const Deposits = () => {
   ]);
 
   const getFilterCode = (key: 'active' | 'archived' | 'hold') => {
-    if(key === 'active') {
+    if (key === 'active') {
       return [2];
     }
-    if(key === 'archived') {
+    if (key === 'archived') {
       return [4];
     }
-    if(key === 'hold') {
+    if (key === 'hold') {
       return [2];
     }
-  }
+  };
 
   const onClose = () => {
     setOpenModal(false);
@@ -70,33 +70,31 @@ export const Deposits = () => {
       setDepositsTotalCount(0);
       setSkip(0);
       hubConnection
-      .invoke<RootList>(
-        'GetUserDepositsInstant', 
-        getFilterCode(activeFilter), 
-        activeFilter === 'hold' ? false : null,
-        0, 
-        20, 
-        sorting
-      )
+        .invoke<RootList>(
+          'GetUserDepositsInstant',
+          getFilterCode(activeFilter),
+          activeFilter === 'hold' ? false : null,
+          0,
+          20,
+          sorting
+        )
         .then((res) => {
-          if(res.totalRecords === [...depositsList, ...res.collection].length) {
+          if (res.totalRecords === [...depositsList, ...res.collection].length) {
             setDepositsListHasMore(false);
           }
-          setDepositsList(state => [...state, ...res.collection]);
+          setDepositsList((state) => [...state, ...res.collection]);
           setDepositsTotalCount(res.totalRecords);
-          
+
           setSkip((state) => state + 20);
-  
         })
         .catch((err: Error) => {
-          console.log(err)
+          console.log(err);
         })
         .finally(() => {
           setGetDepositsLoading(false);
         });
     }
   }, [hubConnection, activeFilter, languale]);
-
 
   //   Task<CollectionResult> GetUserDeposits(DepositState[] states, bool | null isInstant, long skip, long take, QuerySorting[] sorting)
   // фильтрация по полю state в параметре states
@@ -126,17 +124,17 @@ export const Deposits = () => {
   const handleGetDepositsList = () => {
     if (hubConnection && depositsList.length < depositsTotalCount) {
       hubConnection
-      .invoke<RootList>(
-        'GetUserDepositsInstant', 
-        getFilterCode(activeFilter), 
-        activeFilter === 'hold' ? false : null,
-        skip, 
-        20, 
-        sorting
-      )
+        .invoke<RootList>(
+          'GetUserDepositsInstant',
+          getFilterCode(activeFilter),
+          activeFilter === 'hold' ? false : null,
+          skip,
+          20,
+          sorting
+        )
         .then((res) => {
-          if(res.collection.length) {
-            setDepositsList(state => [...state, ...res.collection]);
+          if (res.collection.length) {
+            setDepositsList((state) => [...state, ...res.collection]);
             setDepositsTotalCount(res.totalRecords);
             setSkip((state) => state + 20);
           }
@@ -144,8 +142,8 @@ export const Deposits = () => {
           setDepositsListHasMore(true);
         })
         .catch((err: Error) => {
-          console.log(err)
-        })
+          console.log(err);
+        });
     }
   };
 
@@ -155,51 +153,47 @@ export const Deposits = () => {
   //   )
   // };
 
-  if(!getDepositsLoading && depositsList.length === 0) {
+  if (!getDepositsLoading && depositsList.length === 0) {
     // history.replace(routers.depositsProgram);
     return (
       <S.Container>
         <Container>
-          <S.NotDeposits>
-            У вас пока нет депозитов. Откройте свой первый депозит !
-          </S.NotDeposits>
+          <S.NotDeposits>У вас пока нет депозитов. Откройте свой первый депозит !</S.NotDeposits>
 
           <S.StyledProgram />
-
         </Container>
       </S.Container>
-    )
-  };
+    );
+  }
 
   return (
     <S.Container>
       <Container>
         <Heading
-          onClick={() => history.push(routers.depositsProgram)}
+          onClick={() => history.push(routers.orderCreate)}
           title="Мои депозиты"
           btnText="Открыть депозит"
         />
       </Container>
       <Container>
-        <Filter activeFilter={activeFilter} setActiveFilter={setActiveFilter} /> 
+        <Filter activeFilter={activeFilter} setActiveFilter={setActiveFilter} />
       </Container>
       <Container>
         <Scrollbars style={{ height: '240px', minHeight: '240px' }}>
-          {
-          getDepositsLoading
-          ?
+          {getDepositsLoading ? (
             <Loading />
-          :
-            depositsList.length > 0 &&
+          ) : (
+            depositsList.length > 0 && (
               <InfiniteScroll
-                  pageStart={0}
-                  loadMore={handleGetDepositsList}
-                  hasMore={depositsListHasMore}
-                  useWindow={false}
-                >
-                  <Table depositsList={depositsList} />
+                pageStart={0}
+                loadMore={handleGetDepositsList}
+                hasMore={depositsListHasMore}
+                useWindow={false}
+              >
+                <Table depositsList={depositsList} />
               </InfiniteScroll>
-          }
+            )
+          )}
         </Scrollbars>
       </Container>
       {/* <Container>
