@@ -97,7 +97,7 @@ const Center = styled.div<{ styles?: string; lottery?: boolean }>`
     }
   }}
 `;
-
+ 
 const ModalContainer = styled.div<{ zIndex: string; lottery?: boolean }>`
   position: fixed;
   top: 0;
@@ -108,7 +108,7 @@ const ModalContainer = styled.div<{ zIndex: string; lottery?: boolean }>`
   display: block;
   transition: 0.3s;
   z-index: ${(props) => props.zIndex};
-  overflow: auto;
+  overflow: auto; 
   @media (max-width: 576px) {
     padding: 20px;
   }
