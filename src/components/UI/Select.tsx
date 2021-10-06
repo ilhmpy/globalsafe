@@ -1,8 +1,8 @@
 import styled from 'styled-components/macro';
-import { FC, useState } from "react";
-import { ReactComponent as Arrow } from "../../assets/svg/selArrow.svg";
+import { FC, useState } from 'react';
+import { ReactComponent as Arrow } from '../../assets/svg/selArrow.svg';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { BalanceList, Balance } from "../../types/balance";
+import { BalanceList, Balance } from '../../types/balance';
 import moment from 'moment';
 import 'moment/locale/ru';
 
@@ -13,34 +13,38 @@ type SelectType = {
 };
 
 export const Select: FC<SelectType> = ({ data, setSwitch, withoutVolume }: SelectType) => {
-    const [value, setValue] = useState<string | undefined>();
-    const [activeSwitch, setActiveSwitch] = useState<boolean>(false);
+  const [value, setValue] = useState<string | undefined>();
+  const [activeSwitch, setActiveSwitch] = useState<boolean>(false);
 
-    const hideList = () => {
-       setActiveSwitch(!activeSwitch)
-    };
+  const hideList = () => {
+    setActiveSwitch(!activeSwitch);
+  };
 
     const getSwitch = (e: any) => {
         hideList();
         setValue(Balance[e.target.dataset.curr]);
         setSwitch(Balance[e.target.dataset.curr]);
     };
-    
-    console.log(data);
 
     return (
-      <Field onClick={hideList}>
+      <Field onClick={hideList} rotate={activeSwitch}>
           <Arrow className="arrow" />
           {value ? value : ( "Валюта не выбрана" )}
           <FieldList block={activeSwitch}>
-            <Scrollbars>
+            <Scrollbars className="pagination">
                 {data && data.map((item, idx) => (
                     <FieldListItem 
                         key={idx} 
                         data-curr={item.balanceKind} 
                         onClick={getSwitch}
                     >
-                        {Balance[item.balanceKind]}{!withoutVolume && ` - ${(item.volume).toLocaleString("ru-RU", { maximumFractionDigits: 2 })}`}
+                        {Balance[item.balanceKind]}{!withoutVolume && ` - ${(
+                                item.balanceKind === 1 ? 
+                                item.volume / 100000 : 
+                                item.balanceKind === 43 ?
+                                item.volume / 10000 : 
+                                item.balanceKind === 59 ? 
+                                item.volume / 100 : item.volume).toLocaleString("ru-RU", { maximumFractionDigits: 5 })}`}
                     </FieldListItem>
                 ))}
             </Scrollbars>
@@ -49,7 +53,7 @@ export const Select: FC<SelectType> = ({ data, setSwitch, withoutVolume }: Selec
     );
 };
 
-const Field = styled.div` 
+const Field = styled.div<{ rotate?: boolean; }>` 
     width: 100%;
     border: 1px solid #EDF0F6;
     border-radius: 4px;
@@ -69,43 +73,45 @@ const Field = styled.div`
 
     & > .arrow {
         position: absolute;
-        right: 12px;
+        right: 17px;
+        transform: ${({ rotate }) => `rotate(${rotate ? "90" : "0"}deg)`};
+        transition: .5s;
     } 
 `;
 
-const FieldList = styled.div<{ block: boolean; }>`
-    width: 100%;
-    height: 90px;
-    background: #F9FAFB;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
-    position: absolute;
-    z-index: 9999;
-    border: 1px solid #EDF0F6;
-    border-top: 0px;
-    left: -1px;
-    margin: 0;
-    margin-top: 128px;
-    min-width: 340px;
-    overflow-y: hidden;
-    display: ${({ block }) => block ? "block" : "none"};
+const FieldList = styled.div<{ block: boolean }>`
+  width: 100%;
+  height: 90px;
+  background: #f9fafb;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  position: absolute;
+  z-index: 9999;
+  border: 1px solid #edf0f6;
+  border-top: 0px;
+  left: -1px;
+  margin: 0;
+  margin-top: 128px;
+  min-width: 340px;
+  overflow-y: hidden;
+  display: ${({ block }) => (block ? 'block' : 'none')};
 `;
 
 const FieldListItem = styled.div`
-    width: 100%;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    padding: 12px;
-    color: #000;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 16px;
-    transition: 0.5s;
-    user-select: none;
+  width: 100%;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 12px;
+  color: #000;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
+  transition: 0.5s;
+  user-select: none;
 
-    &:hover {
-        background: #EDF0F6;
-    }
+  &:hover {
+    background: #edf0f6;
+  }
 `;

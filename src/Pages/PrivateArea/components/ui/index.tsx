@@ -10,6 +10,7 @@ import { Text } from './Text';
 import { FilterButton } from './FilterButton';
 import { CopyIconButton } from './CopyIconButton';
 import { TextBlock } from './TextBlock';
+import { Radio } from './Radio';
 
 export {
   Chip,
@@ -29,4 +30,5 @@ export {
   FilterButton,
   CopyIconButton,
   TextBlock,
+  Radio,
 };

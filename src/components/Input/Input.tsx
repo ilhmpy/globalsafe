@@ -6,10 +6,19 @@ interface IProps {
   name: string;
   value: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  disabled?: boolean;
 }
 
-export const Input: FC<IProps> = ({ placeholder, name, value, onChange }: IProps) => {
-  return <InputUI placeholder={placeholder} name={name} value={value} onChange={onChange} />;
+export const Input: FC<IProps> = ({ placeholder, name, value, onChange, disabled }: IProps) => {
+  return (
+    <InputUI
+      disabled={disabled}
+      placeholder={placeholder}
+      name={name}
+      value={value}
+      onChange={onChange}
+    />
+  );
 };
 
 export const InputUI = styled.input`

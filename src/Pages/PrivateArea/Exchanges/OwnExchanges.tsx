@@ -35,7 +35,7 @@ export const OwnExchanges = () => {
               <div>Сертификаты</div>
             </TabNavItem>
           </TabsBlock>
-          <Text size={14} lH={16} weight={500}>
+          <Text size={14} lH={16} weight={500} black>
             Рейтинг аккаунта: 5.0
           </Text>
         </S.SubHeader>

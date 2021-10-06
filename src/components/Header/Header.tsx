@@ -45,7 +45,7 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
 
   function handleClick() {
     if (!user) {
-      history.push('/login');
+      history.push('/login/0');
     } else {
       history.push(routers.deposits);
     }
