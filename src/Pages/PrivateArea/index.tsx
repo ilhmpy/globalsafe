@@ -351,13 +351,12 @@ export const InfoMain: FC = () => {
 
   const outPutBalance = () => {
     const value = Number(outPutEd.replace(/\s/g, ""));
-    console.log(Number(blockchain) + Number(service) + 1);
     if (
       hubConnection &&
       outPutCurrency.length > 0 &&
       outPutEd.length > 0 &&
       value > 0 &&
-      value > Number(blockchain) + Number(service) + 1
+      value >= Number(blockchain) + Number(service) + 1
     ) {
       setWithdrawValueLoad(true);
       console.log("withdraw", value)

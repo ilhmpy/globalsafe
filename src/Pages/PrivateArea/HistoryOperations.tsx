@@ -128,6 +128,7 @@ export const HistoryOperations = () => {
 
     useEffect(() => {
         if (hubConnection) {
+            console.log("REQ");
             setNewItems(true);
             const date = new Date();
             setLoading(true);
@@ -141,6 +142,7 @@ export const HistoryOperations = () => {
             )
               .then(res => {
                 setLoading(false);
+                console.log("res", res.collection);
                 if (allCurrency) {
                    setOperations(items => res.collection.map((i: any) => {
                        return {
