@@ -351,6 +351,7 @@ export const InfoMain: FC = () => {
 
   const outPutBalance = () => {
     const value = Number(outPutEd.replace(/\s/g, ""));
+    console.log(Number(blockchain) + Number(service) + 1);
     if (
       hubConnection &&
       outPutCurrency.length > 0 &&
@@ -364,14 +365,13 @@ export const InfoMain: FC = () => {
         .invoke(
           'Withdraw',
           Balance[outPutCurrency as keyof typeof Balance],
-          value
-         /* outPutCurrency === 'CWD'
-            ? Number(+outPutEd) * 100000
-            : outPutCurrency === 'GLOBAL'
-            ? Number(+outPutEd) * 10000
-            : outPutCurrency === 'MULTICS'
-            ? Number(+outPutEd) * 100
-            : Number(+outPutEd), */
+          outPutCurrency === 'CWD'
+          ? value * 100000
+          : outPutCurrency === 'GLOBAL'
+          ? value * 10000
+          : outPutCurrency === 'MULTICS'
+          ? value * 100
+          : value
         )
         .then((res) => {
           console.log(res);
@@ -594,7 +594,7 @@ export const InfoMain: FC = () => {
           setBlockchain("0");
         }} width={420} withClose p20>
           <H3 center modalTitle>
-            Ошибка вывода средств
+            Ошибка вывода средств 
           </H3>
           <Styled.Desc>С баланса личного кабинета не были выведены средства в размере:</Styled.Desc>
           <Styled.Desc bold style={{ marginBottom: "10px" }}>
