@@ -11,7 +11,10 @@ import * as FilterS from './components/Filter/S.el';
 import { Filter } from "./components/Filter/index";
 import { AppContext } from '../../context/HubContext';
 import { Balance } from "../../types/balance";
-import { Loading, NotItems } from "./components/Loading/Loading";
+import { Loading, NotItems, Spinner } from "./components/Loading/Loading";
+import formatRelativeWithOptions from 'date-fns/esm/fp/formatRelativeWithOptions/index.js';
+import { isObject } from 'highcharts';
+import { isTemplateSpan } from 'typescript';
 
 export const HistoryOperations = () => {
     const history = useHistory();
@@ -71,7 +74,8 @@ export const HistoryOperations = () => {
         };
     };
 
-    const [operations, setOperations] = useState<any[]>([]);
+    const [operations, setOperations] = useState<any[] | null>(null);
+    const [statusNew, setStatusNew] = useState<any>();
 
     /*    /// NA.
     Null,
@@ -126,8 +130,6 @@ export const HistoryOperations = () => {
         if (hubConnection) {
             setNewItems(true);
             const date = new Date();
-            console.log(nowMonth ? new Date(date.getFullYear(), date.getMonth(), 1, 0, 0) : new Date(2018, 5, 13, 10, 0, 0),
-            new Date())
             setLoading(true);
             hubConnection.invoke(
                 "GetBalanceLog", 
@@ -139,19 +141,31 @@ export const HistoryOperations = () => {
             )
               .then(res => {
                 setLoading(false);
-                console.log(res.collection, activeFilter);
+                console.log("res", res.collection);
                 if (allCurrency) {
-                   setOperations(res.collection);
+                   setOperations(items => res.collection.map((i: any) => {
+                       return {
+                         ...i,
+                         new: false
+                       };
+                   }));
                 } else {
                     if (balances) {
-                        setOperations(res.collection.filter((i: any) => Number(i.balanceSafeId) === balances[1].id));
+                        setOperations(res.collection.map((i: any) => {
+                            if (Number(i.balanceSafeId) === balances[1].id) {
+                                return {
+                                    ...i,
+                                    new: false
+                                };
+                            };
+                        }));
                     };
                 };
-                if (res.collection.length) {
+                if (res.collection.length > 0) {
                     setEmptyItems(false);
                 } else {
                     setEmptyItems(true);
-                }
+                };
               })
               .catch(err => {
                 console.log(err);
@@ -159,6 +173,15 @@ export const HistoryOperations = () => {
               });
         };
     }, [activeFilter, hubConnection, nowMonth, allCurrency]);
+
+    function changeNew() {
+        setOperations(items => items && items.map((i: any) => {
+            return {
+                ...i,
+                new: false 
+            };
+        }))
+    }
 
     function addMore() {
         if (hubConnection) {
@@ -169,17 +192,29 @@ export const HistoryOperations = () => {
                 getFilter(activeFilter), 
                 nowMonth ? new Date(date.getFullYear(), date.getMonth(), 1, 0, 0) : new Date(2013, 5, 13, 10, 0, 0),
                 new Date(), 
-                operations.length + 1, 5
+                operations && operations.length + 1, 5
             )
               .then(res => {
                 console.log("rees", res);
+                changeNew();
                 if (allCurrency) {
-                    setOperations((data: any) => [...data, ...res.collection]);
+                    setOperations((data: any) => [...data.map((i: any) => {
+                        return { ...i, new: false }
+                    }), ...res.collection.map((i: any) => {
+                        return { ...i, new: true }
+                    })]);
                 } else {
                     if (balances) {
-                        setOperations((data: any) => [...data, ...res.collection.filter((i: any) => Number(i.balanceSafeId) === balances[1].id)]);
+                        setOperations((data: any) => [...data.map((i: any) => {
+                            return { ...i, new: false }
+                        }), ...res.collection.map((i: any) => {
+                            if (Number(i.balanceSafeId) === balances[1].id) {
+                                return { ...i, new: true }
+                            }
+                        })]);
                     };
                 };
+                setStatusNew(setTimeout(() => changeNew(), 1000));
                 if (res.collection.length > 0) {
                     setNewItems(true);
                 } else {
@@ -212,12 +247,6 @@ export const HistoryOperations = () => {
         }
       }
 
-    if (loading) {
-        return (
-            <Loading />
-        )
-    };
-
     function getCurrency(id: number) {
         if (balances) {
             for (let i = 0; i < balances.length; i++) {
@@ -245,33 +274,41 @@ export const HistoryOperations = () => {
                     withCustomButtons 
                     withoutContainer
                     buttons={buttons}
-                />
+                /> 
             </Styled.FilterAllBlock>
-            {!emptyItems ? (
-                <>
-                    <Styled.Table none={not}>
-                        <Styled.TableItem head>
-                            <Styled.TableInnerItem head>Дата и время</Styled.TableInnerItem>
-                            <Styled.TableInnerItem head>Категория</Styled.TableInnerItem>
-                            <Styled.TableInnerItem head>Сумма</Styled.TableInnerItem>
-                        </Styled.TableItem>
-                        <Styled.TableMap>
-                            {operations && operations.map((item, idx) => (
-                                <Styled.TableItem item key={idx}>
-                                    <Styled.TableInnerItem item>{moment(item.operationDate).format("DD.MM.YYYY")} в {moment(item.operationDate).format("HH:MM")}</Styled.TableInnerItem>
-                                    <Styled.TableInnerItem item>{operation(item.operationKind)}</Styled.TableInnerItem>
-                                    <Styled.TableInnerItem item income={item.balanceDelta > 0}>
-                                        {item.balanceDelta > 0 && (<>{sign(item.balanceDelta)} </>)} {(item.balanceDelta).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {item.balanceSafeId && getCurrency(item.balanceSafeId)}
-                                    </Styled.TableInnerItem>
-                                </Styled.TableItem>
-                            ))}
-                        </Styled.TableMap>
-                    </Styled.Table>
-                    <Styled.Button onClick={addMore} newItems={newItems}>Показать ещё</Styled.Button>
-                </>
-            ) : (
-                <NotItems text="Не имеется элементов. Попробуйте поменять фильтр." />
-            )}
+            <Styled.Table none={not}>
+                <Styled.TableItem head>
+                    <Styled.TableInnerItem head>Дата и время</Styled.TableInnerItem>
+                    <Styled.TableInnerItem head>Категория</Styled.TableInnerItem>
+                    <Styled.TableInnerItem head>Сумма</Styled.TableInnerItem>
+                </Styled.TableItem>
+                {operations ? (
+                    <>
+                        {!emptyItems ? (
+                            <>
+                                <Styled.TableMap>
+                                    {operations && operations.map((item, idx) => (
+                                        <Styled.TableItem item key={idx} newItem={item.new}>
+                                            <Styled.TableInnerItem item>{moment(item.operationDate).format("DD.MM.YYYY")} в {moment(item.operationDate).format("HH:MM")}</Styled.TableInnerItem>
+                                            <Styled.TableInnerItem item>{operation(item.operationKind)}</Styled.TableInnerItem>
+                                            <Styled.TableInnerItem item income={item.balanceDelta > 0}>
+                                                {item.balanceDelta > 0 && (<>{sign(item.balanceDelta)} </>)} {(item.balanceDelta).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {item.balanceSafeId && getCurrency(item.balanceSafeId)}
+                                            </Styled.TableInnerItem>
+                                        </Styled.TableItem>
+                                    ))}
+                                </Styled.TableMap>
+                            </>
+                        ) : (
+                            <NotItems text="Не имеется элементов. Попробуйте поменять фильтр." />
+                        )}
+                    </>
+                ) : ( <Loading /> )}
+            </Styled.Table>
+          <Styled.Button onClick={addMore} newItems={operations && operations.length > 0 ? newItems : false}>
+                {operations && operations[operations.length - 1].new ? 
+                    <Spinner style={{ width: 25, height: 25, borderTop: "2px solid #fff", margin: "0 auto" }} /> 
+                    : "Показать ещё"}
+          </Styled.Button>
         </Container>
     )
 }    

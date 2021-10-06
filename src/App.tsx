@@ -162,7 +162,7 @@ const App: FC = () => {
   //     }
   //   }
   // }, [localStorage.getItem('i18nextLng')]);
-
+ 
   return (
     <div style={{ position: 'relative' }}>
       <ChartProvider>
