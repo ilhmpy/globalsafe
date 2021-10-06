@@ -11,4 +11,6 @@ export const routers = {
   p2pchangesAdvert: '/info/p2p-changes/advert',
   p2pchangesOwn: '/info/p2p-changes/own',
   p2pchangesSingleExchangeDetails: '/info/p2p-changes/:exchangeId',
+  p2pchangesSingleExchangeChat: '/info/p2p-changes/:exchangeId/chat',
+  p2pchangesSingleOrderDetails: '/info/p2p-changes/orders/:orderId',
 };

@@ -10,6 +10,8 @@ import { Text } from './Text';
 import { FilterButton } from './FilterButton';
 import { CopyIconButton } from './CopyIconButton';
 import { Radio } from './Radio';
+import { MessageCard } from './MessageCard';
+import { Space } from './Space';
 
 export {
   Chip,
@@ -29,4 +31,6 @@ export {
   FilterButton,
   CopyIconButton,
   Radio,
+  MessageCard,
+  Space
 };

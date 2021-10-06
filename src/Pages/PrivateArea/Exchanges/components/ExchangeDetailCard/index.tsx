@@ -12,14 +12,17 @@ import {
 import { Button } from '../../../../../components/Button/V2/Button';
 import { ExchangeSuccessModal } from '../modals/ExchangeSuccessModal';
 import { ExchangeRejectModal } from '../modals/ExchangeRejectModal';
+import { useHistory } from 'react-router';
+import { routers } from '../../../../../constantes/routers';
  
 export const ExchangeDetailCard: FC = () => {
+  const history = useHistory();
   const [feedbackValue, setFeedbackValue] = useState(5);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showRejectModal, setShowRejectModal] = useState(false);
   
   const handleClick = () => {
-    console.log("ExchangeDetailCard Click")
+    history.push(`/info/p2p-changes/${Date.now().toString()}/chat`);
   };
 
   return (

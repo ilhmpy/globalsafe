@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router';
 import alfa from '../../../../../assets/v2/svg/banks/alfa.svg';
 import alfa1 from '../../../../../assets/v2/svg/banks/alfa1.svg';
 import sber from '../../../../../assets/v2/svg/banks/sber.svg';
@@ -8,7 +9,12 @@ import { CurrencyPair } from '../modals/CurrencyPair';
 import * as S from './S.el';
 
 export const AdvertTable = () => {
+  const history = useHistory();
   const [selectedOption, setSelectedOption] = useState<string | null>('Все валюты предложения');
+
+  const handleNavigateTo = () => {
+    history.replace(`/info/p2p-changes/orders/${Date.now().toString()}`)
+  }
   return (
     <>
       {/* <CurrencyPair
@@ -42,7 +48,7 @@ export const AdvertTable = () => {
             <span>Рейтинг</span>
           </S.Cell>
         </S.Header>
-        <S.BodyItem>
+        <S.BodyItem onClick={handleNavigateTo}>
           <S.Cell data-label="Кол-во">5 000 000 CWD</S.Cell>
           <S.Cell data-label="Курс">0.90</S.Cell>
           <S.Cell data-label="На сумму">4 500 000 USD</S.Cell>
@@ -63,7 +69,7 @@ export const AdvertTable = () => {
           <S.Cell data-label="Время на обмен">20 м</S.Cell>
           <S.Cell data-label="Рейтинг">5.0 (378)</S.Cell>
         </S.BodyItem>
-        <S.BodyItem active>
+        <S.BodyItem active  onClick={handleNavigateTo}>
           <S.Cell data-label="Кол-во">1 000 000 GLOBAL</S.Cell>
           <S.Cell data-label="Курс">0.91</S.Cell>
           <S.Cell data-label="На сумму">910 000 EUR</S.Cell>
@@ -82,7 +88,7 @@ export const AdvertTable = () => {
           <S.Cell data-label="Рейтинг">5.0 (274)</S.Cell>
         </S.BodyItem>
 
-        <S.BodyItem>
+        <S.BodyItem  onClick={handleNavigateTo}>
           <S.Cell data-label="Кол-во">270 000 CWD</S.Cell>
           <S.Cell data-label="Курс">0.92</S.Cell>
           <S.Cell data-label="На сумму">248 400 USDT</S.Cell>
