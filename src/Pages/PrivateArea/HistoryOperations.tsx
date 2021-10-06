@@ -12,6 +12,9 @@ import { Filter } from "./components/Filter/index";
 import { AppContext } from '../../context/HubContext';
 import { Balance } from "../../types/balance";
 import { Loading, NotItems } from "./components/Loading/Loading";
+import formatRelativeWithOptions from 'date-fns/esm/fp/formatRelativeWithOptions/index.js';
+import { isObject } from 'highcharts';
+import { isTemplateSpan } from 'typescript';
 
 export const HistoryOperations = () => {
     const history = useHistory();
@@ -72,6 +75,7 @@ export const HistoryOperations = () => {
     };
 
     const [operations, setOperations] = useState<any[]>([]);
+    const [statusNew, setStatusNew] = useState<any>();
 
     /*    /// NA.
     Null,
@@ -126,8 +130,6 @@ export const HistoryOperations = () => {
         if (hubConnection) {
             setNewItems(true);
             const date = new Date();
-            console.log(nowMonth ? new Date(date.getFullYear(), date.getMonth(), 1, 0, 0) : new Date(2018, 5, 13, 10, 0, 0),
-            new Date())
             setLoading(true);
             hubConnection.invoke(
                 "GetBalanceLog", 
@@ -139,12 +141,23 @@ export const HistoryOperations = () => {
             )
               .then(res => {
                 setLoading(false);
-                console.log(res.collection, activeFilter);
                 if (allCurrency) {
-                   setOperations(res.collection);
+                   setOperations(items => res.collection.map((i: any) => {
+                       return {
+                         ...i,
+                         new: false
+                       };
+                   }));
                 } else {
                     if (balances) {
-                        setOperations(res.collection.filter((i: any) => Number(i.balanceSafeId) === balances[1].id));
+                        setOperations(res.collection.map((i: any) => {
+                            if (Number(i.balanceSafeId) === balances[1].id) {
+                                return {
+                                    ...i,
+                                    new: false
+                                };
+                            };
+                        }));
                     };
                 };
                 if (res.collection.length) {
@@ -160,6 +173,15 @@ export const HistoryOperations = () => {
         };
     }, [activeFilter, hubConnection, nowMonth, allCurrency]);
 
+    function changeNew() {
+        setOperations(items => items.map((i: any) => {
+            return {
+                ...i,
+                new: false 
+            };
+        }))
+    }
+
     function addMore() {
         if (hubConnection) {
             const date = new Date();
@@ -173,13 +195,25 @@ export const HistoryOperations = () => {
             )
               .then(res => {
                 console.log("rees", res);
+                changeNew();
                 if (allCurrency) {
-                    setOperations((data: any) => [...data, ...res.collection]);
+                    setOperations((data: any) => [...data.map((i: any) => {
+                        return { ...i, new: false }
+                    }), ...res.collection.map((i: any) => {
+                        return { ...i, new: true }
+                    })]);
                 } else {
                     if (balances) {
-                        setOperations((data: any) => [...data, ...res.collection.filter((i: any) => Number(i.balanceSafeId) === balances[1].id)]);
+                        setOperations((data: any) => [...data.map((i: any) => {
+                            return { ...i, new: false }
+                        }), ...res.collection.map((i: any) => {
+                            if (Number(i.balanceSafeId) === balances[1].id) {
+                                return { ...i, new: true }
+                            }
+                        })]);
                     };
                 };
+                setStatusNew(setTimeout(() => changeNew(), 3000));
                 if (res.collection.length > 0) {
                     setNewItems(true);
                 } else {
@@ -212,12 +246,6 @@ export const HistoryOperations = () => {
         }
       }
 
-    if (loading) {
-        return (
-            <Loading />
-        )
-    };
-
     function getCurrency(id: number) {
         if (balances) {
             for (let i = 0; i < balances.length; i++) {
@@ -245,33 +273,37 @@ export const HistoryOperations = () => {
                     withCustomButtons 
                     withoutContainer
                     buttons={buttons}
-                />
+                /> 
             </Styled.FilterAllBlock>
-            {!emptyItems ? (
-                <>
-                    <Styled.Table none={not}>
-                        <Styled.TableItem head>
-                            <Styled.TableInnerItem head>Дата и время</Styled.TableInnerItem>
-                            <Styled.TableInnerItem head>Категория</Styled.TableInnerItem>
-                            <Styled.TableInnerItem head>Сумма</Styled.TableInnerItem>
-                        </Styled.TableItem>
-                        <Styled.TableMap>
-                            {operations && operations.map((item, idx) => (
-                                <Styled.TableItem item key={idx}>
-                                    <Styled.TableInnerItem item>{moment(item.operationDate).format("DD.MM.YYYY")} в {moment(item.operationDate).format("HH:MM")}</Styled.TableInnerItem>
-                                    <Styled.TableInnerItem item>{operation(item.operationKind)}</Styled.TableInnerItem>
-                                    <Styled.TableInnerItem item income={item.balanceDelta > 0}>
-                                        {item.balanceDelta > 0 && (<>{sign(item.balanceDelta)} </>)} {(item.balanceDelta).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {item.balanceSafeId && getCurrency(item.balanceSafeId)}
-                                    </Styled.TableInnerItem>
-                                </Styled.TableItem>
-                            ))}
-                        </Styled.TableMap>
-                    </Styled.Table>
-                    <Styled.Button onClick={addMore} newItems={newItems}>Показать ещё</Styled.Button>
-                </>
-            ) : (
-                <NotItems text="Не имеется элементов. Попробуйте поменять фильтр." />
-            )}
+            <Styled.Table none={not}>
+                <Styled.TableItem head>
+                    <Styled.TableInnerItem head>Дата и время</Styled.TableInnerItem>
+                    <Styled.TableInnerItem head>Категория</Styled.TableInnerItem>
+                    <Styled.TableInnerItem head>Сумма</Styled.TableInnerItem>
+                </Styled.TableItem>
+                {operations.length > 0 ? (
+                    <>
+                        {!emptyItems ? (
+                            <>
+                                <Styled.TableMap>
+                                    {operations && operations.map((item, idx) => (
+                                        <Styled.TableItem item key={idx} newItem={item.new}>
+                                            <Styled.TableInnerItem item>{moment(item.operationDate).format("DD.MM.YYYY")} в {moment(item.operationDate).format("HH:MM")}</Styled.TableInnerItem>
+                                            <Styled.TableInnerItem item>{operation(item.operationKind)}</Styled.TableInnerItem>
+                                            <Styled.TableInnerItem item income={item.balanceDelta > 0}>
+                                                {item.balanceDelta > 0 && (<>{sign(item.balanceDelta)} </>)} {(item.balanceDelta).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {item.balanceSafeId && getCurrency(item.balanceSafeId)}
+                                            </Styled.TableInnerItem>
+                                        </Styled.TableItem>
+                                    ))}
+                                </Styled.TableMap>
+                            </>
+                        ) : (
+                            <NotItems text="Не имеется элементов. Попробуйте поменять фильтр." />
+                        )}
+                    </>
+                ) : ( <Loading /> )}
+            </Styled.Table>
+          <Styled.Button onClick={addMore} newItems={operations.length > 0 ? newItems : false}>Показать ещё</Styled.Button>
         </Container>
     )
 }    

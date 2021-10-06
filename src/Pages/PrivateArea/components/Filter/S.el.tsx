@@ -27,6 +27,7 @@ export const Button = styled.button<{ active?: boolean }>`
   border-radius: 2px;
   user-select: none;
   background: ${(props) => (props.active ? '#EBEBF2' : 'transparent')};
+  transition: 0.5s;
 `;
 
 export const Buttons = styled.div`

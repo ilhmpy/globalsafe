@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro';
+import styled, { keyframes } from 'styled-components/macro';
 
 export const FilterDivision = styled.div`
     width: 129px;
@@ -43,6 +43,7 @@ type TableProps = {
    head?: boolean; 
    item?: boolean;
    income?: boolean;
+   newItem?: boolean;
 }
 
 export const TableItem = styled.div<TableProps>`
@@ -68,7 +69,16 @@ export const TableItem = styled.div<TableProps>`
                 &:last-child {
                     border-bottom: 0px;
                 }
-          `;
+          `; 
+        };
+    }}
+
+    ${({ newItem }) => {
+        if (newItem) {
+            return `
+                opacity: 10%;
+                transition: 3s;
+            `;
         };
     }}
 `; 
