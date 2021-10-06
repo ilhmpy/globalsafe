@@ -28,7 +28,7 @@ export const Advert = () => {
               <div>Мои обмены</div>
             </TabNavItem>
 
-            <TabNavItem to={routers.deposits} exact>
+            <TabNavItem to={routers.certificates} exact>
               <div>Сертификаты</div>
             </TabNavItem>
           </TabsBlock>

@@ -45,6 +45,7 @@ import { HistoryOperations } from './HistoryOperations';
 import { OwnExchanges } from './Exchanges/OwnExchanges';
 import { SingleExchangeDetails } from './Exchanges/SingleExchangeDetails';
 import { OrderToSell } from './Exchanges/OrderToSell';
+import { Certificates } from './Certificates/Certificates';
 
 export const InfoMain: FC = () => {
   const { t } = useTranslation();
@@ -730,6 +731,7 @@ export const InfoMain: FC = () => {
           <Route path={routers.settingsNewPayMethod} component={NewPayMethod} exact />
           <Route path={routers.settingsViewPayMethod} component={ViewPayMethod} exact />
           <Route path={routers.operations} component={HistoryOperations} exact />
+          <Route path={routers.certificates} component={Certificates} exact />
         </Switch>
         <CSSTransition in={depositSuccess} timeout={0} classNames="modal" unmountOnExit>
           <Modal width={540} onClose={() => setDepositSuccess(false)}>

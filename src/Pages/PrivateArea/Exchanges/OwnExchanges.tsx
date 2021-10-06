@@ -31,7 +31,7 @@ export const OwnExchanges = () => {
               <div>Мои обмены</div>
             </TabNavItem>
 
-            <TabNavItem to={routers.deposits} exact>
+            <TabNavItem to={routers.certificates} exact>
               <div>Сертификаты</div>
             </TabNavItem>
           </TabsBlock>
@@ -41,18 +41,18 @@ export const OwnExchanges = () => {
         </S.SubHeader>
 
         <S.Filters>
-            <FilterButton 
-                active={activeFilter === 'active'}
-                onClick={() => setActiveFilter('active')}
-            >
-                Активные
-            </FilterButton>
-            <FilterButton 
-                active={activeFilter === 'archived'}
-                onClick={() => setActiveFilter('archived')}
-            >
-              Архив
-            </FilterButton>
+          <FilterButton
+            active={activeFilter === 'active'}
+            onClick={() => setActiveFilter('active')}
+          >
+            Активные
+          </FilterButton>
+          <FilterButton
+            active={activeFilter === 'archived'}
+            onClick={() => setActiveFilter('archived')}
+          >
+            Архив
+          </FilterButton>
           <S.Line />
           <FilterButton active>Все валюты</FilterButton>
           <S.Line />
@@ -61,14 +61,8 @@ export const OwnExchanges = () => {
           <FilterButton active>Все Статусы</FilterButton>
         </S.Filters>
 
-        {
-            activeFilter === 'active' &&
-            <OwnActiveExchangesTable />
-        }   
-        {
-            activeFilter === 'archived' &&
-            <OwnArchivedExchangesTable />
-        }
+        {activeFilter === 'active' && <OwnActiveExchangesTable />}
+        {activeFilter === 'archived' && <OwnArchivedExchangesTable />}
         {/* <S.ButtonWrap>
           <Button>Показать еще</Button>
         </S.ButtonWrap> */}
