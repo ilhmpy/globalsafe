@@ -1,5 +1,5 @@
 import React, { FC, ReactElement, ReactNode, ChangeEvent } from 'react';
-import { LabelContainer, CheckboxInput, CheckboxIcon } from './S.el';
+import { LabelContainer, CheckboxInput, CheckboxIcon, CheckboxLabel } from './S.el';
 
 type Props = {
   checked?: boolean;
@@ -9,15 +9,17 @@ type Props = {
   name?: string;
   children?: ReactNode;
   dis?: boolean;
+  labelBold?: boolean;
 };
 
 export const Checkbox: FC<Props> = (props: Props): ReactElement => {
-  const { checked, onChange, label, name, children, dis } = props;
+  const { checked, onChange, label, name, children, dis, labelBold = false } = props;
   return (
     <LabelContainer>
       <CheckboxInput name={name} type="checkbox" checked={checked} onChange={onChange} />
       <CheckboxIcon dis={dis} />
       {children}
+      {label && <CheckboxLabel checked={checked} labelBold={labelBold}>{label}</CheckboxLabel>}
     </LabelContainer>
   );
 };

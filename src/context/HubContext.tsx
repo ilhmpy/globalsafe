@@ -1,6 +1,7 @@
 import * as signalR from '@microsoft/signalr';
 import React, { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 import { API_URL } from '../constantes/api';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { BalanceList } from '../types/balance';
@@ -18,9 +19,10 @@ type Context = {
   isFailed: boolean | null;
   chosenMethod: any;
   setChosenMethod: (state: any) => void;
+  loan: any[] | null;
 };
 
-export const AppContext = React.createContext<Context>({
+export const AppContext = React.createContext<Context>({ 
   hubConnection: null,
   user: null,
   logOut: () => undefined,
@@ -32,9 +34,11 @@ export const AppContext = React.createContext<Context>({
   isFailed: null,
   chosenMethod: {},
   setChosenMethod: () => undefined,
+  loan: null,
 });
 
 export const HubProvider: FC = ({ children }: any) => {
+  const history = useHistory();
   const [hubConnection, setHubConnection] = useState<Nulable<signalR.HubConnection>>(null);
   const [user, setUser] = useState<null | string | false>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -44,6 +48,7 @@ export const HubProvider: FC = ({ children }: any) => {
   const [balanceList, setBalanceList] = useState<BalanceList[] | null>(null);
   const [isFailed, setIsFailed] = useState<boolean | null>(null);
   const [chosenMethod, setChosenMethod] = useState<any>({});
+  const [loan, setLoan] = useState<any[] | null>(null);
   const { i18n } = useTranslation();
 
   useEffect(() => {
@@ -83,7 +88,6 @@ export const HubProvider: FC = ({ children }: any) => {
       console.log('BalanceUpdate', data);
       if (balanceList) {
         const idx = balanceList.findIndex((item: any) => item.safeId === data.safeId);
-
         if (idx !== -1) {
           setBalanceList([...balanceList.slice(0, idx), data, ...balanceList.slice(idx + 1)]);
         } else {
@@ -113,8 +117,7 @@ export const HubProvider: FC = ({ children }: any) => {
           if (res.balances.length) {
             const newArr = res.balances.filter((item: any) => item.balanceKind === 1);
             setBalance(newArr[0].volume);
-
-            console.log(res.balances);
+            setLoan(res.loanBalances);
 
             if (!localStorage.getItem('i18nextLng')) {
               i18n.changeLanguage(res.languageCode === 1 ? 'ru' : 'en');
@@ -124,7 +127,6 @@ export const HubProvider: FC = ({ children }: any) => {
               volume: item.volume,
             }));
             setBalanceList(res.balances);
-            console.log(res.balances);
           }
           if (res.roles.length && res.roles[0].name === 'administrator') {
             setIsAdmin(true);
@@ -141,7 +143,10 @@ export const HubProvider: FC = ({ children }: any) => {
     }
     return function cleanup() {
       if (hubConnection !== null) {
-        hubConnection.stop();
+        hubConnection
+          .stop()
+          .then(() => undefined)
+          .catch((e) => console.log(e));
       }
     };
   }, [hubConnection, myToken]);
@@ -150,6 +155,7 @@ export const HubProvider: FC = ({ children }: any) => {
     setMyToken(null);
     setUser(null);
     setIsAdmin(false);
+    // history?.replace('/');
   };
 
   const login = (token: string) => {
@@ -170,7 +176,8 @@ export const HubProvider: FC = ({ children }: any) => {
         isFailed,
         chosenMethod,
         setChosenMethod,
-      }}
+        loan,
+      }} 
     >
       {children}
     </AppContext.Provider>
