@@ -31,6 +31,8 @@ export const Row = styled.div`
   align-items: center;
   margin: 0px 20px;
   border-bottom: 1px solid #ebebf2;
+  cursor: pointer;
+
   &:last-child {
     border-bottom: none;
   }
@@ -76,6 +78,7 @@ const header = css`
 `;
 
 export const Header = styled(Row)`
+  cursor: auto;
   ${header};
 `;
 
