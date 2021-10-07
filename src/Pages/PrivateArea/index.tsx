@@ -24,14 +24,15 @@ import { AppContext } from '../../context/HubContext';
 
 export const InfoMain: FC = () => {
   const appContext = useContext(AppContext);
-  console.log('appContext', appContext);
-  const { balance, balanceList } = appContext;
+  const { user } = appContext;
 
-  //   if (!balance && !balanceList) {
-  //     console.log('/info');
+  if (user === null) {
+    return null;
+  }
 
-  //     return <Redirect to="/info" />;
-  //   }
+  if (user === false) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <>
