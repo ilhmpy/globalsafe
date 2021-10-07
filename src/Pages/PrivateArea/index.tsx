@@ -119,6 +119,8 @@ export const InfoMain: FC = () => {
       .map((b) => Balance[b.balanceKind]);
   }, [balanceList]);
 
+  console.log(balanceList);
+
   const handleDepositModal = () => {
     setAddDeposit(false);
     setDepositSuccess(false);

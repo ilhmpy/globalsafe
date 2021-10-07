@@ -13,7 +13,7 @@ import PageNotFound from './Pages/Tech/PageNotFound';
 import TechWorks from './Pages/Tech/TechWorks';
 import { HistoryOperations } from './Pages/PrivateArea/HistoryOperations';
 import { routers } from './constantes/routers';
-declare global {
+declare global {  
   interface Window {
     OneSignal: any;
   }
