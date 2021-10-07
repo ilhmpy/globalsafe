@@ -119,8 +119,6 @@ export const InfoMain: FC = () => {
       .map((b) => Balance[b.balanceKind]);
   }, [balanceList]);
 
-  console.log(balanceList);
-
   const handleDepositModal = () => {
     setAddDeposit(false);
     setDepositSuccess(false);
@@ -327,7 +325,7 @@ export const InfoMain: FC = () => {
 
   const changeBalance = () => {
     const value = Number(ed.replace(/\s/g, ""));
-    if (hubConnection && currency.length > 0 && ed.length > 0 && value > 0) {
+    if (hubConnection && currency.length > 0) {
       const newWindow = window.open();
       console.log("change", value);
       hubConnection
@@ -353,13 +351,7 @@ export const InfoMain: FC = () => {
 
   const outPutBalance = () => {
     const value = Number(outPutEd.replace(/\s/g, ""));
-    if (
-      hubConnection &&
-      outPutCurrency.length > 0 &&
-      outPutEd.length > 0 &&
-      value > 0 &&
-      value >= Number(blockchain) + Number(service) + 1
-    ) {
+    if (hubConnection && outPutCurrency.length > 0) {
       setWithdrawValueLoad(true);
       console.log("withdraw", value)
       hubConnection
@@ -375,13 +367,13 @@ export const InfoMain: FC = () => {
           : value
         )
         .then((res) => {
-          console.log(res);
+          console.log("WORK", res);
           setWithdrawValueLoad(false);
           setOutPutError(false);
           setWithDrawModal(false);
         })
         .catch((err: Error) => {
-          console.log(err);
+          console.log("ERRO", err);
           setWithdrawValueLoad(false);
           setOutPutError(true);
           setWithDrawModal(false);
@@ -420,6 +412,19 @@ export const InfoMain: FC = () => {
     history.push('/');
     // window.location.reload();
   };
+
+  function getCurrency() {
+    if (blockchain != "0") {
+      if (outPutEd.length < 1 && outPutCurrency.length < 1) {
+        return "CWD";
+      } else {
+        return outPutCurrency;
+      };
+    } else {
+      return "";
+    };
+  };
+
   return (
     <>
       {withdrawValueLoad && (
@@ -460,14 +465,10 @@ export const InfoMain: FC = () => {
               })}
               onChange={(e) => {
                 const validValue = e.currentTarget.value.replace(/[^0-9]/gi, '');
-                if (validValue[0] != "0") {
-                  setEd((Number(validValue).toLocaleString("ru-RU", { maximumFractionDigits: 2 })));
-                } else {
-                  setEd("");
-                };
+                setEd((Number(validValue).toLocaleString("ru-RU", { maximumFractionDigits: 2 })));
                }}
             />
-            <PAButton onClick={changeBalance}>Пополнить баланс</PAButton>
+            <PAButton onClick={changeBalance} disabled={Number(ed) < 1 || currency.length < 1}>Пополнить баланс</PAButton>
           </div>
         </Modal>
       </CSSTransition>
@@ -536,31 +537,29 @@ export const InfoMain: FC = () => {
               onKeyDown={((e) => {
                 if (e.keyCode === 8 && outPutEd.length === 1) {
                   setOutPutEd("");
+                  setBlockchain("0");
+                  setService("0");
                 };
               })}
               onChange={(e) => {
                 const validValue = e.currentTarget.value.replace(/[^0-9]/gi, '');
-                if (validValue[0] != "0") {
-                  setOutPutEd((Number(validValue).toLocaleString("ru-RU", { maximumFractionDigits: 2 })));
-                  getCommisions(validValue);
-                } else {
-                  setOutPutEd("");
-                };
+                setOutPutEd((Number(validValue).toLocaleString("ru-RU", { maximumFractionDigits: 2 })));
+                getCommisions(validValue);
               }}
             />
             <Styled.Commision marginT={20} marginB={10}>
               Комиссия блокчейна:{' '}
               <span>
-                {blockchain} {blockchain.length != '0' ? outPutCurrency : ''}
+                {blockchain} {getCurrency()}
               </span>
             </Styled.Commision>
             <Styled.Commision marginT={10} marginB={20}>
               Комиcсия сервиса:{' '}
               <span>
-                {service} {service.length != '0' ? outPutCurrency : ''}
+                {service} {getCurrency()}
               </span>
             </Styled.Commision>
-            <PAButton onClick={outPutBalance}>Вывести средства</PAButton>
+            <PAButton onClick={outPutBalance} disabled={Number(outPutEd) < 1 || outPutCurrency.length < 1}>Вывести средства</PAButton>
           </div>
         </Modal>
       </CSSTransition>
@@ -579,7 +578,7 @@ export const InfoMain: FC = () => {
             {outPutEd} {outPutCurrency}
           </Styled.Desc>
           <Styled.Desc mLess>
-            К выводу: {Number(outPutEd.replace(/\s/g, "")) ? Number(outPutEd.replace(/\s/g, "")) - (Number(blockchain) + Number(service)) : 0}
+            К выводу: {Number(outPutEd) + Number(blockchain) + Number(service)}
           </Styled.Desc>
           <Styled.Desc mLess>Комиссия блокчейн: {blockchain}</Styled.Desc>
           <Styled.Desc mLess>Комиссия сервиса: {service}</Styled.Desc>
@@ -602,7 +601,7 @@ export const InfoMain: FC = () => {
             {outPutEd} {outPutCurrency}
           </Styled.Desc>
           <Styled.Desc mLess>
-            К выводу: {Number(outPutEd.replace(/\s/g, "")) ? Number(outPutEd.replace(/\s/g, "")) - (Number(blockchain) + Number(service)) : 0}
+            К выводу: {Number(outPutEd) + Number(blockchain) + Number(service)}
           </Styled.Desc>
           <Styled.Desc mLess>Комиссия блокчейн: {blockchain}</Styled.Desc>
           <Styled.Desc mLess style={{ marginBottom: "0px" }}>Комиссия сервиса: {service}</Styled.Desc>
