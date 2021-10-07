@@ -12,11 +12,12 @@ import { useSpring } from 'react-spring';
 
 type Props = {
   children: any;
+  active: number;
+  setActive: (active: number) => void;
 };
 
-export const Tabs: FC<Props> = ({ children }: Props) => {
+export const Tabs: FC<Props> = ({ children, active, setActive }: Props) => {
   const tabsRef = children?.map((child: any) => useRef(child));
-  const [active, setActive] = useState(0);
   const [currentTab, setCurrentTab] = useState({ width: 0, left: 0 });
 
   useEffect(() => {
