@@ -56,8 +56,8 @@ export const Dropdown: FC<SelectProps> = ({
     <div>
       <Styled.DropDownContainer ref={ref}>
         <Styled.DropDownHeader tabIndex={0} onClick={toggling} onKeyDown={onKeyDown}>
-          {selectedOption || ''}
-          {label && <span data-label={label} />}
+          {selectedOption ? selectedOption : label ? label : ''}
+
           <Styled.Arrow rotat={true}>
             <Icon />
           </Styled.Arrow>
