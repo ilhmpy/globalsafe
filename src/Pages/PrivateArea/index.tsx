@@ -44,6 +44,7 @@ import { Advert } from './Exchanges/Advert';
 import { HistoryOperations } from './HistoryOperations';
 import { OwnExchanges } from './Exchanges/OwnExchanges';
 import { SingleExchangeDetails } from './Exchanges/SingleExchangeDetails';
+import { AnyPtrRecord } from 'dns';
 
 export const InfoMain: FC = () => {
   const { t } = useTranslation();
@@ -71,6 +72,7 @@ export const InfoMain: FC = () => {
   const balance = appContext.balance;
   const hubConnection = appContext.hubConnection;
   const balanceList = appContext.balanceList;
+  const loan = appContext.loan;
   const logOut = appContext.logOut;
   const inputRef = useRef<any>(null);
   const history = useHistory();
@@ -234,29 +236,34 @@ export const InfoMain: FC = () => {
       ? balanseType[0].volume >= depositSelect?.minAmount / 100000 ||
         balanseType[0].volume >= depositSelect?.price
       : false;
-
   const blackList = [0, 1, 9, 10, 11];
+  const lockeds: any[] = [];
+  const lockedBalances = loan && loan.map((item: any) => {
+    let volume = 0;
+    for (let i = 0; i < loan.length; i++) {
+      if (item.balanceKind == loan[i].balanceKind) {
+        volume += loan[i].loanValue;
+      };
+    };
+    if (!lockeds.some((i: any) => i.balanceKind == item.balanceKind)) {
+      lockeds.push({ volume, balanceKind: item.balanceKind, locked: true }); 
+    };
+  });
+  console.log(lockeds);
   const balanceChips = balanceList
     ?.filter((item) => !blackList.includes(item.balanceKind))
     .sort((a, b) => a.balanceKind - b.balanceKind)
     .map((obj) =>
       obj.balanceKind === 43
-        ? { ...obj, volume: obj.volume > 1 ? obj.volume / 10000 : obj.volume }
+        ? { ...obj, volume: obj.volume > 1 ? obj.volume / 10000 : obj.volume, locked: false }
         : obj.balanceKind === 59
-        ? { ...obj, volume: obj.volume > 1 ? obj.volume / 100 : obj.volume }
+        ? { ...obj, volume: obj.volume > 1 ? obj.volume / 100 : obj.volume, locked: false }
         : obj
     );
-
-  // if (user === null) {
-  //   return null;
-  // }
 
   const balanceFuture =
     depositSelect && [9, 10, 11].includes(depositSelect.priceKind) && depositSelect.priceKind !== 1;
 
-  // if (user === false) {
-  //   return <Redirect to="/" />;
-  // }
   const copy = (text: string) => {
     createNotify({
       text: t('copy.text'),
@@ -611,14 +618,6 @@ export const InfoMain: FC = () => {
         </Modal>
       </CSSTransition>
 
-      <TokenModal
-        block={toTokenModal}
-        setBlock={setToTokenModal}
-        setToTranslate={setCountToTranslate}
-        onButton={() => {
-          return;
-        }}
-      />
       <ConvertingModal
         open={openConverting}
         setOpen={setOpenConverting}
@@ -704,12 +703,9 @@ export const InfoMain: FC = () => {
         </DepositsPanelContainer>
 
         <Switch>
-          {/* <Route path="/info" component={Info} exact /> */}
-          {/* <Route path="/info/deposits" component={InfoDeposits} exact /> */}
           <Route path={routers.deposits} component={Deposits} exact />
           <Route path={routers.depositsProgram} component={DepositProgram} exact />
           <Route path={routers.depositsOpen} component={DepositOpen} exact />
-          {/* <Route path="/info/balance" component={InfoBalance} exact /> */}
           <Route path="/info/deposits/:slug" component={OnePage} exact />
           <Route path={routers.p2pchanges} component={Advert} exact />
           <Route path={routers.p2pchangesOwn} component={OwnExchanges} exact />

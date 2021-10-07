@@ -18,6 +18,7 @@ type Context = {
   isFailed: boolean | null;
   chosenMethod: any;
   setChosenMethod: (state: any) => void;
+  loan: any[] | null;
 };
 
 export const AppContext = React.createContext<Context>({
@@ -32,6 +33,7 @@ export const AppContext = React.createContext<Context>({
   isFailed: null,
   chosenMethod: {},
   setChosenMethod: () => undefined,
+  loan: null
 });
 
 export const HubProvider: FC = ({ children }: any) => {
@@ -44,6 +46,7 @@ export const HubProvider: FC = ({ children }: any) => {
   const [balanceList, setBalanceList] = useState<BalanceList[] | null>(null);
   const [isFailed, setIsFailed] = useState<boolean | null>(null);
   const [chosenMethod, setChosenMethod] = useState<any>({});
+  const [loan, setLoan] = useState<any[] | null>(null);
   const { i18n } = useTranslation();
 
   useEffect(() => {
@@ -113,6 +116,7 @@ export const HubProvider: FC = ({ children }: any) => {
           if (res.balances.length) {
             const newArr = res.balances.filter((item: any) => item.balanceKind === 1);
             setBalance(newArr[0].volume);
+            setLoan(res.loanBalances);
 
             console.log(res.balances);
 
@@ -170,6 +174,7 @@ export const HubProvider: FC = ({ children }: any) => {
         isFailed,
         chosenMethod,
         setChosenMethod,
+        loan
       }}
     >
       {children}
