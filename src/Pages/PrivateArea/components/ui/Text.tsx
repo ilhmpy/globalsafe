@@ -9,6 +9,7 @@ type Props = {
   unone?: boolean;
   grey?: boolean;
   black?: boolean;
+  error?: boolean;
 };
 
 export const Text = styled.p<Props>`
@@ -17,5 +18,5 @@ export const Text = styled.p<Props>`
   line-height: ${(props) => (props.lH ? props.lH : 16)}px;
   margin-bottom: ${(props) => (props.mB ? props.mB : 0)}px;
   user-select: ${(props) => (props.unone ? 'none' : 'text')};
-  color: ${props => props.black ? props.theme.black : 'inherit'};
+  color: ${(props) => (props.black ? props.theme.black : props.error ? '#FF4A31' : '#000')};
 `;

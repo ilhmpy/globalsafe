@@ -17,4 +17,9 @@ export const PAButton = styled.button`
    outline: none;
    border: 0;
    cursor: pointer;
+
+   &:disabled {
+      opacity: 55%;
+      cursor: not-allowed;
+   }
 `;

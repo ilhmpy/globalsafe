@@ -15,6 +15,7 @@ export const Advert = () => {
       <Container>
         <Heading
           onClick={() => history.push(routers.orderCreate)}
+          // onClick={() => history.push(routers.orderCreate)}
           title="P2P обмены"
           btnText="Опубликовать ордер"
         />

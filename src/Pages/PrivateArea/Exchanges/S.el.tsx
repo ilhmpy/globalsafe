@@ -1,5 +1,5 @@
 import styled from 'styled-components/macro';
-import { FilterButton } from '../components/ui';
+import { FilterButton as BaseFilterButton } from '../components/ui';
 
 export const SubHeader = styled.div`
   display: flex;
@@ -11,7 +11,6 @@ export const SubHeader = styled.div`
 export const Filters = styled.div`
   display: flex;
   margin-bottom: 20px;
-  margin-bottom: 10px;
 `;
 
 export const Line = styled.span`
@@ -32,3 +31,8 @@ export const Container = styled.div`
 export const TitleContainer = styled.div`
   margin-bottom: 20px;
 `;
+
+export const FilterButton = styled(BaseFilterButton)`
+  margin: 0 10px 0 0;
+`;
+

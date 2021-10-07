@@ -31,7 +31,7 @@ export const DepositsPrograms = () => {
        lang,
        true,
        0,
-       20,
+       100,
       )
         .then((res) => {
           console.log("res", res);
@@ -39,10 +39,9 @@ export const DepositsPrograms = () => {
         })  
         .catch((err) => console.log(err));
     }
-  }, [hubConnection]);
+  }, [hubConnection, lang]);
 
   function toDeposits(id: string) {
-    console.log(id)
     const token = localStorage.getItem("token");
     if (token && user) {
       history.push(`/info/deposits/new-deposit/${id}`);
