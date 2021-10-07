@@ -15,6 +15,9 @@ import { routers } from '../../constantes/routers';
 import { HeaderBar } from "./HeaderBar";
 import { DepositProgram } from "./Deposits/DepositProgram";
 import { DepositOpen  } from "./Deposits/DepositOpen";
+import { OrderToSell } from './Exchanges/OrderToSell';
+import { Certificates } from './Certificates/Certificates';
+import { OrderCreate } from './Orders/OrderCreate';
 
 export const InfoMain: FC = () => {
   return (
@@ -33,6 +36,9 @@ export const InfoMain: FC = () => {
             <Route path={routers.settingsNewPayMethod} component={NewPayMethod} exact />
             <Route path={routers.settingsViewPayMethod} component={ViewPayMethod} exact />
             <Route path={routers.operations} component={HistoryOperations} exact />
+            <Route path={routers.certificates} component={Certificates} exact />
+            <Route path={routers.p2pchangesOrderToSell} component={OrderToSell} exact />
+            <Route path={routers.p2pchangesOwn} component={OwnExchanges} exact />
           </Switch>
           <Footer />
       </Styled.Page>
