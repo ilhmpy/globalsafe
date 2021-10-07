@@ -14,7 +14,7 @@ type Props = {
   children: any;
 };
 
-const TabSystem: FC<Props> = ({ children }: Props) => {
+export const Tabs: FC<Props> = ({ children }: Props) => {
   const tabsRef = children?.map((child: any) => useRef(child));
 
   const [currentTab, setCurrentTab] = useState({ width: 0, left: 0 });
@@ -49,9 +49,9 @@ const TabSystem: FC<Props> = ({ children }: Props) => {
   );
 };
 
-export default () => (
-  <TabSystem>
-    <div>Tab 1</div>
-    <div>Tab 2</div>
-  </TabSystem>
-);
+// export default () => (
+//   <TabSystem>
+//     <div>Tab 1</div>
+//     <div>Tab 2</div>
+//   </TabSystem>
+// );
