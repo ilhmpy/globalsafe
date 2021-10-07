@@ -34,5 +34,5 @@ export {
   TextBlock,
   Radio,
   MessageCard,
-  Space
+  Space,
 };
