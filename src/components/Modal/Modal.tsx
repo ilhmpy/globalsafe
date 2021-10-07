@@ -15,6 +15,8 @@ type ModalProps = {
   lottery?: boolean;
   withClose?: boolean;
   withoutClose?: boolean;
+  ptl?: boolean;
+  p20?: boolean;
 };
 
 export const Modal: React.FC<ModalProps> = ({
@@ -29,6 +31,8 @@ export const Modal: React.FC<ModalProps> = ({
   lottery,
   withClose,
   withoutClose,
+  ptl,
+  p20
 }: ModalProps) => {
   const handleContainerClick = (e: React.MouseEvent) => {
     if (e.currentTarget == e.target) {
@@ -46,7 +50,7 @@ export const Modal: React.FC<ModalProps> = ({
     <Portal>
       <ModalContainer zIndex={zIndex} style={style} className="bbg" lottery={lottery}>
         <Center styles={styles} onClick={handleContainerClick} lottery={lottery}>
-          <ModalComponent width={width} mobMarg={mobMarg} paddingTop={paddingTop}>
+          <ModalComponent width={width} mobMarg={mobMarg} paddingTop={paddingTop} paddingsTopLess={ptl} p20={p20}>
               {withClose && (<span className="close"><Times onClick={handleContainerClick} /></span>)}
               {children}
           </ModalComponent>
@@ -93,7 +97,7 @@ const Center = styled.div<{ styles?: string; lottery?: boolean }>`
     }
   }}
 `;
-
+ 
 const ModalContainer = styled.div<{ zIndex: string; lottery?: boolean }>`
   position: fixed;
   top: 0;
@@ -104,7 +108,7 @@ const ModalContainer = styled.div<{ zIndex: string; lottery?: boolean }>`
   display: block;
   transition: 0.3s;
   z-index: ${(props) => props.zIndex};
-  overflow: auto;
+  overflow: auto; 
   @media (max-width: 576px) {
     padding: 20px;
   }
@@ -116,6 +120,8 @@ const ModalComponent = styled.div<{
   paddingTop?: number;
   styles?: string;
   lottery?: boolean;
+  paddingsTopLess?: boolean;
+  p20?: boolean;
 }>`
   display: flex;
   flex-direction: column;
@@ -134,6 +140,20 @@ const ModalComponent = styled.div<{
     if (paddingTop) {
       return `
         padding-top: ${paddingTop}px;
+      `;
+    }
+  }}
+
+  ${({ paddingsTopLess, p20 }) => {
+    if (paddingsTopLess) {
+      return `
+        padding-top: 20px;
+        padding-bottom: 20px;
+      `;
+    };
+    if (p20) {
+      return `
+        padding: 20px;
       `;
     }
   }}
@@ -162,9 +182,9 @@ const ModalComponent = styled.div<{
     }
   }
 
-  & > span > svg > path {
+  .close > svg > path {
     fill: #000;
-  }
+  } 
 
   ${({ styles }) => {
     if (styles) {

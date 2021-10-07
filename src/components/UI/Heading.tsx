@@ -55,7 +55,7 @@ export const H2 = styled.h2<{ center?: boolean; mb?: boolean; mt?: boolean; }>`
 `;
 
 
-export const H3 = styled.h3<{ center?: boolean; }>`
+export const H3 = styled.h3<{ center?: boolean; modalTitle?: boolean; }>`
   font-weight: 700;
   font-size: 24px;
   line-height: 28px;
@@ -67,6 +67,15 @@ export const H3 = styled.h3<{ center?: boolean; }>`
         text-align: center;
         margin-top: 32px;
         margin-bottom: 32px;
+      `;
+    };
+  }}
+
+  ${({ modalTitle }) => {
+    if (modalTitle) {
+      return `
+          margin-top: 20px;
+          margin-bottom: 40px;
       `;
     };
   }}

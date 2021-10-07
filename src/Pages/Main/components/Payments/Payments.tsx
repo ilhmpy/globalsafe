@@ -178,7 +178,7 @@ export const Payments: FC = () => {
     <>
       {statsDeposit.length ? (
       <>
-        <Container page pNone>
+        <Container page pNone mtNone>
             <H2 center>{t('payments.currPay')}</H2>
             <WhiteBox>
               <WhiteIntf>

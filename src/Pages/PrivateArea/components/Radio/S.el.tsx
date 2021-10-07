@@ -3,7 +3,7 @@ import styled from 'styled-components/macro';
 export const CheckboxIcon = styled.span<{ dis?: boolean }>`
   background: transparent;
   border: 1px solid #000;
-  border-radius: 3px;
+  border-radius: 50%;
   display: block;
   height: 14px;
   width: 14px;
@@ -21,16 +21,15 @@ export const CheckboxIcon = styled.span<{ dis?: boolean }>`
     }
   }}
   &:after {
-    border-color: transparent;
-    border-style: solid;
-    border-width: 0 1px 1px 0;
     content: '';
     height: 8px;
-    left: 4px;
+    left: 2px;
     position: absolute;
-    top: 0px;
-    transform: rotate(45deg);
-    width: 4px;
+    top: 2px;
+    margin: auto;
+    border-radius: 50%;
+    width: 8px;
+    background: #fff;
     transition-duration: 0.1s;
     transition-property: border-color;
     transition-timing-function: cubic-bezier(0.33, 0.96, 0.49, 1.01);
@@ -44,10 +43,9 @@ export const CheckboxInput = styled.input`
   position: absolute;
   width: 0;
   &:checked ~ ${CheckboxIcon}:after {
-    border-color: #fff;
+    background: #0094ff;
   }
   &:checked ~ ${CheckboxIcon} {
-    background: #0094ff;
     border-color: #0094ff;
   }
 `;

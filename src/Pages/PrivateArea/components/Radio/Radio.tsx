@@ -11,11 +11,11 @@ type Props = {
   dis?: boolean;
 };
 
-export const Checkbox: FC<Props> = (props: Props): ReactElement => {
+export const Radio: FC<Props> = (props: Props): ReactElement => {
   const { checked, onChange, label, name, children, dis } = props;
   return (
     <LabelContainer>
-      <CheckboxInput name={name} type="checkbox" checked={checked} onChange={onChange} />
+      <CheckboxInput name={name} type="radio" checked={checked} onChange={onChange} />
       <CheckboxIcon dis={dis} />
       {children}
     </LabelContainer>

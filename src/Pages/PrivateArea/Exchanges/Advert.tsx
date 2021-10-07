@@ -15,6 +15,7 @@ export const Advert = () => {
       <Container>
         <Heading
           onClick={() => history.push(routers.p2pchangesNewOrder)}
+          // onClick={() => history.push(routers.orderCreate)}
           title="P2P обмены"
           btnText="Опубликовать ордер"
         />
@@ -28,7 +29,7 @@ export const Advert = () => {
               <div>Мои обмены</div>
             </TabNavItem>
 
-            <TabNavItem to={routers.deposits} exact>
+            <TabNavItem to={routers.certificates} exact>
               <div>Сертификаты</div>
             </TabNavItem>
           </TabsBlock>

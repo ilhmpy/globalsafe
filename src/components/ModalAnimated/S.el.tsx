@@ -31,7 +31,7 @@ export const ModalContainer = styled.div`
 
 export const Content = styled.div`
   margin: 0 20px;
-  background: #f2f2f2;
+  background: #fff;
   border: 1px solid rgba(255, 255, 255, 0.5);
   box-sizing: border-box;
   border-radius: 8px;

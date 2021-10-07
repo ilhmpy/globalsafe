@@ -185,9 +185,6 @@ export const Settings: FC = () => {
   );
 };
 
-const Hat = styled.div``;
-const Title = styled.p``;
-
 const Ceil = styled.li<{ checked?: boolean }>`
   display: flex;
   align-items: center;
@@ -250,4 +247,5 @@ const TableCard = styled(Card)`
   background: transparent;
   box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
   border-radius: 4px;
+  margin-bottom: 40px;
 `;

@@ -6,8 +6,9 @@ import { Modal } from '../../components/Modal/Modal';
 interface Iprops {
   open: boolean;
   setOpen: (open: boolean) => void;
+  convertedArray: number[];
 }
-export const ConvertingModalSuccess: FC<Iprops> = ({ open, setOpen }: Iprops) => {
+export const ConvertingModalSuccess: FC<Iprops> = ({ open, setOpen, convertedArray }: Iprops) => {
   const { t } = useTranslation();
 
   return (
@@ -20,13 +21,24 @@ export const ConvertingModalSuccess: FC<Iprops> = ({ open, setOpen }: Iprops) =>
               <ContentTitle>Конвертация CWD в MULTICS успешно завершена:</ContentTitle>
               <ContentBody>
                 <span>
-                  Списано CWD: <strong>8 500</strong>
+                  Списано CWD:
+                  <strong>
+                    {(convertedArray[0] / 100000).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
+                  </strong>
                 </span>
                 <span>
-                  Курс CWD-MULTICS: <strong>16.45</strong>
+                  Курс CWD-MULTICS:
+                  <strong>
+                    {(convertedArray[1] / convertedArray[2] / 1000).toLocaleString('ru-RU', {
+                      maximumFractionDigits: 2,
+                    })}
+                  </strong>
                 </span>
                 <span>
-                  Зачислено MULTICS: <strong>516.71 MULTICS</strong>
+                  Зачислено MULTICS:
+                  <strong>
+                    {+convertedArray[2].toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ') / 100}
+                  </strong>
                 </span>
               </ContentBody>
             </ModalContent>
@@ -48,7 +60,6 @@ const ContentBody = styled.div`
   justify-content: flex-start;
   text-align: start;
   color: #000000;
-
 `;
 
 const ModalBlock = styled.div`

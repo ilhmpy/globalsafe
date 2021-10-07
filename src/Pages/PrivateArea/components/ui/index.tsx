@@ -9,6 +9,7 @@ import { TabNavItem, TabsBlock } from './Tabs';
 import { Text } from './Text';
 import { FilterButton } from './FilterButton';
 import { CopyIconButton } from './CopyIconButton';
+import { TextBlock } from './TextBlock';
 import { Radio } from './Radio';
 import { MessageCard } from './MessageCard';
 import { Space } from './Space';
@@ -30,6 +31,7 @@ export {
   Text,
   FilterButton,
   CopyIconButton,
+  TextBlock,
   Radio,
   MessageCard,
   Space

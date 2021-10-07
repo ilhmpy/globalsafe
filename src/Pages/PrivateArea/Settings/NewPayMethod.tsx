@@ -143,6 +143,7 @@ const SwitcherRow = styled.div<{ checked?: boolean }>`
 
 const Blocks = styled.div`
   display: flex;
+  margin-bottom: 40px;
 `;
 const LeftSide = styled.div`
   width: calc(100% - 700px);

@@ -28,6 +28,7 @@ export const CardBox = styled.div`
         width: 20px;
         height: 6px;
         border-radius: 6px;
+        background: #0094FF !important;
     }
 `;
 

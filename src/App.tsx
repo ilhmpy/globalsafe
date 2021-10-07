@@ -13,7 +13,7 @@ import PageNotFound from './Pages/Tech/PageNotFound';
 import TechWorks from './Pages/Tech/TechWorks';
 import { HistoryOperations } from './Pages/PrivateArea/HistoryOperations';
 import { routers } from './constantes/routers';
-declare global {
+declare global {  
   interface Window {
     OneSignal: any;
   }
@@ -162,7 +162,7 @@ const App: FC = () => {
   //     }
   //   }
   // }, [localStorage.getItem('i18nextLng')]);
-
+ 
   return (
     <div style={{ position: 'relative' }}>
       <ChartProvider>
@@ -174,7 +174,7 @@ const App: FC = () => {
               <Route path="/" component={Main} exact />
               <Route path="/admin" component={Admin} />
               <Route path={routers.deposits} component={InfoMain} />
-              <Route path="/login" component={Authentication} />
+              <Route path="/login/:depositId" component={Authentication} />
               <Route path="/register" component={Register} />
               <Route path="/tech" component={TechWorks} />
               <Route path="/404" component={PageNotFound} />

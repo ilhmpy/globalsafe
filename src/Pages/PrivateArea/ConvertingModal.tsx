@@ -1,4 +1,4 @@
-import React, { FC, useContext, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
@@ -9,43 +9,86 @@ import { Input } from '../../components/Input';
 import { Modal } from '../../components/Modal/Modal';
 import { Select } from '../../components/Select/Select5';
 import { AppContext } from '../../context/HubContext';
+import { BalanceList, Balance } from '../../types/balance';
 
 interface Props {
   open: boolean;
-  converting?: boolean;
   setOpen: (open: boolean) => void;
   setIsSuccessConverting: (status: boolean) => void;
   setIsFailConverting: (status: boolean) => void;
+  setConvertedArray: (array: number[]) => void;
 }
 
 export const ConvertingModal: FC<Props> = ({
   open,
   setOpen,
-  converting,
   setIsSuccessConverting,
   setIsFailConverting,
+  setConvertedArray,
 }: Props) => {
   const { t } = useTranslation();
   const [defaultFormState, setDefaultFormState] = useState({
     fromSum: '',
-    toSum: '',
+    toSum: [0, 0, 0],
     fromCurrency: '',
     toCurrency: '',
   });
   const [fromSum, setFromSum] = useState('');
-  const [toSum, setToSum] = useState('');
+  const [toSum, setToSum] = useState([0, 0, 0]);
   const [fromCurrency, setFromCurrency] = useState('');
   const [toCurrency, setToCurrency] = useState('');
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
 
   const resetStateValues = () => {
-    setDefaultFormState({
-      fromSum: '',
-      toSum: '',
-      fromCurrency: '',
-      toCurrency: '',
-    });
+    setFromSum('');
+    setToSum([0, 0, 0]);
+    setFromCurrency('');
+    setToCurrency('');
+  };
+
+  useEffect(() => {
+    (async () => {
+      if (hubConnection && fromCurrency && toCurrency && +fromSum > 0) {
+        try {
+          const response = await hubConnection.invoke(
+            'CalculateBalanceExchange',
+            (+fromSum * 100000).toString(),
+            59
+          );
+          setToSum(response);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    })();
+  }, [fromCurrency, toCurrency, fromSum]);
+
+  const convert = async () => {
+    (async () => {
+      if (hubConnection && fromCurrency && toCurrency && +fromSum > 0) {
+        try {
+          const response = await hubConnection.invoke(
+            'BalanceExchange',
+            (+fromSum * 100000).toString(),
+            59
+          );
+          setConvertedArray(response);
+        } catch (error) {
+          setIsFailConverting(true);
+          console.error(error);
+        }
+      }
+    })();
+  };
+
+  const convertButtonSubmit = () => {
+    convert();
+    if (toSum[0] > 0) {
+      setOpen(false);
+      setTimeout(() => setIsSuccessConverting(true), 2000);
+      setTimeout(() => resetStateValues(), 1000);
+    }
   };
 
   return (
@@ -59,65 +102,60 @@ export const ConvertingModal: FC<Props> = ({
       >
         <Container>
           <ModalTitle>{t('privateArea.converting')}</ModalTitle>
-          <CloseButton onClick={() => setOpen(false)} />
+          <CloseButton
+            onClick={() => {
+              setOpen(false);
+              setTimeout(() => resetStateValues(), 500);
+            }}
+          />
 
           <ContentWrapper>
             <InnerBlock>
               <Select
                 placeholder="Исходная валюта не выбрана"
-                options={['One', 'Two', 'Three']}
-                selectedOption={defaultFormState.fromCurrency}
-                setSelectedOption={(val: string) =>
-                  setDefaultFormState({ ...defaultFormState, fromCurrency: val })
-                }
+                options={['CWD']}
+                selectedOption={fromCurrency}
+                setSelectedOption={(val: string) => setFromCurrency(val)}
               />
               <Input
                 placeholder="Сумма"
                 name="fromSum"
-                value={defaultFormState.fromSum}
-                onChange={(e) =>
-                  setDefaultFormState({
-                    ...defaultFormState,
-                    fromSum: e.target.value.replace(/\D/, ''),
-                  })
-                }
+                value={fromSum.replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
+                onChange={({ target: { value } }) => setFromSum(value.replaceAll(/\D/g, ''))}
               />
             </InnerBlock>
             <FromToArrow />
             <InnerBlock>
               <Select
                 placeholder="Валюта к получению не выбрана"
-                options={['One', 'Two', 'Three']}
-                selectedOption={defaultFormState.toCurrency}
-                setSelectedOption={(val: string) =>
-                  setDefaultFormState({ ...defaultFormState, toCurrency: val })
-                }
+                options={['MULTICS']}
+                selectedOption={toCurrency}
+                setSelectedOption={(val: string) => setToCurrency(val)}
               />
               <Input
+                disabled
                 placeholder="Сумма"
                 name="toSum"
-                value={defaultFormState.toSum}
-                onChange={(e) =>
-                  setDefaultFormState({
-                    ...defaultFormState,
-                    toSum: e.target.value.replace(/\D/, ''),
-                  })
+                value={
+                  toSum[2] <= 0
+                    ? ''
+                    : +toSum[2].toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ') / 100
                 }
+                onChange={(e) => undefined}
               />
               <RateRow>
                 <Rate>Курс:</Rate>
-                <Rate>0</Rate>
+                <Rate>
+                  {toSum[1] > 0
+                    ? (toSum[1] / toSum[2] / 1000).toLocaleString('ru-RU', {
+                        maximumFractionDigits: 2,
+                      })
+                    : 0}
+                </Rate>
               </RateRow>
 
-              <Button
-                primary
-                onClick={() => {
-                  setOpen(false);
-                  setTimeout(() => setIsSuccessConverting(true), 500);
-                  setTimeout(() => resetStateValues(), 500);
-                }}
-              >
-                {converting ? t('privateArea.convert2') : t('privateArea.topUpBalance')}
+              <Button bigSize primary onClick={convertButtonSubmit}>
+                {t('privateArea.convert2')}
               </Button>
             </InnerBlock>
           </ContentWrapper>
@@ -149,36 +187,6 @@ const RateRow = styled.div`
   min-height: 40px;
 `;
 
-// export const Input = styled.input`
-//   width: 100%;
-//   border: 1px solid #edf0f7;
-//   box-sizing: border-box;
-//   border-radius: 2px;
-//   min-height: 40px;
-//   padding: 8px;
-//   font-weight: normal;
-//   background: #f9fafb;
-//   font-size: 14px;
-//   line-height: 21px;
-//   letter-spacing: 0.1px;
-//   color: ${(props) => props.theme.text2};
-//   color: #000000;
-
-//   &:focus {
-//     outline: none;
-//   }
-//   ::placeholder,
-//   ::-webkit-input-placeholder {
-//     font-style: normal;
-//     font-weight: normal;
-//     font-size: 14px;
-//     line-height: 16px;
-//     opacity: 0.4;
-//     color: ${(props) => props.theme.text};
-//     color: #000000;
-//   }
-// `;
-
 const InnerBlock = styled.div`
   display: flex;
   flex-direction: column;
@@ -202,6 +210,7 @@ const CloseButton = styled(Close)`
   position: absolute;
   right: 19px;
   top: 19px;
+  cursor: pointer;
 `;
 
 const ModalTitle = styled.h2`
