@@ -46,6 +46,7 @@ import { OwnExchanges } from './Exchanges/OwnExchanges';
 import { SingleExchangeDetails } from './Exchanges/SingleExchangeDetails';
 import { SingleExchangeChat } from './Exchanges/SingleExchangeChat';
 import { SingleOrderDetails } from './Exchanges/SingleOrderDetails';
+import { NewOrder } from './Exchanges/NewOrder';
 
 export const InfoMain: FC = () => {
   const { t } = useTranslation();
@@ -705,8 +706,9 @@ export const InfoMain: FC = () => {
           <Route path="/info/deposits/:slug" component={OnePage} exact />
           <Route path={routers.p2pchanges} component={Advert} exact />
           <Route path={routers.p2pchangesOwn} component={OwnExchanges} exact />
-          <Route path={routers.p2pchangesSingleExchangeDetails} component={SingleExchangeDetails} exact />
+          <Route path={routers.p2pchangesSingleExchangeDetails} component={SingleExchangeDetails} exact /> 
           <Route path={routers.p2pchangesSingleExchangeChat} component={SingleExchangeChat} exact />
+          <Route path={routers.p2pchangesNewOrder} component={NewOrder} exact />
           <Route path={routers.p2pchangesSingleOrderDetails} component={SingleOrderDetails} exact />
           <Route path={routers.settings} component={Settings} exact />
           <Route path={routers.settingsNewPayMethod} component={NewPayMethod} exact />
