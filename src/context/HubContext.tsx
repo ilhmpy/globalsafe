@@ -1,6 +1,7 @@
 import * as signalR from '@microsoft/signalr';
 import React, { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 import { API_URL } from '../constantes/api';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { BalanceList } from '../types/balance';
@@ -35,6 +36,7 @@ export const AppContext = React.createContext<Context>({
 });
 
 export const HubProvider: FC = ({ children }: any) => {
+  const history = useHistory();
   const [hubConnection, setHubConnection] = useState<Nulable<signalR.HubConnection>>(null);
   const [user, setUser] = useState<null | string | false>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -141,7 +143,10 @@ export const HubProvider: FC = ({ children }: any) => {
     }
     return function cleanup() {
       if (hubConnection !== null) {
-        hubConnection.stop();
+        hubConnection
+          .stop()
+          .then(() => undefined)
+          .catch((e) => console.log(e));
       }
     };
   }, [hubConnection, myToken]);
@@ -150,6 +155,7 @@ export const HubProvider: FC = ({ children }: any) => {
     setMyToken(null);
     setUser(null);
     setIsAdmin(false);
+    // history?.replace('/');
   };
 
   const login = (token: string) => {

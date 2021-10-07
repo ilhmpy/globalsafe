@@ -1,5 +1,5 @@
-﻿import React, { FC } from 'react';
-import { NavLink, Route, Switch, useHistory } from 'react-router-dom';
+﻿import React, { FC, useContext } from 'react';
+import { NavLink, Redirect, Route, Switch, useHistory } from 'react-router-dom';
 // import { Button } from '../../components/Button/Button';
 import { Header } from '../../components/Header/Header';
 import { routers } from '../../constantes/routers';
@@ -21,8 +21,19 @@ import { OrderToSell } from './Exchanges/OrderToSell';
 import { Certificates } from './Certificates/Certificates';
 import { HeadBar } from './components/HeadBar/HeadBar';
 import { OrderCreate } from './Orders/OrderCreate';
+import { AppContext } from '../../context/HubContext';
 
 export const InfoMain: FC = () => {
+  const appContext = useContext(AppContext);
+  console.log('appContext', appContext);
+  const { balance, balanceList } = appContext;
+
+//   if (!balance && !balanceList) {
+//     console.log('/info');
+
+//     return <Redirect to="/info" />;
+//   }
+
   return (
     <>
       <Header />
