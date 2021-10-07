@@ -5,6 +5,7 @@ import useOnClickOutside from '../../hooks/useOutsideHook';
 import * as Styled from './Select.elements';
 
 type SelectProps = {
+  className?: string;
   options: string[];
   label?: string;
   selectedOption: null | string;
@@ -13,6 +14,7 @@ type SelectProps = {
 };
 
 export const Select: FC<SelectProps> = ({
+  className = '',
   options,
   label,
   selectedOption,
@@ -57,7 +59,7 @@ export const Select: FC<SelectProps> = ({
   };
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div className={className} style={{ position: 'relative' }}>
       <Styled.DropDownContainer ref={ref}>
         <Styled.DropDownHeader tabIndex={0} onClick={toggling} onKeyDown={onKeyDown}>
           {selectedOption
