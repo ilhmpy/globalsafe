@@ -18,3 +18,17 @@ export const Main = styled.div`
 export const BlockWrapper = styled.div<{ big?: boolean }>`
   margin-bottom: ${(props) => (props.big ? 40 : 20)}px;
 `;
+
+export const TabsWrap = styled.div`
+  margin-bottom: 40px;
+`;
+
+export const Block = styled.div<{ mbBig?: boolean }>`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: ${(props) => (props.mbBig ? 40 : 20)}px;
+`;
+
+export const BlockItem = styled.div`
+  width: calc(50% - 10px);
+`;
