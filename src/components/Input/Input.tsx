@@ -4,7 +4,7 @@ import styled from 'styled-components';
 interface IProps {
   placeholder?: string;
   name: string;
-  value: string;
+  value: string | number;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   disabled?: boolean;
 }

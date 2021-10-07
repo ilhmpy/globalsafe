@@ -21,23 +21,24 @@ export const ConvertingModalSuccess: FC<Iprops> = ({ open, setOpen, convertedArr
               <ContentTitle>Конвертация CWD в MULTICS успешно завершена:</ContentTitle>
               <ContentBody>
                 <span>
-                  Списано CWD:{' '}
+                  Списано CWD:
                   <strong>
-                    {(convertedArray[0] / 100000).toLocaleString('ru-RU', {
+                    {(convertedArray[0] / 100000).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
+                  </strong>
+                </span>
+                <span>
+                  Курс CWD-MULTICS:
+                  <strong>
+                    {(convertedArray[1] / convertedArray[2] / 1000).toLocaleString('ru-RU', {
                       maximumFractionDigits: 2,
                     })}
                   </strong>
                 </span>
                 <span>
-                  Курс CWD-MULTICS:{' '}
+                  Зачислено MULTICS:
                   <strong>
-                    {(convertedArray[1] / 100000).toLocaleString('ru-RU', {
-                      maximumFractionDigits: 2,
-                    })}
+                    {+convertedArray[2].toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ') / 100}
                   </strong>
-                </span>
-                <span>
-                  Зачислено MULTICS: <strong>{convertedArray[2]}</strong>
                 </span>
               </ContentBody>
             </ModalContent>

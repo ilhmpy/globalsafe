@@ -102,7 +102,12 @@ export const ConvertingModal: FC<Props> = ({
       >
         <Container>
           <ModalTitle>{t('privateArea.converting')}</ModalTitle>
-          <CloseButton onClick={() => setOpen(false)} />
+          <CloseButton
+            onClick={() => {
+              setOpen(false);
+              setTimeout(() => resetStateValues(), 500);
+            }}
+          />
 
           <ContentWrapper>
             <InnerBlock>
@@ -115,8 +120,8 @@ export const ConvertingModal: FC<Props> = ({
               <Input
                 placeholder="Сумма"
                 name="fromSum"
-                value={fromSum}
-                onChange={(e) => setFromSum(e.target.value.replace(/\D/, ''))}
+                value={fromSum.replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
+                onChange={({ target: { value } }) => setFromSum(value.replaceAll(/\D/g, ''))}
               />
             </InnerBlock>
             <FromToArrow />
@@ -131,15 +136,21 @@ export const ConvertingModal: FC<Props> = ({
                 disabled
                 placeholder="Сумма"
                 name="toSum"
-                value={toSum[2] <= 0 ? '' : String(toSum[2])}
+                value={
+                  toSum[2] <= 0
+                    ? ''
+                    : +toSum[2].toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ') / 100
+                }
                 onChange={(e) => undefined}
               />
               <RateRow>
                 <Rate>Курс:</Rate>
                 <Rate>
-                  {(toSum[1] / 100000).toLocaleString('ru-RU', {
-                    maximumFractionDigits: 2,
-                  })}
+                  {toSum[1] > 0
+                    ? (toSum[1] / toSum[2] / 1000).toLocaleString('ru-RU', {
+                        maximumFractionDigits: 2,
+                      })
+                    : 0}
                 </Rate>
               </RateRow>
 
