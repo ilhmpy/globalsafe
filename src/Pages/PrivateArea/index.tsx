@@ -246,21 +246,29 @@ export const InfoMain: FC = () => {
       };
     };
     if (!lockeds.some((i: any) => i.balanceKind == item.balanceKind)) {
-      lockeds.push({ volume, balanceKind: item.balanceKind, locked: true }); 
+      lockeds.push({ ...item, volume: 
+            item.balanceKind === 1 ? 
+            volume / 100000 : item.balanceKind === 43 ?
+            volume / 10000 : item.balanceKind === 59 ?
+            volume / 100 : volume, 
+            balanceKind: item.balanceKind, locked: true }); 
     };
   });
-  console.log(lockeds);
-  const balanceChips = balanceList
-    ?.filter((item) => !blackList.includes(item.balanceKind))
-    .sort((a, b) => a.balanceKind - b.balanceKind)
-    .map((obj) =>
-      obj.balanceKind === 43
-        ? { ...obj, volume: obj.volume > 1 ? obj.volume / 10000 : obj.volume, locked: false }
-        : obj.balanceKind === 59
-        ? { ...obj, volume: obj.volume > 1 ? obj.volume / 100 : obj.volume, locked: false }
-        : obj
-    );
-
+  const balancesArray = balanceList
+  ?.filter((item) => !blackList.includes(item.balanceKind))
+  .sort((a, b) => a.balanceKind - b.balanceKind)
+  .map((obj) =>
+    obj.balanceKind === 43
+      ? { ...obj, volume: obj.volume > 1 ? obj.volume / 10000 : obj.volume, locked: false }
+      : obj.balanceKind === 59
+      ? { ...obj, volume: obj.volume > 1 ? obj.volume / 100 : obj.volume, locked: false }
+      : obj
+  );
+  const edit: any[] = [];
+  balancesArray?.forEach(item => {
+    edit.push(item);
+  });
+  const balanceChips: any[] = [...edit, ...lockeds];
   const balanceFuture =
     depositSelect && [9, 10, 11].includes(depositSelect.priceKind) && depositSelect.priceKind !== 1;
 
@@ -670,7 +678,7 @@ export const InfoMain: FC = () => {
                   return (
                     <Chip
                       key={`chip-item-${idx}`}
-                      leftIcon={() => <LockIcon />}
+                      leftIcon={i.locked ? <LockIcon /> : null}
                       bgColor={getChipColor(i)}
                     >
                       <span>

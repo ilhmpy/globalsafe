@@ -21,7 +21,7 @@ type Context = {
   loan: any[] | null;
 };
 
-export const AppContext = React.createContext<Context>({
+export const AppContext = React.createContext<Context>({ 
   hubConnection: null,
   user: null,
   logOut: () => undefined,
@@ -33,7 +33,7 @@ export const AppContext = React.createContext<Context>({
   isFailed: null,
   chosenMethod: {},
   setChosenMethod: () => undefined,
-  loan: null
+  loan: null,
 });
 
 export const HubProvider: FC = ({ children }: any) => {
@@ -86,7 +86,6 @@ export const HubProvider: FC = ({ children }: any) => {
       console.log('BalanceUpdate', data);
       if (balanceList) {
         const idx = balanceList.findIndex((item: any) => item.safeId === data.safeId);
-
         if (idx !== -1) {
           setBalanceList([...balanceList.slice(0, idx), data, ...balanceList.slice(idx + 1)]);
         } else {
@@ -118,8 +117,6 @@ export const HubProvider: FC = ({ children }: any) => {
             setBalance(newArr[0].volume);
             setLoan(res.loanBalances);
 
-            console.log(res.balances);
-
             if (!localStorage.getItem('i18nextLng')) {
               i18n.changeLanguage(res.languageCode === 1 ? 'ru' : 'en');
             }
@@ -128,7 +125,6 @@ export const HubProvider: FC = ({ children }: any) => {
               volume: item.volume,
             }));
             setBalanceList(res.balances);
-            console.log(res.balances);
           }
           if (res.roles.length && res.roles[0].name === 'administrator') {
             setIsAdmin(true);
@@ -174,8 +170,8 @@ export const HubProvider: FC = ({ children }: any) => {
         isFailed,
         chosenMethod,
         setChosenMethod,
-        loan
-      }}
+        loan,
+      }} 
     >
       {children}
     </AppContext.Provider>
