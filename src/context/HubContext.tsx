@@ -22,7 +22,7 @@ type Context = {
   loan: any[] | null;
 };
 
-export const AppContext = React.createContext<Context>({ 
+export const AppContext = React.createContext<Context>({
   hubConnection: null,
   user: null,
   logOut: () => undefined,
@@ -66,7 +66,6 @@ export const HubProvider: FC = ({ children }: any) => {
       .start()
       .then(() => {
         setHubConnection(hubConnection);
-        console.log('connected', isFailed);
         if (window.location.pathname == '/tech') {
           setIsFailed(false);
         }
@@ -75,13 +74,17 @@ export const HubProvider: FC = ({ children }: any) => {
         console.error(e);
         setMyToken('');
         console.log(e);
-        console.log('notConnected', isFailed);
+
         setIsFailed(true);
         setUser('');
       });
 
-    console.log(hubConnection);
-  }, [myToken, isFailed]);
+    // return function cleanup() {
+    //   if (hubConnection !== null) {
+    //     hubConnection.stop();
+    //   }
+    // };
+  }, [myToken]);
 
   useEffect(() => {
     const cb = (data: any) => {
@@ -143,10 +146,7 @@ export const HubProvider: FC = ({ children }: any) => {
     }
     return function cleanup() {
       if (hubConnection !== null) {
-        hubConnection
-          .stop()
-          .then(() => undefined)
-          .catch((e) => console.log(e));
+        hubConnection.stop();
       }
     };
   }, [hubConnection, myToken]);
@@ -155,7 +155,7 @@ export const HubProvider: FC = ({ children }: any) => {
     setMyToken(null);
     setUser(null);
     setIsAdmin(false);
-    // history?.replace('/');
+    // history.push('/');
   };
 
   const login = (token: string) => {
@@ -177,7 +177,7 @@ export const HubProvider: FC = ({ children }: any) => {
         chosenMethod,
         setChosenMethod,
         loan,
-      }} 
+      }}
     >
       {children}
     </AppContext.Provider>

@@ -405,7 +405,7 @@ export const HeadBar: FC = () => {
   const handleLogOut = () => {
     logOut();
     // TODO: Think better logic
-    history.push('/');
+    // history.push('/');
     // window.location.reload();
   };
   return (
