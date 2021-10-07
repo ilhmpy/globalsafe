@@ -19,6 +19,7 @@ import {
   TextBlock,
 } from '../components/ui';
 import { Button } from '../../../components/Button/V2/Button';
+import { Tabs } from '../components/Tabs/Tabs';
 
 export const OrderCreate = () => {
   const history = useHistory();
@@ -47,11 +48,10 @@ export const OrderCreate = () => {
             </S.BlockWrapper>
           </LeftSide>
           <RightSide>
-            <TitleWrap>
-              <Text size={24} lH={28} weight={700} mB={40}>
-                Заявка на продажу CWD за USD
-              </Text>
-            </TitleWrap>
+            <Tabs>
+              <div>Покупка</div>
+              <div>Продажа</div>
+            </Tabs>
 
             <Button bigSize primary>
               Опубликовать ордер
