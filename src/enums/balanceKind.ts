@@ -1,76 +1,76 @@
 export enum BalanceKind{
     // <summary>
     // NA coin.
-    // </summary>
+    // </summary>0
     Na,
 
     // <summary>
     // Crowdwiz coin.
-    // </summary>
+    // </summary>1
     CWD,
 
     // <summary>
     // Crowdwiz Milli gold.
-    // </summary>
+    // </summary>2
     MGCWD,
 
     // <summary>
     // Crowdwiz gold asset
-    // </summary>
+    // </summary>3
     GCWD,
 
     // <summary>
     // Crowdwiz diamond asset
-    // </summary>
+    // </summary>4
     DIAMOND,
 
     // <summary>
     // Crowdwiz BTC
-    // </summary>
+    // </summary>5
     CROWDBTC,
 
     // <summary>
     // Bonus CWD balance.
-    // </summary>
+    // </summary>6
     CWDBONUS,
 
     // <summary>
     // Carbone asset for autobonus. 
-    // </summary>
+    // </summary>7
     CARBONE,
 
     // <summary>
     // Bronze asset for option deposits.
-    // </summary>
+    // </summary>8
     BRONZE,
 
     // <summary>
     // Option 4 asset.
-    // </summary>
+    // </summary>9
     FUTURE4,
 
     // <summary>
     // Option 5 asset.
-    // </summary>
+    // </summary>10
     FUTURE5,
 
     // <summary>
     // Option 6 asset.
-    // </summary>
+    // </summary>11
     FUTURE6,
 
     // <summary>
     // Option 7 asset.
-    // </summary>
+    // </summary>12
     FUTURE7,
 
     // <summary>
     // Option 8 asset.
-    // </summary>
+    // </summary>13
     FUTURE8,
 
     // <summary>
     // Globalsafe asset.
-    // </summary>
+    // </summary>14
     GLOBALSAFE,
 }

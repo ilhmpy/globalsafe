@@ -4,14 +4,14 @@ import styled from "styled-components";
 interface ChipProps {
     className?: string;
     children: React.ReactNode;
-    leftIcon?: () => React.ReactNode;
+    leftIcon?: React.ReactNode | null; 
     bgColor?: string;
 }
 
 export const Chip = ({className, children, leftIcon, bgColor = '#E0F8FF'}: ChipProps) => {
     return (
         <ChipContainer className={className} bgColor={bgColor}>
-            {leftIcon && <ChipLeftIconBlock>{leftIcon()}</ChipLeftIconBlock>}
+            {leftIcon && <ChipLeftIconBlock>{leftIcon}</ChipLeftIconBlock>}
             <ChipText>{children}</ChipText>
         </ChipContainer>
     )
