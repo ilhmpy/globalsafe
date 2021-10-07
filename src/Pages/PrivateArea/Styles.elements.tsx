@@ -266,7 +266,7 @@ export const LeftIcon = styled(Left)`
 export const Page = styled.div`
   margin-top: 100px;
   flex-direction: column;
-  height: 100vh;
+  height: calc(100vh - 98px);
   display: flex;
 `;
 

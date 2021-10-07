@@ -14,9 +14,9 @@ type Props = {
   children: any;
 };
 
-const TabSystem: FC<Props> = ({ children }: Props) => {
+export const Tabs: FC<Props> = ({ children }: Props) => {
   const tabsRef = children?.map((child: any) => useRef(child));
-
+  const [active, setActive] = useState(0);
   const [currentTab, setCurrentTab] = useState({ width: 0, left: 0 });
 
   useEffect(() => {
@@ -26,16 +26,22 @@ const TabSystem: FC<Props> = ({ children }: Props) => {
     });
   }, []);
 
-  const onTabSelect = (tab: number) =>
+  const onTabSelect = (tab: number) => {
+    setActive(tab);
     setCurrentTab({
       width: tabsRef[tab].current.clientWidth,
       left: tabsRef[tab].current.offsetLeft,
     });
-
+  };
   return (
     <S.TabBar>
       {children.map((tab: string, index: number) => (
-        <S.Tab key={index} ref={tabsRef[index]} onClick={() => onTabSelect(index)}>
+        <S.Tab
+          key={index}
+          ref={tabsRef[index]}
+          active={active === index}
+          onClick={() => onTabSelect(index)}
+        >
           {tab}
         </S.Tab>
       ))}
@@ -49,9 +55,9 @@ const TabSystem: FC<Props> = ({ children }: Props) => {
   );
 };
 
-export default () => (
-  <TabSystem>
-    <div>Tab 1</div>
-    <div>Tab 2</div>
-  </TabSystem>
-);
+// export default () => (
+//   <TabSystem>
+//     <div>Tab 1</div>
+//     <div>Tab 2</div>
+//   </TabSystem>
+// );
