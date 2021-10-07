@@ -50,7 +50,6 @@ export const InfoMain: FC = () => {
             exact
           />
         </Switch>
-
         <Footer />
       </Styled.Page>
     </>
