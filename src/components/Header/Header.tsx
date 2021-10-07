@@ -24,6 +24,8 @@ import {
 import { Nav } from './Nav';
 import { NavAdmin } from './NavAdmin';
 import { routers } from '../../constantes/routers';
+import { Notify } from "./Notify/Notify";
+import { ReactComponent as Ball } from "../../assets/svg/ball.svg";
 
 type Props = {
   admPanel?: boolean;
@@ -82,60 +84,63 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
   };
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   return (
-    <HeaderWrap header={header}>
-      <Container>
-        <HeaderInner>
-          <HeaderLogo href="/">
-            <Logo />
-          </HeaderLogo>
-          <MenuBtn open={open} onClick={() => setOpen(!open)}>
-            <span></span>
-            <span></span>
-          </MenuBtn>
-          <HeaderMenu open={open}>
-            {admPanel ? (
-              <NavAdmin lang={lang} onClose={onClose} />
-            ) : (
-              <Nav
-                onClose={onClose}
-                handleClick={handleClick}
-                user={user}
-                logOut={logOut}
-                location={location.pathname}
-                admin={admin}
-                lang={lang}
-              />
-            )}
-          </HeaderMenu>
+    <>
+      <HeaderWrap header={header}>
+        <Container>
+          <HeaderInner>
+            <HeaderLogo href="/">
+              <Logo />
+            </HeaderLogo>
+            <MenuBtn open={open} onClick={() => setOpen(!open)}>
+              <span></span>
+              <span></span>
+            </MenuBtn>
+            <HeaderMenu open={open}>
+              {admPanel ? (
+                <NavAdmin lang={lang} onClose={onClose} />
+              ) : (
+                <Nav
+                  onClose={onClose}
+                  handleClick={handleClick}
+                  user={user}
+                  logOut={logOut}
+                  location={location.pathname}
+                  admin={admin}
+                  lang={lang}
+                />
+              )}
+            </HeaderMenu>
 
-          {lang === 'ru' ? (
-            <Languale onClick={() => i18n.changeLanguage('en')}>EN</Languale>
-          ) : (
-            <Languale onClick={() => i18n.changeLanguage('ru')}>RU</Languale>
-          )}
-          <SwitchTheme onClick={swithTheme}>
-            {theme === 'light' ? <DarkTheme /> : <LightTheme />}
-          </SwitchTheme>
-          {admin && <AdminButton onClick={toAdmin}>{t('headerButton.admin')}</AdminButton>}
-          {location.pathname === '/' ? (
-            <Button primary onClick={handleClick}>
-              {t('headerButton.personalArea')}
-            </Button>
-          ) : user ? (
-            // <Button primary onClick={logOut}>
-            //   {t('logout')}
-            // </Button>
-            <Button primary onClick={handleClick}>
-              {t('headerButton.personalArea')}
-            </Button>
-          ) : (
-            <Button primary onClick={handleClick}>
-              {t('headerButton.personalArea')}
-            </Button>
-          )}
-        </HeaderInner>
-      </Container>
-    </HeaderWrap>
+            {lang === 'ru' ? (
+              <Languale onClick={() => i18n.changeLanguage('en')}>EN</Languale>
+            ) : (
+              <Languale onClick={() => i18n.changeLanguage('ru')}>RU</Languale>
+            )}
+            <SwitchTheme onClick={swithTheme}>
+              {theme === 'light' ? <DarkTheme /> : <LightTheme />}
+            </SwitchTheme>
+            {admin && <AdminButton onClick={toAdmin}>{t('headerButton.admin')}</AdminButton>}
+            {location.pathname === '/' ? (
+              <Button primary onClick={handleClick}>
+                {t('headerButton.personalArea')}
+              </Button>
+            ) : user ? (
+              // <Button primary onClick={logOut}>
+              //   {t('logout')}
+              // </Button>
+              <Button primary onClick={handleClick}>
+                {t('headerButton.personalArea')}
+              </Button>
+            ) : (
+              <Button primary onClick={handleClick}>
+                {t('headerButton.personalArea')}
+              </Button>
+            )}
+          </HeaderInner> 
+        </Container>
+      </HeaderWrap>
+      <Notify block={true} />
+    </>
   );
 };
 
