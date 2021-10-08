@@ -9,7 +9,6 @@ import { Input } from '../../components/Input';
 import { Modal } from '../../components/Modal/Modal';
 import { Select } from '../../components/Select/Select5';
 import { AppContext } from '../../context/HubContext';
-import { BalanceList, Balance } from '../../types/balance';
 
 interface Props {
   open: boolean;
@@ -74,6 +73,7 @@ export const ConvertingModal: FC<Props> = ({
             59
           );
           setConvertedArray(response);
+          setIsSuccessConverting(true);
         } catch (error) {
           setIsFailConverting(true);
           console.error(error);
@@ -86,7 +86,6 @@ export const ConvertingModal: FC<Props> = ({
     convert();
     if (toSum[0] > 0) {
       setOpen(false);
-      setTimeout(() => setIsSuccessConverting(true), 2000);
       setTimeout(() => resetStateValues(), 1000);
     }
   };
@@ -139,7 +138,7 @@ export const ConvertingModal: FC<Props> = ({
                 value={
                   toSum[2] <= 0
                     ? ''
-                    : +toSum[2].toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ') / 100
+                    : (toSum[2] / 100).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')
                 }
                 onChange={(e) => undefined}
               />
