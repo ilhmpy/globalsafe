@@ -14,7 +14,7 @@ export const Text = styled.p`
   transition: all 0.3s;
 `;
 
-export const SwitchTheme = styled.div<{ mob?: boolean }>`
+export const SwitchTheme = styled.div<{ mob?: boolean; adm?: boolean; auth?: boolean; }>`
   width: 20px;
   height: 20px;
   margin-right: 20px;
@@ -52,7 +52,7 @@ export const AdminButton = styled.button`
   }
 `;
 
-export const Languale = styled.div`
+export const Languale = styled.div<{ lng?: boolean; }>`
   display: flex;
   align-items: center;
   font-weight: 500;

@@ -25,14 +25,14 @@ export const BallContainer = styled.div<{ notChecked: boolean; }>`
     }
 `;
 
-export const NotifiesBlock = styled.div<{ block: boolean; auth: boolean; empty: boolean; }>`
+export const NotifiesBlock = styled.div<{ block: boolean; auth?: boolean; admin?: boolean; empty: boolean; }>`
     width: 80%;
     max-width: 420px;
     height: ${({ empty }) => empty ? "80px" : "584px"};
     background: #fff;
     border-radius: 4px;
     position: absolute;
-    right: ${({ auth }) => auth ? "140px" : "48px"};
+    right: 140px;
     top: 50px;
     border: 1px solid #DCDCE8;
     z-index: 9999;
@@ -73,6 +73,7 @@ export const Notify = styled.div<{ checked: boolean; empty?: boolean; }>`
     padding: 10px;
     padding-left: 29px;
     position: relative;
+    cursor: pointer;
     &::before {
         content: "";
         display: ${({ checked }) => !checked ? "block" : "none"};
