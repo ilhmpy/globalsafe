@@ -23,6 +23,9 @@ export const BallContainer = styled.div<{ notChecked: boolean; }>`
     @media only screen and (max-device-width: 767px) {
         width: 50px;
     }
+    @media only screen and (max-device-width: 330px) {
+        width: 35px;
+    }
 `;
 
 export const NotifiesBlock = styled.div<{ block: boolean; auth?: boolean; admin?: boolean; empty: boolean; }>`
@@ -69,11 +72,11 @@ export const NotifiesBlock = styled.div<{ block: boolean; auth?: boolean; admin?
         border-left: 1px solid #DCDCE8;
         margin: auto;
     }
-    
+    @media only screen and (max-device-width: 767px) {
+        right: 0;
+    }
     & > .scrollbars > div {
-     //   width: 3px !important;
-       // height: 240px !important;
-       right: -2px !important;
+        right: -1px !important;
     }
 `;
 

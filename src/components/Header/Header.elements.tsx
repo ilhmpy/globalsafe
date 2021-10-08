@@ -19,7 +19,6 @@ export const SwitchTheme = styled.div<{ mob?: boolean; admin?: boolean; auth?: b
   height: 20px;
   margin-right: 20px;
   border-radius: 50%;
-  /* background: ${(props) => props.theme.switch}; */
   cursor: pointer;
   ${({ admin, auth }) => {
     if (!auth || auth && !admin) {
@@ -28,6 +27,9 @@ export const SwitchTheme = styled.div<{ mob?: boolean; admin?: boolean; auth?: b
       `;
     };
   }}
+  @media only screen and (max-device-width: 767px) {
+    margin-right: 40px;
+  }
   @media (max-width: 1100px) {
     div {
       display: flex;
