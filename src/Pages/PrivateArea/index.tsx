@@ -21,6 +21,7 @@ import { OrderToSell } from './Exchanges/OrderToSell';
 import { Certificates } from './Certificates/Certificates';
 import { OrderCreate } from './Orders/OrderCreate';
 import { AppContext } from '../../context/HubContext';
+import { NewOrder } from './Exchanges/NewOrder';
 import { DepositView } from './Deposits/DepositView';
 
 export const InfoMain: FC = () => {
@@ -58,7 +59,8 @@ export const InfoMain: FC = () => {
           <Route path={routers.operations} component={HistoryOperations} exact />
           <Route path={routers.certificates} component={Certificates} exact />
           <Route path={routers.p2pchangesOrderToSell} component={OrderToSell} exact />
-          <Route path={routers.p2pchangesOwn} component={OwnExchanges} exact />
+          {/* TODO Remove | just for testing */}
+          <Route path={routers.p2pchangesNewOrder} component={NewOrder} exact />
         </Switch>
         <Footer />
       </Styled.Page>
