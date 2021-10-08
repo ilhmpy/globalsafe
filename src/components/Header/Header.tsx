@@ -77,18 +77,16 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
       document.body.style.overflow = 'unset';
     }
   }, [open]);
-
-  const onClose = () => {
+  function onClose() {
     setOpen(false);
-  };
-
+  }
   const toAdmin = () => {
     history.push('/admin');
   };
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   function onBall(e: any) {
     setNotify(!notify);
-  };
+  }; 
   return (
     <>
       <HeaderWrap header={header}>
