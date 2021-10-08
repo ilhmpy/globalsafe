@@ -25,6 +25,7 @@ import { Nav } from './Nav';
 import { NavAdmin } from './NavAdmin';
 import { routers } from '../../constantes/routers';
 import { Notify } from "./Notify/Notify";
+import * as Notifies from "./Notify/Notify.styles";
 import { ReactComponent as Ball } from "../../assets/svg/ball.svg";
 
 type Props = {
@@ -116,6 +117,9 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
             ) : (
               <Languale onClick={() => i18n.changeLanguage('ru')}>RU</Languale>
             )}
+            <Notifies.BallContainer>
+              <Ball /> 
+            </Notifies.BallContainer>
             <SwitchTheme onClick={swithTheme}>
               {theme === 'light' ? <DarkTheme /> : <LightTheme />}
             </SwitchTheme>
