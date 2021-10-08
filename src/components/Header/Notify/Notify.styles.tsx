@@ -1,4 +1,120 @@
 import styled from "styled-components/macro";
 
-export const BallContainer = styled.div`
+export const BallContainer = styled.div<{ notChecked: boolean; }>`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 95px;
+    position: relative;
+    & > svg {
+        cursor: pointer;
+    }
+    &::before {
+        content: "";
+        display: ${({ notChecked }) => notChecked ? "block" : "none"};
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: #FF4A31;
+        position: absolute;
+        margin-left: 17px;
+        margin-top: -15px;
+    }
+    @media only screen and (max-device-width: 767px) {
+        width: 50px;
+    }
+`;
+
+export const NotifiesBlock = styled.div<{ block: boolean; auth: boolean; empty: boolean; }>`
+    width: 80%;
+    max-width: 420px;
+    height: ${({ empty }) => empty ? "80px" : "584px"};
+    background: #fff;
+    border-radius: 4px;
+    position: absolute;
+    right: ${({ auth }) => auth ? "140px" : "48px"};
+    top: 50px;
+    border: 1px solid #DCDCE8;
+    z-index: 9999;
+    background: #fff;
+    box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
+    display: ${({ block }) => block ? "block" : "none"};
+    padding: 20px 8px 1px 0px;
+    &::before {
+        content: "";
+        width: 14px;
+        height: 14px;
+        background: #fff;
+        display: block;
+        border-radius: 3px;
+        border-bottom-left-radius: 0px;
+        border-top-right-radius: 0px;
+        transform: rotate(45deg);
+        position: absolute;
+        right: 0;
+        left: 0;
+        top: -8px;
+        border-top: 1px solid #DCDCE8;
+        border-left: 1px solid #DCDCE8;
+        margin: auto;
+    }
+    
+    & > .scrollbars > div {
+     //   width: 3px !important;
+       // height: 240px !important;
+       right: -2px !important;
+    }
+`;
+
+export const Notify = styled.div<{ checked: boolean; empty?: boolean; }>`
+    width: 100%;
+    background: #F9FAFB;
+    margin-bottom: 10px;
+    padding: 10px;
+    padding-left: 29px;
+    position: relative;
+    &::before {
+        content: "";
+        display: ${({ checked }) => !checked ? "block" : "none"};
+        background: #FF4A31;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        left: 12px;
+        top: 17px;
+        position: absolute;
+    }
+    ${({ empty }) => { 
+        if (empty) {
+            return `
+                height: 40px;
+                margin-bottom: 10px;
+                display: flex;
+                align-items: center;
+            `;
+        };
+    }}
+`;
+
+export const NotifyItem = styled.h3<{ grey?: boolean; bold?: boolean; }>`
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 20px;
+    color: #3F3E4E;
+    margin-bottom: 4px;
+    &:last-child {
+        margin-bottom: 0px;
+    }
+    ${({ grey, bold }) => {
+        if (grey) {
+            return `
+               opacity: 60%;
+            `;
+        };
+        if (bold) {
+            return `
+                font-weight: 700;
+            `;
+        }
+    }}
 `;

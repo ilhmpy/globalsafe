@@ -17,7 +17,7 @@ export const Text = styled.p`
 export const SwitchTheme = styled.div<{ mob?: boolean }>`
   width: 20px;
   height: 20px;
-  margin-right: 40px;
+  margin-right: 20px;
   border-radius: 50%;
   /* background: ${(props) => props.theme.switch}; */
   cursor: pointer;
@@ -58,14 +58,10 @@ export const Languale = styled.div`
   font-weight: 500;
   font-size: 12px;
   line-height: 14px;
-  margin-right: 40px;
   color: ${(props) => props.theme.text};
   cursor: pointer;
   @media (max-width: 1100px) {
     margin-left: auto;
-  }
-  @media (max-width: 767px) {
-    margin-right: 20px;
   }
   img {
     margin-left: 6px;

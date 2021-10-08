@@ -35,6 +35,8 @@ type Props = {
 export const Header: FC<Props> = ({ admPanel }: Props) => {
   const [header, setHeader] = useState(false);
   const [open, setOpen] = useState(false);
+  const [notify, setNotify] = useState<boolean>(true);
+
   const appContext = useContext(AppContext);
   const themeContext = useContext(ThemeContext);
   const swithTheme = themeContext.toggleTheme;
@@ -84,6 +86,9 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
     history.push('/admin');
   };
   const lang = localStorage.getItem('i18nextLng') || 'ru';
+  function onBall(e: any) {
+    setNotify(!notify);
+  };
   return (
     <>
       <HeaderWrap header={header}>
@@ -117,9 +122,14 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
             ) : (
               <Languale onClick={() => i18n.changeLanguage('ru')}>RU</Languale>
             )}
-            <Notifies.BallContainer>
-              <Ball /> 
-            </Notifies.BallContainer>
+            {user && (
+              <>
+                <Notifies.BallContainer notChecked={true}>
+                    <Ball onClick={onBall} style={{ height: "20px" }} />
+                </Notifies.BallContainer>
+                <Notify block={notify} auth={admin ? true : false} /> 
+              </>
+            )}
             <SwitchTheme onClick={swithTheme}>
               {theme === 'light' ? <DarkTheme /> : <LightTheme />}
             </SwitchTheme>
@@ -143,7 +153,6 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
           </HeaderInner> 
         </Container>
       </HeaderWrap>
-      <Notify block={true} />
     </>
   );
 };
