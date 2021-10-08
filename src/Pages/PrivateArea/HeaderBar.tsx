@@ -368,9 +368,6 @@ export const HeaderBar = () => {
   */
 
   const changeBalance = () => {
-    function cb(top: any) {
-      console.log("getTop", top);
-    }
     const value = Number(ed.replace(/\s/g, ''));
     if (hubConnection && currency.length > 0) {
       const newWindow = window.open();
@@ -394,12 +391,6 @@ export const HeaderBar = () => {
           setAddDrawModal(false);
         });
     }
-    if (hubConnection) {
-      hubConnection.on("BalanceUpdate", cb);
-    };
-    return () => {
-      hubConnection?.off('BalanceUpdate', cb);
-    };
   };
 
   const outPutBalance = () => {
