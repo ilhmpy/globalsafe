@@ -35,7 +35,7 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin }: NotifyProps) => 
         return;
     }; 
     return (
-      <Notifies.NotifiesBlock block={block} empty={notifies.length === 0}>
+      <Notifies.NotifiesBlock block={block} admin={admin} empty={notifies.length === 0}>
         <Scrollbars style={{ width: "100%", height: "100%" }} className="scrollbars">
             {notifies && notifies.length ? (
                 <>

@@ -114,23 +114,23 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
                   admin={admin}
                   lang={lang}
                 />
-              )}
+              )} 
             </HeaderMenu>
 
             {lang === 'ru' ? (
-              <Languale onClick={() => i18n.changeLanguage('en')}>EN</Languale>
+              <Languale auth={user ? true : false} admin={admin ? true : false} onClick={() => i18n.changeLanguage('en')}>EN</Languale>
             ) : (
-              <Languale onClick={() => i18n.changeLanguage('ru')}>RU</Languale>
+              <Languale auth={user ? true : false} admin={admin ? true : false} onClick={() => i18n.changeLanguage('ru')}>RU</Languale>
             )}
             {user && (
               <>
                 <Notifies.BallContainer notChecked={true}>
                     <Ball onClick={onBall} style={{ height: "20px" }} />
                 </Notifies.BallContainer>
-                <Notify block={notify} /> 
+                <Notify block={notify} admin={admin ? true : false} /> 
               </>
             )}
-            <SwitchTheme onClick={swithTheme}>
+            <SwitchTheme admin={admin ? true : false} auth={user ? true : false} onClick={swithTheme}>
               {theme === 'light' ? <DarkTheme /> : <LightTheme />}
             </SwitchTheme>
             {admin && <AdminButton onClick={toAdmin}>{t('headerButton.admin')}</AdminButton>}

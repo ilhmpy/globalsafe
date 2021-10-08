@@ -32,7 +32,18 @@ export const NotifiesBlock = styled.div<{ block: boolean; auth?: boolean; admin?
     background: #fff;
     border-radius: 4px;
     position: absolute;
-    right: 140px;
+    ${({ admin }) => {
+        if (admin) {
+            return `
+                right: 140px;
+            `;
+        };
+        if (!admin) {
+            return `
+                right: 48px;
+            `;
+        };
+    }}
     top: 50px;
     border: 1px solid #DCDCE8;
     z-index: 9999;

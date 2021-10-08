@@ -14,13 +14,20 @@ export const Text = styled.p`
   transition: all 0.3s;
 `;
 
-export const SwitchTheme = styled.div<{ mob?: boolean; adm?: boolean; auth?: boolean; }>`
+export const SwitchTheme = styled.div<{ mob?: boolean; admin?: boolean; auth?: boolean; }>`
   width: 20px;
   height: 20px;
   margin-right: 20px;
   border-radius: 50%;
   /* background: ${(props) => props.theme.switch}; */
   cursor: pointer;
+  ${({ admin, auth }) => {
+    if (!auth || auth && !admin) {
+      return `
+        margin-right: 40px;
+      `;
+    };
+  }}
   @media (max-width: 1100px) {
     div {
       display: flex;
@@ -52,7 +59,7 @@ export const AdminButton = styled.button`
   }
 `;
 
-export const Languale = styled.div<{ lng?: boolean; }>`
+export const Languale = styled.div<{ auth?: boolean; admin?: boolean; }>`
   display: flex;
   align-items: center;
   font-weight: 500;
@@ -60,6 +67,18 @@ export const Languale = styled.div<{ lng?: boolean; }>`
   line-height: 14px;
   color: ${(props) => props.theme.text};
   cursor: pointer;
+  ${({ auth, admin }) => {
+    if (!auth) {
+      return `
+        margin-right: 40px;
+      `;
+    };
+    if (auth && admin) {
+      return `
+        margin-right: 0px;
+      `;
+    }
+  }}
   @media (max-width: 1100px) {
     margin-left: auto;
   }
