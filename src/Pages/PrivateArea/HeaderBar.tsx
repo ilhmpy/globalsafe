@@ -371,7 +371,7 @@ export const HeaderBar = () => {
     const value = Number(ed.replace(/\s/g, ''));
     if (hubConnection && currency.length > 0) {
       const newWindow = window.open();
-      // console.log('change', value);
+      // console.log('change', Balance[currency as keyof typeof Balance], value);
       hubConnection
         .invoke(
           'GetTopUpUrl',
