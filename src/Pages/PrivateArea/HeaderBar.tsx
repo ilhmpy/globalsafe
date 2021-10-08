@@ -287,7 +287,6 @@ export const HeaderBar = () => {
       hubConnection
         .invoke<Commisions>('GetWithdrawFee', 1, Number(value))
         .then((res: any) => {
-          console.log(res);
           setBlockchain((res.networkFee / 100000).toString());
           setService((res.serviceFee / 100000).toString());
         })
@@ -332,6 +331,42 @@ export const HeaderBar = () => {
     setCurrencyValue('');
   };
 
+  /* 
+    нет данных
+    Нулевой, 0 
+
+    /// Успешный перевод.
+    Успех, 1 
+
+    /// Невозможно передать. Недостаточно средств.
+    На балансе аккаунта не достаточно средств, 2 
+
+    /// Ошибка передачи.
+    Ошибка, 3
+
+    /// Адрес назначения перевода не найден.
+    DestinationNotfound, 4
+
+    /// Неправильный источник передачи. Аккаунт не может быть найден.
+    SourceNotFound, 5 
+
+    /// Сумма перевода меньше разрешенного минимального объема перевода.
+    ValueIsTooSmall, 6
+
+    /// Сумма перевода больше разрешенной максимальной суммы перевода.
+    ValueIsTooLarge, 7 
+
+    /// Превышение дневной квоты перевода средств.
+    DailyQuotaExceed, 8
+
+    /// Превышение месячной квоты перевода средств.
+    MonthlyQuotaExceed, 9
+
+    /// Доступна активная невыполненная ставка.
+    WagerAvailable, 10
+
+  */
+
   const changeBalance = () => {
     const value = Number(ed.replace(/\s/g, ''));
     if (hubConnection && currency.length > 0) {
@@ -362,7 +397,13 @@ export const HeaderBar = () => {
     const value = Number(outPutEd.replace(/\s/g, ''));
     if (hubConnection && outPutCurrency.length > 0) {
       setWithdrawValueLoad(true);
-      console.log('withdraw', value);
+      /* console.log('withdraw', outPutCurrency === 'CWD'
+      ? value * 100000
+      : outPutCurrency === 'GLOBAL'
+      ? value * 10000
+      : outPutCurrency === 'MULTICS'
+      ? value * 100
+      : value, Balance[outPutCurrency as keyof typeof Balance]) */
       hubConnection
         .invoke(
           'Withdraw',
@@ -376,17 +417,50 @@ export const HeaderBar = () => {
             : value
         )
         .then((res) => {
-          console.log('WORK', res);
+          // console.log('WORK', res);
           setWithdrawValueLoad(false);
-          setOutPutError(false);
           setWithDrawModal(false);
+          if (res === 0) {
+            setOutPutError(true);
+            setOutPutErrorReason("Ошибка вывода средств.");
+          } else if (res === 1) {
+            setOutPutError(false);
+            setOutPutErrorReason("");
+          } else if (res === 2) {
+            setOutPutError(true);
+            setOutPutErrorReason("На балансе аккаунта недостаточно средств.");
+          } else if (res === 3) {
+            setOutPutError(true);
+            setOutPutErrorReason("Ошибка вывода средств.");
+          } else if (res === 4) {
+            setOutPutError(true);
+            setOutPutErrorReason("Получатель перевода не найден.")
+          } else if (res === 5) {
+            setOutPutError(true);
+            setOutPutErrorReason("Неправильный источник перевода. Аккаунт не может быть найден.");
+          } else if (res === 6) {
+            setOutPutError(true);
+            setOutPutErrorReason("Сумма перевода меньше разрешенного минимального объема перевода.");
+          } else if (res === 7) {
+            setOutPutError(true);
+            setOutPutErrorReason("Сумма перевода больше разрешенной максимальной суммы перевода.");
+          } else if (res === 8) {
+            setOutPutError(true);
+            setOutPutErrorReason("Превышение дневной квоты перевода средств.");
+          } else if (res === 9) {
+            setOutPutError(true);
+            setOutPutErrorReason("Превышение месячной квоты перевода средств.");
+          } else if (res === 10) {
+            setOutPutError(true);
+            setOutPutErrorReason("Доступна активная невыполненная ставка.");
+          }
         })
         .catch((err: Error) => {
-          console.log('ERRO', err);
+         // console.log('ERROR', err);
           setWithdrawValueLoad(false);
           setOutPutError(true);
           setWithDrawModal(false);
-          setOutPutErrorReason('На балансе аккаунта недостаточно средств.');
+          setOutPutErrorReason('Неполадки сервера.');
         });
     }
   };
@@ -611,7 +685,7 @@ export const HeaderBar = () => {
             {outPutEd} {outPutCurrency}
           </Styled.Desc>
           <Styled.Desc mLess>
-            К выводу: {Number(outPutEd) + Number(blockchain) + Number(service)}
+            К выводу: {Number(outPutEd.replace(/\s/g, '')) + Number(blockchain) + Number(service)}
           </Styled.Desc>
           <Styled.Desc mLess>Комиссия блокчейн: {blockchain}</Styled.Desc>
           <Styled.Desc mLess>Комиссия сервиса: {service}</Styled.Desc>
@@ -639,7 +713,7 @@ export const HeaderBar = () => {
             {outPutEd} {outPutCurrency}
           </Styled.Desc>
           <Styled.Desc mLess>
-            К выводу: {Number(outPutEd) + Number(blockchain) + Number(service)}
+            К выводу: {Number(outPutEd.replace(/\s/g, '')) + Number(blockchain) + Number(service)}
           </Styled.Desc>
           <Styled.Desc mLess>Комиссия блокчейн: {blockchain}</Styled.Desc>
           <Styled.Desc mLess style={{ marginBottom: '0px' }}>
