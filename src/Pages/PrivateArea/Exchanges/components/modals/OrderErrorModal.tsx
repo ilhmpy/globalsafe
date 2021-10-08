@@ -4,7 +4,7 @@ import { useHistory } from 'react-router';
 import { Button } from '../../../../../components/Button/V2/Button';
 import { Modal } from '../../../../../components/ModalAnimated';
 import { routers } from '../../../../../constantes/routers';
-import { Space, Text } from '../../../components/ui';
+import { Text } from '../../../components/ui';
 import * as S from './S.el';
 
 type Props = {
