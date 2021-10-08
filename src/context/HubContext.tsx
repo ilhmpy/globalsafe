@@ -20,6 +20,8 @@ type Context = {
   chosenMethod: any;
   setChosenMethod: (state: any) => void;
   loan: any[] | null;
+  chosenDepositView: any;
+  setChosenDepositView: (object: any) => void;
 };
 
 export const AppContext = React.createContext<Context>({
@@ -35,6 +37,8 @@ export const AppContext = React.createContext<Context>({
   chosenMethod: {},
   setChosenMethod: () => undefined,
   loan: null,
+  setChosenDepositView: () => undefined,
+  chosenDepositView: {},
 });
 
 export const HubProvider: FC = ({ children }: any) => {
@@ -50,6 +54,7 @@ export const HubProvider: FC = ({ children }: any) => {
   const [chosenMethod, setChosenMethod] = useState<any>({});
   const [loan, setLoan] = useState<any[] | null>(null);
   const { i18n } = useTranslation();
+  const [chosenDepositView, setChosenDepositView] = useState({});
 
   useEffect(() => {
     const hubConnection = new signalR.HubConnectionBuilder()
@@ -177,6 +182,8 @@ export const HubProvider: FC = ({ children }: any) => {
         chosenMethod,
         setChosenMethod,
         loan,
+        chosenDepositView,
+        setChosenDepositView,
       }}
     >
       {children}
