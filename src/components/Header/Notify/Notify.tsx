@@ -94,11 +94,7 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds }: Not
     };
     return (
       <Notifies.NotifiesBlock block={block} admin={admin} empty={!loading && notifies.length === 0} load={loading}>
-          {loading ? (
-            <>
-              <InBlockLoading />
-            </>
-          ) : (
+          {loading ? <InBlockLoading /> : (
             <>
                 <Scrollbars style={{ width: "100%" }} className="scrollbars">
                     {notifies && notifies.length ? (
@@ -117,7 +113,7 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds }: Not
                         </>
                     ) : (
                         <Notifies.Notify empty notChecked={false}>
-                        <Notifies.NotifyItem>Непрочитанных уведомлений пока нет</Notifies.NotifyItem>
+                            <Notifies.NotifyItem>Непрочитанных уведомлений пока нет</Notifies.NotifyItem>
                         </Notifies.Notify> 
                     )}
                 </Scrollbars>

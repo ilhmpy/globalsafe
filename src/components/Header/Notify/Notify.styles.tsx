@@ -46,22 +46,22 @@ export const NotifiesBlock = styled.div<{ block: boolean; auth?: boolean; admin?
     ${({ admin, block }) => {
         if (admin) {
             return `
-               right: ${block ? "140px" : "-680px"};
+               right: 140px;
                @media only screen and (max-device-width: 767px) {
-                right: ${block ? "0px" : "-680px"};
+                right: 0px;
                }
             `;
         };
         if (!admin) {
             return `
-               right: ${block ? "48px" : "-680px"};
+               right: 48px;
                @media only screen and (max-device-width: 767px) {
-                right: ${block ? "0px" : "-680px"};
+                right: 0px;
                }
             `;
         };
     }}
-    top: 50px;
+    top: ${({ block }) => block ? "50px" : "1200px"};
     border: 1px solid #DCDCE8;
     z-index: 0;
     background: #fff;
