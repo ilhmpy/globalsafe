@@ -72,13 +72,8 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
              .catch(err => console.error(err));
         };
     };
-    function outBlock(e: any) {
-        if (e.target !== e.currentTarget) {
-            setBlock(false);
-        };
-    };
     return (
-      <Notifies.NotifiesBlock block={block} admin={admin} empty={!loading && notifies.length === 0} load={loading} onClick={outBlock}>
+      <Notifies.NotifiesBlock block={block} admin={admin} empty={!loading && notifies.length === 0} load={loading} onMouseLeave={() => setBlock(false)}>
           {loading ? <InBlockLoading /> : (
             <>
                 <Scrollbars style={{ width: "100%" }} className="scrollbars">
