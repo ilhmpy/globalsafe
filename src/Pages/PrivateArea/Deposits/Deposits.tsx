@@ -1,28 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import Scrollbars from 'react-custom-scrollbars';
 import InfiniteScroll from 'react-infinite-scroller';
-
+import { useHistory } from 'react-router-dom';
 import { Container } from '../../../components/UI/Container';
-import { Back } from '../components/Back';
+import { routers } from '../../../constantes/routers';
+import { AppContext } from '../../../context/HubContext';
+import { Collection, RootList } from '../../../types/info';
 import { Filter } from '../components/Filter';
 import { Heading } from '../components/Heading';
-import { OpenDeposit } from '../components/OpenDeposits';
-import { ShowDeposit } from '../components/ShowDeposit';
+import { Loading } from '../components/Loading/Loading';
 import { Table } from '../components/Table';
-import { TableHistory } from '../components/Table/History';
-import { Title } from '../components/ui/Title';
-import { routers } from '../../../constantes/routers';
 import * as S from './S.elements';
-import { ConfirmOpenDeposit } from '../components/Modals/ConfirmOpenDeposit';
-import { SuccessOpenDeposit } from '../components/Modals/Success';
-import { ErrorOpenDeposit } from '../components/Modals/ErrorOpenDeposit';
-import { CloseDeposit } from '../components/Modals/CloseDeposit';
-import { CloseDepositSuccess } from '../components/Modals/CloseDepositSuccess';
-import { CloseDepositError } from '../components/Modals/CloseDepositError';
-import { AppContext } from '../../../context/HubContext';
-import { Collection, DepositsCollection, RootList } from '../../../types/info';
-import { Loading, NotItems } from '../components/Loading/Loading';
 
 export const Deposits = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -34,8 +22,8 @@ export const Deposits = () => {
   const [activeFilter, setActiveFilter] = useState<'active' | 'archived' | 'hold'>('active');
 
   const history = useHistory();
-  const appContext = useContext(AppContext);
-  const hubConnection = appContext.hubConnection;
+  const { hubConnection, balanceList } = useContext(AppContext);
+
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   const languale = lang === 'ru' ? 1 : 0;
 
@@ -170,7 +158,7 @@ export const Deposits = () => {
     <S.Container>
       <Container>
         <Heading
-          onClick={() => history.push(routers.orderCreate)}
+          onClick={() => history.push(routers.depositsProgram)}
           title="Мои депозиты"
           btnText="Открыть депозит"
         />
