@@ -35,7 +35,7 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin }: NotifyProps) => 
         { date: new Date(), view: true, value: 2800000, balanceKind: 14, desc: "Выплата по депозиту Expres" },
         */
     ]);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [loading, setLoading] = useState<boolean>(false);
     const appContext = useContext(AppContext);
     const hubConnection = appContext.hubConnection;
     useEffect(() => {
