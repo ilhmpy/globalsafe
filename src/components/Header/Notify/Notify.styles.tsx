@@ -91,7 +91,7 @@ export const NotifiesBlock = styled.div<{ block: boolean; auth?: boolean; admin?
     }
 `;
 
-export const Notify = styled.div<{ checked: boolean; empty?: boolean; }>`
+export const Notify = styled.div<{ notChecked: boolean; empty?: boolean; }>`
     width: 100%;
     background: #F9FAFB;
     margin-bottom: 10px;
@@ -101,7 +101,7 @@ export const Notify = styled.div<{ checked: boolean; empty?: boolean; }>`
     cursor: pointer;
     &::before {
         content: "";
-        display: ${({ checked }) => !checked ? "block" : "none"};
+        display: ${({ notChecked }) => notChecked ? "block" : "none"};
         background: #FF4A31;
         width: 5px;
         height: 5px;

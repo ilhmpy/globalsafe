@@ -9,10 +9,11 @@ import  { InBlockLoading } from "../../UI/V4/InBlockLoading/InBlockLoading";
 type NotifyProps = {
    block: boolean; 
    auth?: boolean;
-   admin?: boolean;
+   admin?: boolean; 
+   setCheckeds: (bool: boolean) => void;
 };
 
-export const Notify: FC<NotifyProps> = ({ block, auth, admin }: NotifyProps) => {
+export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds }: NotifyProps) => {
     const [notifies, setNotifies] = useState<any[]>([
         /*
         { date: new Date(), view: true, value: 10000, balanceKind: 1, desc: "Баланс личного кабинета успешно пополнен через cwd.global" },
@@ -40,7 +41,23 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin }: NotifyProps) => 
     const hubConnection = appContext.hubConnection;
     useEffect(() => {
         if (hubConnection) {
-            
+            setLoading(true);
+            hubConnection.invoke(
+                "GetInAppNotifications",
+                [0],
+                0,
+                100
+            )
+            .then((res) => {
+              console.log("user notifications", res);
+              setCheckeds(res.collection.some((item: any) => item.readState === 0));
+              setNotifies(res.collection);
+              setLoading(false);
+            })
+            .catch((err) => {
+                console.error(err);
+                setLoading(false);
+            })
         };
     }, [hubConnection])
     function onNotify() {
@@ -58,19 +75,19 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin }: NotifyProps) => 
                     {notifies && notifies.length ? (
                         <>
                             {notifies && notifies.map((notify: any, idx: number) => (
-                                <Notifies.Notify checked={notify.view} key={idx} onClick={onNotify}>
+                                <Notifies.Notify notChecked={notify.readState === 0} key={idx} onClick={onNotify}>
                                     <Notifies.NotifyItem grey>
-                                        {moment(notify.date).format("DD.MM.YYYY")} в {moment(notify.date).format("HH:MM")}
+                                        {moment(notify.sentDate).format("DD.MM.YYYY")} в {moment(notify.sentDate).format("HH:MM")}
                                     </Notifies.NotifyItem>
                                     <Notifies.NotifyItem bold>
-                                        {(notify.value).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {Balance[notify.balanceKind]}
+                                        {(notify.message).toLocaleString("ru-RU", { maximumFractionDigits: 2 })}
                                     </Notifies.NotifyItem>
-                                    <Notifies.NotifyItem>{notify.desc}</Notifies.NotifyItem>
+                                    <Notifies.NotifyItem>{notify.subject}</Notifies.NotifyItem>
                                 </Notifies.Notify>
                             ))}
                         </>
                     ) : (
-                        <Notifies.Notify empty checked={true}>
+                        <Notifies.Notify empty notChecked={false}>
                         <Notifies.NotifyItem>Непрочитанных уведомлений пока нет</Notifies.NotifyItem>
                         </Notifies.Notify> 
                     )}

@@ -36,6 +36,7 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
   const [header, setHeader] = useState(false);
   const [open, setOpen] = useState(false);
   const [notify, setNotify] = useState<boolean>(false);
+  const [checkeds, setCheckeds] = useState<boolean>(false);
 
   const appContext = useContext(AppContext);
   const themeContext = useContext(ThemeContext);
@@ -122,10 +123,10 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
             )}
             {user && (
               <>
-                <Notifies.BallContainer notChecked={true}>
+                <Notifies.BallContainer notChecked={checkeds}>
                     <Ball onClick={onBall} style={{ height: "20px" }} />
                 </Notifies.BallContainer>
-                <Notify block={notify} admin={admin ? true : false} /> 
+                <Notify block={notify} setCheckeds={setCheckeds} admin={admin ? true : false} /> 
               </>
             )}
             <SwitchTheme admin={admin ? true : false} auth={user ? true : false} onClick={swithTheme}>
