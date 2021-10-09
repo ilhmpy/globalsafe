@@ -13,6 +13,18 @@ type NotifyProps = {
    setCheckeds: (bool: boolean) => void;
 };
 
+interface NotifyItem {
+  id: number;
+  message: string;
+  readState: number;
+  safeId: string;
+  sentDate: any;
+  state: number;
+  subject: string;
+  userId: number;
+  userSafeId: string;
+};
+
 export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds }: NotifyProps) => {
     const [notifies, setNotifies] = useState<any[]>([
         /*
@@ -38,13 +50,24 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds }: Not
     ]);
     const [loading, setLoading] = useState<boolean>(false);
     const appContext = useContext(AppContext);
-    const hubConnection = appContext.hubConnection;
+    const hubConnection = appContext.hubConnection;   
+    useEffect(() => {
+        function cb (notify: any) {
+            console.log(notify);
+        };
+        if (hubConnection) {
+            hubConnection.on("InAppNotification", cb);
+        };
+        return () => {
+            hubConnection?.off("InAppNotification", cb);
+        };
+    }, [hubConnection]);
     useEffect(() => {
         if (hubConnection) {
             setLoading(true);
             hubConnection.invoke(
                 "GetInAppNotifications",
-                [0],
+                [],
                 0,
                 100
             )
@@ -57,11 +80,17 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds }: Not
             .catch((err) => {
                 console.error(err);
                 setLoading(false);
-            })
+            });
         };
-    }, [hubConnection])
-    function onNotify() {
-        return;
+    }, [hubConnection]);
+    function onNotify(id: string) {
+        if (hubConnection) {
+            hubConnection.invoke("SetStateInAppNotification", id, 0)
+             .then(res => {
+                 console.log(res);
+             })
+             .catch(err => console.error(err));
+        };
     };
     return (
       <Notifies.NotifiesBlock block={block} admin={admin} empty={!loading && notifies.length === 0} load={loading}>
@@ -71,16 +100,16 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds }: Not
             </>
           ) : (
             <>
-                <Scrollbars style={{ width: "100%", height: "100%" }} className="scrollbars">
+                <Scrollbars style={{ width: "100%" }} className="scrollbars">
                     {notifies && notifies.length ? (
                         <>
-                            {notifies && notifies.map((notify: any, idx: number) => (
-                                <Notifies.Notify notChecked={notify.readState === 0} key={idx} onClick={onNotify}>
+                            {notifies && notifies.map((notify: NotifyItem, idx: number) => (
+                                <Notifies.Notify notChecked={notify.readState === 0} key={idx} onClick={() => onNotify(notify.safeId)}>
                                     <Notifies.NotifyItem grey>
                                         {moment(notify.sentDate).format("DD.MM.YYYY")} в {moment(notify.sentDate).format("HH:MM")}
                                     </Notifies.NotifyItem>
                                     <Notifies.NotifyItem bold>
-                                        {(notify.message).toLocaleString("ru-RU", { maximumFractionDigits: 2 })}
+                                        {notify.message}
                                     </Notifies.NotifyItem>
                                     <Notifies.NotifyItem>{notify.subject}</Notifies.NotifyItem>
                                 </Notifies.Notify>

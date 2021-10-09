@@ -66,7 +66,6 @@ export const NotifiesBlock = styled.div<{ block: boolean; auth?: boolean; admin?
     z-index: 0;
     background: #fff;
     box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
-    // display: ${({ block }) => block ? "block" : "none"};
     padding: 20px 8px 1px 0px;
     &::before {
         content: "";
@@ -128,6 +127,8 @@ export const NotifyItem = styled.h3<{ grey?: boolean; bold?: boolean; }>`
     line-height: 20px;
     color: #3F3E4E;
     margin-bottom: 4px;
+    max-width: 360px;
+    word-wrap: break-word;
     &:last-child {
         margin-bottom: 0px;
     }
