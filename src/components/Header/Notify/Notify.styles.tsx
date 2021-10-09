@@ -35,24 +35,31 @@ export const NotifiesBlock = styled.div<{ block: boolean; auth?: boolean; admin?
     background: #fff;
     border-radius: 4px;
     position: absolute;
-    ${({ admin }) => {
+    transition: .3s;
+    ${({ admin, block }) => {
         if (admin) {
             return `
-                right: 140px;
+               right: ${block ? "140px" : "-680px"};
+               @media only screen and (max-device-width: 767px) {
+                right: ${block ? "0px" : "-680px"};
+               }
             `;
         };
         if (!admin) {
             return `
-                right: 48px;
+               right: ${block ? "48px" : "-680px"};
+               @media only screen and (max-device-width: 767px) {
+                right: ${block ? "0px" : "-680px"};
+               }
             `;
         };
     }}
     top: 50px;
     border: 1px solid #DCDCE8;
-    z-index: 9999;
+    z-index: 0;
     background: #fff;
     box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
-    display: ${({ block }) => block ? "block" : "none"};
+    // display: ${({ block }) => block ? "block" : "none"};
     padding: 20px 8px 1px 0px;
     &::before {
         content: "";
@@ -71,9 +78,6 @@ export const NotifiesBlock = styled.div<{ block: boolean; auth?: boolean; admin?
         border-top: 1px solid #DCDCE8;
         border-left: 1px solid #DCDCE8;
         margin: auto;
-    }
-    @media only screen and (max-device-width: 767px) {
-        right: 0;
     }
     & > .scrollbars > div {
         right: -1px !important;
