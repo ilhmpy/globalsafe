@@ -126,7 +126,7 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
                 <Notifies.BallContainer notChecked={checkeds}>
                     <Ball onClick={onBall} style={{ height: "20px" }} />
                 </Notifies.BallContainer>
-                <Notify block={notify} setCheckeds={setCheckeds} admin={admin ? true : false} /> 
+                <Notify block={notify} setBlock={setNotify} setCheckeds={setCheckeds} admin={admin ? true : false} /> 
               </>
             )}
             <SwitchTheme admin={admin ? true : false} auth={user ? true : false} onClick={swithTheme}>

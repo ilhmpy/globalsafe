@@ -11,6 +11,7 @@ type NotifyProps = {
    auth?: boolean;
    admin?: boolean; 
    setCheckeds: (bool: boolean) => void;
+   setBlock: (bool: boolean) => void;
 };
 
 interface NotifyItem {
@@ -25,7 +26,7 @@ interface NotifyItem {
   userSafeId: string;
 };
 
-export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds }: NotifyProps) => {
+export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBlock }: NotifyProps) => {
     const [notifies, setNotifies] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const appContext = useContext(AppContext);
@@ -71,8 +72,13 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds }: Not
              .catch(err => console.error(err));
         };
     };
+    function outBlock(e: any) {
+        if (e.target !== e.currentTarget) {
+            setBlock(false);
+        };
+    };
     return (
-      <Notifies.NotifiesBlock block={block} admin={admin} empty={!loading && notifies.length === 0} load={loading}>
+      <Notifies.NotifiesBlock block={block} admin={admin} empty={!loading && notifies.length === 0} load={loading} onClick={outBlock}>
           {loading ? <InBlockLoading /> : (
             <>
                 <Scrollbars style={{ width: "100%" }} className="scrollbars">
