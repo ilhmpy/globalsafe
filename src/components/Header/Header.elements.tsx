@@ -99,7 +99,7 @@ export const HeaderWrap = styled.header<{ header?: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 9999999999;
+  z-index: 9999;
   padding: 30px 0;
   height: 98px;
   transition: all 0.3s ease 0s;
