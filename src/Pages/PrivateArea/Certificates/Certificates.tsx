@@ -33,7 +33,7 @@ export const Certificates = () => {
 
   async function getUserCertificate() {
     try {
-      const res = await hubConnection!.invoke('GetUserCertificate');
+      const res = await hubConnection!.invoke('GetUserCertificate', 1);
       console.log('GetUserCertificate', res);
     } catch (err) {
       console.log(err);
@@ -63,7 +63,7 @@ export const Certificates = () => {
     <S.Container>
       <Container>
         <Heading
-          onClick={() => history.push(routers.orderCreate)}
+          onClick={() => history.goBack()}
           title="P2P обмены"
           btnText="Опубликовать ордер"
         />

@@ -21,7 +21,7 @@ import { OrderToSell } from './Exchanges/OrderToSell';
 import { Certificates } from './Certificates/Certificates';
 import { OrderCreate } from './Orders/OrderCreate';
 import { AppContext } from '../../context/HubContext';
-import { NewOrder } from './Exchanges/NewOrder';
+import { OrderToBuy } from './Exchanges/OrderToBuy';
 import { DepositView } from './Deposits/DepositView';
 
 export const InfoMain: FC = () => {
@@ -48,6 +48,9 @@ export const InfoMain: FC = () => {
           <Route path="/info/deposits/:slug" component={OnePage} exact />
           <Route path={routers.p2pchanges} component={Advert} exact />
           <Route path={routers.p2pchangesOwn} component={OwnExchanges} exact />
+          <Route path={routers.p2pchangesOrderToBuy} component={OrderToBuy} exact />
+          <Route path={routers.p2pchangesOrderToSell} component={OrderToSell} exact />
+          <Route path={routers.certificates} component={Certificates} exact />
           <Route
             path={routers.p2pchangesSingleExchangeDetails}
             component={SingleExchangeDetails}
@@ -57,10 +60,9 @@ export const InfoMain: FC = () => {
           <Route path={routers.settingsNewPayMethod} component={NewPayMethod} exact />
           <Route path={routers.settingsViewPayMethod} component={ViewPayMethod} exact />
           <Route path={routers.operations} component={HistoryOperations} exact />
-          <Route path={routers.certificates} component={Certificates} exact />
-          <Route path={routers.p2pchangesOrderToSell} component={OrderToSell} exact />
+          {/* <Route path={routers.p2pchangesOrderToSell} component={OrderToSell} exact /> */}
           {/* TODO Remove | just for testing */}
-          <Route path={routers.p2pchangesNewOrder} component={NewOrder} exact />
+          {/* <Route path={routers.p2pchangesNewOrder} component={NewOrder} exact /> */}
         </Switch>
         <Footer />
       </Styled.Page>
