@@ -39,7 +39,7 @@ export const Advert = () => {
     <div>
       <Container>
         <Heading
-          onClick={() => history.push(routers.orderCreate)}
+          onClick={() => history.push(routers.p2pchangesOrderToBuy)}
           // onClick={() => history.push(routers.orderCreate)}
           title="P2P обмены"
           btnText="Опубликовать ордер"

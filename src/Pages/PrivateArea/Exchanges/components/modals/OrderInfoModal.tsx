@@ -7,15 +7,35 @@ import { routers } from '../../../../../constantes/routers';
 import { Space, Text } from '../../../components/ui';
 import * as S from './S.el';
 
-type Props = {
-  onClose: () => void;
-  open: boolean;
+interface OrderInfoModalProps {
+    type: 'buy' | 'sell',
+    currencyToBuy: string;
+    currencyToChange: string;
+    orderSumm: string;
+    rate: string;
+    orderMinSumm: string;
+    orderMaxSumm: string;
+    timePeriod: string;
+    onPublish: () => void;
+    loading: boolean;
+    onClose: () => void;
+    open: boolean;
 };
 
-export const OrderBuyModal: FC<Props> = ({
-  onClose,
-  open,
-}: Props) => {
+export const OrderInfoModal: FC<OrderInfoModalProps> = ({
+    type,
+    currencyToBuy,
+    currencyToChange,
+    orderSumm,
+    rate,
+    orderMinSumm,
+    orderMaxSumm,
+    timePeriod,
+    onPublish,
+    loading,
+    onClose,
+    open,
+}: OrderInfoModalProps) => {
     const history = useHistory();
 
     return (
@@ -29,31 +49,33 @@ export const OrderBuyModal: FC<Props> = ({
                         <S.DataListItem>
                             <Text size={14} lH={20}>Направление:</Text>
                             <S.ListItemDivider />
-                            <Text size={14} lH={20} weight={700}>Покупка</Text>
+                            <Text size={14} lH={20} weight={700}>
+                                {type === 'buy' ? 'Покупка' : 'Продажа'}
+                            </Text>
                         </S.DataListItem>
 
                         <S.DataListItem>
                             <Text size={14} lH={20}>Валюта покупки:</Text>
                             <S.ListItemDivider />
-                            <Text size={14} lH={20} weight={700}>CWD</Text>
+                            <Text size={14} lH={20} weight={700}>{currencyToBuy}</Text>
                         </S.DataListItem>
 
                         <S.DataListItem>
                             <Text size={14} lH={20}>Кол-во покупки:</Text>
                             <S.ListItemDivider />
-                            <Text size={14} lH={20} weight={700}>100 000</Text>
+                            <Text size={14} lH={20} weight={700}>{orderSumm}</Text>
                         </S.DataListItem>
 
                         <S.DataListItem>
                             <Text size={14} lH={20}>Валюта обмена:</Text>
                             <S.ListItemDivider />
-                            <Text size={14} lH={20} weight={700}>RUB</Text>
+                            <Text size={14} lH={20} weight={700}>{currencyToChange}</Text>
                         </S.DataListItem>
 
                         <S.DataListItem>
                             <Text size={14} lH={20}>Курс:</Text>
                             <S.ListItemDivider />
-                            <Text size={14} lH={20} weight={700}>109.44</Text>
+                            <Text size={14} lH={20} weight={700}>{rate}</Text>
                         </S.DataListItem>
 
                         <S.DataListItem>
@@ -70,18 +92,18 @@ export const OrderBuyModal: FC<Props> = ({
                         <S.DataListItem>
                             <Text size={14} lH={20}>Лимиты:</Text>
                             <S.ListItemDivider />
-                            <Text size={14} lH={20} weight={700}>1 000 - 49 900</Text>
+                            <Text size={14} lH={20} weight={700}>{`${orderMinSumm} - ${orderMaxSumm}`}</Text>
                         </S.DataListItem>
 
                         <S.DataListItem>
                             <Text size={14} lH={20}>Время на обмен:</Text>
                             <S.ListItemDivider />
-                            <Text size={14} lH={20} weight={700}>20 минут</Text>
+                            <Text size={14} lH={20} weight={700}>{timePeriod}</Text>
                         </S.DataListItem>
                     </S.DataList>
 
                     <Space>
-                        <Button primary fullWidth onClick={onClose}>
+                        <Button primary fullWidth onClick={() => onPublish()}>
                             Опубликовать
                         </Button>
                         <Button outlinePrimary fullWidth onClick={onClose}>

@@ -10,7 +10,7 @@ import {
 } from '../../../components/ui';
 import { Button } from '../../../../../components/Button/V2/Button';
 import { useHistory } from 'react-router';
-import { OrderBuyModal } from '../modals/OrderBuyModal';
+// import { OrderInfoModal } from '../modals/OrderInfoModal';
 
 import { routers } from '../../../../../constantes/routers';
 
@@ -19,7 +19,7 @@ import { Checkbox } from '../../../components/Checkbox';
 import { OrderSellModal } from '../modals/OrderSellModal';
 import { OrderErrorModal } from '../modals/OrderErrorModal';
  
-export const NewOrderCard: FC = () => {
+export const OrderToSellCard: FC = () => {
   const history = useHistory();
   const [showOrderBuyModal, setShowOrderBuyModal] = useState(false);
   const [showOrderSellModal, setShowOrderSellModal] = useState(false);
@@ -43,11 +43,11 @@ export const NewOrderCard: FC = () => {
       <RightSide>
 
         <S.TabsBlock>
-            <TabNavItem to={routers.p2pchangesNewOrder} exact>
+            <TabNavItem to={routers.p2pchangesOrderToBuy} exact>
               <div>Покупка</div>
             </TabNavItem>
 
-            <TabNavItem to={routers.p2pchangesOwn} exact>
+            <TabNavItem to={routers.p2pchangesOrderToSell} exact>
               <div>Продажа</div>
             </TabNavItem>
 
@@ -299,10 +299,10 @@ export const NewOrderCard: FC = () => {
           </S.Form>
       </RightSide>
 
-        <OrderBuyModal
+        {/* <OrderBuyModal
             open={showOrderBuyModal}
             onClose={() => setShowOrderBuyModal(false)}
-        />
+        /> */}
         <OrderSellModal
             open={showOrderSellModal}
             onClose={() => setShowOrderSellModal(false)}
