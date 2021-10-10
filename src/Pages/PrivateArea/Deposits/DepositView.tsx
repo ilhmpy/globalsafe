@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useMemo } from 'react';
+import { FC, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Container } from '../../../components/UI/Container';
 import { routers } from '../../../constantes/routers';
@@ -15,26 +15,16 @@ export const DepositView: FC = () => {
   const { hubConnection, balanceList, chosenDepositView, setChosenDepositView } =
     useContext(AppContext);
 
-  console.log('chosenDepositView', chosenDepositView);
-
-  const bType = useMemo(() => {
-    return balanceList?.map((i) => i.balanceKind);
-  }, [balanceList]);
-
   useEffect(() => {
     (async () => {
       if (hubConnection) {
         try {
           const result = await hubConnection.invoke<RootBalanceList>(
-            'GetBalanceLog',
-            bType,
-            [7],
-            new Date('2020-12-02T00:47:45'),
-            new Date(),
+            'GetDepositPaymentsLog',
+            chosenDepositView.safeId,
             0,
-            100
+            10
           );
-          console.log('result', result);
         } catch (error) {
           console.log(error);
         }

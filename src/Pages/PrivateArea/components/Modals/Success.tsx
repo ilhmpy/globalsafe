@@ -22,7 +22,7 @@ export const SuccessOpenDeposit: FC<Props> = ({ onClose, open }: Props) => {
               </S.Text>
             </S.TextWrap>
 
-            <Button fullWidth bigSize primary>
+            <Button fullWidth bigSize primary onClick={onClose}>
               Мои депозиты
             </Button>
           </S.Container>
