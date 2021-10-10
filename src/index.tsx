@@ -8,12 +8,15 @@ import { Loader } from './components/Loader/Loader';
 import { HubProvider } from './context/HubContext';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import { ThemesProvider } from './context/ThemeContext';
+import { ChartProvider } from './context/ChartContext';
 
 ReactDOM.render(
   <ThemesProvider>
     <Suspense fallback={<Loader />}>
       <HubProvider>
-        <App />
+        <ChartProvider>
+          <App />
+        </ChartProvider>
       </HubProvider>
     </Suspense>
   </ThemesProvider>,
