@@ -27,12 +27,12 @@ interface NotifyItem {
 };
 
 export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBlock }: NotifyProps) => {
-    const [notifies, setNotifies] = useState<any[]>([]);
+    const [notifies, setNotifies] = useState<NotifyItem[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const appContext = useContext(AppContext);
     const hubConnection = appContext.hubConnection;   
     useEffect(() => {
-        function cb (notify: any) {
+        function cb (notify: NotifyItem) {
             console.log(notify);
         };
         if (hubConnection) {
