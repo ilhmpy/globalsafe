@@ -3,9 +3,12 @@ import { useHistory } from 'react-router-dom';
 import { ReactComponent as Info } from '../../../../assets/svg/question14.svg';
 import { Button } from '../../../../components/Button/V2/Button';
 import { AppContext } from '../../../../context/HubContext';
+import { Balance } from '../../../../types/balance';
 import { CollectionListDeposits, ListDeposits } from '../../../../types/deposits';
 import { Checkbox } from '../Checkbox';
 import { Dropdown } from '../Dropdown';
+import { ErrorOpenDeposit } from '../Modals/ErrorOpenDeposit';
+import { SuccessOpenDeposit } from '../Modals/Success';
 import {
   ChipWrap,
   LeftSide,
@@ -21,20 +24,32 @@ import * as S from './S.el';
 
 interface IProps {
   goBackClick: () => void;
+  setIsConfirmOpenDeposit: (open: boolean) => void;
+  setSumValue: (value: string) => void;
+
+  isConfirm: boolean;
 }
 
-export const OpenDeposit: FC<IProps> = ({ goBackClick }) => {
+export const OpenDeposit: FC<IProps> = ({
+  goBackClick,
+  setIsConfirmOpenDeposit,
+  isConfirm,
+  setSumValue,
+}) => {
   const [depositProgramsList, setDepositProgramsList] = useState<CollectionListDeposits[]>([]);
-  const [activeDeposite, setActiveDeposite] = useState<CollectionListDeposits>();
-  const [selected, setSelected] = useState<string | null>(setActiveDeposite?.name);
+  const [activeDeposit, setActiveDeposit] = useState<CollectionListDeposits>();
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+  const [isFailed, setIsFailed] = useState<boolean>(false);
   const [isAgree, setIsAgree] = useState<boolean>(false);
   const [sum, setSum] = useState('');
   const history = useHistory();
 
-  const { hubConnection } = useContext(AppContext);
+  const { hubConnection, setSelectedDeposit } = useContext(AppContext);
 
   const setSelectedOption = (str: string) => {
-    setActiveDeposite(depositProgramsList.find((it) => it.name === str));
+    const deposit = depositProgramsList.find((it) => it.name === str);
+    setActiveDeposit(deposit);
+    setSelectedDeposit(deposit as CollectionListDeposits);
   };
 
   const pathnameArray = window.location.pathname.split('/');
@@ -46,9 +61,11 @@ export const OpenDeposit: FC<IProps> = ({ goBackClick }) => {
         .then((res) => {
           if (res.collection.length) {
             setDepositProgramsList(res.collection);
-            setActiveDeposite(
-              res.collection.find((it) => it.id === +pathnameArray[pathnameArray.length - 1])
+            const found = res.collection.find(
+              (it) => it.safeId === pathnameArray[pathnameArray.length - 1]
             );
+            setActiveDeposit(found);
+            setSelectedDeposit(found);
           }
         })
         .catch((err: Error) => {
@@ -61,40 +78,58 @@ export const OpenDeposit: FC<IProps> = ({ goBackClick }) => {
     getPrograms();
   }, []);
 
-  console.log(depositProgramsList);
-  console.log(activeDeposite);
-
-  const openDepost = () => {
-    if (
-      hubConnection &&
-      isAgree &&
-      activeDeposite &&
-      +sum >= activeDeposite?.minAmount &&
-      +sum <=
-        (activeDeposite?.maxAmount ? activeDeposite?.maxAmount : activeDeposite?.minAmount * 10)
-    ) {
-      console.log('CreateUserDeposit', +sum, activeDeposite?.safeId);
+  const openDeposit = () => {
+    if (hubConnection) {
       hubConnection
-        .invoke<any>('CreateUserDeposit', +sum * 100000, activeDeposite?.safeId)
+        .invoke<any>('CreateUserDeposit', +sum * 100000, activeDeposit?.safeId)
         .then((res) => {
-          goBackClick();
-          console.log('.then ~ res', res);
+          setIsSuccess(true);
         })
         .catch((err: Error) => {
+          setIsFailed(true);
           console.log(err);
         });
     }
   };
 
+  const checkPossibility = () => {
+    if (
+      isAgree &&
+      activeDeposit &&
+      +sum >= activeDeposit?.minAmount &&
+      +sum <= (activeDeposit?.maxAmount ? activeDeposit?.maxAmount : activeDeposit?.minAmount * 10)
+    ) {
+      setIsConfirmOpenDeposit(true);
+    }
+  };
+
+  useEffect(() => {
+    isConfirm && openDeposit();
+  }, [isConfirm]);
+
   return (
     <S.Container>
+      <SuccessOpenDeposit
+        onClose={() => {
+          goBackClick();
+          setIsSuccess(false);
+        }}
+        open={isSuccess}
+      />
+      <ErrorOpenDeposit
+        onClose={() => {
+          goBackClick();
+          setIsFailed(false);
+        }}
+        open={isFailed}
+      />
       <LeftSide>
-        <Name>{activeDeposite?.name}</Name>
+        <Name>{activeDeposit?.name}</Name>
         <ChipWrap>
           <Chip>Новый депозит</Chip>
         </ChipWrap>
         <ProgramDescTitle>Описание программы:</ProgramDescTitle>
-        <ProgramDesc>{activeDeposite?.description}</ProgramDesc>
+        <ProgramDesc>{activeDeposit?.description}</ProgramDesc>
       </LeftSide>
       <RightSide>
         <TitleWrap>
@@ -103,17 +138,17 @@ export const OpenDeposit: FC<IProps> = ({ goBackClick }) => {
         <S.DropdownWrapper>
           <Dropdown
             options={depositProgramsList
-              .filter((it) => it.name !== activeDeposite?.name)
+              .filter((it) => it.name !== activeDeposit?.name)
               .map((it) => it.name)}
             setSelectedOption={setSelectedOption}
-            selectedOption={activeDeposite ? activeDeposite?.name : ''}
+            selectedOption={activeDeposit ? activeDeposit?.name : ''}
           />
         </S.DropdownWrapper>
         <S.BlockWrapper>
           <TitleWrap small>
             <ProgramDescTitle>Валюта депозита:</ProgramDescTitle>
           </TitleWrap>
-          <S.TextValue>GSFUTURE6</S.TextValue>
+          <S.TextValue>{Balance[activeDeposit?.asset as number]}</S.TextValue>
         </S.BlockWrapper>
 
         <S.BlockWrapper>
@@ -122,7 +157,7 @@ export const OpenDeposit: FC<IProps> = ({ goBackClick }) => {
               Отложенная выплата: <Info />
             </ProgramDescTitle>
           </TitleWrap>
-          <S.TextValue>{activeDeposite?.isInstant ? 'Да' : 'Нет'}</S.TextValue>
+          <S.TextValue>{activeDeposit?.isInstant ? 'Да' : 'Нет'}</S.TextValue>
         </S.BlockWrapper>
 
         <S.BlockWrapper>
@@ -131,30 +166,34 @@ export const OpenDeposit: FC<IProps> = ({ goBackClick }) => {
               Замороженый депозит: <Info />
             </ProgramDescTitle>
           </TitleWrap>
-          <S.TextValue>{activeDeposite?.isActive ? 'Да' : 'Нет'}</S.TextValue>
+          <S.TextValue>{activeDeposit?.isActive ? 'Да' : 'Нет'}</S.TextValue>
         </S.BlockWrapper>
 
         <S.BlockWrapper>
           <TitleWrap small>
             <ProgramDescTitle>Выплата процентов:</ProgramDescTitle>
           </TitleWrap>
-          <S.TextValue>{`1 раз в ${activeDeposite?.paymentInterval} дней`}</S.TextValue>
+          <S.TextValue>{`1 раз в ${activeDeposit?.paymentInterval} дней`}</S.TextValue>
         </S.BlockWrapper>
         <TitleWrap>
-          <ProgramDescTitle>{`Сумма депозита (min ${activeDeposite?.minAmount
+          <ProgramDescTitle>{`Сумма депозита (min ${activeDeposit?.minAmount
             .toString()
             .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')} - max ${
-            activeDeposite?.maxAmount
-              ? activeDeposite?.maxAmount.toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')
-              : activeDeposite?.minAmount &&
-                (activeDeposite?.minAmount * 10).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')
+            activeDeposit?.maxAmount
+              ? activeDeposit?.maxAmount.toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')
+              : activeDeposit?.minAmount &&
+                (activeDeposit?.minAmount * 10).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')
           }):`}</ProgramDescTitle>
         </TitleWrap>
         <S.FieldContainer>
           <Field
             placeholder="Введите сумму"
             value={sum.toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
-            onChange={(e) => setSum(e.target.value)}
+            onChange={({ target: { value } }) => {
+              const correctValue = value.replaceAll(/\D/g, '');
+              setSum(correctValue);
+              setSumValue(correctValue);
+            }}
           />
         </S.FieldContainer>
         <S.BlockWrapper>
@@ -164,7 +203,7 @@ export const OpenDeposit: FC<IProps> = ({ goBackClick }) => {
             </S.Agree>
           </Checkbox>
         </S.BlockWrapper>
-        <Button bigSize primary onClick={openDepost}>
+        <Button bigSize primary onClick={checkPossibility}>
           Открыть депозит
         </Button>
       </RightSide>

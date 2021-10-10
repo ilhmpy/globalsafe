@@ -3,16 +3,19 @@ import { useHistory } from 'react-router-dom';
 import { Container } from '../../../components/UI/Container';
 import { routers } from '../../../constantes/routers';
 import { AppContext } from '../../../context/HubContext';
-import { CollectionListDeposits, ListDeposits } from '../../../types/deposits';
 import { RootList } from '../../../types/info';
 import { Back } from '../components/Back';
+import { ConfirmOpenDeposit } from '../components/Modals/ConfirmOpenDeposit';
 import { OpenDeposit } from '../components/OpenDeposits';
 import { Title } from '../components/ui/Title';
 import * as S from './S.elements';
 
 export const DepositOpen: FC = () => {
   const history = useHistory();
-  
+  const [isConfirmOpenDeposit, setIsConfirmOpenDeposit] = useState(false);
+  const [isConfirm, setIsConfirm] = useState(false);
+  const [sumValue, setSumValue] = useState<string>('');
+
   const appContext = useContext(AppContext);
   const { hubConnection } = appContext;
 
@@ -42,15 +45,27 @@ export const DepositOpen: FC = () => {
     }
   };
 
-
   return (
     <S.Container>
+      <ConfirmOpenDeposit
+        onClose={(isAgree) => {
+          setIsConfirmOpenDeposit(false);
+          setIsConfirm(isAgree);
+        }}
+        open={isConfirmOpenDeposit}
+        sumValue={sumValue}
+      />
       <Container>
         <Back text="К программам депозитов" onGoBackClick={goBackClick} />
         <Container>
           <Title>Открытие депозита</Title>
         </Container>
-        <OpenDeposit goBackClick={goBackClick} />
+        <OpenDeposit
+          goBackClick={goBackClick}
+          setIsConfirmOpenDeposit={setIsConfirmOpenDeposit}
+          isConfirm={isConfirm}
+          setSumValue={setSumValue}
+        />
       </Container>
     </S.Container>
   );
