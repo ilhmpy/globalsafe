@@ -24,6 +24,9 @@ import {
 import { Nav } from './Nav';
 import { NavAdmin } from './NavAdmin';
 import { routers } from '../../constantes/routers';
+import { Notify } from "./Notify/Notify";
+import * as Notifies from "./Notify/Notify.styles";
+import { ReactComponent as Ball } from "../../assets/svg/ball.svg";
 
 type Props = {
   admPanel?: boolean;
@@ -32,6 +35,9 @@ type Props = {
 export const Header: FC<Props> = ({ admPanel }: Props) => {
   const [header, setHeader] = useState(false);
   const [open, setOpen] = useState(false);
+  const [notify, setNotify] = useState<boolean>(false);
+  const [checkeds, setCheckeds] = useState<boolean>(false);
+
   const appContext = useContext(AppContext);
   const themeContext = useContext(ThemeContext);
   const swithTheme = themeContext.toggleTheme;
@@ -72,70 +78,81 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
       document.body.style.overflow = 'unset';
     }
   }, [open]);
-
-  const onClose = () => {
+  function onClose() {
     setOpen(false);
-  };
-
+  }
   const toAdmin = () => {
     history.push('/admin');
   };
   const lang = localStorage.getItem('i18nextLng') || 'ru';
+  function onBall(e: any) {
+    setNotify(!notify);
+  }; 
   return (
-    <HeaderWrap header={header}>
-      <Container>
-        <HeaderInner>
-          <HeaderLogo href="/">
-            <Logo />
-          </HeaderLogo>
-          <MenuBtn open={open} onClick={() => setOpen(!open)}>
-            <span></span>
-            <span></span>
-          </MenuBtn>
-          <HeaderMenu open={open}>
-            {admPanel ? (
-              <NavAdmin lang={lang} onClose={onClose} />
-            ) : (
-              <Nav
-                onClose={onClose}
-                handleClick={handleClick}
-                user={user}
-                logOut={logOut}
-                location={location.pathname}
-                admin={admin}
-                lang={lang}
-              />
-            )}
-          </HeaderMenu>
+    <>
+      <HeaderWrap header={header}>
+        <Container>
+          <HeaderInner>
+            <HeaderLogo href="/">
+              <Logo />
+            </HeaderLogo>
+            <MenuBtn open={open} onClick={() => setOpen(!open)}>
+              <span></span>
+              <span></span>
+            </MenuBtn>
+            <HeaderMenu open={open}>
+              {admPanel ? (
+                <NavAdmin lang={lang} onClose={onClose} />
+              ) : (
+                <Nav
+                  onClose={onClose}
+                  handleClick={handleClick}
+                  user={user}
+                  logOut={logOut}
+                  location={location.pathname}
+                  admin={admin}
+                  lang={lang}
+                />
+              )} 
+            </HeaderMenu>
 
-          {lang === 'ru' ? (
-            <Languale onClick={() => i18n.changeLanguage('en')}>EN</Languale>
-          ) : (
-            <Languale onClick={() => i18n.changeLanguage('ru')}>RU</Languale>
-          )}
-          <SwitchTheme onClick={swithTheme}>
-            {theme === 'light' ? <DarkTheme /> : <LightTheme />}
-          </SwitchTheme>
-          {admin && <AdminButton onClick={toAdmin}>{t('headerButton.admin')}</AdminButton>}
-          {location.pathname === '/' ? (
-            <Button primary onClick={handleClick}>
-              {t('headerButton.personalArea')}
-            </Button>
-          ) : user ? (
-            // <Button primary onClick={logOut}>
-            //   {t('logout')}
-            // </Button>
-            <Button primary onClick={handleClick}>
-              {t('headerButton.personalArea')}
-            </Button>
-          ) : (
-            <Button primary onClick={handleClick}>
-              {t('headerButton.personalArea')}
-            </Button>
-          )}
-        </HeaderInner>
-      </Container>
-    </HeaderWrap>
+            {lang === 'ru' ? (
+              <Languale auth={user ? true : false} admin={admin ? true : false} onClick={() => i18n.changeLanguage('en')}>EN</Languale>
+            ) : (
+              <Languale auth={user ? true : false} admin={admin ? true : false} onClick={() => i18n.changeLanguage('ru')}>RU</Languale>
+            )}
+            {user && (
+              <>
+                <Notifies.BallContainer notChecked={checkeds}>
+                    <Ball onClick={onBall} style={{ height: "20px" }} />
+                </Notifies.BallContainer>
+                <Notify block={notify} setBlock={setNotify} setCheckeds={setCheckeds} admin={admin ? true : false} /> 
+              </>
+            )}
+            <SwitchTheme admin={admin ? true : false} auth={user ? true : false} onClick={swithTheme}>
+              {theme === 'light' ? <DarkTheme /> : <LightTheme />}
+            </SwitchTheme>
+            {admin && <AdminButton onClick={toAdmin}>{t('headerButton.admin')}</AdminButton>}
+            {location.pathname === '/' ? (
+              <Button primary onClick={handleClick}>
+                {t('headerButton.personalArea')}
+              </Button>
+            ) : user ? (
+              // <Button primary onClick={logOut}>
+              //   {t('logout')}
+              // </Button>
+              <Button primary onClick={handleClick}>
+                {t('headerButton.personalArea')}
+              </Button>
+            ) : (
+              <Button primary onClick={handleClick}>
+                {t('headerButton.personalArea')}
+              </Button>
+            )}
+          </HeaderInner> 
+        </Container>
+      </HeaderWrap>
+    </>
   );
 };
 

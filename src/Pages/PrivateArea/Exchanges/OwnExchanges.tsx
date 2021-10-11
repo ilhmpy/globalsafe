@@ -1,23 +1,49 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+
 import { Container } from '../../../components/UI/Container';
 import { Heading } from '../components/Heading';
-import { useHistory } from 'react-router-dom';
 import { routers } from '../../../constantes/routers';
 import { TabNavItem, TabsBlock, Text, FilterButton } from '../components/ui';
 import * as S from './S.el';
 // import { Button } from '../../../components/Button/V2/Button';
 import { OwnActiveExchangesTable } from './components/OwnActiveExchangesTable/OwnActiveExchangesTable';
 import { OwnArchivedExchangesTable } from './components/OwnArchivedExchangeTable/OwnArchivedExchangeTable';
+import { AppContext } from '../../../context/HubContext';
+import { GetExchangesCollectionResult } from '../../../types/exchange';
 
 export const OwnExchanges = () => {
   const history = useHistory();
+  const { hubConnection } = useContext(AppContext);
   const [activeFilter, setActiveFilter] = useState<'active' | 'archived'>('active');
+
+  useEffect(() => {
+    if (hubConnection) {
+      getGetUserExchanges();
+    }
+  }, [hubConnection, activeFilter]);
+
+  async function getGetUserExchanges() {
+      try {
+        const res = await hubConnection!.invoke<GetExchangesCollectionResult>(
+          'GetExchanges', 
+          [0, 1], 
+          activeFilter === 'active' ? [0, 1, 3] : [2],  
+          0, 
+          20
+        );
+        console.log('getGetUserExchanges', res);
+      } catch (err) {
+        console.log(err);
+      }
+  };
+
 
   return (
     <div>
       <Container>
         <Heading
-          onClick={() => history.push(routers.orderCreate)}
+          onClick={() => history.push(routers.p2pchangesOrderToBuy)}
           title="P2P обмены"
           btnText="Опубликовать ордер"
         />

@@ -299,7 +299,7 @@ export const HistoryOperations = () => {
                                 </Styled.TableMap>
                             </>
                         ) : (
-                            <NotItems text="Не имеется элементов. Попробуйте поменять фильтр." />
+                            <NotItems text="Операции отсутствуют" /> 
                         )}
                     </>
                 ) : ( <Loading /> )}

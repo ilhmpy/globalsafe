@@ -5,20 +5,21 @@ import { Container } from '../../../components/UI/Container';
 import { Back } from '../components/Back';
 import { Title } from '../components/ui/Title';
 import * as S from './S.el';
-import { NewOrderCard } from './components/NewOrderCard';
+import { OrderToBuyCard } from './components/OrderToBuyCard';
+import { routers } from '../../../constantes/routers';
 
-export const NewOrder: FC = () => {
+export const OrderToBuy: FC = () => {
   const history = useHistory();
 
   return (
     <S.Container>
       <Container>
-        <Back text="Назад" onGoBackClick={() => history.goBack()} />
+        <Back text="Назад" onGoBackClick={() => history.replace(routers.p2pchangesOwn)} />
         <S.TitleContainer>
-            <Title mB={0}>Публикация ордера</Title>
+          <Title mB={0}>Публикация ордера</Title>
         </S.TitleContainer>
 
-        <NewOrderCard />
+        <OrderToBuyCard />
 
       </Container>
     </S.Container>

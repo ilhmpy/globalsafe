@@ -14,7 +14,7 @@ export const ErrorOpenDeposit: FC<Props> = ({ onClose, open }: Props) => {
       {open && (
         <Modal onClose={onClose} open={open}>
           <S.Container>
-            <S.Title>Подтверждение открытия депозита</S.Title>
+            <S.Title>Ошибка открытия депозита</S.Title>
             <S.TextWrap>
               <S.Text>
                 Депозит по программе <a href="/">Vanila</a> на сумму 90 000 GSFUTURE6 не был открыт
@@ -26,10 +26,10 @@ export const ErrorOpenDeposit: FC<Props> = ({ onClose, open }: Props) => {
               <S.Text red>На балансе аккаунта недостаточно средств</S.Text>
             </S.TextWrap>
             <S.Buttons>
-              <Button bigSize primary>
+              <Button bigSize primary onClick={onClose}>
                 Пополнить баланс
               </Button>
-              <Button bigSize outlinePrimary>
+              <Button bigSize outlinePrimary onClick={onClose}>
                 Отмена
               </Button>
             </S.Buttons>

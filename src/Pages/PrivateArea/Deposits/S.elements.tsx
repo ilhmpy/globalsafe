@@ -12,7 +12,6 @@ export const NotDeposits = styled.div`
   margin: 20px 0;
 `;
 
-
 export const StyledProgram = styled(Program)`
   padding: 0;
 `;

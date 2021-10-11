@@ -20,9 +20,13 @@ type Context = {
   chosenMethod: any;
   setChosenMethod: (state: any) => void;
   loan: any[] | null;
+  chosenDepositView: any;
+  selectedDeposit: any;
+  setChosenDepositView: (object: any) => void;
+  setSelectedDeposit: (object: any) => void;
 };
 
-export const AppContext = React.createContext<Context>({ 
+export const AppContext = React.createContext<Context>({
   hubConnection: null,
   user: null,
   logOut: () => undefined,
@@ -35,6 +39,10 @@ export const AppContext = React.createContext<Context>({
   chosenMethod: {},
   setChosenMethod: () => undefined,
   loan: null,
+  setChosenDepositView: () => undefined,
+  setSelectedDeposit: () => undefined,
+  selectedDeposit: {},
+  chosenDepositView: {},
 });
 
 export const HubProvider: FC = ({ children }: any) => {
@@ -50,6 +58,8 @@ export const HubProvider: FC = ({ children }: any) => {
   const [chosenMethod, setChosenMethod] = useState<any>({});
   const [loan, setLoan] = useState<any[] | null>(null);
   const { i18n } = useTranslation();
+  const [chosenDepositView, setChosenDepositView] = useState({});
+  const [selectedDeposit, setSelectedDeposit] = useState({});
 
   useEffect(() => {
     const hubConnection = new signalR.HubConnectionBuilder()
@@ -66,7 +76,6 @@ export const HubProvider: FC = ({ children }: any) => {
       .start()
       .then(() => {
         setHubConnection(hubConnection);
-        console.log('connected', isFailed);
         if (window.location.pathname == '/tech') {
           setIsFailed(false);
         }
@@ -75,13 +84,17 @@ export const HubProvider: FC = ({ children }: any) => {
         console.error(e);
         setMyToken('');
         console.log(e);
-        console.log('notConnected', isFailed);
+
         setIsFailed(true);
         setUser('');
       });
 
-    console.log(hubConnection);
-  }, [myToken, isFailed]);
+    // return function cleanup() {
+    //   if (hubConnection !== null) {
+    //     hubConnection.stop();
+    //   }
+    // };
+  }, [myToken]);
 
   useEffect(() => {
     const cb = (data: any) => {
@@ -143,10 +156,7 @@ export const HubProvider: FC = ({ children }: any) => {
     }
     return function cleanup() {
       if (hubConnection !== null) {
-        hubConnection
-          .stop()
-          .then(() => undefined)
-          .catch((e) => console.log(e));
+        hubConnection.stop();
       }
     };
   }, [hubConnection, myToken]);
@@ -155,7 +165,7 @@ export const HubProvider: FC = ({ children }: any) => {
     setMyToken(null);
     setUser(null);
     setIsAdmin(false);
-    // history?.replace('/');
+    // history.push('/');
   };
 
   const login = (token: string) => {
@@ -177,7 +187,11 @@ export const HubProvider: FC = ({ children }: any) => {
         chosenMethod,
         setChosenMethod,
         loan,
-      }} 
+        chosenDepositView,
+        setChosenDepositView,
+        setSelectedDeposit,
+        selectedDeposit,
+      }}
     >
       {children}
     </AppContext.Provider>

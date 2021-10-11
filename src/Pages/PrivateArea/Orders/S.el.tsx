@@ -32,3 +32,20 @@ export const Block = styled.div<{ mbBig?: boolean }>`
 export const BlockItem = styled.div`
   width: calc(50% - 10px);
 `;
+
+export const NoPaymentMethod = styled.div`
+  padding: 20px;
+  background: #ffffff;
+  border: 1px solid #eaeff4;
+  box-sizing: border-box;
+  border-radius: 0px 4px 4px 0px;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 20px;
+  color: #000000;
+  margin-bottom: 20px;
+  a {
+    color: #0094ff;
+    text-decoration: underline;
+  }
+`;

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
+
 import * as S from './S.el';
 import { Container } from '../../../components/UI/Container';
 import { Back } from '../components/Back';
-import { useHistory } from 'react-router-dom';
 import { routers } from '../../../constantes/routers';
 import { Title } from '../components/ui/Title';
 import {
@@ -26,6 +27,7 @@ export const OrderCreate = () => {
   const [selectBuy, setSelectBuy] = useState('');
   const [selectChange, setSelectChange] = useState('');
   const [selectDate, setSelectDate] = useState('20 минут');
+  const [active, setActive] = useState(0);
   const history = useHistory();
   return (
     <S.Container>
@@ -53,61 +55,124 @@ export const OrderCreate = () => {
           </LeftSide>
           <RightSide>
             <S.TabsWrap>
-              <Tabs>
+              <Tabs active={active} setActive={setActive}>
                 <div>Покупка</div>
                 <div>Продажа</div>
               </Tabs>
             </S.TabsWrap>
-            <S.Block>
-              <S.BlockItem>
-                <TitleWrap>
-                  <ProgramDescTitle>Валюта покупки:</ProgramDescTitle>
-                </TitleWrap>
-                <Dropdown
-                  options={[]}
-                  setSelectedOption={setSelectBuy}
-                  selectedOption={selectBuy}
-                  label="Не выбрано"
-                />
-              </S.BlockItem>
-              <S.BlockItem>
-                <TitleWrap>
-                  <ProgramDescTitle>Количество покупки:</ProgramDescTitle>
-                </TitleWrap>
-                <Field placeholder="Введите сумму" />
-              </S.BlockItem>
-            </S.Block>
-            <S.Block>
-              <S.BlockItem>
-                <TitleWrap>
-                  <ProgramDescTitle>Валюта обмена:</ProgramDescTitle>
-                </TitleWrap>
-                <Dropdown
-                  options={[]}
-                  setSelectedOption={setSelectBuy}
-                  selectedOption={selectBuy}
-                  label="Не выбрано"
-                />
-              </S.BlockItem>
-              <S.BlockItem>
-                <TitleWrap>
-                  <ProgramDescTitle>Курс:</ProgramDescTitle>
-                </TitleWrap>
-                <Field placeholder="Введите сумму" />
-              </S.BlockItem>
-            </S.Block>
-            <S.Block mbBig>
-              <S.BlockItem>
-                <TitleWrap>
-                  <ProgramDescTitle>Время на обмен:</ProgramDescTitle>
-                </TitleWrap>
-                <Dropdown
-                  options={['20 минут']}
-                  setSelectedOption={setSelectDate}
-                  selectedOption={selectDate}
-                />
-              </S.BlockItem>
-            </S.Block>
+            <>
+              <S.Block>
+                <S.BlockItem>
+                  <TitleWrap>
+                    <ProgramDescTitle>Валюта покупки:</ProgramDescTitle>
+                  </TitleWrap>
+                  <Dropdown
+                    options={[]}
+                    setSelectedOption={setSelectBuy}
+                    selectedOption={selectBuy}
+                    label="Не выбрано"
+                  />
+                </S.BlockItem>
+                <S.BlockItem>
+                  <TitleWrap>
+                    <ProgramDescTitle>Количество покупки:</ProgramDescTitle>
+                  </TitleWrap>
+                  <Field placeholder="Введите сумму" />
+                </S.BlockItem>
+              </S.Block>
+              <S.Block>
+                <S.BlockItem>
+                  <TitleWrap>
+                    <ProgramDescTitle>Валюта обмена:</ProgramDescTitle>
+                  </TitleWrap>
+                  <Dropdown
+                    options={[]}
+                    setSelectedOption={setSelectBuy}
+                    selectedOption={selectBuy}
+                    label="Не выбрано"
+                  />
+                </S.BlockItem>
+                <S.BlockItem>
+                  <TitleWrap>
+                    <ProgramDescTitle>Курс:</ProgramDescTitle>
+                  </TitleWrap>
+                  <Field placeholder="Введите сумму" />
+                </S.BlockItem>
+              </S.Block>
+              <S.Block mbBig>
+                <S.BlockItem>
+                  <TitleWrap>
+                    <ProgramDescTitle>Время на обмен:</ProgramDescTitle>
+                  </TitleWrap>
+                  <Dropdown
+                    options={['20 минут']}
+                    setSelectedOption={setSelectDate}
+                    selectedOption={selectDate}
+                  />
+                </S.BlockItem>
+              </S.Block>
+            </>
+
+            <>
+              <S.Block>
+                <S.BlockItem>
+                  <TitleWrap>
+                    <ProgramDescTitle>Валюта покупки:</ProgramDescTitle>
+                  </TitleWrap>
+                  <Dropdown
+                    options={[]}
+                    setSelectedOption={setSelectBuy}
+                    selectedOption={selectBuy}
+                    label="Не выбрано"
+                  />
+                </S.BlockItem>
+                <S.BlockItem>
+                  <TitleWrap>
+                    <ProgramDescTitle>Количество покупки:</ProgramDescTitle>
+                  </TitleWrap>
+                  <Field placeholder="Введите сумму" />
+                </S.BlockItem>
+              </S.Block>
+              <S.Block>
+                <S.BlockItem>
+                  <TitleWrap>
+                    <ProgramDescTitle>Валюта обмена:</ProgramDescTitle>
+                  </TitleWrap>
+                  <Dropdown
+                    options={[]}
+                    setSelectedOption={setSelectBuy}
+                    selectedOption={selectBuy}
+                    label="Не выбрано"
+                  />
+                </S.BlockItem>
+                <S.BlockItem>
+                  <TitleWrap>
+                    <ProgramDescTitle>Курс:</ProgramDescTitle>
+                  </TitleWrap>
+                  <Field placeholder="Введите сумму" />
+                </S.BlockItem>
+              </S.Block>
+
+              <TitleWrap>
+                <ProgramDescTitle>Платежный метод:</ProgramDescTitle>
+              </TitleWrap>
+              <S.NoPaymentMethod>
+                Платежные методы отсутствуют, <a href="/">добавьте платежный метод</a>
+              </S.NoPaymentMethod>
+
+              <S.Block mbBig>
+                <S.BlockItem>
+                  <TitleWrap>
+                    <ProgramDescTitle>Время на обмен:</ProgramDescTitle>
+                  </TitleWrap>
+                  <Dropdown
+                    options={['20 минут']}
+                    setSelectedOption={setSelectDate}
+                    selectedOption={selectDate}
+                  />
+                </S.BlockItem>
+              </S.Block>
+            </>
             <Button bigSize primary>
               Опубликовать ордер
             </Button>
