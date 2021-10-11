@@ -1,4 +1,4 @@
-import { FC, useContext, useState } from 'react';
+import { FC, useContext, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
@@ -8,6 +8,13 @@ import { AppContext } from '../../../context/HubContext';
 import { Card, Container } from '../../../globalStyles';
 import * as S from '../components/Filter/S.el';
 import { Heading } from '../components/Heading';
+import {
+  PaymentMethodKind,
+  RootPayMethod,
+  CollectionPayMethod,
+} from '../../../types/paymentMethodKind';
+import { PaymentMethodState } from '../../../types/paymentMethodState';
+import { FiatKind } from '../../../types/fiatKind';
 
 type TableRowType = {
   method?: string;
@@ -17,81 +24,107 @@ type TableRowType = {
   isActive: boolean;
 };
 
+type Rows = {
+  data: CollectionPayMethod;
+  active: (item: CollectionPayMethod) => void;
+};
+
+type PayMethod = {
+  bankNumber?: string;
+  name?: string;
+  bankName?: string;
+  paymentAddress?: string;
+  assetKind?: number;
+  phone?: string;
+};
+
+export const TableRows: FC<Rows> = ({ data, active }: Rows) => {
+  const payMethod: PayMethod = JSON.parse(data.data);
+  const { t } = useTranslation();
+  return (
+    <TableRow
+    // onClick={() => {
+    //   setChosenMethod(row);
+    //   history.push(routers.settingsViewPayMethod);
+    // }}
+    >
+      <Ceil>{payMethod.bankName ? payMethod.bankName : PaymentMethodKind[data.kind]}</Ceil>
+      <Ceil>{payMethod.name ? payMethod.name : '-'}</Ceil>
+      <Ceil>{FiatKind[data.assetKind]}</Ceil>
+      <Ceil
+        checked={data.state === 1}
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+      >
+        <Switcher
+          onChange={() => {
+            active(data);
+          }}
+          checked={data.state === 1}
+        />
+        <span>{t(data.state === 1 ? 'depositsPrograms.on' : 'depositsPrograms.off')}</span>
+      </Ceil>
+    </TableRow>
+  );
+};
+
 export const Settings: FC = () => {
   const { t } = useTranslation();
 
   const appContext = useContext(AppContext);
-  const { chosenMethod, setChosenMethod } = appContext;
-  console.log('chosenMethod', chosenMethod);
+  const { chosenMethod, setChosenMethod, hubConnection } = appContext;
 
   const [activeFilter, setActiveFilter] = useState<string>('Все');
   const history = useHistory();
-  const [tableData, setTableData] = useState<TableRowType[]>([
-    {
-      method: 'АО «Альфа-Банк»',
-      cardHolder: 'VYACHESLAV TROSCHIN',
-      cardNumber: '5536 9137 9922 7240',
-      currency: 'RUB',
-      isActive: true,
-    },
-    {
-      method: 'АО «Тинькофф Банк»',
-      cardHolder: 'VYACHESLAV TROSCHIN',
-      cardNumber: '5536 9137 9922 7240',
-      currency: 'RUB',
-      isActive: true,
-    },
-    {
-      method: 'ПАО Сбербанк',
-      cardHolder: 'SVETLANA TROSCHINA',
-      cardNumber: '5536 9137 9922 7240',
-      currency: 'RUB',
-      isActive: true,
-    },
-    {
-      method: 'АО «Альфа-Банк»',
-      cardHolder: 'VYACHESLAV TROSCHIN',
-      cardNumber: '5536 9137 9922 7240',
-      currency: 'USD',
-      isActive: false,
-    },
-    {
-      method: 'АО «Тинькофф Банк»',
-      cardHolder: 'SVETLANA TROSCHINA',
-      cardNumber: '5536 9137 9922 7240',
-      currency: 'USD',
-      isActive: true,
-    },
-    {
-      method: 'ПАО Сбербанк',
-      cardHolder: 'SVETLANA TROSCHINA',
-      cardNumber: '5536 9137 9922 7240',
-      currency: 'EUR',
-      isActive: false,
-    },
-    {
-      method: 'ERC 20',
-      cardHolder: '-',
-      cardNumber: '5536 9137 9922 7240',
-      currency: 'USDT',
-      isActive: true,
-    },
-    {
-      method: 'TRC 20',
-      cardHolder: '-',
-      cardNumber: '5536 9137 9922 7240',
-      currency: 'USDT',
-      isActive: true,
-    },
-    {
-      method: 'BEP 20',
-      cardHolder: '-',
-      cardNumber: '5536 9137 9922 7240',
-      currency: 'USDT',
-      isActive: false,
-    },
-  ]);
-  const [chosenItem, setChosenItem] = useState<TableRowType>();
+
+  const [userPaymentsMethod, setUserPaymentsMethod] = useState<CollectionPayMethod[]>([]);
+
+  const userPaymentsMethods = async () => {
+    if (!hubConnection) return;
+    try {
+      const res = await hubConnection.invoke<RootPayMethod>(
+        'GetUserPaymentsMethods',
+        [
+          PaymentMethodKind.BankTransfer,
+          PaymentMethodKind.BEP20,
+          PaymentMethodKind.ERC20,
+          PaymentMethodKind.TRC20,
+        ],
+        [PaymentMethodState.Active, PaymentMethodState.Disabled],
+        null,
+        0,
+        20
+      );
+      console.log('res', res);
+      setUserPaymentsMethod(res.collection);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    if (hubConnection) {
+      userPaymentsMethods();
+    }
+  }, [hubConnection]);
+
+  const active = (item: CollectionPayMethod) => {
+    const key = userPaymentsMethod.findIndex((i) => i.safeId === item.safeId);
+    if (item.state === PaymentMethodState.Active) {
+      setUserPaymentsMethod([
+        ...userPaymentsMethod.slice(0, key),
+        { ...item, state: PaymentMethodState.Disabled },
+        ...userPaymentsMethod.slice(key + 1),
+      ]);
+    } else {
+      setUserPaymentsMethod([
+        ...userPaymentsMethod.slice(0, key),
+        { ...item, state: PaymentMethodState.Active },
+        ...userPaymentsMethod.slice(key + 1),
+      ]);
+    }
+  };
 
   return (
     <Container>
@@ -146,40 +179,11 @@ export const Settings: FC = () => {
           <Ceil>Активность</Ceil>
         </TableHeader>
 
-        {tableData.map((row: TableRowType, i: number) => {
-          return (
-            <TableRow
-              key={i}
-              onClick={() => {
-                setChosenMethod(row);
-                history.push(routers.settingsViewPayMethod);
-              }}
-            >
-              <Ceil>{row.method}</Ceil>
-              <Ceil>{row.cardHolder}</Ceil>
-              <Ceil>{row.currency}</Ceil>
-              <Ceil
-                checked={row.isActive}
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}
-              >
-                <Switcher
-                  onChange={() => {
-                    console.log(row.isActive);
-                    setTableData((prev: TableRowType[]) =>
-                      prev.map((obj: TableRowType, index: number) =>
-                        index === i ? { ...obj, isActive: !obj.isActive } : obj
-                      )
-                    );
-                  }}
-                  checked={row.isActive}
-                />
-                <span>{t(row.isActive ? 'depositsPrograms.on' : 'depositsPrograms.off')}</span>
-              </Ceil>
-            </TableRow>
-          );
-        })}
+        {userPaymentsMethod.length
+          ? userPaymentsMethod.map((row) => (
+              <TableRows active={active} data={row} key={row.safeId} />
+            ))
+          : null}
       </TableCard>
     </Container>
   );

@@ -45,18 +45,20 @@ export const InfoMain: FC = () => {
           <Route path="/info/deposits/:slug" component={OnePage} exact />
           <Route path={routers.p2pchanges} component={Advert} exact />
           <Route path={routers.p2pchangesOwn} component={OwnExchanges} exact />
-          <Route
-            path={routers.p2pchangesSingleExchangeDetails}
-            component={SingleExchangeDetails}
-            exact
-          />
+
           <Route path={routers.settings} component={Settings} exact />
           <Route path={routers.settingsNewPayMethod} component={NewPayMethod} exact />
           <Route path={routers.settingsViewPayMethod} component={ViewPayMethod} exact />
           <Route path={routers.operations} component={HistoryOperations} exact />
-          <Route path={routers.certificates} component={Certificates} exact />
+          
           <Route path={routers.p2pchangesOrderToSell} component={OrderToSell} exact />
           <Route path={routers.p2pchangesOwn} component={OwnExchanges} exact />
+          <Route path={routers.certificates} component={Certificates} exact />
+          <Route
+            path={`${routers.p2pchangesSingleExchangeDetails}/:slug`}
+            component={SingleExchangeDetails}
+            exact
+          />
         </Switch>
         <Footer />
       </Styled.Page>
