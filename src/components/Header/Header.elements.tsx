@@ -14,13 +14,22 @@ export const Text = styled.p`
   transition: all 0.3s;
 `;
 
-export const SwitchTheme = styled.div<{ mob?: boolean }>`
+export const SwitchTheme = styled.div<{ mob?: boolean; admin?: boolean; auth?: boolean; }>`
   width: 20px;
   height: 20px;
-  margin-right: 40px;
+  margin-right: 20px;
   border-radius: 50%;
-  /* background: ${(props) => props.theme.switch}; */
   cursor: pointer;
+  ${({ admin, auth }) => {
+    if (!auth || auth && !admin) {
+      return `
+        margin-right: 40px;
+      `;
+    };
+  }}
+  @media only screen and (max-device-width: 767px) {
+    margin-right: 40px;
+  }
   @media (max-width: 1100px) {
     div {
       display: flex;
@@ -52,20 +61,28 @@ export const AdminButton = styled.button`
   }
 `;
 
-export const Languale = styled.div`
+export const Languale = styled.div<{ auth?: boolean; admin?: boolean; }>`
   display: flex;
   align-items: center;
   font-weight: 500;
   font-size: 12px;
   line-height: 14px;
-  margin-right: 40px;
   color: ${(props) => props.theme.text};
   cursor: pointer;
+  ${({ auth, admin }) => {
+    if (!auth) {
+      return `
+        margin-right: 40px;
+      `;
+    };
+    if (auth && admin) {
+      return `
+        margin-right: 0px;
+      `;
+    }
+  }}
   @media (max-width: 1100px) {
     margin-left: auto;
-  }
-  @media (max-width: 767px) {
-    margin-right: 20px;
   }
   img {
     margin-left: 6px;
@@ -82,7 +99,7 @@ export const HeaderWrap = styled.header<{ header?: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 99999;
+  z-index: 9999;
   padding: 30px 0;
   height: 98px;
   transition: all 0.3s ease 0s;
