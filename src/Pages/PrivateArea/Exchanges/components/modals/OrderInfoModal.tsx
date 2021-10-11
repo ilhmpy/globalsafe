@@ -8,33 +8,35 @@ import { Space, Text } from '../../../components/ui';
 import * as S from './S.el';
 
 interface OrderInfoModalProps {
-  type: 'buy' | 'sell';
-  currencyToBuy: string;
-  currencyToChange: string;
-  orderSumm: string;
-  rate: string;
-  orderMinSumm: string;
-  orderMaxSumm: string;
-  timePeriod: string;
-  onPublish: () => void;
-  loading: boolean;
-  onClose: () => void;
-  open: boolean;
-}
+    type: 'buy' | 'sell',
+    currencyToBuy: string;
+    currencyToChange: string;
+    orderSumm: string;
+    rate: string;
+    orderMinSumm: string;
+    orderMaxSumm: string;
+    timePeriod: string;
+    onPublish: () => void;
+    loading: boolean;
+    paymentMethods: any[];
+    onClose: () => void;
+    open: boolean;
+};
 
 export const OrderInfoModal: FC<OrderInfoModalProps> = ({
-  type,
-  currencyToBuy,
-  currencyToChange,
-  orderSumm,
-  rate,
-  orderMinSumm,
-  orderMaxSumm,
-  timePeriod,
-  onPublish,
-  loading,
-  onClose,
-  open,
+    type,
+    currencyToBuy,
+    currencyToChange,
+    orderSumm,
+    rate,
+    orderMinSumm,
+    orderMaxSumm,
+    timePeriod,
+    onPublish,
+    loading,
+    paymentMethods,
+    onClose,
+    open,
 }: OrderInfoModalProps) => {
   const history = useHistory();
 
@@ -96,21 +98,23 @@ export const OrderInfoModal: FC<OrderInfoModalProps> = ({
                 </Text>
               </S.DataListItem>
 
-              <S.DataListItem>
-                <Text size={14} lH={20}>
-                  Платежные методы:
-                </Text>
-                <S.ListItemDivider />
-                <Text size={14} lH={20} weight={700}>
-                  АО «Альфа-Банк»
-                </Text>
-              </S.DataListItem>
-
-              <S.DataListItem justifyEnd>
-                <Text size={14} lH={20} weight={700}>
-                  АО «Тинькофф Банк»
-                </Text>
-              </S.DataListItem>
+                <S.DataListItem>
+                    <Text size={14} lH={20}>Платежные методы:</Text>
+                    <S.ListItemDivider />
+                    <Text size={14} lH={20} weight={700}>
+                        {JSON.parse(paymentMethods[0].data).bankName}
+                    </Text>
+                </S.DataListItem>
+                {
+                    paymentMethods.length > 1 &&
+                    [...paymentMethods].splice(1).map((method) => (
+                        <S.DataListItem justifyEnd key={method.safeId}>
+                            <Text size={14} lH={20} weight={700}>
+                                {JSON.parse(method.data).bankName}
+                            </Text>
+                        </S.DataListItem>
+                    ))
+                }
 
               <S.DataListItem>
                 <Text size={14} lH={20}>
