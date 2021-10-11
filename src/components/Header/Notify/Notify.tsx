@@ -5,6 +5,7 @@ import moment from 'moment';
 import { Balance } from "../../../types/balance";
 import { AppContext } from '../../../context/HubContext';
 import  { InBlockLoading } from "../../UI/V4/InBlockLoading/InBlockLoading";
+import { StyledFilter } from "../../Table/Table.styled";
 
 type NotifyProps = {
    block: boolean; 
@@ -88,10 +89,12 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
         };
     };
     return (
-      <Notifies.NotifiesBlock block={block} admin={admin} empty={!loading && notifies.length === 0} load={loading} onMouseLeave={() => setBlock(false)}>
+      <Notifies.NotifiesBlock block={block} admin={admin} empty={!loading && notifies.length === 0} load={loading} onMouseLeave={() => setBlock(true)}>
           {loading ? <InBlockLoading /> : (
             <>
-                <Scrollbars style={{ width: "100%" }} className="scrollbars">
+                <Scrollbars style={{ width: "100%" }} className="scrollbars" 
+                    renderThumbVertical={(props) => <Notifies.Scrollbar {...props}></Notifies.Scrollbar>}
+                >
                     {notifies && notifies.length ? (
                         <>
                             {notifies && notifies.map((notify: NotifyItem, idx: number) => (
