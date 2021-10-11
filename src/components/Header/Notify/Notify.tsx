@@ -38,9 +38,10 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
         if (hubConnection) {
             hubConnection.on("InAppNotification", cb);
         };
+        /*
         return () => {
             hubConnection?.off("InAppNotification", cb);
-        };
+        }; */ 
     }, [hubConnection]);
     useEffect(() => {
         if (hubConnection) {
