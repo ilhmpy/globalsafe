@@ -41,9 +41,9 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
         });
     };
     
-    function getNotifies() {
+    function getNotifies(loading = true) {
         if (hubConnection) {
-            setLoading(true);
+            setLoading(loading);
             hubConnection.invoke(
                 "GetInAppNotifications",
                 [],
@@ -82,7 +82,7 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
             hubConnection.invoke("SetStateInAppNotification", id, 1)
              .then(res => {
                  console.log(res);
-                 getNotifies();
+                 getNotifies(false);
              })
              .catch(err => console.error(err));
         };
