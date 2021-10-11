@@ -535,16 +535,15 @@ export const HeaderBar = () => {
             <Selectv2 data={balanceList && balanceList} withoutVolume setSwitch={setCurrency} />
             <Inputv2
               placeholder="Сумма пополнения"
-              value={ed}
+              value={ed.replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
               maxLength={8}
               onKeyDown={(e) => {
                 if (e.keyCode === 8 && ed.length === 1) {
                   setEd('');
                 }
               }}
-              onChange={(e) => {
-                const validValue = e.currentTarget.value.replace(/[^0-9]/gi, '');
-                setEd(Number(validValue).toLocaleString('ru-RU', { maximumFractionDigits: 2 }));
+              onChange={({ target: { value }}) => {
+                setEd(value.replaceAll(/\D/g, ''));
               }}
             />
             <PAButton onClick={changeBalance} disabled={Number(ed) < 1 || currency.length < 1}>
@@ -574,7 +573,7 @@ export const HeaderBar = () => {
           </H3>
           <Styled.Desc>Баланс личного кабинета успешно пополнен на:</Styled.Desc>
           <Styled.Desc bold mMore style={{ marginTop: '0px' }}>
-            {ed} {currency}
+            {(Number(ed)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {currency}
           </Styled.Desc>
         </Modal>
       </CSSTransition>
@@ -595,7 +594,7 @@ export const HeaderBar = () => {
           </H3>
           <Styled.Desc>Баланс личного кабинета не был пополнен на:</Styled.Desc>
           <Styled.Desc bold>
-            {ed} {currency}
+            {(Number(ed)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {currency}
           </Styled.Desc>
           <Styled.Desc danger mMore style={{ marginTop: '0px' }}>
             {errorReason}
@@ -622,7 +621,7 @@ export const HeaderBar = () => {
           <div style={{ width: '100%', maxWidth: '340px', margin: '0 auto' }}>
             <Selectv2 data={balanceList && balanceList} setSwitch={setOutPutCurrency} />
             <Inputv2
-              value={outPutEd}
+              value={outPutEd.replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
               placeholder="Сумма вывода"
               maxLength={8}
               onKeyDown={(e) => {
@@ -632,11 +631,9 @@ export const HeaderBar = () => {
                   setService('0');
                 }
               }}
-              onChange={(e) => {
-                const validValue = e.currentTarget.value.replace(/[^0-9]/gi, '');
-                setOutPutEd(
-                  Number(validValue).toLocaleString('ru-RU', { maximumFractionDigits: 2 })
-                );
+              onChange={({ target: { value }}) => {
+                const validValue = value.replaceAll(/\D/g, "");
+                setOutPutEd(validValue);
                 getCommisions(validValue);
               }}
             />
@@ -678,7 +675,7 @@ export const HeaderBar = () => {
           </H3>
           <Styled.Desc>С баланса личного кабинета успешно выведены средства в размере:</Styled.Desc>
           <Styled.Desc bold mMore>
-            {outPutEd} {outPutCurrency}
+            {(Number(outPutEd)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {outPutCurrency}
           </Styled.Desc>
           <Styled.Desc mLess>
             К выводу: {(Number(outPutEd.replace(/[^0-9]/gi, '')) + Number(blockchain) + Number(service)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })}
@@ -706,7 +703,7 @@ export const HeaderBar = () => {
           </H3>
           <Styled.Desc>С баланса личного кабинета не были выведены средства в размере:</Styled.Desc>
           <Styled.Desc bold style={{ marginBottom: '10px' }}>
-            {outPutEd} {outPutCurrency}
+            {(Number(outPutEd)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {outPutCurrency}
           </Styled.Desc>
           <Styled.Desc mLess>
             К выводу: {(Number(outPutEd.replace(/[^0-9]/gi, '')) + Number(blockchain) + Number(service)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })}
