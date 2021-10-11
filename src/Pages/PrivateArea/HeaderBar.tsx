@@ -358,6 +358,75 @@ export const HeaderBar = () => {
     }
   };
 
+  /* 
+  {
+    /// NA
+    Null, 0
+
+    /// Successful transfer.
+    Success, 1
+
+    /// Cannot transfer. Insufficient funds.
+    InsufficientBalance, 2
+
+    /// Transfer error.
+    Error, 3
+
+    /// Transfer destination address cannot be found.
+    DestinationNotfound, 4
+
+    /// Wrong transfer source. Account cannot be found.
+    SourceNotFound, 5
+
+    /// Transfer amount is lower then allowed minimal transfer volume.
+    ValueIsTooSmall, 6
+
+    /// Transfer amount is higher then allowed maximal transfer value.
+    ValueIsTooLarge, 7
+
+    /// Transfer funds daily quota exceed.
+    DailyQuotaExceed, 8
+
+    /// Transfer funds monthly quota exceed.
+    MonthlyQuotaExceed, 9
+
+    /// There is active not executed wager available.
+    WagerAvailable, 10
+}
+    */
+
+  function errorStatus(status: boolean, reason: string) {
+    setOutPutError(status);
+    setOutPutErrorReason(reason);
+  }
+
+  function getStatus(status: number) {
+    console.log(status);
+    if (status === 0) {
+      errorStatus(true, "Ошибка вывода средств");
+    } else if (status === 1) {
+      errorStatus(false, "Успешный вывод средств")
+    } else if (status === 2) {
+      errorStatus(true, "Недостаточно средств на балансе");
+    } else if (status === 3) {
+      errorStatus(true, "Ошибка вывода средств");
+    } else if (status === 4) {
+      errorStatus(true, "Отправитель средств не был найден");
+    } else if (status === 5) {
+      errorStatus(true, "Неверный получатель. Аккаунт не был найден");
+    } else if (status === 6) {
+      errorStatus(true, "Сумма перевода меньше разрешенного минимального объема перевода");
+    } else if (status === 7) {
+      errorStatus(true, "Сумма перевода больше разрешенной максимальной суммы перевода");
+    } else if (status === 8) {
+      errorStatus(true, "Превышение дневной квоты перевода средств");
+    } else if (status === 9) {
+      errorStatus(true, "Превышение месячной квоты перевода средств");
+    } else if (status === 10) {
+      errorStatus(true, "Доступна активная невыполненная ставка.");
+    };
+  }
+
   const outPutBalance = () => {
     const value = Number(outPutEd.replace(/\s/g, ''));
     if (hubConnection && outPutCurrency.length > 0) {
@@ -377,16 +446,17 @@ export const HeaderBar = () => {
         )
         .then((res) => {
           console.log('WORK', res);
-          setWithdrawValueLoad(false);
-          setOutPutError(false);
+          // setOutPutError(false);
+          getStatus(res);
           setWithDrawModal(false);
+          setWithdrawValueLoad(false);
         })
         .catch((err: Error) => {
           console.log('ERRO', err);
           setWithdrawValueLoad(false);
           setOutPutError(true);
           setWithDrawModal(false);
-          setOutPutErrorReason('На балансе аккаунта недостаточно средств.');
+          setOutPutErrorReason('Ошибка на стороне сервера.');
         });
     }
   };
@@ -611,7 +681,7 @@ export const HeaderBar = () => {
             {outPutEd} {outPutCurrency}
           </Styled.Desc>
           <Styled.Desc mLess>
-            К выводу: {Number(outPutEd) + Number(blockchain) + Number(service)}
+            К выводу: {(Number(outPutEd.replace(/[^0-9]/gi, '')) + Number(blockchain) + Number(service)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })}
           </Styled.Desc>
           <Styled.Desc mLess>Комиссия блокчейн: {blockchain}</Styled.Desc>
           <Styled.Desc mLess>Комиссия сервиса: {service}</Styled.Desc>
@@ -639,7 +709,7 @@ export const HeaderBar = () => {
             {outPutEd} {outPutCurrency}
           </Styled.Desc>
           <Styled.Desc mLess>
-            К выводу: {Number(outPutEd) + Number(blockchain) + Number(service)}
+            К выводу: {(Number(outPutEd.replace(/[^0-9]/gi, '')) + Number(blockchain) + Number(service)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })}
           </Styled.Desc>
           <Styled.Desc mLess>Комиссия блокчейн: {blockchain}</Styled.Desc>
           <Styled.Desc mLess style={{ marginBottom: '0px' }}>
