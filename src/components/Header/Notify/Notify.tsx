@@ -31,19 +31,17 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
     const [loading, setLoading] = useState<boolean>(false);
     const appContext = useContext(AppContext);
     const hubConnection = appContext.hubConnection;   
-    useEffect(() => {
-        function cb (notify: NotifyItem) {
-            console.log(notify);
-        };
-        if (hubConnection) {
-            hubConnection.on("InAppNotification", cb);
-        };
-        /*
-        return () => {
-            hubConnection?.off("InAppNotification", cb);
-        }; */ 
-    }, [hubConnection]);
-    useEffect(() => {
+    
+    function cb (notify: NotifyItem) {
+        notifies.forEach(item => {
+            if (item.safeId === notify.safeId) {
+                notifies[notifies.indexOf(item)] = notify;
+                setNotifies((item: any) => item.map((i: any) => i));
+            };
+        });
+    };
+    
+    function getNotifies() {
         if (hubConnection) {
             setLoading(true);
             hubConnection.invoke(
@@ -63,12 +61,28 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
                 setLoading(false);
             });
         };
+    };
+    
+    useEffect(() => {
+        if (hubConnection) {
+            hubConnection.on("InAppNotification", cb);
+        };
+        return () => {
+            hubConnection?.off("InAppNotification", cb);
+        }; 
     }, [hubConnection]);
+    
+    useEffect(() => {
+        getNotifies();
+    }, [hubConnection]);
+
     function onNotify(id: string) {
+        console.log(id);
         if (hubConnection) {
             hubConnection.invoke("SetStateInAppNotification", id, 1)
              .then(res => {
                  console.log(res);
+                 getNotifies();
              })
              .catch(err => console.error(err));
         };

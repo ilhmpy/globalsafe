@@ -446,7 +446,6 @@ export const HeaderBar = () => {
         )
         .then((res) => {
           console.log('WORK', res);
-          // setOutPutError(false);
           getStatus(res);
           setWithDrawModal(false);
           setWithdrawValueLoad(false);
