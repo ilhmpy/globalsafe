@@ -52,8 +52,10 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
             )
             .then((res) => {
               console.log("user notifications", res);
-              setCheckeds(res.collection.some((item: any) => item.readState === 0));
-              setNotifies(res.collection);
+              setCheckeds(res.collection.some((item: NotifyItem) => item.readState === 0));
+              setNotifies(() => res.collection.sort((a: NotifyItem, b: NotifyItem) => 
+                a.readState === 0 ? -1 : (b.readState === 0 ? 1 : -1)
+              ));
               setLoading(false);
             })
             .catch((err) => {
@@ -77,11 +79,9 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
     }, [hubConnection]);
 
     function onNotify(id: string) {
-        console.log(id);
         if (hubConnection) {
             hubConnection.invoke("SetStateInAppNotification", id, 1)
-             .then(res => {
-                 console.log(res);
+             .then(() => {
                  getNotifies(false);
              })
              .catch(err => console.error(err));

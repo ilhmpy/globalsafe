@@ -491,18 +491,6 @@ export const HeaderBar = () => {
     // window.location.reload();
   };
 
-  function getCurrency() {
-    if (blockchain != '0') {
-      if (outPutEd.length < 1 && outPutCurrency.length < 1) {
-        return 'CWD';
-      } else {
-        return outPutCurrency;
-      }
-    } else {
-      return '';
-    }
-  }
-
   return (
     <>
       {withdrawValueLoad && (
@@ -632,20 +620,24 @@ export const HeaderBar = () => {
               }}
               onChange={({ target: { value }}) => {
                 const validValue = value.replaceAll(/\D/g, "");
-                setOutPutEd(validValue);
-                getCommisions(validValue);
+                if (validValue[0] != "0") {
+                  setOutPutEd(validValue);
+                };
+                if (validValue.length > 0 && validValue[0] != "0") {
+                  getCommisions(validValue);
+                };
               }}
             />
             <Styled.Commision marginT={20} marginB={10}>
               Комиссия блокчейна:{' '}
               <span>
-                {blockchain} {getCurrency()}
+                {blockchain}
               </span>
             </Styled.Commision>
             <Styled.Commision marginT={10} marginB={20}>
               Комиcсия сервиса:{' '}
               <span>
-                {service} {getCurrency()}
+                {service}
               </span>
             </Styled.Commision>
             <PAButton
