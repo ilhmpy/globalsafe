@@ -88,7 +88,7 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
              .catch(err => console.error(err));
         };
     };
-    
+
     return (
       <Notifies.NotifiesBlock block={block} admin={admin} empty={!loading && notifies.length === 0} load={loading} onMouseLeave={() => setBlock(false)}>
           {loading ? <InBlockLoading /> : (
