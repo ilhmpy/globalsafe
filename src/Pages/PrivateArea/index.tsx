@@ -61,8 +61,6 @@ export const InfoMain: FC = () => {
           <Route path={routers.settingsViewPayMethod} component={ViewPayMethod} exact />
           <Route path={routers.operations} component={HistoryOperations} exact />
           {/* <Route path={routers.p2pchangesOrderToSell} component={OrderToSell} exact /> */}
-          {/* TODO Remove | just for testing */}
-          {/* <Route path={routers.p2pchangesNewOrder} component={NewOrder} exact /> */}
         </Switch>
         <Footer />
       </Styled.Page>

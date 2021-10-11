@@ -26,7 +26,7 @@ import { FiatKind } from '../../../../../types/fiat';
 export const OrderToBuyCard: FC = () => {
     const history = useHistory();
     const appContext = useContext(AppContext);
-    const { hubConnection, user, balance, loan, balanceList } = appContext;
+    const { hubConnection, user, balance, balanceList } = appContext;
     const [showOrderBuyModal, setShowOrderBuyModal] = useState(false);
     const [showOrderSellModal, setShowOrderSellModal] = useState(false);
     const [showOrderErrorModal, setShowOrderErrorModal] = useState(false);
@@ -70,7 +70,7 @@ export const OrderToBuyCard: FC = () => {
                 'GetUserPaymentsMethods', 
                 [0, 1, 2, 3, 4], // PaymentMethodKind
                 [1], // PaymentMethodState
-                [1, 43], // BalanceKind
+                [1], // BalanceKind
                 0, // skip
                 20 // take
             );
