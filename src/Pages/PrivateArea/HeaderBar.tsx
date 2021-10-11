@@ -31,7 +31,7 @@ import { ConvertingModalFail } from './ConvertingModalFail';
 import { DepositListModal, TokenModal } from './Modals';
 import * as Styled from './Styles.elements';
 
-export const HeaderBar = () => { 
+export const HeaderBar = () => {
   const { t } = useTranslation();
   const [openConverting, setOpenConverting] = useState<boolean>(false);
   const [isSuccessConverting, setIsSuccessConverting] = useState<boolean>(false);
@@ -223,34 +223,43 @@ export const HeaderBar = () => {
       : false;
   const blackList = [0, 1, 9, 10, 11];
   const lockeds: any[] = [];
-  const lockedBalances = loan && loan.map((item: any) => {
-    let volume = 0;
-    for (let i = 0; i < loan.length; i++) {
-      if (item.balanceKind == loan[i].balanceKind) {
-        volume += loan[i].loanValue;
-      };
-    };
-    if (!lockeds.some((i: any) => i.balanceKind == item.balanceKind)) {
-      lockeds.push({ ...item, volume: 
-            item.balanceKind === 1 ? 
-            volume / 100000 : item.balanceKind === 43 ?
-            volume / 10000 : item.balanceKind === 59 ?
-            volume / 100 : volume, 
-            balanceKind: item.balanceKind, locked: true }); 
-    };
-  });
+  const lockedBalances =
+    loan &&
+    loan.map((item: any) => {
+      let volume = 0;
+      for (let i = 0; i < loan.length; i++) {
+        if (item.balanceKind == loan[i].balanceKind) {
+          volume += loan[i].loanValue;
+        }
+      }
+      if (!lockeds.some((i: any) => i.balanceKind == item.balanceKind)) {
+        lockeds.push({
+          ...item,
+          volume:
+            item.balanceKind === 1
+              ? volume / 100000
+              : item.balanceKind === 43
+              ? volume / 10000
+              : item.balanceKind === 59
+              ? volume / 100
+              : volume,
+          balanceKind: item.balanceKind,
+          locked: true,
+        });
+      }
+    });
   const balancesArray = balanceList
-  ?.filter((item) => !blackList.includes(item.balanceKind))
-  .sort((a, b) => a.balanceKind - b.balanceKind)
-  .map((obj) =>
-    obj.balanceKind === 43
-      ? { ...obj, volume: obj.volume > 1 ? obj.volume / 10000 : obj.volume, locked: false }
-      : obj.balanceKind === 59
-      ? { ...obj, volume: obj.volume > 1 ? obj.volume / 100 : obj.volume, locked: false }
-      : obj
-  );
+    ?.filter((item) => !blackList.includes(item.balanceKind))
+    .sort((a, b) => a.balanceKind - b.balanceKind)
+    .map((obj) =>
+      obj.balanceKind === 43
+        ? { ...obj, volume: obj.volume > 1 ? obj.volume / 10000 : obj.volume, locked: false }
+        : obj.balanceKind === 59
+        ? { ...obj, volume: obj.volume > 1 ? obj.volume / 100 : obj.volume, locked: false }
+        : obj
+    );
   const edit: any[] = [];
-  balancesArray?.forEach(item => {
+  balancesArray?.forEach((item) => {
     edit.push(item);
   });
   const balanceChips: any[] = [...edit, ...lockeds];
@@ -324,15 +333,15 @@ export const HeaderBar = () => {
   };
 
   const changeBalance = () => {
-    const value = Number(ed.replace(/\s/g, ""));
+    const value = Number(ed.replace(/\s/g, ''));
     if (hubConnection && currency.length > 0) {
       const newWindow = window.open();
-      console.log("change", value);
+      console.log('change', value);
       hubConnection
         .invoke(
           'GetTopUpUrl',
           Balance[currency as keyof typeof Balance],
-          currency === 'CWD' ? value * 100000 : currency === 'GLOBAL' ? value * 10000 : value,
+          currency === 'CWD' ? value * 100000 : currency === 'GLOBAL' ? value * 10000 : value
         )
         .then((res: string) => {
           newWindow && (newWindow.location.href = res);
@@ -350,30 +359,30 @@ export const HeaderBar = () => {
   };
 
   const outPutBalance = () => {
-    const value = Number(outPutEd.replace(/\s/g, ""));
+    const value = Number(outPutEd.replace(/\s/g, ''));
     if (hubConnection && outPutCurrency.length > 0) {
       setWithdrawValueLoad(true);
-      console.log("withdraw", value)
+      console.log('withdraw', value);
       hubConnection
         .invoke(
           'Withdraw',
           Balance[outPutCurrency as keyof typeof Balance],
           outPutCurrency === 'CWD'
-          ? value * 100000
-          : outPutCurrency === 'GLOBAL'
-          ? value * 10000
-          : outPutCurrency === 'MULTICS'
-          ? value * 100
-          : value
+            ? value * 100000
+            : outPutCurrency === 'GLOBAL'
+            ? value * 10000
+            : outPutCurrency === 'MULTICS'
+            ? value * 100
+            : value
         )
         .then((res) => {
-          console.log("WORK", res);
+          console.log('WORK', res);
           setWithdrawValueLoad(false);
           setOutPutError(false);
           setWithDrawModal(false);
         })
         .catch((err: Error) => {
-          console.log("ERRO", err);
+          console.log('ERRO', err);
           setWithdrawValueLoad(false);
           setOutPutError(true);
           setWithDrawModal(false);
@@ -409,24 +418,24 @@ export const HeaderBar = () => {
   const handleLogOut = () => {
     logOut();
     // TODO: Think better logic
-    history.push('/');
+    // history.push('/');
     // window.location.reload();
   };
 
   function getCurrency() {
-    if (blockchain != "0") {
+    if (blockchain != '0') {
       if (outPutEd.length < 1 && outPutCurrency.length < 1) {
-        return "CWD";
+        return 'CWD';
       } else {
         return outPutCurrency;
-      };
+      }
     } else {
-      return "";
-    };
-  };
+      return '';
+    }
+  }
 
-    return (
-      <>
+  return (
+    <>
       {withdrawValueLoad && (
         <Styled.Loader>
           <Loading />
@@ -458,17 +467,19 @@ export const HeaderBar = () => {
               placeholder="Сумма пополнения"
               value={ed}
               maxLength={8}
-              onKeyDown={((e) => {
+              onKeyDown={(e) => {
                 if (e.keyCode === 8 && ed.length === 1) {
-                  setEd("");
-                };
-              })}
+                  setEd('');
+                }
+              }}
               onChange={(e) => {
                 const validValue = e.currentTarget.value.replace(/[^0-9]/gi, '');
-                setEd((Number(validValue).toLocaleString("ru-RU", { maximumFractionDigits: 2 })));
-               }}
+                setEd(Number(validValue).toLocaleString('ru-RU', { maximumFractionDigits: 2 }));
+              }}
             />
-            <PAButton onClick={changeBalance} disabled={Number(ed) < 1 || currency.length < 1}>Пополнить баланс</PAButton>
+            <PAButton onClick={changeBalance} disabled={Number(ed) < 1 || currency.length < 1}>
+              Пополнить баланс
+            </PAButton>
           </div>
         </Modal>
       </CSSTransition>
@@ -478,11 +489,16 @@ export const HeaderBar = () => {
         timeout={0}
         unmountOnExit
       >
-        <Modal onClose={() => {
-          setError(undefined);
-          setCurrency("");
-          setEd("");
-        }} width={420} withClose p20>
+        <Modal
+          onClose={() => {
+            setError(undefined);
+            setCurrency('');
+            setEd('');
+          }}
+          width={420}
+          withClose
+          p20
+        >
           <H3 center modalTitle>
             Успешное пополнение
           </H3>
@@ -494,11 +510,16 @@ export const HeaderBar = () => {
       </CSSTransition>
 
       <CSSTransition in={error === undefined ? false : error} timeout={0} unmountOnExit>
-        <Modal onClose={() => {
-          setError(undefined);
-          setCurrency("");
-          setEd("");
-        }} width={420} withClose p20>
+        <Modal
+          onClose={() => {
+            setError(undefined);
+            setCurrency('');
+            setEd('');
+          }}
+          width={420}
+          withClose
+          p20
+        >
           <H3 center modalTitle>
             Ошибка пополнения
           </H3>
@@ -517,9 +538,9 @@ export const HeaderBar = () => {
           onClose={() => {
             setWithDrawModal(false);
             setOutPutEd('');
-            setOutPutCurrency("");
-            setBlockchain("0");
-            setService("0");
+            setOutPutCurrency('');
+            setBlockchain('0');
+            setService('0');
           }}
           width={420}
           withClose
@@ -534,16 +555,18 @@ export const HeaderBar = () => {
               value={outPutEd}
               placeholder="Сумма вывода"
               maxLength={8}
-              onKeyDown={((e) => {
+              onKeyDown={(e) => {
                 if (e.keyCode === 8 && outPutEd.length === 1) {
-                  setOutPutEd("");
-                  setBlockchain("0");
-                  setService("0");
-                };
-              })}
+                  setOutPutEd('');
+                  setBlockchain('0');
+                  setService('0');
+                }
+              }}
               onChange={(e) => {
                 const validValue = e.currentTarget.value.replace(/[^0-9]/gi, '');
-                setOutPutEd((Number(validValue).toLocaleString("ru-RU", { maximumFractionDigits: 2 })));
+                setOutPutEd(
+                  Number(validValue).toLocaleString('ru-RU', { maximumFractionDigits: 2 })
+                );
                 getCommisions(validValue);
               }}
             />
@@ -559,17 +582,27 @@ export const HeaderBar = () => {
                 {service} {getCurrency()}
               </span>
             </Styled.Commision>
-            <PAButton onClick={outPutBalance} disabled={Number(outPutEd) < 1 || outPutCurrency.length < 1}>Вывести средства</PAButton>
+            <PAButton
+              onClick={outPutBalance}
+              disabled={Number(outPutEd) < 1 || outPutCurrency.length < 1}
+            >
+              Вывести средства
+            </PAButton>
           </div>
         </Modal>
       </CSSTransition>
 
       <CSSTransition in={outPutError === false ? true : false} timeout={0} unmountOnExit>
-        <Modal onClose={() => {
-          setOutPutError(undefined);
-          setOutPutCurrency("");
-          setOutPutEd("");
-        }} width={420} withClose p20>
+        <Modal
+          onClose={() => {
+            setOutPutError(undefined);
+            setOutPutCurrency('');
+            setOutPutEd('');
+          }}
+          width={420}
+          withClose
+          p20
+        >
           <H3 center modalTitle>
             Успешный вывод средств
           </H3>
@@ -586,25 +619,32 @@ export const HeaderBar = () => {
       </CSSTransition>
 
       <CSSTransition in={outPutError} timeout={0} unmountOnExit>
-        <Modal onClose={() => {
-          setOutPutError(undefined);
-          setOutPutCurrency("");
-          setOutPutEd("");
-          setService("0");
-          setBlockchain("0");
-        }} width={420} withClose p20>
+        <Modal
+          onClose={() => {
+            setOutPutError(undefined);
+            setOutPutCurrency('');
+            setOutPutEd('');
+            setService('0');
+            setBlockchain('0');
+          }}
+          width={420}
+          withClose
+          p20
+        >
           <H3 center modalTitle>
-            Ошибка вывода средств 
+            Ошибка вывода средств
           </H3>
           <Styled.Desc>С баланса личного кабинета не были выведены средства в размере:</Styled.Desc>
-          <Styled.Desc bold style={{ marginBottom: "10px" }}>
+          <Styled.Desc bold style={{ marginBottom: '10px' }}>
             {outPutEd} {outPutCurrency}
           </Styled.Desc>
           <Styled.Desc mLess>
             К выводу: {Number(outPutEd) + Number(blockchain) + Number(service)}
           </Styled.Desc>
           <Styled.Desc mLess>Комиссия блокчейн: {blockchain}</Styled.Desc>
-          <Styled.Desc mLess style={{ marginBottom: "0px" }}>Комиссия сервиса: {service}</Styled.Desc>
+          <Styled.Desc mLess style={{ marginBottom: '0px' }}>
+            Комиссия сервиса: {service}
+          </Styled.Desc>
           <Styled.Desc danger mMore>
             {outPutErrorReason}
           </Styled.Desc>
@@ -626,252 +666,246 @@ export const HeaderBar = () => {
       <ConvertingModalFail open={isFailConverting} setOpen={setIsFailConverting} />
 
       <Header />
-        <DepositsPanelContainer>
-          <PanelTitleBlock>
-            <H4>Личный кабинет</H4>
-            <LogoutButton onClick={handleLogOut}>
-              <UsernameText>{user}</UsernameText>
-              <LogOutIcon />
-            </LogoutButton>
-          </PanelTitleBlock>
-          <PanelCard>
-            <PanelHeader>
-              <PanelInfoBlock>
-                <BalanceInfoText>Баланс аккаунта:</BalanceInfoText>
-                <BalanceValueText>
-                  {balance
-                    ? (balance / 100000).toLocaleString('ru-RU', {
-                        maximumFractionDigits: 5,
-                      })
-                    : '0'}{' '}
-                  CWD
-                </BalanceValueText>
-              </PanelInfoBlock>
-              <PanelActionsBlock>
-                <SecondaryButton title={'Конвертация'} onClick={() => setOpenConverting(true)} />
-                <SecondaryButton title={'Пополнить баланс'} onClick={() => setAddDrawModal(true)} />
-                <SecondaryButton
-                  title={'Вывести средства'}
-                  onClick={() => setWithDrawModal(true)}
-                />
-              </PanelActionsBlock>
-            </PanelHeader>
-            <BalanceChipsBlock>
-              {balanceChips &&
-                balanceChips.map((i: any, idx: number) => {
-                  return (
-                    <Chip
-                      key={`chip-item-${idx}`}
-                      leftIcon={i.locked ? <LockIcon /> : null}
-                      bgColor={getChipColor(i)}
-                    >
-                      <span>
-                        {i.volume.toLocaleString('ru-RU', {
-                          maximumFractionDigits: 4,
-                        })}
-                      </span>
-                      &nbsp;
-                      {Balance[i.balanceKind]}
-                    </Chip>
-                  );
-                })}
-            </BalanceChipsBlock>
+      <DepositsPanelContainer>
+        <PanelTitleBlock>
+          <H4>Личный кабинет</H4>
+          <LogoutButton onClick={handleLogOut}>
+            <UsernameText>{user}</UsernameText>
+            <LogOutIcon />
+          </LogoutButton>
+        </PanelTitleBlock>
+        <PanelCard>
+          <PanelHeader>
+            <PanelInfoBlock>
+              <BalanceInfoText>Баланс аккаунта:</BalanceInfoText>
+              <BalanceValueText>
+                {balance
+                  ? (balance / 100000).toLocaleString('ru-RU', {
+                      maximumFractionDigits: 5,
+                    })
+                  : '0'}{' '}
+                CWD
+              </BalanceValueText>
+            </PanelInfoBlock>
+            <PanelActionsBlock>
+              <SecondaryButton title={'Конвертация'} onClick={() => setOpenConverting(true)} />
+              <SecondaryButton title={'Пополнить баланс'} onClick={() => setAddDrawModal(true)} />
+              <SecondaryButton title={'Вывести средства'} onClick={() => setWithDrawModal(true)} />
+            </PanelActionsBlock>
+          </PanelHeader>
+          <BalanceChipsBlock>
+            {balanceChips &&
+              balanceChips.map((i: any, idx: number) => {
+                return (
+                  <Chip
+                    key={`chip-item-${idx}`}
+                    leftIcon={i.locked ? <LockIcon /> : null}
+                    bgColor={getChipColor(i)}
+                  >
+                    <span>
+                      {i.volume.toLocaleString('ru-RU', {
+                        maximumFractionDigits: 4,
+                      })}
+                    </span>
+                    &nbsp;
+                    {Balance[i.balanceKind]}
+                  </Chip>
+                );
+              })}
+          </BalanceChipsBlock>
 
-            <TabsBlock>
-              <TabNavItem to={routers.deposits} exact>
-                <div>Мои депозиты</div>
-              </TabNavItem>
-              <TabNavItem to={routers.p2pchanges}>
-                <div>P2P обмены</div>
-              </TabNavItem>
-              <TabNavItem to={routers.operations}>
-                <div>История операций</div>
-              </TabNavItem>
-              <TabNavItem to={routers.settings}>
-                <div>Настройки</div>
-              </TabNavItem>
-            </TabsBlock>
-          </PanelCard>
-        </DepositsPanelContainer>
-        <CSSTransition in={depositSuccess} timeout={0} classNames="modal" unmountOnExit>
-          <Modal width={540} onClose={() => setDepositSuccess(false)}>
+          <TabsBlock>
+            <TabNavItem to={routers.deposits} exact>
+              <div>Мои депозиты</div>
+            </TabNavItem>
+            <TabNavItem to={routers.p2pchanges}>
+              <div>P2P обмены</div>
+            </TabNavItem>
+            <TabNavItem to={routers.operations}>
+              <div>История операций</div>
+            </TabNavItem>
+            <TabNavItem to={routers.settings}>
+              <div>Настройки</div>
+            </TabNavItem>
+          </TabsBlock>
+        </PanelCard>
+      </DepositsPanelContainer>
+      <CSSTransition in={depositSuccess} timeout={0} classNames="modal" unmountOnExit>
+        <Modal width={540} onClose={() => setDepositSuccess(false)}>
+          <Styled.ModalBlock>
+            <Styled.ModalTitle>{t('depositSuccess.title')}</Styled.ModalTitle>
+            <Styled.ModalButton onClick={toDeposit} danger>
+              {t('depositSuccess.button')}
+            </Styled.ModalButton>
+          </Styled.ModalBlock>
+        </Modal>
+      </CSSTransition>
+      <CSSTransition in={depositError} timeout={0} classNames="modal" unmountOnExit>
+        <Modal width={540} onClose={() => setDepositError(false)}>
+          <Styled.ModalBlockWide>
+            <Styled.ModalTitle>{t('depositError.title')}</Styled.ModalTitle>
+            <p>{t('depositError.desc')}</p>
+          </Styled.ModalBlockWide>
+        </Modal>
+      </CSSTransition>
+      <div>
+        {withdraw && (
+          <Modal onClose={handleCloseWithdrawModal}>
             <Styled.ModalBlock>
-              <Styled.ModalTitle>{t('depositSuccess.title')}</Styled.ModalTitle>
-              <Styled.ModalButton onClick={toDeposit} danger>
-                {t('depositSuccess.button')}
+              <Styled.ModalTitle>{t('privateArea.withdraw')}</Styled.ModalTitle>
+              <Select
+                placeholder={t('privateArea.selectCurrency')}
+                options={['CWD', 'GLOBAL', 'MULTICS']}
+                selectedOption={currencyValue}
+                setSelectedOption={onChangeCurrencyValue}
+              />
+              <Input
+                onChange={onChangeWithdraw}
+                placeholder={t('privateArea.amountEnter')}
+                type="text"
+                ref={inputRef}
+                value={withdrawValue}
+              />
+              <Styled.ModalButton
+                as="button"
+                disabled={!withdrawValue || !currencyValue || +withdrawValue <= 0}
+                onClick={withdrawBalance}
+                danger
+              >
+                {t('privateArea.withdraw')}
               </Styled.ModalButton>
+              <Styled.ModalCommisionBox>
+                <Styled.ModalCommision>
+                  {t('privateArea.blockchainCommision')} -{' '}
+                  <Styled.ModalCommisionCount>{blockchainCommision} CWD</Styled.ModalCommisionCount>
+                </Styled.ModalCommision>
+                <Styled.ModalCommision>
+                  {t('privateArea.serviceCommision')} -{' '}
+                  <Styled.ModalCommisionCount>{serviceCommision} CWD</Styled.ModalCommisionCount>
+                </Styled.ModalCommision>
+              </Styled.ModalCommisionBox>
             </Styled.ModalBlock>
           </Modal>
-        </CSSTransition>
-        <CSSTransition in={depositError} timeout={0} classNames="modal" unmountOnExit>
-          <Modal width={540} onClose={() => setDepositError(false)}>
-            <Styled.ModalBlockWide>
-              <Styled.ModalTitle>{t('depositError.title')}</Styled.ModalTitle>
-              <p>{t('depositError.desc')}</p>
-            </Styled.ModalBlockWide>
+        )}
+        <CSSTransition in={condition} timeout={0} classNames="modal" unmountOnExit>
+          <Modal width={540} onClose={() => setContition(false)}>
+            <Styled.Conditions open>
+              {depositSelect ? (
+                <p
+                  dangerouslySetInnerHTML={{
+                    __html: depositSelect.description,
+                  }}
+                />
+              ) : (
+                ''
+              )}
+            </Styled.Conditions>
           </Modal>
         </CSSTransition>
-        <div>
-          {withdraw && (
-            <Modal onClose={handleCloseWithdrawModal}>
-              <Styled.ModalBlock>
-                <Styled.ModalTitle>{t('privateArea.withdraw')}</Styled.ModalTitle>
-                <Select
-                  placeholder={t('privateArea.selectCurrency')}
-                  options={['CWD', 'GLOBAL', 'MULTICS']}
-                  selectedOption={currencyValue}
-                  setSelectedOption={onChangeCurrencyValue}
-                />
-                <Input
-                  onChange={onChangeWithdraw}
-                  placeholder={t('privateArea.amountEnter')}
-                  type="text"
-                  ref={inputRef}
-                  value={withdrawValue}
-                />
-                <Styled.ModalButton
-                  as="button"
-                  disabled={!withdrawValue || !currencyValue || +withdrawValue <= 0}
-                  onClick={withdrawBalance}
-                  danger
-                >
-                  {t('privateArea.withdraw')}
-                </Styled.ModalButton>
-                <Styled.ModalCommisionBox>
-                  <Styled.ModalCommision>
-                    {t('privateArea.blockchainCommision')} -{' '}
-                    <Styled.ModalCommisionCount>
-                      {blockchainCommision} CWD
-                    </Styled.ModalCommisionCount>
-                  </Styled.ModalCommision>
-                  <Styled.ModalCommision>
-                    {t('privateArea.serviceCommision')} -{' '}
-                    <Styled.ModalCommisionCount>{serviceCommision} CWD</Styled.ModalCommisionCount>
-                  </Styled.ModalCommision>
-                </Styled.ModalCommisionBox>
-              </Styled.ModalBlock>
-            </Modal>
-          )}
-          <CSSTransition in={condition} timeout={0} classNames="modal" unmountOnExit>
-            <Modal width={540} onClose={() => setContition(false)}>
-              <Styled.Conditions open>
-                {depositSelect ? (
-                  <p
-                    dangerouslySetInnerHTML={{
-                      __html: depositSelect.description,
-                    }}
+        <CSSTransition
+          in={addDeposit && !depositListModal}
+          timeout={300}
+          classNames="modal"
+          unmountOnExit
+        >
+          <Styled.ModalDepositsWrap>
+            <Modal onClose={() => setAddDeposit(false)} width={384} paddingTop={34}>
+              <Styled.ModalTitle mt>{t('privateArea.addDeposit')}</Styled.ModalTitle>
+              <Styled.ModalDeposits>
+                <div>
+                  <Styled.ModalButton choice mb onClick={handleDepositModal} dangerOutline>
+                    {depositSelect ? depositSelect.name : t('privateArea.choiseDeposite')}{' '}
+                    <Styled.IconRotate rights>
+                      <Styled.ModalBack />
+                    </Styled.IconRotate>
+                  </Styled.ModalButton>
+                  <Input
+                    onChange={(e) => setAddDepositValue(e.target.value)}
+                    placeholder={t('privateArea.amountEnter')}
+                    type="number"
+                    ref={inputRef}
+                    value={addDepositValue}
                   />
-                ) : (
-                  ''
-                )}
-              </Styled.Conditions>
-            </Modal>
-          </CSSTransition>
-          <CSSTransition
-            in={addDeposit && !depositListModal}
-            timeout={300}
-            classNames="modal"
-            unmountOnExit
-          >
-            <Styled.ModalDepositsWrap>
-              <Modal onClose={() => setAddDeposit(false)} width={384} paddingTop={34}>
-                <Styled.ModalTitle mt>{t('privateArea.addDeposit')}</Styled.ModalTitle>
-                <Styled.ModalDeposits>
-                  <div>
-                    <Styled.ModalButton choice mb onClick={handleDepositModal} dangerOutline>
-                      {depositSelect ? depositSelect.name : t('privateArea.choiseDeposite')}{' '}
-                      <Styled.IconRotate rights>
-                        <Styled.ModalBack />
-                      </Styled.IconRotate>
-                    </Styled.ModalButton>
-                    <Input
-                      onChange={(e) => setAddDepositValue(e.target.value)}
-                      placeholder={t('privateArea.amountEnter')}
-                      type="number"
-                      ref={inputRef}
-                      value={addDepositValue}
-                    />
-                    <Styled.ModalButton
-                      as="button"
-                      disabled={!asset || !addDepositValue}
-                      onClick={openNewDeposit}
-                      danger
-                    >
-                      {t('depositSelect.add')}
-                    </Styled.ModalButton>
-                    {depositSelect?.description ? (
-                      <Tooltip text={depositSelect.description}>
-                        <Styled.Program>{t('depositSelect.condition')}</Styled.Program>
-                      </Tooltip>
-                    ) : (
-                      <Styled.Program show>{t('depositSelect.showCondition')}</Styled.Program>
-                    )}
-                    {depositSelect && !asset && balanceFuture ? (
-                      <>
-                        <Styled.Warning>
-                          {t('depositSelect.forActive')}&nbsp;
-                          {depositSelect.price}
-                          {depositSelect.priceKind ? Balance[depositSelect.priceKind] : 'CWD'},{' '}
-                          {t('depositSelect.transfer')} <bdi>{account}</bdi>
-                          <Styled.SmallRoundButton onClick={() => copy(account)}>
-                            <Copy />
-                          </Styled.SmallRoundButton>
-                        </Styled.Warning>
-                        <Styled.ModalButton
-                          blue
-                          href={`https://backup.cwd.global/account/${user}/portfolio`}
-                          target="_blank"
-                        >
-                          {t('depositSelect.transferButton')}
-                        </Styled.ModalButton>
-                      </>
-                    ) : null}
-                    {depositSelect && depositSelect.priceKind && asset ? (
-                      <Styled.Warning choice>
-                        {t('depositSelect.willActiv')}&nbsp;{' '}
-                        <span>
-                          {depositSelect.price}{' '}
-                          {depositSelect.priceKind ? Balance[depositSelect.priceKind] : 'CWD'}
-                          {depositSelect.price2Kind &&
-                            ` и ${depositSelect.price2} ${
-                              depositSelect.price2Kind ? Balance[depositSelect.price2Kind] : 'CWD'
-                            }`}
-                        </span>
-                        <br />
-                        {t('depositSelect.bill')}
-                      </Styled.Warning>
-                    ) : depositSelect && depositSelect.priceKind > 11 ? (
+                  <Styled.ModalButton
+                    as="button"
+                    disabled={!asset || !addDepositValue}
+                    onClick={openNewDeposit}
+                    danger
+                  >
+                    {t('depositSelect.add')}
+                  </Styled.ModalButton>
+                  {depositSelect?.description ? (
+                    <Tooltip text={depositSelect.description}>
+                      <Styled.Program>{t('depositSelect.condition')}</Styled.Program>
+                    </Tooltip>
+                  ) : (
+                    <Styled.Program show>{t('depositSelect.showCondition')}</Styled.Program>
+                  )}
+                  {depositSelect && !asset && balanceFuture ? (
+                    <>
                       <Styled.Warning>
-                        {t('depositSelect.willActiv')}&nbsp; {depositSelect.price}{' '}
+                        {t('depositSelect.forActive')}&nbsp;
+                        {depositSelect.price}
+                        {depositSelect.priceKind ? Balance[depositSelect.priceKind] : 'CWD'},{' '}
+                        {t('depositSelect.transfer')} <bdi>{account}</bdi>
+                        <Styled.SmallRoundButton onClick={() => copy(account)}>
+                          <Copy />
+                        </Styled.SmallRoundButton>
+                      </Styled.Warning>
+                      <Styled.ModalButton
+                        blue
+                        href={`https://backup.cwd.global/account/${user}/portfolio`}
+                        target="_blank"
+                      >
+                        {t('depositSelect.transferButton')}
+                      </Styled.ModalButton>
+                    </>
+                  ) : null}
+                  {depositSelect && depositSelect.priceKind && asset ? (
+                    <Styled.Warning choice>
+                      {t('depositSelect.willActiv')}&nbsp;{' '}
+                      <span>
+                        {depositSelect.price}{' '}
                         {depositSelect.priceKind ? Balance[depositSelect.priceKind] : 'CWD'}
                         {depositSelect.price2Kind &&
                           ` и ${depositSelect.price2} ${
                             depositSelect.price2Kind ? Balance[depositSelect.price2Kind] : 'CWD'
                           }`}
-                        <br />
-                        {t('depositSelect.bill')}
-                      </Styled.Warning>
-                    ) : null}
-                  </div>
-                </Styled.ModalDeposits>
-              </Modal>
-            </Styled.ModalDepositsWrap>
-          </CSSTransition>
-          <DepositListModal
-            depositListModal={depositListModal}
-            setDepositListModal={setDepositListModal}
-            handleBackModal={handleBackModal}
-            depositsList={depositsList}
-            selectDeposit={selectDeposit}
-          />
-        </div>
-        <Styled.Note>
-            <Notification onDelete={onDelete} data={notifications} />
-        </Styled.Note>
-      </>
-      )
-} 
-
+                      </span>
+                      <br />
+                      {t('depositSelect.bill')}
+                    </Styled.Warning>
+                  ) : depositSelect && depositSelect.priceKind > 11 ? (
+                    <Styled.Warning>
+                      {t('depositSelect.willActiv')}&nbsp; {depositSelect.price}{' '}
+                      {depositSelect.priceKind ? Balance[depositSelect.priceKind] : 'CWD'}
+                      {depositSelect.price2Kind &&
+                        ` и ${depositSelect.price2} ${
+                          depositSelect.price2Kind ? Balance[depositSelect.price2Kind] : 'CWD'
+                        }`}
+                      <br />
+                      {t('depositSelect.bill')}
+                    </Styled.Warning>
+                  ) : null}
+                </div>
+              </Styled.ModalDeposits>
+            </Modal>
+          </Styled.ModalDepositsWrap>
+        </CSSTransition>
+        <DepositListModal
+          depositListModal={depositListModal}
+          setDepositListModal={setDepositListModal}
+          handleBackModal={handleBackModal}
+          depositsList={depositsList}
+          selectDeposit={selectDeposit}
+        />
+      </div>
+      <Styled.Note>
+        <Notification onDelete={onDelete} data={notifications} />
+      </Styled.Note>
+    </>
+  );
+};
 
 const AppWrapper = styled.div`
   display: flex;

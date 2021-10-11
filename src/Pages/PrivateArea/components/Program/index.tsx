@@ -3,7 +3,6 @@ import { useHistory } from 'react-router';
 import { Button } from '../../../../components/Button/V2/Button';
 import { AppContext } from '../../../../context/HubContext';
 import { CollectionListDeposits, ListDeposits } from '../../../../types/deposits';
-import { DepositsCollection } from '../../../../types/info';
 import * as S from './S.el';
 
 interface ProgramProps {
@@ -12,8 +11,7 @@ interface ProgramProps {
 
 export const Program = ({className = ''}: ProgramProps) => {
   const history = useHistory();
-  const appContext = useContext(AppContext);
-  const hubConnection = appContext.hubConnection;
+  const {hubConnection} = useContext(AppContext);
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   const languale = lang === 'ru' ? 1 : 0;
 

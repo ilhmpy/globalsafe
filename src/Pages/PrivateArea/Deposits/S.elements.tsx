@@ -2,7 +2,7 @@ import styled from 'styled-components/macro';
 import { Program } from '../components/Program';
 
 export const Container = styled.div`
-  margin-bottom: 40px;
+  margin-bottom: 50px;
 `;
 
 export const NotDeposits = styled.div`
@@ -11,7 +11,6 @@ export const NotDeposits = styled.div`
   line-height: 20px;
   margin: 20px 0;
 `;
-
 
 export const StyledProgram = styled(Program)`
   padding: 0;

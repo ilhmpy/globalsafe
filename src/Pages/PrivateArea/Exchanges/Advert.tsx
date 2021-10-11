@@ -1,20 +1,45 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+
 import { Container } from '../../../components/UI/Container';
 import { Heading } from '../components/Heading';
-import { useHistory } from 'react-router-dom';
 import { routers } from '../../../constantes/routers';
 import { TabNavItem, TabsBlock, Text, Chip, FilterButton } from '../components/ui';
 import * as S from './S.el';
 import { AdvertTable } from './components/AdvertTable/AdvertTable';
 import { Button } from '../../../components/Button/V2/Button';
+import { AppContext } from '../../../context/HubContext';
 
 export const Advert = () => {
   const history = useHistory();
+  const { hubConnection } = useContext(AppContext);
+
+  useEffect(() => {
+    if (hubConnection) {
+      getGetUserExchanges();
+    }
+  }, [hubConnection]);
+
+  async function getGetUserExchanges() {
+      try {
+        const res = await hubConnection!.invoke<any>(
+          'GetSellOrders', 
+          [0, 1], 
+          [0, 1, 2, 3],  
+          0, 
+          20
+        );
+        console.log('getGetUserExchanges', res);
+      } catch (err) {
+        console.log(err);
+      }
+  };
+
   return (
     <div>
       <Container>
         <Heading
-          onClick={() => history.push(routers.orderCreate)}
+          onClick={() => history.push(routers.p2pchangesOrderToBuy)}
           // onClick={() => history.push(routers.orderCreate)}
           title="P2P обмены"
           btnText="Опубликовать ордер"
@@ -50,7 +75,9 @@ export const Advert = () => {
           <S.Line />
           <FilterButton>Продажа</FilterButton>
         </S.Filters>
+
         <AdvertTable />
+
         <S.ButtonWrap>
           <Button>Показать еще</Button>
         </S.ButtonWrap>

@@ -60,3 +60,11 @@ export const LabelContainer = styled.label`
   width: 100%;
   user-select: none;
 `;
+
+export const CheckboxLabel = styled.div<{checked: boolean | undefined; labelBold: boolean;}>`
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: ${props => props.labelBold ? 500 : 400};
+  color: ${props => props.checked ? props.theme.blue : props.theme.black};
+  margin-left: 10px;
+`;

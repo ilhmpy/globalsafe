@@ -111,11 +111,12 @@ export const DataList = styled.div`
   margin-bottom: 20px;
 `;
 
-export const DataListItem = styled.div`
+export const DataListItem = styled.div<{justifyEnd?: boolean; spaceBetween?: boolean; mb?: number;}>`
   width: 100%;
   display: flex;
   align-items: flex-end;
-  margin-bottom: 10px;
+  justify-content: ${props => props.justifyEnd ? 'flex-end' : props.spaceBetween ? 'space-between' : 'flex-start'};
+  margin-bottom: ${props => props.mb ? props.mb : 10}px;
 `;
 
 export const ListItemDivider = styled.div`

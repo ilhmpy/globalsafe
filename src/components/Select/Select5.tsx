@@ -1,10 +1,13 @@
 import React, { FC, useRef, useState } from 'react';
 import styled from 'styled-components';
+import Scrollbars from "react-custom-scrollbars";
+
 import { ReactComponent as StrokeBottom } from '../../assets/svg/StrokeBottom.svg';
 import useOnClickOutside from '../../hooks/useOutsideHook';
 import * as Styled from './Select.elements';
 
 type SelectProps = {
+  className?: string;
   options: string[];
   label?: string;
   selectedOption: null | string;
@@ -13,6 +16,7 @@ type SelectProps = {
 };
 
 export const Select: FC<SelectProps> = ({
+  className = '',
   options,
   label,
   selectedOption,
@@ -57,7 +61,7 @@ export const Select: FC<SelectProps> = ({
   };
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div className={className} style={{ position: 'relative' }}>
       <Styled.DropDownContainer ref={ref}>
         <Styled.DropDownHeader tabIndex={0} onClick={toggling} onKeyDown={onKeyDown}>
           {selectedOption
@@ -70,15 +74,17 @@ export const Select: FC<SelectProps> = ({
         </Styled.DropDownHeader>
         {isOpen && (
           <Styled.SelectList>
-            {options.map((option, idx) => (
-              <Styled.ListItem
-                active={activeList === idx}
-                onClick={() => onOptionClicked(option)}
-                key={`select-option-item-${idx}`}
-              >
-                <Styled.Text>{option}</Styled.Text>
-              </Styled.ListItem>
-            ))}
+            <Scrollbars style={{ height: '160px' }}>
+              {options.map((option, idx) => (
+                <Styled.ListItem
+                  active={activeList === idx}
+                  onClick={() => onOptionClicked(option)}
+                  key={`select-option-item-${idx}`}
+                >
+                  <Styled.Text>{option}</Styled.Text>
+                </Styled.ListItem>
+              ))}
+            </Scrollbars>
           </Styled.SelectList>
         )}
       </Styled.DropDownContainer>

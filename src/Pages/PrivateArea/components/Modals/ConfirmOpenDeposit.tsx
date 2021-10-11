@@ -1,18 +1,27 @@
-import React, { FC } from 'react';
+import moment from 'moment';
+import React, { FC, useContext } from 'react';
 import { Button } from '../../../../components/Button/V2/Button';
 import { Modal } from '../../../../components/ModalAnimated';
+import { AppContext } from '../../../../context/HubContext';
+import { Balance } from '../../../../types/balance';
+import { CollectionListDeposits } from '../../../../types/deposits';
 import * as S from './S.el';
 
 type Props = {
-  onClose: () => void;
+  onClose: (isAgree: boolean) => void;
   open: boolean;
+  selectedDeposit?: CollectionListDeposits;
+  sumValue: string;
 };
 
-export const ConfirmOpenDeposit: FC<Props> = ({ onClose, open }: Props) => {
+export const ConfirmOpenDeposit: FC<Props> = ({ onClose, open, sumValue }: Props) => {
+  const { selectedDeposit } = useContext(AppContext);
+
+
   return (
     <>
       {open && (
-        <Modal onClose={onClose} open={open}>
+        <Modal onClose={() => onClose(false)} open={open}>
           <S.Container>
             <S.Title>Подтверждение открытия депозита</S.Title>
             <S.TextWrap>
@@ -24,32 +33,35 @@ export const ConfirmOpenDeposit: FC<Props> = ({ onClose, open }: Props) => {
             <S.List>
               <S.ListItem>
                 <S.Text>
-                  Программа депозита: <strong>VANILA</strong>
+                  Программа депозита: <strong>{selectedDeposit?.name}</strong>
                 </S.Text>
               </S.ListItem>
               <S.ListItem>
                 <S.Text>
-                  Тело депозита: <strong>90 000 GSFUTURE6</strong>
+                  Тело депозита:
+                  <strong>{` ${sumValue.replace(/(\d)(?=(\d{3})+$)/g, '$1 ')} ${
+                    Balance[selectedDeposit?.asset as number]
+                  }`}</strong>
                 </S.Text>
               </S.ListItem>
               <S.ListItem>
                 <S.Text>
-                  Отложенная выплата: <strong>НЕТ</strong>
+                  Отложенная выплата: <strong>{selectedDeposit?.isInstant ? 'Да' : 'Нет'}</strong>
                 </S.Text>
               </S.ListItem>
               <S.ListItem>
                 <S.Text>
-                  Замороженый депозит: <strong>ДА</strong>
+                  Замороженый депозит: <strong>{selectedDeposit?.isActive ? 'Да' : 'Нет'}</strong>
                 </S.Text>
               </S.ListItem>
               <S.ListItem>
                 <S.Text>
-                  Дата открытия депозита: <strong>19.09.2021</strong>
+                  Дата открытия депозита: <strong>{moment().format('DD.MM.YYYY')}</strong>
                 </S.Text>
               </S.ListItem>
               <S.ListItem>
                 <S.Text>
-                  Дата закрытия депозита: <strong>19.09.2021</strong>
+                  Дата закрытия депозита: <strong>{moment().format('DD.MM.YYYY')}</strong>
                 </S.Text>
               </S.ListItem>
               <S.ListItem>
@@ -68,10 +80,10 @@ export const ConfirmOpenDeposit: FC<Props> = ({ onClose, open }: Props) => {
               </S.List>
             </S.TextWrap>
             <S.Buttons>
-              <Button bigSize primary>
+              <Button bigSize primary onClick={() => onClose(true)}>
                 Открыть депозит
               </Button>
-              <Button bigSize outlinePrimary>
+              <Button bigSize outlinePrimary onClick={() => onClose(false)}>
                 Отмена
               </Button>
             </S.Buttons>
