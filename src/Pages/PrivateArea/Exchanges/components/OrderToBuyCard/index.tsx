@@ -60,6 +60,7 @@ export const OrderToBuyCard: FC = () => {
 
     useEffect(() => {
         if(hubConnection) {
+            setSelectedPaymentMethodsIds([]);
             getUserPaymentMethods();
         }
     }, [currencyToChange]);
