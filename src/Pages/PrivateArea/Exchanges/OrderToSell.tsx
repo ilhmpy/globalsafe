@@ -16,63 +16,14 @@ export const OrderToSell: FC = () => {
       <Container>
         <Back text="Назад" onGoBackClick={() => history.replace(routers.p2pchangesOwn)} />
         <S.TitleContainer>
-            <Title mB={0}>Публикация ордера</Title>
+          <Title mB={0}>Публикация ордера</Title>
         </S.TitleContainer>
 
         <OrderToSellCard />
-
       </Container>
     </S.Container>
   );
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import React, { useContext, useEffect } from 'react';
 // import { BuyOrder } from './components/BuyOrder/BuyOrder';

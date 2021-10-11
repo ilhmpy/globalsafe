@@ -20,7 +20,6 @@ export const OrderToBuy: FC = () => {
         </S.TitleContainer>
 
         <OrderToBuyCard />
-
       </Container>
     </S.Container>
   );

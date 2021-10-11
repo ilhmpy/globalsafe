@@ -21,19 +21,13 @@ export const Advert = () => {
   }, [hubConnection]);
 
   async function getGetUserExchanges() {
-      try {
-        const res = await hubConnection!.invoke<any>(
-          'GetSellOrders', 
-          [0, 1], 
-          [0, 1, 2, 3],  
-          0, 
-          20
-        );
-        console.log('getGetUserExchanges', res);
-      } catch (err) {
-        console.log(err);
-      }
-  };
+    try {
+      const res = await hubConnection!.invoke<any>('GetSellOrders', [0, 1], [0, 1, 2, 3], 0, 20);
+      console.log('getGetUserExchanges', res);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   return (
     <div>
