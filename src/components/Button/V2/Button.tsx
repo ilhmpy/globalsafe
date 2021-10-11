@@ -65,4 +65,10 @@ export const Button = styled.a<Props>`
       `;
     }
   }}
+  &:disabled {
+    background: #ccc;
+    border-color: #ccc;
+    box-shadow: none;
+    user-select: none;
+  }
 `;

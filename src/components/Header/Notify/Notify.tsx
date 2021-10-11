@@ -34,12 +34,8 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
     const hubConnection = appContext.hubConnection;   
     
     function cb (notify: NotifyItem) {
-        notifies.forEach(item => {
-            if (item.safeId === notify.safeId) {
-                notifies[notifies.indexOf(item)] = notify;
-                setNotifies((item: any) => item.map((i: any) => i));
-            };
-        });
+        console.log("NotifiesUpdate", notify);
+        getNotifies(false);
     };
     
     function getNotifies(loading = true) {
@@ -47,7 +43,7 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
             setLoading(loading);
             hubConnection.invoke(
                 "GetInAppNotifications",
-                [],
+                [1],
                 0,
                 100
             )

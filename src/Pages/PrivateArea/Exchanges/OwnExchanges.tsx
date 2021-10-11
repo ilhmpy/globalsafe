@@ -24,20 +24,19 @@ export const OwnExchanges = () => {
   }, [hubConnection, activeFilter]);
 
   async function getGetUserExchanges() {
-      try {
-        const res = await hubConnection!.invoke<GetExchangesCollectionResult>(
-          'GetExchanges', 
-          [0, 1], 
-          activeFilter === 'active' ? [0, 1, 3] : [2],  
-          0, 
-          20
-        );
-        console.log('getGetUserExchanges', res);
-      } catch (err) {
-        console.log(err);
-      }
-  };
-
+    try {
+      const res = await hubConnection!.invoke<GetExchangesCollectionResult>(
+        'GetExchanges',
+        [0, 1],
+        activeFilter === 'active' ? [0, 1, 3] : [2],
+        0,
+        20
+      );
+      console.log('getGetUserExchanges', res);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   return (
     <div>
