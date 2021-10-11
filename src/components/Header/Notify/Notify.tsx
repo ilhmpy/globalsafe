@@ -43,7 +43,7 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
             setLoading(loading);
             hubConnection.invoke(
                 "GetInAppNotifications",
-                [],
+                [1],
                 0,
                 100
             )
