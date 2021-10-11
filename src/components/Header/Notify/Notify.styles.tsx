@@ -147,8 +147,8 @@ export const NotifyItem = styled.h3<{ grey?: boolean; bold?: boolean; }>`
 `;
 
 export const Scrollbar = styled.div`
-    width: 3px;
-    height: 203px;
+    width: 3px !important;
+    height: 203px !important;
     background: #93A1C1;
     border-radius: 2px;
 `;
