@@ -7,12 +7,35 @@ import { routers } from '../../../../../constantes/routers';
 import { Space, Text } from '../../../components/ui';
 import * as S from './S.el';
 
-type Props = {
+interface OrderInfoModalProps {
+  type: 'buy' | 'sell';
+  currencyToBuy: string;
+  currencyToChange: string;
+  orderSumm: string;
+  rate: string;
+  orderMinSumm: string;
+  orderMaxSumm: string;
+  timePeriod: string;
+  onPublish: () => void;
+  loading: boolean;
   onClose: () => void;
   open: boolean;
-};
+}
 
-export const OrderSellModal: FC<Props> = ({ onClose, open }: Props) => {
+export const OrderInfoModal: FC<OrderInfoModalProps> = ({
+  type,
+  currencyToBuy,
+  currencyToChange,
+  orderSumm,
+  rate,
+  orderMinSumm,
+  orderMaxSumm,
+  timePeriod,
+  onPublish,
+  loading,
+  onClose,
+  open,
+}: OrderInfoModalProps) => {
   const history = useHistory();
 
   return (
@@ -29,27 +52,27 @@ export const OrderSellModal: FC<Props> = ({ onClose, open }: Props) => {
                 </Text>
                 <S.ListItemDivider />
                 <Text size={14} lH={20} weight={700}>
-                  Продажа
+                  {type === 'buy' ? 'Покупка' : 'Продажа'}
                 </Text>
               </S.DataListItem>
 
               <S.DataListItem>
                 <Text size={14} lH={20}>
-                  Валюта продажи:
+                  Валюта покупки:
                 </Text>
                 <S.ListItemDivider />
                 <Text size={14} lH={20} weight={700}>
-                  CWD
+                  {currencyToBuy}
                 </Text>
               </S.DataListItem>
 
               <S.DataListItem>
                 <Text size={14} lH={20}>
-                  Кол-во продажи:
+                  Кол-во покупки:
                 </Text>
                 <S.ListItemDivider />
                 <Text size={14} lH={20} weight={700}>
-                  100 000
+                  {orderSumm}
                 </Text>
               </S.DataListItem>
 
@@ -59,7 +82,7 @@ export const OrderSellModal: FC<Props> = ({ onClose, open }: Props) => {
                 </Text>
                 <S.ListItemDivider />
                 <Text size={14} lH={20} weight={700}>
-                  RUB
+                  {currencyToChange}
                 </Text>
               </S.DataListItem>
 
@@ -69,7 +92,7 @@ export const OrderSellModal: FC<Props> = ({ onClose, open }: Props) => {
                 </Text>
                 <S.ListItemDivider />
                 <Text size={14} lH={20} weight={700}>
-                  109.44
+                  {rate}
                 </Text>
               </S.DataListItem>
 
@@ -82,61 +105,19 @@ export const OrderSellModal: FC<Props> = ({ onClose, open }: Props) => {
                   АО «Альфа-Банк»
                 </Text>
               </S.DataListItem>
-              <>
-                <S.DataListItem spaceBetween>
-                  <Text size={14} lH={20} weight={300}>
-                    Номер карты:
-                  </Text>
-                  <Text size={14} lH={20} weight={700}>
-                    5536 9137 9922 7240
-                  </Text>
-                </S.DataListItem>
-              </>
-              <>
-                <S.DataListItem spaceBetween mb={20}>
-                  <Text size={14} lH={20} weight={300}>
-                    Держатель карты:
-                  </Text>
-                  <Text size={14} lH={20} weight={700}>
-                    VYACHESLAV TROSCHIN
-                  </Text>
-                </S.DataListItem>
-              </>
 
               <S.DataListItem justifyEnd>
                 <Text size={14} lH={20} weight={700}>
                   АО «Тинькофф Банк»
                 </Text>
               </S.DataListItem>
-              <>
-                <S.DataListItem spaceBetween>
-                  <Text size={14} lH={20} weight={300}>
-                    Номер карты:
-                  </Text>
-                  <Text size={14} lH={20} weight={700}>
-                    5536 9137 9922 7240
-                  </Text>
-                </S.DataListItem>
-              </>
-              <>
-                <S.DataListItem spaceBetween>
-                  <Text size={14} lH={20} weight={300}>
-                    Держатель карты:
-                  </Text>
-                  <Text size={14} lH={20} weight={700}>
-                    VYACHESLAV TROSCHIN
-                  </Text>
-                </S.DataListItem>
-              </>
 
               <S.DataListItem>
                 <Text size={14} lH={20}>
                   Лимиты:
                 </Text>
                 <S.ListItemDivider />
-                <Text size={14} lH={20} weight={700}>
-                  1 000 - 49 900
-                </Text>
+                <Text size={14} lH={20} weight={700}>{`${orderMinSumm} - ${orderMaxSumm}`}</Text>
               </S.DataListItem>
 
               <S.DataListItem>
@@ -145,13 +126,13 @@ export const OrderSellModal: FC<Props> = ({ onClose, open }: Props) => {
                 </Text>
                 <S.ListItemDivider />
                 <Text size={14} lH={20} weight={700}>
-                  20 минут
+                  {timePeriod}
                 </Text>
               </S.DataListItem>
             </S.DataList>
 
             <Space>
-              <Button primary fullWidth onClick={onClose}>
+              <Button primary fullWidth onClick={() => onPublish()}>
                 Опубликовать
               </Button>
               <Button outlinePrimary fullWidth onClick={onClose}>

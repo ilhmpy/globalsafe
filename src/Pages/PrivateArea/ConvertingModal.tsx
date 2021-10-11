@@ -9,7 +9,6 @@ import { Input } from '../../components/Input';
 import { Modal } from '../../components/Modal/Modal';
 import { Select } from '../../components/Select/Select5';
 import { AppContext } from '../../context/HubContext';
-import { BalanceList, Balance } from '../../types/balance';
 
 interface Props {
   open: boolean;
@@ -73,22 +72,18 @@ export const ConvertingModal: FC<Props> = ({
             (+fromSum * 100000).toString(),
             59
           );
-          setConvertedArray(response);
+          if (response[1] & response[2]) {
+            setConvertedArray(response);
+            setIsSuccessConverting(true);
+            setOpen(false);
+            setTimeout(() => resetStateValues(), 1000);
+          }
         } catch (error) {
           setIsFailConverting(true);
           console.error(error);
         }
       }
     })();
-  };
-
-  const convertButtonSubmit = () => {
-    convert();
-    if (toSum[0] > 0) {
-      setOpen(false);
-      setTimeout(() => setIsSuccessConverting(true), 2000);
-      setTimeout(() => resetStateValues(), 1000);
-    }
   };
 
   return (
@@ -121,7 +116,9 @@ export const ConvertingModal: FC<Props> = ({
                 placeholder="Сумма"
                 name="fromSum"
                 value={fromSum.replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
-                onChange={({ target: { value } }) => setFromSum(value.replaceAll(/\D/g, ''))}
+                onChange={({ target: { value } }) =>
+                  !(value.length > 1 && value[0] === '0') && setFromSum(value.replaceAll(/\D/g, ''))
+                }
               />
             </InnerBlock>
             <FromToArrow />
@@ -139,7 +136,7 @@ export const ConvertingModal: FC<Props> = ({
                 value={
                   toSum[2] <= 0
                     ? ''
-                    : +toSum[2].toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ') / 100
+                    : (toSum[2] / 100).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')
                 }
                 onChange={(e) => undefined}
               />
@@ -154,7 +151,7 @@ export const ConvertingModal: FC<Props> = ({
                 </Rate>
               </RateRow>
 
-              <Button bigSize primary onClick={convertButtonSubmit}>
+              <Button bigSize primary onClick={convert}>
                 {t('privateArea.convert2')}
               </Button>
             </InnerBlock>

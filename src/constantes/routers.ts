@@ -10,6 +10,7 @@ export const routers = {
   p2pchanges: '/info/p2p-changes',
   p2pchangesAdvert: '/info/p2p-changes/advert',
   p2pchangesOwn: '/info/p2p-changes/own',
+  p2pchangesOrderToBuy: '/info/p2p-changes/create-buy-order',
   p2pchangesOrderToSell: '/info/p2p-changes/create-sell-order',
   p2pchangesSingleExchangeDetails: '/info/p2p-changes',
   p2pchangesSingleExchangeChat: '/info/p2p-changes/chat/:exchangeId',
@@ -17,4 +18,5 @@ export const routers = {
   p2pchangesNewOrder: '/info/p2p-changes/new-order',
   certificates: '/info/p2p-changes/certificates',
   orderCreate: '/info/p2p-changes/order-create'
+
 };

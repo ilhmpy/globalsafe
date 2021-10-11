@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
+
 import * as S from './S.el';
 import { Container } from '../../../components/UI/Container';
 import { Back } from '../components/Back';
-import { useHistory } from 'react-router-dom';
 import { routers } from '../../../constantes/routers';
 import { Title } from '../components/ui/Title';
 import {
