@@ -206,6 +206,8 @@ export const ListItem = styled.li<{ active?: boolean }>`
   justify-content: space-between;
   background: ${(props) => props.theme.card.background};
   cursor: pointer;
+  color: #000000;
+  
   &:focus,
   &:hover {
     background: ${(props) => props.theme.card.backgroundAlfa};
@@ -217,6 +219,7 @@ export const Text = styled.div`
   font-weight: normal;
   font-size: 14px;
   line-height: 20px;
+  color: #000000;
 `;
 
 export const Value = styled.div`
@@ -245,6 +248,8 @@ export const DropDownHeader = styled.div`
   position: relative;
   width: 100%;
   transition: 200ms ease-in-out;
+  color: #000000;
+  
   ${Arrow} {
     position: absolute;
     right: 14px;
