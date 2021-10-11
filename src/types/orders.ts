@@ -1,4 +1,5 @@
 import { Balance } from "./balance";
+import { FiatKind } from "./fiat";
 
 export enum OrderState {
     Active,
@@ -13,7 +14,7 @@ interface OrderBaseModel {
     userSafeId: string;
     assetKind: Balance;
     volume: number;
-    operationAssetKind: Balance;
+    operationAssetKind: FiatKind;
     limitFrom: number;
     limitTo: number;
     methodsKindsJson: string; // 

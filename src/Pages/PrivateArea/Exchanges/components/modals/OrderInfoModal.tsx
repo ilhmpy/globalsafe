@@ -18,6 +18,7 @@ interface OrderInfoModalProps {
     timePeriod: string;
     onPublish: () => void;
     loading: boolean;
+    paymentMethods: any[];
     onClose: () => void;
     open: boolean;
 };
@@ -33,6 +34,7 @@ export const OrderInfoModal: FC<OrderInfoModalProps> = ({
     timePeriod,
     onPublish,
     loading,
+    paymentMethods,
     onClose,
     open,
 }: OrderInfoModalProps) => {
@@ -81,13 +83,20 @@ export const OrderInfoModal: FC<OrderInfoModalProps> = ({
                         <S.DataListItem>
                             <Text size={14} lH={20}>Платежные методы:</Text>
                             <S.ListItemDivider />
-                            <Text size={14} lH={20} weight={700}>АО «Альфа-Банк»</Text>
+                            <Text size={14} lH={20} weight={700}>
+                                {JSON.parse(paymentMethods[0].data).bankName}
+                            </Text>
                         </S.DataListItem>
-
-                        <S.DataListItem justifyEnd>
-                            <Text size={14} lH={20} weight={700}>АО «Тинькофф Банк»</Text>
-                        </S.DataListItem>
-
+                        {
+                            paymentMethods.length > 1 &&
+                            [...paymentMethods].splice(1).map((method) => (
+                                <S.DataListItem justifyEnd key={method.safeId}>
+                                    <Text size={14} lH={20} weight={700}>
+                                        {JSON.parse(method.data).bankName}
+                                    </Text>
+                                </S.DataListItem>
+                            ))
+                        }
 
                         <S.DataListItem>
                             <Text size={14} lH={20}>Лимиты:</Text>
