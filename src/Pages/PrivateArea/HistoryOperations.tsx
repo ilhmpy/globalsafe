@@ -143,22 +143,28 @@ export const HistoryOperations = () => {
                 setLoading(false);
                 console.log("res", res.collection);
                 if (allCurrency) {
-                   setOperations(items => res.collection.map((i: any) => {
-                       return {
-                         ...i,
-                         new: false
-                       };
-                   }));
+                   setOperations(() => {
+                     const items = res.collection.map((i: any) => {
+                        return {
+                          ...i,
+                          new: false
+                        };
+                    });
+                    return items.reverse(); 
+                   });
                 } else {
                     if (balances) {
-                        setOperations(res.collection.map((i: any) => {
-                            if (Number(i.balanceSafeId) === balances[1].id) {
-                                return {
-                                    ...i,
-                                    new: false
+                        setOperations(() => {
+                            const items = res.collection.map((i: any) => {
+                                if (Number(i.balanceSafeId) === balances[1].id) {
+                                    return {
+                                        ...i,
+                                        new: false
+                                    };
                                 };
-                            };
-                        }));
+                            });
+                           return items.reverse(); 
+                        });
                     };
                 };
                 if (res.collection.length > 0) {
@@ -198,11 +204,18 @@ export const HistoryOperations = () => {
                 console.log("rees", res);
                 changeNew();
                 if (allCurrency) {
-                    setOperations((data: any) => [...data.map((i: any) => {
-                        return { ...i, new: false }
-                    }), ...res.collection.map((i: any) => {
-                        return { ...i, new: true }
-                    })]);
+                    setOperations((data: any) => {
+                        const items = [...data.map((i: any) => {
+                            return { ...i, new: false }
+                        }), ...res.collection.map((i: any) => {
+                            return { ...i, new: true }
+                        })];
+                        return items; /* sort((x: any, y: any) => {
+                            const a = new Date(x.operationDate);
+                            const b = new Date(y.operationDate);
+                            return a > b ? -1 : a < b ? 1 : 0;
+                        }); */
+                    });
                 } else {
                     if (balances) {
                         setOperations((data: any) => [...data.map((i: any) => {
