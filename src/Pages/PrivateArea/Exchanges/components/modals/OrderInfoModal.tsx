@@ -4,6 +4,7 @@ import { useHistory } from 'react-router';
 import { Button } from '../../../../../components/Button/V2/Button';
 import { Modal } from '../../../../../components/ModalAnimated';
 import { routers } from '../../../../../constantes/routers';
+import { ViewBuyOrderModel } from '../../../../../types/orders';
 import { Space, Text } from '../../../components/ui';
 import * as S from './S.el';
 
@@ -19,6 +20,7 @@ interface OrderInfoModalProps {
     onPublish: () => void;
     loading: boolean;
     paymentMethods: any[];
+    newCreatedOrder: ViewBuyOrderModel | undefined;
     onClose: () => void;
     open: boolean;
 };
@@ -35,6 +37,7 @@ export const OrderInfoModal: FC<OrderInfoModalProps> = ({
     onPublish,
     loading,
     paymentMethods,
+    newCreatedOrder,
     onClose,
     open,
 }: OrderInfoModalProps) => {
@@ -45,7 +48,10 @@ export const OrderInfoModal: FC<OrderInfoModalProps> = ({
       {open && (
         <Modal onClose={onClose} open={open}>
           <S.SmallContainer>
-            <S.BlackTitle>Публикация ордера</S.BlackTitle>
+            <S.BlackTitle>
+              {newCreatedOrder ? '' : 'Публикация ордера'}
+              
+            </S.BlackTitle>
 
             <S.DataList>
               <S.DataListItem>
@@ -135,14 +141,22 @@ export const OrderInfoModal: FC<OrderInfoModalProps> = ({
               </S.DataListItem>
             </S.DataList>
 
-            <Space>
-              <Button primary fullWidth onClick={() => onPublish()}>
-                Опубликовать
-              </Button>
-              <Button outlinePrimary fullWidth onClick={onClose}>
-                Отмена
-              </Button>
-            </Space>
+            {
+              newCreatedOrder
+              ?
+                <Button primary fullWidth onClick={() => history.replace(`/info/p2p-changes/orders/${newCreatedOrder.id}`)}>
+                  Перейти к ордеру
+                </Button>
+              :
+                <Space>
+                  <Button primary fullWidth onClick={() => onPublish()}>
+                    Опубликовать
+                  </Button>
+                  <Button outlinePrimary fullWidth onClick={onClose}>
+                    Отмена
+                  </Button>
+              </Space>
+            }
           </S.SmallContainer>
         </Modal>
       )}
