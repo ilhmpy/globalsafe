@@ -86,7 +86,9 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
     };
 
     return (
-      <Notifies.NotifiesBlock block={block} admin={admin} empty={!loading && notifies.length === 0} load={loading} onMouseLeave={() => setBlock(false)}>
+      <Notifies.NotifiesBlock block={block} admin={admin} 
+            empty={!loading && notifies.length === 0}
+            load={loading} onMouseLeave={() => setBlock(false)}>
           {loading ? <InBlockLoading /> : (
             <>
                 {notifies && notifies.length ? (
