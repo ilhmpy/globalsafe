@@ -23,6 +23,7 @@ import { OrderCreate } from './Orders/OrderCreate';
 import { AppContext } from '../../context/HubContext';
 import { OrderToBuy } from './Exchanges/OrderToBuy';
 import { DepositView } from './Deposits/DepositView';
+import { SingleOrderDetails } from './Exchanges/SingleOrderDetails';
 
 export const InfoMain: FC = () => {
   const appContext = useContext(AppContext);
@@ -52,6 +53,11 @@ export const InfoMain: FC = () => {
           <Route path={routers.p2pchangesOrderToBuy} component={OrderToBuy} exact />
           <Route path={routers.p2pchangesOrderToSell} component={OrderToSell} exact />
           <Route path={routers.certificates} component={Certificates} exact />
+          <Route
+            path={routers.p2pchangesSingleOrderDetails}
+            component={SingleOrderDetails}
+            exact
+          />
           <Route
             path={routers.p2pchangesSingleExchangeDetails}
             component={SingleExchangeDetails}
