@@ -332,11 +332,17 @@ export const HeaderBar = () => {
     setCurrencyValue('');
   };
 
+  function createPortal() {
+    const a = document.createElement("a");
+    a.rel="noreferrer noopener";
+    a.target="_blank";
+    return a;
+  };
+
   const changeBalance = () => {
     const value = Number(ed.replace(/\s/g, ''));
     if (hubConnection && currency.length > 0) {
-      const newWindow = window.open();
-      console.log('change', value);
+      const a = createPortal();
       hubConnection
         .invoke(
           'GetTopUpUrl',
@@ -344,13 +350,15 @@ export const HeaderBar = () => {
           currency === 'CWD' ? value * 100000 : currency === 'GLOBAL' ? value * 10000 : value
         )
         .then((res: string) => {
-          newWindow && (newWindow.location.href = res);
-          setError(false);
-          setAddDrawModal(false);
+          a.href = res;
+          a.click();
+          setTimeout(() => {
+            setError(false);
+            setAddDrawModal(false);
+          }, 5000);
         })
         .catch((err: Error) => {
           console.log(err);
-          newWindow && newWindow.close();
           setError(true);
           setErrorReason('На балансе аккаунта недостаточно средств.');
           setAddDrawModal(false);
@@ -455,7 +463,7 @@ export const HeaderBar = () => {
           setWithdrawValueLoad(false);
           setOutPutError(true);
           setWithDrawModal(false);
-          setOutPutErrorReason('Ошибка на стороне сервера.');
+          setOutPutErrorReason('Ошибка вывода средств.');
         });
     }
   };
