@@ -68,6 +68,7 @@ export const InfoMain: FC = () => {
             component={SingleOrderDetails}
             exact
           />
+          <Route path={routers.settingsViewPayMethod + '/:slug'} component={ViewPayMethod} exact />
         </Switch>
         <Footer />
       </Styled.Page>
