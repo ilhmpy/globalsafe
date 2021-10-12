@@ -318,10 +318,10 @@ export const HistoryOperations = () => {
                 ) : ( <Loading /> )}
             </Styled.Table>
           <Styled.Button onClick={addMore} newItems={operations && operations.length > 0 ? newItems : false}>
-                {operations && operations[operations.length - 1] && operations[operations.length - 1].new ? 
+                {operations && operations.some((item: any) => item.new === true) ? 
                     <Spinner style={{ width: 25, height: 25, borderTop: "2px solid #fff", margin: "0 auto" }} /> 
                     : "Показать ещё"}
           </Styled.Button>
         </Container>
     )
-}    
+} 
