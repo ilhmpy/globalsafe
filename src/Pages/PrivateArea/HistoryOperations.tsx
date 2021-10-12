@@ -186,7 +186,7 @@ export const HistoryOperations = () => {
                 ...i,
                 new: false 
             };
-        }))
+        }));
     }
 
     function addMore() {
