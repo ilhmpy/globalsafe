@@ -109,8 +109,10 @@ export const NewPayMethod: FC = () => {
           'AddPaymentMethod',
           kind,
           keys.findIndex((i) => i === balanceType),
+          checked ? 1 : 2,
           JSON.stringify(addPayMethod())
         );
+        history.push(routers.settings);
       } catch (e) {
         console.log(e);
       }
