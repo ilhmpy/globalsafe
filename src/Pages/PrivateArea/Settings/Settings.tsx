@@ -15,6 +15,7 @@ import {
 } from '../../../types/paymentMethodKind';
 import { PaymentMethodState } from '../../../types/paymentMethodState';
 import { FiatKind } from '../../../types/fiatKind';
+import { SettingsContext } from '../../../context/SettingsContext';
 
 type TableRowType = {
   method?: string;
@@ -27,6 +28,7 @@ type TableRowType = {
 type Rows = {
   data: CollectionPayMethod;
   active: (item: CollectionPayMethod) => void;
+  toView: (id: string) => void;
 };
 
 type PayMethod = {
@@ -38,16 +40,11 @@ type PayMethod = {
   phone?: string;
 };
 
-export const TableRows: FC<Rows> = ({ data, active }: Rows) => {
+export const TableRows: FC<Rows> = ({ data, active, toView }: Rows) => {
   const payMethod: PayMethod = JSON.parse(data.data);
   const { t } = useTranslation();
   return (
-    <TableRow
-    // onClick={() => {
-    //   setChosenMethod(row);
-    //   history.push(routers.settingsViewPayMethod);
-    // }}
-    >
+    <TableRow onClick={() => toView(data.safeId)}>
       <Ceil>{payMethod.bankName ? payMethod.bankName : PaymentMethodKind[data.kind]}</Ceil>
       <Ceil>{payMethod.name ? payMethod.name : '-'}</Ceil>
       <Ceil>{FiatKind[data.assetKind]}</Ceil>
@@ -70,31 +67,24 @@ export const TableRows: FC<Rows> = ({ data, active }: Rows) => {
 };
 
 export const Settings: FC = () => {
-  const { t } = useTranslation();
-
   const appContext = useContext(AppContext);
-  const { chosenMethod, setChosenMethod, hubConnection } = appContext;
+  const { hubConnection } = appContext;
 
   const [activeFilter, setActiveFilter] = useState<string>('Все');
   const history = useHistory();
 
-  const [userPaymentsMethod, setUserPaymentsMethod] = useState<CollectionPayMethod[]>([]);
+  const { userPaymentsMethod, setUserPaymentsMethod } = useContext(SettingsContext);
 
-  const userPaymentsMethods = async () => {
+  const userPaymentsMethods = async (arr: number[]) => {
     if (!hubConnection) return;
     try {
       const res = await hubConnection.invoke<RootPayMethod>(
         'GetUserPaymentsMethods',
-        [
-          PaymentMethodKind.BankTransfer,
-          PaymentMethodKind.BEP20,
-          PaymentMethodKind.ERC20,
-          PaymentMethodKind.TRC20,
-        ],
+        arr,
         [PaymentMethodState.Active, PaymentMethodState.Disabled],
         null,
         0,
-        20
+        100
       );
       console.log('res', res);
       setUserPaymentsMethod(res.collection);
@@ -104,26 +94,76 @@ export const Settings: FC = () => {
   };
 
   useEffect(() => {
+    const arr = () => {
+      if (activeFilter === 'Все') {
+        return [
+          PaymentMethodKind.BankTransfer,
+          PaymentMethodKind.BEP20,
+          PaymentMethodKind.ERC20,
+          PaymentMethodKind.TRC20,
+          PaymentMethodKind.Alfabank,
+          PaymentMethodKind.Sberbank,
+          PaymentMethodKind.Tinkoff,
+        ];
+      } else if (activeFilter === 'АО «Альфа-Банк»') {
+        return [PaymentMethodKind.Alfabank];
+      } else if (activeFilter === 'АО «Тинькофф Банк»') {
+        return [PaymentMethodKind.Tinkoff];
+      } else if (activeFilter === 'ПАО Сбербанк') {
+        return [PaymentMethodKind.Sberbank];
+      } else if (activeFilter === 'ERC 20') {
+        return [PaymentMethodKind.ERC20];
+      } else if (activeFilter === 'TRC 20') {
+        return [PaymentMethodKind.TRC20];
+      } else if (activeFilter === 'BEP 20') {
+        return [PaymentMethodKind.BEP20];
+      } else {
+        return [
+          PaymentMethodKind.BankTransfer,
+          PaymentMethodKind.BEP20,
+          PaymentMethodKind.ERC20,
+          PaymentMethodKind.TRC20,
+          PaymentMethodKind.Alfabank,
+          PaymentMethodKind.Sberbank,
+          PaymentMethodKind.Tinkoff,
+        ];
+      }
+    };
     if (hubConnection) {
-      userPaymentsMethods();
+      userPaymentsMethods(arr());
     }
-  }, [hubConnection]);
+  }, [hubConnection, activeFilter]);
+
+  const adjustPaymentMethod = async (id: number, safeId: string) => {
+    if (!hubConnection) return;
+    try {
+      await hubConnection.invoke('AdjustStatePaymentMethod', safeId, id);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const active = (item: CollectionPayMethod) => {
     const key = userPaymentsMethod.findIndex((i) => i.safeId === item.safeId);
     if (item.state === PaymentMethodState.Active) {
+      adjustPaymentMethod(PaymentMethodState.Disabled, item.safeId);
       setUserPaymentsMethod([
         ...userPaymentsMethod.slice(0, key),
         { ...item, state: PaymentMethodState.Disabled },
         ...userPaymentsMethod.slice(key + 1),
       ]);
     } else {
+      adjustPaymentMethod(PaymentMethodState.Active, item.safeId);
       setUserPaymentsMethod([
         ...userPaymentsMethod.slice(0, key),
         { ...item, state: PaymentMethodState.Active },
         ...userPaymentsMethod.slice(key + 1),
       ]);
     }
+  };
+
+  const toView = (id: string) => {
+    history.push(routers.settingsViewPayMethod + '/' + id);
   };
 
   return (
@@ -133,20 +173,6 @@ export const Settings: FC = () => {
         title="Настройки"
         btnText="Добавить платежный метод"
       />
-      {/* <Filter
-        activeFilter={activeFilter}
-        setActiveFilter={setActiveFilter}
-        buttonValues={[
-          'Все',
-          'АО «Альфа-Банк»',
-          'АО «Тинькофф Банк»',
-          'ПАО Сбербанк',
-          'ERC 20',
-          'TRC 20',
-          'BEP 20',
-          'Все валюты',
-        ]}
-      /> */}
 
       <S.Container>
         <S.Buttons>
@@ -181,7 +207,7 @@ export const Settings: FC = () => {
 
         {userPaymentsMethod.length
           ? userPaymentsMethod.map((row) => (
-              <TableRows active={active} data={row} key={row.safeId} />
+              <TableRows active={active} toView={toView} data={row} key={row.safeId} />
             ))
           : null}
       </TableCard>

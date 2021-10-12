@@ -66,7 +66,7 @@ export const InfoMain: FC = () => {
 
           <Route path={routers.settings} component={Settings} exact />
           <Route path={routers.settingsNewPayMethod} component={NewPayMethod} exact />
-          <Route path={routers.settingsViewPayMethod} component={ViewPayMethod} exact />
+          <Route path={routers.settingsViewPayMethod + '/:slug'} component={ViewPayMethod} exact />
           <Route path={routers.operations} component={HistoryOperations} exact />
 
           {/* <Route path={routers.p2pchangesOrderToSell} component={OrderToSell} exact /> */}
