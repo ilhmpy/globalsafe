@@ -533,6 +533,7 @@ export const HeaderBar = () => {
                 setEd(value.replaceAll(/\D/g, ''));
               }}
             />
+            <Styled.Message>Для пополнения баланса вы будете перенаправлены на cwd.global</Styled.Message>
             <PAButton onClick={changeBalance} disabled={Number(ed) < 1 || currency.length < 1}>
               Пополнить баланс
             </PAButton>
@@ -556,35 +557,10 @@ export const HeaderBar = () => {
           p20
         >
           <H3 center modalTitle>
-            Успешное пополнение
+            Пополнение баланса
           </H3>
-          <Styled.Desc>Баланс личного кабинета успешно пополнен на:</Styled.Desc>
-          <Styled.Desc bold mMore style={{ marginTop: '0px' }}>
-            {(Number(ed)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {currency}
-          </Styled.Desc>
-        </Modal>
-      </CSSTransition>
-
-      <CSSTransition in={error === undefined ? false : error} timeout={0} unmountOnExit>
-        <Modal
-          onClose={() => {
-            setError(undefined);
-            setCurrency('');
-            setEd('');
-          }}
-          width={420}
-          withClose
-          p20
-        >
-          <H3 center modalTitle>
-            Ошибка пополнения
-          </H3>
-          <Styled.Desc>Баланс личного кабинета не был пополнен на:</Styled.Desc>
-          <Styled.Desc bold>
-            {(Number(ed)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {currency}
-          </Styled.Desc>
-          <Styled.Desc danger mMore style={{ marginTop: '0px' }}>
-            {errorReason}
+          <Styled.Desc style={{ marginBottom: "20px", maxWidth: "340px" }}>
+            Мы сообщим вам о результате операции пополнения в личном уведомлении.
           </Styled.Desc>
         </Modal>
       </CSSTransition>
