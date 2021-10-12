@@ -24,6 +24,7 @@ import { AppContext } from '../../context/HubContext';
 import { OrderToBuy } from './Exchanges/OrderToBuy';
 import { DepositView } from './Deposits/DepositView';
 import { Notifications } from "./Notifications/Notifications";
+import { SingleOrderDetails } from './Exchanges/SingleOrderDetails';
 
 export const InfoMain: FC = () => {
   const appContext = useContext(AppContext);
@@ -62,6 +63,11 @@ export const InfoMain: FC = () => {
           <Route path={routers.settingsViewPayMethod} component={ViewPayMethod} exact />
           <Route path={routers.operations} component={HistoryOperations} exact />
           <Route path={routers.notifications} component={Notifications} exact />
+          <Route
+            path={routers.p2pchangesSingleOrderDetails}
+            component={SingleOrderDetails}
+            exact
+          />
         </Switch>
         <Footer />
       </Styled.Page>
