@@ -766,6 +766,9 @@ export const HeaderBar = () => {
             <TabNavItem to={routers.operations}>
               <div>История операций</div>
             </TabNavItem>
+            <TabNavItem to={routers.notifications}>
+              <div>Уведомления</div>
+            </TabNavItem>
             <TabNavItem to={routers.settings}>
               <div>Настройки</div>
             </TabNavItem>

@@ -4,6 +4,7 @@ import Scrollbars from 'react-custom-scrollbars';
 import moment from 'moment';
 import { AppContext } from '../../../context/HubContext';
 import  { InBlockLoading } from "../../UI/V4/InBlockLoading/InBlockLoading";
+import { NotifyItem } from "../../../constantes/notifies";
 
 type NotifyProps = {
    block: boolean; 
@@ -11,20 +12,6 @@ type NotifyProps = {
    admin?: boolean; 
    setCheckeds: (bool: boolean) => void;
    setBlock: (bool: boolean) => void;
-};
-
-type NotifyItem = {
-  id: number;
-  message: string;
-  readState: number;
-  safeId: string;
-  sentDate: any;
-  state: number;
-  subject: string;
-  userId: number;
-  userSafeId: string;
-  notificationKind: number;
-  link: string;
 };
 
 export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBlock }: NotifyProps) => {
