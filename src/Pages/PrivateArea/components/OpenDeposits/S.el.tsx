@@ -44,6 +44,8 @@ export const Agree = styled.p`
   font-size: 14px;
   line-height: 20px;
   margin-left: 10px;
+  color: #000000;
+
   a {
     text-decoration: underline;
     color: #0094ff;

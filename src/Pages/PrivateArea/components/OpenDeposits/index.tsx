@@ -92,15 +92,17 @@ export const OpenDeposit: FC<IProps> = ({
     }
   };
 
-  const checkPossibility = () => {
-    if (
-      isAgree &&
-      activeDeposit &&
-      +sum >= activeDeposit?.minAmount/ 100000&&
-      +sum <= (activeDeposit?.maxAmount ? activeDeposit?.maxAmount/ 100000: activeDeposit?.minAmount / 1000)
-    ) {
-      setIsConfirmOpenDeposit(true);
-    }
+  const checkPossibility = () =>
+    isAgree &&
+    activeDeposit &&
+    +sum >= activeDeposit?.minAmount / 100000 &&
+    +sum <=
+      (activeDeposit?.maxAmount
+        ? activeDeposit?.maxAmount / 100000
+        : activeDeposit?.minAmount / 1000);
+
+  const openConfirm = () => {
+    checkPossibility() && setIsConfirmOpenDeposit(true);
   };
 
   useEffect(() => {
@@ -208,7 +210,7 @@ export const OpenDeposit: FC<IProps> = ({
             </S.Agree>
           </Checkbox>
         </S.BlockWrapper>
-        <Button bigSize primary onClick={checkPossibility}>
+        <Button bigSize primary onClick={openConfirm} disabled={!checkPossibility()}>
           Открыть депозит
         </Button>
       </RightSide>
