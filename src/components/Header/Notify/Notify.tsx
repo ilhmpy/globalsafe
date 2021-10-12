@@ -48,7 +48,9 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
             .then((res) => {
               console.log("user notifications", res);
               setCheckeds(res.collection.some((item: NotifyItem) => item.readState === 0));
-              setNotifies(() => res.collection.sort((x: any, y: any) => {
+              setNotifies(() => res.collection.map((item: any) => {
+                  return { ...item, click: undefined };
+              }).sort((x: any, y: any) => {
                 const a = new Date(x.sentDate);
                 const b = new Date(y.sentDate);
                 return a > b ? -1 : a < b ? 1 : 0;
@@ -75,14 +77,27 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
         getNotifies();
     }, [hubConnection]);
 
+    function changeHide(bool: boolean, id: string) {
+        notifies.forEach((notify: any) => {
+            if (notify.safeId === id) {
+                notify.click = bool;
+                setNotifies(items => items.map(i => i));
+            };
+        });
+    };
+
     function onNotify(id: string) {
-        if (hubConnection) {
-            hubConnection.invoke("SetStateInAppNotification", id, 1) 
-             .then(() => {
-                 getNotifies(false);
-             })
-             .catch(err => console.error(err));
-        };
+        changeHide(true, id);
+        setTimeout(() => {
+            changeHide(false, id);
+            if (hubConnection) {
+                hubConnection.invoke("SetStateInAppNotification", id, 1)
+                 .then(() => {
+                     getNotifies(false);
+                 })
+                 .catch(err => console.error(err));
+            };
+        }, 500);
     };
 
     return (
@@ -93,15 +108,15 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
             <>
                 {notifies && notifies.length ? (
                     <Scrollbars renderThumbVertical={(props) => <Notifies.Scrollbar {...props}></Notifies.Scrollbar>}>
-                        {notifies && notifies.map((notify: NotifyItem, idx: number) => (
-                            <Notifies.Notify notChecked={notify.readState === 0} key={idx}>
+                        {notifies && notifies.map((notify: any, idx: number) => (
+                            <Notifies.Notify click={notify.click} notChecked={notify.readState === 0} key={idx}>
                                 <Notifies.NotifyItem grey>
                                     {moment(notify.sentDate).format("DD.MM.YYYY")} в {moment(notify.sentDate).format("HH:MM")}
                                 </Notifies.NotifyItem>
                                 <Notifies.NotifyItem bold>
                                     {notify.subject}
                                 </Notifies.NotifyItem>
-                                <Notifies.NotifyItem>{notify.message}</Notifies.NotifyItem>
+                                <Notifies.NotifyItem><a href="">{notify.message}</a></Notifies.NotifyItem>
                                 <Notifies.DoneNotify onClick={() => onNotify(notify.safeId)} />
                             </Notifies.Notify>
                         ))}

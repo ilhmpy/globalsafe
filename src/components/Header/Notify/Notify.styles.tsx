@@ -1,4 +1,4 @@
-import styled from "styled-components/macro";
+import styled, { keyframes } from "styled-components/macro";
 import { ReactComponent as Done } from "../../../assets/svg/done.svg";
 
 export const BallContainer = styled.div<{ notChecked: boolean; }>`
@@ -30,6 +30,7 @@ export const BallContainer = styled.div<{ notChecked: boolean; }>`
 `;
 
 export const NotifiesBlock = styled.div<{ block: boolean; auth?: boolean; admin?: boolean; empty: boolean; load: boolean; }>`
+    overflow-x: hidden;
     width: 80%;
     max-width: 420px;
     height: ${({ empty }) => empty ? "80px" : "584px"};
@@ -44,7 +45,7 @@ export const NotifiesBlock = styled.div<{ block: boolean; auth?: boolean; admin?
     border-radius: 4px;
     position: absolute;
     transition: .3s;
-    ${({ admin, block }) => {
+    ${({ admin }) => {
         if (admin) {
             return `
                right: 140px;
@@ -91,7 +92,16 @@ export const NotifiesBlock = styled.div<{ block: boolean; auth?: boolean; admin?
     }
 `;
 
-export const Notify = styled.div<{ notChecked: boolean; empty?: boolean; }>`
+export const hideNotify = keyframes`
+    0% { margin-left: 20px; opacity: 80%; }
+    10% { margin-left: 50px; opacity: 60%; }
+    20% { margin-left: 70px; opacity: 40%; }
+    30% { margin-left: 90px; opacity: 20%; }
+    50% { margin-left: 110px; opacity: 15%; }
+    100% { margin-left: 120px; opacity: 10%; }
+`;
+
+export const Notify = styled.div<{ notChecked: boolean; empty?: boolean; click?: boolean; }>`
     width: 100%;
     background: #F9FAFB;
     margin-bottom: 10px;
@@ -99,6 +109,20 @@ export const Notify = styled.div<{ notChecked: boolean; empty?: boolean; }>`
     padding-left: 29px;
     position: relative;
     cursor: pointer;
+    ${({ click }) => {
+        if (click) {
+            return `
+                margin-left: 120px;
+                opacity: 10%;
+            `;
+        }
+        if (click === false) {
+            return `
+                display: none;
+            `;
+        }
+    }}
+    transition: 0.5s;
     &::before {
         content: "";
         display: ${({ notChecked }) => notChecked ? "block" : "none"};
@@ -127,6 +151,12 @@ export const NotifyItem = styled.h3<{ grey?: boolean; bold?: boolean; }>`
     font-size: 12px;
     line-height: 20px;
     color: #3F3E4E;
+    & > a {
+        color: inherit;
+        line-height: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+    }
     margin-bottom: 4px;
     max-width: 360px;
     word-wrap: break-word;
