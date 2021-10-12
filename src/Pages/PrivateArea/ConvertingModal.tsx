@@ -33,7 +33,7 @@ export const ConvertingModal: FC<Props> = ({
     toCurrency: '',
   });
   const [fromSum, setFromSum] = useState('');
-  const [toSum, setToSum] = useState([0, 0, 0]);
+  const [toSum, setToSum] = useState<string[]>(['0', '0', '0']);
   const [fromCurrency, setFromCurrency] = useState('');
   const [toCurrency, setToCurrency] = useState('');
   const appContext = useContext(AppContext);
@@ -41,7 +41,7 @@ export const ConvertingModal: FC<Props> = ({
 
   const resetStateValues = () => {
     setFromSum('');
-    setToSum([0, 0, 0]);
+    setToSum(['0', '0', '0']);
     setFromCurrency('');
     setToCurrency('');
   };
@@ -65,7 +65,7 @@ export const ConvertingModal: FC<Props> = ({
 
   const convert = async () => {
     (async () => {
-      if (hubConnection && fromCurrency && toCurrency && +fromSum > 0) {
+      if (hubConnection && fromCurrency && toCurrency && +fromSum > 0 && +toSum[1]) {
         try {
           const response = await hubConnection.invoke(
             'BalanceExchange',
@@ -134,24 +134,24 @@ export const ConvertingModal: FC<Props> = ({
                 placeholder="Сумма"
                 name="toSum"
                 value={
-                  toSum[2] <= 0
+                  +toSum[2] <= 0
                     ? ''
-                    : (toSum[2] / 100).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')
+                    : (+toSum[2] / 100).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')
                 }
                 onChange={(e) => undefined}
               />
               <RateRow>
                 <Rate>Курс:</Rate>
                 <Rate>
-                  {toSum[1] > 0
-                    ? (toSum[1] / toSum[2] / 1000).toLocaleString('ru-RU', {
+                  {+toSum[1] > 0
+                    ? (+toSum[1] / +toSum[2] / 1000).toLocaleString('ru-RU', {
                         maximumFractionDigits: 2,
                       })
                     : 0}
                 </Rate>
               </RateRow>
 
-              <Button bigSize primary onClick={convert}>
+              <Button bigSize primary onClick={convert} disabled={toSum[1] === '0'}>
                 {t('privateArea.convert2')}
               </Button>
             </InnerBlock>
