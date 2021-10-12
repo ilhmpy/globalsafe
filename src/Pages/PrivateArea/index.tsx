@@ -23,6 +23,7 @@ import { OrderCreate } from './Orders/OrderCreate';
 import { AppContext } from '../../context/HubContext';
 import { OrderToBuy } from './Exchanges/OrderToBuy';
 import { DepositView } from './Deposits/DepositView';
+import { Notifications } from "./Notifications/Notifications";
 import { SingleOrderDetails } from './Exchanges/SingleOrderDetails';
 
 export const InfoMain: FC = () => {
@@ -49,27 +50,25 @@ export const InfoMain: FC = () => {
           <Route path="/info/deposits/:slug" component={OnePage} exact />
           <Route path={routers.p2pchanges} component={Advert} exact />
           <Route path={routers.p2pchangesOwn} component={OwnExchanges} exact />
-
           <Route path={routers.p2pchangesOrderToBuy} component={OrderToBuy} exact />
           <Route path={routers.p2pchangesOrderToSell} component={OrderToSell} exact />
           <Route path={routers.certificates} component={Certificates} exact />
-          <Route
-            path={routers.p2pchangesSingleOrderDetails}
-            component={SingleOrderDetails}
-            exact
-          />
           <Route
             path={routers.p2pchangesSingleExchangeDetails}
             component={SingleExchangeDetails}
             exact
           />
-
           <Route path={routers.settings} component={Settings} exact />
           <Route path={routers.settingsNewPayMethod} component={NewPayMethod} exact />
-          <Route path={routers.settingsViewPayMethod + '/:slug'} component={ViewPayMethod} exact />
+          <Route path={routers.settingsViewPayMethod} component={ViewPayMethod} exact />
           <Route path={routers.operations} component={HistoryOperations} exact />
-
-          {/* <Route path={routers.p2pchangesOrderToSell} component={OrderToSell} exact /> */}
+          <Route path={routers.notifications} component={Notifications} exact />
+          <Route
+            path={routers.p2pchangesSingleOrderDetails}
+            component={SingleOrderDetails}
+            exact
+          />
+          <Route path={routers.settingsViewPayMethod + '/:slug'} component={ViewPayMethod} exact />
         </Switch>
         <Footer />
       </Styled.Page>

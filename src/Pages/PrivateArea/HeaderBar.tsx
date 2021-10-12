@@ -332,11 +332,17 @@ export const HeaderBar = () => {
     setCurrencyValue('');
   };
 
+  function createPortal() {
+    const a = document.createElement("a");
+    a.rel="noreferrer noopener";
+    a.target="_blank";
+    return a;
+  };
+
   const changeBalance = () => {
     const value = Number(ed.replace(/\s/g, ''));
     if (hubConnection && currency.length > 0) {
-      const newWindow = window.open();
-      console.log('change', value);
+      const a = createPortal();
       hubConnection
         .invoke(
           'GetTopUpUrl',
@@ -344,13 +350,15 @@ export const HeaderBar = () => {
           currency === 'CWD' ? value * 100000 : currency === 'GLOBAL' ? value * 10000 : value
         )
         .then((res: string) => {
-          newWindow && (newWindow.location.href = res);
-          setError(false);
-          setAddDrawModal(false);
+          a.href = res;
+          a.click();
+          setTimeout(() => {
+            setError(false);
+            setAddDrawModal(false);
+          }, 5000);
         })
         .catch((err: Error) => {
           console.log(err);
-          newWindow && newWindow.close();
           setError(true);
           setErrorReason('На балансе аккаунта недостаточно средств.');
           setAddDrawModal(false);
@@ -455,7 +463,7 @@ export const HeaderBar = () => {
           setWithdrawValueLoad(false);
           setOutPutError(true);
           setWithDrawModal(false);
-          setOutPutErrorReason('Ошибка на стороне сервера.');
+          setOutPutErrorReason('Ошибка вывода средств.');
         });
     }
   };
@@ -533,6 +541,7 @@ export const HeaderBar = () => {
                 setEd(value.replaceAll(/\D/g, ''));
               }}
             />
+            <Styled.Message>Для пополнения баланса вы будете перенаправлены на cwd.global</Styled.Message>
             <PAButton onClick={changeBalance} disabled={Number(ed) < 1 || currency.length < 1}>
               Пополнить баланс
             </PAButton>
@@ -556,35 +565,10 @@ export const HeaderBar = () => {
           p20
         >
           <H3 center modalTitle>
-            Успешное пополнение
+            Пополнение баланса
           </H3>
-          <Styled.Desc>Баланс личного кабинета успешно пополнен на:</Styled.Desc>
-          <Styled.Desc bold mMore style={{ marginTop: '0px' }}>
-            {(Number(ed)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {currency}
-          </Styled.Desc>
-        </Modal>
-      </CSSTransition>
-
-      <CSSTransition in={error === undefined ? false : error} timeout={0} unmountOnExit>
-        <Modal
-          onClose={() => {
-            setError(undefined);
-            setCurrency('');
-            setEd('');
-          }}
-          width={420}
-          withClose
-          p20
-        >
-          <H3 center modalTitle>
-            Ошибка пополнения
-          </H3>
-          <Styled.Desc>Баланс личного кабинета не был пополнен на:</Styled.Desc>
-          <Styled.Desc bold>
-            {(Number(ed)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {currency}
-          </Styled.Desc>
-          <Styled.Desc danger mMore style={{ marginTop: '0px' }}>
-            {errorReason}
+          <Styled.Desc style={{ marginBottom: "20px", maxWidth: "340px" }}>
+            Мы сообщим вам о результате операции пополнения в личном уведомлении.
           </Styled.Desc>
         </Modal>
       </CSSTransition>
@@ -781,6 +765,9 @@ export const HeaderBar = () => {
             </TabNavItem>
             <TabNavItem to={routers.operations}>
               <div>История операций</div>
+            </TabNavItem>
+            <TabNavItem to={routers.notifications}>
+              <div>Уведомления</div>
             </TabNavItem>
             <TabNavItem to={routers.settings}>
               <div>Настройки</div>
