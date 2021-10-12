@@ -112,7 +112,7 @@ export const Notify = styled.div<{ notChecked: boolean; empty?: boolean; click?:
     ${({ click }) => {
         if (click) {
             return `
-                margin-left: 120px;
+                margin-left: 350px;
                 opacity: 10%;
             `;
         };
