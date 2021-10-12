@@ -14,7 +14,7 @@ import { Balance } from "../../types/balance";
 import { Loading, NotItems, Spinner } from "./components/Loading/Loading";
 import formatRelativeWithOptions from 'date-fns/esm/fp/formatRelativeWithOptions/index.js';
 import { isObject } from 'highcharts';
-import { isTemplateSpan } from 'typescript';
+import { InternalSymbolName, isTemplateSpan } from 'typescript';
 
 export const HistoryOperations = () => {
     const history = useHistory();
@@ -150,7 +150,11 @@ export const HistoryOperations = () => {
                           new: false
                         };
                     });
-                    return items.reverse(); 
+                    return items.sort((x: any, y: any) => {
+                        const a = new Date(x.operationDate);
+                        const b = new Date(y.operationDate);
+                        return a > b ? -1 : a < b ? 1 : 0;
+                    });
                    });
                 } else {
                     if (balances) {
@@ -163,7 +167,11 @@ export const HistoryOperations = () => {
                                     };
                                 };
                             });
-                           return items.reverse(); 
+                           return items.sort((x: any, y: any) => {
+                                const a = new Date(x.operationDate);
+                                const b = new Date(y.operationDate);
+                                return a > b ? -1 : a < b ? 1 : 0;
+                            }); 
                         });
                     };
                 };
@@ -210,21 +218,28 @@ export const HistoryOperations = () => {
                         }), ...res.collection.map((i: any) => {
                             return { ...i, new: true }
                         })];
-                        return items; /* sort((x: any, y: any) => {
+                        return items.sort((x: any, y: any) => {
                             const a = new Date(x.operationDate);
                             const b = new Date(y.operationDate);
                             return a > b ? -1 : a < b ? 1 : 0;
-                        }); */
+                        });
                     });
                 } else {
                     if (balances) {
-                        setOperations((data: any) => [...data.map((i: any) => {
-                            return { ...i, new: false }
-                        }), ...res.collection.map((i: any) => {
-                            if (Number(i.balanceSafeId) === balances[1].id) {
-                                return { ...i, new: true }
-                            }
-                        })]);
+                        setOperations((data: any) => {
+                            const items = [...data.map((i: any) => {
+                                return { ...i, new: false }
+                            }), ...res.collection.map((i: any) => {
+                                if (Number(i.balanceSafeId) === balances[1].id) {
+                                    return { ...i, new: true }
+                                }
+                            })];
+                            return items.sort((x: any, y: any) => {
+                                const a = new Date(x.operationDate);
+                                const b = new Date(y.operationDate);
+                                return a > b ? -1 : a < b ? 1 : 0;
+                            });
+                        });
                     };
                 };
                 setStatusNew(setTimeout(() => changeNew(), 1000));

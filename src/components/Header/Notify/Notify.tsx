@@ -50,9 +50,11 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
             .then((res) => {
               console.log("user notifications", res);
               setCheckeds(res.collection.some((item: NotifyItem) => item.readState === 0));
-              setNotifies(() => res.collection.sort((a: NotifyItem, b: NotifyItem) => 
-                a.readState === 0 ? -1 : (b.readState === 0 ? 1 : -1)
-              ));
+              setNotifies(() => res.collection.sort((x: any, y: any) => {
+                const a = new Date(x.sentDate);
+                const b = new Date(y.sentDate);
+                return a > b ? -1 : a < b ? 1 : 0;
+              }));
               setLoading(false);
             })
             .catch((err) => {
