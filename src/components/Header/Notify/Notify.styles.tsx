@@ -30,7 +30,6 @@ export const BallContainer = styled.div<{ notChecked: boolean; }>`
 `;
 
 export const NotifiesBlock = styled.div<{ block: boolean; auth?: boolean; admin?: boolean; empty: boolean; load: boolean; }>`
-    overflow-x: hidden;
     width: 80%;
     max-width: 420px;
     height: ${({ empty }) => empty ? "80px" : "584px"};
@@ -109,20 +108,20 @@ export const Notify = styled.div<{ notChecked: boolean; empty?: boolean; click?:
     padding-left: 29px;
     position: relative;
     cursor: pointer;
+    transition: 0.5s;
     ${({ click }) => {
         if (click) {
             return `
                 margin-left: 120px;
                 opacity: 10%;
             `;
-        }
+        };
         if (click === false) {
             return `
                 display: none;
             `;
-        }
+        };
     }}
-    transition: 0.5s;
     &::before {
         content: "";
         display: ${({ notChecked }) => notChecked ? "block" : "none"};

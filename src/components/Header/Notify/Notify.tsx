@@ -91,7 +91,7 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
         setTimeout(() => {
             changeHide(false, id);
             if (hubConnection) {
-                hubConnection.invoke("SetStateInAppNotification", id, 1)
+                hubConnection.invoke("SetStateInAppNotification", id, 0)
                  .then(() => {
                      getNotifies(false);
                  })
@@ -103,7 +103,7 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
     return (
       <Notifies.NotifiesBlock block={block} admin={admin} 
             empty={!loading && notifies.length === 0}
-            load={loading} onMouseLeave={() => setBlock(false)}>
+            load={loading} onMouseLeave={() => setBlock(true)}>
           {loading ? <InBlockLoading /> : (
             <>
                 {notifies && notifies.length ? (
