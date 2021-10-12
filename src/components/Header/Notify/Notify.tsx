@@ -43,7 +43,7 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
             setLoading(loading);
             hubConnection.invoke(
                 "GetInAppNotifications",
-                [1],
+                [0],
                 0,
                 100
             )
@@ -89,27 +89,25 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
       <Notifies.NotifiesBlock block={block} admin={admin} empty={!loading && notifies.length === 0} load={loading} onMouseLeave={() => setBlock(false)}>
           {loading ? <InBlockLoading /> : (
             <>
-                <Scrollbars renderThumbVertical={(props) => <Notifies.Scrollbar {...props}></Notifies.Scrollbar>}>
-                    {notifies && notifies.length ? (
-                        <>
-                            {notifies && notifies.map((notify: NotifyItem, idx: number) => (
-                                <Notifies.Notify notChecked={notify.readState === 0} key={idx} onClick={() => onNotify(notify.safeId)}>
-                                    <Notifies.NotifyItem grey>
-                                        {moment(notify.sentDate).format("DD.MM.YYYY")} в {moment(notify.sentDate).format("HH:MM")}
-                                    </Notifies.NotifyItem>
-                                    <Notifies.NotifyItem bold>
-                                        {notify.message}
-                                    </Notifies.NotifyItem>
-                                    <Notifies.NotifyItem>{notify.subject}</Notifies.NotifyItem>
-                                </Notifies.Notify>
-                            ))}
-                        </>
-                    ) : (
-                        <Notifies.Notify empty notChecked={false}>
-                            <Notifies.NotifyItem>Непрочитанных уведомлений пока нет</Notifies.NotifyItem>
-                        </Notifies.Notify> 
-                    )}
-                </Scrollbars>
+                {notifies && notifies.length ? (
+                    <Scrollbars renderThumbVertical={(props) => <Notifies.Scrollbar {...props}></Notifies.Scrollbar>}>
+                        {notifies && notifies.map((notify: NotifyItem, idx: number) => (
+                            <Notifies.Notify notChecked={notify.readState === 0} key={idx} onClick={() => onNotify(notify.safeId)}>
+                                <Notifies.NotifyItem grey>
+                                    {moment(notify.sentDate).format("DD.MM.YYYY")} в {moment(notify.sentDate).format("HH:MM")}
+                                </Notifies.NotifyItem>
+                                <Notifies.NotifyItem bold>
+                                    {notify.subject}
+                                </Notifies.NotifyItem>
+                                <Notifies.NotifyItem>{notify.message}</Notifies.NotifyItem>
+                            </Notifies.Notify>
+                        ))}
+                   </Scrollbars>
+                ) : (
+                    <Notifies.Notify empty notChecked={false}>
+                        <Notifies.NotifyItem>Непрочитанных уведомлений пока нет</Notifies.NotifyItem>
+                    </Notifies.Notify> 
+                )}
             </>
           )}
       </Notifies.NotifiesBlock>
