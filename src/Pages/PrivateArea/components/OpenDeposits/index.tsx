@@ -81,7 +81,7 @@ export const OpenDeposit: FC<IProps> = ({
   const openDeposit = () => {
     if (hubConnection) {
       hubConnection
-        .invoke<any>('CreateUserDeposit', +sum * 100000, activeDeposit?.safeId)
+        .invoke<any>('CreateUserDeposit', +sum, activeDeposit?.safeId)
         .then((res) => {
           setIsSuccess(true);
         })
@@ -96,8 +96,8 @@ export const OpenDeposit: FC<IProps> = ({
     if (
       isAgree &&
       activeDeposit &&
-      +sum >= activeDeposit?.minAmount &&
-      +sum <= (activeDeposit?.maxAmount ? activeDeposit?.maxAmount : activeDeposit?.minAmount * 10)
+      +sum >= activeDeposit?.minAmount/ 100000&&
+      +sum <= (activeDeposit?.maxAmount ? activeDeposit?.maxAmount/ 100000: activeDeposit?.minAmount / 1000)
     ) {
       setIsConfirmOpenDeposit(true);
     }
@@ -115,6 +115,8 @@ export const OpenDeposit: FC<IProps> = ({
           setIsSuccess(false);
         }}
         open={isSuccess}
+        deposit={activeDeposit}
+        sumValue={sum}
       />
       <ErrorOpenDeposit
         onClose={() => {
@@ -122,6 +124,8 @@ export const OpenDeposit: FC<IProps> = ({
           setIsFailed(false);
         }}
         open={isFailed}
+        deposit={activeDeposit}
+        sumValue={sum}
       />
       <LeftSide>
         <Name>{activeDeposit?.name}</Name>
@@ -176,13 +180,14 @@ export const OpenDeposit: FC<IProps> = ({
           <S.TextValue>{`1 раз в ${activeDeposit?.paymentInterval} дней`}</S.TextValue>
         </S.BlockWrapper>
         <TitleWrap>
-          <ProgramDescTitle>{`Сумма депозита (min ${activeDeposit?.minAmount
-            .toString()
-            .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')} - max ${
+          <ProgramDescTitle>{`Сумма депозита (min ${
+            activeDeposit?.minAmount &&
+            (activeDeposit?.minAmount / 100000).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')
+          } - max ${
             activeDeposit?.maxAmount
-              ? activeDeposit?.maxAmount.toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')
+              ? (activeDeposit?.maxAmount / 100000).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')
               : activeDeposit?.minAmount &&
-                (activeDeposit?.minAmount * 10).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')
+                (activeDeposit?.minAmount / 1000).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')
           }):`}</ProgramDescTitle>
         </TitleWrap>
         <S.FieldContainer>

@@ -72,22 +72,18 @@ export const ConvertingModal: FC<Props> = ({
             (+fromSum * 100000).toString(),
             59
           );
-          setConvertedArray(response);
-          setIsSuccessConverting(true);
+          if (response[1] & response[2]) {
+            setConvertedArray(response);
+            setIsSuccessConverting(true);
+            setOpen(false);
+            setTimeout(() => resetStateValues(), 1000);
+          }
         } catch (error) {
           setIsFailConverting(true);
           console.error(error);
         }
       }
     })();
-  };
-
-  const convertButtonSubmit = () => {
-    convert();
-    if (toSum[0] > 0) {
-      setOpen(false);
-      setTimeout(() => resetStateValues(), 1000);
-    }
   };
 
   return (
@@ -120,7 +116,9 @@ export const ConvertingModal: FC<Props> = ({
                 placeholder="Сумма"
                 name="fromSum"
                 value={fromSum.replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
-                onChange={({ target: { value } }) => setFromSum(value.replaceAll(/\D/g, ''))}
+                onChange={({ target: { value } }) =>
+                  !(value.length > 1 && value[0] === '0') && setFromSum(value.replaceAll(/\D/g, ''))
+                }
               />
             </InnerBlock>
             <FromToArrow />
@@ -153,7 +151,7 @@ export const ConvertingModal: FC<Props> = ({
                 </Rate>
               </RateRow>
 
-              <Button bigSize primary onClick={convertButtonSubmit}>
+              <Button bigSize primary onClick={convert}>
                 {t('privateArea.convert2')}
               </Button>
             </InnerBlock>

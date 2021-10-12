@@ -1,4 +1,5 @@
 import { Balance } from "./balance";
+import { FiatKind } from "./fiat";
 
 export enum ExchangeKind {
     Sell,
@@ -29,7 +30,7 @@ export interface ViewExchangeModel {
     state: ExchangeState;
     volume: number;
     assetKind: Balance;
-    exchangeAssetKind: Balance;
+    exchangeAssetKind: FiatKind;
     rate: number;
     exchangeVolume: number;
     limitFrom: number;

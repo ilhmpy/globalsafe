@@ -2,7 +2,7 @@ import { FC, useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { APP_ID, APP_SAFARI_ID } from './constantes/onesignal';
-import { ChartProvider } from './context/ChartContext';
+
 import { AppContext } from './context/HubContext';
 import GlobalStyle from './globalStyles';
 import { Admin } from './Pages/Admin';
@@ -13,7 +13,7 @@ import PageNotFound from './Pages/Tech/PageNotFound';
 import TechWorks from './Pages/Tech/TechWorks';
 import { HistoryOperations } from './Pages/PrivateArea/HistoryOperations';
 import { routers } from './constantes/routers';
-declare global {  
+declare global {
   interface Window {
     OneSignal: any;
   }
@@ -162,26 +162,23 @@ const App: FC = () => {
   //     }
   //   }
   // }, [localStorage.getItem('i18nextLng')]);
- 
+
   return (
     <div style={{ position: 'relative' }}>
-      <ChartProvider>
-        <Router>
-          <div className="App">
-            <GlobalStyle />
-
-            <Switch>
-              <Route path="/" component={Main} exact />
-              <Route path="/admin" component={Admin} />
-              <Route path={routers.deposits} component={InfoMain} />
-              <Route path="/login/:depositId" component={Authentication} />
-              <Route path="/register" component={Register} />
-              <Route path="/tech" component={TechWorks} />
-              <Route path="/404" component={PageNotFound} />
-            </Switch>
-          </div>
-        </Router>
-      </ChartProvider>
+      <Router>
+        <div className="App">
+          <GlobalStyle />
+          <Switch>
+            <Route path="/" component={Main} exact />
+            <Route path="/admin" component={Admin} />
+            <Route path={routers.deposits} component={InfoMain} />
+            <Route path="/login/:depositId" component={Authentication} />
+            <Route path="/register" component={Register} />
+            <Route path="/tech" component={TechWorks} />
+            <Route path="/404" component={PageNotFound} />
+          </Switch>
+        </div>
+      </Router>
     </div>
   );
 };

@@ -9,6 +9,7 @@ import * as S from './S.el';
 import { AdvertTable } from './components/AdvertTable/AdvertTable';
 import { Button } from '../../../components/Button/V2/Button';
 import { AppContext } from '../../../context/HubContext';
+import { GetSellOrdersModel } from '../../../types/orders';
 
 export const Advert = () => {
   const history = useHistory();
@@ -22,14 +23,14 @@ export const Advert = () => {
 
   async function getGetUserExchanges() {
       try {
-        const res = await hubConnection!.invoke<any>(
+        const res = await hubConnection!.invoke<GetSellOrdersModel>(
           'GetSellOrders', 
           [0, 1], 
           [0, 1, 2, 3],  
           0, 
           20
         );
-        console.log('getGetUserExchanges', res);
+        console.log('GetSellOrders', res.collection);
       } catch (err) {
         console.log(err);
       }

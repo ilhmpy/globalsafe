@@ -26,7 +26,7 @@ import { FiatKind } from '../../../../../types/fiat';
 export const OrderToBuyCard: FC = () => {
     const history = useHistory();
     const appContext = useContext(AppContext);
-    const { hubConnection, user, balance, loan, balanceList } = appContext;
+    const { hubConnection, user, balance, balanceList } = appContext;
     const [showOrderBuyModal, setShowOrderBuyModal] = useState(false);
     const [showOrderSellModal, setShowOrderSellModal] = useState(false);
     const [showOrderErrorModal, setShowOrderErrorModal] = useState(false);
@@ -39,7 +39,8 @@ export const OrderToBuyCard: FC = () => {
     const [orderMaxSumm, setOrderMaxSumm] = useState('');
     const [changeTimePeriod, setChangeTimePeriod] = useState('20 минут');
 
-    const [paymentMethods, setPaymentMethods] = useState<any[]>([]);
+    const [paymentMethods, setPaymentMethods] = useState<any[] | undefined>(undefined);
+    const [selectedPaymentMethodsIds, setSelectedPaymentMethodsIds] = useState<string[]>([])
 
     const [createOrderLoading, setCreateOrderLoading] = useState(false);
 
@@ -59,27 +60,30 @@ export const OrderToBuyCard: FC = () => {
 
     useEffect(() => {
         if(hubConnection) {
+            setSelectedPaymentMethodsIds([]);
             getUserPaymentMethods();
         }
-    }, []);
+    }, [currencyToChange]);
 
     const getUserPaymentMethods = async () => {
-        setCreateOrderLoading(true);
-        try {
-            const res = await hubConnection!.invoke(
-                'GetUserPaymentsMethods', 
-                [0, 1, 2, 3, 4], // PaymentMethodKind
-                [1], // PaymentMethodState
-                [1, 43], // BalanceKind
-                0, // skip
-                20 // take
-            );
-            setPaymentMethods(res.collection);
-            console.log('GetUserPaymentsMethods', res);
-            setCreateOrderLoading(false);
-        } catch (err) {
-            console.log(err);
-            setCreateOrderLoading(false);
+        if(currencyToChange) {
+            setCreateOrderLoading(true);
+            try {
+                const res = await hubConnection!.invoke(
+                    'GetUserPaymentsMethods', 
+                    [], // PaymentMethodKind
+                    [1], // PaymentMethodState
+                    [ FiatKind[currencyToChange as keyof typeof FiatKind] ], // BalanceKind
+                    0, // skip
+                    20 // take
+                );
+                setPaymentMethods(res.collection);
+                console.log('GetUserPaymentsMethods', res);
+                setCreateOrderLoading(false);
+            } catch (err) {
+                console.log(err);
+                setCreateOrderLoading(false);
+            }
         }
     }
 
@@ -93,8 +97,8 @@ export const OrderToBuyCard: FC = () => {
                 FiatKind[currencyToChange as keyof typeof FiatKind], // FiatKind operationAssetKind
                 Number(orderMinSumm), // long limitFrom
                 Number(orderMaxSumm), // long limitTo
-                '', // int window
-                [], // Array of int methodsKinds max:5
+                10, // int window
+                selectedPaymentMethodsIds.map(id => +id).splice(0, 5), // Array of int methodsKinds max:5
             );
             console.log('GetUserPaymentsMethods', res);
         } catch (err) {
@@ -129,6 +133,15 @@ export const OrderToBuyCard: FC = () => {
           setOrderMaxSumm(e.target.value);
         }
     };
+
+    const handleMethodsCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const methodId = e.target.value;
+        if(selectedPaymentMethodsIds.includes(methodId)) {
+            setSelectedPaymentMethodsIds(s => s.filter(id => id !== methodId));
+        } else {
+            setSelectedPaymentMethodsIds(s => [...s, methodId]);
+        }
+    }
 
     return (
         <S.Container>
@@ -215,53 +228,26 @@ export const OrderToBuyCard: FC = () => {
                             Платежный метод:
                         </Text>
                         {
+                            paymentMethods === undefined 
+                            ?
+                                null
+                            :
                             paymentMethods.length > 0
                             ?
-                                <>
-                                {/*  */}
-                                    <Space gap={20} mb={20} column>
-                                        <Checkbox 
-                                            label={'АО «Альфа-Банк»'}
-                                            checked={true}
-                                            onChange={(e) => console.log(e)}
-                                        />
-                                        <Checkbox 
-                                            label={'АО «Тинькофф Банк»'}
-                                            checked={true}
-                                            onChange={(e) => console.log(e)}
-                                        />
-                                        <Checkbox 
-                                            label={'ПАО Сбербанк'}
-                                            checked={false}
-                                            onChange={(e) => console.log(e)}
-                                        />
-                                    </Space>
-
-                                    {/*  */}
-                                    <br />
-                                    <hr />
-                                    <br />
-                                    <Space gap={20} column>
-                                        <Checkbox 
-                                            label={'TRC 20'}
-                                            labelBold
-                                            checked={true}
-                                            onChange={(e) => console.log(e)}
-                                        />
-                                        <Checkbox 
-                                            label={'ERC 20'}
-                                            labelBold
-                                            checked={true}
-                                            onChange={(e) => console.log(e)}
-                                        />
-                                        <Checkbox 
-                                            label={'BEP 20'}
-                                            labelBold
-                                            checked={false}
-                                            onChange={(e) => console.log(e)}
-                                        />
-                                    </Space>
-                                </>
+                                <Space gap={20} mb={20} column>
+                                    {
+                                        paymentMethods.map((method, i) => (
+                                            <Checkbox 
+                                                key={`payment-method-${method.safeId}-${i}`}
+                                                label={JSON.parse(method.data).bankName}
+                                                labelBold
+                                                checked={selectedPaymentMethodsIds.includes(String(method.id))}
+                                                value={method.id}
+                                                onChange={handleMethodsCheckboxChange}
+                                            />
+                                        ))
+                                    }
+                                </Space>
                             :
                                 // Empty State
                                 <S.EmptyPaymentsBlock>
@@ -353,6 +339,11 @@ export const OrderToBuyCard: FC = () => {
                 timePeriod={changeTimePeriod}
                 onPublish={handleCreateBuyOrder}
                 loading={createOrderLoading}
+                paymentMethods={paymentMethods 
+                    ? 
+                    paymentMethods?.filter(m => selectedPaymentMethodsIds.includes(String(m.id))) 
+                    : []
+                }
                 open={showOrderBuyModal}
                 onClose={() => setShowOrderBuyModal(false)}
             />

@@ -68,7 +68,7 @@ export const Select: FC<SelectProps> = ({
             ? selectedOption || ''
             : placeholder && <Placeholder>{placeholder}</Placeholder>}
           {label && <span data-label={label} />}
-          <Styled.Arrow rotat={isOpen}>
+          <Styled.Arrow>
             <StrokeBottom />
           </Styled.Arrow>
         </Styled.DropDownHeader>

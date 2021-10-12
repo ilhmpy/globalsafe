@@ -18,6 +18,7 @@ interface OrderInfoModalProps {
     timePeriod: string;
     onPublish: () => void;
     loading: boolean;
+    paymentMethods: any[];
     onClose: () => void;
     open: boolean;
 };
@@ -33,86 +34,118 @@ export const OrderInfoModal: FC<OrderInfoModalProps> = ({
     timePeriod,
     onPublish,
     loading,
+    paymentMethods,
     onClose,
     open,
 }: OrderInfoModalProps) => {
-    const history = useHistory();
+  const history = useHistory();
 
-    return (
-        <>
-        {open && (
-            <Modal onClose={onClose} open={open}>
-                <S.SmallContainer>
-                    <S.BlackTitle>Публикация ордера</S.BlackTitle>
+  return (
+    <>
+      {open && (
+        <Modal onClose={onClose} open={open}>
+          <S.SmallContainer>
+            <S.BlackTitle>Публикация ордера</S.BlackTitle>
 
-                    <S.DataList>
-                        <S.DataListItem>
-                            <Text size={14} lH={20}>Направление:</Text>
-                            <S.ListItemDivider />
+            <S.DataList>
+              <S.DataListItem>
+                <Text size={14} lH={20}>
+                  Направление:
+                </Text>
+                <S.ListItemDivider />
+                <Text size={14} lH={20} weight={700}>
+                  {type === 'buy' ? 'Покупка' : 'Продажа'}
+                </Text>
+              </S.DataListItem>
+
+              <S.DataListItem>
+                <Text size={14} lH={20}>
+                  Валюта покупки:
+                </Text>
+                <S.ListItemDivider />
+                <Text size={14} lH={20} weight={700}>
+                  {currencyToBuy}
+                </Text>
+              </S.DataListItem>
+
+              <S.DataListItem>
+                <Text size={14} lH={20}>
+                  Кол-во покупки:
+                </Text>
+                <S.ListItemDivider />
+                <Text size={14} lH={20} weight={700}>
+                  {orderSumm}
+                </Text>
+              </S.DataListItem>
+
+              <S.DataListItem>
+                <Text size={14} lH={20}>
+                  Валюта обмена:
+                </Text>
+                <S.ListItemDivider />
+                <Text size={14} lH={20} weight={700}>
+                  {currencyToChange}
+                </Text>
+              </S.DataListItem>
+
+              <S.DataListItem>
+                <Text size={14} lH={20}>
+                  Курс:
+                </Text>
+                <S.ListItemDivider />
+                <Text size={14} lH={20} weight={700}>
+                  {rate}
+                </Text>
+              </S.DataListItem>
+
+                <S.DataListItem>
+                    <Text size={14} lH={20}>Платежные методы:</Text>
+                    <S.ListItemDivider />
+                    <Text size={14} lH={20} weight={700}>
+                        {JSON.parse(paymentMethods[0].data).bankName}
+                    </Text>
+                </S.DataListItem>
+                {
+                    paymentMethods.length > 1 &&
+                    [...paymentMethods].splice(1).map((method) => (
+                        <S.DataListItem justifyEnd key={method.safeId}>
                             <Text size={14} lH={20} weight={700}>
-                                {type === 'buy' ? 'Покупка' : 'Продажа'}
+                                {JSON.parse(method.data).bankName}
                             </Text>
                         </S.DataListItem>
+                    ))
+                }
 
-                        <S.DataListItem>
-                            <Text size={14} lH={20}>Валюта покупки:</Text>
-                            <S.ListItemDivider />
-                            <Text size={14} lH={20} weight={700}>{currencyToBuy}</Text>
-                        </S.DataListItem>
+              <S.DataListItem>
+                <Text size={14} lH={20}>
+                  Лимиты:
+                </Text>
+                <S.ListItemDivider />
+                <Text size={14} lH={20} weight={700}>{`${orderMinSumm} - ${orderMaxSumm}`}</Text>
+              </S.DataListItem>
 
-                        <S.DataListItem>
-                            <Text size={14} lH={20}>Кол-во покупки:</Text>
-                            <S.ListItemDivider />
-                            <Text size={14} lH={20} weight={700}>{orderSumm}</Text>
-                        </S.DataListItem>
+              <S.DataListItem>
+                <Text size={14} lH={20}>
+                  Время на обмен:
+                </Text>
+                <S.ListItemDivider />
+                <Text size={14} lH={20} weight={700}>
+                  {timePeriod}
+                </Text>
+              </S.DataListItem>
+            </S.DataList>
 
-                        <S.DataListItem>
-                            <Text size={14} lH={20}>Валюта обмена:</Text>
-                            <S.ListItemDivider />
-                            <Text size={14} lH={20} weight={700}>{currencyToChange}</Text>
-                        </S.DataListItem>
-
-                        <S.DataListItem>
-                            <Text size={14} lH={20}>Курс:</Text>
-                            <S.ListItemDivider />
-                            <Text size={14} lH={20} weight={700}>{rate}</Text>
-                        </S.DataListItem>
-
-                        <S.DataListItem>
-                            <Text size={14} lH={20}>Платежные методы:</Text>
-                            <S.ListItemDivider />
-                            <Text size={14} lH={20} weight={700}>АО «Альфа-Банк»</Text>
-                        </S.DataListItem>
-
-                        <S.DataListItem justifyEnd>
-                            <Text size={14} lH={20} weight={700}>АО «Тинькофф Банк»</Text>
-                        </S.DataListItem>
-
-
-                        <S.DataListItem>
-                            <Text size={14} lH={20}>Лимиты:</Text>
-                            <S.ListItemDivider />
-                            <Text size={14} lH={20} weight={700}>{`${orderMinSumm} - ${orderMaxSumm}`}</Text>
-                        </S.DataListItem>
-
-                        <S.DataListItem>
-                            <Text size={14} lH={20}>Время на обмен:</Text>
-                            <S.ListItemDivider />
-                            <Text size={14} lH={20} weight={700}>{timePeriod}</Text>
-                        </S.DataListItem>
-                    </S.DataList>
-
-                    <Space>
-                        <Button primary fullWidth onClick={() => onPublish()}>
-                            Опубликовать
-                        </Button>
-                        <Button outlinePrimary fullWidth onClick={onClose}>
-                            Отмена
-                        </Button>
-                    </Space>
-                </S.SmallContainer>
-            </Modal>
-        )}
-        </>
-    );
+            <Space>
+              <Button primary fullWidth onClick={() => onPublish()}>
+                Опубликовать
+              </Button>
+              <Button outlinePrimary fullWidth onClick={onClose}>
+                Отмена
+              </Button>
+            </Space>
+          </S.SmallContainer>
+        </Modal>
+      )}
+    </>
+  );
 };
