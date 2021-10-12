@@ -91,7 +91,7 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
         setTimeout(() => {
             changeHide(false, id);
             if (hubConnection) {
-                hubConnection.invoke("SetStateInAppNotification", id, 0)
+                hubConnection.invoke("SetStateInAppNotification", id, 1)
                  .then(() => {
                      getNotifies(false);
                  })
