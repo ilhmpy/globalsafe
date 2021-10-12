@@ -13,7 +13,7 @@ type NotifyProps = {
    setBlock: (bool: boolean) => void;
 };
 
-interface NotifyItem {
+type NotifyItem = {
   id: number;
   message: string;
   readState: number;
@@ -23,6 +23,8 @@ interface NotifyItem {
   subject: string;
   userId: number;
   userSafeId: string;
+  notificationKind: number;
+  link: string;
 };
 
 export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBlock }: NotifyProps) => {
@@ -100,6 +102,12 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
         }, 500);
     };
 
+    function getLinkAddress(link: string, kind: number) {
+        if (kind === 20 || kind === 21 || kind === 22) {
+            return `/info/p2p-changes/orders/${link}`;
+        };
+    };
+
     return (
       <Notifies.NotifiesBlock block={block} admin={admin} 
             empty={!loading && notifies.length === 0}
@@ -116,7 +124,7 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
                                 <Notifies.NotifyItem bold>
                                     {notify.subject}
                                 </Notifies.NotifyItem>
-                                <Notifies.NotifyItem><a href="">{notify.message}</a></Notifies.NotifyItem>
+                                <Notifies.NotifyItem link={notify.link}><a href={getLinkAddress(notify.link, notify.notificationKind)}>{notify.message}</a></Notifies.NotifyItem>
                                 <Notifies.DoneNotify onClick={() => onNotify(notify.safeId)} />
                             </Notifies.Notify>
                         ))}

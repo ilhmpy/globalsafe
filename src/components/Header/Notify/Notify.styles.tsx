@@ -112,7 +112,6 @@ export const Notify = styled.div<{ notChecked: boolean; empty?: boolean; click?:
     ${({ click }) => {
         if (click) {
             return `
-                margin-left: 350px;
                 opacity: 10%;
             `;
         };
@@ -145,7 +144,7 @@ export const Notify = styled.div<{ notChecked: boolean; empty?: boolean; click?:
     }}
 `;
 
-export const NotifyItem = styled.h3<{ grey?: boolean; bold?: boolean; }>`
+export const NotifyItem = styled.h3<{ grey?: boolean; bold?: boolean; link?: string; }>`
     font-weight: 400;
     font-size: 12px;
     line-height: 20px;
@@ -155,6 +154,14 @@ export const NotifyItem = styled.h3<{ grey?: boolean; bold?: boolean; }>`
         line-height: inherit;
         font-size: inherit;
         font-weight: inherit;
+        ${({ link }) => {
+            if (link == "0") {
+                return `
+                    pointer-events: none; 
+                    cursor: default;
+                `;
+            };
+        }}
     }
     margin-bottom: 4px;
     max-width: 360px;
