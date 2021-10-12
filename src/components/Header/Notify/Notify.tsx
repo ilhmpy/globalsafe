@@ -2,10 +2,8 @@ import * as Notifies from "./Notify.styles";
 import { FC, useState, useEffect, useContext } from "react";
 import Scrollbars from 'react-custom-scrollbars';
 import moment from 'moment';
-import { Balance } from "../../../types/balance";
 import { AppContext } from '../../../context/HubContext';
 import  { InBlockLoading } from "../../UI/V4/InBlockLoading/InBlockLoading";
-import { StyledFilter } from "../../Table/Table.styled";
 
 type NotifyProps = {
    block: boolean; 
@@ -79,7 +77,7 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
 
     function onNotify(id: string) {
         if (hubConnection) {
-            hubConnection.invoke("SetStateInAppNotification", id, 1)
+            hubConnection.invoke("SetStateInAppNotification", id, 1) 
              .then(() => {
                  getNotifies(false);
              })
@@ -94,7 +92,7 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
                 {notifies && notifies.length ? (
                     <Scrollbars renderThumbVertical={(props) => <Notifies.Scrollbar {...props}></Notifies.Scrollbar>}>
                         {notifies && notifies.map((notify: NotifyItem, idx: number) => (
-                            <Notifies.Notify notChecked={notify.readState === 0} key={idx} onClick={() => onNotify(notify.safeId)}>
+                            <Notifies.Notify notChecked={notify.readState === 0} key={idx}>
                                 <Notifies.NotifyItem grey>
                                     {moment(notify.sentDate).format("DD.MM.YYYY")} в {moment(notify.sentDate).format("HH:MM")}
                                 </Notifies.NotifyItem>
@@ -102,6 +100,7 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
                                     {notify.subject}
                                 </Notifies.NotifyItem>
                                 <Notifies.NotifyItem>{notify.message}</Notifies.NotifyItem>
+                                <Notifies.DoneNotify onClick={() => onNotify(notify.safeId)} />
                             </Notifies.Notify>
                         ))}
                    </Scrollbars>

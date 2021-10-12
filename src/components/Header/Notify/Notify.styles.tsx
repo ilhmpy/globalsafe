@@ -1,4 +1,5 @@
 import styled from "styled-components/macro";
+import { ReactComponent as Done } from "../../../assets/svg/done.svg";
 
 export const BallContainer = styled.div<{ notChecked: boolean; }>`
     display: flex;
@@ -151,4 +152,8 @@ export const Scrollbar = styled.div`
     height: 203px !important;
     background: #93A1C1;
     border-radius: 2px;
+`;
+
+export const DoneNotify = styled(Done)`
+    margin: 10px 0px 0px 0px;
 `;
