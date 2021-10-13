@@ -7,7 +7,7 @@ export const NotificationsBlock = styled.div`
 
 export const NotificationsMap = styled.div``;
 
-export const NotificationItem = styled.div`
+export const NotificationItem = styled.div<{ newItem: boolean; }>`
     width: 100%;
     border-radius: 4px;
     background: #fff;
@@ -19,6 +19,14 @@ export const NotificationItem = styled.div`
     padding-right: 20px;
     min-height: 60px;
     margin-bottom: 2px;
+    opacity: 100%;
+    ${({ newItem }) => {
+        if (newItem) {
+            return `
+                  opacity: 10%;
+            `;
+        };
+    }}
 `;
 
 export const DoneNotification = styled(Done)<{ disabled?: boolean; }>`

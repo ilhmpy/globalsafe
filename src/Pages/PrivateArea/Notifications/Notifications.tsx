@@ -20,6 +20,7 @@ export const Notifications = () => {
     const [notifies, setNotifies] = useState<NotifyItem[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [newItems, setNewItems] = useState<boolean>(false);
+    const [statusNew, setStatusNew] = useState<any>();
 
     function length(res: NotifyItem[]) {
         if (res.length === 0) {
@@ -69,6 +70,12 @@ export const Notifications = () => {
         };
     };
 
+    function changeNew() {
+        setNotifies(items => items.map(item => {
+            return { ...item, new: false };
+        }));
+    };
+
     function onMore() {
         if (hubConnection) {
             hubConnection.invoke(
@@ -78,15 +85,21 @@ export const Notifications = () => {
                 5
             )
               .then((res) => {
-                setNotifies(data => [...res.collection.map((item: NotifyItem) => {
-                    return { ...item, new: true }
-                }), ...data.map((item: NotifyItem) => {
-                    return { ...item, new: false }
-                })]);
+                changeNew();
+                console.log("more", res);
+                setNotifies(data => {
+                    const items = [...data.map((item: NotifyItem) => {
+                        return { ...item, new: false }
+                    }), ...res.collection.map((item: NotifyItem) => {
+                        return { ...item, new: true }
+                    })];
+                    console.log(items);
+                    return items;
+                });
                 length(res.collection);
-                setTimeout(() => {
-                    fieldNew(res.collection, setNotifies, true);
-                }, 1000);
+                setStatusNew(setTimeout(() => {
+                    changeNew();
+                 }, 2000));
               })    
               .catch((err) => console.log(err));
         };
@@ -95,7 +108,7 @@ export const Notifications = () => {
     return (
         <Container>
             <Notifies.NotificationsBlock>
-                <Heading title="История операций" withoutBtn />
+                <Heading title="Уведомления" withoutBtn />
             </Notifies.NotificationsBlock>
             <Filter 
                 activeFilter={activeFilter}
@@ -115,8 +128,8 @@ export const Notifications = () => {
                         <>
                             {notifies.length === 0 ? <NotItems text="Не имеется уведомлений по этому фильтру" /> : (
                                 <>
-                                    {notifies.map((notify: NotifyItem, idx: number) => (
-                                        <Notifies.NotificationItem key={idx}> 
+                                    {notifies.map((notify: any, idx: number) => (
+                                        <Notifies.NotificationItem key={idx} newItem={notify.new}> 
                                             <Table.Item item>
                                                 {moment(notify.sentDate).format("DD.MM.YYYY")} в {moment(notify.sentDate).format("HH:MM")}
                                             </Table.Item>
