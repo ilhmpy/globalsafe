@@ -12,12 +12,14 @@ export const NotificationItem = styled.div<{ newItem: boolean; }>`
     border-radius: 4px;
     background: #fff;
     box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
-    display: flex;
-    align-items: center;
+    display: flex; 
+    // align-items: center;
     position: relative;
     padding-left: 20px;
     padding-right: 20px;
-    min-height: 60px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    // min-height: 60px;
     margin-bottom: 2px;
     opacity: 100%;
     ${({ newItem }) => {

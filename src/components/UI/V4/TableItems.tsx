@@ -15,6 +15,7 @@ export const Item = styled.h3<{ item?: boolean; }>`
     font-size: 14px;
     font-weight: 300;
     margin-right: 75px;
+    min-height: 20px;
     ${({ item }) => {
         if (item) {
             return `
@@ -63,17 +64,13 @@ export const LinkButton = styled.a`
     display: flex;
     align-items: center;
     justify-content: center;
-\   margin-bottom: 22px;
     background: #0094FF;
     border-radius: 4px;
     font-weight: 400;
     font-size: 12px;
     line-height: 14px;
     cursor: pointer;
-`;
-
-export const Spin = styled(Spinner)`
-
+    margin-top: 14px;
 `;
 
 type MoreButtonType = {

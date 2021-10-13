@@ -105,6 +105,14 @@ export const Notifications = () => {
         };
     };
 
+    function link(kind: number) {
+        return kind === 20 || kind === 21 || kind === 22;
+    };
+
+    function createLink(link: string) {
+        return `p2p-changes/orders/${link}`;
+    }
+
     return (
         <Container>
             <Notifies.NotificationsBlock>
@@ -135,9 +143,9 @@ export const Notifications = () => {
                                             </Table.Item>
                                             <Table.Item item>
                                                 {notify.message}
+                                                {link(notify.notificationKind) && <Table.LinkButton href={createLink(notify.link)}>Перейти к обмену</Table.LinkButton>}
                                             </Table.Item>
                                             <Notifies.DoneNotification disabled={activeFilter === "active"} onClick={() => onNotify(notify.safeId)} />
-                                            {/* <Table.LinkButton>Перейти к обмену</Table.LinkButton> */}
                                         </Notifies.NotificationItem>
                                     ))}
                                 </>
