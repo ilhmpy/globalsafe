@@ -10,7 +10,6 @@ import {
   Text,
   Title,
 } from '../../../components/ui';
-import { Button } from '../../../../../components/Button/V2/Button';
 import { OrderInfoModal } from '../modals/OrderInfoModal';
 
 import { routers } from '../../../../../constantes/routers';
@@ -126,7 +125,7 @@ export const OrderToBuyCard: FC = () => {
         console.log('limitTo', Number(orderMaxSumm))
         console.log('window', 20)
         console.log('methodsKinds', findPaymentMethodKinds(paymentMethods?.filter(m => selectedPaymentMethodsIds.includes(String(m.id)))))
-        console.log('terms', null);
+        console.log('terms', '');
 
         
         try {
@@ -140,7 +139,7 @@ export const OrderToBuyCard: FC = () => {
                 +orderMaxSumm, // long limitTo
                 timeDurations.find(t => t.label === changeTimePeriod)?.value, // int window
                 findPaymentMethodKinds(paymentMethods?.filter(m => selectedPaymentMethodsIds.includes(String(m.id)))), // Array of int methodsKinds max:5
-                null, // terms
+                '', // terms
             );
             setNewCreatedOrder(res);
             console.log('GetUserPaymentsMethods', res);
@@ -307,44 +306,58 @@ export const OrderToBuyCard: FC = () => {
                     </S.FormItem>
                 </Space>
 
-                <Space mb={20}>
-                    <S.FormItem>
-                        <Text size={14} weight={300} lH={20} mB={10} black>
-                            Платежный метод:
-                        </Text>
-                        {
-                            paymentMethods === undefined 
-                            ?
-                                null
-                            :
-                            paymentMethods.length > 0
-                            ?
-                                <Space gap={20} mb={20} column>
-                                    {
-                                        paymentMethods.map((method, i) => (
-                                            <Checkbox 
-                                                key={`payment-method-${method.safeId}-${i}`}
-                                                label={JSON.parse(method.data).bankName}
-                                                labelBold
-                                                checked={selectedPaymentMethodsIds.includes(String(method.id))}
-                                                value={String(method.id)}
-                                                onChange={handleMethodsCheckboxChange}
-                                            />
-                                        ))
-                                    }
-                                </Space>
-                            :
-                                // Empty State
-                                <S.EmptyPaymentsBlock>
-                                    <Text size={14} weight={300} lH={20} black>
-                                        {`Платежные методы отсутствуют, `}
-                                        <S.Link to={routers.settingsNewPayMethod}>добавьте платежный метод</S.Link>
-                                    </Text>
-                                </S.EmptyPaymentsBlock>
-                        }
-                          
-                    </S.FormItem>
-                </Space>
+                {
+                    paymentMethods === undefined 
+                    ?
+                    null
+                    :
+                    <Space mb={20}>
+                        <S.FormItem>
+                            <Text size={14} weight={300} lH={20} mB={10} black>
+                                Платежный метод:
+                            </Text>
+                            {
+                                paymentMethods.length > 0
+                                ?
+                                    <Space gap={20} column>
+                                        {
+                                            paymentMethods.map((method, i) => {
+                                                return FiatKind[currencyToChange as keyof typeof FiatKind] !== 7
+                                                ?
+                                                    <Checkbox 
+                                                        key={`payment-method-${method.safeId}-${i}`}
+                                                        label={JSON.parse(method.data).bankName}
+                                                        labelBold
+                                                        checked={selectedPaymentMethodsIds.includes(String(method.id))}
+                                                        value={String(method.id)}
+                                                        onChange={handleMethodsCheckboxChange}
+                                                    />
+                                                :
+                                                    <Checkbox 
+                                                        key={`payment-method-${method.safeId}-${i}`}
+                                                        label={FiatKind[method.assetKind]}
+                                                        labelBold
+                                                        checked={selectedPaymentMethodsIds.includes(String(method.id))}
+                                                        value={String(method.id)}
+                                                        onChange={handleMethodsCheckboxChange}
+                                                    />
+                                            })
+                                        }
+                                    </Space>
+                                :
+                                    // Empty State
+                                    <S.EmptyPaymentsBlock>
+                                        <Text size={14} weight={300} lH={20} black>
+                                            {`Платежные методы отсутствуют, `}
+                                            <S.Link to={routers.settingsNewPayMethod}>добавьте платежный метод</S.Link>
+                                        </Text>
+                                    </S.EmptyPaymentsBlock>
+                            }
+                            
+                        </S.FormItem>
+                    </Space>
+                }
+               
                 {
                     (currencyToBuy &&  currencyToChange && orderSumm && changeRate) &&
                     <Space gap={20} mb={20}>
@@ -429,99 +442,3 @@ export const OrderToBuyCard: FC = () => {
         </S.Container>
     );
 };
-
-
- {/* <Space gap={20} column>
-    <Space gap={10} column>
-        <Checkbox 
-             label={'АО «Альфа-Банк»'}
-             checked={true}
-             onChange={(e) => console.log(e)}
-         />
-         <S.PaymentMethodDetailsBlock>
-             <Text size={14} weight={300} lH={20} black mB={4}>Номер карты:</Text>
-             <Text size={14} weight={500} lH={16} black mB={10}>5536 9137 9922 7240</Text>
-
-             <Text size={14} weight={300} lH={20} black mB={4}>Держатель карты:</Text>
-             <Text size={14} weight={500} lH={16} black>VYACHESLAV TROSCHIN</Text>
-         </S.PaymentMethodDetailsBlock>
-     </Space>
-
-     <Space gap={10} column>
-         <Checkbox 
-             label={'АО «Тинькофф Банк»'}
-             checked={true}
-             onChange={(e) => console.log(e)}
-         />
-         <S.PaymentMethodDetailsBlock>
-             <Text size={14} weight={300} lH={20} black mB={4}>Номер карты:</Text>
-             <Text size={14} weight={500} lH={16} black mB={10}>5536 9137 9922 7240</Text>
-
-             <Text size={14} weight={300} lH={20} black mB={4}>Держатель карты:</Text>
-             <Text size={14} weight={500} lH={16} black>VYACHESLAV TROSCHIN</Text>
-         </S.PaymentMethodDetailsBlock>
-     </Space>
-
-     <Space gap={10} column>
-         <Checkbox 
-             label={'ПАО Сбербанк'}
-             checked={false}
-             onChange={(e) => console.log(e)}
-         />
-         <S.PaymentMethodDetailsBlock>
-             <Text size={14} weight={300} lH={20} black mB={4}>Номер карты:</Text>
-             <Text size={14} weight={500} lH={16} black mB={10}>5536 9137 9922 7240</Text>
-
-             <Text size={14} weight={300} lH={20} black mB={4}>Держатель карты:</Text>
-             <Text size={14} weight={500} lH={16} black>VYACHESLAV TROSCHIN</Text>
-         </S.PaymentMethodDetailsBlock>
-     </Space>
- </Space> */}
-
-
-
-
-
- {/* <Space gap={20} column>
-     <Space gap={10} column>
-         <Checkbox 
-             label={'TRC 20'}
-             labelBold
-             checked={true}
-             onChange={(e) => console.log(e)}
-         />
-         <S.PaymentMethodDetailsBlock>
-             <Text size={14} weight={300} lH={20} black mB={4}>Адрес кошелька:</Text>
-             <Text size={14} weight={500} lH={16} black>377JKD792HcVkP5qZoF7Pv31MbUwke5iMX</Text>
-         </S.PaymentMethodDetailsBlock>
-     </Space>
-
-     <Space gap={10} column>
-         <Checkbox 
-             label={'ERC 20'}
-             labelBold
-             checked={true}
-             onChange={(e) => console.log(e)}
-         />
-         <S.PaymentMethodDetailsBlock>
-             <Text size={14} weight={300} lH={20} black mB={4}>Адрес кошелька:</Text>
-             <Text size={14} weight={500} lH={16} black>377JKD792HcVkP5qZoF7Pv31MbUwke5iMX</Text>
-         </S.PaymentMethodDetailsBlock>
-     </Space>
-
-     <Space gap={10} column>
-         <Checkbox 
-             label={'BEP 20'}
-             labelBold
-             checked={false}
-             onChange={(e) => console.log(e)}
-         />
-         <S.PaymentMethodDetailsBlock>
-             <Text size={14} weight={300} lH={20} black mB={4}>Адрес кошелька:</Text>
-             <Text size={14} weight={500} lH={16} black>377JKD792HcVkP5qZoF7Pv31MbUwke5iMX</Text>
-         </S.PaymentMethodDetailsBlock>
-     </Space>
- </Space>
-
-</S.FormItem>
-</Space> */}
