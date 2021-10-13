@@ -35,9 +35,7 @@ export const DoneNotification = styled(Done)<{ disabled?: boolean; }>`
     position: absolute;
     right: 20px;
     display: block;
-    margin-top: auto;
-    margin-bottom: auto;
-    top: 0;
+    top: 20px;
     bottom: 0;
     cursor: pointer;
     ${({ disabled }) => {

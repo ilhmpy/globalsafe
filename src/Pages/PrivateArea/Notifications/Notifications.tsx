@@ -134,7 +134,7 @@ export const Notifications = () => {
                     </Table.Header>
                     {loading ? <Loading /> : (
                         <>
-                            {notifies.length === 0 ? <NotItems text="Не имеется уведомлений по этому фильтру" /> : (
+                            {notifies.length === 0 ? <NotItems text="Не имеется уведомлений" /> : (
                                 <>
                                     {notifies.map((notify: any, idx: number) => (
                                         <Notifies.NotificationItem key={idx} newItem={notify.new}> 
@@ -143,7 +143,7 @@ export const Notifications = () => {
                                             </Table.Item>
                                             <Table.Item item>
                                                 {notify.message}
-                                                {link(notify.notificationKind) && <Table.LinkButton href={createLink(notify.link)}>Перейти к обмену</Table.LinkButton>}
+                                                {link(notify.notificationKind) && notify.link != "" && <Table.LinkButton href={createLink(notify.link)}>Перейти к обмену</Table.LinkButton>}
                                             </Table.Item>
                                             <Notifies.DoneNotification disabled={activeFilter === "active"} onClick={() => onNotify(notify.safeId)} />
                                         </Notifies.NotificationItem>
