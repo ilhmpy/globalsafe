@@ -137,13 +137,14 @@ export const Notifications = () => {
                             {notifies.length === 0 ? <NotItems text="Не имеется уведомлений" /> : (
                                 <>
                                     {notifies.map((notify: any, idx: number) => (
-                                        <Notifies.NotificationItem key={idx} newItem={notify.new}> 
+                                        <Notifies.NotificationItem key={idx} newItem={notify.new}>
                                             <Table.Item item>
                                                 {moment(notify.sentDate).format("DD.MM.YYYY")} в {moment(notify.sentDate).format("HH:MM")}
                                             </Table.Item>
                                             <Table.Item item>
                                                 {notify.message}
-                                                {link(notify.notificationKind) && notify.link != "" && <Table.LinkButton href={createLink(notify.link)}>Перейти к обмену</Table.LinkButton>}
+                                                {link(notify.notificationKind) && notify.link != "" && notify.link != "0" && 
+                                                    <Table.LinkButton href={createLink(notify.link)}>Перейти к обмену</Table.LinkButton>}
                                             </Table.Item>
                                             <Notifies.DoneNotification disabled={activeFilter === "active"} onClick={() => onNotify(notify.safeId)} />
                                         </Notifies.NotificationItem>
