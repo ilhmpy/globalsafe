@@ -106,6 +106,10 @@ export const HeaderBar = () => {
       .map((b) => Balance[b.balanceKind]);
   }, [balanceList]);
 
+  const bl: any[] = [0, 9, 10, 11]; 
+
+  const balances = balanceList?.filter((item) => !bl.includes(item.balanceKind));
+
   const handleDepositModal = () => {
     setAddDeposit(false);
     setDepositSuccess(false);
@@ -527,7 +531,7 @@ export const HeaderBar = () => {
             Пополнение баланса
           </H3>
           <div style={{ width: '100%', maxWidth: '340px', margin: '0 auto' }}>
-            <Selectv2 data={balanceList && balanceList} withoutVolume setSwitch={setCurrency} />
+            <Selectv2 data={balances && balances} withoutVolume setSwitch={setCurrency} />
             <Inputv2
               placeholder="Сумма пополнения"
               value={ed.replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
@@ -590,7 +594,7 @@ export const HeaderBar = () => {
             Вывод средств
           </H3>
           <div style={{ width: '100%', maxWidth: '340px', margin: '0 auto' }}>
-            <Selectv2 data={balanceList && balanceList} setSwitch={setOutPutCurrency} />
+            <Selectv2 data={balances && balances} setSwitch={setOutPutCurrency} />
             <Inputv2
               value={outPutEd.replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
               placeholder="Сумма вывода"
