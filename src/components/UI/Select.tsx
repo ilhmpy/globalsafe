@@ -7,7 +7,7 @@ import moment from 'moment';
 import 'moment/locale/ru';
 
 type SelectType = {
-  data: BalanceList[] | null;
+  data: any[] | null | undefined | BalanceList[]; 
   setSwitch: (value: string) => void;
   withoutVolume?: boolean;
 };

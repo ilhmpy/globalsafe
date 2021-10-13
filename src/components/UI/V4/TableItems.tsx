@@ -1,4 +1,6 @@
 import styled from "styled-components/macro";
+import React, { FC } from "react";
+import { Spinner } from "../../../Pages/PrivateArea/components/Loading/Loading";
 
 export const Table = styled.div<{ none?: boolean; }>`
   width: 100%;
@@ -13,6 +15,7 @@ export const Item = styled.h3<{ item?: boolean; }>`
     font-size: 14px;
     font-weight: 300;
     margin-right: 75px;
+    min-height: 20px;
     ${({ item }) => {
         if (item) {
             return `
@@ -61,11 +64,26 @@ export const LinkButton = styled.a`
     display: flex;
     align-items: center;
     justify-content: center;
-\   margin-bottom: 22px;
     background: #0094FF;
     border-radius: 4px;
     font-weight: 400;
     font-size: 12px;
     line-height: 14px;
     cursor: pointer;
+    margin-top: 14px;
 `;
+
+type MoreButtonType = {
+    newItems: boolean;
+    text: string;
+    onMore: () => void;
+    loadingNewItems: boolean;
+};
+
+export const MoreButton: FC<MoreButtonType> = ({ newItems, onMore, text, loadingNewItems }: MoreButtonType) => {
+    return (
+        <More newItems={newItems} onClick={onMore}>
+            {loadingNewItems ? <Spinner style={{ width: "25px", height: "25px", borderTop: "2px solid #fff", margin: "0 auto" }} /> : text}
+        </More>
+    );
+};

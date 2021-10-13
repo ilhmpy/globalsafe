@@ -52,7 +52,6 @@ export const TableItem = styled.div<TableProps>`
     align-items: center;
     height: 56px;
     position: relative;
-
     ${({ head, item }) => {
         if (head) {
             return `
