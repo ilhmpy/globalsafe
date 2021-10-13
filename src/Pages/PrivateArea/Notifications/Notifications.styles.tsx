@@ -21,7 +21,7 @@ export const NotificationItem = styled.div`
     margin-bottom: 2px;
 `;
 
-export const DoneNotification = styled(Done)`
+export const DoneNotification = styled(Done)<{ disabled?: boolean; }>`
     position: absolute;
     right: 20px;
     display: block;
@@ -30,4 +30,13 @@ export const DoneNotification = styled(Done)`
     top: 0;
     bottom: 0;
     cursor: pointer;
+    ${({ disabled }) => {
+        if (!disabled) {
+            return `
+                opacity: 30%;  
+                pointer-events: none;
+                cursor: not-allowed;
+            `;
+        };
+    }}
 `;

@@ -73,22 +73,20 @@ export const LinkButton = styled.a`
 `;
 
 export const Spin = styled(Spinner)`
-    width: 25;
-    height: 25; 
-    borderTop: 2px solid #fff;
-    margin: 0 auto;
+
 `;
 
 type MoreButtonType = {
     newItems: boolean;
     text: string;
     onMore: () => void;
-}
+    loadingNewItems: boolean;
+};
 
-export const MoreButton: FC<MoreButtonType> = ({ newItems, onMore, text }: MoreButtonType) => {
+export const MoreButton: FC<MoreButtonType> = ({ newItems, onMore, text, loadingNewItems }: MoreButtonType) => {
     return (
         <More newItems={newItems} onClick={onMore}>
-            {newItems ? <Spin /> : text}
+            {loadingNewItems ? <Spinner style={{ width: "25px", height: "25px", borderTop: "2px solid #fff", margin: "0 auto" }} /> : text}
         </More>
     );
 };

@@ -7,6 +7,7 @@ import { Filter } from "../components/Filter/index";
 import { NotifyItem } from "../../../constantes/notifies";
 import * as Table from '../../../components/UI/V4/TableItems';
 import moment from "moment";
+import { NotItems, Loading } from "../../../Pages/PrivateArea/components/Loading/Loading";
 
 export const Notifications = () => {
     const [buttons, setButtons] = useState<any[]>([
@@ -17,9 +18,27 @@ export const Notifications = () => {
     const appContext = useContext(AppContext);
     const hubConnection = appContext.hubConnection;
     const [notifies, setNotifies] = useState<NotifyItem[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [newItems, setNewItems] = useState<boolean>(false);
+
+    function length(res: NotifyItem[]) {
+        if (res.length === 0) {
+            setNewItems(false);
+        } else {
+            setNewItems(true);
+        };
+    };
+
+    function fieldNew(res: NotifyItem[], setState: (value: NotifyItem[]) => void, field = false) {
+        const items = res.map((item) => {
+            return { ...item, new: field }
+        });
+        setState(items);
+    };
 
     function getNotifies() {
         if (hubConnection) {
+            setLoading(true);
             hubConnection.invoke(
                 "GetInAppNotifications",
                 [activeFilter === "active" ? 0 : 1],
@@ -28,10 +47,12 @@ export const Notifications = () => {
             )
               .then((res) => {
                 console.log("all notifies on page", res.collection);
-                setNotifies(res.collection);
+                fieldNew(res.collection, setNotifies);
+                length(res.collection);
               })    
-              .catch((err) => console.log(err));
-        }
+              .catch((err) => console.log(err))
+              .finally(() => setLoading(false));
+        };
     };
 
     useEffect(() => {
@@ -57,7 +78,15 @@ export const Notifications = () => {
                 5
             )
               .then((res) => {
-                setNotifies(data => [...res.collection, ...data]);
+                setNotifies(data => [...res.collection.map((item: NotifyItem) => {
+                    return { ...item, new: true }
+                }), ...data.map((item: NotifyItem) => {
+                    return { ...item, new: false }
+                })]);
+                length(res.collection);
+                setTimeout(() => {
+                    fieldNew(res.collection, setNotifies, true);
+                }, 1000);
               })    
               .catch((err) => console.log(err));
         };
@@ -82,21 +111,31 @@ export const Notifications = () => {
                         <Table.Item>Дата и время</Table.Item>
                         <Table.Item>Уведомление</Table.Item>
                     </Table.Header>
-                    {notifies.map((notify: NotifyItem, idx: number) => (
-                        <Notifies.NotificationItem key={idx}> 
-                            <Table.Item item>
-                                {moment(notify.sentDate).format("DD.MM.YYYY")} в {moment(notify.sentDate).format("HH:MM")}
-                            </Table.Item>
-                            <Table.Item item>
-                                {notify.message}
-                            </Table.Item>
-                            <Notifies.DoneNotification style={{ display: activeFilter == "active" ? "block" : "none"}} onClick={() => onNotify(notify.safeId)} />
-                            {/* <Table.LinkButton>Перейти к обмену</Table.LinkButton> */}
-                        </Notifies.NotificationItem>
-                    ))}
+                    {loading ? <Loading /> : (
+                        <>
+                            {notifies.length === 0 ? <NotItems text="Не имеется уведомлений по этому фильтру" /> : (
+                                <>
+                                    {notifies.map((notify: NotifyItem, idx: number) => (
+                                        <Notifies.NotificationItem key={idx}> 
+                                            <Table.Item item>
+                                                {moment(notify.sentDate).format("DD.MM.YYYY")} в {moment(notify.sentDate).format("HH:MM")}
+                                            </Table.Item>
+                                            <Table.Item item>
+                                                {notify.message}
+                                            </Table.Item>
+                                            <Notifies.DoneNotification disabled={activeFilter === "active"} onClick={() => onNotify(notify.safeId)} />
+                                            {/* <Table.LinkButton>Перейти к обмену</Table.LinkButton> */}
+                                        </Notifies.NotificationItem>
+                                    ))}
+                                </>
+                            )}
+                        </>
+                    )}
                 </Table.Table>
             </Notifies.NotificationsMap>
-            <Table.MoreButton onMore={onMore} newItems={false} text="Показать ещё" />
+            <Table.MoreButton onMore={onMore} newItems={newItems} 
+                loadingNewItems={notifies.some((item: any) => item.new === true)} text="Показать ещё" 
+            />
         </Container>
     );
 };
