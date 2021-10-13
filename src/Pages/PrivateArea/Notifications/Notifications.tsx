@@ -18,8 +18,7 @@ export const Notifications = () => {
     const hubConnection = appContext.hubConnection;
     const [notifies, setNotifies] = useState<NotifyItem[]>([]);
 
-    useEffect(() => {
-        console.log(activeFilter);
+    function getNotifies() {
         if (hubConnection) {
             hubConnection.invoke(
                 "GetInAppNotifications",
@@ -33,10 +32,35 @@ export const Notifications = () => {
               })    
               .catch((err) => console.log(err));
         }
+    };
+
+    useEffect(() => {
+        getNotifies()
     }, [hubConnection, activeFilter]);
 
-    function onNotify() {
-        return;
+    function onNotify(id: string) {
+        if (hubConnection) {
+            hubConnection.invoke("SetStateInAppNotification", id, 1)
+             .then(() => {
+                 getNotifies();
+             })
+             .catch(err => console.error(err));
+        };
+    };
+
+    function onMore() {
+        if (hubConnection) {
+            hubConnection.invoke(
+                "GetInAppNotifications",
+                [activeFilter === "active" ? 0 : 1],
+                notifies.length,
+                5
+            )
+              .then((res) => {
+                setNotifies(data => [...res.collection, ...data]);
+              })    
+              .catch((err) => console.log(err));
+        };
     };
 
     return (
@@ -59,19 +83,20 @@ export const Notifications = () => {
                         <Table.Item>Уведомление</Table.Item>
                     </Table.Header>
                     {notifies.map((notify: NotifyItem, idx: number) => (
-                        <Notifies.NotificationItem key={idx}>
+                        <Notifies.NotificationItem key={idx}> 
                             <Table.Item item>
                                 {moment(notify.sentDate).format("DD.MM.YYYY")} в {moment(notify.sentDate).format("HH:MM")}
                             </Table.Item>
                             <Table.Item item>
                                 {notify.message}
                             </Table.Item>
-                            <Notifies.DoneNotification style={{ display: activeFilter == "active" ? "block" : "none"}} onClick={onNotify} />
+                            <Notifies.DoneNotification style={{ display: activeFilter == "active" ? "block" : "none"}} onClick={() => onNotify(notify.safeId)} />
                             {/* <Table.LinkButton>Перейти к обмену</Table.LinkButton> */}
                         </Notifies.NotificationItem>
                     ))}
                 </Table.Table>
             </Notifies.NotificationsMap>
+            <Table.MoreButton onMore={onMore} newItems={false} text="Показать ещё" />
         </Container>
     );
 };
