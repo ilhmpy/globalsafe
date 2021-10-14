@@ -37,9 +37,22 @@ export const Notifications = () => {
         setState(items);
     };
 
-    function getNotifies() {
+    function cb (notify: NotifyItem) {
+        getNotifies(false);
+    };
+
+    useEffect(() => {
         if (hubConnection) {
-            setLoading(true);
+            hubConnection.on("InAppNotification", cb);
+        };
+        return () => {
+            hubConnection?.off("InAppNotification", cb);
+        }; 
+    }, [hubConnection]);
+
+    function getNotifies(load = true) {
+        if (hubConnection) {
+            setLoading(load);
             hubConnection.invoke(
                 "GetInAppNotifications",
                 [activeFilter === "active" ? 0 : 1],
