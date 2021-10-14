@@ -40,11 +40,11 @@ export const Select: FC<SelectType> = ({ data, setSwitch, withoutVolume }: Selec
                     >
                         {Balance[item.balanceKind]}{!withoutVolume && ` - ${(
                                 item.balanceKind === 1 ? 
-                                item.volume / 100000 : 
+                                Number(item.volume) / 100000 : 
                                 item.balanceKind === 43 ?
-                                item.volume / 10000 : 
+                                Number(item.volume) / 10000 : 
                                 item.balanceKind === 59 ? 
-                                item.volume / 100 : item.volume).toLocaleString("ru-RU", { maximumFractionDigits: 5 })}`}
+                                Number(item.volume) / 100 : Number(item.volume)).toLocaleString("ru-RU", { maximumFractionDigits: 5 })}`}
                     </FieldListItem>
                 ))}
             </Scrollbars>

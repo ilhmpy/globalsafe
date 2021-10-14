@@ -112,10 +112,14 @@ export const HubProvider: FC = ({ children }: any) => {
       }
     };
     if (hubConnection) {
+      hubConnection.on("OperationNotification", cb);
+    }
+    if (hubConnection) {
       hubConnection.on('BalanceUpdate', cb);
     }
     return () => {
       hubConnection?.off('BalanceUpdate', cb);
+      hubConnection?.off("OperationNotification", cb);
     };
   }, [hubConnection, balanceList]);
 

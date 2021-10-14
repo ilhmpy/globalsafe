@@ -46,7 +46,7 @@ export const InfoMain: FC = () => {
           <Route path={routers.deposits} component={Deposits} exact />
           <Route path={routers.depositsProgram} component={DepositProgram} exact />
           <Route path={routers.depositsOpen} component={DepositOpen} exact />
-          <Route path={routers.depositsView} component={DepositView} exact />
+          <Route path={routers.depositsView} component={DepositView} exact /> 
           <Route path="/info/deposits/:slug" component={OnePage} exact />
           <Route path={routers.p2pchanges} component={Advert} exact />
           <Route path={routers.p2pchangesOwn} component={OwnExchanges} exact />
