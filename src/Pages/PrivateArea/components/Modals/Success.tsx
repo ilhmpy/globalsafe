@@ -21,7 +21,7 @@ export const SuccessOpenDeposit: FC<Props> = ({ onClose, open, deposit, sumValue
             <S.Title>Успешное открытие депозита</S.Title>
             <S.TextWrap big>
               <S.Text>
-                Депозит по программе <a href="/">{deposit?.name}</a> на сумму <br />
+              {`Депозит по программе ${deposit?.name} на сумму`} <br />
                 {`${sumValue} ${Balance[deposit?.asset as number]} успешно открыт`}.
               </S.Text>
             </S.TextWrap>

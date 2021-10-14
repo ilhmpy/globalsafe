@@ -26,7 +26,7 @@ import { Card, Container } from '../../../../globalStyles';
 import { Balance, Notify } from '../../../../types/balance';
 import { Commisions, DepositsCollection, RootDeposits } from '../../../../types/info';
 import { ConvertingModalSuccess } from '../../ConveringSuccessModal';
-import { ConvertingModal } from '../../ConvertingModal';
+import { ConvertingModal, IBalanceExchange } from '../../ConvertingModal';
 import { ConvertingModalFail } from '../../ConvertingModalFail';
 // import { InfoBalance } from '../../InfoBalance';
 import { DepositListModal, TokenModal } from '../../Modals';
@@ -95,7 +95,12 @@ export const HeadBar: FC = () => {
   );
   const [withDrawModal, setWithDrawModal] = useState<boolean>(false);
   const [addDrawModal, setAddDrawModal] = useState<boolean>(false);
-  const [convertedArray, setConvertedArray] = useState<number[]>([0, 0, 0]);
+  const [convertedData, setConvertedData] = useState<IBalanceExchange>({
+    userAmount: 0,
+    calculatedAmount: 0,
+    targetAmount: 0,
+    discountPercent: 0,
+  });
 
   // Get Balance Kinds List as an Array
   const balancesList = useMemo(() => {
@@ -634,12 +639,12 @@ export const HeadBar: FC = () => {
         setOpen={setOpenConverting}
         setIsSuccessConverting={setIsSuccessConverting}
         setIsFailConverting={setIsFailConverting}
-        setConvertedArray={setConvertedArray}
+        setConvertedData={setConvertedData}
       />
       <ConvertingModalSuccess
         open={isSuccessConverting}
         setOpen={setIsSuccessConverting}
-        convertedArray={convertedArray}
+        convertedData={convertedData}
       />
       <ConvertingModalFail open={isFailConverting} setOpen={setIsFailConverting} />
 
