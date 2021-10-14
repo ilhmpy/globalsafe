@@ -5,6 +5,7 @@ import moment from 'moment';
 import { AppContext } from '../../../context/HubContext';
 import  { InBlockLoading } from "../../UI/V4/InBlockLoading/InBlockLoading";
 import { NotifyItem } from "../../../constantes/notifies";
+import * as Table from "../../UI/V4/TableItems";
 
 type NotifyProps = {
    block: boolean; 
@@ -95,6 +96,10 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
         };
     };
 
+    function link(kind: number) {
+        return kind === 20 || kind === 21 || kind === 22;
+    };
+
     return (
       <Notifies.NotifiesBlock block={block} admin={admin} 
             empty={!loading && notifies.length === 0}
@@ -102,7 +107,9 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
           {loading ? <InBlockLoading /> : (
             <>
                 {notifies && notifies.length ? (
-                    <Scrollbars renderThumbVertical={(props) => <Notifies.Scrollbar {...props}></Notifies.Scrollbar>}>
+                    <Scrollbars 
+                        style={{ width: "100%", height: "100%" }}
+                        renderThumbVertical={(props) => <Notifies.Scrollbar {...props}></Notifies.Scrollbar>}>
                         {notifies && notifies.map((notify: any, idx: number) => (
                             <Notifies.Notify click={notify.click} notChecked={notify.readState === 0} key={idx}>
                                 <Notifies.NotifyItem grey>
@@ -111,7 +118,11 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
                                 <Notifies.NotifyItem bold>
                                     {notify.subject}
                                 </Notifies.NotifyItem>
-                                <Notifies.NotifyItem link={notify.link}><a href={getLinkAddress(notify.link, notify.notificationKind)}>{notify.message}</a></Notifies.NotifyItem>
+                                <Notifies.NotifyItem>{notify.message}</Notifies.NotifyItem>
+                                {link(notify.notificationKind) && notify.link != "" && notify.link != "0" && 
+                                    <Table.LinkButton 
+                                        style={{ marginTop: "10px" }}
+                                        href={getLinkAddress(notify.link, notify.notificationKind)}>Перейти к обмену</Table.LinkButton>}
                                 <Notifies.DoneNotify onClick={() => onNotify(notify.safeId)} />
                             </Notifies.Notify>
                         ))}

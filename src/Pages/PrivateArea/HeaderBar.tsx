@@ -783,6 +783,7 @@ export const HeaderBar = () => {
           <BalanceChipsBlock>
             {balanceChips &&
               balanceChips.map((i: any, idx: number) => {
+                
                 return (
                   <Chip
                     key={`chip-item-${idx}`}
