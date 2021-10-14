@@ -17,9 +17,11 @@ export const OwnExchanges = () => {
   const { hubConnection } = useContext(AppContext);
   const [activeFilter, setActiveFilter] = useState<'active' | 'archived'>('active');
   const [userExchanges, setUserExchanges] = useState<ViewExchangeModel[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (hubConnection) {
+      setLoading(true);
       getGetUserExchanges();
     };
   }, [hubConnection, activeFilter]);
@@ -37,6 +39,8 @@ export const OwnExchanges = () => {
       setUserExchanges(res.collection);
     } catch (err) {
       console.log(err);
+    } finally {
+      setLoading(false);
     };
   };
 
@@ -88,8 +92,8 @@ export const OwnExchanges = () => {
           <FilterButton active>Все Статусы</FilterButton>
         </S.Filters>
 
-        {activeFilter === 'active' && <OwnActiveExchangesTable exchanges={userExchanges} />}
-        {activeFilter === 'archived' && <OwnArchivedExchangesTable exchanges={userExchanges} />}
+        {activeFilter === 'active' && <OwnActiveExchangesTable loading={loading} exchanges={userExchanges} />}
+        {activeFilter === 'archived' && <OwnArchivedExchangesTable loading={loading} exchanges={userExchanges} />}
         {/* <S.ButtonWrap>
           <Button>Показать еще</Button>
         </S.ButtonWrap> */}

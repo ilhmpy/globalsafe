@@ -10,11 +10,12 @@ import { Balance } from "../../../../../types/balance";
 import { FiatKind } from "../../../../../types/fiat";
 import { PaymentMethodKind } from "../../../../../types/paymentMethodKind";
 import moment from "moment";
+import { Loading, NotItems } from "../../../components/Loading/Loading";
 
 import * as S from './S.el';
 import { getTime } from 'date-fns';
 
-export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges }: OwnExchangesProps) => {
+export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, loading }: OwnExchangesProps) => {
   const history = useHistory();
   const [selectedOption, setSelectedOption] = useState<string | null>('Все валюты предложения');
 
@@ -44,6 +45,14 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges }: Ow
 
   const Status = ["Создан", "Принят", "Завершен", "", "Отменен"];
 
+  /* 
+    ОСТАЛОСЬ СДЕЛАТЬ:
+    обновление оставшегося время каждую минуту
+    страница архив
+    детальная страница каждого обмена
+    доделать ещё два "текстового" метода оплаты
+  */
+
   function getTime(date: Date, wn: any) {
     const create = new Date(date);
     const now = new Date();
@@ -63,7 +72,7 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges }: Ow
   };
  
   setInterval(() => {
-    console.log("oneMinutes latter")
+    console.log("oneMinutes latter") 
   }, 60000);
 
   return (
@@ -99,23 +108,31 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges }: Ow
             <span>Статус</span>
           </S.Cell>
         </S.Header>
-        {exchanges.map((exchange, idx) => (
-            <S.BodyItem key={idx} onClick={() => handleNavigateToExchange(exchange.safeId)}>
-                <S.Cell data-label="Тип">{exchange.kind === 0 ? "Продажа" : "Покупка"}</S.Cell>
-                <S.Cell data-label="Кол-во">{exchange.volume} {Balance[exchange.assetKind]}</S.Cell>
-                <S.Cell data-label="Курс">{exchange.rate}</S.Cell>
-                <S.Cell data-label="Сумма оплаты">{exchange.exchangeVolume} {FiatKind[exchange.exchangeAssetKind]}</S.Cell>
-                <S.Cell data-label="Метод оплаты">
-                  <S.BankList>
-                    <S.BankItem>
-                      {getPaymentMethod(exchange.paymentMethod?.kind)}
-                    </S.BankItem>
-                  </S.BankList> 
-                </S.Cell>
-                <S.Cell data-label="Оставшееся время">{getTime(exchange.creationDate, exchange.operationWindow)}</S.Cell>
-                <S.Cell data-label="Статус">{Status[exchange.state]}</S.Cell> 
-            </S.BodyItem>
-        ))}
+        {loading ? <Loading /> : (
+          <>
+            {exchanges.length === 0 ? <NotItems text="У вас нету обменов" /> : (
+              <>
+                {exchanges.map((exchange, idx) => (
+                  <S.BodyItem key={idx} onClick={() => handleNavigateToExchange(exchange.safeId)}>
+                      <S.Cell data-label="Тип">{exchange.kind === 0 ? "Продажа" : "Покупка"}</S.Cell>
+                      <S.Cell data-label="Кол-во">{exchange.volume} {Balance[exchange.assetKind]}</S.Cell>
+                      <S.Cell data-label="Курс">{exchange.rate}</S.Cell>
+                      <S.Cell data-label="Сумма оплаты">{exchange.exchangeVolume} {FiatKind[exchange.exchangeAssetKind]}</S.Cell>
+                      <S.Cell data-label="Метод оплаты">
+                        <S.BankList>
+                          <S.BankItem>
+                            {getPaymentMethod(exchange.paymentMethod?.kind)}
+                          </S.BankItem>
+                        </S.BankList> 
+                      </S.Cell>
+                      <S.Cell data-label="Оставшееся время">{getTime(exchange.creationDate, exchange.operationWindow)}</S.Cell>
+                      <S.Cell data-label="Статус">{Status[exchange.state]}</S.Cell> 
+                  </S.BodyItem>
+                ))}
+              </>
+            )}
+          </>
+        )}
       </S.Table>
     </>
   );
