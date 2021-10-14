@@ -65,7 +65,7 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
     
     useEffect(() => {
         getNotifies();
-    }, [hubConnection]);
+    }, [hubConnection, block]);
 
     function changeHide(bool: boolean, id: string) {
         notifies.forEach((notify: any) => {
