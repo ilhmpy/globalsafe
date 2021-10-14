@@ -115,9 +115,9 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
                 {exchanges.map((exchange, idx) => (
                   <S.BodyItem key={idx} onClick={() => handleNavigateToExchange(exchange.safeId)}>
                       <S.Cell data-label="Тип">{exchange.kind === 0 ? "Продажа" : "Покупка"}</S.Cell>
-                      <S.Cell data-label="Кол-во">{exchange.volume} {Balance[exchange.assetKind]}</S.Cell>
+                      <S.Cell data-label="Кол-во">{(exchange.volume).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {Balance[exchange.assetKind]}</S.Cell>
                       <S.Cell data-label="Курс">{exchange.rate}</S.Cell>
-                      <S.Cell data-label="Сумма оплаты">{exchange.exchangeVolume} {FiatKind[exchange.exchangeAssetKind]}</S.Cell>
+                      <S.Cell data-label="Сумма оплаты">{(exchange.exchangeVolume).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {FiatKind[exchange.exchangeAssetKind]}</S.Cell>
                       <S.Cell data-label="Метод оплаты">
                         <S.BankList>
                           <S.BankItem>
