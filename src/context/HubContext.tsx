@@ -24,6 +24,7 @@ type Context = {
   selectedDeposit: any;
   setChosenDepositView: (object: any) => void;
   setSelectedDeposit: (object: any) => void;
+  userSafeId?: string | undefined,
 };
 
 export const AppContext = React.createContext<Context>({
@@ -43,6 +44,7 @@ export const AppContext = React.createContext<Context>({
   setSelectedDeposit: () => undefined,
   selectedDeposit: {},
   chosenDepositView: {},
+  userSafeId: undefined,
 });
 
 export const HubProvider: FC = ({ children }: any) => {
@@ -60,6 +62,7 @@ export const HubProvider: FC = ({ children }: any) => {
   const { i18n } = useTranslation();
   const [chosenDepositView, setChosenDepositView] = useState({});
   const [selectedDeposit, setSelectedDeposit] = useState({});
+  const [userSafeId, setUserSafeId] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     const hubConnection = new signalR.HubConnectionBuilder()
@@ -87,6 +90,7 @@ export const HubProvider: FC = ({ children }: any) => {
 
         setIsFailed(true);
         setUser('');
+        setUserSafeId(undefined);
       });
 
     // return function cleanup() {
@@ -126,6 +130,7 @@ export const HubProvider: FC = ({ children }: any) => {
         .then((res) => {
           console.log('GetSigned', res);
           setUser(res.name);
+          setUserSafeId(res.safeId)
           setLoading(false);
           if (res.balances.length) {
             const newArr = res.balances.filter((item: any) => item.balanceKind === 1);
@@ -150,6 +155,7 @@ export const HubProvider: FC = ({ children }: any) => {
         .catch((err) => {
           console.log(err);
           setUser(false);
+          setUserSafeId(undefined);
           setIsAdmin(false);
           setLoading(false);
         });
@@ -164,6 +170,7 @@ export const HubProvider: FC = ({ children }: any) => {
   const logOut = () => {
     setMyToken(null);
     setUser(null);
+    setUserSafeId(undefined);
     setIsAdmin(false);
     // history.push('/');
   };
@@ -191,6 +198,7 @@ export const HubProvider: FC = ({ children }: any) => {
         setChosenDepositView,
         setSelectedDeposit,
         selectedDeposit,
+        userSafeId,
       }}
     >
       {children}

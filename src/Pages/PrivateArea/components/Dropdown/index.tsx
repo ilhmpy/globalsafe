@@ -1,4 +1,6 @@
 import React, { FC, useRef, useState } from 'react';
+import { Scrollbars } from 'react-custom-scrollbars';
+
 import { ReactComponent as Icon } from '../../../../assets/v2/svg/down-arrow.svg';
 import useOnClickOutside from '../../../../hooks/useOutsideHook';
 import * as Styled from './S.el';
@@ -64,15 +66,17 @@ export const Dropdown: FC<SelectProps> = ({
         </Styled.DropDownHeader>
         {isOpen && (
           <Styled.SelectList>
-            {options.map((option, idx) => (
-              <Styled.ListItem
-                active={activeList === idx}
-                onClick={() => onOptionClicked(option)}
-                key={`select-option-item-${idx}`}
-              >
-                <Styled.Text>{option}</Styled.Text>
-              </Styled.ListItem>
-            ))}
+            <Scrollbars style={{ height: '200px' }}>
+              {options.map((option, idx) => (
+                <Styled.ListItem
+                  active={activeList === idx}
+                  onClick={() => onOptionClicked(option)}
+                  key={`select-option-item-${idx}`}
+                >
+                  <Styled.Text>{option}</Styled.Text>
+                </Styled.ListItem>
+              ))}
+            </Scrollbars>
           </Styled.SelectList>
         )}
       </Styled.DropDownContainer>

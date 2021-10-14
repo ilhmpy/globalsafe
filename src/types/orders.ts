@@ -17,8 +17,8 @@ interface OrderBaseModel {
     operationAssetKind: FiatKind;
     limitFrom: number;
     limitTo: number;
-    methodsKindsJson: string; // 
-    methodsKinds: any[]; // PaymentMethodKind[]
+    methodsKindsJson: string;
+    methodsKinds: number[]; 
     creationDate: Date;
     rate: number;
     operationWindow: any; //

@@ -8,6 +8,7 @@ import { Text } from '../components/ui/Text';
 import * as S from './S.el';
 import { OrderDetailCard } from './components/OrderDetailCard';
 import { ExchangesInOrderTable } from './components/ExchangesInOrderTable';
+import { routers } from '../../../constantes/routers';
 
 export const SingleOrderDetails: FC = () => {
   const history = useHistory();
@@ -16,7 +17,7 @@ export const SingleOrderDetails: FC = () => {
   return (
     <S.Container>
       <Container>
-        <Back text="Назад" onGoBackClick={() => history.goBack()} />
+        <Back text="Назад" onGoBackClick={() => history.replace(routers.p2pchanges)} />
         <S.TitleContainer>
             <Title mB={0}>Ордер на покупку CWD-RUB</Title>
             <Text size={14} lH={20} black>
@@ -25,7 +26,7 @@ export const SingleOrderDetails: FC = () => {
         </S.TitleContainer>
 
         <S.Container>
-            <OrderDetailCard />
+          <OrderDetailCard />
         </S.Container>
 
         <S.Container>

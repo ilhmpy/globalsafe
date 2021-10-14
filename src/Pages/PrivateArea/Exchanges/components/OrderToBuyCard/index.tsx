@@ -161,7 +161,7 @@ export const OrderToBuyCard: FC = () => {
     };
 
     const onRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const pattern = /^[0-9.]*$/;
+        const pattern = /^[0-9][0-9\.]*$/;
         if (e.target.value === '' || pattern.test(e.target.value)) {
           setChangeRate(e.target.value);
         }
