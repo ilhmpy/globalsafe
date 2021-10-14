@@ -5,29 +5,66 @@ import alfa1 from '../../../../../assets/v2/svg/banks/alfa1.svg';
 import sber from '../../../../../assets/v2/svg/banks/sber.svg';
 import tinkoff from '../../../../../assets/v2/svg/banks/tinkoff.svg';
 import { CurrencyPair } from '../modals/CurrencyPair';
-import { OwnExchangesProps, ExchangeKind } from '../../../../../types/exchange';
+import { OwnExchangesProps, ViewExchangeModel } from '../../../../../types/exchange';
 import { Balance } from "../../../../../types/balance";
 import { FiatKind } from "../../../../../types/fiat";
 import { PaymentMethodKind } from "../../../../../types/paymentMethodKind";
+import moment from "moment";
 
 import * as S from './S.el';
+import { getTime } from 'date-fns';
 
-type OwnActiveProps = {
-  exchanges: any[];
-}
-
-export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges }: OwnActiveProps) => {
+export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges }: OwnExchangesProps) => {
   const history = useHistory();
   const [selectedOption, setSelectedOption] = useState<string | null>('Все валюты предложения');
 
-  const handleNavigateToExchange = () => {
-    history.replace(`/info/p2p-changes/${Date.now().toString()}`)
+  const handleNavigateToExchange = (id: string) => {
+    history.replace(`/info/p2p-changes/${id}`);
   };
 
   function getPaymentMethod(kind: number) {
+    if (kind === undefined) {
+      return "N/A"
+    } else if (kind === 0) {
+      return "ERC20";
+    } else if (kind === 1) {
+      return "TRC20";
+    } else if (kind === 2) {
+      return "BEP20";      
+    } else if (kind === 3) {
+      return "BankTransfer";
+    } else if (kind === 4) {
+      return <img src={tinkoff} alt="tinkoff" />;
+    } else if (kind === 5) {
+      return <img src={sber} alt="sber" />;
+    } else if (kind === 6) {
+      return <img src={alfa} alt="alfa" />;
+    };
+  };
 
-    return alfa;
-  }
+  const Status = ["Создан", "Принят", "Завершен", "", "Отменен"];
+
+  function getTime(date: Date, wn: any) {
+    const create = new Date(date);
+    const now = new Date();
+    const result = { days: wn.days - (now.getDay() - create.getDay()), 
+                     hours: wn.hours - (now.getHours() - create.getHours()), 
+                     minutes: wn.minutes - (now.getMinutes() - create.getMinutes()), 
+                     seconds: wn.seconds - (now.getSeconds() - create.getSeconds())
+                   }; 
+    const { days, hours, minutes, seconds } = result;
+    if (days > 0) {
+      return `${days}д ${hours > 0 ? hours : 0}ч`;
+    } else if (hours > 0) {
+      return `${hours}ч ${minutes > 0 ? minutes : 0}м`;
+    } else if (minutes > 0) {
+      return `${minutes}м ${seconds > 0 ? seconds : 0}с`;
+    };
+  };
+ 
+  setInterval(() => {
+    console.log("oneMinutes latter")
+  }, 60000);
 
   return (
     <>
@@ -63,7 +100,7 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges }: Ow
           </S.Cell>
         </S.Header>
         {exchanges.map((exchange, idx) => (
-            <S.BodyItem key={idx} onClick={handleNavigateToExchange}>
+            <S.BodyItem key={idx} onClick={() => handleNavigateToExchange(exchange.safeId)}>
                 <S.Cell data-label="Тип">{exchange.kind === 0 ? "Продажа" : "Покупка"}</S.Cell>
                 <S.Cell data-label="Кол-во">{exchange.volume} {Balance[exchange.assetKind]}</S.Cell>
                 <S.Cell data-label="Курс">{exchange.rate}</S.Cell>
@@ -71,20 +108,12 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges }: Ow
                 <S.Cell data-label="Метод оплаты">
                   <S.BankList>
                     <S.BankItem>
-                      <img src={getPaymentMethod(exchange.paymentMethod.assetKind)} alt="" />
+                      {getPaymentMethod(exchange.paymentMethod?.kind)}
                     </S.BankItem>
-                    {/* 
-                      <S.BankItem>
-                        <img src={tinkoff} alt="" />
-                      </S.BankItem>
-                      <S.BankItem>
-                        <img src={sber} alt="" />
-                      </S.BankItem> 
-                    */}
-                  </S.BankList>
+                  </S.BankList> 
                 </S.Cell>
-                <S.Cell data-label="Оставшееся время">18м 23с</S.Cell>
-                <S.Cell data-label="Статус">Ожидание подтверждения оплаты</S.Cell>
+                <S.Cell data-label="Оставшееся время">{getTime(exchange.creationDate, exchange.operationWindow)}</S.Cell>
+                <S.Cell data-label="Статус">{Status[exchange.state]}</S.Cell> 
             </S.BodyItem>
         ))}
       </S.Table>

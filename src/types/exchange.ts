@@ -49,5 +49,5 @@ export interface GetExchangesCollectionResult {
 }
 
 export type OwnExchangesProps = {
-    exchanges: ViewExchangeModel[];
+    exchanges: ViewExchangeModel[]; 
 };

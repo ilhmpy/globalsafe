@@ -23,7 +23,7 @@ export const OwnExchanges = () => {
       getGetUserExchanges();
     };
   }, [hubConnection, activeFilter]);
-  
+
   async function getGetUserExchanges() {
     try {
       const res = await hubConnection!.invoke<GetExchangesCollectionResult>(
