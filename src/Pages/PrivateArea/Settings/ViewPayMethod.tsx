@@ -110,7 +110,16 @@ export const ViewPayMethod = ({ match }: RouteComponentProps<PropsMatch>) => {
       />
 
       <TitleWrapper>
-        <Title>Платежный метод {userMethod ? payList[userMethod.kind] : ''}</Title>
+        <Title>
+          {' '}
+          {userMethod && !payMethod.paymentAddress ? (
+            <>Платежный метод {payList[userMethod.kind]}</>
+          ) : payMethod.paymentAddress ? (
+            <>Криптокошелек {payList[userMethod.kind]}</>
+          ) : (
+            ''
+          )}
+        </Title>
       </TitleWrapper>
 
       {userMethod ? (

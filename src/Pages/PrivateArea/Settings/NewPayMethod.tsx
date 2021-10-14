@@ -14,6 +14,7 @@ import { FiatKind } from '../../../types/fiatKind';
 import { PaymentMethodKind } from '../../../types/paymentMethodKind';
 import { Back } from '../components/Back';
 import { Title } from '../components/ui/Title';
+import NumberFormat from 'react-number-format';
 
 type dataBank = {
   name: string;
@@ -58,19 +59,19 @@ export const NewPayMethod: FC = () => {
 
   const { t } = useTranslation();
   const { hubConnection, user } = useContext(AppContext);
+  const keys = Object.keys(FiatKind).filter((k) => typeof FiatKind[k as any] === 'number');
   const [bankName, setBankName] = useState(payList[0]);
   const [name, setName] = useState('');
   const [bankNumber, setBankNumber] = useState('');
   const [checked, setChecked] = useState(true);
-  const [balanceType, setBalanceType] = useState('');
+  const [balanceType, setBalanceType] = useState(keys[0]);
   const [payAddress, setPayAddress] = useState('');
-  const [data, setData] = useState<null | dataBank | dataCripto>(null);
-  const [kind, setKind] = useState<PaymentMethodKind | number>(PaymentMethodKind.BankTransfer);
+  const [kind, setKind] = useState<PaymentMethodKind | number>(PaymentMethodKind.ERC20);
 
   const isUSDT = [PaymentMethodKind[0], PaymentMethodKind[1], PaymentMethodKind[2]].includes(
     bankName
   );
-
+  console.log('bankName', bankName);
   const addPayMethod = () => {
     if (isUSDT) {
       return {
@@ -86,8 +87,6 @@ export const NewPayMethod: FC = () => {
   };
 
   const history = useHistory();
-
-  const keys = Object.keys(FiatKind).filter((k) => typeof FiatKind[k as any] === 'number');
 
   const newMethod = {
     state: 1,
@@ -187,10 +186,10 @@ export const NewPayMethod: FC = () => {
             <>
               <Entry>
                 <span>Номер карты:</span>
-                <Input
-                  name="toSum"
+                <NumberField
                   value={bankNumber}
-                  onChange={(e) => setBankNumber(e.target.value)}
+                  onChange={(e: any) => setBankNumber(e.target.value)}
+                  format="#### #### #### ####"
                 />
               </Entry>
               <Entry>
@@ -219,7 +218,7 @@ export const NewPayMethod: FC = () => {
               primary
               as="button"
               disabled={
-                isUSDT ? payAddress.trim() === '' : bankNumber.length < 4 || name.trim() === ''
+                isUSDT ? payAddress.trim() === '' : bankNumber.length < 16 || name.trim() === ''
               }
               onClick={addPaymentMethod}
             >
@@ -237,6 +236,23 @@ export const NewPayMethod: FC = () => {
 
 const TitleWrapper = styled.div`
   margin: 0px 0px 20px;
+`;
+
+const NumberField = styled(NumberFormat)`
+  background: #f9fafb;
+  border: 1px solid #edf0f7;
+  box-sizing: border-box;
+  border-radius: 4px;
+  width: 300px;
+  padding: 12px;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 16px;
+  color: #000000;
+  font-family: 'Roboto', sans-serif;
+  &:focus {
+    outline: none;
+  }
 `;
 
 const ButtonWrapper = styled.div`
