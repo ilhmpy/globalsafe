@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useState } from 'react';
+import { ChangeEvent, FC, useContext, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
@@ -7,23 +7,123 @@ import { Input } from '../../../components/Input';
 import { Select } from '../../../components/Select/Select5';
 import { Switcher } from '../../../components/Switcher';
 import { routers } from '../../../constantes/routers';
+import { AppContext } from '../../../context/HubContext';
 import { Container } from '../../../globalStyles';
+import { Balance } from '../../../types/balance';
+import { FiatKind } from '../../../types/fiatKind';
+import { PaymentMethodKind } from '../../../types/paymentMethodKind';
 import { Back } from '../components/Back';
 import { Title } from '../components/ui/Title';
 
-export const NewPayMethod: FC = () => {
-  const { t } = useTranslation();
+type dataBank = {
+  name: string;
+  bankName: string;
+  bankNumber: string;
+};
 
-  const [defaultState, setDefaultState] = useState({
-    accaunt: 'viproller777',
-    rating: '5.0',
-    method: 'АО «Тинькофф Банк»',
-    cardHolder: 'VYACHESLAV TROSCHIN',
-    cardNumber: '5536 9137 9922 7240',
-    currency: 'RUB',
-    isActive: true,
+type dataCripto = {
+  paymentAddress: string;
+};
+
+export const NewPayMethod: FC = () => {
+  const keysPay = Object.keys(PaymentMethodKind).filter(
+    (k) => typeof PaymentMethodKind[k as any] === 'number'
+  );
+
+  const payList = keysPay.map((i) => {
+    if (i === PaymentMethodKind[0]) {
+      return PaymentMethodKind[0];
+    }
+    if (i === PaymentMethodKind[1]) {
+      return PaymentMethodKind[1];
+    }
+    if (i === PaymentMethodKind[2]) {
+      return PaymentMethodKind[2];
+    }
+    if (i === PaymentMethodKind[3]) {
+      return 'BANK TRANSFER';
+    }
+    if (i === PaymentMethodKind[4]) {
+      return 'АО «Тинькофф Банк»';
+    }
+    if (i === PaymentMethodKind[5]) {
+      return 'ПАО Сбербанк';
+    }
+    if (i === PaymentMethodKind[6]) {
+      return 'АО «Альфа-Банк»';
+    } else {
+      return '';
+    }
   });
+
+  const { t } = useTranslation();
+  const { hubConnection, user } = useContext(AppContext);
+  const [bankName, setBankName] = useState(payList[0]);
+  const [name, setName] = useState('');
+  const [bankNumber, setBankNumber] = useState('');
+  const [checked, setChecked] = useState(true);
+  const [balanceType, setBalanceType] = useState('');
+  const [payAddress, setPayAddress] = useState('');
+  const [data, setData] = useState<null | dataBank | dataCripto>(null);
+  const [kind, setKind] = useState<PaymentMethodKind | number>(PaymentMethodKind.BankTransfer);
+
+  const isUSDT = [PaymentMethodKind[0], PaymentMethodKind[1], PaymentMethodKind[2]].includes(
+    bankName
+  );
+
+  const addPayMethod = () => {
+    if (isUSDT) {
+      return {
+        paymentAddress: payAddress,
+      };
+    } else {
+      return {
+        name,
+        bankName,
+        bankNumber,
+      };
+    }
+  };
+
   const history = useHistory();
+
+  const keys = Object.keys(FiatKind).filter((k) => typeof FiatKind[k as any] === 'number');
+
+  const newMethod = {
+    state: 1,
+    kind: kind,
+    assetKind: balanceType ? keys.findIndex((i) => i === balanceType) : 2,
+    data: JSON.stringify(addPayMethod()),
+  };
+
+  const changeTypeMethod = (str: string) => {
+    const id = payList.findIndex((i) => i === str);
+    setBankName(str);
+    setKind(id);
+  };
+
+  const addPaymentMethod = async () => {
+    if (hubConnection) {
+      try {
+        await hubConnection.invoke(
+          'AddPaymentMethod',
+          kind,
+          keys.findIndex((i) => i === balanceType),
+          checked ? 1 : 2,
+          JSON.stringify(addPayMethod())
+        );
+        history.push(routers.settings);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (isUSDT) {
+      setBalanceType(FiatKind[7]);
+    }
+  }, [isUSDT]);
 
   return (
     <Container>
@@ -37,11 +137,11 @@ export const NewPayMethod: FC = () => {
         <LeftSide>
           <Entry>
             <span>Аккаунт:</span>
-            <span>{defaultState.accaunt}</span>
+            <span>{user}</span>
           </Entry>
           <Entry>
             <span>Рейтинг аккаунта:</span>
-            <span>{defaultState.rating}</span>
+            <span>0</span>
           </Entry>
         </LeftSide>
 
@@ -49,60 +149,80 @@ export const NewPayMethod: FC = () => {
           <Entry>
             <span>Платежный метод:</span>
             <Select
-              options={['АО «Тинькофф Банк»', 'ПАО Сбербанк', 'АО «Альфа-Банк»']}
-              selectedOption={defaultState.method}
-              setSelectedOption={(val: string) => setDefaultState({ ...defaultState, method: val })}
+              options={payList}
+              selectedOption={bankName}
+              setSelectedOption={(val: string) => changeTypeMethod(val)}
             />
           </Entry>
           <Entry>
             <span>Валюта:</span>
             <Select
-              options={['RUB', 'USD', 'EUR']}
-              selectedOption={defaultState.currency}
-              setSelectedOption={(val: string) =>
-                setDefaultState({ ...defaultState, currency: val })
-              }
+              options={isUSDT ? [FiatKind[7]] : keys}
+              selectedOption={balanceType}
+              setSelectedOption={setBalanceType}
             />
           </Entry>
-          <Entry>
+          {/* <Entry>
             <span>Номер карты:</span>
             <Input
               name="toSum"
-              value={defaultState.cardNumber}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setDefaultState({ ...defaultState, cardNumber: e.target.value })
-              }
+              value={bankNumber}
+              onChange={(e) => setBankNumber(e.target.value)}
             />
           </Entry>
           <Entry>
             <span>Держатель карты:</span>
-            <Input
-              name="toSum"
-              value={defaultState.cardHolder}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setDefaultState({ ...defaultState, cardHolder: e.target.value })
-              }
-            />
-          </Entry>
+            <Input name="toSum" value={name} onChange={(e) => setName(e.target.value)} />
+          </Entry> */}
+          {isUSDT ? (
+            <Entry>
+              <span>Адрес кошелька:</span>
+              <Input
+                name="toSum"
+                value={payAddress}
+                onChange={(e) => setPayAddress(e.target.value)}
+              />
+            </Entry>
+          ) : (
+            <>
+              <Entry>
+                <span>Номер карты:</span>
+                <Input
+                  name="toSum"
+                  value={bankNumber}
+                  onChange={(e) => setBankNumber(e.target.value)}
+                />
+              </Entry>
+              <Entry>
+                <span>Держатель карты:</span>
+                <Input name="toSum" value={name} onChange={(e) => setName(e.target.value)} />
+              </Entry>
+            </>
+          )}
           <Entry sm>
             <span>Активность метода:</span>
 
-            <SwitcherRow checked={defaultState.isActive}>
+            <SwitcherRow checked={checked}>
               <Switcher
                 onChange={() => {
-                  console.log(111);
-                  setDefaultState((prev: any) => ({ ...prev, isActive: !prev.isActive }));
+                  setChecked(!checked);
                 }}
-                checked={defaultState.isActive}
+                checked={checked}
               />
-              <span>
-                {t(defaultState.isActive ? 'depositsPrograms.on' : 'depositsPrograms.off')}
-              </span>
+              <span>{t(checked ? 'depositsPrograms.on' : 'depositsPrograms.off')}</span>
             </SwitcherRow>
           </Entry>
 
           <ButtonWrapper>
-            <Button bigSize primary onClick={() => history.push(routers.settings)}>
+            <Button
+              bigSize
+              primary
+              as="button"
+              disabled={
+                isUSDT ? payAddress.trim() === '' : bankNumber.length < 4 || name.trim() === ''
+              }
+              onClick={addPaymentMethod}
+            >
               Сохранить
             </Button>
             <Button bigSize outlinePrimary onClick={() => history.push(routers.settings)}>

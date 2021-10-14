@@ -7,6 +7,7 @@ type Props = {
   outlinePrimary?: boolean;
   outlineDanger?: boolean;
   fullWidth?: boolean;
+  disabled?: boolean;
 };
 
 export const Button = styled.a<Props>`
@@ -16,7 +17,8 @@ export const Button = styled.a<Props>`
   text-decoration: none;
   display: inline-block;
   box-sizing: border-box;
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? 'no-drop' : 'pointer')};
+  opacity: ${(props) => (props.disabled ? '0.4' : '1')};
   appearance: none;
   user-select: none;
   border-radius: 4px;
@@ -31,7 +33,9 @@ export const Button = styled.a<Props>`
   background: #515172;
   color: #ffffff;
   &:hover {
-    box-shadow: 0px 4px 10px ${(props) => props.theme.buttonBorder};
+    box-shadow: ${(props) =>
+      props.disabled ? 'none' : `0px 4px 10px ${props.theme.buttonBorder}`};
+
     border-color: ${(props) => props.theme.buttonBorder};
   }
   &:focus,
@@ -65,4 +69,17 @@ export const Button = styled.a<Props>`
       `;
     }
   }}
+  &:disabled {
+    box-shadow: none;
+    user-select: none;
+    cursor: initial;
+    opacity: 0.4;
+  }
 `;
+
+// &:disabled {
+//   background: #ccc;
+//   border-color: #ccc;
+//   box-shadow: none;
+//   user-select: none;
+// }

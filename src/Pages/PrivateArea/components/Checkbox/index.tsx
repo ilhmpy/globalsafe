@@ -13,10 +13,10 @@ type Props = {
 };
 
 export const Checkbox: FC<Props> = (props: Props): ReactElement => {
-  const { checked, onChange, label, name, children, dis, labelBold = false } = props;
+  const { checked, onChange, label, name, children, dis, labelBold = false, value } = props;
   return (
     <LabelContainer>
-      <CheckboxInput name={name} type="checkbox" checked={checked} onChange={onChange} />
+      <CheckboxInput name={name} type="checkbox" checked={checked} onChange={onChange} value={value} />
       <CheckboxIcon dis={dis} />
       {children}
       {label && <CheckboxLabel checked={checked} labelBold={labelBold}>{label}</CheckboxLabel>}

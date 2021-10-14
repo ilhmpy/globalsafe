@@ -193,6 +193,7 @@ export const SelectList = styled.ul`
   border: 1px solid rgba(86, 101, 127, 0.3);
   border-radius: 4px;
   position: absolute;
+  user-select: none;
   right: 0;
   left: 0;
   top: 40px;

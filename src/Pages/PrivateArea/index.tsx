@@ -21,6 +21,10 @@ import { OrderToSell } from './Exchanges/OrderToSell';
 import { Certificates } from './Certificates/Certificates';
 import { OrderCreate } from './Orders/OrderCreate';
 import { AppContext } from '../../context/HubContext';
+import { OrderToBuy } from './Exchanges/OrderToBuy';
+import { DepositView } from './Deposits/DepositView';
+import { Notifications } from "./Notifications/Notifications";
+import { SingleOrderDetails } from './Exchanges/SingleOrderDetails';
 
 export const InfoMain: FC = () => {
   const appContext = useContext(AppContext);
@@ -42,9 +46,13 @@ export const InfoMain: FC = () => {
           <Route path={routers.deposits} component={Deposits} exact />
           <Route path={routers.depositsProgram} component={DepositProgram} exact />
           <Route path={routers.depositsOpen} component={DepositOpen} exact />
+          <Route path={routers.depositsView} component={DepositView} exact /> 
           <Route path="/info/deposits/:slug" component={OnePage} exact />
           <Route path={routers.p2pchanges} component={Advert} exact />
           <Route path={routers.p2pchangesOwn} component={OwnExchanges} exact />
+          <Route path={routers.p2pchangesOrderToBuy} component={OrderToBuy} exact />
+          <Route path={routers.p2pchangesOrderToSell} component={OrderToSell} exact />
+          <Route path={routers.certificates} component={Certificates} exact />
           <Route
             path={routers.p2pchangesSingleExchangeDetails}
             component={SingleExchangeDetails}
@@ -54,9 +62,13 @@ export const InfoMain: FC = () => {
           <Route path={routers.settingsNewPayMethod} component={NewPayMethod} exact />
           <Route path={routers.settingsViewPayMethod} component={ViewPayMethod} exact />
           <Route path={routers.operations} component={HistoryOperations} exact />
-          <Route path={routers.certificates} component={Certificates} exact />
-          <Route path={routers.p2pchangesOrderToSell} component={OrderToSell} exact />
-          <Route path={routers.p2pchangesOwn} component={OwnExchanges} exact />
+          <Route path={routers.notifications} component={Notifications} exact />
+          <Route
+            path={routers.p2pchangesSingleOrderDetails}
+            component={SingleOrderDetails}
+            exact
+          />
+          <Route path={routers.settingsViewPayMethod + '/:slug'} component={ViewPayMethod} exact />
         </Switch>
         <Footer />
       </Styled.Page>

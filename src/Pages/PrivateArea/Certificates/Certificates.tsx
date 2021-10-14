@@ -16,10 +16,17 @@ import {
 import * as S from './S.el';
 import { Button } from '../../../components/Button/V2/Button';
 import { AppContext } from '../../../context/HubContext';
-import { RootCertificates, Collection } from '../../../types/certificates';
+import {
+  RootCertificates,
+  Collection,
+  ViewUserCertificateModel,
+} from '../../../types/certificates';
+import { Balance } from '../../../types/balance';
+import moment from 'moment';
 
 export const Certificates = () => {
   const [allCert, setAllCert] = useState<Collection[]>([]);
+  const [userCertificat, setUserCertificat] = useState<null | ViewUserCertificateModel>(null);
   const history = useHistory();
   const { hubConnection } = useContext(AppContext);
 
@@ -32,17 +39,20 @@ export const Certificates = () => {
   }, [hubConnection]);
 
   async function getUserCertificate() {
+    if (!hubConnection) return;
     try {
-      const res = await hubConnection!.invoke('GetUserCertificate');
+      const res = await hubConnection.invoke<ViewUserCertificateModel>('GetUserCertificate', 1);
       console.log('GetUserCertificate', res);
+      setUserCertificat(res);
     } catch (err) {
       console.log(err);
     }
   }
 
   async function getCertificates() {
+    if (!hubConnection) return;
     try {
-      const res = await hubConnection!.invoke<RootCertificates>('GetCertificates', 0, 40);
+      const res = await hubConnection.invoke<RootCertificates>('GetCertificates', 0, 40);
       console.log('GetCertificates', res);
       setAllCert(res.collection);
     } catch (err) {
@@ -52,7 +62,7 @@ export const Certificates = () => {
 
   const getCertificate = async () => {
     try {
-      const res = await hubConnection!.invoke('GetCertificatesMarket', 4, 0, 100);
+      const res = await hubConnection!.invoke('GetCertificatesMarket', 2, 0, 100);
       console.log('GetMarket"', res);
     } catch (err) {
       console.log(err);
@@ -62,11 +72,7 @@ export const Certificates = () => {
   return (
     <S.Container>
       <Container>
-        <Heading
-          onClick={() => history.push(routers.orderCreate)}
-          title="P2P обмены"
-          btnText="Опубликовать ордер"
-        />
+        <Heading onClick={() => history.goBack()} title="P2P обмены" btnText="Опубликовать ордер" />
         <S.SubHeader>
           <TabsBlock>
             <TabNavItem to={routers.p2pchanges} exact>
@@ -85,33 +91,38 @@ export const Certificates = () => {
             Рейтинг аккаунта: 5.0
           </Text>
         </S.SubHeader>
-        <Title>Активный сертификат</Title>
-        <S.ActiveCert>
-          <S.ActiveCertItem>
-            <Text size={14} weight={300} lH={20}>
-              Тип сертификата:
-            </Text>
-            <Text size={14} weight={500} lH={20}>
-              SILVER
-            </Text>
-          </S.ActiveCertItem>
-          <S.ActiveCertItem>
-            <Text size={14} weight={300} lH={20}>
-              Оставшийся лимит в сутках:
-            </Text>
-            <Text size={14} weight={500} lH={20}>
-              12 880 CWD
-            </Text>
-          </S.ActiveCertItem>
-          <S.ActiveCertItem>
-            <Text size={14} weight={300} lH={20}>
-              Оставшийся срок действия:
-            </Text>
-            <Text size={14} weight={500} lH={20}>
-              48 часов 39 минут
-            </Text>
-          </S.ActiveCertItem>
-        </S.ActiveCert>
+        {userCertificat ? (
+          <>
+            <Title>Активный сертификат</Title>
+            <S.ActiveCert>
+              <S.ActiveCertItem>
+                <Text size={14} weight={300} lH={20}>
+                  Тип сертификата:
+                </Text>
+                <Text size={14} weight={500} lH={20}>
+                  {userCertificat.certificate.name}
+                </Text>
+              </S.ActiveCertItem>
+              <S.ActiveCertItem>
+                <Text size={14} weight={300} lH={20}>
+                  Оставшийся лимит в сутках:
+                </Text>
+                <Text size={14} weight={500} lH={20}>
+                  {(userCertificat.certificate.dailyVolume / 100000).toLocaleString()}{' '}
+                  {Balance[userCertificat.certificate.assetKind]}
+                </Text>
+              </S.ActiveCertItem>
+              <S.ActiveCertItem>
+                <Text size={14} weight={300} lH={20}>
+                  Оставшийся срок действия:
+                </Text>
+                <Text size={14} weight={500} lH={20}>
+                  {moment(userCertificat.finishDate).diff(userCertificat.creationDate, 'days')}
+                </Text>
+              </S.ActiveCertItem>
+            </S.ActiveCert>
+          </>
+        ) : null}
         <Title>Доступные сертификаты</Title>
       </Container>
 

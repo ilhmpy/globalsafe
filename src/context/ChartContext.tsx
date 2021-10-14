@@ -1,7 +1,7 @@
 import React, { FC, useState, useContext, useEffect } from 'react';
 import { AppContext } from './HubContext';
 import { Collection, RootChange } from '../types/currency';
-import moment from 'moment'; 
+import moment from 'moment';
 
 type Context = {
   fetchGLOBAL: (type: string) => void;
@@ -456,6 +456,7 @@ export const ChartProvider: FC = ({ children }: any) => {
   };
 
   useEffect(() => {
+    let cancel = false;
     const cb = (data: Collection) => {
       console.log('MarketNotification', data);
       if (data.assetKind === 3) {
@@ -470,11 +471,12 @@ export const ChartProvider: FC = ({ children }: any) => {
         return;
       }
     };
-    if (hubConnection) {
+    if (hubConnection && !cancel) {
       hubConnection.on('MarketNotification', cb);
     }
     return () => {
       hubConnection?.off('MarketNotification', cb);
+      cancel = true;
     };
   }, [hubConnection]);
 

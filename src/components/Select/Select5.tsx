@@ -1,5 +1,7 @@
 import React, { FC, useRef, useState } from 'react';
 import styled from 'styled-components';
+import Scrollbars from "react-custom-scrollbars";
+
 import { ReactComponent as StrokeBottom } from '../../assets/svg/StrokeBottom.svg';
 import useOnClickOutside from '../../hooks/useOutsideHook';
 import * as Styled from './Select.elements';
@@ -66,21 +68,23 @@ export const Select: FC<SelectProps> = ({
             ? selectedOption || ''
             : placeholder && <Placeholder>{placeholder}</Placeholder>}
           {label && <span data-label={label} />}
-          <Styled.Arrow rotat={isOpen}>
+          <Styled.Arrow>
             <StrokeBottom />
           </Styled.Arrow>
         </Styled.DropDownHeader>
         {isOpen && (
           <Styled.SelectList>
-            {options.map((option, idx) => (
-              <Styled.ListItem
-                active={activeList === idx}
-                onClick={() => onOptionClicked(option)}
-                key={`select-option-item-${idx}`}
-              >
-                <Styled.Text>{option}</Styled.Text>
-              </Styled.ListItem>
-            ))}
+            <Scrollbars style={{ height: '160px' }}>
+              {options.map((option, idx) => (
+                <Styled.ListItem
+                  active={activeList === idx}
+                  onClick={() => onOptionClicked(option)}
+                  key={`select-option-item-${idx}`}
+                >
+                  <Styled.Text>{option}</Styled.Text>
+                </Styled.ListItem>
+              ))}
+            </Scrollbars>
           </Styled.SelectList>
         )}
       </Styled.DropDownContainer>

@@ -7,18 +7,32 @@ import { ReactComponent as Close } from '../../../assets/svg/close.svg';
 import { Button } from '../../../components/Button/V2/Button';
 import { Modal } from '../../../components/Modal/Modal';
 import { AppContext } from '../../../context/HubContext';
+import { payList } from './utils';
+import { PaymentMethodKind, CollectionPayMethod } from '../../../types/paymentMethodKind';
+import { FiatKind } from '../../../types/fiatKind';
+
+type PayMethod = {
+  bankNumber?: string;
+  name?: string;
+  bankName?: string;
+  paymentAddress?: string;
+  assetKind?: number;
+};
 
 interface IProps {
   open: boolean;
   setOpen: (open: boolean) => void;
-  setConfirm: (open: boolean) => void;
+  setConfirm: () => void;
+  data: CollectionPayMethod;
 }
 
-export const DeleteModal: FC<IProps> = ({ open, setOpen, setConfirm }: IProps) => {
+export const DeleteModal: FC<IProps> = ({ open, setOpen, setConfirm, data }: IProps) => {
   const { t } = useTranslation();
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const history = useHistory();
+
+  const payMethod: PayMethod = JSON.parse(data.data);
 
   return (
     <CSSTransition in={open} timeout={300} unmountOnExit>
@@ -31,14 +45,25 @@ export const DeleteModal: FC<IProps> = ({ open, setOpen, setConfirm }: IProps) =
             <InnerBlock>
               <Row>Вы действительно хотите удалить платежный метод ?:</Row>
               <Row>
-                <b>АО «Тинькофф Банк», RUR</b>
+                <b>
+                  {payList[data.kind]}, {FiatKind[data.assetKind]}
+                </b>
               </Row>
-              <Row>
-                <strong>VYACHESLAV TROSCHIN</strong>
-              </Row>
-              <Row>
-                <b>5536 9137 9922 7240</b>
-              </Row>
+              {payMethod.name ? (
+                <Row>
+                  <strong>{payMethod.name}</strong>
+                </Row>
+              ) : null}
+              {payMethod.bankNumber ? (
+                <Row>
+                  <b>{payMethod.bankNumber}</b>
+                </Row>
+              ) : null}
+              {payMethod.paymentAddress ? (
+                <Row>
+                  <b>{payMethod.paymentAddress}</b>
+                </Row>
+              ) : null}
             </InnerBlock>
             <ButtonWrapper>
               {/* <Button bigSize fullWidth primary onClick={() => history.push(routers.settings)}> */}
@@ -48,7 +73,7 @@ export const DeleteModal: FC<IProps> = ({ open, setOpen, setConfirm }: IProps) =
                 primary
                 onClick={() => {
                   setOpen(false);
-                  setConfirm(true);
+                  setConfirm();
                 }}
               >
                 Удалить

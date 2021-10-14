@@ -1,6 +1,6 @@
-import { FC, useContext, useState } from 'react';
+import { FC, useContext, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
+import { useHistory, RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
 import { Button } from '../../../components/Button/V2/Button';
 import { Switcher } from '../../../components/Switcher';
@@ -11,24 +11,96 @@ import { Back } from '../components/Back';
 import { Title } from '../components/ui/Title';
 import { DeleteModal } from './DeleteModal';
 import { DeleteNotification } from './DeleteNotification';
+import { SettingsContext } from '../../../context/SettingsContext';
+import { PaymentMethodKind, CollectionPayMethod } from '../../../types/paymentMethodKind';
+import { PaymentMethodState } from '../../../types/paymentMethodState';
+import { FiatKind } from '../../../types/fiatKind';
+import { payList } from './utils';
 
-export const ViewPayMethod: FC = () => {
+type PropsMatch = {
+  slug: string;
+};
+
+type PayMethod = {
+  bankNumber?: string;
+  name?: string;
+  bankName?: string;
+  paymentAddress?: string;
+  assetKind?: number;
+};
+
+export const ViewPayMethod = ({ match }: RouteComponentProps<PropsMatch>) => {
   const appContext = useContext(AppContext);
-  const { chosenMethod, setChosenMethod } = appContext;
-  const { method, cardHolder, cardNumber, currency, isActive } = chosenMethod;
+  const { chosenMethod, setChosenMethod, user, hubConnection } = appContext;
   const { t } = useTranslation();
+  const id = match.params.slug;
   const history = useHistory();
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
   const [deleteNotificationIsOpen, setDeleteNotificationIsOpen] = useState(false);
+  const [userMethod, setUserMethod] = useState<null | CollectionPayMethod>(null);
+  const { userPaymentsMethod, setUserPaymentsMethod } = useContext(SettingsContext);
+
+  useEffect(() => {
+    if (!userPaymentsMethod.length) {
+      history.push(routers.settings);
+    } else {
+      const obj = userPaymentsMethod.filter((i) => i.safeId === id)[0];
+      setUserMethod(obj);
+    }
+  }, [userPaymentsMethod, id]);
+
+  if (!userMethod) {
+    return null;
+  }
+
+  const payMethod: PayMethod = JSON.parse(userMethod?.data);
+
+  const adjustPaymentMethod = async (id: number) => {
+    if (!hubConnection) return;
+    try {
+      await hubConnection.invoke('AdjustStatePaymentMethod', userMethod.safeId, id);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const active = (item: CollectionPayMethod) => {
+    const key = userPaymentsMethod.findIndex((i) => i.safeId === item.safeId);
+    if (item.state === PaymentMethodState.Active) {
+      adjustPaymentMethod(PaymentMethodState.Disabled);
+      setUserPaymentsMethod([
+        ...userPaymentsMethod.slice(0, key),
+        { ...item, state: PaymentMethodState.Disabled },
+        ...userPaymentsMethod.slice(key + 1),
+      ]);
+    } else {
+      adjustPaymentMethod(PaymentMethodState.Active);
+      setUserPaymentsMethod([
+        ...userPaymentsMethod.slice(0, key),
+        { ...item, state: PaymentMethodState.Active },
+        ...userPaymentsMethod.slice(key + 1),
+      ]);
+    }
+  };
+
+  const deletePayMethod = () => {
+    setDeleteNotificationIsOpen(true);
+    adjustPaymentMethod(PaymentMethodState.Removed);
+  };
 
   return (
     <Container>
       <DeleteModal
+        data={userMethod}
         open={deleteModalIsOpen}
         setOpen={setDeleteModalIsOpen}
-        setConfirm={setDeleteNotificationIsOpen}
+        setConfirm={deletePayMethod}
       />
-      <DeleteNotification open={deleteNotificationIsOpen} setOpen={setDeleteNotificationIsOpen} />
+      <DeleteNotification
+        data={userMethod}
+        open={deleteNotificationIsOpen}
+        setOpen={setDeleteNotificationIsOpen}
+      />
 
       <Back
         text="К списку платежных методов"
@@ -38,59 +110,75 @@ export const ViewPayMethod: FC = () => {
       />
 
       <TitleWrapper>
-        <Title>Платежный метод АО «Тинькофф Банк»</Title>
+        <Title>Платежный метод {userMethod ? payList[userMethod.kind] : ''}</Title>
       </TitleWrapper>
 
-      <Blocks>
-        <LeftSide>
-          <Entry>
-            <span>Аккаунт:</span>
-            <span>viproller777</span>
-          </Entry>
-          <Entry>
-            <span>Рейтинг аккаунта:</span>
-            <span>5.0</span>
-          </Entry>
-        </LeftSide>
+      {userMethod ? (
+        <Blocks>
+          <LeftSide>
+            <Entry>
+              <span>Аккаунт:</span>
+              <span>{user}</span>
+            </Entry>
+            <Entry>
+              <span>Рейтинг аккаунта:</span>
+              <span>5.0</span>
+            </Entry>
+          </LeftSide>
 
-        <RightSide>
-          <Entry>
-            <span>Платежный метод:</span>
-            <span>{method}</span>
-          </Entry>
-          <Entry>
-            <span>Валюта:</span>
-            <span>{currency}</span>
-          </Entry>
-          <Entry>
-            <span>Номер карты:</span>
-            <span>{cardNumber}</span>
-          </Entry>
-          <Entry>
-            <span>Держатель карты:</span>
-            <span>{cardHolder}</span>
-          </Entry>
-          <Entry>
-            <span>Активность метода:</span>
+          <RightSide>
+            <Entry>
+              <span>Платежный метод:</span>
+              <span>{payList[userMethod.kind]}</span>
+            </Entry>
+            <Entry>
+              <span>Валюта:</span>
+              <span>{FiatKind[userMethod.assetKind]}</span>
+            </Entry>
+            {payMethod.bankNumber ? (
+              <Entry>
+                <span>Номер карты:</span>
+                <span>{payMethod.bankNumber}</span>
+              </Entry>
+            ) : null}
 
-            <SwitcherRow checked={isActive}>
-              <Switcher
-                onChange={() => {
-                  setChosenMethod((prev: any) => ({ ...prev, isActive: !prev.isActive }));
-                }}
-                checked={isActive}
-              />
-              <span>{t(isActive ? 'depositsPrograms.on' : 'depositsPrograms.off')}</span>
-            </SwitcherRow>
-          </Entry>
+            {payMethod.name ? (
+              <Entry>
+                <span>Держатель карты:</span>
+                <span>{payMethod.name}</span>
+              </Entry>
+            ) : null}
+            {payMethod.paymentAddress ? (
+              <Entry>
+                <span>Адрес кошелька:</span>
+                <span>{payMethod.paymentAddress}</span>
+              </Entry>
+            ) : null}
+            <Entry>
+              <span>Активность метода:</span>
+              <SwitcherRow checked={userMethod.state === PaymentMethodState.Active}>
+                <Switcher
+                  onChange={() => active(userMethod)}
+                  checked={userMethod.state === PaymentMethodState.Active}
+                />
+                <span>
+                  {t(
+                    userMethod.state === PaymentMethodState.Active
+                      ? 'depositsPrograms.on'
+                      : 'depositsPrograms.off'
+                  )}
+                </span>
+              </SwitcherRow>
+            </Entry>
 
-          <ButtonWrapper>
-            <Button bigSize outlinePrimary onClick={() => setDeleteModalIsOpen(true)}>
-              Удалить
-            </Button>
-          </ButtonWrapper>
-        </RightSide>
-      </Blocks>
+            <ButtonWrapper>
+              <Button bigSize outlinePrimary onClick={() => setDeleteModalIsOpen(true)}>
+                Удалить
+              </Button>
+            </ButtonWrapper>
+          </RightSide>
+        </Blocks>
+      ) : null}
     </Container>
   );
 };
