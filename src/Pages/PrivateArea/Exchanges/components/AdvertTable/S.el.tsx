@@ -146,6 +146,11 @@ export const BankItem = styled.div`
   }
 `;
 
+export const BankItemText = styled(BankItem)`
+  width: auto;
+  padding: 0 6px;
+`;
+
 export const TypeCrypto = styled.div`
   font-weight: 500;
   font-size: 12px;

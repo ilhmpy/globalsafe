@@ -110,9 +110,9 @@ export const OrderToSellCard: FC = () => {
         }
     };
 
-    const findPaymentMethodKinds = (methodsList: CollectionPayMethod[] = []): number[] => {
-        const kinds = methodsList.map(m => m.kind);
-        const withoutDuplicates = [...new Set(kinds)];
+    const findPaymentMethodKinds = (methodsList: CollectionPayMethod[] = []): string[] => {
+        const safeIds = methodsList.map(m => m.safeId);
+        const withoutDuplicates = [...new Set(safeIds)];
         return withoutDuplicates;
     };
 
@@ -125,7 +125,7 @@ export const OrderToSellCard: FC = () => {
         console.log('limitTo', Number(orderMaxSumm))
         console.log('window', 20)
         console.log('methodsKinds', findPaymentMethodKinds(paymentMethods?.filter(m => selectedPaymentMethodsIds.includes(String(m.id)))))
-        console.log('terms', null);
+        console.log('terms', '');
 
         
         try {
@@ -139,7 +139,7 @@ export const OrderToSellCard: FC = () => {
                 +orderMaxSumm, // long limitTo
                 timeDurations.find(t => t.label === changeTimePeriod)?.value, // int window
                 findPaymentMethodKinds(paymentMethods?.filter(m => selectedPaymentMethodsIds.includes(String(m.id)))), // Array of int methodsKinds max:5
-                null, // terms
+                '', // terms
             );
             setNewCreatedOrder(res);
             console.log('CreateSellOrder', res);
@@ -161,7 +161,7 @@ export const OrderToSellCard: FC = () => {
     };
 
     const onRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const pattern = /^[0-9.]*$/;
+        const pattern = /^[0-9][0-9\.]*$/;
         if (e.target.value === '' || pattern.test(e.target.value)) {
           setChangeRate(e.target.value);
         }
