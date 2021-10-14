@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import { FC, useState } from 'react';
 import { useHistory } from 'react-router';
 import alfa from '../../../../../assets/v2/svg/banks/alfa.svg';
 import alfa1 from '../../../../../assets/v2/svg/banks/alfa1.svg';
 import sber from '../../../../../assets/v2/svg/banks/sber.svg';
 import tinkoff from '../../../../../assets/v2/svg/banks/tinkoff.svg';
 import { CurrencyPair } from '../modals/CurrencyPair';
+import { OwnExchangesProps } from '../../../../../types/exchange';
 
 import * as S from './S.el';
 
-export const OwnArchivedExchangesTable = () => {
+export const OwnArchivedExchangesTable: FC<OwnExchangesProps> = ({ exchanges }: OwnExchangesProps) => {
   const history = useHistory();
   const [selectedOption, setSelectedOption] = useState<string | null>('Все валюты предложения');
 
@@ -67,8 +68,8 @@ export const OwnArchivedExchangesTable = () => {
                 </S.BankItem>
                 <S.BankItem>
                   <img src={sber} alt="" />
-                </S.BankItem> */}
-            </S.BankList>
+                </S.BankItem> */ }
+            </S.BankList> 
           </S.Cell>
           <S.Cell data-label="Статус">Завершен</S.Cell>
         </S.BodyItem>

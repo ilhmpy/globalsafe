@@ -47,3 +47,7 @@ export interface GetExchangesCollectionResult {
     collection: ViewExchangeModel[];
     totalRecords: number;
 }
+
+export type OwnExchangesProps = {
+    exchanges: ViewExchangeModel[];
+};
