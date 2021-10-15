@@ -35,8 +35,9 @@ export const Certificates = () => {
   const [buyCertificateModal, setBuyCertificateModal] = useState<MarketCertificate | null>(null);
   const [successModal, setIsSuccessModal] = useState<MarketCertificate | null>(null);
   const [errorModal, setIsErrorModal] = useState<MarketCertificate | null>(null);
+  const [errorType, setErrorType] = useState('');
   const history = useHistory();
-  const { hubConnection } = useContext(AppContext);
+  const { hubConnection, balance } = useContext(AppContext);
 
   useEffect(() => {
     if (hubConnection) {
@@ -50,7 +51,7 @@ export const Certificates = () => {
     if (!hubConnection) return;
     try {
       const res = await hubConnection.invoke<ViewUserCertificateModel>('GetUserCertificate', 1);
-      // console.log('GetUserCertificate', res);
+      console.log('GetUserCertificate', res);
       setUserCertificat(res);
     } catch (err) {
       console.log(err);
@@ -76,7 +77,7 @@ export const Certificates = () => {
         0,
         100
       );
-      // console.log('GetMarket"', res);
+      console.log('GetMarket"', res);
       setAllCert(res.collection);
     } catch (err) {
       console.log(err);
@@ -87,7 +88,7 @@ export const Certificates = () => {
     setBuyCertificateModal(null);
     if (hubConnection) {
       try {
-        await hubConnection.invoke('PurchaseItem', data.safeId);
+        await hubConnection.invoke('PurchaseCertificate', data.safeId);
         getUserCertificate();
         setIsSuccessModal(data);
       } catch (e) {
@@ -97,9 +98,24 @@ export const Certificates = () => {
     }
   };
 
-  // const onClose = () => {
-
-  // }
+  const onValid = (item: MarketCertificate) => {
+    if (userCertificat && balance) {
+      console.log('true');
+      if (userCertificat.certificate.safeId === item.certificate.safeId) {
+        setErrorType('Данный сертификат уже куплен');
+        setIsErrorModal(item);
+      } else if (item.certificate.dailyVolume <= userCertificat.certificate.dailyVolume) {
+        setErrorType('Сумма сертификата меньше существующей');
+        setIsErrorModal(item);
+      } else if (balance < item.price) {
+        setErrorType('На балансе аккаунта недостаточно средств');
+        setIsErrorModal(item);
+      } else {
+        setErrorType('');
+        setBuyCertificateModal(item);
+      }
+    }
+  };
 
   return (
     <S.Container>
@@ -115,7 +131,12 @@ export const Certificates = () => {
         <SuccessModal open={true} data={successModal} onClose={() => setIsSuccessModal(null)} />
       )}
       {errorModal && (
-        <ErrorModal open={true} data={errorModal} onClose={() => setIsErrorModal(null)} />
+        <ErrorModal
+          errorType={errorType}
+          open={true}
+          data={errorModal}
+          onClose={() => setIsErrorModal(null)}
+        />
       )}
       <Container>
         <Heading onClick={() => history.goBack()} title="P2P обмены" btnText="Опубликовать ордер" />
@@ -212,17 +233,7 @@ export const Certificates = () => {
                   })}{' '}
                   {Balance[item.certificate.assetKind]}
                 </Text>
-                <Button
-                  bigSize
-                  primary
-                  onClick={() => setBuyCertificateModal(item)}
-                  as="button"
-                  disabled={
-                    userCertificat?.safeId === item.certificate.safeId ||
-                    (userCertificat !== null &&
-                      item.certificate.dailyVolume < userCertificat.certificate.dailyVolume)
-                  }
-                >
+                <Button bigSize primary onClick={() => onValid(item)} as="button">
                   Купить сертификат
                 </Button>
               </S.AvilableCertificatesItem>
