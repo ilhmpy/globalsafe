@@ -1,18 +1,23 @@
-import React, { FC } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import { Button } from '../../../../components/Button/V2/Button';
 import { Modal } from '../../../../components/ModalAnimated';
+import { AppContext } from '../../../../context/HubContext';
+import { BalanceKind } from '../../../../enums/balanceKind';
+import { IBalanceExchange } from '../../ConvertingModal';
 import * as S from './S.el';
 
 type Props = {
-  onClose: () => void;
+  onClose: (isAgreed: boolean) => void;
   open: boolean;
+  deposit: any;
+  calculated?: IBalanceExchange;
 };
 
-export const CloseDeposit: FC<Props> = ({ onClose, open }: Props) => {
+export const CloseDeposit: FC<Props> = ({ onClose, open, deposit, calculated }: Props) => {
   return (
     <>
       {open && (
-        <Modal onClose={onClose} open={open}>
+        <Modal onClose={() => onClose(false)} open={open}>
           <S.Container>
             <S.Title>Закрытие депозита</S.Title>
             <S.TextWrap>
@@ -24,22 +29,37 @@ export const CloseDeposit: FC<Props> = ({ onClose, open }: Props) => {
             <S.List>
               <S.ListItem>
                 <S.Text>
-                  Программа депозита: <strong>VANILA</strong>
+                  Программа депозита: <strong>{deposit.name}</strong>
                 </S.Text>
               </S.ListItem>
               <S.ListItem>
                 <S.Text>
-                  Тело депозита: <strong>90 000 GSFUTURE6</strong>
+                  Тело депозита:{' '}
+                  <strong>
+                    {deposit?.payedAmountView} {BalanceKind[deposit?.depositKind]}
+                  </strong>
                 </S.Text>
               </S.ListItem>
               <S.ListItem>
                 <S.Text>
-                  Оставшиеся проценты: <strong>38 %</strong>
+                  Оставшиеся проценты: <strong>{deposit.paymentRatio} %</strong>
                 </S.Text>
               </S.ListItem>
               <S.ListItem>
                 <S.Text>
-                  Курс конвертации: <strong>2.14 MULTICS</strong>
+                  Курс конвертации:{' '}
+                  <strong>
+                    {calculated && calculated.calculatedAmount > 0
+                      ? (
+                          calculated.calculatedAmount /
+                          calculated.targetAmount /
+                          1000
+                        ).toLocaleString('ru-RU', {
+                          maximumFractionDigits: 2,
+                        })
+                      : 0}{' '}
+                    MULTICS
+                  </strong>
                 </S.Text>
               </S.ListItem>
             </S.List>
@@ -47,16 +67,24 @@ export const CloseDeposit: FC<Props> = ({ onClose, open }: Props) => {
               <S.List>
                 <S.ListItem>
                   <S.Text>
-                    К зачислению: <strong>279 000 MULTICS</strong>
+                    К зачислению:{' '}
+                    <strong>
+                      {calculated && calculated.targetAmount > 0
+                        ? (calculated.targetAmount / 100)
+                            .toString()
+                            .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')
+                        : 0}{' '}
+                      MULTICS
+                    </strong>
                   </S.Text>
                 </S.ListItem>
               </S.List>
             </S.TextWrap>
             <S.Buttons>
-              <Button bigSize primary>
+              <Button bigSize primary onClick={() => onClose(true)}>
                 Закрыть депозит
               </Button>
-              <Button bigSize outlinePrimary>
+              <Button bigSize outlinePrimary onClick={() => onClose(false)}>
                 Отмена
               </Button>
             </S.Buttons>

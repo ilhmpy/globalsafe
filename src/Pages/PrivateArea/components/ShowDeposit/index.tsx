@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { FC } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import { Button } from '../../../../components/Button/V2/Button';
 import { BalanceKind } from '../../../../enums/balanceKind';
 import {
@@ -14,12 +14,81 @@ import {
 } from '../ui';
 import { Chip } from '../ui/Chip';
 import * as S from './S.el';
+import { CloseDeposit } from '../Modals/CloseDeposit';
+import { AppContext } from '../../../../context/HubContext';
+import { IBalanceExchange } from '../../ConvertingModal';
+import { CloseDepositSuccess } from '../Modals/CloseDepositSuccess';
+import { CloseDepositError } from '../Modals/CloseDepositError';
+import { useHistory } from 'react-router';
+import { routers } from '../../../../constantes/routers';
 
-export const ShowDeposit: FC<{ chosenDepositView: any }> = ({ chosenDepositView }) => {
+export const ShowDeposit: FC<{ chosenDepositView: any }> = ({ chosenDepositView }: any) => {
+  const history = useHistory();
   const { deposit } = chosenDepositView;
+  const { hubConnection } = useContext(AppContext);
+  const [isOpenCloseDeposit, setIsOpenCloseDeposit] = useState<boolean>(false);
+  const [isAgree, setIsAgree] = useState<boolean>(false);
+  const [calculated, setCalculated] = useState<IBalanceExchange>();
+  const [closeDepositSuccess, setCloseDepositSuccess] = useState<boolean>(false);
+  const [closeDepositError, setCloseDepositError] = useState<boolean>(false);
+  useEffect(() => {
+    (async () => {
+      if (hubConnection) {
+        try {
+          const response = await hubConnection.invoke(
+            'CalculateBalanceExchange',
+            chosenDepositView.amount.toString(),
+            59
+          );
+          setCalculated(response);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      if (hubConnection && isAgree) {
+        try {
+          // const replace = await hubConnection.invoke();
+          setCloseDepositSuccess(true);
+        } catch (error) {
+          console.log(error);
+          setCloseDepositError(true);
+        }
+      }
+    })();
+  }, [isAgree]);
 
   return (
     <S.Container>
+      <CloseDeposit
+        onClose={(isAgree: boolean) => {
+          setIsOpenCloseDeposit(false);
+          setIsAgree(isAgree);
+        }}
+        open={isOpenCloseDeposit}
+        deposit={deposit}
+        calculated={calculated}
+      />
+      <CloseDepositSuccess
+        onClose={() => {
+          setCloseDepositSuccess(false);
+          history.push(routers.deposits);
+        }}
+        open={closeDepositSuccess}
+        deposit={deposit}
+        calculated={calculated}
+      />
+      <CloseDepositError
+        onClose={() => {
+          setCloseDepositError(false);
+          history.push(routers.deposits);
+        }}
+        open={closeDepositError}
+      />
       <LeftSide bg="#EFECFF">
         <Name>{deposit?.name}</Name>
         <ChipWrap small>
@@ -38,7 +107,7 @@ export const ShowDeposit: FC<{ chosenDepositView: any }> = ({ chosenDepositView 
         <ChipWrap>
           <ProgramDesc>{deposit?.description}</ProgramDesc>
         </ChipWrap>
-        <Button bigSize primary>
+        <Button bigSize primary onClick={() => setIsOpenCloseDeposit(true)}>
           Закрыть депозит
         </Button>
       </LeftSide>
