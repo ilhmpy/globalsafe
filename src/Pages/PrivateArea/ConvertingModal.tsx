@@ -151,6 +151,17 @@ export const ConvertingModal: FC<Props> = ({
                 </Rate>
               </RateRow>
 
+              <RateRow>
+                <Rate>Скидка %:</Rate>
+                <Rate>
+                  {+toSum[1] > 0
+                    ? (+toSum[1] / +toSum[2] / 1000).toLocaleString('ru-RU', {
+                        maximumFractionDigits: 2,
+                      })
+                    : 0}
+                </Rate>
+              </RateRow>
+
               <Button bigSize primary onClick={convert} disabled={toSum[1] === '0'}>
                 {t('privateArea.convert2')}
               </Button>
@@ -177,11 +188,10 @@ const Rate = styled.span`
 `;
 
 const RateRow = styled.div`
-  margin-top: 5px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  min-height: 40px;
+  min-height: 35px;
 `;
 
 const InnerBlock = styled.div`
