@@ -47,6 +47,7 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
 
   /* 
     ОСТАЛОСЬ СДЕЛАТЬ:
+    доработка высчитывания времени(в будущем протещу)
     обновление оставшегося время каждую минуту
     страница архив
     детальная страница каждого обмена
@@ -56,23 +57,27 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
   function getTime(date: Date, wn: any) {
     const create = new Date(date);
     const now = new Date();
-    const result = { days: wn.days - (now.getDay() - create.getDay()), 
-                     hours: wn.hours - (now.getHours() - create.getHours()), 
-                     minutes: wn.minutes - (now.getMinutes() - create.getMinutes()), 
-                     seconds: wn.seconds - (now.getSeconds() - create.getSeconds())
+    const result = { 
+                     days: wn.days - moment().diff(date, "days", false), 
+                     hours: wn.totalHours - moment().diff(date, "hours", false), 
+                     minutes: wn.totalMinutes - moment().diff(date, "minutes", false), 
+                     seconds: wn.totalSeconds - moment().diff(date, "seconds", false)
                    }; 
     const { days, hours, minutes, seconds } = result;
+    console.log(result);
     if (days > 0) {
       return `${days}д ${hours > 0 ? hours : 0}ч`;
     } else if (hours > 0) {
       return `${hours}ч ${minutes > 0 ? minutes : 0}м`;
     } else if (minutes > 0) {
       return `${minutes}м ${seconds > 0 ? seconds : 0}с`;
+    } else {
+      return `0м 0с`;
     };
   };
  
-  setInterval(() => {
-    console.log("oneMinutes latter") 
+  setInterval(() => { 
+    return;
   }, 60000);
 
   return (
