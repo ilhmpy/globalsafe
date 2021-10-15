@@ -47,12 +47,12 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
               <Container>
                 <Back text="К списку обменов" onGoBackClick={() => history.replace(routers.p2pchangesOwn)} />
                 <S.TitleContainer>
-                    <Title mB={0}>Обмен {Balance[exchange.assetKind]}-{FiatKind[exchange.exchangeAssetKind]}</Title>
+                    <Title mB={0}>Обмен {`${Balance[exchange.assetKind]}-${FiatKind[exchange.exchangeAssetKind]}`}</Title>
                     <Text size={14} lH={20} black>
                       № {exchange.id}
                     </Text>
                 </S.TitleContainer>
-                <ExchangeDetailCard />
+                <ExchangeDetailCard exchange={exchange} />
               </Container>
             </>
           )}

@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useContext } from 'react';
 import * as S from './S.el';
 import {
   Chip,
@@ -14,17 +14,88 @@ import { ExchangeSuccessModal } from '../modals/ExchangeSuccessModal';
 import { ExchangeRejectModal } from '../modals/ExchangeRejectModal';
 import { useHistory } from 'react-router';
 import { routers } from '../../../../../constantes/routers';
+import { ViewExchangeModel, ExchangeState } from '../../../../../types/exchange';
+import { Balance } from "../../../../../types/balance";
+import { FiatKind } from "../../../../../types/fiat";
+import { PaymentMethodKind } from "../../../../../types/paymentMethodKind";
+import { getDefaultLibFileName } from 'typescript';
+import { AppContext } from '../../../../../context/HubContext';
 
-export const ExchangeDetailCard: FC = () => {
+type DetailCardProps = {
+  exchange: ViewExchangeModel;
+}
+
+export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCardProps) => {
   const history = useHistory();
   const [feedbackValue, setFeedbackValue] = useState(5);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showRejectModal, setShowRejectModal] = useState(false);
+  const { account } = useContext(AppContext);
 
   const handleClick = () => {
     history.push(`/info/p2p-changes/${Date.now().toString()}/chat`);
     console.log('ExchangeDetailCard Click');
   };
+
+  console.log(exchange)
+
+  function getExchangeChip(chip: ExchangeState) {
+    if (chip === 0) {
+      return (
+        <Chip style={{ background: "rgba(0, 148, 255, 10%)" }}>Новый</Chip>
+      );
+    } else if (chip === 1) {
+      return (
+        <Chip style={{ background: "#FF4A31", color: "#fff" }}>Оставшееся время 12м. 48с. </Chip>
+        );
+    } else if (chip === 2) {
+      return (
+        <Chip style={{ background: "rgba(93, 167, 0, 0.1)", fontWeight: 500 }}>Завершен</Chip>
+        );
+    } else if (chip === 3) {
+      return (
+        <Chip>Жалоба</Chip>
+        );
+    } else if (chip === 4) {
+      return (
+        <Chip style={{ background: "rgba(93, 167, 0, 0.1)" }}>Отменен</Chip>
+        );
+    };
+  };
+
+  const PaymentMethods = [
+    "ERC20",
+    "TRC20",
+    "BEP20",
+    "BankTransfer",
+    "АО «Тинькофф Банк»",
+    "ПАО Сбербанк",
+    "АО «Альфа-Банк»"
+  ];
+
+  function getAllTime(time: any) {
+    const { days, hours, minutes, seconds } = time;
+    if (days > 0) {
+      return `${days}д. ${hours > 0 ? hours : 0}ч.`;
+    } else if (hours > 0) {
+      return `${hours}ч. ${minutes > 0 ? minutes : 0}м.`;
+    } else if (minutes > 0) {
+      return `${minutes}м. ${seconds > 0 ? seconds : 0}с.`;
+    } else {
+      return `0м. 0с.`;
+    };
+  };
+
+  function getMyRating() {
+    let rating = 0;
+    account.claims.forEach((claim: any) => {
+      if (claim.claimType === "exchanges-rating") {
+        rating = claim.claimValue;
+        console.log(rating);
+      }
+    });
+    return (Number(rating)).toFixed(1);
+  }
 
   return (
     <S.Container>
@@ -34,60 +105,64 @@ export const ExchangeDetailCard: FC = () => {
             Количество:
           </Text>
           <Title lH={28} mB={10}>
-            5 000 000 CWD
+            {(exchange.volume).toLocaleString('ru-RU', { maximumFractionDigits: 2 })} {Balance[exchange.assetKind]}
           </Title>
-          <Chip>Продажа</Chip>
+          <Chip>{exchange.kind === 0 ? "Продажа" : "Покупка"}</Chip>
         </S.BlockWrapper>
 
         <S.BlockWrapper>
           <Text size={14} lH={20} mB={10} black>
             Курс:
           </Text>
-          <Title lH={28}>0.90</Title>
+          <Title lH={28}>{exchange.rate}</Title>
         </S.BlockWrapper>
 
         <S.BlockWrapper>
           <Text size={14} lH={20} mB={10} black>
             На сумму:
           </Text>
-          <Title lH={28}>4 500 000 USD</Title>
+          <Title lH={28}>{exchange.exchangeVolume} {FiatKind[exchange.exchangeAssetKind]}</Title>
         </S.BlockWrapper>
 
         <S.BlockWrapper>
           <Text size={14} lH={20} mB={10} black>
             Лимиты:
           </Text>
-          <Title lH={28}>1 000 - 10 000 USD</Title>
+          <Title lH={28}>
+            {`${(exchange.limitFrom).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} - ${(exchange.limitTo).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} ${FiatKind[exchange.exchangeAssetKind]}`}
+          </Title>
         </S.BlockWrapper>
 
         <S.BlockWrapper>
           <Text size={14} lH={20} mB={10} black>
             Методы оплаты:
           </Text>
-          <Title lH={28}>АО «Тинькофф Банк»</Title>
+          {exchange.methodsKinds.map((method: any, idx: number) => (
+            <Title lH={28} key={idx}>{PaymentMethods[method]}</Title>
+          ))}
         </S.BlockWrapper>
 
         <S.BlockWrapper>
           <Text size={14} lH={20} mB={10} black>
             Время на обмен:
           </Text>
-          <Title lH={28}>20м. 00с.</Title>
+          <Title lH={28}>{getAllTime(exchange.operationWindow)}</Title>
         </S.BlockWrapper>
 
         <S.BlockWrapper>
           <Text size={14} lH={20} mB={10} black>
             Рейтинг продавца:
           </Text>
-          <Title lH={28}>5.0 (378)</Title>
+          <Title lH={28}>{exchange.kind === 0 ? (Number(exchange.userRating)).toFixed(1) : getMyRating()} (378) </Title>
         </S.BlockWrapper>
       </LeftSide>
 
       <RightSide>
         <S.TitleBlockWrapper>
           <Title mB={10} lH={28}>
-            Покупка CWD за USD
+            {exchange.kind === 0 ? "Продажа" : "Покупка"} {`${Balance[exchange.assetKind]} за ${FiatKind[exchange.exchangeAssetKind]}`}
           </Title>
-          <Chip>Абуз</Chip>
+          {getExchangeChip(exchange.state)}
         </S.TitleBlockWrapper>
 
         <S.BlockWrapper>
@@ -95,7 +170,7 @@ export const ExchangeDetailCard: FC = () => {
             Количество:
           </Text>
           <Text size={14} lH={20} weight={500} black>
-            482.40 CWD
+            {exchange.volume * exchange.rate} {Balance[exchange.assetKind]}
           </Text>
         </S.BlockWrapper>
 
@@ -104,7 +179,7 @@ export const ExchangeDetailCard: FC = () => {
             На сумму:
           </Text>
           <Text size={14} lH={20} weight={500} black>
-            49 900 USD
+            {(exchange.exchangeVolume * exchange.rate).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {FiatKind[exchange.exchangeAssetKind]}
           </Text>
         </S.BlockWrapper>
 
@@ -113,7 +188,7 @@ export const ExchangeDetailCard: FC = () => {
             Метод оплаты:
           </Text>
           <Text size={14} lH={20} weight={500} black>
-            АО «Альфа-Банк», RUR
+            {PaymentMethods[exchange.paymentMethod?.kind]}, {FiatKind[exchange.paymentMethod?.assetKind]}
           </Text>
         </S.BlockWrapper>
 
@@ -143,7 +218,7 @@ export const ExchangeDetailCard: FC = () => {
             Рейтинг покупателя:
           </Text>
           <Text size={14} lH={20} weight={500} black>
-            5.0 (256)
+            {exchange.kind === 0 ? getMyRating() : (Number(exchange.userRating)).toFixed(1)} (256)
           </Text>
         </S.BlockWrapper>
 

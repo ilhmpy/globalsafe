@@ -24,6 +24,7 @@ type Context = {
   selectedDeposit: any;
   setChosenDepositView: (object: any) => void;
   setSelectedDeposit: (object: any) => void;
+  account: any;
 };
 
 export const AppContext = React.createContext<Context>({
@@ -43,6 +44,7 @@ export const AppContext = React.createContext<Context>({
   setSelectedDeposit: () => undefined,
   selectedDeposit: {},
   chosenDepositView: {},
+  account: {}
 });
 
 export const HubProvider: FC = ({ children }: any) => {
@@ -60,6 +62,7 @@ export const HubProvider: FC = ({ children }: any) => {
   const { i18n } = useTranslation();
   const [chosenDepositView, setChosenDepositView] = useState({});
   const [selectedDeposit, setSelectedDeposit] = useState({});
+  const [account, setAccount] = useState<any>({});
 
   useEffect(() => {
     const hubConnection = new signalR.HubConnectionBuilder()
@@ -130,6 +133,7 @@ export const HubProvider: FC = ({ children }: any) => {
         .then((res) => {
           console.log('GetSigned', res);
           setUser(res.name);
+          setAccount(res);
           setLoading(false);
           if (res.balances.length) {
             const newArr = res.balances.filter((item: any) => item.balanceKind === 1);
@@ -195,6 +199,7 @@ export const HubProvider: FC = ({ children }: any) => {
         setChosenDepositView,
         setSelectedDeposit,
         selectedDeposit,
+        account
       }}
     >
       {children}
