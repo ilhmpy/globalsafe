@@ -86,7 +86,7 @@ export const Settings: FC = () => {
         0,
         100
       );
-      console.log('res', res);
+      // console.log('res', res);
       setUserPaymentsMethod(res.collection);
     } catch (err) {
       console.log(err);
