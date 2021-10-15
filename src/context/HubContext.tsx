@@ -24,7 +24,7 @@ type Context = {
   selectedDeposit: any;
   setChosenDepositView: (object: any) => void;
   setSelectedDeposit: (object: any) => void;
-  userSafeId?: string | undefined,
+  userSafeId?: string | undefined;
 };
 
 export const AppContext = React.createContext<Context>({
@@ -102,7 +102,6 @@ export const HubProvider: FC = ({ children }: any) => {
 
   useEffect(() => {
     const cb = (data: any) => {
-      console.log('BalanceUpdate', data);
       if (balanceList) {
         const idx = balanceList.findIndex((item: any) => item.safeId === data.safeId);
         if (idx !== -1) {
@@ -115,15 +114,12 @@ export const HubProvider: FC = ({ children }: any) => {
         setBalance(data.volume);
       }
     };
-    if (hubConnection) {
-      hubConnection.on("OperationNotification", cb);
-    }
+
     if (hubConnection) {
       hubConnection.on('BalanceUpdate', cb);
     }
     return () => {
       hubConnection?.off('BalanceUpdate', cb);
-      hubConnection?.off("OperationNotification", cb);
     };
   }, [hubConnection, balanceList]);
 
@@ -134,7 +130,7 @@ export const HubProvider: FC = ({ children }: any) => {
         .then((res) => {
           console.log('GetSigned', res);
           setUser(res.name);
-          setUserSafeId(res.safeId)
+          setUserSafeId(res.safeId);
           setLoading(false);
           if (res.balances.length) {
             const newArr = res.balances.filter((item: any) => item.balanceKind === 1);
