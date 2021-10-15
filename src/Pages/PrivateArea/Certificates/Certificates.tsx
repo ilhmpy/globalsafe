@@ -218,7 +218,7 @@ export const Certificates = () => {
                   onClick={() => setBuyCertificateModal(item)}
                   as="button"
                   disabled={
-                    userCertificat?.safeId === item.safeId ||
+                    userCertificat?.safeId === item.certificate.safeId ||
                     (userCertificat !== null &&
                       item.certificate.dailyVolume < userCertificat.certificate.dailyVolume)
                   }
