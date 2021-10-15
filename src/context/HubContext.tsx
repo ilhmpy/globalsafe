@@ -24,7 +24,7 @@ type Context = {
   selectedDeposit: any;
   setChosenDepositView: (object: any) => void;
   setSelectedDeposit: (object: any) => void;
-  userSafeId?: string | undefined,
+  userSafeId?: string | undefined;
 };
 
 export const AppContext = React.createContext<Context>({
@@ -51,7 +51,7 @@ export const HubProvider: FC = ({ children }: any) => {
   const history = useHistory();
   const [hubConnection, setHubConnection] = useState<Nulable<signalR.HubConnection>>(null);
   const [user, setUser] = useState<null | string | false>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);
   const [balance, setBalance] = useState<null | number>(null);
   const [isAdmin, setIsAdmin] = useState<null | boolean>(null);
   const [myToken, setMyToken] = useLocalStorage('token');
@@ -87,22 +87,20 @@ export const HubProvider: FC = ({ children }: any) => {
         console.error(e);
         setMyToken('');
         console.log(e);
-
         setIsFailed(true);
-        setUser('');
+        setUser(false);
         setUserSafeId(undefined);
       });
 
-    // return function cleanup() {
-    //   if (hubConnection !== null) {
-    //     hubConnection.stop();
-    //   }
-    // };
+    return () => {
+      if (hubConnection !== null) {
+        hubConnection.stop();
+      }
+    };
   }, [myToken]);
 
   useEffect(() => {
     const cb = (data: any) => {
-      console.log('BalanceUpdate', data);
       if (balanceList) {
         const idx = balanceList.findIndex((item: any) => item.safeId === data.safeId);
         if (idx !== -1) {
@@ -115,15 +113,12 @@ export const HubProvider: FC = ({ children }: any) => {
         setBalance(data.volume);
       }
     };
-    if (hubConnection) {
-      hubConnection.on("OperationNotification", cb);
-    }
+
     if (hubConnection) {
       hubConnection.on('BalanceUpdate', cb);
     }
     return () => {
       hubConnection?.off('BalanceUpdate', cb);
-      hubConnection?.off("OperationNotification", cb);
     };
   }, [hubConnection, balanceList]);
 
@@ -134,7 +129,7 @@ export const HubProvider: FC = ({ children }: any) => {
         .then((res) => {
           console.log('GetSigned', res);
           setUser(res.name);
-          setUserSafeId(res.safeId)
+          setUserSafeId(res.safeId);
           setLoading(false);
           if (res.balances.length) {
             const newArr = res.balances.filter((item: any) => item.balanceKind === 1);
@@ -164,7 +159,7 @@ export const HubProvider: FC = ({ children }: any) => {
           setLoading(false);
         });
     }
-    return function cleanup() {
+    return () => {
       if (hubConnection !== null) {
         hubConnection.stop();
       }
