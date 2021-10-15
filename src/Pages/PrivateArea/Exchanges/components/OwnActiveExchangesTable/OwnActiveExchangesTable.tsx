@@ -76,15 +76,15 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
     };
   };
 
-  const Status = ["Создан", "Принят", "Завершен", "", "Отменен"];
+  const Status = ["Создан", "Принят", "Завершен", "Подана жалоба", "Отменен"];
 
   /* 
     ОСТАЛОСЬ СДЕЛАТЬ:
     ^ доработка высчитывания времени(в будущем протещу)
-    ^ обновление оставшегося время каждую минуту
-    страница архив
+    обновление оставшегося время каждую минуту
+    ^ страница архив
     детальная страница каждого обмена
-    доделать ещё два "текстового" метода оплаты
+    ^ доделать ещё два "текстового" метода оплаты
   */
 
   function getTime(date: Date, wn: any) {
@@ -110,8 +110,8 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
   };
  
   setInterval(() => { 
-    const data = exchanges.map((i) => i);
-    setExchanges && setExchanges(data)
+    // const data = exchanges.map((i) => i);
+    // setExchanges && setExchanges(data)
   }, 60000);
 
   return (
@@ -154,12 +154,14 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
                 {exchanges.map((exchange, idx) => (
                   <S.BodyItem key={idx} onClick={() => handleNavigateToExchange(exchange.safeId)}>
                       <S.Cell data-label="Тип">{exchange.kind === 0 ? "Продажа" : "Покупка"}</S.Cell>
-                      <S.Cell data-label="Кол-во">{(exchange.volume).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {Balance[exchange.assetKind]}</S.Cell>
+                      <S.Cell data-label="Кол-во">
+                        {(exchange.volume).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {Balance[exchange.assetKind]}
+                      </S.Cell>
                       <S.Cell data-label="Курс">{exchange.rate}</S.Cell>
                       <S.Cell data-label="Сумма оплаты">{(exchange.exchangeVolume).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {FiatKind[exchange.exchangeAssetKind]}</S.Cell>
                       <S.Cell data-label="Метод оплаты">
                         <S.BankList>
-                            {getPaymentMethod(exchange.paymentMethod?.kind) /* */}
+                            {getPaymentMethod(exchange.paymentMethod?.kind)}
                         </S.BankList> 
                       </S.Cell>
                       <S.Cell data-label="Оставшееся время">{getTime(exchange.creationDate, exchange.operationWindow)}</S.Cell>
