@@ -50,7 +50,7 @@ export const Certificates = () => {
     if (!hubConnection) return;
     try {
       const res = await hubConnection.invoke<ViewUserCertificateModel>('GetUserCertificate', 1);
-      console.log('GetUserCertificate', res);
+      // console.log('GetUserCertificate', res);
       setUserCertificat(res);
     } catch (err) {
       console.log(err);
@@ -76,7 +76,7 @@ export const Certificates = () => {
         0,
         100
       );
-      console.log('GetMarket"', res);
+      // console.log('GetMarket"', res);
       setAllCert(res.collection);
     } catch (err) {
       console.log(err);
@@ -217,7 +217,11 @@ export const Certificates = () => {
                   primary
                   onClick={() => setBuyCertificateModal(item)}
                   as="button"
-                  disabled={userCertificat?.safeId === item.safeId}
+                  disabled={
+                    userCertificat?.safeId === item.safeId ||
+                    (userCertificat !== null &&
+                      item.certificate.dailyVolume < userCertificat.certificate.dailyVolume)
+                  }
                 >
                   Купить сертификат
                 </Button>
