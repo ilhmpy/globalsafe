@@ -92,7 +92,7 @@ export const OwnExchanges = () => {
           <FilterButton active>Все Статусы</FilterButton>
         </S.Filters>
 
-        {activeFilter === 'active' && <OwnActiveExchangesTable loading={loading} exchanges={userExchanges} />}
+        {activeFilter === 'active' && <OwnActiveExchangesTable setExchanges={setUserExchanges} loading={loading} exchanges={userExchanges} />}
         {activeFilter === 'archived' && <OwnArchivedExchangesTable loading={loading} exchanges={userExchanges} />}
         {/* <S.ButtonWrap>
           <Button>Показать еще</Button>

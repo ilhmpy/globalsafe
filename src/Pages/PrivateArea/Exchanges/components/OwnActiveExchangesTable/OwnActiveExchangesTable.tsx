@@ -14,8 +14,9 @@ import { Loading, NotItems } from "../../../components/Loading/Loading";
 
 import * as S from './S.el';
 import { getTime } from 'date-fns';
+import { BankItem } from '../AdvertTable/S.el';
 
-export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, loading }: OwnExchangesProps) => {
+export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, loading, setExchanges }: OwnExchangesProps) => {
   const history = useHistory();
   const [selectedOption, setSelectedOption] = useState<string | null>('Все валюты предложения');
 
@@ -23,23 +24,55 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
     history.replace(`/info/p2p-changes/${id}`);
   };
 
-  function getPaymentMethod(kind: number) {
+  function getPaymentMethod(kind: PaymentMethodKind | undefined) {
     if (kind === undefined) {
-      return "N/A"
+      return (
+        <S.BankItem style={{ width: "33px" }}>
+          N/A
+        </S.BankItem>
+      )
     } else if (kind === 0) {
-      return "ERC20";
+      return (
+        <S.BankItem style={{ width: "48px" }}>
+          ERC20
+        </S.BankItem>
+      );
     } else if (kind === 1) {
-      return "TRC20";
+      return (
+        <S.BankItem style={{ width: "48px" }}>
+          TRC20        
+        </S.BankItem>
+      );
     } else if (kind === 2) {
-      return "BEP20";      
+      return (
+        <S.BankItem style={{ width: "48px" }}> 
+          BEP20
+        </S.BankItem>
+      );      
     } else if (kind === 3) {
-      return "BankTransfer";
+      return (
+        <S.BankItem style={{ width: "90px" }}>
+          BankTransfer
+        </S.BankItem>
+      );
     } else if (kind === 4) {
-      return <img src={tinkoff} alt="tinkoff" />;
+      return (
+        <S.BankItem>
+          <img src={tinkoff} alt="tinkoff" />
+        </S.BankItem>
+      );
     } else if (kind === 5) {
-      return <img src={sber} alt="sber" />;
+      return (
+        <S.BankItem>
+          <img src={sber} alt="sber" />
+        </S.BankItem>
+      );
     } else if (kind === 6) {
-      return <img src={alfa} alt="alfa" />;
+      return (
+        <S.BankItem>
+          <img src={alfa} alt="alfa" />
+        </S.BankItem>
+      );
     };
   };
 
@@ -47,8 +80,8 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
 
   /* 
     ОСТАЛОСЬ СДЕЛАТЬ:
-    доработка высчитывания времени(в будущем протещу)
-    обновление оставшегося время каждую минуту
+    ^ доработка высчитывания времени(в будущем протещу)
+    ^ обновление оставшегося время каждую минуту
     страница архив
     детальная страница каждого обмена
     доделать ещё два "текстового" метода оплаты
@@ -77,7 +110,8 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
   };
  
   setInterval(() => { 
-    return;
+    const data = exchanges.map((i) => i);
+    setExchanges && setExchanges(data)
   }, 60000);
 
   return (
@@ -125,9 +159,7 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
                       <S.Cell data-label="Сумма оплаты">{(exchange.exchangeVolume).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {FiatKind[exchange.exchangeAssetKind]}</S.Cell>
                       <S.Cell data-label="Метод оплаты">
                         <S.BankList>
-                          <S.BankItem>
-                            {getPaymentMethod(exchange.paymentMethod?.kind)}
-                          </S.BankItem>
+                            {getPaymentMethod(exchange.paymentMethod?.kind) /* */}
                         </S.BankList> 
                       </S.Cell>
                       <S.Cell data-label="Оставшееся время">{getTime(exchange.creationDate, exchange.operationWindow)}</S.Cell>

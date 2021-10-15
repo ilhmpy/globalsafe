@@ -50,5 +50,6 @@ export interface GetExchangesCollectionResult {
 
 export type OwnExchangesProps = {
     exchanges: ViewExchangeModel[];
-    loading: boolean; 
+    loading: boolean;
+    setExchanges?: (value: any) => any; 
 };
