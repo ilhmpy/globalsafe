@@ -2,13 +2,14 @@ import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Modal } from '../../components/Modal/Modal';
+import { IBalanceExchange } from './ConvertingModal';
 
 interface Iprops {
   open: boolean;
   setOpen: (open: boolean) => void;
-  convertedArray: number[];
+  convertedData: IBalanceExchange;
 }
-export const ConvertingModalSuccess: FC<Iprops> = ({ open, setOpen, convertedArray }: Iprops) => {
+export const ConvertingModalSuccess: FC<Iprops> = ({ open, setOpen, convertedData }: Iprops) => {
   const { t } = useTranslation();
 
   return (
@@ -23,13 +24,19 @@ export const ConvertingModalSuccess: FC<Iprops> = ({ open, setOpen, convertedArr
                 <span>
                   Списано CWD:{' '}
                   <strong>
-                    {(convertedArray[0] / 100000).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
+                    {(convertedData.userAmount / 100000)
+                      .toString()
+                      .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
                   </strong>
                 </span>
                 <span>
                   Курс CWD-MULTICS:{' '}
                   <strong>
-                    {(convertedArray[1] / convertedArray[2] / 1000).toLocaleString('ru-RU', {
+                    {(
+                      convertedData.calculatedAmount /
+                      convertedData.targetAmount /
+                      1000
+                    ).toLocaleString('ru-RU', {
                       maximumFractionDigits: 2,
                     })}
                   </strong>
@@ -37,7 +44,9 @@ export const ConvertingModalSuccess: FC<Iprops> = ({ open, setOpen, convertedArr
                 <span>
                   Зачислено MULTICS:{' '}
                   <strong>
-                    {+convertedArray[2].toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ') / 100}
+                    {(convertedData.targetAmount / 100)
+                      .toString()
+                      .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
                   </strong>
                 </span>
               </ContentBody>

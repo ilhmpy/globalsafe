@@ -15,7 +15,14 @@ interface Props {
   setOpen: (open: boolean) => void;
   setIsSuccessConverting: (status: boolean) => void;
   setIsFailConverting: (status: boolean) => void;
-  setConvertedArray: (array: number[]) => void;
+  setConvertedData: (array: IBalanceExchange) => void;
+}
+
+export interface IBalanceExchange {
+  userAmount: number;
+  calculatedAmount: number;
+  targetAmount: number;
+  discountPercent: number;
 }
 
 export const ConvertingModal: FC<Props> = ({
@@ -23,17 +30,16 @@ export const ConvertingModal: FC<Props> = ({
   setOpen,
   setIsSuccessConverting,
   setIsFailConverting,
-  setConvertedArray,
+  setConvertedData,
 }: Props) => {
   const { t } = useTranslation();
-  const [defaultFormState, setDefaultFormState] = useState({
-    fromSum: '',
-    toSum: [0, 0, 0],
-    fromCurrency: '',
-    toCurrency: '',
-  });
   const [fromSum, setFromSum] = useState('');
-  const [toSum, setToSum] = useState([0, 0, 0]);
+  const [toSum, setToSum] = useState<IBalanceExchange>({
+    userAmount: 0,
+    calculatedAmount: 0,
+    targetAmount: 0,
+    discountPercent: 0,
+  });
   const [fromCurrency, setFromCurrency] = useState('');
   const [toCurrency, setToCurrency] = useState('');
   const appContext = useContext(AppContext);
@@ -41,7 +47,12 @@ export const ConvertingModal: FC<Props> = ({
 
   const resetStateValues = () => {
     setFromSum('');
-    setToSum([0, 0, 0]);
+    setToSum({
+      userAmount: 0,
+      calculatedAmount: 0,
+      targetAmount: 0,
+      discountPercent: 0,
+    });
     setFromCurrency('');
     setToCurrency('');
   };
@@ -65,15 +76,15 @@ export const ConvertingModal: FC<Props> = ({
 
   const convert = async () => {
     (async () => {
-      if (hubConnection && fromCurrency && toCurrency && +fromSum > 0) {
+      if (hubConnection && fromCurrency && toCurrency && +fromSum > 0 && toSum.calculatedAmount) {
         try {
-          const response = await hubConnection.invoke(
+          const response = await hubConnection.invoke<IBalanceExchange>(
             'BalanceExchange',
             (+fromSum * 100000).toString(),
             59
           );
-          if (response[1] & response[2]) {
-            setConvertedArray(response);
+          if (response.calculatedAmount & response.targetAmount) {
+            setConvertedData(response);
             setIsSuccessConverting(true);
             setOpen(false);
             setTimeout(() => resetStateValues(), 1000);
@@ -134,24 +145,27 @@ export const ConvertingModal: FC<Props> = ({
                 placeholder="Сумма"
                 name="toSum"
                 value={
-                  toSum[2] <= 0
+                  +toSum.targetAmount <= 0
                     ? ''
-                    : (toSum[2] / 100).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')
+                    : (+toSum.targetAmount / 100).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')
                 }
                 onChange={(e) => undefined}
               />
               <RateRow>
                 <Rate>Курс:</Rate>
                 <Rate>
-                  {toSum[1] > 0
-                    ? (toSum[1] / toSum[2] / 1000).toLocaleString('ru-RU', {
-                        maximumFractionDigits: 2,
-                      })
+                  {+toSum.calculatedAmount > 0
+                    ? (+toSum.calculatedAmount / +toSum.targetAmount / 1000).toLocaleString(
+                        'ru-RU',
+                        {
+                          maximumFractionDigits: 2,
+                        }
+                      )
                     : 0}
                 </Rate>
               </RateRow>
 
-              <Button bigSize primary onClick={convert}>
+              <Button bigSize primary onClick={convert} disabled={toSum.calculatedAmount === 0}>
                 {t('privateArea.convert2')}
               </Button>
             </InnerBlock>

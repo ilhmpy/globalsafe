@@ -17,7 +17,7 @@ type Props = {
 export const ConfirmOpenDeposit: FC<Props> = ({ onClose, open, sumValue }: Props) => {
   const { selectedDeposit } = useContext(AppContext);
 
-
+  
   return (
     <>
       {open && (
@@ -61,7 +61,8 @@ export const ConfirmOpenDeposit: FC<Props> = ({ onClose, open, sumValue }: Props
               </S.ListItem>
               <S.ListItem>
                 <S.Text>
-                  Дата закрытия депозита: <strong>{moment().format('DD.MM.YYYY')}</strong>
+                  Дата закрытия депозита:{' '}
+                  <strong>{moment().add(90, 'days').format('DD.MM.YYYY')}</strong>
                 </S.Text>
               </S.ListItem>
               <S.ListItem>
@@ -74,7 +75,10 @@ export const ConfirmOpenDeposit: FC<Props> = ({ onClose, open, sumValue }: Props
               <S.List>
                 <S.ListItem>
                   <S.Text>
-                    К списанию: <strong>90 000 GSFUTURE6</strong>
+                    К списанию:{' '}
+                    <strong>{` ${sumValue.replace(/(\d)(?=(\d{3})+$)/g, '$1 ')} ${
+                      Balance[selectedDeposit?.asset as number]
+                    }`}</strong>
                   </S.Text>
                 </S.ListItem>
               </S.List>

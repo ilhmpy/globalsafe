@@ -5,5 +5,6 @@ export enum FiatKind {
     KZT,
     USD,
     EUR,
-    THB
+    THB,
+    USDT
 };

@@ -26,7 +26,7 @@ import { Card, Container } from '../../globalStyles';
 import { Balance, Notify } from '../../types/balance';
 import { Commisions, DepositsCollection, RootDeposits } from '../../types/info';
 import { ConvertingModalSuccess } from './ConveringSuccessModal';
-import { ConvertingModal } from './ConvertingModal';
+import { ConvertingModal, IBalanceExchange } from './ConvertingModal';
 import { ConvertingModalFail } from './ConvertingModalFail';
 import { DepositListModal, TokenModal } from './Modals';
 import * as Styled from './Styles.elements';
@@ -95,7 +95,12 @@ export const HeaderBar = () => {
   );
   const [withDrawModal, setWithDrawModal] = useState<boolean>(false);
   const [addDrawModal, setAddDrawModal] = useState<boolean>(false);
-  const [convertedArray, setConvertedArray] = useState<number[]>([0, 0, 0]);
+  const [convertedData, setConvertedData] = useState<IBalanceExchange>({
+    userAmount: 0,
+    calculatedAmount: 0,
+    targetAmount: 0,
+    discountPercent: 0,
+  });
 
   // Get Balance Kinds List as an Array
   const balancesList = useMemo(() => {
@@ -105,6 +110,10 @@ export const HeaderBar = () => {
       .filter((b) => list.includes(Balance[b.balanceKind]))
       .map((b) => Balance[b.balanceKind]);
   }, [balanceList]);
+
+  const bl: any[] = [0, 9, 10, 11]; 
+
+  const balances = balanceList?.filter((item) => !bl.includes(item.balanceKind));
 
   const handleDepositModal = () => {
     setAddDeposit(false);
@@ -287,7 +296,6 @@ export const HeaderBar = () => {
       hubConnection
         .invoke<Commisions>('GetWithdrawFee', 1, Number(value))
         .then((res: any) => {
-          console.log(res);
           setBlockchain((res.networkFee / 100000).toString());
           setService((res.serviceFee / 100000).toString());
         })
@@ -332,11 +340,53 @@ export const HeaderBar = () => {
     setCurrencyValue('');
   };
 
+  /* 
+    нет данных
+    Нулевой, 0 
+
+    /// Успешный перевод.
+    Успех, 1 
+
+    /// Невозможно передать. Недостаточно средств.
+    На балансе аккаунта не достаточно средств, 2 
+
+    /// Ошибка передачи.
+    Ошибка, 3
+
+    /// Адрес назначения перевода не найден.
+    DestinationNotfound, 4
+
+    /// Неправильный источник передачи. Аккаунт не может быть найден.
+    SourceNotFound, 5 
+
+    /// Сумма перевода меньше разрешенного минимального объема перевода.
+    ValueIsTooSmall, 6
+
+    /// Сумма перевода больше разрешенной максимальной суммы перевода.
+    ValueIsTooLarge, 7 
+
+    /// Превышение дневной квоты перевода средств.
+    DailyQuotaExceed, 8
+
+    /// Превышение месячной квоты перевода средств.
+    MonthlyQuotaExceed, 9
+
+    /// Доступна активная невыполненная ставка.
+    WagerAvailable, 10
+
+  */
+
+  function createPortal() {
+    const a = document.createElement("a");
+    a.rel="noreferrer noopener";
+    a.target="_blank";
+    return a;
+  };
+
   const changeBalance = () => {
     const value = Number(ed.replace(/\s/g, ''));
     if (hubConnection && currency.length > 0) {
-      const newWindow = window.open();
-      console.log('change', value);
+      const a = createPortal();
       hubConnection
         .invoke(
           'GetTopUpUrl',
@@ -344,13 +394,15 @@ export const HeaderBar = () => {
           currency === 'CWD' ? value * 100000 : currency === 'GLOBAL' ? value * 10000 : value
         )
         .then((res: string) => {
-          newWindow && (newWindow.location.href = res);
-          setError(false);
-          setAddDrawModal(false);
+          a.href = res;
+          a.click();
+          setTimeout(() => {
+            setError(false);
+            setAddDrawModal(false);
+          }, 5000);
         })
         .catch((err: Error) => {
           console.log(err);
-          newWindow && newWindow.close();
           setError(true);
           setErrorReason('На балансе аккаунта недостаточно средств.');
           setAddDrawModal(false);
@@ -431,7 +483,13 @@ export const HeaderBar = () => {
     const value = Number(outPutEd.replace(/\s/g, ''));
     if (hubConnection && outPutCurrency.length > 0) {
       setWithdrawValueLoad(true);
-      console.log('withdraw', value);
+      /* console.log('withdraw', outPutCurrency === 'CWD'
+      ? value * 100000
+      : outPutCurrency === 'GLOBAL'
+      ? value * 10000
+      : outPutCurrency === 'MULTICS'
+      ? value * 100
+      : value, Balance[outPutCurrency as keyof typeof Balance]) */
       hubConnection
         .invoke(
           'Withdraw',
@@ -451,11 +509,11 @@ export const HeaderBar = () => {
           setWithdrawValueLoad(false);
         })
         .catch((err: Error) => {
-          console.log('ERRO', err);
+         // console.log('ERROR', err);
           setWithdrawValueLoad(false);
           setOutPutError(true);
           setWithDrawModal(false);
-          setOutPutErrorReason('Ошибка на стороне сервера.');
+          setOutPutErrorReason('Ошибка вывода средств.');
         });
     }
   };
@@ -519,7 +577,7 @@ export const HeaderBar = () => {
             Пополнение баланса
           </H3>
           <div style={{ width: '100%', maxWidth: '340px', margin: '0 auto' }}>
-            <Selectv2 data={balanceList && balanceList} withoutVolume setSwitch={setCurrency} />
+            <Selectv2 data={balances && balances} withoutVolume setSwitch={setCurrency} />
             <Inputv2
               placeholder="Сумма пополнения"
               value={ed.replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
@@ -533,6 +591,7 @@ export const HeaderBar = () => {
                 setEd(value.replaceAll(/\D/g, ''));
               }}
             />
+            <Styled.Message>Для пополнения баланса вы будете перенаправлены на cwd.global</Styled.Message>
             <PAButton onClick={changeBalance} disabled={Number(ed) < 1 || currency.length < 1}>
               Пополнить баланс
             </PAButton>
@@ -556,35 +615,10 @@ export const HeaderBar = () => {
           p20
         >
           <H3 center modalTitle>
-            Успешное пополнение
+            Пополнение баланса
           </H3>
-          <Styled.Desc>Баланс личного кабинета успешно пополнен на:</Styled.Desc>
-          <Styled.Desc bold mMore style={{ marginTop: '0px' }}>
-            {(Number(ed)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {currency}
-          </Styled.Desc>
-        </Modal>
-      </CSSTransition>
-
-      <CSSTransition in={error === undefined ? false : error} timeout={0} unmountOnExit>
-        <Modal
-          onClose={() => {
-            setError(undefined);
-            setCurrency('');
-            setEd('');
-          }}
-          width={420}
-          withClose
-          p20
-        >
-          <H3 center modalTitle>
-            Ошибка пополнения
-          </H3>
-          <Styled.Desc>Баланс личного кабинета не был пополнен на:</Styled.Desc>
-          <Styled.Desc bold>
-            {(Number(ed)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {currency}
-          </Styled.Desc>
-          <Styled.Desc danger mMore style={{ marginTop: '0px' }}>
-            {errorReason}
+          <Styled.Desc style={{ marginBottom: "20px", maxWidth: "340px" }}>
+            Мы сообщим вам о результате операции пополнения в личном уведомлении.
           </Styled.Desc>
         </Modal>
       </CSSTransition>
@@ -606,7 +640,7 @@ export const HeaderBar = () => {
             Вывод средств
           </H3>
           <div style={{ width: '100%', maxWidth: '340px', margin: '0 auto' }}>
-            <Selectv2 data={balanceList && balanceList} setSwitch={setOutPutCurrency} />
+            <Selectv2 data={balances && balances} setSwitch={setOutPutCurrency} />
             <Inputv2
               value={outPutEd.replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
               placeholder="Сумма вывода"
@@ -666,10 +700,10 @@ export const HeaderBar = () => {
           </H3>
           <Styled.Desc>С баланса личного кабинета успешно выведены средства в размере:</Styled.Desc>
           <Styled.Desc bold mMore>
-            {(Number(outPutEd)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {outPutCurrency}
+            {(Number(outPutEd.replace(/[^0-9]/gi, '')) + Number(blockchain) + Number(service)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {outPutCurrency}
           </Styled.Desc>
           <Styled.Desc mLess>
-            К выводу: {(Number(outPutEd.replace(/[^0-9]/gi, '')) + Number(blockchain) + Number(service)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })}
+            К зачислению: {(Number(outPutEd)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} 
           </Styled.Desc>
           <Styled.Desc mLess>Комиссия блокчейн: {blockchain}</Styled.Desc>
           <Styled.Desc mLess>Комиссия сервиса: {service}</Styled.Desc>
@@ -694,10 +728,10 @@ export const HeaderBar = () => {
           </H3>
           <Styled.Desc>С баланса личного кабинета не были выведены средства в размере:</Styled.Desc>
           <Styled.Desc bold style={{ marginBottom: '10px' }}>
-            {(Number(outPutEd)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {outPutCurrency}
+            {(Number(outPutEd.replace(/[^0-9]/gi, '')) + Number(blockchain) + Number(service)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {outPutCurrency}
           </Styled.Desc>
           <Styled.Desc mLess>
-            К выводу: {(Number(outPutEd.replace(/[^0-9]/gi, '')) + Number(blockchain) + Number(service)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })}
+            К зачислению: {(Number(outPutEd)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} 
           </Styled.Desc>
           <Styled.Desc mLess>Комиссия блокчейн: {blockchain}</Styled.Desc>
           <Styled.Desc mLess style={{ marginBottom: '0px' }}>
@@ -714,12 +748,12 @@ export const HeaderBar = () => {
         setOpen={setOpenConverting}
         setIsSuccessConverting={setIsSuccessConverting}
         setIsFailConverting={setIsFailConverting}
-        setConvertedArray={setConvertedArray}
+        setConvertedData={setConvertedData}
       />
       <ConvertingModalSuccess
         open={isSuccessConverting}
         setOpen={setIsSuccessConverting}
-        convertedArray={convertedArray}
+        convertedData={convertedData}
       />
       <ConvertingModalFail open={isFailConverting} setOpen={setIsFailConverting} />
 
@@ -754,6 +788,7 @@ export const HeaderBar = () => {
           <BalanceChipsBlock>
             {balanceChips &&
               balanceChips.map((i: any, idx: number) => {
+                
                 return (
                   <Chip
                     key={`chip-item-${idx}`}
@@ -761,7 +796,7 @@ export const HeaderBar = () => {
                     bgColor={getChipColor(i)}
                   >
                     <span>
-                      {i.volume.toLocaleString('ru-RU', {
+                      {(Number(i.volume)).toLocaleString('ru-RU', {
                         maximumFractionDigits: 4,
                       })}
                     </span>
@@ -781,6 +816,9 @@ export const HeaderBar = () => {
             </TabNavItem>
             <TabNavItem to={routers.operations}>
               <div>История операций</div>
+            </TabNavItem>
+            <TabNavItem to={routers.notifications}>
+              <div>Уведомления</div>
             </TabNavItem>
             <TabNavItem to={routers.settings}>
               <div>Настройки</div>

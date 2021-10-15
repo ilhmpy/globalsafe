@@ -14,7 +14,7 @@ import { Balance } from "../../types/balance";
 import { Loading, NotItems, Spinner } from "./components/Loading/Loading";
 import formatRelativeWithOptions from 'date-fns/esm/fp/formatRelativeWithOptions/index.js';
 import { isObject } from 'highcharts';
-import { isTemplateSpan } from 'typescript';
+import { InternalSymbolName, isTemplateSpan } from 'typescript';
 
 export const HistoryOperations = () => {
     const history = useHistory();
@@ -143,22 +143,36 @@ export const HistoryOperations = () => {
                 setLoading(false);
                 console.log("res", res.collection);
                 if (allCurrency) {
-                   setOperations(items => res.collection.map((i: any) => {
-                       return {
-                         ...i,
-                         new: false
-                       };
-                   }));
+                   setOperations(() => {
+                     const items = res.collection.map((i: any) => {
+                        return {
+                          ...i,
+                          new: false
+                        };
+                    });
+                    return items.sort((x: any, y: any) => {
+                        const a = new Date(x.operationDate);
+                        const b = new Date(y.operationDate);
+                        return a > b ? -1 : a < b ? 1 : 0;
+                    });
+                   });
                 } else {
                     if (balances) {
-                        setOperations(res.collection.map((i: any) => {
-                            if (Number(i.balanceSafeId) === balances[1].id) {
-                                return {
-                                    ...i,
-                                    new: false
+                        setOperations(() => {
+                            const items = res.collection.map((i: any) => {
+                                if (Number(i.balanceSafeId) === balances[1].id) {
+                                    return {
+                                        ...i,
+                                        new: false
+                                    };
                                 };
-                            };
-                        }));
+                            });
+                           return items.sort((x: any, y: any) => {
+                                const a = new Date(x.operationDate);
+                                const b = new Date(y.operationDate);
+                                return a > b ? -1 : a < b ? 1 : 0;
+                            }); 
+                        });
                     };
                 };
                 if (res.collection.length > 0) {
@@ -180,7 +194,7 @@ export const HistoryOperations = () => {
                 ...i,
                 new: false 
             };
-        }))
+        }));
     }
 
     function addMore() {
@@ -198,23 +212,37 @@ export const HistoryOperations = () => {
                 console.log("rees", res);
                 changeNew();
                 if (allCurrency) {
-                    setOperations((data: any) => [...data.map((i: any) => {
-                        return { ...i, new: false }
-                    }), ...res.collection.map((i: any) => {
-                        return { ...i, new: true }
-                    })]);
-                } else {
-                    if (balances) {
-                        setOperations((data: any) => [...data.map((i: any) => {
+                    setOperations((data: any) => {
+                        const items = [...data.map((i: any) => {
                             return { ...i, new: false }
                         }), ...res.collection.map((i: any) => {
-                            if (Number(i.balanceSafeId) === balances[1].id) {
-                                return { ...i, new: true }
-                            }
-                        })]);
+                            return { ...i, new: true }
+                        })];
+                        return items.sort((x: any, y: any) => {
+                            const a = new Date(x.operationDate);
+                            const b = new Date(y.operationDate);
+                            return a > b ? -1 : a < b ? 1 : 0;
+                        });
+                    });
+                } else {
+                    if (balances) {
+                        setOperations((data: any) => {
+                            const items = [...data.map((i: any) => {
+                                return { ...i, new: false }
+                            }), ...res.collection.map((i: any) => {
+                                if (Number(i.balanceSafeId) === balances[1].id) {
+                                    return { ...i, new: true }
+                                }
+                            })];
+                            return items.sort((x: any, y: any) => {
+                                const a = new Date(x.operationDate);
+                                const b = new Date(y.operationDate);
+                                return a > b ? -1 : a < b ? 1 : 0;
+                            });
+                        });
                     };
                 };
-                setStatusNew(setTimeout(() => changeNew(), 1000));
+                setStatusNew(setTimeout(() => changeNew(), 2000));
                 if (res.collection.length > 0) {
                     setNewItems(true);
                 } else {
@@ -305,10 +333,10 @@ export const HistoryOperations = () => {
                 ) : ( <Loading /> )}
             </Styled.Table>
           <Styled.Button onClick={addMore} newItems={operations && operations.length > 0 ? newItems : false}>
-                {operations && operations[operations.length - 1] && operations[operations.length - 1].new ? 
+                {operations && operations.some((item: any) => item.new === true) ? 
                     <Spinner style={{ width: 25, height: 25, borderTop: "2px solid #fff", margin: "0 auto" }} /> 
                     : "Показать ещё"}
           </Styled.Button>
         </Container>
     )
-}    
+} 

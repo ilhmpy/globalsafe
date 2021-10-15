@@ -1,7 +1,10 @@
 import styled from 'styled-components/macro';
+import { NavLink } from 'react-router-dom';
+
 import { TabsBlock as BaseTabsBlock } from '../../../components/ui';
 import { Select as BaseSelect } from '../../../../../components/Select/Select5';
-import { NavLink } from 'react-router-dom';
+import { Button as BaseButton } from '../../../../../components/Button/V2/Button';
+
 export const Container = styled.div`
   width: 100%;
   display: flex;
@@ -36,6 +39,11 @@ export const FormItem = styled.div`
   flex-direction: column;
   width: 100%;
 `;
+
+export const Button = styled(BaseButton)`
+  text-transform: none;
+`;
+
 
 export const SubmitButton = styled.button`
   display: flex;

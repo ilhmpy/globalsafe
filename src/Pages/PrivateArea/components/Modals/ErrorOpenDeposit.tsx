@@ -1,14 +1,18 @@
 import React, { FC } from 'react';
 import { Button } from '../../../../components/Button/V2/Button';
 import { Modal } from '../../../../components/ModalAnimated';
+import { Balance } from '../../../../types/balance';
+import { CollectionListDeposits } from '../../../../types/deposits';
 import * as S from './S.el';
 
 type Props = {
   onClose: () => void;
   open: boolean;
+  deposit?: CollectionListDeposits;
+  sumValue: string;
 };
 
-export const ErrorOpenDeposit: FC<Props> = ({ onClose, open }: Props) => {
+export const ErrorOpenDeposit: FC<Props> = ({ onClose, open, deposit, sumValue }: Props) => {
   return (
     <>
       {open && (
@@ -17,8 +21,9 @@ export const ErrorOpenDeposit: FC<Props> = ({ onClose, open }: Props) => {
             <S.Title>Ошибка открытия депозита</S.Title>
             <S.TextWrap>
               <S.Text>
-                Депозит по программе <a href="/">Vanila</a> на сумму 90 000 GSFUTURE6 не был открыт
-                по причине:
+                Депозит по программе <a href="/">{deposit?.name}</a> {' '}
+                {`на сумму ${sumValue} ${Balance[deposit?.asset as number]} не был открыт
+                по причине:`}
               </S.Text>
             </S.TextWrap>
 

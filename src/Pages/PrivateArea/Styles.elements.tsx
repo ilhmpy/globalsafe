@@ -1067,3 +1067,12 @@ export const Commision = styled.h3<{ marginT?: number; marginB?: number }>`
     right: 0;
   }
 `;
+
+export const Message = styled.h3`
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #000;
+  margin: 20px 0px 20px 0px;
+  max-width: 240px;
+`;

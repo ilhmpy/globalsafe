@@ -1,14 +1,18 @@
 import React, { FC } from 'react';
 import { Button } from '../../../../components/Button/V2/Button';
 import { Modal } from '../../../../components/ModalAnimated';
+import { Balance } from '../../../../types/balance';
+import { CollectionListDeposits } from '../../../../types/deposits';
 import * as S from './S.el';
 
 type Props = {
   onClose: () => void;
   open: boolean;
+  deposit?: CollectionListDeposits;
+  sumValue: string;
 };
 
-export const SuccessOpenDeposit: FC<Props> = ({ onClose, open }: Props) => {
+export const SuccessOpenDeposit: FC<Props> = ({ onClose, open, deposit, sumValue }: Props) => {
   return (
     <>
       {open && (
@@ -17,8 +21,8 @@ export const SuccessOpenDeposit: FC<Props> = ({ onClose, open }: Props) => {
             <S.Title>Успешное открытие депозита</S.Title>
             <S.TextWrap big>
               <S.Text>
-                Депозит по программе <a href="/">Vanila</a> на сумму <br />
-                90 000 GSFUTURE6 успешно открыт.
+              {`Депозит по программе ${deposit?.name} на сумму`} <br />
+                {`${sumValue} ${Balance[deposit?.asset as number]} успешно открыт`}.
               </S.Text>
             </S.TextWrap>
 
