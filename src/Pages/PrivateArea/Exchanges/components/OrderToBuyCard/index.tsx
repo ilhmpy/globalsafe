@@ -80,7 +80,6 @@ export const OrderToBuyCard: FC = () => {
 
     const getUserPaymentMethods = async () => {
         if(currencyToChange) {
-            setCreateOrderLoading(true);
             try {
                 const res = await hubConnection!.invoke<RootPayMethod>(
                     'GetUserPaymentsMethods', 
@@ -92,10 +91,8 @@ export const OrderToBuyCard: FC = () => {
                 );
                 setPaymentMethods(res.collection);
                 console.log('GetUserPaymentsMethods', res);
-                setCreateOrderLoading(false);
             } catch (err) {
                 console.log(err);
-                setCreateOrderLoading(false);
             }
         }
     };
@@ -127,7 +124,7 @@ export const OrderToBuyCard: FC = () => {
         console.log('methodsKinds', findPaymentMethodKinds(paymentMethods?.filter(m => selectedPaymentMethodsIds.includes(String(m.id)))))
         console.log('terms', '');
 
-        
+        setCreateOrderLoading(true);
         try {
             const res = await hubConnection!.invoke<ViewBuyOrderModel>(
                 'CreateBuyOrder', 
@@ -143,9 +140,11 @@ export const OrderToBuyCard: FC = () => {
             );
             setNewCreatedOrder(res);
             console.log('GetUserPaymentsMethods', res);
+            setCreateOrderLoading(false);
         } catch (err) {
             setShowOrderErrorModal(true);
             console.log(err);
+            setCreateOrderLoading(false);
         }
     }
 

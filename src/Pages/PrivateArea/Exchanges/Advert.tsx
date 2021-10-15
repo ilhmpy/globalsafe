@@ -9,7 +9,7 @@ import * as S from './S.el';
 import { AdvertTable } from './components/AdvertTable/AdvertTable';
 import { Button } from '../../../components/Button/V2/Button';
 import { AppContext } from '../../../context/HubContext';
-import { GetBuyOrdersModel, GetSellOrdersModel, ViewBuyOrderModel, ViewSellOrderModel } from '../../../types/orders';
+import { GetBuyOrdersModel, GetSellOrdersModel, OrderType, ViewBuyOrderModel, ViewSellOrderModel } from '../../../types/orders';
 import { CurrencyPair } from './components/modals/CurrencyPair';
 import { Balance } from '../../../types/balance';
 import { FiatKind } from '../../../types/fiat';
@@ -18,7 +18,7 @@ import { FiatKind } from '../../../types/fiat';
 export const Advert = () => {
   const history = useHistory();
   const { hubConnection } = useContext(AppContext);
-  const [activeType, setActiveType] = useState<'buy' | 'sell'>('buy');
+  const [activeType, setActiveType] = useState<OrderType>(OrderType.Buy);
   const [selectedBalanceKind, setSelectedBalanceKind] = useState<string | null>(null);
   const [selectedFiatKind, setSelectedFiatKind] = useState<string | null>(null);
   const [showCurrencyPairModal, setShowCurrenctPairModal] = useState(false);
@@ -30,11 +30,11 @@ export const Advert = () => {
 
   useEffect(() => {
     if (hubConnection) {
-      if(activeType === 'buy') {
+      if(activeType === OrderType.Buy) {
         getBuyOrders();
       }
 
-      if(activeType === 'sell') {
+      if(activeType === OrderType.Sell) {
         getSellOrders();
       }
     }
@@ -59,7 +59,6 @@ export const Advert = () => {
         console.log(err);
       }
   };
-  console.log(skip)
 
   const getSellOrders = async () => {
     try {
@@ -102,11 +101,11 @@ export const Advert = () => {
   };
 
   const handleLoadMore = () => {
-    if(activeType === 'buy') {
+    if(activeType === OrderType.Buy) {
       getBuyOrders();
     }
 
-    if(activeType === 'sell') {
+    if(activeType === OrderType.Sell) {
       getSellOrders();
     }
   }
@@ -144,14 +143,14 @@ export const Advert = () => {
         </S.Filters>
         <S.Filters>
           <FilterButton 
-            active={activeType === 'buy'}
-            onClick={() => setActiveType('buy')}
+            active={activeType === OrderType.Buy}
+            onClick={() => setActiveType(OrderType.Buy)}
           >
             Покупка
           </FilterButton>
           <FilterButton
-            active={activeType === 'sell'}
-            onClick={() => setActiveType('sell')}
+            active={activeType === OrderType.Sell}
+            onClick={() => setActiveType(OrderType.Sell)}
           >
             Продажа
           </FilterButton>
@@ -197,7 +196,7 @@ export const Advert = () => {
           onAccept={handleAcceptPair}
         />
       
-        <AdvertTable list={ordersList} />
+        <AdvertTable list={ordersList} ordersType={activeType} />
 
         {
           (ordersList.length < totalCount) &&  
