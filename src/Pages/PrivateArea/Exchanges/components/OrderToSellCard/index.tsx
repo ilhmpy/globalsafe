@@ -80,7 +80,6 @@ export const OrderToSellCard: FC = () => {
 
     const getUserPaymentMethods = async () => {
         if(currencyToChange) {
-            setCreateOrderLoading(true);
             try {
                 const res = await hubConnection!.invoke<RootPayMethod>(
                     'GetUserPaymentsMethods', 
@@ -92,10 +91,8 @@ export const OrderToSellCard: FC = () => {
                 );
                 setPaymentMethods(res.collection);
                 console.log('GetUserPaymentsMethods', res);
-                setCreateOrderLoading(false);
             } catch (err) {
                 console.log(err);
-                setCreateOrderLoading(false);
             }
         }
     };
@@ -116,7 +113,7 @@ export const OrderToSellCard: FC = () => {
         return withoutDuplicates;
     };
 
-    const handleCreateBuyOrder = async () => {
+    const handleCreateSellOrder = async () => {
         console.log('orderSumm', String(orderSumm))
         console.log('changeRate', +changeRate)
         console.log('assetKind', Balance[currencyToSell as keyof typeof Balance])
@@ -127,7 +124,7 @@ export const OrderToSellCard: FC = () => {
         console.log('methodsKinds', findPaymentMethodKinds(paymentMethods?.filter(m => selectedPaymentMethodsIds.includes(String(m.id)))))
         console.log('terms', '');
 
-        
+        setCreateOrderLoading(true);
         try {
             const res = await hubConnection!.invoke<ViewSellOrderModel>(
                 'CreateSellOrder', 
@@ -143,7 +140,10 @@ export const OrderToSellCard: FC = () => {
             );
             setNewCreatedOrder(res);
             console.log('CreateSellOrder', res);
+            setCreateOrderLoading(false);
+
         } catch (err) {
+            setCreateOrderLoading(false);
             setShowOrderErrorModal(true);
             console.log(err);
         }
@@ -446,7 +446,7 @@ export const OrderToSellCard: FC = () => {
                 orderMinSumm={orderMinSumm}
                 orderMaxSumm={orderMaxSumm}
                 timePeriod={changeTimePeriod}
-                onPublish={handleCreateBuyOrder}
+                onPublish={handleCreateSellOrder}
                 loading={createOrderLoading}
                 paymentMethods={paymentMethods 
                     ? 

@@ -10,15 +10,6 @@ export enum PaymentMethodKind {
   Alfabank
 }
 
-// Use One If this enums for paymentMethod Kinds
-// export enum IPaymentMethodKind {
-//   USDT,
-//   BankTransfer,
-//   Tinkoff,
-//   Sberbank,
-//   Alfabank
-// }
-
 export interface CollectionPayMethod {
     id: number;
     safeId: string;

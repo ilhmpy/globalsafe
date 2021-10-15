@@ -2,9 +2,10 @@ import React, { useContext, useState } from 'react';
 import { useHistory } from 'react-router';
 
 import { AppContext } from '../../../../../context/HubContext';
+import { PrivateAreaContext } from '../../../../../context/PrivateAreaContext';
 import { Balance } from '../../../../../types/balance';
 import { FiatKind } from '../../../../../types/fiat';
-import { ViewBuyOrderModel, ViewSellOrderModel } from '../../../../../types/orders';
+import { OrderType, ViewBuyOrderModel, ViewSellOrderModel } from '../../../../../types/orders';
 import { paymentMethodIconSrc } from '../../../utils';
 import { PaymentMethods } from '../modals/PaymentMethods';
 import { Rating } from '../modals/Rating';
@@ -13,16 +14,23 @@ import * as S from './S.el';
 
 interface AdvertTableProps {
   list: Array<ViewBuyOrderModel | ViewSellOrderModel>;
+  ordersType: OrderType;
 }
 
-export const AdvertTable = ({list}: AdvertTableProps) => {
+export const AdvertTable = ({ list, ordersType }: AdvertTableProps) => {
   const history = useHistory();
   const { userSafeId } = useContext(AppContext);
+  const { setCurrentOrder, setCurrentOrderType } = useContext(PrivateAreaContext);
   const [selectedOption, setSelectedOption] = useState<string | null>('Все валюты предложения');
 
-  const handleNavigateTo = (orderId: number) => {
-    history.replace(`/info/p2p-changes/orders/${orderId}`)
-  }
+  const handleNavigateTo = (order: ViewBuyOrderModel | ViewSellOrderModel) => {
+    setCurrentOrder(order);
+    setCurrentOrderType(ordersType);
+
+    if(order.userSafeId === userSafeId) {
+      history.replace(`/info/p2p-changes/orders/my/${order.id}`)
+    }
+  };
 
   const [ratingOption, setRatingOption] = useState<string | null>('Рейтинг участников 5.0');
   return (
@@ -67,7 +75,7 @@ export const AdvertTable = ({list}: AdvertTableProps) => {
             <S.BodyItem 
               key={`order-list-item-${order.safeId}`}
               active={order.userSafeId === userSafeId}
-              onClick={() => handleNavigateTo(order.id)} 
+              onClick={() => handleNavigateTo(order)} 
             >
               <S.Cell data-label="Кол-во">
                 {`${order.volume} ${Balance[order.assetKind]}`}

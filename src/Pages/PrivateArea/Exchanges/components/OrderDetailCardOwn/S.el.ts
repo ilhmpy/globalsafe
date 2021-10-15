@@ -15,4 +15,6 @@ export const BlockWrapper = styled.div<{largeMB?: boolean}>`
   margin-bottom: ${props => props.largeMB ? '40px' : '20px'};
 `;
 
-
+export const PaymentMethodDetailsBlock = styled.div`
+  padding-left: 40px;
+`;
