@@ -7,9 +7,10 @@ type Props = {
   onClose: () => void;
   open: boolean;
   data: MarketCertificate;
+  errorType: string;
 };
 
-export const ErrorModal: FC<Props> = ({ onClose, open, data }: Props) => {
+export const ErrorModal: FC<Props> = ({ onClose, open, data, errorType }: Props) => {
   return (
     <>
       {open && (
@@ -17,7 +18,7 @@ export const ErrorModal: FC<Props> = ({ onClose, open, data }: Props) => {
           <S.SmallContainer>
             <S.BlackTitle>Ошибка покупки сертификата</S.BlackTitle>
             <S.Desc>Сертификат “{data.certificate.name}” не был приобретен по причине:</S.Desc>
-            <S.Reason>На балансе аккаунта недостаточно средств</S.Reason>
+            <S.Reason>{errorType}</S.Reason>
           </S.SmallContainer>
         </Modal>
       )}
