@@ -185,6 +185,8 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
         </S.BlockWrapper>
       </LeftSide>
 
+      {/* IF COMPLETED AND NOT GRADET */}
+
       <RightSide>
         <S.TitleBlockWrapper>
           <Title mB={10} lH={28}>
@@ -241,6 +243,8 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
           </Text>
         </S.BlockWrapper>
         
+        {/* COMPLETED, ABUSED, CANCELLED STATES */}
+        
         <S.BlockWrapper when={exchange.state === 2 || exchange.state === 3 || exchange.state === 4}>
           <Text size={14} lH={20} mB={4} black>
             Рейтинг покупателя
@@ -249,6 +253,10 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
             {exchange.kind === 0 ? getMyRating() : (Number(exchange.userRating)).toFixed(1)} (X)
           </Text>
         </S.BlockWrapper>
+
+        {/* ************************************ */}
+
+        {/* **************************** */}
 
         {/* INITIATED STATE */}
 
