@@ -2,44 +2,73 @@ import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Modal } from '../../components/Modal/Modal';
+import { IBalanceExchange } from './ConvertingModal';
 
 interface Iprops {
   open: boolean;
   setOpen: (open: boolean) => void;
-  convertedArray: number[];
+  setConvertedData: (convertedData: IBalanceExchange) => void;
+  convertedData: IBalanceExchange;
 }
-export const ConvertingModalSuccess: FC<Iprops> = ({ open, setOpen, convertedArray }: Iprops) => {
+export const ConvertingModalSuccess: FC<Iprops> = ({
+  open,
+  setOpen,
+  convertedData,
+  setConvertedData,
+}: Iprops) => {
   const { t } = useTranslation();
 
   return (
     <>
       {open && (
-        <Modal onClose={() => setOpen(false)} width={420}>
+        <Modal
+          onClose={() => {
+            setOpen(false);
+            setConvertedData({
+              userAmount: 0,
+              calculatedAmount: 0,
+              targetAmount: 0,
+              discountPercent: 0,
+            });
+          }}
+          width={420}
+        >
           <ModalBlock>
             <ModalTitle>{t('privateArea.convertingSuccess')}</ModalTitle>
             <ModalContent>
               <ContentTitle>Конвертация CWD в MULTICS успешно завершена:</ContentTitle>
               <ContentBody>
-                <span>
-                  Списано CWD:{' '}
+                <p>
+                  <KeySpan>Списано (CWD):</KeySpan>
                   <strong>
-                    {(convertedArray[0] / 100000).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
+                    {(convertedData.userAmount / 100000)
+                      .toString()
+                      .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
                   </strong>
-                </span>
-                <span>
-                  Курс CWD-MULTICS:{' '}
+                </p>
+                <p>
+                  <KeySpan>Курс (CWD-MULTICS):</KeySpan>
                   <strong>
-                    {(convertedArray[1] / convertedArray[2] / 1000).toLocaleString('ru-RU', {
+                    {(
+                      convertedData.calculatedAmount /
+                      convertedData.targetAmount /
+                      1000
+                    ).toLocaleString('ru-RU', {
                       maximumFractionDigits: 2,
                     })}
                   </strong>
-                </span>
-                <span>
-                  Зачислено MULTICS:{' '}
+                </p>
+                <p>
+                  <KeySpan>Скидка (%):</KeySpan> <strong>{convertedData.discountPercent}</strong>
+                </p>
+                <p>
+                  <KeySpan>Зачислено (MULTICS):</KeySpan>
                   <strong>
-                    {+convertedArray[2].toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ') / 100}
+                    {(convertedData.targetAmount / 100)
+                      .toString()
+                      .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
                   </strong>
-                </span>
+                </p>
               </ContentBody>
             </ModalContent>
           </ModalBlock>
@@ -48,6 +77,26 @@ export const ConvertingModalSuccess: FC<Iprops> = ({ open, setOpen, convertedArr
     </>
   );
 };
+
+const KeySpan = styled.div`
+  &:after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    /* max-width: 150px; */
+    width: 150px;
+    border-bottom: 1px dotted rgba(0, 0, 0, 0.2);
+  }
+  &:nth-child(1) {
+    width: 200px;
+  }
+  &:nth-child(2) {
+  }
+  &:nth-child(3) {
+  }
+  &:nth-child(4) {
+  }
+`;
 
 const ContentTitle = styled.div`
   text-align: start;
@@ -60,6 +109,27 @@ const ContentBody = styled.div`
   justify-content: flex-start;
   text-align: start;
   color: #000000;
+  & > p {
+    display: flex;
+    justify-content: space-between;
+    /* border-bottom: 1px dotted rgba(0, 0, 0, 0.2); */
+    background-color: #ffffff;
+    position: relative;
+
+    & > strong {
+      /* &:after {
+        content: '';
+        border-bottom: 1px dotted rgba(0, 0, 0, 0.2);
+
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        border-bottom: 0.1em dotted;
+      } */
+    }
+  }
 `;
 
 const ModalBlock = styled.div`

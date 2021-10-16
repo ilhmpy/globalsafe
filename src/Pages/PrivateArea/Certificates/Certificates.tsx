@@ -20,20 +20,29 @@ import {
   RootCertificates,
   Collection,
   ViewUserCertificateModel,
+  RootMarketCertificate,
+  MarketCertificate,
 } from '../../../types/certificates';
 import { Balance } from '../../../types/balance';
 import moment from 'moment';
+import { BuyCertificateModal } from './modals/BuyCertificate';
+import { SuccessModal } from './modals/SuccessModal';
+import { ErrorModal } from './modals/ErrorModal';
 
 export const Certificates = () => {
-  const [allCert, setAllCert] = useState<Collection[]>([]);
+  const [allCert, setAllCert] = useState<MarketCertificate[]>([]);
   const [userCertificat, setUserCertificat] = useState<null | ViewUserCertificateModel>(null);
+  const [buyCertificateModal, setBuyCertificateModal] = useState<MarketCertificate | null>(null);
+  const [successModal, setIsSuccessModal] = useState<MarketCertificate | null>(null);
+  const [errorModal, setIsErrorModal] = useState<MarketCertificate | null>(null);
+  const [errorType, setErrorType] = useState('');
   const history = useHistory();
-  const { hubConnection } = useContext(AppContext);
+  const { hubConnection, balance } = useContext(AppContext);
 
   useEffect(() => {
     if (hubConnection) {
       getUserCertificate();
-      getCertificates();
+      // getCertificates();
       getCertificate();
     }
   }, [hubConnection]);
@@ -49,28 +58,86 @@ export const Certificates = () => {
     }
   }
 
-  async function getCertificates() {
-    if (!hubConnection) return;
-    try {
-      const res = await hubConnection.invoke<RootCertificates>('GetCertificates', 0, 40);
-      console.log('GetCertificates', res);
-      setAllCert(res.collection);
-    } catch (err) {
-      console.log(err);
-    }
-  }
+  // async function getCertificates() {
+  //   if (!hubConnection) return;
+  //   try {
+  //     const res = await hubConnection.invoke<RootCertificates>('GetCertificates', 0, 40);
+  //     console.log('GetCertificates', res);
+  //     setAllCert(res.collection);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }
 
   const getCertificate = async () => {
     try {
-      const res = await hubConnection!.invoke('GetCertificatesMarket', 2, 0, 100);
+      const res = await hubConnection!.invoke<RootMarketCertificate>(
+        'GetCertificatesMarket',
+        1,
+        0,
+        100
+      );
       console.log('GetMarket"', res);
+      setAllCert(res.collection);
     } catch (err) {
       console.log(err);
     }
   };
 
+  const purchase = async (data: MarketCertificate) => {
+    setBuyCertificateModal(null);
+    if (hubConnection) {
+      try {
+        await hubConnection.invoke('PurchaseCertificate', data.safeId);
+        getUserCertificate();
+        setIsSuccessModal(data);
+      } catch (e) {
+        console.log(e);
+        setIsErrorModal(data);
+      }
+    }
+  };
+
+  const onValid = (item: MarketCertificate) => {
+    if (userCertificat && balance) {
+      console.log('true');
+      if (userCertificat.certificate.safeId === item.certificate.safeId) {
+        setErrorType('Данный сертификат уже куплен');
+        setIsErrorModal(item);
+      } else if (item.certificate.dailyVolume <= userCertificat.certificate.dailyVolume) {
+        setErrorType('Сумма сертификата меньше существующей');
+        setIsErrorModal(item);
+      } else if (balance < item.price) {
+        setErrorType('На балансе аккаунта недостаточно средств');
+        setIsErrorModal(item);
+      } else {
+        setErrorType('');
+        setBuyCertificateModal(item);
+      }
+    }
+  };
+
   return (
     <S.Container>
+      {buyCertificateModal && (
+        <BuyCertificateModal
+          data={buyCertificateModal}
+          purchase={purchase}
+          onClose={() => setBuyCertificateModal(null)}
+          open={true}
+        />
+      )}
+      {successModal && (
+        <SuccessModal open={true} data={successModal} onClose={() => setIsSuccessModal(null)} />
+      )}
+      {errorModal && (
+        <ErrorModal
+          errorType={errorType}
+          open={true}
+          data={errorModal}
+          onClose={() => setIsErrorModal(null)}
+        />
+      )}
       <Container>
         <Heading onClick={() => history.goBack()} title="P2P обмены" btnText="Опубликовать ордер" />
         <S.SubHeader>
@@ -117,7 +184,7 @@ export const Certificates = () => {
                   Оставшийся срок действия:
                 </Text>
                 <Text size={14} weight={500} lH={20}>
-                  {moment(userCertificat.finishDate).diff(userCertificat.creationDate, 'days')}
+                  {moment(userCertificat.finishDate).diff(userCertificat.creationDate, 'days')} день
                 </Text>
               </S.ActiveCertItem>
             </S.ActiveCert>
@@ -131,36 +198,44 @@ export const Certificates = () => {
           ? allCert.map((item) => (
               <S.AvilableCertificatesItem key={item.safeId}>
                 <Text size={24} weight={700} lH={28} mB={40}>
-                  {item.name}
+                  {item.certificate.name}
                 </Text>
                 <TitleWrap small>
                   <ProgramDescTitle>Лимит:</ProgramDescTitle>
                 </TitleWrap>
                 <Text size={14} weight={500} lH={20} mB={20}>
-                  100 000 CWD / 24ч.
+                  {(item.certificate.dailyVolume / 100000).toLocaleString('en-US', {
+                    maximumFractionDigits: 2,
+                  })}{' '}
+                  {Balance[item.certificate.assetKind]} / {item.certificate.duration} дней.
                 </Text>
 
                 <TitleWrap small>
                   <ProgramDescTitle>Срок действия:</ProgramDescTitle>
                 </TitleWrap>
                 <Text size={14} weight={500} lH={20} mB={20}>
-                  72 часа
+                  {item.certificate.duration} дней
                 </Text>
 
                 <TitleWrap small>
                   <ProgramDescTitle>Описание:</ProgramDescTitle>
                 </TitleWrap>
                 <Text size={14} weight={500} lH={20} mB={20}>
-                  {item.description}
+                  {item.certificate.description}
                 </Text>
 
                 <TitleWrap small>
                   <ProgramDescTitle>Стоимость:</ProgramDescTitle>
                 </TitleWrap>
                 <Text size={14} weight={500} lH={20} mB={40}>
-                  100 CWD
+                  {(item.price / 100000).toLocaleString('en-US', {
+                    maximumFractionDigits: 2,
+                  })}{' '}
+                  {Balance[item.certificate.assetKind]}
                 </Text>
-                <Button primary>Купить сертификат</Button>
+                <Button bigSize primary onClick={() => onValid(item)} as="button">
+                  Купить сертификат
+                </Button>
               </S.AvilableCertificatesItem>
             ))
           : null}

@@ -196,6 +196,7 @@ export const SelectList = styled.ul`
   left: 0;
   top: 40px;
   z-index: 999;
+  overflow: hidden;
 `;
 
 export const ListItem = styled.li<{ active?: boolean }>`

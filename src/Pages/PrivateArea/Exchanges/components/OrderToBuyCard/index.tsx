@@ -10,25 +10,25 @@ import {
   Text,
   Title,
 } from '../../../components/ui';
-import { Button } from '../../../../../components/Button/V2/Button';
 import { OrderInfoModal } from '../modals/OrderInfoModal';
 
 import { routers } from '../../../../../constantes/routers';
 
 import { Input } from '../../../../../components/Input';
 import { Checkbox } from '../../../components/Checkbox';
-import { OrderSellModal } from '../modals/OrderSellModal';
 import { OrderErrorModal } from '../modals/OrderErrorModal';
 import { AppContext } from '../../../../../context/HubContext';
 import { Balance } from '../../../../../types/balance';
 import { FiatKind } from '../../../../../types/fiat';
+import { CollectionPayMethod, RootPayMethod } from '../../../../../types/paymentMethodKind';
+import { ViewUserCertificateModel } from '../../../../../types/certificates';
+import { ViewBuyOrderModel } from '../../../../../types/orders';
  
 export const OrderToBuyCard: FC = () => {
     const history = useHistory();
     const appContext = useContext(AppContext);
-    const { hubConnection, user, balance, balanceList } = appContext;
+    const { hubConnection, user } = appContext;
     const [showOrderBuyModal, setShowOrderBuyModal] = useState(false);
-    const [showOrderSellModal, setShowOrderSellModal] = useState(false);
     const [showOrderErrorModal, setShowOrderErrorModal] = useState(false);
 
     const [currencyToBuy, setCurrencyToBuy] = useState('');
@@ -37,12 +37,24 @@ export const OrderToBuyCard: FC = () => {
     const [changeRate, setChangeRate] = useState('');
     const [orderMinSumm, setOrderMinSumm] = useState('');
     const [orderMaxSumm, setOrderMaxSumm] = useState('');
-    const [changeTimePeriod, setChangeTimePeriod] = useState('20 минут');
+    const timeDurations = useMemo<{label: string; value: number}[]>(() => {
+        return [
+            {label: '20 минут', value: 20},
+            {label: '40 минут', value: 40},
+            {label: '60 минут', value: 60},
+            {label: '90 минут', value: 90},
+            {label: '120 минут', value: 120},
+            {label: '150 минут', value: 150},
+        ]
+    }, []);
+    const [changeTimePeriod, setChangeTimePeriod] = useState(timeDurations[0].label);
 
-    const [paymentMethods, setPaymentMethods] = useState<any[] | undefined>(undefined);
-    const [selectedPaymentMethodsIds, setSelectedPaymentMethodsIds] = useState<string[]>([])
+    const [paymentMethods, setPaymentMethods] = useState<CollectionPayMethod[] | undefined>(undefined);
+    const [selectedPaymentMethodsIds, setSelectedPaymentMethodsIds] = useState<string[]>([]);
+    const [userActiveCertificate, setUserActiveCertificate] = useState<ViewUserCertificateModel | null>(null);
 
     const [createOrderLoading, setCreateOrderLoading] = useState(false);
+    const [newCreatedOrder, setNewCreatedOrder] = useState<ViewBuyOrderModel | undefined>(undefined);
 
     // Get Balance Kinds List as an Array
     const balanceKinds = useMemo<string[]>(() => {
@@ -62,14 +74,14 @@ export const OrderToBuyCard: FC = () => {
         if(hubConnection) {
             setSelectedPaymentMethodsIds([]);
             getUserPaymentMethods();
+            getUserCertificate();
         }
     }, [currencyToChange]);
 
     const getUserPaymentMethods = async () => {
         if(currencyToChange) {
-            setCreateOrderLoading(true);
             try {
-                const res = await hubConnection!.invoke(
+                const res = await hubConnection!.invoke<RootPayMethod>(
                     'GetUserPaymentsMethods', 
                     [], // PaymentMethodKind
                     [1], // PaymentMethodState
@@ -79,42 +91,76 @@ export const OrderToBuyCard: FC = () => {
                 );
                 setPaymentMethods(res.collection);
                 console.log('GetUserPaymentsMethods', res);
-                setCreateOrderLoading(false);
             } catch (err) {
                 console.log(err);
-                setCreateOrderLoading(false);
             }
         }
-    }
+    };
 
-    const handleCreateBuyOrder = async () => {
+    const getUserCertificate = async () => {
         try {
-            const res = await hubConnection!.invoke(
-                'CreateBuyOrder', 
-                orderSumm, // string volume
-                changeRate, // double rate
-                Balance[currencyToBuy as keyof typeof Balance], // BalanceKind assetKind
-                FiatKind[currencyToChange as keyof typeof FiatKind], // FiatKind operationAssetKind
-                Number(orderMinSumm), // long limitFrom
-                Number(orderMaxSumm), // long limitTo
-                10, // int window
-                selectedPaymentMethodsIds.map(id => +id).splice(0, 5), // Array of int methodsKinds max:5
-            );
-            console.log('GetUserPaymentsMethods', res);
+            const res = await hubConnection!.invoke<ViewUserCertificateModel>('GetUserCertificate', 1);
+            setUserActiveCertificate(res);
+            console.log('getUserCertificate', res);
         } catch (err) {
             console.log(err);
+        }
+    };
+
+    const findPaymentMethodKinds = (methodsList: CollectionPayMethod[] = []): number[] => {
+        const kinds = methodsList.map(m => m.kind);
+        const withoutDuplicates = [...new Set(kinds)];
+        return withoutDuplicates;
+    };
+
+    const handleCreateBuyOrder = async () => {
+        console.log('orderSumm', String(orderSumm))
+        console.log('changeRate', +changeRate)
+        console.log('assetKind', Balance[currencyToBuy as keyof typeof Balance])
+        console.log('operationAssetKind', FiatKind[currencyToChange as keyof typeof FiatKind])
+        console.log('limitFrom', Number(orderMinSumm))
+        console.log('limitTo', Number(orderMaxSumm))
+        console.log('window', 20)
+        console.log('methodsKinds', findPaymentMethodKinds(paymentMethods?.filter(m => selectedPaymentMethodsIds.includes(String(m.id)))))
+        console.log('terms', '');
+
+        setCreateOrderLoading(true);
+        try {
+            const res = await hubConnection!.invoke<ViewBuyOrderModel>(
+                'CreateBuyOrder', 
+                String(orderSumm), // string volume
+                +changeRate, // double rate
+                Balance[currencyToBuy as keyof typeof Balance], // BalanceKind assetKind
+                FiatKind[currencyToChange as keyof typeof FiatKind], // FiatKind operationAssetKind
+                +orderMinSumm, // long limitFrom
+                +orderMaxSumm, // long limitTo
+                timeDurations.find(t => t.label === changeTimePeriod)?.value, // int window
+                findPaymentMethodKinds(paymentMethods?.filter(m => selectedPaymentMethodsIds.includes(String(m.id)))), // Array of int methodsKinds max:5
+                '', // terms
+            );
+            setNewCreatedOrder(res);
+            console.log('GetUserPaymentsMethods', res);
+            setCreateOrderLoading(false);
+        } catch (err) {
+            setShowOrderErrorModal(true);
+            console.log(err);
+            setCreateOrderLoading(false);
         }
     }
 
     const onOrderSummChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const pattern = /^[1-9][0-9]*$/;
         if (e.target.value === '' || pattern.test(e.target.value)) {
-          setOrderSumm(e.target.value);
+            if(userActiveCertificate && (+e.target.value > userActiveCertificate.certificate.dailyVolume)) {
+                setOrderSumm(String(userActiveCertificate.certificate.dailyVolume));
+            } else {
+                setOrderSumm(e.target.value);
+            }
         }
     };
 
     const onRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const pattern = /^[0-9.]*$/;
+        const pattern = /^[0-9][0-9\.]*$/;
         if (e.target.value === '' || pattern.test(e.target.value)) {
           setChangeRate(e.target.value);
         }
@@ -123,14 +169,22 @@ export const OrderToBuyCard: FC = () => {
     const onOrderMinSummChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const pattern = /^[1-9][0-9]*$/;
         if (e.target.value === '' || pattern.test(e.target.value)) {
-          setOrderMinSumm(e.target.value);
+            if(+e.target.value > +orderSumm) {
+                setOrderMinSumm(orderSumm);
+            } else {
+                setOrderMinSumm(e.target.value);
+            }
         }
     };
 
     const onOrderMaxSummChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const pattern = /^[1-9][0-9]*$/;
         if (e.target.value === '' || pattern.test(e.target.value)) {
-          setOrderMaxSumm(e.target.value);
+            if(+e.target.value > +orderSumm) {
+                setOrderMaxSumm(orderSumm);
+            } else {
+                setOrderMaxSumm(e.target.value);
+            }
         }
     };
 
@@ -139,9 +193,38 @@ export const OrderToBuyCard: FC = () => {
         if(selectedPaymentMethodsIds.includes(methodId)) {
             setSelectedPaymentMethodsIds(s => s.filter(id => id !== methodId));
         } else {
-            setSelectedPaymentMethodsIds(s => [...s, methodId]);
+            if(selectedPaymentMethodsIds.length < 6) {
+                setSelectedPaymentMethodsIds(s => [...s, methodId]);
+            }
         }
     }
+
+    const formIsValid = useMemo<boolean>(() => {
+        let isValid = true;
+        if(!currencyToBuy) {
+            isValid = false;
+        }
+        if(!currencyToChange) {
+            isValid = false;
+        }
+        if(!orderSumm) {
+            isValid = false;
+        }
+        if(!changeRate) {
+            isValid = false;
+        }
+        if(!orderMinSumm) {
+            isValid = false;
+        }
+        if(!orderMaxSumm) {
+            isValid = false;
+        }
+        if(selectedPaymentMethodsIds.length === 0) {
+            isValid = false;
+        }
+
+        return isValid;
+    }, [currencyToBuy, currencyToChange, orderSumm, changeRate, orderMinSumm, orderMaxSumm, selectedPaymentMethodsIds])
 
     return (
         <S.Container>
@@ -222,46 +305,60 @@ export const OrderToBuyCard: FC = () => {
                     </S.FormItem>
                 </Space>
 
-                <Space mb={20}>
-                    <S.FormItem>
-                        <Text size={14} weight={300} lH={20} mB={10} black>
-                            Платежный метод:
-                        </Text>
-                        {
-                            paymentMethods === undefined 
-                            ?
-                                null
-                            :
-                            paymentMethods.length > 0
-                            ?
-                                <Space gap={20} mb={20} column>
-                                    {
-                                        paymentMethods.map((method, i) => (
-                                            <Checkbox 
-                                                key={`payment-method-${method.safeId}-${i}`}
-                                                label={JSON.parse(method.data).bankName}
-                                                labelBold
-                                                checked={selectedPaymentMethodsIds.includes(String(method.id))}
-                                                value={method.id}
-                                                onChange={handleMethodsCheckboxChange}
-                                            />
-                                        ))
-                                    }
-                                </Space>
-                            :
-                                // Empty State
-                                <S.EmptyPaymentsBlock>
-                                    <Text size={14} weight={300} lH={20} black>
-                                        {`Платежные методы отсутствуют, `}
-                                        <S.Link to={routers.settingsNewPayMethod}>добавьте платежный метод</S.Link>
-                                    </Text>
-                                </S.EmptyPaymentsBlock>
-                        }
-                          
-                    </S.FormItem>
-                </Space>
                 {
-                    currencyToChange && 
+                    paymentMethods === undefined 
+                    ?
+                    null
+                    :
+                    <Space mb={20}>
+                        <S.FormItem>
+                            <Text size={14} weight={300} lH={20} mB={10} black>
+                                Платежный метод:
+                            </Text>
+                            {
+                                paymentMethods.length > 0
+                                ?
+                                    <Space gap={20} column>
+                                        {
+                                            paymentMethods.map((method, i) => {
+                                                return FiatKind[currencyToChange as keyof typeof FiatKind] !== 7
+                                                ?
+                                                    <Checkbox 
+                                                        key={`payment-method-${method.safeId}-${i}`}
+                                                        label={JSON.parse(method.data).bankName}
+                                                        labelBold
+                                                        checked={selectedPaymentMethodsIds.includes(String(method.id))}
+                                                        value={String(method.id)}
+                                                        onChange={handleMethodsCheckboxChange}
+                                                    />
+                                                :
+                                                    <Checkbox 
+                                                        key={`payment-method-${method.safeId}-${i}`}
+                                                        label={FiatKind[method.assetKind]}
+                                                        labelBold
+                                                        checked={selectedPaymentMethodsIds.includes(String(method.id))}
+                                                        value={String(method.id)}
+                                                        onChange={handleMethodsCheckboxChange}
+                                                    />
+                                            })
+                                        }
+                                    </Space>
+                                :
+                                    // Empty State
+                                    <S.EmptyPaymentsBlock>
+                                        <Text size={14} weight={300} lH={20} black>
+                                            {`Платежные методы отсутствуют, `}
+                                            <S.Link to={routers.settingsNewPayMethod}>добавьте платежный метод</S.Link>
+                                        </Text>
+                                    </S.EmptyPaymentsBlock>
+                            }
+                            
+                        </S.FormItem>
+                    </Space>
+                }
+               
+                {
+                    (currencyToBuy &&  currencyToChange && orderSumm && changeRate) &&
                     <Space gap={20} mb={20}>
                         <S.FormItem>
                             <Text size={14} weight={300} lH={20} mB={10} black>
@@ -295,7 +392,7 @@ export const OrderToBuyCard: FC = () => {
                         </Text>
                         <S.Select
                             placeholder="20 минут"
-                            options={['20 минут', '40 минут', '60 минут', '90 минут', '120 минут', '150 минут']}
+                            options={timeDurations.map(i => i.label)}
                             selectedOption={changeTimePeriod}
                             setSelectedOption={(val: string) => setChangeTimePeriod(val)}
                         />
@@ -303,26 +400,15 @@ export const OrderToBuyCard: FC = () => {
                 </Space>
                 
                 <Space gap={10} mb={40}>
-                    <S.SubmitButton type="button" onClick={() => setShowOrderBuyModal(true)}>
-                        <Button primary>
-                            Опубликовать ордер
-                        </Button> 
-                    </S.SubmitButton>
-
-                    <S.SubmitButton type="button" onClick={() => setShowOrderSellModal(true)}>
-                        <Button primary>
-                            Опубликовать ордер 2
-                        </Button> 
-                    </S.SubmitButton>
-
-                    <S.SubmitButton 
-                        type="button" 
-                        onClick={() => setShowOrderErrorModal(true)}
+                    <S.Button 
+                        primary 
+                        onClick={() => setShowOrderBuyModal(true)}
+                        as={'button'}
+                        disabled={!formIsValid}
+                        type="button"
                     >
-                        <Button primary>
-                            Опубликовать ордер Error
-                        </Button> 
-                    </S.SubmitButton>
+                        Опубликовать ордер
+                    </S.Button> 
                 </Space>
             
             </S.Form>
@@ -344,12 +430,9 @@ export const OrderToBuyCard: FC = () => {
                     paymentMethods?.filter(m => selectedPaymentMethodsIds.includes(String(m.id))) 
                     : []
                 }
+                newCreatedOrder={newCreatedOrder}
                 open={showOrderBuyModal}
                 onClose={() => setShowOrderBuyModal(false)}
-            />
-            <OrderSellModal
-                open={showOrderSellModal}
-                onClose={() => setShowOrderSellModal(false)}
             />
             <OrderErrorModal 
                 open={showOrderErrorModal}
@@ -358,99 +441,3 @@ export const OrderToBuyCard: FC = () => {
         </S.Container>
     );
 };
-
-
- {/* <Space gap={20} column>
-    <Space gap={10} column>
-        <Checkbox 
-             label={'АО «Альфа-Банк»'}
-             checked={true}
-             onChange={(e) => console.log(e)}
-         />
-         <S.PaymentMethodDetailsBlock>
-             <Text size={14} weight={300} lH={20} black mB={4}>Номер карты:</Text>
-             <Text size={14} weight={500} lH={16} black mB={10}>5536 9137 9922 7240</Text>
-
-             <Text size={14} weight={300} lH={20} black mB={4}>Держатель карты:</Text>
-             <Text size={14} weight={500} lH={16} black>VYACHESLAV TROSCHIN</Text>
-         </S.PaymentMethodDetailsBlock>
-     </Space>
-
-     <Space gap={10} column>
-         <Checkbox 
-             label={'АО «Тинькофф Банк»'}
-             checked={true}
-             onChange={(e) => console.log(e)}
-         />
-         <S.PaymentMethodDetailsBlock>
-             <Text size={14} weight={300} lH={20} black mB={4}>Номер карты:</Text>
-             <Text size={14} weight={500} lH={16} black mB={10}>5536 9137 9922 7240</Text>
-
-             <Text size={14} weight={300} lH={20} black mB={4}>Держатель карты:</Text>
-             <Text size={14} weight={500} lH={16} black>VYACHESLAV TROSCHIN</Text>
-         </S.PaymentMethodDetailsBlock>
-     </Space>
-
-     <Space gap={10} column>
-         <Checkbox 
-             label={'ПАО Сбербанк'}
-             checked={false}
-             onChange={(e) => console.log(e)}
-         />
-         <S.PaymentMethodDetailsBlock>
-             <Text size={14} weight={300} lH={20} black mB={4}>Номер карты:</Text>
-             <Text size={14} weight={500} lH={16} black mB={10}>5536 9137 9922 7240</Text>
-
-             <Text size={14} weight={300} lH={20} black mB={4}>Держатель карты:</Text>
-             <Text size={14} weight={500} lH={16} black>VYACHESLAV TROSCHIN</Text>
-         </S.PaymentMethodDetailsBlock>
-     </Space>
- </Space> */}
-
-
-
-
-
- {/* <Space gap={20} column>
-     <Space gap={10} column>
-         <Checkbox 
-             label={'TRC 20'}
-             labelBold
-             checked={true}
-             onChange={(e) => console.log(e)}
-         />
-         <S.PaymentMethodDetailsBlock>
-             <Text size={14} weight={300} lH={20} black mB={4}>Адрес кошелька:</Text>
-             <Text size={14} weight={500} lH={16} black>377JKD792HcVkP5qZoF7Pv31MbUwke5iMX</Text>
-         </S.PaymentMethodDetailsBlock>
-     </Space>
-
-     <Space gap={10} column>
-         <Checkbox 
-             label={'ERC 20'}
-             labelBold
-             checked={true}
-             onChange={(e) => console.log(e)}
-         />
-         <S.PaymentMethodDetailsBlock>
-             <Text size={14} weight={300} lH={20} black mB={4}>Адрес кошелька:</Text>
-             <Text size={14} weight={500} lH={16} black>377JKD792HcVkP5qZoF7Pv31MbUwke5iMX</Text>
-         </S.PaymentMethodDetailsBlock>
-     </Space>
-
-     <Space gap={10} column>
-         <Checkbox 
-             label={'BEP 20'}
-             labelBold
-             checked={false}
-             onChange={(e) => console.log(e)}
-         />
-         <S.PaymentMethodDetailsBlock>
-             <Text size={14} weight={300} lH={20} black mB={4}>Адрес кошелька:</Text>
-             <Text size={14} weight={500} lH={16} black>377JKD792HcVkP5qZoF7Pv31MbUwke5iMX</Text>
-         </S.PaymentMethodDetailsBlock>
-     </Space>
- </Space>
-
-</S.FormItem>
-</Space> */}

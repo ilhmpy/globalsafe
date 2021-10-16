@@ -2,18 +2,31 @@ import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Modal } from '../../components/Modal/Modal';
+import { IBalanceExchange } from './ConvertingModal';
 
 interface Iprops {
   open: boolean;
   setOpen: (open: boolean) => void;
+  setConvertedData: (convertedData: IBalanceExchange) => void;
 }
-export const ConvertingModalFail: FC<Iprops> = ({ open, setOpen }: Iprops) => {
+export const ConvertingModalFail: FC<Iprops> = ({ open, setOpen, setConvertedData }: Iprops) => {
   const { t } = useTranslation();
 
   return (
     <>
       {open && (
-        <Modal onClose={() => setOpen(false)} width={420}>
+        <Modal
+          onClose={() => {
+            setOpen(false);
+            setConvertedData({
+              userAmount: 0,
+              calculatedAmount: 0,
+              targetAmount: 0,
+              discountPercent: 0,
+            });
+          }}
+          width={420}
+        >
           <ModalBlock>
             <ModalTitle>{t('privateArea.convertingFail')}</ModalTitle>
             <ModalContent>

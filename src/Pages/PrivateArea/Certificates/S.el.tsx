@@ -44,6 +44,7 @@ export const AvilableCertificates = styled(Wrap)`
   align-items: stretch;
   justify-content: flex-start;
   max-width: 1148px;
+  flex-wrap: wrap;
 `;
 
 export const AvilableCertificatesItem = styled.div`

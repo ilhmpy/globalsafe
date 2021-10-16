@@ -2,10 +2,10 @@ import * as Notifies from "./Notify.styles";
 import { FC, useState, useEffect, useContext } from "react";
 import Scrollbars from 'react-custom-scrollbars';
 import moment from 'moment';
-import { Balance } from "../../../types/balance";
 import { AppContext } from '../../../context/HubContext';
 import  { InBlockLoading } from "../../UI/V4/InBlockLoading/InBlockLoading";
-import { StyledFilter } from "../../Table/Table.styled";
+import { NotifyItem } from "../../../constantes/notifies";
+import * as Table from "../../UI/V4/TableItems";
 
 type NotifyProps = {
    block: boolean; 
@@ -13,18 +13,6 @@ type NotifyProps = {
    admin?: boolean; 
    setCheckeds: (bool: boolean) => void;
    setBlock: (bool: boolean) => void;
-};
-
-interface NotifyItem {
-  id: number;
-  message: string;
-  readState: number;
-  safeId: string;
-  sentDate: any;
-  state: number;
-  subject: string;
-  userId: number;
-  userSafeId: string;
 };
 
 export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBlock }: NotifyProps) => {
@@ -50,9 +38,13 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
             .then((res) => {
               console.log("user notifications", res);
               setCheckeds(res.collection.some((item: NotifyItem) => item.readState === 0));
-              setNotifies(() => res.collection.sort((a: NotifyItem, b: NotifyItem) => 
-                a.readState === 0 ? -1 : (b.readState === 0 ? 1 : -1)
-              ));
+              setNotifies(() => res.collection.map((item: any) => {
+                  return { ...item, click: undefined };
+              }).sort((x: any, y: any) => {
+                const a = new Date(x.sentDate);
+                const b = new Date(y.sentDate);
+                return a > b ? -1 : a < b ? 1 : 0;
+              }));
               setLoading(false);
             })
             .catch((err) => {
@@ -73,26 +65,53 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
     
     useEffect(() => {
         getNotifies();
-    }, [hubConnection]);
+    }, [hubConnection, block]);
+
+    function changeHide(bool: boolean, id: string) {
+        notifies.forEach((notify: any) => {
+            if (notify.safeId === id) {
+                notify.click = bool;
+                setNotifies(items => items.map(i => i));
+            };
+        });
+    };
 
     function onNotify(id: string) {
-        if (hubConnection) {
-            hubConnection.invoke("SetStateInAppNotification", id, 1)
-             .then(() => {
-                 getNotifies(false);
-             })
-             .catch(err => console.error(err));
+        changeHide(true, id);
+        setTimeout(() => {
+            changeHide(false, id);
+            if (hubConnection) {
+                hubConnection.invoke("SetStateInAppNotification", id, 1)
+                 .then(() => {
+                     getNotifies(false);
+                 })
+                 .catch(err => console.error(err));
+            };
+        }, 500);
+    };
+
+    function getLinkAddress(link: string, kind: number) {
+        if (kind === 20 || kind === 21 || kind === 22) {
+            return `/info/p2p-changes/orders/${link}`;
         };
     };
 
+    function link(kind: number) {
+        return kind === 20 || kind === 21 || kind === 22;
+    };
+
     return (
-      <Notifies.NotifiesBlock block={block} admin={admin} empty={!loading && notifies.length === 0} load={loading} onMouseLeave={() => setBlock(false)}>
+      <Notifies.NotifiesBlock block={block} admin={admin} 
+            empty={!loading && notifies.length === 0}
+            load={loading} onMouseLeave={() => setBlock(false)}>
           {loading ? <InBlockLoading /> : (
             <>
                 {notifies && notifies.length ? (
-                    <Scrollbars renderThumbVertical={(props) => <Notifies.Scrollbar {...props}></Notifies.Scrollbar>}>
-                        {notifies && notifies.map((notify: NotifyItem, idx: number) => (
-                            <Notifies.Notify notChecked={notify.readState === 0} key={idx} onClick={() => onNotify(notify.safeId)}>
+                    <Scrollbars 
+                        style={{ width: "100%", height: "100%" }}
+                        renderThumbVertical={(props) => <Notifies.Scrollbar {...props}></Notifies.Scrollbar>}>
+                        {notifies && notifies.map((notify: any, idx: number) => (
+                            <Notifies.Notify click={notify.click} notChecked={notify.readState === 0} key={idx}>
                                 <Notifies.NotifyItem grey>
                                     {moment(notify.sentDate).format("DD.MM.YYYY")} в {moment(notify.sentDate).format("HH:MM")}
                                 </Notifies.NotifyItem>
@@ -100,6 +119,11 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
                                     {notify.subject}
                                 </Notifies.NotifyItem>
                                 <Notifies.NotifyItem>{notify.message}</Notifies.NotifyItem>
+                                {link(notify.notificationKind) && notify.link != "" && notify.link != "0" && 
+                                    <Table.LinkButton 
+                                        style={{ marginTop: "10px" }}
+                                        href={getLinkAddress(notify.link, notify.notificationKind)}>Перейти к обмену</Table.LinkButton>}
+                                <Notifies.DoneNotify onClick={() => onNotify(notify.safeId)} />
                             </Notifies.Notify>
                         ))}
                    </Scrollbars>

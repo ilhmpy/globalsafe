@@ -1,32 +1,40 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useHistory } from 'react-router';
-import alfa from '../../../../../assets/v2/svg/banks/alfa.svg';
-import alfa1 from '../../../../../assets/v2/svg/banks/alfa1.svg';
-import sber from '../../../../../assets/v2/svg/banks/sber.svg';
-import tinkoff from '../../../../../assets/v2/svg/banks/tinkoff.svg';
-import { CurrencyPair } from '../modals/CurrencyPair';
+
+import { AppContext } from '../../../../../context/HubContext';
+import { PrivateAreaContext } from '../../../../../context/PrivateAreaContext';
+import { Balance } from '../../../../../types/balance';
+import { FiatKind } from '../../../../../types/fiat';
+import { OrderType, ViewBuyOrderModel, ViewSellOrderModel } from '../../../../../types/orders';
+import { paymentMethodIconSrc } from '../../../utils';
 import { PaymentMethods } from '../modals/PaymentMethods';
 import { Rating } from '../modals/Rating';
 
 import * as S from './S.el';
 
-export const AdvertTable = () => {
+interface AdvertTableProps {
+  list: Array<ViewBuyOrderModel | ViewSellOrderModel>;
+  ordersType: OrderType;
+}
+
+export const AdvertTable = ({ list, ordersType }: AdvertTableProps) => {
   const history = useHistory();
+  const { userSafeId } = useContext(AppContext);
+  const { setCurrentOrder, setCurrentOrderType } = useContext(PrivateAreaContext);
   const [selectedOption, setSelectedOption] = useState<string | null>('Все валюты предложения');
 
-  const handleNavigateTo = () => {
-    history.replace(`/info/p2p-changes/orders/${Date.now().toString()}`)
-  }
+  const handleNavigateTo = (order: ViewBuyOrderModel | ViewSellOrderModel) => {
+    setCurrentOrder(order);
+    setCurrentOrderType(ordersType);
+
+    if(order.userSafeId === userSafeId) {
+      history.replace(`/info/p2p-changes/orders/my/${order.id}`)
+    }
+  };
+
   const [ratingOption, setRatingOption] = useState<string | null>('Рейтинг участников 5.0');
   return (
     <>
-      {/* <CurrencyPair
-        open={true}
-        onClose={() => undefined}
-        options={['Все валюты предложения', 'CWD']}
-        selectedOption={selectedOption}
-        setSelectedOption={setSelectedOption}
-      /> */}
       {/* <Rating
         open={true}
         onClose={() => undefined}
@@ -59,61 +67,49 @@ export const AdvertTable = () => {
             <span>Рейтинг</span>
           </S.Cell>
         </S.Header>
-        <S.BodyItem onClick={handleNavigateTo}>
-          <S.Cell data-label="Кол-во">5 000 000 CWD</S.Cell>
-          <S.Cell data-label="Курс">0.90</S.Cell>
-          <S.Cell data-label="На сумму">4 500 000 USD</S.Cell>
-          <S.Cell data-label="Лимиты">1 000 - 10 000 USD</S.Cell>
-          <S.Cell data-label="Метод оплаты">
-            <S.BankList>
-              <S.BankItem>
-                <img src={alfa} alt="" />
-              </S.BankItem>
-              <S.BankItem>
-                <img src={tinkoff} alt="" />
-              </S.BankItem>
-              <S.BankItem>
-                <img src={sber} alt="" />
-              </S.BankItem>
-            </S.BankList>
-          </S.Cell>
-          <S.Cell data-label="Время на обмен">20 м</S.Cell>
-          <S.Cell data-label="Рейтинг">5.0 (378)</S.Cell>
-        </S.BodyItem>
-        <S.BodyItem active  onClick={handleNavigateTo}>
-          <S.Cell data-label="Кол-во">1 000 000 GLOBAL</S.Cell>
-          <S.Cell data-label="Курс">0.91</S.Cell>
-          <S.Cell data-label="На сумму">910 000 EUR</S.Cell>
-          <S.Cell data-label="Лимиты">1 000 - 10 000 EUR</S.Cell>
-          <S.Cell data-label="Метод оплаты">
-            <S.BankList>
-              <S.BankItem>
-                <img src={alfa} alt="" />
-              </S.BankItem>
-              <S.BankItem>
-                <img src={alfa1} alt="" />
-              </S.BankItem>
-            </S.BankList>
-          </S.Cell>
-          <S.Cell data-label="Время на обмен">20 м</S.Cell>
-          <S.Cell data-label="Рейтинг">5.0 (274)</S.Cell>
-        </S.BodyItem>
 
-        <S.BodyItem  onClick={handleNavigateTo}>
-          <S.Cell data-label="Кол-во">270 000 CWD</S.Cell>
-          <S.Cell data-label="Курс">0.92</S.Cell>
-          <S.Cell data-label="На сумму">248 400 USDT</S.Cell>
-          <S.Cell data-label="Лимиты">100 - ∞ USDT</S.Cell>
-          <S.Cell data-label="Метод оплаты">
-            <S.BankList>
-              <S.TypeCrypto>ERC 20</S.TypeCrypto>
-              <S.TypeCrypto>TRC 20</S.TypeCrypto>
-              <S.TypeCrypto>BEP 20</S.TypeCrypto>
-            </S.BankList>
-          </S.Cell>
-          <S.Cell data-label="Время на обмен">20 м</S.Cell>
-          <S.Cell data-label="Рейтинг">5.0 (1)</S.Cell>
-        </S.BodyItem>
+
+        {
+          list.length > 0 &&
+          list.map((order) => (
+            <S.BodyItem 
+              key={`order-list-item-${order.safeId}`}
+              active={order.userSafeId === userSafeId}
+              onClick={() => handleNavigateTo(order)} 
+            >
+              <S.Cell data-label="Кол-во">
+                {`${order.volume} ${Balance[order.assetKind]}`}
+              </S.Cell>
+              <S.Cell data-label="Курс">{order.rate}</S.Cell>
+              <S.Cell data-label="На сумму">
+                {`${(order.volume * order.rate)} ${FiatKind[order.operationAssetKind]}`}
+              </S.Cell>
+              <S.Cell data-label="Лимиты">
+                {`${order.limitFrom} - ${order.limitTo} ${FiatKind[order.operationAssetKind]}`}
+              </S.Cell>
+              <S.Cell data-label="Метод оплаты">
+                <S.BankList>
+                  {
+                    order.methodsKinds.length > 0 &&
+                    order.methodsKinds.map((method, i) => (
+                      method < 3 
+                      ?
+                        <S.BankItemText key={`method-item-${i}`}>
+                          <img src={paymentMethodIconSrc(method)} alt="" />
+                        </S.BankItemText>
+                      :
+                        <S.BankItem key={`method-item-${i}`}>
+                          <img src={paymentMethodIconSrc(method)} alt="" />
+                        </S.BankItem>
+                    ))
+                  }
+                </S.BankList>
+              </S.Cell>
+              <S.Cell data-label="Время на обмен">{`${order.operationWindow.totalMinutes} м`}</S.Cell>
+              <S.Cell data-label="Рейтинг">{`${order.userRating} (${order.totalExecuted})`}</S.Cell>
+            </S.BodyItem>
+          ))
+        }
       </S.Table>
     </>
   );

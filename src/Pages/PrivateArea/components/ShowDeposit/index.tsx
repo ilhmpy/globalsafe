@@ -30,7 +30,8 @@ export const ShowDeposit: FC<{ chosenDepositView: any }> = ({ chosenDepositView 
         </TitleWrap>
         <TitleWrap big>
           <Name>
-            {chosenDepositView?.amount?.toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')} GLOBAL
+            {(chosenDepositView?.amount / 100000).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}{' '}
+            GLOBAL
           </Name>
         </TitleWrap>
         <ProgramDescTitle>Описание и условия депозита:</ProgramDescTitle>

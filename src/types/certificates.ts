@@ -22,7 +22,7 @@ export interface ViewUserCertificateModel {
     userSafeId: string;
     creationDate: string;
     finishDate: string;
-    certificate: ViewTradeCertificateModel;
+    certificate: ViewTradeCertificateModel; 
   }
 
   export interface ViewTradeCertificateModel {
@@ -34,3 +34,19 @@ export interface ViewUserCertificateModel {
     assetKind: Balance;
     dailyVolume: number;
   }
+
+  export interface RootMarketCertificate {
+    collection: MarketCertificate[];
+    totalRecords: number;
+  }
+
+  export interface MarketCertificate {
+    id: number;
+    safeId: string;
+    itemKind: number;
+    price: number;
+    priceKind: number;
+    certificate: ViewTradeCertificateModel;
+  }
+
+  

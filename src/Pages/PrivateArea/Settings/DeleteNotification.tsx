@@ -1,27 +1,32 @@
 import React, { FC, useContext, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
 import { ReactComponent as Close } from '../../../assets/svg/close.svg';
 import { Modal } from '../../../components/Modal/Modal';
 import { routers } from '../../../constantes/routers';
-import { AppContext } from '../../../context/HubContext';
+import { payList } from './utils';
+import { PaymentMethodKind, CollectionPayMethod } from '../../../types/paymentMethodKind';
+import { FiatKind } from '../../../types/fiatKind';
 
 interface IProps {
   open: boolean;
   setOpen: (open: boolean) => void;
+  data: CollectionPayMethod;
 }
 
-export const DeleteNotification: FC<IProps> = ({ open, setOpen }: IProps) => {
-  const { t } = useTranslation();
-  const [fromSum, setFromSum] = useState('');
-  const [toSum, setToSum] = useState('');
-  const [fromCurrency, setFromCurrency] = useState('');
-  const [toCurrency, setToCurrency] = useState('');
-  const appContext = useContext(AppContext);
-  const hubConnection = appContext.hubConnection;
+type PayMethod = {
+  bankNumber?: string;
+  name?: string;
+  bankName?: string;
+  paymentAddress?: string;
+  assetKind?: number;
+};
+
+export const DeleteNotification: FC<IProps> = ({ open, setOpen, data }: IProps) => {
   const history = useHistory();
+
+  const payMethod: PayMethod = JSON.parse(data.data);
 
   return (
     <CSSTransition in={open} timeout={300} unmountOnExit>
@@ -43,16 +48,26 @@ export const DeleteNotification: FC<IProps> = ({ open, setOpen }: IProps) => {
 
           <ContentWrapper>
             <InnerBlock>
-              <Row>Успешно удален платежный метод:</Row>
               <Row>
-                <b>Банковский перевод АО «Тинькофф Банк»</b>
+                <b>
+                  {payList[data.kind]}, {FiatKind[data.assetKind]}
+                </b>
               </Row>
-              <Row>
-                <strong>VYACHESLAV TROSCHIN</strong>
-              </Row>
-              <Row>
-                <b>5536 9137 9922 7240</b>
-              </Row>
+              {payMethod.name ? (
+                <Row>
+                  <strong>{payMethod.name}</strong>
+                </Row>
+              ) : null}
+              {payMethod.bankNumber ? (
+                <Row>
+                  <b>{payMethod.bankNumber}</b>
+                </Row>
+              ) : null}
+              {payMethod.paymentAddress ? (
+                <Row>
+                  <b>{payMethod.paymentAddress}</b>
+                </Row>
+              ) : null}
             </InnerBlock>
           </ContentWrapper>
         </Container>
