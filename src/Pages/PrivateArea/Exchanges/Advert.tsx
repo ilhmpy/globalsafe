@@ -51,7 +51,7 @@ export const Advert = () => {
         getSellOrders();
       }
     }
-  }, [hubConnection, activeType, selectedPair]);
+  }, [hubConnection, activeType, selectedPair, acceptedRate]);
 
   const getBuyOrders = async () => {
       try {
@@ -60,7 +60,7 @@ export const Advert = () => {
           selectedPair?.balance ? [ Balance[selectedPair?.balance as keyof typeof Balance] ] : [],  // Array of BalanceKind assetKinds
           selectedPair?.fiat ? [ FiatKind[selectedPair?.fiat as keyof typeof FiatKind] ] : [],  // Array of FiatKind opAssetKinds
           // [], // Array of PaymentMethodKind[] paymentMethodKinds
-          // 0, // int rating
+          // acceptedRate, // int rating
           skip, 
           10
         );
@@ -80,6 +80,8 @@ export const Advert = () => {
         'GetSellOrders', 
         selectedPair?.balance ? [ Balance[selectedPair?.balance as keyof typeof Balance] ] : [],  // Array of BalanceKind assetKinds
         selectedPair?.fiat ? [ FiatKind[selectedPair?.fiat as keyof typeof FiatKind] ] : [],  // Array of FiatKind opAssetKinds
+        // [], // Array of PaymentMethodKind[] paymentMethodKinds
+        // acceptedRate, // int rating
         skip, 
         10
       );
