@@ -191,7 +191,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
           <Text size={14} lH={20} mB={10} black>
             На сумму:
           </Text>
-          <Title lH={28}>{exchange.exchangeVolume} {FiatKind[exchange.exchangeAssetKind]}</Title>
+          <Title lH={28}>{exchange.volume * exchange.rate} {FiatKind[exchange.exchangeAssetKind]}</Title>
         </S.BlockWrapper>
 
         <S.BlockWrapper>

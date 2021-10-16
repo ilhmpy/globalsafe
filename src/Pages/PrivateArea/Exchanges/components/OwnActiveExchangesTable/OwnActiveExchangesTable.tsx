@@ -76,11 +76,10 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
     };
   };
 
-  const Status = ["Создан", "Принят", "Завершен", "Подана жалоба", "Отменен"];
+  const Status = ["Новый", "Подтвержден", "Завершен", "Подана жалоба", "Отменен"];
 
   /* 
     ОСТАЛОСЬ СДЕЛАТЬ:
-    ^ доработка высчитывания времени(в будущем протещу)
     обновление оставшегося время каждую минуту
     ^ страница архив
     детальная страница каждого обмена
@@ -88,14 +87,13 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
   */
 
   function getTime(date: Date, wn: any) {
-    const create = new Date(date);
-    const now = new Date();
     const result = { 
                      days: wn.days - moment().diff(date, "days", false), 
                      hours: wn.totalHours - moment().diff(date, "hours", false), 
                      minutes: wn.totalMinutes - moment().diff(date, "minutes", false), 
                      seconds: wn.totalSeconds - moment().diff(date, "seconds", false)
-                   }; 
+                   };
+    console.log(wn.minutes - moment().diff(new Date(2021, 9, 16, 15, 57), "minutes", false))
     const { days, hours, minutes, seconds } = result;
    // console.log(date, wn, result);
     if (days > 0) {
