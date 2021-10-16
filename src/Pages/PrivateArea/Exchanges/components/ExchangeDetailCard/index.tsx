@@ -1,4 +1,4 @@
-import React, { FC, useState, useContext } from 'react';
+import React, { FC, useState, useContext, useEffect } from 'react';
 import * as S from './S.el';
 import {
   Chip,
@@ -30,12 +30,28 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
   const [feedbackValue, setFeedbackValue] = useState(5);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showRejectModal, setShowRejectModal] = useState(false);
-  const { account } = useContext(AppContext);
+  const { account, hubConnection } = useContext(AppContext);
+  const [totalExchanges, setTotalExchanges] = useState<any>({}); 
 
   const handleClick = () => {
     history.push(`/info/p2p-changes/${Date.now().toString()}/chat`);
     console.log('ExchangeDetailCard Click');
   };
+
+  function getTotalExecutedExchanges(id: string) {
+    if (hubConnection) {
+      hubConnection.invoke("GetTotalExecutedExchanges", id)
+        .then((res) => {
+          console.log("totalExecutedExchanges", res);
+        })
+        .catch((err) => console.error(err));
+    };
+  };  
+
+  useEffect(() => {
+    getTotalExecutedExchanges(account.safeId);
+    // GetTotalExecutedExchanges();
+  }, [hubConnection]);
 
   console.log(exchange)
 
@@ -91,11 +107,23 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
     account.claims.forEach((claim: any) => {
       if (claim.claimType === "exchanges-rating") {
         rating = claim.claimValue;
-        console.log(rating);
-      }
+      };
     });
     return (Number(rating)).toFixed(1);
   }
+
+  function getParsePaymentData(field: "card" | "name") {
+    const fields = JSON.parse(exchange.paymentMethod?.data);
+    if (fields) {
+      if (field === "card") {
+        return fields.bankNumber;
+      } else {
+        return fields.name;
+      };
+    } else {
+      return {};
+    };
+  };
 
   return (
     <S.Container>
@@ -153,7 +181,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
           <Text size={14} lH={20} mB={10} black>
             Рейтинг продавца:
           </Text>
-          <Title lH={28}>{exchange.kind === 0 ? (Number(exchange.userRating)).toFixed(1) : getMyRating()} (378) </Title>
+          <Title lH={28}>{exchange.kind === 0 ? (Number(exchange.userRating)).toFixed(1) : getMyRating()} (X) </Title>
         </S.BlockWrapper>
       </LeftSide>
 
@@ -198,9 +226,9 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
           </Text>
           <S.Space>
             <Text size={14} lH={20} weight={500} black>
-              5536 9137 9922 7240
+              {getParsePaymentData("card")}
             </Text>
-            <CopyIconButton copyValue={'5536 9137 9922 7240'} />
+            <CopyIconButton copyValue={getParsePaymentData("card")} />
           </S.Space>
         </S.BlockWrapper>
 
@@ -209,99 +237,259 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
             Держатель карты:
           </Text>
           <Text size={14} lH={20} weight={500} black>
-            VYACHESLAV TROSCHIN
+            {getParsePaymentData("name")}
           </Text>
         </S.BlockWrapper>
-
-        <S.BlockWrapper>
+        
+        <S.BlockWrapper when={exchange.state === 2 || exchange.state === 3 || exchange.state === 4}>
           <Text size={14} lH={20} mB={4} black>
-            Рейтинг покупателя:
+            Рейтинг покупателя
           </Text>
-          <Text size={14} lH={20} weight={500} black>
-            {exchange.kind === 0 ? getMyRating() : (Number(exchange.userRating)).toFixed(1)} (256)
+          <Text size={14} lH={20} mB={4} black>
+            {exchange.kind === 0 ? getMyRating() : (Number(exchange.userRating)).toFixed(1)} (X)
           </Text>
         </S.BlockWrapper>
 
-        <S.TransferInfoBlock>
-          <Text size={14} lH={20} black>
-            Покупатель указал, что перевел средства в размере <S.B>49 900 RUB</S.B> на указанный
-            счет. Подтвердите получение средств для успешного завершения обмена. Покупатель получит{' '}
-            <S.B>482.40 CWD</S.B>
-          </Text>
-        </S.TransferInfoBlock>
+        {/* INITIATED STATE */}
 
-        <S.Space justify="space-between">
-          <Button primary onClick={() => setShowSuccessModal(true)}>
-            Средства получены
-          </Button>
+        <S.StateBlock when={exchange.state === 0}>
+          
+          <S.StateBlock when={exchange.kind === 1}>
+            <S.TransferInfoBlock>
+              <Text size={14} lH={20} black>
+                Осуществите перевод средств на указанный счет в размере <S.B>{(Math.floor(exchange.exchangeVolume * exchange.rate)).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {FiatKind[exchange.exchangeAssetKind]}</S.B> и подтвердите
+                перевод средств продавцу нажав на кнопку “средства отправлены”
+              </Text>
+            </S.TransferInfoBlock>
 
-          <S.Space gap={20}>
-            <Button outlinePrimary onClick={handleClick}>
-              Чат
-            </Button>
-            <Button outlineDanger onClick={handleClick}>
-              Жалоба
-            </Button>
-          </S.Space>
-        </S.Space>
+            <S.Space justify="space-between">
+              <S.Space gap={20}>
+                <Button primary bigSize onClick={() => setShowSuccessModal(true)}>
+                  Средства отправлены
+                </Button>
+                <Button outlinePrimary bigSize onClick={handleClick}>
+                    Отменить обмен
+                </Button>
+              </S.Space>
 
-        {/* Another State */}
-        <S.TransferInfoBlock>
-          <Text size={14} lH={20} black>
-            Обмен успешно завершен. Средства в размере <S.B>482.40 CWD</S.B> отправлены покупателю.
-            Оставьте свою оценку покупателю.
-          </Text>
-        </S.TransferInfoBlock>
+              <S.Space gap={20}>
+                <Button outlinePrimary bigSize onClick={handleClick}>
+                  Чат
+                </Button>
+                <Button outlinePrimary bigSize onClick={handleClick} as="button" disabled={exchange.state === 0} exchangeBtn>
+                  Жалоба
+                </Button>
+              </S.Space>
+            </S.Space>
+          </S.StateBlock>
+          
+          <S.StateBlock when={exchange.kind === 0}>
+            <S.TransferInfoBlock>
+              <Text size={14} lH={20} black>
+                Покупатель  осуществляет перевод средств на указанный счет в размере <S.B>{(Math.floor(exchange.exchangeVolume * exchange.rate)).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {FiatKind[exchange.exchangeAssetKind]}</S.B> <br />
+                С вашего баланса списаны и заморожены <S.B>{exchange.volume * exchange.rate} {Balance[exchange.assetKind]}</S.B> до подтверждения вами получения средств.
+              </Text>
+            </S.TransferInfoBlock>
 
-        <S.FeedbackBlock>
-          <Text size={14} lH={20} mB={10} black>
-            Оставьте свою оценку покупателю:
-          </Text>
-          <Radio.Group>
-            <Radio
-              name="feedback"
-              label="1"
-              value="1"
-              checked={feedbackValue === 1}
-              onChange={(e) => setFeedbackValue(+e.target.value)}
-            />
-            <Radio
-              name="feedback"
-              label="2"
-              value="2"
-              checked={feedbackValue === 2}
-              onChange={(e) => setFeedbackValue(+e.target.value)}
-            />
-            <Radio
-              name="feedback"
-              label="3"
-              value="3"
-              checked={feedbackValue === 3}
-              onChange={(e) => setFeedbackValue(+e.target.value)}
-            />
-            <Radio
-              name="feedback"
-              label="4"
-              value="4"
-              checked={feedbackValue === 4}
-              onChange={(e) => setFeedbackValue(+e.target.value)}
-            />
-            <Radio
-              name="feedback"
-              label="5"
-              value="5"
-              checked={feedbackValue === 5}
-              onChange={(e) => setFeedbackValue(+e.target.value)}
-            />
-          </Radio.Group>
-        </S.FeedbackBlock>
+            <S.Space justify="space-between">
+              <S.Space gap={20}>
+                <Button primary bigSize onClick={() => setShowSuccessModal(true)}>
+                  Средства получены
+                </Button>
+              </S.Space>
 
-        <Button primary onClick={() => setShowRejectModal(true)}>
-          Подтвердить
-        </Button>
+              <S.Space gap={20}>
+                <Button outlinePrimary bigSize onClick={handleClick}>
+                  Чат
+                </Button>
+              </S.Space>
+            </S.Space>
+          </S.StateBlock>
+
+        </S.StateBlock>
+
+        {/* **************************** */}
+
+        {/* CONFIRMED STATE */}
+
+        <S.StateBlock when={exchange.state === 1}>
+                      
+          <S.StateBlock when={exchange.kind === 0}>
+            <S.TransferInfoBlock>
+              <Text size={14} lH={20} black>  
+                <S.B>{exchange.volume * exchange.rate} {Balance[exchange.assetKind]}</S.B> будут отправлены вам сразу после подтверждения 
+                продавцом получения средств размере <S.B>{(Math.floor(exchange.exchangeVolume * exchange.rate)).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {FiatKind[exchange.exchangeAssetKind]}</S.B> на указанный счет.
+              </Text>
+            </S.TransferInfoBlock>
+
+            <S.Space justify="space-between">
+              <S.Space gap={20}>
+                <Button primary bigSize as="button" disabled={exchange.kind === 0} onClick={() => setShowSuccessModal(true)}>
+                  Средства отправлены
+                </Button>
+              </S.Space>
+
+              <S.Space gap={20}>
+                <Button outlinePrimary bigSize onClick={handleClick}>
+                  Чат
+                </Button>
+                <Button outlinePrimary bigSize onClick={handleClick} exchangeBtn>
+                  Жалоба
+                </Button>
+              </S.Space>
+            </S.Space>
+          </S.StateBlock>
+
+          <S.StateBlock when={exchange.kind === 1}>
+              <S.TransferInfoBlock>
+                <Text size={14} lH={20} black>  
+                  Покупатель указал, что перевел средства в размере <S.B>{(Math.floor(exchange.exchangeVolume * exchange.rate)).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {FiatKind[exchange.exchangeAssetKind]}</S.B> на указанный счет.
+                  Подтвердите получение средств для успешного завершения обмена.
+                  Покупатель получит <S.B>{exchange.volume * exchange.rate} {Balance[exchange.assetKind]}</S.B>
+                </Text>
+              </S.TransferInfoBlock>
+
+              <S.Space justify="space-between">
+                <S.Space gap={20}>
+                  <Button primary bigSize as="button" disabled={exchange.kind === 0} onClick={() => setShowSuccessModal(true)}>
+                    Средства получены
+                  </Button>
+                </S.Space>
+
+                <S.Space gap={20}>
+                  <Button outlinePrimary bigSize onClick={handleClick}>
+                    Чат
+                  </Button>
+                  <Button outlinePrimary bigSize as="button" disabled={true} onClick={handleClick} exchangeBtn>
+                    Жалоба
+                  </Button>
+                </S.Space>
+              </S.Space>
+          </S.StateBlock>
+
+        </S.StateBlock>
+
+        {/* ******************** */}
+
+        {/* COMPLETED STATE */}
+
+        <S.StateBlock when={exchange.state === 2}>
+
+            <S.StateBlock when={exchange.kind === 0}>
+                <S.TransferInfoBlock>
+                  <Text size={14} lH={20} black>
+                    Обмен успешно завершен. Средства в размере <S.B>{exchange.volume * exchange.rate} {Balance[exchange.assetKind]}</S.B>  отправлены на ваш баланс.
+                    Оставьте свою оценку продавцу.
+                  </Text>
+                </S.TransferInfoBlock>
+                <S.FeedbackBlock>
+                  <Text size={14} lH={20} mB={10} black>
+                    Оставьте свою оценку покупателю:
+                  </Text>
+                  <Radio.Group>
+                    <Radio
+                      name="feedback"
+                      label="1"
+                      value="1"
+                      checked={feedbackValue === 1}
+                      onChange={(e) => setFeedbackValue(+e.target.value)}
+                    />
+                    <Radio
+                      name="feedback"
+                      label="2"
+                      value="2"
+                      checked={feedbackValue === 2}
+                      onChange={(e) => setFeedbackValue(+e.target.value)}
+                    />
+                    <Radio
+                      name="feedback"
+                      label="3"
+                      value="3"
+                      checked={feedbackValue === 3}
+                      onChange={(e) => setFeedbackValue(+e.target.value)}
+                    />
+                    <Radio
+                      name="feedback"
+                      label="4"
+                      value="4"
+                      checked={feedbackValue === 4}
+                      onChange={(e) => setFeedbackValue(+e.target.value)}
+                    />
+                    <Radio
+                      name="feedback"
+                      label="5"
+                      value="5"
+                      checked={feedbackValue === 5}
+                      onChange={(e) => setFeedbackValue(+e.target.value)}
+                    />
+                  </Radio.Group>
+              </S.FeedbackBlock>
+
+              <Button primary onClick={() => false}>
+                Подтвердить
+              </Button>
+            </S.StateBlock>
+
+            <S.StateBlock when={exchange.kind === 1}>
+                <S.TransferInfoBlock>
+                  <Text size={14} lH={20} black>
+                    Обмен успешно завершен. Средства в размере <S.B>{exchange.volume * exchange.rate} {Balance[exchange.assetKind]}</S.B> отправлены покупателю.
+                    Оставьте свою оценку покупателю.
+                  </Text>
+                </S.TransferInfoBlock>
+                <S.FeedbackBlock>
+                  <Text size={14} lH={20} mB={10} black>
+                    Оставьте свою оценку покупателю:
+                  </Text>
+                  <Radio.Group>
+                    <Radio
+                      name="feedback"
+                      label="1"
+                      value="1"
+                      checked={feedbackValue === 1}
+                      onChange={(e) => setFeedbackValue(+e.target.value)}
+                    />
+                    <Radio
+                      name="feedback"
+                      label="2"
+                      value="2"
+                      checked={feedbackValue === 2}
+                      onChange={(e) => setFeedbackValue(+e.target.value)}
+                    />
+                    <Radio
+                      name="feedback"
+                      label="3"
+                      value="3"
+                      checked={feedbackValue === 3}
+                      onChange={(e) => setFeedbackValue(+e.target.value)}
+                    />
+                    <Radio
+                      name="feedback"
+                      label="4"
+                      value="4"
+                      checked={feedbackValue === 4}
+                      onChange={(e) => setFeedbackValue(+e.target.value)}
+                    />
+                    <Radio
+                      name="feedback"
+                      label="5"
+                      value="5"
+                      checked={feedbackValue === 5}
+                      onChange={(e) => setFeedbackValue(+e.target.value)}
+                    />
+                  </Radio.Group>
+              </S.FeedbackBlock>
+              <Button primary onClick={() => false}>
+                Подтвердить
+              </Button>
+            </S.StateBlock>
+
+        </S.StateBlock>
+        {/* ************** */}
+
       </RightSide>
-      <ExchangeSuccessModal open={showSuccessModal} onClose={() => setShowSuccessModal(false)} />
-      <ExchangeRejectModal open={showRejectModal} onClose={() => setShowRejectModal(false)} />
+      <ExchangeSuccessModal open={showSuccessModal} onClose={() => false} />
+      <ExchangeRejectModal open={showRejectModal} onClose={() => false} />
     </S.Container>
   );
 };

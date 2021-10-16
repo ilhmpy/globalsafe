@@ -26,15 +26,40 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
   const { hubConnection } = useContext(AppContext);
   const [loading, setLoading] = useState<boolean>(false);
 
-  useEffect(() => {
+  function getExchange(loading: boolean) {
     if (hubConnection) {
-      setLoading(true);
+      setLoading(loading);
       hubConnection.invoke("GetExchange", exchangeId)
         .then((res) => {
           setExchange(res);
         })
         .catch((err) => console.log(err))
         .finally(() => setLoading(false));
+    };
+  };
+
+  useEffect(() => {
+    getExchange(true);
+  }, [hubConnection]);
+
+  useEffect(() => {
+    function cb() {
+      console.log("ExchangeChanged")
+      getExchange(false);
+    };
+    if (hubConnection) {
+      hubConnection.on("ExchangeCompleted", cb);
+      hubConnection.on("BuyOrderCompleted", cb);
+      hubConnection.on("ExchangedCancelled", cb);
+      hubConnection.on("ExchangeConfirmationRequired", cb);
+      hubConnection.on("ExchangeAbused", cb);
+    };
+    return () => {
+      hubConnection?.off("ExchangeCompleted", cb);
+      hubConnection?.off("BuyOrderCompleted", cb);
+      hubConnection?.off("ExchangedCancelled", cb);
+      hubConnection?.off("ExchangeConfirmationRequired", cb);
+      hubConnection?.off("ExchangeAbused", cb);
     };
   }, [hubConnection]);
 

@@ -7,6 +7,7 @@ type Props = {
   outlinePrimary?: boolean;
   outlineDanger?: boolean;
   fullWidth?: boolean;
+  exchangeBtn?: boolean;
   disabled?: boolean;
 };
 
@@ -17,9 +18,7 @@ export const Button = styled.a<Props>`
   text-decoration: none;
   display: inline-block;
   box-sizing: border-box;
-  cursor: ${(props) => (props.disabled ? 'no-drop' : 'pointer')};
-  opacity: ${(props) => (props.disabled ? '0.4' : '1')};
-  appearance: none;
+  appreance: none;
   user-select: none;
   border-radius: 4px;
   width: ${(props) => (props.fullWidth ? '100%' : 'auto')};
@@ -32,11 +31,9 @@ export const Button = styled.a<Props>`
   transition: all 0.3s ease 0s;
   background: #515172;
   color: #ffffff;
+  cursor: pointer;
   &:hover {
-    box-shadow: ${(props) =>
-      props.disabled ? 'none' : `0px 4px 10px ${props.theme.buttonBorder}`};
-
-    border-color: ${(props) => props.theme.buttonBorder};
+    box-shadow: 0px 4px 10px #515172;
   }
   &:focus,
   &:active {
@@ -74,6 +71,13 @@ export const Button = styled.a<Props>`
     user-select: none;
     cursor: initial;
     opacity: 0.4;
+    ${({ exchangeBtn }) => {
+      if (exchangeBtn) {
+        return `
+          opacity: 0.4;
+        `;
+      };
+    }}
   }
 `;
 

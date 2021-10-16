@@ -97,7 +97,7 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
                      seconds: wn.totalSeconds - moment().diff(date, "seconds", false)
                    }; 
     const { days, hours, minutes, seconds } = result;
-    console.log(result);
+    console.log(date, wn, result);
     if (days > 0) {
       return `${days}д ${hours > 0 ? hours : 0}ч`;
     } else if (hours > 0) {
