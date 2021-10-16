@@ -69,7 +69,7 @@ export const Button = styled.a<Props>`
   &:disabled {
     box-shadow: none;
     user-select: none;
-    cursor: initial;
+    cursor: not-allowed;
     opacity: 0.4;
     ${({ exchangeBtn }) => {
       if (exchangeBtn) {

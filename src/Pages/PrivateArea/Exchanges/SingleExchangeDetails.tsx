@@ -31,35 +31,49 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
       setLoading(loading);
       hubConnection.invoke("GetExchange", exchangeId)
         .then((res) => {
+          console.log(res);
           setExchange(res);
+          setLoading(false);
         })
-        .catch((err) => console.log(err))
-        .finally(() => setLoading(false));
+        .catch((err) => {
+          console.log(err);
+          setLoading(false);
+        })
     };
   };
 
   useEffect(() => {
-    getExchange(true);
+    if (hubConnection) {
+      getExchange(true);
+    };
   }, [hubConnection]);
 
+  function cb() {
+    console.log("ExchangeChanged")
+    getExchange(false);
+  };
+
   useEffect(() => {
-    function cb() {
-      console.log("ExchangeChanged")
-      getExchange(false);
-    };
     if (hubConnection) {
       hubConnection.on("ExchangeCompleted", cb);
       hubConnection.on("BuyOrderCompleted", cb);
-      hubConnection.on("ExchangedCancelled", cb);
       hubConnection.on("ExchangeConfirmationRequired", cb);
       hubConnection.on("ExchangeAbused", cb);
     };
     return () => {
       hubConnection?.off("ExchangeCompleted", cb);
       hubConnection?.off("BuyOrderCompleted", cb);
-      hubConnection?.off("ExchangedCancelled", cb);
       hubConnection?.off("ExchangeConfirmationRequired", cb);
       hubConnection?.off("ExchangeAbused", cb);
+    };
+  }, [hubConnection]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection.on("ExchangedCancelled", cb);
+    } 
+    return () => {
+      hubConnection?.off("ExchangedCancelled", cb);
     };
   }, [hubConnection]);
 

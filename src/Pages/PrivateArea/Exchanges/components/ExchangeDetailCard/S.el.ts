@@ -53,7 +53,6 @@ export const FeedbackBlock = styled.div`
 export const StateBlock = styled.div<{ when: boolean; }>`
   width: 100%;
   display: ${({ when }) => {
-    console.log(when, when ? "block" : "none")
     return when ? "block" : "none"
   }};
 `;
