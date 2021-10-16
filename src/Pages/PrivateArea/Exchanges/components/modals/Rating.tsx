@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { Button } from '../../../../../components/Button/V2/Button';
 import { Modal } from '../../../../../components/ModalAnimated';
 import { Dropdown } from '../../../components/Dropdown';
@@ -7,18 +7,26 @@ import * as S from './S.el';
 type Props = {
   onClose: () => void;
   open: boolean;
-  selectedOption: string | null;
-  setSelectedOption: (selectedOption: string) => void;
-  options: string[];
+  selectedRate: string;
+  setSelectedRate: (rate: string) => void;
+  rates: string[];
+  onAccept: (rateIndex: number) => void;
 };
 
 export const Rating: FC<Props> = ({
   onClose,
   open,
-  selectedOption,
-  setSelectedOption,
-  options,
+  selectedRate,
+  setSelectedRate,
+  rates,
+  onAccept,
 }: Props) => {
+
+  const handleAccept = () => {
+    onAccept(rates.indexOf(selectedRate));
+    onClose();
+  };
+  
   return (
     <>
       {open && (
@@ -27,12 +35,12 @@ export const Rating: FC<Props> = ({
             <S.Title>Выбор рейтинга</S.Title>
             <S.DropdonwConatainer big>
               <Dropdown
-                selectedOption={selectedOption}
-                setSelectedOption={setSelectedOption}
-                options={options}
+                selectedOption={selectedRate}
+                setSelectedOption={setSelectedRate}
+                options={rates}
               />
             </S.DropdonwConatainer>
-            <Button bigSize fullWidth primary>
+            <Button bigSize fullWidth primary onClick={handleAccept}>
               Применить
             </Button>
           </S.Container>

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { Container } from '../../../components/UI/Container';
@@ -11,6 +11,7 @@ import { Button } from '../../../components/Button/V2/Button';
 import { AppContext } from '../../../context/HubContext';
 import { GetBuyOrdersModel, GetSellOrdersModel, OrderType, ViewBuyOrderModel, ViewSellOrderModel } from '../../../types/orders';
 import { CurrencyPair } from './components/modals/CurrencyPair';
+import { Rating } from './components/modals/Rating';
 import { Balance } from '../../../types/balance';
 import { FiatKind } from '../../../types/fiat';
  
@@ -24,9 +25,21 @@ export const Advert = () => {
   const [showCurrencyPairModal, setShowCurrenctPairModal] = useState(false);
   const [selectedPair, setSelectedPair] = useState<null | {balance: string; fiat: string;}>(null);
   const [ordersList, setOrdersList] = useState<ViewBuyOrderModel[] | ViewSellOrderModel[]>([]);
+  const [showRatingModal, setShowRatingModal] = useState(false);
+  const [selectedRate, setSelectedRate] = useState('Не выбрано');
+  const [acceptedRate, setAcceptedRate] = useState(0);
 
   const [totalCount, setTotalCount] = useState(0);
   const [skip, setSkip] = useState(0);
+
+  const ratesList = useMemo<string[]>(() => [
+    'Не выбрано',
+    'Рейтинг участников 1.0',
+    'Рейтинг участников 2.0',
+    'Рейтинг участников 3.0',
+    'Рейтинг участников 4.0',
+    'Рейтинг участников 5.0',
+  ], []);
 
   useEffect(() => {
     if (hubConnection) {
@@ -38,8 +51,7 @@ export const Advert = () => {
         getSellOrders();
       }
     }
-  }, [hubConnection, activeType, selectedPair]);
-
+  }, [hubConnection, activeType, selectedPair, acceptedRate]);
 
   const getBuyOrders = async () => {
       try {
@@ -47,6 +59,8 @@ export const Advert = () => {
           'GetBuyOrders', 
           selectedPair?.balance ? [ Balance[selectedPair?.balance as keyof typeof Balance] ] : [],  // Array of BalanceKind assetKinds
           selectedPair?.fiat ? [ FiatKind[selectedPair?.fiat as keyof typeof FiatKind] ] : [],  // Array of FiatKind opAssetKinds
+          // [], // Array of PaymentMethodKind[] paymentMethodKinds
+          // acceptedRate, // int rating
           skip, 
           10
         );
@@ -66,6 +80,8 @@ export const Advert = () => {
         'GetSellOrders', 
         selectedPair?.balance ? [ Balance[selectedPair?.balance as keyof typeof Balance] ] : [],  // Array of BalanceKind assetKinds
         selectedPair?.fiat ? [ FiatKind[selectedPair?.fiat as keyof typeof FiatKind] ] : [],  // Array of FiatKind opAssetKinds
+        // [], // Array of PaymentMethodKind[] paymentMethodKinds
+        // acceptedRate, // int rating
         skip, 
         10
       );
@@ -86,7 +102,7 @@ export const Advert = () => {
       setShowCurrenctPairModal(false);
       return;
     }
-
+ 
     setSelectedPair({
       balance: selectedBalanceKind ? selectedBalanceKind : '',
       fiat: selectedFiatKind ? selectedFiatKind : ''
@@ -98,6 +114,8 @@ export const Advert = () => {
     setSelectedPair(null);
     setSelectedBalanceKind(null);
     setSelectedFiatKind(null);
+    setSelectedRate(ratesList[0]);
+    setAcceptedRate(0);
   };
 
   const handleLoadMore = () => {
@@ -173,10 +191,15 @@ export const Advert = () => {
           <S.Line />
           <FilterButton active>Все методы оплаты</FilterButton>
           <S.Line />
-          <FilterButton active>Все рейтинги</FilterButton>
+          <FilterButton 
+            active={acceptedRate !== 0}
+            onClick={() => setShowRatingModal(true)}
+          >
+            {acceptedRate === 0 ? 'Все рейтинги' : ratesList[acceptedRate]}
+            </FilterButton>
 
           {
-            selectedPair &&
+            selectedPair || (acceptedRate !== 0) &&
             <S.MLAutoFilterButton
               onClick={resetFilters}
             >
@@ -194,6 +217,14 @@ export const Advert = () => {
           selectedFiatKind={selectedFiatKind}
           setSelectedFiatKind={setSelectedFiatKind}
           onAccept={handleAcceptPair}
+        />
+        <Rating 
+          selectedRate={selectedRate}
+          setSelectedRate={setSelectedRate}
+          rates={ratesList}
+          onAccept={setAcceptedRate}
+          open={showRatingModal}
+          onClose={() => setShowRatingModal(false)}
         />
       
         <AdvertTable list={ordersList} ordersType={activeType} />
