@@ -175,7 +175,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
             Количество:
           </Text>
           <Title lH={28} mB={10}>
-            {(exchange.volume).toLocaleString('ru-RU', { maximumFractionDigits: 2 })} {Balance[exchange.assetKind]}
+            {(exchange.exchangeVolume).toLocaleString('ru-RU', { maximumFractionDigits: 2 })} {Balance[exchange.assetKind]}
           </Title>
           <Chip>{exchange.kind === 0 ? "Продажа" : "Покупка"}</Chip>
         </S.BlockWrapper>
@@ -191,7 +191,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
           <Text size={14} lH={20} mB={10} black>
             На сумму:
           </Text>
-          <Title lH={28}>{exchange.volume * exchange.rate} {FiatKind[exchange.exchangeAssetKind]}</Title>
+          <Title lH={28}>{exchange.exchangeVolume * exchange.rate} {FiatKind[exchange.exchangeAssetKind]}</Title>
         </S.BlockWrapper>
 
         <S.BlockWrapper>
@@ -251,7 +251,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
             На сумму:
           </Text>
           <Text size={14} lH={20} weight={500} black>
-            {(exchange.exchangeVolume * exchange.rate).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {FiatKind[exchange.exchangeAssetKind]}
+            {(exchange.volume * exchange.rate).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {FiatKind[exchange.exchangeAssetKind]}
           </Text>
         </S.BlockWrapper>
 
@@ -309,7 +309,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
           <S.StateBlock when={exchange.kind === 1}>
             <S.TransferInfoBlock>
               <Text size={14} lH={20} black>
-                Осуществите перевод средств на указанный счет в размере <S.B>{(Math.floor(exchange.exchangeVolume * exchange.rate)).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {FiatKind[exchange.exchangeAssetKind]}</S.B> и подтвердите
+                Осуществите перевод средств на указанный счет в размере <S.B>{(Math.floor(exchange.volume * exchange.rate)).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {FiatKind[exchange.exchangeAssetKind]}</S.B> и подтвердите
                 перевод средств продавцу нажав на кнопку “средства отправлены”
               </Text>
             </S.TransferInfoBlock>
@@ -338,7 +338,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
           <S.StateBlock when={exchange.kind === 0}>
             <S.TransferInfoBlock>
               <Text size={14} lH={20} black>
-                Покупатель  осуществляет перевод средств на указанный счет в размере <S.B>{(Math.floor(exchange.exchangeVolume * exchange.rate)).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {FiatKind[exchange.exchangeAssetKind]}</S.B> <br />
+                Покупатель  осуществляет перевод средств на указанный счет в размере <S.B>{(Math.floor(exchange.volume * exchange.rate)).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {FiatKind[exchange.exchangeAssetKind]}</S.B> <br />
                 С вашего баланса списаны и заморожены <S.B>{exchange.volume} {Balance[exchange.assetKind]}</S.B> до подтверждения вами получения средств.
               </Text>
             </S.TransferInfoBlock>
@@ -370,7 +370,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
             <S.TransferInfoBlock>
               <Text size={14} lH={20} black>  
                 <S.B>{exchange.volume} {Balance[exchange.assetKind]}</S.B> будут отправлены вам сразу после подтверждения 
-                продавцом получения средств размере <S.B>{(Math.floor(exchange.exchangeVolume * exchange.rate)).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {FiatKind[exchange.exchangeAssetKind]}</S.B> на указанный счет.
+                продавцом получения средств размере <S.B>{(Math.floor(exchange.volume * exchange.rate)).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {FiatKind[exchange.exchangeAssetKind]}</S.B> на указанный счет.
               </Text>
             </S.TransferInfoBlock>
 
@@ -395,7 +395,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
           <S.StateBlock when={exchange.kind === 0}>
               <S.TransferInfoBlock>
                 <Text size={14} lH={20} black>  
-                  Покупатель указал, что перевел средства в размере <S.B>{(Math.floor(exchange.exchangeVolume * exchange.rate)).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {FiatKind[exchange.exchangeAssetKind]}</S.B> на указанный счет.
+                  Покупатель указал, что перевел средства в размере <S.B>{(Math.floor(exchange.volume * exchange.rate)).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {FiatKind[exchange.exchangeAssetKind]}</S.B> на указанный счет.
                   Подтвердите получение средств для успешного завершения обмена.
                   Покупатель получит <S.B>{exchange.volume} {Balance[exchange.assetKind]}</S.B>
                 </Text>
