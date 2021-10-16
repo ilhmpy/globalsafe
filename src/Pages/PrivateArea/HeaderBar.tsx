@@ -27,6 +27,7 @@ import { Balance, Notify } from '../../types/balance';
 import { Commisions, DepositsCollection, RootDeposits } from '../../types/info';
 import { ConvertingModalConfirm } from './ConveringConfirmModal ';
 import { ConvertingModalSuccess } from './ConveringSuccessModal';
+import { ConvertingModalCorrection } from './ConvertingCorrectionModal';
 import { ConvertingModal, IBalanceExchange } from './ConvertingModal';
 import { ConvertingModalFail } from './ConvertingModalFail';
 import { DepositListModal } from './Modals';
@@ -763,6 +764,15 @@ export const HeaderBar = () => {
         convertedData={convertedData}
       />
       <ConvertingModalConfirm
+        open={isConfirmConverting}
+        setOpen={setIsConfirmConverting}
+        convertedData={convertedData}
+        setIsConfirmConverting={setIsConfirmConverting}
+        setConvertedData={setConvertedData}
+        setIsSuccessConverting={setIsSuccessConverting}
+        setIsFailConverting={setIsFailConverting}
+      />
+      <ConvertingModalCorrection
         open={isConfirmConverting}
         setOpen={setIsConfirmConverting}
         convertedData={convertedData}

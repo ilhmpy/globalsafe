@@ -112,7 +112,7 @@ export const ConvertingModal: FC<Props> = ({
       +fromSum > 0 &&
       convertedData.calculatedAmount
     ) {
-      resetStateValues()
+      resetStateValues();
       setOpen(false);
       setIsConfirmConverting(true);
     }
@@ -129,6 +129,12 @@ export const ConvertingModal: FC<Props> = ({
         onClose={() => {
           setOpen(false);
           setTimeout(() => resetStateValues(), 500);
+          setConvertedData({
+            userAmount: 0,
+            calculatedAmount: 0,
+            targetAmount: 0,
+            discountPercent: 0,
+          });
         }}
         width={420}
       >
@@ -138,6 +144,12 @@ export const ConvertingModal: FC<Props> = ({
             onClick={() => {
               setOpen(false);
               setTimeout(() => resetStateValues(), 500);
+              setConvertedData({
+                userAmount: 0,
+                calculatedAmount: 0,
+                targetAmount: 0,
+                discountPercent: 0,
+              });
             }}
           />
 
@@ -150,7 +162,7 @@ export const ConvertingModal: FC<Props> = ({
                 setSelectedOption={(val: string) => setFromCurrency(val)}
               />
               <Input
-                placeholder="0.0000"
+                placeholder={toCurrency ? '0' : '0.0000'}
                 name="fromSum"
                 value={fromSum.replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
                 onChange={({ target: { value } }) =>
@@ -167,8 +179,7 @@ export const ConvertingModal: FC<Props> = ({
                 setSelectedOption={(val: string) => setToCurrency(val)}
               />
               <Input
-                disabled
-                placeholder="0.0000"
+                placeholder={toCurrency ? '0' : '0.0000'}
                 name="convertedData"
                 value={
                   convertedData.targetAmount <= 0
@@ -177,7 +188,13 @@ export const ConvertingModal: FC<Props> = ({
                         .toString()
                         .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')
                 }
-                onChange={(e) => undefined}
+                onChange={({ target: { value } }) =>
+                  !(value.length > 1 && value[0] === '0') &&
+                  setConvertedData({
+                    ...convertedData,
+                    targetAmount: +value.replaceAll(/\D/g, '') * 100,
+                  })
+                }
               />
               <RateRow>
                 <Rate>Курс:</Rate>
