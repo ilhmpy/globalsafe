@@ -17,8 +17,8 @@ interface OrderBaseModel {
     operationAssetKind: FiatKind;
     limitFrom: number;
     limitTo: number;
-    methodsKindsJson: string; // 
-    methodsKinds: any[]; // PaymentMethodKind[]
+    methodsKindsJson: string;
+    methodsKinds: number[]; 
     creationDate: Date;
     rate: number;
     operationWindow: any; //
@@ -27,9 +27,14 @@ interface OrderBaseModel {
     terms?: string;
     userRating: string;
 }
-
-export interface ViewBuyOrderModel extends OrderBaseModel {};
-export interface ViewSellOrderModel extends OrderBaseModel {};
+// tslint:@typescript-eslint/no-empty-interface
+export interface ViewBuyOrderModel extends OrderBaseModel {
+    id: number;
+};
+// @ts-ignore: Unreachable code error
+export interface ViewSellOrderModel extends OrderBaseModel {
+    id: number;
+};
 
 export interface GetBuyOrdersModel {
     totalRecords: number;
@@ -39,4 +44,9 @@ export interface GetBuyOrdersModel {
 export interface GetSellOrdersModel {
     totalRecords: number;
     collection: ViewSellOrderModel[];
+}
+
+export enum OrderType {
+    Buy = 'buy',
+    Sell = 'sell',
 }

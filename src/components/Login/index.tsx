@@ -407,7 +407,7 @@ const SelfInput = styled(Input)`
   margin-bottom: 30px;
 `;
 
-const RepeatCode = styled.button<{ op?: boolean; hasUnderline?: boolean; }>`
+const RepeatCode = styled.button<{ op?: boolean; hasUnderline?: boolean }>`
   opacity: ${(props) => (props.op ? '1' : '0')};
   cursor: pointer;
   appearance: none;
@@ -419,7 +419,7 @@ const RepeatCode = styled.button<{ op?: boolean; hasUnderline?: boolean; }>`
   font-size: 12px;
   line-height: 14px;
   text-align: center;
-  text-decoration-line: ${props => props.hasUnderline ? 'underline' : 'none'};
+  text-decoration-line: ${(props) => (props.hasUnderline ? 'underline' : 'none')};
   position: absolute;
   left: 0px;
   right: 0px;
@@ -496,7 +496,7 @@ const LinkToSmall = styled.a`
 export const Submit = styled(Button)<{ mb?: boolean }>`
   max-width: 100%;
   margin-bottom: ${(props) => (props.mb ? '20px' : '0')};
-  color: ${props => props.theme.dangerButtonText};
+  color: ${(props) => props.theme.text};
 `;
 
 const CardContainer = styled(Card)`

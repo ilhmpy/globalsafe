@@ -91,15 +91,6 @@ export const NotifiesBlock = styled.div<{ block: boolean; auth?: boolean; admin?
     }
 `;
 
-export const hideNotify = keyframes`
-    0% { margin-left: 20px; opacity: 80%; }
-    10% { margin-left: 50px; opacity: 60%; }
-    20% { margin-left: 70px; opacity: 40%; }
-    30% { margin-left: 90px; opacity: 20%; }
-    50% { margin-left: 110px; opacity: 15%; }
-    100% { margin-left: 120px; opacity: 10%; }
-`;
-
 export const Notify = styled.div<{ notChecked: boolean; empty?: boolean; click?: boolean; }>`
     width: 100%;
     background: #F9FAFB;

@@ -1,8 +1,9 @@
-import React, { FC, useContext, useEffect, useState } from 'react';
+import React, { FC, useContext } from 'react';
 import { Button } from '../../../../components/Button/V2/Button';
 import { Modal } from '../../../../components/ModalAnimated';
 import { AppContext } from '../../../../context/HubContext';
 import { BalanceKind } from '../../../../enums/balanceKind';
+import { Balance } from '../../../../types/balance';
 import { IBalanceExchange } from '../../ConvertingModal';
 import * as S from './S.el';
 
@@ -14,6 +15,22 @@ type Props = {
 };
 
 export const CloseDeposit: FC<Props> = ({ onClose, open, deposit, calculated }: Props) => {
+console.log('deposit', deposit)
+  const { hubConnection } = useContext(AppContext);
+
+  const depositExchange = async (amountId: string, kind: number) => {
+    console.log('DepositExchange', amountId, kind);
+    if (hubConnection) {
+      try {
+        const res = await hubConnection.invoke('DepositExchange', amountId, kind);
+        console.log('res', res);
+        onClose(true);
+        // history.push('/info/deposits');
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
   return (
     <>
       {open && (
@@ -81,7 +98,13 @@ export const CloseDeposit: FC<Props> = ({ onClose, open, deposit, calculated }: 
               </S.List>
             </S.TextWrap>
             <S.Buttons>
-              <Button bigSize primary onClick={() => onClose(true)}>
+              <Button
+                bigSize
+                primary
+                onClick={() => {
+                  depositExchange(deposit.safeId, Balance.MULTICS);
+                }}
+              >
                 Закрыть депозит
               </Button>
               <Button bigSize outlinePrimary onClick={() => onClose(false)}>

@@ -13,6 +13,11 @@ export const Filters = styled.div`
   margin-bottom: 20px;
 `;
 
+export const MLAutoFilterButton = styled(BaseFilterButton)`
+  margin-left: auto;
+`;
+
+
 export const Line = styled.span`
   height: 26px;
   width: 1px;

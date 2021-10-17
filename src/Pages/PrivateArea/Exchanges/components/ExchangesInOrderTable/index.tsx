@@ -1,25 +1,34 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useHistory } from 'react-router';
 import alfa from '../../../../../assets/v2/svg/banks/alfa.svg';
+import { Balance } from '../../../../../types/balance';
+import { ViewExchangeModel } from '../../../../../types/exchange';
+import { FiatKind } from '../../../../../types/fiat';
 
 import * as S from './S.el';
 
-export const ExchangesInOrderTable = () => {
+interface ExchangesInOrderTable {
+  exchangesList: ViewExchangeModel[];
+}
+
+// TODO: Check Exchange Fields and update Table | Update ViewExchangeModel
+// TODO: Fix Open Exchange Page Route
+export const ExchangesInOrderTable: React.FC<ExchangesInOrderTable> = ({exchangesList}: ExchangesInOrderTable) => {
   const history = useHistory();
 
-  const handleNavigateToExchange = () => {
-    history.replace(`/info/p2p-changes/${Date.now().toString()}`)
+  const handleNavigateToExchange = (safeId: string) => {
+    history.replace(`/info/p2p-changes/${safeId}`)
   };
 
+  const exchangeStateLabels = useMemo(() => [
+    'Новый',
+    'Ожидание перевода',
+    'Завершен',
+    'Абуз',
+    'Отменен',
+  ], []);
+
   return (
-    <>
-      {/* <CurrencyPair
-        open={true}
-        onClose={() => undefined}
-        options={['Все валюты предложения', 'CWD']}
-        selectedOption={selectedOption}
-        setSelectedOption={setSelectedOption}
-      /> */}
       <S.Table>
         <S.Header>
           <S.Cell>
@@ -42,68 +51,40 @@ export const ExchangesInOrderTable = () => {
           </S.Cell>
         </S.Header>
 
-        <S.BodyItem onClick={handleNavigateToExchange}>
-          <S.Cell data-label="№ обмена">4799646829</S.Cell>
-          <S.Cell data-label="Кол-во">400 CWD</S.Cell>
-          <S.Cell data-label="Стоимость">41 376 RUB</S.Cell>
-          <S.Cell data-label="Метод оплаты">
-            <S.BankList>
-              <S.BankItem>
-                <img src={alfa} alt="" />
-              </S.BankItem>
-            </S.BankList>
-          </S.Cell>
-          <S.Cell data-label="Оставшееся время">18м 23с</S.Cell>
-          <S.Cell data-label="Статус">Ожидание подтверждения оплаты</S.Cell>
-        </S.BodyItem>
-
-        <S.BodyItem onClick={handleNavigateToExchange}>
-          <S.Cell data-label="№ обмена">4799646829</S.Cell>
-          <S.Cell data-label="Кол-во">400 CWD</S.Cell>
-          <S.Cell data-label="Стоимость">41 376 RUB</S.Cell>
-          <S.Cell data-label="Метод оплаты">
-            <S.BankList>
-              <S.BankItem>
-                <img src={alfa} alt="" />
-              </S.BankItem>
-            </S.BankList>
-          </S.Cell>
-          <S.Cell data-label="Оставшееся время">18м 23с</S.Cell>
-          <S.Cell data-label="Статус">Ожидание подтверждения оплаты</S.Cell>
-        </S.BodyItem>
-
-        <S.BodyItem onClick={handleNavigateToExchange}>
-          <S.Cell data-label="№ обмена">4799646829</S.Cell>
-          <S.Cell data-label="Кол-во">400 CWD</S.Cell>
-          <S.Cell data-label="Стоимость">41 376 RUB</S.Cell>
-          <S.Cell data-label="Метод оплаты">
-            <S.BankList>
-              <S.BankItem>
-                <img src={alfa} alt="" />
-              </S.BankItem>
-            </S.BankList>
-          </S.Cell>
-          <S.Cell data-label="Оставшееся время">18м 23с</S.Cell>
-          <S.Cell data-label="Статус">Ожидание подтверждения оплаты</S.Cell>
-        </S.BodyItem>
-
-        <S.BodyItem onClick={handleNavigateToExchange}>
-          <S.Cell data-label="№ обмена">4799646829</S.Cell>
-          <S.Cell data-label="Кол-во">400 CWD</S.Cell>
-          <S.Cell data-label="Стоимость">41 376 RUB</S.Cell>
-          <S.Cell data-label="Метод оплаты">
-            <S.BankList>
-              <S.BankItem>
-                <img src={alfa} alt="" />
-              </S.BankItem>
-            </S.BankList>
-          </S.Cell>
-          <S.Cell data-label="Оставшееся время">18м 23с</S.Cell>
-          <S.Cell data-label="Статус">Ожидание подтверждения оплаты</S.Cell>
-        </S.BodyItem>
-        
+        {
+          exchangesList.length > 0 
+          ?
+            exchangesList.map((exchange) => (
+              <S.BodyItem
+                key={`exchange-item-${exchange}`}
+                onClick={() => handleNavigateToExchange(exchange.safeId)}
+              >
+                <S.Cell data-label="№ обмена">{exchange.safeId}</S.Cell>
+                <S.Cell data-label="Кол-во">
+                {`${exchange.volume} ${Balance[exchange.assetKind]}`}
+                </S.Cell>
+                <S.Cell data-label="Стоимость">
+                  {`${exchange.volume * exchange.rate} ${FiatKind[exchange.exchangeAssetKind]}`}
+                </S.Cell>
+                <S.Cell data-label="Метод оплаты">
+                  <S.BankList>
+                    <S.BankItem>
+                      <img src={alfa} alt="" />
+                    </S.BankItem>
+                  </S.BankList>
+                </S.Cell>
+                <S.Cell data-label="Оставшееся время">
+                  {`${exchange.operationWindow.minutes}м ${exchange.operationWindow.seconds}с`}
+                </S.Cell>
+                <S.Cell data-label="Статус">
+                  {exchangeStateLabels[exchange.state]}
+                </S.Cell>
+              </S.BodyItem>
+            ))
+          :
+          "Список Пустой"
+        }
 
       </S.Table>
-    </>
   );
 };

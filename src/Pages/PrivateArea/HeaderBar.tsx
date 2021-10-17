@@ -111,6 +111,10 @@ export const HeaderBar = () => {
       .map((b) => Balance[b.balanceKind]);
   }, [balanceList]);
 
+  const bl: any[] = [0, 9, 10, 11]; 
+
+  const balances = balanceList?.filter((item) => !bl.includes(item.balanceKind));
+
   const handleDepositModal = () => {
     setAddDeposit(false);
     setDepositSuccess(false);
@@ -292,7 +296,6 @@ export const HeaderBar = () => {
       hubConnection
         .invoke<Commisions>('GetWithdrawFee', 1, Number(value))
         .then((res: any) => {
-          console.log(res);
           setBlockchain((res.networkFee / 100000).toString());
           setService((res.serviceFee / 100000).toString());
         })
@@ -336,6 +339,42 @@ export const HeaderBar = () => {
     setWithdrawValue('');
     setCurrencyValue('');
   };
+
+  /* 
+    нет данных
+    Нулевой, 0 
+
+    /// Успешный перевод.
+    Успех, 1 
+
+    /// Невозможно передать. Недостаточно средств.
+    На балансе аккаунта не достаточно средств, 2 
+
+    /// Ошибка передачи.
+    Ошибка, 3
+
+    /// Адрес назначения перевода не найден.
+    DestinationNotfound, 4
+
+    /// Неправильный источник передачи. Аккаунт не может быть найден.
+    SourceNotFound, 5 
+
+    /// Сумма перевода меньше разрешенного минимального объема перевода.
+    ValueIsTooSmall, 6
+
+    /// Сумма перевода больше разрешенной максимальной суммы перевода.
+    ValueIsTooLarge, 7 
+
+    /// Превышение дневной квоты перевода средств.
+    DailyQuotaExceed, 8
+
+    /// Превышение месячной квоты перевода средств.
+    MonthlyQuotaExceed, 9
+
+    /// Доступна активная невыполненная ставка.
+    WagerAvailable, 10
+
+  */
 
   function createPortal() {
     const a = document.createElement("a");
@@ -444,7 +483,13 @@ export const HeaderBar = () => {
     const value = Number(outPutEd.replace(/\s/g, ''));
     if (hubConnection && outPutCurrency.length > 0) {
       setWithdrawValueLoad(true);
-      console.log('withdraw', value);
+      /* console.log('withdraw', outPutCurrency === 'CWD'
+      ? value * 100000
+      : outPutCurrency === 'GLOBAL'
+      ? value * 10000
+      : outPutCurrency === 'MULTICS'
+      ? value * 100
+      : value, Balance[outPutCurrency as keyof typeof Balance]) */
       hubConnection
         .invoke(
           'Withdraw',
@@ -464,7 +509,7 @@ export const HeaderBar = () => {
           setWithdrawValueLoad(false);
         })
         .catch((err: Error) => {
-          console.log('ERRO', err);
+         // console.log('ERROR', err);
           setWithdrawValueLoad(false);
           setOutPutError(true);
           setWithDrawModal(false);
@@ -532,7 +577,7 @@ export const HeaderBar = () => {
             Пополнение баланса
           </H3>
           <div style={{ width: '100%', maxWidth: '340px', margin: '0 auto' }}>
-            <Selectv2 data={balanceList && balanceList} withoutVolume setSwitch={setCurrency} />
+            <Selectv2 data={balances && balances} withoutVolume setSwitch={setCurrency} />
             <Inputv2
               placeholder="Сумма пополнения"
               value={ed.replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
@@ -595,7 +640,7 @@ export const HeaderBar = () => {
             Вывод средств
           </H3>
           <div style={{ width: '100%', maxWidth: '340px', margin: '0 auto' }}>
-            <Selectv2 data={balanceList && balanceList} setSwitch={setOutPutCurrency} />
+            <Selectv2 data={balances && balances} setSwitch={setOutPutCurrency} />
             <Inputv2
               value={outPutEd.replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
               placeholder="Сумма вывода"
@@ -655,10 +700,10 @@ export const HeaderBar = () => {
           </H3>
           <Styled.Desc>С баланса личного кабинета успешно выведены средства в размере:</Styled.Desc>
           <Styled.Desc bold mMore>
-            {(Number(outPutEd)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {outPutCurrency}
+            {(Number(outPutEd.replace(/[^0-9]/gi, '')) + Number(blockchain) + Number(service)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {outPutCurrency}
           </Styled.Desc>
           <Styled.Desc mLess>
-            К выводу: {(Number(outPutEd.replace(/[^0-9]/gi, '')) + Number(blockchain) + Number(service)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })}
+            К зачислению: {(Number(outPutEd)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} 
           </Styled.Desc>
           <Styled.Desc mLess>Комиссия блокчейн: {blockchain}</Styled.Desc>
           <Styled.Desc mLess>Комиссия сервиса: {service}</Styled.Desc>
@@ -683,10 +728,10 @@ export const HeaderBar = () => {
           </H3>
           <Styled.Desc>С баланса личного кабинета не были выведены средства в размере:</Styled.Desc>
           <Styled.Desc bold style={{ marginBottom: '10px' }}>
-            {(Number(outPutEd)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {outPutCurrency}
+            {(Number(outPutEd.replace(/[^0-9]/gi, '')) + Number(blockchain) + Number(service)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {outPutCurrency}
           </Styled.Desc>
           <Styled.Desc mLess>
-            К выводу: {(Number(outPutEd.replace(/[^0-9]/gi, '')) + Number(blockchain) + Number(service)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })}
+            К зачислению: {(Number(outPutEd)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} 
           </Styled.Desc>
           <Styled.Desc mLess>Комиссия блокчейн: {blockchain}</Styled.Desc>
           <Styled.Desc mLess style={{ marginBottom: '0px' }}>
@@ -743,6 +788,7 @@ export const HeaderBar = () => {
           <BalanceChipsBlock>
             {balanceChips &&
               balanceChips.map((i: any, idx: number) => {
+                
                 return (
                   <Chip
                     key={`chip-item-${idx}`}
@@ -750,7 +796,7 @@ export const HeaderBar = () => {
                     bgColor={getChipColor(i)}
                   >
                     <span>
-                      {i.volume.toLocaleString('ru-RU', {
+                      {(Number(i.volume)).toLocaleString('ru-RU', {
                         maximumFractionDigits: 4,
                       })}
                     </span>

@@ -86,7 +86,7 @@ export const Settings: FC = () => {
         0,
         100
       );
-      console.log('res', res);
+      // console.log('res', res);
       setUserPaymentsMethod(res.collection);
     } catch (err) {
       console.log(err);
@@ -184,7 +184,6 @@ export const Settings: FC = () => {
             'ERC 20',
             'TRC 20',
             'BEP 20',
-            'Все валюты',
           ].map((value: string, i: number) => (
             <S.Button
               key={i}
@@ -205,15 +204,24 @@ export const Settings: FC = () => {
           <Ceil>Активность</Ceil>
         </TableHeader>
 
-        {userPaymentsMethod.length
-          ? userPaymentsMethod.map((row) => (
-              <TableRows active={active} toView={toView} data={row} key={row.safeId} />
-            ))
-          : null}
+        {userPaymentsMethod.length ? (
+          userPaymentsMethod.map((row) => (
+            <TableRows active={active} toView={toView} data={row} key={row.safeId} />
+          ))
+        ) : (
+          <NotData>Нет платежных методов</NotData>
+        )}
       </TableCard>
     </Container>
   );
 };
+
+const NotData = styled.div`
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  padding: 12px 20px;
+`;
 
 const Ceil = styled.li<{ checked?: boolean }>`
   display: flex;

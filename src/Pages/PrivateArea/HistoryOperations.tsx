@@ -242,7 +242,7 @@ export const HistoryOperations = () => {
                         });
                     };
                 };
-                setStatusNew(setTimeout(() => changeNew(), 1000));
+                setStatusNew(setTimeout(() => changeNew(), 2000));
                 if (res.collection.length > 0) {
                     setNewItems(true);
                 } else {

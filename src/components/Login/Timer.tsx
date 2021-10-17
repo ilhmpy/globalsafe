@@ -19,7 +19,7 @@ export const Timer: FC<Props> = ({ state, setState, last, children }: Props) => 
   useEffect(() => {
     if (last) {
       const day = moment.utc().valueOf();
-      const day1 = last ? moment.utc(last).valueOf() + 1 * 60000 : moment.utc().valueOf();
+      const day1 = last ? moment.utc(last).valueOf() + 30 * 60000 : moment.utc().valueOf();
       const mins = (day1 - day) / 1000;
       setDeadline(mins);
       setState('-');
