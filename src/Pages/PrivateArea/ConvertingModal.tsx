@@ -11,16 +11,17 @@ import { Select } from '../../components/Select/Select5';
 import { AppContext } from '../../context/HubContext';
 import { Balance } from '../../types/balance';
 
-interface Props {
+interface IProps {
   open: boolean;
   setOpen: (open: boolean) => void;
-  setIsSuccessConverting: (status: boolean) => void;
-  setIsFailConverting: (status: boolean) => void;
   setIsConfirmConverting: (status: boolean) => void;
   setIsCorrectionConverting: (status: boolean) => void;
   setConvertedData: (array: IBalanceExchange) => void;
   convertedData: IBalanceExchange;
   isConfirmConverting: boolean;
+  isOkConverting: boolean;
+  setFromSumCloud: (value: string) => void;
+  setIsOkConverting: (status: boolean) => void;
 }
 
 export interface IBalanceExchange {
@@ -30,67 +31,32 @@ export interface IBalanceExchange {
   discountPercent: number;
 }
 
-export const ConvertingModal: FC<Props> = ({
+export const ConvertingModal: FC<IProps> = ({
   open,
   setOpen,
-  setIsSuccessConverting,
-  setIsFailConverting,
   setIsConfirmConverting,
   setConvertedData,
   convertedData,
   setIsCorrectionConverting,
   isConfirmConverting,
-}: Props) => {
+  setFromSumCloud,
+  isOkConverting,
+  setIsOkConverting,
+}: IProps) => {
+  console.log('convertedData', convertedData);
   const { t } = useTranslation();
   const [fromSum, setFromSum] = useState('');
+  const [toSum, setToSum] = useState('');
   const [fromCurrency, setFromCurrency] = useState('');
   const [toCurrency, setToCurrency] = useState('');
   const { hubConnection } = useContext(AppContext);
 
   const resetStateValues = () => {
     setFromSum('');
-    // setConvertedData({
-    //   userAmount: 0,
-    //   calculatedAmount: 0,
-    //   targetAmount: 0,
-    //   discountPercent: 0,
-    // });
+    setToSum('');
     setFromCurrency('');
     setToCurrency('');
   };
-
-  // useEffect(() => {
-  //   (async () => {
-  //     if (hubConnection && fromCurrency && toCurrency && +fromSum > 0) {
-  //       try {
-  //         const response = await hubConnection.invoke(
-  //           'CalculateBalanceExchange',
-  //           (+fromSum * 100000).toString(),
-  //           59
-  //         );
-  //         console.log('response1', response);
-  //         setConvertedData(response);
-  //         setConvertedData(response);
-  //       } catch (error) {
-  //         console.error(error);
-  //       }
-  //     } else if (hubConnection && fromCurrency && toCurrency && convertedData.targetAmount > 0) {
-  //       console.log('EstimationOfExchange');
-  //       try {
-  //         const response = await hubConnection.invoke(
-  //           'EstimationOfExchange',
-  //           convertedData.targetAmount.toString(),
-  //           Balance.CWD
-  //         );
-  //         console.log('response2', response);
-  //         setConvertedData(response);
-  //         setConvertedData(response);
-  //       } catch (error) {
-  //         console.error(error);
-  //       }
-  //     }
-  //   })();
-  // }, [fromCurrency, toCurrency, fromSum, convertedData.targetAmount]);
 
   useEffect(() => {
     (async () => {
@@ -98,11 +64,9 @@ export const ConvertingModal: FC<Props> = ({
         try {
           const response = await hubConnection.invoke(
             'CalculateBalanceExchange',
-            (+fromSum * 100000).toString(),
+            (+fromSum * 100000 + 1).toString(),
             59
           );
-          console.log('response1', response);
-          setConvertedData(response);
           setConvertedData(response);
         } catch (error) {
           console.error(error);
@@ -111,66 +75,41 @@ export const ConvertingModal: FC<Props> = ({
     })();
   }, [fromCurrency, toCurrency, fromSum]);
 
-  useEffect(() => {
-    (async () => {
-      if (hubConnection && fromCurrency && toCurrency && convertedData.targetAmount > 0) {
-        console.log('EstimationOfExchange');
-        try {
-          const response = await hubConnection.invoke(
-            'EstimationOfExchange',
-            convertedData.targetAmount.toString(),
-            Balance.CWD
-          );
-          console.log('response2', response);
-          setConvertedData(response);
-          setConvertedData(response);
-        } catch (error) {
-          console.error(error);
-        }
+  const estimatiOfExchange = async () => {
+    if (hubConnection && fromCurrency && toCurrency && +toSum > 0) {
+      try {
+        const response = await hubConnection.invoke('EstimationOfExchange', toSum, Balance.CWD);
+        setConvertedData({
+          userAmount: response.calculatedAmount * 100,
+          calculatedAmount: response.calculatedAmount,
+          targetAmount: response.userAmount,
+          discountPercent: response.discountPercent,
+        });
+      } catch (error) {
+        console.error(error);
       }
-    })();
-  }, [fromCurrency, toCurrency, convertedData.targetAmount]);
-  const convert = async () => {
-    (async () => {
-      if (
-        hubConnection &&
-        fromCurrency &&
-        toCurrency &&
-        +fromSum > 0 &&
-        convertedData.calculatedAmount
-      ) {
-        try {
-          const response = await hubConnection.invoke<IBalanceExchange>(
-            'BalanceExchange',
-            (+fromSum * 100000).toString(),
-            59
-          );
-          console.log('response', response);
-          if (response.calculatedAmount && response.targetAmount) {
-            setOpen(false);
-            setConvertedData(response);
-            setIsSuccessConverting(true);
-            setTimeout(() => resetStateValues(), 1000);
-          }
-        } catch (error) {
-          setIsFailConverting(true);
-          console.error(error);
-        }
-      }
-    })();
+    }
   };
+  useEffect(() => {
+    estimatiOfExchange();
+  }, [fromCurrency, toCurrency, toSum]);
+
+  useEffect(() => {
+    if (isOkConverting) {
+      setFromSum((convertedData.calculatedAmount / 100000).toString());
+    }
+  }, [isOkConverting]);
 
   const further = () => {
-    if (
-      hubConnection &&
-      fromCurrency &&
-      toCurrency &&
-      +fromSum > 0 &&
-      convertedData.calculatedAmount
-    ) {
-      resetStateValues();
+    if (hubConnection && fromCurrency && toCurrency && convertedData.calculatedAmount) {
+      setIsOkConverting(false);
       setOpen(false);
-      fromSum ? setIsCorrectionConverting(true) : setIsConfirmConverting(true);
+      if (+fromSum > 0 && !isOkConverting) {
+        setIsCorrectionConverting(true);
+      } else {
+        resetStateValues();
+        setIsConfirmConverting(true);
+      }
     }
   };
 
@@ -184,6 +123,7 @@ export const ConvertingModal: FC<Props> = ({
       <Modal
         onClose={() => {
           setOpen(false);
+          setIsOkConverting(false);
           setTimeout(() => resetStateValues(), 500);
           setConvertedData({
             userAmount: 0,
@@ -199,6 +139,7 @@ export const ConvertingModal: FC<Props> = ({
           <CloseButton
             onClick={() => {
               setOpen(false);
+              setIsOkConverting(false);
               setTimeout(() => resetStateValues(), 500);
               setConvertedData({
                 userAmount: 0,
@@ -218,12 +159,32 @@ export const ConvertingModal: FC<Props> = ({
                 setSelectedOption={(val: string) => setFromCurrency(val)}
               />
               <Input
-                placeholder={toCurrency ? '0' : '0.0000'}
+                placeholder="0.0000"
                 name="fromSum"
-                value={fromSum.replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
-                onChange={({ target: { value } }) =>
-                  !(value.length > 1 && value[0] === '0') && setFromSum(value.replaceAll(/\D/g, ''))
+                value={
+                  fromSum
+                    ? Number(fromSum).toLocaleString('ru-RU', {
+                        maximumFractionDigits: 2,
+                      })
+                    : convertedData.userAmount <= 0
+                    ? ''
+                    : (convertedData.userAmount / 100000).toLocaleString('ru-RU', {
+                        maximumFractionDigits: 2,
+                      })
                 }
+                onChange={({ target: { value } }) => {
+                  setToSum('');
+                  if (!(value.length > 1 && value[0] === '0')) {
+                    setFromSumCloud(value.replaceAll(/\D/g, ''));
+                    setFromSum(value.replaceAll(/\D/g, ''));
+                    setConvertedData({
+                      userAmount: 0,
+                      calculatedAmount: 0,
+                      targetAmount: 0,
+                      discountPercent: 0,
+                    });
+                  }
+                }}
               />
             </InnerBlock>
             <FromToArrow />
@@ -238,19 +199,36 @@ export const ConvertingModal: FC<Props> = ({
                 placeholder={toCurrency ? '0' : '0.0000'}
                 name="toSum"
                 value={
-                  convertedData.targetAmount <= 0
+                  toSum
+                    ? toSum
+                    : convertedData.targetAmount <= 0
                     ? ''
-                    : (convertedData.targetAmount / 100)
-                        .toString()
-                        .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')
+                    : (convertedData.targetAmount / 100).toLocaleString('ru-RU', {
+                        maximumFractionDigits: 2,
+                      })
                 }
-                onChange={({ target: { value } }) =>
-                  !(value.length > 1 && value[0] === '0') &&
-                  setConvertedData({
-                    ...convertedData,
-                    targetAmount: +value.replaceAll(/\D/g, '') * 100,
-                  })
-                }
+                onChange={({ target: { value } }) => {
+                  if (value.length > 1 && value[0] === '0') {
+                    setFromSum('');
+                    setToSum('');
+                    setConvertedData({
+                      userAmount: 0,
+                      calculatedAmount: 0,
+                      targetAmount: 0,
+                      discountPercent: 0,
+                    });
+                  } else if (!value) {
+                    setToSum('');
+                    setConvertedData({
+                      userAmount: 0,
+                      calculatedAmount: 0,
+                      targetAmount: 0,
+                      discountPercent: 0,
+                    });
+                  } else {
+                    setToSum(value.replaceAll(/\D/g, ''));
+                  }
+                }}
               />
               <RateRow>
                 <Rate>Курс:</Rate>
@@ -269,17 +247,17 @@ export const ConvertingModal: FC<Props> = ({
 
               <RateRow>
                 <Rate>Скидка %:</Rate>
-                <Rate>{convertedData.discountPercent}</Rate>
+                <Rate>
+                  {convertedData.calculatedAmount !== 0 ? convertedData.discountPercent : '0'}
+                </Rate>
               </RateRow>
-
               <Button
                 bigSize
                 primary
                 onClick={further}
                 disabled={convertedData.calculatedAmount === 0}
               >
-                {/* {t('privateArea.convert2')} */}
-                {fromSum ? 'Рассчитать' : 'Далее'}
+                {fromSum && !isOkConverting ? 'Рассчитать' : 'Далее'}
               </Button>
             </InnerBlock>
           </ContentWrapper>

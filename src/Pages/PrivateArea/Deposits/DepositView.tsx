@@ -17,6 +17,7 @@ export const DepositView: FC = () => {
 
   useEffect(() => {
     (async () => {
+      console.log('GetDepositPaymentsLog', chosenDepositView.safeId, 0, 10);
       if (hubConnection) {
         try {
           const result = await hubConnection.invoke<RootBalanceList>(
@@ -25,6 +26,7 @@ export const DepositView: FC = () => {
             0,
             10
           );
+          console.log('GetDepositPaymentsLog result', result);
         } catch (error) {
           console.log(error);
         }
