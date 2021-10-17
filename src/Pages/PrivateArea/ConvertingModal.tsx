@@ -9,6 +9,7 @@ import { Input } from '../../components/Input';
 import { Modal } from '../../components/Modal/Modal';
 import { Select } from '../../components/Select/Select5';
 import { AppContext } from '../../context/HubContext';
+import { Balance } from '../../types/balance';
 
 interface Props {
   open: boolean;
@@ -16,6 +17,7 @@ interface Props {
   setIsSuccessConverting: (status: boolean) => void;
   setIsFailConverting: (status: boolean) => void;
   setIsConfirmConverting: (status: boolean) => void;
+  setIsCorrectionConverting: (status: boolean) => void;
   setConvertedData: (array: IBalanceExchange) => void;
   convertedData: IBalanceExchange;
   isConfirmConverting: boolean;
@@ -36,6 +38,7 @@ export const ConvertingModal: FC<Props> = ({
   setIsConfirmConverting,
   setConvertedData,
   convertedData,
+  setIsCorrectionConverting,
   isConfirmConverting,
 }: Props) => {
   const { t } = useTranslation();
@@ -56,6 +59,39 @@ export const ConvertingModal: FC<Props> = ({
     setToCurrency('');
   };
 
+  // useEffect(() => {
+  //   (async () => {
+  //     if (hubConnection && fromCurrency && toCurrency && +fromSum > 0) {
+  //       try {
+  //         const response = await hubConnection.invoke(
+  //           'CalculateBalanceExchange',
+  //           (+fromSum * 100000).toString(),
+  //           59
+  //         );
+  //         console.log('response1', response);
+  //         setConvertedData(response);
+  //         setConvertedData(response);
+  //       } catch (error) {
+  //         console.error(error);
+  //       }
+  //     } else if (hubConnection && fromCurrency && toCurrency && convertedData.targetAmount > 0) {
+  //       console.log('EstimationOfExchange');
+  //       try {
+  //         const response = await hubConnection.invoke(
+  //           'EstimationOfExchange',
+  //           convertedData.targetAmount.toString(),
+  //           Balance.CWD
+  //         );
+  //         console.log('response2', response);
+  //         setConvertedData(response);
+  //         setConvertedData(response);
+  //       } catch (error) {
+  //         console.error(error);
+  //       }
+  //     }
+  //   })();
+  // }, [fromCurrency, toCurrency, fromSum, convertedData.targetAmount]);
+
   useEffect(() => {
     (async () => {
       if (hubConnection && fromCurrency && toCurrency && +fromSum > 0) {
@@ -65,6 +101,7 @@ export const ConvertingModal: FC<Props> = ({
             (+fromSum * 100000).toString(),
             59
           );
+          console.log('response1', response);
           setConvertedData(response);
           setConvertedData(response);
         } catch (error) {
@@ -74,6 +111,25 @@ export const ConvertingModal: FC<Props> = ({
     })();
   }, [fromCurrency, toCurrency, fromSum]);
 
+  useEffect(() => {
+    (async () => {
+      if (hubConnection && fromCurrency && toCurrency && convertedData.targetAmount > 0) {
+        console.log('EstimationOfExchange');
+        try {
+          const response = await hubConnection.invoke(
+            'EstimationOfExchange',
+            convertedData.targetAmount.toString(),
+            Balance.CWD
+          );
+          console.log('response2', response);
+          setConvertedData(response);
+          setConvertedData(response);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    })();
+  }, [fromCurrency, toCurrency, convertedData.targetAmount]);
   const convert = async () => {
     (async () => {
       if (
@@ -114,7 +170,7 @@ export const ConvertingModal: FC<Props> = ({
     ) {
       resetStateValues();
       setOpen(false);
-      setIsConfirmConverting(true);
+      fromSum ? setIsCorrectionConverting(true) : setIsConfirmConverting(true);
     }
   };
 
@@ -180,7 +236,7 @@ export const ConvertingModal: FC<Props> = ({
               />
               <Input
                 placeholder={toCurrency ? '0' : '0.0000'}
-                name="convertedData"
+                name="toSum"
                 value={
                   convertedData.targetAmount <= 0
                     ? ''
@@ -223,7 +279,7 @@ export const ConvertingModal: FC<Props> = ({
                 disabled={convertedData.calculatedAmount === 0}
               >
                 {/* {t('privateArea.convert2')} */}
-                Далее
+                {fromSum ? 'Рассчитать' : 'Далее'}
               </Button>
             </InnerBlock>
           </ContentWrapper>

@@ -38,8 +38,9 @@ export const HeadBar: FC = () => {
   const [isSuccessConverting, setIsSuccessConverting] = useState<boolean>(false);
   const [isFailConverting, setIsFailConverting] = useState<boolean>(false);
   const [isConfirmConverting, setIsConfirmConverting] = useState<boolean>(false);
-  const [notifications, setNotifications] = useState<Notify[]>([]);
+  const [isCorrectionConverting, setIsCorrectionConverting] = useState<boolean>(false);
 
+  const [notifications, setNotifications] = useState<Notify[]>([]);
   const [addDeposit, setAddDeposit] = useState<boolean>(false);
   const [depositListModal, setDepositListModal] = useState<boolean>(false);
   const [addDepositValue, setAddDepositValue] = useState<string>('');
@@ -633,6 +634,7 @@ export const HeadBar: FC = () => {
         open={openConverting}
         isConfirmConverting={isConfirmConverting}
         setOpen={setOpenConverting}
+        setIsCorrectionConverting={setIsCorrectionConverting}
         setIsConfirmConverting={setIsConfirmConverting}
         setIsSuccessConverting={setIsSuccessConverting}
         setIsFailConverting={setIsFailConverting}

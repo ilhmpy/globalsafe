@@ -55,7 +55,7 @@ export const ConvertingModalCorrection: FC<Iprops> = ({
 
   return (
     <>
-      {true && (
+      {open && (
         <Modal onClose={() => setOpen(false)} width={420}>
           <ModalBlock>
             <ModalTitle>Коррекция суммы списания</ModalTitle>
