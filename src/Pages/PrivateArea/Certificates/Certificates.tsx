@@ -99,21 +99,22 @@ export const Certificates = () => {
   };
 
   const onValid = (item: MarketCertificate) => {
-    if (userCertificat && balance) {
-      console.log('true');
-      if (userCertificat.certificate.safeId === item.certificate.safeId) {
-        setErrorType('Данный сертификат уже куплен');
-        setIsErrorModal(item);
-      } else if (item.certificate.dailyVolume <= userCertificat.certificate.dailyVolume) {
-        setErrorType('Сумма сертификата меньше существующей');
-        setIsErrorModal(item);
-      } else if (balance < item.price) {
-        setErrorType('На балансе аккаунта недостаточно средств');
-        setIsErrorModal(item);
-      } else {
-        setErrorType('');
-        setBuyCertificateModal(item);
-      }
+    console.log('true');
+    if (userCertificat && userCertificat.certificate.safeId === item.certificate.safeId) {
+      setErrorType('Данный сертификат уже куплен');
+      setIsErrorModal(item);
+    } else if (
+      userCertificat &&
+      item.certificate.dailyVolume <= userCertificat.certificate.dailyVolume
+    ) {
+      setErrorType('Сумма сертификата меньше существующей');
+      setIsErrorModal(item);
+    } else if (balance && balance < item.price) {
+      setErrorType('На балансе аккаунта недостаточно средств');
+      setIsErrorModal(item);
+    } else {
+      setErrorType('');
+      setBuyCertificateModal(item);
     }
   };
 

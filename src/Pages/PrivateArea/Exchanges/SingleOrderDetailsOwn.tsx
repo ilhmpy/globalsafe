@@ -13,14 +13,40 @@ import { PrivateAreaContext } from '../../../context/PrivateAreaContext';
 import { Balance } from '../../../types/balance';
 import { FiatKind } from '../../../types/fiatKind';
 import { OrderType } from '../../../types/orders';
+import { AppContext } from '../../../context/HubContext';
+import { GetExchangesCollectionResult, ViewExchangeModel } from '../../../types/exchange';
 
 export const SingleOrderDetailsOwn: FC = () => {
   const history = useHistory();
+  const { hubConnection } = useContext(AppContext);
   const { currentOrder, setCurrentOrder, currentOrderType, setCurrentOrderType } = useContext(PrivateAreaContext);
   const [activeFilter, setActiveFilter] = useState<'active' | 'archived' | 'all'>('active');
+  const [orderExchanges, setOrderExchanges] = useState<ViewExchangeModel[]>([]);
 
   console.log('currentOrder', currentOrder)
   console.log('currentOrderType', currentOrderType)
+
+  useEffect(() => {
+    if(hubConnection && currentOrder) {
+      handleGetExchangesByOrder();
+    }
+  }, [hubConnection, currentOrder, activeFilter]);
+
+  const handleGetExchangesByOrder = async () => {
+    try {
+      const res = await hubConnection!.invoke<GetExchangesCollectionResult>(
+        'GetExchangesByOrder',  
+        currentOrder?.safeId, // order safeId
+        activeFilter === 'all' ? [0, 1, 2, 3, 4] : activeFilter === 'active' ? [0, 1, 3] : [2, 4], // Array of ExchangeStates
+        0, // skip
+        20 // take
+      );
+      console.log('GetExchangesByOrder', res);
+      setOrderExchanges(res.collection);
+    } catch (err) { 
+      console.log(err);
+    }
+  }
 
   const handleGoBack = () => {
     setCurrentOrder(null);
@@ -67,23 +93,23 @@ export const SingleOrderDetailsOwn: FC = () => {
                   active={activeFilter === 'all'}
                   onClick={() => setActiveFilter('all')}
                 >
-                    Все
+                  Все
                 </S.FilterButton>
                 <S.FilterButton 
                   active={activeFilter === 'active'}
                   onClick={() => setActiveFilter('active')}
                 >
-                    Активные
+                  Активные
                 </S.FilterButton>
                 <S.FilterButton 
                   active={activeFilter === 'archived'}
                   onClick={() => setActiveFilter('archived')}
                 >
-                Архив
+                  Архив
                 </S.FilterButton>
             </S.Filters>
 
-            <ExchangesInOrderTable />
+            <ExchangesInOrderTable exchangesList={orderExchanges} />
         </S.Container>
         
       </Container>
