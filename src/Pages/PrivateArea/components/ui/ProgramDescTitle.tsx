@@ -1,6 +1,7 @@
 import styled from 'styled-components/macro';
 
 export const ProgramDescTitle = styled.p`
+  position: relative;
   font-weight: 300;
   font-size: 14px;
   line-height: 20px;
