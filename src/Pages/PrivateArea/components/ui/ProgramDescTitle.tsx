@@ -10,6 +10,8 @@ export const ProgramDescTitle = styled.p`
   user-select: none;
   display: flex;
   align-items: center;
+  width: fit-content;
+
   svg {
     margin-left: 5px;
   }
