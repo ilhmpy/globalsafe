@@ -17,7 +17,6 @@ type Props = {
 export const ConfirmOpenDeposit: FC<Props> = ({ onClose, open, sumValue }: Props) => {
   const { selectedDeposit } = useContext(AppContext);
 
-  
   return (
     <>
       {open && (
@@ -67,7 +66,10 @@ export const ConfirmOpenDeposit: FC<Props> = ({ onClose, open, sumValue }: Props
               </S.ListItem>
               <S.ListItem>
                 <S.Text>
-                  Сумма выплаты: <strong>380 000 CWD</strong>
+                  Сумма выплаты:{' '}
+                  <strong>{` ${sumValue.replace(/(\d)(?=(\d{3})+$)/g, '$1 ')} ${
+                    Balance[selectedDeposit?.asset as number]
+                  }`}</strong>
                 </S.Text>
               </S.ListItem>
             </S.List>
