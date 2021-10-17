@@ -1,6 +1,7 @@
 import styled from 'styled-components/macro';
 
 export const ProgramDescTitle = styled.p`
+  position: relative;
   font-weight: 300;
   font-size: 14px;
   line-height: 20px;
@@ -9,6 +10,8 @@ export const ProgramDescTitle = styled.p`
   user-select: none;
   display: flex;
   align-items: center;
+  width: fit-content;
+
   svg {
     margin-left: 5px;
   }
