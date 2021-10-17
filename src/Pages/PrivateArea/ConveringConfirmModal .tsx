@@ -1,45 +1,68 @@
-import { FC } from 'react';
+import { FC, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+import { Button } from '../../components/Button/V2/Button';
 import { Modal } from '../../components/Modal/Modal';
-import { IBalanceExchange } from './ConvertingModal';
+import { AppContext } from '../../context/HubContext';
+import { CloseButton, IBalanceExchange } from './ConvertingModal';
 
 interface Iprops {
   open: boolean;
   setOpen: (open: boolean) => void;
-  setConvertedData: (convertedData: IBalanceExchange) => void;
   convertedData: IBalanceExchange;
+  setIsConfirmConverting: (isConfirm: boolean) => void;
+  setIsSuccessConverting: (isSuccess: boolean) => void;
+  setIsFailConverting: (isFail: boolean) => void;
+  setConvertedData: (open: IBalanceExchange) => void;
 }
-export const ConvertingModalSuccess: FC<Iprops> = ({
+export const ConvertingModalConfirm: FC<Iprops> = ({
   open,
   setOpen,
   convertedData,
+  setIsConfirmConverting,
   setConvertedData,
+  setIsSuccessConverting,
+  setIsFailConverting,
 }: Iprops) => {
   const { t } = useTranslation();
+  const { hubConnection } = useContext(AppContext);
+
+  const convert = async () => {
+    (async () => {
+      if (hubConnection) {
+        try {
+          const response = await hubConnection.invoke<IBalanceExchange>(
+            'BalanceExchange',
+            convertedData.userAmount.toString(),
+            59
+          );
+          console.log('response', response);
+          if (response.calculatedAmount && response.targetAmount) {
+            setOpen(false);
+            setConvertedData(response);
+            setIsSuccessConverting(true);
+            // setTimeout(() => resetStateValues(), 1000);
+          }
+        } catch (error) {
+          setIsFailConverting(true);
+          console.error(error);
+        }
+      }
+    })();
+  };
 
   return (
     <>
       {open && (
-        <Modal
-          onClose={() => {
-            setOpen(false);
-            setConvertedData({
-              userAmount: 0,
-              calculatedAmount: 0,
-              targetAmount: 0,
-              discountPercent: 0,
-            });
-          }}
-          width={420}
-        >
+        <Modal onClose={() => setOpen(false)} width={420}>
           <ModalBlock>
-            <ModalTitle>{t('privateArea.convertingSuccess')}</ModalTitle>
+            <ModalTitle>Подтверждение конвертации</ModalTitle>
             <ModalContent>
-              <ContentTitle>Конвертация CWD в MULTICS успешно завершена:</ContentTitle>
+              <ContentTitle>Вы собираетесь сконвертировать средства:</ContentTitle>
+              <CloseButton onClick={() => setOpen(false)} />
               <ContentBody>
                 <p>
-                  <KeySpan>Списано (CWD):</KeySpan>
+                  <KeySpan>К списанию (CWD)</KeySpan>
                   <strong>
                     {(convertedData.userAmount / 100000)
                       .toString()
@@ -47,7 +70,7 @@ export const ConvertingModalSuccess: FC<Iprops> = ({
                   </strong>
                 </p>
                 <p>
-                  <KeySpan>Курс (CWD-MULTICS):</KeySpan>
+                  <KeySpan>Курс:</KeySpan>
                   <strong>
                     {(
                       convertedData.calculatedAmount /
@@ -62,13 +85,42 @@ export const ConvertingModalSuccess: FC<Iprops> = ({
                   <KeySpan>Скидка (%):</KeySpan> <strong>{convertedData.discountPercent}</strong>
                 </p>
                 <p>
-                  <KeySpan>Зачислено (MULTICS):</KeySpan>
+                  <KeySpan>К получению (MULTICS):</KeySpan>
                   <strong>
                     {(convertedData.targetAmount / 100)
                       .toString()
                       .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
                   </strong>
                 </p>
+                <ButtonsWrapper>
+                  <Button
+                    bigSize
+                    primary
+                    onClick={() => {
+                      convert();
+                      setIsConfirmConverting(true);
+                      setOpen(false);
+                    }}
+                  >
+                    Сконвертировать
+                  </Button>
+                  <Button
+                    fullWidth
+                    bigSize
+                    outlinePrimary
+                    onClick={() => {
+                      setConvertedData({
+                        userAmount: 0,
+                        calculatedAmount: 0,
+                        targetAmount: 0,
+                        discountPercent: 0,
+                      });
+                      setOpen(false);
+                    }}
+                  >
+                    Отмена
+                  </Button>
+                </ButtonsWrapper>
               </ContentBody>
             </ModalContent>
           </ModalBlock>
@@ -77,6 +129,12 @@ export const ConvertingModalSuccess: FC<Iprops> = ({
     </>
   );
 };
+
+const ButtonsWrapper = styled.div`
+  display: flex;
+  margin-top: 10px;
+  gap: 20px;
+`;
 
 const KeySpan = styled.div`
   &:after {
@@ -101,6 +159,7 @@ const KeySpan = styled.div`
 const ContentTitle = styled.div`
   text-align: start;
   color: #000000;
+  margin-bottom: 10px;
 `;
 
 const ContentBody = styled.div`
@@ -109,6 +168,8 @@ const ContentBody = styled.div`
   justify-content: flex-start;
   text-align: start;
   color: #000000;
+  gap: 10px;
+
   & > p {
     display: flex;
     justify-content: space-between;

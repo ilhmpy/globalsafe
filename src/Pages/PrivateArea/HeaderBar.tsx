@@ -25,10 +25,12 @@ import { AppContext } from '../../context/HubContext';
 import { Card, Container } from '../../globalStyles';
 import { Balance, Notify } from '../../types/balance';
 import { Commisions, DepositsCollection, RootDeposits } from '../../types/info';
+import { ConvertingModalConfirm } from './ConveringConfirmModal ';
 import { ConvertingModalSuccess } from './ConveringSuccessModal';
+import { ConvertingModalCorrection } from './ConvertingCorrectionModal';
 import { ConvertingModal, IBalanceExchange } from './ConvertingModal';
 import { ConvertingModalFail } from './ConvertingModalFail';
-import { DepositListModal, TokenModal } from './Modals';
+import { DepositListModal } from './Modals';
 import * as Styled from './Styles.elements';
 
 export const HeaderBar = () => {
@@ -36,6 +38,9 @@ export const HeaderBar = () => {
   const [openConverting, setOpenConverting] = useState<boolean>(false);
   const [isSuccessConverting, setIsSuccessConverting] = useState<boolean>(false);
   const [isFailConverting, setIsFailConverting] = useState<boolean>(false);
+  const [isConfirmConverting, setIsConfirmConverting] = useState<boolean>(false);
+  const [isCorrectionConverting, setIsCorrectionConverting] = useState<boolean>(false);
+  
   const [notifications, setNotifications] = useState<Notify[]>([]);
   const [addDeposit, setAddDeposit] = useState<boolean>(false);
   const [depositListModal, setDepositListModal] = useState<boolean>(false);
@@ -111,7 +116,7 @@ export const HeaderBar = () => {
       .map((b) => Balance[b.balanceKind]);
   }, [balanceList]);
 
-  const bl: any[] = [0, 9, 10, 11]; 
+  const bl: any[] = [0, 9, 10, 11];
 
   const balances = balanceList?.filter((item) => !bl.includes(item.balanceKind));
 
@@ -377,11 +382,11 @@ export const HeaderBar = () => {
   */
 
   function createPortal() {
-    const a = document.createElement("a");
-    a.rel="noreferrer noopener";
-    a.target="_blank";
+    const a = document.createElement('a');
+    a.rel = 'noreferrer noopener';
+    a.target = '_blank';
     return a;
-  };
+  }
 
   const changeBalance = () => {
     const value = Number(ed.replace(/\s/g, ''));
@@ -455,28 +460,28 @@ export const HeaderBar = () => {
   function getStatus(status: number) {
     console.log(status);
     if (status === 0) {
-      errorStatus(true, "Ошибка вывода средств");
+      errorStatus(true, 'Ошибка вывода средств');
     } else if (status === 1) {
-      errorStatus(false, "Успешный вывод средств")
+      errorStatus(false, 'Успешный вывод средств');
     } else if (status === 2) {
-      errorStatus(true, "Недостаточно средств на балансе");
+      errorStatus(true, 'Недостаточно средств на балансе');
     } else if (status === 3) {
-      errorStatus(true, "Ошибка вывода средств");
+      errorStatus(true, 'Ошибка вывода средств');
     } else if (status === 4) {
-      errorStatus(true, "Отправитель средств не был найден");
+      errorStatus(true, 'Отправитель средств не был найден');
     } else if (status === 5) {
-      errorStatus(true, "Неверный получатель. Аккаунт не был найден");
+      errorStatus(true, 'Неверный получатель. Аккаунт не был найден');
     } else if (status === 6) {
-      errorStatus(true, "Сумма перевода меньше разрешенного минимального объема перевода");
+      errorStatus(true, 'Сумма перевода меньше разрешенного минимального объема перевода');
     } else if (status === 7) {
-      errorStatus(true, "Сумма перевода больше разрешенной максимальной суммы перевода");
+      errorStatus(true, 'Сумма перевода больше разрешенной максимальной суммы перевода');
     } else if (status === 8) {
-      errorStatus(true, "Превышение дневной квоты перевода средств");
+      errorStatus(true, 'Превышение дневной квоты перевода средств');
     } else if (status === 9) {
-      errorStatus(true, "Превышение месячной квоты перевода средств");
+      errorStatus(true, 'Превышение месячной квоты перевода средств');
     } else if (status === 10) {
-      errorStatus(true, "Доступна активная невыполненная ставка.");
-    };
+      errorStatus(true, 'Доступна активная невыполненная ставка.');
+    }
   }
 
   const outPutBalance = () => {
@@ -509,7 +514,7 @@ export const HeaderBar = () => {
           setWithdrawValueLoad(false);
         })
         .catch((err: Error) => {
-         // console.log('ERROR', err);
+          // console.log('ERROR', err);
           setWithdrawValueLoad(false);
           setOutPutError(true);
           setWithDrawModal(false);
@@ -587,11 +592,13 @@ export const HeaderBar = () => {
                   setEd('');
                 }
               }}
-              onChange={({ target: { value }}) => {
+              onChange={({ target: { value } }) => {
                 setEd(value.replaceAll(/\D/g, ''));
               }}
             />
-            <Styled.Message>Для пополнения баланса вы будете перенаправлены на cwd.global</Styled.Message>
+            <Styled.Message>
+              Для пополнения баланса вы будете перенаправлены на cwd.global
+            </Styled.Message>
             <PAButton onClick={changeBalance} disabled={Number(ed) < 1 || currency.length < 1}>
               Пополнить баланс
             </PAButton>
@@ -617,7 +624,7 @@ export const HeaderBar = () => {
           <H3 center modalTitle>
             Пополнение баланса
           </H3>
-          <Styled.Desc style={{ marginBottom: "20px", maxWidth: "340px" }}>
+          <Styled.Desc style={{ marginBottom: '20px', maxWidth: '340px' }}>
             Мы сообщим вам о результате операции пополнения в личном уведомлении.
           </Styled.Desc>
         </Modal>
@@ -652,27 +659,21 @@ export const HeaderBar = () => {
                   setService('0');
                 }
               }}
-              onChange={({ target: { value }}) => {
-                const validValue = value.replaceAll(/\D/g, "");
-                if (validValue[0] != "0") {
+              onChange={({ target: { value } }) => {
+                const validValue = value.replaceAll(/\D/g, '');
+                if (validValue[0] != '0') {
                   setOutPutEd(validValue);
-                };
-                if (validValue.length > 0 && validValue[0] != "0") {
+                }
+                if (validValue.length > 0 && validValue[0] != '0') {
                   getCommisions(validValue);
-                };
+                }
               }}
             />
             <Styled.Commision marginT={20} marginB={10}>
-              Комиссия блокчейна:{' '}
-              <span>
-                {blockchain}
-              </span>
+              Комиссия блокчейна: <span>{blockchain}</span>
             </Styled.Commision>
             <Styled.Commision marginT={10} marginB={20}>
-              Комиcсия сервиса:{' '}
-              <span>
-                {service}
-              </span>
+              Комиcсия сервиса: <span>{service}</span>
             </Styled.Commision>
             <PAButton
               onClick={outPutBalance}
@@ -700,10 +701,15 @@ export const HeaderBar = () => {
           </H3>
           <Styled.Desc>С баланса личного кабинета успешно выведены средства в размере:</Styled.Desc>
           <Styled.Desc bold mMore>
-            {(Number(outPutEd.replace(/[^0-9]/gi, '')) + Number(blockchain) + Number(service)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {outPutCurrency}
+            {(
+              Number(outPutEd.replace(/[^0-9]/gi, '')) +
+              Number(blockchain) +
+              Number(service)
+            ).toLocaleString('ru-RU', { maximumFractionDigits: 2 })}{' '}
+            {outPutCurrency}
           </Styled.Desc>
           <Styled.Desc mLess>
-            К зачислению: {(Number(outPutEd)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} 
+            К зачислению: {Number(outPutEd).toLocaleString('ru-RU', { maximumFractionDigits: 2 })}
           </Styled.Desc>
           <Styled.Desc mLess>Комиссия блокчейн: {blockchain}</Styled.Desc>
           <Styled.Desc mLess>Комиссия сервиса: {service}</Styled.Desc>
@@ -728,10 +734,15 @@ export const HeaderBar = () => {
           </H3>
           <Styled.Desc>С баланса личного кабинета не были выведены средства в размере:</Styled.Desc>
           <Styled.Desc bold style={{ marginBottom: '10px' }}>
-            {(Number(outPutEd.replace(/[^0-9]/gi, '')) + Number(blockchain) + Number(service)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {outPutCurrency}
+            {(
+              Number(outPutEd.replace(/[^0-9]/gi, '')) +
+              Number(blockchain) +
+              Number(service)
+            ).toLocaleString('ru-RU', { maximumFractionDigits: 2 })}{' '}
+            {outPutCurrency}
           </Styled.Desc>
           <Styled.Desc mLess>
-            К зачислению: {(Number(outPutEd)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} 
+            К зачислению: {Number(outPutEd).toLocaleString('ru-RU', { maximumFractionDigits: 2 })}
           </Styled.Desc>
           <Styled.Desc mLess>Комиссия блокчейн: {blockchain}</Styled.Desc>
           <Styled.Desc mLess style={{ marginBottom: '0px' }}>
@@ -745,17 +756,45 @@ export const HeaderBar = () => {
 
       <ConvertingModal
         open={openConverting}
+        isConfirmConverting={isConfirmConverting}
         setOpen={setOpenConverting}
+        setIsCorrectionConverting={setIsCorrectionConverting}
+        setIsConfirmConverting={setIsConfirmConverting}
         setIsSuccessConverting={setIsSuccessConverting}
         setIsFailConverting={setIsFailConverting}
         setConvertedData={setConvertedData}
+        convertedData={convertedData}
       />
+      <ConvertingModalConfirm
+        open={isConfirmConverting}
+        setOpen={setIsConfirmConverting}
+        convertedData={convertedData}
+        setIsConfirmConverting={setIsConfirmConverting}
+        setConvertedData={setConvertedData}
+        setIsSuccessConverting={setIsSuccessConverting}
+        setIsFailConverting={setIsFailConverting}
+      />
+      <ConvertingModalCorrection
+        open={isCorrectionConverting}
+        setOpen={setIsCorrectionConverting}
+        convertedData={convertedData}
+        setIsConfirmConverting={setIsConfirmConverting}
+        setConvertedData={setConvertedData}
+        setIsSuccessConverting={setIsSuccessConverting}
+        setIsFailConverting={setIsFailConverting}
+      />
+
       <ConvertingModalSuccess
         open={isSuccessConverting}
         setOpen={setIsSuccessConverting}
         convertedData={convertedData}
+        setConvertedData={setConvertedData}
       />
-      <ConvertingModalFail open={isFailConverting} setOpen={setIsFailConverting} />
+      <ConvertingModalFail
+        open={isFailConverting}
+        setOpen={setIsFailConverting}
+        setConvertedData={setConvertedData}
+      />
 
       <Header />
       <DepositsPanelContainer>
@@ -788,7 +827,6 @@ export const HeaderBar = () => {
           <BalanceChipsBlock>
             {balanceChips &&
               balanceChips.map((i: any, idx: number) => {
-                
                 return (
                   <Chip
                     key={`chip-item-${idx}`}
@@ -796,7 +834,7 @@ export const HeaderBar = () => {
                     bgColor={getChipColor(i)}
                   >
                     <span>
-                      {(Number(i.volume)).toLocaleString('ru-RU', {
+                      {Number(i.volume).toLocaleString('ru-RU', {
                         maximumFractionDigits: 4,
                       })}
                     </span>

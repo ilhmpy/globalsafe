@@ -9,13 +9,18 @@ import { Input } from '../../components/Input';
 import { Modal } from '../../components/Modal/Modal';
 import { Select } from '../../components/Select/Select5';
 import { AppContext } from '../../context/HubContext';
+import { Balance } from '../../types/balance';
 
 interface Props {
   open: boolean;
   setOpen: (open: boolean) => void;
   setIsSuccessConverting: (status: boolean) => void;
   setIsFailConverting: (status: boolean) => void;
+  setIsConfirmConverting: (status: boolean) => void;
+  setIsCorrectionConverting: (status: boolean) => void;
   setConvertedData: (array: IBalanceExchange) => void;
+  convertedData: IBalanceExchange;
+  isConfirmConverting: boolean;
 }
 
 export interface IBalanceExchange {
@@ -30,32 +35,62 @@ export const ConvertingModal: FC<Props> = ({
   setOpen,
   setIsSuccessConverting,
   setIsFailConverting,
+  setIsConfirmConverting,
   setConvertedData,
+  convertedData,
+  setIsCorrectionConverting,
+  isConfirmConverting,
 }: Props) => {
   const { t } = useTranslation();
   const [fromSum, setFromSum] = useState('');
-  const [toSum, setToSum] = useState<IBalanceExchange>({
-    userAmount: 0,
-    calculatedAmount: 0,
-    targetAmount: 0,
-    discountPercent: 0,
-  });
   const [fromCurrency, setFromCurrency] = useState('');
   const [toCurrency, setToCurrency] = useState('');
-  const appContext = useContext(AppContext);
-  const hubConnection = appContext.hubConnection;
+  const { hubConnection } = useContext(AppContext);
 
   const resetStateValues = () => {
     setFromSum('');
-    setToSum({
-      userAmount: 0,
-      calculatedAmount: 0,
-      targetAmount: 0,
-      discountPercent: 0,
-    });
+    // setConvertedData({
+    //   userAmount: 0,
+    //   calculatedAmount: 0,
+    //   targetAmount: 0,
+    //   discountPercent: 0,
+    // });
     setFromCurrency('');
     setToCurrency('');
   };
+
+  // useEffect(() => {
+  //   (async () => {
+  //     if (hubConnection && fromCurrency && toCurrency && +fromSum > 0) {
+  //       try {
+  //         const response = await hubConnection.invoke(
+  //           'CalculateBalanceExchange',
+  //           (+fromSum * 100000).toString(),
+  //           59
+  //         );
+  //         console.log('response1', response);
+  //         setConvertedData(response);
+  //         setConvertedData(response);
+  //       } catch (error) {
+  //         console.error(error);
+  //       }
+  //     } else if (hubConnection && fromCurrency && toCurrency && convertedData.targetAmount > 0) {
+  //       console.log('EstimationOfExchange');
+  //       try {
+  //         const response = await hubConnection.invoke(
+  //           'EstimationOfExchange',
+  //           convertedData.targetAmount.toString(),
+  //           Balance.CWD
+  //         );
+  //         console.log('response2', response);
+  //         setConvertedData(response);
+  //         setConvertedData(response);
+  //       } catch (error) {
+  //         console.error(error);
+  //       }
+  //     }
+  //   })();
+  // }, [fromCurrency, toCurrency, fromSum, convertedData.targetAmount]);
 
   useEffect(() => {
     (async () => {
@@ -66,7 +101,9 @@ export const ConvertingModal: FC<Props> = ({
             (+fromSum * 100000).toString(),
             59
           );
-          setToSum(response);
+          console.log('response1', response);
+          setConvertedData(response);
+          setConvertedData(response);
         } catch (error) {
           console.error(error);
         }
@@ -74,19 +111,45 @@ export const ConvertingModal: FC<Props> = ({
     })();
   }, [fromCurrency, toCurrency, fromSum]);
 
+  useEffect(() => {
+    (async () => {
+      if (hubConnection && fromCurrency && toCurrency && convertedData.targetAmount > 0) {
+        console.log('EstimationOfExchange');
+        try {
+          const response = await hubConnection.invoke(
+            'EstimationOfExchange',
+            convertedData.targetAmount.toString(),
+            Balance.CWD
+          );
+          console.log('response2', response);
+          setConvertedData(response);
+          setConvertedData(response);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    })();
+  }, [fromCurrency, toCurrency, convertedData.targetAmount]);
   const convert = async () => {
     (async () => {
-      if (hubConnection && fromCurrency && toCurrency && +fromSum > 0 && toSum.calculatedAmount) {
+      if (
+        hubConnection &&
+        fromCurrency &&
+        toCurrency &&
+        +fromSum > 0 &&
+        convertedData.calculatedAmount
+      ) {
         try {
           const response = await hubConnection.invoke<IBalanceExchange>(
             'BalanceExchange',
             (+fromSum * 100000).toString(),
             59
           );
-          if (response.calculatedAmount & response.targetAmount) {
+          console.log('response', response);
+          if (response.calculatedAmount && response.targetAmount) {
+            setOpen(false);
             setConvertedData(response);
             setIsSuccessConverting(true);
-            setOpen(false);
             setTimeout(() => resetStateValues(), 1000);
           }
         } catch (error) {
@@ -97,12 +160,37 @@ export const ConvertingModal: FC<Props> = ({
     })();
   };
 
+  const further = () => {
+    if (
+      hubConnection &&
+      fromCurrency &&
+      toCurrency &&
+      +fromSum > 0 &&
+      convertedData.calculatedAmount
+    ) {
+      resetStateValues();
+      setOpen(false);
+      fromSum ? setIsCorrectionConverting(true) : setIsConfirmConverting(true);
+    }
+  };
+
   return (
-    <CSSTransition in={open} timeout={300} unmountOnExit>
+    <CSSTransition
+      in={open}
+      timeout={300}
+      unmountOnExit
+      style={{ display: isConfirmConverting ? 'none' : 'block' }}
+    >
       <Modal
         onClose={() => {
           setOpen(false);
           setTimeout(() => resetStateValues(), 500);
+          setConvertedData({
+            userAmount: 0,
+            calculatedAmount: 0,
+            targetAmount: 0,
+            discountPercent: 0,
+          });
         }}
         width={420}
       >
@@ -112,6 +200,12 @@ export const ConvertingModal: FC<Props> = ({
             onClick={() => {
               setOpen(false);
               setTimeout(() => resetStateValues(), 500);
+              setConvertedData({
+                userAmount: 0,
+                calculatedAmount: 0,
+                targetAmount: 0,
+                discountPercent: 0,
+              });
             }}
           />
 
@@ -124,7 +218,7 @@ export const ConvertingModal: FC<Props> = ({
                 setSelectedOption={(val: string) => setFromCurrency(val)}
               />
               <Input
-                placeholder="Сумма"
+                placeholder={toCurrency ? '0' : '0.0000'}
                 name="fromSum"
                 value={fromSum.replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
                 onChange={({ target: { value } }) =>
@@ -141,32 +235,51 @@ export const ConvertingModal: FC<Props> = ({
                 setSelectedOption={(val: string) => setToCurrency(val)}
               />
               <Input
-                disabled
-                placeholder="Сумма"
+                placeholder={toCurrency ? '0' : '0.0000'}
                 name="toSum"
                 value={
-                  +toSum.targetAmount <= 0
+                  convertedData.targetAmount <= 0
                     ? ''
-                    : (+toSum.targetAmount / 100).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')
+                    : (convertedData.targetAmount / 100)
+                        .toString()
+                        .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')
                 }
-                onChange={(e) => undefined}
+                onChange={({ target: { value } }) =>
+                  !(value.length > 1 && value[0] === '0') &&
+                  setConvertedData({
+                    ...convertedData,
+                    targetAmount: +value.replaceAll(/\D/g, '') * 100,
+                  })
+                }
               />
               <RateRow>
                 <Rate>Курс:</Rate>
                 <Rate>
-                  {+toSum.calculatedAmount > 0
-                    ? (+toSum.calculatedAmount / +toSum.targetAmount / 1000).toLocaleString(
-                        'ru-RU',
-                        {
-                          maximumFractionDigits: 2,
-                        }
-                      )
+                  {convertedData.calculatedAmount > 0
+                    ? (
+                        convertedData.calculatedAmount /
+                        convertedData.targetAmount /
+                        1000
+                      ).toLocaleString('ru-RU', {
+                        maximumFractionDigits: 2,
+                      })
                     : 0}
                 </Rate>
               </RateRow>
 
-              <Button bigSize primary onClick={convert} disabled={toSum.calculatedAmount === 0}>
-                {t('privateArea.convert2')}
+              <RateRow>
+                <Rate>Скидка %:</Rate>
+                <Rate>{convertedData.discountPercent}</Rate>
+              </RateRow>
+
+              <Button
+                bigSize
+                primary
+                onClick={further}
+                disabled={convertedData.calculatedAmount === 0}
+              >
+                {/* {t('privateArea.convert2')} */}
+                {fromSum ? 'Рассчитать' : 'Далее'}
               </Button>
             </InnerBlock>
           </ContentWrapper>
@@ -179,7 +292,7 @@ export const ConvertingModal: FC<Props> = ({
 const FromToArrow = styled(FromTo)`
   position: absolute;
   left: 49%;
-  top: 32%;
+  top: 28%;
 `;
 
 const Rate = styled.span`
@@ -191,11 +304,10 @@ const Rate = styled.span`
 `;
 
 const RateRow = styled.div`
-  margin-top: 5px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  min-height: 40px;
+  min-height: 35px;
 `;
 
 const InnerBlock = styled.div`
@@ -217,7 +329,7 @@ const Container = styled.div`
   gap: 20px;
 `;
 
-const CloseButton = styled(Close)`
+export const CloseButton = styled(Close)`
   position: absolute;
   right: 19px;
   top: 19px;
