@@ -1,9 +1,7 @@
-import { FC, useContext, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { FC, useState } from 'react';
 import styled from 'styled-components';
 import { Button } from '../../components/Button/V2/Button';
 import { Modal } from '../../components/Modal/Modal';
-import { AppContext } from '../../context/HubContext';
 import { Checkbox } from './components/Checkbox';
 import { CloseButton, IBalanceExchange } from './ConvertingModal';
 
@@ -11,46 +9,25 @@ interface Iprops {
   open: boolean;
   setOpen: (open: boolean) => void;
   convertedData: IBalanceExchange;
-  setIsConfirmConverting: (isConfirm: boolean) => void;
-  setIsSuccessConverting: (isSuccess: boolean) => void;
-  setIsFailConverting: (isFail: boolean) => void;
-  setConvertedData: (open: IBalanceExchange) => void;
+  setOpenConverting: (open: boolean) => void;
+  setIsOkConverting: (isOk: boolean) => void;
+  fromSumCloud: string;
 }
+
 export const ConvertingModalCorrection: FC<Iprops> = ({
   open,
   setOpen,
   convertedData,
-  setIsConfirmConverting,
-  setConvertedData,
-  setIsSuccessConverting,
-  setIsFailConverting,
+  setOpenConverting,
+  fromSumCloud,
+  setIsOkConverting,
 }: Iprops) => {
-  const { t } = useTranslation();
-  const { hubConnection } = useContext(AppContext);
   const [isNoShow, setIsNoShow] = useState<boolean>(false);
 
-  const convert = async () => {
-    (async () => {
-      if (hubConnection) {
-        try {
-          const response = await hubConnection.invoke<IBalanceExchange>(
-            'BalanceExchange',
-            convertedData.userAmount.toString(),
-            59
-          );
-          console.log('response', response);
-          if (response.calculatedAmount && response.targetAmount) {
-            setOpen(false);
-            setConvertedData(response);
-            setIsSuccessConverting(true);
-            // setTimeout(() => resetStateValues(), 1000);
-          }
-        } catch (error) {
-          setIsFailConverting(true);
-          console.error(error);
-        }
-      }
-    })();
+  const agree = async () => {
+    setOpen(false);
+    setOpenConverting(true);
+    setIsOkConverting(true);
   };
 
   return (
@@ -70,18 +47,18 @@ export const ConvertingModalCorrection: FC<Iprops> = ({
                   <KeySpan>Указано к списанию (CWD)</KeySpan>
                   <Dots />
                   <strong>
-                    {(convertedData.userAmount / 100000)
-                      .toString()
-                      .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
+                    {Number(fromSumCloud).toLocaleString('ru-RU', {
+                      maximumFractionDigits: 2,
+                    })}
                   </strong>
                 </p>
                 <p>
                   <KeySpan>Рассчетная сумма к списанию (CWD)</KeySpan>
                   <Dots />
                   <strong>
-                    {(convertedData.userAmount / 100000)
-                      .toString()
-                      .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
+                    {(convertedData.calculatedAmount / 100000).toLocaleString('ru-RU', {
+                      maximumFractionDigits: 2,
+                    })}
                   </strong>
                 </p>
                 <p>
@@ -116,16 +93,7 @@ export const ConvertingModalCorrection: FC<Iprops> = ({
                   <KeySpan style={{ width: '100%' }}>Больше не показывать это окно</KeySpan>
                 </CheckboxGroup>
                 <ButtonsWrapper>
-                  <Button
-                    bigSize
-                    primary
-                    fullWidth
-                    onClick={() => {
-                      convert();
-                      setIsConfirmConverting(true);
-                      setOpen(false);
-                    }}
-                  >
+                  <Button bigSize primary fullWidth onClick={agree}>
                     Ok
                   </Button>
                 </ButtonsWrapper>

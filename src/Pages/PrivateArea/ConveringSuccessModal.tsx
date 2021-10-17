@@ -40,6 +40,7 @@ export const ConvertingModalSuccess: FC<Iprops> = ({
               <ContentBody>
                 <p>
                   <KeySpan>Списано (CWD):</KeySpan>
+                  <Dots />
                   <strong>
                     {(convertedData.userAmount / 100000)
                       .toString()
@@ -48,6 +49,7 @@ export const ConvertingModalSuccess: FC<Iprops> = ({
                 </p>
                 <p>
                   <KeySpan>Курс (CWD-MULTICS):</KeySpan>
+                  <Dots />
                   <strong>
                     {(
                       convertedData.calculatedAmount /
@@ -59,10 +61,13 @@ export const ConvertingModalSuccess: FC<Iprops> = ({
                   </strong>
                 </p>
                 <p>
-                  <KeySpan>Скидка (%):</KeySpan> <strong>{convertedData.discountPercent}</strong>
+                  <KeySpan>Скидка (%):</KeySpan>
+                  <Dots />
+                  <strong>{convertedData.discountPercent}</strong>
                 </p>
                 <p>
                   <KeySpan>Зачислено (MULTICS):</KeySpan>
+                  <Dots />
                   <strong>
                     {(convertedData.targetAmount / 100)
                       .toString()
@@ -77,25 +82,15 @@ export const ConvertingModalSuccess: FC<Iprops> = ({
     </>
   );
 };
+const Dots = styled.div`
+  flex: 1;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.2);
+  position: relative;
+  bottom: 4px;
+`;
 
 const KeySpan = styled.div`
-  &:after {
-    content: '';
-    position: absolute;
-    bottom: 5px;
-    /* max-width: 150px; */
-    width: 150px;
-    border-bottom: 1px dotted rgba(0, 0, 0, 0.2);
-  }
-  &:nth-child(1) {
-    width: 200px;
-  }
-  &:nth-child(2) {
-  }
-  &:nth-child(3) {
-  }
-  &:nth-child(4) {
-  }
+  position: relative;
 `;
 
 const ContentTitle = styled.div`
@@ -112,23 +107,8 @@ const ContentBody = styled.div`
   & > p {
     display: flex;
     justify-content: space-between;
-    /* border-bottom: 1px dotted rgba(0, 0, 0, 0.2); */
     background-color: #ffffff;
     position: relative;
-
-    & > strong {
-      /* &:after {
-        content: '';
-        border-bottom: 1px dotted rgba(0, 0, 0, 0.2);
-
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        border-bottom: 0.1em dotted;
-      } */
-    }
   }
 `;
 

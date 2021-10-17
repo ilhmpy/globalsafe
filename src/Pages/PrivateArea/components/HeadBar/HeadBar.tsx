@@ -39,6 +39,8 @@ export const HeadBar: FC = () => {
   const [isFailConverting, setIsFailConverting] = useState<boolean>(false);
   const [isConfirmConverting, setIsConfirmConverting] = useState<boolean>(false);
   const [isCorrectionConverting, setIsCorrectionConverting] = useState<boolean>(false);
+  const [fromSumCloud, setFromSumCloud] = useState('');
+  const [isOkConverting, setIsOkConverting] = useState<boolean>(false);
 
   const [notifications, setNotifications] = useState<Notify[]>([]);
   const [addDeposit, setAddDeposit] = useState<boolean>(false);
@@ -636,10 +638,11 @@ export const HeadBar: FC = () => {
         setOpen={setOpenConverting}
         setIsCorrectionConverting={setIsCorrectionConverting}
         setIsConfirmConverting={setIsConfirmConverting}
-        setIsSuccessConverting={setIsSuccessConverting}
-        setIsFailConverting={setIsFailConverting}
         setConvertedData={setConvertedData}
         convertedData={convertedData}
+        setFromSumCloud={setFromSumCloud}
+        isOkConverting={isOkConverting}
+        setIsOkConverting={setIsOkConverting}
       />
       <ConvertingModalSuccess
         open={isSuccessConverting}

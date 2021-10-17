@@ -41,7 +41,6 @@ export const ConvertingModalConfirm: FC<Iprops> = ({
             setOpen(false);
             setConvertedData(response);
             setIsSuccessConverting(true);
-            // setTimeout(() => resetStateValues(), 1000);
           }
         } catch (error) {
           setIsFailConverting(true);
@@ -63,14 +62,17 @@ export const ConvertingModalConfirm: FC<Iprops> = ({
               <ContentBody>
                 <p>
                   <KeySpan>К списанию (CWD)</KeySpan>
+                  <Dots />
                   <strong>
-                    {(convertedData.userAmount / 100000)
-                      .toString()
-                      .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
+                    {(convertedData.userAmount / 100000).toLocaleString('ru-RU', {
+                      maximumFractionDigits: 2,
+                    })}
                   </strong>
                 </p>
                 <p>
                   <KeySpan>Курс:</KeySpan>
+                  <Dots />
+
                   <strong>
                     {(
                       convertedData.calculatedAmount /
@@ -82,14 +84,17 @@ export const ConvertingModalConfirm: FC<Iprops> = ({
                   </strong>
                 </p>
                 <p>
-                  <KeySpan>Скидка (%):</KeySpan> <strong>{convertedData.discountPercent}</strong>
+                  <KeySpan>Скидка (%):</KeySpan>
+                  <Dots />
+
+                  <strong>{convertedData.discountPercent}</strong>
                 </p>
                 <p>
                   <KeySpan>К получению (MULTICS):</KeySpan>
+                  <Dots />
+
                   <strong>
-                    {(convertedData.targetAmount / 100)
-                      .toString()
-                      .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
+                    {convertedData.targetAmount.toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
                   </strong>
                 </p>
                 <ButtonsWrapper>
@@ -130,6 +135,13 @@ export const ConvertingModalConfirm: FC<Iprops> = ({
   );
 };
 
+const Dots = styled.div`
+  flex: 1;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.2);
+  position: relative;
+  bottom: 4px;
+`;
+
 const ButtonsWrapper = styled.div`
   display: flex;
   margin-top: 10px;
@@ -137,23 +149,7 @@ const ButtonsWrapper = styled.div`
 `;
 
 const KeySpan = styled.div`
-  &:after {
-    content: '';
-    position: absolute;
-    bottom: 5px;
-    /* max-width: 150px; */
-    width: 150px;
-    border-bottom: 1px dotted rgba(0, 0, 0, 0.2);
-  }
-  &:nth-child(1) {
-    width: 200px;
-  }
-  &:nth-child(2) {
-  }
-  &:nth-child(3) {
-  }
-  &:nth-child(4) {
-  }
+  position: relative;
 `;
 
 const ContentTitle = styled.div`
@@ -173,23 +169,8 @@ const ContentBody = styled.div`
   & > p {
     display: flex;
     justify-content: space-between;
-    /* border-bottom: 1px dotted rgba(0, 0, 0, 0.2); */
     background-color: #ffffff;
     position: relative;
-
-    & > strong {
-      /* &:after {
-        content: '';
-        border-bottom: 1px dotted rgba(0, 0, 0, 0.2);
-
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        border-bottom: 0.1em dotted;
-      } */
-    }
   }
 `;
 
