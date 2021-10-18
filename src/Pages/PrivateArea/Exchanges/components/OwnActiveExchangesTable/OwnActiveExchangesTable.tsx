@@ -5,7 +5,7 @@ import alfa1 from '../../../../../assets/v2/svg/banks/alfa1.svg';
 import sber from '../../../../../assets/v2/svg/banks/sber.svg';
 import tinkoff from '../../../../../assets/v2/svg/banks/tinkoff.svg';
 import { CurrencyPair } from '../modals/CurrencyPair';
-import { OwnExchangesProps, ViewExchangeModel } from '../../../../../types/exchange';
+import { OwnExchangesProps, ExchangeState } from '../../../../../types/exchange';
 import { Balance } from "../../../../../types/balance";
 import { FiatKind } from "../../../../../types/fiat";
 import { PaymentMethodKind } from "../../../../../types/paymentMethodKind";
@@ -80,22 +80,10 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
 
   /* 
     ОСТАЛОСЬ СДЕЛАТЬ:
-    обновление оставшегося время каждую минуту
-    ^ страница архив
     детальная страница каждого обмена
-    ^ доделать ещё два "текстового" метода оплаты
   */
 
-  function getTime(date: Date, wn: any) {
-    const result = { 
-                     days: wn.days - moment().diff(date, "days", false), 
-                     hours: wn.totalHours - moment().diff(date, "hours", false), 
-                     minutes: wn.totalMinutes - moment().diff(date, "minutes", false), 
-                     seconds: wn.totalSeconds - moment().diff(date, "seconds", false)
-                   };
-    console.log(wn.minutes - moment().diff(new Date(2021, 9, 16, 15, 57), "minutes", false))
-    const { days, hours, minutes, seconds } = result;
-   // console.log(date, wn, result);
+  function getCountsTime({ days, hours, minutes, seconds }: any) {
     if (days > 0) {
       return `${days}д ${hours > 0 ? hours : 0}ч`;
     } else if (hours > 0) {
@@ -105,12 +93,21 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
     } else {
       return `0м 0с`;
     };
+  }
+
+  function getTime(date: Date, wn: any, state: number) {
+    const result = { 
+                     days: wn.days - moment().diff(date, "days", false), 
+                     hours: wn.totalHours - moment().diff(date, "hours", false), 
+                     minutes: wn.totalMinutes - moment().diff(date, "minutes", false), 
+                     seconds: wn.totalSeconds - moment().diff(date, "seconds", false)
+                   };
+    if (state === 1) {
+      return getCountsTime(result);
+    } else {
+      return getCountsTime(wn);
+    };
   };
- 
-  setInterval(() => { 
-    // const data = exchanges.map((i) => i);
-    // setExchanges && setExchanges(data)
-  }, 60000);
 
   return (
     <>
@@ -162,7 +159,7 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
                             {getPaymentMethod(exchange.paymentMethod?.kind)}
                         </S.BankList> 
                       </S.Cell>
-                      <S.Cell data-label="Оставшееся время">{getTime(exchange.creationDate, exchange.operationWindow)}</S.Cell>
+                      <S.Cell data-label="Оставшееся время">{getTime(exchange.creationDate, exchange.operationWindow, exchange.state)}</S.Cell>
                       <S.Cell data-label="Статус">{Status[exchange.state]}</S.Cell> 
                   </S.BodyItem>
                 ))}
