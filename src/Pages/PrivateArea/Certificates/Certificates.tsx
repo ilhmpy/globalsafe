@@ -109,7 +109,7 @@ export const Certificates = () => {
     ) {
       setErrorType('Сумма сертификата меньше существующей');
       setIsErrorModal(item);
-    } else if (balance && balance < item.price) {
+    } else if (balance !== null && balance < item.price) {
       setErrorType('На балансе аккаунта недостаточно средств');
       setIsErrorModal(item);
     } else {
