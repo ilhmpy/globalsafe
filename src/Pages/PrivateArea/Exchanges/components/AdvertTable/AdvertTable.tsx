@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { useHistory } from 'react-router';
 
 import { AppContext } from '../../../../../context/HubContext';
@@ -7,8 +7,6 @@ import { Balance } from '../../../../../types/balance';
 import { FiatKind } from '../../../../../types/fiat';
 import { OrderType, ViewBuyOrderModel, ViewSellOrderModel } from '../../../../../types/orders';
 import { countVolumeToShow, paymentMethodIconSrc } from '../../../utils';
-import { PaymentMethods } from '../modals/PaymentMethods';
-import { Rating } from '../modals/Rating';
 
 import * as S from './S.el';
 
@@ -21,28 +19,17 @@ export const AdvertTable = ({ list, ordersType }: AdvertTableProps) => {
   const history = useHistory();
   const { userSafeId } = useContext(AppContext);
   const { setCurrentOrder, setCurrentOrderType } = useContext(PrivateAreaContext);
-  const [selectedOption, setSelectedOption] = useState<string | null>('Все валюты предложения');
 
   const handleNavigateTo = (order: ViewBuyOrderModel | ViewSellOrderModel) => {
     setCurrentOrder(order);
     setCurrentOrderType(ordersType);
 
     if(order.userSafeId === userSafeId) {
-      history.replace(`/info/p2p-changes/orders/my/${order.id}`)
+      history.replace(`/info/p2p-changes/orders/my/${order.id}`);
     }
   };
 
-  const [ratingOption, setRatingOption] = useState<string | null>('Рейтинг участников 5.0');
   return (
-    <>
-      {/* <Rating
-        open={true}
-        onClose={() => undefined}
-        options={['Рейтинг участников 5.0', 'Рейтинг участников 4.0', 'Рейтинг участников 3.0']}
-        selectedOption={ratingOption}
-        setSelectedOption={setRatingOption}
-      /> */}
-      {/* <PaymentMethods open={true} onClose={() => undefined} /> */}
       <S.Table>
         <S.Header>
           <S.Cell>
@@ -68,8 +55,7 @@ export const AdvertTable = ({ list, ordersType }: AdvertTableProps) => {
           </S.Cell>
         </S.Header>
 
-
-        {
+        { 
           list.length > 0 &&
           list.map((order) => (
             <S.BodyItem 
@@ -78,11 +64,15 @@ export const AdvertTable = ({ list, ordersType }: AdvertTableProps) => {
               onClick={() => handleNavigateTo(order)} 
             >
               <S.Cell data-label="Кол-во">
-                {`${countVolumeToShow(order.volume, order.assetKind)} ${Balance[order.assetKind]}`}
+                {`${countVolumeToShow(order.volume, order.assetKind).toLocaleString('ru-RU', {
+                    maximumFractionDigits: 4,
+                  })} ${Balance[order.assetKind]}`}
               </S.Cell>
               <S.Cell data-label="Курс">{order.rate}</S.Cell>
               <S.Cell data-label="На сумму">
-                {`${(order.volume * order.rate)} ${FiatKind[order.operationAssetKind]}`}
+                {`${(countVolumeToShow(order.volume, order.assetKind) * order.rate).toLocaleString('ru-RU', {
+                    maximumFractionDigits: 4,
+                  })} ${FiatKind[order.operationAssetKind]}`}
               </S.Cell>
               <S.Cell data-label="Лимиты">
                 {`${order.limitFrom} - ${order.limitTo} ${FiatKind[order.operationAssetKind]}`}
@@ -111,6 +101,5 @@ export const AdvertTable = ({ list, ordersType }: AdvertTableProps) => {
           ))
         }
       </S.Table>
-    </>
   );
 };

@@ -90,7 +90,11 @@ export const DeleteOrderModal: FC<Props> = ({
                                 {`На сумму (${FiatKind[order.operationAssetKind]}):`}
                             </Text>
                             <S.ListItemDivider />
-                            <Text size={14} lH={20} weight={700}>{order.volume * order.rate}</Text>
+                            <Text size={14} lH={20} weight={700}>
+                                {(countVolumeToShow(order.volume, order.assetKind) * order.rate).toLocaleString('ru-RU', {
+                                    maximumFractionDigits: 4,
+                                })}
+                            </Text>
                         </S.DataListItem>
 
                         <S.DataListItem>

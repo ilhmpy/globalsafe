@@ -20,7 +20,7 @@ import { OrderErrorModal } from '../modals/OrderErrorModal';
 import { AppContext } from '../../../../../context/HubContext';
 import { Balance } from '../../../../../types/balance';
 import { FiatKind } from '../../../../../types/fiat';
-import { CollectionPayMethod, RootPayMethod } from '../../../../../types/paymentMethodKind';
+import { CollectionPayMethod, PaymentMethodKind, RootPayMethod } from '../../../../../types/paymentMethodKind';
 import { ViewUserCertificateModel } from '../../../../../types/certificates';
 import { OrderType, ViewSellOrderModel } from '../../../../../types/orders';
  
@@ -168,8 +168,13 @@ export const OrderToSellCard: FC = () => {
         if (e.target.value === '' || pattern.test(e.target.value)) {
             if(+e.target.value > +orderSumm) {
                 setOrderMinSumm(orderSumm);
+                setOrderMaxSumm(orderSumm);
             } else {
                 setOrderMinSumm(e.target.value);
+
+                if(+e.target.value > +orderMaxSumm) {
+                    setOrderMaxSumm(e.target.value);
+                }
             }
         }
     };
@@ -181,6 +186,10 @@ export const OrderToSellCard: FC = () => {
                 setOrderMaxSumm(orderSumm);
             } else {
                 setOrderMaxSumm(e.target.value);
+
+                if(+e.target.value < +orderMinSumm) {
+                    setOrderMinSumm(e.target.value);
+                }
             }
         }
     };
@@ -255,7 +264,7 @@ export const OrderToSellCard: FC = () => {
                 <Space gap={20} mb={20}>
                     <S.FormItem>
                         <Text size={14} weight={300} lH={20} mB={10} black>
-                            Валюта покупки:
+                            Валюта продажи:
                         </Text>
                         <S.Select
                             placeholder="Не выбрано"
@@ -266,7 +275,7 @@ export const OrderToSellCard: FC = () => {
                     </S.FormItem>
                     <S.FormItem>
                         <Text size={14} weight={300} lH={20} mB={10} black>
-                            Количество покупки:
+                            Количество продажи:
                         </Text>
                         <Input
                             placeholder="Введите сумму"
@@ -345,7 +354,7 @@ export const OrderToSellCard: FC = () => {
                                               (
                                                 <Space gap={10} column key={`payment-method-${method.safeId}-${i}`}>
                                                   <Checkbox 
-                                                      label={FiatKind[method.assetKind]}
+                                                      label={PaymentMethodKind[method.assetKind]}
                                                       labelBold
                                                       checked={selectedPaymentMethodsIds.includes(String(method.id))}
                                                       value={String(method.id)}
@@ -460,44 +469,3 @@ export const OrderToSellCard: FC = () => {
         </S.Container>
     );
 };
-
-
- {/* <Space gap={20} column>
-    <Space gap={10} column>
-        <Checkbox 
-             label={'АО «Альфа-Банк»'}
-             checked={true}
-             onChange={(e) => console.log(e)}
-         />
-         <S.PaymentMethodDetailsBlock>
-             <Text size={14} weight={300} lH={20} black mB={4}>Номер карты:</Text>
-             <Text size={14} weight={500} lH={16} black mB={10}>5536 9137 9922 7240</Text>
-
-             <Text size={14} weight={300} lH={20} black mB={4}>Держатель карты:</Text>
-             <Text size={14} weight={500} lH={16} black>VYACHESLAV TROSCHIN</Text>
-         </S.PaymentMethodDetailsBlock>
-     </Space>
- </Space> */}
-
-
-
-
-
- {/* <Space gap={20} column>
-     <Space gap={10} column>
-         <Checkbox 
-             label={'TRC 20'}
-             labelBold
-             checked={true}
-             onChange={(e) => console.log(e)}
-         />
-         <S.PaymentMethodDetailsBlock>
-             <Text size={14} weight={300} lH={20} black mB={4}>Адрес кошелька:</Text>
-             <Text size={14} weight={500} lH={16} black>377JKD792HcVkP5qZoF7Pv31MbUwke5iMX</Text>
-         </S.PaymentMethodDetailsBlock>
-     </Space>
-
- </Space>
-
-</S.FormItem>
-</Space> */}

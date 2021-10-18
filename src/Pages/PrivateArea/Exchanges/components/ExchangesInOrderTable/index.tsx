@@ -62,10 +62,14 @@ export const ExchangesInOrderTable: React.FC<ExchangesInOrderTable> = ({exchange
               >
                 <S.Cell data-label="№ обмена">{exchange.safeId}</S.Cell>
                 <S.Cell data-label="Кол-во">
-                {`${countVolumeToShow(exchange.volume, exchange.assetKind)} ${Balance[exchange.assetKind]}`}
+                {`${countVolumeToShow(exchange.volume, exchange.assetKind).toLocaleString('ru-RU', {
+                    maximumFractionDigits: 4,
+                  })} ${Balance[exchange.assetKind]}`}
                 </S.Cell>
                 <S.Cell data-label="Стоимость">
-                  {`${exchange.volume * exchange.rate} ${FiatKind[exchange.exchangeAssetKind]}`}
+                  {`${(countVolumeToShow(exchange.volume, exchange.assetKind) * exchange.rate).toLocaleString('ru-RU', {
+                    maximumFractionDigits: 4,
+                  })} ${FiatKind[exchange.exchangeAssetKind]}`}
                 </S.Cell>
                 <S.Cell data-label="Метод оплаты">
                   <S.BankList>

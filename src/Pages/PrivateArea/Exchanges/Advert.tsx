@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { Container } from '../../../components/UI/Container';
 import { Heading } from '../components/Heading';
 import { routers } from '../../../constantes/routers';
-import { TabNavItem, TabsBlock, Text, Chip, FilterButton } from '../components/ui';
+import { TabNavItem, TabsBlock, Text, FilterButton } from '../components/ui';
 import * as S from './S.el';
 import { AdvertTable } from './components/AdvertTable/AdvertTable';
 import { Button } from '../../../components/Button/V2/Button';
@@ -12,6 +12,7 @@ import { AppContext } from '../../../context/HubContext';
 import { GetBuyOrdersModel, GetSellOrdersModel, OrderType, ViewBuyOrderModel, ViewSellOrderModel } from '../../../types/orders';
 import { CurrencyPair } from './components/modals/CurrencyPair';
 import { Rating } from './components/modals/Rating';
+import { PaymentMethods } from './components/modals/PaymentMethods';
 import { Balance } from '../../../types/balance';
 import { FiatKind } from '../../../types/fiat';
  
@@ -28,6 +29,9 @@ export const Advert = () => {
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [selectedRate, setSelectedRate] = useState('Не выбрано');
   const [acceptedRate, setAcceptedRate] = useState(0);
+  const [showPaymentMethodsModal, setShowPaymentMethodsModal] = useState(false);
+  const [selectedPaymentMethods, setSelectedPaymentMethods] = useState<number[]>([]);
+  const [acceptedPaymentMethods, setAcceptedPaymentMethods] = useState<number[]>([]);
 
   const [totalCount, setTotalCount] = useState(0);
   const [skip, setSkip] = useState(0);
@@ -41,6 +45,17 @@ export const Advert = () => {
     'Рейтинг участников 5.0',
   ], []);
 
+  // The Array should have the same queue as PaymentMethodKind enum
+  const paymentMethodsKinds = useMemo<string[]>(() => [
+    'ERC 20',
+    'TRC 20',
+    'BEP 20',
+    'Банковский перевод',
+    'АО «Тинькофф Банк», USD',
+    'ПАО Сбербанк, USD',
+    'АО «Альфа-Банк», USD',
+  ], []);
+
   useEffect(() => {
     if (hubConnection) {
       if(activeType === OrderType.Buy) {
@@ -51,7 +66,7 @@ export const Advert = () => {
         getSellOrders();
       }
     }
-  }, [hubConnection, activeType, selectedPair, acceptedRate]);
+  }, [hubConnection, activeType, selectedPair, acceptedRate, acceptedPaymentMethods]);
 
   const getBuyOrders = async () => {
       try {
@@ -59,7 +74,7 @@ export const Advert = () => {
           'GetBuyOrders', 
           selectedPair?.balance ? [ Balance[selectedPair?.balance as keyof typeof Balance] ] : [],  // Array of BalanceKind assetKinds
           selectedPair?.fiat ? [ FiatKind[selectedPair?.fiat as keyof typeof FiatKind] ] : [],  // Array of FiatKind opAssetKinds
-          [], // Array of PaymentMethodKind[] paymentMethodKinds
+          acceptedPaymentMethods, // Array of PaymentMethodKind[] paymentMethodKinds
           acceptedRate, // int rating
           skip, 
           10
@@ -80,7 +95,7 @@ export const Advert = () => {
         'GetSellOrders', 
         selectedPair?.balance ? [ Balance[selectedPair?.balance as keyof typeof Balance] ] : [],  // Array of BalanceKind assetKinds
         selectedPair?.fiat ? [ FiatKind[selectedPair?.fiat as keyof typeof FiatKind] ] : [],  // Array of FiatKind opAssetKinds
-        [], // Array of PaymentMethodKind[] paymentMethodKinds
+        acceptedPaymentMethods, // Array of PaymentMethodKind[] paymentMethodKinds
         acceptedRate, // int rating
         skip, 
         10
@@ -115,12 +130,19 @@ export const Advert = () => {
     setShowRatingModal(false);
   };
 
+  const handleAcceptPaymentMethods = () => {
+    setAcceptedPaymentMethods([...selectedPaymentMethods]);
+    setShowPaymentMethodsModal(false);
+  };
+
   const resetFilters = () => {
     setSelectedPair(null);
     setSelectedBalanceKind(null);
     setSelectedFiatKind(null);
     setSelectedRate(ratesList[0]);
     setAcceptedRate(0);
+    setAcceptedPaymentMethods([]);
+    setSelectedPaymentMethods([]);
   };
 
   const handleLoadMore = () => {
@@ -191,10 +213,15 @@ export const Advert = () => {
               :
               `${selectedPair.balance ? selectedPair.balance : 'все'} - ${selectedPair.fiat ? selectedPair.fiat : 'все'}`
             }
-            
+             
           </FilterButton>
           <S.Line />
-          <FilterButton active>Все методы оплаты</FilterButton>
+          <FilterButton 
+            active
+            onClick={() => setShowPaymentMethodsModal(true)}
+          >
+            {`Все методы оплаты ${acceptedPaymentMethods.length ? acceptedPaymentMethods.length : ''}`}
+          </FilterButton>
           <S.Line />
           <FilterButton 
             active
@@ -204,12 +231,15 @@ export const Advert = () => {
             </FilterButton>
 
           {
-            (selectedPair || (acceptedRate !== 0) ) &&
-            <S.MLAutoFilterButton
-              onClick={resetFilters}
-            >
-              Очистить фильтр
-            </S.MLAutoFilterButton>
+            (selectedPair || (acceptedRate !== 0) || (acceptedPaymentMethods.length)) 
+            ?
+              <S.MLAutoFilterButton
+                onClick={resetFilters}
+              >
+                Очистить фильтр
+              </S.MLAutoFilterButton>
+            :
+              null
           }
           
         </S.Filters>
@@ -230,6 +260,14 @@ export const Advert = () => {
           onAccept={handleAcceptRate}
           open={showRatingModal}
           onClose={() => setShowRatingModal(false)}
+        />
+        <PaymentMethods 
+          selectedPaymentMethods={selectedPaymentMethods}
+          setSelectedPaymentMethods={setSelectedPaymentMethods}
+          methodsList={paymentMethodsKinds}
+          onAccept={handleAcceptPaymentMethods}
+          open={showPaymentMethodsModal} 
+          onClose={() => setShowPaymentMethodsModal(false)} 
         />
       
         <AdvertTable list={ordersList} ordersType={activeType} />
