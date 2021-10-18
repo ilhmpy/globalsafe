@@ -91,7 +91,7 @@ export const NotifiesBlock = styled.div<{ block: boolean; auth?: boolean; admin?
     }
 `;
 
-export const Notify = styled.div<{ notChecked: boolean; empty?: boolean; click?: boolean; }>`
+export const Notify = styled.div<{ notChecked: boolean; empty?: boolean; click?: boolean; notclb?: boolean; }>`
     width: 100%;
     background: #F9FAFB;
     margin-bottom: 10px;
@@ -133,9 +133,16 @@ export const Notify = styled.div<{ notChecked: boolean; empty?: boolean; click?:
             `;
         };
     }}
+    ${({ notclb }) => {
+        if (notclb) {
+            return `
+                cursor: initial;  
+            `;
+        };
+    }}
 `;
 
-export const NotifyItem = styled.h3<{ grey?: boolean; bold?: boolean; link?: string; }>`
+export const NotifyItem = styled.h3<{ grey?: boolean; bold?: boolean; link?: string; notclb?: boolean; }>`
     font-weight: 400;
     font-size: 12px;
     line-height: 20px;
@@ -171,6 +178,14 @@ export const NotifyItem = styled.h3<{ grey?: boolean; bold?: boolean; link?: str
                 font-weight: 700;
             `;
         }
+    }}
+
+    ${({ notclb }) => {
+        if (notclb) {
+            return `
+                cursor: initial;
+            `;
+        };
     }}
 `;
 
