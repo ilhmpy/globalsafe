@@ -110,7 +110,9 @@ export const OrderDetailCardOwn: FC<OrderDetailCardProps> = ({ order, orderType 
           <S.BlockWrapper>
             <Text size={14} lH={20} mB={4} black>Количество:</Text>
             <Text size={14} lH={20} weight={500} black>
-              {`${countVolumeToShow(order.volume, order.assetKind)} ${Balance[order.assetKind]}`}
+              {`${countVolumeToShow(order.volume, order.assetKind).toLocaleString('ru-RU', {
+                    maximumFractionDigits: 4,
+                })} ${Balance[order.assetKind]}`}
             </Text>
           </S.BlockWrapper>
 
@@ -122,7 +124,9 @@ export const OrderDetailCardOwn: FC<OrderDetailCardProps> = ({ order, orderType 
           <S.BlockWrapper>
             <Text size={14} lH={20} mB={4} black>На сумму:</Text>
             <Text size={14} lH={20} weight={500} black>
-              {`${(order.volume * order.rate)} ${FiatKind[order.operationAssetKind]}`}
+              {`${(countVolumeToShow(order.volume, order.assetKind) * order.rate).toLocaleString('ru-RU', {
+                    maximumFractionDigits: 4,
+                })} ${FiatKind[order.operationAssetKind]}`}
             </Text>
           </S.BlockWrapper>
 

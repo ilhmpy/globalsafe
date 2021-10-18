@@ -20,9 +20,9 @@ export interface CollectionPayMethod {
     state: number;
     data: string;
     assetKind: FiatKind;
-  }
+}
   
-  export interface RootPayMethod {
-    totalRecords: number;
-    collection: CollectionPayMethod[];
-  }
+export interface RootPayMethod {
+  totalRecords: number;
+  collection: CollectionPayMethod[];
+}

@@ -1,6 +1,7 @@
 import React, { FC, Fragment, useContext } from 'react';
 import { useHistory } from 'react-router';
-import { Button } from '../../../../../components/Button/V2/Button';
+import styled from 'styled-components';
+import { Button as BaseButton } from '../../../../../components/Button/V2/Button';
 import { Modal } from '../../../../../components/ModalAnimated';
 import { PrivateAreaContext } from '../../../../../context/PrivateAreaContext';
 import { FiatKind } from '../../../../../types/fiat';
@@ -169,6 +170,13 @@ export const OrderInfoModal: FC<OrderInfoModalProps> = ({
     </>
   );
 };
+
+const Button = styled(BaseButton)`
+  text-transform: none;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+`;
 
 interface PMProps {
   paymentMethods: CollectionPayMethod[];

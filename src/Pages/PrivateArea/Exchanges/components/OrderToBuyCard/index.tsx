@@ -7,7 +7,7 @@ import { Balance } from '../../../../../types/balance';
 import { ViewUserCertificateModel } from '../../../../../types/certificates';
 import { FiatKind } from '../../../../../types/fiat';
 import { OrderType, ViewBuyOrderModel } from '../../../../../types/orders';
-import { CollectionPayMethod, RootPayMethod } from '../../../../../types/paymentMethodKind';
+import { CollectionPayMethod, PaymentMethodKind, RootPayMethod } from '../../../../../types/paymentMethodKind';
 import { Checkbox } from '../../../components/Checkbox';
 import { LeftSide, RightSide, Space, TabNavItem, Text, Title } from '../../../components/ui';
 import { OrderErrorModal } from '../modals/OrderErrorModal';
@@ -166,8 +166,13 @@ export const OrderToBuyCard: FC = () => {
     if (e.target.value === '' || pattern.test(e.target.value)) {
       if (+e.target.value > +orderSumm) {
         setOrderMinSumm(orderSumm);
+        setOrderMaxSumm(orderSumm);
       } else {
         setOrderMinSumm(e.target.value);
+
+        if(+e.target.value > +orderMaxSumm) {
+          setOrderMaxSumm(e.target.value);
+        }
       }
     }
   };
@@ -179,6 +184,10 @@ export const OrderToBuyCard: FC = () => {
         setOrderMaxSumm(orderSumm);
       } else {
         setOrderMaxSumm(e.target.value);
+        
+        if(+e.target.value < +orderMinSumm) {
+          setOrderMinSumm(e.target.value);
+        }
       }
     }
   };
@@ -330,7 +339,7 @@ export const OrderToBuyCard: FC = () => {
                       ) : (
                         <Checkbox
                           key={`payment-method-${method.safeId}-${i}`}
-                          label={FiatKind[method.assetKind]}
+                          label={PaymentMethodKind[method.assetKind]}
                           labelBold
                           checked={selectedPaymentMethodsIds.includes(String(method.id))}
                           value={String(method.id)}
