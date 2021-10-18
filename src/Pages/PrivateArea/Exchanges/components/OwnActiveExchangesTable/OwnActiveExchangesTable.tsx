@@ -109,6 +109,20 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
     };
   };
 
+  function getVolume(volume: number, kind: number) {
+    let cv = 0;
+    if (kind === 1) {
+      cv = volume / 100000;
+    } else if (kind === 43) {
+      cv = volume / 10000;
+    } else if (kind === 44 || kind === 45 || kind === 48 || kind === 47) {
+      cv = volume / 1;
+    } else if (kind === 59) {
+      cv = volume / 100;
+    };
+    return Number(cv);
+  };
+
   return (
     <>
       {/* <CurrencyPair
@@ -150,7 +164,7 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
                   <S.BodyItem key={idx} onClick={() => handleNavigateToExchange(exchange.safeId)}>
                       <S.Cell data-label="Тип">{exchange.kind === 0 ? "Продажа" : "Покупка"}</S.Cell>
                       <S.Cell data-label="Кол-во">
-                        {(exchange.volume).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {Balance[exchange.assetKind]}
+                        {(getVolume(exchange.volume, exchange.assetKind)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {Balance[exchange.assetKind]}
                       </S.Cell>
                       <S.Cell data-label="Курс">{exchange.rate}</S.Cell>
                       <S.Cell data-label="Сумма оплаты">{(exchange.exchangeVolume).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {FiatKind[exchange.exchangeAssetKind]}</S.Cell>

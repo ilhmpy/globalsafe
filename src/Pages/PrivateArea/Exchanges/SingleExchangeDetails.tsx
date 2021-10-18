@@ -31,7 +31,6 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
       setLoading(loading);
       hubConnection.invoke("GetExchange", exchangeId)
         .then((res) => {
-          console.log(res);
           setExchange(res);
           setLoading(false);
         })
@@ -70,10 +69,10 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
 
   useEffect(() => {
     if (hubConnection) {
-      hubConnection.on("ExchangedCancelled", cb);
+      hubConnection.on("ExchangeCancelled", cb);
     } 
     return () => {
-      hubConnection?.off("ExchangedCancelled", cb);
+      hubConnection?.off("ExchangeCancelled", cb);
     };
   }, [hubConnection]);
 

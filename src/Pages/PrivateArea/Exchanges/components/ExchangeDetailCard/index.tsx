@@ -32,6 +32,22 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
   const [showRejectModal, setShowRejectModal] = useState(false);
   const { account, hubConnection } = useContext(AppContext);
   const [totalExchanges, setTotalExchanges] = useState<any>(); 
+  const buyer = () => {
+    if (exchange.kind === 1) {
+      return exchange.ownerSafeId;
+    } else {
+      return exchange.recepientSafeId;
+    }
+  };
+
+  const [owner, setOwner] = useState<"seller" | "buyer" | undefined>(
+    buyer() === account.safeId ? "seller" : "buyer"
+  );
+
+
+  // ownerId - продавец, recepientId - покупатель
+
+  console.log(owner);
 
   const handleClick = () => {
     history.push(`/info/p2p-changes/${Date.now().toString()}/chat`);
@@ -102,9 +118,8 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
     };
   };
 
-  function getMyRating() {
+  function getMyRating() { 
     let rating = 0;
-    console.log(account.claims)
     account.claims.forEach((claim: any) => {
       if (claim.claimType === "exchanges-rating") {
         rating = claim.claimValue;
@@ -177,6 +192,19 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
     };
   };
 
+  function getVolume(volume: number, kind: number) {
+    let cv = 0;
+    if (kind === 1) {
+      cv = volume / 100000;
+    } else if (kind === 43) {
+      cv = volume / 10000;
+    } else if (kind === 44 || kind === 45 || kind === 48 || kind === 47) {
+      cv = volume / 1;
+    } else if (kind === 59) {
+      cv = volume / 100;
+    };
+    return Number(cv);
+  };
 
   return (
     <S.Container>
@@ -186,7 +214,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
             Количество:
           </Text>
           <Title lH={28} mB={10}>
-            {(exchange.volume).toLocaleString('ru-RU', { maximumFractionDigits: 2 })} {Balance[exchange.assetKind]}
+            {(getVolume(exchange.volume, exchange.assetKind)).toLocaleString('ru-RU', { maximumFractionDigits: 2 })} {Balance[exchange.assetKind]}
           </Title>
           <Chip>{exchange.kind === 0 ? "Продажа" : "Покупка"}</Chip>
         </S.BlockWrapper>
@@ -202,9 +230,9 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
           <Text size={14} lH={20} mB={10} black>
             На сумму:
           </Text>
-          <Title lH={28}>{exchange.volume * exchange.rate} {FiatKind[exchange.exchangeAssetKind]}</Title>
+          <Title lH={28}>{(getVolume(exchange.volume, exchange.assetKind) * exchange.rate).toLocaleString('ru-RU', { maximumFractionDigits: 2 })} {FiatKind[exchange.exchangeAssetKind]}</Title>
         </S.BlockWrapper>
-
+ 
         <S.BlockWrapper>
           <Text size={14} lH={20} mB={10} black>
             Лимиты:
@@ -234,7 +262,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
           <Text size={14} lH={20} mB={10} black>
             Рейтинг продавца:
           </Text>
-          <Title lH={28}>{exchange.kind === 0 ? `${(Number(exchange.userRating)).toFixed(1)} (${totalExchanges})` : `${getMyRating()} (${getMyExchanges()})`}</Title>
+          <Title lH={28}>{owner === "seller" ? `${getMyRating()} (${getMyExchanges()})` : `${(Number(exchange.userRating)).toFixed(1)} (${totalExchanges})`}</Title>
         </S.BlockWrapper>
       </LeftSide>
 
@@ -253,7 +281,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
             Количество:
           </Text>
           <Text size={14} lH={20} weight={500} black>
-            {exchange.exchangeVolume} {Balance[exchange.assetKind]}
+           {(getVolume(exchange.exchangeVolume, exchange.assetKind)).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {Balance[exchange.assetKind]}
           </Text>
         </S.BlockWrapper>
 
@@ -262,7 +290,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
             На сумму:
           </Text>
           <Text size={14} lH={20} weight={500} black>
-            {(exchange.exchangeVolume * exchange.rate).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {FiatKind[exchange.exchangeAssetKind]}
+            {(getVolume(exchange.exchangeVolume, exchange.assetKind) * exchange.rate).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {FiatKind[exchange.exchangeAssetKind]}
           </Text>
         </S.BlockWrapper>
 
@@ -302,10 +330,10 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
         
         <S.BlockWrapper when={exchange.state === 2 || exchange.state === 3 || exchange.state === 4}>
           <Text size={14} lH={20} mB={4} black>
-            Рейтинг покупателя
+            Рейтинг покупателя:
           </Text>
-          <Text size={14} lH={20} mB={4} black>
-            {exchange.kind === 0 ? `${getMyRating()} (${getMyExchanges()})` : `${(Number(exchange.userRating)).toFixed(1)} (${totalExchanges})`}
+          <Text size={14} lH={20} weight={500} mB={4} black>
+            {owner === "seller" ? `${(Number(exchange.userRating)).toFixed(1)} (${totalExchanges})` : `${getMyRating()} (${getMyExchanges()})`}
           </Text>
         </S.BlockWrapper>
 
@@ -317,7 +345,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
 
         <S.StateBlock when={exchange.state === 0}>
           
-          <S.StateBlock when={exchange.kind === 1}>
+          <S.StateBlock when={owner === "buyer"}>
             <S.TransferInfoBlock>
               <Text size={14} lH={20} black>
                 Осуществите перевод средств на указанный счет в размере <S.B>{(Math.floor(exchange.exchangeVolume * exchange.rate)).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {FiatKind[exchange.exchangeAssetKind]}</S.B> и подтвердите
@@ -346,11 +374,11 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
             </S.Space>
           </S.StateBlock>
           
-          <S.StateBlock when={exchange.kind === 0}>
+          <S.StateBlock when={owner === "seller"}>
             <S.TransferInfoBlock>
               <Text size={14} lH={20} black>
                 Покупатель  осуществляет перевод средств на указанный счет в размере <S.B>{(Math.floor(exchange.exchangeVolume * exchange.rate)).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {FiatKind[exchange.exchangeAssetKind]}</S.B> <br />
-                С вашего баланса списаны и заморожены <S.B>{exchange.exchangeVolume} {Balance[exchange.assetKind]}</S.B> до подтверждения вами получения средств.
+                С вашего баланса списаны и заморожены <S.B>{(exchange.exchangeVolume).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {Balance[exchange.assetKind]}</S.B> до подтверждения вами получения средств.
               </Text>
             </S.TransferInfoBlock>
 
@@ -377,10 +405,10 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
 
         <S.StateBlock when={exchange.state === 1}>
                       
-          <S.StateBlock when={exchange.kind === 1}>
+          <S.StateBlock when={owner === "buyer"}>
             <S.TransferInfoBlock>
               <Text size={14} lH={20} black>  
-                <S.B>{exchange.exchangeVolume} {Balance[exchange.assetKind]}</S.B> будут отправлены вам сразу после подтверждения 
+                <S.B>{(exchange.exchangeVolume).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {Balance[exchange.assetKind]}</S.B> будут отправлены вам сразу после подтверждения 
                 продавцом получения средств размере <S.B>{(Math.floor(exchange.exchangeVolume * exchange.rate)).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {FiatKind[exchange.exchangeAssetKind]}</S.B> на указанный счет.
               </Text>
             </S.TransferInfoBlock>
@@ -403,18 +431,18 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
             </S.Space>
           </S.StateBlock>
 
-          <S.StateBlock when={exchange.kind === 0}>
+          <S.StateBlock when={owner === "seller"}>
               <S.TransferInfoBlock>
                 <Text size={14} lH={20} black>  
                   Покупатель указал, что перевел средства в размере <S.B>{(Math.floor(exchange.exchangeVolume * exchange.rate)).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {FiatKind[exchange.exchangeAssetKind]}</S.B> на указанный счет.
                   Подтвердите получение средств для успешного завершения обмена.
-                  Покупатель получит <S.B>{exchange.exchangeVolume} {Balance[exchange.assetKind]}</S.B>
+                  Покупатель получит <S.B>{(exchange.exchangeVolume).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {Balance[exchange.assetKind]}</S.B>
                 </Text>
               </S.TransferInfoBlock>
 
               <S.Space justify="space-between">
                 <S.Space gap={20}>
-                  <Button primary bigSize as="button" onClick={() => completeExchange()}>
+                  <Button primary bigSize as="button" onClick={() => completeExchange(exchange.safeId)}>
                     Средства получены
                   </Button>
                 </S.Space>
@@ -438,10 +466,10 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
 
         <S.StateBlock when={exchange.state === 2}>
 
-            <S.StateBlock when={exchange.kind === 1}>
+            <S.StateBlock when={owner === "buyer"}>
                 <S.TransferInfoBlock>
                   <Text size={14} lH={20} black>
-                    Обмен успешно завершен. Средства в размере <S.B>{exchange.exchangeVolume} {Balance[exchange.assetKind]}</S.B>  отправлены на ваш баланс.
+                    Обмен успешно завершен. Средства в размере <S.B>{(exchange.exchangeVolume).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {Balance[exchange.assetKind]}</S.B>  отправлены на ваш баланс.
                     Оставьте свою оценку продавцу.
                   </Text>
                 </S.TransferInfoBlock>
@@ -493,10 +521,10 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
               </Button>
             </S.StateBlock>
 
-            <S.StateBlock when={exchange.kind === 0}>
+            <S.StateBlock when={owner === "seller"}>
                 <S.TransferInfoBlock>
                   <Text size={14} lH={20} black>
-                    Обмен успешно завершен. Средства в размере <S.B>{exchange.exchangeVolume} {Balance[exchange.assetKind]}</S.B> отправлены покупателю.
+                    Обмен успешно завершен. Средства в размере <S.B>{(exchange.exchangeVolume).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {Balance[exchange.assetKind]}</S.B> отправлены покупателю.
                     Оставьте свою оценку покупателю.
                   </Text>
                 </S.TransferInfoBlock>
