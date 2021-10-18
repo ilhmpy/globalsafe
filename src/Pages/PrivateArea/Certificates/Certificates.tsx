@@ -73,7 +73,7 @@ export const Certificates = () => {
     try {
       const res = await hubConnection!.invoke<RootMarketCertificate>(
         'GetCertificatesMarket',
-        1,
+        [Balance.CWD, Balance.MGCWD, Balance.GCWD, Balance.DIAMOND],
         0,
         100
       );
