@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Modal } from '../../../components/Modal/Modal';
 import { IBalanceExchange } from './ConvertingModal';
 import {
+  CloseButton,
   ContentBody,
   ContentTitle,
   Dots,
@@ -45,6 +46,17 @@ export const ConvertingModalSuccess: FC<Iprops> = ({
             <ModalTitle>{t('privateArea.convertingSuccess')}</ModalTitle>
             <ModalContent gap20>
               <ContentTitle>Конвертация CWD в MULTICS успешно завершена:</ContentTitle>
+              <CloseButton
+                onClick={() => {
+                  setOpen(false);
+                  setConvertedData({
+                    userAmount: 0,
+                    calculatedAmount: 0,
+                    targetAmount: 0,
+                    discountPercent: 0,
+                  });
+                }}
+              />
               <ContentBody>
                 <p>
                   <KeySpan>Списано (CWD):</KeySpan>

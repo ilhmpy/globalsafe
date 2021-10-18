@@ -6,13 +6,14 @@ import { AppContext } from '../../../context/HubContext';
 import { IBalanceExchange } from './ConvertingModal';
 import {
   ButtonsWrapper,
+  CloseButton,
   ContentBody,
   ContentTitle,
   Dots,
   KeySpan,
   ModalBlock,
   ModalContent,
-  ModalTitle,CloseButton
+  ModalTitle,
 } from './styled';
 
 interface Iprops {
@@ -23,6 +24,7 @@ interface Iprops {
   setIsSuccessConverting: (isSuccess: boolean) => void;
   setIsFailConverting: (isFail: boolean) => void;
   setConvertedData: (open: IBalanceExchange) => void;
+  closeWithReset: () => void;
 }
 export const ConvertingModalConfirm: FC<Iprops> = ({
   open,
@@ -32,6 +34,7 @@ export const ConvertingModalConfirm: FC<Iprops> = ({
   setConvertedData,
   setIsSuccessConverting,
   setIsFailConverting,
+  closeWithReset,
 }: Iprops) => {
   const { t } = useTranslation();
   const { hubConnection } = useContext(AppContext);
@@ -45,7 +48,6 @@ export const ConvertingModalConfirm: FC<Iprops> = ({
             convertedData.userAmount.toString(),
             59
           );
-          console.log('response', response);
           if (response.calculatedAmount && response.targetAmount) {
             setOpen(false);
             setConvertedData(response);
@@ -62,12 +64,12 @@ export const ConvertingModalConfirm: FC<Iprops> = ({
   return (
     <>
       {open && (
-        <Modal onClose={() => setOpen(false)} width={420}>
+        <Modal onClose={closeWithReset} width={420}>
           <ModalBlock>
             <ModalTitle>Подтверждение конвертации</ModalTitle>
             <ModalContent>
               <ContentTitle mb10>Вы собираетесь сконвертировать средства:</ContentTitle>
-              <CloseButton onClick={() => setOpen(false)} />
+              <CloseButton onClick={closeWithReset} />
               <ContentBody>
                 <p>
                   <KeySpan>К списанию (CWD)</KeySpan>
@@ -103,7 +105,9 @@ export const ConvertingModalConfirm: FC<Iprops> = ({
                   <Dots />
 
                   <strong>
-                    {convertedData.targetAmount.toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
+                    {(convertedData.targetAmount / 100)
+                      .toString()
+                      .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
                   </strong>
                 </p>
                 <ButtonsWrapper>

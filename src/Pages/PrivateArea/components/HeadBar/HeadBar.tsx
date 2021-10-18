@@ -25,21 +25,13 @@ import { AppContext } from '../../../../context/HubContext';
 import { Card, Container } from '../../../../globalStyles';
 import { Balance, Notify } from '../../../../types/balance';
 import { Commisions, DepositsCollection, RootDeposits } from '../../../../types/info';
-import { ConvertingModalSuccess } from '../../Converting/ConveringSuccessModal';
-import { ConvertingModal, IBalanceExchange } from '../../Converting/ConvertingModal';
-import { ConvertingModalFail } from '../../Converting/ConvertingModalFail';
+import { ConvertingModal } from '../../Converting/ConvertingModal';
 import { DepositListModal, TokenModal } from '../../Modals';
 import * as Styled from '../../Styles.elements';
 
 export const HeadBar: FC = () => {
   const { t } = useTranslation();
   const [openConverting, setOpenConverting] = useState<boolean>(false);
-  const [isSuccessConverting, setIsSuccessConverting] = useState<boolean>(false);
-  const [isFailConverting, setIsFailConverting] = useState<boolean>(false);
-  const [isConfirmConverting, setIsConfirmConverting] = useState<boolean>(false);
-  const [isCorrectionConverting, setIsCorrectionConverting] = useState<boolean>(false);
-  const [fromSumCloud, setFromSumCloud] = useState('');
-  const [isOkConverting, setIsOkConverting] = useState<boolean>(false);
 
   const [notifications, setNotifications] = useState<Notify[]>([]);
   const [addDeposit, setAddDeposit] = useState<boolean>(false);
@@ -99,12 +91,6 @@ export const HeadBar: FC = () => {
   );
   const [withDrawModal, setWithDrawModal] = useState<boolean>(false);
   const [addDrawModal, setAddDrawModal] = useState<boolean>(false);
-  const [convertedData, setConvertedData] = useState<IBalanceExchange>({
-    userAmount: 0,
-    calculatedAmount: 0,
-    targetAmount: 0,
-    discountPercent: 0,
-  });
 
   // Get Balance Kinds List as an Array
   const balancesList = useMemo(() => {
@@ -631,29 +617,8 @@ export const HeadBar: FC = () => {
           return;
         }}
       />
-      <ConvertingModal
-        open={openConverting}
-        isConfirmConverting={isConfirmConverting}
-        setOpen={setOpenConverting}
-        setIsCorrectionConverting={setIsCorrectionConverting}
-        setIsConfirmConverting={setIsConfirmConverting}
-        setConvertedData={setConvertedData}
-        convertedData={convertedData}
-        setFromSumCloud={setFromSumCloud}
-        isOkConverting={isOkConverting}
-        setIsOkConverting={setIsOkConverting}
-      />
-      <ConvertingModalSuccess
-        open={isSuccessConverting}
-        setOpen={setIsSuccessConverting}
-        setConvertedData={setConvertedData}
-        convertedData={convertedData}
-      />
-      <ConvertingModalFail
-        open={isFailConverting}
-        setOpen={setIsFailConverting}
-        setConvertedData={setConvertedData}
-      />
+      <ConvertingModal open={openConverting} setOpen={setOpenConverting} />
+
       <DepositsPanelContainer>
         <PanelTitleBlock>
           <H4>Личный кабинет</H4>

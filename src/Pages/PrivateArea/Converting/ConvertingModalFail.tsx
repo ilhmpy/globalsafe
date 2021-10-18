@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Modal } from '../../../components/Modal/Modal';
 import { IBalanceExchange } from './ConvertingModal';
-import { ContentTitle, ModalBlock, ModalContent, ModalTitle } from './styled';
+import { CloseButton, ContentTitle, ModalBlock, ModalContent, ModalTitle } from './styled';
 
 interface Iprops {
   open: boolean;
@@ -32,6 +32,17 @@ export const ConvertingModalFail: FC<Iprops> = ({ open, setOpen, setConvertedDat
             <ModalTitle>{t('privateArea.convertingFail')}</ModalTitle>
             <ModalContent>
               <ContentTitle>Конвертация CWD в MULTICS завершена с ошибкой:</ContentTitle>
+              <CloseButton
+                onClick={() => {
+                  setOpen(false);
+                  setConvertedData({
+                    userAmount: 0,
+                    calculatedAmount: 0,
+                    targetAmount: 0,
+                    discountPercent: 0,
+                  });
+                }}
+              />
               <ContentBody>
                 <span>На балансе аккаунта недостаточно средств</span>
               </ContentBody>

@@ -7,6 +7,10 @@ import { Modal } from '../../../components/Modal/Modal';
 import { Select } from '../../../components/Select/Select5';
 import { AppContext } from '../../../context/HubContext';
 import { Balance } from '../../../types/balance';
+import { ConvertingModalConfirm } from './ConveringModalConfirm ';
+import { ConvertingModalSuccess } from './ConveringModalSuccess';
+import { ConvertingModalCorrection } from './ConvertingModalCorrection';
+import { ConvertingModalFail } from './ConvertingModalFail';
 import {
   CloseButton,
   Container,
@@ -21,14 +25,6 @@ import {
 interface IProps {
   open: boolean;
   setOpen: (open: boolean) => void;
-  setIsConfirmConverting: (status: boolean) => void;
-  setIsCorrectionConverting: (status: boolean) => void;
-  setConvertedData: (array: IBalanceExchange) => void;
-  convertedData: IBalanceExchange;
-  isConfirmConverting: boolean;
-  isOkConverting: boolean;
-  setFromSumCloud: (value: string) => void;
-  setIsOkConverting: (status: boolean) => void;
 }
 
 export interface IBalanceExchange {
@@ -38,19 +34,7 @@ export interface IBalanceExchange {
   discountPercent: number;
 }
 
-export const ConvertingModal: FC<IProps> = ({
-  open,
-  setOpen,
-  setIsConfirmConverting,
-  setConvertedData,
-  convertedData,
-  setIsCorrectionConverting,
-  isConfirmConverting,
-  setFromSumCloud,
-  isOkConverting,
-  setIsOkConverting,
-}: IProps) => {
-  console.log('convertedData', convertedData);
+export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
   const { t } = useTranslation();
   const [fromSum, setFromSum] = useState('');
   const [toSum, setToSum] = useState('');
@@ -58,6 +42,18 @@ export const ConvertingModal: FC<IProps> = ({
   const [toCurrency, setToCurrency] = useState('');
   const { hubConnection } = useContext(AppContext);
 
+  const [isSuccessConverting, setIsSuccessConverting] = useState<boolean>(false);
+  const [isFailConverting, setIsFailConverting] = useState<boolean>(false);
+  const [isConfirmConverting, setIsConfirmConverting] = useState<boolean>(false);
+  const [isCorrectionConverting, setIsCorrectionConverting] = useState<boolean>(false);
+  const [fromSumCloud, setFromSumCloud] = useState<string>('');
+  const [isOkConverting, setIsOkConverting] = useState<boolean>(false);
+  const [convertedData, setConvertedData] = useState<IBalanceExchange>({
+    userAmount: 0,
+    calculatedAmount: 0,
+    targetAmount: 0,
+    discountPercent: 0,
+  });
   const resetStateValues = () => {
     setFromSum('');
     setToSum('');
@@ -121,16 +117,16 @@ export const ConvertingModal: FC<IProps> = ({
   };
 
   return (
-    <CSSTransition
-      in={open}
-      timeout={300}
-      unmountOnExit
-      style={{ display: isConfirmConverting ? 'none' : 'block' }}
-    >
-      <Modal
-        onClose={() => {
-          setOpen(false);
-          setIsOkConverting(false);
+    <>
+      <ConvertingModalCorrection
+        open={isCorrectionConverting}
+        setOpen={setIsCorrectionConverting}
+        convertedData={convertedData}
+        setConvertedData={setConvertedData}
+        setOpenConverting={setOpen}
+        fromSumCloud={fromSumCloud}
+        setIsOkConverting={setIsOkConverting}
+        closeWithReset={() => {
           setTimeout(() => resetStateValues(), 500);
           setConvertedData({
             userAmount: 0,
@@ -138,138 +134,189 @@ export const ConvertingModal: FC<IProps> = ({
             targetAmount: 0,
             discountPercent: 0,
           });
+          setIsCorrectionConverting(false);
         }}
-        width={420}
+      />
+      <ConvertingModalConfirm
+        open={isConfirmConverting}
+        setOpen={setIsConfirmConverting}
+        convertedData={convertedData}
+        setIsConfirmConverting={setIsConfirmConverting}
+        setConvertedData={setConvertedData}
+        setIsSuccessConverting={setIsSuccessConverting}
+        setIsFailConverting={setIsFailConverting}
+        closeWithReset={() => {
+          setTimeout(() => resetStateValues(), 500);
+          setConvertedData({
+            userAmount: 0,
+            calculatedAmount: 0,
+            targetAmount: 0,
+            discountPercent: 0,
+          });
+          setIsConfirmConverting(false);
+        }}
+      />
+      <ConvertingModalSuccess
+        open={isSuccessConverting}
+        setOpen={setIsSuccessConverting}
+        convertedData={convertedData}
+        setConvertedData={setConvertedData}
+      />
+      <ConvertingModalFail
+        open={isFailConverting}
+        setOpen={setIsFailConverting}
+        setConvertedData={setConvertedData}
+      />
+      <CSSTransition
+        in={open}
+        timeout={300}
+        unmountOnExit
+        style={{ display: isConfirmConverting ? 'none' : 'block' }}
       >
-        <Container>
-          <ModalTitle mb20>{t('privateArea.converting')}</ModalTitle>
-          <CloseButton
-            onClick={() => {
-              setOpen(false);
-              setIsOkConverting(false);
-              setTimeout(() => resetStateValues(), 500);
-              setConvertedData({
-                userAmount: 0,
-                calculatedAmount: 0,
-                targetAmount: 0,
-                discountPercent: 0,
-              });
-            }}
-          />
+        <Modal
+          onClose={() => {
+            setOpen(false);
+            setIsOkConverting(false);
+            setTimeout(() => resetStateValues(), 500);
+            setConvertedData({
+              userAmount: 0,
+              calculatedAmount: 0,
+              targetAmount: 0,
+              discountPercent: 0,
+            });
+          }}
+          width={420}
+        >
+          <Container>
+            <ModalTitle mb20>{t('privateArea.converting')}</ModalTitle>
+            <CloseButton
+              onClick={() => {
+                setOpen(false);
+                setIsOkConverting(false);
+                setTimeout(() => resetStateValues(), 500);
+                setConvertedData({
+                  userAmount: 0,
+                  calculatedAmount: 0,
+                  targetAmount: 0,
+                  discountPercent: 0,
+                });
+              }}
+            />
 
-          <ContentWrapper>
-            <InnerBlock>
-              <Select
-                placeholder="Исходная валюта не выбрана"
-                options={['CWD']}
-                selectedOption={fromCurrency}
-                setSelectedOption={(val: string) => setFromCurrency(val)}
-              />
-              <Input
-                placeholder="0.0000"
-                name="fromSum"
-                value={
-                  fromSum
-                    ? Number(fromSum).toLocaleString('ru-RU', {
-                        maximumFractionDigits: 2,
-                      })
-                    : convertedData.userAmount <= 0
-                    ? ''
-                    : (convertedData.userAmount / 100000).toLocaleString('ru-RU', {
-                        maximumFractionDigits: 2,
-                      })
-                }
-                onChange={({ target: { value } }) => {
-                  setToSum('');
-                  if (!(value.length > 1 && value[0] === '0')) {
-                    setFromSumCloud(value.replaceAll(/\D/g, ''));
-                    setFromSum(value.replaceAll(/\D/g, ''));
-                    setConvertedData({
-                      userAmount: 0,
-                      calculatedAmount: 0,
-                      targetAmount: 0,
-                      discountPercent: 0,
-                    });
+            <ContentWrapper>
+              <InnerBlock>
+                <Select
+                  placeholder="Исходная валюта не выбрана"
+                  options={['CWD']}
+                  selectedOption={fromCurrency}
+                  setSelectedOption={(val: string) => setFromCurrency(val)}
+                />
+                <Input
+                  placeholder="0.0000"
+                  name="fromSum"
+                  value={
+                    fromSum
+                      ? Number(fromSum).toLocaleString('ru-RU', {
+                          maximumFractionDigits: 2,
+                        })
+                      : convertedData.userAmount <= 0
+                      ? ''
+                      : (convertedData.userAmount / 100000).toLocaleString('ru-RU', {
+                          maximumFractionDigits: 2,
+                        })
                   }
-                }}
-              />
-            </InnerBlock>
-            <FromToArrow />
-            <InnerBlock>
-              <Select
-                placeholder="Валюта к получению не выбрана"
-                options={['MULTICS']}
-                selectedOption={toCurrency}
-                setSelectedOption={(val: string) => setToCurrency(val)}
-              />
-              <Input
-                placeholder={toCurrency ? '0' : '0.0000'}
-                name="toSum"
-                value={
-                  toSum
-                    ? toSum
-                    : convertedData.targetAmount <= 0
-                    ? ''
-                    : (convertedData.targetAmount / 100).toLocaleString('ru-RU', {
-                        maximumFractionDigits: 2,
-                      })
-                }
-                onChange={({ target: { value } }) => {
-                  if (value.length > 1 && value[0] === '0') {
-                    setFromSum('');
+                  onChange={({ target: { value } }) => {
                     setToSum('');
-                    setConvertedData({
-                      userAmount: 0,
-                      calculatedAmount: 0,
-                      targetAmount: 0,
-                      discountPercent: 0,
-                    });
-                  } else if (!value) {
-                    setToSum('');
-                    setConvertedData({
-                      userAmount: 0,
-                      calculatedAmount: 0,
-                      targetAmount: 0,
-                      discountPercent: 0,
-                    });
-                  } else {
-                    setToSum(value.replaceAll(/\D/g, ''));
+                    if (!(value.length > 1 && value[0] === '0')) {
+                      setFromSumCloud(value.replaceAll(/\D/g, ''));
+                      setFromSum(value.replaceAll(/\D/g, ''));
+                      setConvertedData({
+                        userAmount: 0,
+                        calculatedAmount: 0,
+                        targetAmount: 0,
+                        discountPercent: 0,
+                      });
+                    }
+                  }}
+                />
+              </InnerBlock>
+              <FromToArrow />
+              <InnerBlock>
+                <Select
+                  placeholder="Валюта к получению не выбрана"
+                  options={['MULTICS']}
+                  selectedOption={toCurrency}
+                  setSelectedOption={(val: string) => setToCurrency(val)}
+                />
+                <Input
+                  placeholder={toCurrency ? '0' : '0.0000'}
+                  name="toSum"
+                  value={
+                    toSum
+                      ? toSum
+                      : convertedData.targetAmount <= 0
+                      ? ''
+                      : (convertedData.targetAmount / 100).toLocaleString('ru-RU', {
+                          maximumFractionDigits: 2,
+                        })
                   }
-                }}
-              />
-              <RateRow>
-                <Rate>Курс:</Rate>
-                <Rate>
-                  {convertedData.calculatedAmount > 0
-                    ? (
-                        convertedData.calculatedAmount /
-                        convertedData.targetAmount /
-                        1000
-                      ).toLocaleString('ru-RU', {
-                        maximumFractionDigits: 2,
-                      })
-                    : 0}
-                </Rate>
-              </RateRow>
+                  onChange={({ target: { value } }) => {
+                    if (value.length > 1 && value[0] === '0') {
+                      setFromSum('');
+                      setToSum('');
+                      setConvertedData({
+                        userAmount: 0,
+                        calculatedAmount: 0,
+                        targetAmount: 0,
+                        discountPercent: 0,
+                      });
+                    } else if (!value) {
+                      setToSum('');
+                      setConvertedData({
+                        userAmount: 0,
+                        calculatedAmount: 0,
+                        targetAmount: 0,
+                        discountPercent: 0,
+                      });
+                    } else {
+                      setToSum(value.replaceAll(/\D/g, ''));
+                    }
+                  }}
+                />
+                <RateRow>
+                  <Rate>Курс:</Rate>
+                  <Rate>
+                    {convertedData.calculatedAmount > 0
+                      ? (
+                          convertedData.calculatedAmount /
+                          convertedData.targetAmount /
+                          1000
+                        ).toLocaleString('ru-RU', {
+                          maximumFractionDigits: 2,
+                        })
+                      : 0}
+                  </Rate>
+                </RateRow>
 
-              <RateRow>
-                <Rate>Скидка %:</Rate>
-                <Rate>
-                  {convertedData.calculatedAmount !== 0 ? convertedData.discountPercent : '0'}
-                </Rate>
-              </RateRow>
-              <Button
-                bigSize
-                primary
-                onClick={further}
-                disabled={convertedData.calculatedAmount === 0}
-              >
-                {fromSum && !isOkConverting ? 'Рассчитать' : 'Далее'}
-              </Button>
-            </InnerBlock>
-          </ContentWrapper>
-        </Container>
-      </Modal>
-    </CSSTransition>
+                <RateRow>
+                  <Rate>Скидка %:</Rate>
+                  <Rate>
+                    {convertedData.calculatedAmount !== 0 ? convertedData.discountPercent : '0'}
+                  </Rate>
+                </RateRow>
+                <Button
+                  bigSize
+                  primary
+                  onClick={further}
+                  disabled={convertedData.calculatedAmount === 0}
+                >
+                  {fromSum && !isOkConverting ? 'Рассчитать' : 'Далее'}
+                </Button>
+              </InnerBlock>
+            </ContentWrapper>
+          </Container>
+        </Modal>
+      </CSSTransition>
+    </>
   );
 };

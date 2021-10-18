@@ -7,12 +7,13 @@ import { IBalanceExchange } from './ConvertingModal';
 import {
   ButtonsWrapper,
   CheckboxGroup,
+  CloseButton,
   ContentTitle,
   Dots,
   KeySpan,
   ModalBlock,
   ModalContent,
-  ModalTitle,CloseButton
+  ModalTitle,
 } from './styled';
 
 interface Iprops {
@@ -21,7 +22,9 @@ interface Iprops {
   convertedData: IBalanceExchange;
   setOpenConverting: (open: boolean) => void;
   setIsOkConverting: (isOk: boolean) => void;
+  setConvertedData: (data: IBalanceExchange) => void;
   fromSumCloud: string;
+  closeWithReset: () => void;
 }
 
 export const ConvertingModalCorrection: FC<Iprops> = ({
@@ -30,7 +33,9 @@ export const ConvertingModalCorrection: FC<Iprops> = ({
   convertedData,
   setOpenConverting,
   fromSumCloud,
+  setConvertedData,
   setIsOkConverting,
+  closeWithReset,
 }: Iprops) => {
   const [isNoShow, setIsNoShow] = useState<boolean>(false);
 
@@ -43,7 +48,10 @@ export const ConvertingModalCorrection: FC<Iprops> = ({
   return (
     <>
       {open && (
-        <Modal onClose={() => setOpen(false)} width={420}>
+        <Modal
+          onClose={closeWithReset}
+          width={420}
+        >
           <ModalBlock>
             <ModalTitle>Коррекция суммы списания</ModalTitle>
             <ModalContent>
@@ -51,7 +59,7 @@ export const ConvertingModalCorrection: FC<Iprops> = ({
                 Токен MULTICS не имеет дробных значений, в связи с этим указанная вами сумма была
                 скорректирована:
               </ContentTitle>
-              <CloseButton onClick={() => setOpen(false)} />
+              <CloseButton onClick={closeWithReset} />
               <ContentBody>
                 <p>
                   <KeySpan>Указано к списанию (CWD)</KeySpan>
