@@ -32,6 +32,8 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
   const [showRejectModal, setShowRejectModal] = useState(false);
   const { account, hubConnection } = useContext(AppContext);
   const [totalExchanges, setTotalExchanges] = useState<any>(); 
+  const [draw, setDraw] = useState<boolean>(true);
+
   const buyer = () => {
     return (exchange && exchange.kind === 0 && exchange.ownerSafeId !== account.safeId) ||
     (exchange && exchange.kind === 1 && exchange.ownerSafeId === account.safeId);
@@ -462,7 +464,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
                   <Button outlinePrimary bigSize onClick={handleClick}>
                     Чат
                   </Button>
-                  <Button outlinePrimary bigSize as="button" disabled={true} onClick={() => abuseExchange(exchange.safeId)} exchangeBtn>
+                  <Button outlinePrimary bigSize as="button" disabled={draw} onClick={() => abuseExchange(exchange.safeId)} exchangeBtn>
                     Жалоба
                   </Button>
                 </S.Space>
