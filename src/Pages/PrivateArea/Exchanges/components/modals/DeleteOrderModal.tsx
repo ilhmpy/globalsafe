@@ -8,6 +8,7 @@ import { Balance } from '../../../../../types/balance';
 import { FiatKind } from '../../../../../types/fiat';
 import { OrderType, ViewBuyOrderModel, ViewSellOrderModel } from '../../../../../types/orders';
 import { Space, Text } from '../../../components/ui';
+import { countVolumeToShow } from '../../../utils';
 import * as S from './S.el';
 
 type Props = {
@@ -71,7 +72,9 @@ export const DeleteOrderModal: FC<Props> = ({
                         <S.DataListItem>
                             <Text size={14} lH={20}>{`Кол-во (${Balance[order.assetKind]}):`}</Text>
                             <S.ListItemDivider />
-                            <Text size={14} lH={20} weight={700}>{order.volume}</Text>
+                            <Text size={14} lH={20} weight={700}>
+                                {countVolumeToShow(order.volume, order.assetKind)}
+                            </Text>
                         </S.DataListItem>
 
                         <S.DataListItem>

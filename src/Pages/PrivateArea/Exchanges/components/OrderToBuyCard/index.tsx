@@ -98,7 +98,7 @@ export const OrderToBuyCard: FC = () => {
     } catch (err) {
       console.log(err);
     }
-  };
+  }; 
 
   const findPaymentMethodKinds = (methodsList: CollectionPayMethod[] = []): number[] => {
     const kinds = methodsList.map((m) => m.kind);
@@ -106,27 +106,19 @@ export const OrderToBuyCard: FC = () => {
     return withoutDuplicates;
   };
 
-  const handleCreateBuyOrder = async () => {
-    console.log('orderSumm', String(orderSumm));
-    console.log('changeRate', +changeRate);
-    console.log('assetKind', Balance[currencyToBuy as keyof typeof Balance]);
-    console.log('operationAssetKind', FiatKind[currencyToChange as keyof typeof FiatKind]);
-    console.log('limitFrom', Number(orderMinSumm));
-    console.log('limitTo', Number(orderMaxSumm));
-    console.log('window', 20);
-    console.log(
-      'methodsKinds',
-      findPaymentMethodKinds(
-        paymentMethods?.filter((m) => selectedPaymentMethodsIds.includes(String(m.id)))
-      )
-    );
-    console.log('terms', ''); 
+  const countVolume = (summ: string, asset: number): string => {
+    const summary = Number(summ);
+    const value = asset === 1 ? summary * 100000 : asset === 42 ? summary * 10000 : summary;
+    return String(value);
+  };
 
+
+  const handleCreateBuyOrder = async () => {
     setCreateOrderLoading(true);
     try {
       const res = await hubConnection!.invoke<ViewBuyOrderModel>(
         'CreateBuyOrder',
-        String(orderSumm), // string volume
+        countVolume(orderSumm, Balance[currencyToBuy as keyof typeof Balance]), // string volume
         +changeRate, // double rate
         Balance[currencyToBuy as keyof typeof Balance], // BalanceKind assetKind
         FiatKind[currencyToChange as keyof typeof FiatKind], // FiatKind operationAssetKind

@@ -113,22 +113,18 @@ export const OrderToSellCard: FC = () => {
         return withoutDuplicates;
     };
 
-    const handleCreateSellOrder = async () => {
-        console.log('orderSumm', String(orderSumm))
-        console.log('changeRate', +changeRate)
-        console.log('assetKind', Balance[currencyToSell as keyof typeof Balance])
-        console.log('operationAssetKind', FiatKind[currencyToChange as keyof typeof FiatKind])
-        console.log('limitFrom', Number(orderMinSumm))
-        console.log('limitTo', Number(orderMaxSumm))
-        console.log('window', 20)
-        console.log('methodsKinds', findPaymentMethodKinds(paymentMethods?.filter(m => selectedPaymentMethodsIds.includes(String(m.id)))))
-        console.log('terms', '');
+    const countVolume = (summ: string, asset: number): string => {
+        const summary = Number(summ);
+        const value = asset === 1 ? summary * 100000 : asset === 42 ? summary * 10000 : summary;
+        return String(value);
+    };
 
+    const handleCreateSellOrder = async () => {
         setCreateOrderLoading(true);
         try {
             const res = await hubConnection!.invoke<ViewSellOrderModel>(
                 'CreateSellOrder', 
-                String(orderSumm), // string volume
+                countVolume(orderSumm, Balance[currencyToSell as keyof typeof Balance]), // string volume
                 +changeRate, // double rate
                 Balance[currencyToSell as keyof typeof Balance], // BalanceKind assetKind
                 FiatKind[currencyToChange as keyof typeof FiatKind], // FiatKind operationAssetKind

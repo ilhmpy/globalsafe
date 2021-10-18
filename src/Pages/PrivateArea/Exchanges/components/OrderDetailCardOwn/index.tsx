@@ -18,6 +18,7 @@ import { Balance } from '../../../../../types/balance';
 import { FiatKind } from '../../../../../types/fiat';
 import { CollectionPayMethod, PaymentMethodKind } from '../../../../../types/paymentMethodKind';
 import { routers } from '../../../../../constantes/routers';
+import { countVolumeToShow } from '../../../utils';
  
 interface OrderDetailCardProps {
   order: ViewBuyOrderModel | ViewSellOrderModel;
@@ -109,7 +110,7 @@ export const OrderDetailCardOwn: FC<OrderDetailCardProps> = ({ order, orderType 
           <S.BlockWrapper>
             <Text size={14} lH={20} mB={4} black>Количество:</Text>
             <Text size={14} lH={20} weight={500} black>
-              {`${order.volume} ${Balance[order.assetKind]}`}
+              {`${countVolumeToShow(order.volume, order.assetKind)} ${Balance[order.assetKind]}`}
             </Text>
           </S.BlockWrapper>
 

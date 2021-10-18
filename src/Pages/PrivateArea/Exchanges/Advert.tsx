@@ -101,7 +101,7 @@ export const Advert = () => {
       setSelectedPair(null);
       setShowCurrenctPairModal(false);
       return;
-    }
+    };
  
     setSelectedPair({
       balance: selectedBalanceKind ? selectedBalanceKind : '',
@@ -109,6 +109,11 @@ export const Advert = () => {
     });
     setShowCurrenctPairModal(false);
   }
+
+  const handleAcceptRate = () => {
+    setAcceptedRate(ratesList.indexOf(selectedRate));
+    setShowRatingModal(false);
+  };
 
   const resetFilters = () => {
     setSelectedPair(null);
@@ -192,14 +197,14 @@ export const Advert = () => {
           <FilterButton active>Все методы оплаты</FilterButton>
           <S.Line />
           <FilterButton 
-            active={acceptedRate !== 0}
+            active
             onClick={() => setShowRatingModal(true)}
           >
             {acceptedRate === 0 ? 'Все рейтинги' : ratesList[acceptedRate]}
             </FilterButton>
 
           {
-            selectedPair || (acceptedRate !== 0) &&
+            (selectedPair || (acceptedRate !== 0) ) &&
             <S.MLAutoFilterButton
               onClick={resetFilters}
             >
@@ -222,7 +227,7 @@ export const Advert = () => {
           selectedRate={selectedRate}
           setSelectedRate={setSelectedRate}
           rates={ratesList}
-          onAccept={setAcceptedRate}
+          onAccept={handleAcceptRate}
           open={showRatingModal}
           onClose={() => setShowRatingModal(false)}
         />
