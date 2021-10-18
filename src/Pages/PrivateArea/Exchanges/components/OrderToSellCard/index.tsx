@@ -22,7 +22,7 @@ import { Balance } from '../../../../../types/balance';
 import { FiatKind } from '../../../../../types/fiat';
 import { CollectionPayMethod, RootPayMethod } from '../../../../../types/paymentMethodKind';
 import { ViewUserCertificateModel } from '../../../../../types/certificates';
-import { ViewSellOrderModel } from '../../../../../types/orders';
+import { OrderType, ViewSellOrderModel } from '../../../../../types/orders';
  
 export const OrderToSellCard: FC = () => {
     const history = useHistory();
@@ -152,8 +152,8 @@ export const OrderToSellCard: FC = () => {
     const onOrderSummChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const pattern = /^[1-9][0-9]*$/;
         if (e.target.value === '' || pattern.test(e.target.value)) {
-            if(userActiveCertificate && (+e.target.value > userActiveCertificate.certificate.dailyVolume)) {
-                setOrderSumm(String(userActiveCertificate.certificate.dailyVolume));
+            if(userActiveCertificate && (+e.target.value > (userActiveCertificate.certificate.dailyVolume / 100000))) {
+                setOrderSumm(String(userActiveCertificate.certificate.dailyVolume / 100000));
             } else {
                 setOrderSumm(e.target.value);
             }
@@ -438,7 +438,7 @@ export const OrderToSellCard: FC = () => {
         </RightSide>
 
             <OrderInfoModal
-                type={'sell'}
+                type={OrderType.Sell} 
                 currencyToBuy={currencyToSell}
                 currencyToChange={currencyToChange}
                 orderSumm={orderSumm}

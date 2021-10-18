@@ -59,8 +59,8 @@ export const Advert = () => {
           'GetBuyOrders', 
           selectedPair?.balance ? [ Balance[selectedPair?.balance as keyof typeof Balance] ] : [],  // Array of BalanceKind assetKinds
           selectedPair?.fiat ? [ FiatKind[selectedPair?.fiat as keyof typeof FiatKind] ] : [],  // Array of FiatKind opAssetKinds
-          // [], // Array of PaymentMethodKind[] paymentMethodKinds
-          // acceptedRate, // int rating
+          [], // Array of PaymentMethodKind[] paymentMethodKinds
+          acceptedRate, // int rating
           skip, 
           10
         );
@@ -80,8 +80,8 @@ export const Advert = () => {
         'GetSellOrders', 
         selectedPair?.balance ? [ Balance[selectedPair?.balance as keyof typeof Balance] ] : [],  // Array of BalanceKind assetKinds
         selectedPair?.fiat ? [ FiatKind[selectedPair?.fiat as keyof typeof FiatKind] ] : [],  // Array of FiatKind opAssetKinds
-        // [], // Array of PaymentMethodKind[] paymentMethodKinds
-        // acceptedRate, // int rating
+        [], // Array of PaymentMethodKind[] paymentMethodKinds
+        acceptedRate, // int rating
         skip, 
         10
       );

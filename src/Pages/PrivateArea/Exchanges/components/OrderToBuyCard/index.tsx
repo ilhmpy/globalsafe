@@ -6,7 +6,7 @@ import { AppContext } from '../../../../../context/HubContext';
 import { Balance } from '../../../../../types/balance';
 import { ViewUserCertificateModel } from '../../../../../types/certificates';
 import { FiatKind } from '../../../../../types/fiat';
-import { ViewBuyOrderModel } from '../../../../../types/orders';
+import { OrderType, ViewBuyOrderModel } from '../../../../../types/orders';
 import { CollectionPayMethod, RootPayMethod } from '../../../../../types/paymentMethodKind';
 import { Checkbox } from '../../../components/Checkbox';
 import { LeftSide, RightSide, Space, TabNavItem, Text, Title } from '../../../components/ui';
@@ -120,7 +120,7 @@ export const OrderToBuyCard: FC = () => {
         paymentMethods?.filter((m) => selectedPaymentMethodsIds.includes(String(m.id)))
       )
     );
-    console.log('terms', '');
+    console.log('terms', ''); 
 
     setCreateOrderLoading(true);
     try {
@@ -139,7 +139,7 @@ export const OrderToBuyCard: FC = () => {
         '' // terms
       );
       setNewCreatedOrder(res);
-      console.log('GetUserPaymentsMethods', res);
+      console.log('CreateBuyOrder', res);
       setCreateOrderLoading(false);
     } catch (err) {
       setShowOrderErrorModal(true);
@@ -153,9 +153,9 @@ export const OrderToBuyCard: FC = () => {
     if (e.target.value === '' || pattern.test(e.target.value)) {
       if (
         userActiveCertificate &&
-        +e.target.value > userActiveCertificate.certificate.dailyVolume
+        +e.target.value > (userActiveCertificate.certificate.dailyVolume / 100000)
       ) {
-        setOrderSumm(String(userActiveCertificate.certificate.dailyVolume));
+        setOrderSumm(String(userActiveCertificate.certificate.dailyVolume / 100000));
       } else {
         setOrderSumm(e.target.value);
       }
@@ -416,7 +416,7 @@ export const OrderToBuyCard: FC = () => {
       </RightSide>
 
       <OrderInfoModal
-        type={'buy'}
+        type={OrderType.Buy}
         currencyToBuy={currencyToBuy}
         currencyToChange={currencyToChange}
         orderSumm={orderSumm}

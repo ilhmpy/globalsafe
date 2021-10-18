@@ -1,15 +1,16 @@
-import React, { FC, Fragment } from 'react';
+import React, { FC, Fragment, useContext } from 'react';
 import { useHistory } from 'react-router';
 import { Button } from '../../../../../components/Button/V2/Button';
 import { Modal } from '../../../../../components/ModalAnimated';
+import { PrivateAreaContext } from '../../../../../context/PrivateAreaContext';
 import { FiatKind } from '../../../../../types/fiat';
-import { ViewBuyOrderModel } from '../../../../../types/orders';
+import { OrderType, ViewBuyOrderModel, ViewSellOrderModel } from '../../../../../types/orders';
 import { CollectionPayMethod } from '../../../../../types/paymentMethodKind';
 import { Space, Text } from '../../../components/ui';
 import * as S from './S.el';
 
 interface OrderInfoModalProps {
-  type: 'buy' | 'sell';
+  type: OrderType;
   currencyToBuy: string;
   currencyToChange: string;
   orderSumm: string;
@@ -20,7 +21,7 @@ interface OrderInfoModalProps {
   onPublish: () => void;
   loading: boolean;
   paymentMethods: CollectionPayMethod[];
-  newCreatedOrder: ViewBuyOrderModel | undefined;
+  newCreatedOrder: ViewBuyOrderModel | ViewSellOrderModel | undefined;
   onClose: () => void;
   open: boolean;
 }
@@ -42,6 +43,16 @@ export const OrderInfoModal: FC<OrderInfoModalProps> = ({
   open,
 }: OrderInfoModalProps) => {
   const history = useHistory();
+  const { setCurrentOrder, setCurrentOrderType} = useContext(PrivateAreaContext);
+
+  const handleNavigateToOrder = () => {
+    if(newCreatedOrder) {
+      setCurrentOrder(newCreatedOrder);
+      setCurrentOrderType(type);
+      history.replace(`/info/p2p-changes/orders/my/${newCreatedOrder.id}`)
+    }
+  };
+
 
   return (
     <>
@@ -59,7 +70,7 @@ export const OrderInfoModal: FC<OrderInfoModalProps> = ({
                 </Text>
                 <S.ListItemDivider />
                 <Text size={14} lH={20} weight={700}>
-                  {type === 'buy' ? 'Покупка' : 'Продажа'}
+                  {type === OrderType.Buy ? 'Покупка' : 'Продажа'}
                 </Text>
               </S.DataListItem>
 
@@ -103,7 +114,7 @@ export const OrderInfoModal: FC<OrderInfoModalProps> = ({
                 </Text>
               </S.DataListItem>
 
-              {type === 'buy' ? (
+              {type === OrderType.Buy ? (
                 <DrawBuyOrderPaymentsBlock
                   paymentMethods={paymentMethods}
                   currencyToChange={currencyToChange}
@@ -138,7 +149,7 @@ export const OrderInfoModal: FC<OrderInfoModalProps> = ({
               <Button
                 primary
                 fullWidth
-                onClick={() => history.replace(`/info/p2p-changes/orders/${newCreatedOrder.id}`)}
+                onClick={handleNavigateToOrder}
               >
                 Перейти к ордеру
               </Button>

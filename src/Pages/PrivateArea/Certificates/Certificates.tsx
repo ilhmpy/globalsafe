@@ -140,7 +140,11 @@ export const Certificates = () => {
         />
       )}
       <Container>
-        <Heading onClick={() => history.goBack()} title="P2P обмены" btnText="Опубликовать ордер" />
+        <Heading 
+            onClick={() => history.push(routers.p2pchangesOrderToBuy)} 
+            title="P2P обмены" 
+            btnText="Опубликовать ордер" 
+        />
         <S.SubHeader>
           <TabsBlock>
             <TabNavItem to={routers.p2pchanges} exact>
