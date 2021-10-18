@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Button } from '../../../../components/Button/V2/Button';
 import { Modal } from '../../../../components/ModalAnimated';
 import { BalanceKind } from '../../../../enums/balanceKind';
-import { IBalanceExchange } from '../../ConvertingModal';
+import { IBalanceExchange } from '../../Converting/ConvertingModal';
 import * as S from './S.el';
 
 type Props = {

@@ -1,8 +1,17 @@
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
-import { Modal } from '../../components/Modal/Modal';
+import { Modal } from '../../../components/Modal/Modal';
 import { IBalanceExchange } from './ConvertingModal';
+import {
+  CloseButton,
+  ContentBody,
+  ContentTitle,
+  Dots,
+  KeySpan,
+  ModalBlock,
+  ModalContent,
+  ModalTitle,
+} from './styled';
 
 interface Iprops {
   open: boolean;
@@ -35,8 +44,19 @@ export const ConvertingModalSuccess: FC<Iprops> = ({
         >
           <ModalBlock>
             <ModalTitle>{t('privateArea.convertingSuccess')}</ModalTitle>
-            <ModalContent>
+            <ModalContent gap20>
               <ContentTitle>Конвертация CWD в MULTICS успешно завершена:</ContentTitle>
+              <CloseButton
+                onClick={() => {
+                  setOpen(false);
+                  setConvertedData({
+                    userAmount: 0,
+                    calculatedAmount: 0,
+                    targetAmount: 0,
+                    discountPercent: 0,
+                  });
+                }}
+              />
               <ContentBody>
                 <p>
                   <KeySpan>Списано (CWD):</KeySpan>
@@ -82,74 +102,3 @@ export const ConvertingModalSuccess: FC<Iprops> = ({
     </>
   );
 };
-const Dots = styled.div`
-  flex: 1;
-  border-bottom: 1px dashed rgba(0, 0, 0, 0.2);
-  position: relative;
-  bottom: 4px;
-`;
-
-const KeySpan = styled.div`
-  position: relative;
-`;
-
-const ContentTitle = styled.div`
-  text-align: start;
-  color: #000000;
-`;
-
-const ContentBody = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  text-align: start;
-  color: #000000;
-  & > p {
-    display: flex;
-    justify-content: space-between;
-    background-color: #ffffff;
-    position: relative;
-  }
-`;
-
-const ModalBlock = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 40px;
-
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 20px;
-
-  color: #000000;
-
-  @media (max-width: 576px) {
-    /* padding: 40px; */
-  }
-`;
-const ModalTitle = styled.h1`
-  font-style: normal;
-  font-weight: 500;
-  font-size: 24px;
-  line-height: 28px;
-  text-align: center;
-  color: ${(props) => props.theme.text};
-  color: #000000;
-`;
-const ModalContent = styled.p`
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 20px;
-  text-align: center;
-  letter-spacing: 0.1px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-
-  color: ${(props) => props.theme.text};
-`;

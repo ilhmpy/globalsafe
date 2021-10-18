@@ -1,9 +1,20 @@
 import { FC, useState } from 'react';
 import styled from 'styled-components';
-import { Button } from '../../components/Button/V2/Button';
-import { Modal } from '../../components/Modal/Modal';
-import { Checkbox } from './components/Checkbox';
-import { CloseButton, IBalanceExchange } from './ConvertingModal';
+import { Button } from '../../../components/Button/V2/Button';
+import { Modal } from '../../../components/Modal/Modal';
+import { Checkbox } from '../components/Checkbox';
+import { IBalanceExchange } from './ConvertingModal';
+import {
+  ButtonsWrapper,
+  CheckboxGroup,
+  CloseButton,
+  ContentTitle,
+  Dots,
+  KeySpan,
+  ModalBlock,
+  ModalContent,
+  ModalTitle,
+} from './styled';
 
 interface Iprops {
   open: boolean;
@@ -11,7 +22,9 @@ interface Iprops {
   convertedData: IBalanceExchange;
   setOpenConverting: (open: boolean) => void;
   setIsOkConverting: (isOk: boolean) => void;
+  setConvertedData: (data: IBalanceExchange) => void;
   fromSumCloud: string;
+  closeWithReset: () => void;
 }
 
 export const ConvertingModalCorrection: FC<Iprops> = ({
@@ -20,7 +33,9 @@ export const ConvertingModalCorrection: FC<Iprops> = ({
   convertedData,
   setOpenConverting,
   fromSumCloud,
+  setConvertedData,
   setIsOkConverting,
+  closeWithReset,
 }: Iprops) => {
   const [isNoShow, setIsNoShow] = useState<boolean>(false);
 
@@ -33,15 +48,18 @@ export const ConvertingModalCorrection: FC<Iprops> = ({
   return (
     <>
       {open && (
-        <Modal onClose={() => setOpen(false)} width={420}>
+        <Modal
+          onClose={closeWithReset}
+          width={420}
+        >
           <ModalBlock>
             <ModalTitle>Коррекция суммы списания</ModalTitle>
             <ModalContent>
-              <ContentTitle>
+              <ContentTitle mb10>
                 Токен MULTICS не имеет дробных значений, в связи с этим указанная вами сумма была
                 скорректирована:
               </ContentTitle>
-              <CloseButton onClick={() => setOpen(false)} />
+              <CloseButton onClick={closeWithReset} />
               <ContentBody>
                 <p>
                   <KeySpan>Указано к списанию (CWD)</KeySpan>
@@ -106,39 +124,6 @@ export const ConvertingModalCorrection: FC<Iprops> = ({
   );
 };
 
-const CheckboxGroup = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 10px;
-  & > label {
-    max-width: 25px;
-  }
-`;
-
-const Dots = styled.div`
-  flex: 1;
-  border-bottom: 1px dashed rgba(0, 0, 0, 0.2);
-  position: relative;
-  bottom: 4px;
-`;
-
-const ButtonsWrapper = styled.div`
-  display: flex;
-  margin-top: 10px;
-  gap: 20px;
-`;
-
-const KeySpan = styled.div`
-  /* width: 100%; */
-`;
-
-const ContentTitle = styled.div`
-  text-align: start;
-  color: #000000;
-  margin-bottom: 10px;
-`;
-
 const ContentBody = styled.div`
   display: flex;
   flex-direction: column;
@@ -156,46 +141,4 @@ const ContentBody = styled.div`
     align-items: flex-end;
     justify-content: flex-start;
   }
-`;
-
-const ModalBlock = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 40px;
-
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 20px;
-
-  color: #000000;
-
-  @media (max-width: 576px) {
-    /* padding: 40px; */
-  }
-`;
-const ModalTitle = styled.h1`
-  font-style: normal;
-  font-weight: 500;
-  font-size: 24px;
-  line-height: 28px;
-  text-align: center;
-  color: ${(props) => props.theme.text};
-  color: #000000;
-`;
-const ModalContent = styled.p`
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 20px;
-  text-align: center;
-  letter-spacing: 0.1px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-
-  color: ${(props) => props.theme.text};
 `;
