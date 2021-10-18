@@ -4,6 +4,7 @@ import alfa from '../../../../../assets/v2/svg/banks/alfa.svg';
 import { Balance } from '../../../../../types/balance';
 import { ViewExchangeModel } from '../../../../../types/exchange';
 import { FiatKind } from '../../../../../types/fiat';
+import { countVolumeToShow } from '../../../utils';
 
 import * as S from './S.el';
 
@@ -61,7 +62,7 @@ export const ExchangesInOrderTable: React.FC<ExchangesInOrderTable> = ({exchange
               >
                 <S.Cell data-label="№ обмена">{exchange.safeId}</S.Cell>
                 <S.Cell data-label="Кол-во">
-                {`${exchange.volume} ${Balance[exchange.assetKind]}`}
+                {`${countVolumeToShow(exchange.volume, exchange.assetKind)} ${Balance[exchange.assetKind]}`}
                 </S.Cell>
                 <S.Cell data-label="Стоимость">
                   {`${exchange.volume * exchange.rate} ${FiatKind[exchange.exchangeAssetKind]}`}

@@ -6,7 +6,7 @@ import { PrivateAreaContext } from '../../../../../context/PrivateAreaContext';
 import { Balance } from '../../../../../types/balance';
 import { FiatKind } from '../../../../../types/fiat';
 import { OrderType, ViewBuyOrderModel, ViewSellOrderModel } from '../../../../../types/orders';
-import { paymentMethodIconSrc } from '../../../utils';
+import { countVolumeToShow, paymentMethodIconSrc } from '../../../utils';
 import { PaymentMethods } from '../modals/PaymentMethods';
 import { Rating } from '../modals/Rating';
 
@@ -78,7 +78,7 @@ export const AdvertTable = ({ list, ordersType }: AdvertTableProps) => {
               onClick={() => handleNavigateTo(order)} 
             >
               <S.Cell data-label="Кол-во">
-                {`${order.volume} ${Balance[order.assetKind]}`}
+                {`${countVolumeToShow(order.volume, order.assetKind)} ${Balance[order.assetKind]}`}
               </S.Cell>
               <S.Cell data-label="Курс">{order.rate}</S.Cell>
               <S.Cell data-label="На сумму">

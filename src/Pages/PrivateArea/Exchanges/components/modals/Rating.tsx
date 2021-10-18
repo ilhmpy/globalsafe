@@ -10,7 +10,7 @@ type Props = {
   selectedRate: string;
   setSelectedRate: (rate: string) => void;
   rates: string[];
-  onAccept: (rateIndex: number) => void;
+  onAccept: () => void;
 };
 
 export const Rating: FC<Props> = ({
@@ -21,11 +21,6 @@ export const Rating: FC<Props> = ({
   rates,
   onAccept,
 }: Props) => {
-
-  const handleAccept = () => {
-    onAccept(rates.indexOf(selectedRate));
-    onClose();
-  };
   
   return (
     <>
@@ -40,7 +35,7 @@ export const Rating: FC<Props> = ({
                 options={rates}
               />
             </S.DropdonwConatainer>
-            <Button bigSize fullWidth primary onClick={handleAccept}>
+            <Button bigSize fullWidth primary onClick={onAccept}>
               Применить
             </Button>
           </S.Container>
