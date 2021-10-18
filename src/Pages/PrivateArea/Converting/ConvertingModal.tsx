@@ -1,15 +1,22 @@
 import React, { FC, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
-import styled from 'styled-components';
-import { ReactComponent as Close } from '../../assets/svg/close.svg';
-import { ReactComponent as FromTo } from '../../assets/svg/fromTo.svg';
-import { Button } from '../../components/Button/V2/Button';
-import { Input } from '../../components/Input';
-import { Modal } from '../../components/Modal/Modal';
-import { Select } from '../../components/Select/Select5';
-import { AppContext } from '../../context/HubContext';
-import { Balance } from '../../types/balance';
+import { Button } from '../../../components/Button/V2/Button';
+import { Input } from '../../../components/Input';
+import { Modal } from '../../../components/Modal/Modal';
+import { Select } from '../../../components/Select/Select5';
+import { AppContext } from '../../../context/HubContext';
+import { Balance } from '../../../types/balance';
+import {
+  CloseButton,
+  Container,
+  ContentWrapper,
+  FromToArrow,
+  InnerBlock,
+  ModalTitle,
+  Rate,
+  RateRow,
+} from './styled';
 
 interface IProps {
   open: boolean;
@@ -135,7 +142,7 @@ export const ConvertingModal: FC<IProps> = ({
         width={420}
       >
         <Container>
-          <ModalTitle>{t('privateArea.converting')}</ModalTitle>
+          <ModalTitle mb20>{t('privateArea.converting')}</ModalTitle>
           <CloseButton
             onClick={() => {
               setOpen(false);
@@ -266,89 +273,3 @@ export const ConvertingModal: FC<IProps> = ({
     </CSSTransition>
   );
 };
-
-const FromToArrow = styled(FromTo)`
-  position: absolute;
-  left: 49%;
-  top: 28%;
-`;
-
-const Rate = styled.span`
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 20px;
-  color: #000000;
-`;
-
-const RateRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  min-height: 35px;
-`;
-
-const InnerBlock = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`;
-
-const ContentWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-  position: relative;
-`;
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
-
-export const CloseButton = styled(Close)`
-  position: absolute;
-  right: 19px;
-  top: 19px;
-  cursor: pointer;
-`;
-
-const ModalTitle = styled.h2`
-  font-style: normal;
-  font-weight: 500;
-  font-size: 24px;
-  line-height: 28px;
-  text-align: center;
-  margin-bottom: 20px;
-
-  color: #3f3e4e;
-`;
-
-const ModalCurrencyDiv = styled.div`
-  width: 100%;
-  max-width: 200px;
-  margin: 0 auto;
-  position: relative;
-  display: block;
-
-  & > input {
-    max-width: 200px;
-    margin: 0 auto;
-    margin-bottom: 20px;
-    color: ${({ theme }) => theme.toToken.color};
-    color: #000000;
-    padding-right: 103px;
-    text-align: right;
-  }
-
-  & > span {
-    position: absolute;
-
-    color: ${({ theme }) => theme.toToken.color};
-    color: #000000;
-    font-size: 14px;
-    top: 13px;
-    right: 70px;
-  }
-`;

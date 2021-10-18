@@ -4,7 +4,7 @@ import { Modal } from '../../../../components/ModalAnimated';
 import { AppContext } from '../../../../context/HubContext';
 import { BalanceKind } from '../../../../enums/balanceKind';
 import { Balance } from '../../../../types/balance';
-import { IBalanceExchange } from '../../ConvertingModal';
+import { IBalanceExchange } from '../../Converting/ConvertingModal';
 import * as S from './S.el';
 
 type Props = {

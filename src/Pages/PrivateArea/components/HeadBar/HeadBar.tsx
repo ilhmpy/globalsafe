@@ -25,10 +25,9 @@ import { AppContext } from '../../../../context/HubContext';
 import { Card, Container } from '../../../../globalStyles';
 import { Balance, Notify } from '../../../../types/balance';
 import { Commisions, DepositsCollection, RootDeposits } from '../../../../types/info';
-import { ConvertingModalSuccess } from '../../ConveringSuccessModal';
-import { ConvertingModal, IBalanceExchange } from '../../ConvertingModal';
-import { ConvertingModalFail } from '../../ConvertingModalFail';
-// import { InfoBalance } from '../../InfoBalance';
+import { ConvertingModalSuccess } from '../../Converting/ConveringSuccessModal';
+import { ConvertingModal, IBalanceExchange } from '../../Converting/ConvertingModal';
+import { ConvertingModalFail } from '../../Converting/ConvertingModalFail';
 import { DepositListModal, TokenModal } from '../../Modals';
 import * as Styled from '../../Styles.elements';
 

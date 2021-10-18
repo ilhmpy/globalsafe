@@ -25,11 +25,11 @@ import { AppContext } from '../../context/HubContext';
 import { Card, Container } from '../../globalStyles';
 import { Balance, Notify } from '../../types/balance';
 import { Commisions, DepositsCollection, RootDeposits } from '../../types/info';
-import { ConvertingModalConfirm } from './ConveringConfirmModal ';
-import { ConvertingModalSuccess } from './ConveringSuccessModal';
-import { ConvertingModalCorrection } from './ConvertingCorrectionModal';
-import { ConvertingModal, IBalanceExchange } from './ConvertingModal';
-import { ConvertingModalFail } from './ConvertingModalFail';
+import { ConvertingModalSuccess } from './Converting/ConveringSuccessModal';
+import { ConvertingModalCorrection } from './Converting/ConvertingCorrectionModal';
+import { ConvertingModal, IBalanceExchange } from './Converting/ConvertingModal';
+import { ConvertingModalFail } from './Converting/ConvertingModalFail';
+import { ConvertingModalConfirm } from './Converting/ConveringConfirmModal ';
 import { DepositListModal } from './Modals';
 import * as Styled from './Styles.elements';
 

@@ -16,7 +16,7 @@ import { Chip } from '../ui/Chip';
 import * as S from './S.el';
 import { CloseDeposit } from '../Modals/CloseDeposit';
 import { AppContext } from '../../../../context/HubContext';
-import { IBalanceExchange } from '../../ConvertingModal';
+import { IBalanceExchange } from '../../Converting/ConvertingModal';
 import { CloseDepositSuccess } from '../Modals/CloseDepositSuccess';
 import { CloseDepositError } from '../Modals/CloseDepositError';
 import { useHistory } from 'react-router';
