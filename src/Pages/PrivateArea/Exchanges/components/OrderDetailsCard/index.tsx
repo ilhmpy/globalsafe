@@ -10,29 +10,33 @@ import {
     Text,
     Title,
 } from '../../../components/ui';
-import { Button } from '../../../../../components/Button/V2/Button';
-import { DeleteOrderModal } from '../modals/DeleteOrderModal';
-import { DeleteOrderErrorModal } from '../modals/DeleteOrderErrorModal';
 import { OrderType, ViewBuyOrderModel, ViewSellOrderModel } from '../../../../../types/orders';
 import { AppContext } from '../../../../../context/HubContext';
 import { Balance } from '../../../../../types/balance';
 import { FiatKind } from '../../../../../types/fiat';
-import { CollectionPayMethod, PaymentMethodKind } from '../../../../../types/paymentMethodKind';
+import { CollectionPayMethod, PaymentMethodKind, RootPayMethod } from '../../../../../types/paymentMethodKind';
 import { routers } from '../../../../../constantes/routers';
-import { countVolumeToShow } from '../../../utils';
+import { countVolumeToSend, countVolumeToShow } from '../../../utils';
+import { ViewExchangeModel } from '../../../../../types/exchange';
+import { ExchangeRequestModal } from '../../components/modals/ExchangeRequest';
+import { ExchangeRequestErrorModal } from '../modals/ExchangeRequestErrorModal';
+import { Radio } from '../../../components/Radio/Radio';
  
 interface OrderDetailsCardProps {
   order: ViewBuyOrderModel | ViewSellOrderModel;
   orderType: OrderType;
-}
+};
 
 export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }: OrderDetailsCardProps) => {
   const history = useHistory();
-  const { user, hubConnection } = useContext(AppContext);
+  const { hubConnection } = useContext(AppContext);
+  const [balanceSumm, setBalanceSumm] = useState('');
+  const [fiatSumm, setFiatSumm] = useState('');
+  const [paymentMethodSafeId, setPaymentMethodSafeId] = useState('');
   const [sellOrderPaymentMethods, setSellOrderPaymentMethods] = useState<CollectionPayMethod[]>([]);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showDeleteErrorModal, setShowDeleteErrorModal] = useState(false);
-  const [deleteSuccessed, setDeleteSuccessed] = useState(false);
+  const [userPaymentMethods, setUserPaymentMethods] = useState<CollectionPayMethod[]>([]);
+  const [showCreateExchangeModal, setShowCreateExchangeModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
 
 
   useEffect(() => {
@@ -40,57 +44,87 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
       if(order && orderType === OrderType.Sell) {
         getSellOrderPaymentMethods();
       }
+      if(order && orderType === OrderType.Buy) {
+        getUserPaymentMethods();
+      }
     }
   }, [hubConnection, orderType, order]);
 
-  const getSellOrderPaymentMethods = async () => {
-    try {
-      const res = await hubConnection!.invoke<CollectionPayMethod[]>(
-        'GetSellOrderPaymentMethods',  
-        order.safeId
-      );
-      console.log('GetSellOrderPaymentMethods', res);
-      setSellOrderPaymentMethods(res);
-    } catch (err) { 
-      console.log(err);
-    }
-  };
+    const getUserPaymentMethods = async () => {
+        try {
+            const res = await hubConnection!.invoke<RootPayMethod>(
+                'GetUserPaymentsMethods',
+                order.methodsKinds, // PaymentMethodKind
+                [1], // PaymentMethodState
+                [ order.operationAssetKind ], // BalanceKind
+                0, // skip
+                20 // take
+            );
+            setUserPaymentMethods(res.collection);
+            console.log('GetUserPaymentsMethods', res);
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
+    const getSellOrderPaymentMethods = async () => {
+        try {
+            const res = await hubConnection!.invoke<CollectionPayMethod[]>(
+                'GetSellOrderPaymentMethods',  
+                order.safeId
+            );
+            console.log('GetSellOrderPaymentMethods', res);
+            setSellOrderPaymentMethods(res);
+        } catch (err) { 
+            console.log(err);
+        }
+    };
 
+    // TODO Use SetExchangePaymentMethod for CreateSellExchange created exchange
+    const handleCreateExchange = async () => {
+        if(orderType === OrderType.Buy) {
+            try {
+                const res = await hubConnection!.invoke<ViewExchangeModel>(
+                    'CreateSellExchange',  
+                    order.safeId,
+                    countVolumeToSend(balanceSumm, order.assetKind)
+                );
+                console.log('CreateSellExchange', res)
+            } catch (err) { 
+                console.log('CreateSellExchange err', err)
+                setShowCreateExchangeModal(false);
+                setShowErrorModal(true);
+            }
+        } else {
+            try {
+                const res = await hubConnection!.invoke<null>(
+                    'CreateBuyExchange',  
+                    order.safeId,
+                    countVolumeToSend(balanceSumm, order.assetKind), 
+                    paymentMethodSafeId 
+                );
+                console.log('CreateBuyExchange', res)
+            } catch (err) { 
+                console.log('CreateBuyExchange err', err)
+                setShowCreateExchangeModal(false);
+                setShowErrorModal(true);
+            }
+        }
+    };
 
-  const handleCloseDeleteModal = () => {
-    setShowDeleteModal(false);
+    const onBalanceSummChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const pattern = /^[1-9][0-9]*$/;
+        if (e.target.value === '' || pattern.test(e.target.value)) {
+            setBalanceSumm(e.target.value);
+        }
+    };
 
-    if(deleteSuccessed) {
-      history.replace(routers.p2pchanges)
-    }
-  };
-
-  const handleCancelOrder = async () => {
-    if(orderType === OrderType.Buy) {
-      try {
-        await hubConnection!.invoke<null>(
-          'CancelBuyOrder',  
-          order.safeId
-        );
-        setDeleteSuccessed(true);
-      } catch (err) { 
-        handleCloseDeleteModal();
-        setShowDeleteErrorModal(true);
-      }
-    } else {
-      try {
-        await hubConnection!.invoke<null>(
-          'CancelSellOrder',  
-          order.safeId
-        );
-        setDeleteSuccessed(true);
-      } catch (err) { 
-        handleCloseDeleteModal();
-        setShowDeleteErrorModal(true);
-      }
-    }
-  }
+    const onFiatSummChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const pattern = /^[1-9][0-9]*$/;
+        if (e.target.value === '' || pattern.test(e.target.value)) {
+            setFiatSumm(e.target.value);
+        }
+    };
 
   return (
     <S.Container>
@@ -170,22 +204,106 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
 
         <RightSide>
             <Title mB={40} lH={28}>
-                {`Заявка на продажу ${Balance[order.assetKind]} за ${FiatKind[order.operationAssetKind]}`}
+                {`Заявка на ${orderType === OrderType.Buy ? 
+                'продажу' : 'покупку'}  ${Balance[order.assetKind]} за ${FiatKind[order.operationAssetKind]}`}
             </Title>
 
+            <S.FormItem>
+              <Text size={14} weight={300} lH={20} mB={10} black>
+                  {
+                    orderType === OrderType.Buy
+                    ?
+                    `Количество продажи (max 9 000 ${Balance[order.assetKind]}):`
+                    :
+                    `Количество покупки (max 9 500 ${Balance[order.assetKind]}):`
+                  }
+              </Text>
+              <S.Input
+                placeholder="Введите сумму"
+                name="summ"
+                value={balanceSumm}
+                onChange={onBalanceSummChange}
+              />
+            </S.FormItem>
+
+            <S.FormItem>
+              <Text size={14} weight={300} lH={20} mB={10} black>
+                {
+                    orderType === OrderType.Buy
+                    ?
+                    `Сумма к получению (max ${order.limitTo} ${FiatKind[order.operationAssetKind]}):`
+                    :
+                    `Сумма к списанию (min ${order.limitFrom} max ${order.limitTo} ${FiatKind[order.operationAssetKind]}):`
+                  }
+              </Text>
+              <S.Input
+                placeholder="Введите сумму"
+                name="summ"
+                value={fiatSumm}
+                onChange={onFiatSummChange}
+              />
+            </S.FormItem>
          
             {
                 orderType === OrderType.Buy
                 ?
                 <S.BlockWrapper largeMB>
                     <Text size={14} lH={20} mB={4} black>Платежные методы:</Text>
-
                     {
-                    order.methodsKinds.map((kind, i) => (
-                        <Text size={14} lH={20} weight={500} black mB={4} key={`method-item-${i}`}>
-                        {PaymentMethodKind[kind]}
-                        </Text>
-                    ))
+                        userPaymentMethods?.length > 0 &&
+                        userPaymentMethods.map((method, i) => (
+                        method.assetKind !== 7
+                        ?
+                            <Space gap={10} column mb={20} key={`payment-method-${method.safeId}-${i}`}>
+                                <Radio 
+                                    name="payment-method"
+                                    value={method.safeId}
+                                    checked={paymentMethodSafeId === method.safeId} 
+                                    onChange={(e) => setPaymentMethodSafeId(e.target.value)} 
+                                >
+                                    <Text size={14} lH={20} weight={500} mL={10} black>
+                                        {JSON.parse(method.data).bankName}
+                                    </Text>
+                                </Radio>
+                                <S.PaymentMethodDetailsBlock>
+                                    <Text size={14} weight={300} lH={20} black mB={4}>Номер карты:</Text>
+                                    <Space gap={10} mb={10}>
+                                        <Text size={14} weight={500} lH={16} black>
+                                        {JSON.parse(method.data).bankNumber}
+                                        </Text>
+                                        <CopyIconButton copyValue={JSON.parse(method.data).bankNumber} />
+                                    </Space>
+                                    
+
+                                    <Text size={14} weight={300} lH={20} black mB={4}>Держатель карты:</Text>
+                                    <Text size={14} weight={500} lH={16} black>
+                                        {JSON.parse(method.data).name}
+                                    </Text>
+                                </S.PaymentMethodDetailsBlock>
+                            </Space>
+                        :
+                            <Space gap={10} column mb={20} key={`payment-method-${method.safeId}-${i}`}>
+                                <Radio 
+                                    name="payment-method"
+                                    value={method.safeId}
+                                    checked={paymentMethodSafeId === method.safeId} 
+                                    onChange={(e) => setPaymentMethodSafeId(e.target.value)} 
+                                >
+                                    <Text size={14} lH={20} weight={500} mL={10} black>
+                                        {PaymentMethodKind[method.kind]}
+                                    </Text>
+                                </Radio>
+                                <S.PaymentMethodDetailsBlock>
+                                    <Text size={14} weight={300} lH={20} black mB={4}>Адрес кошелька:</Text>
+                                    <Space gap={10} mb={10}>
+                                        <Text size={14} weight={500} lH={16} black>
+                                        {JSON.parse(method.data).paymentAddress}
+                                        </Text>
+                                        <CopyIconButton copyValue={JSON.parse(method.data).bankNumber} />
+                                    </Space>
+                                </S.PaymentMethodDetailsBlock>
+                            </Space>
+                        ))
                     }
                 </S.BlockWrapper>
                 :
@@ -197,61 +315,113 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                         method.assetKind !== 7
                         ?
                             <Space gap={10} column mb={20} key={`payment-method-${method.safeId}-${i}`}>
-                            <Text size={14} lH={20} weight={500} black>
-                                {JSON.parse(method.data).bankName}
-                            </Text>
-                            <S.PaymentMethodDetailsBlock>
-                                <Text size={14} weight={300} lH={20} black mB={4}>Номер карты:</Text>
-                                <Space gap={10} mb={10}>
-                                    <Text size={14} weight={500} lH={16} black>
-                                    {JSON.parse(method.data).bankNumber}
+                                <Radio 
+                                    name="payment-method"
+                                    value={method.safeId}
+                                    checked={paymentMethodSafeId === method.safeId} 
+                                    onChange={(e) => setPaymentMethodSafeId(e.target.value)} 
+                                >
+                                    <Text size={14} lH={20} weight={500} mL={10} black>
+                                        {JSON.parse(method.data).bankName}
                                     </Text>
-                                    <CopyIconButton copyValue={JSON.parse(method.data).bankNumber} />
-                                </Space>
-                                
+                                </Radio>
+                                <S.PaymentMethodDetailsBlock>
+                                    <Text size={14} weight={300} lH={20} black mB={4}>Номер карты:</Text>
+                                    <Space gap={10} mb={10}>
+                                        <Text size={14} weight={500} lH={16} black>
+                                        {JSON.parse(method.data).bankNumber}
+                                        </Text>
+                                        <CopyIconButton copyValue={JSON.parse(method.data).bankNumber} />
+                                    </Space>
+                                    
 
-                                <Text size={14} weight={300} lH={20} black mB={4}>Держатель карты:</Text>
-                                <Text size={14} weight={500} lH={16} black>
-                                    {JSON.parse(method.data).name}
-                                </Text>
-                            </S.PaymentMethodDetailsBlock>
+                                    <Text size={14} weight={300} lH={20} black mB={4}>Держатель карты:</Text>
+                                    <Text size={14} weight={500} lH={16} black>
+                                        {JSON.parse(method.data).name}
+                                    </Text>
+                                </S.PaymentMethodDetailsBlock>
                             </Space>
                         :
                             <Space gap={10} column mb={20} key={`payment-method-${method.safeId}-${i}`}>
-                            <Text size={14} lH={20} weight={500} black>
-                                {PaymentMethodKind[method.kind]}
-                            </Text>
-                            <S.PaymentMethodDetailsBlock>
-                                <Text size={14} weight={300} lH={20} black mB={4}>Адрес кошелька:</Text>
-                                <Space gap={10} mb={10}>
-                                    <Text size={14} weight={500} lH={16} black>
-                                    {JSON.parse(method.data).paymentAddress}
+                                <Radio 
+                                    name="payment-method"
+                                    value={method.safeId}
+                                    checked={paymentMethodSafeId === method.safeId} 
+                                    onChange={(e) => setPaymentMethodSafeId(e.target.value)} 
+                                >
+                                    <Text size={14} lH={20} weight={500} mL={10} black>
+                                        {PaymentMethodKind[method.kind]}
                                     </Text>
-                                    <CopyIconButton copyValue={JSON.parse(method.data).bankNumber} />
-                                </Space>
-                            </S.PaymentMethodDetailsBlock>
+                                </Radio>
+                                <S.PaymentMethodDetailsBlock>
+                                    <Text size={14} weight={300} lH={20} black mB={4}>Адрес кошелька:</Text>
+                                    <Space gap={10} mb={10}>
+                                        <Text size={14} weight={500} lH={16} black>
+                                        {JSON.parse(method.data).paymentAddress}
+                                        </Text>
+                                        <CopyIconButton copyValue={JSON.parse(method.data).bankNumber} />
+                                    </Space>
+                                </S.PaymentMethodDetailsBlock>
                             </Space>
                     ))
                     }
                 </S.BlockWrapper>
             }
-        
-            <Button primary onClick={() => setShowDeleteModal(true)}>
-                Купить
-            </Button>
+
+            <S.TransferInfoBlock>
+                {
+                    orderType === OrderType.Buy
+                    ?
+                        <Text size={14} lH={20} weight={300} black>
+                            {` 
+                                После начала обмена - в течении ${order.operationWindow.minutes} минут покупатель осуществит перевод средств на указанный счет, 
+                                а покупаемое количество ${Balance[order.assetKind]} будет списано с вашего баланса и заморожено до вашего подтверждения получения средств.
+                            `}
+                        </Text>
+                    :
+                        <Text size={14} lH={20} weight={300} black>
+                           {`
+                            После начала обмена - в течении ${order.operationWindow.minutes} минут осуществите перевод средств выбранным платежным методом.
+                           `}
+                        </Text>
+                }
+            </S.TransferInfoBlock>
+
+            {
+                orderType === OrderType.Buy 
+                ?
+                    <S.Button 
+                        as="button"
+                        primary 
+                        onClick={() => setShowCreateExchangeModal(true)}
+                        disabled={!balanceSumm}
+                    >
+                        Продать
+                    </S.Button>
+                :
+                    <S.Button 
+                        as="button"
+                        primary 
+                        onClick={() => setShowCreateExchangeModal(true)}
+                        disabled={!paymentMethodSafeId || !balanceSumm}
+                    >
+                        Купить
+                    </S.Button>
+            }
+            
+            <ExchangeRequestModal
+                exchangeSumm={balanceSumm}
+                order={order}
+                orderType={orderType}
+                onAccept={handleCreateExchange}
+                open={showCreateExchangeModal}
+                onClose={() => setShowCreateExchangeModal(false)}
+            />
+            <ExchangeRequestErrorModal
+                open={showErrorModal}
+                onClose={() => setShowErrorModal(false)}
+            />
         </RightSide>
-        <DeleteOrderModal
-            order={order}
-            orderType={orderType}
-            deleteSuccessed={deleteSuccessed}
-            onDelete={handleCancelOrder}
-            open={showDeleteModal} 
-            onClose={handleCloseDeleteModal}  
-        />
-        <DeleteOrderErrorModal
-            open={showDeleteErrorModal} 
-            onClose={() => setShowDeleteErrorModal(false)}  
-        />
     </S.Container>
   );
 };

@@ -1,4 +1,6 @@
 import styled from 'styled-components/macro';
+import { Input as BaseInput } from '../../../../../components/Input';
+import { Button as BaseButton } from '../../../../../components/Button/V2/Button';
 
 export const Container = styled.div`
   width: 100%;
@@ -16,5 +18,31 @@ export const BlockWrapper = styled.div<{largeMB?: boolean}>`
 `;
 
 export const PaymentMethodDetailsBlock = styled.div`
-  padding-left: 40px;
+  padding-left: 24px;
+`;
+
+export const FormItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 40px;
+`;
+
+export const Input = styled(BaseInput)`
+  width: 300px;
+`;
+
+export const TransferInfoBlock = styled.div`
+  background: ${props => props.theme.white};
+  border: 1px solid #EAEFF4;
+  border-radius: 0px 4px 4px 0px;
+  padding: 20px;
+  margin: 40px 0;
+`;
+
+export const Button = styled(BaseButton)`
+    text-transform: none;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 16px;
 `;
