@@ -62,7 +62,12 @@ export const NotifiesBlock = styled.div<{ block: boolean; auth?: boolean; admin?
             `;
         };
     }}
-    ${({ inPA }) => {
+    ${({ inPA, admin }) => {
+        if (admin && inPA) {
+            return `
+                right: -20px;  
+            `;
+        };
         if (inPA) {
             return `
                 right: -20px;  

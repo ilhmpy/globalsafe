@@ -98,11 +98,7 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
                      minutes: wn.totalMinutes - moment().diff(date, "minutes", false), 
                      seconds: wn.totalSeconds - moment().diff(date, "seconds", false)
                    };
-    if (state === 1) {
-      return getCountsTime(result);
-    } else {
-      return getCountsTime(wn);
-    };
+    return getCountsTime(result);
   };
 
   return (
