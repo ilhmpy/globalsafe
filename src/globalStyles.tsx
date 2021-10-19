@@ -34,7 +34,7 @@ a{
 }
 .is-placeholder {
     position: relative;
-    width: 100%;
+    width: 25%;
     border-radius: 5px;
     opacity: 1;
     visibility: hidden;

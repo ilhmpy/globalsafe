@@ -99,70 +99,82 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
               <Logo />
             </HeaderLogo>
 
-            <ButtonsRev className={user === null || admin === null ? 'is-placeholder' : ''}>
-              <MenuBtn open={open} onClick={() => setOpen(!open)}>
-                <span></span>
-                <span></span>
-              </MenuBtn>
-              <HeaderMenu open={open}>
-                {admPanel ? (
-                  <NavAdmin lang={lang} onClose={onClose} />
-                ) : (
-                  <Nav
-                    onClose={onClose}
-                    handleClick={handleClick}
-                    user={user}
-                    logOut={logOut}
-                    location={location.pathname}
-                    admin={admin}
-                    lang={lang}
-                  />
-                )}
-              </HeaderMenu>
-
-              {lang === 'ru' ? (
-                <Languale
-                  auth={user ? true : false}
-                  admin={admin ? true : false}
-                  onClick={() => i18n.changeLanguage('en')}
-                >
-                  EN
-                </Languale>
+            <MenuBtn open={open} onClick={() => setOpen(!open)}>
+              <span></span>
+              <span></span>
+            </MenuBtn>
+            <HeaderMenu open={open}>
+              {admPanel ? (
+                <NavAdmin lang={lang} onClose={onClose} />
               ) : (
-                <Languale
-                  auth={user ? true : false}
-                  admin={admin ? true : false}
-                  onClick={() => i18n.changeLanguage('ru')}
-                >
-                  RU
-                </Languale>
+                <Nav
+                  onClose={onClose}
+                  handleClick={handleClick}
+                  user={user}
+                  logOut={logOut}
+                  location={location.pathname}
+                  admin={admin}
+                  lang={lang}
+                />
               )}
-              {user && (
-                <>
-                  <Notifies.BallContainer notChecked={checkeds}>
-                    <Ball onClick={onBall} style={{ height: '20px' }} />
-                  </Notifies.BallContainer>
-                  <Notify
-                    block={notify}
-                    setBlock={setNotify}
-                    setCheckeds={setCheckeds}
-                    admin={admin ? true : false}
-                  />
-                </>
-              )}
-              <SwitchTheme
-                admin={admin ? true : false}
-                auth={user ? true : false}
-                onClick={swithTheme}
-              >
-                {theme === 'light' ? <DarkTheme /> : <LightTheme />}
-              </SwitchTheme>
+            </HeaderMenu>
 
+            {lang === 'ru' ? (
+              <Languale
+                auth={user ? true : false}
+                admin={admin ? true : false}
+                onClick={() => i18n.changeLanguage('en')}
+              >
+                EN
+              </Languale>
+            ) : (
+              <Languale
+                auth={user ? true : false}
+                admin={admin ? true : false}
+                onClick={() => i18n.changeLanguage('ru')}
+              >
+                RU
+              </Languale>
+            )}
+            {user && (
+              <>
+                <Notifies.BallContainer notChecked={checkeds}>
+                  <Ball onClick={onBall} style={{ height: '20px' }} />
+                </Notifies.BallContainer>
+                <Notify
+                  block={notify}
+                  setBlock={setNotify}
+                  setCheckeds={setCheckeds}
+                  admin={admin ? true : false}
+                />
+              </>
+            )}
+            <SwitchTheme
+              admin={admin ? true : false}
+              auth={user ? true : false}
+              onClick={swithTheme}
+            >
+              {theme === 'light' ? <DarkTheme /> : <LightTheme />}
+            </SwitchTheme>
+            <div className={user === null || admin === null ? 'is-placeholder' : ''}>
               {admin && <AdminButton onClick={toAdmin}>{t('headerButton.admin')}</AdminButton>}
-              <Button primary onClick={handleClick}>
-                {location.pathname === '/' ? t('headerButton.personalArea') : t('logout')}
-              </Button>
-            </ButtonsRev>
+              {location.pathname === '/' ? (
+                <Button primary onClick={handleClick}>
+                  {t('headerButton.personalArea')}
+                </Button>
+              ) : user ? (
+                // <Button primary onClick={logOut}>
+                //   {t('logout')}
+                // </Button>
+                <Button primary onClick={handleClick}>
+                  {t('headerButton.personalArea')}
+                </Button>
+              ) : (
+                <Button primary onClick={handleClick}>
+                  {t('headerButton.personalArea')}
+                </Button>
+              )}
+            </div>
           </HeaderInner>
         </Container>
       </HeaderWrap>
