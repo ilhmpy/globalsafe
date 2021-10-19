@@ -4,17 +4,23 @@ import { useHistory } from 'react-router';
 import { Button } from '../../../../../components/Button/V2/Button';
 import { Modal } from '../../../../../components/ModalAnimated';
 import { routers } from '../../../../../constantes/routers';
+import { ViewExchangeModel } from '../../../../../types/exchange';
 import { Text } from '../../../components/ui';
 import * as S from './S.el';
+import { Balance } from "../../../../../types/balance";
+import { FiatKind } from "../../../../../types/fiatKind";
+import { getVolume } from "../../../../../functions/getVolume";
 
 type Props = {
   onClose: () => void;
   open: boolean;
+  exchange: any;
 };
 
 export const ExchangeRejectModal: FC<Props> = ({
   onClose,
   open,
+  exchange
 }: Props) => {
     const history = useHistory();
 
@@ -28,20 +34,24 @@ export const ExchangeRejectModal: FC<Props> = ({
                     <S.DataList>
                         <S.DataListItem>
                             <Text size={14} lH={20}>
-                                Покупатель отменил обмен CWD на RUB:
+                                Покупатель отменил обмен {Balance[exchange.assetKind]} на {FiatKind[exchange.exchangeAssetKind]}:
                             </Text>
                         </S.DataListItem>
 
                         <S.DataListItem>
                             <Text size={14} lH={20}>Количество CWD:</Text>
                             <S.ListItemDivider />
-                            <Text size={14} lH={20} weight={700}>482.40</Text>
+                            <Text size={14} lH={20} weight={700}>
+                                {(getVolume(exchange.volume, exchange.assetKind)).toLocaleString('ru-RU', { maximumFractionDigits: 5 })}
+                            </Text>
                         </S.DataListItem>
 
                         <S.DataListItem>
-                            <Text size={14} lH={20}>Стоимость RUB:</Text>
+                            <Text size={14} lH={20}>Стоимость {FiatKind[exchange.exchangeAssetKind]}:</Text>
                             <S.ListItemDivider />
-                            <Text size={14} lH={20} weight={700}>49 900</Text>
+                            <Text size={14} lH={20} weight={700}>
+                                {(exchange.volume * exchange.rate).toLocaleString('ru-RU', { maximumFractionDigits: 5 })}
+                            </Text>
                         </S.DataListItem>
                     </S.DataList>
 

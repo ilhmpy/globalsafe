@@ -23,6 +23,7 @@ import { AppContext } from '../../../../../context/HubContext';
 import moment from "moment";
 import reactVirtualizedAutoSizer from 'react-virtualized-auto-sizer';
 import { setUncaughtExceptionCaptureCallback } from 'process';
+import { getVolume } from "../../../../../functions/getVolume";
 
 type DetailCardProps = {
   exchange: ViewExchangeModel;
@@ -32,8 +33,8 @@ type DetailCardProps = {
 export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: DetailCardProps) => {
   const history = useHistory();
   const [feedbackValue, setFeedbackValue] = useState(5);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [showRejectModal, setShowRejectModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
+  const [showRejectModal, setShowRejectModal] = useState<boolean>(true);
   const { account, hubConnection } = useContext(AppContext);
   const [totalExchanges, setTotalExchanges] = useState<any>(); 
   const [draw, setDraw] = useState<boolean>(true);
@@ -46,15 +47,6 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
   };
 
   const [owner, setOwner] = useState<"seller" | "buyer" | undefined>(buyer() ? "buyer" : "seller");
-
-  /* 
-    КОГДА БУДЕТ ДОБАВЛЕНО БУЛЕВОЕ ПОЛЕ: 
-    показать оценку пользователя если false, и скрыть остальной блок если оценки ещё не было, и если true не показывать оценку но показать остальной блок
-
-    ownerId - продавец, recepientId - покупатель
-  */
-
-  console.log(owner);
 
   const handleClick = () => {
     history.push(`/info/p2p-changes/${Date.now().toString()}/chat`);
@@ -224,20 +216,6 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
     };
   };
 
-  function getVolume(volume: number, kind: number) {
-    let cv = 0;
-    if (kind === 1) {
-      cv = volume / 100000;
-    } else if (kind === 43) {
-      cv = volume / 10000;
-    } else if (kind === 44 || kind === 45 || kind === 48 || kind === 47) {
-      cv = volume / 1;
-    } else if (kind === 59) {
-      cv = volume / 100;
-    };
-    return Number(cv);
-  };
-
   function getCountsTime({ days, hours, minutes, seconds }: any) {
     if (days > 0) {
       return `${days}д ${hours > 0 ? hours : 0}ч`;
@@ -272,7 +250,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
             Количество:
           </Text>
           <Title lH={28} mB={10}>
-            {(getVolume(exchange.orderVolume, exchange.assetKind)).toLocaleString('ru-RU', { maximumFractionDigits: 2 })} {Balance[exchange.assetKind]}
+            {(getVolume(exchange.orderVolume, exchange.assetKind)).toLocaleString('ru-RU', { maximumFractionDigits: 5 })} {Balance[exchange.assetKind]}
           </Title>
           <Chip>{exchange.kind === 0 ? "Продажа" : "Покупка"}</Chip>
         </S.BlockWrapper>
@@ -327,7 +305,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
       {/* IF COMPLETED AND NOT GRADET */}
 
       <RightSide>
-        <S.StateBlock when={exchange.state != 2 && exchange.mark == null && exchange.mark != false}>
+        <S.StateBlock when={exchange.state < 2 || exchange.mark != null}>
         
         <S.TitleBlockWrapper>
           <Title mB={10} lH={28}>
@@ -341,7 +319,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
             Количество:
           </Text>
           <Text size={14} lH={20} weight={500} black>
-           {(getVolume(exchange.volume, exchange.assetKind)).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {Balance[exchange.assetKind]}
+           {(getVolume(exchange.volume, exchange.assetKind)).toLocaleString('ru-RU', { maximumFractionDigits: 5 })} {Balance[exchange.assetKind]}
           </Text>
         </S.BlockWrapper>
 
@@ -640,8 +618,8 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
         {/* ************** */}
 
       </RightSide>
-      <ExchangeSuccessModal open={showSuccessModal} onClose={() => false} />
-      <ExchangeRejectModal open={showRejectModal} onClose={() => false} />
+      <ExchangeSuccessModal exchange={{...exchange, feadback: feedbackValue, owner }} open={showSuccessModal} onClose={() => setShowSuccessModal(false)} />
+      <ExchangeRejectModal exchange={{...exchange, feadback: feedbackValue, owner }} open={showRejectModal} onClose={() => setShowRejectModal(false)} />
   </S.Container>
   );
 };

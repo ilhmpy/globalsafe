@@ -11,6 +11,7 @@ import { FiatKind } from "../../../../../types/fiat";
 import { PaymentMethodKind } from "../../../../../types/paymentMethodKind";
 import moment from "moment";
 import { Loading, NotItems } from "../../../components/Loading/Loading";
+import { getVolume } from "../../../../../functions/getVolume";
 
 import * as S from './S.el';
 import { getTime } from 'date-fns';
@@ -102,20 +103,6 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
     } else {
       return getCountsTime(wn);
     };
-  };
-
-  function getVolume(volume: number, kind: number) {
-    let cv = 0;
-    if (kind === 1) {
-      cv = volume / 100000;
-    } else if (kind === 43) {
-      cv = volume / 10000;
-    } else if (kind === 44 || kind === 45 || kind === 48 || kind === 47) {
-      cv = volume / 1;
-    } else if (kind === 59) {
-      cv = volume / 100;
-    };
-    return Number(cv);
   };
 
   return (
