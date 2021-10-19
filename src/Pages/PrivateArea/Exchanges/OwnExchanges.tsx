@@ -71,21 +71,25 @@ export const OwnExchanges = () => {
           </Text>
         </S.SubHeader>
 
+        <S.Filters style={{ marginBottom: "20px" }}>
+          <FilterButton
+              active={activeFilter === 'active'}
+              onClick={() => setActiveFilter('active')}
+              style={{ marginRight: "0px" }}
+            >
+              Активные
+            </FilterButton>
+            <FilterButton
+              active={activeFilter === 'archived'}
+              onClick={() => setActiveFilter('archived')}
+              style={{ marginLeft: "0px", borderLeft: "0" }}
+            >
+              Архив
+            </FilterButton>
+        </S.Filters>
         <S.Filters>
-          <FilterButton
-            active={activeFilter === 'active'}
-            onClick={() => setActiveFilter('active')}
-          >
-            Активные
-          </FilterButton>
-          <FilterButton
-            active={activeFilter === 'archived'}
-            onClick={() => setActiveFilter('archived')}
-          >
-            Архив
-          </FilterButton>
-          <S.Line />
-          <FilterButton active>Все валюты</FilterButton>
+          <S.Line style={{ display: "none" }} />
+          <FilterButton active style={{ marginLeft: "0px" }}>Все валюты</FilterButton>
           <S.Line />
           <FilterButton active>Все методы оплаты</FilterButton>
           <S.Line />
