@@ -11,6 +11,8 @@ import { ConvertingModalConfirm } from './ConveringModalConfirm ';
 import { ConvertingModalSuccess } from './ConveringModalSuccess';
 import { ConvertingModalCorrection } from './ConvertingModalCorrection';
 import { ConvertingModalFail } from './ConvertingModalFail';
+import { getCookie } from './cookies';
+
 import {
   CloseButton,
   Container,
@@ -48,6 +50,9 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
   const [isCorrectionConverting, setIsCorrectionConverting] = useState<boolean>(false);
   const [fromSumCloud, setFromSumCloud] = useState<string>('');
   const [isOkConverting, setIsOkConverting] = useState<boolean>(false);
+
+  const [isMultics, setIsMultics] = useState<boolean>(false);
+
   const [convertedData, setConvertedData] = useState<IBalanceExchange>({
     userAmount: 0,
     calculatedAmount: 0,
@@ -85,7 +90,7 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
         setConvertedData({
           userAmount: response.calculatedAmount * 100,
           calculatedAmount: response.calculatedAmount,
-          targetAmount: response.userAmount,
+          targetAmount: response.userAmount * 100,
           discountPercent: response.discountPercent,
         });
       } catch (error) {
@@ -105,13 +110,24 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
 
   const further = () => {
     if (hubConnection && fromCurrency && toCurrency && convertedData.calculatedAmount) {
-      setIsOkConverting(false);
-      setOpen(false);
-      if (+fromSum > 0 && !isOkConverting) {
-        setIsCorrectionConverting(true);
-      } else {
+      if (isMultics) {
+        setOpen(false);
         resetStateValues();
         setIsConfirmConverting(true);
+        setIsMultics(false);
+        setIsOkConverting(false);
+      } else if (getCookie('checkbox') && !isOkConverting) {
+        estimatiOfExchange();
+        setIsOkConverting(true);
+      } else if (+fromSum > 0 && !isOkConverting) {
+        setOpen(false);
+        setIsCorrectionConverting(true);
+        setIsOkConverting(false);
+      } else {
+        setOpen(false);
+        resetStateValues();
+        setIsConfirmConverting(true);
+        setIsOkConverting(false);
       }
     }
   };
@@ -230,6 +246,7 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                     if (!(value.length > 1 && value[0] === '0')) {
                       setFromSumCloud(value.replaceAll(/\D/g, ''));
                       setFromSum(value.replaceAll(/\D/g, ''));
+                      setIsMultics(false);
                       setConvertedData({
                         userAmount: 0,
                         calculatedAmount: 0,
@@ -249,7 +266,7 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                   setSelectedOption={(val: string) => setToCurrency(val)}
                 />
                 <Input
-                  placeholder={toCurrency ? '0' : '0.0000'}
+                  placeholder={toCurrency ? '0.00' : '0.0000'}
                   name="toSum"
                   value={
                     toSum
@@ -279,6 +296,7 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                         discountPercent: 0,
                       });
                     } else {
+                      setIsMultics(true);
                       setToSum(value.replaceAll(/\D/g, ''));
                     }
                   }}
