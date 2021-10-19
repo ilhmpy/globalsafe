@@ -32,6 +32,26 @@ img{
 a{
   text-decoration: none;
 }
+.is-placeholder {
+    position: relative;
+    width: 100%;
+    border-radius: 5px;
+    opacity: 1;
+    visibility: hidden;
+    overflow: hidden;
+    content: "&nbsp;";
+    color: transparent;
+    &:after {
+        position: absolute;
+        content: "";
+        height: 100%;
+        width: 100%;
+        visibility: visible;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.075);
+        animation: flickerAnimation 1.5s infinite;
+    }
+}
 .chart-toltip{
   display: flex;
   flex-direction: column;
