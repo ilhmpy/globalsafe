@@ -258,7 +258,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
         <S.BlockWrapper>
           <Text size={14} lH={20} mB={10} black>
             Курс:
-          </Text>
+          </Text> 
           <Title lH={28}>{exchange.rate}</Title>
         </S.BlockWrapper>
 
