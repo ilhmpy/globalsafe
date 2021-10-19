@@ -97,7 +97,6 @@ export const Settings: FC = () => {
     const arr = () => {
       if (activeFilter === 'Все') {
         return [
-          PaymentMethodKind.BankTransfer,
           PaymentMethodKind.BEP20,
           PaymentMethodKind.ERC20,
           PaymentMethodKind.TRC20,
@@ -119,7 +118,6 @@ export const Settings: FC = () => {
         return [PaymentMethodKind.BEP20];
       } else {
         return [
-          PaymentMethodKind.BankTransfer,
           PaymentMethodKind.BEP20,
           PaymentMethodKind.ERC20,
           PaymentMethodKind.TRC20,
