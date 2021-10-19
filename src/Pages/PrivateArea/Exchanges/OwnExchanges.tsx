@@ -10,33 +10,39 @@ import * as S from './S.el';
 import { OwnActiveExchangesTable } from './components/OwnActiveExchangesTable/OwnActiveExchangesTable';
 import { OwnArchivedExchangesTable } from './components/OwnArchivedExchangeTable/OwnArchivedExchangeTable';
 import { AppContext } from '../../../context/HubContext';
-import { GetExchangesCollectionResult } from '../../../types/exchange';
+import { GetExchangesCollectionResult, ViewExchangeModel } from '../../../types/exchange';
 
 export const OwnExchanges = () => {
   const history = useHistory();
   const { hubConnection } = useContext(AppContext);
   const [activeFilter, setActiveFilter] = useState<'active' | 'archived'>('active');
+  const [userExchanges, setUserExchanges] = useState<ViewExchangeModel[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (hubConnection) {
+      setLoading(true);
       getGetUserExchanges();
-    }
+    };
   }, [hubConnection, activeFilter]);
 
   async function getGetUserExchanges() {
     try {
       const res = await hubConnection!.invoke<GetExchangesCollectionResult>(
-        'GetExchanges',
+       'GetExchanges',
         [0, 1],
         activeFilter === 'active' ? [0, 1, 3] : [2],
         0,
-        20
+        10
       );
       console.log('getGetUserExchanges', res);
+      setUserExchanges(res.collection);
     } catch (err) {
       console.log(err);
-    }
-  }
+    } finally {
+      setLoading(false);
+    };
+  };
 
   return (
     <div>
@@ -65,29 +71,33 @@ export const OwnExchanges = () => {
           </Text>
         </S.SubHeader>
 
-        <S.Filters>
+        <S.Filters style={{ marginBottom: "10px" }}>
           <FilterButton
-            active={activeFilter === 'active'}
-            onClick={() => setActiveFilter('active')}
-          >
-            Активные
-          </FilterButton>
-          <FilterButton
-            active={activeFilter === 'archived'}
-            onClick={() => setActiveFilter('archived')}
-          >
-            Архив
-          </FilterButton>
-          <S.Line />
-          <FilterButton active>Все валюты</FilterButton>
+              active={activeFilter === 'active'}
+              onClick={() => setActiveFilter('active')}
+              style={{ marginRight: "0px" }}
+            >
+              Активные
+            </FilterButton>
+            <FilterButton
+              active={activeFilter === 'archived'}
+              onClick={() => setActiveFilter('archived')}
+              style={{ marginLeft: "0px", borderLeft: "0" }}
+            >
+              Архив
+            </FilterButton>
+        </S.Filters>
+        <S.Filters style={{ marginBottom: "10px" }}>
+          <S.Line style={{ display: "none" }} />
+          <FilterButton active style={{ marginLeft: "0px" }}>Все валюты</FilterButton>
           <S.Line />
           <FilterButton active>Все методы оплаты</FilterButton>
           <S.Line />
           <FilterButton active>Все Статусы</FilterButton>
         </S.Filters>
 
-        {activeFilter === 'active' && <OwnActiveExchangesTable />}
-        {activeFilter === 'archived' && <OwnArchivedExchangesTable />}
+        {activeFilter === 'active' && <OwnActiveExchangesTable setExchanges={setUserExchanges} loading={loading} exchanges={userExchanges} />}
+        {activeFilter === 'archived' && <OwnArchivedExchangesTable loading={loading} exchanges={userExchanges} />}
         {/* <S.ButtonWrap>
           <Button>Показать еще</Button>
         </S.ButtonWrap> */}

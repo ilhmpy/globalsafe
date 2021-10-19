@@ -159,14 +159,15 @@ export const HistoryOperations = () => {
                 } else {
                     if (balances) {
                         setOperations(() => {
-                            const items = res.collection.map((i: any) => {
-                                if (Number(i.balanceSafeId) === balances[1].id) {
+                            const items = res.collection.filter((i: any) => {
+                                if (Number(i.id) === balances[1].id) {
                                     return {
                                         ...i,
                                         new: false
                                     };
                                 };
                             });
+                            console.log(items);
                            return items.sort((x: any, y: any) => {
                                 const a = new Date(x.operationDate);
                                 const b = new Date(y.operationDate);
@@ -206,7 +207,8 @@ export const HistoryOperations = () => {
                 getFilter(activeFilter), 
                 nowMonth ? new Date(date.getFullYear(), date.getMonth(), 1, 0, 0) : new Date(2013, 5, 13, 10, 0, 0),
                 new Date(), 
-                operations && operations.length + 1, 5
+                operations && operations.length + 1, 
+                5
             )
               .then(res => {
                 console.log("rees", res);
@@ -230,7 +232,7 @@ export const HistoryOperations = () => {
                             const items = [...data.map((i: any) => {
                                 return { ...i, new: false }
                             }), ...res.collection.map((i: any) => {
-                                if (Number(i.balanceSafeId) === balances[1].id) {
+                                if (Number(i.id) === balances[1].id) {
                                     return { ...i, new: true }
                                 }
                             })];
@@ -315,8 +317,8 @@ export const HistoryOperations = () => {
                         {!emptyItems ? (
                             <>
                                 <Styled.TableMap>
-                                    {operations && operations.map((item, idx) => (
-                                        <Styled.TableItem item key={idx} newItem={item.new}>
+                                    {operations && operations.map((item: any, idx) => (
+                                        <Styled.TableItem item key={idx} newItem={item.new && item.new}>
                                             <Styled.TableInnerItem item>{moment(item.operationDate).format("DD.MM.YYYY")} в {moment(item.operationDate).format("HH:MM")}</Styled.TableInnerItem>
                                             <Styled.TableInnerItem item>{operation(item.operationKind)}</Styled.TableInnerItem>
                                             <Styled.TableInnerItem item income={item.balanceDelta > 0}>
