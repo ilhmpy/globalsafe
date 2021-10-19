@@ -140,6 +140,8 @@ export const BankItem = styled.div`
   height: 24px;
   margin-right: 10px;
   margin-bottom: 6px;
+  font-size: 12px;
+  font-weight: 500;
 
   &:last-child {
     margin-right: 0;
