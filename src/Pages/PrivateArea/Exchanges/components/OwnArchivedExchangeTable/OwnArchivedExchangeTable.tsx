@@ -142,7 +142,7 @@ export const OwnArchivedExchangesTable: FC<OwnExchangesProps> = ({ exchanges, lo
 
         {loading ? <Loading /> : (
           <>
-            {exchanges.length === 0 ? <NotItems text="У вас нету обменов" /> : (
+            {exchanges.length === 0 ? <NotItems text="У вас не имеется обменов" /> : (
               <>
                 {exchanges.map((exchange: ViewExchangeModel, idx) => (
                     <S.BodyItem onClick={() => handleNavigateToExchange(exchange.safeId)} key={idx}>

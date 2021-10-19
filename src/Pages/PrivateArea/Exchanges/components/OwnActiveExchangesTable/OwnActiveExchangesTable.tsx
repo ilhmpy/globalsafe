@@ -140,7 +140,7 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
         </S.Header>
         {loading ? <Loading /> : (
           <>
-            {exchanges.length === 0 ? <NotItems text="У вас нету обменов" /> : (
+            {exchanges.length === 0 ? <NotItems text="У вас не имеется обменов" /> : (
               <>
                 {exchanges.map((exchange, idx) => (
                   <S.BodyItem key={idx} onClick={() => handleNavigateToExchange(exchange.safeId)}>
