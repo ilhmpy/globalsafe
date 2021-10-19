@@ -71,7 +71,7 @@ export const OwnExchanges = () => {
           </Text>
         </S.SubHeader>
 
-        <S.Filters style={{ marginBottom: "20px" }}>
+        <S.Filters style={{ marginBottom: "10px" }}>
           <FilterButton
               active={activeFilter === 'active'}
               onClick={() => setActiveFilter('active')}
@@ -87,7 +87,7 @@ export const OwnExchanges = () => {
               Архив
             </FilterButton>
         </S.Filters>
-        <S.Filters>
+        <S.Filters style={{ marginBottom: "10px" }}>
           <S.Line style={{ display: "none" }} />
           <FilterButton active style={{ marginLeft: "0px" }}>Все валюты</FilterButton>
           <S.Line />
