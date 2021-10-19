@@ -55,22 +55,16 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
     };
   }, [hubConnection, call]);
 
-  function cb() {
-    console.log("ExchangeChanged")
+  function cb(res: any) {
+    console.log("ExchangeChanged", res);
     getExchange(false);
   };
 
   useEffect(() => {
     if (hubConnection) {
-      hubConnection.on("ExchangeCompleted", cb);
-      hubConnection.on("BuyOrderCompleted", cb);
-      hubConnection.on("ExchangeConfirmationRequired", cb);
       hubConnection.on("ExchangeAbused", cb);
     };
     return () => {
-      hubConnection?.off("ExchangeCompleted", cb);
-      hubConnection?.off("BuyOrderCompleted", cb);
-      hubConnection?.off("ExchangeConfirmationRequired", cb);
       hubConnection?.off("ExchangeAbused", cb);
     };
   }, [hubConnection]);
@@ -84,6 +78,24 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
     };
   }, [hubConnection]);
 
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection.on("ExchangeCompleted", cb);
+    };
+    return () => {
+      hubConnection?.off("ExchangeCompleted", cb);
+    };  
+  });
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection.on("ExchangeConfirmationRequired", cb);
+    };
+    return () => {
+      hubConnection?.off("ExchangeConfirmationRequired", cb);
+    };  
+  });
+  
   return (
     <S.Container>
       {loading ? <Loading /> : (

@@ -98,6 +98,14 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
                      minutes: wn.totalMinutes - moment().diff(date, "minutes", false), 
                      seconds: wn.totalSeconds - moment().diff(date, "seconds", false)
                    };
+    const dateLat = new Date(2019, 12, 1);
+    const test = new Date();
+    console.log({ 
+      days: 0,
+      hours: 0,
+      minutes: 0,
+      seconds: 0
+    });
     return getCountsTime(result);
   };
 
