@@ -26,6 +26,8 @@ export const AdvertTable = ({ list, ordersType }: AdvertTableProps) => {
 
     if(order.userSafeId === userSafeId) {
       history.replace(`/info/p2p-changes/orders/my/${order.id}`);
+    } else {
+      history.replace(`/info/p2p-changes/orders/${order.id}`);
     }
   };
 

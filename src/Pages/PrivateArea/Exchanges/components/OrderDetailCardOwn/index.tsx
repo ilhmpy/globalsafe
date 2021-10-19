@@ -20,12 +20,12 @@ import { CollectionPayMethod, PaymentMethodKind } from '../../../../../types/pay
 import { routers } from '../../../../../constantes/routers';
 import { countVolumeToShow } from '../../../utils';
  
-interface OrderDetailCardProps {
+interface OrderDetailsCardOwnProps {
   order: ViewBuyOrderModel | ViewSellOrderModel;
   orderType: OrderType;
 }
 
-export const OrderDetailCardOwn: FC<OrderDetailCardProps> = ({ order, orderType }: OrderDetailCardProps) => {
+export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderType }: OrderDetailsCardOwnProps) => {
   const history = useHistory();
   const { user, hubConnection } = useContext(AppContext);
   const [sellOrderPaymentMethods, setSellOrderPaymentMethods] = useState<CollectionPayMethod[]>([]);

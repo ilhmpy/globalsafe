@@ -19,13 +19,13 @@ import { DepositProgram } from './Deposits/DepositProgram';
 import { DepositOpen } from './Deposits/DepositOpen';
 import { OrderToSell } from './Exchanges/OrderToSell';
 import { Certificates } from './Certificates/Certificates';
-import { OrderCreate } from './Orders/OrderCreate';
 import { AppContext } from '../../context/HubContext';
 import { OrderToBuy } from './Exchanges/OrderToBuy';
 import { DepositView } from './Deposits/DepositView';
 import { Notifications } from "./Notifications/Notifications";
 import { SingleOrderDetailsOwn } from './Exchanges/SingleOrderDetailsOwn';
 import { PrivateAreaProvider } from '../../context/PrivateAreaContext';
+import { SingleOrderDetails } from './Exchanges/SingleOrderDetails';
 
 export const InfoMain: FC = () => {
   const appContext = useContext(AppContext);
@@ -38,7 +38,7 @@ export const InfoMain: FC = () => {
   if (user === false) {
     return <Redirect to="/" />;
   }
-
+ 
   return (
     <>
       <Styled.Page>
@@ -68,6 +68,11 @@ export const InfoMain: FC = () => {
             <Route
               path={routers.p2pchangesSingleOrderDetailsOwn}
               component={SingleOrderDetailsOwn}
+              exact
+            />
+            <Route
+              path={routers.p2pchangesSingleOrderDetails}
+              component={SingleOrderDetails}
               exact
             />
             <Route path={routers.settingsViewPayMethod + '/:slug'} component={ViewPayMethod} exact />
