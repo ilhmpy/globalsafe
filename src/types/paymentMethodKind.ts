@@ -4,7 +4,6 @@ export enum PaymentMethodKind {
   ERC20,
   TRC20,
   BEP20,
-  BankTransfer,
   Tinkoff,
   Sberbank,
   Alfabank

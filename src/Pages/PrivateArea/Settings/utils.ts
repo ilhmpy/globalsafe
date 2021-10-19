@@ -15,9 +15,6 @@ export  const payList = keysPay.map((i) => {
     if (i === PaymentMethodKind[2]) {
       return PaymentMethodKind[2];
     }
-    if (i === PaymentMethodKind[3]) {
-      return 'BANK TRANSFER';
-    }
     if (i === PaymentMethodKind[4]) {
       return 'АО «Тинькофф Банк»';
     }
