@@ -103,6 +103,7 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
     return (
       <Notifies.NotifiesBlock block={block} admin={admin} 
             empty={!loading && notifies.length === 0}
+            inPA={window.location.pathname.indexOf("info") === 1}
             load={loading} onMouseLeave={() => setBlock(false)}>
           {loading ? <InBlockLoading /> : (
             <>
@@ -128,8 +129,8 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
                         ))}
                    </Scrollbars>
                 ) : (
-                    <Notifies.Notify empty notChecked={false}>
-                        <Notifies.NotifyItem>Непрочитанных уведомлений пока нет</Notifies.NotifyItem>
+                    <Notifies.Notify empty notChecked={false} notclb>
+                        <Notifies.NotifyItem notclb>Непрочитанных уведомлений пока нет</Notifies.NotifyItem>
                     </Notifies.Notify> 
                 )}
             </>

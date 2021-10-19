@@ -13,7 +13,7 @@ export const routers = {
   p2pchangesOrderToBuy: '/info/p2p-changes/create-buy-order',
   p2pchangesOrderToSell: '/info/p2p-changes/create-sell-order',
   p2pchangesSingleExchangeDetails: '/info/p2p-changes/:exchangeId',
-  p2pchangesSingleExchangeChat: '/info/p2p-changes/chat/:exchangeId',
+  p2pchangesSingleExchangeChat: '/info/p2p-changes/chat',
   p2pchangesSingleOrderDetailsOwn: '/info/p2p-changes/orders/my/:orderId',
   p2pchangesSingleOrderDetails: '/info/p2p-changes/orders/:orderId',
   certificates: '/info/p2p-changes/certificates',

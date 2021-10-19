@@ -36,6 +36,7 @@ export const Certificates = () => {
   const [successModal, setIsSuccessModal] = useState<MarketCertificate | null>(null);
   const [errorModal, setIsErrorModal] = useState<MarketCertificate | null>(null);
   const [errorType, setErrorType] = useState('');
+  const [dailyVolume, setDailyVolume] = useState(0);
   const history = useHistory();
   const { hubConnection, balance } = useContext(AppContext);
 
@@ -52,6 +53,7 @@ export const Certificates = () => {
     try {
       const res = await hubConnection.invoke<ViewUserCertificateModel>('GetUserCertificate', 1);
       console.log('GetUserCertificate', res);
+      getDailyVolume(res.certificate.assetKind);
       setUserCertificat(res);
     } catch (err) {
       console.log(err);
@@ -69,11 +71,23 @@ export const Certificates = () => {
   //   }
   // }
 
+  const getDailyVolume = async (asset: number) => {
+    if (hubConnection) {
+      try {
+        const res = await hubConnection.invoke('GetDailyVolume', asset);
+        console.log('GetDailyVolume', res);
+        setDailyVolume(res);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+
   const getCertificate = async () => {
     try {
       const res = await hubConnection!.invoke<RootMarketCertificate>(
         'GetCertificatesMarket',
-        [Balance.CWD, Balance.MGCWD, Balance.GCWD, Balance.DIAMOND],
+        [],
         0,
         100
       );
@@ -140,10 +154,10 @@ export const Certificates = () => {
         />
       )}
       <Container>
-        <Heading 
-            onClick={() => history.push(routers.p2pchangesOrderToBuy)} 
-            title="P2P обмены" 
-            btnText="Опубликовать ордер" 
+        <Heading
+          onClick={() => history.push(routers.p2pchangesOrderToBuy)}
+          title="P2P обмены"
+          btnText="Опубликовать ордер"
         />
         <S.SubHeader>
           <TabsBlock>
@@ -180,7 +194,12 @@ export const Certificates = () => {
                   Оставшийся лимит в сутках:
                 </Text>
                 <Text size={14} weight={500} lH={20}>
-                  {(userCertificat.certificate.dailyVolume / 100000).toLocaleString()}{' '}
+                  {dailyVolume
+                    ? (
+                        (userCertificat.certificate.dailyVolume - dailyVolume) /
+                        100000
+                      ).toLocaleString()
+                    : (userCertificat.certificate.dailyVolume / 100000).toLocaleString()}{' '}
                   {Balance[userCertificat.certificate.assetKind]}
                 </Text>
               </S.ActiveCertItem>

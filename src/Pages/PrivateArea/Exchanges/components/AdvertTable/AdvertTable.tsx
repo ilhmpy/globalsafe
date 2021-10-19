@@ -17,14 +17,14 @@ interface AdvertTableProps {
 
 export const AdvertTable = ({ list, ordersType }: AdvertTableProps) => {
   const history = useHistory();
-  const { userSafeId } = useContext(AppContext);
+  const { account } = useContext(AppContext);
   const { setCurrentOrder, setCurrentOrderType } = useContext(PrivateAreaContext);
 
   const handleNavigateTo = (order: ViewBuyOrderModel | ViewSellOrderModel) => {
     setCurrentOrder(order);
     setCurrentOrderType(ordersType);
 
-    if(order.userSafeId === userSafeId) {
+    if(order.userSafeId === account.safeId) {
       history.replace(`/info/p2p-changes/orders/my/${order.id}`);
     } else {
       history.replace(`/info/p2p-changes/orders/${order.id}`);
@@ -62,9 +62,9 @@ export const AdvertTable = ({ list, ordersType }: AdvertTableProps) => {
           list.map((order) => (
             <S.BodyItem 
               key={`order-list-item-${order.safeId}`}
-              active={order.userSafeId === userSafeId}
+              active={order.userSafeId === account.safeId}
               onClick={() => handleNavigateTo(order)} 
-            >
+            > 
               <S.Cell data-label="Кол-во">
                 {`${countVolumeToShow(order.volume, order.assetKind).toLocaleString('ru-RU', {
                     maximumFractionDigits: 4,

@@ -16,9 +16,6 @@ export const paymentMethodIconSrc = (kind: number): string => {
       return trc20;
     case PaymentMethodKind.BEP20:
       return bep20;
-
-    case PaymentMethodKind.BankTransfer:
-      return bankTransfer;
     case PaymentMethodKind.Tinkoff:
       return tinkoff;
     case PaymentMethodKind.Sberbank:

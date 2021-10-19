@@ -11,8 +11,15 @@ export const Container = styled.div`
   }
 `;
 
-export const BlockWrapper = styled.div`
+export const BlockWrapper = styled.div<{ when?: boolean; }>`
   margin-bottom: 20px;
+  ${({ when }) => {
+    if (when != null) {
+      return `
+        display: ${when === true ? "block" : "none"};
+      `;
+    };
+  }}
 `;
 
 export const TitleBlockWrapper = styled.div`
@@ -41,4 +48,11 @@ export const FeedbackBlock = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 40px;
+`;
+
+export const StateBlock = styled.div<{ when: boolean; }>`
+  width: 100%;
+  display: ${({ when }) => {
+    return when ? "block" : "none"
+  }};
 `;

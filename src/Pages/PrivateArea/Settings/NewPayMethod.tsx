@@ -14,7 +14,7 @@ import { FiatKind } from '../../../types/fiatKind';
 import { PaymentMethodKind } from '../../../types/paymentMethodKind';
 import { Back } from '../components/Back';
 import { Title } from '../components/ui/Title';
-import NumberFormat from 'react-number-format';
+import NumberFormat from 'react-number-format'; 
 
 type dataBank = {
   name: string;

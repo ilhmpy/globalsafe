@@ -22,10 +22,11 @@ import { Certificates } from './Certificates/Certificates';
 import { AppContext } from '../../context/HubContext';
 import { OrderToBuy } from './Exchanges/OrderToBuy';
 import { DepositView } from './Deposits/DepositView';
-import { Notifications } from "./Notifications/Notifications";
+import { Notifications } from './Notifications/Notifications';
 import { SingleOrderDetailsOwn } from './Exchanges/SingleOrderDetailsOwn';
 import { PrivateAreaProvider } from '../../context/PrivateAreaContext';
 import { SingleOrderDetails } from './Exchanges/SingleOrderDetails';
+import { SingleExchangeChat } from './Exchanges/SingleExchangeChat';
 
 export const InfoMain: FC = () => {
   const appContext = useContext(AppContext);
@@ -48,7 +49,7 @@ export const InfoMain: FC = () => {
             <Route path={routers.deposits} component={Deposits} exact />
             <Route path={routers.depositsProgram} component={DepositProgram} exact />
             <Route path={routers.depositsOpen} component={DepositOpen} exact />
-            <Route path={routers.depositsView} component={DepositView} exact /> 
+            <Route path={routers.depositsView} component={DepositView} exact />
             <Route path="/info/deposits/:slug" component={OnePage} exact />
             <Route path={routers.p2pchanges} component={Advert} exact />
             <Route path={routers.p2pchangesOwn} component={OwnExchanges} exact />
@@ -75,7 +76,16 @@ export const InfoMain: FC = () => {
               component={SingleOrderDetails}
               exact
             />
-            <Route path={routers.settingsViewPayMethod + '/:slug'} component={ViewPayMethod} exact />
+            <Route 
+              path={routers.settingsViewPayMethod + '/:slug'}
+              component={ViewPayMethod}
+              exact
+            />
+            <Route
+              path={routers.p2pchangesSingleExchangeChat + '/:slug'}
+              component={SingleExchangeChat}
+              exact
+            />
           </Switch>
         </PrivateAreaProvider>
         <Footer />
