@@ -14,7 +14,7 @@ export enum ExchangeState {
     Cancelled
 }
 
-export interface ViewExchangeModel {
+export interface ViewExchangeModel { 
     id: number;
     safeId: string;
     orderId: number;
