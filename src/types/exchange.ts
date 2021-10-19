@@ -41,6 +41,8 @@ export interface ViewExchangeModel {
     methodsKinds: any;
     paymentMethod: any;
     userRating: string;
+    orderVolume: number;
+    mark: boolean | null;
 }
 
 export interface GetExchangesCollectionResult {

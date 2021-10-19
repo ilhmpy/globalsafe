@@ -20,12 +20,16 @@ import { FiatKind } from "../../../../../types/fiat";
 import { PaymentMethodKind } from "../../../../../types/paymentMethodKind";
 import { getDefaultLibFileName } from 'typescript';
 import { AppContext } from '../../../../../context/HubContext';
+import moment from "moment";
+import reactVirtualizedAutoSizer from 'react-virtualized-auto-sizer';
+import { setUncaughtExceptionCaptureCallback } from 'process';
 
 type DetailCardProps = {
   exchange: ViewExchangeModel;
+  setCall: (value: boolean) => void; 
 }
 
-export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCardProps) => {
+export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: DetailCardProps) => {
   const history = useHistory();
   const [feedbackValue, setFeedbackValue] = useState(5);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -33,6 +37,8 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
   const { account, hubConnection } = useContext(AppContext);
   const [totalExchanges, setTotalExchanges] = useState<any>(); 
   const [draw, setDraw] = useState<boolean>(true);
+  const [time, setTime] = useState<string>();
+  const [timer, setTimer] = useState<any>();
 
   const buyer = () => {
     return (exchange && exchange.kind === 0 && exchange.ownerSafeId !== account.safeId) ||
@@ -41,22 +47,11 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
 
   const [owner, setOwner] = useState<"seller" | "buyer" | undefined>(buyer() ? "buyer" : "seller");
 
-
-  // ownerId - продавец, recepientId - покупатель
-
   /* 
-    Блок с права:
-    количество - volume
-    на сумму - exchangeVolume
-    
-    Блок с лева:
-    количество - поле добавят
-    на сумму - количество * rate
-
     КОГДА БУДЕТ ДОБАВЛЕНО БУЛЕВОЕ ПОЛЕ: 
-    показать оценку пользователя если false, и если true не показывать
+    показать оценку пользователя если false, и скрыть остальной блок если оценки ещё не было, и если true не показывать оценку но показать остальной блок
 
-    ПОЛЕ КОЛИЧЕСТВО С ЛЕВА ЗАХАРДКОЖЕНО(строки: 228, 244), нужно изменить когда добавят поле.
+    ownerId - продавец, recepientId - покупатель
   */
 
   console.log(owner);
@@ -90,7 +85,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
       );
     } else if (chip === 1) {
       return (
-        <Chip style={{ background: "#FF4A31", color: "#fff" }}>Оставшееся время 12м. 48с. </Chip>
+        <Chip style={{ background: "#FF4A31", color: "#fff" }}>Оставшееся время {time} </Chip>
         );
     } else if (chip === 2) {
       return (
@@ -169,6 +164,9 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
       hubConnection.invoke("AbuseExchange", id)
         .then((res) => {
           console.log("abuse", res);
+          if (owner === "buyer") {
+            setCall(true);
+          };
         })
         .catch((err) => console.log(err));
     }
@@ -179,6 +177,8 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
       hubConnection.invoke("CompleteExchange", id)
         .then((res) => {
           console.log("complete", res);
+          setCall(true);
+          setShowSuccessModal(true);
         })
         .catch((err) => console.log(err));
     }
@@ -189,17 +189,36 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
       hubConnection.invoke("CancelExchange", id)
         .then((res) => {
           console.log("cancel", res);
+          setShowRejectModal(true);
         })
         .catch((err) => console.log(err));
     }
   };
 
   function confirmExchangePayment(id: string) {
-    console.log(id)
     if (hubConnection) {
       hubConnection.invoke("ConfirmExchangePayment", id)
         .then((res) => {
           console.log("confirm", res);
+          if (owner === "buyer") {
+            setCall(true);
+          };
+        })
+        .catch((err) => console.log(err));
+    };
+  };
+
+  function rateUser() {
+    if (hubConnection) {
+      hubConnection.invoke(
+        "RateUser", 
+        feedbackValue,
+        owner === "seller" ? exchange.ownerId : exchange.recepientId,
+        exchange.safeId
+      )
+        .then((res) => {
+          console.log(res);
+          setCall(true);
         })
         .catch((err) => console.log(err));
     };
@@ -219,6 +238,32 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
     return Number(cv);
   };
 
+  function getCountsTime({ days, hours, minutes, seconds }: any) {
+    if (days > 0) {
+      return `${days}д ${hours > 0 ? hours : 0}ч`;
+    } else if (hours > 0) {
+      return `${hours}ч ${minutes > 0 ? minutes : 0}м`;
+    } else if (minutes > 0) {
+      return `${minutes}м ${seconds > 0 ? seconds : 0}с`;
+    } else {
+      return `0м. 0с.`;
+    };
+  };
+
+  useEffect(() => {
+    if (exchange.state === 1) {
+      setTimer(setInterval(() => {
+        const result = { 
+          days: exchange.operationWindow.days - moment().diff(exchange.creationDate, "days", false), 
+          hours: exchange.operationWindow.totalHours - moment().diff(exchange.creationDate, "hours", false), 
+          minutes: exchange.operationWindow.totalMinutes - moment().diff(exchange.creationDate, "minutes", false), 
+          seconds: exchange.operationWindow.totalSeconds - moment().diff(exchange.creationDate, "seconds", false)
+        };
+        setTime(getCountsTime(result));
+      }, 60000));
+    };
+  }, [exchange.state]);
+
   return (
     <S.Container>
       <LeftSide bg={'#EAEFF4'}>
@@ -227,7 +272,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
             Количество:
           </Text>
           <Title lH={28} mB={10}>
-            {(getVolume(100000, exchange.assetKind)).toLocaleString('ru-RU', { maximumFractionDigits: 2 })} {Balance[exchange.assetKind]}
+            {(getVolume(exchange.orderVolume, exchange.assetKind)).toLocaleString('ru-RU', { maximumFractionDigits: 2 })} {Balance[exchange.assetKind]}
           </Title>
           <Chip>{exchange.kind === 0 ? "Продажа" : "Покупка"}</Chip>
         </S.BlockWrapper>
@@ -243,7 +288,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
           <Text size={14} lH={20} mB={10} black>
             На сумму:
           </Text>
-          <Title lH={28}>{(getVolume(100000, exchange.assetKind) * exchange.rate).toLocaleString('ru-RU', { maximumFractionDigits: 2 })} {FiatKind[exchange.exchangeAssetKind]}</Title>
+          <Title lH={28}>{(exchange.orderVolume * exchange.rate).toLocaleString('ru-RU', { maximumFractionDigits: 2 })} {FiatKind[exchange.exchangeAssetKind]}</Title>
         </S.BlockWrapper>
  
         <S.BlockWrapper>
@@ -282,6 +327,8 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
       {/* IF COMPLETED AND NOT GRADET */}
 
       <RightSide>
+        <S.StateBlock when={exchange.state != 2 && exchange.mark == null && exchange.mark != false}>
+        
         <S.TitleBlockWrapper>
           <Title mB={10} lH={28}>
             {exchange.kind === 0 ? "Продажа" : "Покупка"} {`${Balance[exchange.assetKind]} за ${FiatKind[exchange.exchangeAssetKind]}`}
@@ -303,7 +350,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
             На сумму:
           </Text>
           <Text size={14} lH={20} weight={500} black>
-            {(getVolume(exchange.volume, exchange.assetKind) * exchange.rate).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {FiatKind[exchange.exchangeAssetKind]}
+            {(exchange.exchangeVolume).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {FiatKind[exchange.exchangeAssetKind]}
           </Text>
         </S.BlockWrapper>
 
@@ -350,6 +397,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
           </Text>
         </S.BlockWrapper>
 
+        </S.StateBlock>
         {/* ************************************ */}
 
         {/* ********************************************* */}
@@ -361,7 +409,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
           <S.StateBlock when={owner === "buyer"}>
             <S.TransferInfoBlock>
               <Text size={14} lH={20} black>
-                Осуществите перевод средств на указанный счет в размере <S.B>{(getVolume(exchange.volume, exchange.assetKind) * exchange.rate).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {FiatKind[exchange.exchangeAssetKind]}</S.B> и подтвердите
+                Осуществите перевод средств на указанный счет в размере <S.B>{(exchange.volume * exchange.rate).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {FiatKind[exchange.exchangeAssetKind]}</S.B> и подтвердите
                 перевод средств продавцу нажав на кнопку “средства отправлены”
               </Text>
             </S.TransferInfoBlock>
@@ -390,7 +438,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
           <S.StateBlock when={owner === "seller"}>
             <S.TransferInfoBlock>
               <Text size={14} lH={20} black>
-                Покупатель  осуществляет перевод средств на указанный счет в размере <S.B>{(getVolume(exchange.volume, exchange.assetKind) * exchange.rate).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {FiatKind[exchange.exchangeAssetKind]}</S.B> <br />
+                Покупатель  осуществляет перевод средств на указанный счет в размере <S.B>{(exchange.volume * exchange.rate).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {FiatKind[exchange.exchangeAssetKind]}</S.B> <br />
                 С вашего баланса списаны и заморожены <S.B>{(getVolume(exchange.volume, exchange.assetKind)).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {Balance[exchange.assetKind]}</S.B> до подтверждения вами получения средств.
               </Text>
             </S.TransferInfoBlock>
@@ -422,7 +470,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
             <S.TransferInfoBlock>
               <Text size={14} lH={20} black>  
                 <S.B>{(exchange.volume).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {Balance[exchange.assetKind]}</S.B> будут отправлены вам сразу после подтверждения 
-                продавцом получения средств размере <S.B>{(getVolume(exchange.volume, exchange.assetKind) * exchange.rate).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {FiatKind[exchange.exchangeAssetKind]}</S.B> на указанный счет.
+                продавцом получения средств размере <S.B>{(exchange.volume * exchange.rate).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {FiatKind[exchange.exchangeAssetKind]}</S.B> на указанный счет.
               </Text>
             </S.TransferInfoBlock>
 
@@ -447,9 +495,9 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
           <S.StateBlock when={owner === "seller"}>
               <S.TransferInfoBlock>
                 <Text size={14} lH={20} black>  
-                  Покупатель указал, что перевел средства в размере <S.B>{(getVolume(exchange.volume, exchange.assetKind) * exchange.rate).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {FiatKind[exchange.exchangeAssetKind]}</S.B> на указанный счет.
+                  Покупатель указал, что перевел средства в размере <S.B>{(exchange.volume * exchange.rate).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {FiatKind[exchange.exchangeAssetKind]}</S.B> на указанный счет.
                   Подтвердите получение средств для успешного завершения обмена.
-                  Покупатель получит <S.B>{(exchange.volume).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {Balance[exchange.assetKind]}</S.B>
+                  Покупатель получит <S.B>{(getVolume(exchange.volume, exchange.assetKind)).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} {Balance[exchange.assetKind]}</S.B>
                 </Text>
               </S.TransferInfoBlock>
 
@@ -529,7 +577,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
                   </Radio.Group>
               </S.FeedbackBlock>
 
-              <Button primary onClick={() => false}>
+              <Button primary onClick={() => rateUser()}>
                 Подтвердить
               </Button>
             </S.StateBlock>
@@ -583,7 +631,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange }: DetailCard
                     />
                   </Radio.Group>
               </S.FeedbackBlock>
-              <Button primary onClick={() => false}>
+              <Button primary onClick={() => rateUser()}>
                 Подтвердить
               </Button>
             </S.StateBlock>

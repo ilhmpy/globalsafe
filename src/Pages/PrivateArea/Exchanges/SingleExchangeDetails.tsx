@@ -25,10 +25,12 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
   const { exchangeId } = match.params;
   const { hubConnection } = useContext(AppContext);
   const [loading, setLoading] = useState<boolean>(false);
+  const [call, setCall] = useState<boolean>(false);
 
   function getExchange(loading: boolean) {
     if (hubConnection) {
       setLoading(loading);
+      setCall(false);
       hubConnection.invoke("GetExchange", exchangeId)
         .then((res) => {
           setExchange(res);
@@ -46,6 +48,12 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
       getExchange(true);
     };
   }, [hubConnection]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      getExchange(false);
+    }
+  }, [hubConnection, call]);
 
   function cb() {
     console.log("ExchangeChanged")
@@ -90,7 +98,7 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
                       № {exchange.id}
                     </Text>
                 </S.TitleContainer>
-                <ExchangeDetailCard exchange={exchange} />
+                <ExchangeDetailCard setCall={setCall} exchange={exchange} />
               </Container>
             </>
           )}
