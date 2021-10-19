@@ -24,6 +24,7 @@ import moment from 'moment';
 import reactVirtualizedAutoSizer from 'react-virtualized-auto-sizer';
 import { setUncaughtExceptionCaptureCallback } from 'process';
 import { getVolume } from '../../../../../functions/getVolume';
+import { getTime } from 'date-fns';
 
 type DetailCardProps = {
   exchange: ViewExchangeModel;
@@ -225,37 +226,22 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
     }
   }
 
+  function getTime() {
+    const total = exchange.operationWindow.totalMilliseconds - (new Date().getTime() - new Date(exchange.creationDate).getTime());
+    const seconds = Math.floor((total/1000) % 60);
+    const minutes = Math.floor((total/1000/60) % 60);
+    const hours = Math.floor((total/(1000*60*60)) % 24);
+    const days = Math.floor(total/(1000*60*60*24));
+    const result = { days, hours, minutes, seconds };
+    setTime(getCountsTime(result));
+  };
+
   useEffect(() => {
     if (exchange.state === 1) {
-      const result = {
-        days: exchange.operationWindow.days - moment().diff(exchange.creationDate, 'days', false),
-        hours:
-          exchange.operationWindow.totalHours -
-          moment().diff(exchange.creationDate, 'hours', false),
-        minutes:
-          exchange.operationWindow.totalMinutes -
-          moment().diff(exchange.creationDate, 'minutes', false),
-        seconds:
-          exchange.operationWindow.totalSeconds -
-          moment().diff(exchange.creationDate, 'seconds', false),
-      };
-      setTime(getCountsTime(result));
+      getTime();
       setTimer(
         setInterval(() => {
-          const result = {
-            days:
-              exchange.operationWindow.days - moment().diff(exchange.creationDate, 'days', false),
-            hours:
-              exchange.operationWindow.totalHours -
-              moment().diff(exchange.creationDate, 'hours', false),
-            minutes:
-              exchange.operationWindow.totalMinutes -
-              moment().diff(exchange.creationDate, 'minutes', false),
-            seconds:
-              exchange.operationWindow.totalSeconds -
-              moment().diff(exchange.creationDate, 'seconds', false),
-          };
-          setTime(getCountsTime(result));
+          getTime();
         }, 60000)
       );
     }

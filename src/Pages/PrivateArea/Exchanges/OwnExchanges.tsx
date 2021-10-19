@@ -44,6 +44,18 @@ export const OwnExchanges = () => {
     };
   };
 
+  function getMyRating() {
+    if (account.claims) {
+      let rating = 0;
+      account.claims.forEach((claim: any) => {
+      if (claim.claimType === "exchanges-rating") {
+        rating = claim.claimValue;
+      };
+    });
+      return (Number(rating)).toFixed(1);
+    };
+  };
+
   return (
     <div>
       <Container>
@@ -67,12 +79,7 @@ export const OwnExchanges = () => {
             </TabNavItem>
           </TabsBlock>
           <Text size={14} lH={16} weight={500} black>
-            Рейтинг аккаунта: {account.claims.forEach((claim: any) => {
-              console.log(account.claims);
-              if (claim.claimType === "") {
-
-              }
-            })}
+            Рейтинг аккаунта: {getMyRating()}
           </Text>
         </S.SubHeader>
 

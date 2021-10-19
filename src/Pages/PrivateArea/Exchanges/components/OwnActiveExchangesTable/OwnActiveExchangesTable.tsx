@@ -92,20 +92,13 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
   }
 
   function getTime(date: Date, wn: any, state: number) {
-    const result = { 
-                     days: wn.days - moment().diff(date, "days", false), 
-                     hours: wn.totalHours - moment().diff(date, "hours", false), 
-                     minutes: wn.totalMinutes - moment().diff(date, "minutes", false), 
-                     seconds: wn.totalSeconds - moment().diff(date, "seconds", false)
-                   };
-    const dateLat = new Date(2019, 12, 1);
-    const test = new Date();
-    console.log({ 
-      days: 0,
-      hours: 0,
-      minutes: 0,
-      seconds: 0
-    });
+    const total = wn.totalMilliseconds - (new Date().getTime() - new Date(date).getTime());
+    const seconds = Math.floor((total/1000) % 60);
+    const minutes = Math.floor((total/1000/60) % 60);
+    const hours = Math.floor((total/(1000*60*60)) % 24);
+    const days = Math.floor(total/(1000*60*60*24));
+
+    const result = { days, hours, minutes, seconds };
     return getCountsTime(result);
   };
 
