@@ -100,11 +100,10 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
         return kind === 20 || kind === 21 || kind === 22;
     };
 
-    console.log(window.location)
-
     return (
       <Notifies.NotifiesBlock block={block} admin={admin} 
             empty={!loading && notifies.length === 0}
+            inPA={window.location.pathname.indexOf("info") === 1}
             load={loading} onMouseLeave={() => setBlock(false)}>
           {loading ? <InBlockLoading /> : (
             <>
