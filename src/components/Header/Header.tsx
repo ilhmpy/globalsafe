@@ -159,9 +159,9 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
               </SwitchTheme>
 
               {admin && <AdminButton onClick={toAdmin}>{t('headerButton.admin')}</AdminButton>}
-              <Btn onClick={handleClick}>
+              <Button primary onClick={handleClick}>
                 {location.pathname === '/' ? t('headerButton.personalArea') : t('logout')}
-              </Btn>
+              </Button>
             </ButtonsRev>
           </HeaderInner>
         </Container>
