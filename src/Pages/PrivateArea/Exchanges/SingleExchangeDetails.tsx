@@ -85,7 +85,7 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
     return () => {
       hubConnection?.off("ExchangeCompleted", cb);
     };  
-  });
+  }, [hubConnection]);
 
   useEffect(() => {
     if (hubConnection) {
@@ -94,7 +94,25 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
     return () => {
       hubConnection?.off("ExchangeConfirmationRequired", cb);
     };  
-  });
+  }, [hubConnection]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection.on("BuyOrderVolumeChanged", cb);
+    };
+    return () => {
+      hubConnection?.off("BuyOrderVolumeChanged", cb);
+    };  
+  }), [hubConnection];
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection.on("SellOrderVolumeChanged", cb);
+    };
+    return () => {
+      hubConnection?.off("SellOrderVolumeChanged", cb);
+    };  
+  }, [hubConnection])
   
   return (
     <S.Container>
