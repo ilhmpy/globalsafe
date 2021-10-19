@@ -34,7 +34,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
   const history = useHistory();
   const [feedbackValue, setFeedbackValue] = useState(5);
   const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
-  const [showRejectModal, setShowRejectModal] = useState<boolean>(true);
+  const [showRejectModal, setShowRejectModal] = useState<boolean>(false);
   const { account, hubConnection } = useContext(AppContext);
   const [totalExchanges, setTotalExchanges] = useState<any>(); 
   const [draw, setDraw] = useState<boolean>(true);
@@ -305,7 +305,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
       {/* IF COMPLETED AND NOT GRADET */}
 
       <RightSide>
-        <S.StateBlock when={exchange.state < 2 || exchange.mark != null}>
+        <S.StateBlock when={(exchange.state <= 4 && exchange.state != 1) || exchange.mark != null}>
         
         <S.TitleBlockWrapper>
           <Title mB={10} lH={28}>
@@ -366,7 +366,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
         
         {/* COMPLETED, ABUSED, CANCELLED STATES */}
         
-        <S.BlockWrapper when={exchange.state === 2 || exchange.state === 3 || exchange.state === 4}>
+        <S.BlockWrapper when={exchange.state === 1 || exchange.state === 3 || exchange.state === 4}>
           <Text size={14} lH={20} mB={4} black>
             Рейтинг покупателя:
           </Text>
@@ -394,7 +394,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
 
             <S.Space justify="space-between">
               <S.Space gap={20}>
-                <Button primary bigSize onClick={() => confirmExchangePayment(exchange.safeId)}>
+                <Button primary bigSize onClick={() => completeExchange(exchange.safeId)}>
                   Средства отправлены
                 </Button>
                 <Button outlinePrimary bigSize onClick={() => cancelExchange(exchange.safeId)}>
@@ -442,7 +442,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
 
         {/* CONFIRMED STATE */} 
 
-        <S.StateBlock when={exchange.state === 1}>
+        <S.StateBlock when={exchange.state === 2}>
                       
           <S.StateBlock when={owner === "buyer"}>
             <S.TransferInfoBlock>
@@ -481,7 +481,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
 
               <S.Space justify="space-between">
                 <S.Space gap={20}>
-                  <Button primary bigSize as="button" onClick={() => completeExchange(exchange.safeId)}>
+                  <Button primary bigSize as="button" onClick={() => confirmExchangePayment(exchange.safeId)}>
                     Средства получены
                   </Button>
                 </S.Space>
@@ -503,7 +503,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
 
         {/* COMPLETED STATE */}
 
-        <S.StateBlock when={exchange.state === 2}>
+        <S.StateBlock when={exchange.state === 1}>
 
             <S.StateBlock when={owner === "buyer"}>
                 <S.TransferInfoBlock>

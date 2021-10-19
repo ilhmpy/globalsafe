@@ -50,9 +50,9 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
   }, [hubConnection]);
 
   useEffect(() => {
-    if (hubConnection) {
+    if (hubConnection && call === true) {
       getExchange(false);
-    }
+    };
   }, [hubConnection, call]);
 
   function cb() {
