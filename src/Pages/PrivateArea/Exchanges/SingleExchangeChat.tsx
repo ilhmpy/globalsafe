@@ -13,9 +13,6 @@ import { AppContext } from '../../../context/HubContext';
 import { ViewExchangeModel } from '../../../types/exchange';
 import { Balance } from '../../../types/balance';
 import { FiatKind } from '../../../types/fiatKind';
-import axios from 'axios';
-import { API_URL } from '../../../constantes/api';
-import useLocalStorage from '../../../hooks/useLocalStorage';
 
 type PropsMatch = {
   slug: string;
@@ -26,8 +23,6 @@ export const SingleExchangeChat = ({ match }: RouteComponentProps<PropsMatch>) =
   const history = useHistory();
   const safeId = match.params.slug;
   const { hubConnection } = useContext(AppContext);
-  const [myToken] = useLocalStorage('token');
-  console.log('safeId', safeId);
 
   useEffect(() => {
     if (hubConnection && safeId) {
@@ -44,40 +39,6 @@ export const SingleExchangeChat = ({ match }: RouteComponentProps<PropsMatch>) =
       })();
     }
   }, [hubConnection, safeId]);
-
-  const fetchText = async (str: string) => {
-    try {
-      const res = await axios.put(
-        `${API_URL}/v1/exchange/${exchange?.safeId}/chat/text?access_token=${myToken}`,
-        str,
-        {
-          headers: {
-            'Content-Type': 'text/plain',
-          },
-        }
-      );
-
-      // scrollto();
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const fetchPicture = async (img: any) => {
-    const formData = new FormData();
-    formData.append('file', img);
-
-    try {
-      const res = await axios.post(
-        `${API_URL}/v1/exchange/${exchange?.safeId}/chat/picture?access_token=${myToken}`,
-        formData
-      );
-
-      // scrollto();
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   return (
     <S.Container>

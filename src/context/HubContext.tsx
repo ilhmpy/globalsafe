@@ -44,7 +44,7 @@ export const AppContext = React.createContext<Context>({
   setSelectedDeposit: () => undefined,
   selectedDeposit: {},
   chosenDepositView: {},
-  account: {}
+  account: {},
 });
 
 export const HubProvider: FC = ({ children }: any) => {
@@ -115,14 +115,14 @@ export const HubProvider: FC = ({ children }: any) => {
       }
     };
     if (hubConnection) {
-      hubConnection.on("OperationNotification", cb);
+      hubConnection.on('OperationNotification', cb);
     }
     if (hubConnection) {
       hubConnection.on('BalanceUpdate', cb);
     }
     return () => {
       hubConnection?.off('BalanceUpdate', cb);
-      hubConnection?.off("OperationNotification", cb);
+      hubConnection?.off('OperationNotification', cb);
     };
   }, [hubConnection, balanceList]);
 
@@ -132,6 +132,11 @@ export const HubProvider: FC = ({ children }: any) => {
         .invoke('GetSigned')
         .then((res) => {
           console.log('GetSigned', res);
+          if (res.roles.length && res.roles[0].name === 'administrator') {
+            setIsAdmin(true);
+          } else {
+            setIsAdmin(false);
+          }
           setUser(res.name);
           setAccount(res);
           setLoading(false);
@@ -148,11 +153,6 @@ export const HubProvider: FC = ({ children }: any) => {
               volume: item.volume,
             }));
             setBalanceList(res.balances);
-          }
-          if (res.roles.length && res.roles[0].name === 'administrator') {
-            setIsAdmin(true);
-          } else {
-            setIsAdmin(false);
           }
         })
         .catch((err) => {
@@ -199,7 +199,7 @@ export const HubProvider: FC = ({ children }: any) => {
         setChosenDepositView,
         setSelectedDeposit,
         selectedDeposit,
-        account
+        account,
       }}
     >
       {children}
