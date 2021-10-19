@@ -41,9 +41,17 @@ export interface ViewExchangeModel {
     methodsKinds: any;
     paymentMethod: any;
     userRating: string;
+    orderVolume: number;
+    mark: boolean | null;
 }
 
 export interface GetExchangesCollectionResult {
     collection: ViewExchangeModel[];
     totalRecords: number;
 }
+
+export type OwnExchangesProps = {
+    exchanges: ViewExchangeModel[];
+    loading: boolean;
+    setExchanges?: (value: any) => any; 
+};
