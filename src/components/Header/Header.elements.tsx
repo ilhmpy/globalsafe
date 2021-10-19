@@ -14,18 +14,18 @@ export const Text = styled.p`
   transition: all 0.3s;
 `;
 
-export const SwitchTheme = styled.div<{ mob?: boolean; admin?: boolean; auth?: boolean; }>`
+export const SwitchTheme = styled.div<{ mob?: boolean; admin?: boolean; auth?: boolean }>`
   width: 20px;
   height: 20px;
   margin-right: 20px;
   border-radius: 50%;
   cursor: pointer;
   ${({ admin, auth }) => {
-    if (!auth || auth && !admin) {
+    if (!auth || (auth && !admin)) {
       return `
         margin-right: 40px;
       `;
-    };
+    }
   }}
   @media only screen and (max-device-width: 767px) {
     margin-right: 40px;
@@ -41,7 +41,38 @@ export const SwitchTheme = styled.div<{ mob?: boolean; admin?: boolean; auth?: b
   }
 `;
 
-export const AdminButton = styled.button`
+export const Btn = styled.button`
+  padding: 11px 20px 11px;
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+  box-sizing: border-box;
+  cursor: pointer;
+  appearance: none;
+  user-select: none;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 14px;
+  text-transform: uppercase;
+  color: #ffffff;
+  border: none;
+  transition: all 0.3s ease 0s;
+  background: #0094ff;
+  color: #ffffff;
+  &:hover {
+    box-shadow: ${(props) =>
+      props.disabled ? 'none' : `0px 4px 10px ${props.theme.buttonBorder}`};
+
+    border-color: ${(props) => props.theme.buttonBorder};
+  }
+  &:focus,
+  &:active {
+    outline: none;
+  }
+`;
+
+export const AdminButton = styled(Btn)`
   padding: 12px 12px;
   font-weight: 500;
   font-family: 'Roboto', sans-serif;
@@ -61,7 +92,13 @@ export const AdminButton = styled.button`
   }
 `;
 
-export const Languale = styled.div<{ auth?: boolean; admin?: boolean; }>`
+export const ButtonsRev = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+`;
+
+export const Languale = styled.div<{ auth?: boolean; admin?: boolean }>`
   display: flex;
   align-items: center;
   font-weight: 500;
@@ -74,7 +111,7 @@ export const Languale = styled.div<{ auth?: boolean; admin?: boolean; }>`
       return `
         margin-right: 40px;
       `;
-    };
+    }
     if (auth && admin) {
       return `
         margin-right: 0px;
