@@ -1,4 +1,4 @@
-import { ChangeEvent, FC } from 'react';
+import { ChangeEvent, FC, KeyboardEventHandler } from 'react';
 import styled from 'styled-components';
 
 interface IProps {
@@ -6,12 +6,25 @@ interface IProps {
   name: string;
   value: string | number;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onKeyPress?: (e: any) => void;
   disabled?: boolean;
   className?: string;
   readOnly?: boolean;
+  type?: string;
+  required?: boolean;
 }
 
-export const Input: FC<IProps> = ({ placeholder, name, value, onChange, disabled, className = '', readOnly = false }: IProps) => {
+export const Input: FC<IProps> = ({
+  placeholder,
+  name,
+  value,
+  onChange,
+  disabled,
+  className = '',
+  readOnly = false,
+  type,
+  required,
+}: IProps) => {
   return (
     <InputUI
       className={className}
@@ -21,6 +34,8 @@ export const Input: FC<IProps> = ({ placeholder, name, value, onChange, disabled
       value={value}
       onChange={onChange}
       readOnly={readOnly}
+      type={type}
+      required={required}
     />
   );
 };

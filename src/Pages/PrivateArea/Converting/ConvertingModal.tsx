@@ -86,11 +86,17 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
   const estimatiOfExchange = async () => {
     if (hubConnection && fromCurrency && toCurrency && +toSum > 0) {
       try {
-        const response = await hubConnection.invoke('EstimationOfExchange', toSum, Balance.CWD);
+        // console.log('EstimationOfExchange', toSum, Balance.CWD);
+        const response = await hubConnection.invoke(
+          'EstimationOfExchange',
+          String(+toSum * 100),
+          Balance.CWD
+        );
+        console.log('estimatiOfExchange ~ response', response);
         setConvertedData({
-          userAmount: response.calculatedAmount * 100,
+          userAmount: response.calculatedAmount,
           calculatedAmount: response.calculatedAmount,
-          targetAmount: response.userAmount * 100,
+          targetAmount: response.userAmount,
           discountPercent: response.discountPercent,
         });
       } catch (error) {
@@ -131,6 +137,10 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
       }
     }
   };
+
+  console.log('fromSum', fromSum);
+  console.log('toSum', toSum);
+  console.log('convertedData', convertedData);
 
   return (
     <>
@@ -227,33 +237,52 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                   selectedOption={fromCurrency}
                   setSelectedOption={(val: string) => setFromCurrency(val)}
                 />
+                {console.log(
+                  '----------------->',
+                  fromSum
+                    ? Number(fromSum).toLocaleString('ru-RU', {
+                        maximumFractionDigits: 4,
+                      })
+                    : convertedData.userAmount <= 0
+                    ? ''
+                    : (convertedData.userAmount / 100000).toLocaleString('ru-RU', {
+                        maximumFractionDigits: 4,
+                      })
+                )}
                 <Input
+                  type="number"
+                  required
                   placeholder="0.0000"
                   name="fromSum"
                   value={
                     fromSum
-                      ? Number(fromSum).toLocaleString('ru-RU', {
-                          maximumFractionDigits: 2,
-                        })
+                      ? Number(fromSum)
                       : convertedData.userAmount <= 0
                       ? ''
-                      : (convertedData.userAmount / 100000).toLocaleString('ru-RU', {
-                          maximumFractionDigits: 2,
-                        })
+                      : (convertedData.userAmount / 100000)
                   }
-                  onChange={({ target: { value } }) => {
+                  //   onKeyPress={(e) => e.charCode >= 48}
+                  onChange={(e: any) => {
+                    const { value } = e.target;
+                    console.log('value', value);
                     setToSum('');
-                    if (!(value.length > 1 && value[0] === '0')) {
-                      setFromSumCloud(value.replaceAll(/\D/g, ''));
-                      setFromSum(value.replaceAll(/\D/g, ''));
-                      setIsMultics(false);
-                      setConvertedData({
-                        userAmount: 0,
-                        calculatedAmount: 0,
-                        targetAmount: 0,
-                        discountPercent: 0,
-                      });
+
+                    if (value.split('.').length === 1) {
+                      setFromSumCloud(value);
+                      setFromSum(value);
+                    } else if (value.split('.') && value.split('.')[1].length < 5) {
+                      setFromSumCloud(value);
+                      setFromSum(value);
                     }
+
+                    setIsMultics(false);
+                    // setConvertedData({
+                    //   userAmount: 0,
+                    //   calculatedAmount: 0,
+                    //   targetAmount: 0,
+                    //   discountPercent: 0,
+                    // });
+                    // }
                   }}
                 />
               </InnerBlock>
@@ -277,27 +306,35 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                           maximumFractionDigits: 2,
                         })
                   }
-                  onChange={({ target: { value } }) => {
-                    if (value.length > 1 && value[0] === '0') {
-                      setFromSum('');
-                      setToSum('');
-                      setConvertedData({
-                        userAmount: 0,
-                        calculatedAmount: 0,
-                        targetAmount: 0,
-                        discountPercent: 0,
-                      });
-                    } else if (!value) {
-                      setToSum('');
-                      setConvertedData({
-                        userAmount: 0,
-                        calculatedAmount: 0,
-                        targetAmount: 0,
-                        discountPercent: 0,
-                      });
-                    } else {
-                      setIsMultics(true);
-                      setToSum(value.replaceAll(/\D/g, ''));
+                  onChange={(e: any) => {
+                    const { value } = e.target;
+                    // if (value.length > 1 && value[0] === '0') {
+                    //   setFromSum('');
+                    //   setToSum('');
+                    //   setConvertedData({
+                    //     userAmount: 0,
+                    //     calculatedAmount: 0,
+                    //     targetAmount: 0,
+                    //     discountPercent: 0,
+                    //   });
+                    // } else if (!value) {
+                    //   setToSum('');
+                    //   setConvertedData({
+                    //     userAmount: 0,
+                    //     calculatedAmount: 0,
+                    //     targetAmount: 0,
+                    //     discountPercent: 0,
+                    //   });
+                    // } else {
+                    //   setIsMultics(true);
+                    //   setToSum(value.replaceAll(/[^0-9\.]/g, ''));
+                    // }
+
+                    setFromSum('');
+                    if (value.split('.').length === 1) {
+                      setToSum(value);
+                    } else if (value.split('.') && value.split('.')[1].length < 3) {
+                      setToSum(value);
                     }
                   }}
                 />
