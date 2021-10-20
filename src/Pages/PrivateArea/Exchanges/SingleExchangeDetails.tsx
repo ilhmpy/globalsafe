@@ -81,10 +81,6 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
     cb(res);
   };
 
-  function completedCallback(res: ViewExchangeModel) {
-    cb(res);
-  };
-
   useEffect(() => {
     if (hubConnection) {
       hubConnection.on("ExchangeAbused", cb);
@@ -105,10 +101,10 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
 
   useEffect(() => {
     if (hubConnection) {
-      hubConnection.on("ExchangeCompleted", completedCallback);
+      hubConnection.on("ExchangeCompleted", cb);
     };
     return () => {
-      hubConnection?.off("ExchangeCompleted", completedCallback);
+      hubConnection?.off("ExchangeCompleted", cb);
     };  
   }, [hubConnection]);
 
@@ -150,7 +146,7 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
                 <S.TitleContainer>
                     <Title mB={0}>Обмен {`${Balance[exchange.assetKind]}-${FiatKind[exchange.exchangeAssetKind]}`}</Title>
                     <Text size={14} lH={20} black>
-                      № {exchange.id}
+                      № {exchange.safeId}
                     </Text>
                 </S.TitleContainer>
                 <ExchangeDetailCard setCall={setCall} 

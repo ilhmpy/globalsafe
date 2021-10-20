@@ -39,7 +39,7 @@ type DetailCardProps = {
 export const ExchangeDetailCard: FC<DetailCardProps> = ({ 
   exchange, setCall, setShowSuccessModal, 
   setShowRejectModal, showRejectModal, 
-  showSuccessModal, owner
+  showSuccessModal,
 }: DetailCardProps) => {
   const history = useHistory();
   const [feedbackValue, setFeedbackValue] = useState(5);
@@ -48,6 +48,14 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
   const [draw, setDraw] = useState<boolean>(true);
   const [time, setTime] = useState<string>();
   const [timer, setTimer] = useState<any>();
+  const buyer = () => {
+    return (
+      (exchange && exchange.kind === 0 && exchange.ownerSafeId !== account.safeId) ||
+      (exchange && exchange.kind === 1 && exchange.ownerSafeId === account.safeId)
+    );
+  };
+
+  const [owner, setOwner] = useState<'seller' | 'buyer'>(buyer() ? 'buyer' : 'seller');
 
   const handleClick = () => {
     history.push(routers.p2pchangesSingleExchangeChat + '/' + exchange.safeId);
@@ -196,7 +204,6 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
 
   function rateUser() {
     if (hubConnection) {
-      console.log(owner === "seller" ? exchange.recepientId : exchange.ownerId)
       hubConnection
         .invoke(
           'RateUser',
@@ -244,6 +251,16 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
       );
     }
   }, [exchange.state]);
+
+  function editStateForTesting(state = 0) {
+    if (hubConnection) {
+      hubConnection.invoke("EditExchangeState", "379035279365767168", 0)
+        .then(() => console.log("change"))
+        .catch((err) => console.log(err));
+    };
+  };
+
+  // editStateForTesting(0);
 
   return (
     <S.Container>
@@ -326,7 +343,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
       {/* IF COMPLETED AND NOT GRADET */}
 
       <RightSide>
-        <S.StateBlock when={exchange.state < 2 || exchange.mark != null}>
+        <S.StateBlock when={exchange.state < 2 || exchange.state != 2 || exchange.mark != null}>
           <S.TitleBlockWrapper>
             <Title mB={10} lH={28}>
               {exchange.kind === 0 ? 'Продажа' : 'Покупка'}{' '}
@@ -603,7 +620,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
 
         {/* COMPLETED STATE */}
 
-        <S.StateBlock when={exchange.state === 2}>
+        <S.StateBlock when={exchange.state === 2 && exchange.mark === null}>
           <S.StateBlock when={owner === 'buyer'}>
             <S.TransferInfoBlock>
               <Text size={14} lH={20} black>
