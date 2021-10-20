@@ -168,11 +168,10 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
         .then((res) => {
           console.log('complete', res);
           setCall(true);
-          setShowSuccessModal(true);
         })
         .catch((err) => console.log(err));
-    }
-  }
+    };
+  };
 
   function cancelExchange(id: string) {
     if (hubConnection) {
@@ -183,8 +182,8 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
           setShowRejectModal(true);
         })
         .catch((err) => console.log(err));
-    }
-  }
+    };
+  };
 
   function confirmExchangePayment(id: string) {
     if (hubConnection) {
@@ -194,7 +193,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
           console.log('confirm', res);
           if (owner === 'buyer') {
             setCall(true);
-          }
+          };
         })
         .catch((err) => console.log(err));
     }
@@ -214,6 +213,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
         .then((res) => {
           console.log(res);
           setCall(true);
+          setShowSuccessModal(true);
         })
         .catch((err) => console.log(err));
     }
