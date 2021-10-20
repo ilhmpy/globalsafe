@@ -1,4 +1,4 @@
-import React, { FC, useContext, useEffect, useState } from 'react';
+import React, { ChangeEvent, FC, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
 import { Button } from '../../../components/Button/V2/Button';
@@ -92,7 +92,7 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
           String(Math.floor(+toSum * 100)),
           Balance.CWD
         );
-        console.log('estimatiOfExchange ~ response', response);
+        // console.log('estimatiOfExchange ~ response', response);
         setConvertedData({
           userAmount: response.calculatedAmount,
           calculatedAmount: response.calculatedAmount,
@@ -237,18 +237,6 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                   selectedOption={fromCurrency}
                   setSelectedOption={(val: string) => setFromCurrency(val)}
                 />
-                {console.log(
-                  '----------------->',
-                  fromSum
-                    ? Number(fromSum).toLocaleString('ru-RU', {
-                        maximumFractionDigits: 4,
-                      })
-                    : convertedData.userAmount <= 0
-                    ? ''
-                    : (convertedData.userAmount / 100000).toLocaleString('ru-RU', {
-                        maximumFractionDigits: 4,
-                      })
-                )}
                 <Input
                   type="number"
                   required
@@ -256,23 +244,24 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                   name="fromSum"
                   value={
                     fromSum
-                      ? Number(fromSum)
+                      ? fromSum
                       : convertedData.userAmount <= 0
                       ? ''
                       : convertedData.userAmount / 100000
                   }
-                  //   onKeyPress={(e) => e.charCode >= 48}
-                  onChange={(e: any) => {
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     const { value } = e.target;
                     console.log('value', value);
                     setToSum('');
 
-                    if (value.split('.').length === 1) {
-                      setFromSumCloud(value);
-                      setFromSum(value);
-                    } else if (value.split('.') && value.split('.')[1].length < 5) {
-                      setFromSumCloud(value);
-                      setFromSum(value);
+                    if (value[0] !== '0' || value[1] !== '0') {
+                      if (value.split('.')?.length === 1) {
+                        setFromSumCloud(value);
+                        setFromSum(value);
+                      } else if (value.split('.')[1]?.length < 5) {
+                        setFromSumCloud(value);
+                        setFromSum(value);
+                      }
                     }
 
                     setIsMultics(false);
@@ -301,9 +290,9 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                           maximumFractionDigits: 2,
                         })
                   }
-                  onChange={(e: any) => {
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     const { value } = e.target;
-                    console.log('value', value);
+                    setFromSum('');
 
                     if (value[0] !== '0' || value[1] !== '0') {
                       if (
@@ -313,7 +302,6 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                       } else if (value.split('.')?.length === 1 && value?.length < 11) {
                         setToSum(value);
 
-                        setFromSum('');
                         setConvertedData({
                           userAmount: 0,
                           calculatedAmount: 0,
