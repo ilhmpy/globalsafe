@@ -72,8 +72,6 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
     getTotalExecutedExchanges(exchange.ownerSafeId);
   }, [hubConnection]);
 
-  console.log(exchange);
-
   function getExchangeChip(chip: ExchangeState) {
     if (chip === 0) {
       return <Chip style={{ background: 'rgba(0, 148, 255, 10%)' }}>Новый</Chip>;
@@ -195,15 +193,18 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
         })
         .catch((err) => console.log(err));
     }
-  }
+  };
+
+  console.log(exchange);
 
   function rateUser() {
     if (hubConnection) {
+      console.log(owner === "seller" ? exchange.recepientId : exchange.ownerId)
       hubConnection
         .invoke(
           'RateUser',
           feedbackValue,
-          owner === 'seller' ? exchange.ownerId : exchange.recepientId,
+          owner === 'seller' ? exchange.recepientSafeId : exchange.ownerSafeId,
           exchange.safeId
         )
         .then((res) => {
