@@ -33,41 +33,50 @@ export const OwnExchanges = () => {
 
 
   const statuts = useMemo<string[]>(() => [
-    "Новый",
-    "Ожидается подтверждение выплаты",
-    "Завершен", 
+    "Ожидается подтверждение выплаты", 
     "Жалоба",
     "Отменен"
   ], []);
   
   const paymentMethodsKinds = useMemo<string[]>(() => [
-    'ERC 20',
-    'TRC 20',
-    'BEP 20',
-    'Банковский перевод',
-    'АО «Тинькофф Банк», USD',
-    'ПАО Сбербанк, USD',
     'АО «Альфа-Банк», USD',
+    'ПАО Сбербанк, USD',
+    'АО «Тинькофф Банк», USD',
+    'BEP 20',
+    'TRC 20',
+    'ERC 20',
   ], []);
 
   useEffect(() => {
     if (hubConnection) {
-      setLoading(true);
+      if (!selectedPaymentMethods.length) {
+        setLoading(true);
+      };
       getGetUserExchanges();
     };
-  }, [hubConnection, activeFilter]);
+  }, [hubConnection, activeFilter, selectedPaymentMethods]);
 
   async function getGetUserExchanges() {
     try {
       const res = await hubConnection!.invoke<GetExchangesCollectionResult>(
        'GetExchanges',
         [0, 1],
-        activeFilter === 'active' ? [0, 1, 2] : [3, 4],
+        activeFilter === 'active' ? [0, 1] : [2, 3, 4],
         0,
         10
       );
       console.log('getGetUserExchanges', res);
-      setUserExchanges(res.collection);
+
+      if (selectedPaymentMethods.length) {
+        /* setUserExchanges(() => res.collection.filter((i) => {
+          if (selectedPaymentMethods.some(method => i.paymentMethod.assetKind)) {
+            return i;
+          };
+        })); */
+      } else {
+        setUserExchanges(res.collection);
+      };
+
     } catch (err) {
       console.log(err);
     } finally {

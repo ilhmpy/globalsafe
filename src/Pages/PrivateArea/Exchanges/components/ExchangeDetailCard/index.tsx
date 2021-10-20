@@ -620,7 +620,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
             </S.TransferInfoBlock>
             <S.FeedbackBlock>
               <Text size={14} lH={20} mB={10} black>
-                Оставьте свою оценку покупателю:
+                Оставьте свою оценку продавцу:
               </Text>
               <Radio.Group>
                 <Radio
@@ -661,7 +661,10 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
               </Radio.Group>
             </S.FeedbackBlock>
 
-            <Button primary onClick={() => rateUser()}>
+            <Button primary onClick={() => {
+              rateUser();
+              setShowSuccessModal(true);
+            }}>
               Подтвердить
             </Button>
           </S.StateBlock>
@@ -721,7 +724,10 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                 />
               </Radio.Group>
             </S.FeedbackBlock>
-            <Button primary onClick={() => rateUser()}>
+            <Button primary onClick={() => {
+              rateUser();
+              setShowSuccessModal(true);
+            }}>
               Подтвердить
             </Button>
           </S.StateBlock>
@@ -729,12 +735,12 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
         {/* ************** */}
       </RightSide>
       <ExchangeSuccessModal
-        exchange={{ ...exchange, feadback: feedbackValue, owner }}
+        exchange={{ ...exchange, feedback: feedbackValue, owner }}
         open={showSuccessModal}
         onClose={() => setShowSuccessModal(false)}
       />
       <ExchangeRejectModal
-        exchange={{ ...exchange, feadback: feedbackValue, owner }}
+        exchange={{ ...exchange, feedback: feedbackValue, owner }}
         open={showRejectModal}
         onClose={() => setShowRejectModal(false)}
       />

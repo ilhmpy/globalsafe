@@ -82,9 +82,6 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
   };
 
   function completedCallback(res: ViewExchangeModel) {
-    if (owner === "buyer") {
-      setShowSuccessModal(true);
-    };
     cb(res);
   };
 
