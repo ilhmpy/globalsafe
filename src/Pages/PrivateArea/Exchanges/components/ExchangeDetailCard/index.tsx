@@ -88,7 +88,6 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
     'ERC20',
     'TRC20',
     'BEP20',
-    'BankTransfer',
     'АО «Тинькофф Банк»',
     'ПАО Сбербанк',
     'АО «Альфа-Банк»',

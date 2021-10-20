@@ -92,7 +92,7 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
 
     function getLinkAddress(link: string, kind: number) {
         if (kind === 20 || kind === 21 || kind === 22) {
-            return `/info/p2p-changes/orders/${link}`;
+            return `/info/p2p-changes/${link}`;
         };
     };
 

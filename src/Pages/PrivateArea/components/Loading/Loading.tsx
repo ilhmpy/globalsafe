@@ -43,6 +43,10 @@ export const NotDeposits = styled.div`
   line-height: 20px;
   margin: 20px 0;
   color: #000;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 export const spin = keyframes`

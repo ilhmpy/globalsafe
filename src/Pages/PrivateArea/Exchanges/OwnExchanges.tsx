@@ -39,9 +39,9 @@ export const OwnExchanges = () => {
   ], []);
   
   const paymentMethodsKinds = useMemo<string[]>(() => [
-    'АО «Альфа-Банк», USD',
-    'ПАО Сбербанк, USD',
-    'АО «Тинькофф Банк», USD',
+    'АО «Альфа-Банк»',
+    'ПАО Сбербанк',
+    'АО «Тинькофф Банк»',
     'BEP 20',
     'TRC 20',
     'ERC 20',
@@ -68,11 +68,12 @@ export const OwnExchanges = () => {
       console.log('getGetUserExchanges', res);
 
       if (selectedPaymentMethods.length) {
-        /* setUserExchanges(() => res.collection.filter((i) => {
-          if (selectedPaymentMethods.some(method => i.paymentMethod.assetKind)) {
-            return i;
+        const filter = res.collection.filter((i) => {
+          if (selectedPaymentMethods.includes(i.paymentMethod?.kind)) {
+              return i;
           };
-        })); */
+        });
+        setUserExchanges(filter);
       } else {
         setUserExchanges(res.collection);
       };
