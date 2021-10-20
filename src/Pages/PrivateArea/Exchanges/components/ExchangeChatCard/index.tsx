@@ -678,6 +678,10 @@ export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
     setModalImage(item);
   };
 
+  const buyer =
+    (exchange && exchange.kind === 0 && exchange.ownerSafeId !== userSafeId) ||
+    (exchange && exchange.kind === 1 && exchange.ownerSafeId === userSafeId);
+
   if (!exchange) {
     return null;
   }
@@ -706,7 +710,7 @@ export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
             })}{' '}
             {Balance[exchange.assetKind]}
           </Title>
-          <Chip>Продажа</Chip>
+          <Chip>{buyer ? 'Покупка' : 'Продажа'}</Chip>
         </S.BlockWrapper>
 
         <S.BlockWrapper>
