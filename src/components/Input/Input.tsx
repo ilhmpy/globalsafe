@@ -8,39 +8,34 @@ interface IProps {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onKeyPress?: (e: any) => void;
   disabled?: boolean;
+  className?: string;
+  readOnly?: boolean;
   type?: string;
   required?: boolean;
-  step?: string;
-  min?: string;
-  pattern?: string;
 }
 
 export const Input: FC<IProps> = ({
-  type,
   placeholder,
   name,
   value,
   onChange,
   disabled,
+  className = '',
+  readOnly = false,
+  type,
   required,
-  step,
-  min,
-  pattern,
-  onKeyPress,
 }: IProps) => {
   return (
     <InputUI
-      onKeyPress={onKeyPress}
-      pattern={pattern}
-      min={min}
-      step={step}
-      required={required}
-      type={type}
+      className={className}
       disabled={disabled}
       placeholder={placeholder}
       name={name}
       value={value}
       onChange={onChange}
+      readOnly={readOnly}
+      type={type}
+      required={required}
     />
   );
 };

@@ -10,6 +10,7 @@ import { OrderType, ViewBuyOrderModel } from '../../../../../types/orders';
 import { CollectionPayMethod, PaymentMethodKind, RootPayMethod } from '../../../../../types/paymentMethodKind';
 import { Checkbox } from '../../../components/Checkbox';
 import { LeftSide, RightSide, Space, TabNavItem, Text, Title } from '../../../components/ui';
+import { countVolumeToSend } from '../../../utils';
 import { OrderErrorModal } from '../modals/OrderErrorModal';
 import { OrderInfoModal } from '../modals/OrderInfoModal';
 import * as S from './S.el';
@@ -48,6 +49,7 @@ export const OrderToBuyCard: FC = () => {
 
   const [createOrderLoading, setCreateOrderLoading] = useState(false);
   const [newCreatedOrder, setNewCreatedOrder] = useState<ViewBuyOrderModel | undefined>(undefined);
+  const [dailyLimitRest, setDailyLimitRest] = useState(0);
 
   // Get Balance Kinds List as an Array
   const balanceKinds = useMemo<string[]>(() => {
@@ -70,6 +72,31 @@ export const OrderToBuyCard: FC = () => {
       getUserCertificate();
     }
   }, [currencyToChange]);
+
+  useEffect(() => {
+    if (hubConnection && currencyToBuy) {
+      handleGetDailyVolume();
+    }
+  }, [currencyToBuy]);
+
+  const handleGetDailyVolume = async () => {
+      try {
+        const res = await hubConnection!.invoke<number>(
+          'GetDailyVolume', 
+          Balance[currencyToBuy as keyof typeof Balance]
+        );
+        console.log('GetDailyVolume', res);
+        if(userActiveCertificate) {
+          // TODO: Write Logic for all assets, now will work only for CWD
+          if(userActiveCertificate.certificate.assetKind === 1) {
+            const rest = (userActiveCertificate.certificate.dailyVolume - res) / 100000;
+            setDailyLimitRest(rest);
+          }
+        }
+      } catch (err) {
+        console.log(err);
+      }
+  };
 
   const getUserPaymentMethods = async () => {
     if (currencyToChange) {
@@ -106,24 +133,17 @@ export const OrderToBuyCard: FC = () => {
     return withoutDuplicates;
   };
 
-  const countVolume = (summ: string, asset: number): string => {
-    const summary = Number(summ);
-    const value = asset === 1 ? summary * 100000 : asset === 42 ? summary * 10000 : summary;
-    return String(value);
-  };
-
-
   const handleCreateBuyOrder = async () => {
     setCreateOrderLoading(true);
     try {
       const res = await hubConnection!.invoke<ViewBuyOrderModel>(
         'CreateBuyOrder',
-        countVolume(orderSumm, Balance[currencyToBuy as keyof typeof Balance]), // string volume
+        countVolumeToSend(orderSumm, Balance[currencyToBuy as keyof typeof Balance]), // string volume
         +changeRate, // double rate
         Balance[currencyToBuy as keyof typeof Balance], // BalanceKind assetKind
         FiatKind[currencyToChange as keyof typeof FiatKind], // FiatKind operationAssetKind
-        +orderMinSumm, // long limitFrom
-        +orderMaxSumm, // long limitTo
+        +countVolumeToSend(orderMinSumm, Balance[currencyToBuy as keyof typeof Balance]), // long limitFrom
+        +countVolumeToSend(orderMaxSumm, Balance[currencyToBuy as keyof typeof Balance]), // long limitTo
         timeDurations.find((t) => t.label === changeTimePeriod)?.value, // int window
         findPaymentMethodKinds(
           paymentMethods?.filter((m) => selectedPaymentMethodsIds.includes(String(m.id)))
@@ -143,11 +163,8 @@ export const OrderToBuyCard: FC = () => {
   const onOrderSummChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const pattern = /^[1-9][0-9]*$/;
     if (e.target.value === '' || pattern.test(e.target.value)) {
-      if (
-        userActiveCertificate &&
-        +e.target.value > (userActiveCertificate.certificate.dailyVolume / 100000)
-      ) {
-        setOrderSumm(String(userActiveCertificate.certificate.dailyVolume / 100000));
+      if (+e.target.value > dailyLimitRest) {
+        setOrderSumm(String(dailyLimitRest));
       } else {
         setOrderSumm(e.target.value);
       }
@@ -166,13 +183,8 @@ export const OrderToBuyCard: FC = () => {
     if (e.target.value === '' || pattern.test(e.target.value)) {
       if (+e.target.value > +orderSumm) {
         setOrderMinSumm(orderSumm);
-        setOrderMaxSumm(orderSumm);
       } else {
         setOrderMinSumm(e.target.value);
-
-        if(+e.target.value > +orderMaxSumm) {
-          setOrderMaxSumm(e.target.value);
-        }
       }
     }
   };
@@ -184,10 +196,6 @@ export const OrderToBuyCard: FC = () => {
         setOrderMaxSumm(orderSumm);
       } else {
         setOrderMaxSumm(e.target.value);
-        
-        if(+e.target.value < +orderMinSumm) {
-          setOrderMinSumm(e.target.value);
-        }
       }
     }
   };

@@ -28,6 +28,30 @@ export const paymentMethodIconSrc = (kind: number): string => {
 };
 
 export const countVolumeToShow = (countVolume: number, asset: number): number => {
-  const value = asset === 1 ? countVolume / 100000 : asset === 42 ? countVolume / 10000 : countVolume;
+  let value = countVolume;
+  if(asset === 1) {
+    value = countVolume / 100000;
+  }
+  if(asset === 42) {
+    value = countVolume / 10000;
+  }
+  if(asset === 59) {
+    value = countVolume / 100;
+  }
   return value;
+};
+
+export const countVolumeToSend = (summ: string, asset: number): string => {
+  const summary = Number(summ);
+  let value = summary;
+  if(asset === 1) {
+    value = summary * 100000;
+  }
+  if(asset === 42) {
+    value = summary * 10000;
+  }
+  if(asset === 59) {
+    value = summary * 100;
+  }
+  return String(value);
 };

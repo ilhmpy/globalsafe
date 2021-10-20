@@ -25,6 +25,7 @@ type Context = {
   setChosenDepositView: (object: any) => void;
   setSelectedDeposit: (object: any) => void;
   account: any;
+  userSafeId: string | null;
 };
 
 export const AppContext = React.createContext<Context>({
@@ -44,7 +45,8 @@ export const AppContext = React.createContext<Context>({
   setSelectedDeposit: () => undefined,
   selectedDeposit: {},
   chosenDepositView: {},
-  account: {}
+  account: {},
+  userSafeId: null,
 });
 
 export const HubProvider: FC = ({ children }: any) => {
@@ -56,6 +58,7 @@ export const HubProvider: FC = ({ children }: any) => {
   const [isAdmin, setIsAdmin] = useState<null | boolean>(null);
   const [myToken, setMyToken] = useLocalStorage('token');
   const [balanceList, setBalanceList] = useState<BalanceList[] | null>(null);
+  const [userSafeId, setUserSafeId] = useState<null | string>(null);
   const [isFailed, setIsFailed] = useState<boolean | null>(null);
   const [chosenMethod, setChosenMethod] = useState<any>({});
   const [loan, setLoan] = useState<any[] | null>(null);
@@ -115,14 +118,14 @@ export const HubProvider: FC = ({ children }: any) => {
       }
     };
     if (hubConnection) {
-      hubConnection.on("OperationNotification", cb);
+      hubConnection.on('OperationNotification', cb);
     }
     if (hubConnection) {
       hubConnection.on('BalanceUpdate', cb);
     }
     return () => {
       hubConnection?.off('BalanceUpdate', cb);
-      hubConnection?.off("OperationNotification", cb);
+      hubConnection?.off('OperationNotification', cb);
     };
   }, [hubConnection, balanceList]);
 
@@ -132,8 +135,14 @@ export const HubProvider: FC = ({ children }: any) => {
         .invoke('GetSigned')
         .then((res) => {
           console.log('GetSigned', res);
+          if (res.roles.length && res.roles[0].name === 'administrator') {
+            setIsAdmin(true);
+          } else {
+            setIsAdmin(false);
+          }
           setUser(res.name);
           setAccount(res);
+          setUserSafeId(res.safeId);
           setLoading(false);
           if (res.balances.length) {
             const newArr = res.balances.filter((item: any) => item.balanceKind === 1);
@@ -148,11 +157,6 @@ export const HubProvider: FC = ({ children }: any) => {
               volume: item.volume,
             }));
             setBalanceList(res.balances);
-          }
-          if (res.roles.length && res.roles[0].name === 'administrator') {
-            setIsAdmin(true);
-          } else {
-            setIsAdmin(false);
           }
         })
         .catch((err) => {
@@ -199,7 +203,8 @@ export const HubProvider: FC = ({ children }: any) => {
         setChosenDepositView,
         setSelectedDeposit,
         selectedDeposit,
-        account
+        account,
+        userSafeId,
       }}
     >
       {children}

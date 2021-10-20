@@ -20,12 +20,12 @@ import { CollectionPayMethod, PaymentMethodKind } from '../../../../../types/pay
 import { routers } from '../../../../../constantes/routers';
 import { countVolumeToShow } from '../../../utils';
  
-interface OrderDetailCardProps {
+interface OrderDetailsCardOwnProps {
   order: ViewBuyOrderModel | ViewSellOrderModel;
   orderType: OrderType;
 }
 
-export const OrderDetailCardOwn: FC<OrderDetailCardProps> = ({ order, orderType }: OrderDetailCardProps) => {
+export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderType }: OrderDetailsCardOwnProps) => {
   const history = useHistory();
   const { user, hubConnection } = useContext(AppContext);
   const [sellOrderPaymentMethods, setSellOrderPaymentMethods] = useState<CollectionPayMethod[]>([]);
@@ -101,7 +101,7 @@ export const OrderDetailCardOwn: FC<OrderDetailCardProps> = ({ order, orderType 
 
         <S.BlockWrapper>
           <Text size={14} lH={20} mB={10} black>Рейтинг аккаунта:</Text>
-          <Title lH={28}>{order.userRating}</Title>
+          <Title lH={28}>{Number(order.userRating).toFixed(1)}</Title>
         </S.BlockWrapper>
 
       </LeftSide>
@@ -133,7 +133,7 @@ export const OrderDetailCardOwn: FC<OrderDetailCardProps> = ({ order, orderType 
           <S.BlockWrapper>
             <Text size={14} lH={20} mB={4} black>Лимиты:</Text>
             <Text size={14} lH={20} weight={500} black>
-            {`${order.limitFrom} - ${order.limitTo} ${FiatKind[order.operationAssetKind]}`}
+              {`${countVolumeToShow(order.limitFrom, order.assetKind)} - ${countVolumeToShow(order.limitTo, order.assetKind)} ${FiatKind[order.operationAssetKind]}`}
             </Text>
           </S.BlockWrapper>
 

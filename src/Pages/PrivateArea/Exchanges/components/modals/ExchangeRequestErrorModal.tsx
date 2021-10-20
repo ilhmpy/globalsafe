@@ -1,6 +1,8 @@
 import React, { FC } from 'react';
+import { useHistory } from 'react-router';
 import { Button } from '../../../../../components/Button/V2/Button';
 import { Modal } from '../../../../../components/ModalAnimated';
+import { routers } from '../../../../../constantes/routers';
 import * as S from './S.el';
 
 type Props = {
@@ -9,6 +11,12 @@ type Props = {
 };
 
 export const ExchangeRequestErrorModal: FC<Props> = ({ onClose, open }: Props) => {
+  const history = useHistory();
+
+  const handleGoToList = () => {
+    history.replace(routers.p2pchanges);
+  };
+
   return (
     <>
       {open && (
@@ -17,7 +25,7 @@ export const ExchangeRequestErrorModal: FC<Props> = ({ onClose, open }: Props) =
             <S.Title>Ошибка отправления заявки</S.Title>
             <S.Desc>Ваша заявка на покупку не была отправлена на обмен по причине:</S.Desc>
             <S.Reason>Владелец удалил ордер</S.Reason>
-            <Button fullWidth bigSize primary>
+            <Button fullWidth bigSize primary onClick={handleGoToList}>
               Список объявлений
             </Button>
           </S.Container>

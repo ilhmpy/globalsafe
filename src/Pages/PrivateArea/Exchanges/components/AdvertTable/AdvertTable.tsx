@@ -26,6 +26,8 @@ export const AdvertTable = ({ list, ordersType }: AdvertTableProps) => {
 
     if(order.userSafeId === account.safeId) {
       history.replace(`/info/p2p-changes/orders/my/${order.id}`);
+    } else {
+      history.replace(`/info/p2p-changes/orders/${order.id}`);
     }
   };
 
@@ -75,7 +77,7 @@ export const AdvertTable = ({ list, ordersType }: AdvertTableProps) => {
                   })} ${FiatKind[order.operationAssetKind]}`}
               </S.Cell>
               <S.Cell data-label="Лимиты">
-                {`${order.limitFrom} - ${order.limitTo} ${FiatKind[order.operationAssetKind]}`}
+                {`${countVolumeToShow(order.limitFrom, order.assetKind)} - ${countVolumeToShow(order.limitTo, order.assetKind)} ${FiatKind[order.operationAssetKind]}`}
               </S.Cell>
               <S.Cell data-label="Метод оплаты">
                 <S.BankList>
@@ -96,7 +98,9 @@ export const AdvertTable = ({ list, ordersType }: AdvertTableProps) => {
                 </S.BankList>
               </S.Cell>
               <S.Cell data-label="Время на обмен">{`${order.operationWindow.totalMinutes} м`}</S.Cell>
-              <S.Cell data-label="Рейтинг">{`${order.userRating ? order.userRating : '-'} (${order.totalExecuted})`}</S.Cell>
+              <S.Cell data-label="Рейтинг">
+                {`${order.userRating ? Number(order.userRating).toFixed(1) : '-'} (${order.totalExecuted})`}
+              </S.Cell>
             </S.BodyItem>
           ))
         }
