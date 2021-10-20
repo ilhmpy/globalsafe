@@ -14,7 +14,7 @@ import { GetExchangesCollectionResult, ViewExchangeModel } from '../../../types/
 
 export const OwnExchanges = () => {
   const history = useHistory();
-  const { hubConnection } = useContext(AppContext);
+  const { hubConnection, account } = useContext(AppContext);
   const [activeFilter, setActiveFilter] = useState<'active' | 'archived'>('active');
   const [userExchanges, setUserExchanges] = useState<ViewExchangeModel[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -44,6 +44,18 @@ export const OwnExchanges = () => {
     };
   };
 
+  function getMyRating() {
+    if (account.claims) {
+      let rating = 0;
+      account.claims.forEach((claim: any) => {
+      if (claim.claimType === "exchanges-rating") {
+        rating = claim.claimValue;
+      };
+    });
+      return (Number(rating)).toFixed(1);
+    };
+  };
+
   return (
     <div>
       <Container>
@@ -67,7 +79,7 @@ export const OwnExchanges = () => {
             </TabNavItem>
           </TabsBlock>
           <Text size={14} lH={16} weight={500} black>
-            Рейтинг аккаунта: 5.0
+            Рейтинг аккаунта: {getMyRating()}
           </Text>
         </S.SubHeader>
 

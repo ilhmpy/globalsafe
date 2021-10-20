@@ -23,6 +23,7 @@ import { FiatKind } from '../../../../../types/fiat';
 import { CollectionPayMethod, PaymentMethodKind, RootPayMethod } from '../../../../../types/paymentMethodKind';
 import { ViewUserCertificateModel } from '../../../../../types/certificates';
 import { OrderType, ViewSellOrderModel } from '../../../../../types/orders';
+import { countVolumeToSend } from '../../../utils';
  
 export const OrderToSellCard: FC = () => {
     const history = useHistory();
@@ -55,7 +56,8 @@ export const OrderToSellCard: FC = () => {
 
     const [createOrderLoading, setCreateOrderLoading] = useState(false);
     const [newCreatedOrder, setNewCreatedOrder] = useState<ViewSellOrderModel | undefined>(undefined);
-
+    const [dailyLimitRest, setDailyLimitRest] = useState(0);
+    
     // Get Balance Kinds List as an Array
     const balanceKinds = useMemo<string[]>(() => {
        // @ts-ignore: Unreachable code error
@@ -77,6 +79,31 @@ export const OrderToSellCard: FC = () => {
             getUserCertificate();
         }
     }, [currencyToChange]);
+
+    useEffect(() => {
+        if (hubConnection && currencyToSell) {
+          handleGetDailyVolume();
+        }
+    }, [currencyToSell]);
+
+    const handleGetDailyVolume = async () => {
+        try {
+          const res = await hubConnection!.invoke<number>(
+            'GetDailyVolume', 
+            Balance[currencyToSell as keyof typeof Balance]
+          );
+          console.log('GetDailyVolume', res);
+          if(userActiveCertificate) {
+            // TODO: Write Logic for all assets, now will work only for CWD
+            if(userActiveCertificate.certificate.assetKind === 1) {
+              const rest = (userActiveCertificate.certificate.dailyVolume - res) / 100000;
+              setDailyLimitRest(rest);
+            }
+          }
+        } catch (err) {
+          console.log(err);
+        }
+    };
 
     const getUserPaymentMethods = async () => {
         if(currencyToChange) {
@@ -113,18 +140,12 @@ export const OrderToSellCard: FC = () => {
         return withoutDuplicates;
     };
 
-    const countVolume = (summ: string, asset: number): string => {
-        const summary = Number(summ);
-        const value = asset === 1 ? summary * 100000 : asset === 42 ? summary * 10000 : summary;
-        return String(value);
-    };
-
     const handleCreateSellOrder = async () => {
         setCreateOrderLoading(true);
         try {
             const res = await hubConnection!.invoke<ViewSellOrderModel>(
                 'CreateSellOrder', 
-                countVolume(orderSumm, Balance[currencyToSell as keyof typeof Balance]), // string volume
+                countVolumeToSend(orderSumm, Balance[currencyToSell as keyof typeof Balance]), // string volume
                 +changeRate, // double rate
                 Balance[currencyToSell as keyof typeof Balance], // BalanceKind assetKind
                 FiatKind[currencyToChange as keyof typeof FiatKind], // FiatKind operationAssetKind
@@ -148,8 +169,8 @@ export const OrderToSellCard: FC = () => {
     const onOrderSummChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const pattern = /^[1-9][0-9]*$/;
         if (e.target.value === '' || pattern.test(e.target.value)) {
-            if(userActiveCertificate && (+e.target.value > (userActiveCertificate.certificate.dailyVolume / 100000))) {
-                setOrderSumm(String(userActiveCertificate.certificate.dailyVolume / 100000));
+            if (+e.target.value > dailyLimitRest) {
+                setOrderSumm(String(dailyLimitRest));
             } else {
                 setOrderSumm(e.target.value);
             }
@@ -168,13 +189,8 @@ export const OrderToSellCard: FC = () => {
         if (e.target.value === '' || pattern.test(e.target.value)) {
             if(+e.target.value > +orderSumm) {
                 setOrderMinSumm(orderSumm);
-                setOrderMaxSumm(orderSumm);
             } else {
                 setOrderMinSumm(e.target.value);
-
-                if(+e.target.value > +orderMaxSumm) {
-                    setOrderMaxSumm(e.target.value);
-                }
             }
         }
     };
@@ -186,10 +202,6 @@ export const OrderToSellCard: FC = () => {
                 setOrderMaxSumm(orderSumm);
             } else {
                 setOrderMaxSumm(e.target.value);
-
-                if(+e.target.value < +orderMinSumm) {
-                    setOrderMinSumm(e.target.value);
-                }
             }
         }
     };

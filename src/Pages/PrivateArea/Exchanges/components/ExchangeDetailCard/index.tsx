@@ -24,6 +24,7 @@ import moment from 'moment';
 import reactVirtualizedAutoSizer from 'react-virtualized-auto-sizer';
 import { setUncaughtExceptionCaptureCallback } from 'process';
 import { getVolume } from '../../../../../functions/getVolume';
+import { getTime } from 'date-fns';
 
 type DetailCardProps = {
   exchange: ViewExchangeModel;
@@ -50,6 +51,34 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
 
   const [owner, setOwner] = useState<'seller' | 'buyer' | undefined>(buyer() ? 'buyer' : 'seller');
 
+  useEffect(() => {
+    function cb() {
+      if (owner === "buyer") {
+        setShowSuccessModal(true);
+      };
+    };
+    if (hubConnection) {
+      hubConnection.on("ExchangeCompleted", cb);
+    };
+    return () => {
+      hubConnection?.off("ExchangeCompleted", cb);
+    };  
+  }, [hubConnection]);
+
+  useEffect(() => {
+    function cb() {
+      if (owner === "seller") {
+        setShowRejectModal(true);
+      };
+    };
+    if (hubConnection) {
+      hubConnection.on("ExchangeCancelled", cb);
+    } 
+    return () => {
+      hubConnection?.off("ExchangeCancelled", cb);
+    };
+  }, [hubConnection]);
+
   const handleClick = () => {
     history.push(routers.p2pchangesSingleExchangeChat + '/' + exchange.safeId);
     console.log('ExchangeDetailCard Click');
@@ -70,8 +99,6 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
   useEffect(() => {
     getTotalExecutedExchanges(exchange.ownerSafeId);
   }, [hubConnection]);
-
-  console.log(exchange);
 
   function getExchangeChip(chip: ExchangeState) {
     if (chip === 0) {
@@ -194,15 +221,18 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
         })
         .catch((err) => console.log(err));
     }
-  }
+  };
+
+  console.log(exchange);
 
   function rateUser() {
     if (hubConnection) {
+      console.log(owner === "seller" ? exchange.recepientId : exchange.ownerId)
       hubConnection
         .invoke(
           'RateUser',
           feedbackValue,
-          owner === 'seller' ? exchange.ownerId : exchange.recepientId,
+          owner === 'seller' ? exchange.recepientSafeId : exchange.ownerSafeId,
           exchange.safeId
         )
         .then((res) => {
@@ -225,37 +255,22 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
     }
   }
 
+  function getTime() {
+    const total = exchange.operationWindow.totalMilliseconds - (new Date().getTime() - new Date(exchange.creationDate).getTime());
+    const seconds = Math.floor((total/1000) % 60);
+    const minutes = Math.floor((total/1000/60) % 60);
+    const hours = Math.floor((total/(1000*60*60)) % 24);
+    const days = Math.floor(total/(1000*60*60*24));
+    const result = { days, hours, minutes, seconds };
+    setTime(getCountsTime(result));
+  };
+
   useEffect(() => {
     if (exchange.state === 1) {
-      const result = {
-        days: exchange.operationWindow.days - moment().diff(exchange.creationDate, 'days', false),
-        hours:
-          exchange.operationWindow.totalHours -
-          moment().diff(exchange.creationDate, 'hours', false),
-        minutes:
-          exchange.operationWindow.totalMinutes -
-          moment().diff(exchange.creationDate, 'minutes', false),
-        seconds:
-          exchange.operationWindow.totalSeconds -
-          moment().diff(exchange.creationDate, 'seconds', false),
-      };
-      setTime(getCountsTime(result));
+      getTime();
       setTimer(
         setInterval(() => {
-          const result = {
-            days:
-              exchange.operationWindow.days - moment().diff(exchange.creationDate, 'days', false),
-            hours:
-              exchange.operationWindow.totalHours -
-              moment().diff(exchange.creationDate, 'hours', false),
-            minutes:
-              exchange.operationWindow.totalMinutes -
-              moment().diff(exchange.creationDate, 'minutes', false),
-            seconds:
-              exchange.operationWindow.totalSeconds -
-              moment().diff(exchange.creationDate, 'seconds', false),
-          };
-          setTime(getCountsTime(result));
+          getTime();
         }, 60000)
       );
     }

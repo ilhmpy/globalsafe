@@ -11,6 +11,7 @@ import { FiatKind } from "../../../../../types/fiat";
 import { PaymentMethodKind } from "../../../../../types/paymentMethodKind";
 import moment from "moment";
 import { Loading, NotItems } from "../../../components/Loading/Loading";
+import { getVolume } from "../../../../../functions/getVolume";
 
 import * as S from './S.el';
 
@@ -149,7 +150,7 @@ export const OwnArchivedExchangesTable: FC<OwnExchangesProps> = ({ exchanges, lo
                       <S.Cell data-label="Дата">{moment(exchange.creationDate).format("DD.MM.YYYY")}</S.Cell>
                       <S.Cell data-label="Тип">{exchange.kind === 0 ? "Продажа" : "Покупка"}</S.Cell>
                       <S.Cell data-label="Кол-во">
-                        {(exchange.volume).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {Balance[exchange.assetKind]}
+                        {(getVolume(exchange.volume, exchange.assetKind)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {Balance[exchange.assetKind]}
                       </S.Cell>
                       <S.Cell data-label="Курс">{exchange.rate}</S.Cell>
                       <S.Cell data-label="Сумма оплаты">

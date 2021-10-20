@@ -29,7 +29,7 @@ export const BallContainer = styled.div<{ notChecked: boolean; }>`
     }
 `;
 
-export const NotifiesBlock = styled.div<{ block: boolean; auth?: boolean; admin?: boolean; empty: boolean; load: boolean; }>`
+export const NotifiesBlock = styled.div<{ block: boolean; auth?: boolean; admin?: boolean; empty: boolean; load: boolean; inPA?: boolean; }>`
     width: 80%;
     max-width: 420px;
     height: ${({ empty }) => empty ? "80px" : "584px"};
@@ -59,6 +59,18 @@ export const NotifiesBlock = styled.div<{ block: boolean; auth?: boolean; admin?
                @media only screen and (max-device-width: 767px) {
                 right: 0px;
                }
+            `;
+        };
+    }}
+    ${({ inPA, admin }) => {
+        if (admin && inPA) {
+            return `
+                right: -20px;  
+            `;
+        };
+        if (inPA) {
+            return `
+                right: -20px;  
             `;
         };
     }}
