@@ -21,6 +21,7 @@ export const Advert = () => {
   const history = useHistory();
   const { hubConnection } = useContext(AppContext);
   const [activeType, setActiveType] = useState<OrderType>(OrderType.Buy);
+  const [listingMyOrders, setListingMyOrders] = useState<boolean>(false);
   const [selectedBalanceKind, setSelectedBalanceKind] = useState<string | null>(null);
   const [selectedFiatKind, setSelectedFiatKind] = useState<string | null>(null);
   const [showCurrencyPairModal, setShowCurrenctPairModal] = useState(false);
@@ -32,7 +33,7 @@ export const Advert = () => {
   const [showPaymentMethodsModal, setShowPaymentMethodsModal] = useState(false);
   const [selectedPaymentMethods, setSelectedPaymentMethods] = useState<number[]>([]);
   const [acceptedPaymentMethods, setAcceptedPaymentMethods] = useState<number[]>([]);
-
+ 
   const [totalCount, setTotalCount] = useState(0);
   const [skip, setSkip] = useState(0);
 
@@ -55,17 +56,21 @@ export const Advert = () => {
     'АО «Альфа-Банк», USD',
   ], []);
 
+  const getOrders = () => {
+    if(activeType === OrderType.Buy) {
+      getBuyOrders();
+    }
+
+    if(activeType === OrderType.Sell) {
+      getSellOrders();
+    }
+  }
+
   useEffect(() => {
     if (hubConnection) {
-      if(activeType === OrderType.Buy) {
-        getBuyOrders();
-      }
-
-      if(activeType === OrderType.Sell) {
-        getSellOrders();
-      }
+      getOrders();
     }
-  }, [hubConnection, activeType, selectedPair, acceptedRate, acceptedPaymentMethods]);
+  }, [hubConnection, activeType, selectedPair, acceptedRate, acceptedPaymentMethods, listingMyOrders]);
 
   const getBuyOrders = async () => {
       try {
@@ -75,7 +80,7 @@ export const Advert = () => {
           selectedPair?.fiat ? [ FiatKind[selectedPair?.fiat as keyof typeof FiatKind] ] : [],  // Array of FiatKind opAssetKinds
           acceptedPaymentMethods, // Array of PaymentMethodKind[] paymentMethodKinds
           acceptedRate, // int rating
-          false,
+          listingMyOrders, // if true ? will show my orders
           skip, 
           10
         );
@@ -97,7 +102,7 @@ export const Advert = () => {
         selectedPair?.fiat ? [ FiatKind[selectedPair?.fiat as keyof typeof FiatKind] ] : [],  // Array of FiatKind opAssetKinds
         acceptedPaymentMethods, // Array of PaymentMethodKind[] paymentMethodKinds
         acceptedRate, // int rating
-        false,
+        listingMyOrders, // if true ? will show my orders
         skip, 
         10
       );
@@ -154,7 +159,33 @@ export const Advert = () => {
     if(activeType === OrderType.Sell) {
       getSellOrders();
     }
-  }
+  };
+
+
+  // Listening to changes
+  const cb = (res: any) => {
+    console.log("socket works::", res);
+    getOrders();
+  };
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection.on("SellOrderCreated", cb);
+      hubConnection.on("BuyOrderCreated", cb);
+      hubConnection.on("BuyOrderVolumeChanged", cb);
+      hubConnection.on("SellOrderVolumeChanged", cb);
+      hubConnection.on("SellOrderCompleted", cb);
+      hubConnection.on("BuyOrderCompleted", cb);
+    };
+    return () => {
+      hubConnection?.off("SellOrderCreated", cb);
+      hubConnection?.off("BuyOrderCreated", cb);
+      hubConnection?.off("BuyOrderVolumeChanged", cb);
+      hubConnection?.off("SellOrderVolumeChanged", cb);
+      hubConnection?.off("SellOrderCompleted", cb);
+      hubConnection?.off("BuyOrderCompleted", cb);
+    };
+  }, [hubConnection]);
 
   return (
     <div>
@@ -183,20 +214,34 @@ export const Advert = () => {
           </Text>
         </S.SubHeader>
         <S.Filters>
-          <FilterButton active>Все объявления</FilterButton>
-          <FilterButton>Мои объявления</FilterButton>
+          <FilterButton 
+            active={!listingMyOrders}
+            onClick={() => setListingMyOrders(false)}
+            style={{ marginRight: "0px" }}
+          >
+            Все объявления
+          </FilterButton>
+          <FilterButton
+            active={listingMyOrders}
+            onClick={() => setListingMyOrders(true)}
+            style={{ marginLeft: "0px", borderLeft: "0" }}
+          >
+            Мои объявления
+          </FilterButton>
 
         </S.Filters>
         <S.Filters>
           <FilterButton 
             active={activeType === OrderType.Buy}
             onClick={() => setActiveType(OrderType.Buy)}
+            style={{ marginRight: "0px" }}
           >
             Покупка
           </FilterButton>
           <FilterButton
             active={activeType === OrderType.Sell}
             onClick={() => setActiveType(OrderType.Sell)}
+            style={{ marginLeft: "0px", borderLeft: "0" }}
           >
             Продажа
           </FilterButton>
@@ -271,7 +316,7 @@ export const Advert = () => {
           onClose={() => setShowPaymentMethodsModal(false)} 
         />
       
-        <AdvertTable list={ordersList} ordersType={activeType} />
+        <AdvertTable list={ordersList} />
 
         {
           (ordersList.length < totalCount) &&  
