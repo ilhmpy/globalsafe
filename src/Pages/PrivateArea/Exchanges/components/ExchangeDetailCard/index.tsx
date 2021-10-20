@@ -49,7 +49,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
     );
   };
 
-  const [owner, setOwner] = useState<'seller' | 'buyer' | undefined>(buyer() ? 'buyer' : 'seller');
+  const [owner, setOwner] = useState<'seller' | 'buyer'>(buyer() ? 'buyer' : 'seller');
 
   useEffect(() => {
     function cb() {

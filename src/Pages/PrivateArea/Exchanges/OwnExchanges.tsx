@@ -31,7 +31,7 @@ export const OwnExchanges = () => {
       const res = await hubConnection!.invoke<GetExchangesCollectionResult>(
        'GetExchanges',
         [0, 1],
-        activeFilter === 'active' ? [0, 1, 3] : [2],
+        activeFilter === 'active' ? [0, 1, 2] : [3, 4],
         0,
         10
       );

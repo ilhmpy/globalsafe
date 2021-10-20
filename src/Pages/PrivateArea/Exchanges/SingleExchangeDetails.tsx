@@ -57,7 +57,11 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
 
   function cb(res: any) {
     console.log("ExchangeChanged", res);
-    getExchange(false);
+    if (exchange) {
+      if (res.safeId === exchange.safeId) {
+        setExchange(res);
+      };
+    };
   };
 
   useEffect(() => {
