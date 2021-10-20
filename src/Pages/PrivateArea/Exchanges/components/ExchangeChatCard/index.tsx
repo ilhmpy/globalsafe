@@ -18,7 +18,7 @@ type Props = {
 
 export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
   const [value, setValue] = useState('');
-  const { hubConnection } = useContext(AppContext);
+  const { hubConnection, userSafeId } = useContext(AppContext);
   const [history, setHistory] = useState<CollectionHistory[]>([]);
   const [loaderPicture, setLoaderPicture] = useState(false);
   const [myToken] = useLocalStorage('token');
@@ -75,7 +75,7 @@ export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0] && event.target.files[0].size < 5e6) {
-      // console.log("event.target.files", event.target.files[0]);
+      console.log('event.target.files', event.target.files[0]);
       setLoaderPicture(true);
       // scrollto();
       const fileUploaded = event.target.files[0];
@@ -195,51 +195,30 @@ export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
           </S.ChatHeader>
 
           <S.ChatContainer>
-            <MessageCard
-              own={false}
-              date="15 минут назад"
-              body="Добрый вечер, я отправил деньги на указанный счет, давайте ускорим процесс обмена :)"
-            />
-            <MessageCard own={false} image />
+            {history.map((item) => (
+              <div key={item.safeId}>
+                <MessageCard
+                  image={item.messageKind === 1}
+                  own={item.userSafeId === userSafeId}
+                  body={item}
+                />
+              </div>
+            ))}
+
+            {/* <MessageCard own={false} image />
 
             <MessageCard
               own={true}
               date="10 минут назад"
               body="Хорошо, надеюсь ничего серьезного с банковской проблемой, отменяю обмен и спасибо что предупредили !"
             />
-            <MessageCard own={true} date="Только что" body="Пошел отменять заявку" />
-            <MessageCard
-              own={false}
-              date="15 минут назад"
-              body="Добрый вечер, я отправил деньги на указанный счет, давайте ускорим процесс обмена :)"
-            />
-            <MessageCard own={false} image />
-
-            <MessageCard
-              own={true}
-              date="10 минут назад"
-              body="Хорошо, надеюсь ничего серьезного с банковской проблемой, отменяю обмен и спасибо что предупредили !"
-            />
-            <MessageCard own={true} date="Только что" body="Пошел отменять заявку" />
-            <MessageCard
-              own={false}
-              date="15 минут назад"
-              body="Добрый вечер, я отправил деньги на указанный счет, давайте ускорим процесс обмена :)"
-            />
-            <MessageCard own={false} image />
-
-            <MessageCard
-              own={true}
-              date="10 минут назад"
-              body="Хорошо, надеюсь ничего серьезного с банковской проблемой, отменяю обмен и спасибо что предупредили !"
-            />
-            <MessageCard own={true} date="Только что" body="Пошел отменять заявку" />
+            <MessageCard own={true} date="Только что" body="Пошел отменять заявку" /> */}
           </S.ChatContainer>
 
           <S.ChatFooter>
             <S.SendMessageForm onSubmit={handleSendMessage}>
               <S.FileUpload>
-                <S.FileInput type="file" hidden />
+                <S.FileInput onChange={handleChange} type="file" hidden />
                 <AttachIcon />
               </S.FileUpload>
               <S.SendInput

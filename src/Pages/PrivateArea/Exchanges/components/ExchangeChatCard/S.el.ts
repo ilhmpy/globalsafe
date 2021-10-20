@@ -67,10 +67,12 @@ export const ChatContainer = styled.div`
     flex: 1;
     display: flex;
     flex-direction: column;
-
-    max-height: 572px;
+    min-height: calc(100vh - 328px);
     overflow-y: scroll;
-
+    @media (max-width: 768px){
+      min-height: 400px;
+      max-height: 400px;
+    }
     &::-webkit-scrollbar {
         display: none;
       }
