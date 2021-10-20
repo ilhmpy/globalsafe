@@ -86,8 +86,7 @@ export const OwnExchanges = () => {
         0,
         10
       );
-      console.log('getGetUserExchanges', res);
-
+      console.log('GetExchanges', res);
       if (selectedPaymentMethods.length) {
         const filter = res.collection.filter((i) => {
           if (selectedPaymentMethods.includes(i.paymentMethod?.kind)) {
@@ -98,8 +97,6 @@ export const OwnExchanges = () => {
       } else if (selectedBalanceKind && selectedFiatKind) {
         const kind = getBalanceKindByStringName(selectedBalanceKind);
         const fiatKind = getFiatKindByStringName(selectedFiatKind);
-
-        console.log(kind, fiatKind);
 
         const filter = res.collection.filter((i) => {
           if (i.assetKind === kind && i.exchangeAssetKind === fiatKind) {
