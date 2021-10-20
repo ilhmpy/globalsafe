@@ -211,7 +211,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                 {`Рейтинг ${orderType === OrderType.Buy ? 'покупателя' : 'продавца'}:`}
             </Text>
             <Title lH={28}>
-                {`${order.userRating ? order.userRating : '-'} (${order.totalExecuted})`}
+                {`${order.userRating ? Number(order.userRating).toFixed(1) : '-'} (${order.totalExecuted})`}
             </Title>
             </S.BlockWrapper>
         </LeftSide>
