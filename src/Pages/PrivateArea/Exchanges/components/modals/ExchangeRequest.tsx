@@ -58,7 +58,7 @@ export const ExchangeRequestModal: FC<Props> = ({
               <S.Listitem>
                 <S.ListitemName>
                    
-                  {`Рейтинг ${orderType === OrderType.Buy ? 'продавца' : 'покупателя'}:`}
+                  {`Рейтинг ${orderType === OrderType.Buy ? 'покупателя' : 'продавца'}:`}
                 </S.ListitemName>
                 <S.Line />
                 <S.ListitemValue>{order.userRating ? order.userRating : '-'}</S.ListitemValue>
