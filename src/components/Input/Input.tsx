@@ -1,4 +1,4 @@
-import { ChangeEvent, FC } from 'react';
+import { ChangeEvent, FC, KeyboardEventHandler } from 'react';
 import styled from 'styled-components';
 
 interface IProps {
@@ -6,12 +6,36 @@ interface IProps {
   name: string;
   value: string | number;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onKeyPress?: (e: any) => void;
   disabled?: boolean;
+  type?: string;
+  required?: boolean;
+  step?: string;
+  min?: string;
+  pattern?: string;
 }
 
-export const Input: FC<IProps> = ({ placeholder, name, value, onChange, disabled }: IProps) => {
+export const Input: FC<IProps> = ({
+  type,
+  placeholder,
+  name,
+  value,
+  onChange,
+  disabled,
+  required,
+  step,
+  min,
+  pattern,
+  onKeyPress,
+}: IProps) => {
   return (
     <InputUI
+      onKeyPress={onKeyPress}
+      pattern={pattern}
+      min={min}
+      step={step}
+      required={required}
+      type={type}
       disabled={disabled}
       placeholder={placeholder}
       name={name}
