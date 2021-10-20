@@ -11,6 +11,7 @@ type Props = {
   onAccept: () => void;
   onClose: () => void;
   open: boolean;
+  text?: string;
 };
 
 export const PaymentMethods: FC<Props> = ({ 
@@ -19,7 +20,8 @@ export const PaymentMethods: FC<Props> = ({
   methodsList,
   onAccept,
   onClose,
-  open 
+  open,
+  text = "Выбор методов оплаты"
 }: Props) => {
 
   const handleCheckboxChange = (index: number) => {
@@ -35,7 +37,7 @@ export const PaymentMethods: FC<Props> = ({
       {open && (
         <Modal onClose={onClose} open={open}>
           <S.Container>
-            <S.Title>Выбор методов оплаты</S.Title>
+            <S.Title>{text}</S.Title>
             {
               [...methodsList].reverse().map((methodName, i) => (
                 i !== 3
