@@ -1,4 +1,4 @@
-import React, { FC, useState, useContext, useEffect } from 'react';
+import React, { FC, useState, useContext, useEffect, useRef } from 'react';
 import * as S from './S.el';
 import { Chip, LeftSide, MessageCard, RightSide, Text, Title } from '../../../components/ui';
 import { routers } from '../../../../../constantes/routers';
@@ -18,6 +18,9 @@ import moment from 'moment';
 import 'moment-duration-format';
 import { payListItem } from '../../../Settings/utils';
 import 'moment/locale/ru';
+import { Loading } from '../../../../../components/UI/Loading';
+import { TypeFlags } from 'typescript';
+import { ModalShowImage } from './ModalShow';
 
 const mockData = [
   {
@@ -514,12 +517,13 @@ export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
   const [value, setValue] = useState('');
   const { hubConnection, userSafeId } = useContext(AppContext);
   const [history, setHistory] = useState<CollectionHistory[]>([]);
+  const [historyList, setHistoryList] = useState<HistoryCollection | null>(null);
   const [loaderPicture, setLoaderPicture] = useState(false);
+  const [modalImage, setModalImage] = useState<null | string>(null);
   const [myToken] = useLocalStorage('token');
+  const ref = useRef<HTMLDivElement>(null);
+  const messageEl = useRef<HTMLDivElement>(null);
   moment.locale('ru');
-  const handleClick = () => {
-    console.log('ExchangeDetailCard Click');
-  };
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -528,6 +532,19 @@ export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
     }
 
     setValue('');
+  };
+
+  const scrollto = () => {
+    if (ref && ref.current) {
+      ref.current.scrollIntoView();
+    }
+  };
+
+  const scrollToMyRef = () => {
+    if (ref && ref.current) {
+      const scroll = ref.current.scrollHeight - ref.current.clientHeight;
+      ref.current.scrollTo(0, scroll);
+    }
   };
 
   useEffect(() => {
@@ -545,9 +562,9 @@ export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
               result[d] = [item];
             }
           });
-          console.log('result', result);
-          setHistory(res.collection);
-          console.log('GetExchangeChat', res);
+          setHistoryList(result);
+          // console.log('GetExchangeChat', res);
+          scrollto();
         })
         .catch((e) => console.log(e));
     }
@@ -561,10 +578,21 @@ export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
     const cb = (data: CollectionHistory) => {
       if (exchange && data.exchangeSafeId === exchange.safeId) {
         if (data.message.trim() !== '') {
-          setLoaderPicture(false);
           setHistory([...history, data]);
+
+          const result: HistoryCollection = { ...historyList };
+
+          const d = moment.utc(data.messageDate).local().format('MM/DD/YYYY');
+          if (result[d]) {
+            result[d].push(data);
+          } else {
+            result[d] = [data];
+          }
+          setHistoryList(result);
+          setLoaderPicture(false);
+
           // statesBadge(data.exchangeSafeId);
-          // scrollto();
+          scrollto();
         }
       }
     };
@@ -575,13 +603,13 @@ export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
       cancel = true;
       hubConnection?.off('ExchangeMessage', cb);
     };
-  }, [hubConnection, exchange, history]);
+  }, [hubConnection, exchange, historyList]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0] && event.target.files[0].size < 5e6) {
-      console.log('event.target.files', event.target.files[0]);
+      // console.log('event.target.files', event.target.files[0]);
       setLoaderPicture(true);
-      // scrollto();
+      scrollToMyRef();
       const fileUploaded = event.target.files[0];
       const val = ['image/jpeg', 'image/png'].includes(fileUploaded.type);
       fetchPicture(event.target.files[0]);
@@ -620,6 +648,34 @@ export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  useEffect(() => {
+    if (loaderPicture) {
+      if (ref && ref.current) {
+        ref.current.scrollIntoView();
+      }
+    }
+  }, [loaderPicture, ref]);
+
+  useEffect(() => {
+    if (historyList) {
+      scrollto();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!historyList) return;
+    const timer = setTimeout(() => scrollto(), 1000);
+    return () => clearTimeout(timer);
+  }, [historyList]);
+
+  const onCloseModal = () => {
+    setModalImage(null);
+  };
+
+  const onClickImage = (item: string) => {
+    setModalImage(item);
   };
 
   if (!exchange) {
@@ -725,31 +781,43 @@ export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
       </LeftSide>
 
       <S.RightSide>
+        {modalImage && <ModalShowImage image={modalImage} onClose={onCloseModal} />}
         <S.ChatWrapper>
-          <S.ChatHeader>
-            <Text size={12} lH={16} black>
-              23.09.2021 Четверг
-            </Text>
-          </S.ChatHeader>
-
           <S.ChatContainer>
-            {history.map((item) => (
-              <MessageCard
-                key={item.safeId}
-                image={item.messageKind === 1}
-                own={item.userSafeId === userSafeId}
-                body={item}
-              />
-            ))}
-            <div id="bottom"></div>
-            {/* <MessageCard own={false} image />
-
-            <MessageCard
-              own={true}
-              date="10 минут назад"
-              body="Хорошо, надеюсь ничего серьезного с банковской проблемой, отменяю обмен и спасибо что предупредили !"
-            />
-            <MessageCard own={true} date="Только что" body="Пошел отменять заявку" /> */}
+            {historyList
+              ? Object.keys(historyList).map((key) => (
+                  <div key={key}>
+                    <S.ChatHeader>
+                      <Text size={12} lH={16} black>
+                        {moment(new Date(key)).calendar(null, {
+                          lastDay: `[Вчера]`,
+                          sameDay: `[Сегодня]`,
+                          lastWeek: 'MMMM DD',
+                          nextWeek: 'dddd',
+                          sameElse: 'MMMM DD',
+                        })}
+                      </Text>
+                    </S.ChatHeader>
+                    <>
+                      {historyList[key].map((item) => (
+                        <MessageCard
+                          onClickImage={onClickImage}
+                          key={item.safeId}
+                          image={item.messageKind === 1}
+                          own={item.userSafeId === userSafeId}
+                          body={item}
+                        />
+                      ))}
+                    </>
+                  </div>
+                ))
+              : null}
+            {loaderPicture ? (
+              <S.LoaderContainer>
+                <Loading />
+              </S.LoaderContainer>
+            ) : null}
+            <div ref={ref} />
           </S.ChatContainer>
 
           <S.ChatFooter>

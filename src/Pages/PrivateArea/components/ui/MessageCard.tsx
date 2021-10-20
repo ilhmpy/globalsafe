@@ -8,13 +8,19 @@ interface MessageCardProps {
   own?: boolean;
   image: boolean;
   body: CollectionHistory;
+  onClickImage: (item: string) => void;
 }
 
-export const MessageCard = ({ own = true, image = false, body }: MessageCardProps) => {
+export const MessageCard = ({
+  own = true,
+  image = false,
+  body,
+  onClickImage,
+}: MessageCardProps) => {
   if (image) {
     return (
       <MessageContainer own={own}>
-        <MessageBlock own={own}>
+        <MessageBlock pointer own={own} onClick={() => onClickImage(body.message)}>
           {/* <ChatTestImage /> */}
           <img src={body.message} alt="" />
         </MessageBlock>
@@ -57,7 +63,7 @@ const PartnerMessageStyles = css`
   border-radius: 0px 4px 4px 4px;
 `;
 
-const MessageBlock = styled.div<{ own: boolean }>`
+const MessageBlock = styled.div<{ own: boolean; pointer?: boolean }>`
   max-width: 470px;
   font-weight: 300;
   font-size: 14px;
@@ -65,4 +71,5 @@ const MessageBlock = styled.div<{ own: boolean }>`
   color: ${(props) => props.theme.black};
   padding: 12px;
   ${(props) => (props.own ? OwnMessageStyles : PartnerMessageStyles)};
+  cursor: ${(props) => (props.pointer ? 'pointer' : 'inherit')};
 `;
