@@ -84,26 +84,28 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
     const handleCreateExchange = async () => {
         if(orderType === OrderType.Buy) {
             try {
-                console.log('order.safeId', order.safeId)
-                console.log('balanceSumm', countVolumeToSend(balanceSumm, order.assetKind))
                 const res = await hubConnection!.invoke<ViewExchangeModel>(
                     'CreateSellExchange',  
                     order.safeId,
                     countVolumeToSend(balanceSumm, order.assetKind)
                 );
                 console.log('CreateSellExchange', res);
+
+                // Add Payment Method for created Exchange
+                const response = await hubConnection!.invoke<null>(
+                    'SetExchangePaymentMethod',  
+                    res.safeId,
+                    paymentMethodSafeId
+                );
+                
+                console.log('SetExchangePaymentMethod', response);
                 setShowCreateExchangeModal(false);
             } catch (err) { 
-                console.log('CreateSellExchange err', err)
                 setShowCreateExchangeModal(false);
                 setShowErrorModal(true);
             }
         } else {
             try {
-                console.log('order.safeId', order.safeId)
-                console.log('balanceSumm', countVolumeToSend(balanceSumm, order.assetKind))
-                console.log('paymentMethodSafeId', paymentMethodSafeId)
-
                 const res = await hubConnection!.invoke<null>(
                     'CreateBuyExchange',  
                     order.safeId,
@@ -113,7 +115,6 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                 console.log('CreateBuyExchange', res)
                 setShowCreateExchangeModal(false);
             } catch (err) { 
-                console.log('CreateBuyExchange err', err)
                 setShowCreateExchangeModal(false);
                 setShowErrorModal(true);
             }
@@ -123,7 +124,12 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
     const onBalanceSummChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const pattern = /^[0-9][0-9\.]*$/;
         if (e.target.value === '' || pattern.test(e.target.value)) {
-            setBalanceSumm(e.target.value);
+            const limitTo = countVolumeToShow(+order.limitTo, order.assetKind);
+            if(+e.target.value > limitTo) {
+                setBalanceSumm(String(limitTo));
+            } else {
+                setBalanceSumm(e.target.value);
+            }
         }
     };
 
@@ -205,7 +211,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                 {`Рейтинг ${orderType === OrderType.Buy ? 'покупателя' : 'продавца'}:`}
             </Text>
             <Title lH={28}>
-                {`${order.userRating ? order.userRating : '-'} (${order.totalExecuted})`}
+                {`${order.userRating ? Number(order.userRating).toFixed(1) : '-'} (${order.totalExecuted})`}
             </Title>
             </S.BlockWrapper>
         </LeftSide>
@@ -397,24 +403,14 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
             </S.TransferInfoBlock>
 
             {
-                orderType === OrderType.Buy 
-                ?
-                    <S.Button 
-                        as="button"
-                        primary 
-                        onClick={() => setShowCreateExchangeModal(true)}
-                        disabled={!balanceSumm}
-                    >
-                        Продать
-                    </S.Button>
-                :
+                
                     <S.Button 
                         as="button"
                         primary 
                         onClick={() => setShowCreateExchangeModal(true)}
                         disabled={!paymentMethodSafeId || !balanceSumm}
                     >
-                        Купить
+                       {orderType === OrderType.Buy ? 'Продать' : 'Купить'}
                     </S.Button>
             }
             

@@ -15,6 +15,7 @@ import {
   ModalContent,
   ModalTitle,
 } from './styled';
+import { setCookie } from './cookies';
 
 interface Iprops {
   open: boolean;
@@ -45,19 +46,19 @@ export const ConvertingModalCorrection: FC<Iprops> = ({
     setIsOkConverting(true);
   };
 
+  const checkboxClick = () => {
+    setCookie('checkbox', 'yes', 90);
+  };
+
   return (
     <>
       {open && (
-        <Modal
-          onClose={closeWithReset}
-          width={420}
-        >
+        <Modal onClose={closeWithReset} width={420}>
           <ModalBlock>
             <ModalTitle>Коррекция суммы списания</ModalTitle>
             <ModalContent>
               <ContentTitle mb10>
-                Токен MULTICS не имеет дробных значений, в связи с этим указанная вами сумма была
-                скорректирована:
+                Сумма к списанию скорректирована исходя из формул расчета конвертации:
               </ContentTitle>
               <CloseButton onClick={closeWithReset} />
               <ContentBody>
@@ -107,7 +108,13 @@ export const ConvertingModalCorrection: FC<Iprops> = ({
                   </strong>
                 </p>
                 <CheckboxGroup>
-                  <Checkbox checked={isNoShow} onChange={() => setIsNoShow(!isNoShow)} />
+                  <Checkbox
+                    checked={isNoShow}
+                    onChange={() => {
+                      setIsNoShow(!isNoShow);
+                      checkboxClick();
+                    }}
+                  />
                   <KeySpan style={{ width: '100%' }}>Больше не показывать это окно</KeySpan>
                 </CheckboxGroup>
                 <ButtonsWrapper>
