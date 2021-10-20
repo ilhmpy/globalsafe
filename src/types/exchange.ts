@@ -38,7 +38,7 @@ export interface ViewExchangeModel {
     operationWindow: any;
     terms?: string;
     methodsKindsJson: string;
-    methodsKinds: any;
+    methodsKinds: number[];
     paymentMethod: any;
     userRating: string;
     orderVolume: number;

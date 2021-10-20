@@ -11,6 +11,11 @@ import { AppContext } from '../../../../../context/HubContext';
 import axios from 'axios';
 import { API_URL } from '../../../../../constantes/api';
 import useLocalStorage from '../../../../../hooks/useLocalStorage';
+import { Counter } from '../../../components/ui/Counter';
+import { Balance } from '../../../../../types/balance';
+import { FiatKind } from '../../../../../types/fiatKind';
+import moment from 'moment';
+import 'moment-duration-format';
 
 type Props = {
   exchange: ViewExchangeModel | null;
@@ -126,7 +131,14 @@ export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
     <S.Container>
       <LeftSide bg={'#EAEFF4'}>
         <S.BlockWrapper>
-          <Chip type="danger">Оставшееся время 03м. 49с.</Chip>
+          <Chip type="danger">
+            Оставшееся время&nbsp;
+            <Counter
+              data={exchange.creationDate}
+              delay={exchange.operationWindow.totalMilliseconds * 100}
+              formatNum
+            />
+          </Chip>
         </S.BlockWrapper>
 
         <S.BlockWrapper>
@@ -134,7 +146,10 @@ export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
             Количество:
           </Text>
           <Title lH={28} mB={10}>
-            5 000 000 CWD
+            {(exchange.volume / 100000).toLocaleString('en-US', {
+              maximumFractionDigits: 2,
+            })}
+            {Balance[exchange.assetKind]}
           </Title>
           <Chip>Продажа</Chip>
         </S.BlockWrapper>
@@ -150,28 +165,43 @@ export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
           <Text size={14} lH={20} mB={10} black>
             На сумму:
           </Text>
-          <Title lH={28}>4 500 000 USD</Title>
+          <Title lH={28}>
+            {exchange.exchangeVolume.toLocaleString('en-US', {
+              maximumFractionDigits: 2,
+            })}{' '}
+            {FiatKind[exchange.exchangeAssetKind]}
+          </Title>
         </S.BlockWrapper>
 
         <S.BlockWrapper>
           <Text size={14} lH={20} mB={10} black>
             Лимиты:
           </Text>
-          <Title lH={28}>1 000 - 10 000 USD</Title>
+          <Title lH={28}>
+            {exchange.limitFrom} - {exchange.limitTo}&nbsp;{FiatKind[exchange.exchangeAssetKind]}
+          </Title>
         </S.BlockWrapper>
 
         <S.BlockWrapper>
           <Text size={14} lH={20} mB={10} black>
             Методы оплаты:
           </Text>
-          <Title lH={28}>{PaymentMethodKind[exchange.kind]}</Title>
+          {exchange.methodsKinds.map((i) => (
+            <Title key={i} lH={28}>
+              {PaymentMethodKind[i]}
+            </Title>
+          ))}
         </S.BlockWrapper>
 
         <S.BlockWrapper>
           <Text size={14} lH={20} mB={10} black>
             Время на обмен:
           </Text>
-          <Title lH={28}>20м. 00с.</Title>
+          <Title lH={28}>
+            {moment
+              .duration(exchange.operationWindow.totalSeconds, 'seconds')
+              .format('dd[д.] hh[ч.] mm[м.]')}
+          </Title>
         </S.BlockWrapper>
 
         <S.BlockWrapper>
