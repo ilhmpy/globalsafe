@@ -23,9 +23,19 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
   const history = useHistory();
   const [exchange, setExchange] = useState<ViewExchangeModel | undefined>();
   const { exchangeId } = match.params;
-  const { hubConnection } = useContext(AppContext);
+  const { hubConnection, account } = useContext(AppContext);
   const [loading, setLoading] = useState<boolean>(false);
   const [call, setCall] = useState<boolean>(false);
+  const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
+  const [showRejectModal, setShowRejectModal] = useState<boolean>(false);
+  const buyer = () => {
+    return (
+      (exchange && exchange.kind === 0 && exchange.ownerSafeId !== account.safeId) ||
+      (exchange && exchange.kind === 1 && exchange.ownerSafeId === account.safeId)
+    );
+  };
+
+  const [owner, setOwner] = useState<'seller' | 'buyer'>(buyer() ? 'buyer' : 'seller');
 
   function getExchange(loading: boolean) {
     if (hubConnection) {
@@ -55,13 +65,27 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
     };
   }, [hubConnection, call]);
 
-  function cb(res: any) {
+  function cb(res: ViewExchangeModel) {
     console.log("ExchangeChanged", res);
     if (exchange) {
       if (res.safeId === exchange.safeId) {
         setExchange(res);
       };
     };
+  };
+
+  function cancelledCallback(res: ViewExchangeModel) {
+    if (owner === "seller") {
+      setShowRejectModal(true);
+    };
+    cb(res);
+  };
+
+  function completedCallback(res: ViewExchangeModel) {
+    if (owner === "buyer") {
+      setShowSuccessModal(true);
+    };
+    cb(res);
   };
 
   useEffect(() => {
@@ -75,19 +99,19 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
 
   useEffect(() => {
     if (hubConnection) {
-      hubConnection.on("ExchangeCancelled", cb);
+      hubConnection.on("ExchangeCancelled", cancelledCallback);
     } 
     return () => {
-      hubConnection?.off("ExchangeCancelled", cb);
+      hubConnection?.off("ExchangeCancelled", cancelledCallback);
     };
   }, [hubConnection]);
 
   useEffect(() => {
     if (hubConnection) {
-      hubConnection.on("ExchangeCompleted", cb);
+      hubConnection.on("ExchangeCompleted", completedCallback);
     };
     return () => {
-      hubConnection?.off("ExchangeCompleted", cb);
+      hubConnection?.off("ExchangeCompleted", completedCallback);
     };  
   }, [hubConnection]);
 
@@ -132,7 +156,14 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
                       № {exchange.id}
                     </Text>
                 </S.TitleContainer>
-                <ExchangeDetailCard setCall={setCall} exchange={exchange} />
+                <ExchangeDetailCard setCall={setCall} 
+                  setShowSuccessModal={setShowSuccessModal} 
+                  setShowRejectModal={setShowRejectModal}
+                  showSuccessModal={showSuccessModal} 
+                  showRejectModal={showRejectModal}
+                  exchange={exchange} 
+                  owner={owner}
+                />
               </Container>
             </>
           )}

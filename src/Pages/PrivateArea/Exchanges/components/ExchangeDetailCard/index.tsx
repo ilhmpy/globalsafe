@@ -29,55 +29,25 @@ import { getTime } from 'date-fns';
 type DetailCardProps = {
   exchange: ViewExchangeModel;
   setCall: (value: boolean) => void;
+  showSuccessModal: boolean;
+  setShowSuccessModal: (value: boolean) => void;
+  showRejectModal: boolean;
+  setShowRejectModal: (value: boolean) => void;
+  owner: "seller" | "buyer";
 };
 
-export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: DetailCardProps) => {
+export const ExchangeDetailCard: FC<DetailCardProps> = ({ 
+  exchange, setCall, setShowSuccessModal, 
+  setShowRejectModal, showRejectModal, 
+  showSuccessModal, owner
+}: DetailCardProps) => {
   const history = useHistory();
   const [feedbackValue, setFeedbackValue] = useState(5);
-  const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
-  const [showRejectModal, setShowRejectModal] = useState<boolean>(false);
   const { account, hubConnection } = useContext(AppContext);
   const [totalExchanges, setTotalExchanges] = useState<any>();
   const [draw, setDraw] = useState<boolean>(true);
   const [time, setTime] = useState<string>();
   const [timer, setTimer] = useState<any>();
-
-  const buyer = () => {
-    return (
-      (exchange && exchange.kind === 0 && exchange.ownerSafeId !== account.safeId) ||
-      (exchange && exchange.kind === 1 && exchange.ownerSafeId === account.safeId)
-    );
-  };
-
-  const [owner, setOwner] = useState<'seller' | 'buyer'>(buyer() ? 'buyer' : 'seller');
-
-  useEffect(() => {
-    function cb() {
-      if (owner === "buyer") {
-        setShowSuccessModal(true);
-      };
-    };
-    if (hubConnection) {
-      hubConnection.on("ExchangeCompleted", cb);
-    };
-    return () => {
-      hubConnection?.off("ExchangeCompleted", cb);
-    };  
-  }, [hubConnection]);
-
-  useEffect(() => {
-    function cb() {
-      if (owner === "seller") {
-        setShowRejectModal(true);
-      };
-    };
-    if (hubConnection) {
-      hubConnection.on("ExchangeCancelled", cb);
-    } 
-    return () => {
-      hubConnection?.off("ExchangeCancelled", cb);
-    };
-  }, [hubConnection]);
 
   const handleClick = () => {
     history.push(routers.p2pchangesSingleExchangeChat + '/' + exchange.safeId);
