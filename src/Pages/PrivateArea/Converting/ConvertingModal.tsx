@@ -86,10 +86,10 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
   const estimatiOfExchange = async () => {
     if (hubConnection && fromCurrency && toCurrency && +toSum > 0) {
       try {
-        // console.log('EstimationOfExchange', toSum, Balance.CWD);
+        // console.log('EstimationOfExchange', String(+toSum * 100), Balance.CWD);
         const response = await hubConnection.invoke(
           'EstimationOfExchange',
-          String(+toSum * 100),
+          String(Math.floor(+toSum * 100)),
           Balance.CWD
         );
         console.log('estimatiOfExchange ~ response', response);
@@ -276,13 +276,6 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                     }
 
                     setIsMultics(false);
-                    // setConvertedData({
-                    //   userAmount: 0,
-                    //   calculatedAmount: 0,
-                    //   targetAmount: 0,
-                    //   discountPercent: 0,
-                    // });
-                    // }
                   }}
                 />
               </InnerBlock>
@@ -310,33 +303,34 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                   }
                   onChange={(e: any) => {
                     const { value } = e.target;
-                    // if (value.length > 1 && value[0] === '0') {
-                    //   setFromSum('');
-                    //   setToSum('');
-                    //   setConvertedData({
-                    //     userAmount: 0,
-                    //     calculatedAmount: 0,
-                    //     targetAmount: 0,
-                    //     discountPercent: 0,
-                    //   });
-                    // } else if (!value) {
-                    //   setToSum('');
-                    //   setConvertedData({
-                    //     userAmount: 0,
-                    //     calculatedAmount: 0,
-                    //     targetAmount: 0,
-                    //     discountPercent: 0,
-                    //   });
-                    // } else {
-                    //   setIsMultics(true);
-                    //   setToSum(value.replaceAll(/[^0-9\.]/g, ''));
-                    // }
+                    console.log('value', value);
 
-                    setFromSum('');
-                    if (value.split('.').length === 1) {
-                      setToSum(value);
-                    } else if (value.split('.') && value.split('.')[1].length < 3) {
-                      setToSum(value);
+                    if (value[0] !== '0' || value[1] !== '0') {
+                      if (
+                        value.split('.')[1]?.length === 2 &&
+                        value.split('.')[1][value.split('.')[1]?.length - 1] == '0'
+                      ) {
+                      } else if (value.split('.')?.length === 1 && value?.length < 11) {
+                        setToSum(value);
+
+                        setFromSum('');
+                        setConvertedData({
+                          userAmount: 0,
+                          calculatedAmount: 0,
+                          targetAmount: 0,
+                          discountPercent: 0,
+                        });
+                      } else if (value.split('.')[1]?.length < 3 && value?.length < 11) {
+                        setToSum(value);
+
+                        setFromSum('');
+                        setConvertedData({
+                          userAmount: 0,
+                          calculatedAmount: 0,
+                          targetAmount: 0,
+                          discountPercent: 0,
+                        });
+                      }
                     }
                   }}
                 />
