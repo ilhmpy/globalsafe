@@ -77,7 +77,7 @@ export const AdvertTable = ({ list, ordersType }: AdvertTableProps) => {
                   })} ${FiatKind[order.operationAssetKind]}`}
               </S.Cell>
               <S.Cell data-label="Лимиты">
-                {`${order.limitFrom} - ${order.limitTo} ${FiatKind[order.operationAssetKind]}`}
+                {`${countVolumeToShow(order.limitFrom, order.assetKind)} - ${countVolumeToShow(order.limitTo, order.assetKind)} ${FiatKind[order.operationAssetKind]}`}
               </S.Cell>
               <S.Cell data-label="Метод оплаты">
                 <S.BankList>

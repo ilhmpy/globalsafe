@@ -149,8 +149,8 @@ export const OrderToSellCard: FC = () => {
                 +changeRate, // double rate
                 Balance[currencyToSell as keyof typeof Balance], // BalanceKind assetKind
                 FiatKind[currencyToChange as keyof typeof FiatKind], // FiatKind operationAssetKind
-                +orderMinSumm, // long limitFrom
-                +orderMaxSumm, // long limitTo
+                +countVolumeToSend(orderMinSumm, Balance[currencyToSell as keyof typeof Balance]), // long limitFrom
+                +countVolumeToSend(orderMaxSumm, Balance[currencyToSell as keyof typeof Balance]), // long limitTo
                 timeDurations.find(t => t.label === changeTimePeriod)?.value, // int window
                 findPaymentMethodKinds(paymentMethods?.filter(m => selectedPaymentMethodsIds.includes(String(m.id)))), // Array of int methodsKinds max:5
                 '', // terms
