@@ -44,6 +44,7 @@ export const ChatWrapper = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
+  height: 748px;
 `;
 
 export const ChatHeader = styled.div`
@@ -63,15 +64,14 @@ export const ChatHeader = styled.div`
 
 export const ChatContainer = styled.div`
     margin-top: 56px;
-    padding: 40px 40px 90px 40px;
+    padding: 40px 40px 0px 40px;
     flex: 1;
     display: flex;
     flex-direction: column;
-    min-height: calc(100vh - 328px);
+    justify-content: flex-end;
     overflow-y: scroll;
     @media (max-width: 768px){
-      min-height: 400px;
-      max-height: 400px;
+      height: 400px;
     }
     &::-webkit-scrollbar {
         display: none;

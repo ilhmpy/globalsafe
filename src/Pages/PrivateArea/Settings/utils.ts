@@ -27,3 +27,26 @@ export  const payList = keysPay.map((i) => {
       return '';
     }
   });
+
+  export  const payListItem = (i: number) => {
+    if (i === PaymentMethodKind.ERC20) {
+      return PaymentMethodKind[0];
+    }
+    if (i === PaymentMethodKind.TRC20) {
+      return PaymentMethodKind[1];
+    }
+    if (i === PaymentMethodKind.BEP20) {
+      return PaymentMethodKind[2];
+    }
+    if (i === PaymentMethodKind.Tinkoff) {
+      return 'АО «Тинькофф Банк»';
+    }
+    if (i === PaymentMethodKind.Sberbank) {
+      return 'ПАО Сбербанк';
+    }
+    if (i === PaymentMethodKind.Alfabank) {
+      return 'АО «Альфа-Банк»';
+    } else {
+      return '';
+    }
+  };

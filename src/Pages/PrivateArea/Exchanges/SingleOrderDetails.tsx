@@ -15,10 +15,11 @@ import { OrderDetailsCard } from './components/OrderDetailsCard';
 
 export const SingleOrderDetails: FC = () => {
   const history = useHistory();
-  const { currentOrder, setCurrentOrder, currentOrderType, setCurrentOrderType } = useContext(PrivateAreaContext);
+  const { currentOrder, setCurrentOrder, currentOrderType, setCurrentOrderType } =
+    useContext(PrivateAreaContext);
 
-  console.log('currentOrder', currentOrder)
-  console.log('currentOrderType', currentOrderType)
+  console.log('currentOrder', currentOrder);
+  console.log('currentOrderType', currentOrderType);
 
   const handleGoBack = () => {
     setCurrentOrder(null);
@@ -30,32 +31,30 @@ export const SingleOrderDetails: FC = () => {
     return () => {
       setCurrentOrder(null);
       setCurrentOrderType(undefined);
-    }
+    };
   }, []);
 
-  if(!currentOrder || !currentOrderType) {
+  if (!currentOrder || !currentOrderType) {
     history.replace(routers.p2pchanges);
     return null;
-  };
+  }
 
   return (
     <S.Container>
       <Container>
         <Back text="К списку ордеров" onGoBackClick={handleGoBack} />
         <S.TitleContainer>
-            <Title mB={0}>
-              {
-                `Ордер на ${currentOrderType === OrderType.Buy ? 
-                'покупку' : 'продажу'} ${Balance[currentOrder.assetKind]}-${FiatKind[currentOrder.operationAssetKind]}`
-              }
-            </Title>
-            <Text size={14} lH={20} black>
-              {`№ ${currentOrder.safeId}`}
-            </Text>
+          <Title mB={0}>
+            {`Ордер на ${currentOrderType === OrderType.Buy ? 'покупку' : 'продажу'} ${
+              Balance[currentOrder.assetKind]
+            }-${FiatKind[currentOrder.operationAssetKind]}`}
+          </Title>
+          <Text size={14} lH={20} black>
+            {`№ ${currentOrder.safeId}`}
+          </Text>
         </S.TitleContainer>
 
         <OrderDetailsCard order={currentOrder} orderType={currentOrderType} />
-
       </Container>
     </S.Container>
   );
