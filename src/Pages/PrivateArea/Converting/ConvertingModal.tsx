@@ -259,7 +259,7 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                       ? Number(fromSum)
                       : convertedData.userAmount <= 0
                       ? ''
-                      : (convertedData.userAmount / 100000)
+                      : convertedData.userAmount / 100000
                   }
                   //   onKeyPress={(e) => e.charCode >= 48}
                   onChange={(e: any) => {
@@ -295,6 +295,8 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                   setSelectedOption={(val: string) => setToCurrency(val)}
                 />
                 <Input
+                  type="number"
+                  required
                   placeholder={toCurrency ? '0.00' : '0.0000'}
                   name="toSum"
                   value={
