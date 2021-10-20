@@ -18,7 +18,6 @@ import moment from 'moment';
 import 'moment-duration-format';
 import { payListItem } from '../../../Settings/utils';
 import 'moment/locale/ru';
-moment.locale('ru');
 
 const mockData = [
   {
@@ -507,13 +506,17 @@ type Props = {
   exchange: ViewExchangeModel | null;
 };
 
+type HistoryCollection = {
+  [elemName: string]: CollectionHistory[];
+};
+
 export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
   const [value, setValue] = useState('');
   const { hubConnection, userSafeId } = useContext(AppContext);
   const [history, setHistory] = useState<CollectionHistory[]>([]);
   const [loaderPicture, setLoaderPicture] = useState(false);
   const [myToken] = useLocalStorage('token');
-
+  moment.locale('ru');
   const handleClick = () => {
     console.log('ExchangeDetailCard Click');
   };
@@ -533,6 +536,16 @@ export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
       hubConnection
         .invoke<RootHistory>('GetExchangeChat', exchange.safeId, 0, 100)
         .then((res) => {
+          const result: HistoryCollection = {};
+          res.collection.forEach((item) => {
+            const d = moment.utc(item.messageDate).local().format('MM/DD/YYYY');
+            if (result[d]) {
+              result[d].push(item);
+            } else {
+              result[d] = [item];
+            }
+          });
+          console.log('result', result);
           setHistory(res.collection);
           console.log('GetExchangeChat', res);
         })
@@ -728,7 +741,7 @@ export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
                 body={item}
               />
             ))}
-
+            <div id="bottom"></div>
             {/* <MessageCard own={false} image />
 
             <MessageCard
