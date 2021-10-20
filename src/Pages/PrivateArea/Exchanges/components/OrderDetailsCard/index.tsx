@@ -84,12 +84,15 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
     const handleCreateExchange = async () => {
         if(orderType === OrderType.Buy) {
             try {
+                console.log('order.safeId', order.safeId)
+                console.log('balanceSumm', countVolumeToSend(balanceSumm, order.assetKind))
                 const res = await hubConnection!.invoke<ViewExchangeModel>(
                     'CreateSellExchange',  
                     order.safeId,
                     countVolumeToSend(balanceSumm, order.assetKind)
                 );
-                console.log('CreateSellExchange', res)
+                console.log('CreateSellExchange', res);
+                setShowCreateExchangeModal(false);
             } catch (err) { 
                 console.log('CreateSellExchange err', err)
                 setShowCreateExchangeModal(false);
@@ -97,6 +100,10 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
             }
         } else {
             try {
+                console.log('order.safeId', order.safeId)
+                console.log('balanceSumm', countVolumeToSend(balanceSumm, order.assetKind))
+                console.log('paymentMethodSafeId', paymentMethodSafeId)
+
                 const res = await hubConnection!.invoke<null>(
                     'CreateBuyExchange',  
                     order.safeId,
@@ -104,6 +111,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                     paymentMethodSafeId 
                 );
                 console.log('CreateBuyExchange', res)
+                setShowCreateExchangeModal(false);
             } catch (err) { 
                 console.log('CreateBuyExchange err', err)
                 setShowCreateExchangeModal(false);
@@ -113,14 +121,14 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
     };
 
     const onBalanceSummChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const pattern = /^[1-9][0-9]*$/;
+        const pattern = /^[0-9][0-9\.]*$/;
         if (e.target.value === '' || pattern.test(e.target.value)) {
             setBalanceSumm(e.target.value);
         }
     };
 
     const onFiatSummChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const pattern = /^[1-9][0-9]*$/;
+        const pattern = /^[0-9][0-9\.]*$/;
         if (e.target.value === '' || pattern.test(e.target.value)) {
             setFiatSumm(e.target.value);
         }
@@ -166,7 +174,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                 Лимиты:
             </Text>
             <Title lH={28}>
-            {`${order.limitFrom} - ${order.limitTo} ${FiatKind[order.operationAssetKind]}`}
+            {`${countVolumeToShow(order.limitFrom, order.assetKind)} - ${countVolumeToShow(order.limitTo, order.assetKind)} ${FiatKind[order.operationAssetKind]}`}
             </Title>
             </S.BlockWrapper>
 
@@ -237,9 +245,10 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                   }
               </Text>
               <S.Input
+                readOnly
                 placeholder="Введите сумму"
                 name="summ"
-                value={fiatSumm}
+                value={balanceSumm ? (+balanceSumm * order.rate) : ''}
                 onChange={onFiatSummChange}
               />
             </S.FormItem>
