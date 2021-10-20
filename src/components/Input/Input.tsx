@@ -7,11 +7,13 @@ interface IProps {
   value: string | number;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   disabled?: boolean;
+  className?: string;
 }
 
-export const Input: FC<IProps> = ({ placeholder, name, value, onChange, disabled }: IProps) => {
+export const Input: FC<IProps> = ({ placeholder, name, value, onChange, disabled, className = '' }: IProps) => {
   return (
     <InputUI
+      className={className}
       disabled={disabled}
       placeholder={placeholder}
       name={name}
