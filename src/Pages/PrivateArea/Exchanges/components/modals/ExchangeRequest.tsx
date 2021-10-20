@@ -43,7 +43,9 @@ export const ExchangeRequestModal: FC<Props> = ({
                 </S.ListitemName>
                 <S.Line />
                 <S.ListitemValue>
-                  {order.rate}
+                  {order.rate.toLocaleString('ru-RU', {
+                    maximumFractionDigits: 5,
+                  })}
                 </S.ListitemValue>
               </S.Listitem>
               <S.Listitem>

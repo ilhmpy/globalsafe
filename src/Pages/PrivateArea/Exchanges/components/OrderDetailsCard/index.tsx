@@ -160,7 +160,9 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                 Курс:
             </Text>
             <Title lH={28}>
-                {order.rate}
+                {order.rate.toLocaleString('ru-RU', {
+                    maximumFractionDigits: 5,
+                })}
             </Title>
             </S.BlockWrapper>
 
