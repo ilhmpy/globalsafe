@@ -16,6 +16,7 @@ import { getVolume } from "../../../../../functions/getVolume";
 import * as S from './S.el';
 import { getTime } from 'date-fns';
 import { BankItem } from '../AdvertTable/S.el';
+import { countVolumeToShow } from '../../../utils';
 
 export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, loading, setExchanges }: OwnExchangesProps) => {
   const history = useHistory();
@@ -137,10 +138,10 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
                   <S.BodyItem key={idx} onClick={() => handleNavigateToExchange(exchange.safeId)}>
                       <S.Cell data-label="Тип">{exchange.kind === 0 ? "Продажа" : "Покупка"}</S.Cell>
                       <S.Cell data-label="Кол-во">
-                        {(getVolume(exchange.orderVolume, exchange.assetKind)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {Balance[exchange.assetKind]}
+                        {(countVolumeToShow(exchange.orderVolume, exchange.assetKind)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {Balance[exchange.assetKind]}
                       </S.Cell>
                       <S.Cell data-label="Курс">{exchange.rate}</S.Cell>
-                      <S.Cell data-label="Сумма оплаты">{(exchange.volume * exchange.rate).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {FiatKind[exchange.exchangeAssetKind]}</S.Cell>
+                      <S.Cell data-label="Сумма оплаты">{(countVolumeToShow(exchange.exchangeVolume, exchange.assetKind)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {FiatKind[exchange.exchangeAssetKind]}</S.Cell>
                       <S.Cell data-label="Метод оплаты">
                         <S.BankList>
                             {getPaymentMethod(exchange.paymentMethod?.kind)}

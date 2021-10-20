@@ -38,11 +38,8 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
   const [owner, setOwner] = useState<'seller' | 'buyer'>(buyer() ? 'buyer' : 'seller');
 
   /* 
-    отображать тип обмена в зависимости от того кто находится на странице
-    переделить лимиты
     сделать фильтр по статусам
     переписать логику исходя из нового решения на бэке для обоюдной оценки участников обмена(в будущем)
-    исправить трабл с каллбэками
   */
 
   function getExchange(loading: boolean) {
