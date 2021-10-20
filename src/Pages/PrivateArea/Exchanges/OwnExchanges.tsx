@@ -13,6 +13,7 @@ import { AppContext } from '../../../context/HubContext';
 import { GetExchangesCollectionResult, ViewExchangeModel } from '../../../types/exchange';
 import { PaymentMethods } from './components/modals/PaymentMethods';
 import { CurrencyPair } from './components/modals/CurrencyPair';
+import { Balance } from '../../../types/balance';
 
 export const OwnExchanges = () => {
   const history = useHistory();
@@ -47,6 +48,26 @@ export const OwnExchanges = () => {
     'ERC 20',
   ], []);
 
+  function getBalanceKindByStringName(name: string) {
+    return name === "CWD" ? 1 : 
+           name === "GLOBALSAFE" ? 14 :
+           name === "GLOBAL" ? 42 : 
+           name === "GF" ? 43 :
+           name === "FF" ? 44 : 
+           name === "MULTICS" ? 59 : 0;
+  };
+
+  function getFiatKindByStringName(name: string) {
+    return name === "RUB" ? 0 :
+           name === "BYN" ? 1 :
+           name === "UAH" ? 2 : 
+           name === "KZT" ? 3 :
+           name === "USD" ? 4 :
+           name === "EUR" ? 5 :
+           name === "THB" ? 6 :
+           name === "USDT" ? 7 : 0;
+  };
+
   useEffect(() => {
     if (hubConnection) {
       if (!selectedPaymentMethods.length) {
@@ -54,7 +75,7 @@ export const OwnExchanges = () => {
       };
       getGetUserExchanges();
     };
-  }, [hubConnection, activeFilter, selectedPaymentMethods]);
+  }, [hubConnection, activeFilter, selectedPaymentMethods, selectedBalanceKind, selectedFiatKind]);
 
   async function getGetUserExchanges() {
     try {
@@ -74,10 +95,21 @@ export const OwnExchanges = () => {
           };
         });
         setUserExchanges(filter);
+      } else if (selectedBalanceKind && selectedFiatKind) {
+        const kind = getBalanceKindByStringName(selectedBalanceKind);
+        const fiatKind = getFiatKindByStringName(selectedFiatKind);
+
+        console.log(kind, fiatKind);
+
+        const filter = res.collection.filter((i) => {
+          if (i.assetKind === kind && i.exchangeAssetKind === fiatKind) {
+            return i;
+          };
+        });
+        setUserExchanges(filter);
       } else {
         setUserExchanges(res.collection);
       };
-
     } catch (err) {
       console.log(err);
     } finally {
