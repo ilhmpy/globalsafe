@@ -37,6 +37,10 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
 
   const [owner, setOwner] = useState<'seller' | 'buyer'>(buyer() ? 'buyer' : 'seller');
 
+  /* 
+    
+  */
+
   function getExchange(loading: boolean) {
     if (hubConnection) {
       setLoading(loading);
