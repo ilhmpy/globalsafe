@@ -51,6 +51,34 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
 
   const [owner, setOwner] = useState<'seller' | 'buyer' | undefined>(buyer() ? 'buyer' : 'seller');
 
+  useEffect(() => {
+    function cb() {
+      if (owner === "buyer") {
+        setShowSuccessModal(true);
+      };
+    };
+    if (hubConnection) {
+      hubConnection.on("ExchangeCompleted", cb);
+    };
+    return () => {
+      hubConnection?.off("ExchangeCompleted", cb);
+    };  
+  }, [hubConnection]);
+
+  useEffect(() => {
+    function cb() {
+      if (owner === "seller") {
+        setShowRejectModal(true);
+      };
+    };
+    if (hubConnection) {
+      hubConnection.on("ExchangeCancelled", cb);
+    } 
+    return () => {
+      hubConnection?.off("ExchangeCancelled", cb);
+    };
+  }, [hubConnection]);
+
   const handleClick = () => {
     history.push(routers.p2pchangesSingleExchangeChat + '/' + exchange.safeId);
     console.log('ExchangeDetailCard Click');
