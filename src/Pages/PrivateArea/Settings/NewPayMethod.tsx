@@ -14,7 +14,7 @@ import { FiatKind } from '../../../types/fiatKind';
 import { PaymentMethodKind } from '../../../types/paymentMethodKind';
 import { Back } from '../components/Back';
 import { Title } from '../components/ui/Title';
-import NumberFormat from 'react-number-format'; 
+import NumberFormat from 'react-number-format';
 
 type dataBank = {
   name: string;
@@ -42,15 +42,12 @@ export const NewPayMethod: FC = () => {
       return PaymentMethodKind[2];
     }
     if (i === PaymentMethodKind[3]) {
-      return 'BANK TRANSFER';
-    }
-    if (i === PaymentMethodKind[4]) {
       return 'АО «Тинькофф Банк»';
     }
-    if (i === PaymentMethodKind[5]) {
+    if (i === PaymentMethodKind[4]) {
       return 'ПАО Сбербанк';
     }
-    if (i === PaymentMethodKind[6]) {
+    if (i === PaymentMethodKind[5]) {
       return 'АО «Альфа-Банк»';
     } else {
       return '';
