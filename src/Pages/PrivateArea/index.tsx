@@ -39,7 +39,7 @@ export const InfoMain: FC = () => {
   if (user === false) {
     return <Redirect to="/" />;
   }
- 
+
   return (
     <>
       <Styled.Page>
@@ -72,11 +72,11 @@ export const InfoMain: FC = () => {
               exact
             />
             <Route
-              path={routers.p2pchangesSingleOrderDetails}
+              path={routers.p2pchangesSingleOrderDetails + '/:slug'}
               component={SingleOrderDetails}
               exact
             />
-            <Route 
+            <Route
               path={routers.settingsViewPayMethod + '/:slug'}
               component={ViewPayMethod}
               exact
