@@ -15,13 +15,13 @@ export  const payList = keysPay.map((i) => {
     if (i === PaymentMethodKind[2]) {
       return PaymentMethodKind[2];
     }
-    if (i === PaymentMethodKind[4]) {
+    if (i === PaymentMethodKind[3]) {
       return 'АО «Тинькофф Банк»';
     }
-    if (i === PaymentMethodKind[5]) {
+    if (i === PaymentMethodKind[4]) {
       return 'ПАО Сбербанк';
     }
-    if (i === PaymentMethodKind[6]) {
+    if (i === PaymentMethodKind[5]) {
       return 'АО «Альфа-Банк»';
     } else {
       return '';

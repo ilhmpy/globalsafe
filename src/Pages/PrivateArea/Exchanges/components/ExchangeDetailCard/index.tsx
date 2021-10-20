@@ -51,6 +51,34 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
 
   const [owner, setOwner] = useState<'seller' | 'buyer' | undefined>(buyer() ? 'buyer' : 'seller');
 
+  useEffect(() => {
+    function cb() {
+      if (owner === "buyer") {
+        setShowSuccessModal(true);
+      };
+    };
+    if (hubConnection) {
+      hubConnection.on("ExchangeCompleted", cb);
+    };
+    return () => {
+      hubConnection?.off("ExchangeCompleted", cb);
+    };  
+  }, [hubConnection]);
+
+  useEffect(() => {
+    function cb() {
+      if (owner === "seller") {
+        setShowRejectModal(true);
+      };
+    };
+    if (hubConnection) {
+      hubConnection.on("ExchangeCancelled", cb);
+    } 
+    return () => {
+      hubConnection?.off("ExchangeCancelled", cb);
+    };
+  }, [hubConnection]);
+
   const handleClick = () => {
     history.push(routers.p2pchangesSingleExchangeChat + '/' + exchange.safeId);
     console.log('ExchangeDetailCard Click');
@@ -71,8 +99,6 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
   useEffect(() => {
     getTotalExecutedExchanges(exchange.ownerSafeId);
   }, [hubConnection]);
-
-  console.log(exchange);
 
   function getExchangeChip(chip: ExchangeState) {
     if (chip === 0) {
@@ -195,15 +221,18 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
         })
         .catch((err) => console.log(err));
     }
-  }
+  };
+
+  console.log(exchange);
 
   function rateUser() {
     if (hubConnection) {
+      console.log(owner === "seller" ? exchange.recepientId : exchange.ownerId)
       hubConnection
         .invoke(
           'RateUser',
           feedbackValue,
-          owner === 'seller' ? exchange.ownerId : exchange.recepientId,
+          owner === 'seller' ? exchange.recepientSafeId : exchange.ownerSafeId,
           exchange.safeId
         )
         .then((res) => {

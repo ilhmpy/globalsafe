@@ -93,9 +93,9 @@ export const AdminButton = styled(Btn)`
 `;
 
 export const ButtonsRev = styled.div`
-  display: flex;
-  align-items: center;
-  margin-left: 10px;
+  @media (max-width: 767px) {
+    display: none;
+  }
 `;
 
 export const Languale = styled.div<{ auth?: boolean; admin?: boolean }>`
