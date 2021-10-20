@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React from 'react';
 import styled, { css } from 'styled-components';
 import { ReactComponent as ChatTestImage } from '../../../../assets/v2/svg/chat-test-image.svg';
@@ -23,7 +24,7 @@ export const MessageCard = ({ own = true, image = false, body }: MessageCardProp
 
   return (
     <MessageContainer own={own}>
-      <MessageDate>{body.messageDate}</MessageDate>
+      <MessageDate>{moment.utc(body.messageDate).local().fromNow()}</MessageDate>
       <MessageBlock own={own}>{body.message}</MessageBlock>
     </MessageContainer>
   );

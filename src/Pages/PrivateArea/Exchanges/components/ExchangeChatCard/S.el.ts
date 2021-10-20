@@ -44,6 +44,8 @@ export const ChatWrapper = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
+  height: 748px;
+  overflow: hidden;
 `;
 
 export const ChatHeader = styled.div`
@@ -52,30 +54,18 @@ export const ChatHeader = styled.div`
   justify-content: center;
   text-align: center;
   padding: 20px 40px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
 
   border-bottom: 1px solid #EBEBF2;
 `;
 
 export const ChatContainer = styled.div`
     margin-top: 56px;
-    padding: 40px 40px 90px 40px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-height: calc(100vh - 328px);
+    padding: 40px 40px 0px 40px;
     overflow-y: scroll;
-    @media (max-width: 768px){
-      min-height: 400px;
-      max-height: 400px;
-    }
-    &::-webkit-scrollbar {
+    height: 100%;
+    /* &::-webkit-scrollbar {
         display: none;
-      }
+      } */
 `;
 
 export const ChatFooter = styled.div`

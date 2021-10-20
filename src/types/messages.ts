@@ -8,7 +8,7 @@ export interface CollectionHistory {
     exchangeSafeId: string;
     message: string;
     messageKind: number;
-    messageDate: Date;
+    messageDate: string;
 }
 
 export interface RootHistory {
