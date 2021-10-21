@@ -43,8 +43,9 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
   showSuccessModal,
 }: DetailCardProps) => {
   const history = useHistory();
-  const [feedbackValue, setFeedbackValue] = useState(5);
   const { account, hubConnection } = useContext(AppContext);
+
+  const [feedbackValue, setFeedbackValue] = useState(5);
   const [totalExchanges, setTotalExchanges] = useState<any>();
   const [draw, setDraw] = useState<boolean>(true);
   const [time, setTime] = useState<string>();
@@ -58,11 +59,28 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
   };
 
   const [owner, setOwner] = useState<'seller' | 'buyer'>(buyer() ? 'buyer' : 'seller');
+  const [mark, setMark] = useState<boolean | null>(null);
+  const [markTimer, setMarkTimer] = useState<any>();
 
   const handleClick = () => {
     history.push(routers.p2pchangesSingleExchangeChat + '/' + exchange.safeId);
     console.log('ExchangeDetailCard Click');
   };
+
+  function getUserMark() {
+    if (hubConnection) {
+      hubConnection.invoke("GetUserMark", exchange.safeId)
+        .then((res) => {
+          console.log("mark", res);
+          setMark(res > 0);
+        })
+        .catch(err => console.log(err));
+    };
+  };
+ 
+  useEffect(() => {
+    getUserMark();
+  }, [hubConnection])
 
   function getTotalExecutedExchanges(id: string) {
     if (hubConnection) {
@@ -74,7 +92,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
         })
         .catch((err) => console.error(err));
     }
-  }
+  };
 
   useEffect(() => {
     getTotalExecutedExchanges(exchange.ownerSafeId);
@@ -346,7 +364,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
       {/* IF COMPLETED AND NOT GRADET */}
 
       <RightSide>
-        <S.StateBlock when={exchange.state < 2 || exchange.state != 2 || exchange.mark != null}>
+        <S.StateBlock when={exchange.state < 2 || exchange.state != 2 || mark != false}>
           <S.TitleBlockWrapper>
             <Title mB={10} lH={28}>
               {exchange.kind === 0 ? 'Продажа' : 'Покупка'}{' '}
@@ -625,7 +643,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
 
         {/* COMPLETED STATE */}
 
-        <S.StateBlock when={exchange.state === 2 && exchange.mark === null}>
+        <S.StateBlock when={exchange.state === 2 && mark === false}>
           <S.StateBlock when={owner === 'buyer'}>
             <S.TransferInfoBlock>
               <Text size={14} lH={20} black>
@@ -685,6 +703,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
             <Button primary onClick={() => {
               rateUser();
               setShowSuccessModal(true);
+              getUserMark();
             }}>
               Подтвердить
             </Button>
@@ -748,6 +767,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
             <Button primary onClick={() => {
               rateUser();
               setShowSuccessModal(true);
+              getUserMark();
             }}>
               Подтвердить
             </Button>

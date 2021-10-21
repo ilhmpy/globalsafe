@@ -71,9 +71,9 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
   }, [hubConnection, call]);
 
   function cb(res: ViewExchangeModel) {
-    console.log("ExchangeChanged RES", res);
     if (exchange) {
       if (res.safeId === exchange.safeId) {
+        console.log("ExchangeChanged RES", res);
         setExchange(res);
       };
     };

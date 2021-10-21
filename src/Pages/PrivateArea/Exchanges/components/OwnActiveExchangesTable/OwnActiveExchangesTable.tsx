@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useContext } from 'react';
 import { useHistory } from 'react-router';
 import alfa from '../../../../../assets/v2/svg/banks/alfa.svg';
 import alfa1 from '../../../../../assets/v2/svg/banks/alfa1.svg';
@@ -9,9 +9,7 @@ import { OwnExchangesProps, ExchangeState } from '../../../../../types/exchange'
 import { Balance } from "../../../../../types/balance";
 import { FiatKind } from "../../../../../types/fiat";
 import { PaymentMethodKind } from "../../../../../types/paymentMethodKind";
-import moment from "moment";
 import { Loading, NotItems } from "../../../components/Loading/Loading";
-import { getVolume } from "../../../../../functions/getVolume";
 
 import * as S from './S.el';
 import { getTime } from 'date-fns';
@@ -21,6 +19,7 @@ import { countVolumeToShow } from '../../../utils';
 export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, loading, setExchanges }: OwnExchangesProps) => {
   const history = useHistory();
   const [selectedOption, setSelectedOption] = useState<string | null>('Все валюты предложения');
+
 
   const handleNavigateToExchange = (id: string) => {
     history.replace(`/info/p2p-changes/${id}`);
