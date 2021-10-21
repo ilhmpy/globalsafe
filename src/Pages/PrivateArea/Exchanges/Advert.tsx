@@ -166,7 +166,7 @@ export const Advert = () => {
   // Listening to changes
   useEffect(() => {
     const cbOrderVolumeChanged = (orderSafeId: string, summ: number) => {
-      console.log('__SOCKET__cbOrderVolumeChanged::', orderSafeId);
+      console.log('__SOCKET__cbOrderVolumeChanged::', orderSafeId, summ);
       const key = ordersList.findIndex((order) => order.safeId === orderSafeId);
       if(key !== -1) {
         setOrdersList(state => [
@@ -187,7 +187,7 @@ export const Advert = () => {
     if (hubConnection) {
         hubConnection.on("BuyOrderCreated", cbOrderCreated);
         hubConnection.on("BuyOrderVolumeChanged", cbOrderVolumeChanged);
-        
+
         hubConnection.on("SellOrderCreated", cbOrderCreated);
         hubConnection.on("SellOrderVolumeChanged", cbOrderVolumeChanged);
     };
