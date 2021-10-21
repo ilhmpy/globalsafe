@@ -248,14 +248,14 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
 
                     if (
                       (value[0] !== '0' || value[1] !== '0') &&
-                      (/^(\d+([.]\d{0,2})?|\.?\d{1,2})$/gm.test(value) || !value)
+                      (/^(\d+([.,]\d{0,2})?|\.?\d{1,2})$/gm.test(value) || !value)
                     ) {
                       if (value.split('.')?.length === 1) {
-                        setFromSumCloud(value);
-                        setFromSum(value);
+                        setFromSumCloud(value.replaceAll(',', '.'));
+                        setFromSum(value.replaceAll(',', '.'));
                       } else if (value.split('.')[1]?.length < 5) {
-                        setFromSumCloud(value);
-                        setFromSum(value);
+                        setFromSumCloud(value.replaceAll(',', '.'));
+                        setFromSum(value.replaceAll(',', '.'));
                       }
                     }
 
@@ -288,14 +288,14 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
 
                     if (
                       (value[0] !== '0' || value[1] !== '0') &&
-                      (/^(\d+([.]\d{0,2})?|\.?\d{1,2})$/gm.test(value) || !value)
+                      (/^(\d+([.,]\d{0,2})?|\.?\d{1,2})$/gm.test(value) || !value)
                     ) {
                       if (
                         value.split('.')[1]?.length === 2 &&
                         value.split('.')[1][value.split('.')[1]?.length - 1] == '0'
                       ) {
                       } else if (value.split('.')?.length === 1 && value?.length < 11) {
-                        setToSum(value);
+                        setToSum(value.replaceAll(',', '.'));
 
                         setConvertedData({
                           userAmount: 0,
@@ -304,7 +304,7 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                           discountPercent: 0,
                         });
                       } else if (value.split('.')[1]?.length < 3 && value?.length < 11) {
-                        setToSum(value);
+                        setToSum(value.replaceAll(',', '.'));
 
                         setFromSum('');
                         setConvertedData({
