@@ -34,7 +34,7 @@ export const OwnExchanges = () => {
   const [showSelectedStatus, setShowSelectedStatus] = useState<boolean>(false);
   const [selectedStatus, setSelectedStatus] = useState<any>([]);
 
-  const [status, setStatus] = useState<any[]>([]);
+  const [status, setStatus] = useState<any[] | null>(null);
   const [payments, setPayments] = useState<any[]>([]);
   const [balanceKind, setBalanceKind] = useState<number | null>(null);
   const [fiatKind, setFiatKind] = useState<number | null>(null);
@@ -107,9 +107,11 @@ useEffect(() => {
         setUserExchanges(filter);
       } else if (selectedStatus.length) {
         const filter = res.collection.filter((i) => {
-          for (let el = 0; el < status.length; el++) {
-            if (i.state === status[el]) {
-              return i;
+          if (status) {
+            for (let el = 0; el < status.length; el++) {
+              if (i.state === status[el]) {
+                return i;
+              };
             };
           };
         });
@@ -193,7 +195,9 @@ useEffect(() => {
               : "Все валюты"}
           </FilterButton>
           <S.Line />
-          <FilterButton active onClick={() => setShowPaymentMethodsModal(true)}>Все методы оплаты</FilterButton>
+          <FilterButton active onClick={() => setShowPaymentMethodsModal(true)}>
+            Все методы оплаты {payments && payments.length ? payments.length : ""}
+          </FilterButton>
           <S.Line />
           <FilterButton active onClick={() => setShowSelectedStatus(true)}>Все Статусы</FilterButton>
         </S.Filters>
