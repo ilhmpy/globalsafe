@@ -14,6 +14,7 @@ import { GetExchangesCollectionResult, ViewExchangeModel } from '../../../types/
 import { PaymentMethods } from './components/modals/PaymentMethods';
 import { CurrencyPair } from './components/modals/CurrencyPair';
 import { Balance } from '../../../types/balance';
+import { getBalanceKindByStringName, getFiatKindByStringName } from '../utils';
 
 export const OwnExchanges = () => {
   const history = useHistory();
@@ -33,11 +34,14 @@ export const OwnExchanges = () => {
   const [selectedStatus, setSelectedStatus] = useState<number[]>([]);
 
 
-  const statuts = useMemo<string[]>(() => [
-    "Ожидается подтверждение выплаты", 
+  const statuts = useMemo<string[]>(() => activeFilter === "active" ? [
+    "Новый",
+    "Ожидается подтверждение оплаты",
+  ] : [
+    "Завершен",
     "Жалоба",
     "Отменен"
-  ], []);
+  ], [activeFilter]);
   
   const paymentMethodsKinds = useMemo<string[]>(() => [
     'АО «Альфа-Банк»',
@@ -48,26 +52,6 @@ export const OwnExchanges = () => {
     'ERC 20',
   ], []);
 
-  function getBalanceKindByStringName(name: string) {
-    return name === "CWD" ? 1 : 
-           name === "GLOBALSAFE" ? 14 :
-           name === "GLOBAL" ? 42 : 
-           name === "GF" ? 43 :
-           name === "FF" ? 44 : 
-           name === "MULTICS" ? 59 : 0;
-  };
-
-  function getFiatKindByStringName(name: string) {
-    return name === "RUB" ? 0 :
-           name === "BYN" ? 1 :
-           name === "UAH" ? 2 : 
-           name === "KZT" ? 3 :
-           name === "USD" ? 4 :
-           name === "EUR" ? 5 :
-           name === "THB" ? 6 :
-           name === "USDT" ? 7 : 0;
-  };
-
   useEffect(() => {
     if (hubConnection) {
       if (!selectedPaymentMethods.length) {
@@ -75,7 +59,7 @@ export const OwnExchanges = () => {
       };
       getGetUserExchanges();
     };
-  }, [hubConnection, activeFilter, selectedPaymentMethods, selectedBalanceKind, selectedFiatKind]);
+  }, [hubConnection, activeFilter, selectedPaymentMethods, selectedBalanceKind, selectedFiatKind, selectedStatus]);
 
   async function getGetUserExchanges() {
     try {
@@ -102,6 +86,12 @@ export const OwnExchanges = () => {
           if (i.assetKind === kind && i.exchangeAssetKind === fiatKind) {
             return i;
           };
+        });
+        setUserExchanges(filter);
+      } else if (selectedStatus.length) {
+        const filter = res.collection.filter((i) => {
+          
+          return i;
         });
         setUserExchanges(filter);
       } else {

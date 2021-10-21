@@ -72,7 +72,7 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
     };
   };
 
-  const Status = ["Новый", "Подтвержден", "Завершен", "Подана жалоба", "Отменен"];
+  const Status = ["Новый", "Ожидается подтверждение оплаты", "Завершен", "Подана жалоба", "Отменен"];
 
   function getCountsTime({ days, hours, minutes, seconds }: any) {
     if (days > 0) {

@@ -70,7 +70,7 @@ export const OwnArchivedExchangesTable: FC<OwnExchangesProps> = ({ exchanges, lo
     };
   };
 
-  const Status = ["Создан", "Принят", "Завершен", "Подана жалоба", "Отменен"];
+  const Status = ["Новый", "Ожидается новое подтверждение оплаты", "Завершен", "Подана жалоба", "Отменен"];
 
   /*
   const test: ViewExchangeModel[] = [
