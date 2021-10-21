@@ -39,6 +39,12 @@ export const OwnExchanges = () => {
   const [balanceKind, setBalanceKind] = useState<number | null>(null);
   const [fiatKind, setFiatKind] = useState<number | null>(null);
 
+  /* 
+    калбэки на главной странице "мои обмены"
+    таймер на детальной странице и в списках(посмотреть что там за баг)
+    посмотреть и по надобности исправить обработку данных калбэков на детальной странице
+  */
+
   const statuts = useMemo<Object[]>(() => activeFilter === "active" ? [
     { methodName: "Новый", kind: 0 },
     { methodName: "Ожидается подтверждение оплаты", kind: 1 },
@@ -166,7 +172,7 @@ useEffect(() => {
           </Text>
         </S.SubHeader>
 
-        <S.Filters style={{ marginBottom: "10px" }}>
+        <S.Filters style={{ marginBottom: "10px", position: "relative" }}>
           <FilterButton
               active={activeFilter === 'active'}
               onClick={() => setActiveFilter('active')}
@@ -182,7 +188,7 @@ useEffect(() => {
               Архив
             </FilterButton>
         </S.Filters>
-        <S.Filters style={{ marginBottom: "10px" }}>
+        <S.Filters style={{ marginBottom: "10px", position: "relative" }}>
           <S.Line style={{ display: "none" }} />
           <FilterButton active style={{ marginLeft: "0px" }} onClick={() => setShowCurrencyPairModal(true)}>
             {balanceKind != null && fiatKind != null ? 
@@ -196,6 +202,9 @@ useEffect(() => {
           <S.Line />
           <FilterButton active onClick={() => setShowSelectedStatus(true)}>
             {status && status.length ? "Статусы - " : "Все статусы"} {status && status.length ? status.length : ""}
+          </FilterButton>
+          <FilterButton style={{ position: "absolute", right: "0px" }} onClick={resetFilters}>
+            Очистить все фильтры
           </FilterButton>
         </S.Filters>
 
