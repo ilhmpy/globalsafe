@@ -366,7 +366,7 @@ export const OrderToSellCard: FC = () => {
                                               (
                                                 <Space gap={10} column key={`payment-method-${method.safeId}-${i}`}>
                                                   <Checkbox 
-                                                      label={PaymentMethodKind[method.assetKind]}
+                                                      label={PaymentMethodKind[method.kind]}
                                                       labelBold
                                                       checked={selectedPaymentMethodsIds.includes(String(method.id))}
                                                       value={String(method.id)}

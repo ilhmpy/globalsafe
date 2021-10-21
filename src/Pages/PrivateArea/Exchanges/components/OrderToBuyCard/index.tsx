@@ -173,8 +173,11 @@ export const OrderToBuyCard: FC = () => {
 
   const onRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const pattern = /^[0-9][0-9\.]*$/;
+    const pattern2 = /^[0-9]{3}\.[0-9]{5}$/;
     if (e.target.value === '' || pattern.test(e.target.value)) {
-      setChangeRate(e.target.value);
+      if(!pattern2.test(e.target.value)) {
+        setChangeRate(e.target.value);
+      }
     }
   };
 
@@ -347,7 +350,7 @@ export const OrderToBuyCard: FC = () => {
                       ) : (
                         <Checkbox
                           key={`payment-method-${method.safeId}-${i}`}
-                          label={PaymentMethodKind[method.assetKind]}
+                          label={PaymentMethodKind[method.kind]}
                           labelBold
                           checked={selectedPaymentMethodsIds.includes(String(method.id))}
                           value={String(method.id)}
