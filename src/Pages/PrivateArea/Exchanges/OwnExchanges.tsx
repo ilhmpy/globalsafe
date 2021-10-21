@@ -59,9 +59,7 @@ export const OwnExchanges = () => {
 
   useEffect(() => {
     if (hubConnection) {
-      if (!selectedPaymentMethods.length) {
-        setLoading(true);
-      };
+      setLoading(true);
       getGetUserExchanges();
     };
 }, [hubConnection, activeFilter, balanceKind, fiatKind, status, payments]);
@@ -92,6 +90,7 @@ useEffect(() => {
       );
       console.log('GetExchanges', res);
       if (payments.length) {
+        console.log("FILTER PAYMENTS")
         const filter = res.collection.filter((i) => {
           if (payments.includes(i.paymentMethod?.kind)) {
               return i;
@@ -105,7 +104,7 @@ useEffect(() => {
           };
         });
         setUserExchanges(filter);
-      } else if (status) {
+      } else if (status && status.length) {
         const filter = res.collection.filter((i) => {
           for (let el = 0; el < status.length; el++) {
             if (i.state === status[el]) {
