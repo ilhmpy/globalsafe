@@ -16,6 +16,7 @@ import { CurrencyPair } from './components/modals/CurrencyPair';
 import { Balance } from '../../../types/balance';
 import { FiatKind } from "../../../types/fiatKind";
 import { getBalanceKindByStringName, getFiatKindByStringName, getMyRating } from '../utils';
+import { ExchangesInOrderTable } from './components/ExchangesInOrderTable';
 
 export const OwnExchanges = () => {
   const history = useHistory();
@@ -57,16 +58,27 @@ export const OwnExchanges = () => {
     ExchangeAbused - на обмен подана жалоба
   */
 
-  function cb() {
-    return false;
+  function cb(res: any) {
+    const exchanges = [...userExchanges];
+    userExchanges.forEach((item) => {
+      if (item.safeId === res.safeId) {
+        exchanges[userExchanges.indexOf(item)] = res;
+      };
+    });
+    setUserExchanges(exchanges);
+    setUserExchanges(state => state.map(i => i));
   };
+
+  function volumeChanged() {
+    return false;
+  }
 
   useEffect(() => {
     if (hubConnection) {
-      hubConnection.on("BuyOrderVolumeChanged", cb);
+      hubConnection.on("BuyOrderVolumeChanged", volumeChanged);
     };
     return () => {
-      hubConnection?.off("BuyOrderVolumeChanged", cb);
+      hubConnection?.off("BuyOrderVolumeChanged", volumeChanged);
     };
   }, [hubConnection]);
 
@@ -76,15 +88,6 @@ export const OwnExchanges = () => {
     };
     return () => {
       hubConnection?.off("ExchangeCreated", cb);
-    };
-  }, [hubConnection]);
-
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection.on("SellOrderVolumeChanged", cb);
-    };
-    return () => {
-      hubConnection?.off("SellOrderVolumeChanged", cb);
     };
   }, [hubConnection]);
 
