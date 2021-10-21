@@ -25,6 +25,7 @@ import reactVirtualizedAutoSizer from 'react-virtualized-auto-sizer';
 import { setUncaughtExceptionCaptureCallback } from 'process';
 import { getVolume } from '../../../../../functions/getVolume';
 import { getTime } from 'date-fns';
+import { Counter } from '../../../components/ui/Counter';
 import  { countVolumeToShow } from "../../../utils";
 
 type DetailCardProps = {
@@ -84,7 +85,11 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
     if (chip === 0) {
       return <Chip style={{ background: 'rgba(0, 148, 255, 10%)' }}>Новый</Chip>;
     } else if (chip === 1) {
-      return <Chip style={{ background: '#FF4A31', color: '#fff' }}>Оставшееся время {time} </Chip>;
+      return (
+        <Chip style={{ background: '#FF4A31', color: '#fff' }}>
+          Оставшееся время <Counter  data={exchange.creationDate} delay={exchange.operationWindow.totalMilliseconds} formatNum /> 
+        </Chip>
+      );
     } else if (chip === 2) {
       return <Chip style={{ background: 'rgba(93, 167, 0, 0.1)', fontWeight: 500 }}>Завершен</Chip>;
     } else if (chip === 3) {

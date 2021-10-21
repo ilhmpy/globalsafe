@@ -50,5 +50,5 @@ export const Counter: FC<Props> = ({ data, formatNum, over, delay }) => {
     }
   }, [start, count]);
 
-  return <>{count > -1 ? state : '00:00'}</>;
+  return <>{count > -1 ? state : '0м. 0с.'}</>;
 };
