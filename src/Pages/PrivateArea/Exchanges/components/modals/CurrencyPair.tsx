@@ -48,13 +48,8 @@ export const CurrencyPair: FC<Props> = ({
     "FF12", "FF11", "FF10", "FF9", "FF8", "FF7", "FF5", "GF6", "GF5", "UGLTEST", "GARANT", "MG921P18000",
     "D721P25000", "D921P60000", "G721P42000", "G921P64000", "MG821P15000", "INDEX_MSHARE", "D821P50000", "FF6"
   ];
-
-  const [balanceKind, setBalanceKind] = useState<any>(null);
-  const [fiatKind, setFiatKind] = useState<any>(null);
-
+  
   function handleAcceptButton() {
-    setSelectedFiatKind(fiatKind);
-    setSelectedBalanceKind(balanceKind);
     onAccept();
   };
 
@@ -67,16 +62,16 @@ export const CurrencyPair: FC<Props> = ({
             <S.DropdonwConatainer>
               <Dropdown
                 label="Все валюты предложения"
-                selectedOption={balanceKind}
-                setSelectedOption={(val) => setBalanceKind(val === 'Не выбрано' ? null : val)}
+                selectedOption={selectedBalanceKind}
+                setSelectedOption={(val) => setSelectedBalanceKind(val === 'Не выбрано' ? null : val)}
                 options={["Не выбрано", ...balanceKinds.filter(item => !bl.includes(item))]}
               />
             </S.DropdonwConatainer>
             <S.DropdonwConatainer big>
               <Dropdown
                 label="Все валюты спроса"
-                selectedOption={fiatKind}
-                setSelectedOption={val => setFiatKind(val === 'Не выбрано' ? null : val)}
+                selectedOption={selectedFiatKind}
+                setSelectedOption={val => setSelectedFiatKind(val === 'Не выбрано' ? null : val)}
                 options={['Не выбрано', ...fiatKinds]}
               />
             </S.DropdonwConatainer>

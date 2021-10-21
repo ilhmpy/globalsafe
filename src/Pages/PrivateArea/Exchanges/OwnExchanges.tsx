@@ -14,6 +14,7 @@ import { GetExchangesCollectionResult, ViewExchangeModel, ExchangeState } from '
 import { PaymentMethods } from './components/modals/PaymentMethods';
 import { CurrencyPair } from './components/modals/CurrencyPair';
 import { Balance } from '../../../types/balance';
+import { FiatKind } from "../../../types/fiatKind";
 import { getBalanceKindByStringName, getFiatKindByStringName, getMyRating } from '../utils';
 
 export const OwnExchanges = () => {
@@ -35,6 +36,8 @@ export const OwnExchanges = () => {
 
   const [status, setStatus] = useState<any[]>([]);
   const [payments, setPayments] = useState<any[]>([]);
+  const [balanceKind, setBalanceKind] = useState<number | null>(null);
+  const [fiatKind, setFiatKind] = useState<number | null>(null);
 
   const statuts = useMemo<Object[]>(() => activeFilter === "active" ? [
     { methodName: "Новый", kind: 0 },
@@ -61,7 +64,7 @@ export const OwnExchanges = () => {
       };
       getGetUserExchanges();
     };
-}, [hubConnection, activeFilter, selectedBalanceKind, selectedFiatKind, status, payments]);
+}, [hubConnection, activeFilter, balanceKind, fiatKind, status, payments]);
 
 function resetFilters() {
   setSelectedBalanceKind(null);
@@ -70,6 +73,8 @@ function resetFilters() {
   setPayments([]);
   setSelectedPaymentMethods([]);
   setSelectedStatus([]);
+  setBalanceKind(null);
+  setFiatKind(null);
 };
 
 useEffect(() => {
@@ -93,12 +98,9 @@ useEffect(() => {
           };
         });
         setUserExchanges(filter);
-      } else if (selectedBalanceKind && selectedFiatKind) {
+      } else if (balanceKind && fiatKind) {
         const filter = res.collection.filter((i) => {
-          const kind = getBalanceKindByStringName(selectedBalanceKind); 
-          const fiatKind = getFiatKindByStringName(selectedFiatKind);
-
-          if (i.assetKind === kind && i.exchangeAssetKind === fiatKind) {
+          if (i.assetKind === balanceKind && i.exchangeAssetKind === fiatKind) {
             return i; 
           };
         });
@@ -128,6 +130,10 @@ useEffect(() => {
   };
 
   function handleAcceptPair() {
+    const kind = getBalanceKindByStringName(selectedBalanceKind); 
+    const fiatKind = getFiatKindByStringName(selectedFiatKind);
+    setBalanceKind(kind);
+    setFiatKind(fiatKind);
     setShowCurrencyPairModal(false)
   };
 
@@ -181,7 +187,11 @@ useEffect(() => {
         </S.Filters>
         <S.Filters style={{ marginBottom: "10px" }}>
           <S.Line style={{ display: "none" }} />
-          <FilterButton active style={{ marginLeft: "0px" }} onClick={() => setShowCurrencyPairModal(true)}>Все валюты</FilterButton>
+          <FilterButton active style={{ marginLeft: "0px" }} onClick={() => setShowCurrencyPairModal(true)}>
+            {balanceKind != null && fiatKind != null ? 
+              `${Balance[balanceKind]} - ${FiatKind[fiatKind]}`  
+              : "Все валюты"}
+          </FilterButton>
           <S.Line />
           <FilterButton active onClick={() => setShowPaymentMethodsModal(true)}>Все методы оплаты</FilterButton>
           <S.Line />
