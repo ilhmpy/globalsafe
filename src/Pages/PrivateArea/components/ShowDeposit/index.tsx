@@ -62,6 +62,10 @@ export const ShowDeposit: FC<{ chosenDepositView: any }> = ({ chosenDepositView 
     })();
   }, [isAgree]);
 
+  const colorSwitcher = (type: string) => {
+    if (type === 'archive') return '#EFECFF';
+  };
+
   return (
     <S.Container>
       <CloseDeposit
