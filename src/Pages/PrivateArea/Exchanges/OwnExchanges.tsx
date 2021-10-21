@@ -176,6 +176,7 @@ useEffect(() => {
         0,
         10
       );
+      console.log("GetExchanges", res.collection);
       if (payments.length) {
         const filter = res.collection.filter((i) => {
           if (payments.includes(i.paymentMethod?.kind)) {

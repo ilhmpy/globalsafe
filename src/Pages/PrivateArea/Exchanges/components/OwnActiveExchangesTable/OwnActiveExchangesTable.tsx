@@ -86,14 +86,17 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
     };
   }
 
-  function getTime(date: Date, wn: any, state: number) {
-    const total = wn.totalMilliseconds - (new Date().getTime() - new Date(date).getTime());
+  function getTime(date: Date, wn: any) {
+    const total = wn.totalMilliSeconds - (new Date().getTime() - new Date(date).getTime());
     const seconds = Math.floor((total/1000) % 60);
     const minutes = Math.floor((total/1000/60) % 60);
     const hours = Math.floor((total/(1000*60*60)) % 24);
     const days = Math.floor(total/(1000*60*60*24));
 
     const result = { days, hours, minutes, seconds };
+
+    console.log(total);
+  
     return getCountsTime(result);
   };
 
@@ -147,7 +150,7 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
                             {getPaymentMethod(exchange.paymentMethod?.kind)}
                         </S.BankList> 
                       </S.Cell>
-                      <S.Cell data-label="Оставшееся время">{getTime(exchange.creationDate, exchange.operationWindow, exchange.state)}</S.Cell>
+                      <S.Cell data-label="Оставшееся время">{getTime(exchange.creationDate, exchange.operationWindow)}</S.Cell>
                       <S.Cell data-label="Статус">{Status[exchange.state]}</S.Cell> 
                   </S.BodyItem>
                 ))}

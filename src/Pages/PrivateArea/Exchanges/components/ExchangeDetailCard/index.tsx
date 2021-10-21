@@ -229,8 +229,8 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
     } else if (minutes > 0) {
       return `${minutes}м ${seconds > 0 ? seconds : 0}с`;
     } else {
-      return `0м. 0с.`;
       setTimerDown(true);
+      return `0м. 0с.`;
     }
   }
 
