@@ -177,6 +177,7 @@ export const OrderToBuyCard: FC = () => {
   };
 
   const onRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setOrderMaxSumm('');
     const pattern = /^[0-9][0-9\.]*$/;
     const pattern2 = /^[0-9]{1,10}\.[0-9]{6}$/;
     if (e.target.value === '' || pattern.test(e.target.value)) {
@@ -200,8 +201,8 @@ export const OrderToBuyCard: FC = () => {
   const onOrderMaxSummChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const pattern = /^[1-9][0-9]*$/;
     if (e.target.value === '' || pattern.test(e.target.value)) {
-      if (+e.target.value > +orderSumm) {
-        setOrderMaxSumm(orderSumm);
+      if (+e.target.value > (+orderSumm * +changeRate)) {
+        setOrderMaxSumm(String(+orderSumm * +changeRate));
       } else {
         setOrderMaxSumm(e.target.value);
       }
