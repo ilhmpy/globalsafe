@@ -43,7 +43,86 @@ export const OwnExchanges = () => {
     калбэки на главной странице "мои обмены"
     таймер на детальной странице и в списках(посмотреть что там за баг)
     посмотреть и по надобности исправить обработку данных калбэков на детальной странице
+    сделать новую логику оценивания когда пройдет пр по бэку
   */
+
+  /*
+    CALLBACKS: 
+    BuyOrderVolumeChanged - значение доступной валюты ордера на покупку изменилось
+    ExchangeCreated - создан новый обмен
+    SellOrderVolumeChanged - значение доступной валюты ордера на продажу изменилось
+    ExchangeCompleted - обмен завершен
+    ExchangeCancelled - обмен отменен
+    ExchangeConfirmationRequired - обмен ожидает подтверждения
+    ExchangeAbused - на обмен подана жалоба
+  */
+
+  function cb() {
+    return false;
+  };
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection.on("BuyOrderVolumeChanged", cb);
+    };
+    return () => {
+      hubConnection?.off("BuyOrderVolumeChanged", cb);
+    };
+  }, [hubConnection]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection.on("ExchangeCreated", cb);
+    };
+    return () => {
+      hubConnection?.off("ExchangeCreated", cb);
+    };
+  }, [hubConnection]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection.on("SellOrderVolumeChanged", cb);
+    };
+    return () => {
+      hubConnection?.off("SellOrderVolumeChanged", cb);
+    };
+  }, [hubConnection]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection.on("ExchangeCompleted", cb);
+    };
+    return () => {
+      hubConnection?.off("ExchangeCompleted", cb);
+    };
+  }, [hubConnection]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection.on("ExchangeCancelled", cb);
+    };
+    return () => {
+      hubConnection?.off("ExchangeCancelled", cb);
+    };
+  }, [hubConnection]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection.on("ExchangeConfirmationRequired", cb);
+    };
+    return () => {
+      hubConnection?.off("ExchangeConfirmationRequired", cb);
+    };
+  }, [hubConnection]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection.on("ExchangeAbused", cb);
+    };
+    return () => {
+      hubConnection?.off("ExchangeAbused", cb);
+    };
+  }, [hubConnection]);
 
   const statuts = useMemo<Object[]>(() => activeFilter === "active" ? [
     { methodName: "Новый", kind: 0 },
