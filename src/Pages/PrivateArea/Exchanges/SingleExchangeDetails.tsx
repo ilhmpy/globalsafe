@@ -23,9 +23,24 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
   const history = useHistory();
   const [exchange, setExchange] = useState<ViewExchangeModel | undefined>();
   const { exchangeId } = match.params;
-  const { hubConnection } = useContext(AppContext);
+  const { hubConnection, account } = useContext(AppContext);
   const [loading, setLoading] = useState<boolean>(false);
   const [call, setCall] = useState<boolean>(false);
+  const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
+  const [showRejectModal, setShowRejectModal] = useState<boolean>(false);
+  const buyer = () => {
+    return (
+      (exchange && exchange.kind === 0 && exchange.ownerSafeId !== account.safeId) ||
+      (exchange && exchange.kind === 1 && exchange.ownerSafeId === account.safeId)
+    );
+  };
+
+  const [owner, setOwner] = useState<'seller' | 'buyer'>(buyer() ? 'buyer' : 'seller');
+
+  /* 
+    сделать фильтр по статусам
+    переписать логику исходя из нового решения на бэке для обоюдной оценки участников обмена(в будущем)
+  */
 
   function getExchange(loading: boolean) {
     if (hubConnection) {
@@ -55,9 +70,22 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
     };
   }, [hubConnection, call]);
 
-  function cb(res: any) {
-    console.log("ExchangeChanged", res);
-    getExchange(false);
+  function cb(res: ViewExchangeModel) {
+    console.log("ExchangeChanged RES", res);
+    if (exchange) {
+      if (res.safeId === exchange.safeId) {
+        setExchange(res);
+      } else {
+        getExchange(false);
+      };
+    };
+  };
+
+  function cancelledCallback(res: ViewExchangeModel) {
+    if (owner === "seller") {
+      setShowRejectModal(true);
+    };
+    cb(res);
   };
 
   useEffect(() => {
@@ -71,10 +99,10 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
 
   useEffect(() => {
     if (hubConnection) {
-      hubConnection.on("ExchangeCancelled", cb);
+      hubConnection.on("ExchangeCancelled", cancelledCallback);
     } 
     return () => {
-      hubConnection?.off("ExchangeCancelled", cb);
+      hubConnection?.off("ExchangeCancelled", cancelledCallback);
     };
   }, [hubConnection]);
 
@@ -125,10 +153,17 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
                 <S.TitleContainer>
                     <Title mB={0}>Обмен {`${Balance[exchange.assetKind]}-${FiatKind[exchange.exchangeAssetKind]}`}</Title>
                     <Text size={14} lH={20} black>
-                      № {exchange.id}
+                      № {exchange.safeId}
                     </Text>
                 </S.TitleContainer>
-                <ExchangeDetailCard setCall={setCall} exchange={exchange} />
+                <ExchangeDetailCard setCall={setCall} 
+                  setShowSuccessModal={setShowSuccessModal} 
+                  setShowRejectModal={setShowRejectModal}
+                  showSuccessModal={showSuccessModal} 
+                  showRejectModal={showRejectModal}
+                  exchange={exchange} 
+                  owner={owner}
+                />
               </Container>
             </>
           )}

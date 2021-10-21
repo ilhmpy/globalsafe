@@ -47,30 +47,18 @@ export const NotifiesBlock = styled.div<{ block: boolean; auth?: boolean; admin?
     ${({ admin }) => {
         if (admin) {
             return `
-               right: 140px;
-               @media only screen and (max-device-width: 767px) {
+            right: 140px;
+            @media only screen and (max-device-width: 767px) {
                 right: 0px;
-               }
+            }
             `;
         };
         if (!admin) {
             return `
-               right: 48px;
-               @media only screen and (max-device-width: 767px) {
+            right: 48px;
+            @media only screen and (max-device-width: 767px) {
                 right: 0px;
-               }
-            `;
-        };
-    }}
-    ${({ inPA, admin }) => {
-        if (admin && inPA) {
-            return `
-                right: -20px;  
-            `;
-        };
-        if (inPA) {
-            return `
-                right: -20px;  
+            }
             `;
         };
     }}

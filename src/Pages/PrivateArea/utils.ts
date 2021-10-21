@@ -55,3 +55,23 @@ export const countVolumeToSend = (summ: string, asset: number): string => {
   }
   return String(value);
 };
+
+export function getBalanceKindByStringName(name: string) {
+  return name === "CWD" ? 1 : 
+         name === "GLOBALSAFE" ? 14 :
+         name === "GLOBAL" ? 42 : 
+         name === "GF" ? 43 :
+         name === "FF" ? 44 : 
+         name === "MULTICS" ? 59 : 0;
+};
+
+export function getFiatKindByStringName(name: string) {
+  return name === "RUB" ? 0 :
+         name === "BYN" ? 1 :
+         name === "UAH" ? 2 : 
+         name === "KZT" ? 3 :
+         name === "USD" ? 4 :
+         name === "EUR" ? 5 :
+         name === "THB" ? 6 :
+         name === "USDT" ? 7 : 0;
+};

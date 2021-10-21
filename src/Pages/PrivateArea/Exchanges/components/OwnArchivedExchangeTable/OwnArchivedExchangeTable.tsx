@@ -51,23 +51,17 @@ export const OwnArchivedExchangesTable: FC<OwnExchangesProps> = ({ exchanges, lo
       );      
     } else if (kind === 3) {
       return (
-        <S.BankItem style={{ width: "90px" }}>
-          BankTransfer
+        <S.BankItem>
+          <img src={tinkoff} alt="tinkoff" />
         </S.BankItem>
       );
     } else if (kind === 4) {
       return (
         <S.BankItem>
-          <img src={tinkoff} alt="tinkoff" />
-        </S.BankItem>
-      );
-    } else if (kind === 5) {
-      return (
-        <S.BankItem>
           <img src={sber} alt="sber" />
         </S.BankItem>
       );
-    } else if (kind === 6) {
+    } else if (kind === 5) {
       return (
         <S.BankItem>
           <img src={alfa} alt="alfa" />
@@ -76,7 +70,7 @@ export const OwnArchivedExchangesTable: FC<OwnExchangesProps> = ({ exchanges, lo
     };
   };
 
-  const Status = ["Создан", "Принят", "Завершен", "Подана жалоба", "Отменен"];
+  const Status = ["Новый", "Ожидается новое подтверждение оплаты", "Завершен", "Подана жалоба", "Отменен"];
 
   /*
   const test: ViewExchangeModel[] = [
