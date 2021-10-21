@@ -62,7 +62,7 @@ export function getBalanceKindByStringName(name: string | null) {
          name === "GLOBAL" ? 42 : 
          name === "GF" ? 43 :
          name === "FF" ? 44 : 
-         name === "MULTICS" ? 59 : 0;
+         name === "MULTICS" ? 59 : null;
 };
 
 export function getFiatKindByStringName(name: string | null) {
@@ -73,7 +73,7 @@ export function getFiatKindByStringName(name: string | null) {
          name === "USD" ? 4 :
          name === "EUR" ? 5 :
          name === "THB" ? 6 :
-         name === "USDT" ? 7 : 0;
+         name === "USDT" ? 7 : null;
 };
 
 export function getMyRating(account: any) {

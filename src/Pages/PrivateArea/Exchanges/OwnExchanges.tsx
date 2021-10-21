@@ -91,9 +91,9 @@ useEffect(() => {
         10
       );
       console.log('GetExchanges', res);
-      if (selectedPaymentMethods.length) {
+      if (payments.length) {
         const filter = res.collection.filter((i) => {
-          if (selectedPaymentMethods.includes(i.paymentMethod?.kind)) {
+          if (payments.includes(i.paymentMethod?.kind)) {
               return i;
           };
         });
@@ -105,13 +105,11 @@ useEffect(() => {
           };
         });
         setUserExchanges(filter);
-      } else if (selectedStatus.length) {
+      } else if (status) {
         const filter = res.collection.filter((i) => {
-          if (status) {
-            for (let el = 0; el < status.length; el++) {
-              if (i.state === status[el]) {
-                return i;
-              };
+          for (let el = 0; el < status.length; el++) {
+            if (i.state === status[el]) {
+              return i;
             };
           };
         });
@@ -196,10 +194,12 @@ useEffect(() => {
           </FilterButton>
           <S.Line />
           <FilterButton active onClick={() => setShowPaymentMethodsModal(true)}>
-            Все методы оплаты {payments && payments.length ? payments.length : ""}
+            {payments && payments.length ? "Методы оплаты - " : "Все методы оплаты"} {payments && payments.length ? payments.length : ""}
           </FilterButton>
           <S.Line />
-          <FilterButton active onClick={() => setShowSelectedStatus(true)}>Все Статусы</FilterButton>
+          <FilterButton active onClick={() => setShowSelectedStatus(true)}>
+            {status && status.length ? "Статусы - " : "Все статусы"} {status && status.length ? status.length : ""}
+          </FilterButton>
         </S.Filters>
 
         {activeFilter === 'active' && <OwnActiveExchangesTable setExchanges={setUserExchanges} loading={loading} exchanges={userExchanges} />}
