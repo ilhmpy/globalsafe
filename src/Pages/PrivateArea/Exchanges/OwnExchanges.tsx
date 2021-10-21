@@ -27,8 +27,8 @@ export const OwnExchanges = () => {
   const [showPaymentMethodsModal, setShowPaymentMethodsModal] = useState<boolean>(false);
   
   const [showCurrencyPairModal, setShowCurrencyPairModal] = useState<boolean>(false);
-  const [selectedBalanceKind, setSelectedBalanceKind] = useState<string | null>("");
-  const [selectedFiatKind, setSelectedFiatKind] = useState<string | null>("");
+  const [selectedBalanceKind, setSelectedBalanceKind] = useState<string | null>(null);
+  const [selectedFiatKind, setSelectedFiatKind] = useState<string | null>(null);
 
   const [showSelectedStatus, setShowSelectedStatus] = useState<boolean>(false);
   const [selectedStatus, setSelectedStatus] = useState<any>([]);
@@ -62,6 +62,19 @@ export const OwnExchanges = () => {
       getGetUserExchanges();
     };
 }, [hubConnection, activeFilter, selectedBalanceKind, selectedFiatKind, status, payments]);
+
+function resetFilters() {
+  setSelectedBalanceKind(null);
+  setSelectedFiatKind(null);
+  setStatus([]);
+  setPayments([]);
+  setSelectedPaymentMethods([]);
+  setSelectedStatus([]);
+};
+
+useEffect(() => {
+  resetFilters();
+}, [activeFilter]);
 
   async function getGetUserExchanges() {
     try {
