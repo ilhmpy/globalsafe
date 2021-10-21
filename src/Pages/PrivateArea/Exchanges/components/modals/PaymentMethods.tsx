@@ -13,6 +13,7 @@ type Props = {
   open: boolean;
   text?: string;
   objectsArray?: boolean;
+  black?: boolean;
 };
 
 export const PaymentMethods: FC<Props> = ({ 
@@ -23,6 +24,7 @@ export const PaymentMethods: FC<Props> = ({
   onClose,
   open,
   text = "Выбор методов оплаты",
+  black,
   objectsArray
 }: Props) => {
 
@@ -49,11 +51,11 @@ export const PaymentMethods: FC<Props> = ({
                 {[...methodsList].map((i, idx) => (
                     <S.DropdonwConatainer big key={idx}>
                       <Checkbox 
-                        dis
+                        dis={!black}
                         checked={selectedPaymentMethods.includes(i.kind)}
                         onChange={() => handleCheckboxChange(i.kind)}
                       >
-                        <S.Label dis>{i.methodName}</S.Label>
+                        <S.Label dis={!black} active={selectedPaymentMethods.includes(i.kind)}>{i.methodName}</S.Label>
                       </Checkbox>
                   </S.DropdonwConatainer>
                 ))}
@@ -66,22 +68,22 @@ export const PaymentMethods: FC<Props> = ({
                     ?
                       <S.DropdonwConatainer big>
                         <Checkbox 
-                          dis
+                          dis={!black}
                           checked={selectedPaymentMethods.includes(i)}
                           onChange={() => handleCheckboxChange(i)}
                         >
-                          <S.Label dis>{methodName}</S.Label>
+                          <S.Label active={selectedPaymentMethods.includes(i)} dis={!black}>{methodName}</S.Label>
                         </Checkbox>
                       </S.DropdonwConatainer>
                     :
                       <>
                         <S.DropdonwConatainer big>
                           <Checkbox 
-                            dis
+                            dis={!black}
                             checked={selectedPaymentMethods.includes(i)}
                             onChange={() => handleCheckboxChange(i)}
                           >
-                            <S.Label dis>
+                            <S.Label active={selectedPaymentMethods.includes(i)} dis={!black}>
                               {methodName}
                             </S.Label>
                           </Checkbox>

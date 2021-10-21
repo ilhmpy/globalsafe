@@ -183,6 +183,7 @@ export const OwnExchanges = () => {
           onAccept={handleAcceptPaymentMethods}
           open={showPaymentMethodsModal} 
           onClose={() => setShowPaymentMethodsModal(false)} 
+          black
         />
 
         <CurrencyPair
@@ -204,6 +205,7 @@ export const OwnExchanges = () => {
           open={showSelectedStatus}  
           onClose={() => setShowSelectedStatus(false)} 
           objectsArray
+          black
         />
       </Container>
     </div>
