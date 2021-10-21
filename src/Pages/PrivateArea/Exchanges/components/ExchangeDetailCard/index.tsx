@@ -64,7 +64,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
 
   const handleClick = () => {
     history.push(routers.p2pchangesSingleExchangeChat + '/' + exchange.safeId);
-    console.log('ExchangeDetailCard Click');
+    console.log('ExchangeDetailCard Click');      
   };
 
   function getUserMark() {
