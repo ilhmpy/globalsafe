@@ -88,16 +88,14 @@ useEffect(() => {
         0,
         10
       );
-      console.log('GetExchanges', res);
       if (payments.length) {
-        console.log("FILTER PAYMENTS")
         const filter = res.collection.filter((i) => {
           if (payments.includes(i.paymentMethod?.kind)) {
               return i;
           };
         });
         setUserExchanges(filter);
-      } else if (balanceKind && fiatKind) {
+      } else if (balanceKind != null && fiatKind != null) {
         const filter = res.collection.filter((i) => {
           if (i.assetKind === balanceKind && i.exchangeAssetKind === fiatKind) {
             return i; 
