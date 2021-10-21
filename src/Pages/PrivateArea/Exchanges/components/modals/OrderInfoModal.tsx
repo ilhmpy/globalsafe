@@ -1,9 +1,8 @@
-import React, { FC, Fragment, useContext } from 'react';
+import React, { FC, Fragment } from 'react';
 import { useHistory } from 'react-router';
 import styled from 'styled-components';
 import { Button as BaseButton } from '../../../../../components/Button/V2/Button';
 import { Modal } from '../../../../../components/ModalAnimated';
-import { PrivateAreaContext } from '../../../../../context/PrivateAreaContext';
 import { FiatKind } from '../../../../../types/fiat';
 import { OrderType, ViewBuyOrderModel, ViewSellOrderModel } from '../../../../../types/orders';
 import { CollectionPayMethod, PaymentMethodKind } from '../../../../../types/paymentMethodKind';
@@ -44,16 +43,12 @@ export const OrderInfoModal: FC<OrderInfoModalProps> = ({
   open,
 }: OrderInfoModalProps) => {
   const history = useHistory();
-  const { setCurrentOrder, setCurrentOrderType} = useContext(PrivateAreaContext);
 
   const handleNavigateToOrder = () => {
     if(newCreatedOrder) {
-      setCurrentOrder(newCreatedOrder);
-      setCurrentOrderType(type);
-      history.replace(`/info/p2p-changes/orders/my/${newCreatedOrder.id}`)
+      history.replace(`/info/p2p-changes/orders/my/${newCreatedOrder.safeId}`)
     }
   };
-
 
   return (
     <>

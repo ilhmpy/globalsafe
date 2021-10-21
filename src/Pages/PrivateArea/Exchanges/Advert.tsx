@@ -163,30 +163,46 @@ export const Advert = () => {
   };
 
 
+  
   // Listening to changes
-  const cb = (res: any) => {
-    console.log("socket works::", res);
-    getOrders();
-  };
-
   useEffect(() => {
+    const cbOrderVolumeChanged = (orderSafeId: string, summ: number) => {
+      console.log('__SOCKET__cbOrderVolumeChanged::', orderSafeId);
+      const key = ordersList.findIndex((order) => order.safeId === orderSafeId);
+      if(key !== -1) {
+        setOrdersList(state => [
+          ...state.slice(0, key),
+          {...state[key], volume: summ},
+          ...state.slice(key + 1),
+        ]);
+      }
+    };
+
+    const cbOrderCreated = (newOrder: ViewBuyOrderModel | ViewSellOrderModel) => {
+      console.log('__SOCKET__cbOrderCreated::', newOrder)
+      if(newOrder) {
+        setOrdersList(state => [newOrder, ...state])
+      }
+    };
+
     if (hubConnection) {
-      hubConnection.on("SellOrderCreated", cb);
-      hubConnection.on("BuyOrderCreated", cb);
-      hubConnection.on("BuyOrderVolumeChanged", cb);
-      hubConnection.on("SellOrderVolumeChanged", cb);
-      hubConnection.on("SellOrderCompleted", cb);
-      hubConnection.on("BuyOrderCompleted", cb);
+        hubConnection.on("BuyOrderCreated", cbOrderCreated);
+        hubConnection.on("BuyOrderVolumeChanged", cbOrderVolumeChanged);
+        
+        hubConnection.on("SellOrderCreated", cbOrderCreated);
+        hubConnection.on("SellOrderVolumeChanged", cbOrderVolumeChanged);
     };
+
     return () => {
-      hubConnection?.off("SellOrderCreated", cb);
-      hubConnection?.off("BuyOrderCreated", cb);
-      hubConnection?.off("BuyOrderVolumeChanged", cb);
-      hubConnection?.off("SellOrderVolumeChanged", cb);
-      hubConnection?.off("SellOrderCompleted", cb);
-      hubConnection?.off("BuyOrderCompleted", cb);
+      hubConnection?.off("BuyOrderCreated", cbOrderCreated);
+      hubConnection?.off("SellOrderCreated", cbOrderCreated);
+
+      hubConnection?.off("BuyOrderVolumeChanged", cbOrderVolumeChanged);
+      hubConnection?.off("SellOrderVolumeChanged", cbOrderVolumeChanged);
+
     };
-  }, [hubConnection]);
+  }, [hubConnection, ordersList]);
+
 
   return (
     <div>

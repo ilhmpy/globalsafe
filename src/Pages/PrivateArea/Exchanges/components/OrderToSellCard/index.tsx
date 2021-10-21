@@ -197,13 +197,13 @@ export const OrderToSellCard: FC = () => {
     const onOrderMinSummChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const pattern = /^[1-9][0-9]*$/;
         if (e.target.value === '' || pattern.test(e.target.value)) {
-            if(+e.target.value > +orderSumm) {
-                setOrderMinSumm(orderSumm);
-            } else {
-                setOrderMinSumm(e.target.value);
-            }
+          if (+e.target.value > ((+orderSumm - 1) * +changeRate)) {
+            setOrderMinSumm(String((+orderSumm - 1) * +changeRate));
+          } else {
+            setOrderMinSumm(e.target.value);
+          }
         }
-    };
+      };
 
     const onOrderMaxSummChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const pattern = /^[1-9][0-9]*$/;
