@@ -75,8 +75,6 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
     if (exchange) {
       if (res.safeId === exchange.safeId) {
         setExchange(res);
-      } else {
-        getExchange(false);
       };
     };
   };
@@ -86,6 +84,16 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
       setShowRejectModal(true);
     };
     cb(res);
+  };
+
+  function volumeChanged(id: string, volume: number) {
+    if (exchange) {
+      const newExchange = exchange;
+      if (newExchange.safeId === id) {
+        newExchange.volume = volume;
+        setExchange(newExchange);
+      };  
+    }
   };
 
   useEffect(() => {
@@ -126,19 +134,19 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
 
   useEffect(() => {
     if (hubConnection) {
-      hubConnection.on("BuyOrderVolumeChanged", cb);
+      hubConnection.on("BuyOrderVolumeChanged", volumeChanged);
     };
     return () => {
-      hubConnection?.off("BuyOrderVolumeChanged", cb);
+      hubConnection?.off("BuyOrderVolumeChanged", volumeChanged);
     };  
   }), [hubConnection];
 
   useEffect(() => {
     if (hubConnection) {
-      hubConnection.on("SellOrderVolumeChanged", cb);
+      hubConnection.on("SellOrderVolumeChanged", volumeChanged);
     };
     return () => {
-      hubConnection?.off("SellOrderVolumeChanged", cb);
+      hubConnection?.off("SellOrderVolumeChanged", volumeChanged);
     };  
   }, [hubConnection])
   

@@ -58,6 +58,11 @@ export const OwnExchanges = () => {
     ExchangeAbused - на обмен подана жалоба
   */
 
+  function rerender(exchanges: ViewExchangeModel[]) {
+    setUserExchanges(exchanges);
+    setUserExchanges(state => state.map(i => i));
+  };
+
   function cb(res: any) {
     const exchanges = [...userExchanges];
     userExchanges.forEach((item) => {
@@ -65,13 +70,22 @@ export const OwnExchanges = () => {
         exchanges[userExchanges.indexOf(item)] = res;
       };
     });
-    setUserExchanges(exchanges);
-    setUserExchanges(state => state.map(i => i));
+    rerender(exchanges);
   };
 
-  function volumeChanged() {
-    return false;
-  }
+  function volumeChanged(id: string, volume: number) {
+    const exchanges = [...userExchanges];
+    userExchanges.forEach((item) => {
+      if (item.safeId === id) {
+        exchanges[userExchanges.indexOf(item)].volume = volume;
+      };
+    });
+    rerender(exchanges);
+  };
+
+  function exchangeCreated(res: ViewExchangeModel) {
+    rerender([...userExchanges, res]);
+  };
 
   useEffect(() => {
     if (hubConnection) {
@@ -84,10 +98,10 @@ export const OwnExchanges = () => {
 
   useEffect(() => {
     if (hubConnection) {
-      hubConnection.on("ExchangeCreated", cb);
+      hubConnection.on("ExchangeCreated", exchangeCreated);
     };
     return () => {
-      hubConnection?.off("ExchangeCreated", cb);
+      hubConnection?.off("ExchangeCreated", exchangeCreated);
     };
   }, [hubConnection]);
 
