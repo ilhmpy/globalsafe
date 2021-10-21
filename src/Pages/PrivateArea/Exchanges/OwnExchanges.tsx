@@ -91,7 +91,6 @@ export const OwnExchanges = () => {
         setUserExchanges(filter);
       } else if (selectedStatus.length) {
         const filter = res.collection.filter((i) => {
-          console.log(selectedStatus);
           for (let el = 0; el < selectedStatus.length; el++) {
             if (i.state === selectedStatus[el]) {
               return i;
