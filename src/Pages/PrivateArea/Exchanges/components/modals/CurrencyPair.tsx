@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useContext } from 'react';
+import { FC, useState, useMemo } from 'react';
 import { Button } from '../../../../../components/Button/V2/Button';
 import { Modal } from '../../../../../components/ModalAnimated';
 import { Balance } from '../../../../../types/balance';
@@ -40,8 +40,6 @@ export const CurrencyPair: FC<Props> = ({
       const list: string[] = Object.values(FiatKind).filter(i => typeof i === 'string');
       return list;
   }, [Balance]);
-
-  const { balanceList } = useContext(AppContext);
   const bl: any[] = [
     "Na", "FUTURE4", "FUTURE5", "FUTURE6", "MGCWD", "GCWD", "DIAMOND", "CROWD_BTC", "CWDBONUS", 
     "CARBONE", "BRONZE", "MCENT", "PRIDE", "CROWD", "SILVER", "ALTER", "SILVER_I3700820", "SILVER_I61900820",
@@ -50,6 +48,10 @@ export const CurrencyPair: FC<Props> = ({
     "FF12", "FF11", "FF10", "FF9", "FF8", "FF7", "FF5", "GF6", "GF5", "UGLTEST", "GARANT", "MG921P18000",
     "D721P25000", "D921P60000", "G721P42000", "G921P64000", "MG821P15000", "INDEX_MSHARE", "D821P50000", "FF6"
   ];
+  
+  function handleAcceptButton() {
+    onAccept();
+  };
 
   return (
     <>
@@ -73,7 +75,7 @@ export const CurrencyPair: FC<Props> = ({
                 options={['Не выбрано', ...fiatKinds]}
               />
             </S.DropdonwConatainer>
-            <Button fullWidth primary onClick={onAccept}>
+            <Button fullWidth primary onClick={handleAcceptButton}>
               Применить
             </Button>
           </S.Container>

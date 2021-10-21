@@ -10,11 +10,12 @@ import * as S from './S.el';
 import { OwnActiveExchangesTable } from './components/OwnActiveExchangesTable/OwnActiveExchangesTable';
 import { OwnArchivedExchangesTable } from './components/OwnArchivedExchangeTable/OwnArchivedExchangeTable';
 import { AppContext } from '../../../context/HubContext';
-import { GetExchangesCollectionResult, ViewExchangeModel } from '../../../types/exchange';
+import { GetExchangesCollectionResult, ViewExchangeModel, ExchangeState } from '../../../types/exchange';
 import { PaymentMethods } from './components/modals/PaymentMethods';
 import { CurrencyPair } from './components/modals/CurrencyPair';
 import { Balance } from '../../../types/balance';
-import { getBalanceKindByStringName, getFiatKindByStringName } from '../utils';
+import { FiatKind } from "../../../types/fiatKind";
+import { getBalanceKindByStringName, getFiatKindByStringName, getMyRating } from '../utils';
 
 export const OwnExchanges = () => {
   const history = useHistory();
@@ -31,16 +32,105 @@ export const OwnExchanges = () => {
   const [selectedFiatKind, setSelectedFiatKind] = useState<string | null>(null);
 
   const [showSelectedStatus, setShowSelectedStatus] = useState<boolean>(false);
-  const [selectedStatus, setSelectedStatus] = useState<number[]>([]);
+  const [selectedStatus, setSelectedStatus] = useState<any>([]);
 
+  const [status, setStatus] = useState<any[] | null>(null);
+  const [payments, setPayments] = useState<any[]>([]);
+  const [balanceKind, setBalanceKind] = useState<number | null>(null);
+  const [fiatKind, setFiatKind] = useState<number | null>(null);
 
-  const statuts = useMemo<string[]>(() => activeFilter === "active" ? [
-    "Новый",
-    "Ожидается подтверждение оплаты",
+  /* 
+    калбэки на главной странице "мои обмены"
+    таймер на детальной странице и в списках(посмотреть что там за баг)
+    посмотреть и по надобности исправить обработку данных калбэков на детальной странице
+    сделать новую логику оценивания когда пройдет пр по бэку
+  */
+
+  /*
+    CALLBACKS: 
+    BuyOrderVolumeChanged - значение доступной валюты ордера на покупку изменилось
+    ExchangeCreated - создан новый обмен
+    SellOrderVolumeChanged - значение доступной валюты ордера на продажу изменилось
+    ExchangeCompleted - обмен завершен
+    ExchangeCancelled - обмен отменен
+    ExchangeConfirmationRequired - обмен ожидает подтверждения
+    ExchangeAbused - на обмен подана жалоба
+  */
+
+  function cb() {
+    return false;
+  };
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection.on("BuyOrderVolumeChanged", cb);
+    };
+    return () => {
+      hubConnection?.off("BuyOrderVolumeChanged", cb);
+    };
+  }, [hubConnection]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection.on("ExchangeCreated", cb);
+    };
+    return () => {
+      hubConnection?.off("ExchangeCreated", cb);
+    };
+  }, [hubConnection]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection.on("SellOrderVolumeChanged", cb);
+    };
+    return () => {
+      hubConnection?.off("SellOrderVolumeChanged", cb);
+    };
+  }, [hubConnection]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection.on("ExchangeCompleted", cb);
+    };
+    return () => {
+      hubConnection?.off("ExchangeCompleted", cb);
+    };
+  }, [hubConnection]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection.on("ExchangeCancelled", cb);
+    };
+    return () => {
+      hubConnection?.off("ExchangeCancelled", cb);
+    };
+  }, [hubConnection]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection.on("ExchangeConfirmationRequired", cb);
+    };
+    return () => {
+      hubConnection?.off("ExchangeConfirmationRequired", cb);
+    };
+  }, [hubConnection]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection.on("ExchangeAbused", cb);
+    };
+    return () => {
+      hubConnection?.off("ExchangeAbused", cb);
+    };
+  }, [hubConnection]);
+
+  const statuts = useMemo<Object[]>(() => activeFilter === "active" ? [
+    { methodName: "Новый", kind: 0 },
+    { methodName: "Ожидается подтверждение оплаты", kind: 1 },
   ] : [
-    "Завершен",
-    "Жалоба",
-    "Отменен"
+    { methodName: "Завершен", kind: 2 },
+    { methodName: "Подана жалоба", kind: 3 },
+    { methodName: "Отменен", kind: 4 }
   ], [activeFilter]);
   
   const paymentMethodsKinds = useMemo<string[]>(() => [
@@ -54,12 +144,25 @@ export const OwnExchanges = () => {
 
   useEffect(() => {
     if (hubConnection) {
-      if (!selectedPaymentMethods.length) {
-        setLoading(true);
-      };
+      setLoading(true);
       getGetUserExchanges();
     };
-  }, [hubConnection, activeFilter, selectedPaymentMethods, selectedBalanceKind, selectedFiatKind, selectedStatus]);
+}, [hubConnection, activeFilter, balanceKind, fiatKind, status, payments]);
+
+function resetFilters() {
+  setSelectedBalanceKind(null);
+  setSelectedFiatKind(null);
+  setStatus([]);
+  setPayments([]);
+  setSelectedPaymentMethods([]);
+  setSelectedStatus([]);
+  setBalanceKind(null);
+  setFiatKind(null);
+};
+
+useEffect(() => {
+  resetFilters();
+}, [activeFilter]);
 
   async function getGetUserExchanges() {
     try {
@@ -70,28 +173,27 @@ export const OwnExchanges = () => {
         0,
         10
       );
-      console.log('GetExchanges', res);
-      if (selectedPaymentMethods.length) {
+      if (payments.length) {
         const filter = res.collection.filter((i) => {
-          if (selectedPaymentMethods.includes(i.paymentMethod?.kind)) {
+          if (payments.includes(i.paymentMethod?.kind)) {
               return i;
           };
         });
         setUserExchanges(filter);
-      } else if (selectedBalanceKind && selectedFiatKind) {
-        const kind = getBalanceKindByStringName(selectedBalanceKind);
-        const fiatKind = getFiatKindByStringName(selectedFiatKind);
-
+      } else if (balanceKind != null && fiatKind != null) {
         const filter = res.collection.filter((i) => {
-          if (i.assetKind === kind && i.exchangeAssetKind === fiatKind) {
-            return i;
+          if (i.assetKind === balanceKind && i.exchangeAssetKind === fiatKind) {
+            return i; 
           };
         });
         setUserExchanges(filter);
-      } else if (selectedStatus.length) {
+      } else if (status && status.length) {
         const filter = res.collection.filter((i) => {
-          
-          return i;
+          for (let el = 0; el < status.length; el++) {
+            if (i.state === status[el]) {
+              return i;
+            };
+          };
         });
         setUserExchanges(filter);
       } else {
@@ -104,27 +206,21 @@ export const OwnExchanges = () => {
     };
   };
 
-  function getMyRating() {
-    if (account.claims) {
-      let rating = 0;
-      account.claims.forEach((claim: any) => {
-      if (claim.claimType === "exchanges-rating") {
-        rating = claim.claimValue;
-      };
-    });
-      return (Number(rating)).toFixed(1);
-    };
-  };
-
   function handleAcceptPaymentMethods() {
+    setPayments(selectedPaymentMethods);
     setShowPaymentMethodsModal(false);
   };
 
   function handleAcceptPair() {
+    const kind = getBalanceKindByStringName(selectedBalanceKind); 
+    const fiatKind = getFiatKindByStringName(selectedFiatKind);
+    setBalanceKind(kind);
+    setFiatKind(fiatKind);
     setShowCurrencyPairModal(false)
   };
 
   function handleAcceptSelectedStatus() {
+    setStatus(selectedStatus);
     setShowSelectedStatus(false);
   };
 
@@ -151,11 +247,11 @@ export const OwnExchanges = () => {
             </TabNavItem>
           </TabsBlock>
           <Text size={14} lH={16} weight={500} black>
-            Рейтинг аккаунта: {getMyRating()}
+            Рейтинг аккаунта: {getMyRating(account)}
           </Text>
         </S.SubHeader>
 
-        <S.Filters style={{ marginBottom: "10px" }}>
+        <S.Filters style={{ marginBottom: "10px", position: "relative" }}>
           <FilterButton
               active={activeFilter === 'active'}
               onClick={() => setActiveFilter('active')}
@@ -171,13 +267,24 @@ export const OwnExchanges = () => {
               Архив
             </FilterButton>
         </S.Filters>
-        <S.Filters style={{ marginBottom: "10px" }}>
+        <S.Filters style={{ marginBottom: "10px", position: "relative" }}>
           <S.Line style={{ display: "none" }} />
-          <FilterButton active style={{ marginLeft: "0px" }} onClick={() => setShowCurrencyPairModal(true)}>Все валюты</FilterButton>
+          <FilterButton active style={{ marginLeft: "0px" }} onClick={() => setShowCurrencyPairModal(true)}>
+            {balanceKind != null && fiatKind != null ? 
+              `${Balance[balanceKind]} - ${FiatKind[fiatKind]}`  
+              : "Все валюты"}
+          </FilterButton>
           <S.Line />
-          <FilterButton active onClick={() => setShowPaymentMethodsModal(true)}>Все методы оплаты</FilterButton>
+          <FilterButton active onClick={() => setShowPaymentMethodsModal(true)}>
+            {payments && payments.length ? "Методы оплаты - " : "Все методы оплаты"} {payments && payments.length ? payments.length : ""}
+          </FilterButton>
           <S.Line />
-          <FilterButton active onClick={() => setShowSelectedStatus(true)}>Все Статусы</FilterButton>
+          <FilterButton active onClick={() => setShowSelectedStatus(true)}>
+            {status && status.length ? "Статусы - " : "Все статусы"} {status && status.length ? status.length : ""}
+          </FilterButton>
+          <FilterButton style={{ position: "absolute", right: "0px" }} onClick={resetFilters}>
+            Очистить все фильтры
+          </FilterButton>
         </S.Filters>
 
         {activeFilter === 'active' && <OwnActiveExchangesTable setExchanges={setUserExchanges} loading={loading} exchanges={userExchanges} />}
@@ -190,6 +297,7 @@ export const OwnExchanges = () => {
           onAccept={handleAcceptPaymentMethods}
           open={showPaymentMethodsModal} 
           onClose={() => setShowPaymentMethodsModal(false)} 
+          black
         />
 
         <CurrencyPair
@@ -210,6 +318,8 @@ export const OwnExchanges = () => {
           onAccept={handleAcceptSelectedStatus}
           open={showSelectedStatus}  
           onClose={() => setShowSelectedStatus(false)} 
+          objectsArray
+          black
         />
       </Container>
     </div>

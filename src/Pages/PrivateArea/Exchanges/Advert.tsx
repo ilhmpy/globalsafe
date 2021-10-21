@@ -67,6 +67,7 @@ export const Advert = () => {
   }
 
   useEffect(() => {
+    console.log("CHANGE")
     if (hubConnection) {
       getOrders();
     }
