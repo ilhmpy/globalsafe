@@ -10,11 +10,11 @@ import * as S from './S.el';
 import { OwnActiveExchangesTable } from './components/OwnActiveExchangesTable/OwnActiveExchangesTable';
 import { OwnArchivedExchangesTable } from './components/OwnArchivedExchangeTable/OwnArchivedExchangeTable';
 import { AppContext } from '../../../context/HubContext';
-import { GetExchangesCollectionResult, ViewExchangeModel } from '../../../types/exchange';
+import { GetExchangesCollectionResult, ViewExchangeModel, ExchangeState } from '../../../types/exchange';
 import { PaymentMethods } from './components/modals/PaymentMethods';
 import { CurrencyPair } from './components/modals/CurrencyPair';
 import { Balance } from '../../../types/balance';
-import { getBalanceKindByStringName, getFiatKindByStringName } from '../utils';
+import { getBalanceKindByStringName, getFiatKindByStringName, getMyRating } from '../utils';
 
 export const OwnExchanges = () => {
   const history = useHistory();
@@ -31,16 +31,17 @@ export const OwnExchanges = () => {
   const [selectedFiatKind, setSelectedFiatKind] = useState<string | null>(null);
 
   const [showSelectedStatus, setShowSelectedStatus] = useState<boolean>(false);
-  const [selectedStatus, setSelectedStatus] = useState<number[]>([]);
+  const [selectedStatus, setSelectedStatus] = useState<any>([]);
+  
+  const status = ["Initiated", "Confirmed", "Completed", "Abused", "Cancelled"];
 
-
-  const statuts = useMemo<string[]>(() => activeFilter === "active" ? [
-    "Новый",
-    "Ожидается подтверждение оплаты",
+  const statuts = useMemo<Object[]>(() => activeFilter === "active" ? [
+    { methodName: "Новый", kind: 0 },
+    { methodName: "Ожидается подтверждение оплаты", kind: 1 },
   ] : [
-    "Завершен",
-    "Жалоба",
-    "Отменен"
+    { methodName: "Завершен", kind: 2 },
+    { methodName: "Подана жалоба", kind: 3 },
+    { methodName: "Отменен", kind: 4 }
   ], [activeFilter]);
   
   const paymentMethodsKinds = useMemo<string[]>(() => [
@@ -90,8 +91,12 @@ export const OwnExchanges = () => {
         setUserExchanges(filter);
       } else if (selectedStatus.length) {
         const filter = res.collection.filter((i) => {
-          
-          return i;
+          console.log(selectedStatus);
+          for (let el = 0; el < selectedStatus.length; el++) {
+            if (i.state === selectedStatus[el]) {
+              return i;
+            };
+          };
         });
         setUserExchanges(filter);
       } else {
@@ -101,18 +106,6 @@ export const OwnExchanges = () => {
       console.log(err);
     } finally {
       setLoading(false);
-    };
-  };
-
-  function getMyRating() {
-    if (account.claims) {
-      let rating = 0;
-      account.claims.forEach((claim: any) => {
-      if (claim.claimType === "exchanges-rating") {
-        rating = claim.claimValue;
-      };
-    });
-      return (Number(rating)).toFixed(1);
     };
   };
 
@@ -151,7 +144,7 @@ export const OwnExchanges = () => {
             </TabNavItem>
           </TabsBlock>
           <Text size={14} lH={16} weight={500} black>
-            Рейтинг аккаунта: {getMyRating()}
+            Рейтинг аккаунта: {getMyRating(account)}
           </Text>
         </S.SubHeader>
 
@@ -210,6 +203,7 @@ export const OwnExchanges = () => {
           onAccept={handleAcceptSelectedStatus}
           open={showSelectedStatus}  
           onClose={() => setShowSelectedStatus(false)} 
+          objectsArray
         />
       </Container>
     </div>

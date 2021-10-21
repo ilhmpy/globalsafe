@@ -75,3 +75,15 @@ export function getFiatKindByStringName(name: string) {
          name === "THB" ? 6 :
          name === "USDT" ? 7 : 0;
 };
+
+export function getMyRating(account: any) {
+  if (account.claims) {
+    let rating = 0;
+    account.claims.forEach((claim: any) => {
+    if (claim.claimType === "exchanges-rating") {
+      rating = claim.claimValue;
+    };
+  });
+    return (Number(rating)).toFixed(1);
+  };
+};
