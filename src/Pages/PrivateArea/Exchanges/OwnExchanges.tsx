@@ -27,13 +27,14 @@ export const OwnExchanges = () => {
   const [showPaymentMethodsModal, setShowPaymentMethodsModal] = useState<boolean>(false);
   
   const [showCurrencyPairModal, setShowCurrencyPairModal] = useState<boolean>(false);
-  const [selectedBalanceKind, setSelectedBalanceKind] = useState<string | null>(null);
-  const [selectedFiatKind, setSelectedFiatKind] = useState<string | null>(null);
+  const [selectedBalanceKind, setSelectedBalanceKind] = useState<string | null>("");
+  const [selectedFiatKind, setSelectedFiatKind] = useState<string | null>("");
 
   const [showSelectedStatus, setShowSelectedStatus] = useState<boolean>(false);
   const [selectedStatus, setSelectedStatus] = useState<any>([]);
-  
-  const status = ["Initiated", "Confirmed", "Completed", "Abused", "Cancelled"];
+
+  const [status, setStatus] = useState<any[]>([]);
+  const [payments, setPayments] = useState<any[]>([]);
 
   const statuts = useMemo<Object[]>(() => activeFilter === "active" ? [
     { methodName: "Новый", kind: 0 },
@@ -60,7 +61,7 @@ export const OwnExchanges = () => {
       };
       getGetUserExchanges();
     };
-  }, [hubConnection, activeFilter, selectedPaymentMethods, selectedBalanceKind, selectedFiatKind, selectedStatus]);
+}, [hubConnection, activeFilter, selectedBalanceKind, selectedFiatKind, status, payments]);
 
   async function getGetUserExchanges() {
     try {
@@ -80,19 +81,19 @@ export const OwnExchanges = () => {
         });
         setUserExchanges(filter);
       } else if (selectedBalanceKind && selectedFiatKind) {
-        const kind = getBalanceKindByStringName(selectedBalanceKind);
-        const fiatKind = getFiatKindByStringName(selectedFiatKind);
-
         const filter = res.collection.filter((i) => {
+          const kind = getBalanceKindByStringName(selectedBalanceKind); 
+          const fiatKind = getFiatKindByStringName(selectedFiatKind);
+
           if (i.assetKind === kind && i.exchangeAssetKind === fiatKind) {
-            return i;
+            return i; 
           };
         });
         setUserExchanges(filter);
       } else if (selectedStatus.length) {
         const filter = res.collection.filter((i) => {
-          for (let el = 0; el < selectedStatus.length; el++) {
-            if (i.state === selectedStatus[el]) {
+          for (let el = 0; el < status.length; el++) {
+            if (i.state === status[el]) {
               return i;
             };
           };
@@ -109,6 +110,7 @@ export const OwnExchanges = () => {
   };
 
   function handleAcceptPaymentMethods() {
+    setPayments(selectedPaymentMethods);
     setShowPaymentMethodsModal(false);
   };
 
@@ -117,6 +119,7 @@ export const OwnExchanges = () => {
   };
 
   function handleAcceptSelectedStatus() {
+    setStatus(selectedStatus);
     setShowSelectedStatus(false);
   };
 

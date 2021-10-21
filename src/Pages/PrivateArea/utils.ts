@@ -56,7 +56,7 @@ export const countVolumeToSend = (summ: string, asset: number): string => {
   return String(value);
 };
 
-export function getBalanceKindByStringName(name: string) {
+export function getBalanceKindByStringName(name: string | null) {
   return name === "CWD" ? 1 : 
          name === "GLOBALSAFE" ? 14 :
          name === "GLOBAL" ? 42 : 
@@ -65,7 +65,7 @@ export function getBalanceKindByStringName(name: string) {
          name === "MULTICS" ? 59 : 0;
 };
 
-export function getFiatKindByStringName(name: string) {
+export function getFiatKindByStringName(name: string | null) {
   return name === "RUB" ? 0 :
          name === "BYN" ? 1 :
          name === "UAH" ? 2 : 

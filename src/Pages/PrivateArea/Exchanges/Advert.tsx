@@ -57,6 +57,7 @@ export const Advert = () => {
   ], []);
 
   useEffect(() => {
+    console.log("CHANGE")
     if (hubConnection) {
       if(activeType === OrderType.Buy) {
         getBuyOrders();
