@@ -39,7 +39,7 @@ export const InfoMain: FC = () => {
   if (user === false) {
     return <Redirect to="/" />;
   }
- 
+
   return (
     <>
       <Styled.Page>
@@ -76,7 +76,7 @@ export const InfoMain: FC = () => {
               component={SingleOrderDetails}
               exact
             />
-            <Route 
+            <Route
               path={routers.settingsViewPayMethod + '/:slug'}
               component={ViewPayMethod}
               exact

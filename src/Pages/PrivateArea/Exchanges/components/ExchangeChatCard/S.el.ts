@@ -44,6 +44,8 @@ export const ChatWrapper = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
+  height: 748px;
+  overflow: hidden;
 `;
 
 export const ChatHeader = styled.div`
@@ -52,25 +54,15 @@ export const ChatHeader = styled.div`
   justify-content: center;
   text-align: center;
   padding: 20px 40px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-
+  margin-bottom: 40px;
   border-bottom: 1px solid #EBEBF2;
 `;
 
 export const ChatContainer = styled.div`
     margin-top: 56px;
-    padding: 40px 40px 90px 40px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-
-    max-height: 572px;
+    padding: 40px 40px 0px 40px;
     overflow-y: scroll;
-
+    height: 100%;
     &::-webkit-scrollbar {
         display: none;
       }
@@ -122,4 +114,31 @@ export const FileUpload = styled.label`
 
 export const FileInput = styled.input`
     
+`;
+
+export const LoaderContainer = styled.div`
+  margin-right: 20px;
+  display: flex;
+  justify-content: flex-end;
+  height: 120px;
+`
+
+export const ImageContainer = styled.div`
+  text-align: center;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 25px 48px;
+  position: relative;
+  @media (max-width: 576px) {
+    width: 100%;
+    padding: 40px 0px;
+    height: 100vh;
+  }
+  img {
+    max-width: 100% !important;
+    height: 100%;
+    object-fit: contain;
+  }
 `;

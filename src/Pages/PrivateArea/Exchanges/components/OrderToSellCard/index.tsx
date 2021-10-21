@@ -28,7 +28,7 @@ import { countVolumeToSend } from '../../../utils';
 export const OrderToSellCard: FC = () => {
     const history = useHistory();
     const appContext = useContext(AppContext);
-    const { hubConnection, user } = appContext;
+    const { hubConnection, user, balanceList } = appContext;
     const [showOrderSellModal, setShowOrderSellModal] = useState(false);
     const [showOrderErrorModal, setShowOrderErrorModal] = useState(false);
 
@@ -60,10 +60,16 @@ export const OrderToSellCard: FC = () => {
     
     // Get Balance Kinds List as an Array
     const balanceKinds = useMemo<string[]>(() => {
-       // @ts-ignore: Unreachable code error
-       const list: string[] = Object.values(Balance).filter(i => typeof i === 'string');
-       return list;
-    }, [Balance]);
+        const ownBalanceKinds: number[] = balanceList?.map(b => b.balanceKind) || [];
+    
+        // @ts-ignore: Unreachable code error
+        const list: string[] = Object.values(Balance)
+        .filter((b) => typeof b === 'string')
+        .filter((b, i) => ownBalanceKinds.includes(i))
+        .filter((b) => b !== 'Na');
+        
+        return list;
+      }, [Balance, balanceList]);
 
      // Get Fiat Kinds List as an Array
      const fiatKinds = useMemo<string[]>(() => {
@@ -149,8 +155,8 @@ export const OrderToSellCard: FC = () => {
                 +changeRate, // double rate
                 Balance[currencyToSell as keyof typeof Balance], // BalanceKind assetKind
                 FiatKind[currencyToChange as keyof typeof FiatKind], // FiatKind operationAssetKind
-                +orderMinSumm, // long limitFrom
-                +orderMaxSumm, // long limitTo
+                +countVolumeToSend(orderMinSumm, Balance[currencyToSell as keyof typeof Balance]), // long limitFrom
+                +countVolumeToSend(orderMaxSumm, Balance[currencyToSell as keyof typeof Balance]), // long limitTo
                 timeDurations.find(t => t.label === changeTimePeriod)?.value, // int window
                 findPaymentMethodKinds(paymentMethods?.filter(m => selectedPaymentMethodsIds.includes(String(m.id)))), // Array of int methodsKinds max:5
                 '', // terms
@@ -178,28 +184,32 @@ export const OrderToSellCard: FC = () => {
     };
 
     const onRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setOrderMaxSumm('');
         const pattern = /^[0-9][0-9\.]*$/;
+        const pattern2 = /^[0-9]{1,10}\.[0-9]{6}$/;
         if (e.target.value === '' || pattern.test(e.target.value)) {
-          setChangeRate(e.target.value);
+            if(!pattern2.test(e.target.value)) {
+                setChangeRate(e.target.value);
+            }
         }
     };
 
     const onOrderMinSummChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const pattern = /^[1-9][0-9]*$/;
         if (e.target.value === '' || pattern.test(e.target.value)) {
-            if(+e.target.value > +orderSumm) {
-                setOrderMinSumm(orderSumm);
-            } else {
-                setOrderMinSumm(e.target.value);
-            }
+          if (+e.target.value > ((+orderSumm - 1) * +changeRate)) {
+            setOrderMinSumm(String((+orderSumm - 1) * +changeRate));
+          } else {
+            setOrderMinSumm(e.target.value);
+          }
         }
-    };
+      };
 
     const onOrderMaxSummChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const pattern = /^[1-9][0-9]*$/;
         if (e.target.value === '' || pattern.test(e.target.value)) {
-            if(+e.target.value > +orderSumm) {
-                setOrderMaxSumm(orderSumm);
+            if (+e.target.value > (+orderSumm * +changeRate)) {
+                setOrderMaxSumm(String(+orderSumm * +changeRate));
             } else {
                 setOrderMaxSumm(e.target.value);
             }
@@ -366,7 +376,7 @@ export const OrderToSellCard: FC = () => {
                                               (
                                                 <Space gap={10} column key={`payment-method-${method.safeId}-${i}`}>
                                                   <Checkbox 
-                                                      label={PaymentMethodKind[method.assetKind]}
+                                                      label={PaymentMethodKind[method.kind]}
                                                       labelBold
                                                       checked={selectedPaymentMethodsIds.includes(String(method.id))}
                                                       value={String(method.id)}

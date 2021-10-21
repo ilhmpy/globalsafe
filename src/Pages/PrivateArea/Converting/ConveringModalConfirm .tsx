@@ -45,7 +45,7 @@ export const ConvertingModalConfirm: FC<Iprops> = ({
         try {
           const response = await hubConnection.invoke<IBalanceExchange>(
             'BalanceExchange',
-            convertedData.userAmount.toString(),
+            (convertedData.userAmount + 1).toString(),
             59
           );
           if (response.calculatedAmount && response.targetAmount) {

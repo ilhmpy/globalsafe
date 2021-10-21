@@ -43,7 +43,9 @@ export const ExchangeRequestModal: FC<Props> = ({
                 </S.ListitemName>
                 <S.Line />
                 <S.ListitemValue>
-                  {order.rate}
+                  {order.rate.toLocaleString('ru-RU', {
+                    maximumFractionDigits: 5,
+                  })}
                 </S.ListitemValue>
               </S.Listitem>
               <S.Listitem>
@@ -56,7 +58,10 @@ export const ExchangeRequestModal: FC<Props> = ({
                 </S.ListitemValue>
               </S.Listitem>
               <S.Listitem>
-                <S.ListitemName>Рейтинг продавца:</S.ListitemName>
+                <S.ListitemName>
+                   
+                  {`Рейтинг ${orderType === OrderType.Buy ? 'покупателя' : 'продавца'}:`}
+                </S.ListitemName>
                 <S.Line />
                 <S.ListitemValue>{order.userRating ? order.userRating : '-'}</S.ListitemValue>
               </S.Listitem>

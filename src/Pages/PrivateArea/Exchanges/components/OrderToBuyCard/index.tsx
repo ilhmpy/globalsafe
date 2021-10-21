@@ -18,7 +18,7 @@ import * as S from './S.el';
 export const OrderToBuyCard: FC = () => {
   const history = useHistory();
   const appContext = useContext(AppContext);
-  const { hubConnection, user } = appContext;
+  const { hubConnection, user, balanceList } = appContext;
   const [showOrderBuyModal, setShowOrderBuyModal] = useState(false);
   const [showOrderErrorModal, setShowOrderErrorModal] = useState(false);
 
@@ -53,10 +53,16 @@ export const OrderToBuyCard: FC = () => {
 
   // Get Balance Kinds List as an Array
   const balanceKinds = useMemo<string[]>(() => {
+    const ownBalanceKinds: number[] = balanceList?.map(b => b.balanceKind) || [];
+
     // @ts-ignore: Unreachable code error
-    const list: string[] = Object.values(Balance).filter((i) => typeof i === 'string');
+    const list: string[] = Object.values(Balance)
+    .filter((b) => typeof b === 'string')
+    .filter((b, i) => ownBalanceKinds.includes(i))
+    .filter((b) => b !== 'Na');
+
     return list;
-  }, [Balance]);
+  }, [Balance, balanceList]);
 
   // Get Fiat Kinds List as an Array
   const fiatKinds = useMemo<string[]>(() => {
@@ -142,8 +148,8 @@ export const OrderToBuyCard: FC = () => {
         +changeRate, // double rate
         Balance[currencyToBuy as keyof typeof Balance], // BalanceKind assetKind
         FiatKind[currencyToChange as keyof typeof FiatKind], // FiatKind operationAssetKind
-        +orderMinSumm, // long limitFrom
-        +orderMaxSumm, // long limitTo
+        +countVolumeToSend(orderMinSumm, Balance[currencyToBuy as keyof typeof Balance]), // long limitFrom
+        +countVolumeToSend(orderMaxSumm, Balance[currencyToBuy as keyof typeof Balance]), // long limitTo
         timeDurations.find((t) => t.label === changeTimePeriod)?.value, // int window
         findPaymentMethodKinds(
           paymentMethods?.filter((m) => selectedPaymentMethodsIds.includes(String(m.id)))
@@ -172,17 +178,21 @@ export const OrderToBuyCard: FC = () => {
   };
 
   const onRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setOrderMaxSumm('');
     const pattern = /^[0-9][0-9\.]*$/;
+    const pattern2 = /^[0-9]{1,10}\.[0-9]{6}$/;
     if (e.target.value === '' || pattern.test(e.target.value)) {
-      setChangeRate(e.target.value);
+      if(!pattern2.test(e.target.value)) {
+        setChangeRate(e.target.value);
+      }
     }
   };
 
   const onOrderMinSummChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const pattern = /^[1-9][0-9]*$/;
     if (e.target.value === '' || pattern.test(e.target.value)) {
-      if (+e.target.value > +orderSumm) {
-        setOrderMinSumm(orderSumm);
+      if (+e.target.value > ((+orderSumm - 1) * +changeRate)) {
+        setOrderMinSumm(String((+orderSumm - 1) * +changeRate));
       } else {
         setOrderMinSumm(e.target.value);
       }
@@ -192,8 +202,8 @@ export const OrderToBuyCard: FC = () => {
   const onOrderMaxSummChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const pattern = /^[1-9][0-9]*$/;
     if (e.target.value === '' || pattern.test(e.target.value)) {
-      if (+e.target.value > +orderSumm) {
-        setOrderMaxSumm(orderSumm);
+      if (+e.target.value > (+orderSumm * +changeRate)) {
+        setOrderMaxSumm(String(+orderSumm * +changeRate));
       } else {
         setOrderMaxSumm(e.target.value);
       }
@@ -347,7 +357,7 @@ export const OrderToBuyCard: FC = () => {
                       ) : (
                         <Checkbox
                           key={`payment-method-${method.safeId}-${i}`}
-                          label={PaymentMethodKind[method.assetKind]}
+                          label={PaymentMethodKind[method.kind]}
                           labelBold
                           checked={selectedPaymentMethodsIds.includes(String(method.id))}
                           value={String(method.id)}

@@ -25,6 +25,7 @@ import reactVirtualizedAutoSizer from 'react-virtualized-auto-sizer';
 import { setUncaughtExceptionCaptureCallback } from 'process';
 import { getVolume } from '../../../../../functions/getVolume';
 import { getTime } from 'date-fns';
+import { Counter } from '../../../components/ui/Counter';
 import  { countVolumeToShow } from "../../../utils";
 
 type DetailCardProps = {
@@ -102,7 +103,11 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
     if (chip === 0) {
       return <Chip style={{ background: 'rgba(0, 148, 255, 10%)' }}>Новый</Chip>;
     } else if (chip === 1) {
-      return <Chip style={{ background: '#FF4A31', color: '#fff' }}>Оставшееся время {time} </Chip>;
+      return (
+        <Chip style={{ background: '#FF4A31', color: '#fff' }}>
+          Оставшееся время <Counter  data={exchange.creationDate} delay={exchange.operationWindow.totalMilliseconds} formatNum /> 
+        </Chip>
+      );
     } else if (chip === 2) {
       return <Chip style={{ background: 'rgba(93, 167, 0, 0.1)', fontWeight: 500 }}>Завершен</Chip>;
     } else if (chip === 3) {
@@ -238,41 +243,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
         .catch((err) => console.log(err));
     }
   }
-
-  function getCountsTime({ days, hours, minutes, seconds }: any) {
-    if (days > 0) {
-      return `${days}д ${hours > 0 ? hours : 0}ч`;
-    } else if (hours > 0) {
-      return `${hours}ч ${minutes > 0 ? minutes : 0}м`;
-    } else if (minutes > 0) {
-      return `${minutes}м ${seconds > 0 ? seconds : 0}с`;
-    } else {
-      setTimerDown(true);
-      return `0м. 0с.`;
-    }
-  }
-
-  function getTime() {
-    const total = exchange.operationWindow.totalMilliseconds - (new Date().getTime() - new Date(exchange.creationDate).getTime());
-    const seconds = Math.floor((total/1000) % 60);
-    const minutes = Math.floor((total/1000/60) % 60);
-    const hours = Math.floor((total/(1000*60*60)) % 24);
-    const days = Math.floor(total/(1000*60*60*24));
-    const result = { days, hours, minutes, seconds };
-    setTime(getCountsTime(result));
-  };
-
-  useEffect(() => {
-    if (exchange.state === 1) {
-      getTime();
-      setTimer(
-        setInterval(() => {
-          getTime();
-        }, 60000)
-      );
-    }
-  }, [exchange.state]);
-
+  
   function editStateForTesting(state = 0) {
     if (hubConnection) {
       hubConnection.invoke("EditExchangeState", "379035279365767168", 0)

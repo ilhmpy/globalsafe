@@ -82,7 +82,11 @@ export const DeleteOrderModal: FC<Props> = ({
                                 {`Курс (${Balance[order.assetKind]}-${FiatKind[order.operationAssetKind]}):`}
                             </Text>
                             <S.ListItemDivider />
-                            <Text size={14} lH={20} weight={700}>{order.rate}</Text>
+                            <Text size={14} lH={20} weight={700}>
+                                {order.rate.toLocaleString('ru-RU', {
+                                    maximumFractionDigits: 5,
+                                })}
+                            </Text>
                         </S.DataListItem>
 
                         <S.DataListItem>

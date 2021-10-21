@@ -25,6 +25,7 @@ type Context = {
   setChosenDepositView: (object: any) => void;
   setSelectedDeposit: (object: any) => void;
   account: any;
+  userSafeId: string | null;
 };
 
 export const AppContext = React.createContext<Context>({
@@ -45,6 +46,7 @@ export const AppContext = React.createContext<Context>({
   selectedDeposit: {},
   chosenDepositView: {},
   account: {},
+  userSafeId: null,
 });
 
 export const HubProvider: FC = ({ children }: any) => {
@@ -56,6 +58,7 @@ export const HubProvider: FC = ({ children }: any) => {
   const [isAdmin, setIsAdmin] = useState<null | boolean>(null);
   const [myToken, setMyToken] = useLocalStorage('token');
   const [balanceList, setBalanceList] = useState<BalanceList[] | null>(null);
+  const [userSafeId, setUserSafeId] = useState<null | string>(null);
   const [isFailed, setIsFailed] = useState<boolean | null>(null);
   const [chosenMethod, setChosenMethod] = useState<any>({});
   const [loan, setLoan] = useState<any[] | null>(null);
@@ -139,6 +142,7 @@ export const HubProvider: FC = ({ children }: any) => {
           }
           setUser(res.name);
           setAccount(res);
+          setUserSafeId(res.safeId);
           setLoading(false);
           if (res.balances.length) {
             const newArr = res.balances.filter((item: any) => item.balanceKind === 1);
@@ -200,6 +204,7 @@ export const HubProvider: FC = ({ children }: any) => {
         setSelectedDeposit,
         selectedDeposit,
         account,
+        userSafeId,
       }}
     >
       {children}

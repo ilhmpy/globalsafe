@@ -10,6 +10,7 @@ import { Balance } from "../../../../../types/balance";
 import { FiatKind } from "../../../../../types/fiat";
 import { PaymentMethodKind } from "../../../../../types/paymentMethodKind";
 import { Loading, NotItems } from "../../../components/Loading/Loading";
+import { Counter } from '../../../components/ui/Counter';
 
 import * as S from './S.el';
 import { getTime } from 'date-fns';
@@ -73,41 +74,7 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
 
   const Status = ["Новый", "Ожидается подтверждение оплаты", "Завершен", "Подана жалоба", "Отменен"];
 
-  function getCountsTime({ days, hours, minutes, seconds }: any) {
-    if (days > 0) {
-      return `${days}д ${hours > 0 ? hours : 0}ч`;
-    } else if (hours > 0) {
-      return `${hours}ч ${minutes > 0 ? minutes : 0}м`;
-    } else if (minutes > 0) {
-      return `${minutes}м ${seconds > 0 ? seconds : 0}с`;
-    } else {
-      return `0м 0с`;
-    };
-  }
-
-  function getTime(date: Date, wn: any) {
-    const total = wn.totalMilliSeconds - (new Date().getTime() - new Date(date).getTime());
-    const seconds = Math.floor((total/1000) % 60);
-    const minutes = Math.floor((total/1000/60) % 60);
-    const hours = Math.floor((total/(1000*60*60)) % 24);
-    const days = Math.floor(total/(1000*60*60*24));
-
-    const result = { days, hours, minutes, seconds };
-
-    console.log(total);
-  
-    return getCountsTime(result);
-  };
-
   return (
-    <>
-      {/* <CurrencyPair
-        open={true}
-        onClose={() => undefined}
-        options={['Все валюты предложения', 'CWD']}
-        selectedOption={selectedOption}
-        setSelectedOption={setSelectedOption}
-      /> */}
       <S.Table>
         <S.Header>
           <S.Cell>
@@ -149,7 +116,9 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
                             {getPaymentMethod(exchange.paymentMethod?.kind)}
                         </S.BankList> 
                       </S.Cell>
-                      <S.Cell data-label="Оставшееся время">{getTime(exchange.creationDate, exchange.operationWindow)}</S.Cell>
+                      <S.Cell data-label="Оставшееся время">
+                        <Counter data={exchange.creationDate} delay={exchange.operationWindow.totalMilliseconds} formatNum />
+                      </S.Cell>
                       <S.Cell data-label="Статус">{Status[exchange.state]}</S.Cell> 
                   </S.BodyItem>
                 ))}
@@ -158,6 +127,5 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
           </>
         )}
       </S.Table>
-    </>
   );
 };

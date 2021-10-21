@@ -101,7 +101,7 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
 
         <S.BlockWrapper>
           <Text size={14} lH={20} mB={10} black>Рейтинг аккаунта:</Text>
-          <Title lH={28}>{order.userRating}</Title>
+          <Title lH={28}>{Number(order.userRating).toFixed(1)}</Title>
         </S.BlockWrapper>
 
       </LeftSide>
@@ -118,7 +118,11 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
 
           <S.BlockWrapper>
             <Text size={14} lH={20} mB={4} black>Курс:</Text>
-            <Text size={14} lH={20} weight={500} black>{order.rate}</Text>
+            <Text size={14} lH={20} weight={500} black>
+              {order.rate.toLocaleString('ru-RU', {
+                maximumFractionDigits: 5,
+              })}
+            </Text>
           </S.BlockWrapper>
 
           <S.BlockWrapper>
@@ -133,7 +137,7 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
           <S.BlockWrapper>
             <Text size={14} lH={20} mB={4} black>Лимиты:</Text>
             <Text size={14} lH={20} weight={500} black>
-            {`${order.limitFrom} - ${order.limitTo} ${FiatKind[order.operationAssetKind]}`}
+              {`${countVolumeToShow(order.limitFrom, order.assetKind)} - ${countVolumeToShow(order.limitTo, order.assetKind)} ${FiatKind[order.operationAssetKind]}`}
             </Text>
           </S.BlockWrapper>
 

@@ -1,4 +1,4 @@
-import React, { FC, useContext, useEffect, useState } from 'react';
+import React, { ChangeEvent, FC, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
 import { Button } from '../../../components/Button/V2/Button';
@@ -11,6 +11,8 @@ import { ConvertingModalConfirm } from './ConveringModalConfirm ';
 import { ConvertingModalSuccess } from './ConveringModalSuccess';
 import { ConvertingModalCorrection } from './ConvertingModalCorrection';
 import { ConvertingModalFail } from './ConvertingModalFail';
+import { getCookie } from './cookies';
+
 import {
   CloseButton,
   Container,
@@ -48,6 +50,9 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
   const [isCorrectionConverting, setIsCorrectionConverting] = useState<boolean>(false);
   const [fromSumCloud, setFromSumCloud] = useState<string>('');
   const [isOkConverting, setIsOkConverting] = useState<boolean>(false);
+
+  const [isMultics, setIsMultics] = useState<boolean>(false);
+
   const [convertedData, setConvertedData] = useState<IBalanceExchange>({
     userAmount: 0,
     calculatedAmount: 0,
@@ -81,9 +86,13 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
   const estimatiOfExchange = async () => {
     if (hubConnection && fromCurrency && toCurrency && +toSum > 0) {
       try {
-        const response = await hubConnection.invoke('EstimationOfExchange', toSum, Balance.CWD);
+        const response = await hubConnection.invoke(
+          'EstimationOfExchange',
+          String(Math.floor(+toSum * 100)),
+          Balance.CWD
+        );
         setConvertedData({
-          userAmount: response.calculatedAmount * 100,
+          userAmount: response.calculatedAmount,
           calculatedAmount: response.calculatedAmount,
           targetAmount: response.userAmount,
           discountPercent: response.discountPercent,
@@ -105,13 +114,24 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
 
   const further = () => {
     if (hubConnection && fromCurrency && toCurrency && convertedData.calculatedAmount) {
-      setIsOkConverting(false);
-      setOpen(false);
-      if (+fromSum > 0 && !isOkConverting) {
-        setIsCorrectionConverting(true);
-      } else {
+      if (isMultics) {
+        setOpen(false);
         resetStateValues();
         setIsConfirmConverting(true);
+        setIsMultics(false);
+        setIsOkConverting(false);
+      } else if (getCookie('checkbox') && !isOkConverting) {
+        estimatiOfExchange();
+        setIsOkConverting(true);
+      } else if (+fromSum > 0 && !isOkConverting) {
+        setOpen(false);
+        setIsCorrectionConverting(true);
+        setIsOkConverting(false);
+      } else {
+        setOpen(false);
+        resetStateValues();
+        setIsConfirmConverting(true);
+        setIsOkConverting(false);
       }
     }
   };
@@ -212,31 +232,34 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                   setSelectedOption={(val: string) => setFromCurrency(val)}
                 />
                 <Input
+                  required
                   placeholder="0.0000"
                   name="fromSum"
                   value={
                     fromSum
-                      ? Number(fromSum).toLocaleString('ru-RU', {
-                          maximumFractionDigits: 2,
-                        })
+                      ? fromSum
                       : convertedData.userAmount <= 0
                       ? ''
-                      : (convertedData.userAmount / 100000).toLocaleString('ru-RU', {
-                          maximumFractionDigits: 2,
-                        })
+                      : convertedData.userAmount / 100000
                   }
-                  onChange={({ target: { value } }) => {
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    const { value } = e.target;
                     setToSum('');
-                    if (!(value.length > 1 && value[0] === '0')) {
-                      setFromSumCloud(value.replaceAll(/\D/g, ''));
-                      setFromSum(value.replaceAll(/\D/g, ''));
-                      setConvertedData({
-                        userAmount: 0,
-                        calculatedAmount: 0,
-                        targetAmount: 0,
-                        discountPercent: 0,
-                      });
+
+                    if (
+                      (value[0] !== '0' || value[1] !== '0') &&
+                      (/^(\d+([.,]\d{0,2})?|\.?\d{1,2})$/gm.test(value) || !value)
+                    ) {
+                      if (value.split('.')?.length === 1) {
+                        setFromSumCloud(value.replaceAll(',', '.'));
+                        setFromSum(value.replaceAll(',', '.'));
+                      } else if (value.split('.')[1]?.length < 5) {
+                        setFromSumCloud(value.replaceAll(',', '.'));
+                        setFromSum(value.replaceAll(',', '.'));
+                      }
                     }
+
+                    setIsMultics(false);
                   }}
                 />
               </InnerBlock>
@@ -249,37 +272,48 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                   setSelectedOption={(val: string) => setToCurrency(val)}
                 />
                 <Input
-                  placeholder={toCurrency ? '0' : '0.0000'}
+                  required
+                  placeholder={toCurrency ? '0.00' : '0.0000'}
                   name="toSum"
                   value={
                     toSum
                       ? toSum
                       : convertedData.targetAmount <= 0
                       ? ''
-                      : (convertedData.targetAmount / 100).toLocaleString('ru-RU', {
-                          maximumFractionDigits: 2,
-                        })
+                      : convertedData.targetAmount / 100
                   }
-                  onChange={({ target: { value } }) => {
-                    if (value.length > 1 && value[0] === '0') {
-                      setFromSum('');
-                      setToSum('');
-                      setConvertedData({
-                        userAmount: 0,
-                        calculatedAmount: 0,
-                        targetAmount: 0,
-                        discountPercent: 0,
-                      });
-                    } else if (!value) {
-                      setToSum('');
-                      setConvertedData({
-                        userAmount: 0,
-                        calculatedAmount: 0,
-                        targetAmount: 0,
-                        discountPercent: 0,
-                      });
-                    } else {
-                      setToSum(value.replaceAll(/\D/g, ''));
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    const { value } = e.target;
+                    setFromSum('');
+
+                    if (
+                      (value[0] !== '0' || value[1] !== '0') &&
+                      (/^(\d+([.,]\d{0,2})?|\.?\d{1,2})$/gm.test(value) || !value)
+                    ) {
+                      if (
+                        value.split('.')[1]?.length === 2 &&
+                        value.split('.')[1][value.split('.')[1]?.length - 1] == '0'
+                      ) {
+                      } else if (value.split('.')?.length === 1 && value?.length < 11) {
+                        setToSum(value.replaceAll(',', '.'));
+
+                        setConvertedData({
+                          userAmount: 0,
+                          calculatedAmount: 0,
+                          targetAmount: 0,
+                          discountPercent: 0,
+                        });
+                      } else if (value.split('.')[1]?.length < 3 && value?.length < 11) {
+                        setToSum(value.replaceAll(',', '.'));
+
+                        setFromSum('');
+                        setConvertedData({
+                          userAmount: 0,
+                          calculatedAmount: 0,
+                          targetAmount: 0,
+                          discountPercent: 0,
+                        });
+                      }
                     }
                   }}
                 />

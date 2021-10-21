@@ -31,9 +31,12 @@ export const Button = styled.a<Props>`
   transition: all 0.3s ease 0s;
   background: #515172;
   color: #ffffff;
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? 'no-drop' : 'pointer')};
+  opacity: ${(props) => (props.disabled ? '0.4' : '1')};
+
   &:hover {
-    box-shadow: 0px 4px 10px #515172;
+    box-shadow: ${(props) => (props.disabled ? 'none' : `0px 4px 10px #515172`)};
+    border-color: ${(props) => props.theme.buttonBorder};
   }
   &:focus,
   &:active {
@@ -76,7 +79,7 @@ export const Button = styled.a<Props>`
         return `
           opacity: 0.4;
         `;
-      };
+      }
     }}
   }
 `;
