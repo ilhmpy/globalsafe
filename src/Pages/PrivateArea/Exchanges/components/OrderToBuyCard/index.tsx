@@ -18,7 +18,7 @@ import * as S from './S.el';
 export const OrderToBuyCard: FC = () => {
   const history = useHistory();
   const appContext = useContext(AppContext);
-  const { hubConnection, user } = appContext;
+  const { hubConnection, user, balanceList } = appContext;
   const [showOrderBuyModal, setShowOrderBuyModal] = useState(false);
   const [showOrderErrorModal, setShowOrderErrorModal] = useState(false);
 
@@ -53,10 +53,15 @@ export const OrderToBuyCard: FC = () => {
 
   // Get Balance Kinds List as an Array
   const balanceKinds = useMemo<string[]>(() => {
+    const ownBalanceKinds: number[] = balanceList?.map(b => b.balanceKind) || [];
+
     // @ts-ignore: Unreachable code error
-    const list: string[] = Object.values(Balance).filter((i) => typeof i === 'string');
+    const list: string[] = Object.values(Balance)
+    .filter((i) => typeof i === 'string')
+    .filter((b, i) => ownBalanceKinds.includes(i))
+    .filter((b, i) => i !== 0);
     return list;
-  }, [Balance]);
+  }, [Balance, balanceList]);
 
   // Get Fiat Kinds List as an Array
   const fiatKinds = useMemo<string[]>(() => {
@@ -173,7 +178,7 @@ export const OrderToBuyCard: FC = () => {
 
   const onRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const pattern = /^[0-9][0-9\.]*$/;
-    const pattern2 = /^[0-9]{3}\.[0-9]{5}$/;
+    const pattern2 = /^[0-9]{1,10}\.[0-9]{6}$/;
     if (e.target.value === '' || pattern.test(e.target.value)) {
       if(!pattern2.test(e.target.value)) {
         setChangeRate(e.target.value);
