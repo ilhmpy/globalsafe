@@ -57,9 +57,10 @@ export const OrderToBuyCard: FC = () => {
 
     // @ts-ignore: Unreachable code error
     const list: string[] = Object.values(Balance)
-    .filter((i) => typeof i === 'string')
+    .filter((b) => typeof b === 'string')
     .filter((b, i) => ownBalanceKinds.includes(i))
-    .filter((b, i) => i !== 0);
+    .filter((b) => b !== 'Na');
+    
     return list;
   }, [Balance, balanceList]);
 

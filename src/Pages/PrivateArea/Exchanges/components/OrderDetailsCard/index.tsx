@@ -89,31 +89,33 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                     order.safeId,
                     countVolumeToSend(balanceSumm, order.assetKind)
                 );
-                console.log('CreateSellExchange', res);
 
                 // Add Payment Method for created Exchange
-                const response = await hubConnection!.invoke<null>(
+                await hubConnection!.invoke<null>(
                     'SetExchangePaymentMethod',  
                     res.safeId,
                     paymentMethodSafeId
                 );
-                
-                console.log('SetExchangePaymentMethod', response);
                 setShowCreateExchangeModal(false);
+
+                // On Exchange Create success Navigate to exchange Page
+                history.replace(`${routers.p2pchanges}/${res.safeId}`);
             } catch (err) { 
                 setShowCreateExchangeModal(false);
                 setShowErrorModal(true);
             }
         } else {
             try {
-                const res = await hubConnection!.invoke<null>(
+                const res = await hubConnection!.invoke<ViewExchangeModel>(
                     'CreateBuyExchange',  
                     order.safeId,
                     countVolumeToSend(balanceSumm, order.assetKind), 
                     paymentMethodSafeId 
                 );
-                console.log('CreateBuyExchange', res)
                 setShowCreateExchangeModal(false);
+
+                // On Exchange Create success Navigate to exchange Page
+                history.replace(`${routers.p2pchanges}/${res.safeId}`);
             } catch (err) { 
                 setShowCreateExchangeModal(false);
                 setShowErrorModal(true);
@@ -124,13 +126,19 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
     const onBalanceSummChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const pattern = /^[0-9][0-9\.]*$/;
         if (e.target.value === '' || pattern.test(e.target.value)) {
+            const volume = countVolumeToShow(+order.volume, order.assetKind);
+            if(+e.target.value > volume) {
+                setBalanceSumm(String(volume));
+                return;
+            }
+
             const limitTo = countVolumeToShow(+order.limitTo, order.assetKind);
             if(+e.target.value > limitTo) {
                 setBalanceSumm(String(limitTo));
+                return;
             } 
-            else {
-                setBalanceSumm(e.target.value);
-            }
+                
+            setBalanceSumm(e.target.value);
         }
     };
 

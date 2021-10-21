@@ -61,14 +61,15 @@ export const OrderToSellCard: FC = () => {
     // Get Balance Kinds List as an Array
     const balanceKinds = useMemo<string[]>(() => {
         const ownBalanceKinds: number[] = balanceList?.map(b => b.balanceKind) || [];
-
+    
         // @ts-ignore: Unreachable code error
         const list: string[] = Object.values(Balance)
-        .filter((i) => typeof i === 'string')
+        .filter((b) => typeof b === 'string')
         .filter((b, i) => ownBalanceKinds.includes(i))
-        .filter((b, i) => i !== 0);
+        .filter((b) => b !== 'Na');
+        
         return list;
-    }, [Balance, balanceList]);
+      }, [Balance, balanceList]);
 
      // Get Fiat Kinds List as an Array
      const fiatKinds = useMemo<string[]>(() => {
