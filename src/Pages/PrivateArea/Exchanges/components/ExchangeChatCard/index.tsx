@@ -547,6 +547,12 @@ export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
     }
   };
 
+  const scrolltoTest = () => {
+    if (ref && ref.current) {
+      ref.current.scrollTop = ref.current.scrollHeight - ref.current.clientHeight;
+    }
+  };
+
   useEffect(() => {
     let cancel = false;
     if (hubConnection && !cancel && exchange) {
@@ -564,7 +570,7 @@ export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
           });
           setHistoryList(result);
           // console.log('GetExchangeChat', res);
-          scrollto();
+          scrolltoTest();
         })
         .catch((e) => console.log(e));
     }
@@ -592,7 +598,7 @@ export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
           setLoaderPicture(false);
 
           // statesBadge(data.exchangeSafeId);
-          scrollto();
+          scrolltoTest();
         }
       }
     };
@@ -609,7 +615,7 @@ export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
     if (event.target.files && event.target.files[0] && event.target.files[0].size < 5e6) {
       // console.log('event.target.files', event.target.files[0]);
       setLoaderPicture(true);
-      scrollToMyRef();
+      scrolltoTest();
       const fileUploaded = event.target.files[0];
       const val = ['image/jpeg', 'image/png'].includes(fileUploaded.type);
       fetchPicture(event.target.files[0]);
@@ -652,21 +658,19 @@ export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
 
   useEffect(() => {
     if (loaderPicture) {
-      if (ref && ref.current) {
-        ref.current.scrollIntoView();
-      }
+      scrolltoTest();
     }
-  }, [loaderPicture, ref]);
+  }, [loaderPicture]);
 
   useEffect(() => {
     if (historyList) {
-      scrollto();
+      scrolltoTest();
     }
   }, []);
 
   useEffect(() => {
     if (!historyList) return;
-    const timer = setTimeout(() => scrollto(), 1000);
+    const timer = setTimeout(() => scrolltoTest(), 2000);
     return () => clearTimeout(timer);
   }, [historyList]);
 
@@ -787,7 +791,7 @@ export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
       <S.RightSide>
         {modalImage && <ModalShowImage image={modalImage} onClose={onCloseModal} />}
         <S.ChatWrapper>
-          <S.ChatContainer>
+          <S.ChatContainer ref={ref}>
             {historyList
               ? Object.keys(historyList).map((key) => (
                   <div key={key}>
@@ -821,7 +825,7 @@ export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
                 <Loading />
               </S.LoaderContainer>
             ) : null}
-            <div ref={ref} />
+            {/* <div ref={ref} /> */}
           </S.ChatContainer>
 
           <S.ChatFooter>
