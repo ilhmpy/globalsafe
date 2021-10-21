@@ -286,9 +286,7 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                       ? toSum
                       : convertedData.targetAmount <= 0
                       ? ''
-                      : (convertedData.targetAmount / 100).toLocaleString('ru-RU', {
-                          maximumFractionDigits: 2,
-                        })
+                      : convertedData.targetAmount / 100
                   }
                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     const { value } = e.target;
