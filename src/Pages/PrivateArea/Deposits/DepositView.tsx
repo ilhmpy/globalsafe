@@ -1,9 +1,9 @@
-import { FC, useContext, useEffect } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Container } from '../../../components/UI/Container';
 import { routers } from '../../../constantes/routers';
 import { AppContext } from '../../../context/HubContext';
-import { RootBalanceList } from '../../../types/balanceHistory';
+import { Collection, RootBalanceList } from '../../../types/balanceHistory';
 import { Back } from '../components/Back';
 import { ShowDeposit } from '../components/ShowDeposit';
 import { TableHistory } from '../components/Table/History';
@@ -15,6 +15,8 @@ export const DepositView: FC = () => {
   const { hubConnection, balanceList, chosenDepositView, setChosenDepositView } =
     useContext(AppContext);
 
+  const [accrualHistory, setAccrualHistory] = useState<Collection[]>([]);
+
   useEffect(() => {
     (async () => {
       console.log('GetDepositPaymentsLog', chosenDepositView.safeId, 0, 10);
@@ -24,8 +26,9 @@ export const DepositView: FC = () => {
             'GetDepositPaymentsLog',
             chosenDepositView.safeId,
             0,
-            10
+            40
           );
+          setAccrualHistory(result.collection);
           console.log('GetDepositPaymentsLog result', result);
         } catch (error) {
           console.log(error);
@@ -44,11 +47,11 @@ export const DepositView: FC = () => {
             history.push(routers.deposits);
           }}
         />
-        <ShowDeposit chosenDepositView={chosenDepositView} />
+        <ShowDeposit chosenDepositView={chosenDepositView}  />
       </Container>
       <Container>
         <Title small>История начислений</Title>
-        <TableHistory />
+        <TableHistory accrualHistory={accrualHistory}/>
       </Container>
     </S.Container>
   );

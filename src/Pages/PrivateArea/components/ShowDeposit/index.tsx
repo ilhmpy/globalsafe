@@ -1,7 +1,14 @@
 import moment from 'moment';
 import React, { FC, useContext, useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 import { Button } from '../../../../components/Button/V2/Button';
+import { routers } from '../../../../constantes/routers';
+import { AppContext } from '../../../../context/HubContext';
 import { BalanceKind } from '../../../../enums/balanceKind';
+import { IBalanceExchange } from '../../Converting/ConvertingModal';
+import { CloseDeposit } from '../Modals/CloseDeposit';
+import { CloseDepositError } from '../Modals/CloseDepositError';
+import { CloseDepositSuccess } from '../Modals/CloseDepositSuccess';
 import {
   ChipWrap,
   LeftSide,
@@ -14,15 +21,14 @@ import {
 } from '../ui';
 import { Chip } from '../ui/Chip';
 import * as S from './S.el';
-import { CloseDeposit } from '../Modals/CloseDeposit';
-import { AppContext } from '../../../../context/HubContext';
-import { IBalanceExchange } from '../../Converting/ConvertingModal';
-import { CloseDepositSuccess } from '../Modals/CloseDepositSuccess';
-import { CloseDepositError } from '../Modals/CloseDepositError';
-import { useHistory } from 'react-router';
-import { routers } from '../../../../constantes/routers';
 
-export const ShowDeposit: FC<{ chosenDepositView: any }> = ({ chosenDepositView }: any) => {
+interface IProps {
+  chosenDepositView: any;
+}
+
+export const ShowDeposit: FC<IProps> = ({ chosenDepositView }: IProps) => {
+  console.log('chosenDepositView', chosenDepositView);
+
   const history = useHistory();
   const { deposit } = chosenDepositView;
   const { hubConnection } = useContext(AppContext);
@@ -136,7 +142,6 @@ export const ShowDeposit: FC<{ chosenDepositView: any }> = ({ chosenDepositView 
               <TitleWrap small>
                 <ProgramDescTitle>Всего выплачено:</ProgramDescTitle>
               </TitleWrap>
-              {console.log(BalanceKind[deposit?.depositKind])}
               <TextValue>
                 {chosenDepositView?.payedAmountView} {BalanceKind[deposit?.depositKind]}
               </TextValue>
