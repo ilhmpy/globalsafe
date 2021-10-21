@@ -185,22 +185,11 @@ export const Advert = () => {
     };
 
     if (hubConnection) {
-      if(activeType === OrderType.Buy) {
         hubConnection.on("BuyOrderCreated", cbOrderCreated);
         hubConnection.on("BuyOrderVolumeChanged", cbOrderVolumeChanged);
-
-        // Unscubscribe
-        hubConnection?.off("SellOrderCreated", cbOrderCreated);
-        hubConnection?.off("SellOrderVolumeChanged", cbOrderVolumeChanged);
-      } 
-      if(activeType === OrderType.Sell) {
+        
         hubConnection.on("SellOrderCreated", cbOrderCreated);
         hubConnection.on("SellOrderVolumeChanged", cbOrderVolumeChanged);
-
-        // Unscubscribe
-        hubConnection?.off("BuyOrderCreated", cbOrderCreated);
-        hubConnection?.off("BuyOrderVolumeChanged", cbOrderVolumeChanged);
-      }
     };
 
     return () => {
