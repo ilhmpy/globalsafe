@@ -57,7 +57,7 @@ export const OwnExchanges = () => {
 
   function cb(res: any) {
     const exchanges = [...userExchanges];
-    console.log("ExchangeChanged/Created/Completed");
+    console.log("ExchangeChanged/Created/Completed", res);
     userExchanges.forEach((item) => {
       if (item.safeId === res.safeId) {
         exchanges[userExchanges.indexOf(item)] = res;
@@ -67,7 +67,7 @@ export const OwnExchanges = () => {
   };
 
   function volumeChanged(id: string, volume: number) {
-    console.log("ExchangeChanged/Created/Completed");
+    console.log("ExchangeChanged/Created/Completed", id, volume);
     const exchanges = [...userExchanges];
     userExchanges.forEach((item) => {
       if (item.safeId === id) {
@@ -78,6 +78,7 @@ export const OwnExchanges = () => {
   };
 
   function exchangeCreated(res: ViewExchangeModel) {
+    console.log("ExchangeChanged/Created/Completed", res);
     rerender([res, ...userExchanges]);
   };
 
