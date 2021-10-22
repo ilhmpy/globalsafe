@@ -135,18 +135,19 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
   function cb(res: ViewExchangeModel) {
     console.log("ExchangeChanged RES", res, res.safeId, exchange && exchange.safeId);
     if (exchange != null && exchange.safeId == res.safeId) {
-        console.log("EQ")
         setExchange(res);
     };
   };
 
   function cancelledCallback(res: ViewExchangeModel) {
-    setShowRejectModal(true);
-    cb(res);
+    if (exchange != null && exchange.safeId === res.safeId) {
+      setShowRejectModal(true);
+      cb(res);
+    };
   };
 
   function volumeChanged(id: string, volume: number) {
-    if (exchange) {
+    if (exchange != null) {
       const newExchange = exchange;
       if (newExchange.safeId === id) {
         newExchange.orderVolume = volume;
