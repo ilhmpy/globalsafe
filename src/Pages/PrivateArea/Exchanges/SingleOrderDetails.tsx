@@ -49,25 +49,34 @@ export const SingleOrderDetails: FC = () => {
   };
 
   // Listening to changes
-  const cb = (res: any) => {
-    console.log("socket works::", res);
-    getOrder();
-  };
-
   useEffect(() => {
-    if (hubConnection) {
-      hubConnection.on("BuyOrderVolumeChanged", cb);
-      hubConnection.on("SellOrderVolumeChanged", cb);
-      hubConnection.on("SellOrderCompleted", cb);
-      hubConnection.on("BuyOrderCompleted", cb);
-      hubConnection.on("SetPaymentMethod", cb);
+    const cbOrderVolumeChanged = (orderSafeId: string, summ: number) => {
+      console.log('__SOCKET__cbOrderVolumeChanged::', orderSafeId, summ);
+      if(currentOrder && orderSafeId) {
+        setCurrentOrder({
+          ...currentOrder,
+          volume: summ
+        })
+      }
     };
+
+    const cbOrderCompleted = (orderSafeId: string) => {
+      console.log('__SOCKET__cbOrderCompleted::', orderSafeId)
+    };
+
+    if (hubConnection) {
+        hubConnection.on("BuyOrderVolumeChanged", cbOrderVolumeChanged);
+        hubConnection.on("SellOrderVolumeChanged", cbOrderVolumeChanged);
+
+        hubConnection.on("BuyOrderCompleted", cbOrderCompleted);
+        hubConnection.on("SellOrderCompleted", cbOrderCompleted);
+    };
+
     return () => {
-      hubConnection?.off("BuyOrderVolumeChanged", cb);
-      hubConnection?.off("SellOrderVolumeChanged", cb);
-      hubConnection?.off("SellOrderCompleted", cb);
-      hubConnection?.off("BuyOrderCompleted", cb);
-      hubConnection?.off("SetPaymentMethod", cb);
+      hubConnection?.off("BuyOrderVolumeChanged", cbOrderVolumeChanged);
+      hubConnection?.off("SellOrderVolumeChanged", cbOrderVolumeChanged);
+      hubConnection?.off("SellOrderCompleted", cbOrderCompleted);
+      hubConnection?.off("BuyOrderCompleted", cbOrderCompleted);
     };
   }, [hubConnection]);
 

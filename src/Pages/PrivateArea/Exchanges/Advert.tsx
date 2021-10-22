@@ -56,20 +56,16 @@ export const Advert = () => {
     'АО «Альфа-Банк», USD',
   ], []);
 
-  const getOrders = () => {
-    if(activeType === OrderType.Buy) {
-      getBuyOrders();
-    }
-
-    if(activeType === OrderType.Sell) {
-      getSellOrders();
-    }
-  }
-
   useEffect(() => {
-    console.log("CHANGE")
+    setSkip(0);
     if (hubConnection) {
-      getOrders();
+      if(activeType === OrderType.Buy) {
+        getBuyOrders();
+      }
+  
+      if(activeType === OrderType.Sell) {
+        getSellOrders();
+      }
     }
   }, [hubConnection, activeType, selectedPair, acceptedRate, acceptedPaymentMethods, listingMyOrders]);
 
@@ -82,14 +78,13 @@ export const Advert = () => {
           acceptedPaymentMethods, // Array of PaymentMethodKind[] paymentMethodKinds
           acceptedRate, // int rating
           listingMyOrders, // if true ? will show my orders
-          skip, 
+          0, 
           10
         );
         console.log('GetBuyOrders', res);
-        // setOrdersList(s => [...s, ...res.collection]);
         setOrdersList(res.collection);
         setTotalCount(res.totalRecords);
-        // setSkip(s => s + 10);
+        setSkip(s => s + 10);
       } catch (err) {
         console.log(err);
       }
@@ -104,14 +99,13 @@ export const Advert = () => {
         acceptedPaymentMethods, // Array of PaymentMethodKind[] paymentMethodKinds
         acceptedRate, // int rating
         listingMyOrders, // if true ? will show my orders
-        skip, 
+        0, 
         10
       );
       console.log('GetSellOrders', res);
-      // setOrdersList(s => [...s, ...res.collection]);
       setOrdersList(res.collection);
       setTotalCount(res.totalRecords);
-      // setSkip(s => s + 10);
+      setSkip(s => s + 10);
     } catch (err) {
       console.log(err);
     }
@@ -152,17 +146,45 @@ export const Advert = () => {
     setSelectedPaymentMethods([]);
   };
 
-  const handleLoadMore = () => {
+  const handleLoadMoreOrders = async () => {
     if(activeType === OrderType.Buy) {
-      getBuyOrders();
-    }
-
-    if(activeType === OrderType.Sell) {
-      getSellOrders();
+      try {
+        const res = await hubConnection!.invoke<GetBuyOrdersModel>(
+          'GetBuyOrders', 
+          selectedPair?.balance ? [ Balance[selectedPair?.balance as keyof typeof Balance] ] : [],  // Array of BalanceKind assetKinds
+          selectedPair?.fiat ? [ FiatKind[selectedPair?.fiat as keyof typeof FiatKind] ] : [],  // Array of FiatKind opAssetKinds
+          acceptedPaymentMethods, // Array of PaymentMethodKind[] paymentMethodKinds
+          acceptedRate, // int rating
+          listingMyOrders, // if true ? will show my orders
+          skip, 
+          10
+        );
+        setOrdersList(s => [...s, ...res.collection]);
+        setTotalCount(res.totalRecords);
+        setSkip(s => s + 10);
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      try {
+        const res = await hubConnection!.invoke<GetSellOrdersModel>(
+          'GetSellOrders', 
+          selectedPair?.balance ? [ Balance[selectedPair?.balance as keyof typeof Balance] ] : [],  // Array of BalanceKind assetKinds
+          selectedPair?.fiat ? [ FiatKind[selectedPair?.fiat as keyof typeof FiatKind] ] : [],  // Array of FiatKind opAssetKinds
+          acceptedPaymentMethods, // Array of PaymentMethodKind[] paymentMethodKinds
+          acceptedRate, // int rating
+          listingMyOrders, // if true ? will show my orders
+          skip, 
+          10
+        );
+        setOrdersList(s => [...s, ...res.collection]);
+        setTotalCount(res.totalRecords);
+        setSkip(s => s + 10);
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
-
-
   
   // Listening to changes
   useEffect(() => {
@@ -339,7 +361,7 @@ export const Advert = () => {
         {
           (ordersList.length < totalCount) &&  
           <S.ButtonWrap>
-            <Button onClick={handleLoadMore}>Показать еще</Button>
+            <Button onClick={handleLoadMoreOrders}>Показать еще</Button>
           </S.ButtonWrap>
         }
       
