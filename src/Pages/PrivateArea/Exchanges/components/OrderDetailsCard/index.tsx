@@ -138,7 +138,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                 return;
             } 
                 
-            setBalanceSumm(e.target.value.replace("^0*", ""));
+            setBalanceSumm(e.target.value);
         }
     };
 
