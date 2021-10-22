@@ -13,7 +13,6 @@ interface ExchangesInOrderTable {
 }
 
 // TODO: Check Exchange Fields and update Table | Update ViewExchangeModel
-// TODO: Fix Open Exchange Page Route
 export const ExchangesInOrderTable: React.FC<ExchangesInOrderTable> = ({exchangesList}: ExchangesInOrderTable) => {
   const history = useHistory();
 
@@ -57,7 +56,7 @@ export const ExchangesInOrderTable: React.FC<ExchangesInOrderTable> = ({exchange
           ?
             exchangesList.map((exchange) => (
               <S.BodyItem
-                key={`exchange-item-${exchange}`}
+                key={`exchange-item-${exchange.safeId}`}
                 onClick={() => handleNavigateToExchange(exchange.safeId)}
               >
                 <S.Cell data-label="№ обмена">{exchange.safeId}</S.Cell>
