@@ -176,6 +176,35 @@ useEffect(() => {
   resetFilters();
 }, [activeFilter]);
 
+function filters(res: GetExchangesCollectionResult) {
+  if (payments.length) {
+    const filter = res.collection.filter((i) => {
+      if (payments.includes(i.paymentMethod?.kind)) {
+          return i;
+      };
+    });
+    setUserExchanges(filter);
+  } else if (balanceKind != null && fiatKind != null) {
+    const filter = res.collection.filter((i) => {
+      if (i.assetKind === balanceKind && i.exchangeAssetKind === fiatKind) {
+        return i; 
+      };
+    });
+    setUserExchanges(filter);
+  } else if (status && status.length) {
+    const filter = res.collection.filter((i) => {
+      for (let el = 0; el < status.length; el++) {
+        if (i.state === status[el]) {
+          return i;
+        };
+      };
+    });
+    setUserExchanges(filter);
+  } else {
+    setUserExchanges(res.collection);
+  };
+}
+
   async function getGetUserExchanges() {
     try {
       const res = await hubConnection!.invoke<GetExchangesCollectionResult>(
@@ -186,32 +215,7 @@ useEffect(() => {
         10
       );
       console.log("GetExchanges", res.collection);
-      if (payments.length) {
-        const filter = res.collection.filter((i) => {
-          if (payments.includes(i.paymentMethod?.kind)) {
-              return i;
-          };
-        });
-        setUserExchanges(filter);
-      } else if (balanceKind != null && fiatKind != null) {
-        const filter = res.collection.filter((i) => {
-          if (i.assetKind === balanceKind && i.exchangeAssetKind === fiatKind) {
-            return i; 
-          };
-        });
-        setUserExchanges(filter);
-      } else if (status && status.length) {
-        const filter = res.collection.filter((i) => {
-          for (let el = 0; el < status.length; el++) {
-            if (i.state === status[el]) {
-              return i;
-            };
-          };
-        });
-        setUserExchanges(filter);
-      } else {
-        setUserExchanges(res.collection);
-      };
+      filters(res);
     } catch (err) {
       console.log(err);
     } finally {
