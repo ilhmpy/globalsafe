@@ -83,7 +83,7 @@ export const OwnExchanges = () => {
   };
 
   function exchangeCreated(res: ViewExchangeModel) {
-    rerender([...userExchanges, res]);
+    rerender([res, ...userExchanges]);
   };
 
   useEffect(() => {
