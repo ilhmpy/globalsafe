@@ -27,7 +27,7 @@ export const paymentMethodIconSrc = (kind: number): string => {
   }
 };
 
-export const countVolumeToShow = (countVolume: number, asset: number): number => {
+export const countVolumeToShow = (countVolume: number, asset: any): number => {
   let value = countVolume;
   if(asset === 1) {
     value = countVolume / 100000;
