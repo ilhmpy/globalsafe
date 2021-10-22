@@ -56,7 +56,15 @@ export const NewPayMethod: FC = () => {
 
   const { t } = useTranslation();
   const { hubConnection, user } = useContext(AppContext);
-  const keys = Object.keys(FiatKind).filter((k) => typeof FiatKind[k as any] === 'number');
+  const keys = [
+    FiatKind[0],
+    FiatKind[1],
+    FiatKind[2],
+    FiatKind[3],
+    FiatKind[4],
+    FiatKind[5],
+    FiatKind[6],
+  ];
   const [bankName, setBankName] = useState(payList[0]);
   const [name, setName] = useState('');
   const [bankNumber, setBankNumber] = useState('');
@@ -68,7 +76,7 @@ export const NewPayMethod: FC = () => {
   const isUSDT = [PaymentMethodKind[0], PaymentMethodKind[1], PaymentMethodKind[2]].includes(
     bankName
   );
-  console.log('bankName', bankName);
+  // console.log('bankName', bankName);
   const addPayMethod = () => {
     if (isUSDT) {
       return {
@@ -118,6 +126,8 @@ export const NewPayMethod: FC = () => {
   useEffect(() => {
     if (isUSDT) {
       setBalanceType(FiatKind[7]);
+    } else {
+      setBalanceType(FiatKind[0]);
     }
   }, [isUSDT]);
 
