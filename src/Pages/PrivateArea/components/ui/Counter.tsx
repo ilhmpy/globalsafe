@@ -1,15 +1,17 @@
 import React, { useEffect, useState, FC } from 'react';
 import moment from 'moment';
 import 'moment-duration-format';
+import { getTime } from 'date-fns';
 
 type Props = {
   data: string | Date;
   delay?: number;
   formatNum?: boolean;
   over?: () => void;
+  setTimerDown?: (val: boolean) => any;
 };
 
-export const Counter: FC<Props> = ({ data, formatNum, over, delay }) => {
+export const Counter: FC<Props> = ({ data, formatNum, over, delay, setTimerDown }) => {
   const [count, setCount] = useState(0);
   const [start, setStart] = useState(false);
   const [state, setState] = useState<null | string>(null);
@@ -47,8 +49,15 @@ export const Counter: FC<Props> = ({ data, formatNum, over, delay }) => {
       return () => clearInterval(secondsLeft);
     } else {
       start && over && over();
-    }
+    };
   }, [start, count]);
 
-  return <>{count > -1 ? state : '0м. 0с.'}</>;
+  function getTime() {
+    if (setTimerDown != undefined && count < -1) {
+      setTimerDown(true);
+    };
+    return count > -1 ? state : '0м. 0с.'
+  }
+
+  return <>{getTime()}</>;
 };

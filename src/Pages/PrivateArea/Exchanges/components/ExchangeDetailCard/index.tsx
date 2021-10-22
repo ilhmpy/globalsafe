@@ -67,23 +67,6 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
   const [mark, setMark] = useState<boolean | null>(null);
   const [markTimer, setMarkTimer] = useState<any>();
 
-  
-  function getExchange(loading: boolean) {
-    if (hubConnection) {
-      setLoading(loading);
-      setCall(false);
-      hubConnection.invoke("GetExchange", exchangeId)
-        .then((res) => {
-          setExchange(res);
-          setLoading(false);
-        })
-        .catch((err) => {
-          console.log(err);
-          setLoading(false);
-        })
-    };
-  };
-
   useEffect(() => {
     if (hubConnection) {
       hubConnection.on("ExchangeAbused", cb);
@@ -203,7 +186,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
     } else if (chip === 1) {
       return (
         <Chip style={{ background: '#FF4A31', color: '#fff' }}>
-          Оставшееся время <Counter  data={exchange.creationDate} delay={exchange.operationWindow.totalMilliseconds} formatNum /> 
+          Оставшееся время <Counter setTimerDown={setTimerDown} data={exchange.creationDate} delay={exchange.operationWindow.totalMilliseconds} formatNum /> 
         </Chip>
       );
     } else if (chip === 2) {
