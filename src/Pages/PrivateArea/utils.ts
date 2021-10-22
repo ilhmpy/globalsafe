@@ -56,16 +56,16 @@ export const countVolumeToSend = (summ: string, asset: number): string => {
   return String(value);
 };
 
-export function getBalanceKindByStringName(name: string) {
+export function getBalanceKindByStringName(name: string | null) {
   return name === "CWD" ? 1 : 
          name === "GLOBALSAFE" ? 14 :
          name === "GLOBAL" ? 42 : 
          name === "GF" ? 43 :
          name === "FF" ? 44 : 
-         name === "MULTICS" ? 59 : 0;
+         name === "MULTICS" ? 59 : null;
 };
 
-export function getFiatKindByStringName(name: string) {
+export function getFiatKindByStringName(name: string | null) {
   return name === "RUB" ? 0 :
          name === "BYN" ? 1 :
          name === "UAH" ? 2 : 
@@ -73,5 +73,17 @@ export function getFiatKindByStringName(name: string) {
          name === "USD" ? 4 :
          name === "EUR" ? 5 :
          name === "THB" ? 6 :
-         name === "USDT" ? 7 : 0;
+         name === "USDT" ? 7 : null;
+};
+
+export function getMyRating(account: any) {
+  if (account.claims) {
+    let rating = 0;
+    account.claims.forEach((claim: any) => {
+    if (claim.claimType === "exchanges-rating") {
+      rating = claim.claimValue;
+    };
+  });
+    return (Number(rating)).toFixed(1);
+  };
 };

@@ -67,6 +67,7 @@ export const Advert = () => {
   }
 
   useEffect(() => {
+    console.log("CHANGE")
     if (hubConnection) {
       getOrders();
     }
@@ -330,6 +331,7 @@ export const Advert = () => {
           onAccept={handleAcceptPaymentMethods}
           open={showPaymentMethodsModal} 
           onClose={() => setShowPaymentMethodsModal(false)} 
+          black
         />
       
         <AdvertTable list={ordersList} />

@@ -57,7 +57,7 @@ export const DeleteOrderModal: FC<Props> = ({
                             <Text size={14} lH={20}>Направление:</Text>
                             <S.ListItemDivider />
                             <Text size={14} lH={20} weight={700}>
-                                {orderType === OrderType.Buy ? 'Покупка' : 'продажа'}
+                                {orderType === OrderType.Buy ? 'Покупка' : 'Продажа'}
                             </Text>
                         </S.DataListItem>
 

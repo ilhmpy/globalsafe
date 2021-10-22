@@ -75,7 +75,7 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
             (+fromSum * 100000 + 1).toString(),
             59
           );
-          setConvertedData(response);
+          setConvertedData({ ...response, userAmount: response.userAmount - 1 });
         } catch (error) {
           console.error(error);
         }
@@ -86,13 +86,11 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
   const estimatiOfExchange = async () => {
     if (hubConnection && fromCurrency && toCurrency && +toSum > 0) {
       try {
-        // console.log('EstimationOfExchange', String(+toSum * 100), Balance.CWD);
         const response = await hubConnection.invoke(
           'EstimationOfExchange',
           String(Math.floor(+toSum * 100)),
           Balance.CWD
         );
-        // console.log('estimatiOfExchange ~ response', response);
         setConvertedData({
           userAmount: response.calculatedAmount,
           calculatedAmount: response.calculatedAmount,
@@ -137,10 +135,6 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
       }
     }
   };
-
-  console.log('fromSum', fromSum);
-  console.log('toSum', toSum);
-  console.log('convertedData', convertedData);
 
   return (
     <>
@@ -238,7 +232,6 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                   setSelectedOption={(val: string) => setFromCurrency(val)}
                 />
                 <Input
-                  type="number"
                   required
                   placeholder="0.0000"
                   name="fromSum"
@@ -251,16 +244,29 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                   }
                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     const { value } = e.target;
-                    console.log('value', value);
                     setToSum('');
 
-                    if (value[0] !== '0' || value[1] !== '0') {
+                    if (value === '') {
+                      setFromSumCloud('');
+                      setFromSum('');
+                      setConvertedData({
+                        userAmount: 0,
+                        calculatedAmount: 0,
+                        targetAmount: 0,
+                        discountPercent: 0,
+                      });
+                    }
+
+                    if (
+                      (value[0] !== '0' || value[1] !== '0') &&
+                      (/^(\d+([.,]\d{0,4})?|\.?\d{1,4})$/gm.test(value) || !value)
+                    ) {
                       if (value.split('.')?.length === 1) {
-                        setFromSumCloud(value);
-                        setFromSum(value);
+                        setFromSumCloud(value.replaceAll(',', '.'));
+                        setFromSum(value.replaceAll(',', '.'));
                       } else if (value.split('.')[1]?.length < 5) {
-                        setFromSumCloud(value);
-                        setFromSum(value);
+                        setFromSumCloud(value.replaceAll(',', '.'));
+                        setFromSum(value.replaceAll(',', '.'));
                       }
                     }
 
@@ -277,7 +283,6 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                   setSelectedOption={(val: string) => setToCurrency(val)}
                 />
                 <Input
-                  type="number"
                   required
                   placeholder={toCurrency ? '0.00' : '0.0000'}
                   name="toSum"
@@ -292,13 +297,16 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                     const { value } = e.target;
                     setFromSum('');
 
-                    if (value[0] !== '0' || value[1] !== '0') {
+                    if (
+                      (value[0] !== '0' || value[1] !== '0') &&
+                      (/^(\d+([.,]\d{0,2})?|\.?\d{1,2})$/gm.test(value) || !value)
+                    ) {
                       if (
                         value.split('.')[1]?.length === 2 &&
                         value.split('.')[1][value.split('.')[1]?.length - 1] == '0'
                       ) {
                       } else if (value.split('.')?.length === 1 && value?.length < 11) {
-                        setToSum(value);
+                        setToSum(value.replaceAll(',', '.'));
 
                         setConvertedData({
                           userAmount: 0,
@@ -307,7 +315,7 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                           discountPercent: 0,
                         });
                       } else if (value.split('.')[1]?.length < 3 && value?.length < 11) {
-                        setToSum(value);
+                        setToSum(value.replaceAll(',', '.'));
 
                         setFromSum('');
                         setConvertedData({
