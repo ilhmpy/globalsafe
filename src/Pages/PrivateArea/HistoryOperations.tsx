@@ -15,6 +15,7 @@ import { Loading, NotItems, Spinner } from "./components/Loading/Loading";
 import formatRelativeWithOptions from 'date-fns/esm/fp/formatRelativeWithOptions/index.js';
 import { isObject } from 'highcharts';
 import { InternalSymbolName, isTemplateSpan } from 'typescript';
+import { countVolumeToShow } from './utils';
 
 export const HistoryOperations = () => {
     const history = useHistory();
@@ -322,7 +323,7 @@ export const HistoryOperations = () => {
                                             <Styled.TableInnerItem item>{moment(item.operationDate).format("DD.MM.YYYY")} в {moment(item.operationDate).format("HH:MM")}</Styled.TableInnerItem>
                                             <Styled.TableInnerItem item>{operation(item.operationKind)}</Styled.TableInnerItem>
                                             <Styled.TableInnerItem item income={item.balanceDelta > 0}>
-                                                {item.balanceDelta > 0 && (<>{sign(item.balanceDelta)} </>)} {(item.balanceDelta).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {item.balanceSafeId && getCurrency(item.balanceSafeId)}
+                                                {item.balanceDelta > 0 && (<>{sign(item.balanceDelta)} </>)} {(countVolumeToShow(item.balanceDelta, item.assetKind)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {item.balanceSafeId && getCurrency(item.balanceSafeId)}
                                             </Styled.TableInnerItem>
                                         </Styled.TableItem>
                                     ))}

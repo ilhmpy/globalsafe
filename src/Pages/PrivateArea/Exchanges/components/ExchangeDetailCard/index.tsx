@@ -65,61 +65,72 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
 
   const [owner, setOwner] = useState<'seller' | 'buyer'>(buyer() ? 'buyer' : 'seller');
   const [mark, setMark] = useState<boolean | null>(null);
-  const [markTimer, setMarkTimer] = useState<any>();
 
   useEffect(() => {
-    if (hubConnection) {
+    let cancel = false;
+    if (hubConnection && !cancel) {
       hubConnection.on("ExchangeAbused", cb);
     };
     return () => {
+      cancel = true;
       hubConnection?.off("ExchangeAbused", cb);
     };
-  }, [hubConnection]);
+  }, [hubConnection, exchange]);
 
   useEffect(() => {
-    if (hubConnection) {
+    let cancel = false;
+    if (hubConnection && !cancel) {
       hubConnection.on("ExchangeCancelled", cancelledCallback);
     } 
     return () => {
+      cancel = true;
       hubConnection?.off("ExchangeCancelled", cancelledCallback);
     };
-  }, [hubConnection]);
+  }, [hubConnection, exchange]);
 
   useEffect(() => {
-    if (hubConnection) {
+    let cancel = false;
+    if (hubConnection && !cancel) {
       hubConnection.on("ExchangeCompleted", cb);
     };
     return () => {
+      cancel = true;
       hubConnection?.off("ExchangeCompleted", cb);
     };  
-  }, [hubConnection]);
+  }, [hubConnection, exchange]);
 
   useEffect(() => {
-    if (hubConnection) {
+    let cancel = false;
+    if (hubConnection && !cancel) {
       hubConnection.on("ExchangeConfirmationRequired", cb);
     };
     return () => {
+      cancel = true;
       hubConnection?.off("ExchangeConfirmationRequired", cb);
     };  
-  }, [hubConnection]);
+  }, [hubConnection, exchange]);
 
   useEffect(() => {
-    if (hubConnection) {
+    let cancel = false;
+    if (hubConnection && !cancel) {
       hubConnection.on("BuyOrderVolumeChanged", volumeChanged);
     };
     return () => {
+      cancel = true;
       hubConnection?.off("BuyOrderVolumeChanged", volumeChanged);
     };  
-  }), [hubConnection];
+  }), [hubConnection], exchange;
 
   useEffect(() => {
-    if (hubConnection) {
+    let cancel = false;
+    if (hubConnection && !cancel) {
       hubConnection.on("SellOrderVolumeChanged", volumeChanged);
     };
     return () => {
+      cancel = true;
       hubConnection?.off("SellOrderVolumeChanged", volumeChanged);
     };  
-  }, [hubConnection])
+  }, [hubConnection, exchange])
 
   function cb(res: ViewExchangeModel) {
     console.log("ExchangeChanged RES", res, res.safeId, exchange && exchange.safeId);
@@ -138,7 +149,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
     if (exchange) {
       const newExchange = exchange;
       if (newExchange.safeId === id) {
-        newExchange.volume = volume;
+        newExchange.orderVolume = volume;
         setExchange(newExchange);
       };  
     }
@@ -162,7 +173,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
  
   useEffect(() => {
     getUserMark();
-  }, [hubConnection])
+  }, [hubConnection, exchange])
 
   function getTotalExecutedExchanges(id: string) {
     if (hubConnection) {
@@ -195,8 +206,8 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
       return <Chip>Жалоба</Chip>;
     } else if (chip === 4) {
       return <Chip style={{ background: 'rgba(93, 167, 0, 0.1)' }}>Отменен</Chip>;
-    }
-  }
+    };
+  };
 
   const PaymentMethods = [
     'ERC20',
@@ -308,11 +319,6 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
   console.log(exchange);
 
   function rateUser() {
-    console.log({
-      mark: feedbackValue,
-      userSafeId: owner === 'seller' ? exchange.recepientSafeId : exchange.ownerSafeId,
-      exchangeSafeId: exchange.safeId
-    })
     if (hubConnection) {
       hubConnection
         .invoke(

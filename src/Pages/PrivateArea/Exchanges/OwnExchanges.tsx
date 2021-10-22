@@ -51,9 +51,78 @@ export const OwnExchanges = () => {
     ExchangeAbused - на обмен подана жалоба
   */
 
-  function rerender(exchanges: ViewExchangeModel[]) {
-    setUserExchanges(exchanges);
-  };
+    function resetFilters() {
+      setSelectedBalanceKind(null);
+      setSelectedFiatKind(null);
+      setStatus([]);
+      setPayments([]);
+      setSelectedPaymentMethods([]);
+      setSelectedStatus([]);
+      setBalanceKind(null);
+      setFiatKind(null);
+    };
+    
+    useEffect(() => {
+      resetFilters();
+    }, [activeFilter]);
+    
+    function filters(res: GetExchangesCollectionResult) {
+      if (payments.length) {
+        const filter = res.collection.filter((i) => {
+          if (payments.includes(i.paymentMethod?.kind)) {
+              return i;
+          };
+        });
+        setUserExchanges(filter);
+      } else if (balanceKind != null && fiatKind != null) {
+        const filter = res.collection.filter((i) => {
+          if (i.assetKind === balanceKind && i.exchangeAssetKind === fiatKind) {
+            return i; 
+          };
+        });
+        setUserExchanges(filter);
+      } else if (status && status.length) {
+        const filter = res.collection.filter((i) => {
+          for (let el = 0; el < status.length; el++) {
+            if (i.state === status[el]) {
+              return i;
+            };
+          };
+        });
+        setUserExchanges(filter);
+      } else {
+        setUserExchanges(res.collection);
+      };
+    }
+    
+    async function getGetUserExchanges() {
+      try {
+        const res = await hubConnection!.invoke<GetExchangesCollectionResult>(
+         'GetExchanges',
+          [0, 1],
+          activeFilter === 'active' ? [0, 1] : [2, 3, 4],
+          0,
+          10
+        );
+        console.log("GetExchanges", res.collection);
+        filters(res);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setLoading(false);
+      };
+    };
+
+  useEffect(() => {
+    let cancel = false;
+    if (hubConnection && !cancel) {
+      setLoading(true);
+      getGetUserExchanges();
+    };
+    return () => {
+      cancel = true;
+    }
+  }, [hubConnection, activeFilter, balanceKind, fiatKind, status, payments]);
 
   function cb(res: any) {
     const exchanges = [...userExchanges];
@@ -63,7 +132,7 @@ export const OwnExchanges = () => {
         exchanges[userExchanges.indexOf(item)] = res;
       };
     });
-    rerender(exchanges);
+    setUserExchanges(exchanges);
   };
 
   function volumeChanged(id: string, volume: number) {
@@ -71,67 +140,93 @@ export const OwnExchanges = () => {
     const exchanges = [...userExchanges];
     userExchanges.forEach((item) => {
       if (item.safeId === id) {
-        exchanges[userExchanges.indexOf(item)].volume = volume;
+        exchanges[userExchanges.indexOf(item)].orderVolume = volume;
       };
     });
-    rerender(exchanges);
+    setUserExchanges(exchanges);
   };
 
   function exchangeCreated(res: ViewExchangeModel) {
-    console.log("ExchangeChanged/Created/Completed", res);
-    rerender([res, ...userExchanges]);
+    if (userExchanges) {
+      console.log("ExchangeChanged/Created/Completed", res);
+      console.log([res, ...userExchanges], userExchanges)
+      setUserExchanges([res, ...userExchanges]);
+    }
   };
 
   useEffect(() => {
-    if (hubConnection) {
+    let cancel = false;
+    if (hubConnection && !cancel) {
       hubConnection.on("BuyOrderVolumeChanged", volumeChanged);
     };
     return () => {
+      cancel = true;
       hubConnection?.off("BuyOrderVolumeChanged", volumeChanged);
     };
-  }, [hubConnection]);
+  }, [hubConnection, userExchanges]);
 
   useEffect(() => {
-    if (hubConnection) {
+    let cancel = false;
+    if (hubConnection && !cancel) {
+      hubConnection.on("SellOrderVolumeChanged", volumeChanged);
+    };
+    return () => {
+      cancel = true;
+      hubConnection?.off("SellOrderVolumeChanged", volumeChanged);
+    };
+  }, [hubConnection, userExchanges]);
+
+  useEffect(() => {
+    let cancel = false;
+    if (hubConnection && !cancel) {
       hubConnection.on("ExchangeCreated", exchangeCreated);
     };
     return () => {
+      cancel = true;
       hubConnection?.off("ExchangeCreated", exchangeCreated);
     };
-  }, [hubConnection]);
+  }, [hubConnection, userExchanges]);
 
   useEffect(() => {
-    if (hubConnection) {
+    let cancel = false;
+    if (hubConnection && !cancel) {
       hubConnection.on("ExchangeCompleted", cb);
     };
     return () => {
+      cancel = true;
       hubConnection?.off("ExchangeCompleted", cb);
     };
-  }, [hubConnection]);
+  }, [hubConnection, userExchanges]);
 
   useEffect(() => {
+    let cancel = false;
     if (hubConnection) {
       hubConnection.on("ExchangeCancelled", cb);
     };
     return () => {
+      cancel = true;
       hubConnection?.off("ExchangeCancelled", cb);
     };
-  }, [hubConnection]);
+  }, [hubConnection, userExchanges]);
 
   useEffect(() => {
-    if (hubConnection) {
+    let cancel = false;
+    if (hubConnection && !cancel) {
       hubConnection.on("ExchangeConfirmationRequired", cb);
     };
     return () => {
+      cancel = true;
       hubConnection?.off("ExchangeConfirmationRequired", cb);
     };
   }, [hubConnection]);
 
   useEffect(() => {
-    if (hubConnection) {
+    let cancel = false;
+    if (hubConnection && !cancel) {
       hubConnection.on("ExchangeAbused", cb);
     };
     return () => {
+      cancel = true;
       hubConnection?.off("ExchangeAbused", cb);
     };
   }, [hubConnection]);
@@ -153,75 +248,6 @@ export const OwnExchanges = () => {
     'TRC 20',
     'ERC 20',
   ], []);
-
-  useEffect(() => {
-    if (hubConnection) {
-      setLoading(true);
-      getGetUserExchanges();
-    };
-}, [hubConnection, activeFilter, balanceKind, fiatKind, status, payments]);
-
-function resetFilters() {
-  setSelectedBalanceKind(null);
-  setSelectedFiatKind(null);
-  setStatus([]);
-  setPayments([]);
-  setSelectedPaymentMethods([]);
-  setSelectedStatus([]);
-  setBalanceKind(null);
-  setFiatKind(null);
-};
-
-useEffect(() => {
-  resetFilters();
-}, [activeFilter]);
-
-function filters(res: GetExchangesCollectionResult) {
-  if (payments.length) {
-    const filter = res.collection.filter((i) => {
-      if (payments.includes(i.paymentMethod?.kind)) {
-          return i;
-      };
-    });
-    setUserExchanges(filter);
-  } else if (balanceKind != null && fiatKind != null) {
-    const filter = res.collection.filter((i) => {
-      if (i.assetKind === balanceKind && i.exchangeAssetKind === fiatKind) {
-        return i; 
-      };
-    });
-    setUserExchanges(filter);
-  } else if (status && status.length) {
-    const filter = res.collection.filter((i) => {
-      for (let el = 0; el < status.length; el++) {
-        if (i.state === status[el]) {
-          return i;
-        };
-      };
-    });
-    setUserExchanges(filter);
-  } else {
-    setUserExchanges(res.collection);
-  };
-}
-
-  async function getGetUserExchanges() {
-    try {
-      const res = await hubConnection!.invoke<GetExchangesCollectionResult>(
-       'GetExchanges',
-        [0, 1],
-        activeFilter === 'active' ? [0, 1] : [2, 3, 4],
-        0,
-        10
-      );
-      console.log("GetExchanges", res.collection);
-      filters(res);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
-    };
-  };
 
   function handleAcceptPaymentMethods() {
     setPayments(selectedPaymentMethods);
