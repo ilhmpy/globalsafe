@@ -9,6 +9,7 @@ import { FiatKind } from "../../../../../types/fiatKind";
 import { getVolume } from "../../../../../functions/getVolume";
 import { Text } from '../../../components/ui';
 import * as S from './S.el';
+import { countVolumeToShow } from "../../../utils";
 
 type Props = {
   onClose: () => void;
@@ -35,7 +36,7 @@ export const ExchangeSuccessModal: FC<Props> = ({
                             <Text size={14} lH={20}>{exchange.owner === "seller" ? "Продано" : "Куплено"} {Balance[exchange.assetKind]}:</Text>
                             <S.ListItemDivider />
                             <Text size={14} lH={20} weight={700}>
-                                {(getVolume(exchange.volume, exchange.assetKind)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })}
+                                {(countVolumeToShow(exchange.volume, exchange.assetKind)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })}
                             </Text>
                         </S.DataListItem> 
 
@@ -43,7 +44,7 @@ export const ExchangeSuccessModal: FC<Props> = ({
                             <Text size={14} lH={20}>Стоимость {FiatKind[exchange.exchangeAssetKind]}:</Text>
                             <S.ListItemDivider />
                             <Text size={14} lH={20} weight={700}>
-                                {(exchange.volume * exchange.rate).toLocaleString("ru-RU", { maximumFractionDigits: 5 })}
+                                {(countVolumeToShow(exchange.exchangeVolume, exchange.assetKind)).toLocaleString("ru-RU", { maximumFractionDigits: 5 })}
                             </Text>
                         </S.DataListItem>
 

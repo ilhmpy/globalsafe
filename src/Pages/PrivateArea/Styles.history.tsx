@@ -30,6 +30,7 @@ export const Table = styled.div<{ none?: boolean; }>`
   margin-bottom: 40px;
   box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
   border-radius: 4px;
+  min-height: 530px;
 `;
 
 export const TableMap = styled.div`

@@ -55,16 +55,24 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
     };
     
     useEffect(() => {
-        if (hubConnection) {
+        let cancel = false;
+        if (hubConnection && !cancel) {
             hubConnection.on("InAppNotification", cb);
         };
         return () => {
+            cancel = true;
             hubConnection?.off("InAppNotification", cb);
         }; 
-    }, [hubConnection]);
+    }, [hubConnection, notifies]);
     
     useEffect(() => {
         getNotifies();
+    }, [hubConnection]);
+
+    useEffect(() => {
+        if (block) {
+            getNotifies();
+        };
     }, [hubConnection, block]);
 
     function changeHide(bool: boolean, id: string) {
