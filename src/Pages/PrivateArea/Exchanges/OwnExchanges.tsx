@@ -218,7 +218,7 @@ export const OwnExchanges = () => {
       cancel = true;
       hubConnection?.off("ExchangeConfirmationRequired", cb);
     };
-  }, [hubConnection]);
+  }, [hubConnection, userExchanges]);
 
   useEffect(() => {
     let cancel = false;
@@ -229,7 +229,7 @@ export const OwnExchanges = () => {
       cancel = true;
       hubConnection?.off("ExchangeAbused", cb);
     };
-  }, [hubConnection]);
+  }, [hubConnection, userExchanges]);
 
   const statuts = useMemo<Object[]>(() => activeFilter === "active" ? [
     { methodName: "Новый", kind: 0 },
