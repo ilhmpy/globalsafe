@@ -40,8 +40,6 @@ export const OwnExchanges = () => {
   const [balanceKind, setBalanceKind] = useState<number | null>(null);
   const [fiatKind, setFiatKind] = useState<number | null>(null);
 
-  const [resetFilter, setResetFilter] = useState<boolean>(false);
-
   /*
     CALLBACKS: 
     BuyOrderVolumeChanged - значение доступной валюты ордера на покупку изменилось
@@ -242,13 +240,13 @@ export const OwnExchanges = () => {
     { methodName: "Отменен", kind: 4 }
   ], [activeFilter]);
   
-  const paymentMethodsKinds = useMemo<string[]>(() => [
-    'АО «Альфа-Банк»',
-    'ПАО Сбербанк',
-    'АО «Тинькофф Банк»',
-    'BEP 20',
-    'TRC 20',
-    'ERC 20',
+  const paymentMethodsKinds = useMemo<Object[]>(() => [
+    { methodName: 'ERC 20', kind: 0 },
+    { methodName: 'TRC 20', kind: 1 },
+    { methodName: "BEP 20", kind: 2 },
+    { methodName: 'АО «Альфа-Банк»', kind: 3 },
+    { methodName: 'ПАО Сбербанк', kind: 4 },
+    { methodName: 'АО «Тинькофф Банк»', kind: 5 }
   ], []);
 
   function handleAcceptPaymentMethods() {
@@ -346,6 +344,7 @@ export const OwnExchanges = () => {
           onAccept={handleAcceptPaymentMethods}
           open={showPaymentMethodsModal} 
           onClose={() => setShowPaymentMethodsModal(false)} 
+          objectsArray
           black
         />
 
