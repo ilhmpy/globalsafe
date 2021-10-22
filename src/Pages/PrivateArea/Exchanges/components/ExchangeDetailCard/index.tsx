@@ -227,6 +227,11 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
   console.log(exchange);
 
   function rateUser() {
+    console.log({
+      mark: feedbackValue,
+      userSafeId: owner === 'seller' ? exchange.recepientSafeId : exchange.ownerSafeId,
+      exchangeSafeId: exchange.safeId
+    })
     if (hubConnection) {
       hubConnection
         .invoke(

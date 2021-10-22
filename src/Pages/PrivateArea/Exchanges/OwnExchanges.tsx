@@ -60,7 +60,6 @@ export const OwnExchanges = () => {
 
   function rerender(exchanges: ViewExchangeModel[]) {
     setUserExchanges(exchanges);
-    setUserExchanges(state => state.map(i => i));
   };
 
   function cb(res: any) {
