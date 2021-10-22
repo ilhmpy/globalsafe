@@ -36,12 +36,16 @@ type DetailCardProps = {
   showRejectModal: boolean;
   setShowRejectModal: (value: boolean) => void;
   owner: "seller" | "buyer";
+  setExchange: (val: ViewExchangeModel) => any; 
+  setLoading: (val: boolean) => any;
+  exchangeId: string;
 };
 
 export const ExchangeDetailCard: FC<DetailCardProps> = ({ 
   exchange, setCall, setShowSuccessModal, 
   setShowRejectModal, showRejectModal, 
-  showSuccessModal,
+  showSuccessModal, setExchange, setLoading, 
+  exchangeId
 }: DetailCardProps) => {
   const history = useHistory();
   const { account, hubConnection } = useContext(AppContext);
@@ -62,6 +66,100 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
   const [owner, setOwner] = useState<'seller' | 'buyer'>(buyer() ? 'buyer' : 'seller');
   const [mark, setMark] = useState<boolean | null>(null);
   const [markTimer, setMarkTimer] = useState<any>();
+
+  
+  function getExchange(loading: boolean) {
+    if (hubConnection) {
+      setLoading(loading);
+      setCall(false);
+      hubConnection.invoke("GetExchange", exchangeId)
+        .then((res) => {
+          setExchange(res);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setLoading(false);
+        })
+    };
+  };
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection.on("ExchangeAbused", cb);
+    };
+    return () => {
+      hubConnection?.off("ExchangeAbused", cb);
+    };
+  }, [hubConnection]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection.on("ExchangeCancelled", cancelledCallback);
+    } 
+    return () => {
+      hubConnection?.off("ExchangeCancelled", cancelledCallback);
+    };
+  }, [hubConnection]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection.on("ExchangeCompleted", cb);
+    };
+    return () => {
+      hubConnection?.off("ExchangeCompleted", cb);
+    };  
+  }, [hubConnection]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection.on("ExchangeConfirmationRequired", cb);
+    };
+    return () => {
+      hubConnection?.off("ExchangeConfirmationRequired", cb);
+    };  
+  }, [hubConnection]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection.on("BuyOrderVolumeChanged", volumeChanged);
+    };
+    return () => {
+      hubConnection?.off("BuyOrderVolumeChanged", volumeChanged);
+    };  
+  }), [hubConnection];
+
+  useEffect(() => {
+    if (hubConnection) {
+      hubConnection.on("SellOrderVolumeChanged", volumeChanged);
+    };
+    return () => {
+      hubConnection?.off("SellOrderVolumeChanged", volumeChanged);
+    };  
+  }, [hubConnection])
+
+  function cb(res: ViewExchangeModel) {
+    console.log("ExchangeChanged RES", res, res.safeId, exchange && exchange.safeId);
+    if (exchange != null && exchange.safeId == res.safeId) {
+        console.log("EQ")
+        setExchange(res);
+    };
+  };
+
+  function cancelledCallback(res: ViewExchangeModel) {
+    setShowRejectModal(true);
+    cb(res);
+  };
+
+  function volumeChanged(id: string, volume: number) {
+    if (exchange) {
+      const newExchange = exchange;
+      if (newExchange.safeId === id) {
+        newExchange.volume = volume;
+        setExchange(newExchange);
+      };  
+    }
+  };
 
   const handleClick = () => {
     history.push(routers.p2pchangesSingleExchangeChat + '/' + exchange.safeId);
@@ -252,12 +350,12 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
   function editStateForTesting(state = 0) {
     if (hubConnection) {
       hubConnection.invoke("EditExchangeState", "379035279365767168", 0)
-        .then(() => console.log("change"))
-        .catch((err) => console.log(err));
+        .then(() => console.log("EDIT_EXCHANGE_STATE"))
+        .catch((err) => console.log("EDIT_EXCHANGE_STATE_ERROR", err));
     };
   };
 
-  // editStateForTesting(0);
+  editStateForTesting(0);
 
   return (
     <S.Container>
