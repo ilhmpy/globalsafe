@@ -125,7 +125,7 @@ export const Notifications = () => {
     };
 
     function createLink(link: string) {
-        return `p2p-changes/orders/${link}`;
+        return `p2p-changes/${link}`;
     }
 
     return (
