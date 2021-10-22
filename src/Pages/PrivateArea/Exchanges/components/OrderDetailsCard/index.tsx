@@ -238,9 +238,21 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                   {
                     orderType === OrderType.Buy
                     ?
-                    `Количество продажи (max ${countVolumeToShow(order.limitTo, order.assetKind)} ${Balance[order.assetKind]}):`
+                    `Количество продажи (max ${
+                        order.volume < order.limitTo
+                        ? 
+                            countVolumeToShow(order.volume, order.assetKind) 
+                        : 
+                            countVolumeToShow(order.limitTo, order.assetKind)
+                    } ${Balance[order.assetKind]}):`
                     :
-                    `Количество покупки (max ${countVolumeToShow(order.limitTo, order.assetKind)} ${Balance[order.assetKind]}):`
+                    `Количество продажи (max ${
+                        order.volume < order.limitTo
+                        ? 
+                            countVolumeToShow(order.volume, order.assetKind) 
+                        : 
+                            countVolumeToShow(order.limitTo, order.assetKind)
+                    } ${Balance[order.assetKind]}):`
                   }
               </Text>
               <S.Input
@@ -256,10 +268,27 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                 {
                     orderType === OrderType.Buy
                     ?
-                    `Сумма к получению (max ${countVolumeToShow(order.limitTo, order.assetKind) * order.rate} ${FiatKind[order.operationAssetKind]}):`
+                    `Сумма к получению (max ${
+                        order.volume < order.limitTo
+                        ?
+                            countVolumeToShow(order.volume, order.assetKind) * order.rate
+                        :
+                            countVolumeToShow(order.limitTo, order.assetKind) * order.rate
+                    } ${FiatKind[order.operationAssetKind]}):`
                     :
-                    `Сумма к списанию (min ${countVolumeToShow(order.limitFrom, order.assetKind) * order.rate} max ${
-                        countVolumeToShow(order.limitTo, order.assetKind) * order.rate} ${FiatKind[order.operationAssetKind]
+                    `Сумма к списанию (min ${
+                        order.volume < order.limitFrom 
+                        ?
+                            countVolumeToShow(order.volume, order.assetKind) * order.rate
+                        :
+                            countVolumeToShow(order.limitFrom, order.assetKind) * order.rate
+                    } max ${
+                        order.volume < order.limitTo 
+                        ? 
+                            countVolumeToShow(order.volume, order.assetKind) * order.rate
+                        : 
+                            countVolumeToShow(order.limitTo, order.assetKind) * order.rate
+                        } ${FiatKind[order.operationAssetKind]
                     }):`
                   }
               </Text>
