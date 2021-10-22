@@ -42,13 +42,15 @@ export const Notifications = () => {
     };
 
     useEffect(() => {
-        if (hubConnection) {
+        let cancel = false;
+        if (hubConnection && !cancel) {
             hubConnection.on("InAppNotification", cb);
         };
         return () => {
+            cancel = true;
             hubConnection?.off("InAppNotification", cb);
         }; 
-    }, [hubConnection]);
+    }, [hubConnection, notifies]);
 
     function getNotifies(load = true) {
         if (hubConnection) {
