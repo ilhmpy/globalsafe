@@ -40,6 +40,8 @@ export const OwnExchanges = () => {
   const [balanceKind, setBalanceKind] = useState<number | null>(null);
   const [fiatKind, setFiatKind] = useState<number | null>(null);
 
+  const [resetFilter, setResetFilter] = useState<boolean>(false);
+
   /*
     CALLBACKS: 
     BuyOrderVolumeChanged - значение доступной валюты ордера на покупку изменилось
@@ -325,9 +327,13 @@ export const OwnExchanges = () => {
           <FilterButton active onClick={() => setShowSelectedStatus(true)}>
             {status && status.length ? "Статусы - " : "Все статусы"} {status && status.length ? status.length : ""}
           </FilterButton>
-          <FilterButton style={{ position: "absolute", right: "0px" }} onClick={resetFilters}>
-            Очистить все фильтры
-          </FilterButton>
+          {payments.length > 0 || (status != null && status.length > 0) || balanceKind != null || fiatKind != null ? (
+            <>
+              <FilterButton style={{ position: "absolute", right: "0px", }} onClick={resetFilters}>
+                Очистить фильтр
+              </FilterButton>
+            </>
+          ) : null}
         </S.Filters>
 
         {activeFilter === 'active' && <OwnActiveExchangesTable setExchanges={setUserExchanges} loading={loading} exchanges={userExchanges} />}
