@@ -40,13 +40,6 @@ export const OwnExchanges = () => {
   const [balanceKind, setBalanceKind] = useState<number | null>(null);
   const [fiatKind, setFiatKind] = useState<number | null>(null);
 
-  /* 
-    калбэки на главной странице "мои обмены"
-    таймер на детальной странице и в списках(посмотреть что там за баг)
-    посмотреть и по надобности исправить обработку данных калбэков на детальной странице
-    сделать новую логику оценивания когда пройдет пр по бэку
-  */
-
   /*
     CALLBACKS: 
     BuyOrderVolumeChanged - значение доступной валюты ордера на покупку изменилось
@@ -64,6 +57,7 @@ export const OwnExchanges = () => {
 
   function cb(res: any) {
     const exchanges = [...userExchanges];
+    console.log("ExchangeChanged/Created/Completed");
     userExchanges.forEach((item) => {
       if (item.safeId === res.safeId) {
         exchanges[userExchanges.indexOf(item)] = res;
@@ -73,6 +67,7 @@ export const OwnExchanges = () => {
   };
 
   function volumeChanged(id: string, volume: number) {
+    console.log("ExchangeChanged/Created/Completed");
     const exchanges = [...userExchanges];
     userExchanges.forEach((item) => {
       if (item.safeId === id) {
