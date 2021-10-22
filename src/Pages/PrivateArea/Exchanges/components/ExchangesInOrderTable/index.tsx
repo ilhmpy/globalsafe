@@ -24,7 +24,7 @@ export const ExchangesInOrderTable: React.FC<ExchangesInOrderTable> = ({exchange
     'Новый',
     'Ожидание перевода',
     'Завершен',
-    'Абуз',
+    'Спорный',
     'Отменен',
   ], []);
 
