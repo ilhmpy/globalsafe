@@ -57,7 +57,7 @@ export const Counter: FC<Props> = ({ data, formatNum, over, delay, setTimerDown 
       setTimerDown(true);
     };
     return count > -1 ? state : '0м. 0с.'
-  }
+  };
 
   return <>{getTime()}</>;
 };
