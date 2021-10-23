@@ -41,9 +41,9 @@ export const SwitchTheme = styled.div<{ mob?: boolean; admin?: boolean; auth?: b
   }
 `;
 
-export const Btn = styled.button`
+export const Btn = styled.button<{ hide?: boolean }>`
   padding: 11px 20px 11px;
-  display: inline-block;
+  display: ${(props) => (props.hide ? 'none' : 'inline-block')};
   text-align: center;
   text-decoration: none;
   box-sizing: border-box;
@@ -84,6 +84,7 @@ export const AdminButton = styled(Btn)`
   margin-right: 28px;
   color: ${(props) => props.theme.v2.text};
   text-transform: uppercase;
+
   &:focus {
     outline: none;
   }
@@ -93,6 +94,7 @@ export const AdminButton = styled(Btn)`
 `;
 
 export const ButtonsRev = styled.div`
+  width: auto;
   @media (max-width: 767px) {
     display: none;
   }

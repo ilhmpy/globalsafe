@@ -74,7 +74,7 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
             (+fromSum * 100000 + 1).toString(),
             59
           );
-          setConvertedData(response);
+          setConvertedData({ ...response, userAmount: response.userAmount - 1 });
         } catch (error) {
           console.error(error);
         }
@@ -247,9 +247,20 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                     const { value } = e.target;
                     setToSum('');
 
+                    if (value === '') {
+                      setFromSumCloud('');
+                      setFromSum('');
+                      setConvertedData({
+                        userAmount: 0,
+                        calculatedAmount: 0,
+                        targetAmount: 0,
+                        discountPercent: 0,
+                      });
+                    }
+
                     if (
                       (value[0] !== '0' || value[1] !== '0') &&
-                      (/^(\d+([.,]\d{0,2})?|\.?\d{1,2})$/gm.test(value) || !value)
+                      (/^(\d+([.,]\d{0,4})?|\.?\d{1,4})$/gm.test(value) || !value)
                     ) {
                       if (value.split('.')?.length === 1) {
                         setFromSumCloud(value.replaceAll(',', '.'));
@@ -324,15 +335,25 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                 <RateRow>
                   <Rate>Курс:</Rate>
                   <Rate>
-                    {convertedData.calculatedAmount > 0
-                      ? (
+                    {!convertedData.calculatedAmount
+                      ? 0
+                      : (convertedData.calculatedAmount / convertedData.targetAmount / 1000)
+                          .toString()
+                          .split('.').length > 1
+                      ? `${(convertedData.calculatedAmount / convertedData.targetAmount / 1000)
+                          .toString()
+                          .split('.')[0]
+                          .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
+                          (convertedData.calculatedAmount / convertedData.targetAmount / 1000)
+                            .toFixed(5)
+                            .toString()
+                            .split('.')[1]
+                        }`
+                      : (
                           convertedData.calculatedAmount /
                           convertedData.targetAmount /
                           1000
-                        ).toLocaleString('ru-RU', {
-                          maximumFractionDigits: 2,
-                        })
-                      : 0}
+                        ).toFixed(5)}
                   </Rate>
                 </RateRow>
 

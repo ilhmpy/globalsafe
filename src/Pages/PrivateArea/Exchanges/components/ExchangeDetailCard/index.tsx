@@ -25,6 +25,7 @@ import reactVirtualizedAutoSizer from 'react-virtualized-auto-sizer';
 import { setUncaughtExceptionCaptureCallback } from 'process';
 import { getVolume } from '../../../../../functions/getVolume';
 import { getTime } from 'date-fns';
+import { Counter } from '../../../components/ui/Counter';
 import  { countVolumeToShow } from "../../../utils";
 
 type DetailCardProps = {
@@ -35,16 +36,21 @@ type DetailCardProps = {
   showRejectModal: boolean;
   setShowRejectModal: (value: boolean) => void;
   owner: "seller" | "buyer";
+  setExchange: (val: ViewExchangeModel) => any; 
+  setLoading: (val: boolean) => any;
+  exchangeId: string;
 };
 
 export const ExchangeDetailCard: FC<DetailCardProps> = ({ 
   exchange, setCall, setShowSuccessModal, 
   setShowRejectModal, showRejectModal, 
-  showSuccessModal,
+  showSuccessModal, setExchange, setLoading, 
+  exchangeId
 }: DetailCardProps) => {
   const history = useHistory();
-  const [feedbackValue, setFeedbackValue] = useState(5);
   const { account, hubConnection } = useContext(AppContext);
+
+  const [feedbackValue, setFeedbackValue] = useState(5);
   const [totalExchanges, setTotalExchanges] = useState<any>();
   const [draw, setDraw] = useState<boolean>(true);
   const [time, setTime] = useState<string>();
@@ -58,11 +64,117 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
   };
 
   const [owner, setOwner] = useState<'seller' | 'buyer'>(buyer() ? 'buyer' : 'seller');
+  const [mark, setMark] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    let cancel = false;
+    if (hubConnection && !cancel) {
+      hubConnection.on("ExchangeAbused", cb);
+    };
+    return () => {
+      cancel = true;
+      hubConnection?.off("ExchangeAbused", cb);
+    };
+  }, [hubConnection, exchange]);
+
+  useEffect(() => {
+    let cancel = false;
+    if (hubConnection && !cancel) {
+      hubConnection.on("ExchangeCancelled", cancelledCallback);
+    } 
+    return () => {
+      cancel = true;
+      hubConnection?.off("ExchangeCancelled", cancelledCallback);
+    };
+  }, [hubConnection, exchange]);
+
+  useEffect(() => {
+    let cancel = false;
+    if (hubConnection && !cancel) {
+      hubConnection.on("ExchangeCompleted", cb);
+    };
+    return () => {
+      cancel = true;
+      hubConnection?.off("ExchangeCompleted", cb);
+    };  
+  }, [hubConnection, exchange]);
+
+  useEffect(() => {
+    let cancel = false;
+    if (hubConnection && !cancel) {
+      hubConnection.on("ExchangeConfirmationRequired", cb);
+    };
+    return () => {
+      cancel = true;
+      hubConnection?.off("ExchangeConfirmationRequired", cb);
+    };  
+  }, [hubConnection, exchange]);
+
+  useEffect(() => {
+    let cancel = false;
+    if (hubConnection && !cancel) {
+      hubConnection.on("BuyOrderVolumeChanged", volumeChanged);
+    };
+    return () => {
+      cancel = true;
+      hubConnection?.off("BuyOrderVolumeChanged", volumeChanged);
+    };  
+  }), [hubConnection], exchange;
+
+  useEffect(() => {
+    let cancel = false;
+    if (hubConnection && !cancel) {
+      hubConnection.on("SellOrderVolumeChanged", volumeChanged);
+    };
+    return () => {
+      cancel = true;
+      hubConnection?.off("SellOrderVolumeChanged", volumeChanged);
+    };  
+  }, [hubConnection, exchange])
+
+  function cb(res: ViewExchangeModel) {
+    console.log("ExchangeChanged RES", res, res.safeId, exchange && exchange.safeId);
+    if (exchange != null && exchange.safeId == res.safeId) {
+        setExchange(res);
+    };
+  };
+
+  function cancelledCallback(res: ViewExchangeModel) {
+    if (exchange != null && exchange.safeId === res.safeId) {
+      setShowRejectModal(true);
+      cb(res);
+    };
+  };
+
+  function volumeChanged(id: string, volume: number) {
+    if (exchange != null) {
+      const newExchange = exchange;
+      if (newExchange.safeId === id) {
+        newExchange.orderVolume = volume;
+        setExchange(newExchange);
+      };  
+    }
+  };
 
   const handleClick = () => {
     history.push(routers.p2pchangesSingleExchangeChat + '/' + exchange.safeId);
-    console.log('ExchangeDetailCard Click');
+    console.log('ExchangeDetailCard Click');      
   };
+
+  function getUserMark() {
+    if (hubConnection) {
+      hubConnection.invoke("GetUserMark", exchange.safeId)
+        .then((res) => {
+          console.log("mark", res);
+          setMark(res > 0);
+        })
+        .catch(err => console.log(err));
+    };
+  };
+ 
+  useEffect(() => {
+    getUserMark();
+  }, [hubConnection, exchange])
 
   function getTotalExecutedExchanges(id: string) {
     if (hubConnection) {
@@ -74,7 +186,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
         })
         .catch((err) => console.error(err));
     }
-  }
+  };
 
   useEffect(() => {
     getTotalExecutedExchanges(exchange.ownerSafeId);
@@ -84,15 +196,19 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
     if (chip === 0) {
       return <Chip style={{ background: 'rgba(0, 148, 255, 10%)' }}>Новый</Chip>;
     } else if (chip === 1) {
-      return <Chip style={{ background: '#FF4A31', color: '#fff' }}>Оставшееся время {time} </Chip>;
+      return (
+        <Chip style={{ background: '#FF4A31', color: '#fff' }}>
+          Оставшееся время <Counter setTimerDown={setTimerDown} data={exchange.creationDate} delay={exchange.operationWindow.totalMilliseconds} formatNum /> 
+        </Chip>
+      );
     } else if (chip === 2) {
       return <Chip style={{ background: 'rgba(93, 167, 0, 0.1)', fontWeight: 500 }}>Завершен</Chip>;
     } else if (chip === 3) {
       return <Chip>Жалоба</Chip>;
     } else if (chip === 4) {
       return <Chip style={{ background: 'rgba(93, 167, 0, 0.1)' }}>Отменен</Chip>;
-    }
-  }
+    };
+  };
 
   const PaymentMethods = [
     'ERC20',
@@ -220,50 +336,16 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
         .catch((err) => console.log(err));
     }
   }
-
-  function getCountsTime({ days, hours, minutes, seconds }: any) {
-    if (days > 0) {
-      return `${days}д ${hours > 0 ? hours : 0}ч`;
-    } else if (hours > 0) {
-      return `${hours}ч ${minutes > 0 ? minutes : 0}м`;
-    } else if (minutes > 0) {
-      return `${minutes}м ${seconds > 0 ? seconds : 0}с`;
-    } else {
-      return `0м. 0с.`;
-      setTimerDown(true);
-    }
-  }
-
-  function getTime() {
-    const total = exchange.operationWindow.totalMilliseconds - (new Date().getTime() - new Date(exchange.creationDate).getTime());
-    const seconds = Math.floor((total/1000) % 60);
-    const minutes = Math.floor((total/1000/60) % 60);
-    const hours = Math.floor((total/(1000*60*60)) % 24);
-    const days = Math.floor(total/(1000*60*60*24));
-    const result = { days, hours, minutes, seconds };
-    setTime(getCountsTime(result));
-  };
-
-  useEffect(() => {
-    if (exchange.state === 1) {
-      getTime();
-      setTimer(
-        setInterval(() => {
-          getTime();
-        }, 60000)
-      );
-    }
-  }, [exchange.state]);
-
+  
   function editStateForTesting(state = 0) {
     if (hubConnection) {
       hubConnection.invoke("EditExchangeState", "379035279365767168", 0)
-        .then(() => console.log("change"))
-        .catch((err) => console.log(err));
+        .then(() => console.log("EDIT_EXCHANGE_STATE"))
+        .catch((err) => console.log("EDIT_EXCHANGE_STATE_ERROR", err));
     };
   };
 
-  // editStateForTesting(0);
+  editStateForTesting(0);
 
   return (
     <S.Container>
@@ -346,7 +428,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
       {/* IF COMPLETED AND NOT GRADET */}
 
       <RightSide>
-        <S.StateBlock when={exchange.state < 2 || exchange.state != 2 || exchange.mark != null}>
+        <S.StateBlock when={exchange.state < 2 || exchange.state != 2 || mark != false}>
           <S.TitleBlockWrapper>
             <Title mB={10} lH={28}>
               {exchange.kind === 0 ? 'Продажа' : 'Покупка'}{' '}
@@ -625,7 +707,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
 
         {/* COMPLETED STATE */}
 
-        <S.StateBlock when={exchange.state === 2 && exchange.mark === null}>
+        <S.StateBlock when={exchange.state === 2 && mark === false}>
           <S.StateBlock when={owner === 'buyer'}>
             <S.TransferInfoBlock>
               <Text size={14} lH={20} black>
@@ -685,6 +767,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
             <Button primary onClick={() => {
               rateUser();
               setShowSuccessModal(true);
+              getUserMark();
             }}>
               Подтвердить
             </Button>
@@ -748,6 +831,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
             <Button primary onClick={() => {
               rateUser();
               setShowSuccessModal(true);
+              getUserMark();
             }}>
               Подтвердить
             </Button>

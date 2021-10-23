@@ -16,6 +16,7 @@ import { CurrencyPair } from './components/modals/CurrencyPair';
 import { Balance } from '../../../types/balance';
 import { FiatKind } from "../../../types/fiatKind";
 import { getBalanceKindByStringName, getFiatKindByStringName, getMyRating } from '../utils';
+import { ExchangesInOrderTable } from './components/ExchangesInOrderTable';
 
 export const OwnExchanges = () => {
   const history = useHistory();
@@ -39,13 +40,6 @@ export const OwnExchanges = () => {
   const [balanceKind, setBalanceKind] = useState<number | null>(null);
   const [fiatKind, setFiatKind] = useState<number | null>(null);
 
-  /* 
-    калбэки на главной странице "мои обмены"
-    таймер на детальной странице и в списках(посмотреть что там за баг)
-    посмотреть и по надобности исправить обработку данных калбэков на детальной странице
-    сделать новую логику оценивания когда пройдет пр по бэку
-  */
-
   /*
     CALLBACKS: 
     BuyOrderVolumeChanged - значение доступной валюты ордера на покупку изменилось
@@ -57,122 +51,22 @@ export const OwnExchanges = () => {
     ExchangeAbused - на обмен подана жалоба
   */
 
-  function cb() {
-    return false;
-  };
-
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection.on("BuyOrderVolumeChanged", cb);
+    function resetFilters() {
+      setSelectedBalanceKind(null);
+      setSelectedFiatKind(null);
+      setStatus([]);
+      setPayments([]);
+      setSelectedPaymentMethods([]);
+      setSelectedStatus([]);
+      setBalanceKind(null);
+      setFiatKind(null);
     };
-    return () => {
-      hubConnection?.off("BuyOrderVolumeChanged", cb);
-    };
-  }, [hubConnection]);
-
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection.on("ExchangeCreated", cb);
-    };
-    return () => {
-      hubConnection?.off("ExchangeCreated", cb);
-    };
-  }, [hubConnection]);
-
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection.on("SellOrderVolumeChanged", cb);
-    };
-    return () => {
-      hubConnection?.off("SellOrderVolumeChanged", cb);
-    };
-  }, [hubConnection]);
-
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection.on("ExchangeCompleted", cb);
-    };
-    return () => {
-      hubConnection?.off("ExchangeCompleted", cb);
-    };
-  }, [hubConnection]);
-
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection.on("ExchangeCancelled", cb);
-    };
-    return () => {
-      hubConnection?.off("ExchangeCancelled", cb);
-    };
-  }, [hubConnection]);
-
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection.on("ExchangeConfirmationRequired", cb);
-    };
-    return () => {
-      hubConnection?.off("ExchangeConfirmationRequired", cb);
-    };
-  }, [hubConnection]);
-
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection.on("ExchangeAbused", cb);
-    };
-    return () => {
-      hubConnection?.off("ExchangeAbused", cb);
-    };
-  }, [hubConnection]);
-
-  const statuts = useMemo<Object[]>(() => activeFilter === "active" ? [
-    { methodName: "Новый", kind: 0 },
-    { methodName: "Ожидается подтверждение оплаты", kind: 1 },
-  ] : [
-    { methodName: "Завершен", kind: 2 },
-    { methodName: "Подана жалоба", kind: 3 },
-    { methodName: "Отменен", kind: 4 }
-  ], [activeFilter]);
-  
-  const paymentMethodsKinds = useMemo<string[]>(() => [
-    'АО «Альфа-Банк»',
-    'ПАО Сбербанк',
-    'АО «Тинькофф Банк»',
-    'BEP 20',
-    'TRC 20',
-    'ERC 20',
-  ], []);
-
-  useEffect(() => {
-    if (hubConnection) {
-      setLoading(true);
-      getGetUserExchanges();
-    };
-}, [hubConnection, activeFilter, balanceKind, fiatKind, status, payments]);
-
-function resetFilters() {
-  setSelectedBalanceKind(null);
-  setSelectedFiatKind(null);
-  setStatus([]);
-  setPayments([]);
-  setSelectedPaymentMethods([]);
-  setSelectedStatus([]);
-  setBalanceKind(null);
-  setFiatKind(null);
-};
-
-useEffect(() => {
-  resetFilters();
-}, [activeFilter]);
-
-  async function getGetUserExchanges() {
-    try {
-      const res = await hubConnection!.invoke<GetExchangesCollectionResult>(
-       'GetExchanges',
-        [0, 1],
-        activeFilter === 'active' ? [0, 1] : [2, 3, 4],
-        0,
-        10
-      );
+    
+    useEffect(() => {
+      resetFilters();
+    }, [activeFilter]);
+    
+    function filters(res: GetExchangesCollectionResult) {
       if (payments.length) {
         const filter = res.collection.filter((i) => {
           if (payments.includes(i.paymentMethod?.kind)) {
@@ -199,12 +93,161 @@ useEffect(() => {
       } else {
         setUserExchanges(res.collection);
       };
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
+    }
+    
+    async function getGetUserExchanges() {
+      try {
+        const res = await hubConnection!.invoke<GetExchangesCollectionResult>(
+         'GetExchanges',
+          [0, 1],
+          activeFilter === 'active' ? [0, 1] : [2, 3, 4],
+          0,
+          10
+        );
+        console.log("GetExchanges", res.collection);
+        filters(res);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setLoading(false);
+      };
     };
+
+  useEffect(() => {
+    let cancel = false;
+    if (hubConnection && !cancel) {
+      setLoading(true);
+      getGetUserExchanges();
+    };
+    return () => {
+      cancel = true;
+    }
+  }, [hubConnection, activeFilter, balanceKind, fiatKind, status, payments]);
+
+  function cb(res: any) {
+    const exchanges = [...userExchanges];
+    console.log("ExchangeChanged/Created/Completed", res);
+    userExchanges.forEach((item) => {
+      if (item.safeId === res.safeId) {
+        exchanges[userExchanges.indexOf(item)] = res;
+      };
+    });
+    setUserExchanges(exchanges);
   };
+
+  function volumeChanged(id: string, volume: number) {
+    console.log("ExchangeChanged/Created/Completed", id, volume);
+    const exchanges = [...userExchanges];
+    userExchanges.forEach((item) => {
+      if (item.safeId === id) {
+        exchanges[userExchanges.indexOf(item)].orderVolume = volume;
+      };
+    });
+    setUserExchanges(exchanges);
+  };
+
+  function exchangeCreated(res: ViewExchangeModel) {
+    if (userExchanges) {
+      console.log("ExchangeChanged/Created/Completed", res);
+      console.log([res, ...userExchanges], userExchanges)
+      setUserExchanges([res, ...userExchanges]);
+    }
+  };
+
+  useEffect(() => {
+    let cancel = false;
+    if (hubConnection && !cancel) {
+      hubConnection.on("BuyOrderVolumeChanged", volumeChanged);
+    };
+    return () => {
+      cancel = true;
+      hubConnection?.off("BuyOrderVolumeChanged", volumeChanged);
+    };
+  }, [hubConnection, userExchanges]);
+
+  useEffect(() => {
+    let cancel = false;
+    if (hubConnection && !cancel) {
+      hubConnection.on("SellOrderVolumeChanged", volumeChanged);
+    };
+    return () => {
+      cancel = true;
+      hubConnection?.off("SellOrderVolumeChanged", volumeChanged);
+    };
+  }, [hubConnection, userExchanges]);
+
+  useEffect(() => {
+    let cancel = false;
+    if (hubConnection && !cancel) {
+      hubConnection.on("ExchangeCreated", exchangeCreated);
+    };
+    return () => {
+      cancel = true;
+      hubConnection?.off("ExchangeCreated", exchangeCreated);
+    };
+  }, [hubConnection, userExchanges]);
+
+  useEffect(() => {
+    let cancel = false;
+    if (hubConnection && !cancel) {
+      hubConnection.on("ExchangeCompleted", cb);
+    };
+    return () => {
+      cancel = true;
+      hubConnection?.off("ExchangeCompleted", cb);
+    };
+  }, [hubConnection, userExchanges]);
+
+  useEffect(() => {
+    let cancel = false;
+    if (hubConnection) {
+      hubConnection.on("ExchangeCancelled", cb);
+    };
+    return () => {
+      cancel = true;
+      hubConnection?.off("ExchangeCancelled", cb);
+    };
+  }, [hubConnection, userExchanges]);
+
+  useEffect(() => {
+    let cancel = false;
+    if (hubConnection && !cancel) {
+      hubConnection.on("ExchangeConfirmationRequired", cb);
+    };
+    return () => {
+      cancel = true;
+      hubConnection?.off("ExchangeConfirmationRequired", cb);
+    };
+  }, [hubConnection, userExchanges]);
+
+  useEffect(() => {
+    let cancel = false;
+    if (hubConnection && !cancel) {
+      hubConnection.on("ExchangeAbused", cb);
+    };
+    return () => {
+      cancel = true;
+      hubConnection?.off("ExchangeAbused", cb);
+    };
+  }, [hubConnection, userExchanges]);
+
+  const statuts = useMemo<Object[]>(() => activeFilter === "active" ? [
+    { methodName: "Новый", kind: 0 },
+    { methodName: "Ожидается подтверждение оплаты", kind: 1 },
+  ] : [
+    { methodName: "Завершен", kind: 2 },
+    { methodName: "Подана жалоба", kind: 3 },
+    { methodName: "Отменен", kind: 4 }
+  ], [activeFilter]);
+  
+  const paymentMethodsKinds = useMemo<string[]>(() => [
+    'АО «Альфа-Банк»',
+    'ПАО Сбербанк',
+    'АО «Тинькофф Банк»',
+    'BEP 20',
+    'TRC 20',
+    'ERC 20',
+  ], []);
 
   function handleAcceptPaymentMethods() {
     setPayments(selectedPaymentMethods);

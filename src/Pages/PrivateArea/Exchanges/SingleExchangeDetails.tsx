@@ -21,7 +21,7 @@ type PropsMatch = {
 
 export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>) => {
   const history = useHistory();
-  const [exchange, setExchange] = useState<ViewExchangeModel | undefined>();
+  const [exchange, setExchange] = useState<ViewExchangeModel | null>(null);
   const { exchangeId } = match.params;
   const { hubConnection, account } = useContext(AppContext);
   const [loading, setLoading] = useState<boolean>(false);
@@ -36,11 +36,6 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
   };
 
   const [owner, setOwner] = useState<'seller' | 'buyer'>(buyer() ? 'buyer' : 'seller');
-
-  /* 
-    сделать фильтр по статусам
-    переписать логику исходя из нового решения на бэке для обоюдной оценки участников обмена(в будущем)
-  */
 
   function getExchange(loading: boolean) {
     if (hubConnection) {
@@ -57,7 +52,7 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
         })
     };
   };
-
+ 
   useEffect(() => {
     if (hubConnection) {
       getExchange(true);
@@ -70,83 +65,11 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
     };
   }, [hubConnection, call]);
 
-  function cb(res: ViewExchangeModel) {
-    console.log("ExchangeChanged RES", res);
-    if (exchange) {
-      if (res.safeId === exchange.safeId) {
-        setExchange(res);
-      } else {
-        getExchange(false);
-      };
-    };
-  };
-
-  function cancelledCallback(res: ViewExchangeModel) {
-    if (owner === "seller") {
-      setShowRejectModal(true);
-    };
-    cb(res);
-  };
-
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection.on("ExchangeAbused", cb);
-    };
-    return () => {
-      hubConnection?.off("ExchangeAbused", cb);
-    };
-  }, [hubConnection]);
-
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection.on("ExchangeCancelled", cancelledCallback);
-    } 
-    return () => {
-      hubConnection?.off("ExchangeCancelled", cancelledCallback);
-    };
-  }, [hubConnection]);
-
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection.on("ExchangeCompleted", cb);
-    };
-    return () => {
-      hubConnection?.off("ExchangeCompleted", cb);
-    };  
-  }, [hubConnection]);
-
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection.on("ExchangeConfirmationRequired", cb);
-    };
-    return () => {
-      hubConnection?.off("ExchangeConfirmationRequired", cb);
-    };  
-  }, [hubConnection]);
-
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection.on("BuyOrderVolumeChanged", cb);
-    };
-    return () => {
-      hubConnection?.off("BuyOrderVolumeChanged", cb);
-    };  
-  }), [hubConnection];
-
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection.on("SellOrderVolumeChanged", cb);
-    };
-    return () => {
-      hubConnection?.off("SellOrderVolumeChanged", cb);
-    };  
-  }, [hubConnection])
-  
   return (
     <S.Container>
       {loading ? <Loading /> : (
         <>
-          {exchange === undefined ? <NotItems text="Не имеется информации по этому обмену" /> : (
+          {exchange === null ? <NotItems text="Не имеется информации по этому обмену" /> : (
             <>
               <Container>
                 <Back text="К списку обменов" onGoBackClick={() => history.replace(routers.p2pchangesOwn)} />
@@ -161,8 +84,11 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
                   setShowRejectModal={setShowRejectModal}
                   showSuccessModal={showSuccessModal} 
                   showRejectModal={showRejectModal}
-                  exchange={exchange} 
+                  exchange={exchange}
+                  setExchange={setExchange}
                   owner={owner}
+                  setLoading={setLoading}
+                  exchangeId={exchangeId}
                 />
               </Container>
             </>

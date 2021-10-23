@@ -74,38 +74,96 @@ export const SingleOrderDetailsOwn: FC = () => {
   const handleGoBack = () => {
     history.replace(routers.p2pchanges);
   };
-
-   // Listening to changes
-   const cb = (res: any) => {
-    console.log("socket works::", res);
-    getOrder();
-    handleGetExchangesByOrder();
-  };
-
+  
+  // Listening to changes
   useEffect(() => {
-    if (hubConnection) {
-      hubConnection.on("BuyOrderVolumeChanged", cb);
-      hubConnection.on("ExchangeCreated", cb);
-      hubConnection.on("SellOrderVolumeChanged", cb);
-      hubConnection.on("SellOrderCompleted", cb);
-      hubConnection.on("ExchangeCompleted", cb);
-      hubConnection.on("BuyOrderCompleted", cb);
-      hubConnection.on("ExchangeCancelled", cb);
-      hubConnection.on("ExchangeConfirmationRequired", cb);
-      hubConnection.on("ExchangeAbused", cb);
-      hubConnection.on("SetPaymentMethod", cb);
+    const cbOrderVolumeChanged = (orderSafeId: string, summ: number) => {
+      console.log('__SOCKET__cbOrderVolumeChanged::', orderSafeId, summ);
+      if(currentOrder && orderSafeId) {
+        setCurrentOrder(() => {
+          return {
+            ...currentOrder,
+            volume: summ
+          }
+        });
+      }
     };
+
+    const cbOrderCompleted = (orderSafeId: string) => {
+      console.log('__SOCKET__cbOrderCompleted::', orderSafeId)
+    };
+
+    // Exchanges Callbacks
+    const cbExchangeCreated = (exchange: ViewExchangeModel) => {
+      console.log('__SOCKET__cbExchangeCreated::', exchange)
+      if(exchange && activeFilter !== 'archived') {
+        setOrderExchanges(state => [exchange, ...state]);
+      }
+    };
+
+    const cbExchangeCompleted = (exchange: ViewExchangeModel) => {
+      console.log('__SOCKET__cbExchangeCompleted::', exchange);
+      if(exchange) {
+        cbExchangeStatusChanged(exchange);
+      }
+    };
+
+    const cbExchangeCancelled = (exchange: ViewExchangeModel) => {
+      console.log('__SOCKET__ExchangeCancelled::', exchange);
+      if(exchange) {
+        cbExchangeStatusChanged(exchange);
+      }
+    };
+
+    const cbExchangeConfirmationRequired = (exchange: ViewExchangeModel) => {
+      console.log('__SOCKET__ExchangeConfirmationRequired::', exchange);
+      if(exchange) {
+        cbExchangeStatusChanged(exchange);
+      }
+    };
+
+    const cbExchangeAbused = (exchange: ViewExchangeModel) => {
+      console.log('__SOCKET__ExchangeAbused::', exchange);
+      if(exchange) {
+        cbExchangeStatusChanged(exchange);
+      }
+    };
+
+    const cbExchangeStatusChanged = (exchange: ViewExchangeModel) => {
+      const key = orderExchanges.findIndex((ex) => ex.safeId === exchange.safeId);
+      if(key !== -1) {
+        setOrderExchanges(state => [
+          ...state.slice(0, key),
+          {...exchange},
+          ...state.slice(key + 1),
+        ]);
+      }
+    };
+
+    if (hubConnection) {
+      hubConnection.on("BuyOrderVolumeChanged", cbOrderVolumeChanged);
+      hubConnection.on("SellOrderVolumeChanged", cbOrderVolumeChanged);
+      hubConnection.on("BuyOrderCompleted", cbOrderCompleted);
+      hubConnection.on("SellOrderCompleted", cbOrderCompleted);
+
+      hubConnection.on("ExchangeCreated", cbExchangeCreated);
+      hubConnection.on("ExchangeCompleted", cbExchangeCompleted);
+      hubConnection.on("ExchangeCancelled", cbExchangeCancelled);
+      hubConnection.on("ExchangeConfirmationRequired", cbExchangeConfirmationRequired);
+      hubConnection.on("ExchangeAbused", cbExchangeAbused);
+    };
+
     return () => {
-      hubConnection?.off("BuyOrderVolumeChanged", cb);
-      hubConnection?.off("ExchangeCreated", cb);
-      hubConnection?.off("SellOrderVolumeChanged", cb);
-      hubConnection?.off("SellOrderCompleted", cb);
-      hubConnection?.off("ExchangeCompleted", cb);
-      hubConnection?.off("BuyOrderCompleted", cb);
-      hubConnection?.off("ExchangeCancelled", cb);
-      hubConnection?.off("ExchangeConfirmationRequired", cb);
-      hubConnection?.off("ExchangeAbused", cb);
-      hubConnection?.off("SetPaymentMethod", cb);
+      hubConnection?.off("BuyOrderVolumeChanged", cbOrderVolumeChanged);
+      hubConnection?.off("SellOrderVolumeChanged", cbOrderVolumeChanged);
+      hubConnection?.off("SellOrderCompleted", cbOrderCompleted);
+      hubConnection?.off("BuyOrderCompleted", cbOrderCompleted);
+
+      hubConnection?.off("ExchangeCreated", cbExchangeCreated);
+      hubConnection?.off("ExchangeCompleted", cbExchangeCompleted);
+      hubConnection?.off("ExchangeCancelled", cbExchangeCancelled);
+      hubConnection?.off("ExchangeConfirmationRequired", cbExchangeConfirmationRequired);
+      hubConnection?.off("ExchangeAbused", cbExchangeAbused);
     };
   }, [hubConnection]);
 

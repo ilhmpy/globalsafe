@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useContext } from 'react';
 import { useHistory } from 'react-router';
 import alfa from '../../../../../assets/v2/svg/banks/alfa.svg';
 import alfa1 from '../../../../../assets/v2/svg/banks/alfa1.svg';
@@ -9,9 +9,8 @@ import { OwnExchangesProps, ExchangeState } from '../../../../../types/exchange'
 import { Balance } from "../../../../../types/balance";
 import { FiatKind } from "../../../../../types/fiat";
 import { PaymentMethodKind } from "../../../../../types/paymentMethodKind";
-import moment from "moment";
 import { Loading, NotItems } from "../../../components/Loading/Loading";
-import { getVolume } from "../../../../../functions/getVolume";
+import { Counter } from '../../../components/ui/Counter';
 
 import * as S from './S.el';
 import { getTime } from 'date-fns';
@@ -21,6 +20,7 @@ import { countVolumeToShow } from '../../../utils';
 export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, loading, setExchanges }: OwnExchangesProps) => {
   const history = useHistory();
   const [selectedOption, setSelectedOption] = useState<string | null>('Все валюты предложения');
+
 
   const handleNavigateToExchange = (id: string) => {
     history.replace(`/info/p2p-changes/${id}`);
@@ -74,38 +74,7 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
 
   const Status = ["Новый", "Ожидается подтверждение оплаты", "Завершен", "Подана жалоба", "Отменен"];
 
-  function getCountsTime({ days, hours, minutes, seconds }: any) {
-    if (days > 0) {
-      return `${days}д ${hours > 0 ? hours : 0}ч`;
-    } else if (hours > 0) {
-      return `${hours}ч ${minutes > 0 ? minutes : 0}м`;
-    } else if (minutes > 0) {
-      return `${minutes}м ${seconds > 0 ? seconds : 0}с`;
-    } else {
-      return `0м 0с`;
-    };
-  }
-
-  function getTime(date: Date, wn: any, state: number) {
-    const total = wn.totalMilliseconds - (new Date().getTime() - new Date(date).getTime());
-    const seconds = Math.floor((total/1000) % 60);
-    const minutes = Math.floor((total/1000/60) % 60);
-    const hours = Math.floor((total/(1000*60*60)) % 24);
-    const days = Math.floor(total/(1000*60*60*24));
-
-    const result = { days, hours, minutes, seconds };
-    return getCountsTime(result);
-  };
-
   return (
-    <>
-      {/* <CurrencyPair
-        open={true}
-        onClose={() => undefined}
-        options={['Все валюты предложения', 'CWD']}
-        selectedOption={selectedOption}
-        setSelectedOption={setSelectedOption}
-      /> */}
       <S.Table>
         <S.Header>
           <S.Cell>
@@ -138,7 +107,7 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
                   <S.BodyItem key={idx} onClick={() => handleNavigateToExchange(exchange.safeId)}>
                       <S.Cell data-label="Тип">{exchange.kind === 0 ? "Продажа" : "Покупка"}</S.Cell>
                       <S.Cell data-label="Кол-во">
-                        {(countVolumeToShow(exchange.orderVolume, exchange.assetKind)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {Balance[exchange.assetKind]}
+                        {(countVolumeToShow(exchange.volume, exchange.assetKind)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {Balance[exchange.assetKind]}
                       </S.Cell>
                       <S.Cell data-label="Курс">{exchange.rate}</S.Cell>
                       <S.Cell data-label="Сумма оплаты">{(countVolumeToShow(exchange.exchangeVolume, exchange.assetKind)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {FiatKind[exchange.exchangeAssetKind]}</S.Cell>
@@ -147,7 +116,9 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
                             {getPaymentMethod(exchange.paymentMethod?.kind)}
                         </S.BankList> 
                       </S.Cell>
-                      <S.Cell data-label="Оставшееся время">{getTime(exchange.creationDate, exchange.operationWindow, exchange.state)}</S.Cell>
+                      <S.Cell data-label="Оставшееся время">
+                        <Counter data={exchange.creationDate} delay={exchange.operationWindow.totalMilliseconds} formatNum />
+                      </S.Cell>
                       <S.Cell data-label="Статус">{Status[exchange.state]}</S.Cell> 
                   </S.BodyItem>
                 ))}
@@ -156,6 +127,5 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
           </>
         )}
       </S.Table>
-    </>
   );
 };

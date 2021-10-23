@@ -15,6 +15,7 @@ import { Loading, NotItems, Spinner } from "./components/Loading/Loading";
 import formatRelativeWithOptions from 'date-fns/esm/fp/formatRelativeWithOptions/index.js';
 import { isObject } from 'highcharts';
 import { InternalSymbolName, isTemplateSpan } from 'typescript';
+import { countVolumeToShow } from './utils';
 
 export const HistoryOperations = () => {
     const history = useHistory();
@@ -277,11 +278,19 @@ export const HistoryOperations = () => {
         }
       }
 
-    function getCurrency(id: number) {
+    function getCurrency(id: number, type: "string" | "number" = "number") {
         if (balances) {
-            for (let i = 0; i < balances.length; i++) {
-                if (Number(id) == balances[i].id) {
-                    return Balance[balances[i].balanceKind];
+            if (type === "string") {
+                for (let i = 0; i < balances.length; i++) {
+                    if (Number(id) == balances[i].id) {
+                        return Balance[balances[i].balanceKind];
+                    };
+                };
+            } else {
+                for (let i = 0; i < balances.length; i++) {
+                    if (Number(id) == balances[i].id) {
+                        return balances[i].balanceKind;
+                    };
                 };
             };
         };
@@ -322,13 +331,15 @@ export const HistoryOperations = () => {
                                             <Styled.TableInnerItem item>{moment(item.operationDate).format("DD.MM.YYYY")} в {moment(item.operationDate).format("HH:MM")}</Styled.TableInnerItem>
                                             <Styled.TableInnerItem item>{operation(item.operationKind)}</Styled.TableInnerItem>
                                             <Styled.TableInnerItem item income={item.balanceDelta > 0}>
-                                                {item.balanceDelta > 0 && (<>{sign(item.balanceDelta)} </>)} {(item.balanceDelta).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {item.balanceSafeId && getCurrency(item.balanceSafeId)}
+                                                {item.balanceDelta > 0 && (
+                                                    <>{sign(countVolumeToShow(item.balanceDelta, getCurrency(item.balanceSafeId, "number"))
+                                                )} </>)}  {item.balanceSafeId && (countVolumeToShow(item.balanceDelta, getCurrency(item.balanceSafeId, "number"))).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {item.balanceSafeId && getCurrency(item.balanceSafeId, "string")}
                                             </Styled.TableInnerItem>
                                         </Styled.TableItem>
                                     ))}
                                 </Styled.TableMap>
                             </>
-                        ) : (
+                        ) : ( 
                             <NotItems text="Операции отсутствуют" /> 
                         )}
                     </>
@@ -339,6 +350,6 @@ export const HistoryOperations = () => {
                     <Spinner style={{ width: 25, height: 25, borderTop: "2px solid #fff", margin: "0 auto" }} /> 
                     : "Показать ещё"}
           </Styled.Button>
-        </Container>
-    )
+        </Container> 
+    ) 
 } 

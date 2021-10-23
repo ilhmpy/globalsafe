@@ -64,7 +64,7 @@ export const PaymentMethods: FC<Props> = ({
               <>
                 {
                   [...methodsList].reverse().map((methodName, i) => (
-                    i !== 3
+                    i !== 2
                     ?
                       <S.DropdonwConatainer big>
                         <Checkbox 

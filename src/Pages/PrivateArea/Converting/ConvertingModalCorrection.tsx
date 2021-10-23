@@ -39,7 +39,7 @@ export const ConvertingModalCorrection: FC<Iprops> = ({
   closeWithReset,
 }: Iprops) => {
   const [isNoShow, setIsNoShow] = useState<boolean>(false);
-  const { userAmount, calculatedAmount, targetAmount, discountPercent } = convertedData;
+  const { calculatedAmount, targetAmount, discountPercent } = convertedData;
 
   const agree = async () => {
     setOpen(false);

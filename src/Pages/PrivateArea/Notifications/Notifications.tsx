@@ -42,13 +42,15 @@ export const Notifications = () => {
     };
 
     useEffect(() => {
-        if (hubConnection) {
+        let cancel = false;
+        if (hubConnection && !cancel) {
             hubConnection.on("InAppNotification", cb);
         };
         return () => {
+            cancel = true;
             hubConnection?.off("InAppNotification", cb);
         }; 
-    }, [hubConnection]);
+    }, [hubConnection, notifies]);
 
     function getNotifies(load = true) {
         if (hubConnection) {
@@ -123,7 +125,7 @@ export const Notifications = () => {
     };
 
     function createLink(link: string) {
-        return `p2p-changes/orders/${link}`;
+        return `p2p-changes/${link}`;
     }
 
     return (
