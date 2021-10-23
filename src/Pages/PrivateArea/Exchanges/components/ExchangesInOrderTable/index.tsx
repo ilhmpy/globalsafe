@@ -1,9 +1,10 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useHistory } from 'react-router';
 import alfa from '../../../../../assets/v2/svg/banks/alfa.svg';
 import { Balance } from '../../../../../types/balance';
 import { ViewExchangeModel } from '../../../../../types/exchange';
 import { FiatKind } from '../../../../../types/fiat';
+import { Counter } from '../../../components/ui/Counter';
 import { countVolumeToShow } from '../../../utils';
 
 import * as S from './S.el';
@@ -15,6 +16,7 @@ interface ExchangesInOrderTable {
 // TODO: Check Exchange Fields and update Table | Update ViewExchangeModel
 export const ExchangesInOrderTable: React.FC<ExchangesInOrderTable> = ({exchangesList}: ExchangesInOrderTable) => {
   const history = useHistory();
+  const [timerDown, setTimerDown] = useState<boolean>(false);
 
   const handleNavigateToExchange = (safeId: string) => {
     history.replace(`/info/p2p-changes/${safeId}`)
@@ -78,7 +80,18 @@ export const ExchangesInOrderTable: React.FC<ExchangesInOrderTable> = ({exchange
                   </S.BankList>
                 </S.Cell>
                 <S.Cell data-label="Оставшееся время">
-                  {`${exchange.operationWindow.minutes}м ${exchange.operationWindow.seconds}с`}
+                  {
+                    exchange.state === 0 || exchange.state === 1
+                    ?
+                      <Counter 
+                        setTimerDown={setTimerDown} 
+                        data={exchange.creationDate} 
+                        delay={exchange.operationWindow.totalMilliseconds} 
+                        formatNum 
+                      />
+                    :
+                    '0м. 0с.'
+                  }
                 </S.Cell>
                 <S.Cell data-label="Статус">
                   {exchangeStateLabels[exchange.state]}
