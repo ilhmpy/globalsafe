@@ -16,6 +16,8 @@ import formatRelativeWithOptions from 'date-fns/esm/fp/formatRelativeWithOptions
 import { isObject } from 'highcharts';
 import { InternalSymbolName, isTemplateSpan } from 'typescript';
 import { countVolumeToShow } from './utils';
+import { ViewExchangeModel } from '../../types/exchange';
+import { isFirstDayOfMonth } from 'date-fns/esm';
 
 export const HistoryOperations = () => {
     const history = useHistory();
@@ -38,6 +40,7 @@ export const HistoryOperations = () => {
     const [not, setNot] = useState<boolean>(false);
     const [newItems, setNewItems] = useState<boolean>(true);
     const [emptyItems, setEmptyItems] = useState<boolean>(false);
+    const [allState, setAllState] = useState<ViewExchangeModel[]>([]);
 
     const operation = (id: number) => {
         if (id === 1) {
@@ -87,6 +90,7 @@ export const HistoryOperations = () => {
 
     const [operations, setOperations] = useState<any[] | null>(null);
     const [statusNew, setStatusNew] = useState<any>();
+    const [totalRecords, setTotalRecords] = useState<number | null>(null);
 
     /*    /// NA.
         /// <summary>
@@ -200,7 +204,15 @@ export const HistoryOperations = () => {
         CertificatePurchase, 21
     */ 
 
-    useEffect(() => {
+    function getFirstElements(collection: ViewExchangeModel[], elms: number) {
+        return collection.filter((i, idx) => {
+            if (idx < elms) {
+                return i;
+            };
+        });
+    };
+
+    function getBalanceLog() {
         if (hubConnection) {
             setNewItems(true);
             const date = new Date();
@@ -211,20 +223,18 @@ export const HistoryOperations = () => {
                 getFilter(activeFilter), 
                 nowMonth ? new Date(date.getFullYear(), date.getMonth(), 1, 0, 0) : new Date(2013, 5, 13, 10, 0, 0),
                 new Date(), 
-                0, 10
+                0, 100
             )
               .then(res => {
                 setLoading(false);
-                console.log("res", res.collection);
+                console.log("res", res);
+                setTotalRecords(res.totalRecords);
+                setAllState(res.collection);
+                const collection = getFirstElements(res.collection, 10);
+                console.log(collection);
                 if (allCurrency) {
                    setOperations(() => {
-                     const items = res.collection.map((i: any) => {
-                        return {
-                          ...i,
-                          new: false
-                        };
-                    });
-                    return items.sort((x: any, y: any) => {
+                    return collection.map((i: any) => ({ ...i, new: false })).sort((x: any, y: any) => {
                         const a = new Date(x.operationDate);
                         const b = new Date(y.operationDate);
                         return a > b ? -1 : a < b ? 1 : 0;
@@ -233,16 +243,11 @@ export const HistoryOperations = () => {
                 } else {
                     if (balances) {
                         setOperations(() => {
-                            const items = res.collection.filter((i: any) => {
-                                if (Number(i.id) === balances[1].id) {
-                                    return {
-                                        ...i,
-                                        new: false
-                                    };
-                                };
-                            });
-                            console.log(items);
-                           return items.sort((x: any, y: any) => {
+                            return collection.filter((i: any) => {
+                                if (Number(i.id) === balances[1].id) { 
+                                    return { ...i, new: false };                    
+                               };
+                            }).sort((x: any, y: any) => {
                                 const a = new Date(x.operationDate);
                                 const b = new Date(y.operationDate);
                                 return a > b ? -1 : a < b ? 1 : 0;
@@ -261,7 +266,11 @@ export const HistoryOperations = () => {
                 setLoading(false);
               });
         };
-    }, [activeFilter, hubConnection, nowMonth, allCurrency]);
+    };
+
+    useEffect(() => {
+        getBalanceLog();
+    }, [activeFilter, hubConnection, nowMonth, allCurrency, totalRecords]);
 
     function changeNew() {
         setOperations(items => items && items.map((i: any) => {
@@ -270,64 +279,23 @@ export const HistoryOperations = () => {
                 new: false 
             };
         }));
-    }
+    };
 
     function addMore() {
-        if (hubConnection) {
-            const date = new Date();
-            hubConnection.invoke(
-                "GetBalanceLog", 
-                [1], 
-                getFilter(activeFilter), 
-                nowMonth ? new Date(date.getFullYear(), date.getMonth(), 1, 0, 0) : new Date(2013, 5, 13, 10, 0, 0),
-                new Date(), 
-                operations && operations.length + 1, 
-                5
-            )
-              .then(res => {
-                console.log("rees", res);
-                changeNew();
-                if (allCurrency) {
-                    setOperations((data: any) => {
-                        const items = [...data.map((i: any) => {
-                            return { ...i, new: false }
-                        }), ...res.collection.map((i: any) => {
-                            return { ...i, new: true }
-                        })];
-                        return items.sort((x: any, y: any) => {
-                            const a = new Date(x.operationDate);
-                            const b = new Date(y.operationDate);
-                            return a > b ? -1 : a < b ? 1 : 0;
-                        });
-                    });
-                } else {
-                    if (balances) {
-                        setOperations((data: any) => {
-                            const items = [...data.map((i: any) => {
-                                return { ...i, new: false }
-                            }), ...res.collection.map((i: any) => {
-                                if (Number(i.id) === balances[1].id) {
-                                    return { ...i, new: true }
-                                }
-                            })];
-                            return items.sort((x: any, y: any) => {
-                                const a = new Date(x.operationDate);
-                                const b = new Date(y.operationDate);
-                                return a > b ? -1 : a < b ? 1 : 0;
-                            });
-                        });
-                    };
-                };
+        if (operations && operations.length <= allState.length) {
+            changeNew();
+            let items: any[] = [];
+            for (let i = 0; i < 5; i++) {
+                items = [...items, { ...allState[operations.length + i], new: true }];
+            };            
+            if (items.length) {
+                setOperations([...operations, ...items].sort((x: any, y: any) => {
+                    const a = new Date(x.operationDate);
+                    const b = new Date(y.operationDate);
+                    return a > b ? -1 : a < b ? 1 : 0;
+                }));
                 setStatusNew(setTimeout(() => changeNew(), 2000));
-                if (res.collection.length > 0) {
-                    setNewItems(true);
-                } else {
-                    setNewItems(false);
-                }
-              })
-              .catch(err => {
-                  console.log(err);
-              });
+            };
         };
     };
 
