@@ -49,7 +49,7 @@ export const PaymentMethods: FC<Props> = ({
             {objectsArray ? (
               <>
                 {[...methodsList].reverse().map((i, idx) => (
-                    i.kind !== 2 ?
+                    i.kind !== 3 ?
                     <S.DropdonwConatainer big key={idx}>
                       <Checkbox 
                         dis={!black}

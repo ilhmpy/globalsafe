@@ -81,12 +81,29 @@ export const OwnExchanges = () => {
           };
         });
         setUserExchanges(filter);
-      } else if (balanceKind != null && fiatKind != null) {
-        const filter = res.collection.filter((i) => {
-          if (i.assetKind === balanceKind && i.exchangeAssetKind === fiatKind) {
-            return i; 
-          };
-        });
+      } else if (balanceKind != null || fiatKind != null) {
+        let filter: ViewExchangeModel[] = [];
+        if (balanceKind != null && fiatKind == null) {
+          filter = res.collection.filter((i) => {
+            if (i.assetKind === balanceKind) {
+              return i; 
+            };
+          });
+        };
+        if (balanceKind === null && fiatKind != null) {
+          filter = res.collection.filter((i) => {
+            if (i.exchangeAssetKind === fiatKind) {
+              return i; 
+            };
+          });
+        };
+        if (balanceKind !== null && fiatKind !== null) {
+          filter = res.collection.filter((i) => {
+            if (i.exchangeAssetKind === fiatKind && i.assetKind === balanceKind) {
+              return i; 
+            };
+          });
+        };
         setUserExchanges(filter);
       } else if (status && status.length) {
         const filter = res.collection.filter((i) => {
@@ -247,7 +264,6 @@ export const OwnExchanges = () => {
     { methodName: "Ожидается подтверждение оплаты", kind: 1 },
   ] : [
     { methodName: "Завершен", kind: 2 },
-    { methodName: "Подана жалоба", kind: 3 },
     { methodName: "Отменен", kind: 4 }
   ], [activeFilter]);
   
@@ -326,7 +342,11 @@ export const OwnExchanges = () => {
           <FilterButton active style={{ marginLeft: "0px" }} onClick={() => setShowCurrencyPairModal(true)}>
             {balanceKind != null && fiatKind != null ? 
               `${Balance[balanceKind]} - ${FiatKind[fiatKind]}`  
-              : "Все валюты"}
+              : balanceKind != null && fiatKind == null ? 
+              `${Balance[balanceKind]} - Все` :
+              balanceKind == null && fiatKind != null ? 
+              `Все - ${FiatKind[fiatKind]}` : "Все валюты"
+            }
           </FilterButton>
           <S.Line />
           <FilterButton active onClick={() => setShowPaymentMethodsModal(true)}>
