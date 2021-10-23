@@ -51,6 +51,12 @@ export const OwnExchanges = () => {
     ExchangeAbused - на обмен подана жалоба
   */
 
+  /*
+    изменить цвет кнопки жалоба на красный
+    убрать из фильтров обменов статус в жалобе
+    
+  */
+
     function resetFilters() {
       setSelectedBalanceKind(null);
       setSelectedFiatKind(null);
@@ -68,6 +74,7 @@ export const OwnExchanges = () => {
     
     function filters(res: GetExchangesCollectionResult) {
       if (payments.length) {
+        console.log(payments);
         const filter = res.collection.filter((i) => {
           if (payments.includes(i.paymentMethod?.kind)) {
               return i;
@@ -100,7 +107,7 @@ export const OwnExchanges = () => {
         const res = await hubConnection!.invoke<GetExchangesCollectionResult>(
          'GetExchanges',
           [0, 1],
-          activeFilter === 'active' ? [0, 1] : [2, 3, 4],
+          activeFilter === 'active' ? [0, 1] : [2, 4],
           0,
           10
         );
@@ -149,9 +156,13 @@ export const OwnExchanges = () => {
   function exchangeCreated(res: ViewExchangeModel) {
     if (userExchanges) {
       console.log("ExchangeChanged/Created/Completed", res);
-      console.log([res, ...userExchanges], userExchanges)
-      setUserExchanges([res, ...userExchanges]);
-    }
+      if (res.state <= 2 && activeFilter === "active") {
+        setUserExchanges([res, ...userExchanges]);
+      };
+      if (res.state >= 3 && activeFilter === "archived") {
+        setUserExchanges([res, ...userExchanges]);
+      };
+    };
   };
 
   useEffect(() => {
@@ -244,9 +255,9 @@ export const OwnExchanges = () => {
     { methodName: 'ERC 20', kind: 0 },
     { methodName: 'TRC 20', kind: 1 },
     { methodName: "BEP 20", kind: 2 },
-    { methodName: 'АО «Альфа-Банк»', kind: 3 },
+    { methodName: 'АО «Тинькофф Банк»', kind: 3 },
     { methodName: 'ПАО Сбербанк', kind: 4 },
-    { methodName: 'АО «Тинькофф Банк»', kind: 5 }
+    { methodName: 'АО «Альфа-Банк»', kind: 5 },
   ], []);
 
   function handleAcceptPaymentMethods() {
