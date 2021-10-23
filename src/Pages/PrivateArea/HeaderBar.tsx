@@ -255,7 +255,7 @@ export const HeaderBar = () => {
       obj.balanceKind === 43
         ? { ...obj, volume: obj.volume > 1 ? obj.volume / 10000 : obj.volume, locked: false }
         : obj.balanceKind === 59
-        ? { ...obj, volume: obj.volume > 1 ? obj.volume / 100 : obj.volume, locked: false }
+        ? { ...obj, volume: obj.volume > 0 ? obj.volume / 100 : obj.volume, locked: false }
         : obj
     );
   const edit: any[] = [];
