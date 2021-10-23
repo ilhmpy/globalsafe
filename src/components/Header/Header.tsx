@@ -157,8 +157,9 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
               {theme === 'light' ? <DarkTheme /> : <LightTheme />}
             </SwitchTheme>
             <ButtonsRev className={user === null || admin === null ? 'is-placeholder' : ''}>
-              {admin && <AdminButton onClick={toAdmin}>{t('headerButton.admin')}</AdminButton>}
-              {location.pathname === '/' ? (
+              <AdminButton onClick={toAdmin}>{t('headerButton.admin')}</AdminButton>
+
+              {/* {location.pathname === '/' ? (
                 <Button primary onClick={handleClick}>
                   {t('headerButton.personalArea')}
                 </Button>
@@ -170,11 +171,16 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
                   {t('headerButton.personalArea')}
                 </Button>
               ) : (
-                <Button primary onClick={handleClick}>
-                  {t('headerButton.personalArea')}
-                </Button>
-              )}
+               
+              )} */}
             </ButtonsRev>
+            <Btn
+              className={user === null || admin === null ? 'is-placeholder' : ''}
+              hide={user === null}
+              onClick={handleClick}
+            >
+              {t('headerButton.personalArea')}
+            </Btn>
           </HeaderInner>
         </Container>
       </HeaderWrap>
