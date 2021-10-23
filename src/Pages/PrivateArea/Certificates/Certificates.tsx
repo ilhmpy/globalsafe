@@ -28,6 +28,8 @@ import moment from 'moment';
 import { BuyCertificateModal } from './modals/BuyCertificate';
 import { SuccessModal } from './modals/SuccessModal';
 import { ErrorModal } from './modals/ErrorModal';
+import { wordDecline } from '../../../utils/wordDecline';
+import 'moment-duration-format';
 
 export const Certificates = () => {
   const [allCert, setAllCert] = useState<MarketCertificate[]>([]);
@@ -132,6 +134,15 @@ export const Certificates = () => {
     }
   };
 
+  const dateB = moment.utc().local();
+
+  const dateC = moment.utc('2022-01-24T09:50:39').local();
+
+  // console.log(
+  //   'Разница в ',
+  //   moment.duration.utc('2022-01-24T09:50:39').local().diff(moment.utc().local(), 'days')
+  // );
+
   return (
     <S.Container>
       {buyCertificateModal && (
@@ -208,7 +219,15 @@ export const Certificates = () => {
                   Оставшийся срок действия:
                 </Text>
                 <Text size={14} weight={500} lH={20}>
-                  {moment(userCertificat.finishDate).diff(userCertificat.creationDate, 'days')} день
+                  {moment.utc(userCertificat.finishDate).local().diff(moment.utc().local(), 'days')}
+                  &nbsp;
+                  {wordDecline(
+                    moment
+                      .utc(userCertificat.finishDate)
+                      .local()
+                      .diff(moment.utc().local(), 'days'),
+                    ['день', 'дня', 'дней']
+                  )}
                 </Text>
               </S.ActiveCertItem>
             </S.ActiveCert>
