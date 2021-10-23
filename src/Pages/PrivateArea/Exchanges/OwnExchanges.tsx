@@ -343,9 +343,10 @@ export const OwnExchanges = () => {
             {balanceKind != null && fiatKind != null ? 
               `${Balance[balanceKind]} - ${FiatKind[fiatKind]}`  
               : balanceKind != null && fiatKind == null ? 
-              `${Balance[balanceKind]} - Все` :
-              balanceKind == null && fiatKind != null ? 
-              `Все - ${FiatKind[fiatKind]}` : "Все валюты"
+              `${Balance[balanceKind]} - Все` 
+              : balanceKind == null && fiatKind != null ? 
+              `Все - ${FiatKind[fiatKind]}` 
+              : "Все валюты"
             }
           </FilterButton>
           <S.Line />

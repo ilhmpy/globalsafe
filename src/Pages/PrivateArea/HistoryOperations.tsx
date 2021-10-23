@@ -59,7 +59,7 @@ export const HistoryOperations = () => {
         } else if (id === 8) {
             return t('operation.close');
         } else if (id === 9) {
-            return "Регулировка балансировки"
+            return "Регулировка баланса"
         } else if (id === 10) {
             return "Приз"
         } else if (id === 11) {
@@ -72,6 +72,18 @@ export const HistoryOperations = () => {
             return "Перевод между балансами.";
         } else if (id === 15) {
             return "Обменный депозит.";
+        } else if (id === 16) {
+            return "Создан ордер на продажу";
+        } else if (id === 17) {
+            return "Ордер на продажу отменен";
+        } else if (id === 18) {
+            return "Обмен";
+        } else if (id === 19) {
+            return "Обмен завершен";
+        } else if (id === 20) {
+            return "Обмен отменен";
+        } else if (id === 21) {
+            return "Куплен сертификат";
         };
     };
 
@@ -79,52 +91,115 @@ export const HistoryOperations = () => {
     const [statusNew, setStatusNew] = useState<any>();
 
     /*    /// NA.
-    Null,
+        /// <summary>
+        /// NA.
+        /// </summary>
+        Null, 0
 
-    /// Top-up operation.
-    TopUp, 1
+        /// <summary>
+        /// Top-up operation.
+        /// </summary>
+        TopUp, 1
+
+        /// <summary>
+        /// Withdraw operation.
+        /// </summary>
+        Withdraw, 2
+
+        /// <summary>
+        /// Balance rollback due to transaction failure.
+        /// </summary>
+        Rollback, 3
+
+        /// <summary>
+        /// Promo balance adjustment.
+        /// </summary>
+        Promo, 4
+
+        /// <summary>
+        /// Affiliate charges.
+        /// </summary>
+        AffiliateCharges, 5
+
+        /// <summary>
+        /// Open new user deposit.
+        /// </summary>
+        DepositOpen, 6
+
+        /// <summary>
+        /// Deposit charges.
+        /// </summary>
+        DepositPayments, 7
+
+        /// <summary>
+        /// Return deposit body on expiry.
+        /// </summary>
+        DepositClose, 8
+
+        /// <summary>
+        /// Balance operation adjustemnt.
+        /// </summary>
+        Adjustment, 9
+
+        /// <summary>
+        /// Balance prize adjustment.
+        /// </summary>
+        Prize, 10
+
+        /// <summary>
+        /// Network commission from the transaction amount
+        /// </summary>
+        TransactionNetworkFee, 11
+
+        /// <summary>
+        /// Service commission from the transaction amount
+        /// </summary>
+        TransactionServiceFee, 12
+
+        /// <summary>
+        /// Deposit loan.
+        /// </summary>
+        DepositLoan, 13
+
+        /// <summary>
+        /// Transfer between balances.
+        /// </summary>
+        BalanceExchange, 14
  
-    /// Withdraw operation.
-    Withdraw, 2
+        /// <summary>
+        /// Exchange deposit.
+        /// </summary>
+        DepositExchange, 15
 
-    /// Balance rollback due to transaction failure.
-    Rollback, 3
+        /// <summary>
+        /// Funds reservation for sell order creation.
+        /// </summary>
+        SellOrderCreation, 16
+ 
+        /// <summary>
+        /// Refund on sell order cancelation.
+        /// </summary>
+        SellOrderCancelation, 17
 
-    /// Promo balance adjustment.
-    Promo, 4
+        /// <summary>
+        /// Exchange funds keep.
+        /// </summary>
+        Exchange, 18
 
-    /// Affiliate charges.
-    AffiliateCharges, 5 
+        /// <summary>
+        /// Exchange completion.
+        /// </summary>
+        ExchangeCompletion, 19
 
-    /// Open new user deposit.
-    DepositOpen, 6
-
-    /// Deposit charges.
-    DepositPayments, 7
-
-    /// Return deposit body on expiry.
-    DepositClose, 8
-
-    /// Balance operation adjustemnt.
-    Adjustment, 9
-
-    /// Balance prize adjustment.
-    Prize, 10
-
-    /// Network commission from the transaction amount
-    TransactionNetworkFee, 11
-
-    /// Service commission from the transaction amount
-    TransactionServiceFee, 12
-
-    /// Deposit loan.
-    DepositLoan, 13
-
-    /// Transfer between balances.
-    BalanceExchange, 14
-
-    /// Exchange deposit.
-    DepositExchange, 15
+        /// <summary>
+        /// Return funds due to exchange cancelation.
+        /// </summary>
+        ExchangeCancelation, 20
+        
+        /// <summary>
+        /// Purchase new certificate.
+        /// </summary>
+        CertificatePurchase, 21
     */ 
 
     useEffect(() => {
