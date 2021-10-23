@@ -16,7 +16,7 @@ import { Balance } from '../../../../../types/balance';
 import { FiatKind } from '../../../../../types/fiat';
 import { CollectionPayMethod, PaymentMethodKind, RootPayMethod } from '../../../../../types/paymentMethodKind';
 import { routers } from '../../../../../constantes/routers';
-import { countVolumeToSend, countVolumeToShow } from '../../../utils';
+import { countVolumeToSend, countVolumeToShow, removeLeadingZeros } from '../../../utils';
 import { ViewExchangeModel } from '../../../../../types/exchange';
 import { ExchangeRequestModal } from '../../components/modals/ExchangeRequest';
 import { ExchangeRequestErrorModal } from '../modals/ExchangeRequestErrorModal';
@@ -39,16 +39,16 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
   const [showErrorModal, setShowErrorModal] = useState(false);
 
 
-  useEffect(() => {
-    if(hubConnection) {
-      if(order && orderType === OrderType.Sell) {
-        getSellOrderPaymentMethods();
-      }
-      if(order && orderType === OrderType.Buy) {
-        getUserPaymentMethods();
-      }
-    }
-  }, [hubConnection, orderType, order]);
+    useEffect(() => {
+        if(hubConnection) {
+        if(order && orderType === OrderType.Sell) {
+            getSellOrderPaymentMethods();
+        }
+        if(order && orderType === OrderType.Buy) {
+            getUserPaymentMethods();
+        }
+        }
+    }, [hubConnection, orderType, order]);
 
     const getUserPaymentMethods = async () => {
         try {
@@ -123,22 +123,26 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
         }
     };
 
+
+
     const onBalanceSummChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const pattern = /^[0-9][0-9\.]*$/;
         if (e.target.value === '' || pattern.test(e.target.value)) {
+            const value = removeLeadingZeros(e.target.value);
+
             const volume = countVolumeToShow(+order.volume, order.assetKind);
-            if(+e.target.value > volume) {
+            if(+value > volume) {
                 setBalanceSumm(String(volume));
                 return;
             }
 
             const limitTo = countVolumeToShow(+order.limitTo, order.assetKind);
-            if(+e.target.value > limitTo) {
+            if(+value > limitTo) {
                 setBalanceSumm(String(limitTo));
                 return;
             } 
                 
-            setBalanceSumm(e.target.value);
+            setBalanceSumm(value);
         }
     };
 

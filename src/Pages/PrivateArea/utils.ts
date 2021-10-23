@@ -87,3 +87,15 @@ export function getMyRating(account: any) {
     return (Number(rating)).toFixed(1);
   };
 };
+
+export const removeLeadingZeros = (str: string): string => {
+  // Regex to remove leading
+  // zeros from a string
+  const regex = new RegExp("^0+(?!$)",'g');
+
+  // Replaces the matched
+  // value with given string
+  str = str.replaceAll(regex, "");
+
+ return str;
+};
