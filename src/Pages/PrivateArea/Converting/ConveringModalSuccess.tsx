@@ -26,6 +26,7 @@ export const ConvertingModalSuccess: FC<Iprops> = ({
   setConvertedData,
 }: Iprops) => {
   const { t } = useTranslation();
+  const { userAmount, calculatedAmount, targetAmount, discountPercent } = convertedData;
 
   return (
     <>
@@ -62,36 +63,43 @@ export const ConvertingModalSuccess: FC<Iprops> = ({
                   <KeySpan>Списано (CWD):</KeySpan>
                   <Dots />
                   <strong>
-                    {(convertedData.userAmount / 100000)
-                      .toString()
-                      .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
+                    {(userAmount / 100000).toString().split('.').length > 1
+                      ? `${(userAmount / 100000)
+                          .toString()
+                          .split('.')[0]
+                          .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
+                          (userAmount / 100000).toFixed(5).toString().split('.')[1]
+                        }`
+                      : (userAmount / 100000).toFixed(5)}
                   </strong>
                 </p>
                 <p>
                   <KeySpan>Курс (CWD-MULTICS):</KeySpan>
                   <Dots />
                   <strong>
-                    {(
-                      convertedData.calculatedAmount /
-                      convertedData.targetAmount /
-                      1000
-                    ).toLocaleString('ru-RU', {
-                      maximumFractionDigits: 2,
-                    })}
+                    {(calculatedAmount / targetAmount / 1000).toString().split('.').length > 1
+                      ? `${(calculatedAmount / targetAmount / 1000)
+                          .toString()
+                          .split('.')[0]
+                          .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
+                          (calculatedAmount / targetAmount / 1000)
+                            .toFixed(5)
+                            .toString()
+                            .split('.')[1]
+                        }`
+                      : (calculatedAmount / targetAmount / 1000).toFixed(5)}
                   </strong>
                 </p>
                 <p>
                   <KeySpan>Скидка (%):</KeySpan>
                   <Dots />
-                  <strong>{convertedData.discountPercent}</strong>
+                  <strong>{discountPercent}</strong>
                 </p>
                 <p>
                   <KeySpan>Зачислено (MULTICS):</KeySpan>
                   <Dots />
                   <strong>
-                    {(convertedData.targetAmount / 100)
-                      .toString()
-                      .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
+                    {(targetAmount / 100).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
                   </strong>
                 </p>
               </ContentBody>
