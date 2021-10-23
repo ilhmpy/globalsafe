@@ -12,7 +12,6 @@ import { ConvertingModalSuccess } from './ConveringModalSuccess';
 import { ConvertingModalCorrection } from './ConvertingModalCorrection';
 import { ConvertingModalFail } from './ConvertingModalFail';
 import { getCookie } from './cookies';
-
 import {
   CloseButton,
   Container,
@@ -233,14 +232,16 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                 />
                 <Input
                   required
-                  placeholder="0.0000"
+                  placeholder="0.00000"
                   name="fromSum"
                   value={
                     fromSum
                       ? fromSum
                       : convertedData.userAmount <= 0
                       ? ''
-                      : convertedData.userAmount / 100000
+                      : (convertedData.userAmount / 100000).toLocaleString('ru-RU', {
+                          maximumFractionDigits: 2,
+                        })
                   }
                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     const { value } = e.target;
@@ -258,6 +259,7 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                         setFromSum(value.replaceAll(',', '.'));
                       }
                     }
+                    if (!value) setFromSum(value);
 
                     setIsMultics(false);
                   }}
@@ -273,14 +275,16 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                 />
                 <Input
                   required
-                  placeholder={toCurrency ? '0.00' : '0.0000'}
+                  placeholder={toCurrency ? '0.00' : '0.00000'}
                   name="toSum"
                   value={
                     toSum
                       ? toSum
                       : convertedData.targetAmount <= 0
                       ? ''
-                      : convertedData.targetAmount / 100
+                      : (convertedData.targetAmount / 100).toLocaleString('ru-RU', {
+                          maximumFractionDigits: 2,
+                        })
                   }
                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     const { value } = e.target;
