@@ -39,8 +39,6 @@ export const HistoryOperations = () => {
     const [newItems, setNewItems] = useState<boolean>(true);
     const [emptyItems, setEmptyItems] = useState<boolean>(false);
 
-    const filter = [1, 2];
-
     const operation = (id: number) => {
         if (id === 1) {
             return t('operation.add');
@@ -403,7 +401,7 @@ export const HistoryOperations = () => {
                                 <Styled.TableMap>
                                     {operations && operations.map((item: any, idx) => (
                                         <Styled.TableItem item key={idx} newItem={item.new && item.new}>
-                                            <Styled.TableInnerItem item>{moment(item.operationDate).format("DD.MM.YYYY")} в {moment(item.operationDate).format("HH:MM")}</Styled.TableInnerItem>
+                                            <Styled.TableInnerItem item>{moment(item.operationDate).local().format("DD.MM.YYYY")} в {moment(item.operationDate).local().format("HH:MM")}</Styled.TableInnerItem>
                                             <Styled.TableInnerItem item>{operation(item.operationKind)}</Styled.TableInnerItem>
                                             <Styled.TableInnerItem item income={item.balanceDelta > 0}>
                                                 {item.balanceDelta > 0 && (

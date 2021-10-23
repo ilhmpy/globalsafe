@@ -122,7 +122,7 @@ export const Notify: FC<NotifyProps> = ({ block, auth, admin, setCheckeds, setBl
                         {notifies && notifies.map((notify: any, idx: number) => (
                             <Notifies.Notify click={notify.click} notChecked={notify.readState === 0} key={idx}>
                                 <Notifies.NotifyItem grey>
-                                    {moment(notify.sentDate).format("DD.MM.YYYY")} в {moment(notify.sentDate).format("HH:MM")}
+                                    {moment(notify.sentDate).local().format("DD.MM.YYYY")} в {moment(notify.sentDate).local().format("HH:MM")}
                                 </Notifies.NotifyItem>
                                 <Notifies.NotifyItem bold>
                                     {notify.subject}
