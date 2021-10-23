@@ -31,9 +31,6 @@ export const Counter: FC<Props> = ({ data, formatNum, over, delay, setTimerDown 
     }
 
     setStart(true);
-  }, [data]);
-
-  useEffect(() => {
     if (start && count > -1) {
       const secondsLeft = setInterval(() => {
         setCount((c) => c - 1);
@@ -50,7 +47,7 @@ export const Counter: FC<Props> = ({ data, formatNum, over, delay, setTimerDown 
     } else {
       start && over && over();
     };
-  }, [start, count]);
+  }, [start, count, data]);
 
   function getTime() {
     if (setTimerDown != undefined && count < -1) {
