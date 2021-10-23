@@ -286,7 +286,9 @@ export const HistoryOperations = () => {
             changeNew();
             let items: any[] = [];
             for (let i = 0; i < 5; i++) {
-                items = [...items, { ...allState[operations.length + i], new: true }];
+                if (allState[operations.length + i]) {
+                    items = [...items, { ...allState[operations.length + i], new: true }];
+                };
             };            
             if (items.length) {
                 setOperations([...operations, ...items].sort((x: any, y: any) => {
