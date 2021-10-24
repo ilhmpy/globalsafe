@@ -4,7 +4,7 @@ import { Button } from '../../../components/Button/V2/Button';
 import { Modal } from '../../../components/Modal/Modal';
 import { Checkbox } from '../components/Checkbox';
 import { IBalanceExchange } from './ConvertingModal';
-import { setCookie } from './cookies';
+import { setCookie } from './cookiesFns';
 import {
   ButtonsWrapper,
   CheckboxGroup,
@@ -67,9 +67,11 @@ export const ConvertingModalCorrection: FC<Iprops> = ({
                   <KeySpan>Указано к списанию (CWD)</KeySpan>
                   <Dots />
                   <strong>
-                    {Number(fromSumCloud).toLocaleString('ru-RU', {
-                      maximumFractionDigits: 2,
-                    })}
+                    {fromSumCloud.split('.').length > 1
+                      ? `${fromSumCloud.split('.')[0].replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
+                          (+fromSumCloud).toFixed(5).toString().split('.')[1]
+                        }`
+                      : (+fromSumCloud).toFixed(5)}
                   </strong>
                 </p>
                 <p>

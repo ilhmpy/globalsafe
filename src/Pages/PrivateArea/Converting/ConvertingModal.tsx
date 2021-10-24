@@ -11,7 +11,7 @@ import { ConvertingModalConfirm } from './ConveringModalConfirm ';
 import { ConvertingModalSuccess } from './ConveringModalSuccess';
 import { ConvertingModalCorrection } from './ConvertingModalCorrection';
 import { ConvertingModalFail } from './ConvertingModalFail';
-import { getCookie } from './cookies';
+import { getCookie } from './cookiesFns';
 import {
   CloseButton,
   Container,
@@ -293,9 +293,14 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                       ? toSum
                       : convertedData.targetAmount <= 0
                       ? ''
-                      : (convertedData.targetAmount / 100).toLocaleString('ru-RU', {
-                          maximumFractionDigits: 2,
-                        })
+                      : (convertedData.targetAmount / 100).toString().split('.').length > 1
+                      ? `${(convertedData.targetAmount / 100)
+                          .toString()
+                          .split('.')[0]
+                          .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
+                          (convertedData.targetAmount / 100).toFixed(2).toString().split('.')[1]
+                        }`
+                      : (convertedData.targetAmount / 100).toFixed(2)
                   }
                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     const { value } = e.target;
