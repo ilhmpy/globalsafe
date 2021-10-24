@@ -11,7 +11,7 @@ import { ConvertingModalConfirm } from './ConveringModalConfirm ';
 import { ConvertingModalSuccess } from './ConveringModalSuccess';
 import { ConvertingModalCorrection } from './ConvertingModalCorrection';
 import { ConvertingModalFail } from './ConvertingModalFail';
-import { getCookie } from './cookies';
+import { getCookie } from './cookiesFns';
 import {
   CloseButton,
   Container,
