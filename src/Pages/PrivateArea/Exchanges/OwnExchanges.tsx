@@ -70,7 +70,6 @@ export const OwnExchanges = () => {
     
     function filters(res: GetExchangesCollectionResult) {
       if (payments.length) {
-        console.log(payments);
         const filter = res.collection.filter((i) => {
           if (payments.includes(i.paymentMethod?.kind)) {
               return i;
