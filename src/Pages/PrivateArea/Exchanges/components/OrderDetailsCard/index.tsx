@@ -237,7 +237,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                 Время на обмен:
             </Text>
             <Title lH={28}>
-             {`${order.operationWindow.minutes}м. ${order.operationWindow.seconds}с.`}
+             {`${order.operationWindow.totalMinutes}м. ${order.operationWindow.seconds}с.`}
             </Title>
             </S.BlockWrapper>
 
@@ -472,14 +472,14 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                     ?
                         <Text size={14} lH={20} weight={300} black>
                             {` 
-                                После начала обмена - в течении ${order.operationWindow.minutes} минут покупатель осуществит перевод средств на указанный счет, 
+                                После начала обмена - в течении ${order.operationWindow.totalMinutes} минут покупатель осуществит перевод средств на указанный счет, 
                                 а покупаемое количество ${Balance[order.assetKind]} будет списано с вашего баланса и заморожено до вашего подтверждения получения средств.
                             `}
                         </Text>
                     :
                         <Text size={14} lH={20} weight={300} black>
                            {`
-                            После начала обмена - в течении ${order.operationWindow.minutes} минут осуществите перевод средств выбранным платежным методом.
+                            После начала обмена - в течении ${order.operationWindow.totalMinutes} минут осуществите перевод средств выбранным платежным методом.
                            `}
                         </Text>
                 }
@@ -487,18 +487,23 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
 
             {
                 
-                    <S.Button 
-                        as="button"
-                        primary 
-                        onClick={() => setShowCreateExchangeModal(true)}
-                        disabled={
-                            !paymentMethodSafeId || 
-                            !balanceSumm || 
-                            (countVolumeToShow(+order.limitFrom, order.assetKind) > Number(balanceSumm))
-                        }
-                    >
-                       {orderType === OrderType.Buy ? 'Продать' : 'Купить'}
-                    </S.Button>
+                <S.Button 
+                    as="button"
+                    primary 
+                    onClick={() => setShowCreateExchangeModal(true)}
+                    disabled={
+                        !paymentMethodSafeId || 
+                        !balanceSumm || 
+                        (   order.volume < order.limitFrom 
+                            ?
+                            countVolumeToShow(+order.volume, order.assetKind) > Number(balanceSumm)
+                            :
+                            countVolumeToShow(+order.limitFrom, order.assetKind) > Number(balanceSumm)
+                        )
+                    }
+                >
+                    {orderType === OrderType.Buy ? 'Продать' : 'Купить'}
+                </S.Button>
             }
             
             <ExchangeRequestModal
