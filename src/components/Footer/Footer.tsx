@@ -62,10 +62,13 @@ const FooterBlock = styled.footer<{ other?: boolean }>`
     min-height: 188px;
     max-height: 188px;
   }
-
   @media only screen and (max-device-width: 767px) {
     min-height: 320px;
     max-height: 320px;
+
+    & > div {
+      position: relative;
+    }
 
     .logo {
       display: none;
@@ -77,10 +80,11 @@ const FooterBlock = styled.footer<{ other?: boolean }>`
       margin-right: auto;
       right: 0;
       left: 0;
-      bottom: 100px;
+      top: 155px;
     }
   }
 
+  /*
   ${({ other }) => {
     if (other) {
       return `
@@ -97,7 +101,7 @@ const FooterBlock = styled.footer<{ other?: boolean }>`
         }
       `;
     }
-  }}
+  }} */
 `;
 
 const FooterHeader = styled.header`
