@@ -51,12 +51,6 @@ export const OwnExchanges = () => {
     ExchangeAbused - на обмен подана жалоба
   */
 
-  /*
-    изменить цвет кнопки жалоба на красный
-    убрать из фильтров обменов статус в жалобе
-    
-  */
-
     function resetFilters() {
       setSelectedBalanceKind(null);
       setSelectedFiatKind(null);
