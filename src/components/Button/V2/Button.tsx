@@ -74,14 +74,23 @@ export const Button = styled.a<Props>`
     user-select: none;
     cursor: not-allowed;
     opacity: 0.4;
-    ${({ exchangeBtn }) => {
-      if (exchangeBtn) {
-        return `
-          opacity: 0.4;
-        `;
-      }
-    }}
   }
+  ${({ exchangeBtn }) => {
+    if (exchangeBtn) {
+      return `
+        border: 1px solid #FF4A31;
+        color: #FF4A31;
+        &:hover {
+          box-shadow: 0px 4px 10px #FF4A31;
+          border: 1px solid #FF4A31;
+        }
+        &:disabled {
+          border: 1px solid #0094FF;
+          color: #0094FF;
+        }
+      `;
+    };
+  }}
 `;
 
 // &:disabled {

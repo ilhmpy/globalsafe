@@ -124,7 +124,7 @@ export const OwnExchanges = () => {
         const res = await hubConnection!.invoke<GetExchangesCollectionResult>(
          'GetExchanges',
           [0, 1],
-          activeFilter === 'active' ? [0, 1] : [2, 4],
+          activeFilter === 'active' ? [0, 1, 3] : [2, 4],
           0,
           10
         );
@@ -262,6 +262,7 @@ export const OwnExchanges = () => {
   const statuts = useMemo<Object[]>(() => activeFilter === "active" ? [
     { methodName: "Новый", kind: 0 },
     { methodName: "Ожидается подтверждение оплаты", kind: 1 },
+    { methodName: "Спорный", kind: 3 }
   ] : [
     { methodName: "Завершен", kind: 2 },
     { methodName: "Отменен", kind: 4 }
