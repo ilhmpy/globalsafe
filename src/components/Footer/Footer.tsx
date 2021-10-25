@@ -66,12 +66,12 @@ const FooterBlock = styled.footer<{ other?: boolean }>`
     min-height: 320px;
     max-height: 320px;
 
-    & > div {
-      position: relative;
-    }
-
     .logo {
       display: none;
+    }
+
+    & > div {
+      position: relative;
     }
 
     .tg {
@@ -83,25 +83,6 @@ const FooterBlock = styled.footer<{ other?: boolean }>`
       top: 155px;
     }
   }
-
-  /*
-  ${({ other }) => {
-    if (other) {
-      return `
-        @media only screen and (min-device-width: 320px) and (max-device-width: 429px) {
-          .tg {
-            bottom: 15px;
-          }
-        }
-      
-        @media only screen and (min-device-width: 430px) and (max-device-width: 480px) {
-          .tg {
-            bottom: -126px;
-          }
-        }
-      `;
-    }
-  }} */
 `;
 
 const FooterHeader = styled.header`
