@@ -9,7 +9,6 @@ import * as S from './S.el';
 import { OrderDetailCardOwn } from './components/OrderDetailCardOwn';
 import { ExchangesInOrderTable } from './components/ExchangesInOrderTable';
 import { routers } from '../../../constantes/routers';
-import { PrivateAreaContext } from '../../../context/PrivateAreaContext';
 import { Balance } from '../../../types/balance';
 import { FiatKind } from '../../../types/fiatKind';
 import { OrderType, ViewBuyOrderModel, ViewSellOrderModel } from '../../../types/orders';
