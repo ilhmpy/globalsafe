@@ -68,10 +68,6 @@ export const OwnExchanges = () => {
       setFiatKind(null);
     };
     
-    useEffect(() => {
-      resetFilters();
-    }, [activeFilter]);
-    
     function filters(res: GetExchangesCollectionResult) {
       if (payments.length) {
         console.log(payments);
