@@ -129,27 +129,47 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
         const pattern = /^[0-9][0-9\.]*$/;
         if (e.target.value === '' || pattern.test(e.target.value)) {
             const value = removeLeadingZeros(e.target.value);
-
             const volume = countVolumeToShow(+order.volume, order.assetKind);
+            const limitTo = countVolumeToShow(+order.limitTo, order.assetKind);
+
             if(+value > volume) {
                 setBalanceSumm(String(volume));
+                setFiatSumm((volume * order.rate).toFixed(5));
                 return;
             }
 
-            const limitTo = countVolumeToShow(+order.limitTo, order.assetKind);
             if(+value > limitTo) {
                 setBalanceSumm(String(limitTo));
+                setFiatSumm((limitTo * order.rate).toFixed(5));
                 return;
             } 
                 
             setBalanceSumm(value);
+            setFiatSumm((+value * order.rate).toFixed(5));
         }
     };
 
     const onFiatSummChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const pattern = /^[0-9][0-9\.]*$/;
         if (e.target.value === '' || pattern.test(e.target.value)) {
-            setFiatSumm(e.target.value);
+            const value = removeLeadingZeros(e.target.value);
+            const volumeSumm = countVolumeToShow(+order.volume, order.assetKind) * order.rate;
+            const limitToSumm = countVolumeToShow(+order.limitTo, order.assetKind) * order.rate;
+
+            if(+value > volumeSumm) {
+                setFiatSumm(String(volumeSumm));
+                setBalanceSumm((+volumeSumm / order.rate).toFixed(5))
+                return;
+            }
+
+            if(+value > limitToSumm) {
+                setFiatSumm(String(limitToSumm));
+                setBalanceSumm((+limitToSumm / order.rate).toFixed(5))
+                return;
+            } 
+
+            setFiatSumm(value);
+            setBalanceSumm((+value / order.rate).toFixed(5))
         }
     };
 
@@ -297,10 +317,9 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                   }
               </Text>
               <S.Input
-                readOnly
                 placeholder="Введите сумму"
                 name="summ"
-                value={balanceSumm ? (+balanceSumm * order.rate) : ''}
+                value={fiatSumm}
                 onChange={onFiatSummChange}
               />
             </S.FormItem>
