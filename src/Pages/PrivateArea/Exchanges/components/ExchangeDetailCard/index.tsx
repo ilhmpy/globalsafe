@@ -689,10 +689,10 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                   Чат
                 </Button>
                 <Button
-                  outlinePrimary
+                  outlineDanger
                   bigSize
                   as="button"
-                  disabled={draw}
+                  disabled={true}
                   onClick={() => abuseExchange(exchange.safeId)}
                   exchangeBtn
                 >

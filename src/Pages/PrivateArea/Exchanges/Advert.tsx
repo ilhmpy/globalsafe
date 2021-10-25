@@ -15,11 +15,12 @@ import { Rating } from './components/modals/Rating';
 import { PaymentMethods } from './components/modals/PaymentMethods';
 import { Balance } from '../../../types/balance';
 import { FiatKind } from '../../../types/fiat';
+import { getMyRating } from '../utils';
  
 // TODO: Update Load more Functional.
 export const Advert = () => {
   const history = useHistory();
-  const { hubConnection } = useContext(AppContext);
+  const { hubConnection, account } = useContext(AppContext);
   const [activeType, setActiveType] = useState<OrderType>(OrderType.Buy);
   const [listingMyOrders, setListingMyOrders] = useState<boolean>(false);
   const [selectedBalanceKind, setSelectedBalanceKind] = useState<string | null>(null);
@@ -249,7 +250,7 @@ export const Advert = () => {
             </TabNavItem>
           </TabsBlock>
           <Text size={14} lH={16} weight={500}>
-            Рейтинг аккаунта: 5.0
+            Рейтинг аккаунта: {getMyRating(account)}
           </Text>
         </S.SubHeader>
         <S.Filters>
