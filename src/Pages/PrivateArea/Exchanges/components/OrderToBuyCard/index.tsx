@@ -6,7 +6,7 @@ import { AppContext } from '../../../../../context/HubContext';
 import { Balance } from '../../../../../types/balance';
 import { ViewUserCertificateModel } from '../../../../../types/certificates';
 import { FiatKind } from '../../../../../types/fiat';
-import { OrderType, ViewBuyOrderModel } from '../../../../../types/orders';
+import { GetBuyOrdersModel, OrderType, ViewBuyOrderModel } from '../../../../../types/orders';
 import { CollectionPayMethod, PaymentMethodKind, RootPayMethod } from '../../../../../types/paymentMethodKind';
 import { Checkbox } from '../../../components/Checkbox';
 import { LeftSide, RightSide, Space, TabNavItem, Text, Title } from '../../../components/ui';
@@ -50,6 +50,8 @@ export const OrderToBuyCard: FC = () => {
   const [createOrderLoading, setCreateOrderLoading] = useState(false);
   const [newCreatedOrder, setNewCreatedOrder] = useState<ViewBuyOrderModel | undefined>(undefined);
   const [dailyLimitRest, setDailyLimitRest] = useState(0);
+  const [hasFamiliarOrder, setHasFamiliarOrder] = useState(false);
+  const [showHasFamiliarOrder, setShowHasFamiliarOrder] = useState(false);
 
   // Get Balance Kinds List as an Array
   const balanceKinds = useMemo<string[]>(() => {
@@ -138,6 +140,37 @@ export const OrderToBuyCard: FC = () => {
     const withoutDuplicates = [...new Set(kinds)];
     return withoutDuplicates;
   };
+
+  useEffect(() => {
+    if (hubConnection && currencyToBuy && currencyToChange) {
+      getBuyOrders();
+    }
+  }, [hubConnection, currencyToBuy, currencyToChange]);
+
+  const getBuyOrders = async () => {
+    try {
+      const res = await hubConnection!.invoke<GetBuyOrdersModel>(
+        'GetBuyOrders', 
+        currencyToBuy ? [ Balance[currencyToBuy as keyof typeof Balance] ] : [],  // Array of BalanceKind assetKinds
+        currencyToChange ? [ FiatKind[currencyToChange as keyof typeof FiatKind] ] : [],  // Array of FiatKind opAssetKinds
+        [], // Array of PaymentMethodKind[] paymentMethodKinds
+        0, // int rating
+        true, // if true ? will show my orders
+        0, 
+        10
+      );
+      console.log('GetBuyOrders', res);
+      if(res.collection.length > 0) {
+        setHasFamiliarOrder(true);
+      } else {
+        setHasFamiliarOrder(false);
+      }
+      
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
 
   const handleCreateBuyOrder = async () => {
     setCreateOrderLoading(true);
@@ -260,6 +293,15 @@ export const OrderToBuyCard: FC = () => {
     selectedPaymentMethodsIds,
   ]);
 
+  const handlePublushOrder = () => {
+    if(hasFamiliarOrder) {
+      setShowHasFamiliarOrder(true);
+      return;
+    }
+
+    setShowOrderBuyModal(true);
+  };
+ 
   return (
     <S.Container>
       <LeftSide bg={'#EAEFF4'}>
@@ -427,7 +469,7 @@ export const OrderToBuyCard: FC = () => {
           <Space gap={10} mb={40}>
             <S.Button
               primary
-              onClick={() => setShowOrderBuyModal(true)}
+              onClick={handlePublushOrder}
               as={'button'}
               disabled={!formIsValid}
               type="button"
@@ -458,7 +500,15 @@ export const OrderToBuyCard: FC = () => {
         open={showOrderBuyModal}
         onClose={() => setShowOrderBuyModal(false)}
       />
-      <OrderErrorModal open={showOrderErrorModal} onClose={() => setShowOrderErrorModal(false)} />
+      <OrderErrorModal 
+        open={showOrderErrorModal} 
+        onClose={() => setShowOrderErrorModal(false)} 
+      /> 
+      <OrderErrorModal  
+        message="У вас уже есть ордер с такой же валютной парой"
+        open={showHasFamiliarOrder} 
+        onClose={() => setShowHasFamiliarOrder(false)} 
+      /> 
     </S.Container>
   );
 };

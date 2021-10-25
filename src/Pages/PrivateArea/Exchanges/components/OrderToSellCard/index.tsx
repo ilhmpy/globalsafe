@@ -22,7 +22,7 @@ import { Balance } from '../../../../../types/balance';
 import { FiatKind } from '../../../../../types/fiat';
 import { CollectionPayMethod, PaymentMethodKind, RootPayMethod } from '../../../../../types/paymentMethodKind';
 import { ViewUserCertificateModel } from '../../../../../types/certificates';
-import { OrderType, ViewSellOrderModel } from '../../../../../types/orders';
+import { GetSellOrdersModel, OrderType, ViewSellOrderModel } from '../../../../../types/orders';
 import { countVolumeToSend } from '../../../utils';
  
 export const OrderToSellCard: FC = () => {
@@ -57,6 +57,8 @@ export const OrderToSellCard: FC = () => {
     const [createOrderLoading, setCreateOrderLoading] = useState(false);
     const [newCreatedOrder, setNewCreatedOrder] = useState<ViewSellOrderModel | undefined>(undefined);
     const [dailyLimitRest, setDailyLimitRest] = useState(0);
+    const [hasFamiliarOrder, setHasFamiliarOrder] = useState(false);
+    const [showHasFamiliarOrder, setShowHasFamiliarOrder] = useState(false);
     
     // Get Balance Kinds List as an Array
     const balanceKinds = useMemo<string[]>(() => {
@@ -145,6 +147,36 @@ export const OrderToSellCard: FC = () => {
         const withoutDuplicates = [...new Set(safeIds)];
         return withoutDuplicates;
     };
+
+    useEffect(() => {
+        if (hubConnection && currencyToSell && currencyToChange) {
+          getBuyOrders();
+        }
+      }, [hubConnection, currencyToSell, currencyToChange]);
+    
+      const getBuyOrders = async () => {
+        try {
+          const res = await hubConnection!.invoke<GetSellOrdersModel>(
+            'GetSellOrders', 
+            currencyToSell ? [ Balance[currencyToSell as keyof typeof Balance] ] : [],  // Array of BalanceKind assetKinds
+            currencyToChange ? [ FiatKind[currencyToChange as keyof typeof FiatKind] ] : [],  // Array of FiatKind opAssetKinds
+            [], // Array of PaymentMethodKind[] paymentMethodKinds
+            0, // int rating
+            true, // if true ? will show my orders
+            0, 
+            10
+          );
+          console.log('GetSellOrders', res);
+          if(res.collection.length > 0) {
+            setHasFamiliarOrder(true);
+          } else {
+            setHasFamiliarOrder(false);
+          }
+          
+        } catch (err) {
+          console.log(err);
+        }
+      };
 
     const handleCreateSellOrder = async () => {
         setCreateOrderLoading(true);
@@ -257,6 +289,15 @@ export const OrderToSellCard: FC = () => {
 
         return isValid;
     }, [currencyToSell, currencyToChange, orderSumm, changeRate, orderMinSumm, orderMaxSumm, selectedPaymentMethodsIds])
+
+    const handlePublushOrder = () => {
+        if(hasFamiliarOrder) {
+          setShowHasFamiliarOrder(true);
+          return;
+        }
+
+        setShowOrderSellModal(true)
+    };
 
     return (
         <S.Container>
@@ -456,7 +497,7 @@ export const OrderToSellCard: FC = () => {
                 <Space gap={10} mb={40}>
                     <S.Button 
                         primary 
-                        onClick={() => setShowOrderSellModal(true)}
+                        onClick={handlePublushOrder}
                         as={'button'}
                         disabled={!formIsValid}
                         type="button"
@@ -492,6 +533,11 @@ export const OrderToSellCard: FC = () => {
                 open={showOrderErrorModal}
                 onClose={() => setShowOrderErrorModal(false)}
             />
+            <OrderErrorModal  
+                message="У вас уже есть ордер с такой же валютной парой"
+                open={showHasFamiliarOrder} 
+                onClose={() => setShowHasFamiliarOrder(false)} 
+            /> 
         </S.Container>
     );
 };
