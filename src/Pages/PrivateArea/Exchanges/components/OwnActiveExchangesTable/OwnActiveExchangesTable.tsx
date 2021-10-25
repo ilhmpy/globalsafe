@@ -72,7 +72,7 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
     };
   };
 
-  const Status = ["Новый", "Ожидается подтверждение оплаты", "Завершен", "Подана жалоба", "Отменен"];
+  const Status = ["Новый", "Ожидается подтверждение оплаты", "Завершен", "Спорный", "Отменен"];
 
   return (
       <S.Table>

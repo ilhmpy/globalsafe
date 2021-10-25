@@ -41,3 +41,19 @@ export const FilterButton = styled(BaseFilterButton)`
   margin: 0 10px 0 0;
 `;
 
+export const FiltersResetModal = styled.div<{ show: boolean; }>`
+  display: ${({ show }) => show ? "block" : "none"};
+  position: absolute;
+  right: 10px;
+  top: 28px;
+  background: #f9fafb;
+  width: 119px;
+`;
+
+export const FiltersResetItem = styled.h3`
+  text-align: center;
+  font-size: 12px;
+  line-height: 20px;
+  color: rgba(0,0,0,.6);
+  font-weight: 400;
+`;

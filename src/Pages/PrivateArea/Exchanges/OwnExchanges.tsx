@@ -51,6 +51,12 @@ export const OwnExchanges = () => {
     ExchangeAbused - на обмен подана жалоба
   */
 
+  /*
+    изменить цвет кнопки жалоба на красный
+    убрать из фильтров обменов статус в жалобе
+    
+  */
+
     function resetFilters() {
       setSelectedBalanceKind(null);
       setSelectedFiatKind(null);
@@ -68,18 +74,36 @@ export const OwnExchanges = () => {
     
     function filters(res: GetExchangesCollectionResult) {
       if (payments.length) {
+        console.log(payments);
         const filter = res.collection.filter((i) => {
           if (payments.includes(i.paymentMethod?.kind)) {
               return i;
           };
         });
         setUserExchanges(filter);
-      } else if (balanceKind != null && fiatKind != null) {
-        const filter = res.collection.filter((i) => {
-          if (i.assetKind === balanceKind && i.exchangeAssetKind === fiatKind) {
-            return i; 
-          };
-        });
+      } else if (balanceKind != null || fiatKind != null) {
+        let filter: ViewExchangeModel[] = [];
+        if (balanceKind != null && fiatKind == null) {
+          filter = res.collection.filter((i) => {
+            if (i.assetKind === balanceKind) {
+              return i; 
+            };
+          });
+        };
+        if (balanceKind === null && fiatKind != null) {
+          filter = res.collection.filter((i) => {
+            if (i.exchangeAssetKind === fiatKind) {
+              return i; 
+            };
+          });
+        };
+        if (balanceKind !== null && fiatKind !== null) {
+          filter = res.collection.filter((i) => {
+            if (i.exchangeAssetKind === fiatKind && i.assetKind === balanceKind) {
+              return i; 
+            };
+          });
+        };
         setUserExchanges(filter);
       } else if (status && status.length) {
         const filter = res.collection.filter((i) => {
@@ -100,7 +124,7 @@ export const OwnExchanges = () => {
         const res = await hubConnection!.invoke<GetExchangesCollectionResult>(
          'GetExchanges',
           [0, 1],
-          activeFilter === 'active' ? [0, 1] : [2, 3, 4],
+          activeFilter === 'active' ? [0, 1] : [2, 4],
           0,
           10
         );
@@ -149,9 +173,13 @@ export const OwnExchanges = () => {
   function exchangeCreated(res: ViewExchangeModel) {
     if (userExchanges) {
       console.log("ExchangeChanged/Created/Completed", res);
-      console.log([res, ...userExchanges], userExchanges)
-      setUserExchanges([res, ...userExchanges]);
-    }
+      if (res.state <= 2 && activeFilter === "active") {
+        setUserExchanges([res, ...userExchanges]);
+      };
+      if (res.state >= 3 && activeFilter === "archived") {
+        setUserExchanges([res, ...userExchanges]);
+      };
+    };
   };
 
   useEffect(() => {
@@ -236,17 +264,16 @@ export const OwnExchanges = () => {
     { methodName: "Ожидается подтверждение оплаты", kind: 1 },
   ] : [
     { methodName: "Завершен", kind: 2 },
-    { methodName: "Подана жалоба", kind: 3 },
     { methodName: "Отменен", kind: 4 }
   ], [activeFilter]);
   
-  const paymentMethodsKinds = useMemo<string[]>(() => [
-    'АО «Альфа-Банк»',
-    'ПАО Сбербанк',
-    'АО «Тинькофф Банк»',
-    'BEP 20',
-    'TRC 20',
-    'ERC 20',
+  const paymentMethodsKinds = useMemo<Object[]>(() => [
+    { methodName: 'ERC 20', kind: 0 },
+    { methodName: 'TRC 20', kind: 1 },
+    { methodName: "BEP 20", kind: 2 },
+    { methodName: 'АО «Тинькофф Банк»', kind: 3 },
+    { methodName: 'ПАО Сбербанк', kind: 4 },
+    { methodName: 'АО «Альфа-Банк»', kind: 5 },
   ], []);
 
   function handleAcceptPaymentMethods() {
@@ -315,7 +342,12 @@ export const OwnExchanges = () => {
           <FilterButton active style={{ marginLeft: "0px" }} onClick={() => setShowCurrencyPairModal(true)}>
             {balanceKind != null && fiatKind != null ? 
               `${Balance[balanceKind]} - ${FiatKind[fiatKind]}`  
-              : "Все валюты"}
+              : balanceKind != null && fiatKind == null ? 
+              `${Balance[balanceKind]} - Все` 
+              : balanceKind == null && fiatKind != null ? 
+              `Все - ${FiatKind[fiatKind]}` 
+              : "Все валюты"
+            }
           </FilterButton>
           <S.Line />
           <FilterButton active onClick={() => setShowPaymentMethodsModal(true)}>
@@ -325,9 +357,13 @@ export const OwnExchanges = () => {
           <FilterButton active onClick={() => setShowSelectedStatus(true)}>
             {status && status.length ? "Статусы - " : "Все статусы"} {status && status.length ? status.length : ""}
           </FilterButton>
-          <FilterButton style={{ position: "absolute", right: "0px" }} onClick={resetFilters}>
-            Очистить все фильтры
-          </FilterButton>
+          {payments.length > 0 || (status != null && status.length > 0) || balanceKind != null || fiatKind != null ? (
+            <>
+              <FilterButton style={{ position: "absolute", right: "0px", }} onClick={resetFilters}>
+                Очистить фильтр
+              </FilterButton>
+            </>
+          ) : null}
         </S.Filters>
 
         {activeFilter === 'active' && <OwnActiveExchangesTable setExchanges={setUserExchanges} loading={loading} exchanges={userExchanges} />}
@@ -340,6 +376,7 @@ export const OwnExchanges = () => {
           onAccept={handleAcceptPaymentMethods}
           open={showPaymentMethodsModal} 
           onClose={() => setShowPaymentMethodsModal(false)} 
+          objectsArray
           black
         />
 

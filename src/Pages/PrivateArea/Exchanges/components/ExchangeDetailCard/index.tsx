@@ -204,9 +204,9 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
     } else if (chip === 2) {
       return <Chip style={{ background: 'rgba(93, 167, 0, 0.1)', fontWeight: 500 }}>Завершен</Chip>;
     } else if (chip === 3) {
-      return <Chip>Жалоба</Chip>;
+      return <Chip>Спорный</Chip>;
     } else if (chip === 4) {
-      return <Chip style={{ background: 'rgba(93, 167, 0, 0.1)' }}>Отменен</Chip>;
+      return <Chip style={{ background: 'rgba(255, 74, 49, 0.1)' }}>Отменен</Chip>;
     };
   };
 
@@ -345,7 +345,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
     };
   };
 
-  editStateForTesting(0);
+  // editStateForTesting(0);
 
   return (
     <S.Container>
@@ -552,7 +552,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                   disabled={exchange.state === 0}
                   exchangeBtn
                 >
-                  Жалоба
+                  Пожаловаться
                 </Button>
               </S.Space>
             </S.Space>
@@ -638,14 +638,14 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                   Чат
                 </Button>
                 <Button
-                  outlinePrimary
+                  outlineDanger
                   bigSize
                   as="button"
                   disabled={!timerDown}
                   onClick={() => abuseExchange(exchange.safeId)}
                   exchangeBtn
                 >
-                  Жалоба
+                  Пожаловаться
                 </Button>
               </S.Space>
             </S.Space>
@@ -696,7 +696,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                   onClick={() => abuseExchange(exchange.safeId)}
                   exchangeBtn
                 >
-                  Жалоба
+                  Пожаловаться
                 </Button>
               </S.Space>
             </S.Space>

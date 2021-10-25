@@ -48,7 +48,8 @@ export const PaymentMethods: FC<Props> = ({
             <S.Title>{text}</S.Title>
             {objectsArray ? (
               <>
-                {[...methodsList].map((i, idx) => (
+                {[...methodsList].reverse().map((i, idx) => (
+                    i.kind !== 3 ?
                     <S.DropdonwConatainer big key={idx}>
                       <Checkbox 
                         dis={!black}
@@ -57,7 +58,23 @@ export const PaymentMethods: FC<Props> = ({
                       >
                         <S.Label dis={!black} active={selectedPaymentMethods.includes(i.kind)}>{i.methodName}</S.Label>
                       </Checkbox>
-                  </S.DropdonwConatainer>
+                    </S.DropdonwConatainer>
+                    : 
+                    <>
+                      <S.DropdonwConatainer>
+                        <Checkbox 
+                          dis={!black}
+                          checked={selectedPaymentMethods.includes(i.kind)}
+                          onChange={() => handleCheckboxChange(i.kind)}
+                        >
+                          <S.Label dis={!black} active={selectedPaymentMethods.includes(i.kind)}>{i.methodName}</S.Label>
+                        </Checkbox>
+                      </S.DropdonwConatainer>
+
+                      <S.DropdonwConatainer big>
+                        <S.Hr />
+                      </S.DropdonwConatainer>
+                    </>
                 ))}
               </>
             ) : (
