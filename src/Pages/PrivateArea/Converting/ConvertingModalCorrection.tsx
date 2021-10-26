@@ -4,6 +4,7 @@ import { Button } from '../../../components/Button/V2/Button';
 import { Modal } from '../../../components/Modal/Modal';
 import { Checkbox } from '../components/Checkbox';
 import { IBalanceExchange } from './ConvertingModal';
+import { setCookie } from './cookiesFns';
 import {
   ButtonsWrapper,
   CheckboxGroup,
@@ -15,7 +16,6 @@ import {
   ModalContent,
   ModalTitle,
 } from './styled';
-import { setCookie } from './cookies';
 
 interface Iprops {
   open: boolean;
@@ -39,6 +39,7 @@ export const ConvertingModalCorrection: FC<Iprops> = ({
   closeWithReset,
 }: Iprops) => {
   const [isNoShow, setIsNoShow] = useState<boolean>(false);
+  const { calculatedAmount, targetAmount, discountPercent } = convertedData;
 
   const agree = async () => {
     setOpen(false);
@@ -63,48 +64,76 @@ export const ConvertingModalCorrection: FC<Iprops> = ({
               <CloseButton onClick={closeWithReset} />
               <ContentBody>
                 <p>
-                  <KeySpan>Указано к списанию (CWD)</KeySpan>
+                  <KeySpan sm>Указано к списанию (CWD)</KeySpan>
                   <Dots />
                   <strong>
-                    {Number(fromSumCloud).toLocaleString('ru-RU', {
-                      maximumFractionDigits: 2,
-                    })}
+                    {fromSumCloud.split('.').length > 1
+                      ? `${fromSumCloud.split('.')[0].replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
+                          (+fromSumCloud).toFixed(5).toString().split('.')[1]
+                        }`
+                      : `${(+fromSumCloud)
+                          .toFixed(5)
+                          .split('.')[0]
+                          .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
+                          (+fromSumCloud).toFixed(5).split('.')[1]
+                        }`}
                   </strong>
                 </p>
                 <p>
-                  <KeySpan>Рассчетная сумма к списанию (CWD)</KeySpan>
+                  <KeySpan sm={calculatedAmount.toString().length > 6}>
+                    Рассчетная сумма к списанию (CWD)
+                  </KeySpan>
                   <Dots />
                   <strong>
-                    {(convertedData.calculatedAmount / 100000).toLocaleString('ru-RU', {
-                      maximumFractionDigits: 2,
-                    })}
+                    {(calculatedAmount / 100000).toString().split('.').length > 1
+                      ? `${(calculatedAmount / 100000)
+                          .toString()
+                          .split('.')[0]
+                          .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
+                          (calculatedAmount / 100000).toFixed(5).toString().split('.')[1]
+                        }`
+                      : (calculatedAmount / 100000).toFixed(5)}
                   </strong>
                 </p>
                 <p>
                   <KeySpan>Курс:</KeySpan>
                   <Dots />
                   <strong>
-                    {(
-                      convertedData.calculatedAmount /
-                      convertedData.targetAmount /
-                      1000
-                    ).toLocaleString('ru-RU', {
-                      maximumFractionDigits: 2,
-                    })}
+                    {(calculatedAmount / targetAmount / 1000).toString().split('.').length > 1
+                      ? `${(calculatedAmount / targetAmount / 1000)
+                          .toString()
+                          .split('.')[0]
+                          .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
+                          (calculatedAmount / targetAmount / 1000)
+                            .toFixed(5)
+                            .toString()
+                            .split('.')[1]
+                        }`
+                      : (calculatedAmount / targetAmount / 1000).toFixed(5)}
                   </strong>
                 </p>
                 <p>
                   <KeySpan>Скидка (%):</KeySpan>
                   <Dots />
-                  <strong>{convertedData.discountPercent}</strong>
+                  <strong>{discountPercent}</strong>
                 </p>
                 <p>
                   <KeySpan>К получению (MULTICS):</KeySpan>
                   <Dots />
                   <strong>
-                    {(convertedData.targetAmount / 100)
-                      .toString()
-                      .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
+                    {(targetAmount / 100).toString().split('.').length > 1
+                      ? `${(targetAmount / 100)
+                          .toString()
+                          .split('.')[0]
+                          .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
+                          (targetAmount / 100).toFixed(2).toString().split('.')[1]
+                        }`
+                      : `${(+(targetAmount / 100).toString())
+                          .toFixed(2)
+                          .split('.')[0]
+                          .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
+                          (targetAmount / 100).toFixed(2).split('.')[1]
+                        }`}
                   </strong>
                 </p>
                 <CheckboxGroup>
@@ -147,5 +176,9 @@ const ContentBody = styled.div`
     display: flex;
     align-items: flex-end;
     justify-content: flex-start;
+  }
+
+  & > p > strong {
+    white-space: nowrap;
   }
 `;

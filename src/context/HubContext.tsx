@@ -26,6 +26,8 @@ type Context = {
   setSelectedDeposit: (object: any) => void;
   account: any;
   userSafeId: string | null;
+  setDepositsFilter: (depositsFilter: 'active' | 'archived' | 'hold') => void;
+  depositsFilter: string;
 };
 
 export const AppContext = React.createContext<Context>({
@@ -47,6 +49,8 @@ export const AppContext = React.createContext<Context>({
   chosenDepositView: {},
   account: {},
   userSafeId: null,
+  setDepositsFilter: () => undefined,
+  depositsFilter: '',
 });
 
 export const HubProvider: FC = ({ children }: any) => {
@@ -66,6 +70,7 @@ export const HubProvider: FC = ({ children }: any) => {
   const [chosenDepositView, setChosenDepositView] = useState({});
   const [selectedDeposit, setSelectedDeposit] = useState({});
   const [account, setAccount] = useState<any>({});
+  const [depositsFilter, setDepositsFilter] = useState<'active' | 'archived' | 'hold'>('active');
 
   useEffect(() => {
     const hubConnection = new signalR.HubConnectionBuilder()
@@ -205,6 +210,8 @@ export const HubProvider: FC = ({ children }: any) => {
         selectedDeposit,
         account,
         userSafeId,
+        setDepositsFilter,
+        depositsFilter,
       }}
     >
       {children}

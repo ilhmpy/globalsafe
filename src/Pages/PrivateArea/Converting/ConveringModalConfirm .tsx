@@ -1,5 +1,4 @@
 import { FC, useContext } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Button } from '../../../components/Button/V2/Button';
 import { Modal } from '../../../components/Modal/Modal';
 import { AppContext } from '../../../context/HubContext';
@@ -36,8 +35,8 @@ export const ConvertingModalConfirm: FC<Iprops> = ({
   setIsFailConverting,
   closeWithReset,
 }: Iprops) => {
-  const { t } = useTranslation();
   const { hubConnection } = useContext(AppContext);
+  const { userAmount, calculatedAmount, targetAmount, discountPercent } = convertedData;
 
   const convert = async () => {
     (async () => {
@@ -45,7 +44,7 @@ export const ConvertingModalConfirm: FC<Iprops> = ({
         try {
           const response = await hubConnection.invoke<IBalanceExchange>(
             'BalanceExchange',
-            convertedData.userAmount.toString(),
+            (userAmount + 1).toString(),
             59
           );
           if (response.calculatedAmount && response.targetAmount) {
@@ -75,9 +74,14 @@ export const ConvertingModalConfirm: FC<Iprops> = ({
                   <KeySpan>К списанию (CWD)</KeySpan>
                   <Dots />
                   <strong>
-                    {(convertedData.userAmount / 100000).toLocaleString('ru-RU', {
-                      maximumFractionDigits: 2,
-                    })}
+                    {(userAmount / 100000).toString().split('.').length > 1
+                      ? `${(userAmount / 100000)
+                          .toString()
+                          .split('.')[0]
+                          .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
+                          (userAmount / 100000).toFixed(5).toString().split('.')[1]
+                        }`
+                      : (userAmount / 100000).toFixed(5)}
                   </strong>
                 </p>
                 <p>
@@ -85,29 +89,31 @@ export const ConvertingModalConfirm: FC<Iprops> = ({
                   <Dots />
 
                   <strong>
-                    {(
-                      convertedData.calculatedAmount /
-                      convertedData.targetAmount /
-                      1000
-                    ).toLocaleString('ru-RU', {
-                      maximumFractionDigits: 2,
-                    })}
+                    {(calculatedAmount / targetAmount / 1000).toString().split('.').length > 1
+                      ? `${(calculatedAmount / targetAmount / 1000)
+                          .toString()
+                          .split('.')[0]
+                          .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
+                          (calculatedAmount / targetAmount / 1000)
+                            .toFixed(5)
+                            .toString()
+                            .split('.')[1]
+                        }`
+                      : (calculatedAmount / targetAmount / 1000).toFixed(5)}
                   </strong>
                 </p>
                 <p>
                   <KeySpan>Скидка (%):</KeySpan>
                   <Dots />
 
-                  <strong>{convertedData.discountPercent}</strong>
+                  <strong>{discountPercent}</strong>
                 </p>
                 <p>
                   <KeySpan>К получению (MULTICS):</KeySpan>
                   <Dots />
 
                   <strong>
-                    {(convertedData.targetAmount / 100)
-                      .toString()
-                      .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
+                    {(targetAmount / 100).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
                   </strong>
                 </p>
                 <ButtonsWrapper>

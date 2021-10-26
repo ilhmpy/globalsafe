@@ -18,30 +18,44 @@ import { ViewExchangeModel, ExchangeState } from '../../../../../types/exchange'
 import { Balance } from '../../../../../types/balance';
 import { FiatKind } from '../../../../../types/fiat';
 import { PaymentMethodKind } from '../../../../../types/paymentMethodKind';
-import { getDefaultLibFileName } from 'typescript';
+import { createTypeReferenceDirectiveResolutionCache, getDefaultLibFileName } from 'typescript';
 import { AppContext } from '../../../../../context/HubContext';
 import moment from 'moment';
 import reactVirtualizedAutoSizer from 'react-virtualized-auto-sizer';
 import { setUncaughtExceptionCaptureCallback } from 'process';
 import { getVolume } from '../../../../../functions/getVolume';
 import { getTime } from 'date-fns';
+import { Counter } from '../../../components/ui/Counter';
+import  { countVolumeToShow } from "../../../utils";
 
 type DetailCardProps = {
   exchange: ViewExchangeModel;
   setCall: (value: boolean) => void;
+  showSuccessModal: boolean;
+  setShowSuccessModal: (value: boolean) => void;
+  showRejectModal: boolean;
+  setShowRejectModal: (value: boolean) => void;
+  owner: "seller" | "buyer";
+  setExchange: (val: ViewExchangeModel) => any; 
+  setLoading: (val: boolean) => any;
+  exchangeId: string;
 };
 
-export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: DetailCardProps) => {
+export const ExchangeDetailCard: FC<DetailCardProps> = ({ 
+  exchange, setCall, setShowSuccessModal, 
+  setShowRejectModal, showRejectModal, 
+  showSuccessModal, setExchange, setLoading, 
+  exchangeId
+}: DetailCardProps) => {
   const history = useHistory();
-  const [feedbackValue, setFeedbackValue] = useState(5);
-  const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
-  const [showRejectModal, setShowRejectModal] = useState<boolean>(false);
   const { account, hubConnection } = useContext(AppContext);
+
+  const [feedbackValue, setFeedbackValue] = useState(5);
   const [totalExchanges, setTotalExchanges] = useState<any>();
   const [draw, setDraw] = useState<boolean>(true);
   const [time, setTime] = useState<string>();
   const [timer, setTimer] = useState<any>();
-
+  const [timerDown, setTimerDown] = useState<boolean>(false);
   const buyer = () => {
     return (
       (exchange && exchange.kind === 0 && exchange.ownerSafeId !== account.safeId) ||
@@ -49,40 +63,118 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
     );
   };
 
-  const [owner, setOwner] = useState<'seller' | 'buyer' | undefined>(buyer() ? 'buyer' : 'seller');
+  const [owner, setOwner] = useState<'seller' | 'buyer'>(buyer() ? 'buyer' : 'seller');
+  const [mark, setMark] = useState<boolean | null>(null);
 
   useEffect(() => {
-    function cb() {
-      if (owner === "buyer") {
-        setShowSuccessModal(true);
-      };
+    let cancel = false;
+    if (hubConnection && !cancel) {
+      hubConnection.on("ExchangeAbused", cb);
     };
-    if (hubConnection) {
+    return () => {
+      cancel = true;
+      hubConnection?.off("ExchangeAbused", cb);
+    };
+  }, [hubConnection, exchange]);
+
+  useEffect(() => {
+    let cancel = false;
+    if (hubConnection && !cancel) {
+      hubConnection.on("ExchangeCancelled", cancelledCallback);
+    } 
+    return () => {
+      cancel = true;
+      hubConnection?.off("ExchangeCancelled", cancelledCallback);
+    };
+  }, [hubConnection, exchange]);
+
+  useEffect(() => {
+    let cancel = false;
+    if (hubConnection && !cancel) {
       hubConnection.on("ExchangeCompleted", cb);
     };
     return () => {
+      cancel = true;
       hubConnection?.off("ExchangeCompleted", cb);
     };  
-  }, [hubConnection]);
+  }, [hubConnection, exchange]);
 
   useEffect(() => {
-    function cb() {
-      if (owner === "seller") {
-        setShowRejectModal(true);
-      };
+    let cancel = false;
+    if (hubConnection && !cancel) {
+      hubConnection.on("ExchangeConfirmationRequired", cb);
     };
-    if (hubConnection) {
-      hubConnection.on("ExchangeCancelled", cb);
-    } 
     return () => {
-      hubConnection?.off("ExchangeCancelled", cb);
+      cancel = true;
+      hubConnection?.off("ExchangeConfirmationRequired", cb);
+    };  
+  }, [hubConnection, exchange]);
+
+  useEffect(() => {
+    let cancel = false;
+    if (hubConnection && !cancel) {
+      hubConnection.on("BuyOrderVolumeChanged", volumeChanged);
     };
-  }, [hubConnection]);
+    return () => {
+      cancel = true;
+      hubConnection?.off("BuyOrderVolumeChanged", volumeChanged);
+    };  
+  }), [hubConnection], exchange;
+
+  useEffect(() => {
+    let cancel = false;
+    if (hubConnection && !cancel) {
+      hubConnection.on("SellOrderVolumeChanged", volumeChanged);
+    };
+    return () => {
+      cancel = true;
+      hubConnection?.off("SellOrderVolumeChanged", volumeChanged);
+    };  
+  }, [hubConnection, exchange])
+
+  function cb(res: ViewExchangeModel) {
+    console.log("ExchangeChanged RES", res, res.safeId, exchange && exchange.safeId);
+    if (exchange != null && exchange.safeId == res.safeId) {
+        setExchange(res);
+    };
+  };
+
+  function cancelledCallback(res: ViewExchangeModel) {
+    if (exchange != null && exchange.safeId === res.safeId) {
+      setShowRejectModal(true);
+      cb(res);
+    };
+  };
+
+  function volumeChanged(id: string, volume: number) {
+    if (exchange != null) {
+      const newExchange = exchange;
+      if (newExchange.safeId === id) {
+        newExchange.orderVolume = volume;
+        setExchange(newExchange);
+      };  
+    }
+  };
 
   const handleClick = () => {
     history.push(routers.p2pchangesSingleExchangeChat + '/' + exchange.safeId);
-    console.log('ExchangeDetailCard Click');
+    console.log('ExchangeDetailCard Click');      
   };
+
+  function getUserMark() {
+    if (hubConnection) {
+      hubConnection.invoke("GetUserMark", exchange.safeId)
+        .then((res) => {
+          console.log("mark", res);
+          setMark(res > 0);
+        })
+        .catch(err => console.log(err));
+    };
+  };
+ 
+  useEffect(() => {
+    getUserMark();
+  }, [hubConnection, exchange])
 
   function getTotalExecutedExchanges(id: string) {
     if (hubConnection) {
@@ -94,7 +186,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
         })
         .catch((err) => console.error(err));
     }
-  }
+  };
 
   useEffect(() => {
     getTotalExecutedExchanges(exchange.ownerSafeId);
@@ -104,21 +196,24 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
     if (chip === 0) {
       return <Chip style={{ background: 'rgba(0, 148, 255, 10%)' }}>Новый</Chip>;
     } else if (chip === 1) {
-      return <Chip style={{ background: '#FF4A31', color: '#fff' }}>Оставшееся время {time} </Chip>;
+      return (
+        <Chip style={{ background: '#FF4A31', color: '#fff' }}>
+          Оставшееся время <Counter setTimerDown={setTimerDown} data={exchange.creationDate} delay={exchange.operationWindow.totalMilliseconds} formatNum /> 
+        </Chip>
+      );
     } else if (chip === 2) {
       return <Chip style={{ background: 'rgba(93, 167, 0, 0.1)', fontWeight: 500 }}>Завершен</Chip>;
     } else if (chip === 3) {
-      return <Chip>Жалоба</Chip>;
+      return <Chip>Спорный</Chip>;
     } else if (chip === 4) {
-      return <Chip style={{ background: 'rgba(93, 167, 0, 0.1)' }}>Отменен</Chip>;
-    }
-  }
+      return <Chip style={{ background: 'rgba(255, 74, 49, 0.1)' }}>Отменен</Chip>;
+    };
+  };
 
   const PaymentMethods = [
     'ERC20',
     'TRC20',
     'BEP20',
-    'BankTransfer',
     'АО «Тинькофф Банк»',
     'ПАО Сбербанк',
     'АО «Альфа-Банк»',
@@ -191,11 +286,10 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
         .then((res) => {
           console.log('complete', res);
           setCall(true);
-          setShowSuccessModal(true);
         })
         .catch((err) => console.log(err));
-    }
-  }
+    };
+  };
 
   function cancelExchange(id: string) {
     if (hubConnection) {
@@ -206,8 +300,8 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
           setShowRejectModal(true);
         })
         .catch((err) => console.log(err));
-    }
-  }
+    };
+  };
 
   function confirmExchangePayment(id: string) {
     if (hubConnection) {
@@ -217,7 +311,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
           console.log('confirm', res);
           if (owner === 'buyer') {
             setCall(true);
-          }
+          };
         })
         .catch((err) => console.log(err));
     }
@@ -227,7 +321,6 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
 
   function rateUser() {
     if (hubConnection) {
-      console.log(owner === "seller" ? exchange.recepientId : exchange.ownerId)
       hubConnection
         .invoke(
           'RateUser',
@@ -238,43 +331,21 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
         .then((res) => {
           console.log(res);
           setCall(true);
+          setShowSuccessModal(true);
         })
         .catch((err) => console.log(err));
     }
   }
-
-  function getCountsTime({ days, hours, minutes, seconds }: any) {
-    if (days > 0) {
-      return `${days}д ${hours > 0 ? hours : 0}ч`;
-    } else if (hours > 0) {
-      return `${hours}ч ${minutes > 0 ? minutes : 0}м`;
-    } else if (minutes > 0) {
-      return `${minutes}м ${seconds > 0 ? seconds : 0}с`;
-    } else {
-      return `0м. 0с.`;
-    }
-  }
-
-  function getTime() {
-    const total = exchange.operationWindow.totalMilliseconds - (new Date().getTime() - new Date(exchange.creationDate).getTime());
-    const seconds = Math.floor((total/1000) % 60);
-    const minutes = Math.floor((total/1000/60) % 60);
-    const hours = Math.floor((total/(1000*60*60)) % 24);
-    const days = Math.floor(total/(1000*60*60*24));
-    const result = { days, hours, minutes, seconds };
-    setTime(getCountsTime(result));
+  
+  function editStateForTesting(state = 0) {
+    if (hubConnection) {
+      hubConnection.invoke("EditExchangeState", "379035279365767168", 0)
+        .then(() => console.log("EDIT_EXCHANGE_STATE"))
+        .catch((err) => console.log("EDIT_EXCHANGE_STATE_ERROR", err));
+    };
   };
 
-  useEffect(() => {
-    if (exchange.state === 1) {
-      getTime();
-      setTimer(
-        setInterval(() => {
-          getTime();
-        }, 60000)
-      );
-    }
-  }, [exchange.state]);
+  // editStateForTesting(0);
 
   return (
     <S.Container>
@@ -284,12 +355,12 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
             Количество:
           </Text>
           <Title lH={28} mB={10}>
-            {getVolume(exchange.orderVolume, exchange.assetKind).toLocaleString('ru-RU', {
+            {countVolumeToShow(exchange.orderVolume, exchange.assetKind).toLocaleString('ru-RU', {
               maximumFractionDigits: 5,
             })}{' '}
             {Balance[exchange.assetKind]}
           </Title>
-          <Chip>{exchange.kind === 0 ? 'Продажа' : 'Покупка'}</Chip>
+          <Chip>{owner === "seller" ? 'Продажа' : 'Покупка'}</Chip>
         </S.BlockWrapper>
 
         <S.BlockWrapper>
@@ -304,7 +375,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
             На сумму:
           </Text>
           <Title lH={28}>
-            {(exchange.orderVolume * exchange.rate).toLocaleString('ru-RU', {
+            {(countVolumeToShow(exchange.orderVolume * exchange.rate, exchange.assetKind)).toLocaleString('ru-RU', {
               maximumFractionDigits: 2,
             })}{' '}
             {FiatKind[exchange.exchangeAssetKind]}
@@ -316,9 +387,9 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
             Лимиты:
           </Text>
           <Title lH={28}>
-            {`${exchange.limitFrom.toLocaleString('ru-RU', {
+            {`${countVolumeToShow(exchange.limitFrom, exchange.assetKind).toLocaleString('ru-RU', {
               maximumFractionDigits: 0,
-            })} - ${exchange.limitTo.toLocaleString('ru-RU', { maximumFractionDigits: 0 })} ${
+            })} - ${countVolumeToShow(exchange.limitTo, exchange.assetKind).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} ${
               FiatKind[exchange.exchangeAssetKind]
             }`}
           </Title>
@@ -357,7 +428,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
       {/* IF COMPLETED AND NOT GRADET */}
 
       <RightSide>
-        <S.StateBlock when={exchange.state < 2 || exchange.mark != null}>
+        <S.StateBlock when={exchange.state < 2 || exchange.state != 2 || mark != false}>
           <S.TitleBlockWrapper>
             <Title mB={10} lH={28}>
               {exchange.kind === 0 ? 'Продажа' : 'Покупка'}{' '}
@@ -371,7 +442,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
               Количество:
             </Text>
             <Text size={14} lH={20} weight={500} black>
-              {getVolume(exchange.volume, exchange.assetKind).toLocaleString('ru-RU', {
+              {countVolumeToShow(exchange.volume, exchange.assetKind).toLocaleString('ru-RU', {
                 maximumFractionDigits: 5,
               })}{' '}
               {Balance[exchange.assetKind]}
@@ -383,7 +454,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
               На сумму:
             </Text>
             <Text size={14} lH={20} weight={500} black>
-              {exchange.exchangeVolume.toLocaleString('ru-RU', { maximumFractionDigits: 0 })}{' '}
+              {countVolumeToShow(exchange.exchangeVolume, exchange.assetKind).toLocaleString('ru-RU', { maximumFractionDigits: 0 })}{' '}
               {FiatKind[exchange.exchangeAssetKind]}
             </Text>
           </S.BlockWrapper>
@@ -450,7 +521,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
               <Text size={14} lH={20} black>
                 Осуществите перевод средств на указанный счет в размере{' '}
                 <S.B>
-                  {(exchange.volume * exchange.rate).toLocaleString('ru-RU', {
+                  {(countVolumeToShow(exchange.exchangeVolume, exchange.assetKind)).toLocaleString('ru-RU', {
                     maximumFractionDigits: 5,
                   })}{' '}
                   {FiatKind[exchange.exchangeAssetKind]}
@@ -481,7 +552,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
                   disabled={exchange.state === 0}
                   exchangeBtn
                 >
-                  Жалоба
+                  Пожаловаться
                 </Button>
               </S.Space>
             </S.Space>
@@ -492,14 +563,14 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
               <Text size={14} lH={20} black>
                 Покупатель осуществляет перевод средств на указанный счет в размере{' '}
                 <S.B>
-                  {(exchange.volume * exchange.rate).toLocaleString('ru-RU', {
+                  {(countVolumeToShow(exchange.exchangeVolume, exchange.assetKind)).toLocaleString('ru-RU', {
                     maximumFractionDigits: 0,
                   })}{' '}
                   {FiatKind[exchange.exchangeAssetKind]}
                 </S.B>{' '}
                 <br />С вашего баланса списаны и заморожены{' '}
                 <S.B>
-                  {getVolume(exchange.volume, exchange.assetKind).toLocaleString('ru-RU', {
+                  {countVolumeToShow(exchange.volume, exchange.assetKind).toLocaleString('ru-RU', {
                     maximumFractionDigits: 5,
                   })}{' '}
                   {Balance[exchange.assetKind]}
@@ -533,14 +604,14 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
             <S.TransferInfoBlock>
               <Text size={14} lH={20} black>
                 <S.B>
-                  {getVolume(exchange.volume, exchange.assetKind).toLocaleString('ru-RU', {
+                  {countVolumeToShow(exchange.volume, exchange.assetKind).toLocaleString('ru-RU', {
                     maximumFractionDigits: 5,
                   })}{' '}
                   {Balance[exchange.assetKind]}
                 </S.B>{' '}
                 будут отправлены вам сразу после подтверждения продавцом получения средств размере{' '}
                 <S.B>
-                  {(exchange.volume * exchange.rate).toLocaleString('ru-RU', {
+                  {(countVolumeToShow(exchange.exchangeVolume, exchange.assetKind)).toLocaleString('ru-RU', {
                     maximumFractionDigits: 0,
                   })}{' '}
                   {FiatKind[exchange.exchangeAssetKind]}
@@ -567,12 +638,14 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
                   Чат
                 </Button>
                 <Button
-                  outlinePrimary
+                  outlineDanger
                   bigSize
+                  as="button"
+                  disabled={!timerDown}
                   onClick={() => abuseExchange(exchange.safeId)}
                   exchangeBtn
                 >
-                  Жалоба
+                  Пожаловаться
                 </Button>
               </S.Space>
             </S.Space>
@@ -583,7 +656,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
               <Text size={14} lH={20} black>
                 Покупатель указал, что перевел средства в размере{' '}
                 <S.B>
-                  {(exchange.volume * exchange.rate).toLocaleString('ru-RU', {
+                  {(countVolumeToShow(exchange.exchangeVolume, exchange.assetKind)).toLocaleString('ru-RU', {
                     maximumFractionDigits: 0,
                   })}{' '}
                   {FiatKind[exchange.exchangeAssetKind]}
@@ -616,14 +689,14 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
                   Чат
                 </Button>
                 <Button
-                  outlinePrimary
+                  outlineDanger
                   bigSize
                   as="button"
-                  disabled={draw}
+                  disabled={true}
                   onClick={() => abuseExchange(exchange.safeId)}
                   exchangeBtn
                 >
-                  Жалоба
+                  Пожаловаться
                 </Button>
               </S.Space>
             </S.Space>
@@ -634,13 +707,13 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
 
         {/* COMPLETED STATE */}
 
-        <S.StateBlock when={exchange.state === 2}>
+        <S.StateBlock when={exchange.state === 2 && mark === false}>
           <S.StateBlock when={owner === 'buyer'}>
             <S.TransferInfoBlock>
               <Text size={14} lH={20} black>
                 Обмен успешно завершен. Средства в размере{' '}
                 <S.B>
-                  {getVolume(exchange.volume, exchange.assetKind).toLocaleString('ru-RU', {
+                  {countVolumeToShow(exchange.volume, exchange.assetKind).toLocaleString('ru-RU', {
                     maximumFractionDigits: 5,
                   })}{' '}
                   {Balance[exchange.assetKind]}
@@ -650,7 +723,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
             </S.TransferInfoBlock>
             <S.FeedbackBlock>
               <Text size={14} lH={20} mB={10} black>
-                Оставьте свою оценку покупателю:
+                Оставьте свою оценку продавцу:
               </Text>
               <Radio.Group>
                 <Radio
@@ -691,7 +764,11 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
               </Radio.Group>
             </S.FeedbackBlock>
 
-            <Button primary onClick={() => rateUser()}>
+            <Button primary onClick={() => {
+              rateUser();
+              setShowSuccessModal(true);
+              getUserMark();
+            }}>
               Подтвердить
             </Button>
           </S.StateBlock>
@@ -701,7 +778,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
               <Text size={14} lH={20} black>
                 Обмен успешно завершен. Средства в размере{' '}
                 <S.B>
-                  {getVolume(exchange.volume, exchange.assetKind).toLocaleString('ru-RU', {
+                  {countVolumeToShow(exchange.volume, exchange.assetKind).toLocaleString('ru-RU', {
                     maximumFractionDigits: 5,
                   })}{' '}
                   {Balance[exchange.assetKind]}
@@ -751,7 +828,11 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
                 />
               </Radio.Group>
             </S.FeedbackBlock>
-            <Button primary onClick={() => rateUser()}>
+            <Button primary onClick={() => {
+              rateUser();
+              setShowSuccessModal(true);
+              getUserMark();
+            }}>
               Подтвердить
             </Button>
           </S.StateBlock>
@@ -759,12 +840,12 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({ exchange, setCall }: D
         {/* ************** */}
       </RightSide>
       <ExchangeSuccessModal
-        exchange={{ ...exchange, feadback: feedbackValue, owner }}
+        exchange={{ ...exchange, feedback: feedbackValue, owner }}
         open={showSuccessModal}
         onClose={() => setShowSuccessModal(false)}
       />
       <ExchangeRejectModal
-        exchange={{ ...exchange, feadback: feedbackValue, owner }}
+        exchange={{ ...exchange, feedback: feedbackValue, owner }}
         open={showRejectModal}
         onClose={() => setShowRejectModal(false)}
       />

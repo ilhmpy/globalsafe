@@ -101,7 +101,9 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
 
         <S.BlockWrapper>
           <Text size={14} lH={20} mB={10} black>Рейтинг аккаунта:</Text>
-          <Title lH={28}>{Number(order.userRating).toFixed(1)}</Title>
+          <Title lH={28}>
+            {`${order.userRating ? Number(order.userRating).toFixed(1) : '-'}`}
+          </Title>
         </S.BlockWrapper>
 
       </LeftSide>
@@ -144,7 +146,7 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
           <S.BlockWrapper>
             <Text size={14} lH={20} mB={4} black>Время на обмен:</Text>
             <Text size={14} lH={20} weight={500} black>
-              {`${order.operationWindow.minutes}м. ${order.operationWindow.seconds}с.`}
+              {`${order.operationWindow.totalMinutes}м. ${order.operationWindow.seconds}с.`}
             </Text>
           </S.BlockWrapper>
 

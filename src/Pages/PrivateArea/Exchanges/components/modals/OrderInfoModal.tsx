@@ -1,12 +1,11 @@
-import React, { FC, Fragment, useContext } from 'react';
+import React, { FC, Fragment } from 'react';
 import { useHistory } from 'react-router';
 import styled from 'styled-components';
 import { Button as BaseButton } from '../../../../../components/Button/V2/Button';
 import { Modal } from '../../../../../components/ModalAnimated';
-import { PrivateAreaContext } from '../../../../../context/PrivateAreaContext';
 import { FiatKind } from '../../../../../types/fiat';
 import { OrderType, ViewBuyOrderModel, ViewSellOrderModel } from '../../../../../types/orders';
-import { CollectionPayMethod } from '../../../../../types/paymentMethodKind';
+import { CollectionPayMethod, PaymentMethodKind } from '../../../../../types/paymentMethodKind';
 import { Space, Text } from '../../../components/ui';
 import * as S from './S.el';
 
@@ -44,16 +43,12 @@ export const OrderInfoModal: FC<OrderInfoModalProps> = ({
   open,
 }: OrderInfoModalProps) => {
   const history = useHistory();
-  const { setCurrentOrder, setCurrentOrderType} = useContext(PrivateAreaContext);
 
   const handleNavigateToOrder = () => {
     if(newCreatedOrder) {
-      setCurrentOrder(newCreatedOrder);
-      setCurrentOrderType(type);
-      history.replace(`/info/p2p-changes/orders/my/${newCreatedOrder.id}`)
+      history.replace(`/info/p2p-changes/orders/my/${newCreatedOrder.safeId}`)
     }
   };
-
 
   return (
     <>
@@ -216,14 +211,14 @@ const DrawBuyOrderPaymentsBlock = ({ paymentMethods, currencyToChange }: PMProps
         </Text>
         <S.ListItemDivider />
         <Text size={14} lH={20} weight={700}>
-          {FiatKind[paymentMethods[0].assetKind]}
+          {PaymentMethodKind[paymentMethods[0].kind]}
         </Text>
       </S.DataListItem>
       {paymentMethods.length > 1 &&
         [...paymentMethods].splice(1).map((method) => (
           <S.DataListItem justifyEnd key={method.safeId}>
             <Text size={14} lH={20} weight={700}>
-              {FiatKind[method.assetKind]}
+              {PaymentMethodKind[method.kind]}
             </Text>
           </S.DataListItem>
         ))}
@@ -307,7 +302,7 @@ const DrawSellOrderPaymentsBlock = ({ paymentMethods, currencyToChange }: PMProp
               </Text>
               <S.ListItemDivider />
               <Text size={14} lH={20} weight={700}>
-                {FiatKind[method.assetKind]}
+                {PaymentMethodKind[method.kind]}
               </Text>
             </S.DataListItem>
 
@@ -324,7 +319,7 @@ const DrawSellOrderPaymentsBlock = ({ paymentMethods, currencyToChange }: PMProp
           <Fragment key={`payment-method-${method.safeId}-${i}`}>
             <S.DataListItem justifyEnd>
               <Text size={14} lH={20} weight={700}>
-                {FiatKind[method.assetKind]}
+                {PaymentMethodKind[method.kind]}
               </Text>
             </S.DataListItem>
 

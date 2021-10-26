@@ -21,11 +21,21 @@ type PropsMatch = {
 
 export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>) => {
   const history = useHistory();
-  const [exchange, setExchange] = useState<ViewExchangeModel | undefined>();
+  const [exchange, setExchange] = useState<ViewExchangeModel | null>(null);
   const { exchangeId } = match.params;
-  const { hubConnection } = useContext(AppContext);
+  const { hubConnection, account } = useContext(AppContext);
   const [loading, setLoading] = useState<boolean>(false);
   const [call, setCall] = useState<boolean>(false);
+  const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
+  const [showRejectModal, setShowRejectModal] = useState<boolean>(false);
+  const buyer = () => {
+    return (
+      (exchange && exchange.kind === 0 && exchange.ownerSafeId !== account.safeId) ||
+      (exchange && exchange.kind === 1 && exchange.ownerSafeId === account.safeId)
+    );
+  };
+
+  const [owner, setOwner] = useState<'seller' | 'buyer'>(buyer() ? 'buyer' : 'seller');
 
   function getExchange(loading: boolean) {
     if (hubConnection) {
@@ -42,7 +52,7 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
         })
     };
   };
-
+ 
   useEffect(() => {
     if (hubConnection) {
       getExchange(true);
@@ -55,80 +65,31 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
     };
   }, [hubConnection, call]);
 
-  function cb(res: any) {
-    console.log("ExchangeChanged", res);
-    getExchange(false);
-  };
-
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection.on("ExchangeAbused", cb);
-    };
-    return () => {
-      hubConnection?.off("ExchangeAbused", cb);
-    };
-  }, [hubConnection]);
-
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection.on("ExchangeCancelled", cb);
-    } 
-    return () => {
-      hubConnection?.off("ExchangeCancelled", cb);
-    };
-  }, [hubConnection]);
-
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection.on("ExchangeCompleted", cb);
-    };
-    return () => {
-      hubConnection?.off("ExchangeCompleted", cb);
-    };  
-  }, [hubConnection]);
-
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection.on("ExchangeConfirmationRequired", cb);
-    };
-    return () => {
-      hubConnection?.off("ExchangeConfirmationRequired", cb);
-    };  
-  }, [hubConnection]);
-
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection.on("BuyOrderVolumeChanged", cb);
-    };
-    return () => {
-      hubConnection?.off("BuyOrderVolumeChanged", cb);
-    };  
-  }), [hubConnection];
-
-  useEffect(() => {
-    if (hubConnection) {
-      hubConnection.on("SellOrderVolumeChanged", cb);
-    };
-    return () => {
-      hubConnection?.off("SellOrderVolumeChanged", cb);
-    };  
-  }, [hubConnection])
-  
   return (
     <S.Container>
       {loading ? <Loading /> : (
         <>
-          {exchange === undefined ? <NotItems text="Не имеется информации по этому обмену" /> : (
+          {exchange === null ? <NotItems text="Не имеется информации по этому обмену" /> : (
             <>
               <Container>
                 <Back text="К списку обменов" onGoBackClick={() => history.replace(routers.p2pchangesOwn)} />
                 <S.TitleContainer>
                     <Title mB={0}>Обмен {`${Balance[exchange.assetKind]}-${FiatKind[exchange.exchangeAssetKind]}`}</Title>
                     <Text size={14} lH={20} black>
-                      № {exchange.id}
+                      № {exchange.safeId}
                     </Text>
                 </S.TitleContainer>
-                <ExchangeDetailCard setCall={setCall} exchange={exchange} />
+                <ExchangeDetailCard setCall={setCall} 
+                  setShowSuccessModal={setShowSuccessModal} 
+                  setShowRejectModal={setShowRejectModal}
+                  showSuccessModal={showSuccessModal} 
+                  showRejectModal={showRejectModal}
+                  exchange={exchange}
+                  setExchange={setExchange}
+                  owner={owner}
+                  setLoading={setLoading}
+                  exchangeId={exchangeId}
+                />
               </Container>
             </>
           )}

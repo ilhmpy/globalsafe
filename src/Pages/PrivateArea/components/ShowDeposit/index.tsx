@@ -31,7 +31,7 @@ export const ShowDeposit: FC<IProps> = ({ chosenDepositView }: IProps) => {
 
   const history = useHistory();
   const { deposit } = chosenDepositView;
-  const { hubConnection } = useContext(AppContext);
+  const { hubConnection, depositsFilter } = useContext(AppContext);
   const [isOpenCloseDeposit, setIsOpenCloseDeposit] = useState<boolean>(false);
   const [isAgree, setIsAgree] = useState<boolean>(false);
   const [calculated, setCalculated] = useState<IBalanceExchange>();
@@ -70,8 +70,14 @@ export const ShowDeposit: FC<IProps> = ({ chosenDepositView }: IProps) => {
 
   const colorSwitcher = (type: string) => {
     if (type === 'active') return '#EFECFF';
-    else if (type === 'archive') return '#E0F8FF';
-    else if (type === 'delayed') return '#DAFFE2';
+    else if (type === 'archived') return '#E0F8FF';
+    else if (type === 'hold') return '#DAFFE2';
+  };
+
+  const getDepositType = (type: string) => {
+    if (type === 'active') return 'Активный депозит';
+    else if (type === 'archived') return 'В архиве';
+    else if (type === 'hold') return 'С отложенной выплатой';
   };
 
   console.log(deposit);
@@ -103,10 +109,10 @@ export const ShowDeposit: FC<IProps> = ({ chosenDepositView }: IProps) => {
         }}
         open={closeDepositError}
       />
-      <LeftSide bg={colorSwitcher(deposit?.isActive ? 'active' : 'delayed')}>
+      <LeftSide bg={colorSwitcher(depositsFilter)}>
         <Name>{deposit?.name}</Name>
         <ChipWrap small>
-          <Chip>{deposit?.isActive ? 'Активный депозит' : 'С отложенной выплатой'}</Chip>
+          <Chip>{getDepositType(depositsFilter)}</Chip>
         </ChipWrap>
         <TitleWrap small>
           <ProgramDescTitle>Сумма депозита:</ProgramDescTitle>

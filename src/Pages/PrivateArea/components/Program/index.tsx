@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import { Button } from '../../../../components/Button/V2/Button';
 import { AppContext } from '../../../../context/HubContext';
-import { CollectionListDeposits } from '../../../../types/deposits';
+import { CollectionListDeposits, ListDeposits } from '../../../../types/deposits';
 import { RootList } from '../../../../types/info';
 import * as S from './S.el';
 
@@ -23,18 +23,18 @@ export const Program = ({ className = '' }: ProgramProps) => {
     if (hubConnection) {
       setDepositProgramsLoading(true);
       hubConnection
-        .invoke<RootList>('GetUserDeposits', [1, 2, 3, 4, 5, 6, 7, 8], null, 0, 20, [
-          {
-            ConditionWeight: 1,
-            OrderType: 2,
-            FieldName: 'creationDate',
-          },
-        ])
-        // .invoke<ListDeposits>('GetDeposits', languale, true, 0, 20)
+        // .invoke<RootList>('GetUserDeposits', [1, 2, 3, 4, 5, 6, 7, 8], null, 0, 20, [
+        //   {
+        //     ConditionWeight: 1,
+        //     OrderType: 2,
+        //     FieldName: 'creationDate',
+        //   },
+        // ])
+        .invoke<ListDeposits>('GetDeposits', languale, true, 0, 20)
         .then((res) => {
           console.log('.11111111111111s', res);
           if (res.collection.length) {
-            // setDepositProgramsList(res.collection);
+            setDepositProgramsList(res.collection);
           }
           setDepositProgramsLoading(false);
         })
@@ -59,7 +59,7 @@ export const Program = ({ className = '' }: ProgramProps) => {
         depositProgramsList.map((program, i) => (
           <S.Card key={`${program.id}-${i}`}>
             <S.CardTitle>{program.name}</S.CardTitle>
-            <S.CardDesc>{program.description}</S.CardDesc>
+            <S.CardDesc dangerouslySetInnerHTML={{ __html: program.description }} />
             <Button primary onClick={() => handleNavigateToOpen(program.safeId)}>
               Открыть депозит
             </Button>

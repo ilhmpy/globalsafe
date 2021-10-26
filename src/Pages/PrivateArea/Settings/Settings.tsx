@@ -16,6 +16,12 @@ import {
 import { PaymentMethodState } from '../../../types/paymentMethodState';
 import { FiatKind } from '../../../types/fiatKind';
 import { SettingsContext } from '../../../context/SettingsContext';
+import {
+  GetExchangesCollectionResult,
+  ViewExchangeModel,
+  ExchangeState,
+} from '../../../types/exchange';
+import { DontDeleteModal } from './DontDeleteModal';
 
 type TableRowType = {
   method?: string;
@@ -68,12 +74,79 @@ export const TableRows: FC<Rows> = ({ data, active, toView }: Rows) => {
 
 export const Settings: FC = () => {
   const appContext = useContext(AppContext);
-  const { hubConnection } = appContext;
-
+  const { hubConnection, userSafeId } = appContext;
+  const [dontDeleteModal, setDontDeleteModal] = useState(false);
   const [activeFilter, setActiveFilter] = useState<string>('Все');
   const history = useHistory();
 
-  const { userPaymentsMethod, setUserPaymentsMethod } = useContext(SettingsContext);
+  const { userPaymentsMethod, setUserPaymentsMethod, usePaymentMethods, setUsePaymentMethods } =
+    useContext(SettingsContext);
+  const [total, setTotal] = useState(0);
+  const [myExchanges, setMyExchanges] = useState<ViewExchangeModel[]>([]);
+
+  useEffect(() => {
+    if (userPaymentsMethod.length && myExchanges.length && userSafeId && !usePaymentMethods) {
+      const arrSell = myExchanges.filter(
+        (exchange) =>
+          (exchange.kind === 0 && exchange.ownerSafeId === userSafeId) ||
+          (exchange.kind === 1 && exchange.ownerSafeId !== userSafeId)
+      );
+      const methods = userPaymentsMethod.filter((i) =>
+        arrSell.some((j) => j.exchangeAssetKind === i.assetKind && j.methodsKinds.includes(i.kind))
+      );
+      setUsePaymentMethods(methods);
+    }
+  }, [userPaymentsMethod, myExchanges, userSafeId, usePaymentMethods]);
+
+  const getExchanges = async () => {
+    let arrList: ViewExchangeModel[] = [];
+    let isFetching = true;
+    let totalNum = 0;
+    if (hubConnection) {
+      while (isFetching) {
+        try {
+          const res = await hubConnection.invoke<GetExchangesCollectionResult>(
+            'GetExchanges',
+            [0, 1],
+            [ExchangeState.Initiated, ExchangeState.Abused, ExchangeState.Confirmed],
+            totalNum,
+            100
+          );
+          if (res) {
+            if (arrList.length < res.totalRecords) {
+              arrList = [...arrList, ...res.collection];
+
+              if (arrList.length === res.totalRecords) {
+                setTotal(res.totalRecords);
+                isFetching = false;
+                break;
+              }
+              if (total === 0) {
+                setTotal(0);
+              }
+              totalNum += 100;
+            } else {
+              isFetching = false;
+              setTotal(0);
+              break;
+            }
+          }
+        } catch (e) {
+          console.log(e);
+          setTotal(0);
+          isFetching = false;
+        }
+      }
+      setMyExchanges(arrList);
+      console.log('arrList', arrList);
+    }
+  };
+
+  useEffect(() => {
+    if (hubConnection) {
+      getExchanges();
+    }
+  }, [hubConnection]);
 
   const userPaymentsMethods = async (arr: number[]) => {
     if (!hubConnection) return;
@@ -86,7 +159,7 @@ export const Settings: FC = () => {
         0,
         100
       );
-      // console.log('res', res);
+      console.log('GetUserPaymentsMethods', res);
       setUserPaymentsMethod(res.collection);
     } catch (err) {
       console.log(err);
@@ -142,6 +215,16 @@ export const Settings: FC = () => {
   };
 
   const active = (item: CollectionPayMethod) => {
+    const isHave = usePaymentMethods
+      ? usePaymentMethods.filter((i) => i.safeId === item.safeId)
+      : [];
+
+    if (isHave.length) {
+      console.log('isHave');
+      setDontDeleteModal(true);
+      return;
+    }
+
     const key = userPaymentsMethod.findIndex((i) => i.safeId === item.safeId);
     if (item.state === PaymentMethodState.Active) {
       adjustPaymentMethod(PaymentMethodState.Disabled, item.safeId);
@@ -171,7 +254,7 @@ export const Settings: FC = () => {
         title="Настройки"
         btnText="Добавить платежный метод"
       />
-
+      <DontDeleteModal open={dontDeleteModal} setOpen={setDontDeleteModal} />
       <S.Container>
         <S.Buttons>
           {[

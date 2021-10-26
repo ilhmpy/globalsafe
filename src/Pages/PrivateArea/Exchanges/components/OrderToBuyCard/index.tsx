@@ -6,7 +6,7 @@ import { AppContext } from '../../../../../context/HubContext';
 import { Balance } from '../../../../../types/balance';
 import { ViewUserCertificateModel } from '../../../../../types/certificates';
 import { FiatKind } from '../../../../../types/fiat';
-import { OrderType, ViewBuyOrderModel } from '../../../../../types/orders';
+import { GetBuyOrdersModel, OrderType, ViewBuyOrderModel } from '../../../../../types/orders';
 import { CollectionPayMethod, PaymentMethodKind, RootPayMethod } from '../../../../../types/paymentMethodKind';
 import { Checkbox } from '../../../components/Checkbox';
 import { LeftSide, RightSide, Space, TabNavItem, Text, Title } from '../../../components/ui';
@@ -18,7 +18,7 @@ import * as S from './S.el';
 export const OrderToBuyCard: FC = () => {
   const history = useHistory();
   const appContext = useContext(AppContext);
-  const { hubConnection, user } = appContext;
+  const { hubConnection, user, balanceList } = appContext;
   const [showOrderBuyModal, setShowOrderBuyModal] = useState(false);
   const [showOrderErrorModal, setShowOrderErrorModal] = useState(false);
 
@@ -50,13 +50,21 @@ export const OrderToBuyCard: FC = () => {
   const [createOrderLoading, setCreateOrderLoading] = useState(false);
   const [newCreatedOrder, setNewCreatedOrder] = useState<ViewBuyOrderModel | undefined>(undefined);
   const [dailyLimitRest, setDailyLimitRest] = useState(0);
+  const [hasFamiliarOrder, setHasFamiliarOrder] = useState(false);
+  const [showHasFamiliarOrder, setShowHasFamiliarOrder] = useState(false);
 
   // Get Balance Kinds List as an Array
   const balanceKinds = useMemo<string[]>(() => {
+    const ownBalanceKinds: number[] = balanceList?.map(b => b.balanceKind) || [];
+
     // @ts-ignore: Unreachable code error
-    const list: string[] = Object.values(Balance).filter((i) => typeof i === 'string');
+    const list: string[] = Object.values(Balance)
+    .filter((b) => typeof b === 'string')
+    .filter((b, i) => ownBalanceKinds.includes(i))
+    .filter((b) => b !== 'Na');
+
     return list;
-  }, [Balance]);
+  }, [Balance, balanceList]);
 
   // Get Fiat Kinds List as an Array
   const fiatKinds = useMemo<string[]>(() => {
@@ -133,6 +141,37 @@ export const OrderToBuyCard: FC = () => {
     return withoutDuplicates;
   };
 
+  useEffect(() => {
+    if (hubConnection && currencyToBuy && currencyToChange) {
+      getBuyOrders();
+    }
+  }, [hubConnection, currencyToBuy, currencyToChange]);
+
+  const getBuyOrders = async () => {
+    try {
+      const res = await hubConnection!.invoke<GetBuyOrdersModel>(
+        'GetBuyOrders', 
+        currencyToBuy ? [ Balance[currencyToBuy as keyof typeof Balance] ] : [],  // Array of BalanceKind assetKinds
+        currencyToChange ? [ FiatKind[currencyToChange as keyof typeof FiatKind] ] : [],  // Array of FiatKind opAssetKinds
+        [], // Array of PaymentMethodKind[] paymentMethodKinds
+        0, // int rating
+        true, // if true ? will show my orders
+        0, 
+        10
+      );
+      console.log('GetBuyOrders', res);
+      if(res.collection.length > 0) {
+        setHasFamiliarOrder(true);
+      } else {
+        setHasFamiliarOrder(false);
+      }
+      
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+
   const handleCreateBuyOrder = async () => {
     setCreateOrderLoading(true);
     try {
@@ -163,6 +202,9 @@ export const OrderToBuyCard: FC = () => {
   const onOrderSummChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const pattern = /^[1-9][0-9]*$/;
     if (e.target.value === '' || pattern.test(e.target.value)) {
+      // Clear Min-Max values
+      setOrderMinSumm('');
+      setOrderMaxSumm('');
       if (+e.target.value > dailyLimitRest) {
         setOrderSumm(String(dailyLimitRest));
       } else {
@@ -173,16 +215,21 @@ export const OrderToBuyCard: FC = () => {
 
   const onRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const pattern = /^[0-9][0-9\.]*$/;
+    const pattern2 = /^[0-9]{1,10}\.[0-9]{6}$/;
     if (e.target.value === '' || pattern.test(e.target.value)) {
-      setChangeRate(e.target.value);
+      // Clear Max limit
+      setOrderMaxSumm('');
+      if(!pattern2.test(e.target.value)) {
+        setChangeRate(e.target.value);
+      }
     }
   };
 
   const onOrderMinSummChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const pattern = /^[1-9][0-9]*$/;
     if (e.target.value === '' || pattern.test(e.target.value)) {
-      if (+e.target.value > +orderSumm) {
-        setOrderMinSumm(orderSumm);
+      if (+e.target.value > ((+orderSumm - 1) * +changeRate)) {
+        setOrderMinSumm(String((+orderSumm - 1) * +changeRate));
       } else {
         setOrderMinSumm(e.target.value);
       }
@@ -192,8 +239,8 @@ export const OrderToBuyCard: FC = () => {
   const onOrderMaxSummChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const pattern = /^[1-9][0-9]*$/;
     if (e.target.value === '' || pattern.test(e.target.value)) {
-      if (+e.target.value > +orderSumm) {
-        setOrderMaxSumm(orderSumm);
+      if (+e.target.value > (+orderSumm * +changeRate)) {
+        setOrderMaxSumm(String(+orderSumm * +changeRate));
       } else {
         setOrderMaxSumm(e.target.value);
       }
@@ -246,6 +293,15 @@ export const OrderToBuyCard: FC = () => {
     selectedPaymentMethodsIds,
   ]);
 
+  const handlePublushOrder = () => {
+    if(hasFamiliarOrder) {
+      setShowHasFamiliarOrder(true);
+      return;
+    }
+
+    setShowOrderBuyModal(true);
+  };
+ 
   return (
     <S.Container>
       <LeftSide bg={'#EAEFF4'}>
@@ -347,7 +403,7 @@ export const OrderToBuyCard: FC = () => {
                       ) : (
                         <Checkbox
                           key={`payment-method-${method.safeId}-${i}`}
-                          label={PaymentMethodKind[method.assetKind]}
+                          label={PaymentMethodKind[method.kind]}
                           labelBold
                           checked={selectedPaymentMethodsIds.includes(String(method.id))}
                           value={String(method.id)}
@@ -413,7 +469,7 @@ export const OrderToBuyCard: FC = () => {
           <Space gap={10} mb={40}>
             <S.Button
               primary
-              onClick={() => setShowOrderBuyModal(true)}
+              onClick={handlePublushOrder}
               as={'button'}
               disabled={!formIsValid}
               type="button"
@@ -444,7 +500,15 @@ export const OrderToBuyCard: FC = () => {
         open={showOrderBuyModal}
         onClose={() => setShowOrderBuyModal(false)}
       />
-      <OrderErrorModal open={showOrderErrorModal} onClose={() => setShowOrderErrorModal(false)} />
+      <OrderErrorModal 
+        open={showOrderErrorModal} 
+        onClose={() => setShowOrderErrorModal(false)} 
+      /> 
+      <OrderErrorModal  
+        message="У вас уже есть ордер с такой же валютной парой"
+        open={showHasFamiliarOrder} 
+        onClose={() => setShowHasFamiliarOrder(false)} 
+      /> 
     </S.Container>
   );
 };

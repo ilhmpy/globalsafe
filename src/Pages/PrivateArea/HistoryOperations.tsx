@@ -15,6 +15,9 @@ import { Loading, NotItems, Spinner } from "./components/Loading/Loading";
 import formatRelativeWithOptions from 'date-fns/esm/fp/formatRelativeWithOptions/index.js';
 import { isObject } from 'highcharts';
 import { InternalSymbolName, isTemplateSpan } from 'typescript';
+import { countVolumeToShow } from './utils';
+import { ViewExchangeModel } from '../../types/exchange';
+import { isFirstDayOfMonth } from 'date-fns/esm';
 
 export const HistoryOperations = () => {
     const history = useHistory();
@@ -37,8 +40,7 @@ export const HistoryOperations = () => {
     const [not, setNot] = useState<boolean>(false);
     const [newItems, setNewItems] = useState<boolean>(true);
     const [emptyItems, setEmptyItems] = useState<boolean>(false);
-
-    const filter = [1, 2];
+    const [allState, setAllState] = useState<ViewExchangeModel[]>([]);
 
     const operation = (id: number) => {
         if (id === 1) {
@@ -58,7 +60,7 @@ export const HistoryOperations = () => {
         } else if (id === 8) {
             return t('operation.close');
         } else if (id === 9) {
-            return "Регулировка балансировки"
+            return "Регулировка баланса"
         } else if (id === 10) {
             return "Приз"
         } else if (id === 11) {
@@ -71,62 +73,146 @@ export const HistoryOperations = () => {
             return "Перевод между балансами.";
         } else if (id === 15) {
             return "Обменный депозит.";
+        } else if (id === 16) {
+            return "Создан ордер на продажу";
+        } else if (id === 17) {
+            return "Ордер на продажу отменен";
+        } else if (id === 18) {
+            return "Обмен";
+        } else if (id === 19) {
+            return "Обмен завершен";
+        } else if (id === 20) {
+            return "Обмен отменен";
+        } else if (id === 21) {
+            return "Куплен сертификат";
         };
     };
 
     const [operations, setOperations] = useState<any[] | null>(null);
     const [statusNew, setStatusNew] = useState<any>();
+    const [totalRecords, setTotalRecords] = useState<number | null>(null);
 
     /*    /// NA.
-    Null,
+        /// <summary>
+        /// NA.
+        /// </summary>
+        Null, 0
 
-    /// Top-up operation.
-    TopUp, 1
+        /// <summary>
+        /// Top-up operation.
+        /// </summary>
+        TopUp, 1
+
+        /// <summary>
+        /// Withdraw operation.
+        /// </summary>
+        Withdraw, 2
+
+        /// <summary>
+        /// Balance rollback due to transaction failure.
+        /// </summary>
+        Rollback, 3
+
+        /// <summary>
+        /// Promo balance adjustment.
+        /// </summary>
+        Promo, 4
+
+        /// <summary>
+        /// Affiliate charges.
+        /// </summary>
+        AffiliateCharges, 5
+
+        /// <summary>
+        /// Open new user deposit.
+        /// </summary>
+        DepositOpen, 6
+
+        /// <summary>
+        /// Deposit charges.
+        /// </summary>
+        DepositPayments, 7
+
+        /// <summary>
+        /// Return deposit body on expiry.
+        /// </summary>
+        DepositClose, 8
+
+        /// <summary>
+        /// Balance operation adjustemnt.
+        /// </summary>
+        Adjustment, 9
+
+        /// <summary>
+        /// Balance prize adjustment.
+        /// </summary>
+        Prize, 10
+
+        /// <summary>
+        /// Network commission from the transaction amount
+        /// </summary>
+        TransactionNetworkFee, 11
+
+        /// <summary>
+        /// Service commission from the transaction amount
+        /// </summary>
+        TransactionServiceFee, 12
+
+        /// <summary>
+        /// Deposit loan.
+        /// </summary>
+        DepositLoan, 13
+
+        /// <summary>
+        /// Transfer between balances.
+        /// </summary>
+        BalanceExchange, 14
  
-    /// Withdraw operation.
-    Withdraw, 2
+        /// <summary>
+        /// Exchange deposit.
+        /// </summary>
+        DepositExchange, 15
 
-    /// Balance rollback due to transaction failure.
-    Rollback, 3
+        /// <summary>
+        /// Funds reservation for sell order creation.
+        /// </summary>
+        SellOrderCreation, 16
+ 
+        /// <summary>
+        /// Refund on sell order cancelation.
+        /// </summary>
+        SellOrderCancelation, 17
 
-    /// Promo balance adjustment.
-    Promo, 4
+        /// <summary>
+        /// Exchange funds keep.
+        /// </summary>
+        Exchange, 18
 
-    /// Affiliate charges.
-    AffiliateCharges, 5 
+        /// <summary>
+        /// Exchange completion.
+        /// </summary>
+        ExchangeCompletion, 19
 
-    /// Open new user deposit.
-    DepositOpen, 6
-
-    /// Deposit charges.
-    DepositPayments, 7
-
-    /// Return deposit body on expiry.
-    DepositClose, 8
-
-    /// Balance operation adjustemnt.
-    Adjustment, 9
-
-    /// Balance prize adjustment.
-    Prize, 10
-
-    /// Network commission from the transaction amount
-    TransactionNetworkFee, 11
-
-    /// Service commission from the transaction amount
-    TransactionServiceFee, 12
-
-    /// Deposit loan.
-    DepositLoan, 13
-
-    /// Transfer between balances.
-    BalanceExchange, 14
-
-    /// Exchange deposit.
-    DepositExchange, 15
+        /// <summary>
+        /// Return funds due to exchange cancelation.
+        /// </summary>
+        ExchangeCancelation, 20
+        
+        /// <summary>
+        /// Purchase new certificate.
+        /// </summary>
+        CertificatePurchase, 21
     */ 
 
-    useEffect(() => {
+    function getFirstElements(collection: ViewExchangeModel[], elms: number) {
+        return collection.filter((i, idx) => {
+            if (idx < elms) {
+                return i;
+            };
+        });
+    };
+
+    function getBalanceLog() {
         if (hubConnection) {
             setNewItems(true);
             const date = new Date();
@@ -137,20 +223,18 @@ export const HistoryOperations = () => {
                 getFilter(activeFilter), 
                 nowMonth ? new Date(date.getFullYear(), date.getMonth(), 1, 0, 0) : new Date(2013, 5, 13, 10, 0, 0),
                 new Date(), 
-                0, 10
+                0, 100
             )
               .then(res => {
                 setLoading(false);
-                console.log("res", res.collection);
+                console.log("res", res);
+                setTotalRecords(res.totalRecords);
+                setAllState(res.collection);
+                const collection = getFirstElements(res.collection, 10);
+                console.log(collection);
                 if (allCurrency) {
                    setOperations(() => {
-                     const items = res.collection.map((i: any) => {
-                        return {
-                          ...i,
-                          new: false
-                        };
-                    });
-                    return items.sort((x: any, y: any) => {
+                    return collection.map((i: any) => ({ ...i, new: false })).sort((x: any, y: any) => {
                         const a = new Date(x.operationDate);
                         const b = new Date(y.operationDate);
                         return a > b ? -1 : a < b ? 1 : 0;
@@ -159,16 +243,11 @@ export const HistoryOperations = () => {
                 } else {
                     if (balances) {
                         setOperations(() => {
-                            const items = res.collection.filter((i: any) => {
-                                if (Number(i.id) === balances[1].id) {
-                                    return {
-                                        ...i,
-                                        new: false
-                                    };
-                                };
-                            });
-                            console.log(items);
-                           return items.sort((x: any, y: any) => {
+                            return collection.filter((i: any) => {
+                                if (Number(i.id) === balances[1].id) { 
+                                    return { ...i, new: false };                    
+                               };
+                            }).sort((x: any, y: any) => {
                                 const a = new Date(x.operationDate);
                                 const b = new Date(y.operationDate);
                                 return a > b ? -1 : a < b ? 1 : 0;
@@ -187,7 +266,11 @@ export const HistoryOperations = () => {
                 setLoading(false);
               });
         };
-    }, [activeFilter, hubConnection, nowMonth, allCurrency]);
+    };
+
+    useEffect(() => {
+        getBalanceLog();
+    }, [activeFilter, hubConnection, nowMonth, allCurrency, totalRecords]);
 
     function changeNew() {
         setOperations(items => items && items.map((i: any) => {
@@ -196,64 +279,25 @@ export const HistoryOperations = () => {
                 new: false 
             };
         }));
-    }
+    };
 
     function addMore() {
-        if (hubConnection) {
-            const date = new Date();
-            hubConnection.invoke(
-                "GetBalanceLog", 
-                [1], 
-                getFilter(activeFilter), 
-                nowMonth ? new Date(date.getFullYear(), date.getMonth(), 1, 0, 0) : new Date(2013, 5, 13, 10, 0, 0),
-                new Date(), 
-                operations && operations.length + 1, 
-                5
-            )
-              .then(res => {
-                console.log("rees", res);
-                changeNew();
-                if (allCurrency) {
-                    setOperations((data: any) => {
-                        const items = [...data.map((i: any) => {
-                            return { ...i, new: false }
-                        }), ...res.collection.map((i: any) => {
-                            return { ...i, new: true }
-                        })];
-                        return items.sort((x: any, y: any) => {
-                            const a = new Date(x.operationDate);
-                            const b = new Date(y.operationDate);
-                            return a > b ? -1 : a < b ? 1 : 0;
-                        });
-                    });
-                } else {
-                    if (balances) {
-                        setOperations((data: any) => {
-                            const items = [...data.map((i: any) => {
-                                return { ...i, new: false }
-                            }), ...res.collection.map((i: any) => {
-                                if (Number(i.id) === balances[1].id) {
-                                    return { ...i, new: true }
-                                }
-                            })];
-                            return items.sort((x: any, y: any) => {
-                                const a = new Date(x.operationDate);
-                                const b = new Date(y.operationDate);
-                                return a > b ? -1 : a < b ? 1 : 0;
-                            });
-                        });
-                    };
+        if (operations && operations.length <= allState.length) {
+            changeNew();
+            let items: any[] = [];
+            for (let i = 0; i < 5; i++) {
+                if (allState[operations.length + i]) {
+                    items = [...items, { ...allState[operations.length + i], new: true }];
                 };
+            };            
+            if (items.length) {
+                setOperations([...operations, ...items].sort((x: any, y: any) => {
+                    const a = new Date(x.operationDate);
+                    const b = new Date(y.operationDate);
+                    return a > b ? -1 : a < b ? 1 : 0;
+                }));
                 setStatusNew(setTimeout(() => changeNew(), 2000));
-                if (res.collection.length > 0) {
-                    setNewItems(true);
-                } else {
-                    setNewItems(false);
-                }
-              })
-              .catch(err => {
-                  console.log(err);
-              });
+            };
         };
     };
 
@@ -277,11 +321,19 @@ export const HistoryOperations = () => {
         }
       }
 
-    function getCurrency(id: number) {
+    function getCurrency(id: number, type: "string" | "number" = "number") {
         if (balances) {
-            for (let i = 0; i < balances.length; i++) {
-                if (Number(id) == balances[i].id) {
-                    return Balance[balances[i].balanceKind];
+            if (type === "string") {
+                for (let i = 0; i < balances.length; i++) {
+                    if (Number(id) == balances[i].id) {
+                        return Balance[balances[i].balanceKind];
+                    };
+                };
+            } else {
+                for (let i = 0; i < balances.length; i++) {
+                    if (Number(id) == balances[i].id) {
+                        return balances[i].balanceKind;
+                    };
                 };
             };
         };
@@ -319,16 +371,18 @@ export const HistoryOperations = () => {
                                 <Styled.TableMap>
                                     {operations && operations.map((item: any, idx) => (
                                         <Styled.TableItem item key={idx} newItem={item.new && item.new}>
-                                            <Styled.TableInnerItem item>{moment(item.operationDate).format("DD.MM.YYYY")} в {moment(item.operationDate).format("HH:MM")}</Styled.TableInnerItem>
+                                            <Styled.TableInnerItem item>{moment(item.operationDate).local().format("DD.MM.YYYY")} в {moment(item.operationDate).local().format("HH:MM")}</Styled.TableInnerItem>
                                             <Styled.TableInnerItem item>{operation(item.operationKind)}</Styled.TableInnerItem>
                                             <Styled.TableInnerItem item income={item.balanceDelta > 0}>
-                                                {item.balanceDelta > 0 && (<>{sign(item.balanceDelta)} </>)} {(item.balanceDelta).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {item.balanceSafeId && getCurrency(item.balanceSafeId)}
+                                                {item.balanceDelta > 0 && (
+                                                    <>{sign(countVolumeToShow(item.balanceDelta, getCurrency(item.balanceSafeId, "number"))
+                                                )} </>)}  {item.balanceSafeId && (countVolumeToShow(item.balanceDelta, getCurrency(item.balanceSafeId, "number"))).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {item.balanceSafeId && getCurrency(item.balanceSafeId, "string")}
                                             </Styled.TableInnerItem>
                                         </Styled.TableItem>
                                     ))}
                                 </Styled.TableMap>
                             </>
-                        ) : (
+                        ) : ( 
                             <NotItems text="Операции отсутствуют" /> 
                         )}
                     </>
@@ -339,6 +393,6 @@ export const HistoryOperations = () => {
                     <Spinner style={{ width: 25, height: 25, borderTop: "2px solid #fff", margin: "0 auto" }} /> 
                     : "Показать ещё"}
           </Styled.Button>
-        </Container>
-    )
+        </Container> 
+    ) 
 } 

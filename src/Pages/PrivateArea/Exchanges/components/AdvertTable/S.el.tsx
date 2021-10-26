@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components/macro';
 export const Table = styled.div`
   width: 100%;
   margin-bottom: 40px;
+  min-height: 350px;
 `;
 
 const table = css`

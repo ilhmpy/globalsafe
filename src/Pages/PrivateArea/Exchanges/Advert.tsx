@@ -15,11 +15,12 @@ import { Rating } from './components/modals/Rating';
 import { PaymentMethods } from './components/modals/PaymentMethods';
 import { Balance } from '../../../types/balance';
 import { FiatKind } from '../../../types/fiat';
+import { getMyRating } from '../utils';
  
 // TODO: Update Load more Functional.
 export const Advert = () => {
   const history = useHistory();
-  const { hubConnection } = useContext(AppContext);
+  const { hubConnection, account } = useContext(AppContext);
   const [activeType, setActiveType] = useState<OrderType>(OrderType.Buy);
   const [listingMyOrders, setListingMyOrders] = useState<boolean>(false);
   const [selectedBalanceKind, setSelectedBalanceKind] = useState<string | null>(null);
@@ -51,24 +52,21 @@ export const Advert = () => {
     'ERC 20',
     'TRC 20',
     'BEP 20',
-    'АО «Тинькофф Банк», USD',
-    'ПАО Сбербанк, USD',
-    'АО «Альфа-Банк», USD',
+    'АО «Тинькофф Банк»',
+    'ПАО Сбербанк',
+    'АО «Альфа-Банк»',
   ], []);
 
-  const getOrders = () => {
-    if(activeType === OrderType.Buy) {
-      getBuyOrders();
-    }
-
-    if(activeType === OrderType.Sell) {
-      getSellOrders();
-    }
-  }
-
   useEffect(() => {
+    setSkip(0);
     if (hubConnection) {
-      getOrders();
+      if(activeType === OrderType.Buy) {
+        getBuyOrders();
+      }
+  
+      if(activeType === OrderType.Sell) {
+        getSellOrders();
+      }
     }
   }, [hubConnection, activeType, selectedPair, acceptedRate, acceptedPaymentMethods, listingMyOrders]);
 
@@ -81,14 +79,13 @@ export const Advert = () => {
           acceptedPaymentMethods, // Array of PaymentMethodKind[] paymentMethodKinds
           acceptedRate, // int rating
           listingMyOrders, // if true ? will show my orders
-          skip, 
+          0, 
           10
         );
         console.log('GetBuyOrders', res);
-        // setOrdersList(s => [...s, ...res.collection]);
         setOrdersList(res.collection);
         setTotalCount(res.totalRecords);
-        // setSkip(s => s + 10);
+        setSkip(s => s + 10);
       } catch (err) {
         console.log(err);
       }
@@ -103,14 +100,13 @@ export const Advert = () => {
         acceptedPaymentMethods, // Array of PaymentMethodKind[] paymentMethodKinds
         acceptedRate, // int rating
         listingMyOrders, // if true ? will show my orders
-        skip, 
+        0, 
         10
       );
       console.log('GetSellOrders', res);
-      // setOrdersList(s => [...s, ...res.collection]);
       setOrdersList(res.collection);
       setTotalCount(res.totalRecords);
-      // setSkip(s => s + 10);
+      setSkip(s => s + 10);
     } catch (err) {
       console.log(err);
     }
@@ -151,41 +147,85 @@ export const Advert = () => {
     setSelectedPaymentMethods([]);
   };
 
-  const handleLoadMore = () => {
+  const handleLoadMoreOrders = async () => {
     if(activeType === OrderType.Buy) {
-      getBuyOrders();
-    }
-
-    if(activeType === OrderType.Sell) {
-      getSellOrders();
+      try {
+        const res = await hubConnection!.invoke<GetBuyOrdersModel>(
+          'GetBuyOrders', 
+          selectedPair?.balance ? [ Balance[selectedPair?.balance as keyof typeof Balance] ] : [],  // Array of BalanceKind assetKinds
+          selectedPair?.fiat ? [ FiatKind[selectedPair?.fiat as keyof typeof FiatKind] ] : [],  // Array of FiatKind opAssetKinds
+          acceptedPaymentMethods, // Array of PaymentMethodKind[] paymentMethodKinds
+          acceptedRate, // int rating
+          listingMyOrders, // if true ? will show my orders
+          skip, 
+          10
+        );
+        setOrdersList(s => [...s, ...res.collection]);
+        setTotalCount(res.totalRecords);
+        setSkip(s => s + 10);
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      try {
+        const res = await hubConnection!.invoke<GetSellOrdersModel>(
+          'GetSellOrders', 
+          selectedPair?.balance ? [ Balance[selectedPair?.balance as keyof typeof Balance] ] : [],  // Array of BalanceKind assetKinds
+          selectedPair?.fiat ? [ FiatKind[selectedPair?.fiat as keyof typeof FiatKind] ] : [],  // Array of FiatKind opAssetKinds
+          acceptedPaymentMethods, // Array of PaymentMethodKind[] paymentMethodKinds
+          acceptedRate, // int rating
+          listingMyOrders, // if true ? will show my orders
+          skip, 
+          10
+        );
+        setOrdersList(s => [...s, ...res.collection]);
+        setTotalCount(res.totalRecords);
+        setSkip(s => s + 10);
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
-
-
+  
   // Listening to changes
-  const cb = (res: any) => {
-    console.log("socket works::", res);
-    getOrders();
-  };
-
   useEffect(() => {
+    const cbOrderVolumeChanged = (orderSafeId: string, summ: number) => {
+      console.log('__SOCKET__cbOrderVolumeChanged::', orderSafeId, summ);
+      const key = ordersList.findIndex((order) => order.safeId === orderSafeId);
+      if(key !== -1) {
+        setOrdersList(state => [
+          ...state.slice(0, key),
+          {...state[key], volume: summ},
+          ...state.slice(key + 1),
+        ]);
+      }
+    };
+
+    const cbOrderCreated = (newOrder: ViewBuyOrderModel | ViewSellOrderModel) => {
+      console.log('__SOCKET__cbOrderCreated::', newOrder)
+      if(newOrder) {
+        setOrdersList(state => [newOrder, ...state])
+      }
+    };
+
     if (hubConnection) {
-      hubConnection.on("SellOrderCreated", cb);
-      hubConnection.on("BuyOrderCreated", cb);
-      hubConnection.on("BuyOrderVolumeChanged", cb);
-      hubConnection.on("SellOrderVolumeChanged", cb);
-      hubConnection.on("SellOrderCompleted", cb);
-      hubConnection.on("BuyOrderCompleted", cb);
+        hubConnection.on("BuyOrderCreated", cbOrderCreated);
+        hubConnection.on("BuyOrderVolumeChanged", cbOrderVolumeChanged);
+
+        hubConnection.on("SellOrderCreated", cbOrderCreated);
+        hubConnection.on("SellOrderVolumeChanged", cbOrderVolumeChanged);
     };
+
     return () => {
-      hubConnection?.off("SellOrderCreated", cb);
-      hubConnection?.off("BuyOrderCreated", cb);
-      hubConnection?.off("BuyOrderVolumeChanged", cb);
-      hubConnection?.off("SellOrderVolumeChanged", cb);
-      hubConnection?.off("SellOrderCompleted", cb);
-      hubConnection?.off("BuyOrderCompleted", cb);
+      hubConnection?.off("BuyOrderCreated", cbOrderCreated);
+      hubConnection?.off("SellOrderCreated", cbOrderCreated);
+
+      hubConnection?.off("BuyOrderVolumeChanged", cbOrderVolumeChanged);
+      hubConnection?.off("SellOrderVolumeChanged", cbOrderVolumeChanged);
+
     };
-  }, [hubConnection]);
+  }, [hubConnection, ordersList]);
+
 
   return (
     <div>
@@ -210,7 +250,7 @@ export const Advert = () => {
             </TabNavItem>
           </TabsBlock>
           <Text size={14} lH={16} weight={500}>
-            Рейтинг аккаунта: 5.0
+            Рейтинг аккаунта: {getMyRating(account)}
           </Text>
         </S.SubHeader>
         <S.Filters>
@@ -314,6 +354,7 @@ export const Advert = () => {
           onAccept={handleAcceptPaymentMethods}
           open={showPaymentMethodsModal} 
           onClose={() => setShowPaymentMethodsModal(false)} 
+          black
         />
       
         <AdvertTable list={ordersList} />
@@ -321,7 +362,7 @@ export const Advert = () => {
         {
           (ordersList.length < totalCount) &&  
           <S.ButtonWrap>
-            <Button onClick={handleLoadMore}>Показать еще</Button>
+            <Button onClick={handleLoadMoreOrders}>Показать еще</Button>
           </S.ButtonWrap>
         }
       

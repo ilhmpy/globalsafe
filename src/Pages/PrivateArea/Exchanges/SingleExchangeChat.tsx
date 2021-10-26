@@ -13,6 +13,7 @@ import { AppContext } from '../../../context/HubContext';
 import { ViewExchangeModel } from '../../../types/exchange';
 import { Balance } from '../../../types/balance';
 import { FiatKind } from '../../../types/fiatKind';
+import { Loader } from '../../../components/Loader/Loader';
 
 type PropsMatch = {
   slug: string;
@@ -20,6 +21,7 @@ type PropsMatch = {
 
 export const SingleExchangeChat = ({ match }: RouteComponentProps<PropsMatch>) => {
   const [exchange, setExchange] = useState<ViewExchangeModel | null>(null);
+  const [loader, setLoader] = useState(true);
   const history = useHistory();
   const safeId = match.params.slug;
   const { hubConnection } = useContext(AppContext);
@@ -35,6 +37,8 @@ export const SingleExchangeChat = ({ match }: RouteComponentProps<PropsMatch>) =
           }
         } catch (e) {
           console.log(e);
+        } finally {
+          setLoader(false);
         }
       })();
     }
@@ -56,7 +60,7 @@ export const SingleExchangeChat = ({ match }: RouteComponentProps<PropsMatch>) =
           </Text>
         </S.TitleContainer>
 
-        <ExchangeChatCard exchange={exchange} />
+        {loader ? <Loader /> : <ExchangeChatCard exchange={exchange} />}
       </Container>
     </S.Container>
   );

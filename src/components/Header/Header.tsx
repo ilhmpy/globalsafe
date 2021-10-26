@@ -1,18 +1,18 @@
 import React, { FC, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
-import styled from 'styled-components/macro';
-import { ReactComponent as Logo } from '../../assets/v2/svg/logo.svg';
-import ru from '../../assets/svg/russia.svg';
-import { ReactComponent as DarkTheme } from '../../assets/v2/svg/dark-theme.svg';
+import { ReactComponent as Ball } from '../../assets/svg/ball.svg';
 import { ReactComponent as LightTheme } from '../../assets/svg/themeLight.svg';
-import usa from '../../assets/svg/usa.svg';
+import { ReactComponent as DarkTheme } from '../../assets/v2/svg/dark-theme.svg';
+import { ReactComponent as Logo } from '../../assets/v2/svg/logo.svg';
+import { Container } from '../../components/UI/Container';
+import { routers } from '../../constantes/routers';
 import { AppContext } from '../../context/HubContext';
 import { ThemeContext } from '../../context/ThemeContext';
-import { Container } from '../../components/UI/Container';
-import { Button } from '../Button/V2/Button';
 import {
   AdminButton,
+  Btn,
+  ButtonsRev,
   HeaderInner,
   HeaderLogo,
   HeaderMenu,
@@ -20,15 +20,11 @@ import {
   Languale,
   MenuBtn,
   SwitchTheme,
-  Btn,
-  ButtonsRev,
 } from './Header.elements';
 import { Nav } from './Nav';
 import { NavAdmin } from './NavAdmin';
-import { routers } from '../../constantes/routers';
 import { Notify } from './Notify/Notify';
 import * as Notifies from './Notify/Notify.styles';
-import { ReactComponent as Ball } from '../../assets/svg/ball.svg';
 
 type Props = {
   admPanel?: boolean;
@@ -157,8 +153,11 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
               {theme === 'light' ? <DarkTheme /> : <LightTheme />}
             </SwitchTheme>
             <ButtonsRev className={user === null || admin === null ? 'is-placeholder' : ''}>
-              {admin && <AdminButton onClick={toAdmin}>{t('headerButton.admin')}</AdminButton>}
-              {location.pathname === '/' ? (
+              {admin ? (
+                <AdminButton onClick={toAdmin}>{t('headerButton.admin')}</AdminButton>
+              ) : null}
+
+              {/* {location.pathname === '/' ? (
                 <Button primary onClick={handleClick}>
                   {t('headerButton.personalArea')}
                 </Button>
@@ -170,11 +169,16 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
                   {t('headerButton.personalArea')}
                 </Button>
               ) : (
-                <Button primary onClick={handleClick}>
-                  {t('headerButton.personalArea')}
-                </Button>
-              )}
+               
+              )} */}
             </ButtonsRev>
+            <Btn
+              className={user === null || admin === null ? 'is-placeholder' : ''}
+              hide={user === null}
+              onClick={handleClick}
+            >
+              {t('headerButton.personalArea')}
+            </Btn>
           </HeaderInner>
         </Container>
       </HeaderWrap>

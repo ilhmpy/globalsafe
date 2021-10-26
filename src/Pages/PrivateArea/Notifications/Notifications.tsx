@@ -21,6 +21,7 @@ export const Notifications = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [newItems, setNewItems] = useState<boolean>(false);
     const [statusNew, setStatusNew] = useState<any>();
+    const [allNotifies, setAllNotifies] = useState<NotifyItem[]>([]);
 
     function length(res: NotifyItem[]) {
         if (res.length === 0) {
@@ -37,18 +38,28 @@ export const Notifications = () => {
         setState(items);
     };
 
-    function cb (notify: NotifyItem) {
+    function cb () {
         getNotifies(false);
     };
 
     useEffect(() => {
-        if (hubConnection) {
+        let cancel = false;
+        if (hubConnection && !cancel) {
             hubConnection.on("InAppNotification", cb);
         };
         return () => {
+            cancel = true;
             hubConnection?.off("InAppNotification", cb);
         }; 
-    }, [hubConnection]);
+    }, [hubConnection, notifies]);
+
+    function getFirstElements(collection: NotifyItem[], elms: number) {
+        return collection.filter((i, idx) => {
+            if (idx < elms) {
+                return i;
+            };
+        });
+    };
 
     function getNotifies(load = true) {
         if (hubConnection) {
@@ -57,11 +68,13 @@ export const Notifications = () => {
                 "GetInAppNotifications",
                 [activeFilter === "active" ? 0 : 1],
                 0,
-                10
+                100
             )
               .then((res) => {
                 console.log("all notifies on page", res.collection);
-                fieldNew(res.collection, setNotifies);
+                const items = getFirstElements(res.collection, 10);
+                setNotifies(items.map((item) => ({ ...item, new: false })));
+                setAllNotifies(res.collection.map((item: any) => ({ ...item, new: false })));
                 length(res.collection);
               })    
               .catch((err) => console.log(err))
@@ -90,31 +103,22 @@ export const Notifications = () => {
     };
 
     function onMore() {
-        if (hubConnection) {
-            hubConnection.invoke(
-                "GetInAppNotifications",
-                [activeFilter === "active" ? 0 : 1],
-                notifies.length,
-                5
-            )
-              .then((res) => {
-                changeNew();
-                console.log("more", res);
-                setNotifies(data => {
-                    const items = [...data.map((item: NotifyItem) => {
-                        return { ...item, new: false }
-                    }), ...res.collection.map((item: NotifyItem) => {
-                        return { ...item, new: true }
-                    })];
-                    console.log(items);
-                    return items;
-                });
-                length(res.collection);
-                setStatusNew(setTimeout(() => {
-                    changeNew();
-                 }, 2000));
-              })    
-              .catch((err) => console.log(err));
+        if (notifies && notifies.length <= allNotifies.length) {
+            changeNew();
+            let items: any[] = [];
+            for (let i = 0; i < 5; i++) {
+                if (allNotifies[notifies.length + i]) {
+                    items = [...items, { ...allNotifies[notifies.length + i], new: true }];
+                };
+            };            
+            if (items.length) {
+                setNotifies([...notifies, ...items].sort((x: any, y: any) => {
+                    const a = new Date(x.operationDate);
+                    const b = new Date(y.operationDate);
+                    return a > b ? -1 : a < b ? 1 : 0;
+                }));
+                setStatusNew(setTimeout(() => changeNew(), 2000));
+            };
         };
     };
 
@@ -123,8 +127,8 @@ export const Notifications = () => {
     };
 
     function createLink(link: string) {
-        return `p2p-changes/orders/${link}`;
-    }
+        return `p2p-changes/${link}`;
+    };
 
     return (
         <Container>
@@ -169,7 +173,8 @@ export const Notifications = () => {
                 </Table.Table>
             </Notifies.NotificationsMap>
             <Table.MoreButton onMore={onMore} newItems={newItems} 
-                loadingNewItems={notifies.some((item: any) => item.new === true)} text="Показать ещё" 
+                loadingNewItems={notifies.some((item: any) => item.new === true)} 
+                text="Показать ещё" 
             />
         </Container>
     );

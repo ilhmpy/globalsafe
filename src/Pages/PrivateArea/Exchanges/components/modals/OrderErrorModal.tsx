@@ -11,9 +11,10 @@ import * as S from './S.el';
 type Props = {
   onClose: () => void;
   open: boolean;
+  message?: string;
 };
 
-export const OrderErrorModal: FC<Props> = ({ onClose, open }: Props) => {
+export const OrderErrorModal: FC<Props> = ({ onClose, open, message }: Props) => {
   const history = useHistory();
 
   return (
@@ -27,7 +28,13 @@ export const OrderErrorModal: FC<Props> = ({ onClose, open }: Props) => {
               Ордер не был опубликован по причине:
             </Text>
             <Text size={14} lH={20} error mB={20}>
-              Отсутствует сертификат
+              {
+                !!message
+                ?
+                  message
+                :
+                  'Отсутствует сертификат'
+              }
             </Text>
 
             <Button primary onClick={() => history.replace(routers.certificates)}>

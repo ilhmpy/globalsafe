@@ -5,7 +5,9 @@ export const NotificationsBlock = styled.div`
     width: 100%;
 `;
 
-export const NotificationsMap = styled.div``;
+export const NotificationsMap = styled.div`
+    min-height: 530px;
+`;
 
 export const NotificationItem = styled.div<{ newItem: boolean; }>`
     width: 100%;

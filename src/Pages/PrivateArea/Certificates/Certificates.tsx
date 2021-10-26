@@ -22,16 +22,20 @@ import {
   ViewUserCertificateModel,
   RootMarketCertificate,
   MarketCertificate,
+  RootUsersCertificates,
 } from '../../../types/certificates';
 import { Balance } from '../../../types/balance';
 import moment from 'moment';
 import { BuyCertificateModal } from './modals/BuyCertificate';
 import { SuccessModal } from './modals/SuccessModal';
 import { ErrorModal } from './modals/ErrorModal';
+import { wordDecline } from '../../../utils/wordDecline';
+import 'moment-duration-format';
 
 export const Certificates = () => {
   const [allCert, setAllCert] = useState<MarketCertificate[]>([]);
-  const [userCertificat, setUserCertificat] = useState<null | ViewUserCertificateModel>(null);
+  const [userCertificat, setUserCertificat] = useState<ViewUserCertificateModel[]>([]);
+  const [userPureCertificat, setUserPureCertificat] = useState<ViewUserCertificateModel[]>([]);
   const [buyCertificateModal, setBuyCertificateModal] = useState<MarketCertificate | null>(null);
   const [successModal, setIsSuccessModal] = useState<MarketCertificate | null>(null);
   const [errorModal, setIsErrorModal] = useState<MarketCertificate | null>(null);
@@ -45,16 +49,47 @@ export const Certificates = () => {
       getUserCertificate();
       // getCertificates();
       getCertificate();
+      // getDailyVolume();
     }
   }, [hubConnection]);
+
+  // async function getUserCertificate() {
+  //   if (!hubConnection) return;
+  //   try {
+  //     const res = await hubConnection.invoke<ViewUserCertificateModel>('GetUserCertificate', 1);
+  //     console.log('GetUserCertificate', res);
+  //     getDailyVolume(res.certificate.assetKind);
+  //     setUserCertificat(res);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }
 
   async function getUserCertificate() {
     if (!hubConnection) return;
     try {
-      const res = await hubConnection.invoke<ViewUserCertificateModel>('GetUserCertificate', 1);
+      const res = await hubConnection.invoke<RootUsersCertificates>(
+        'GetUserCertificates',
+        [],
+        0,
+        100
+      );
       console.log('GetUserCertificate', res);
-      getDailyVolume(res.certificate.assetKind);
-      setUserCertificat(res);
+      // getDailyVolume(res.certificate.assetKind);
+      // setUserCertificat(res);
+      setUserPureCertificat(res.collection);
+      const arr = res.collection;
+      (async () => {
+        for (let i = 0; i < arr.length; i++) {
+          const res = await hubConnection.invoke('GetOrdersVolume', arr[i].certificate.assetKind);
+          arr[i].certificate.dailyVolume = arr[i].certificate.dailyVolume - res;
+        }
+
+        // console.log('getDailyVolume', resVolume);
+        // arr[n].certificate.dailyVolume = arr[n].certificate.dailyVolume - (resVolume as number);
+      })();
+      setUserCertificat(arr);
+      console.log('arr', arr);
     } catch (err) {
       console.log(err);
     }
@@ -74,9 +109,10 @@ export const Certificates = () => {
   const getDailyVolume = async (asset: number) => {
     if (hubConnection) {
       try {
-        const res = await hubConnection.invoke('GetDailyVolume', asset);
-        console.log('GetDailyVolume', res);
-        setDailyVolume(res);
+        const res = await hubConnection.invoke('GetOrdersVolume', asset);
+        console.log('GetOrdersVolume', res);
+        // setDailyVolume(res);
+        return res;
       } catch (e) {
         console.log(e);
       }
@@ -113,14 +149,14 @@ export const Certificates = () => {
   };
 
   const onValid = (item: MarketCertificate) => {
-    console.log('true');
-    if (userCertificat && userCertificat.certificate.safeId === item.certificate.safeId) {
+    const certificate = userPureCertificat.filter(
+      (i) => i.certificate.assetKind === item.certificate.assetKind
+    )[0];
+
+    if (certificate && certificate.certificate.safeId === item.certificate.safeId) {
       setErrorType('Данный сертификат уже куплен');
       setIsErrorModal(item);
-    } else if (
-      userCertificat &&
-      item.certificate.dailyVolume <= userCertificat.certificate.dailyVolume
-    ) {
+    } else if (certificate && item.certificate.dailyVolume <= certificate.certificate.dailyVolume) {
       setErrorType('Сумма сертификата меньше существующей');
       setIsErrorModal(item);
     } else if (balance !== null && balance < item.price) {
@@ -131,6 +167,11 @@ export const Certificates = () => {
       setBuyCertificateModal(item);
     }
   };
+
+  // console.log(
+  //   'Разница в ',
+  //   moment.duration.utc('2022-01-24T09:50:39').local().diff(moment.utc().local(), 'days')
+  // );
 
   return (
     <S.Container>
@@ -177,43 +218,45 @@ export const Certificates = () => {
             Рейтинг аккаунта: 5.0
           </Text>
         </S.SubHeader>
-        {userCertificat ? (
-          <>
-            <Title>Активный сертификат</Title>
-            <S.ActiveCert>
-              <S.ActiveCertItem>
-                <Text size={14} weight={300} lH={20}>
-                  Тип сертификата:
-                </Text>
-                <Text size={14} weight={500} lH={20}>
-                  {userCertificat.certificate.name}
-                </Text>
-              </S.ActiveCertItem>
-              <S.ActiveCertItem>
-                <Text size={14} weight={300} lH={20}>
-                  Оставшийся лимит в сутках:
-                </Text>
-                <Text size={14} weight={500} lH={20}>
-                  {dailyVolume
-                    ? (
-                        (userCertificat.certificate.dailyVolume - dailyVolume) /
-                        100000
-                      ).toLocaleString()
-                    : (userCertificat.certificate.dailyVolume / 100000).toLocaleString()}{' '}
-                  {Balance[userCertificat.certificate.assetKind]}
-                </Text>
-              </S.ActiveCertItem>
-              <S.ActiveCertItem>
-                <Text size={14} weight={300} lH={20}>
-                  Оставшийся срок действия:
-                </Text>
-                <Text size={14} weight={500} lH={20}>
-                  {moment(userCertificat.finishDate).diff(userCertificat.creationDate, 'days')} день
-                </Text>
-              </S.ActiveCertItem>
-            </S.ActiveCert>
-          </>
-        ) : null}
+        {userCertificat.length
+          ? userCertificat.map((item) => (
+              <div key={item.safeId}>
+                <Title>Активный сертификат</Title>
+                <S.ActiveCert>
+                  <S.ActiveCertItem>
+                    <Text size={14} weight={300} lH={20}>
+                      Тип сертификата:
+                    </Text>
+                    <Text size={14} weight={500} lH={20}>
+                      {item.certificate.name}
+                    </Text>
+                  </S.ActiveCertItem>
+                  <S.ActiveCertItem>
+                    <Text size={14} weight={300} lH={20}>
+                      Оставшийся лимит в сутках:
+                    </Text>
+                    <Text size={14} weight={500} lH={20}>
+                      {(item.certificate.dailyVolume / 100000).toLocaleString()}{' '}
+                      {Balance[item.certificate.assetKind]}
+                    </Text>
+                  </S.ActiveCertItem>
+                  <S.ActiveCertItem>
+                    <Text size={14} weight={300} lH={20}>
+                      Оставшийся срок действия:
+                    </Text>
+                    <Text size={14} weight={500} lH={20}>
+                      {moment.utc(item.finishDate).local().diff(moment.utc().local(), 'days')}
+                      &nbsp;
+                      {wordDecline(
+                        moment.utc(item.finishDate).local().diff(moment.utc().local(), 'days'),
+                        ['день', 'дня', 'дней']
+                      )}
+                    </Text>
+                  </S.ActiveCertItem>
+                </S.ActiveCert>
+              </div>
+            ))
+          : null}
         <Title>Доступные сертификаты</Title>
       </Container>
 

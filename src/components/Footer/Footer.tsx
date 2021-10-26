@@ -62,7 +62,6 @@ const FooterBlock = styled.footer<{ other?: boolean }>`
     min-height: 188px;
     max-height: 188px;
   }
-
   @media only screen and (max-device-width: 767px) {
     min-height: 320px;
     max-height: 320px;
@@ -71,33 +70,19 @@ const FooterBlock = styled.footer<{ other?: boolean }>`
       display: none;
     }
 
+    & > div {
+      position: relative;
+    }
+
     .tg {
       position: absolute;
       margin-left: auto;
       margin-right: auto;
       right: 0;
       left: 0;
-      bottom: 100px;
+      top: 155px;
     }
   }
-
-  ${({ other }) => {
-    if (other) {
-      return `
-        @media only screen and (min-device-width: 320px) and (max-device-width: 429px) {
-          .tg {
-            bottom: 15px;
-          }
-        }
-      
-        @media only screen and (min-device-width: 430px) and (max-device-width: 480px) {
-          .tg {
-            bottom: -126px;
-          }
-        }
-      `;
-    }
-  }}
 `;
 
 const FooterHeader = styled.header`

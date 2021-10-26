@@ -14,6 +14,7 @@ import { Loading, NotItems } from "../../../components/Loading/Loading";
 import { getVolume } from "../../../../../functions/getVolume";
 
 import * as S from './S.el';
+import { countVolumeToShow } from '../../../utils';
 
 export const OwnArchivedExchangesTable: FC<OwnExchangesProps> = ({ exchanges, loading }: OwnExchangesProps) => {
   const history = useHistory();
@@ -51,23 +52,17 @@ export const OwnArchivedExchangesTable: FC<OwnExchangesProps> = ({ exchanges, lo
       );      
     } else if (kind === 3) {
       return (
-        <S.BankItem style={{ width: "90px" }}>
-          BankTransfer
+        <S.BankItem>
+          <img src={tinkoff} alt="tinkoff" />
         </S.BankItem>
       );
     } else if (kind === 4) {
       return (
         <S.BankItem>
-          <img src={tinkoff} alt="tinkoff" />
-        </S.BankItem>
-      );
-    } else if (kind === 5) {
-      return (
-        <S.BankItem>
           <img src={sber} alt="sber" />
         </S.BankItem>
       );
-    } else if (kind === 6) {
+    } else if (kind === 5) {
       return (
         <S.BankItem>
           <img src={alfa} alt="alfa" />
@@ -76,7 +71,7 @@ export const OwnArchivedExchangesTable: FC<OwnExchangesProps> = ({ exchanges, lo
     };
   };
 
-  const Status = ["Создан", "Принят", "Завершен", "Подана жалоба", "Отменен"];
+  const Status = ["Новый", "Ожидается новое подтверждение оплаты", "Завершен", "Подана жалоба", "Отменен"];
 
   /*
   const test: ViewExchangeModel[] = [
@@ -150,11 +145,11 @@ export const OwnArchivedExchangesTable: FC<OwnExchangesProps> = ({ exchanges, lo
                       <S.Cell data-label="Дата">{moment(exchange.creationDate).format("DD.MM.YYYY")}</S.Cell>
                       <S.Cell data-label="Тип">{exchange.kind === 0 ? "Продажа" : "Покупка"}</S.Cell>
                       <S.Cell data-label="Кол-во">
-                        {(getVolume(exchange.volume, exchange.assetKind)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {Balance[exchange.assetKind]}
+                        {(countVolumeToShow(exchange.volume, exchange.assetKind)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {Balance[exchange.assetKind]}
                       </S.Cell>
                       <S.Cell data-label="Курс">{exchange.rate}</S.Cell>
                       <S.Cell data-label="Сумма оплаты">
-                        {(exchange.exchangeVolume).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {FiatKind[exchange.exchangeAssetKind]}
+                        {(countVolumeToShow(exchange.exchangeVolume, exchange.assetKind)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {FiatKind[exchange.exchangeAssetKind]}
                       </S.Cell>
                       <S.Cell data-label="Метод оплаты">
                           <S.BankList>
