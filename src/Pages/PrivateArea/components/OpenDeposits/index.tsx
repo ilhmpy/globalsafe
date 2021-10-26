@@ -61,6 +61,7 @@ export const OpenDeposit: FC<IProps> = ({
       hubConnection
         .invoke<ListDeposits>('GetDeposits', 1, true, 0, 100)
         .then((res) => {
+          console.log('.then ~ res', res)
           if (res.collection.length) {
             setDepositProgramsList(res.collection);
             const found = res.collection.find(

@@ -69,8 +69,12 @@ export const ShowDeposit: FC<IProps> = ({ chosenDepositView }: IProps) => {
   }, [isAgree]);
 
   const colorSwitcher = (type: string) => {
-    if (type === 'archive') return '#EFECFF';
+    if (type === 'active') return '#EFECFF';
+    else if (type === 'archive') return '#E0F8FF';
+    else if (type === 'delayed') return '#DAFFE2';
   };
+
+  console.log(deposit);
 
   return (
     <S.Container>
@@ -99,7 +103,7 @@ export const ShowDeposit: FC<IProps> = ({ chosenDepositView }: IProps) => {
         }}
         open={closeDepositError}
       />
-      <LeftSide bg="#EFECFF">
+      <LeftSide bg={colorSwitcher(deposit?.isActive ? 'active' : 'delayed')}>
         <Name>{deposit?.name}</Name>
         <ChipWrap small>
           <Chip>{deposit?.isActive ? 'Активный депозит' : 'С отложенной выплатой'}</Chip>

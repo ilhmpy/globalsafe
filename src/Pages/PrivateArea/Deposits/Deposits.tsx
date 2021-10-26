@@ -67,6 +67,15 @@ export const Deposits = () => {
           sorting
         )
         .then((res) => {
+          console.log(
+            'GetUserDepositsInstant',
+            getFilterCode(activeFilter),
+            activeFilter === 'hold' ? false : null,
+            0,
+            20,
+            sorting
+          );
+          console.log('.then ~ res', res);
           if (res.totalRecords === [...depositsList, ...res.collection].length) {
             setDepositsListHasMore(false);
           }

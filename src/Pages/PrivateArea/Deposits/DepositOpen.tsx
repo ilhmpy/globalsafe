@@ -29,6 +29,7 @@ export const DepositOpen: FC = () => {
   const goBackClick = async () => {
     if (hubConnection) {
       try {
+        // .invoke<RootList>('GetUserDeposits', [1, 2, 3, 4, 5, 6, 7, 8], null, 0, 20, sorting)
         const response = await hubConnection?.invoke<RootList>(
           'GetUserDepositsInstant',
           [2],
