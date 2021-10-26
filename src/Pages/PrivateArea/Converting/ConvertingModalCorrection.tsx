@@ -64,18 +64,25 @@ export const ConvertingModalCorrection: FC<Iprops> = ({
               <CloseButton onClick={closeWithReset} />
               <ContentBody>
                 <p>
-                  <KeySpan>Указано к списанию (CWD)</KeySpan>
+                  <KeySpan sm>Указано к списанию (CWD)</KeySpan>
                   <Dots />
                   <strong>
                     {fromSumCloud.split('.').length > 1
                       ? `${fromSumCloud.split('.')[0].replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
                           (+fromSumCloud).toFixed(5).toString().split('.')[1]
                         }`
-                      : (+fromSumCloud).toFixed(5)}
+                      : `${(+fromSumCloud)
+                          .toFixed(5)
+                          .split('.')[0]
+                          .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
+                          (+fromSumCloud).toFixed(5).split('.')[1]
+                        }`}
                   </strong>
                 </p>
                 <p>
-                  <KeySpan>Рассчетная сумма к списанию (CWD)</KeySpan>
+                  <KeySpan sm={calculatedAmount.toString().length > 6}>
+                    Рассчетная сумма к списанию (CWD)
+                  </KeySpan>
                   <Dots />
                   <strong>
                     {(calculatedAmount / 100000).toString().split('.').length > 1
@@ -114,7 +121,19 @@ export const ConvertingModalCorrection: FC<Iprops> = ({
                   <KeySpan>К получению (MULTICS):</KeySpan>
                   <Dots />
                   <strong>
-                    {(targetAmount / 100).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
+                    {(targetAmount / 100).toString().split('.').length > 1
+                      ? `${(targetAmount / 100)
+                          .toString()
+                          .split('.')[0]
+                          .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
+                          (targetAmount / 100).toFixed(5).toString().split('.')[1]
+                        }`
+                      : `${(+(targetAmount / 100).toString())
+                          .toFixed(5)
+                          .split('.')[0]
+                          .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
+                          (targetAmount / 100).toFixed(5).split('.')[1]
+                        }`}
                   </strong>
                 </p>
                 <CheckboxGroup>
@@ -157,5 +176,9 @@ const ContentBody = styled.div`
     display: flex;
     align-items: flex-end;
     justify-content: flex-start;
+  }
+
+  & > p > strong {
+    white-space: nowrap;
   }
 `;
