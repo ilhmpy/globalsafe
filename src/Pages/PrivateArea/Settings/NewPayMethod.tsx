@@ -112,7 +112,11 @@ export const NewPayMethod: FC = () => {
         await hubConnection.invoke(
           'AddPaymentMethod',
           kind,
-          keys.findIndex((i) => i === balanceType),
+          balanceType === FiatKind[7]
+            ? FiatKind.USDT
+            : keys.findIndex((i) => i === balanceType)
+            ? 2
+            : 2,
           checked ? 1 : 2,
           JSON.stringify(addPayMethod())
         );
