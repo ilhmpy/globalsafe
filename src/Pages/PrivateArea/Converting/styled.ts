@@ -7,6 +7,7 @@ export const Dots = styled.div`
   border-bottom: 1px dashed rgba(0, 0, 0, 0.2);
   position: relative;
   bottom: 4px;
+  min-width: 30px;
 `;
 
 export const ButtonsWrapper = styled.div`
@@ -15,8 +16,9 @@ export const ButtonsWrapper = styled.div`
   gap: 20px;
 `;
 
-export const KeySpan = styled.div`
+export const KeySpan = styled.div<{ sm?: boolean }>`
   position: relative;
+  width: ${(props) => (props.sm ? '125px' : '')};
 `;
 
 export const ContentTitle = styled.div<{ mb10?: boolean }>`

@@ -236,15 +236,29 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                   name="fromSum"
                   value={
                     fromSum
-                      ? fromSum
+                      ? fromSum.split('.').length > 1
+                        ? `${fromSum.split('.')[0].replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
+                            fromSum.split('.')[1]
+                          }`
+                        : `${fromSum.replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}`
                       : convertedData.userAmount <= 0
                       ? ''
-                      : (convertedData.userAmount / 100000).toLocaleString('ru-RU', {
-                          maximumFractionDigits: 2,
-                        })
+                      : (convertedData.userAmount / 100000).toString().split('.').length > 1
+                      ? `${(convertedData.userAmount / 100000)
+                          .toString()
+                          .split('.')[0]
+                          .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
+                          (convertedData.userAmount / 100000).toFixed(5).toString().split('.')[1]
+                        }`
+                      : `${(+(convertedData.userAmount / 100000).toString())
+                          .toFixed(5)
+                          .split('.')[0]
+                          .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
+                          (convertedData.userAmount / 100000).toFixed(5).split('.')[1]
+                        }`
                   }
                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                    const { value } = e.target;
+                    const value = e.target.value.replaceAll(' ', '');
                     setToSum('');
 
                     if (value === '') {
@@ -260,17 +274,17 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
 
                     if (
                       (value[0] !== '0' || value[1] !== '0') &&
-                      (/^(\d+([.,]\d{0,4})?|\.?\d{1,4})$/gm.test(value) || !value)
+                      (/^(\d+([.,]\d{0,5})?|\.?\d{1,5})$/gm.test(value) || !value)
                     ) {
                       if (value.split('.')?.length === 1) {
                         setFromSumCloud(value.replaceAll(',', '.'));
                         setFromSum(value.replaceAll(',', '.'));
-                      } else if (value.split('.')[1]?.length < 5) {
+                      } else if (value.split('.')[1]?.length < 6) {
                         setFromSumCloud(value.replaceAll(',', '.'));
                         setFromSum(value.replaceAll(',', '.'));
                       }
                     }
-                    if (!value) setFromSum(value);
+                    // if (!value) setFromSum(value);
 
                     setIsMultics(false);
                   }}
@@ -290,7 +304,11 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                   name="toSum"
                   value={
                     toSum
-                      ? toSum
+                      ? toSum.split('.').length > 1
+                        ? `${toSum.split('.')[0].replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
+                            toSum.split('.')[1]
+                          }`
+                        : `${toSum.replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}`
                       : convertedData.targetAmount <= 0
                       ? ''
                       : (convertedData.targetAmount / 100).toString().split('.').length > 1
@@ -303,7 +321,7 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                       : (convertedData.targetAmount / 100).toFixed(2)
                   }
                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                    const { value } = e.target;
+                    const value = e.target.value.replaceAll(' ', '');
                     setFromSum('');
 
                     if (
