@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components/macro';
 import { Container as Wrap } from '../../../components/UI/Container';
+import { Button } from '../../../components/Button/V2/Button';
 
 export const Container = styled.div`
   padding-bottom: 40px;
@@ -52,4 +53,9 @@ export const AvilableCertificatesItem = styled.div`
   width: 340px;
   ${style};
   margin: 10px;
+  flex-direction: column;
+  display: flex;
+  ${Button} {
+    margin-top: auto;
+  }
 `;

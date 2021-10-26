@@ -153,7 +153,9 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
               {theme === 'light' ? <DarkTheme /> : <LightTheme />}
             </SwitchTheme>
             <ButtonsRev className={user === null || admin === null ? 'is-placeholder' : ''}>
-              <AdminButton onClick={toAdmin}>{t('headerButton.admin')}</AdminButton>
+              {admin ? (
+                <AdminButton onClick={toAdmin}>{t('headerButton.admin')}</AdminButton>
+              ) : null}
 
               {/* {location.pathname === '/' ? (
                 <Button primary onClick={handleClick}>
