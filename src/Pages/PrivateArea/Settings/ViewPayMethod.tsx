@@ -16,6 +16,7 @@ import { PaymentMethodKind, CollectionPayMethod } from '../../../types/paymentMe
 import { PaymentMethodState } from '../../../types/paymentMethodState';
 import { FiatKind } from '../../../types/fiatKind';
 import { payList } from './utils';
+import { DontDeleteModal } from './DontDeleteModal';
 
 type PropsMatch = {
   slug: string;
@@ -38,7 +39,9 @@ export const ViewPayMethod = ({ match }: RouteComponentProps<PropsMatch>) => {
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
   const [deleteNotificationIsOpen, setDeleteNotificationIsOpen] = useState(false);
   const [userMethod, setUserMethod] = useState<null | CollectionPayMethod>(null);
-  const { userPaymentsMethod, setUserPaymentsMethod } = useContext(SettingsContext);
+  const [dontDeleteModal, setDontDeleteModal] = useState(false);
+  const { userPaymentsMethod, setUserPaymentsMethod, usePaymentMethods } =
+    useContext(SettingsContext);
 
   useEffect(() => {
     if (!userPaymentsMethod.length) {
@@ -65,6 +68,14 @@ export const ViewPayMethod = ({ match }: RouteComponentProps<PropsMatch>) => {
   };
 
   const active = (item: CollectionPayMethod) => {
+    const isHave = usePaymentMethods
+      ? usePaymentMethods.filter((i) => i.safeId === item.safeId)
+      : [];
+
+    if (isHave.length) {
+      setDontDeleteModal(true);
+      return;
+    }
     const key = userPaymentsMethod.findIndex((i) => i.safeId === item.safeId);
     if (item.state === PaymentMethodState.Active) {
       adjustPaymentMethod(PaymentMethodState.Disabled);
@@ -84,8 +95,30 @@ export const ViewPayMethod = ({ match }: RouteComponentProps<PropsMatch>) => {
   };
 
   const deletePayMethod = () => {
-    setDeleteNotificationIsOpen(true);
-    adjustPaymentMethod(PaymentMethodState.Removed);
+    const isHave = usePaymentMethods
+      ? usePaymentMethods.filter((i) => i.safeId === userMethod?.safeId)
+      : [];
+
+    if (isHave.length) {
+      setDontDeleteModal(true);
+      return;
+    } else {
+      setDeleteNotificationIsOpen(true);
+      adjustPaymentMethod(PaymentMethodState.Removed);
+    }
+  };
+
+  const isHaveDeleteMethod = () => {
+    const isHave = usePaymentMethods
+      ? usePaymentMethods.filter((i) => i.safeId === userMethod?.safeId)
+      : [];
+
+    if (isHave.length) {
+      setDontDeleteModal(true);
+      return;
+    } else {
+      setDeleteModalIsOpen(true);
+    }
   };
 
   return (
@@ -101,7 +134,7 @@ export const ViewPayMethod = ({ match }: RouteComponentProps<PropsMatch>) => {
         open={deleteNotificationIsOpen}
         setOpen={setDeleteNotificationIsOpen}
       />
-
+      <DontDeleteModal open={dontDeleteModal} setOpen={setDontDeleteModal} />
       <Back
         text="К списку платежных методов"
         onGoBackClick={() => history.push(routers.settings)}
@@ -181,7 +214,7 @@ export const ViewPayMethod = ({ match }: RouteComponentProps<PropsMatch>) => {
             </Entry>
 
             <ButtonWrapper>
-              <Button bigSize outlinePrimary onClick={() => setDeleteModalIsOpen(true)}>
+              <Button bigSize outlinePrimary onClick={isHaveDeleteMethod}>
                 Удалить
               </Button>
             </ButtonWrapper>
