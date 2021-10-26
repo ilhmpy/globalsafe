@@ -11,10 +11,13 @@ import * as S from './S.el';
 
 interface ExchangesInOrderTable {
   exchangesList: ViewExchangeModel[];
+  activeFilter: 'active' | 'archived' | 'all';
 }
 
 // TODO: Check Exchange Fields and update Table | Update ViewExchangeModel
-export const ExchangesInOrderTable: React.FC<ExchangesInOrderTable> = ({exchangesList}: ExchangesInOrderTable) => {
+export const ExchangesInOrderTable: React.FC<ExchangesInOrderTable> = ({
+  exchangesList, activeFilter
+}: ExchangesInOrderTable) => {
   const history = useHistory();
   const [timerDown, setTimerDown] = useState<boolean>(false);
 
@@ -45,9 +48,15 @@ export const ExchangesInOrderTable: React.FC<ExchangesInOrderTable> = ({exchange
           <S.Cell>
             <span>Метод оплаты</span>
           </S.Cell>
-          <S.Cell>
-            <span>Оставшееся время</span>
-          </S.Cell>
+          {
+            activeFilter !== 'archived'
+            ?
+            <S.Cell>
+              <span>Оставшееся время</span>
+            </S.Cell>
+            :
+            null
+          }
           <S.Cell>
             <span>Статус</span>
           </S.Cell>
@@ -79,20 +88,30 @@ export const ExchangesInOrderTable: React.FC<ExchangesInOrderTable> = ({exchange
                     </S.BankItem>
                   </S.BankList>
                 </S.Cell>
-                <S.Cell data-label="Оставшееся время">
-                  {
-                    exchange.state === 0 || exchange.state === 1
-                    ?
-                      <Counter 
-                        setTimerDown={setTimerDown} 
-                        data={exchange.creationDate} 
-                        delay={exchange.operationWindow.totalMilliseconds} 
-                        formatNum 
-                      />
-                    :
-                    '0м. 0с.'
-                  }
-                </S.Cell>
+                {
+                  activeFilter !== 'archived'
+                  ?
+                    <S.Cell data-label="Оставшееся время">
+                      {
+                        (exchange.state === 0 || exchange.state === 1)
+                        ?
+                          <Counter 
+                            setTimerDown={setTimerDown} 
+                            data={exchange.creationDate} 
+                            delay={exchange.operationWindow.totalMilliseconds} 
+                            formatNum 
+                          />
+                        :
+                          (exchange.state === 2 || exchange.state === 4)
+                          ?
+                            '-'
+                          :
+                            '0м. 0с.'
+                      }
+                    </S.Cell>
+                  :
+                    null
+                }
                 <S.Cell data-label="Статус">
                   {exchangeStateLabels[exchange.state]}
                 </S.Cell>

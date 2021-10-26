@@ -121,7 +121,7 @@ export const DeleteOrderModal: FC<Props> = ({
                             </Space>
                         :
                             <Button primary fullWidth onClick={() => history.replace(routers.p2pchanges)}>
-                                К списку объявлений
+                                К списку ордеров
                             </Button>
                     }
                    

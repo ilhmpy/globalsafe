@@ -127,10 +127,17 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
 
     const onBalanceSummChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const pattern = /^[0-9][0-9\.]*$/;
+        const pattern2 = /^[0-9]{1,10}\.[0-9]{6}$/;
         if (e.target.value === '' || pattern.test(e.target.value)) {
             const value = removeLeadingZeros(e.target.value);
             const volume = countVolumeToShow(+order.volume, order.assetKind);
-            const limitTo = countVolumeToShow(+order.limitTo, order.assetKind);
+            const limitTo = countVolumeToShow(+order.limitTo, order.assetKind) / order.rate;
+            
+            if(+value > limitTo) {
+                setBalanceSumm(String(limitTo.toFixed(5)));
+                setFiatSumm((limitTo * order.rate).toFixed(5));
+                return;
+            } 
 
             if(+value > volume) {
                 setBalanceSumm(String(volume));
@@ -138,14 +145,12 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                 return;
             }
 
-            if(+value > limitTo) {
-                setBalanceSumm(String(limitTo));
-                setFiatSumm((limitTo * order.rate).toFixed(5));
-                return;
-            } 
-                
-            setBalanceSumm(value);
-            setFiatSumm((+value * order.rate).toFixed(5));
+      
+            if(!pattern2.test(e.target.value)) {
+                setBalanceSumm(value);
+                setFiatSumm((+value * order.rate).toFixed(5));
+            }
+            
         }
     };
 
@@ -154,19 +159,19 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
         if (e.target.value === '' || pattern.test(e.target.value)) {
             const value = removeLeadingZeros(e.target.value);
             const volumeSumm = countVolumeToShow(+order.volume, order.assetKind) * order.rate;
-            const limitToSumm = countVolumeToShow(+order.limitTo, order.assetKind) * order.rate;
-
-            if(+value > volumeSumm) {
-                setFiatSumm(String(volumeSumm));
-                setBalanceSumm((+volumeSumm / order.rate).toFixed(5))
-                return;
-            }
+            const limitToSumm = countVolumeToShow(+order.limitTo, order.assetKind);
 
             if(+value > limitToSumm) {
                 setFiatSumm(String(limitToSumm));
                 setBalanceSumm((+limitToSumm / order.rate).toFixed(5))
                 return;
             } 
+
+            if(+value > volumeSumm) {
+                setFiatSumm(String(volumeSumm));
+                setBalanceSumm((+volumeSumm / order.rate).toFixed(5))
+                return;
+            }
 
             setFiatSumm(value);
             setBalanceSumm((+value / order.rate).toFixed(5))
@@ -258,7 +263,33 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
             </Title>
 
             <S.FormItem>
-              <Text size={14} weight={300} lH={20} mB={10} black>
+                <Text size={14} weight={300} lH={20} mB={10} black>
+                    {
+                        `Количество ${orderType === OrderType.Buy ? 'продажи' : 'покупки'} (min ${
+                            order.volume < order.limitFrom 
+                            ?
+                                Math.ceil(countVolumeToShow(order.volume, order.assetKind)).toLocaleString('ru-RU', {
+                                    maximumFractionDigits: 5,
+                                })
+                            :
+                                Math.ceil(countVolumeToShow(order.limitFrom, order.assetKind) / order.rate).toLocaleString('ru-RU', {
+                                    maximumFractionDigits: 5,
+                                })
+                        } max ${
+                            order.volume < order.limitTo 
+                            ? 
+                                Math.floor(countVolumeToShow(order.volume, order.assetKind)).toLocaleString('ru-RU', {
+                                    maximumFractionDigits: 5,
+                                })
+                            : 
+                                Math.floor(countVolumeToShow(order.limitTo, order.assetKind) / order.rate).toLocaleString('ru-RU', {
+                                    maximumFractionDigits: 5,
+                                })
+                            } ${Balance[order.assetKind]
+                        }):`
+                    }
+                </Text>
+              {/* <Text size={14} weight={300} lH={20} mB={10} black>
                   {
                     orderType === OrderType.Buy
                     ?
@@ -278,7 +309,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                             countVolumeToShow(order.limitTo, order.assetKind)
                     } ${Balance[order.assetKind]}):`
                   }
-              </Text>
+              </Text> */}
               <S.Input
                 placeholder="Введите сумму"
                 name="summ"
@@ -288,7 +319,42 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
             </S.FormItem>
 
             <S.FormItem>
-              <Text size={14} weight={300} lH={20} mB={10} black>
+                <Text size={14} weight={300} lH={20} mB={10} black>
+                    {
+                        orderType === OrderType.Buy
+                        ?
+                            `Сумма к получению (min ${
+                                order.volume < order.limitFrom 
+                                ?
+                                    countVolumeToShow(order.volume, order.assetKind) * order.rate
+                                :
+                                    countVolumeToShow(order.limitFrom, order.assetKind)
+                            } max ${
+                                order.volume < order.limitTo 
+                                ? 
+                                    countVolumeToShow(order.volume, order.assetKind) * order.rate
+                                : 
+                                    countVolumeToShow(order.limitTo, order.assetKind)
+                                } ${FiatKind[order.operationAssetKind]
+                            }):`
+                        :
+                            `Сумма к списанию (min ${
+                                order.volume < order.limitFrom 
+                                ?
+                                    countVolumeToShow(order.volume, order.assetKind) * order.rate
+                                :
+                                    countVolumeToShow(order.limitFrom, order.assetKind)
+                            } max ${
+                                order.volume < order.limitTo 
+                                ? 
+                                    countVolumeToShow(order.volume, order.assetKind) * order.rate
+                                : 
+                                    countVolumeToShow(order.limitTo, order.assetKind)
+                                } ${FiatKind[order.operationAssetKind]
+                            }):`
+                    }
+                </Text>
+              {/* <Text size={14} weight={300} lH={20} mB={10} black>
                 {
                     orderType === OrderType.Buy
                     ?
@@ -315,7 +381,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                         } ${FiatKind[order.operationAssetKind]
                     }):`
                   }
-              </Text>
+              </Text> */}
               <S.Input
                 placeholder="Введите сумму"
                 name="summ"

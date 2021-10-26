@@ -238,7 +238,7 @@ export const Advert = () => {
         <S.SubHeader>
           <TabsBlock>
             <TabNavItem to={routers.p2pchanges} exact>
-              <div>Объявления</div>
+              <div>Ордеры</div>
             </TabNavItem>
 
             <TabNavItem to={routers.p2pchangesOwn} exact>
@@ -259,14 +259,14 @@ export const Advert = () => {
             onClick={() => setListingMyOrders(false)}
             style={{ marginRight: "0px" }}
           >
-            Все объявления
+            Все ордеры
           </FilterButton>
           <FilterButton
             active={listingMyOrders}
             onClick={() => setListingMyOrders(true)}
             style={{ marginLeft: "0px", borderLeft: "0" }}
           >
-            Мои объявления
+            Мои ордеры
           </FilterButton>
 
         </S.Filters>
