@@ -193,12 +193,10 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
   }, [hubConnection]);
 
   function getExchangeChip(chip: ExchangeState) {
-    if (chip === 0) {
-      return <Chip style={{ background: 'rgba(0, 148, 255, 10%)' }}>Новый</Chip>;
-    } else if (chip === 1) {
+    if (chip === 0 || chip === 1) {
       return (
         <Chip style={{ background: '#FF4A31', color: '#fff' }}>
-          Оставшееся время <Counter setTimerDown={setTimerDown} data={exchange.creationDate} delay={exchange.operationWindow.totalMilliseconds} formatNum /> 
+          {!timerDown && "Оставшееся время"} <Counter text="Время на обмен закончилось" setTimerDown={setTimerDown} data={exchange.creationDate} delay={exchange.operationWindow.totalMilliseconds} formatNum /> 
         </Chip>
       );
     } else if (chip === 2) {
@@ -692,7 +690,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                   outlineDanger
                   bigSize
                   as="button"
-                  disabled={true}
+                  disabled={!timerDown}
                   onClick={() => abuseExchange(exchange.safeId)}
                   exchangeBtn
                 >
