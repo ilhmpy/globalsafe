@@ -126,13 +126,13 @@ export const ConvertingModalCorrection: FC<Iprops> = ({
                           .toString()
                           .split('.')[0]
                           .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
-                          (targetAmount / 100).toFixed(5).toString().split('.')[1]
+                          (targetAmount / 100).toFixed(2).toString().split('.')[1]
                         }`
                       : `${(+(targetAmount / 100).toString())
-                          .toFixed(5)
+                          .toFixed(2)
                           .split('.')[0]
                           .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
-                          (targetAmount / 100).toFixed(5).split('.')[1]
+                          (targetAmount / 100).toFixed(2).split('.')[1]
                         }`}
                   </strong>
                 </p>
