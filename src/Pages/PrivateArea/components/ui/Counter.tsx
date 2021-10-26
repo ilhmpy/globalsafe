@@ -9,9 +9,10 @@ type Props = {
   formatNum?: boolean;
   over?: () => void;
   setTimerDown?: (val: boolean) => any;
+  text?: string | undefined;
 };
 
-export const Counter: FC<Props> = ({ data, formatNum, over, delay, setTimerDown }) => {
+export const Counter: FC<Props> = ({ data, formatNum, over, delay, setTimerDown, text }) => {
   const [count, setCount] = useState(0);
   const [start, setStart] = useState(false);
   const [state, setState] = useState<null | string>(null);
@@ -55,7 +56,7 @@ export const Counter: FC<Props> = ({ data, formatNum, over, delay, setTimerDown 
     if (setTimerDown != undefined && count < -1) {
       setTimerDown(true);
     };
-    return count > 0 ?? state ? state : '0м. 0с.'
+    return count > 0 ?? state ? state : `${text != undefined ? text : "0м. 0с."}`
   };
 
   return <>{getTime()}</>;

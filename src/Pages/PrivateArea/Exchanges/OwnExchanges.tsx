@@ -115,7 +115,7 @@ export const OwnExchanges = () => {
           [0, 1],
           activeFilter === 'active' ? [0, 1, 3] : [2, 4],
           0,
-          10
+          100
         );
         console.log("GetExchanges", res.collection);
         filters(res);

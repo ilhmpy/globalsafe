@@ -5,12 +5,13 @@ import alfa1 from '../../../../../assets/v2/svg/banks/alfa1.svg';
 import sber from '../../../../../assets/v2/svg/banks/sber.svg';
 import tinkoff from '../../../../../assets/v2/svg/banks/tinkoff.svg';
 import { CurrencyPair } from '../modals/CurrencyPair';
-import { OwnExchangesProps, ExchangeState } from '../../../../../types/exchange';
+import { OwnExchangesProps, ExchangeState, ViewExchangeModel } from '../../../../../types/exchange';
 import { Balance } from "../../../../../types/balance";
 import { FiatKind } from "../../../../../types/fiat";
 import { PaymentMethodKind } from "../../../../../types/paymentMethodKind";
 import { Loading, NotItems } from "../../../components/Loading/Loading";
 import { Counter } from '../../../components/ui/Counter';
+import { AppContext } from "../../../../../context/HubContext";
 
 import * as S from './S.el';
 import { getTime } from 'date-fns';
@@ -20,7 +21,7 @@ import { countVolumeToShow } from '../../../utils';
 export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, loading, setExchanges }: OwnExchangesProps) => {
   const history = useHistory();
   const [selectedOption, setSelectedOption] = useState<string | null>('Все валюты предложения');
-
+  const { account } = useContext(AppContext);
 
   const handleNavigateToExchange = (id: string) => {
     history.replace(`/info/p2p-changes/${id}`);
@@ -72,7 +73,21 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
     };
   };
 
-  const Status = ["Новый", "Ожидается подтверждение оплаты", "Завершен", "Спорный", "Отменен"];
+  const Status = ["Новый", "Ожидание подтверждения оплаты", "Завершен", "Спорный", "Отменен"];
+
+  function getStatus({ state, kind, ownerSafeId, recepientSafeId }: ViewExchangeModel) {
+    const owner = (kind === 0 && ownerSafeId !== account.safeId) ||
+    (kind === 1 && ownerSafeId === account.safeId) ? "buyer" : "seller";
+    if (state === 0) {
+      if (owner === "seller") {
+        return "Ожидание перевода";
+      } else {
+        return "Ожидание подтверждения оплаты";        
+      };
+    } else {
+      return Status[state];
+    };
+  };
 
   return (
       <S.Table>
@@ -117,9 +132,9 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
                         </S.BankList> 
                       </S.Cell>
                       <S.Cell data-label="Оставшееся время">
-                        <Counter data={exchange.creationDate} delay={exchange.operationWindow.totalMilliseconds} formatNum />
+                        <Counter text="Время на обмен закончилось" data={exchange.creationDate} delay={exchange.operationWindow.totalMilliseconds} formatNum />
                       </S.Cell>
-                      <S.Cell data-label="Статус">{Status[exchange.state]}</S.Cell> 
+                      <S.Cell data-label="Статус">{getStatus(exchange)}</S.Cell> 
                   </S.BodyItem>
                 ))}
               </>
