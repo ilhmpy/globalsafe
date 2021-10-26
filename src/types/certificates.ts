@@ -35,6 +35,11 @@ export interface ViewUserCertificateModel {
     dailyVolume: number;
   }
 
+  export interface RootUsersCertificates {
+    totalRecords: number;
+    collection: ViewUserCertificateModel[];
+}
+
   export interface RootMarketCertificate {
     collection: MarketCertificate[];
     totalRecords: number;
