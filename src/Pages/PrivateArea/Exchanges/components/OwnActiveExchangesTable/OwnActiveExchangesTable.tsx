@@ -11,6 +11,7 @@ import { FiatKind } from "../../../../../types/fiat";
 import { PaymentMethodKind } from "../../../../../types/paymentMethodKind";
 import { Loading, NotItems } from "../../../components/Loading/Loading";
 import { Counter } from '../../../components/ui/Counter';
+import { Container } from "../../../../../components/UI/Container";
 
 import * as S from './S.el';
 import { getTime } from 'date-fns';
@@ -75,6 +76,7 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
   const Status = ["Новый", "Ожидается подтверждение оплаты", "Завершен", "Спорный", "Отменен"];
 
   return (
+    <Container pTabletNone>
       <S.Table>
         <S.Header>
           <S.Cell>
@@ -127,5 +129,6 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
           </>
         )}
       </S.Table>
+    </Container>
   );
 };

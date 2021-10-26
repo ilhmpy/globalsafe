@@ -27,6 +27,8 @@ import { getVolume } from '../../../../../functions/getVolume';
 import { getTime } from 'date-fns';
 import { Counter } from '../../../components/ui/Counter';
 import  { countVolumeToShow } from "../../../utils";
+import { Container } from "../../../../../components/UI/Container";
+import { scryRenderedComponentsWithType } from 'react-dom/test-utils';
 
 type DetailCardProps = {
   exchange: ViewExchangeModel;
@@ -348,6 +350,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
   // editStateForTesting(0);
 
   return (
+    <Container pTabletNone>
     <S.Container>
       <LeftSide bg={'#EAEFF4'}>
         <S.BlockWrapper>
@@ -428,15 +431,14 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
       {/* IF COMPLETED AND NOT GRADET */}
 
       <RightSide>
+        <S.TitleBlockWrapper>
+          <Title mB={10} lH={28} main>
+            {exchange.kind === 0 ? 'Продажа' : 'Покупка'}{' '}
+            {`${Balance[exchange.assetKind]} за ${FiatKind[exchange.exchangeAssetKind]}`}
+          </Title>
+          {getExchangeChip(exchange.state)}
+        </S.TitleBlockWrapper>
         <S.StateBlock when={exchange.state < 2 || exchange.state != 2 || mark != false}>
-          <S.TitleBlockWrapper>
-            <Title mB={10} lH={28}>
-              {exchange.kind === 0 ? 'Продажа' : 'Покупка'}{' '}
-              {`${Balance[exchange.assetKind]} за ${FiatKind[exchange.exchangeAssetKind]}`}
-            </Title>
-            {getExchangeChip(exchange.state)}
-          </S.TitleBlockWrapper>
-
           <S.BlockWrapper>
             <Text size={14} lH={20} mB={4} black>
               Количество:
@@ -529,33 +531,62 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                 и подтвердите перевод средств продавцу нажав на кнопку “средства отправлены”
               </Text>
             </S.TransferInfoBlock>
+              {screen.width > 1024 ? (
+                <>
+                  <S.Space justify="space-between" tabletWrap>
+                    <S.Space gap={20} justify="space-between">
+                      <Button primary bigSize onClick={() => confirmExchangePayment(exchange.safeId)}>
+                        Средства отправлены
+                      </Button>
+                      <Button outlinePrimary bigSize rightBtnOnTablet onClick={() => cancelExchange(exchange.safeId)}>
+                        Отменить обмен
+                      </Button>
+                    </S.Space>
 
-            <S.Space justify="space-between">
-              <S.Space gap={20}>
-                <Button primary bigSize onClick={() => confirmExchangePayment(exchange.safeId)}>
-                  Средства отправлены
-                </Button>
-                <Button outlinePrimary bigSize onClick={() => cancelExchange(exchange.safeId)}>
-                  Отменить обмен
-                </Button>
-              </S.Space>
-
-              <S.Space gap={20}>
-                <Button outlinePrimary bigSize onClick={handleClick}>
-                  Чат
-                </Button>
-                <Button
-                  outlinePrimary
-                  bigSize
-                  onClick={handleClick}
-                  as="button"
-                  disabled={exchange.state === 0}
-                  exchangeBtn
-                >
-                  Пожаловаться
-                </Button>
-              </S.Space>
-            </S.Space>
+                    <S.Space gap={20} className="intf_btns">
+                      <Button outlinePrimary bigSize onClick={handleClick}>
+                        Чат
+                      </Button>
+                      <Button
+                        outlinePrimary
+                        bigSize
+                        onClick={handleClick}
+                        as="button"
+                        disabled={exchange.state === 0}
+                        exchangeBtn
+                      >
+                        Пожаловаться
+                      </Button>
+                    </S.Space>
+                  </S.Space>
+                </>
+              ) : (
+                <>
+                  <S.Space justify="space-between">
+                    <Button primary bigSize onClick={() => confirmExchangePayment(exchange.safeId)}>
+                      Средства отправлены
+                    </Button>
+                    <Button outlinePrimary bigSize rightBtnOnTablet onClick={() => cancelExchange(exchange.safeId)}>
+                      Отменить обмен
+                    </Button>
+                  </S.Space>
+                  <S.Space gap={20} justify="flex-end" className="intf_btns">
+                      <Button outlinePrimary bigSize onClick={handleClick}>
+                        Чат
+                      </Button>
+                      <Button
+                        outlinePrimary
+                        bigSize
+                        onClick={handleClick}
+                        as="button"
+                        disabled={exchange.state === 0}
+                        exchangeBtn
+                      >
+                        Пожаловаться
+                      </Button>
+                    </S.Space>
+                </>
+              )}
           </S.StateBlock>
 
           <S.StateBlock when={owner === 'seller'}>
@@ -691,7 +722,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                 <Button
                   outlineDanger
                   bigSize
-                  as="button"
+                  as="button" 
                   disabled={true}
                   onClick={() => abuseExchange(exchange.safeId)}
                   exchangeBtn
@@ -850,5 +881,6 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
         onClose={() => setShowRejectModal(false)}
       />
     </S.Container>
+    </Container>
   );
 };

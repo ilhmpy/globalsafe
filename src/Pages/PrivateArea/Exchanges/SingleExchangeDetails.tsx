@@ -66,19 +66,20 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
   }, [hubConnection, call]);
 
   return (
-    <S.Container>
+    <>
       {loading ? <Loading /> : (
         <>
           {exchange === null ? <NotItems text="Не имеется информации по этому обмену" /> : (
             <>
-              <Container>
-                <Back text="К списку обменов" onGoBackClick={() => history.replace(routers.p2pchangesOwn)} />
-                <S.TitleContainer>
-                    <Title mB={0}>Обмен {`${Balance[exchange.assetKind]}-${FiatKind[exchange.exchangeAssetKind]}`}</Title>
-                    <Text size={14} lH={20} black>
-                      № {exchange.safeId}
-                    </Text>
-                </S.TitleContainer>
+                <Container>
+                  <Back text="К списку обменов" onGoBackClick={() => history.replace(routers.p2pchangesOwn)} />
+                  <S.TitleContainer>
+                      <Title mB={0} main>Обмен {`${Balance[exchange.assetKind]}-${FiatKind[exchange.exchangeAssetKind]}`}</Title>
+                      <Text size={14} lH={20} black>
+                        № {exchange.safeId}
+                      </Text>
+                  </S.TitleContainer>
+                </Container>
                 <ExchangeDetailCard setCall={setCall} 
                   setShowSuccessModal={setShowSuccessModal} 
                   setShowRejectModal={setShowRejectModal}
@@ -90,11 +91,10 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
                   setLoading={setLoading}
                   exchangeId={exchangeId}
                 />
-              </Container>
             </>
           )}
         </>
       )}
-    </S.Container>
+    </>
   );
 };
