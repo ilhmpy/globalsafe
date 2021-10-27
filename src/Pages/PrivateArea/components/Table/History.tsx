@@ -1,7 +1,14 @@
-import React from 'react';
+import moment from 'moment';
+import { FC } from 'react';
+import { Balance } from '../../../../types/balance';
+import { Collection } from '../../../../types/balanceHistory';
 import * as S from './S.el';
 
-export const TableHistory = () => {
+interface IProps {
+  accrualHistory: Collection[];
+}
+
+export const TableHistory: FC<IProps> = ({ accrualHistory }: IProps) => {
   return (
     <S.Wrapper>
       <S.Table>
@@ -9,14 +16,22 @@ export const TableHistory = () => {
           <S.Cell>Дата выплаты</S.Cell>
           <S.Cell>Сумма выплаты</S.Cell>
         </S.RowHeader>
-        <S.RowHistory>
-          <S.Cell>15.03.2022</S.Cell>
-          <S.Cell>10 000 CWD</S.Cell>
-        </S.RowHistory>
-        <S.RowHistory>
-          <S.Cell>15.03.2022</S.Cell>
-          <S.Cell>10 000 CWD</S.Cell>
-        </S.RowHistory>
+
+        {accrualHistory.length ? (
+          accrualHistory.map((item) => (
+            <S.RowHistory key={item.id}>
+              <S.Cell>{moment(item.operationDate).format('DD.MM.YYYY')}</S.Cell>
+              <S.Cell>
+                {item.operationKind} {Balance[item.operationKind]}
+              </S.Cell>
+            </S.RowHistory>
+          ))
+        ) : (
+          <S.RowHistory>
+            <S.Cell>-</S.Cell>
+            <S.Cell>-</S.Cell>
+          </S.RowHistory>
+        )}
       </S.Table>
     </S.Wrapper>
   );

@@ -18,23 +18,6 @@ export const Table: FC<TableProps> = ({ depositsList }: TableProps) => {
 
   return (
     <S.Wrapper>
-      {/* <thead>
-        <tr>
-          <th>Программа депозита</th>
-          <th>Сумма депозита</th>
-          <th>Дата ближайшей выплаты</th>
-          <th>Сумма ближайшей выплаты</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Vanila</td>
-          <td>5 000 000 CWD</td>
-          <td>02.10.2011</td>
-          <td>200 000 CWD</td>
-        </tr>
-      </tbody> */}
-
       <S.Table>
         <S.Header>
           <S.Cell>Программа депозита </S.Cell>

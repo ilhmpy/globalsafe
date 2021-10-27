@@ -61,6 +61,7 @@ export const OpenDeposit: FC<IProps> = ({
       hubConnection
         .invoke<ListDeposits>('GetDeposits', 1, true, 0, 100)
         .then((res) => {
+          console.log('.then ~ res', res);
           if (res.collection.length) {
             setDepositProgramsList(res.collection);
             const found = res.collection.find(
@@ -157,7 +158,9 @@ export const OpenDeposit: FC<IProps> = ({
           <Chip>Новый депозит</Chip>
         </ChipWrap>
         <ProgramDescTitle>Описание программы:</ProgramDescTitle>
-        <ProgramDesc>{activeDeposit?.description}</ProgramDesc>
+        <ProgramDesc>
+          <div dangerouslySetInnerHTML={{ __html: activeDeposit?.description as string }} />
+        </ProgramDesc>
       </LeftSide>
       <RightSide>
         <TitleWrap>

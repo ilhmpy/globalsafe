@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, FC } from 'react';
 import Scrollbars from 'react-custom-scrollbars';
 import InfiniteScroll from 'react-infinite-scroller';
 import { useHistory } from 'react-router-dom';
@@ -12,7 +12,7 @@ import { Loading } from '../components/Loading/Loading';
 import { Table } from '../components/Table';
 import * as S from './S.elements';
 
-export const Deposits = () => {
+export const Deposits: FC = () => {
   const [openModal, setOpenModal] = useState(false);
   const [depositsList, setDepositsList] = useState<Collection[]>([]);
   const [getDepositsLoading, setGetDepositsLoading] = useState(true);
@@ -21,8 +21,9 @@ export const Deposits = () => {
   const [skip, setSkip] = useState(0);
   const [activeFilter, setActiveFilter] = useState<'active' | 'archived' | 'hold'>('active');
 
+  const { hubConnection, balanceList, setDepositsFilter } = useContext(AppContext);
+
   const history = useHistory();
-  const { hubConnection, balanceList } = useContext(AppContext);
 
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   const languale = lang === 'ru' ? 1 : 0;
@@ -34,6 +35,10 @@ export const Deposits = () => {
       FieldName: 'creationDate',
     },
   ]);
+
+  useEffect(() => {
+    setDepositsFilter(activeFilter);
+  }, [activeFilter]);
 
   const getFilterCode = (key: 'active' | 'archived' | 'hold') => {
     if (key === 'active') {
@@ -67,6 +72,15 @@ export const Deposits = () => {
           sorting
         )
         .then((res) => {
+          console.log(
+            'GetUserDepositsInstant',
+            getFilterCode(activeFilter),
+            activeFilter === 'hold' ? false : null,
+            0,
+            20,
+            sorting
+          );
+          console.log('.then ~ res', res);
           if (res.totalRecords === [...depositsList, ...res.collection].length) {
             setDepositsListHasMore(false);
           }
