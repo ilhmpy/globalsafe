@@ -5,7 +5,7 @@ import { Checkbox } from '../../../components/Checkbox';
 import * as S from './S.el';
 
 type Props = {
-  selectedPaymentMethods: any[];
+  selectedPaymentMethods: number[];
   setSelectedPaymentMethods: (val: any[]) => void;
   methodsList: any[];
   onAccept: () => void;
@@ -28,11 +28,11 @@ export const PaymentMethods: FC<Props> = ({
   objectsArray
 }: Props) => {
 
-  const handleCheckboxChange = (index: number) => {
-    if(selectedPaymentMethods.includes(index)) {
-      setSelectedPaymentMethods([...selectedPaymentMethods].filter(ind => ind !== index));
+  const handleCheckboxChange = (value: number) => {
+    if(selectedPaymentMethods.includes(value)) {
+      setSelectedPaymentMethods([...selectedPaymentMethods].filter(ind => ind !== value));
     } else {
-      setSelectedPaymentMethods([...selectedPaymentMethods, index]);
+      setSelectedPaymentMethods([...selectedPaymentMethods, value]);
     };
   };
 
@@ -80,16 +80,18 @@ export const PaymentMethods: FC<Props> = ({
             ) : (
               <>
                 {
-                  [...methodsList].reverse().map((methodName, i) => (
+                  [...methodsList].reverse().map((method, i) => (
                     i !== 2
                     ?
                       <S.DropdonwConatainer big>
                         <Checkbox 
                           dis={!black}
-                          checked={selectedPaymentMethods.includes(i)}
-                          onChange={() => handleCheckboxChange(i)}
+                          checked={selectedPaymentMethods.includes(method.value)}
+                          onChange={() => handleCheckboxChange(method.value)}
                         >
-                          <S.Label active={selectedPaymentMethods.includes(i)} dis={!black}>{methodName}</S.Label>
+                          <S.Label active={selectedPaymentMethods.includes(method.value)} dis={!black}>
+                            {method.label}
+                          </S.Label>
                         </Checkbox>
                       </S.DropdonwConatainer>
                     :
@@ -97,11 +99,11 @@ export const PaymentMethods: FC<Props> = ({
                         <S.DropdonwConatainer big>
                           <Checkbox 
                             dis={!black}
-                            checked={selectedPaymentMethods.includes(i)}
-                            onChange={() => handleCheckboxChange(i)}
+                            checked={selectedPaymentMethods.includes(method.value)}
+                            onChange={() => handleCheckboxChange(method.value)}
                           >
-                            <S.Label active={selectedPaymentMethods.includes(i)} dis={!black}>
-                              {methodName}
+                            <S.Label active={selectedPaymentMethods.includes(method.value)} dis={!black}>
+                              {method.label}
                             </S.Label>
                           </Checkbox>
                         </S.DropdonwConatainer>
