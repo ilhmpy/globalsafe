@@ -295,7 +295,7 @@ export const OwnExchanges = () => {
         <S.SubHeader>
           <TabsBlock>
             <TabNavItem to={routers.p2pchanges} exact>
-              <div>Объявления</div>
+              <div>Ордеры</div>
             </TabNavItem>
 
             <TabNavItem to={routers.p2pchangesOwn} exact>
