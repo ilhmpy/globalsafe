@@ -31,6 +31,7 @@ import { SuccessModal } from './modals/SuccessModal';
 import { ErrorModal } from './modals/ErrorModal';
 import { wordDecline } from '../../../utils/wordDecline';
 import 'moment-duration-format';
+import { getMyRating } from '../utils';
 
 export const Certificates = () => {
   const [allCert, setAllCert] = useState<MarketCertificate[]>([]);
@@ -42,7 +43,7 @@ export const Certificates = () => {
   const [errorType, setErrorType] = useState('');
   const [dailyVolume, setDailyVolume] = useState(0);
   const history = useHistory();
-  const { hubConnection, balance } = useContext(AppContext);
+  const { hubConnection, balance, account } = useContext(AppContext);
 
   useEffect(() => {
     if (hubConnection) {
@@ -203,7 +204,7 @@ export const Certificates = () => {
         <S.SubHeader>
           <TabsBlock>
             <TabNavItem to={routers.p2pchanges} exact>
-              <div>Объявления</div>
+              <div>Ордеры</div>
             </TabNavItem>
 
             <TabNavItem to={routers.p2pchangesOwn} exact>
@@ -215,7 +216,7 @@ export const Certificates = () => {
             </TabNavItem>
           </TabsBlock>
           <Text size={14} lH={16} weight={500}>
-            Рейтинг аккаунта: 5.0
+            Рейтинг аккаунта: {getMyRating(account)}
           </Text>
         </S.SubHeader>
         {userCertificat.length

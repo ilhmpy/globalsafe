@@ -123,8 +123,6 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
         }
     };
 
-
-
     const onBalanceSummChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const pattern = /^[0-9][0-9\.]*$/;
         const pattern2 = /^[0-9]{1,10}\.[0-9]{6}$/;
@@ -560,11 +558,11 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                     disabled={
                         !paymentMethodSafeId || 
                         !balanceSumm || 
-                        (   order.volume < order.limitFrom 
+                        (   order.volume < (order.limitFrom / order.rate)
                             ?
                             countVolumeToShow(+order.volume, order.assetKind) > Number(balanceSumm)
                             :
-                            countVolumeToShow(+order.limitFrom, order.assetKind) > Number(balanceSumm)
+                            (countVolumeToShow(+order.limitFrom, order.assetKind) / order.rate) > Number(balanceSumm)
                         )
                     }
                 >

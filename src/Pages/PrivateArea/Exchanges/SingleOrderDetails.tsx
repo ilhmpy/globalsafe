@@ -12,12 +12,14 @@ import { FiatKind } from '../../../types/fiatKind';
 import { OrderType, ViewBuyOrderModel, ViewSellOrderModel } from '../../../types/orders';
 import { OrderDetailsCard } from './components/OrderDetailsCard';
 import { AppContext } from '../../../context/HubContext';
+import { OrderNotActualModal } from './components/modals/OrderNotActualModal';
 
 export const SingleOrderDetails: FC = () => {
   const history = useHistory();
   const {hubConnection} = useContext(AppContext);
   const [currentOrder, setCurrentOrder] = useState<ViewBuyOrderModel | ViewSellOrderModel | null>(null);
   const [currentOrderType, setCurrentOrderType] = useState<OrderType | undefined>(undefined);
+  const [showOrderNotActualModal, setShowOrderNotActualModal] = useState(false);
 
   const { orderSafeId } = useParams<{orderSafeId: string}>();
 
@@ -48,6 +50,11 @@ export const SingleOrderDetails: FC = () => {
     history.replace(routers.p2pchanges);
   };
 
+  const handleCloseOrderNotActualModal = () => {
+    setShowOrderNotActualModal(false);
+    history.replace(routers.p2pchanges);
+  };
+
   // Listening to changes
   useEffect(() => {
     const cbOrderVolumeChanged = (orderSafeId: string, summ: number) => {
@@ -64,12 +71,20 @@ export const SingleOrderDetails: FC = () => {
       console.log('__SOCKET__cbOrderCompleted::', orderSafeId)
     };
 
+    const cbOrderCanceled = (order: ViewBuyOrderModel | ViewSellOrderModel) => {
+      console.log('__SOCKET__cbOrderCanceled::', order);
+      setShowOrderNotActualModal(true);
+    };
+
     if (hubConnection) {
         hubConnection.on("BuyOrderVolumeChanged", cbOrderVolumeChanged);
         hubConnection.on("SellOrderVolumeChanged", cbOrderVolumeChanged);
 
         hubConnection.on("BuyOrderCompleted", cbOrderCompleted);
         hubConnection.on("SellOrderCompleted", cbOrderCompleted);
+        
+        hubConnection.on("BuyOrderCanceled", cbOrderCanceled);
+        hubConnection.on("SellOrderCanceled", cbOrderCanceled);
     };
 
     return () => {
@@ -77,6 +92,8 @@ export const SingleOrderDetails: FC = () => {
       hubConnection?.off("SellOrderVolumeChanged", cbOrderVolumeChanged);
       hubConnection?.off("SellOrderCompleted", cbOrderCompleted);
       hubConnection?.off("BuyOrderCompleted", cbOrderCompleted);
+      hubConnection?.off("BuyOrderCanceled", cbOrderCanceled);
+      hubConnection?.off("SellOrderCanceled", cbOrderCanceled);
     };
   }, [hubConnection]);
 
@@ -101,6 +118,11 @@ export const SingleOrderDetails: FC = () => {
         </S.TitleContainer>
 
         <OrderDetailsCard order={currentOrder} orderType={currentOrderType} />
+
+        <OrderNotActualModal 
+          open={showOrderNotActualModal} 
+          onClose={handleCloseOrderNotActualModal} 
+        />
 
       </Container>
     </S.Container>
