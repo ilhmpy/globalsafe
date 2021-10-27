@@ -9,6 +9,7 @@ type Props = {
   fullWidth?: boolean;
   exchangeBtn?: boolean;
   disabled?: boolean;
+  rightBtnOnTablet?: boolean;
 };
 
 export const Button = styled.a<Props>`
@@ -88,6 +89,14 @@ export const Button = styled.a<Props>`
           border: 1px solid #0094FF;
           color: #0094FF;
         }
+      `;
+    };
+  }}
+  ${({ rightBtnOnTablet }) => {
+    if (rightBtnOnTablet) {
+      return `
+          display: flex;
+          justify-content: flex-end;
       `;
     };
   }}

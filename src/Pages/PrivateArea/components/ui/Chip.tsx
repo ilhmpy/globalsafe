@@ -43,6 +43,10 @@ export const Chip = styled.div<ChipProps>`
       props.type === 'info' && Info ||
       props.type === 'default' && Default || Default
   )}
+  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+    font-weight: 400;
+    font-size: 12px;
+  }
 `;
 
 export const ChipWrap = styled.div<{ small?: boolean }>`

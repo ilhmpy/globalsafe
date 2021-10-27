@@ -1,6 +1,6 @@
 import styled from 'styled-components/macro';
 
-export const Container = styled.div<{ pNone?: boolean; page?: boolean; mtNone?: boolean;}>`
+export const Container = styled.div<{ pNone?: boolean; page?: boolean; mtNone?: boolean; pTabletNone?: boolean; }>`
   width: 100%;
   max-width: 1128px;
   margin: 0 auto;
@@ -10,7 +10,16 @@ export const Container = styled.div<{ pNone?: boolean; page?: boolean; mtNone?: 
     padding-right: ${(props) => (props.pNone ? '0' : '20px')};
     padding-left: ${(props) => (props.pNone ? '0' : '20px')};
   }
-
+  ${({ pTabletNone }) => {
+    if (pTabletNone) {
+      return `
+        @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+          padding-right: 0px;
+          padding-left: 0px;
+        }
+      `;
+    };
+  }}
   ${({ page, mtNone }) => {
     if (page) {
       return `

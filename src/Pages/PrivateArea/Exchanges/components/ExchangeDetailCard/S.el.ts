@@ -6,8 +6,9 @@ export const Container = styled.div`
   align-items: stretch;
   box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
   border-radius: 4px;
-  @media (max-width: 768px) {
-    flex-wrap: wrap;
+  margin-bottom: 40px;
+  @media only screen and (max-device-width: 481px) and (max-device-width: 1024px) {
+    padding-bottom: 0px;
   }
 `;
 
@@ -26,10 +27,37 @@ export const TitleBlockWrapper = styled.div`
   margin-bottom: 40px;
 `;
 
-export const Space = styled.div<{gap?: number, justify?: string}>`
+export const Space = styled.div<{gap?: number, justify?: string; tabletWrap?: boolean; tabletJustify?: string; }>`
   display: flex;
   justify-content: ${props => props.justify ? props.justify : 'flex-start'};
   gap: ${props => props.gap ? `${props.gap}px` : '10px'};
+  ${({ tabletWrap }) => {
+    if (tabletWrap) {
+      return `
+        @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+          flex-wrap: wrap;
+          .intf_btns {
+            width: 100%;
+            justify-content: flex-end;
+          }
+        }
+      `;
+    };
+  }}
+  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+    margin-bottom: 20px;
+    ${({ tabletJustify }) => {
+      if (tabletJustify) {
+        return `
+          justify-content: ${tabletJustify};
+          & > button {
+            display: flex;
+            justify-content: flex-end;
+          }
+        `;
+      }
+    }}
+  }
 `;
 
 export const TransferInfoBlock = styled.div`
