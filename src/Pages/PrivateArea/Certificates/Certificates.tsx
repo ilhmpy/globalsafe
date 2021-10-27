@@ -75,22 +75,19 @@ export const Certificates = () => {
         0,
         100
       );
-      console.log('GetUserCertificate', res);
       // getDailyVolume(res.certificate.assetKind);
       // setUserCertificat(res);
       setUserPureCertificat(res.collection);
       const arr = res.collection;
       (async () => {
         for (let i = 0; i < arr.length; i++) {
-          const res = await hubConnection.invoke('GetOrdersVolume', arr[i].certificate.assetKind);
-          arr[i].certificate.dailyVolume = arr[i].certificate.dailyVolume - res;
+          const resp = await hubConnection.invoke('GetOrdersVolume', arr[i].certificate.assetKind);
+          arr[i].certificate.dailyVolume =
+            arr[i].certificate.dailyVolume - resp > 0 ? arr[i].certificate.dailyVolume - resp : 0;
         }
 
-        // console.log('getDailyVolume', resVolume);
-        // arr[n].certificate.dailyVolume = arr[n].certificate.dailyVolume - (resVolume as number);
+        setUserCertificat(arr);
       })();
-      setUserCertificat(arr);
-      console.log('arr', arr);
     } catch (err) {
       console.log(err);
     }
@@ -169,10 +166,7 @@ export const Certificates = () => {
     }
   };
 
-  // console.log(
-  //   'Разница в ',
-  //   moment.duration.utc('2022-01-24T09:50:39').local().diff(moment.utc().local(), 'days')
-  // );
+  console.log('userCertificat ', userCertificat);
 
   return (
     <S.Container>
@@ -241,7 +235,9 @@ export const Certificates = () => {
                       Оставшийся лимит в сутках:
                     </Text>
                     <Text size={14} weight={500} lH={20}>
-                      {(item.certificate.dailyVolume / 100000).toLocaleString()}{' '}
+                      {item.certificate.dailyVolume > 0
+                        ? (item.certificate.dailyVolume / 100000).toLocaleString()
+                        : 0}{' '}
                       {Balance[item.certificate.assetKind]}
                     </Text>
                   </S.ActiveCertItem>
