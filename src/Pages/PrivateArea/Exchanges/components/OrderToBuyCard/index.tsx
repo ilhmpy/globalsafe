@@ -4,13 +4,13 @@ import { Input } from '../../../../../components/Input';
 import { routers } from '../../../../../constantes/routers';
 import { AppContext } from '../../../../../context/HubContext';
 import { Balance } from '../../../../../types/balance';
-import { ViewUserCertificateModel } from '../../../../../types/certificates';
+import { RootViewUserCertificatesModel, ViewUserCertificateModel } from '../../../../../types/certificates';
 import { FiatKind } from '../../../../../types/fiat';
 import { GetBuyOrdersModel, OrderType, ViewBuyOrderModel } from '../../../../../types/orders';
 import { CollectionPayMethod, PaymentMethodKind, RootPayMethod } from '../../../../../types/paymentMethodKind';
 import { Checkbox } from '../../../components/Checkbox';
 import { LeftSide, RightSide, Space, TabNavItem, Text, Title } from '../../../components/ui';
-import { countVolumeToSend } from '../../../utils';
+import { countVolumeToSend, countVolumeToShow } from '../../../utils';
 import { OrderErrorModal } from '../modals/OrderErrorModal';
 import { OrderInfoModal } from '../modals/OrderInfoModal';
 import * as S from './S.el';
@@ -52,6 +52,7 @@ export const OrderToBuyCard: FC = () => {
   const [dailyLimitRest, setDailyLimitRest] = useState(0);
   const [hasFamiliarOrder, setHasFamiliarOrder] = useState(false);
   const [showHasFamiliarOrder, setShowHasFamiliarOrder] = useState(false);
+  const [showCertificateIsMissingModal, setShowCertificateIsMissingModal] = useState(false);
 
   // Get Balance Kinds List as an Array
   const balanceKinds = useMemo<string[]>(() => {
@@ -77,29 +78,36 @@ export const OrderToBuyCard: FC = () => {
     if (hubConnection) {
       setSelectedPaymentMethodsIds([]);
       getUserPaymentMethods();
-      getUserCertificate();
     }
   }, [currencyToChange]);
 
   useEffect(() => {
     if (hubConnection && currencyToBuy) {
-      handleGetDailyVolume();
+      handleGetOrdersVolume();
+      getUserCertificates();
     }
   }, [currencyToBuy]);
 
-  const handleGetDailyVolume = async () => {
+ useEffect(() => {
+    if (hubConnection && userActiveCertificate) {
+      handleGetOrdersVolume();
+    }
+  }, [userActiveCertificate]);
+
+  const handleGetOrdersVolume = async () => {
       try {
         const res = await hubConnection!.invoke<number>(
-          'GetDailyVolume', 
+          'GetOrdersVolume', 
           Balance[currencyToBuy as keyof typeof Balance]
         );
-        console.log('GetDailyVolume', res);
+        console.log('GetOrdersVolume', res);
         if(userActiveCertificate) {
-          // TODO: Write Logic for all assets, now will work only for CWD
-          if(userActiveCertificate.certificate.assetKind === 1) {
-            const rest = (userActiveCertificate.certificate.dailyVolume - res) / 100000;
-            setDailyLimitRest(rest);
-          }
+          const rest = ( countVolumeToShow(userActiveCertificate.certificate.dailyVolume, userActiveCertificate.certificate.assetKind) - 
+          countVolumeToShow(res, Balance[currencyToBuy as keyof typeof Balance]) );
+          setDailyLimitRest(rest);
+        } else {
+          // Fake Value
+          setDailyLimitRest(100000000000);
         }
       } catch (err) {
         console.log(err);
@@ -125,11 +133,22 @@ export const OrderToBuyCard: FC = () => {
     }
   };
 
-  const getUserCertificate = async () => {
+  const getUserCertificates = async () => {
     try {
-      const res = await hubConnection!.invoke<ViewUserCertificateModel>('GetUserCertificate', 1);
-      setUserActiveCertificate(res);
-      console.log('getUserCertificate', res);
+      const res = await hubConnection!.invoke<RootViewUserCertificatesModel>(
+        'GetUserCertificates', 
+        currencyToBuy ? [ Balance[currencyToBuy as keyof typeof Balance] ] : [],
+        0, 
+        20
+      );
+      console.log('getUserCertificates', res);
+
+      if(res.collection.length > 0) {
+        const sorted = [...res.collection].sort((a, b) => new Date(b.creationDate).getTime() - new Date(a.creationDate).getTime());
+        setUserActiveCertificate(sorted[0]);
+      } else {
+        setUserActiveCertificate(null);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -200,15 +219,20 @@ export const OrderToBuyCard: FC = () => {
   };
 
   const onOrderSummChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const pattern = /^[1-9][0-9]*$/;
+    const pattern = /^[0-9][0-9\.]*$/;
+    const pattern2 = /^[0-9]{1,10}\.[0-9]{6}$/;
     if (e.target.value === '' || pattern.test(e.target.value)) {
       // Clear Min-Max values
       setOrderMinSumm('');
       setOrderMaxSumm('');
       if (+e.target.value > dailyLimitRest) {
-        setOrderSumm(String(dailyLimitRest));
+        if(dailyLimitRest > 0) {
+          setOrderSumm(String(dailyLimitRest));
+        }
       } else {
-        setOrderSumm(e.target.value);
+        if(!pattern2.test(e.target.value)) {
+          setOrderSumm(e.target.value);
+        }
       }
     }
   };
@@ -226,23 +250,29 @@ export const OrderToBuyCard: FC = () => {
   };
 
   const onOrderMinSummChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const pattern = /^[1-9][0-9]*$/;
+    const pattern = /^[0-9][0-9\.]*$/;
+    const pattern2 = /^[0-9]{1,10}\.[0-9]{3}$/;
     if (e.target.value === '' || pattern.test(e.target.value)) {
       if (+e.target.value > ((+orderSumm - 1) * +changeRate)) {
         setOrderMinSumm(String((+orderSumm - 1) * +changeRate));
       } else {
-        setOrderMinSumm(e.target.value);
+        if(!pattern2.test(e.target.value)) {
+          setOrderMinSumm(e.target.value);
+        }
       }
     }
   };
 
   const onOrderMaxSummChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const pattern = /^[1-9][0-9]*$/;
+    const pattern = /^[0-9][0-9\.]*$/;
+    const pattern2 = /^[0-9]{1,10}\.[0-9]{3}$/;
     if (e.target.value === '' || pattern.test(e.target.value)) {
       if (+e.target.value > (+orderSumm * +changeRate)) {
         setOrderMaxSumm(String(+orderSumm * +changeRate));
       } else {
-        setOrderMaxSumm(e.target.value);
+        if(!pattern2.test(e.target.value)) {
+          setOrderMaxSumm(e.target.value);
+        }
       }
     }
   };
@@ -296,6 +326,11 @@ export const OrderToBuyCard: FC = () => {
   const handlePublushOrder = () => {
     if(hasFamiliarOrder) {
       setShowHasFamiliarOrder(true);
+      return;
+    }
+
+    if(userActiveCertificate === null) {
+      setShowCertificateIsMissingModal(true);
       return;
     }
 
@@ -432,6 +467,7 @@ export const OrderToBuyCard: FC = () => {
                   Минимальный лимит операции:
                 </Text>
                 <Input
+                  suffix={currencyToChange ? currencyToChange : '-'}
                   placeholder="Введите сумму"
                   name="minSumm"
                   value={orderMinSumm}
@@ -443,6 +479,7 @@ export const OrderToBuyCard: FC = () => {
                   Максимальный лимит операции:
                 </Text>
                 <Input
+                  suffix={currencyToChange ? currencyToChange : '-'}
                   placeholder="Введите сумму"
                   name="maxSumm"
                   value={orderMaxSumm}
@@ -505,9 +542,14 @@ export const OrderToBuyCard: FC = () => {
         onClose={() => setShowOrderErrorModal(false)} 
       /> 
       <OrderErrorModal  
+        onlyCloseAction
         message="У вас уже есть ордер с такой же валютной парой"
         open={showHasFamiliarOrder} 
         onClose={() => setShowHasFamiliarOrder(false)} 
+      /> 
+      <OrderErrorModal  
+        open={showCertificateIsMissingModal} 
+        onClose={() => setShowCertificateIsMissingModal(false)} 
       /> 
     </S.Container>
   );

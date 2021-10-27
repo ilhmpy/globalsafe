@@ -12,9 +12,10 @@ type Props = {
   onClose: () => void;
   open: boolean;
   message?: string;
+  onlyCloseAction?: boolean;
 };
 
-export const OrderErrorModal: FC<Props> = ({ onClose, open, message }: Props) => {
+export const OrderErrorModal: FC<Props> = ({ onClose, open, message, onlyCloseAction = false }: Props) => {
   const history = useHistory();
 
   return (
@@ -37,9 +38,17 @@ export const OrderErrorModal: FC<Props> = ({ onClose, open, message }: Props) =>
               }
             </Text>
 
-            <Button primary onClick={() => history.replace(routers.certificates)}>
-              Выбрать сертификат
-            </Button>
+            {
+              onlyCloseAction
+              ?
+                <Button primary onClick={onClose}>
+                  Закрыть
+                </Button>
+            :
+                <Button primary onClick={() => history.replace(routers.certificates)}>
+                  Выбрать сертификат
+                </Button>
+            }
           </S.SmallContainer>
         </Modal>
       )}

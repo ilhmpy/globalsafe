@@ -54,4 +54,7 @@ export interface ViewUserCertificateModel {
     certificate: ViewTradeCertificateModel;
   }
 
-  
+  export interface RootViewUserCertificatesModel {
+    collection: ViewUserCertificateModel[];
+    totalRecords: number;
+  }

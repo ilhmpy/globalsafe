@@ -12,6 +12,7 @@ interface IProps {
   readOnly?: boolean;
   type?: string;
   required?: boolean;
+  suffix?: string;
 }
 
 export const Input: FC<IProps> = ({
@@ -24,21 +25,29 @@ export const Input: FC<IProps> = ({
   readOnly = false,
   type,
   required,
+  suffix
 }: IProps) => {
   return (
-    <InputUI
-      className={className}
-      disabled={disabled}
-      placeholder={placeholder}
-      name={name}
-      value={value}
-      onChange={onChange}
-      readOnly={readOnly}
-      type={type}
-      required={required}
-    />
+    <InputWrapper>
+      <InputUI
+        className={className}
+        disabled={disabled}
+        placeholder={placeholder}
+        name={name}
+        value={value}
+        onChange={onChange}
+        readOnly={readOnly}
+        type={type}
+        required={required}
+      />
+      {suffix ? <InputSuffix>{suffix}</InputSuffix> : null}
+    </InputWrapper>
   );
 };
+
+export const InputWrapper = styled.div`
+  position: relative;
+`;
 
 export const InputUI = styled.input`
   width: 100%;
@@ -65,4 +74,14 @@ export const InputUI = styled.input`
     opacity: 0.4;
     color: #000000;
   }
+`;
+
+export const InputSuffix = styled.div`
+  font-size: 14px;
+  line-height: 16px;
+  color: #000000;
+
+  position: absolute;
+  right: 12px;
+  top: 12px;
 `;
