@@ -219,10 +219,14 @@ export const Certificates = () => {
             Рейтинг аккаунта: {getMyRating(account)}
           </Text>
         </S.SubHeader>
+        {userCertificat.length > 1 ? (
+          <Title>Активные сертификаты</Title>
+        ) : userCertificat.length === 1 ? (
+          <Title>Активный сертификат</Title>
+        ) : null}
         {userCertificat.length
           ? userCertificat.map((item) => (
               <div key={item.safeId}>
-                <Title>Активный сертификат</Title>
                 <S.ActiveCert>
                   <S.ActiveCertItem>
                     <Text size={14} weight={300} lH={20}>
