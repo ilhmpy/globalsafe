@@ -128,22 +128,23 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
         const pattern2 = /^[0-9]{1,10}\.[0-9]{6}$/;
         if (e.target.value === '' || pattern.test(e.target.value)) {
             const value = removeLeadingZeros(e.target.value);
-            const volume = countVolumeToShow(+order.volume, order.assetKind);
-            const limitTo = countVolumeToShow(+order.limitTo, order.assetKind) / order.rate;
+            // const volume = countVolumeToShow(+order.volume, order.assetKind);
+            // const limitTo = countVolumeToShow(+order.limitTo, order.assetKind) / order.rate;
+            const volume = Math.floor((countVolumeToShow(order.volume, order.assetKind)) * 100000) / 100000;
+            const limitTo = Math.floor((countVolumeToShow(order.limitTo, order.assetKind) / order.rate) * 100000) / 100000;
             
-            if(+value > limitTo) {
-                setBalanceSumm(String(limitTo.toFixed(5)));
-                setFiatSumm((limitTo * order.rate).toFixed(5));
-                return;
-            } 
-
-            if(+value > volume) {
+            if(+value > volume && volume < limitTo) {
                 setBalanceSumm(String(volume));
                 setFiatSumm((volume * order.rate).toFixed(5));
                 return;
             }
 
-      
+            if(+value > limitTo) {
+                setBalanceSumm(String(limitTo));
+                setFiatSumm((limitTo * order.rate).toFixed(5));
+                return;  
+            } 
+
             if(!pattern2.test(e.target.value)) {
                 setBalanceSumm(value);
                 setFiatSumm((+value * order.rate).toFixed(5));
@@ -154,25 +155,30 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
 
     const onFiatSummChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const pattern = /^[0-9][0-9\.]*$/;
+        const pattern2 = /^[0-9]{1,10}\.[0-9]{6}$/;
         if (e.target.value === '' || pattern.test(e.target.value)) {
             const value = removeLeadingZeros(e.target.value);
             const volumeSumm = countVolumeToShow(+order.volume, order.assetKind) * order.rate;
             const limitToSumm = countVolumeToShow(+order.limitTo, order.assetKind);
-
-            if(+value > limitToSumm) {
-                setFiatSumm(String(limitToSumm));
-                setBalanceSumm((+limitToSumm / order.rate).toFixed(5))
-                return;
-            } 
+            const volume = Math.floor((countVolumeToShow(order.volume, order.assetKind)) * 100000) / 100000;
+            const limitTo = Math.floor((countVolumeToShow(order.limitTo, order.assetKind) / order.rate) * 100000) / 100000;
 
             if(+value > volumeSumm) {
                 setFiatSumm(String(volumeSumm));
-                setBalanceSumm((+volumeSumm / order.rate).toFixed(5))
+                setBalanceSumm(String(volume));
                 return;
             }
 
-            setFiatSumm(value);
-            setBalanceSumm((+value / order.rate).toFixed(5))
+            if(+value > limitToSumm) {
+                setFiatSumm(String(limitToSumm));
+                setBalanceSumm(String(limitTo));
+                return;
+            } 
+            
+            if(!pattern2.test(e.target.value)) {
+                setFiatSumm(value);
+                setBalanceSumm((+value / order.rate).toFixed(5))
+            }
         }
     };
 
@@ -260,132 +266,92 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                 'продажу' : 'покупку'}  ${Balance[order.assetKind]} за ${FiatKind[order.operationAssetKind]}`}
             </Title>
 
+            {/* useEffect(() => {
+                    if (!sellOrder) return;
+                    if (sellOrder.volume * sellOrder.rate > sellOrder.limitTo) {
+                        setPlAmount(toFixed(sellOrder.limitTo / 100000, 2).toString());
+                        setPlCoin(
+                            toFixed(sellOrder.limitTo / 100000 / sellOrder.rate, 2).toString()
+                        );
+                    } else {
+                        setPlAmount(
+                        toFixed((sellOrder.volume / 100000) * sellOrder.rate, 2).toString()
+                        );
+                        setPlCoin(toFixed(sellOrder.volume / 100000, 2).toString());
+                        }
+                }, [sellOrder]); */}
             <S.FormItem>
                 <Text size={14} weight={300} lH={20} mB={10} black>
                     {
                         `Количество ${orderType === OrderType.Buy ? 'продажи' : 'покупки'} (min ${
-                            order.volume < order.limitFrom 
+                            countVolumeToShow(order.volume, order.assetKind) < (countVolumeToShow(order.limitFrom, order.assetKind) / order.rate) 
                             ?
-                                Math.ceil(countVolumeToShow(order.volume, order.assetKind)).toLocaleString('ru-RU', {
-                                    maximumFractionDigits: 5,
-                                })
+                                Math.ceil((countVolumeToShow(order.volume, order.assetKind)) * 100000) / 100000
+                                // (countVolumeToShow(order.volume, order.assetKind)).toLocaleString('ru-RU', {
+                                //     maximumFractionDigits: 5,
+                                // })
                             :
-                                Math.ceil(countVolumeToShow(order.limitFrom, order.assetKind) / order.rate).toLocaleString('ru-RU', {
-                                    maximumFractionDigits: 5,
-                                })
+                                Math.ceil((countVolumeToShow(order.limitFrom, order.assetKind) / order.rate) * 100000) / 100000
+                                // (countVolumeToShow(order.limitFrom, order.assetKind) / order.rate).toLocaleString('ru-RU', {
+                                //     maximumFractionDigits: 5,
+                                // })
                         } max ${
-                            order.volume < order.limitTo 
+                            countVolumeToShow(order.volume, order.assetKind) < (countVolumeToShow(order.limitTo, order.assetKind) / order.rate)
                             ? 
-                                Math.floor(countVolumeToShow(order.volume, order.assetKind)).toLocaleString('ru-RU', {
-                                    maximumFractionDigits: 5,
-                                })
+                                Math.floor((countVolumeToShow(order.volume, order.assetKind)) * 100000) / 100000
+                                // (countVolumeToShow(order.volume, order.assetKind)).toLocaleString('ru-RU', {
+                                //     maximumFractionDigits: 5,
+                                // })
                             : 
-                                Math.floor(countVolumeToShow(order.limitTo, order.assetKind) / order.rate).toLocaleString('ru-RU', {
-                                    maximumFractionDigits: 5,
-                                })
+                                Math.floor((countVolumeToShow(order.limitTo, order.assetKind) / order.rate) * 100000) / 100000
+                                // (countVolumeToShow(order.limitTo, order.assetKind) / order.rate).toLocaleString('ru-RU', {
+                                //     maximumFractionDigits: 5,
+                                // })
                             } ${Balance[order.assetKind]
                         }):`
                     }
                 </Text>
-              {/* <Text size={14} weight={300} lH={20} mB={10} black>
-                  {
-                    orderType === OrderType.Buy
-                    ?
-                    `Количество продажи (max ${
-                        order.volume < order.limitTo
-                        ? 
-                            countVolumeToShow(order.volume, order.assetKind) 
-                        : 
-                            countVolumeToShow(order.limitTo, order.assetKind)
-                    } ${Balance[order.assetKind]}):`
-                    :
-                    `Количество продажи (max ${
-                        order.volume < order.limitTo
-                        ? 
-                            countVolumeToShow(order.volume, order.assetKind) 
-                        : 
-                            countVolumeToShow(order.limitTo, order.assetKind)
-                    } ${Balance[order.assetKind]}):`
-                  }
-              </Text> */}
-              <S.Input
-                placeholder="Введите сумму"
-                name="summ"
-                value={balanceSumm}
-                onChange={onBalanceSummChange}
-              />
+                <S.Input
+                    placeholder="Введите сумму"
+                    name="summ"
+                    value={balanceSumm}
+                    onChange={onBalanceSummChange}
+                />
             </S.FormItem>
 
             <S.FormItem>
                 <Text size={14} weight={300} lH={20} mB={10} black>
                     {
-                        orderType === OrderType.Buy
-                        ?
-                            `Сумма к получению (min ${
-                                order.volume < order.limitFrom 
-                                ?
-                                    countVolumeToShow(order.volume, order.assetKind) * order.rate
-                                :
-                                    countVolumeToShow(order.limitFrom, order.assetKind)
-                            } max ${
-                                order.volume < order.limitTo 
-                                ? 
-                                    countVolumeToShow(order.volume, order.assetKind) * order.rate
-                                : 
-                                    countVolumeToShow(order.limitTo, order.assetKind)
-                                } ${FiatKind[order.operationAssetKind]
-                            }):`
-                        :
-                            `Сумма к списанию (min ${
-                                order.volume < order.limitFrom 
-                                ?
-                                    countVolumeToShow(order.volume, order.assetKind) * order.rate
-                                :
-                                    countVolumeToShow(order.limitFrom, order.assetKind)
-                            } max ${
-                                order.volume < order.limitTo 
-                                ? 
-                                    countVolumeToShow(order.volume, order.assetKind) * order.rate
-                                : 
-                                    countVolumeToShow(order.limitTo, order.assetKind)
-                                } ${FiatKind[order.operationAssetKind]
-                            }):`
+                        `Сумма к ${orderType === OrderType.Buy ? 'получению' : 'списанию'} (min ${
+                            countVolumeToShow(order.volume, order.assetKind) < (countVolumeToShow(order.limitFrom, order.assetKind) / order.rate)
+                            ?
+                                (countVolumeToShow(order.volume, order.assetKind) * order.rate).toLocaleString('ru-RU', {
+                                    maximumFractionDigits: 5,
+                                })
+                            :
+                                (countVolumeToShow(order.limitFrom, order.assetKind)).toLocaleString('ru-RU', {
+                                    maximumFractionDigits: 5,
+                                })
+                        } max ${
+                            countVolumeToShow(order.volume, order.assetKind) < (countVolumeToShow(order.limitTo, order.assetKind) / order.rate)
+                            ? 
+                                (countVolumeToShow(order.volume, order.assetKind) * order.rate).toLocaleString('ru-RU', {
+                                    maximumFractionDigits: 5,
+                                })
+                            : 
+                                (countVolumeToShow(order.limitTo, order.assetKind)).toLocaleString('ru-RU', {
+                                    maximumFractionDigits: 5,
+                                })
+                            } ${FiatKind[order.operationAssetKind]
+                        }):`
                     }
                 </Text>
-              {/* <Text size={14} weight={300} lH={20} mB={10} black>
-                {
-                    orderType === OrderType.Buy
-                    ?
-                    `Сумма к получению (max ${
-                        order.volume < order.limitTo
-                        ?
-                            countVolumeToShow(order.volume, order.assetKind) * order.rate
-                        :
-                            countVolumeToShow(order.limitTo, order.assetKind) * order.rate
-                    } ${FiatKind[order.operationAssetKind]}):`
-                    :
-                    `Сумма к списанию (min ${
-                        order.volume < order.limitFrom 
-                        ?
-                            countVolumeToShow(order.volume, order.assetKind) * order.rate
-                        :
-                            countVolumeToShow(order.limitFrom, order.assetKind) * order.rate
-                    } max ${
-                        order.volume < order.limitTo 
-                        ? 
-                            countVolumeToShow(order.volume, order.assetKind) * order.rate
-                        : 
-                            countVolumeToShow(order.limitTo, order.assetKind) * order.rate
-                        } ${FiatKind[order.operationAssetKind]
-                    }):`
-                  }
-              </Text> */}
-              <S.Input
-                placeholder="Введите сумму"
-                name="summ"
-                value={fiatSumm}
-                onChange={onFiatSummChange}
-              />
+                <S.Input
+                    placeholder="Введите сумму"
+                    name="summ"
+                    value={fiatSumm}
+                    onChange={onFiatSummChange}
+                />
             </S.FormItem>
          
             {

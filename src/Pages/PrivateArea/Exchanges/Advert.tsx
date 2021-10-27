@@ -48,13 +48,13 @@ export const Advert = () => {
   ], []);
 
   // The Array should have the same queue as PaymentMethodKind enum
-  const paymentMethodsKinds = useMemo<string[]>(() => [
-    'ERC 20',
-    'TRC 20',
-    'BEP 20',
-    'АО «Тинькофф Банк»',
-    'ПАО Сбербанк',
-    'АО «Альфа-Банк»',
+  const paymentMethodsKinds = useMemo<{label: string; value: number}[]>(() => [
+    {label: 'ERC 20', value: 0},
+    {label: 'TRC 20', value: 1},
+    {label: 'BEP 20', value: 2},
+    {label: 'АО «Тинькофф Банк»', value: 3},
+    {label: 'ПАО Сбербанк', value: 4},
+    {label: 'АО «Альфа-Банк»', value: 5}
   ], []);
 
   useEffect(() => {
@@ -72,6 +72,8 @@ export const Advert = () => {
 
   const getBuyOrders = async () => {
       try {
+        console.log("=======================================", acceptedPaymentMethods)
+
         const res = await hubConnection!.invoke<GetBuyOrdersModel>(
           'GetBuyOrders', 
           selectedPair?.balance ? [ Balance[selectedPair?.balance as keyof typeof Balance] ] : [],  // Array of BalanceKind assetKinds
