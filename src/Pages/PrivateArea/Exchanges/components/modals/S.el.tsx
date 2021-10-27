@@ -87,11 +87,11 @@ export const Reason = styled.p`
   margin-bottom: 20px;
 `;
 
-export const Desc = styled.p`
+export const Desc = styled.p<{largeMb?: boolean}>`
   font-size: 14px;
   line-height: 20px;
   color: #000000;
-  margin-bottom: 10px;
+  margin-bottom: ${props => props.largeMb ? 20 : 10}px;
 `;
 
 export const SmallContainer = styled.div`

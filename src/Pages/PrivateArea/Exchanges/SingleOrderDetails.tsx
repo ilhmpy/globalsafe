@@ -68,7 +68,8 @@ export const SingleOrderDetails: FC = () => {
     };
 
     const cbOrderCompleted = (orderSafeId: string) => {
-      console.log('__SOCKET__cbOrderCompleted::', orderSafeId)
+      console.log('__SOCKET__cbOrderCompleted::', orderSafeId);
+      setShowOrderNotActualModal(true);
     };
 
     const cbOrderCanceled = (order: ViewBuyOrderModel | ViewSellOrderModel) => {
