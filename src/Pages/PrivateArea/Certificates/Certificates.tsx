@@ -275,7 +275,7 @@ export const Certificates = () => {
                   {(item.certificate.dailyVolume / 100000).toLocaleString('en-US', {
                     maximumFractionDigits: 2,
                   })}{' '}
-                  {Balance[item.certificate.assetKind]} / 24 дней.
+                  {Balance[item.certificate.assetKind]} / 24ч.
                 </Text>
 
                 <TitleWrap small>
