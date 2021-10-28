@@ -76,17 +76,21 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
     };
   };
 
-  const Status = ["Новый", "Ожидается подтверждение оплаты", "Завершен", "Спорный", "Отменен"];
+  const Status = ["Новый", "Ожидание подтверждения получения средств", "Завершен", "Спорный", "Отменен"];
 
   function getStatus({ state, kind, ownerSafeId }: ViewExchangeModel) {
     const owner = (kind === 0 && ownerSafeId !== account.safeId) ||
     (kind === 1 && ownerSafeId === account.safeId) ? "buyer" : "seller";
     console.log(owner);
     if (state === 0) {
-      if (owner === "seller") {
-        return "Ожидание перевода";
+      if (screen.width > 1024) {
+        if (owner === "seller") {
+          return "Ожидание перевода";
+        } else {
+          return "Ожидание подтверждения оплаты";        
+        };
       } else {
-        return "Ожидание подтверждения оплаты";        
+        return "Новый";
       };
     } else {
       return Status[state];
