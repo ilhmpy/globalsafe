@@ -48,6 +48,7 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
   const { t, i18n } = useTranslation();
 
   function handleClick() {
+    if (user === null) return;
     if (!user) {
       history.push('/login/0');
     } else {
@@ -172,13 +173,7 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
                
               )} */}
             </ButtonsRev>
-            <Btn
-              className={user === null || admin === null ? 'is-placeholder' : ''}
-              hide={user === null}
-              onClick={handleClick}
-            >
-              {t('headerButton.personalArea')}
-            </Btn>
+            <Btn onClick={handleClick}>{t('headerButton.personalArea')}</Btn>
           </HeaderInner>
         </Container>
       </HeaderWrap>
