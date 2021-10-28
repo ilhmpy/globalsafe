@@ -56,7 +56,7 @@ export const OrderToSellCard: FC = () => {
 
     const [createOrderLoading, setCreateOrderLoading] = useState(false);
     const [newCreatedOrder, setNewCreatedOrder] = useState<ViewSellOrderModel | undefined>(undefined);
-    const [dailyLimitRest, setDailyLimitRest] = useState(0);
+    const [dailyLimitRest, setDailyLimitRest] = useState<undefined | number>(0);
     const [hasFamiliarOrder, setHasFamiliarOrder] = useState(false);
     const [showHasFamiliarOrder, setShowHasFamiliarOrder] = useState(false);
     const [showCertificateIsMissingModal, setShowCertificateIsMissingModal] = useState(false);
@@ -90,7 +90,7 @@ export const OrderToSellCard: FC = () => {
 
     useEffect(() => {
         if (hubConnection && currencyToSell) {
-            getUserPaymentMethods();
+            handleGetOrdersVolume();
             getUserCertificates();
         }
     }, [currencyToSell]);
@@ -113,8 +113,7 @@ export const OrderToSellCard: FC = () => {
             countVolumeToShow(res, Balance[currencyToSell as keyof typeof Balance]) );
             setDailyLimitRest(rest);
           } else {
-            // Fake Value
-            setDailyLimitRest(100000000000);
+            setDailyLimitRest(undefined);
           }
         } catch (err) {
           console.log(err);
@@ -140,6 +139,7 @@ export const OrderToSellCard: FC = () => {
     };
 
     const getUserCertificates = async () => {
+        setUserActiveCertificate(null)
         try { 
           const res = await hubConnection!.invoke<RootViewUserCertificatesModel>(
             'GetUserCertificates', 
@@ -229,14 +229,21 @@ export const OrderToSellCard: FC = () => {
             // Clear Min-Max values
             setOrderMinSumm('');
             setOrderMaxSumm('');
-            if (+e.target.value > dailyLimitRest) {
-                if(dailyLimitRest > 0) {
+            if(dailyLimitRest !== undefined) {
+                if (+e.target.value > dailyLimitRest) {
+                  if(dailyLimitRest > 0) {
                     setOrderSumm(String(dailyLimitRest));
-                }
-            } else {
-                if(!pattern2.test(e.target.value)) {
+                  }
+                } else {
+                  if(!pattern2.test(e.target.value)) {
                     setOrderSumm(e.target.value);
+                  }
                 }
+                return
+            }
+        
+            if(dailyLimitRest === undefined) {
+                setOrderSumm(e.target.value);
             }
         }
     };
@@ -318,7 +325,7 @@ export const OrderToSellCard: FC = () => {
 
         return isValid;
     }, [currencyToSell, currencyToChange, orderSumm, changeRate, orderMinSumm, orderMaxSumm, selectedPaymentMethodsIds])
-
+ 
     const handlePublushOrder = () => {
         if(hasFamiliarOrder) {
           setShowHasFamiliarOrder(true);
@@ -333,18 +340,43 @@ export const OrderToSellCard: FC = () => {
         setShowOrderSellModal(true)
     };
 
+    console.log("dailyLimitRestdailyLimitRest", dailyLimitRest)
     return (
         <S.Container>
         <LeftSide bg={'#EAEFF4'}>
             <S.BlockWrapper>
-            <Text size={14} lH={20} mB={10} black>Аккаунт:</Text>
-            <Title lH={28}>{user}</Title>
+                <Text size={14} lH={20} mB={10} black>Аккаунт:</Text>
+                <Title lH={28}>{user}</Title>
             </S.BlockWrapper>
 
             <S.BlockWrapper>
-            <Text size={14} lH={20} mB={10} black>Рейтинг аккаунта:</Text>
-            <Title lH={28}>5.0</Title>
+                <Text size={14} lH={20} mB={10} black>Рейтинг аккаунта:</Text>
+                <Title lH={28}>5.0</Title>
             </S.BlockWrapper>
+
+            {
+                currencyToSell
+                ?
+                    dailyLimitRest !== undefined
+                    ?
+                    <S.BlockWrapper>
+                        <Text size={14} lH={20} mB={10} black>
+                        Оставшийся лимит в сутках:
+                        </Text>
+                        <Title lH={28}>
+                        {`${dailyLimitRest} ${currencyToSell}`}
+                        </Title>
+                    </S.BlockWrapper>
+                    :
+                    <S.BlockWrapper>
+                        <Text size={14} lH={20} mB={10} black>
+                            Отсутствует сертификат 
+                        </Text>
+                        <S.Link to={routers.certificates}>Купить сертификат</S.Link>
+                    </S.BlockWrapper>
+                :
+                    null
+            }
 
         </LeftSide>
 
@@ -383,6 +415,7 @@ export const OrderToSellCard: FC = () => {
                             name="summ"
                             value={orderSumm}
                             onChange={onOrderSummChange}
+                            readOnly={!currencyToSell}
                         />
                     </S.FormItem>
                 </Space>
@@ -408,6 +441,7 @@ export const OrderToSellCard: FC = () => {
                             name="changeRate"
                             value={changeRate}
                             onChange={onRateChange}
+                            readOnly={!currencyToSell}
                         />
                     </S.FormItem>
                 </Space>
