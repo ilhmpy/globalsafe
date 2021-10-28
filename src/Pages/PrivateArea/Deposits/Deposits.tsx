@@ -11,6 +11,9 @@ import { Heading } from '../components/Heading';
 import { Loading } from '../components/Loading/Loading';
 import { Table } from '../components/Table';
 import * as S from './S.elements';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import SwiperCore, { A11y, Navigation, Pagination, Scrollbar, Thumbs, EffectFade } from 'swiper';
+import styled from 'styled-components';
 
 export const Deposits: FC = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -20,6 +23,7 @@ export const Deposits: FC = () => {
   const [depositsListHasMore, setDepositsListHasMore] = useState(true);
   const [skip, setSkip] = useState(0);
   const [activeFilter, setActiveFilter] = useState<'active' | 'archived' | 'hold'>('active');
+  const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
 
   const { hubConnection, balanceList, setDepositsFilter } = useContext(AppContext);
 
@@ -179,8 +183,8 @@ export const Deposits: FC = () => {
       <Container>
         <Filter activeFilter={activeFilter} setActiveFilter={setActiveFilter} />
       </Container>
-      <Container>
-        <Scrollbars style={{ height: '240px', minHeight: '240px' }}>
+      <Container pTabletNone>
+        {/* <Scrollbars style={{ height: '240px', minHeight: '240px' }}>
           {getDepositsLoading ? (
             <Loading />
           ) : (
@@ -195,19 +199,132 @@ export const Deposits: FC = () => {
               </InfiniteScroll>
             )
           )}
-        </Scrollbars>
+        </Scrollbars> */}
+
+        <Swiper
+          spaceBetween={0}
+          thumbs={{ swiper: thumbsSwiper }}
+          className="mySwiper2"
+          loop={true}
+          pagination={{
+            clickable: true,
+          }}
+          breakpoints={{
+            '320': {
+              allowTouchMove: true,
+              navigation: true,
+              grabCursor: true,
+              loop: true,
+            },
+            '768': {
+              allowTouchMove: false,
+              navigation: false,
+              grabCursor: false,
+            },
+          }}
+        >
+          <SwiperSlide className="thumb">
+            <BlockBox>
+              <TopSide>
+                <BoxTitle>Vanila</BoxTitle>
+                <BoxAmount>5 000 000 CWD</BoxAmount>
+                <DateRange>16.09.2021 - 16.09.2022</DateRange>
+              </TopSide>
+              <BottomSide>
+                <div>
+                  <BottomTitle>Ближайшая выплата:</BottomTitle>
+                  <BottomValue>15.10.2011 (сегодня)</BottomValue>
+                </div>
+                <div>
+                  <BottomTitle>Сумма ближайшей выплаты:</BottomTitle>
+                  <BottomValue>200 000 CWD</BottomValue>
+                </div>
+              </BottomSide>
+            </BlockBox>
+          </SwiperSlide>
+          <SwiperSlide className="thumb">
+            <BlockBox>
+              <TopSide>
+                <BoxTitle>Vanila</BoxTitle>
+                <BoxAmount>5 000 000 CWD</BoxAmount>
+                <DateRange>16.09.2021 - 16.09.2022</DateRange>
+              </TopSide>
+              <BottomSide>
+                <div>
+                  <BottomTitle>Ближайшая выплата:</BottomTitle>
+                  <BottomValue>15.10.2011 (сегодня)</BottomValue>
+                </div>
+                <div>
+                  <BottomTitle>Сумма ближайшей выплаты:</BottomTitle>
+                  <BottomValue>200 000 CWD</BottomValue>
+                </div>
+              </BottomSide>
+            </BlockBox>
+          </SwiperSlide>
+        </Swiper>
       </Container>
-      {/* <Container>
-        <Back text="Назад" onClick={() => undefined} />
-      </Container>
-      <Program /> */}
-      {/* <button onClick={() => setOpenModal(true)}>open</button> */}
-      {/* <ConfirmOpenDeposit onClose={onClose} open={openModal} /> */}
-      {/* <SuccessOpenDeposit onClose={onClose} open={openModal} /> */}
-      {/* <ErrorOpenDeposit onClose={onClose} open={openModal} /> */}
-      {/* <CloseDeposit onClose={onClose} open={openModal} /> */}
-      {/* <CloseDepositSuccess onClose={onClose} open={openModal} /> */}
-      {/* <CloseDepositError onClose={onClose} open={openModal} /> */}
     </S.Container>
   );
 };
+
+const BottomValue = styled.p`
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+`;
+const BottomTitle = styled.span`
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 14px;
+`;
+
+const BottomSide = styled.div`
+  border-radius: 0px 0px 4px 4px;
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  & > div {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+`;
+const TopSide = styled.div`
+  background: #ebebf2;
+  border-radius: 4px 4px 0px 0px;
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+
+const DateRange = styled.p`
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 16px;
+`;
+const BoxAmount = styled.p`
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+`;
+const BoxTitle = styled.p`
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 20px;
+`;
+
+const BlockBox = styled.div`
+  max-width: 280px;
+  width: 100%;
+  /* padding: 20px; */
+  background: #ffffff;
+  border: 1px solid #ebebf2;
+  box-sizing: border-box;
+  border-radius: 4px;
+  color: #000000;
+`;

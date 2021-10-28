@@ -14,7 +14,7 @@ export const Table = styled.div`
 `;
 
 export const Cell = styled.div`
-  padding: 10px 0 9px;
+  padding: 9px 0 9px;
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
@@ -24,12 +24,17 @@ export const Cell = styled.div`
     font-size: 12px;
     font-weight: 400;
   }
+  @media (max-width: 1024px) {
+    &:nth-child(4) {
+      display: none;
+    }
+  }
 `;
 
 export const Row = styled.div`
   display: flex;
   align-items: center;
-  margin: 0px 20px;
+  margin: 0px 35px;
   border-bottom: 1px solid #ebebf2;
   cursor: pointer;
 
@@ -38,13 +43,19 @@ export const Row = styled.div`
   }
   ${Cell} {
     &:nth-child(1) {
+      @media (max-width: 1024px) {
+        margin-right: 90px;
+      }
       max-width: 270px;
     }
     &:nth-child(2) {
+      @media (max-width: 1024px) {
+        margin-right: 80px;
+      }
       max-width: 230px;
     }
     &:nth-child(3) {
-      max-width: 271px;
+      max-width: 270px;
     }
     &:nth-child(4) {
       max-width: 200px;
@@ -66,7 +77,7 @@ export const RowHistory = styled(Row)`
 
 const header = css`
   color: #000000;
-  padding: 10px 20px;
+  padding: 10px 35px;
   background: #ebebf2;
   border-bottom: none;
   margin: 0;

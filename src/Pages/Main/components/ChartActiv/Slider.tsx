@@ -1,5 +1,4 @@
-import { FC } from 'react';
-import { useEffect, useState, useRef } from 'react';
+import { FC, useEffect, useState, useRef } from 'react';
 import { ChartActiv } from './ChartActiv';
 import * as S from './S.elements';
 import { Collection } from '../../../../types/currency';
