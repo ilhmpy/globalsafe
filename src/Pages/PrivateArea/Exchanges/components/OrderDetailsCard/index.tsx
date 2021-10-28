@@ -28,15 +28,39 @@ interface OrderDetailsCardProps {
 };
 
 export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }: OrderDetailsCardProps) => {
-  const history = useHistory();
-  const { hubConnection } = useContext(AppContext);
-  const [balanceSumm, setBalanceSumm] = useState('');
-  const [fiatSumm, setFiatSumm] = useState('');
-  const [paymentMethodSafeId, setPaymentMethodSafeId] = useState('');
-  const [sellOrderPaymentMethods, setSellOrderPaymentMethods] = useState<CollectionPayMethod[]>([]);
-  const [userPaymentMethods, setUserPaymentMethods] = useState<CollectionPayMethod[]>([]);
-  const [showCreateExchangeModal, setShowCreateExchangeModal] = useState(false);
-  const [showErrorModal, setShowErrorModal] = useState(false);
+    const history = useHistory();
+    const { hubConnection } = useContext(AppContext);
+    const [balanceSumm, setBalanceSumm] = useState('');
+    const [fiatSumm, setFiatSumm] = useState('');
+    const [paymentMethodSafeId, setPaymentMethodSafeId] = useState('');
+    const [sellOrderPaymentMethods, setSellOrderPaymentMethods] = useState<CollectionPayMethod[]>([]);
+    const [userPaymentMethods, setUserPaymentMethods] = useState<CollectionPayMethod[]>([]);
+    const [showCreateExchangeModal, setShowCreateExchangeModal] = useState(false);
+    const [showErrorModal, setShowErrorModal] = useState(false);
+
+    const [balanceLimitFrom, setBalanceLimitFrom] = useState(0);
+    const [balanceLimitTo, setBalanceLimitTo] = useState(0);
+
+    useEffect(() => {
+        if(order) {
+            let limitFrom = 0;
+            let limitTo = 0;
+            if(countVolumeToShow(order.volume, order.assetKind) < (countVolumeToShow(order.limitFrom, order.assetKind) / order.rate) ) {
+                limitFrom = Math.ceil((countVolumeToShow(order.volume, order.assetKind)) * 100000) / 100000;
+            } else {
+                limitFrom = Math.ceil((countVolumeToShow(order.limitFrom, order.assetKind) / order.rate) * 100000) / 100000;
+            }
+
+            if(countVolumeToShow(order.volume, order.assetKind) < (countVolumeToShow(order.limitTo, order.assetKind) / order.rate)) {
+                limitTo = Math.floor((countVolumeToShow(order.volume, order.assetKind)) * 100000) / 100000;
+            } else {
+                limitTo = Math.floor((countVolumeToShow(order.limitTo, order.assetKind) / order.rate) * 100000) / 100000;
+            }
+            
+            setBalanceLimitFrom(limitFrom);
+            setBalanceLimitTo(limitTo);
+        }
+    }, [order])
 
 
     useEffect(() => {
@@ -127,23 +151,38 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
         const pattern = /^[0-9][0-9\.]*$/;
         const pattern2 = /^[0-9]{1,10}\.[0-9]{6}$/;
         if (e.target.value === '' || pattern.test(e.target.value)) {
-            const value = removeLeadingZeros(e.target.value);
-            // const volume = countVolumeToShow(+order.volume, order.assetKind);
-            // const limitTo = countVolumeToShow(+order.limitTo, order.assetKind) / order.rate;
+            const value = e.target.value;
             const volume = Math.floor((countVolumeToShow(order.volume, order.assetKind)) * 100000) / 100000;
             const limitTo = Math.floor((countVolumeToShow(order.limitTo, order.assetKind) / order.rate) * 100000) / 100000;
             
-            if(+value > volume && volume < limitTo) {
-                setBalanceSumm(String(volume));
-                setFiatSumm((volume * order.rate).toFixed(5));
-                return;
+            if(volume <= limitTo) {
+                if(+value >= volume) {
+                    setBalanceSumm(String(volume));
+                    setFiatSumm((volume * order.rate).toFixed(5));
+                    return;
+                }
+    
+                if(+value >= limitTo) {
+                    setBalanceSumm(String(limitTo));
+                    setFiatSumm((limitTo * order.rate).toFixed(5));
+                    return;  
+                } 
             }
 
-            if(+value > limitTo) {
-                setBalanceSumm(String(limitTo));
-                setFiatSumm((limitTo * order.rate).toFixed(5));
-                return;  
-            } 
+            if(limitTo <= volume) {
+                if(+value >= limitTo) {
+                    setBalanceSumm(String(limitTo));
+                    setFiatSumm((limitTo * order.rate).toFixed(5));
+                    return;  
+                } 
+
+                if(+value >= volume) {
+                    setBalanceSumm(String(volume));
+                    setFiatSumm((volume * order.rate).toFixed(5));
+                    return;
+                }
+            }
+          
 
             if(!pattern2.test(e.target.value)) {
                 setBalanceSumm(value);
@@ -163,21 +202,38 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
             const volume = Math.floor((countVolumeToShow(order.volume, order.assetKind)) * 100000) / 100000;
             const limitTo = Math.floor((countVolumeToShow(order.limitTo, order.assetKind) / order.rate) * 100000) / 100000;
 
-            if(+value > volumeSumm) {
-                setFiatSumm(String(volumeSumm));
-                setBalanceSumm(String(volume));
-                return;
+            if(volumeSumm <= limitToSumm) {
+                if(+value >= volumeSumm) {
+                    setFiatSumm((volumeSumm).toFixed(5));
+                    setBalanceSumm(String(volume));
+                    return;
+                }
+    
+                if(+value >= limitToSumm) {
+                    setFiatSumm((limitToSumm).toFixed(5));
+                    setBalanceSumm(String(limitTo));
+                    return;
+                } 
             }
 
-            if(+value > limitToSumm) {
-                setFiatSumm(String(limitToSumm));
-                setBalanceSumm(String(limitTo));
-                return;
-            } 
+            if(limitToSumm <= volumeSumm) {
+                if(+value >= limitToSumm) {
+                    setFiatSumm((limitToSumm).toFixed(5));
+                    setBalanceSumm(String(limitTo));
+                    return;
+                } 
+
+                if(+value >= volumeSumm) {
+                    setFiatSumm((volumeSumm).toFixed(5));
+                    setBalanceSumm(String(volume));
+                    return;
+                }
+            }
+           
             
             if(!pattern2.test(e.target.value)) {
                 setFiatSumm(value);
-                setBalanceSumm((+value / order.rate).toFixed(5))
+                setBalanceSumm(String(Math.ceil((+value / order.rate) * 100000) / 100000))
             }
         }
     };
@@ -284,29 +340,9 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                 <Text size={14} weight={300} lH={20} mB={10} black>
                     {
                         `Количество ${orderType === OrderType.Buy ? 'продажи' : 'покупки'} (min ${
-                            countVolumeToShow(order.volume, order.assetKind) < (countVolumeToShow(order.limitFrom, order.assetKind) / order.rate) 
-                            ?
-                                Math.ceil((countVolumeToShow(order.volume, order.assetKind)) * 100000) / 100000
-                                // (countVolumeToShow(order.volume, order.assetKind)).toLocaleString('ru-RU', {
-                                //     maximumFractionDigits: 5,
-                                // })
-                            :
-                                Math.ceil((countVolumeToShow(order.limitFrom, order.assetKind) / order.rate) * 100000) / 100000
-                                // (countVolumeToShow(order.limitFrom, order.assetKind) / order.rate).toLocaleString('ru-RU', {
-                                //     maximumFractionDigits: 5,
-                                // })
+                            balanceLimitFrom
                         } max ${
-                            countVolumeToShow(order.volume, order.assetKind) < (countVolumeToShow(order.limitTo, order.assetKind) / order.rate)
-                            ? 
-                                Math.floor((countVolumeToShow(order.volume, order.assetKind)) * 100000) / 100000
-                                // (countVolumeToShow(order.volume, order.assetKind)).toLocaleString('ru-RU', {
-                                //     maximumFractionDigits: 5,
-                                // })
-                            : 
-                                Math.floor((countVolumeToShow(order.limitTo, order.assetKind) / order.rate) * 100000) / 100000
-                                // (countVolumeToShow(order.limitTo, order.assetKind) / order.rate).toLocaleString('ru-RU', {
-                                //     maximumFractionDigits: 5,
-                                // })
+                           balanceLimitTo
                             } ${Balance[order.assetKind]
                         }):`
                     }

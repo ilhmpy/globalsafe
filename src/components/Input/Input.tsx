@@ -39,6 +39,7 @@ export const Input: FC<IProps> = ({
         readOnly={readOnly}
         type={type}
         required={required}
+        autoComplete={'off'}
       />
       {suffix ? <InputSuffix>{suffix}</InputSuffix> : null}
     </InputWrapper>
