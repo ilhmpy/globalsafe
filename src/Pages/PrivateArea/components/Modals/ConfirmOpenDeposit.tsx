@@ -16,6 +16,8 @@ type Props = {
 
 export const ConfirmOpenDeposit: FC<Props> = ({ onClose, open, sumValue }: Props) => {
   const { selectedDeposit } = useContext(AppContext);
+  const { name, asset, isInstant, isActive, paymentRatio, duration, paymentInterval } =
+    selectedDeposit;
 
   return (
     <>
@@ -32,7 +34,7 @@ export const ConfirmOpenDeposit: FC<Props> = ({ onClose, open, sumValue }: Props
             <S.List>
               <S.ListItem>
                 <S.Text>
-                  Программа депозита: <strong>{selectedDeposit?.name}</strong>
+                  Программа депозита: <strong>{name}</strong>
                 </S.Text>
               </S.ListItem>
               <S.ListItem>
@@ -45,12 +47,12 @@ export const ConfirmOpenDeposit: FC<Props> = ({ onClose, open, sumValue }: Props
               </S.ListItem>
               <S.ListItem>
                 <S.Text>
-                  Отложенная выплата: <strong>{selectedDeposit?.isInstant ? 'Да' : 'Нет'}</strong>
+                  Отложенная выплата: <strong>{isInstant ? 'Да' : 'Нет'}</strong>
                 </S.Text>
               </S.ListItem>
               <S.ListItem>
                 <S.Text>
-                  Замороженый депозит: <strong>{selectedDeposit?.isActive ? 'Да' : 'Нет'}</strong>
+                  Замороженый депозит: <strong>{isActive ? 'Да' : 'Нет'}</strong>
                 </S.Text>
               </S.ListItem>
               <S.ListItem>
@@ -66,10 +68,10 @@ export const ConfirmOpenDeposit: FC<Props> = ({ onClose, open, sumValue }: Props
               </S.ListItem>
               <S.ListItem>
                 <S.Text>
-                  Сумма выплаты:{' '}
-                  <strong>{` ${sumValue.replace(/(\d)(?=(\d{3})+$)/g, '$1 ')} ${
-                    Balance[selectedDeposit?.asset as number]
-                  }`}</strong>
+                  Сумма выплаты:
+                  <strong>{` ${(+sumValue * paymentRatio * (duration / paymentInterval))
+                    .toString()
+                    .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')} ${Balance[asset as number]}`}</strong>
                 </S.Text>
               </S.ListItem>
             </S.List>
@@ -79,7 +81,7 @@ export const ConfirmOpenDeposit: FC<Props> = ({ onClose, open, sumValue }: Props
                   <S.Text>
                     К списанию:{' '}
                     <strong>{` ${sumValue.replace(/(\d)(?=(\d{3})+$)/g, '$1 ')} ${
-                      Balance[selectedDeposit?.asset as number]
+                      Balance[asset as number]
                     }`}</strong>
                   </S.Text>
                 </S.ListItem>
