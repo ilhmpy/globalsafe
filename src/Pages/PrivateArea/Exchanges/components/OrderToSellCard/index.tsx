@@ -265,7 +265,7 @@ export const OrderToSellCard: FC = () => {
         const pattern2 = /^[0-9]{1,10}\.[0-9]{3}$/;
         if (e.target.value === '' || pattern.test(e.target.value)) {
         if (+e.target.value > ((+orderSumm - 1) * +changeRate)) {
-            setOrderMinSumm(String((+orderSumm - 1) * +changeRate));
+            setOrderMinSumm(((+orderSumm - 1) * +changeRate).toFixed(2));
         } else {
             if(!pattern2.test(e.target.value)) {
                 setOrderMinSumm(e.target.value);
@@ -279,7 +279,7 @@ export const OrderToSellCard: FC = () => {
         const pattern2 = /^[0-9]{1,10}\.[0-9]{3}$/;
         if (e.target.value === '' || pattern.test(e.target.value)) {
           if (+e.target.value > (+orderSumm * +changeRate)) {
-            setOrderMaxSumm(String(+orderSumm * +changeRate));
+            setOrderMaxSumm((+orderSumm * +changeRate).toFixed(2));
           } else {
             if(!pattern2.test(e.target.value)) {
               setOrderMaxSumm(e.target.value);
