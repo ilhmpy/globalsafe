@@ -12,6 +12,8 @@ import { PaymentMethodKind } from "../../../../../types/paymentMethodKind";
 import { Loading, NotItems } from "../../../components/Loading/Loading";
 import { Counter } from '../../../components/ui/Counter';
 import { Container } from "../../../../../components/UI/Container";
+import { AppContext } from '../../../../../context/HubContext';
+import { ViewExchangeModel } from '../../../../../types/exchange';
 
 import * as S from './S.el';
 import { getTime } from 'date-fns';
@@ -21,6 +23,7 @@ import { countVolumeToShow } from '../../../utils';
 export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, loading, setExchanges }: OwnExchangesProps) => {
   const history = useHistory();
   const [selectedOption, setSelectedOption] = useState<string | null>('Все валюты предложения');
+  const { account } = useContext(AppContext);
 
 
   const handleNavigateToExchange = (id: string) => {
@@ -73,7 +76,26 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
     };
   };
 
-  const Status = ["Новый", "Ожидается подтверждение оплаты", "Завершен", "Спорный", "Отменен"];
+  const Status = ["Новый", "Ожидание подтверждения получения средств", "Завершен", "Спорный", "Отменен"];
+
+  function getStatus({ state, kind, ownerSafeId }: ViewExchangeModel) {
+    const owner = (kind === 0 && ownerSafeId !== account.safeId) ||
+    (kind === 1 && ownerSafeId === account.safeId) ? "buyer" : "seller";
+    console.log(owner);
+    if (state === 0) {
+      if (screen.width > 1024) {
+        if (owner === "seller") {
+          return "Ожидание перевода";
+        } else {
+          return "Ожидание подтверждения оплаты";        
+        };
+      } else {
+        return "Новый";
+      };
+    } else {
+      return Status[state];
+    };
+  };
 
   return (
     <Container pTabletNone>
@@ -119,9 +141,9 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
                         </S.BankList> 
                       </S.Cell>
                       <S.Cell data-label="Оставшееся время">
-                        <Counter data={exchange.creationDate} delay={exchange.operationWindow.totalMilliseconds} formatNum />
+                        <Counter text="Время на обмен закончилось" data={exchange.creationDate} delay={exchange.operationWindow.totalMilliseconds} formatNum />
                       </S.Cell>
-                      <S.Cell data-label="Статус">{Status[exchange.state]}</S.Cell> 
+                      <S.Cell data-label="Статус">{getStatus(exchange)}</S.Cell> 
                   </S.BodyItem>
                 ))}
               </>
