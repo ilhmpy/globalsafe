@@ -261,7 +261,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
         </LeftSide>
 
         <RightSide>
-            <Title mB={40} lH={28}>
+            <Title mB={40} lH={28} main>
                 {`Заявка на ${orderType === OrderType.Buy ? 
                 'продажу' : 'покупку'}  ${Balance[order.assetKind]} за ${FiatKind[order.operationAssetKind]}`}
             </Title>

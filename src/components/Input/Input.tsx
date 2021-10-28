@@ -47,6 +47,9 @@ export const Input: FC<IProps> = ({
 
 export const InputWrapper = styled.div`
   position: relative;
+  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+    max-width: 200px;
+  }
 `;
 
 export const InputUI = styled.input`
