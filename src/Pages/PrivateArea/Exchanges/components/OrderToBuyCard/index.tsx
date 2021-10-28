@@ -49,7 +49,7 @@ export const OrderToBuyCard: FC = () => {
 
   const [createOrderLoading, setCreateOrderLoading] = useState(false);
   const [newCreatedOrder, setNewCreatedOrder] = useState<ViewBuyOrderModel | undefined>(undefined);
-  const [dailyLimitRest, setDailyLimitRest] = useState(0);
+  const [dailyLimitRest, setDailyLimitRest] = useState<undefined | number>(0);
   const [hasFamiliarOrder, setHasFamiliarOrder] = useState(false);
   const [showHasFamiliarOrder, setShowHasFamiliarOrder] = useState(false);
   const [showCertificateIsMissingModal, setShowCertificateIsMissingModal] = useState(false);
@@ -107,7 +107,7 @@ export const OrderToBuyCard: FC = () => {
           setDailyLimitRest(rest);
         } else {
           // Fake Value
-          setDailyLimitRest(100000000000);
+          setDailyLimitRest(undefined);
         }
       } catch (err) {
         console.log(err);
@@ -194,6 +194,19 @@ export const OrderToBuyCard: FC = () => {
   const handleCreateBuyOrder = async () => {
     setCreateOrderLoading(true);
     try {
+      console.log('volume', countVolumeToSend(orderSumm, Balance[currencyToBuy as keyof typeof Balance]))
+      console.log('changeRate', +changeRate)
+      console.log('assetKind', Balance[currencyToBuy as keyof typeof Balance])
+      console.log('operationAssetKind', FiatKind[currencyToChange as keyof typeof FiatKind])
+      console.log('limitFrom', +countVolumeToSend(orderMinSumm, Balance[currencyToBuy as keyof typeof Balance]))
+      console.log('limitTo', +countVolumeToSend(orderMaxSumm, Balance[currencyToBuy as keyof typeof Balance]))
+      console.log('window', timeDurations.find((t) => t.label === changeTimePeriod)?.value)
+      console.log('methodsKinds', findPaymentMethodKinds(
+        paymentMethods?.filter((m) => selectedPaymentMethodsIds.includes(String(m.id)))
+      ))
+      console.log('terms', '')
+
+
       const res = await hubConnection!.invoke<ViewBuyOrderModel>(
         'CreateBuyOrder',
         countVolumeToSend(orderSumm, Balance[currencyToBuy as keyof typeof Balance]), // string volume
@@ -225,15 +238,23 @@ export const OrderToBuyCard: FC = () => {
       // Clear Min-Max values
       setOrderMinSumm('');
       setOrderMaxSumm('');
-      if (+e.target.value > dailyLimitRest) {
-        if(dailyLimitRest > 0) {
-          setOrderSumm(String(dailyLimitRest));
+      if(dailyLimitRest !== undefined) {
+        if (+e.target.value > dailyLimitRest) {
+          if(dailyLimitRest > 0) {
+            setOrderSumm(String(dailyLimitRest));
+          }
+        } else {
+          if(!pattern2.test(e.target.value)) {
+            setOrderSumm(e.target.value);
+          }
         }
-      } else {
-        if(!pattern2.test(e.target.value)) {
-          setOrderSumm(e.target.value);
-        }
+        return
       }
+
+      if(dailyLimitRest === undefined) {
+        setOrderSumm(e.target.value);
+      }
+    
     }
   };
 
@@ -353,6 +374,30 @@ export const OrderToBuyCard: FC = () => {
           </Text>
           <Title lH={28}>5.0</Title>
         </S.BlockWrapper>
+        {
+          currencyToBuy
+          ?
+            dailyLimitRest !== undefined
+            ?
+              <S.BlockWrapper>
+                <Text size={14} lH={20} mB={10} black>
+                  Оставшийся лимит в сутках:
+                </Text>
+                <Title lH={28}>
+                  {`${dailyLimitRest} ${currencyToBuy}`}
+                </Title>
+              </S.BlockWrapper>
+            :
+              <S.BlockWrapper>
+                <Text size={14} lH={20} mB={10} black>
+                  Отсутствует сертификат 
+                </Text>
+                <S.Link to={routers.certificates}>Купить сертификат</S.Link>
+              </S.BlockWrapper>
+          :
+            null
+        }
+        
       </LeftSide>
 
       <RightSide>
@@ -388,6 +433,7 @@ export const OrderToBuyCard: FC = () => {
                 name="summ"
                 value={orderSumm}
                 onChange={onOrderSummChange}
+                readOnly={!currencyToBuy}
               />
             </S.FormItem>
           </Space>
@@ -413,6 +459,7 @@ export const OrderToBuyCard: FC = () => {
                 name="changeRate"
                 value={changeRate}
                 onChange={onRateChange}
+                readOnly={!currencyToBuy}
               />
             </S.FormItem>
           </Space>

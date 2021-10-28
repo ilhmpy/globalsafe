@@ -32,7 +32,7 @@ export const countVolumeToShow = (countVolume: number, asset: any): number => {
   if(asset === 1) {
     value = countVolume / 100000;
   }
-  if(asset === 42) {
+  if(asset === 43) {
     value = countVolume / 10000;
   }
   if(asset === 59) {
@@ -47,7 +47,7 @@ export const countVolumeToSend = (summ: string, asset: number): string => {
   if(asset === 1) {
     value = summary * 100000;
   }
-  if(asset === 42) {
+  if(asset === 43) {
     value = summary * 10000;
   }
   if(asset === 59) {
