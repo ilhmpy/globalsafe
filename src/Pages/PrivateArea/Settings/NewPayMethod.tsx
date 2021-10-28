@@ -76,7 +76,8 @@ export const NewPayMethod: FC = () => {
   const isUSDT = [PaymentMethodKind[0], PaymentMethodKind[1], PaymentMethodKind[2]].includes(
     bankName
   );
-  // console.log('bankName', bankName);
+  console.log('bankName', bankName);
+  console.log('balanceType', balanceType);
   const addPayMethod = () => {
     if (isUSDT) {
       return {
@@ -114,8 +115,8 @@ export const NewPayMethod: FC = () => {
           kind,
           balanceType === FiatKind[7]
             ? FiatKind.USDT
-            : keys.findIndex((i) => i === balanceType)
-            ? 2
+            : balanceType
+            ? keys.findIndex((i) => i === balanceType)
             : 2,
           checked ? 1 : 2,
           JSON.stringify(addPayMethod())
