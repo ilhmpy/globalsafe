@@ -18,62 +18,12 @@ export const Cell = styled.div`
   color: #000;
   width: 100%;
   padding: 0 10px;
-  &:nth-child(1) {
-    max-width: 146px;
-    @media (max-width: 992px) {
-      max-width: 100%;
+  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+    &:nth-child(2) {
+      max-width: 60px;
     }
-  }
-  &:nth-child(2) {
-    max-width: 93px;
-    @media (max-width: 992px) {
-      max-width: 100%;
-    }
-  }
-  &:nth-child(3) {
-    max-width: 156px;
-    @media (max-width: 992px) {
-      max-width: 100%;
-    }
-  }
-  &:nth-child(4) {
-    max-width: 189px;
-    @media (max-width: 992px) {
-      max-width: 100%;
-    }
-  }
-  &:nth-child(5) {
-    max-width: 228px;
-    @media (max-width: 992px) {
-      max-width: 100%;
-    }
-  }
-  &:nth-child(6) {
-    max-width: 139px;
-    @media (max-width: 992px) {
-      max-width: 100%;
-    }
-  }
-  &:nth-child(7) {
-    max-width: 90px;
-    @media (max-width: 992px) {
-      max-width: 100%;
-    }
-  }
-  @media (max-width: 992px) {
-    max-width: 100%;
-    display: flex;
-    justify-content: space-between;
-    padding: 6px 10px;
-    margin-bottom: 2px;
-    background: #ffffff;
-    &:before {
-      content: attr(data-label);
-      text-transform: uppercase;
-      font-weight: 400;
-      font-size: 14px;
-      line-height: 16px;
-      color: #000;
+    &:nth-child(3) {
+      display: none;
     }
   }
 `;
@@ -101,12 +51,6 @@ export const BodyItem = styled.div<{ active?: boolean }>`
     box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
     border-radius: 4px 0 0 4px;
   }
-  @media (max-width: 992px) {
-    flex-wrap: wrap;
-    background: transparent;
-    padding: 0;
-    margin-bottom: 10px;
-  }
 `;
 
 export const Header = styled.div`
@@ -119,9 +63,6 @@ export const Header = styled.div`
     font-size: 14px;
     line-height: 16px;
     color: #000;
-  }
-  @media (max-width: 992px) {
-    display: none;
   }
 `;
 
