@@ -152,14 +152,16 @@ export const OwnExchanges = () => {
   };
 
   function volumeChanged(id: string, volume: number) {
-    console.log("ExchangeChanged/Created/Completed", id, volume);
-    const exchanges = [...userExchanges];
-    userExchanges.forEach((item) => {
-      if (item.safeId === id) {
-        exchanges[userExchanges.indexOf(item)].orderVolume = volume;
-      };
-    });
-    setUserExchanges(exchanges);
+    if (activeFilter !== "archived") {
+      console.log("ExchangeChanged/Created/Completed", id, volume);
+      const exchanges = [...userExchanges];
+      userExchanges.forEach((item) => {
+        if (item.safeId === id) {
+          exchanges[userExchanges.indexOf(item)].orderVolume = volume;
+        };
+      });
+      setUserExchanges(exchanges);
+    };
   };
 
   function exchangeCreated(res: ViewExchangeModel) {

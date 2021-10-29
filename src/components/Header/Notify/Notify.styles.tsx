@@ -63,6 +63,9 @@ export const NotifiesBlock = styled.div<{ block: boolean; auth?: boolean; admin?
         };
     }}
     top: ${({ block }) => block ? "50px" : "1200px"};
+    @media only screen and (max-device-width: 1024px) {
+        top: ${({ block }) => block ? "50px" : "8000px"};
+    };
     border: 1px solid #DCDCE8;
     z-index: 0;
     background: #fff;
