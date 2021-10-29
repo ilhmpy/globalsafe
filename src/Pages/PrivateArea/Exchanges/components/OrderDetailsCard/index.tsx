@@ -280,7 +280,8 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                 Лимиты:
             </Text>
             <Title lH={28}>
-            {`${countVolumeToShow(order.limitFrom, order.assetKind)} - ${countVolumeToShow(order.limitTo, order.assetKind)} ${FiatKind[order.operationAssetKind]}`}
+                {`${countVolumeToShow(order.limitFrom, order.assetKind)} - ${
+                    countVolumeToShow(order.limitTo, order.assetKind)} ${FiatKind[order.operationAssetKind]}`}
             </Title>
             </S.BlockWrapper>
 

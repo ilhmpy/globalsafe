@@ -19,6 +19,7 @@ import { FiatKind } from '../../../../../types/fiat';
 import { CollectionPayMethod, PaymentMethodKind } from '../../../../../types/paymentMethodKind';
 import { routers } from '../../../../../constantes/routers';
 import { countVolumeToShow } from '../../../utils';
+import { RootViewUserCertificatesModel, ViewUserCertificateModel } from '../../../../../types/certificates';
  
 interface OrderDetailsCardOwnProps {
   order: ViewBuyOrderModel | ViewSellOrderModel;
@@ -32,15 +33,25 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showDeleteErrorModal, setShowDeleteErrorModal] = useState(false);
   const [deleteSuccessed, setDeleteSuccessed] = useState(false);
-
+  const [dailyLimitRest, setDailyLimitRest] = useState<number>(0);
+  const [userActiveCertificate, setUserActiveCertificate] =
+  useState<ViewUserCertificateModel | null>(null);
 
   useEffect(() => {
     if(hubConnection) {
+      getUserCertificates();
+
       if(order && orderType === OrderType.Sell) {
         getSellOrderPaymentMethods();
       }
     }
   }, [hubConnection, orderType, order]);
+
+  useEffect(() => {
+    if (hubConnection && userActiveCertificate) {
+      handleGetOrdersVolume();
+    }
+  }, [userActiveCertificate]);
 
   const getSellOrderPaymentMethods = async () => {
     try {
@@ -54,6 +65,47 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
       console.log(err);
     }
   };
+
+  const getUserCertificates = async () => {
+    try {
+      const res = await hubConnection!.invoke<RootViewUserCertificatesModel>(
+        'GetUserCertificates', 
+        [order.assetKind],
+        0, 
+        20
+      );
+      console.log('getUserCertificates', res);
+
+      if(res.collection.length > 0) {
+        const sorted = [...res.collection].sort((a, b) => new Date(b.creationDate).getTime() - new Date(a.creationDate).getTime());
+        setUserActiveCertificate(sorted[0]);
+      } else {
+        setUserActiveCertificate(null);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }; 
+
+  const handleGetOrdersVolume = async () => {
+    try {
+      const res = await hubConnection!.invoke<number>(
+        'GetOrdersVolume', 
+        order.assetKind
+      );
+      console.log('GetOrdersVolume', res);
+      if(userActiveCertificate) {
+        const rest = ( countVolumeToShow(userActiveCertificate.certificate.dailyVolume, userActiveCertificate.certificate.assetKind) - 
+        countVolumeToShow(res, order.assetKind) );
+        setDailyLimitRest(rest);
+      } else {
+        // Fake Value
+        setDailyLimitRest(0);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+};
 
 
 
@@ -103,6 +155,15 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
           <Text size={14} lH={20} mB={10} black>Рейтинг аккаунта:</Text>
           <Title lH={28}>
             {`${order.userRating ? Number(order.userRating).toFixed(1) : '-'}`}
+          </Title>
+        </S.BlockWrapper>
+
+        <S.BlockWrapper>
+          <Text size={14} lH={20} mB={10} black>
+            Оставшийся лимит в сутках:
+          </Text>
+          <Title lH={28}>
+            {`${dailyLimitRest} ${Balance[order.assetKind]}`}
           </Title>
         </S.BlockWrapper>
 
