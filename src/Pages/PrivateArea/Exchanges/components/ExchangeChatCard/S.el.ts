@@ -59,8 +59,7 @@ export const ChatHeader = styled.div`
 `;
 
 export const ChatContainer = styled.div`
-    margin-top: 56px;
-    padding: 40px 40px 0px 40px;
+    padding: 15px 40px 0px 40px;
     overflow-y: scroll;
     height: 100%;
     &::-webkit-scrollbar {
@@ -71,7 +70,7 @@ export const ChatContainer = styled.div`
 export const ChatFooter = styled.div`
   padding: 20px 40px 40px 40px;
   display: flex;
-  align-items-center;
+  align-items:center;
   justify-content: center;
   border-top: 1px solid #EBEBF2;
 `;
