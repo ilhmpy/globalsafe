@@ -154,7 +154,7 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
         <S.BlockWrapper>
           <Text size={14} lH={20} mB={10} black>Рейтинг аккаунта:</Text>
           <Title lH={28}>
-            {`${order.userRating ? Number(order.userRating).toFixed(1) : '-'}`}
+            {`${order.userRating ? Number(order.userRating).toFixed(1) : '0.0'}`}
           </Title>
         </S.BlockWrapper>
 

@@ -312,7 +312,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                 {`Рейтинг ${orderType === OrderType.Buy ? 'покупателя' : 'продавца'}:`}
             </Text>
             <Title lH={28}>
-                {`${order.userRating ? Number(order.userRating).toFixed(1) : '-'} (${order.totalExecuted})`}
+                {`${order.userRating ? Number(order.userRating).toFixed(1) : '0.0'} (${order.totalExecuted})`}
             </Title>
             </S.BlockWrapper>
         </LeftSide>
@@ -577,6 +577,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
             
             <ExchangeRequestModal
                 exchangeSumm={balanceSumm}
+                fiatSumm={fiatSumm}
                 order={order}
                 orderType={orderType}
                 onAccept={handleCreateExchange}

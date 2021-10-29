@@ -8,6 +8,7 @@ import * as S from './S.el';
 
 type Props = {
   exchangeSumm: string;
+  fiatSumm: string;
   order: ViewBuyOrderModel | ViewSellOrderModel;
   orderType: OrderType;
   onAccept: () => void;
@@ -17,6 +18,7 @@ type Props = {
 
 export const ExchangeRequestModal: FC<Props> = ({ 
   exchangeSumm,
+  fiatSumm,
   order,
   orderType,
   onAccept,
@@ -44,7 +46,7 @@ export const ExchangeRequestModal: FC<Props> = ({
                 <S.Line />
                 <S.ListitemValue>
                   {order.rate.toLocaleString('ru-RU', {
-                    maximumFractionDigits: 5,
+                    maximumFractionDigits: 2,
                   })}
                 </S.ListitemValue>
               </S.Listitem>
@@ -54,7 +56,7 @@ export const ExchangeRequestModal: FC<Props> = ({
                 </S.ListitemName>
                 <S.Line />
                 <S.ListitemValue>
-                  {`${Number(exchangeSumm) * order.rate}`}
+                  {fiatSumm}
                 </S.ListitemValue>
               </S.Listitem>
               <S.Listitem>
@@ -69,7 +71,7 @@ export const ExchangeRequestModal: FC<Props> = ({
                     ? 
                       Number(order.userRating).toFixed(1)
                     : 
-                      '-'
+                      '0.0'
                     }
                 </S.ListitemValue>
               </S.Listitem>

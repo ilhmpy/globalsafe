@@ -98,7 +98,7 @@ export const AdvertTable = ({ list }: AdvertTableProps) => {
                 </S.Cell>
                 <S.Cell data-label="Время на обмен">{`${order.operationWindow.totalMinutes} м`}</S.Cell>
                 <S.Cell data-label="Рейтинг">
-                  {`${order.userRating ? Number(order.userRating).toFixed(1) : '-'} (${order.totalExecuted})`}
+                  {`${order.userRating ? Number(order.userRating).toFixed(1) : '0.0'} (${order.totalExecuted})`}
                 </S.Cell>
               </S.BodyItem>
             ))
