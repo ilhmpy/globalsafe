@@ -131,51 +131,55 @@ export const Notifications = () => {
     };
 
     return (
-        <Container>
-            <Notifies.NotificationsBlock>
+        <>
+            <Container>
+                <Notifies.NotificationsBlock>
                 <Heading title="Уведомления" withoutBtn />
-            </Notifies.NotificationsBlock>
-            <Filter 
-                activeFilter={activeFilter}
-                setActiveFilter={setActiveFilter}
-                withoutViewType
-                withCustomButtons 
-                withoutContainer
-                buttons={buttons}
-            /> 
-            <Notifies.NotificationsMap>
-                <Table.Table>
-                    <Table.Header>
-                        <Table.Item>Дата и время</Table.Item>
-                        <Table.Item>Уведомление</Table.Item>
-                    </Table.Header>
-                    {loading ? <Loading /> : (
-                        <>
-                            {notifies.length === 0 ? <NotItems text="Не имеется уведомлений" /> : (
-                                <>
-                                    {notifies.map((notify: any, idx: number) => (
-                                        <Notifies.NotificationItem key={idx} newItem={notify.new}>
-                                            <Table.Item item>
-                                                {moment(notify.sentDate).format("DD.MM.YYYY")} в {moment(notify.sentDate).format("HH:MM")}
-                                            </Table.Item>
-                                            <Table.Item item>
-                                                {notify.message}
-                                                {link(notify.notificationKind) && notify.link != "" && notify.link != "0" && 
-                                                    <Table.LinkButton href={createLink(notify.link)}>Перейти к обмену</Table.LinkButton>}
-                                            </Table.Item>
-                                            <Notifies.DoneNotification disabled={activeFilter === "active"} onClick={() => onNotify(notify.safeId)} />
-                                        </Notifies.NotificationItem>
-                                    ))}
-                                </>
-                            )}
-                        </>
-                    )}
-                </Table.Table>
-            </Notifies.NotificationsMap>
-            <Table.MoreButton onMore={onMore} newItems={newItems} 
-                loadingNewItems={notifies.some((item: any) => item.new === true)} 
-                text="Показать ещё" 
-            />
-        </Container>
+                </Notifies.NotificationsBlock>
+                <Filter 
+                    activeFilter={activeFilter}
+                    setActiveFilter={setActiveFilter}
+                    withoutViewType
+                    withCustomButtons 
+                    withoutContainer
+                    buttons={buttons}
+                /> 
+            </Container>
+            <Container pTabletNone>
+                <Notifies.NotificationsMap>
+                    <Table.Table>
+                        <Table.Header>
+                            <Table.Item>Дата и время</Table.Item>
+                            <Table.Item>Уведомление</Table.Item>
+                        </Table.Header>
+                        {loading ? <Loading /> : (
+                            <>
+                                {notifies.length === 0 ? <NotItems text="Не имеется уведомлений" /> : (
+                                    <>
+                                        {notifies.map((notify: any, idx: number) => (
+                                            <Notifies.NotificationItem key={idx} newItem={notify.new}>
+                                                <Table.Item item>
+                                                    {moment(notify.sentDate).format("DD.MM.YYYY")} в {moment(notify.sentDate).format("HH:MM")}
+                                                </Table.Item>
+                                                <Table.Item item>
+                                                    {notify.message}
+                                                    {link(notify.notificationKind) && notify.link != "" && notify.link != "0" && 
+                                                        <Table.LinkButton href={createLink(notify.link)}>Перейти к обмену</Table.LinkButton>}
+                                                </Table.Item>
+                                                <Notifies.DoneNotification disabled={activeFilter === "active"} onClick={() => onNotify(notify.safeId)} />
+                                            </Notifies.NotificationItem>
+                                        ))}
+                                    </>
+                                )}
+                            </>
+                        )}
+                    </Table.Table>
+                </Notifies.NotificationsMap>
+                <Table.MoreButton onMore={onMore} newItems={newItems} 
+                    loadingNewItems={notifies.some((item: any) => item.new === true)} 
+                    text="Показать ещё" 
+                />
+            </Container>
+       </>
     );
 };

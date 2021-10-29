@@ -88,9 +88,15 @@ export const NotifiesBlock = styled.div<{ block: boolean; auth?: boolean; admin?
         border-top: 1px solid #DCDCE8;
         border-left: 1px solid #DCDCE8;
         margin: auto;
+        @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+            right: 125px;
+        }
     }
     & > .scrollbars > div {
         right: -1px !important;
+    }
+    @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+        right: 0;
     }
 `;
 

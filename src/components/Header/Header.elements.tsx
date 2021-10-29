@@ -237,6 +237,10 @@ export const MenuBtn = styled.span<{ open?: boolean }>`
     border-radius: 2px;
     transform: ${(props) => (props.open ? 'rotate(45deg)' : 'rotate(0deg)')};
   }
+  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+    position: relative;
+    margin-left: 10px;
+  }
 `;
 
 export const HeaderNav = styled.nav``;

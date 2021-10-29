@@ -94,11 +94,6 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
             <HeaderLogo href="/">
               <Logo />
             </HeaderLogo>
-
-            <MenuBtn open={open} onClick={() => setOpen(!open)}>
-              <span></span>
-              <span></span>
-            </MenuBtn>
             <HeaderMenu open={open}>
               {admPanel ? (
                 <NavAdmin lang={lang} onClose={onClose} />
@@ -179,6 +174,10 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
             >
               {t('headerButton.personalArea')}
             </Btn>
+            <MenuBtn open={open} onClick={() => setOpen(!open)}>
+              <span></span>
+              <span></span>
+            </MenuBtn>
           </HeaderInner>
         </Container>
       </HeaderWrap>
