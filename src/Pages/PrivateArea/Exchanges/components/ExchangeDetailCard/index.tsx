@@ -597,7 +597,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                   })}{' '}
                   {FiatKind[exchange.exchangeAssetKind]}
                 </S.B>{' '}
-                <br />С вашего баланса списаны и заморожены{' '}
+                С вашего баланса списаны и заморожены{' '}
                 <S.B>
                   {countVolumeToShow(exchange.volume, exchange.assetKind).toLocaleString('ru-RU', {
                     maximumFractionDigits: 5,
