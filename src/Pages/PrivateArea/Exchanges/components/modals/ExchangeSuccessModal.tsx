@@ -55,7 +55,7 @@ export const ExchangeSuccessModal: FC<Props> = ({
                         </S.DataListItem>
                     </S.DataList>
 
-                    <Button primary fullWidth onClick={() => history.replace(routers.p2pchangesOwn)}>
+                    <Button primary bigSize fullWidth onClick={() => history.replace(routers.p2pchangesOwn)}>
                         К списку обменов
                     </Button>
                 </S.SmallContainer>
