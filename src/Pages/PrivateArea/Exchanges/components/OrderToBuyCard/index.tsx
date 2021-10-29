@@ -18,7 +18,7 @@ import * as S from './S.el';
 export const OrderToBuyCard: FC = () => {
   const history = useHistory();
   const appContext = useContext(AppContext);
-  const { hubConnection, user, balanceList } = appContext;
+  const { hubConnection, user, balanceList, userSafeId } = appContext;
   const [showOrderBuyModal, setShowOrderBuyModal] = useState(false);
   const [showOrderErrorModal, setShowOrderErrorModal] = useState(false);
 
@@ -89,7 +89,7 @@ export const OrderToBuyCard: FC = () => {
   }, [currencyToBuy]);
 
  useEffect(() => {
-    if (hubConnection && userActiveCertificate) {
+    if (hubConnection && currencyToBuy) {
       handleGetOrdersVolume();
     }
   }, [userActiveCertificate]);
@@ -194,19 +194,6 @@ export const OrderToBuyCard: FC = () => {
   const handleCreateBuyOrder = async () => {
     setCreateOrderLoading(true);
     try {
-      console.log('volume', countVolumeToSend(orderSumm, Balance[currencyToBuy as keyof typeof Balance]))
-      console.log('changeRate', +changeRate)
-      console.log('assetKind', Balance[currencyToBuy as keyof typeof Balance])
-      console.log('operationAssetKind', FiatKind[currencyToChange as keyof typeof FiatKind])
-      console.log('limitFrom', +countVolumeToSend(orderMinSumm, Balance[currencyToBuy as keyof typeof Balance]))
-      console.log('limitTo', +countVolumeToSend(orderMaxSumm, Balance[currencyToBuy as keyof typeof Balance]))
-      console.log('window', timeDurations.find((t) => t.label === changeTimePeriod)?.value)
-      console.log('methodsKinds', findPaymentMethodKinds(
-        paymentMethods?.filter((m) => selectedPaymentMethodsIds.includes(String(m.id)))
-      ))
-      console.log('terms', '')
-
-
       const res = await hubConnection!.invoke<ViewBuyOrderModel>(
         'CreateBuyOrder',
         countVolumeToSend(orderSumm, Balance[currencyToBuy as keyof typeof Balance]), // string volume
@@ -263,6 +250,7 @@ export const OrderToBuyCard: FC = () => {
     const pattern2 = /^[0-9]{1,10}\.[0-9]{6}$/;
     if (e.target.value === '' || pattern.test(e.target.value)) {
       // Clear Max limit
+      setOrderMinSumm('');
       setOrderMaxSumm('');
       if(!pattern2.test(e.target.value)) {
         setChangeRate(e.target.value);
@@ -357,7 +345,26 @@ export const OrderToBuyCard: FC = () => {
 
     setShowOrderBuyModal(true);
   };
- 
+
+  // Listening to changes
+  useEffect(() => {
+    const cbOrderCreated = (order: ViewBuyOrderModel) => {
+      console.log('__SOCKET__cbOrderCreated::', order);
+      if(order && order.userSafeId === userSafeId) {
+        handleGetOrdersVolume();
+        getBuyOrders();
+      }
+    };
+
+    if (hubConnection) {
+      hubConnection.on("BuyOrderCreated", cbOrderCreated);
+    };
+
+    return () => {
+      hubConnection?.off("BuyOrderCreated", cbOrderCreated);
+    };
+  }, [hubConnection, userSafeId, currencyToBuy, currencyToChange]);
+
   return (
     <S.Container>
       <LeftSide bg={'#EAEFF4'}>
@@ -585,6 +592,7 @@ export const OrderToBuyCard: FC = () => {
         onClose={() => setShowOrderBuyModal(false)}
       />
       <OrderErrorModal 
+        onlyCloseAction
         open={showOrderErrorModal} 
         onClose={() => setShowOrderErrorModal(false)} 
       /> 
@@ -593,8 +601,9 @@ export const OrderToBuyCard: FC = () => {
         message="У вас уже есть ордер с такой же валютной парой"
         open={showHasFamiliarOrder} 
         onClose={() => setShowHasFamiliarOrder(false)} 
-      /> 
+      />  
       <OrderErrorModal  
+        message="Отсутствует сертификат"
         open={showCertificateIsMissingModal} 
         onClose={() => setShowCertificateIsMissingModal(false)} 
       /> 

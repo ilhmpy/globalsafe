@@ -454,10 +454,12 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                             ))
                         :
                          // Empty State
-                         <S.EmptyPaymentsBlock>
+                        <S.EmptyPaymentsBlock>
                             <Text size={14} weight={300} lH={20} black>
                                 {`Платежные методы отсутствуют, `}
-                                <S.Link to={routers.settingsNewPayMethod}>добавьте платежный метод</S.Link>
+                                <S.Link to={`${routers.settingsNewPayMethod}?redirect=${order.safeId}`}>
+                                    добавьте платежный метод
+                                </S.Link>
                             </Text>
                         </S.EmptyPaymentsBlock>
                     }

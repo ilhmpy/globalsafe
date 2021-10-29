@@ -1,7 +1,9 @@
 import { ChangeEvent, FC, useContext, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
+import NumberFormat from 'react-number-format';
+
 import { Button } from '../../../components/Button/V2/Button';
 import { Input } from '../../../components/Input';
 import { Select } from '../../../components/Select/Select5';
@@ -14,7 +16,7 @@ import { FiatKind } from '../../../types/fiatKind';
 import { PaymentMethodKind } from '../../../types/paymentMethodKind';
 import { Back } from '../components/Back';
 import { Title } from '../components/ui/Title';
-import NumberFormat from 'react-number-format';
+
 
 type dataBank = {
   name: string;
@@ -27,6 +29,8 @@ type dataCripto = {
 };
 
 export const NewPayMethod: FC = () => {
+  const query = new URLSearchParams(useLocation().search);
+
   const keysPay = Object.keys(PaymentMethodKind).filter(
     (k) => typeof PaymentMethodKind[k as any] === 'number'
   );
@@ -121,7 +125,12 @@ export const NewPayMethod: FC = () => {
           checked ? 1 : 2,
           JSON.stringify(addPayMethod())
         );
-        history.push(routers.settings);
+
+        if(query.get('redirect')) {
+          history.goBack();
+        } else {
+          history.push(routers.settings);
+        }
       } catch (e) {
         console.log(e);
       }

@@ -28,16 +28,15 @@ export const OrderErrorModal: FC<Props> = ({ onClose, open, message, onlyCloseAc
             <Text size={14} lH={20} black mB={10}>
               Ордер не был опубликован по причине:
             </Text>
-            <Text size={14} lH={20} error mB={20}>
-              {
-                !!message
-                ?
-                  message
-                :
-                  'Отсутствует сертификат'
-              }
-            </Text>
-
+            {
+              !!message
+              ?
+                <Text size={14} lH={20} error mB={20}>
+                  {message}
+                </Text>
+              :
+                null
+            }
             {
               onlyCloseAction
               ?

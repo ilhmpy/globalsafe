@@ -48,7 +48,7 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
   }, [hubConnection, orderType, order]);
 
   useEffect(() => {
-    if (hubConnection && userActiveCertificate) {
+    if (hubConnection) {
       handleGetOrdersVolume();
     }
   }, [userActiveCertificate]);
