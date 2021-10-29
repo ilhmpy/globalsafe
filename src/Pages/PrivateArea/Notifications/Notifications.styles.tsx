@@ -34,6 +34,7 @@ export const NotificationItem = styled.div<{ newItem: boolean; }>`
         & > h3:nth-child(1) {
             min-width: 130px;
         }
+        padding-left: 40px;
     }
 `;
 
@@ -53,4 +54,7 @@ export const DoneNotification = styled(Done)<{ disabled?: boolean; }>`
             `;
         };
     }}
+    @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+        right: 40px;
+    }
 `;

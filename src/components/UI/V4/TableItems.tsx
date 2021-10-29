@@ -50,6 +50,9 @@ export const Header = styled.header`
     & > h3 {
         margin-right: 109px;
     }
+    @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+        padding-left: 40px;
+    }
 `;
 
 export const More = styled.button<{ newItems: boolean; }>`
