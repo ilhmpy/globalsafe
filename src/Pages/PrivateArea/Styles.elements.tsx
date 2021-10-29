@@ -265,7 +265,9 @@ export const LeftIcon = styled(Left)`
 
 export const Page = styled.div`
   margin-top: 100px;
-  height: 100%;
+  flex-direction: column;
+  height: calc(100vh - 98px);
+  display: flex;
 `;
 
 export const InfoWrap = styled.div`
@@ -1002,4 +1004,75 @@ export const SwitchBlock = styled.div<{ block: boolean }>`
     margin-bottom: 10px;
     font-size: 12px;
   }
+`;
+
+export const Desc = styled.h3<{
+  bold?: boolean;
+  danger?: boolean;
+  mMore?: boolean;
+  mLess?: boolean;
+}>`
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #000;
+  margin-bottom: 10px;
+  margin-left: 20px;
+
+  ${({ bold, danger }) => {
+    if (bold) {
+      return `
+        font-weight: 700;
+      `;
+    }
+
+    if (danger) {
+      return `  
+        color: #FF4A31;
+      `;
+    }
+  }}
+
+  ${({ mMore }) => {
+    if (mMore) {
+      return `
+        margin-top: 10px;        
+        margin-bottom: 20px;
+      `;
+    }
+  }}
+
+  ${({ mLess }) => {
+    if (mLess) {
+      return `
+        margin-bottom: 0px;
+      `;
+    }
+  }}
+`;
+
+export const Commision = styled.h3<{ marginT?: number; marginB?: number }>`
+  width: 100%;
+  position: relative;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  margin-bottom: 10px;
+  color: #000;
+  margin-top: ${({ marginT }) => marginT}px;
+  margin-bottom: ${({ marginB }) => marginB}px;
+
+  & > span {
+    position: absolute;
+    right: 0;
+  }
+`;
+
+export const Message = styled.h3`
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #000;
+  margin: 20px 0px 20px 0px;
+  max-width: 240px;
 `;

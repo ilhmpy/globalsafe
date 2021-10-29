@@ -7,16 +7,16 @@ import { Header } from "../../components/Header/Header";
 import { LoginComponent } from "../../components/Login";
 import { RegisterComponent } from "../../components/Register/Register";
 import { useTranslation } from "react-i18next";
+import { Footer } from "../../components/Footer/Footer";
 
-export const Authentication = () => {
+export const Authentication = ({ match }: any) => {
   const { t } = useTranslation();
+  const id = match.params.depositId;
   return (
     <AuthPage>
       <Header />
-      <Container>
-        <UpTitle>{t("headerButton.personalArea")}</UpTitle>
-      </Container>
-      <LoginComponent />
+      <LoginComponent id={id} />
+      <Footer other />
     </AuthPage>
   );
 };
@@ -26,14 +26,17 @@ export const Register = () => {
   return (
     <AuthPage>
       <Header />
-      <Container>
+      {/* <Container>
         <UpTitle>{t("headerButton.register")}</UpTitle>
-      </Container>
+      </Container> */}
       <RegisterComponent />
+      <Footer other />
     </AuthPage>
   );
 };
 
 const AuthPage = styled(Page)`
   height: 100vh;
+  display: flex;
+  flex-direction: column;
 `;

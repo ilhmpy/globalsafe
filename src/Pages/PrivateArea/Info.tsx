@@ -96,7 +96,7 @@ export const Info = () => {
   useEffect(() => {
     if (hubConnection) {
       hubConnection
-        .invoke<RootList>('GetUserDeposits', [1, 2, 3, 4, 5, 6, 7, 8], 0, 20, [])
+        .invoke<RootList>('GetUserDepositsInstant', [1, 2, 3, 4, 5, 6, 7, 8], null, 0, 20, [])
         .then((res) => {
           setList(res.collection);
         })
@@ -132,7 +132,7 @@ export const Info = () => {
 
   if (user === false) {
     return <Redirect to="/" />;
-  }
+  } 
 
   const onClose = () => {
     setOpen(false);

@@ -439,6 +439,7 @@ export const InfoBalance = () => {
   const getTopUp = () => {
     // GetTopUpUrl(BalanceKind balanceKind, ulong volume)
     const newWindow = window.open();
+
     if (hubConnection) {
       hubConnection
         .invoke(

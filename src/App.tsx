@@ -2,6 +2,7 @@ import { FC, useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { APP_ID, APP_SAFARI_ID } from './constantes/onesignal';
+
 import { AppContext } from './context/HubContext';
 import GlobalStyle from './globalStyles';
 import { Admin } from './Pages/Admin';
@@ -10,6 +11,8 @@ import { Main } from './Pages/Main/Main';
 import { InfoMain } from './Pages/PrivateArea';
 import PageNotFound from './Pages/Tech/PageNotFound';
 import TechWorks from './Pages/Tech/TechWorks';
+import { HistoryOperations } from './Pages/PrivateArea/HistoryOperations';
+import { routers } from './constantes/routers';
 declare global {
   interface Window {
     OneSignal: any;
@@ -37,18 +40,18 @@ const App: FC = () => {
 
   function onlineState() {
     setOnline(window.navigator.onLine);
-    console.log('online update state event working, and set online/offline status');
+    // console.log('online update state event working, and set online/offline status');
   }
 
   useEffect(() => {
     if (isFailed != null) {
       if (online && window.location.pathname != '/tech') {
-        console.log('user online but server not working');
+        // console.log('user online but server not working');
         window.location.href = '/tech';
       }
 
       if (!online && window.location.pathname == '/tech') {
-        console.log('user offline');
+        // console.log('user offline');
         window.location.href = '/';
       }
 
@@ -112,7 +115,7 @@ const App: FC = () => {
         });
         try {
           OneSignal.on('subscriptionChange', (isSubscribed: boolean) => {
-            console.log('OneSignal.on ~ isSubscribed', isSubscribed);
+            // console.log('OneSignal.on ~ isSubscribed', isSubscribed);
             if (isSubscribed) {
               OneSignal.getUserId((id: string) => subscribe(id));
             } else {
@@ -165,15 +168,14 @@ const App: FC = () => {
       <Router>
         <div className="App">
           <GlobalStyle />
-
           <Switch>
             <Route path="/" component={Main} exact />
             <Route path="/admin" component={Admin} />
-            <Route path="/info" component={InfoMain} />
-            <Route path="/login" component={Authentication} />
+            <Route path={routers.deposits} component={InfoMain} />
+            <Route path="/login/:depositId" component={Authentication} />
             <Route path="/register" component={Register} />
             <Route path="/tech" component={TechWorks} />
-            <Route component={PageNotFound} />
+            <Route path="/404" component={PageNotFound} />
           </Switch>
         </div>
       </Router>

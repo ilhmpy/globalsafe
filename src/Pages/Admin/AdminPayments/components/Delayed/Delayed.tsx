@@ -280,7 +280,6 @@ export const Delayed: FC<Props> = ({ listDeposits }: Props) => {
       hubConnection
         .invoke('PayPostponedPayment', safeId, amount)
         .then((res) => {
-          console.log('.then ~ res', res);
           setDone(true);
           setNotifications([
             {

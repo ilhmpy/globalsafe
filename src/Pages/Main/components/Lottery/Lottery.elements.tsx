@@ -1,6 +1,5 @@
 import styled, { css, keyframes } from 'styled-components/macro';
 import { ReactComponent as Close } from '../../../../assets/svg/close.svg';
-import flat from '../../../../assets/svg/flat.svg';
 import { Button } from '../../../../components/Button/Button';
 import { Card } from '../../../../globalStyles';
 
@@ -20,13 +19,17 @@ export const CloseIcon = styled(Close)`
 
 export const TimerHisroryTitle = styled.div`
   font-weight: normal;
-  font-size: 18px;
-  line-height: 21px;
+  font-style: normal;
+  font-size: 14px;
   letter-spacing: 0.1px;
-  margin-bottom: 10px;
+  line-height: 20px;
+  color: #3f3e4e;
+
   @media (max-width: 576px) {
     font-size: 14px;
     line-height: 17px;
+    display: flex;
+    justify-content: center;
   }
 `;
 
@@ -49,16 +52,13 @@ export const TimerContainer = styled.div`
 `;
 
 export const TimerHistoryInner = styled.div<{ mt?: boolean; history?: boolean }>`
-  margin-right: 80px;
   width: 80%;
   max-width: 341px;
-  height: 123px;
+  /* height: 123px; */
   display: flex;
   justify-content: center;
-  padding-left: 30px;
-  padding-right: 20px;
   flex-direction: column;
-
+  gap: 20px;
   @media (max-width: 768px) {
     margin-right: 0px;
   }
@@ -70,7 +70,7 @@ export const TimerHistoryInner = styled.div<{ mt?: boolean; history?: boolean }>
         margin-top: 35px;
         margin-left: auto;
         border-radius: 20px;
-  box-shadow: 1px 0px 12px 1px rgba(34, 60, 80, 0.2);
+        box-shadow: 1px 0px 12px 1px rgba(34, 60, 80, 0.2);
       `;
     }
   }}
@@ -135,7 +135,7 @@ export const TimerValue = styled.div<{ nodata?: boolean }>`
   align-items: center;
   /* justify-content: center; */
   letter-spacing: 0.1px;
-  color: #ff416e;
+  color: #0094ff;
   ${(props) => {
     if (props.nodata) {
       return MyCss;
@@ -164,7 +164,7 @@ export const Present = styled.div`
   font-weight: 500;
   font-size: 36px;
   line-height: 42px;
-  color: #ff416e;
+  color: #0094ff;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
   transition: 0.3s ease-in-out;
   text-align: center;
@@ -340,7 +340,7 @@ export const ContainerItem = styled.div`
 
 export const Inside = styled.div<{ red?: boolean }>`
   background: ${(props) => props.theme.card.background};
-  color: ${(props) => (props.red ? '#FF416E' : '#9D9D9D')};
+  color: ${(props) => (props.red ? '#0094FF;' : '#9D9D9D')};
   font-size: 21px;
   line-height: 25px;
 `;
@@ -438,7 +438,7 @@ export const WinTitle = styled.div<{ sub?: boolean }>`
   letter-spacing: 0.1px;
   width: 100%;
   word-wrap: none;
-  color: ${(props) => (props.sub ? props.theme.text2 : '#FF416E')};
+  color: ${(props) => (props.sub ? props.theme.text2 : '#0094FF;')};
   @media (max-width: 576px) {
     font-size: ${(props) => (props.sub ? '24px' : '16px')};
     line-height: ${(props) => (props.sub ? '32px' : '19px')};
@@ -460,7 +460,7 @@ export const WinDesc = styled.div`
 
 export const WinBrand = styled.p`
   text-transform: uppercase;
-  color: #ff416e;
+  color: #0094ff;
   font-size: 18px;
   line-height: 21px;
 `;
@@ -503,7 +503,14 @@ export const TimerHistoryValue = styled.div<{ nodata?: boolean }>`
   font-size: 36px;
   line-height: 42px;
   letter-spacing: 0.1px;
-  color: #ff416e;
+
+  font-style: normal;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 28px;
+
+  color: #3f3e4e;
+
   ${(props) => {
     if (props.nodata) {
       return MyCss;
@@ -512,6 +519,8 @@ export const TimerHistoryValue = styled.div<{ nodata?: boolean }>`
   @media (max-width: 576px) {
     font-size: 25px;
     line-height: 29px;
+    display: flex;
+    justify-content: center;
   }
 `;
 
@@ -595,7 +604,7 @@ export const TimerIn = styled.div`
 export const TimerProgress = styled.div<{ progress: number }>`
   height: 55px;
   width: 165px;
-  background: #ff416e;
+  background: #0094ff;
   position: absolute;
 
   /*
@@ -615,14 +624,21 @@ export const TimerProgress = styled.div<{ progress: number }>`
 
 export const TimerModalDuration = styled.h3`
   text-align: center;
-  // font-size: 1.60em;
-  font-size: 18px;
   color: ${({ theme }) => theme.timer.color};
   word-spacing: 10px;
   margin-bottom: 1px;
 
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 28px;
+
+  color: #0094ff;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
   & > span {
-    color: #ff416e;
+    max-width: 60px;
+    width: 100%;
   }
 `;
 
@@ -640,16 +656,16 @@ export const TimerModalInner = styled.div`
 `;
 
 export const TimerModal = styled.div<{ display?: boolean; fixed?: boolean; progressBar?: any }>`
-  width: 152px;
-  background-image: url("data:image/svg+xml,%3Csvg width='150' height='85' viewBox='0 0 150 85' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 4C0 1.79086 1.79086 0 4 0H146C148.209 0 150 1.79086 150 4V76C150 78.2091 148.209 80 146 80H140.072C139.016 80 138.002 80.4178 137.253 81.1621L134.906 83.4936C133.467 84.9229 131.186 85.0491 129.598 83.7874L125.925 80.8684C125.217 80.3061 124.34 80 123.436 80H4C1.79086 80 0 78.2091 0 76V4Z' fill='white' fill-opacity='0.9'/%3E%3Cpath d='M0.5 4C0.5 2.067 2.067 0.5 4 0.5H146C147.933 0.5 149.5 2.067 149.5 4V76C149.5 77.933 147.933 79.5 146 79.5H140.072C138.884 79.5 137.744 79.97 136.901 80.8074L134.553 83.1389C133.294 84.3895 131.299 84.5 129.909 83.3959L126.236 80.4769C125.44 79.8444 124.453 79.5 123.436 79.5H4C2.067 79.5 0.5 77.933 0.5 76V4Z' stroke='%2356657F' stroke-opacity='0.05'/%3E%3C/svg%3E");
+  width: 240px;
+  background-image: url("data:image/svg+xml,%3Csvg width='150' height='85' viewBox='0 0 150 85' fill='white' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 4C0 1.79086 1.79086 0 4 0H146C148.209 0 150 1.79086 150 4V76C150 78.2091 148.209 80 146 80H140.072C139.016 80 138.002 80.4178 137.253 81.1621L134.906 83.4936C133.467 84.9229 131.186 85.0491 129.598 83.7874L125.925 80.8684C125.217 80.3061 124.34 80 123.436 80H4C1.79086 80 0 78.2091 0 76V4Z' fill='white' fill-opacity='0.9'/%3E%3Cpath d='M0.5 4C0.5 2.067 2.067 0.5 4 0.5H146C147.933 0.5 149.5 2.067 149.5 4V76C149.5 77.933 147.933 79.5 146 79.5H140.072C138.884 79.5 137.744 79.97 136.901 80.8074L134.553 83.1389C133.294 84.3895 131.299 84.5 129.909 83.3959L126.236 80.4769C125.44 79.8444 124.453 79.5 123.436 79.5H4C2.067 79.5 0.5 77.933 0.5 76V4Z' stroke='%2356657F' stroke-opacity='0.05'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-  border-radius: 4px;
+  border-radius: 0px;
   position: absolute;
-  bottom: 39px;
-  padding: 0 2px;
-  right: 0;
+  bottom: 53px;
+  padding: 0px 2px 0px;
+  right: -3px;
   z-index: 9999;
   filter: drop-shadow(0px 2px 20px rgba(0, 0, 0, 0.1));
   /* border: 1px solid rgba(86, 101, 127, 0.05); */
@@ -658,15 +674,15 @@ export const TimerModal = styled.div<{ display?: boolean; fixed?: boolean; progr
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  height: 86px;
+  height: 136px;
   &:before {
     content: '';
     position: absolute;
     top: 0;
     right: 0;
-    height: 80px;
+    height: 126px;
     border-radius: 4px;
-    width: 152px;
+    width: 240px;
     z-index: -1;
     background-color: ${({ theme }) => theme.timer.bg};
   }
@@ -753,14 +769,17 @@ export const TimerModal = styled.div<{ display?: boolean; fixed?: boolean; progr
 
 export const TimerModalTitle = styled.h3`
   text-align: center;
-  font-size: 0.75em;
+  font-size: 14px;
   width: 80%;
   max-width: 108px;
   letter-spacing: 0.1px;
   max-width: 220px;
-  margin-top: 5px;
+  margin-top: 7px;
   font-weight: 500;
-  margin-bottom: 0px;
+  margin-bottom: 10px;
+  line-height: 20px;
+
+  color: #3f3e4e;
 `;
 
 export const TimerModalUnits = styled.div`
@@ -768,14 +787,16 @@ export const TimerModalUnits = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 16px;
   padding-left: 8px;
   text-align: center;
+  color: #3f3e4e;
+
   span {
-    padding-right: 19px;
-    &:last-child {
-      padding-right: 0px;
-    }
+    max-width: 60px;
+    width: 100%;
   }
 
   & > span {
@@ -809,7 +830,7 @@ export const LotteryModalDesc = styled.div`
   align-items: center;
   padding-left: 20px;
   padding-right: 20px;
-  color: #ff416e;
+  color: #0094ff;
   font-weight: 500;
   font-size: 1.43em;
   margin-top: 10px;
@@ -867,23 +888,21 @@ export const LotteryFlexBox = styled.div`
 `;
 
 export const TimerLoadingWrap = styled.div`
-  width: calc(100% - 4px);
-  left: 0;
-  right: 0;
-  position: absolute;
-  top: 2px;
+  width: calc(100% - 40px);
   margin: 0 auto;
+  padding-top: 30px;
+  height: 10px;
 `;
 
 export const TimerLoading = styled.div<{ progress: number | string }>`
   width: ${({ progress }) => progress}%;
   float: left;
-  height: 1px;
+  height: 2px;
   margin: 0 auto;
   border-radius: 2px;
   transition: ${({ progress }) => (progress == 0 ? '' : '4s')};
   display: block;
-  background: #ff416e;
+  background: #0094ff; ;
 `;
 
 export const LoadingBeforeData = styled.div`
@@ -947,9 +966,10 @@ export const CountContainer = styled.div`
 
 export const CountValue = styled.p<{ strokeColor: string }>`
   color: ${(props) => props.strokeColor};
+  color: conic-gradient(from 0deg at 50% 49.96%, rgba(0, 148, 255, 0.2) 0deg, #0094ff 360deg);
   width: 100%;
-  padding-top: 4px;
-  padding-left: 6px;
+  padding-top: 5px;
+  padding-left: 5px;
 `;
 
 export const TimerHistoryValueMob = styled.div`

@@ -1,18 +1,18 @@
 import React, { FC, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
-import styled from 'styled-components/macro';
-import { ReactComponent as Logo } from '../../assets/svg/logo.svg';
-import ru from '../../assets/svg/russia.svg';
-import { ReactComponent as DarkTheme } from '../../assets/svg/theme.svg';
+import { ReactComponent as Ball } from '../../assets/svg/ball.svg';
 import { ReactComponent as LightTheme } from '../../assets/svg/themeLight.svg';
-import usa from '../../assets/svg/usa.svg';
+import { ReactComponent as DarkTheme } from '../../assets/v2/svg/dark-theme.svg';
+import { ReactComponent as Logo } from '../../assets/v2/svg/logo.svg';
+import { Container } from '../../components/UI/Container';
+import { routers } from '../../constantes/routers';
 import { AppContext } from '../../context/HubContext';
 import { ThemeContext } from '../../context/ThemeContext';
-import { Container } from '../../globalStyles';
-import { Button } from '../Button/Button';
 import {
   AdminButton,
+  Btn,
+  ButtonsRev,
   HeaderInner,
   HeaderLogo,
   HeaderMenu,
@@ -23,6 +23,8 @@ import {
 } from './Header.elements';
 import { Nav } from './Nav';
 import { NavAdmin } from './NavAdmin';
+import { Notify } from './Notify/Notify';
+import * as Notifies from './Notify/Notify.styles';
 
 type Props = {
   admPanel?: boolean;
@@ -31,6 +33,9 @@ type Props = {
 export const Header: FC<Props> = ({ admPanel }: Props) => {
   const [header, setHeader] = useState(false);
   const [open, setOpen] = useState(false);
+  const [notify, setNotify] = useState<boolean>(false);
+  const [checkeds, setCheckeds] = useState<boolean>(false);
+
   const appContext = useContext(AppContext);
   const themeContext = useContext(ThemeContext);
   const swithTheme = themeContext.toggleTheme;
@@ -43,10 +48,11 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
   const { t, i18n } = useTranslation();
 
   function handleClick() {
+    if (user === null) return;
     if (!user) {
-      history.push('/login');
+      history.push('/login/0');
     } else {
-      history.push('/info');
+      history.push(routers.deposits);
     }
   }
 
@@ -71,73 +77,106 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
       document.body.style.overflow = 'unset';
     }
   }, [open]);
-
-  const onClose = () => {
+  function onClose() {
     setOpen(false);
-  };
-
+  }
   const toAdmin = () => {
     history.push('/admin');
   };
   const lang = localStorage.getItem('i18nextLng') || 'ru';
+  function onBall(e: any) {
+    setNotify(!notify);
+  }
   return (
-    <HeaderWrap header={header}>
-      <Container>
-        <HeaderInner>
-          <HeaderLogo href="/">
-            <Logo />
-          </HeaderLogo>
-          <MenuBtn open={open} onClick={() => setOpen(!open)}>
-            <span></span>
-            <span></span>
-          </MenuBtn>
-          <HeaderMenu open={open}>
-            {admPanel ? (
-              <NavAdmin lang={lang} onClose={onClose} />
+    <>
+      <HeaderWrap header={header}>
+        <Container>
+          <HeaderInner>
+            <HeaderLogo href="/">
+              <Logo />
+            </HeaderLogo>
+
+            <MenuBtn open={open} onClick={() => setOpen(!open)}>
+              <span></span>
+              <span></span>
+            </MenuBtn>
+            <HeaderMenu open={open}>
+              {admPanel ? (
+                <NavAdmin lang={lang} onClose={onClose} />
+              ) : (
+                <Nav
+                  onClose={onClose}
+                  handleClick={handleClick}
+                  user={user}
+                  logOut={logOut}
+                  location={location.pathname}
+                  admin={admin}
+                  lang={lang}
+                />
+              )}
+            </HeaderMenu>
+
+            {lang === 'ru' ? (
+              <Languale
+                auth={user ? true : false}
+                admin={admin ? true : false}
+                onClick={() => i18n.changeLanguage('en')}
+              >
+                EN
+              </Languale>
             ) : (
-              <Nav
-                onClose={onClose}
-                handleClick={handleClick}
-                user={user}
-                logOut={logOut}
-                location={location.pathname}
-                admin={admin}
-                lang={lang}
-              />
+              <Languale
+                auth={user ? true : false}
+                admin={admin ? true : false}
+                onClick={() => i18n.changeLanguage('ru')}
+              >
+                RU
+              </Languale>
             )}
-          </HeaderMenu>
-          <SwitchTheme onClick={swithTheme}>
-            {theme === 'light' ? <DarkTheme /> : <LightTheme />}
-          </SwitchTheme>
-          {lang === 'ru' ? (
-            <Languale onClick={() => i18n.changeLanguage('en')}>
-              EN
-              <img src={usa} alt="en" />
-            </Languale>
-          ) : (
-            <Languale onClick={() => i18n.changeLanguage('ru')}>
-              RU
-              <img src={ru} alt="ru" />
-            </Languale>
-          )}
-          {admin && (
-            <AdminButton danger onClick={toAdmin}>
-              {t('headerButton.admin')}
-            </AdminButton>
-          )}
-          {location.pathname === '/' ? (
-            <Button onClick={handleClick}>{t('headerButton.personalArea')}</Button>
-          ) : user ? (
-            <Button onClick={logOut}>{t('logout')}</Button>
-          ) : (
-            <Button onClick={handleClick}>{t('headerButton.personalArea')}</Button>
-          )}
-        </HeaderInner>
-      </Container>
-    </HeaderWrap>
+            {user && (
+              <>
+                <Notifies.BallContainer notChecked={checkeds}>
+                  <Ball onClick={onBall} style={{ height: '20px' }} />
+                </Notifies.BallContainer>
+                <Notify
+                  block={notify}
+                  setBlock={setNotify}
+                  setCheckeds={setCheckeds}
+                  admin={admin ? true : false}
+                />
+              </>
+            )}
+            <SwitchTheme
+              admin={admin ? true : false}
+              auth={user ? true : false}
+              onClick={swithTheme}
+            >
+              {theme === 'light' ? <DarkTheme /> : <LightTheme />}
+            </SwitchTheme>
+            <ButtonsRev className={user === null || admin === null ? 'is-placeholder' : ''}>
+              {admin ? (
+                <AdminButton onClick={toAdmin}>{t('headerButton.admin')}</AdminButton>
+              ) : null}
+
+              {/* {location.pathname === '/' ? (
+                <Button primary onClick={handleClick}>
+                  {t('headerButton.personalArea')}
+                </Button>
+              ) : user ? (
+                // <Button primary onClick={logOut}>
+                //   {t('logout')}
+                // </Button>
+                <Button primary onClick={handleClick}>
+                  {t('headerButton.personalArea')}
+                </Button>
+              ) : (
+               
+              )} */}
+            </ButtonsRev>
+            <Btn onClick={handleClick}>{t('headerButton.personalArea')}</Btn>
+          </HeaderInner>
+        </Container>
+      </HeaderWrap>
+    </>
   );
 };
-
-const Btn = styled(Button)``;
-
-const LinkButton = styled(Btn)``;

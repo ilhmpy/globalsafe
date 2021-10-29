@@ -17,6 +17,17 @@ type Context = {
   isAdmin: boolean | null;
   balanceList: BalanceList[] | null;
   isFailed: boolean | null;
+  chosenMethod: any;
+  setChosenMethod: (state: any) => void;
+  loan: any[] | null;
+  chosenDepositView: any;
+  selectedDeposit: any;
+  setChosenDepositView: (object: any) => void;
+  setSelectedDeposit: (object: any) => void;
+  account: any;
+  userSafeId: string | null;
+  setDepositsFilter: (depositsFilter: 'active' | 'archived' | 'hold') => void;
+  depositsFilter: string;
 };
 
 export const AppContext = React.createContext<Context>({
@@ -29,9 +40,21 @@ export const AppContext = React.createContext<Context>({
   isAdmin: null,
   balanceList: null,
   isFailed: null,
+  chosenMethod: {},
+  setChosenMethod: () => undefined,
+  loan: null,
+  setChosenDepositView: () => undefined,
+  setSelectedDeposit: () => undefined,
+  selectedDeposit: {},
+  chosenDepositView: {},
+  account: {},
+  userSafeId: null,
+  setDepositsFilter: () => undefined,
+  depositsFilter: '',
 });
 
 export const HubProvider: FC = ({ children }: any) => {
+  const history = useHistory();
   const [hubConnection, setHubConnection] = useState<Nulable<signalR.HubConnection>>(null);
   const [user, setUser] = useState<null | string | false>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -39,9 +62,15 @@ export const HubProvider: FC = ({ children }: any) => {
   const [isAdmin, setIsAdmin] = useState<null | boolean>(null);
   const [myToken, setMyToken] = useLocalStorage('token');
   const [balanceList, setBalanceList] = useState<BalanceList[] | null>(null);
+  const [userSafeId, setUserSafeId] = useState<null | string>(null);
   const [isFailed, setIsFailed] = useState<boolean | null>(null);
-  const history = useHistory();
+  const [chosenMethod, setChosenMethod] = useState<any>({});
+  const [loan, setLoan] = useState<any[] | null>(null);
   const { i18n } = useTranslation();
+  const [chosenDepositView, setChosenDepositView] = useState({});
+  const [selectedDeposit, setSelectedDeposit] = useState({});
+  const [account, setAccount] = useState<any>({});
+  const [depositsFilter, setDepositsFilter] = useState<'active' | 'archived' | 'hold'>('active');
 
   useEffect(() => {
     const hubConnection = new signalR.HubConnectionBuilder()
@@ -58,7 +87,6 @@ export const HubProvider: FC = ({ children }: any) => {
       .start()
       .then(() => {
         setHubConnection(hubConnection);
-        console.log('connected', isFailed);
         if (window.location.pathname == '/tech') {
           setIsFailed(false);
         }
@@ -67,20 +95,23 @@ export const HubProvider: FC = ({ children }: any) => {
         console.error(e);
         setMyToken('');
         console.log(e);
-        console.log('notConnected', isFailed);
+
         setIsFailed(true);
         setUser('');
       });
 
-    console.log(hubConnection);
-  }, [myToken, isFailed]);
+    // return function cleanup() {
+    //   if (hubConnection !== null) {
+    //     hubConnection.stop();
+    //   }
+    // };
+  }, [myToken]);
 
   useEffect(() => {
     const cb = (data: any) => {
       console.log('BalanceUpdate', data);
       if (balanceList) {
         const idx = balanceList.findIndex((item: any) => item.safeId === data.safeId);
-
         if (idx !== -1) {
           setBalanceList([...balanceList.slice(0, idx), data, ...balanceList.slice(idx + 1)]);
         } else {
@@ -92,10 +123,14 @@ export const HubProvider: FC = ({ children }: any) => {
       }
     };
     if (hubConnection) {
+      hubConnection.on('OperationNotification', cb);
+    }
+    if (hubConnection) {
       hubConnection.on('BalanceUpdate', cb);
     }
     return () => {
       hubConnection?.off('BalanceUpdate', cb);
+      hubConnection?.off('OperationNotification', cb);
     };
   }, [hubConnection, balanceList]);
 
@@ -105,13 +140,19 @@ export const HubProvider: FC = ({ children }: any) => {
         .invoke('GetSigned')
         .then((res) => {
           console.log('GetSigned', res);
+          if (res.roles.length && res.roles[0].name === 'administrator') {
+            setIsAdmin(true);
+          } else {
+            setIsAdmin(false);
+          }
           setUser(res.name);
+          setAccount(res);
+          setUserSafeId(res.safeId);
           setLoading(false);
           if (res.balances.length) {
             const newArr = res.balances.filter((item: any) => item.balanceKind === 1);
             setBalance(newArr[0].volume);
-
-            console.log(res.balances);
+            setLoan(res.loanBalances);
 
             if (!localStorage.getItem('i18nextLng')) {
               i18n.changeLanguage(res.languageCode === 1 ? 'ru' : 'en');
@@ -121,12 +162,6 @@ export const HubProvider: FC = ({ children }: any) => {
               volume: item.volume,
             }));
             setBalanceList(res.balances);
-            console.log(res.balances);
-          }
-          if (res.roles.length && res.roles[0].name === 'administrator') {
-            setIsAdmin(true);
-          } else {
-            setIsAdmin(false);
           }
         })
         .catch((err) => {
@@ -147,7 +182,7 @@ export const HubProvider: FC = ({ children }: any) => {
     setMyToken(null);
     setUser(null);
     setIsAdmin(false);
-    // history.replace('/');
+    // history.push('/');
   };
 
   const login = (token: string) => {
@@ -166,6 +201,17 @@ export const HubProvider: FC = ({ children }: any) => {
         isAdmin,
         balanceList,
         isFailed,
+        chosenMethod,
+        setChosenMethod,
+        loan,
+        chosenDepositView,
+        setChosenDepositView,
+        setSelectedDeposit,
+        selectedDeposit,
+        account,
+        userSafeId,
+        setDepositsFilter,
+        depositsFilter,
       }}
     >
       {children}

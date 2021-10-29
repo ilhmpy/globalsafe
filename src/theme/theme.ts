@@ -1,11 +1,7 @@
 export const lightTheme = {
-  body: `linear-gradient(
-    0deg
-    , rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)), linear-gradient(
-    82.3deg
-    , #effff9 3.67%, #f3f9ff 22.57%, #fffdf0 44.98%, #fff0f0 73%, #f0f0ff 95.88% ), #ffffff`,
+  body: `#E5E5E5`,
   text: '#0E0D3D',
-  text2: '#515172',
+  text2: '#000000',
   text3: '#333',
   text3Hover: '#000',
   modal: '#fff',
@@ -74,7 +70,7 @@ export const lightTheme = {
   },
   loader: {
     bg: 'rgba(0, 0, 0, 0.2)',
-    pointsColor: '#2b3595',
+    pointsColor: '#2b3595', 
   },
   timer: {
     bg: '#fff',
@@ -84,15 +80,35 @@ export const lightTheme = {
   pink: '#FF416E',
   rounIputBackground: '#FFF0F0',
   titles: "#3F3E4E",
+  authBgGray: '#E5E5E5',
   toToken: {
     color: "rgba(14, 13, 61, 0.5)",
     background: "#fff",
     convertColor: "#0E0D3D"
-  }
+  },
+  black: '#000000',
+  white: '#ffffff',
+  blue: '#0094FF',
+  operations: {
+    descClr: "#3F3E4E",
+    headBg: "rgba(220, 220, 232, 100%)",
+    headClr: "#3F3E4E",
+    ich1: "#fff",
+    ich2: "#F8F7FC",
+    tableBg: "#fff"
+  },
+  v2:{
+    text: "#3F3E4E",
+    body: "#E5E5E5",
+    header:{
+      background: "#fff",
+      burger: "#000"
+    }
+  },
 };
 
 export const darkTheme = {
-  body: 'rgba(48,48,48,1)',
+  body: '#28282F',
   text: '#FFF',
   toggleBorder: '#6B8096',
   buttonBorder: '#FF416E',
@@ -173,6 +189,26 @@ export const darkTheme = {
     color: "#fff",
     background: "#212121",
     convertColor: "#fff"
-  } 
+  },
+  authBgGray: '#E5E5E5',
+  black: '#000000',
+  white: '#ffffff',
+  blue: '#0094FF',
+  operations: {
+    descClr: "#fff",
+    headBg: "#131317",
+    headClr: "#fff",
+    ich1: "#1D1D21",
+    ich2: "#28282F",
+    tableBg: "#2A2A31"
+  },
+  v2:{
+    text: "#3F3E4E",
+    body: "#E5E5E5",
+    header:{
+      background: "#fff",
+      burger: "#FFF"
+    }
+  },
 };
  

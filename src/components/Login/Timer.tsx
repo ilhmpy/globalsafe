@@ -37,9 +37,9 @@ export const Timer: FC<Props> = ({ state, setState, last, children }: Props) => 
       const durations = moment.duration(deadline, 'seconds');
       let formatted;
       if (languale === 1) {
-        formatted = durations.format('d[дн] h[ч] m[мин] s[с]');
+        formatted = durations.format('d[дн] h[ч] m[мин] s[ с]');
       } else {
-        formatted = durations.format('d[d] h[H] m[m] s[s]');
+        formatted = durations.format('d[d] h[H] m[m] s[ s]');
       }
 
       setState(formatted);

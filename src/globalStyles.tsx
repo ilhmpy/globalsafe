@@ -17,8 +17,8 @@ body{
     color:${(props) => props.theme.text};
     position: relative;
     font-weight: 400;
-    background: #E5E5E5;
-    background:${(props) => props.theme.body} ;
+    background: #f9fafb;
+    /* background:${(props) => props.theme.body} ; */
     background-repeat: no-repeat;
     height: 100%;
     scrollbar-width: none;
@@ -31,6 +31,26 @@ img{
 }
 a{
   text-decoration: none;
+}
+.is-placeholder {
+    position: relative;
+    width: 25%;
+    border-radius: 5px;
+    opacity: 1;
+    visibility: hidden;
+    overflow: hidden;
+    content: "&nbsp;";
+    color: transparent;
+    &:after {
+        position: absolute;
+        content: "";
+        height: 100%;
+        width: 100%;
+        visibility: visible;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.075);
+        animation: flickerAnimation 1.5s infinite;
+    }
 }
 .chart-toltip{
   display: flex;
@@ -340,9 +360,14 @@ input[type=number] {
     height: 36px !important;
 }
 
+button {
+  outline: none;
+  border: 0;
+}
+
 `;
 
-export const Container = styled.div<{ pNone?: boolean; bigMargin?: boolean }>`
+export const Container = styled.div<{ pNone?: boolean; bigMargin?: boolean; ppNone?: boolean }>`
   -webkit-background-clip: content-box;
   background-clip: content-box;
   z-index: 1;
@@ -353,10 +378,22 @@ export const Container = styled.div<{ pNone?: boolean; bigMargin?: boolean }>`
   padding-right: 10px;
   padding-left: 10px;
   display: flex;
+  flex-direction: column;
   justify-content: space-around;
   @media screen and (max-width: 992px) {
     padding-right: ${(props) => (props.pNone ? '0' : '20px')};
     padding-left: ${(props) => (props.pNone ? '0' : '20px')};
+  }
+
+  @media only screen and (max-device-width: 480px) {
+    ${({ ppNone }) => {
+      if (ppNone) {
+        return `
+          padding-left: 0;
+          padding-right: 0;
+        `;
+      }
+    }}
   }
 `;
 

@@ -3,12 +3,13 @@ import React, { FC, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import styled from 'styled-components/macro';
-import { Button } from '../../../../components/Button/Button';
+import { Button } from '../../../../components/Button/V2/Button';
+// import { Button } from '../../../../components/Button/Button';
 import { H2 } from '../../../../components/UI/MainStyled';
 import { Page } from '../../../../components/UI/Page';
-import { UpTitle } from '../../../../components/UI/UpTitle';
 import { AppContext } from '../../../../context/HubContext';
-import { Card, Container } from '../../../../globalStyles';
+import { Card } from '../../../../globalStyles';
+import { Container } from '../../../../components/UI/Container';
 import { Balance } from '../../../../types/balance';
 import { ArrList, RootLottery } from '../../../../types/lottery';
 import { Timer } from '../Lottery/Timer';
@@ -35,7 +36,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
     if (hubConnection) {
       hubConnection.on('DrawResult', cb);
       hubConnection
-        .invoke<RootLottery>('GetPrizes', 0, 5)
+        .invoke<RootLottery>('GetPrizesKinds', [], 0, 10)
         .then((res) => {
           const arrList = res.collection.map((item) => ({
             name: item.userName,
@@ -59,10 +60,9 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
   const repeat = () => {
     if (hubConnection) {
       hubConnection
-        .invoke<RootLottery>('GetPrizes', 0, 5)
+        .invoke<RootLottery>('GetPrizesKinds', [], 0, 10)
         .then((res) => {
           setShow(true);
-          console.log('GetPrizes res', res);
           const arrList = res.collection.map((item) => ({
             name: item.userName,
             kind: item.definition.kind,
@@ -88,51 +88,35 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
     }
   };
 
-  const add = () => {
-    if (hubConnection) {
-      hubConnection
-        .invoke<RootLottery>('GetPrizes', 5, 5)
-        .then((res) => {
-          const arrList = res.collection.map((item) => ({
-            name: item.userName,
-            kind: item.definition.kind,
-            date: item.drawLog.drawDate,
-            volume: item.definition.volume,
-            balanceKind: item.definition.balanceKind,
-          }));
-          setNotifyList((notifyList) => [...notifyList, ...arrList]);
-        })
-        .catch((e) => console.log(e));
-    }
-    setShow(false);
-  };
-
   return (
-    <Page id="lottery" margin>
-      <Container>
-        <UpTitle small>{t('draws')}</UpTitle>
-      </Container>
-      <Container bigMargin>
-        <H2>{t('historyLottery')}</H2>
-      </Container>
+    <Page id="lottery" pBottom>
+      <TitleContainer>
+        <H2>{'Розыгрыши'}</H2>
+        <Subtitle>
+          Ниже представлены победители прошлых розыгрышей, испытайте удачу, в этом списке можете
+          оказаться вы !
+        </Subtitle>
+      </TitleContainer>
 
       <Container>
         <TimerHistoryContainer alfa onClick={onOpenModal}>
           <Timer modalTimer />
-          <Button danger>{t('goDraw')}</Button>
+          <Button as="button">{'Перейти к розыгрышу'}</Button>
         </TimerHistoryContainer>
       </Container>
-
+    
       <TableContainer>
-        <TableList dn>
-          <TableItemHead>{t('lotteryTable.date')}</TableItemHead>
-          <TableItemHead>{t('lotteryTable.typeWin')}</TableItemHead>
-          <TableItemHead>{t('lotteryTable.sumWin')}</TableItemHead>
-          <TableItemHead> {t('lotteryTable.winners')}</TableItemHead>
+        {notifyList.length && (
+          <TableList dn>
+            <TableItemHead>{t('lotteryTable.date')}</TableItemHead>
+            <TableItemHead>{t('lotteryTable.typeWin')}</TableItemHead>
+            <TableItemHead>{t('lotteryTable.sumWin')}</TableItemHead>
+            <TableItemHead>{t('lotteryTable.winner')}</TableItemHead>
         </TableList>
+        )}
         <TransitionGroup>
-          {notifyList.length &&
-            notifyList.map((item, idx) => {
+        {notifyList.length && (
+          notifyList.map((item, idx) => {
               if (!isMobile) {
                 return (
                   <CSSTransition key={idx} timeout={500} classNames="item">
@@ -161,67 +145,87 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
                   <CSSTransition key={idx} timeout={500} classNames="item">
                     <TableList card>
                       <TableItem>{moment(item.date).format('DD.MM.YYYY')}</TableItem>
-                      <TableItem>
-                        {item.kind === 0
-                          ? (item.volume / 100000).toLocaleString('ru-RU', {
-                              maximumFractionDigits: 5,
-                            })
-                          : item.kind === 1
-                          ? t('win.two')
-                          : item.volume}
-                        &nbsp;
-                        {item.volume ? Balance[item.balanceKind] : '-'}
-                      </TableItem>
-                      {/* <TableItem>
-                        {item.volume
-                          ? (item.volume / 100000).toLocaleString('ru-RU', {
-                              maximumFractionDigits: 5,
-                            }) +
-                            ' ' +
-                            'CWD'
-                          : typeWin(Number(item.kind))}
-                      </TableItem> */}
-                      <TableItem>
+                      <TableItem style={{ display: "block", position: "absolute", right: "47px", maxWidth: "100px" }}>
                         <Value data-title={item.name}>{item.name}</Value>
                       </TableItem>
                     </TableList>
                   </CSSTransition>
                 );
               }
-            })}
+          }))}
         </TransitionGroup>
-        {show && (
-          <Button dangerOutline onClick={add}>
-            {t('operation.showMore')}
-          </Button>
-        )}
       </TableContainer>
     </Page>
   );
 };
 
+const MainPage = styled(Page)`
+  margin-bottom: 80px;
+  @media (max-width: 768px) {
+    margin-bottom: 20px;
+  }
+`;
+
+const TitleContainer = styled(Container)`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 40px;
+
+  @media (max-width: 992px) {
+    margin-bottom: 20px;
+  }
+`;
+
+const Subtitle = styled.p`
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  max-width: 373px;
+  color: #3f3e4e;
+
+  @media (max-width: 576px) {
+    font-size: 12px;
+    line-height: 18px;
+  }
+`;
+
 const TimerHistoryContainer = styled(Card)`
   width: 100%;
-  padding: 20px 45px;
+  padding: 20px;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 30px;
-  @media (max-width: 768px) {
-    display: none;
+  flex-direction: column;
+  gap: 20px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  background: #ffffff;
+  box-shadow: none;
+  & > button {
+    width: 100%;
+    max-width: 190px;
   }
   @media (max-width: 768px) {
     justify-content: center;
     padding: 20px;
+  }
+  @media (max-width: 576px) {
+    align-items: center;
   }
 `;
 
 const TableContainer = styled(Container)`
   display: flex;
   flex-direction: column;
+  border-radius: 4px;
+
   ${Button} {
     margin: 30px auto;
     width: 160px;
+  }
+
+  @media only screen and (max-device-width: 480px) {
+    padding-right: 0px;
+    padding-left: 0px;
   }
 `;
 
@@ -231,25 +235,28 @@ const TableList = styled.ul<{ card?: boolean; dn?: boolean }>`
   align-items: center;
   width: 100%;
   justify-content: space-between;
-  padding: 10px 50px;
-  margin-bottom: 18px;
-  background: ${(props) => (props.card ? props.theme.card.backgroundAlfa : 'transparent')};
-  box-shadow: ${(props) => (props.card ? '0px 1px 3px rgba(0, 0, 0, 0.25)' : 'none')};
-  border-radius: 20px;
+  padding: 20px 40px;
+  background: ${(props) => (props.card ? props.theme.card.backgroundAlfa : '#dcdce8')};
   border: ${(props) => (props.card ? props.theme.card.border : 'none')};
+  border-radius: 4px 4px 0px 0px;
+
+  &:nth-child(2n) {
+    background: #f8f7fc;
+    box-shadow: 0px 80px 80px -40px rgba(220, 220, 232, 0.5);
+  }
   @media (max-width: 992px) {
-    padding: 10px 15px;
+    /* padding: 10px 15px; */
   }
   @media (max-width: 768px) {
-    padding: 10px 5px;
+    padding: 20px;
   }
   @media (max-width: 576px) {
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    padding: 10px 15px;
-    display: ${(props) => (props.dn ? 'none' : 'flex')};
+    /* flex-wrap: wrap; */
+    /* justify-content: flex-start; */
+    /* padding: 10px 15px; */
+    /* display: ${(props) => (props.dn ? 'none' : 'flex')}; */
     display: flex;
-    flex-direction: column;
+    /* flex-direction: column; */
     align-items: center;
     padding-top: 19px;
     padding-bottom: 5px;
@@ -258,8 +265,7 @@ const TableList = styled.ul<{ card?: boolean; dn?: boolean }>`
     if (props.card) {
       return `
             background: ${({ theme }: any) => theme.card.backgroundAlfa};
-            box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
-            border-radius: 20px;
+            border-radius: 4px;
             border: ${({ theme }: any) => theme.card.border};
           `;
     }
@@ -267,22 +273,23 @@ const TableList = styled.ul<{ card?: boolean; dn?: boolean }>`
 `;
 
 const TableItem = styled.li`
-  letter-spacing: 0.1px;
   font-weight: normal;
-  font-size: 18px;
-  line-height: 21px;
+  font-size: 14px;
+  line-height: 20px;
   width: 100%;
-  color: ${(props) => props.theme.text2};
+  /* color: ${(props) => props.theme.text2}; */
+  color: #3f3e4e;
+
   padding-right: 10px;
+
   @media (max-width: 768px) {
     font-size: 14px;
-    line-height: 16px;
   }
   @media (max-width: 576px) {
     padding-bottom: 12px;
-  }
-  @media (max-width: 576px) {
     text-align: left;
+    font-size: 12px;
+    line-height: 18px;
   }
   &:nth-child(1) {
     max-width: 150px;
@@ -293,19 +300,21 @@ const TableItem = styled.li`
   &:nth-child(2) {
     max-width: 200px;
     @media (max-width: 576px) {
-      max-width: 100%;
+      display: none;
     }
   }
   &:nth-child(3) {
     max-width: 200px;
     @media (max-width: 576px) {
-      max-width: 100%;
+      display: none;
     }
   }
   &:nth-child(4) {
     max-width: 200px;
     @media (max-width: 576px) {
-      max-width: 100%;
+      width: 100px;
+      position: absolute;
+      right: 47px;
     }
   }
   @media only screen and (max-device-width: 600px) {
@@ -314,24 +323,21 @@ const TableItem = styled.li`
 `;
 
 const TableItemHead = styled(TableItem)`
-  color: ${(props) => props.theme.text2};
-  @media (max-width: 576px) {
-    display: none;
-  }
+  /* color: ${(props) => props.theme.text2}; */
+  font-weight: 500;
 `;
 
 const Value = styled.div`
-  font-weight: 500;
-  font-size: 24px;
-  line-height: 28px;
-  // display: flex;
   align-items: center;
-  letter-spacing: 0.1px;
   text-transform: uppercase;
-  color: #ff416e;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  color: #3f3e4e;
 
   &:hover {
     cursor: pointer;
@@ -365,5 +371,7 @@ const Value = styled.div`
       display: block;
       width: 100%;
     }
+    font-size: 12px;
+    line-height: 18px;
   }
 `;

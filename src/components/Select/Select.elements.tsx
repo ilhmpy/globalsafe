@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro';
+import styled from 'styled-components';
 
 export const Placeholder = styled.div`
   font-weight: normal;
@@ -46,7 +46,7 @@ export const Container = styled.div`
 
 export const Arrow = styled.div<{ rotat?: boolean }>`
   margin-right: 0px;
-  transform: ${(props) => (props.rotat ? 'rotate(0deg)' : 'rotate(-90deg)')};
+  transform: ${(props) => (props.rotat ? 'rotate(90deg)' : 'rotate(0deg)')};
   transition: 0.2s ease;
 `;
 
@@ -75,8 +75,9 @@ export const Li = styled.li`
   flex-wrap: wrap;
   justify-content: space-between;
   letter-spacing: 0.1px;
-  color: ${(props) => props.theme.text2};
+  color: #000000;
   padding: 6px 20px;
+
   &:first-child {
     span {
       margin-left: auto;
@@ -192,6 +193,7 @@ export const SelectList = styled.ul`
   border: 1px solid rgba(86, 101, 127, 0.3);
   border-radius: 4px;
   position: absolute;
+  user-select: none;
   right: 0;
   left: 0;
   top: 40px;
@@ -216,14 +218,14 @@ export const ListItem = styled.li<{ active?: boolean }>`
 export const Text = styled.div`
   font-weight: normal;
   font-size: 14px;
-  line-height: 20px;
+  line-height: 16px;
 `;
 
 export const Value = styled.div`
-  color: rgba(38, 50, 56, 0.5);
+  color: #000000;
   font-weight: normal;
   font-size: 14px;
-  line-height: 20px;
+  line-height: 16px;
 `;
 
 export const DropDownContainer = styled.div`
@@ -232,21 +234,25 @@ export const DropDownContainer = styled.div`
 `;
 
 export const DropDownHeader = styled.div`
-  border: 1px solid rgba(81, 81, 114, 0.3);
+  border: 1px solid #edf0f7;
   border-radius: 4px;
   position: relative;
   height: 40px;
   font-size: 14px;
-  line-height: 21px;
-  letter-spacing: 0.25px;
-  padding: 8px;
-  position: relative;
+  line-height: 16px;
+  padding: 12px;
   width: 100%;
   transition: 200ms ease-in-out;
+  display: flex;
+  align-items: center;
+  background: #f9fafb;
+  box-sizing: border-box;
+  color: #000000;
+
   ${Arrow} {
     position: absolute;
-    right: 10px;
-    top: 8px;
+    right: 15px;
+    top: 9px;
   }
   span {
     &::after,
@@ -269,7 +275,7 @@ export const DropDownHeader = styled.div`
       letter-spacing: 0.1px;
       position: absolute;
       left: 12px;
-      padding: 0 10px;
+      padding: 0 12px;
       top: -12px;
       z-index: 9;
       background: ${(props) => props.theme.card.background};

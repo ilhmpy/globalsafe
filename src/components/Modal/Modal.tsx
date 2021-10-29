@@ -1,5 +1,6 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
+import { ReactComponent as Times } from '../../assets/svg/times.svg';
 import { Portal } from '../Portal/Portal';
 
 type ModalProps = {
@@ -12,7 +13,10 @@ type ModalProps = {
   style?: any;
   styles?: string;
   lottery?: boolean;
+  withClose?: boolean;
   withoutClose?: boolean;
+  ptl?: boolean;
+  p20?: boolean;
 };
 
 export const Modal: React.FC<ModalProps> = ({
@@ -25,15 +29,12 @@ export const Modal: React.FC<ModalProps> = ({
   style,
   styles,
   lottery,
+  withClose,
   withoutClose,
+  ptl,
+  p20
 }: ModalProps) => {
   const handleContainerClick = (e: React.MouseEvent) => {
-   // console.log(e.currentTarget.parentNode, e.currentTarget)
-    /* if (e.target.classList.contains("bbg")) {
-      console.log(e.target.classList)
-     // onClose();
-    }; */
-
     if (e.currentTarget == e.target) {
       onClose();
     }
@@ -48,9 +49,9 @@ export const Modal: React.FC<ModalProps> = ({
   return (
     <Portal>
       <ModalContainer zIndex={zIndex} style={style} className="bbg" lottery={lottery}>
-        <Center styles={styles}  onClick={handleContainerClick} lottery={lottery}>
-          <ModalComponent width={width} mobMarg={mobMarg} paddingTop={paddingTop}>
-              {withoutClose ? (<span className="close" onClick={onClose}>&times;</span>) : ( <></> )}
+        <Center styles={styles} onClick={handleContainerClick} lottery={lottery}>
+          <ModalComponent width={width} mobMarg={mobMarg} paddingTop={paddingTop} paddingsTopLess={ptl} p20={p20}>
+              {withClose && (<span className="close"><Times onClick={handleContainerClick} /></span>)}
               {children}
           </ModalComponent>
         </Center>
@@ -66,7 +67,7 @@ const Main = styled.div`
   align-items: center;
 `;
 
-const Center = styled.div<{ styles?: string; lottery?: boolean; }>`
+const Center = styled.div<{ styles?: string; lottery?: boolean }>`
   min-height: calc(100% - 3.5rem);
   margin: 1.75rem auto;
   display: flex;
@@ -76,7 +77,7 @@ const Center = styled.div<{ styles?: string; lottery?: boolean; }>`
   ${({ styles }) => {
     if (styles) {
       return styles;
-    };
+    }
   }}
 
   ${({ lottery }) => {
@@ -93,34 +94,42 @@ const Center = styled.div<{ styles?: string; lottery?: boolean; }>`
           }
         }
       `;
-    };
+    }
   }}
 `;
-
-const ModalContainer = styled.div<{ zIndex: string, lottery?: boolean; }>`
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.2);
-    display: block;
-    transition: 0.3s;
-    z-index: ${(props) => props.zIndex};
-    overflow: auto;
-    @media (max-width: 576px) {
-      padding: 20px;
-    }
+ 
+const ModalContainer = styled.div<{ zIndex: string; lottery?: boolean }>`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: block;
+  transition: 0.3s;
+  z-index: ${(props) => props.zIndex};
+  overflow: auto; 
+  @media (max-width: 576px) {
+    padding: 20px;
+  }
 `;
 
-const ModalComponent = styled.div<{ width?: number; mobMarg?: boolean; paddingTop?: number; styles?: string; lottery?: boolean; }>`
+const ModalComponent = styled.div<{
+  width?: number;
+  mobMarg?: boolean;
+  paddingTop?: number;
+  styles?: string;
+  lottery?: boolean;
+  paddingsTopLess?: boolean;
+  p20?: boolean;
+}>`
   display: flex;
   flex-direction: column;
   margin: 50px auto;
   cursor: auto;
   background: ${(props) => props.theme.modal};
-  border-radius: 10px;
-  padding: 1rem;
+  border-radius: 8px;
+  padding: 40px;
   max-width: ${(props) => (props.width ? props.width + 'px' : '400px')};
   display: flex;
   flex-direction: column;
@@ -135,6 +144,20 @@ const ModalComponent = styled.div<{ width?: number; mobMarg?: boolean; paddingTo
     }
   }}
 
+  ${({ paddingsTopLess, p20 }) => {
+    if (paddingsTopLess) {
+      return `
+        padding-top: 20px;
+        padding-bottom: 20px;
+      `;
+    };
+    if (p20) {
+      return `
+        padding: 20px;
+      `;
+    }
+  }}
+
   & > .wrap {
     padding: 22px;
   }
@@ -143,25 +166,30 @@ const ModalComponent = styled.div<{ width?: number; mobMarg?: boolean; paddingTo
     display: flex;
   }
 
-  & > span {
-    color: ${(props) => props.theme.text3};
+  & > span > svg {
     position: absolute;
-    right: 15px;
-    top: -2px;
+    right: 20px;
+    top: 20px;
     cursor: pointer;
     z-index: 9999;
     font-size: 36px;
     opacity: 40%;
     font-weight: 100;
+    width: 12px;
+    height: 12px;
     &:hover {
       color: ${(props) => props.theme.text3Hover};
     }
   }
 
+  .close > svg > path {
+    fill: #000;
+  } 
+
   ${({ styles }) => {
     if (styles) {
       return styles;
-    };
+    }
   }}
 
   @media (max-width: 768px) {
