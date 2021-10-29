@@ -358,17 +358,14 @@ export const Advert = () => {
           onClose={() => setShowPaymentMethodsModal(false)} 
           black
         />
-      
-        <AdvertTable list={ordersList} />
-
-        {
-          (ordersList.length < totalCount) &&  
-          <S.ButtonWrap>
-            <Button onClick={handleLoadMoreOrders}>Показать еще</Button>
-          </S.ButtonWrap>
-        }
-      
       </Container>
+      <Container pTabletNone>
+        <AdvertTable list={ordersList} />
+      </Container>
+      {(ordersList.length < totalCount) &&  
+        <S.ButtonWrap>
+          <Button onClick={handleLoadMoreOrders}>Показать еще</Button>
+        </S.ButtonWrap>}
     </div>
   );
 };
