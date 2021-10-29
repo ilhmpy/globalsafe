@@ -61,7 +61,6 @@ export const OpenDeposit: FC<IProps> = ({
       hubConnection
         .invoke<ListDeposits>('GetDeposits', 1, true, 0, 100)
         .then((res) => {
-          console.log('.then ~ res', res);
           if (res.collection.length) {
             setDepositProgramsList(res.collection);
             const found = res.collection.find(
@@ -83,9 +82,12 @@ export const OpenDeposit: FC<IProps> = ({
 
   const openDeposit = () => {
     if (hubConnection) {
+      console.log('CreateUserDeposit', +sum * 100000, activeDeposit?.safeId);
+
       hubConnection
-        .invoke<any>('CreateUserDeposit', +sum, activeDeposit?.safeId)
+        .invoke('CreateUserDeposit', +sum * 100000, activeDeposit?.safeId)
         .then((res) => {
+          console.log('response-------------->', res);
           setIsSuccess(true);
         })
         .catch((err: Error) => {

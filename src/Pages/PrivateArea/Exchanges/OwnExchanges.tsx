@@ -310,7 +310,6 @@ export const OwnExchanges = () => {
             Рейтинг аккаунта: {getMyRating(account)}
           </Text>
         </S.SubHeader>
-
         <S.Filters style={{ marginBottom: "10px", position: "relative" }}>
           <FilterButton
               active={activeFilter === 'active'}
@@ -355,6 +354,7 @@ export const OwnExchanges = () => {
             </>
           ) : null}
         </S.Filters>
+      </Container>
 
         {activeFilter === 'active' && <OwnActiveExchangesTable setExchanges={setUserExchanges} loading={loading} exchanges={userExchanges} />}
         {activeFilter === 'archived' && <OwnArchivedExchangesTable loading={loading} exchanges={userExchanges} />}
@@ -391,7 +391,6 @@ export const OwnExchanges = () => {
           objectsArray
           black
         />
-      </Container>
     </div>
   );
 };

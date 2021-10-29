@@ -80,7 +80,6 @@ export const Deposits: FC = () => {
             20,
             sorting
           );
-          console.log('.then ~ res', res);
           if (res.totalRecords === [...depositsList, ...res.collection].length) {
             setDepositsListHasMore(false);
           }

@@ -194,6 +194,16 @@ export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
     return null;
   }
 
+  const balanceValue = (type: number, volume: number) => {
+    if (type === Balance.GLOBAL) {
+      return volume / 10000;
+    } else if (type === Balance.MULTICS) {
+      return volume / 100;
+    } else {
+      return volume / 100000;
+    }
+  };
+
   return (
     <S.Container>
       <LeftSide bg={'#EAEFF4'}>
@@ -213,7 +223,7 @@ export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
             Количество:
           </Text>
           <Title lH={28} mB={10}>
-            {(exchange.volume / 100000).toLocaleString('en-US', {
+            {balanceValue(exchange.assetKind, exchange.volume).toLocaleString('en-US', {
               maximumFractionDigits: 2,
             })}{' '}
             {Balance[exchange.assetKind]}
@@ -233,9 +243,12 @@ export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
             На сумму:
           </Text>
           <Title lH={28}>
-            {(exchange.exchangeVolume / 100000).toLocaleString('en-US', {
-              maximumFractionDigits: 2,
-            })}{' '}
+            {balanceValue(exchange.exchangeAssetKind, exchange.exchangeVolume).toLocaleString(
+              'en-US',
+              {
+                maximumFractionDigits: 2,
+              }
+            )}{' '}
             {FiatKind[exchange.exchangeAssetKind]}
           </Title>
         </S.BlockWrapper>
@@ -302,11 +315,11 @@ export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
                     <S.ChatHeader>
                       <Text size={12} lH={16} black>
                         {moment(new Date(key)).calendar(null, {
-                          lastDay: `[Вчера]`,
-                          sameDay: `[Сегодня]`,
-                          lastWeek: 'MMMM DD',
-                          nextWeek: 'dddd',
-                          sameElse: 'MMMM DD',
+                          lastDay: `DD.MM.YYYY dddd`,
+                          sameDay: `DD.MM.YYYY dddd`,
+                          lastWeek: 'DD.MM.YYYY dddd',
+                          nextWeek: 'DD.MM.YYYY dddd',
+                          sameElse: 'DD.MM.YYYY dddd',
                         })}
                       </Text>
                     </S.ChatHeader>

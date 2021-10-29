@@ -5,13 +5,15 @@ import alfa1 from '../../../../../assets/v2/svg/banks/alfa1.svg';
 import sber from '../../../../../assets/v2/svg/banks/sber.svg';
 import tinkoff from '../../../../../assets/v2/svg/banks/tinkoff.svg';
 import { CurrencyPair } from '../modals/CurrencyPair';
-import { OwnExchangesProps, ExchangeState, ViewExchangeModel } from '../../../../../types/exchange';
+import { OwnExchangesProps, ExchangeState } from '../../../../../types/exchange';
 import { Balance } from "../../../../../types/balance";
 import { FiatKind } from "../../../../../types/fiat";
 import { PaymentMethodKind } from "../../../../../types/paymentMethodKind";
 import { Loading, NotItems } from "../../../components/Loading/Loading";
 import { Counter } from '../../../components/ui/Counter';
-import { AppContext } from "../../../../../context/HubContext";
+import { Container } from "../../../../../components/UI/Container";
+import { AppContext } from '../../../../../context/HubContext';
+import { ViewExchangeModel } from '../../../../../types/exchange';
 
 import * as S from './S.el';
 import { getTime } from 'date-fns';
@@ -22,6 +24,7 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
   const history = useHistory();
   const [selectedOption, setSelectedOption] = useState<string | null>('Все валюты предложения');
   const { account } = useContext(AppContext);
+
 
   const handleNavigateToExchange = (id: string) => {
     history.replace(`/info/p2p-changes/${id}`);
@@ -73,16 +76,21 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
     };
   };
 
-  const Status = ["Новый", "Ожидание подтверждения оплаты", "Завершен", "Спорный", "Отменен"];
+  const Status = ["Новый", "Ожидание подтверждения получения средств", "Завершен", "Спорный", "Отменен"];
 
-  function getStatus({ state, kind, ownerSafeId, recepientSafeId }: ViewExchangeModel) {
+  function getStatus({ state, kind, ownerSafeId }: ViewExchangeModel) {
     const owner = (kind === 0 && ownerSafeId !== account.safeId) ||
     (kind === 1 && ownerSafeId === account.safeId) ? "buyer" : "seller";
+    console.log(owner);
     if (state === 0) {
-      if (owner === "seller") {
-        return "Ожидание перевода";
+      if (screen.width > 1024) {
+        if (owner === "seller") {
+          return "Ожидание перевода";
+        } else {
+          return "Ожидание подтверждения оплаты";        
+        };
       } else {
-        return "Ожидание подтверждения оплаты";        
+        return "Новый";
       };
     } else {
       return Status[state];
@@ -90,6 +98,7 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
   };
 
   return (
+    <Container pTabletNone>
       <S.Table>
         <S.Header>
           <S.Cell>
@@ -142,5 +151,6 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
           </>
         )}
       </S.Table>
+    </Container>
   );
 };

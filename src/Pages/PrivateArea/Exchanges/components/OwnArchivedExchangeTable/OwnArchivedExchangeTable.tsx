@@ -12,6 +12,7 @@ import { PaymentMethodKind } from "../../../../../types/paymentMethodKind";
 import moment from "moment";
 import { Loading, NotItems } from "../../../components/Loading/Loading";
 import { getVolume } from "../../../../../functions/getVolume";
+import { Container } from "../../../../../components/UI/Container";
 
 import * as S from './S.el';
 import { countVolumeToShow } from '../../../utils';
@@ -103,7 +104,7 @@ export const OwnArchivedExchangesTable: FC<OwnExchangesProps> = ({ exchanges, lo
   ]; */
 
   return (
-    <>
+    <Container pTabletNone>
       {/* <CurrencyPair
         open={true}
         onClose={() => undefined}
@@ -164,6 +165,6 @@ export const OwnArchivedExchangesTable: FC<OwnExchangesProps> = ({ exchanges, lo
           </>
         )}
       </S.Table>
-    </>
+    </Container>
   );
 };

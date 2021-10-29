@@ -29,7 +29,7 @@ export const BuyCertificateModal: FC<Props> = ({ onClose, open, data, purchase }
             <S.DataList>
               <S.DataListItem>
                 <Text size={14} lH={20}>
-                  Лимит {Balance[data.certificate.assetKind]}/д:
+                  Лимит {Balance[data.certificate.assetKind]}/24ч:
                 </Text>
                 <S.ListItemDivider />
                 <Text size={14} lH={20} weight={700}>

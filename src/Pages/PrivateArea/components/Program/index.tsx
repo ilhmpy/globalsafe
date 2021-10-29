@@ -23,16 +23,9 @@ export const Program = ({ className = '' }: ProgramProps) => {
     if (hubConnection) {
       setDepositProgramsLoading(true);
       hubConnection
-        // .invoke<RootList>('GetUserDeposits', [1, 2, 3, 4, 5, 6, 7, 8], null, 0, 20, [
-        //   {
-        //     ConditionWeight: 1,
-        //     OrderType: 2,
-        //     FieldName: 'creationDate',
-        //   },
-        // ])
         .invoke<ListDeposits>('GetDeposits', languale, true, 0, 20)
         .then((res) => {
-          console.log('.11111111111111s', res);
+          console.log('.GetDeposits--->', res);
           if (res.collection.length) {
             setDepositProgramsList(res.collection);
           }
