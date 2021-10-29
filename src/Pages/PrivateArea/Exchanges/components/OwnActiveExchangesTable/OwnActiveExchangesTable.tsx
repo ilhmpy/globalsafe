@@ -117,7 +117,7 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
             <span>Метод оплаты</span>
           </S.Cell>
           <S.Cell>
-            <span>Оставшееся время</span>
+            <span>{screen.width > 1024 ? "Оставшееся время" : "Время"}</span>
           </S.Cell>
           <S.Cell>
             <span>Статус</span>

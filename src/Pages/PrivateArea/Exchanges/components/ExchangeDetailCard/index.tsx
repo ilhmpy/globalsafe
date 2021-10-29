@@ -431,7 +431,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
       <RightSide>
         <S.TitleBlockWrapper>
           <Title mB={10} lH={28} main>
-            {exchange.kind === 0 ? 'Продажа' : 'Покупка'}{' '}
+            {owner === "seller" ? 'Продажа' : 'Покупка'}{' '}
             {`${Balance[exchange.assetKind]} за ${FiatKind[exchange.exchangeAssetKind]}`}
           </Title>
           {getExchangeChip(exchange.state)}
