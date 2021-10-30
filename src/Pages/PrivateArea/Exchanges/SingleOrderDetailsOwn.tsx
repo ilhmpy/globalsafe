@@ -185,37 +185,37 @@ export const SingleOrderDetailsOwn: FC = () => {
               {`№ ${currentOrder.safeId}`}
             </Text>
         </S.TitleContainer>
-
+      </Container>
+      <Container pTabletNone>
+          <S.Container>
+            <OrderDetailCardOwn order={currentOrder} orderType={currentOrderType} />
+          </S.Container> 
+      </Container>
+      <Container>
         <S.Container>
-          <OrderDetailCardOwn order={currentOrder} orderType={currentOrderType} />
-        </S.Container> 
-
-        <S.Container>
-            <Title mB={20}>Обмены в рамках ордера</Title>
-            <S.Filters>
-                <S.FilterButton 
-                  active={activeFilter === 'all'}
-                  onClick={() => setActiveFilter('all')}
-                >
-                  Все
-                </S.FilterButton>
-                <S.FilterButton 
-                  active={activeFilter === 'active'}
-                  onClick={() => setActiveFilter('active')}
-                >
-                  Активные
-                </S.FilterButton>
-                <S.FilterButton 
-                  active={activeFilter === 'archived'}
-                  onClick={() => setActiveFilter('archived')}
-                >
-                  Архив
-                </S.FilterButton>
+          <Title mB={20}>Обмены в рамках ордера</Title>
+          <S.Filters>
+            <S.FilterButton 
+              active={activeFilter === 'all'}
+              onClick={() => setActiveFilter('all')}
+             >
+              Все
+             </S.FilterButton>
+             <S.FilterButton 
+               active={activeFilter === 'active'}
+               onClick={() => setActiveFilter('active')}
+              >
+                Активные
+              </S.FilterButton>
+              <S.FilterButton 
+                active={activeFilter === 'archived'}
+                onClick={() => setActiveFilter('archived')}
+              >
+                Архив
+              </S.FilterButton>
             </S.Filters>
-
             <ExchangesInOrderTable exchangesList={orderExchanges} activeFilter={activeFilter} />
-        </S.Container>
-        
+          </S.Container>
       </Container>
     </S.Container>
   );

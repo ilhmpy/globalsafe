@@ -13,7 +13,7 @@ export const Title = styled.h3<{ small?: boolean; mB?: number; lH?: number; main
     if (main) {
       return `
         font-size: 24px;
-        @media only screen and (min-device-width: 768px) and (max-device-width: 1024px)  {
+        @media only screen and (min-device-width: 481px) and (max-device-width: 1024px)  {
           font-size: 24px;
         }
       `;

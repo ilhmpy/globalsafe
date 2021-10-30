@@ -168,6 +168,16 @@ export const Certificates = () => {
 
   console.log('userCertificat ', userCertificat);
 
+  const balanceValue = (type: number, volume: number) => {
+    if (type === Balance.GLOBAL) {
+      return volume / 10000;
+    } else if (type === Balance.MULTICS) {
+      return volume / 100;
+    } else {
+      return volume / 100000;
+    }
+  };
+
   return (
     <S.Container>
       {buyCertificateModal && (
@@ -236,7 +246,10 @@ export const Certificates = () => {
                     </Text>
                     <Text size={14} weight={500} lH={20}>
                       {item.certificate.dailyVolume > 0
-                        ? (item.certificate.dailyVolume / 100000).toLocaleString()
+                        ? balanceValue(
+                            item.certificate.assetKind,
+                            item.certificate.dailyVolume
+                          ).toLocaleString()
                         : 0}{' '}
                       {Balance[item.certificate.assetKind]}
                     </Text>
@@ -272,7 +285,10 @@ export const Certificates = () => {
                   <ProgramDescTitle>Лимит:</ProgramDescTitle>
                 </TitleWrap>
                 <Text size={14} weight={500} lH={20} mB={20}>
-                  {(item.certificate.dailyVolume / 100000).toLocaleString('en-US', {
+                  {balanceValue(
+                    item.certificate.assetKind,
+                    item.certificate.dailyVolume
+                  ).toLocaleString('en-US', {
                     maximumFractionDigits: 2,
                   })}{' '}
                   {Balance[item.certificate.assetKind]} / 24ч.
