@@ -307,13 +307,13 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
             </Title>
             </S.BlockWrapper>
 
-            <S.BlockWrapper>
-            <Text size={14} lH={20} mB={10} black>
-                {`Рейтинг ${orderType === OrderType.Buy ? 'покупателя' : 'продавца'}:`}
-            </Text>
-            <Title lH={28}>
-                {`${order.userRating ? Number(order.userRating).toFixed(1) : '0.0'} (${order.totalExecuted})`}
-            </Title>
+            <S.BlockWrapper noMb>
+                <Text size={14} lH={20} mB={10} black>
+                    {`Рейтинг ${orderType === OrderType.Buy ? 'покупателя' : 'продавца'}:`}
+                </Text>
+                <Title lH={28} mB={0}>
+                    {`${order.userRating ? Number(order.userRating).toFixed(1) : '0.0'} (${order.totalExecuted})`}
+                </Title>
             </S.BlockWrapper>
         </LeftSide>
 
@@ -559,6 +559,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                 <S.Button 
                     as="button"
                     primary 
+                    fullWidthMobile
                     onClick={() => setShowCreateExchangeModal(true)}
                     disabled={
                         !paymentMethodSafeId || 

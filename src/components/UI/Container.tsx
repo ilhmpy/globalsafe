@@ -10,6 +10,10 @@ export const Container = styled.div<{ pNone?: boolean; page?: boolean; mtNone?: 
     padding-right: ${(props) => (props.pNone ? '0' : '20px')};
     padding-left: ${(props) => (props.pNone ? '0' : '20px')};
   }
+  @media (max-width: 768px) {
+    padding-right: ${(props) => (props.pNone ? '0' : '20px')};
+    padding-left: ${(props) => (props.pNone ? '0' : '20px')};
+  }
   ${({ pTabletNone }) => {
     if (pTabletNone) {
       return `

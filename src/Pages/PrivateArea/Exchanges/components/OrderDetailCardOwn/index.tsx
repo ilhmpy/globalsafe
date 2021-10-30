@@ -273,7 +273,7 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
               </S.BlockWrapper>
           }
       
-          <Button primary onClick={() => setShowDeleteModal(true)}>
+          <Button primary onClick={() => setShowDeleteModal(true)} fullWidthMobile>
             Удалить ордер
           </Button>
       </RightSide>

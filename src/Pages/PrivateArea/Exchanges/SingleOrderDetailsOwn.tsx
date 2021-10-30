@@ -112,7 +112,7 @@ export const SingleOrderDetailsOwn: FC = () => {
       if(exchange) {
         cbExchangeStatusChanged(exchange);
       }
-    };
+    }; 
 
     const cbExchangeConfirmationRequired = (exchange: ViewExchangeModel) => {
       console.log('__SOCKET__ExchangeConfirmationRequired::', exchange);
@@ -186,7 +186,7 @@ export const SingleOrderDetailsOwn: FC = () => {
             </Text>
         </S.TitleContainer>
       </Container>
-      <Container pTabletNone>
+      <Container pTabletNone pNone>
           <S.Container>
             <OrderDetailCardOwn order={currentOrder} orderType={currentOrderType} />
           </S.Container> 

@@ -359,7 +359,7 @@ export const Advert = () => {
           black
         />
       </Container>
-      <Container pTabletNone>
+      <Container pTabletNone pNone>
         <AdvertTable list={ordersList} />
       </Container>
       {(ordersList.length < totalCount) &&  

@@ -4,4 +4,9 @@ export const RightSide = styled.div`
   padding: 40px;
   width: 100%;
   background: #fff;
+  @media (max-width: 768px) {
+    width: 100%;
+    padding: 20px;
+  }
 `;
+ 

@@ -10,6 +10,7 @@ type Props = {
   exchangeBtn?: boolean;
   disabled?: boolean;
   rightBtnOnTablet?: boolean;
+  fullWidthMobile?: boolean;
 };
 
 export const Button = styled.a<Props>`
@@ -99,6 +100,15 @@ export const Button = styled.a<Props>`
           justify-content: flex-end;
       `;
     };
+  }};
+  ${({ fullWidthMobile }) => {
+    if(fullWidthMobile) {
+      return  `
+        @media only screen and (max-device-width: 768px) {
+          width: 100%;
+        }
+      `;
+    }
   }}
 `;
 

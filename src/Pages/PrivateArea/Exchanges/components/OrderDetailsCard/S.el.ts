@@ -10,10 +10,14 @@ export const Container = styled.div`
   align-items: stretch;
   box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
   border-radius: 4px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
-export const BlockWrapper = styled.div<{largeMB?: boolean}>`
-  margin-bottom: ${props => props.largeMB ? '40px' : '20px'};
+export const BlockWrapper = styled.div<{largeMB?: boolean, noMb?: boolean;}>`
+  margin-bottom: ${props => props.largeMB ? '40px' : props.noMb ? 0 : '20px'};
 `;
 
 export const PaymentMethodDetailsBlock = styled.div`
@@ -29,6 +33,9 @@ export const FormItem = styled.div`
 
 export const Input = styled(BaseInput)`
   width: 300px;
+  @media only screen and (max-device-width: 768px) {
+    width: 280px;
+  }
 `;
 
 export const TransferInfoBlock = styled.div`

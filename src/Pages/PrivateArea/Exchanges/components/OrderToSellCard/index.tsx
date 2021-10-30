@@ -411,7 +411,7 @@ export const OrderToSellCard: FC = () => {
             </S.TabsBlock>
 
             <S.Form>
-                <Space gap={20} mb={20}>
+                <Space gap={20} mb={20} mobileColumn>
                     <S.FormItem>
                         <Text size={14} weight={300} lH={20} mB={10} black>
                             Валюта продажи:
@@ -437,7 +437,7 @@ export const OrderToSellCard: FC = () => {
                     </S.FormItem>
                 </Space>
 
-                <Space gap={20} mb={20}>
+                <Space gap={20} mb={20} mobileColumn>
                     <S.FormItem>
                         <Text size={14} weight={300} lH={20} mB={10} black>
                             Валюта обмена:
@@ -583,6 +583,7 @@ export const OrderToSellCard: FC = () => {
                 
                 <Space gap={10} mb={40}>
                     <S.Button 
+                        fullWidthMobile
                         primary 
                         onClick={handlePublushOrder}
                         as={'button'}
