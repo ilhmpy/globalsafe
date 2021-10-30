@@ -8,7 +8,7 @@ export const Container = styled.div`
   border-radius: 4px;
   margin-bottom: 40px;
   @media (max-width: 768px) {
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
   }
 `;
 

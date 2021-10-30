@@ -3,6 +3,9 @@ import { Program } from '../components/Program';
 
 export const Container = styled.div`
   margin-bottom: 50px;
+  @media (max-width: 1024px) {
+    margin-bottom: 40px;
+  }
 `;
 
 export const NotDeposits = styled.div`

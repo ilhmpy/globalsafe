@@ -25,6 +25,10 @@ export const Cell = styled.div`
     font-weight: 400;
   }
   @media (max-width: 1024px) {
+    &:nth-child(2) {
+      /* display: flex;
+      justify-content: flex-end; */
+    }
     &:nth-child(4) {
       display: none;
     }
@@ -70,6 +74,9 @@ export const RowHistory = styled(Row)`
       max-width: 69%;
     }
     &:nth-child(2) {
+      @media (max-width: 1024px) {
+        max-width: 17%;
+      }
       max-width: 31%;
     }
   }

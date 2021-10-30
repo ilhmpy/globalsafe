@@ -12,6 +12,8 @@ interface FilterProps {
   withCustomButtons?: boolean;
   withoutViewType?: boolean;
   withoutContainer?: boolean;
+  viewType?: string;
+  setViewType?: (viewType: string) => void;
 }
 
 export const Filter: FC<FilterProps> = ({
@@ -21,11 +23,11 @@ export const Filter: FC<FilterProps> = ({
   withCustomButtons,
   withoutViewType,
   withoutContainer,
+  viewType,
+  setViewType,
 }: FilterProps) => {
-  const [active, setActive] = useState('list');
-
   const handleActive = (type: string) => {
-    if (type !== active) setActive(type);
+    if (type !== viewType) setViewType?.(type);
   };
 
   return (
@@ -64,10 +66,10 @@ export const Filter: FC<FilterProps> = ({
       {!withoutViewType && (
         <S.FilterTypes>
           <S.FilterTypeList onClick={() => handleActive('list')}>
-            {active === 'list' ? <ListFillIcon /> : <ListIcon />}
+            {viewType === 'list' ? <ListFillIcon /> : <ListIcon />}
           </S.FilterTypeList>
           <S.FilterTypeTile onClick={() => handleActive('tile')}>
-            {active === 'tile' ? <TileFillIcon /> : <TileIcon />}
+            {viewType === 'tile' ? <TileFillIcon /> : <TileIcon />}
           </S.FilterTypeTile>
         </S.FilterTypes>
       )}

@@ -28,7 +28,7 @@ export const CloseDepositSuccess: FC<Props> = ({ onClose, open, deposit, calcula
             <S.List>
               <S.ListItem>
                 <S.Text>
-                  Программа депозита: <strong>{deposit.name}</strong>
+                  Программа депозита: <strong>{deposit?.name}</strong>
                 </S.Text>
               </S.ListItem>
               <S.ListItem>
@@ -41,7 +41,7 @@ export const CloseDepositSuccess: FC<Props> = ({ onClose, open, deposit, calcula
               </S.ListItem>
               <S.ListItem>
                 <S.Text>
-                  Оставшиеся проценты: <strong>{deposit.paymentRatio} %</strong>
+                  Оставшиеся проценты: <strong>{deposit?.paymentRatio} %</strong>
                 </S.Text>
               </S.ListItem>
               <S.ListItem>

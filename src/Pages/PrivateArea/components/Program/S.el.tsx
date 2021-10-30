@@ -8,6 +8,9 @@ export const CardContainer = styled(Container)`
   gap: 20px;
   padding: 0 14px;
   max-width: 1108px;
+  @media (max-width: 1024px) {
+    padding: 0 34px;
+  }
 `;
 
 export const Card = styled.div`
@@ -20,6 +23,18 @@ export const Card = styled.div`
   flex-direction: column;
   ${Button} {
     margin-top: auto;
+    @media (max-width: 1024px) {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      align-self: baseline;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    width: 220px;
+    padding: 20px;
   }
 `;
 
@@ -30,6 +45,9 @@ export const CardTitle = styled.h3`
   color: #000000;
   margin-bottom: 40px;
   text-transform: uppercase;
+  @media (max-width: 1024px) {
+    margin-bottom: 20px;
+  }
 `;
 
 export const CardDesc = styled.div`
@@ -37,4 +55,7 @@ export const CardDesc = styled.div`
   line-height: 20px;
   color: #000000;
   margin-bottom: 40px;
+  @media (max-width: 1024px) {
+    margin-bottom: 20px;
+  }
 `;
