@@ -17,6 +17,17 @@ export const Item = styled.h3<{ item?: boolean; }>`
     margin-right: 75px;
     min-height: 20px;
     ${({ item }) => {
+        if (!item) {
+            return `
+                @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+                    &:nth-child(1) {
+                        min-width: 98px;
+                    }
+                }  
+            `;
+        };
+    }}
+    ${({ item }) => {
         if (item) {
             return `
                 font-weight: 500;
@@ -38,6 +49,9 @@ export const Header = styled.header`
     padding-right: 20px;
     & > h3 {
         margin-right: 109px;
+    }
+    @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+        padding-left: 40px;
     }
 `;
 

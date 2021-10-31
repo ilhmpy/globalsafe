@@ -61,6 +61,9 @@ export const TableItem = styled.div<TableProps>`
                 border-top-left-radius: 4px;
                 padding-left: 20px;
                 padding-right: 20px;
+                @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+                    padding: 0px 35px;
+                }
             `;
         };
         if (item) {
@@ -72,7 +75,6 @@ export const TableItem = styled.div<TableProps>`
           `; 
         };
     }}
-
     ${({ newItem }) => {
         if (newItem) {
             return `
@@ -88,6 +90,9 @@ export const TableInnerItem = styled.div<TableProps>`
     &:nth-child(3) {
         position: absolute;
         right: 20px;
+        @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+            right: 35px;
+        }
     }
     ${({ head, item }) => {
         if (head) {
@@ -96,6 +101,9 @@ export const TableInnerItem = styled.div<TableProps>`
                 line-height: 16px;
                 &:nth-child(1) {
                     margin-right: 166px;
+                    @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+                        margin-right: 115px;
+                    }
                 }
             `;
         };
@@ -105,9 +113,15 @@ export const TableInnerItem = styled.div<TableProps>`
                 line-height: 20px;
                 &:nth-child(1) {
                     margin-right: 131px;
+                    @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+                        margin-right: 50px;
+                    }
                 }
                 &:nth-child(3) {
                     right: 0px;
+                }
+                @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+                    padding: 0px 15px;
                 }
             `;
         };
