@@ -14,8 +14,7 @@ export const NotificationItem = styled.div<{ newItem: boolean; }>`
     border-radius: 4px;
     background: #fff;
     box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
-    display: flex; 
-    // align-items: center;
+    display: flex;
     position: relative;
     padding-left: 20px;
     padding-right: 20px;
@@ -31,6 +30,12 @@ export const NotificationItem = styled.div<{ newItem: boolean; }>`
             `;
         };
     }}
+    @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+        & > h3:nth-child(1) {
+            min-width: 130px;
+        }
+        padding-left: 40px;
+    }
 `;
 
 export const DoneNotification = styled(Done)<{ disabled?: boolean; }>`
@@ -49,4 +54,7 @@ export const DoneNotification = styled(Done)<{ disabled?: boolean; }>`
             `;
         };
     }}
+    @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+        right: 40px;
+    }
 `;

@@ -76,13 +76,13 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
     };
   };
 
-  const Status = ["Новый", "Ожидание подтверждения получения средств", "Завершен", "Спорный", "Отменен"];
+  const Status = ["Новый", "Ожидание подтверждения оплаты", "Завершен", "Спорный", "Отменен"];
 
   function getStatus({ state, kind, ownerSafeId }: ViewExchangeModel) {
     const owner = (kind === 0 && ownerSafeId !== account.safeId) ||
     (kind === 1 && ownerSafeId === account.safeId) ? "buyer" : "seller";
-    console.log(owner);
     if (state === 0) {
+      /*
       if (screen.width > 1024) {
         if (owner === "seller") {
           return "Ожидание перевода";
@@ -91,6 +91,11 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
         };
       } else {
         return "Новый";
+      }; */
+      if (owner === "seller") {
+        return "Ожидание перевода";
+      } else {
+        return "Ожидание подтверждения оплаты";        
       };
     } else {
       return Status[state];
@@ -117,7 +122,7 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
             <span>Метод оплаты</span>
           </S.Cell>
           <S.Cell>
-            <span>Оставшееся время</span>
+            <span>{screen.width > 1024 ? "Оставшееся время" : "Время"}</span>
           </S.Cell>
           <S.Cell>
             <span>Статус</span>

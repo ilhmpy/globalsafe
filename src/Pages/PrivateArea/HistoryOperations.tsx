@@ -340,6 +340,7 @@ export const HistoryOperations = () => {
     };
 
     return (
+        <>
         <Container>
             <Heading title="История операций" withoutBtn />
             <Styled.FilterAllBlock>
@@ -358,6 +359,8 @@ export const HistoryOperations = () => {
                     buttons={buttons}
                 /> 
             </Styled.FilterAllBlock>
+        </Container>
+        <Container pTabletNone>
             <Styled.Table none={not}>
                 <Styled.TableItem head>
                     <Styled.TableInnerItem head>Дата и время</Styled.TableInnerItem>
@@ -393,6 +396,7 @@ export const HistoryOperations = () => {
                     <Spinner style={{ width: 25, height: 25, borderTop: "2px solid #fff", margin: "0 auto" }} /> 
                     : "Показать ещё"}
           </Styled.Button>
-        </Container> 
+        </Container>
+     </>
     ) 
 } 
