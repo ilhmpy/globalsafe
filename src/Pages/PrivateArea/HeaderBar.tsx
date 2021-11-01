@@ -28,7 +28,9 @@ import { Commisions, DepositsCollection, RootDeposits } from '../../types/info';
 import { ConvertingModal } from './Converting/ConvertingModal';
 import { DepositListModal } from './Modals';
 import * as Styled from './Styles.elements';
-import { SelectButton } from "./components/ui/SelectButton";
+import { SelectButton } from './components/ui/SelectButton';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import SwiperCore, { Navigation, Pagination, A11y } from 'swiper';
 
 export const HeaderBar = () => {
   const { t } = useTranslation();
@@ -541,6 +543,8 @@ export const HeaderBar = () => {
     // window.location.reload();
   };
 
+  SwiperCore.use([Navigation, Pagination, A11y]);
+
   return (
     <>
       {withdrawValueLoad && (
@@ -761,62 +765,152 @@ export const HeaderBar = () => {
                   ? (balance / 100000).toLocaleString('ru-RU', {
                       maximumFractionDigits: 5,
                     })
-                  : '0'}{' '} 
+                  : '0'}{' '}
                 CWD
               </BalanceValueText>
             </PanelInfoBlock>
-            {screen.width > 1024 ?
+
+            {screen.width <= 768 && (
+              <BalanceChipsBlock>
+                {balanceChips &&
+                  balanceChips.map((i: any, idx: number) => {
+                    return (
+                      <Chip
+                        key={`chip-item-${idx}`}
+                        leftIcon={i.locked ? <LockIcon /> : null}
+                        bgColor={getChipColor(i)}
+                      >
+                        <span>
+                          {Number(i.volume).toLocaleString('ru-RU', {
+                            maximumFractionDigits: 4,
+                          })}
+                        </span>
+                        &nbsp;
+                        {Balance[i.balanceKind]}
+                      </Chip>
+                    );
+                  })}
+              </BalanceChipsBlock>
+            )}
+
+            {screen.width > 1024 ? (
               <PanelActionsBlock>
                 <SecondaryButton title={'Конвертация'} onClick={() => setOpenConverting(true)} />
                 <SecondaryButton title={'Пополнить баланс'} onClick={() => setAddDrawModal(true)} />
-                <SecondaryButton title={'Вывести средства'} onClick={() => setWithDrawModal(true)} />
-              </PanelActionsBlock> 
-            : 
-              <SelectButton buttons={[
-                { text: "Пополнить баланс", onClick: () => setAddDrawModal(true) },
-                { text: "Вывести средств", onClick: () => setWithDrawModal(true) },
-                { text: "Конвертация", onClick: () => setOpenConverting(true) },
-              ]} />
-            }
+                <SecondaryButton
+                  title={'Вывести средства'}
+                  onClick={() => setWithDrawModal(true)}
+                />
+              </PanelActionsBlock>
+            ) : (
+              <SelectButton
+                buttons={[
+                  { text: 'Пополнить баланс', onClick: () => setAddDrawModal(true) },
+                  { text: 'Вывести средств', onClick: () => setWithDrawModal(true) },
+                  { text: 'Конвертация', onClick: () => setOpenConverting(true) },
+                ]}
+              />
+            )}
           </PanelHeader>
-          <BalanceChipsBlock>
-            {balanceChips &&
-              balanceChips.map((i: any, idx: number) => {
-                return (
-                  <Chip
-                    key={`chip-item-${idx}`}
-                    leftIcon={i.locked ? <LockIcon /> : null}
-                    bgColor={getChipColor(i)}
-                  >
-                    <span>
-                      {Number(i.volume).toLocaleString('ru-RU', {
-                        maximumFractionDigits: 4,
-                      })}
-                    </span>
-                    &nbsp;
-                    {Balance[i.balanceKind]}
-                  </Chip>
-                );
-              })}
-          </BalanceChipsBlock>
+          {/* One */}
+          {screen.width > 768 && (
+            <BalanceChipsBlock>
+              {balanceChips &&
+                balanceChips.map((i: any, idx: number) => {
+                  return (
+                    <Chip
+                      key={`chip-item-${idx}`}
+                      leftIcon={i.locked ? <LockIcon /> : null}
+                      bgColor={getChipColor(i)}
+                    >
+                      <span>
+                        {Number(i.volume).toLocaleString('ru-RU', {
+                          maximumFractionDigits: 4,
+                        })}
+                      </span>
+                      &nbsp;
+                      {Balance[i.balanceKind]}
+                    </Chip>
+                  );
+                })}
+            </BalanceChipsBlock>
+          )}
 
-          <TabsBlock>
-            <TabNavItem to={routers.deposits} exact>
-              <div>Мои депозиты</div>
-            </TabNavItem>
-            <TabNavItem to={routers.p2pchanges}>
-              <div>P2P обмены</div>
-            </TabNavItem>
-            <TabNavItem to={routers.operations}>
-              <div>История операций</div>
-            </TabNavItem>
-            <TabNavItem to={routers.notifications}>
-              <div>Уведомления</div>
-            </TabNavItem>
-            <TabNavItem to={routers.settings}>
-              <div>Настройки</div>
-            </TabNavItem>
-          </TabsBlock>
+          {/* Two */}
+
+          {screen.width > 768 ? (
+            <TabsBlock>
+              <TabNavItem to={routers.deposits} exact>
+                <div>Мои депозиты</div>
+              </TabNavItem>
+              <TabNavItem to={routers.p2pchanges}>
+                <div>P2P обмены</div>
+              </TabNavItem>
+              <TabNavItem to={routers.operations}>
+                <div>История операций</div>
+              </TabNavItem>
+              <TabNavItem to={routers.notifications}>
+                <div>Уведомления</div>
+              </TabNavItem>
+              <TabNavItem to={routers.settings}>
+                <div>Настройки</div>
+              </TabNavItem>
+            </TabsBlock>
+          ) : (
+            <SwiperUI
+              onClick={() => console.log(11)}
+              slidesPerView={4}
+              spaceBetween={20}
+              freeMode={true}
+              pagination={false}
+              className="mySwiper"
+              onSlideChange={(swiperCore) => {
+                const { activeIndex, previousIndex, realIndex } = swiperCore;
+                console.log({ activeIndex, previousIndex, realIndex });
+              }}
+              // slideToClickedSlide={true}
+
+              onSwiper={(swiper) => swiper.update()}
+              // navigation={{
+              //   nextEl: '.next',
+              //   prevEl: '.prev',
+              // }}
+              //   observer={true}
+              //   observeParents={true}
+              //   loop={true}
+              //   watchSlidesVisibility={true}
+              //   watchSlidesProgress={true}
+              onInit={(swiper) => {
+                swiper.navigation.update();
+              }}
+            >
+              <SwiperSlide>
+                <TabNavItem to={routers.deposits} exact>
+                  <div>Мои депозиты</div>
+                </TabNavItem>
+              </SwiperSlide>
+              <SwiperSlide>
+                <TabNavItem to={routers.p2pchanges}>
+                  <div>P2P обмены</div>
+                </TabNavItem>
+              </SwiperSlide>
+              <SwiperSlide>
+                <TabNavItem to={routers.operations}>
+                  <div>История операций</div>
+                </TabNavItem>
+              </SwiperSlide>
+              <SwiperSlide>
+                <TabNavItem to={routers.notifications}>
+                  <div>Уведомления</div>
+                </TabNavItem>
+              </SwiperSlide>
+              <SwiperSlide>
+                <TabNavItem to={routers.settings}>
+                  <div>Настройки</div>
+                </TabNavItem>
+              </SwiperSlide>
+            </SwiperUI>
+          )}
         </PanelCard>
       </DepositsPanelContainer>
       <CSSTransition in={depositSuccess} timeout={0} classNames="modal" unmountOnExit>
@@ -996,6 +1090,23 @@ export const HeaderBar = () => {
   );
 };
 
+const SwiperUI = styled(Swiper)`
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  .swiper-slide-active {
+    font-weight: 500;
+    opacity: 1;
+    border-bottom: 2px solid ${(props) => props.theme.blue};
+    width: auto;
+    padding-bottom: 10px;
+  }
+
+  & > div > div {
+    width: auto !important;
+  }
+`;
+
 const AppWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -1009,11 +1120,14 @@ const CustomPage = styled(Styled.Page)`
 const DepositsPanelContainer = styled(Container)`
   display: flex;
   flex-direction: column;
-  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+  @media (max-width: 1024px) {
     width: 100%;
     padding: 0px 34px;
     margin: 0 auto;
     max-width: 1128px;
+  }
+  @media (max-width: 768px) {
+    padding: 0px;
   }
 `;
 
@@ -1023,6 +1137,13 @@ const PanelTitleBlock = styled.div`
   justify-content: space-between;
   margin-bottom: 20px;
   margin-top: 40px;
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 5px;
+    padding: 0px 20px;
+  }
 `;
 
 const H4 = styled.h4`
@@ -1031,7 +1152,7 @@ const H4 = styled.h4`
   font-size: 36px;
   line-height: 42px;
 
-  @media (max-width: 425px) {
+  @media (max-width: 768px) {
     font-size: 18px;
     line-height: 21px;
   }
@@ -1043,6 +1164,12 @@ const LogoutButton = styled.button`
   background: transparent;
   border: none;
   cursor: pointer;
+
+  @media (max-width: 768px) {
+    & > svg {
+      display: none;
+    }
+  }
 `;
 
 const UsernameText = styled.span`
@@ -1062,11 +1189,21 @@ const PanelHeader = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    border-bottom: 1px solid #ebebf2;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    gap: 10px;
+  }
 `;
 
 const PanelInfoBlock = styled.div`
   display: flex;
   flex-direction: column;
+  @media (max-width: 768px) {
+    margin-bottom: 5px;
+  }
 `;
 
 const PanelActionsBlock = styled.div`
@@ -1081,6 +1218,13 @@ const BalanceInfoText = styled.div`
   font-size: 14px;
   line-height: 16px;
   margin-bottom: 10px;
+  @media (max-width: 768px) {
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 14px;
+
+    color: #3f3e4e;
+  }
 `;
 
 const BalanceValueText = styled.div`
@@ -1088,6 +1232,13 @@ const BalanceValueText = styled.div`
   font-weight: 700;
   font-size: 24px;
   line-height: 28px;
+  @media (max-width: 768px) {
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 21px;
+
+    color: #3f3e4e;
+  }
 `;
 
 const BalanceChipsBlock = styled.div`
@@ -1097,6 +1248,16 @@ const BalanceChipsBlock = styled.div`
   margin-bottom: 20px;
   padding-bottom: 20px;
   border-bottom: 1px solid #ebebf2;
+  @media (max-width: 768px) {
+    border-bottom: none;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: min-content;
+  }
 `;
 
 const TabsBlock = styled.div`
@@ -1117,5 +1278,8 @@ const TabNavItem = styled(NavLink)`
     opacity: 1;
 
     border-bottom: 2px solid ${(props) => props.theme.blue};
+  }
+  & > div {
+    white-space: nowrap;
   }
 `;

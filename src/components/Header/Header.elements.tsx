@@ -27,8 +27,8 @@ export const SwitchTheme = styled.div<{ mob?: boolean; admin?: boolean; auth?: b
       `;
     }
   }}
-  @media only screen and (max-device-width: 767px) {
-    margin-right: 40px;
+  @media (max-width: 768px) {
+    display: none;
   }
   @media (max-width: 1100px) {
     div {
@@ -69,6 +69,9 @@ export const Btn = styled.button<{ hide?: boolean }>`
   &:focus,
   &:active {
     outline: none;
+  }
+  @media (max-width: 768px) {
+    display: none;
   }
 `;
 
@@ -123,6 +126,9 @@ export const Languale = styled.div<{ auth?: boolean; admin?: boolean }>`
   @media (max-width: 1100px) {
     margin-left: auto;
   }
+  @media (max-width: 768px) {
+    display: none;
+  }
   img {
     margin-left: 6px;
     border-radius: 50%;
@@ -145,11 +151,13 @@ export const HeaderWrap = styled.header<{ header?: boolean }>`
   background: ${(props) => props.theme.v2.header.background};
   /* background: ${(props) =>
     props.header ? props.theme.header : props.theme.v2.header.background}; */
-  @media (max-width: 576px) {
-    padding: 15px 0;
-  }
-  @media only screen and (max-device-width: 480px) {
+  @media (max-width: 768px) {
     height: 60px;
+    padding: 15px 0;
+
+    & > div {
+      padding: 0 20px;
+    }
   }
 `;
 
@@ -240,6 +248,10 @@ export const MenuBtn = styled.span<{ open?: boolean }>`
   @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
     position: relative;
     margin-left: 10px;
+  }
+  @media (max-width: 768px) {
+    position: absolute;
+    margin-left: 0px;
   }
 `;
 

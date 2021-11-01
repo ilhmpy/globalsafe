@@ -11,6 +11,9 @@ export const Container = styled.div`
     min-width: 156px;
     font-size: 14px;
     line-height: 16px;
+    @media (max-width: 768px) {
+      width: 100%;
+    }
   }
 `;
 
@@ -19,4 +22,7 @@ export const Title = styled.h3`
   font-size: 24px;
   line-height: 38px;
   color: ${(props) => props.theme.v2.text};
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;

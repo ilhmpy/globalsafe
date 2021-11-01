@@ -268,6 +268,9 @@ export const Page = styled.div`
   flex-direction: column;
   height: calc(100vh - 98px);
   display: flex;
+  @media (max-width: 768px) {
+    margin-top: 40px;
+  }
 `;
 
 export const InfoWrap = styled.div`
@@ -1077,6 +1080,4 @@ export const Message = styled.h3`
   max-width: 240px;
 `;
 
-export const SelectButton = styled.div`
-
-`;
+export const SelectButton = styled.div``;

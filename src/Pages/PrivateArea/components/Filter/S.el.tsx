@@ -14,7 +14,7 @@ export const Container = styled.div<{ without?: boolean; }>`
   }}
 `;
 
-export const Button = styled.button<{ active?: boolean }>`
+export const Button = styled.button<{ active?: boolean}>`
   appearance: none;
   cursor: pointer;
   font-size: 12px;
@@ -27,6 +27,7 @@ export const Button = styled.button<{ active?: boolean }>`
   border-radius: 2px;
   user-select: none;
   background: ${(props) => (props.active ? '#EBEBF2' : 'transparent')};
+  white-space: nowrap;
 `;
 
 export const Buttons = styled.div`
