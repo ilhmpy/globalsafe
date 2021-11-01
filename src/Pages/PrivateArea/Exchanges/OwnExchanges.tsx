@@ -415,6 +415,8 @@ export const OwnExchanges = () => {
         {activeFilter === 'active' && <OwnActiveExchangesTable setExchanges={setUserExchanges} loading={loading} exchanges={userExchanges} />}
         {activeFilter === 'archived' && <OwnArchivedExchangesTable loading={loading} exchanges={userExchanges} />}
         
+        <S.Button newItems={true}>Показать ещё</S.Button>
+
         <PaymentMethods 
           selectedPaymentMethods={selectedPaymentMethods}
           setSelectedPaymentMethods={setSelectedPaymentMethods}

@@ -76,3 +76,23 @@ export const FiltersResetItem = styled.h3`
   color: rgba(0,0,0,.6);
   font-weight: 400;
 `;
+
+export const Button = styled.button<{ newItems: boolean; }>`
+    width: 134px;
+    height: 38px;
+    background: #515172;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 14px;
+    line-height: 16px;
+    margin: 0 auto;
+    margin-bottom: 40px;
+    display: block;
+    cursor: pointer;
+    font-weight: 500;
+    display: ${({ newItems }) => newItems ? "block" : "none"};
+    @media only screen and (max-device-width: 480px) {
+      margin-top: 20px;
+      margin-bottom: 40px;
+    }
+`;

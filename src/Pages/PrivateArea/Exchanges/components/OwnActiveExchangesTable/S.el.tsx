@@ -93,9 +93,11 @@ export const BankItem = styled.div`
   margin-bottom: 6px;
   font-size: 12px;
   font-weight: 500;
-
   &:last-child {
     margin-right: 0;
+  }
+  @media only screen and (max-device-width: 480px) {
+    margin-bottom: 0;
   }
 `;
 
@@ -121,15 +123,33 @@ export const Exchange = styled.div`
   box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
   margin-bottom: 10px;
   padding: 20px;
-  &:last-child {
-    margin-bottom: 20px;
-  }
 `;
 
 export const ExchangeLine = styled.div`
-
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  &:nth-child(6) {
+    margin-bottom: 0px;
+  }
 `;
 
 export const ExchangeLineContent = styled.h3<{ main?: boolean; text?: boolean; }>`
-
+  font-size: 14px;
+  line-height: right;
+  color: #000000;
+  ${({ main, text }) => {
+    if (main) {
+      return `
+        font-weight: 300;
+      `;
+    };
+    if (text) {
+      return `
+        font-weight: 500;
+        text-align: right;
+      `;
+    };
+  }}
 `; 
