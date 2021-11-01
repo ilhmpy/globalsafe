@@ -118,7 +118,6 @@ export const TypeCrypto = styled.div`
 
 export const Exchange = styled.div`
   width: 100%;
-  min-height: 230px;
   background: #fff;
   box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
   margin-bottom: 10px;

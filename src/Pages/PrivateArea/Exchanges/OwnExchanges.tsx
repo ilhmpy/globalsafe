@@ -5,6 +5,7 @@ import { Container } from '../../../components/UI/Container';
 import { Heading } from '../components/Heading';
 import { routers } from '../../../constantes/routers';
 import { TabNavItem, TabsBlock, Text, FilterButton } from '../components/ui';
+import { Spinner } from "../components/Loading/Loading";
 import * as S from './S.el';
 
 import { OwnActiveExchangesTable } from './components/OwnActiveExchangesTable/OwnActiveExchangesTable';
@@ -39,6 +40,8 @@ export const OwnExchanges = () => {
   const [payments, setPayments] = useState<any[]>([]);
   const [balanceKind, setBalanceKind] = useState<number | null>(null);
   const [fiatKind, setFiatKind] = useState<number | null>(null);
+  const [allExchanges, setAllExchanges] = useState<ViewExchangeModel[]>([]);
+  const [statusNew, setStatusNew] = useState<any>();
 
   /*
     CALLBACKS: 
@@ -60,6 +63,14 @@ export const OwnExchanges = () => {
       setSelectedStatus([]);
       setBalanceKind(null);
       setFiatKind(null);
+    };
+
+    function getFirstElements(collection: ViewExchangeModel[], elms: number) {
+      return collection.filter((i, idx) => {
+          if (idx < elms) {
+              return i;
+          };
+      });
     };
     
     function filters(res: GetExchangesCollectionResult) {
@@ -104,9 +115,11 @@ export const OwnExchanges = () => {
         });
         setUserExchanges(filter);
       } else {
-        setUserExchanges(res.collection);
+        const collection = getFirstElements(res.collection, 10);
+        setAllExchanges(res.collection);
+        setUserExchanges(collection);
       };
-    }
+    };
     
     async function getGetUserExchanges() {
       try {
@@ -125,6 +138,36 @@ export const OwnExchanges = () => {
         setLoading(false);
       };
     };
+
+    function changeNew() {
+      setUserExchanges(items => items && items.map((i: any) => {
+          return {
+              ...i,
+              new: false 
+          };
+      }));
+    };
+
+
+    function addMore() {
+      if (userExchanges && userExchanges.length <= allExchanges.length) {
+          changeNew();
+          let items: any[] = [];
+          for (let i = 0; i < 5; i++) {
+              if (allExchanges[userExchanges.length + i]) {
+                  items = [...items, { ...allExchanges[userExchanges.length + i], new: true }];
+              };
+          };            
+          if (items.length) {
+              setUserExchanges([...userExchanges, ...items].sort((x: any, y: any) => {
+                  const a = new Date(x.operationDate);
+                  const b = new Date(y.operationDate);
+                  return a > b ? -1 : a < b ? 1 : 0;
+              }));
+              setStatusNew(setTimeout(() => changeNew(), 2000));
+          };
+      };
+  };
 
   useEffect(() => {
     let cancel = false;
@@ -415,7 +458,11 @@ export const OwnExchanges = () => {
         {activeFilter === 'active' && <OwnActiveExchangesTable setExchanges={setUserExchanges} loading={loading} exchanges={userExchanges} />}
         {activeFilter === 'archived' && <OwnArchivedExchangesTable loading={loading} exchanges={userExchanges} />}
         
-        <S.Button newItems={true}>Показать ещё</S.Button>
+        <S.Button onClick={addMore} newItems={!(userExchanges.length === allExchanges.length)}>
+          {userExchanges && userExchanges.some((item: any) => item.new === true) ? 
+              <Spinner style={{ width: 25, height: 25, borderTop: "2px solid #fff", margin: "0 auto" }} /> 
+                : "Показать ещё"}
+        </S.Button>
 
         <PaymentMethods 
           selectedPaymentMethods={selectedPaymentMethods}

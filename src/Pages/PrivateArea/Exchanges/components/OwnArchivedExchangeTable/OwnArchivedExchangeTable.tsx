@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useContext } from 'react';
 import { useHistory } from 'react-router';
 import alfa from '../../../../../assets/v2/svg/banks/alfa.svg';
 import alfa1 from '../../../../../assets/v2/svg/banks/alfa1.svg';
@@ -13,6 +13,7 @@ import moment from "moment";
 import { Loading, NotItems } from "../../../components/Loading/Loading";
 import { getVolume } from "../../../../../functions/getVolume";
 import { Container } from "../../../../../components/UI/Container";
+import { AppContext } from "../../../../../context/HubContext";
 
 import * as S from './S.el';
 import { countVolumeToShow } from '../../../utils';
@@ -20,7 +21,7 @@ import { countVolumeToShow } from '../../../utils';
 export const OwnArchivedExchangesTable: FC<OwnExchangesProps> = ({ exchanges, loading }: OwnExchangesProps) => {
   const history = useHistory();
   const [selectedOption, setSelectedOption] = useState<string | null>('Все валюты предложения');
-
+  const { account } = useContext(AppContext);
   
   const handleNavigateToExchange = (id: string) => {
     history.replace(`/info/p2p-changes/${id}`);
@@ -103,6 +104,30 @@ export const OwnArchivedExchangesTable: FC<OwnExchangesProps> = ({ exchanges, lo
     }
   ]; */
 
+  
+  function getOwner({ kind, ownerSafeId }: ViewExchangeModel) {
+    return (kind === 0 && ownerSafeId !== account.safeId) ||
+    (kind === 1 && ownerSafeId === account.safeId) ? "buyer" : "seller";
+  };
+
+  function localeCount(volume: number, assetKind: number, fiat: boolean) {
+    return (countVolumeToShow(volume, assetKind)).toLocaleString("ru-RU", { maximumFractionDigits: fiat ? 2 : 5 });
+  };
+
+  function getStatus({ state, kind, ownerSafeId }: ViewExchangeModel) {
+    const owner = (kind === 0 && ownerSafeId !== account.safeId) ||
+    (kind === 1 && ownerSafeId === account.safeId) ? "buyer" : "seller";
+    if (state === 0) {
+      if (owner === "seller") {
+        return "Ожидание перевода";
+      } else {
+        return "Ожидание подтверждения оплаты";        
+      };
+    } else {
+      return Status[state];
+    };
+  };
+
   return (
     <>
       {screen.width > 480 ? (
@@ -169,8 +194,47 @@ export const OwnArchivedExchangesTable: FC<OwnExchangesProps> = ({ exchanges, lo
             </S.Table>
           </Container>
       ) : (
-        <></>
+        <>
+          {loading ? <Loading /> : (
+            <>
+              {exchanges.length === 0 ? <NotItems text="У вас не имеется обменов" /> : (
+                  <>
+                    {exchanges.map((exchange, idx) => (
+                      <S.Exchange key={idx} onClick={() => handleNavigateToExchange(exchange.safeId)}>
+                        <S.ExchangeLine> 
+                          <S.ExchangeLineContent main>{getOwner(exchange) === "seller" ? "Продажа" : "Покупка"}:</S.ExchangeLineContent>
+                          <S.ExchangeLineContent text>
+                            {localeCount(getOwner(exchange) === "seller" ? exchange.orderVolume : exchange.volume, exchange.assetKind, false)} {Balance[exchange.assetKind]}
+                          </S.ExchangeLineContent>
+                        </S.ExchangeLine>
+                        <S.ExchangeLine>
+                          <S.ExchangeLineContent main>Курс:</S.ExchangeLineContent>
+                          <S.ExchangeLineContent text>{exchange.rate} {FiatKind[exchange.exchangeAssetKind]}</S.ExchangeLineContent>
+                        </S.ExchangeLine>
+                        <S.ExchangeLine>
+                          <S.ExchangeLineContent main>Метод оплаты:</S.ExchangeLineContent>
+                          <S.ExchangeLineContent text>{getPaymentMethod(exchange.paymentMethod?.kind)}</S.ExchangeLineContent>
+                        </S.ExchangeLine>
+                        <S.ExchangeLine>
+                          <S.ExchangeLineContent main>Сумма оплаты:</S.ExchangeLineContent>
+                          <S.ExchangeLineContent text>{localeCount(exchange.exchangeVolume, exchange.assetKind, true)} {FiatKind[exchange.exchangeAssetKind]}</S.ExchangeLineContent>
+                        </S.ExchangeLine>
+                        <S.ExchangeLine>
+                          <S.ExchangeLineContent main>Дата:</S.ExchangeLineContent>
+                          <S.ExchangeLineContent text>{moment(exchange.creationDate).format("DD.MM.YYYY")}</S.ExchangeLineContent>
+                        </S.ExchangeLine>
+                        <S.ExchangeLine>
+                          <S.ExchangeLineContent main>Статус:</S.ExchangeLineContent>
+                          <S.ExchangeLineContent text style={{ maxWidth: "170px" }}>{getStatus(exchange)}</S.ExchangeLineContent>
+                        </S.ExchangeLine>
+                      </S.Exchange>
+                    ))}
+                </>
+              )}
+            </>
+          )}
+        </>
       )}
     </>
   );
-};
+}; 
