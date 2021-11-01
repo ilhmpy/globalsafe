@@ -103,59 +103,82 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
   };
 
   return (
-    <Container pTabletNone>
-      <S.Table>
-        <S.Header>
-          <S.Cell>
-            <span>Тип</span>
-          </S.Cell>
-          <S.Cell>
-            <span>Кол-во</span>
-          </S.Cell>
-          <S.Cell>
-            <span>Курс</span>
-          </S.Cell>
-          <S.Cell>
-            <span>Сумма оплаты</span>
-          </S.Cell>
-          <S.Cell>
-            <span>Метод оплаты</span>
-          </S.Cell>
-          <S.Cell>
-            <span>{screen.width > 1024 ? "Оставшееся время" : "Время"}</span>
-          </S.Cell>
-          <S.Cell>
-            <span>Статус</span>
-          </S.Cell>
-        </S.Header>
-        {loading ? <Loading /> : (
-          <>
-            {exchanges.length === 0 ? <NotItems text="У вас не имеется обменов" /> : (
-              <>
-                {exchanges.map((exchange, idx) => (
-                  <S.BodyItem key={idx} onClick={() => handleNavigateToExchange(exchange.safeId)}>
-                      <S.Cell data-label="Тип">{exchange.kind === 0 ? "Продажа" : "Покупка"}</S.Cell>
-                      <S.Cell data-label="Кол-во">
-                        {(countVolumeToShow(exchange.volume, exchange.assetKind)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {Balance[exchange.assetKind]}
-                      </S.Cell>
-                      <S.Cell data-label="Курс">{exchange.rate}</S.Cell>
-                      <S.Cell data-label="Сумма оплаты">{(countVolumeToShow(exchange.exchangeVolume, exchange.assetKind)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {FiatKind[exchange.exchangeAssetKind]}</S.Cell>
-                      <S.Cell data-label="Метод оплаты">
-                        <S.BankList>
-                            {getPaymentMethod(exchange.paymentMethod?.kind)}
-                        </S.BankList> 
-                      </S.Cell>
-                      <S.Cell data-label="Оставшееся время">
-                        <Counter text="Время на обмен закончилось" data={exchange.creationDate} delay={exchange.operationWindow.totalMilliseconds} formatNum />
-                      </S.Cell>
-                      <S.Cell data-label="Статус">{getStatus(exchange)}</S.Cell> 
-                  </S.BodyItem>
-                ))}
-              </>
-            )}
-          </>
-        )}
-      </S.Table>
-    </Container>
+    <>
+      {screen.width > 480 ? (
+        <Container pTabletNone>
+        <S.Table>
+          <S.Header>
+            <S.Cell>
+              <span>Тип</span>
+            </S.Cell>
+            <S.Cell>
+              <span>Кол-во</span>
+            </S.Cell>
+            <S.Cell>
+              <span>Курс</span>
+            </S.Cell>
+            <S.Cell>
+              <span>Сумма оплаты</span>
+            </S.Cell>
+            <S.Cell>
+              <span>Метод оплаты</span>
+            </S.Cell>
+            <S.Cell>
+              <span>{screen.width > 1024 ? "Оставшееся время" : "Время"}</span>
+            </S.Cell>
+            <S.Cell>
+              <span>Статус</span>
+            </S.Cell>
+          </S.Header>
+          {loading ? <Loading /> : (
+            <>
+              {exchanges.length === 0 ? <NotItems text="У вас не имеется обменов" /> : (
+                <>
+                  {exchanges.map((exchange, idx) => (
+                    <S.BodyItem key={idx} onClick={() => handleNavigateToExchange(exchange.safeId)}>
+                        <S.Cell data-label="Тип">{exchange.kind === 0 ? "Продажа" : "Покупка"}</S.Cell>
+                        <S.Cell data-label="Кол-во">
+                          {(countVolumeToShow(exchange.volume, exchange.assetKind)).toLocaleString("ru-RU", { maximumFractionDigits: 5 })} {Balance[exchange.assetKind]}
+                        </S.Cell>
+                        <S.Cell data-label="Курс">{exchange.rate}</S.Cell>
+                        <S.Cell data-label="Сумма оплаты">{(countVolumeToShow(exchange.exchangeVolume, exchange.assetKind)).toLocaleString("ru-RU", { maximumFractionDigits: 5 })} {FiatKind[exchange.exchangeAssetKind]}</S.Cell>
+                        <S.Cell data-label="Метод оплаты">
+                          <S.BankList>
+                              {getPaymentMethod(exchange.paymentMethod?.kind)}
+                          </S.BankList> 
+                        </S.Cell>
+                        <S.Cell data-label="Оставшееся время">
+                          <Counter text="Время на обмен закончилось" data={exchange.creationDate} delay={exchange.operationWindow.totalMilliseconds} formatNum />
+                        </S.Cell>
+                        <S.Cell data-label="Статус">{getStatus(exchange)}</S.Cell> 
+                    </S.BodyItem>
+                  ))}
+                </>
+              )}
+            </>
+          )}
+        </S.Table>
+      </Container>
+      ) : (
+        <>
+          {loading ? <Loading /> : (
+            <>
+              {exchanges.length === 0 ? <NotItems text="У вас не имеется обменов" /> : (
+                <>
+                  {exchanges.map((i, idx) => (
+                    <S.Exchange key={idx}>
+                      <S.ExchangeLine> 
+                        <S.ExchangeLineContent main></S.ExchangeLineContent>
+                        <S.ExchangeLineContent text></S.ExchangeLineContent>
+                      </S.ExchangeLine>
+                    </S.Exchange>
+                  ))}
+                </>
+              )}
+            </>
+          )}
+        </>
+      )}
+    </> 
   );
 };

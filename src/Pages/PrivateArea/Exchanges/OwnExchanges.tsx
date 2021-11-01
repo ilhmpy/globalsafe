@@ -302,11 +302,13 @@ export const OwnExchanges = () => {
   return (
     <div>
       <Container>
-        <Heading
-          onClick={() => history.push(routers.p2pchangesOrderToBuy)}
-          title="P2P обмены"
-          btnText="Опубликовать ордер"
-        />
+        {screen.width > 480 && (
+          <Heading
+            onClick={() => history.push(routers.p2pchangesOrderToBuy)}
+            title="P2P обмены"
+            btnText="Опубликовать ордер"
+          />
+        )}
         <S.SubHeader>
           <TabsBlock>
             <TabNavItem to={routers.p2pchanges} exact>
@@ -321,56 +323,95 @@ export const OwnExchanges = () => {
               <div>Сертификаты</div>
             </TabNavItem>
           </TabsBlock>
-          <Text size={14} lH={16} weight={500} black>
-            Рейтинг аккаунта: {getMyRating(account)}
-          </Text>
-        </S.SubHeader>
-        <S.Filters style={{ marginBottom: "10px", position: "relative" }}>
-          <FilterButton
-              active={activeFilter === 'active'}
-              onClick={() => setActiveFilter('active')}
-              style={{ marginRight: "0px" }}
-            >
-              Активные
-            </FilterButton>
-            <FilterButton
-              active={activeFilter === 'archived'}
-              onClick={() => setActiveFilter('archived')}
-              style={{ marginLeft: "0px", borderLeft: "0" }}
-            >
-              Архив
-            </FilterButton>
-        </S.Filters>
-        <S.Filters style={{ marginBottom: "10px", position: "relative" }}>
-          <S.Line style={{ display: "none" }} />
-          <FilterButton active style={{ marginLeft: "0px" }} onClick={() => setShowCurrencyPairModal(true)}>
-            {balanceKind != null && fiatKind != null ? 
-              `${Balance[balanceKind]} - ${FiatKind[fiatKind]}`  
-              : balanceKind != null && fiatKind == null ? 
-              `${Balance[balanceKind]} - Все` 
-              : balanceKind == null && fiatKind != null ? 
-              `Все - ${FiatKind[fiatKind]}` 
-              : "Все валюты"
-            }
-          </FilterButton>
-          <S.Line />
-          <FilterButton active onClick={() => setShowPaymentMethodsModal(true)}>
-            {payments && payments.length ? "Методы оплаты - " : "Все методы оплаты"} {payments && payments.length ? payments.length : ""}
-          </FilterButton>
-          <S.Line />
-          <FilterButton active onClick={() => setShowSelectedStatus(true)}>
-            {status && status.length ? "Статусы - " : "Все статусы"} {status && status.length ? status.length : ""}
-          </FilterButton>
-          {payments.length > 0 || (status != null && status.length > 0) || balanceKind != null || fiatKind != null ? (
-            <>
-              <FilterButton style={{ position: "absolute", right: "0px", }} onClick={resetFilters}>
-                Очистить фильтр
+          {screen.width > 480 && (
+            <Text size={14} lH={16} weight={500} black>
+              Рейтинг аккаунта: {getMyRating(account)}
+            </Text>
+          )}
+        </S.SubHeader> 
+        {screen.width < 480 && (
+          <>
+            <Heading
+              onClick={() => history.push(routers.p2pchangesOrderToBuy)}
+              title="P2P обмены"
+              btnText="Опубликовать ордер"
+              styles={{ marginBottom: "10px" }}
+            />
+            <Text center size={14} lH={16} weight={500} black>
+              Рейтинг аккаунта: {getMyRating(account)}
+            </Text>
+            <S.Filters style={{ marginBottom: "10px", position: "relative" }}>
+              <FilterButton
+                active={activeFilter === 'active'}
+                onClick={() => setActiveFilter('active')}
+                style={{ marginRight: "0px" }}
+                big
+              >
+                Активные
               </FilterButton>
-            </>
-          ) : null}
-        </S.Filters>
-      </Container>
-
+              <FilterButton
+                active={activeFilter === 'archived'}
+                onClick={() => setActiveFilter('archived')}
+                style={{ marginLeft: "0px", borderLeft: "0" }}
+                big
+              >
+                Архив
+              </FilterButton>
+            </S.Filters>
+            <S.FiltersBox>
+              Фильтры (3)
+            </S.FiltersBox>
+          </>
+        )} 
+        {screen.width > 480 && (
+          <>
+            <S.Filters style={{ marginBottom: "10px", position: "relative" }}>
+              <FilterButton
+                active={activeFilter === 'active'}
+                onClick={() => setActiveFilter('active')}
+                style={{ marginRight: "0px" }}
+              >
+                Активные
+              </FilterButton>
+              <FilterButton
+                active={activeFilter === 'archived'}
+                onClick={() => setActiveFilter('archived')}
+                style={{ marginLeft: "0px", borderLeft: "0" }}
+              >
+                Архив
+              </FilterButton>
+          </S.Filters>
+          <S.Filters style={{ marginBottom: "10px", position: "relative" }}>
+            <S.Line style={{ display: "none" }} />
+            <FilterButton active style={{ marginLeft: "0px" }} onClick={() => setShowCurrencyPairModal(true)}>
+              {balanceKind != null && fiatKind != null ? 
+                `${Balance[balanceKind]} - ${FiatKind[fiatKind]}`  
+                : balanceKind != null && fiatKind == null ? 
+                `${Balance[balanceKind]} - Все` 
+                : balanceKind == null && fiatKind != null ? 
+                `Все - ${FiatKind[fiatKind]}` 
+                : "Все валюты"
+              }
+            </FilterButton>
+            <S.Line />
+            <FilterButton active onClick={() => setShowPaymentMethodsModal(true)}>
+              {payments && payments.length ? "Методы оплаты - " : "Все методы оплаты"} {payments && payments.length ? payments.length : ""}
+            </FilterButton>
+            <S.Line />
+            <FilterButton active onClick={() => setShowSelectedStatus(true)}>
+              {status && status.length ? "Статусы - " : "Все статусы"} {status && status.length ? status.length : ""}
+            </FilterButton>
+            {payments.length > 0 || (status != null && status.length > 0) || balanceKind != null || fiatKind != null ? (
+              <>
+                <FilterButton style={{ position: "absolute", right: "0px", }} onClick={resetFilters}>
+                  Очистить фильтр
+                </FilterButton>
+              </>
+            ) : null}
+          </S.Filters>
+        </>
+        )}      
+        </Container>
         {activeFilter === 'active' && <OwnActiveExchangesTable setExchanges={setUserExchanges} loading={loading} exchanges={userExchanges} />}
         {activeFilter === 'archived' && <OwnArchivedExchangesTable loading={loading} exchanges={userExchanges} />}
         

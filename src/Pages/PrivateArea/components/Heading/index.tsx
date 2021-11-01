@@ -7,11 +7,12 @@ type Props = {
   btnText?: string;
   onClick?: () => void;
   withoutBtn?: boolean;
+  styles?: Object;
 };
 
-export const Heading: FC<Props> = ({ title, onClick, btnText, withoutBtn }: Props) => {
+export const Heading: FC<Props> = ({ title, onClick, btnText, withoutBtn, styles }: Props) => {
   return (
-    <S.Container>
+    <S.Container style={styles && styles}>
       <S.Title>{title}</S.Title>
       {!withoutBtn && (
         <Button primary onClick={onClick}>

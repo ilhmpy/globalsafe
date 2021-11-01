@@ -11,6 +11,25 @@ export const SubHeader = styled.div`
 export const Filters = styled.div`
   display: flex;
   margin-bottom: 20px;
+  @media only screen and (max-device-width: 480px) {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+`;
+
+export const FiltersBox = styled.div`
+  width: 100%;
+  height: 26px;
+  border: 1px solid #EBEBF2;
+  border-radius: 2px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  font-weight: 400;
+  font-size: 12px;
+  opacity: 60%;
+  color: #000;
+  margin-bottom: 20px;
 `;
 
 export const MLAutoFilterButton = styled(BaseFilterButton)`

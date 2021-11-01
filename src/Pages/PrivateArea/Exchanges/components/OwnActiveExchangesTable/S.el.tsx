@@ -113,3 +113,23 @@ export const TypeCrypto = styled.div`
     margin-right: 0;
   }
 `;
+
+export const Exchange = styled.div`
+  width: 100%;
+  min-height: 230px;
+  background: #fff;
+  box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
+  margin-bottom: 10px;
+  padding: 20px;
+  &:last-child {
+    margin-bottom: 20px;
+  }
+`;
+
+export const ExchangeLine = styled.div`
+
+`;
+
+export const ExchangeLineContent = styled.h3<{ main?: boolean; text?: boolean; }>`
+
+`; 

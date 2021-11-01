@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const FilterButton = styled.button<{ active?: boolean }>`
+export const FilterButton = styled.button<{ active?: boolean; big?: boolean; }>`
   appearance: none;
   cursor: pointer;
   font-size: 12px;
@@ -17,4 +17,14 @@ export const FilterButton = styled.button<{ active?: boolean }>`
   &:first-child {
     margin-left: 0;
   }
+  ${({ big }) => {
+    if (big) {
+      return `
+        width: 50%;
+        font-weight: 400;
+        height: 26px;
+        min-width: 140px;
+      `;
+    };
+  }}
 `;
