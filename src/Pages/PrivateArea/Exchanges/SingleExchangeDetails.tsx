@@ -75,12 +75,13 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
                   <Back text="К списку обменов" onGoBackClick={() => history.replace(routers.p2pchangesOwn)} />
                   <S.TitleContainer>
                       <Title mB={0} main>Обмен {`${Balance[exchange.assetKind]}-${FiatKind[exchange.exchangeAssetKind]}`}</Title>
-                      <Text size={14} lH={20} black>
+                      <Text size={14} lH={20} black detail>
                         № {exchange.safeId}
                       </Text>
                   </S.TitleContainer>
                 </Container>
-                <ExchangeDetailCard setCall={setCall} 
+                <ExchangeDetailCard 
+                  setCall={setCall} 
                   setShowSuccessModal={setShowSuccessModal} 
                   setShowRejectModal={setShowRejectModal}
                   showSuccessModal={showSuccessModal} 

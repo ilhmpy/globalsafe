@@ -10,6 +10,9 @@ export const Container = styled.div`
   @media only screen and (max-device-width: 481px) and (max-device-width: 1024px) {
     padding-bottom: 0px;
   }
+  @media only screen and (max-device-width: 480px) {
+    flex-wrap: wrap;
+  }
 `;
 
 export const BlockWrapper = styled.div<{ when?: boolean; }>`

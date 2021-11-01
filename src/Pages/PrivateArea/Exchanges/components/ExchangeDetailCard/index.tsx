@@ -351,6 +351,12 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
     <Container pTabletNone>
     <S.Container>
       <LeftSide bg={'#EAEFF4'}>
+        {screen.width < 481 && 
+          <S.BlockWrapper>
+            <Title lH={21} mB={20} fS={18} fW={900}>
+                Детали по ордеру
+            </Title>
+          </S.BlockWrapper>}
         <S.BlockWrapper>
           <Text size={14} lH={20} mB={10} black>
             Количество:
@@ -441,7 +447,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
             <Text size={14} lH={20} mB={4} black>
               Количество:
             </Text>
-            <Text size={14} lH={20} weight={500} black>
+            <Text size={14} lH={20} weight={500} black phoneFWB> 
               {countVolumeToShow(exchange.volume, exchange.assetKind).toLocaleString('ru-RU', {
                 maximumFractionDigits: 5,
               })}{' '}
@@ -453,7 +459,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
             <Text size={14} lH={20} mB={4} black>
               На сумму:
             </Text>
-            <Text size={14} lH={20} weight={500} black>
+            <Text size={14} lH={20} weight={500} black phoneFWB>
               {countVolumeToShow(exchange.exchangeVolume, exchange.assetKind).toLocaleString('ru-RU', { maximumFractionDigits: 0 })}{' '}
               {FiatKind[exchange.exchangeAssetKind]}
             </Text>
@@ -463,7 +469,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
             <Text size={14} lH={20} mB={4} black>
               Метод оплаты:
             </Text>
-            <Text size={14} lH={20} weight={500} black>
+            <Text size={14} lH={20} weight={500} black phoneFWB>
               {exchange.paymentMethod ? (
                 <>
                   {PaymentMethods[exchange.paymentMethod?.kind]},{' '}
@@ -480,7 +486,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
               Номер карты:
             </Text>
             <S.Space>
-              <Text size={14} lH={20} weight={500} black>
+              <Text size={14} lH={20} weight={500} black phoneFWB>
                 {getParsePaymentData('card')}
               </Text>
               <CopyIconButton copyValue={getParsePaymentData('card')} />
@@ -491,7 +497,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
             <Text size={14} lH={20} mB={4} black>
               Держатель карты:
             </Text>
-            <Text size={14} lH={20} weight={500} black>
+            <Text size={14} lH={20} weight={500} black phoneFWB>
               {getParsePaymentData('name')}
             </Text>
           </S.BlockWrapper>
@@ -502,7 +508,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
             <Text size={14} lH={20} mB={4} black>
               Рейтинг покупателя:
             </Text>
-            <Text size={14} lH={20} weight={500} mB={4} black>
+            <Text size={14} lH={20} weight={500} mB={4} black phoneFWB>
               {owner === 'seller'
                 ? `${Number(exchange.userRating).toFixed(1)} (${totalExchanges})`
                 : `${getMyRating()} (${getMyExchanges()})`}

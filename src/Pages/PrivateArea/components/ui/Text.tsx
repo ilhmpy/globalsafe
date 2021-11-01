@@ -12,6 +12,8 @@ type Props = {
   black?: boolean;
   error?: boolean;
   center?: boolean;
+  detail?: boolean;
+  phoneFWB?: boolean;
 };
 
 export const Text = styled.p<Props>`
@@ -31,6 +33,28 @@ export const Text = styled.p<Props>`
         line-height: 14px;
         margin-bottom: 20px;
         margin-top: 0;
+      `;
+    };
+  }}
+  ${({ detail }) => {
+    if (detail) {
+      return `
+        font-size: 12px;
+        font-weight: 300;
+      `;
+    };
+  }}
+  @media only screen and (max-device-width: 480px) {
+    margin-bottom: 4px;
+    font-size: 14px;
+    font-weight: 300;
+  }
+  ${({ phoneFWB }) => {
+    if (phoneFWB) {
+      return `
+        @media only screen and (max-device-width: 480px) {
+          font-weight: 500;
+        }
       `;
     };
   }}
