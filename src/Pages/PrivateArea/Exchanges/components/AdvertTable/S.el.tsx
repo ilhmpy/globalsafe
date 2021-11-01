@@ -51,11 +51,6 @@ export const BodyItem = styled.div<{ active?: boolean }>`
     box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
     border-radius: 4px 0 0 4px;
   }
-
-  @media (max-width: 768px) {
-    padding: 20px;
-    margin-bottom: 10px;
-  }
 `;
 
 export const Header = styled.div`
@@ -115,4 +110,50 @@ export const TypeCrypto = styled.div`
   &:last-child {
     margin-right: 0;
   }
+`;
+
+
+export const MobileBodyItem = styled.div<{ active?: boolean }>`
+  ${table};
+  
+  flex-direction: column;
+  width: 100%;
+  padding: 20px;
+
+  background: ${(props) => (props.active ? 'rgba(0, 148, 255, 0.05)' : '#fff')};
+  box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
+  margin-bottom: 10px;
+  position: relative;
+  cursor: pointer;
+  &:before {
+    content: '';
+    top: 0;
+    left: 0;
+    height: 100%;
+    position: absolute;
+    width: 4px;
+    background: ${(props) => (props.active ? '#0094ff' : '#fff')};
+    box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
+    border-radius: 4px 0 0 4px;
+  }
+`;
+
+export const MobileRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-height: 24px;
+  margin-bottom: 8px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+`;
+
+export const MobileCell = styled.div`
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: #000;
 `;

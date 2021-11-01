@@ -72,8 +72,6 @@ export const Advert = () => {
 
   const getBuyOrders = async () => {
       try {
-        console.log("=======================================", acceptedPaymentMethods)
-
         const res = await hubConnection!.invoke<GetBuyOrdersModel>(
           'GetBuyOrders', 
           selectedPair?.balance ? [ Balance[selectedPair?.balance as keyof typeof Balance] ] : [],  // Array of BalanceKind assetKinds
@@ -230,60 +228,101 @@ export const Advert = () => {
 
 
   return (
-    <div>
+    <div> 
       <Container>
-        <Heading
-          onClick={() => history.push(routers.p2pchangesOrderToBuy)}
-          title="P2P обмены"
-          btnText="Опубликовать ордер"
-        />
-        <S.SubHeader>
-          <TabsBlock>
-            <TabNavItem to={routers.p2pchanges} exact>
-              <div>Ордеры</div>
-            </TabNavItem>
+          {/* Visiable on mobile */}
+          <S.SubHeader hidden mobileVisible>
+            <TabsBlock>
+              <TabNavItem to={routers.p2pchanges} exact>
+                <div>Ордеры</div>
+              </TabNavItem>
 
-            <TabNavItem to={routers.p2pchangesOwn} exact>
-              <div>Мои обмены</div>
-            </TabNavItem>
+              <TabNavItem to={routers.p2pchangesOwn} exact>
+                <div>Мои обмены</div>
+              </TabNavItem>
 
-            <TabNavItem to={routers.certificates} exact>
-              <div>Сертификаты</div>
-            </TabNavItem>
-          </TabsBlock>
-          <Text size={14} lH={16} weight={500}>
-            Рейтинг аккаунта: {getMyRating(account)}
-          </Text>
-        </S.SubHeader>
+              <TabNavItem to={routers.certificates} exact>
+                <div>Сертификаты</div>
+              </TabNavItem>
+            </TabsBlock>
+            <Text size={14} lH={16} weight={500} smHidden>
+              Рейтинг аккаунта: {getMyRating(account)}
+            </Text>
+          </S.SubHeader>
+
+          <Heading
+            onClick={() => history.push(routers.p2pchangesOrderToBuy)}
+            title="P2P обмены"
+            btnText="Опубликовать ордер"
+            userRating={`Рейтинг аккаунта: ${getMyRating(account)}`}
+          />
+          {/* Visiable from Tablet */}
+          <S.SubHeader mobileHidden>
+            <TabsBlock>
+              <TabNavItem to={routers.p2pchanges} exact>
+                <div>Ордеры</div>
+              </TabNavItem>
+
+              <TabNavItem to={routers.p2pchangesOwn} exact>
+                <div>Мои обмены</div>
+              </TabNavItem>
+
+              <TabNavItem to={routers.certificates} exact>
+                <div>Сертификаты</div>
+              </TabNavItem>
+            </TabsBlock>
+            <Text size={14} lH={16} weight={500} smHidden>
+              Рейтинг аккаунта: {getMyRating(account)}
+            </Text>
+          </S.SubHeader>
+
         <S.Filters>
           <FilterButton 
+            smHalfWidth
             active={!listingMyOrders}
             onClick={() => setListingMyOrders(false)}
-            style={{ marginRight: "0px" }}
+            switchLeft
           >
             Все ордеры
           </FilterButton>
           <FilterButton
+            smHalfWidth
             active={listingMyOrders}
             onClick={() => setListingMyOrders(true)}
-            style={{ marginLeft: "0px", borderLeft: "0" }}
+            switchRight
           >
             Мои ордеры
           </FilterButton>
-
         </S.Filters>
-        <S.Filters>
+
+        {/* Show only on Mobile */}  
+        <S.Filters hidden smVisible>
+          <FilterButton
+            wFull
+            active={false}
+            onClick={() => console.log('toogle drawer')}
+          >
+            Фильтры (3)
+          </FilterButton>
+        </S.Filters>
+
+        <S.AdvertTypeText>
+          {activeType === OrderType.Buy ? 'Покупка' : 'Продажа'}
+        </S.AdvertTypeText>
+
+        {/* Hide on Mobile */}
+        <S.Filters smHidden>
           <FilterButton 
             active={activeType === OrderType.Buy}
             onClick={() => setActiveType(OrderType.Buy)}
-            style={{ marginRight: "0px" }}
+            switchLeft
           >
             Покупка
           </FilterButton>
           <FilterButton
             active={activeType === OrderType.Sell}
             onClick={() => setActiveType(OrderType.Sell)}
-            style={{ marginLeft: "0px", borderLeft: "0" }}
+            switchRight
           >
             Продажа
           </FilterButton>
@@ -329,7 +368,6 @@ export const Advert = () => {
             :
               null
           }
-          
         </S.Filters>
 
         <CurrencyPair

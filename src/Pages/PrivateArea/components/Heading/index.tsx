@@ -7,9 +7,10 @@ type Props = {
   btnText?: string;
   onClick?: () => void;
   withoutBtn?: boolean;
+  userRating?: string;
 };
 
-export const Heading: FC<Props> = ({ title, onClick, btnText, withoutBtn }: Props) => {
+export const Heading: FC<Props> = ({ title, onClick, btnText, withoutBtn, userRating }: Props) => {
   return (
     <S.Container>
       <S.Title>{title}</S.Title>
@@ -18,6 +19,12 @@ export const Heading: FC<Props> = ({ title, onClick, btnText, withoutBtn }: Prop
           {btnText}
         </Button>
       )}
+      {
+        userRating &&
+        <S.RateText>
+          {userRating}
+        </S.RateText>
+      }
     </S.Container>
   );
 };
