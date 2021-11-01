@@ -10,10 +10,11 @@ export const LeftSide = styled.div<{ bg?: string }>`
   }
   @media (max-width: 768px) {
     width: 100%;
+    padding: 20px;
   }
   @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
     width: 33%;
     padding-left: 35px;
     padding-right: 35px;
   }
-`;
+`; 

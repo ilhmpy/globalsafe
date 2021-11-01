@@ -19,7 +19,7 @@ export const OrderToBuy: FC = () => {
           <Title mB={0}>Публикация ордера</Title>
         </S.TitleContainer>
       </Container>
-      <Container pTabletNone>        
+      <Container pTabletNone pNone>        
         <OrderToBuyCard />
       </Container>
     </S.Container>

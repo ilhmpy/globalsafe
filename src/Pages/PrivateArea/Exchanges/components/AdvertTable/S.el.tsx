@@ -51,6 +51,11 @@ export const BodyItem = styled.div<{ active?: boolean }>`
     box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
     border-radius: 4px 0 0 4px;
   }
+
+  @media (max-width: 768px) {
+    padding: 20px;
+    margin-bottom: 10px;
+  }
 `;
 
 export const Header = styled.div`
@@ -63,6 +68,10 @@ export const Header = styled.div`
     font-size: 14px;
     line-height: 16px;
     color: #000;
+  }
+
+  @media (max-width: 768px) {
+    display: none;
   }
 `;
 

@@ -11,6 +11,10 @@ export const Container = styled.div`
   align-items: stretch;
   box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
   border-radius: 4px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 export const BlockWrapper = styled.div<{largeMB?: boolean}>`
@@ -32,6 +36,11 @@ export const Select = styled(BaseSelect)`
   @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
     max-width: 200px;
     min-width: 200px;
+  }
+  @media (max-width: 768px) {
+    width: 100%;
+    max-width: initial;
+    min-width: auto;
   }
 `;
 

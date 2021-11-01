@@ -107,7 +107,7 @@ export const SingleOrderDetails: FC = () => {
       <Container>
         <Back text="К списку ордеров" onGoBackClick={handleGoBack} />
         <S.TitleContainer>
-            <Title mB={0} main> 
+            <Title mB={0}> 
               {
                 `Ордер на ${currentOrderType === OrderType.Buy ? 
                 'покупку' : 'продажу'} ${Balance[currentOrder.assetKind]}-${FiatKind[currentOrder.operationAssetKind]}`
@@ -119,7 +119,7 @@ export const SingleOrderDetails: FC = () => {
         </S.TitleContainer>
       </Container>
 
-      <Container pTabletNone>
+      <Container pTabletNone pNone>
         <OrderDetailsCard order={currentOrder} orderType={currentOrderType} />
         <OrderNotActualModal 
           open={showOrderNotActualModal} 

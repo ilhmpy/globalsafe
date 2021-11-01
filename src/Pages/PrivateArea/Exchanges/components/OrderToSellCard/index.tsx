@@ -28,10 +28,9 @@ import { countVolumeToSend, countVolumeToShow } from '../../../utils';
 export const OrderToSellCard: FC = () => {
     const history = useHistory();
     const appContext = useContext(AppContext);
-    const { hubConnection, user, balanceList } = appContext;
+    const { hubConnection, user, balanceList, userSafeId } = appContext;
     const [showOrderSellModal, setShowOrderSellModal] = useState(false);
     const [showOrderErrorModal, setShowOrderErrorModal] = useState(false);
-
     const [currencyToSell, setCurrencyToSell] = useState('');
     const [currencyToChange, setCurrencyToChange] = useState('');
     const [orderSumm, setOrderSumm] = useState('');
@@ -96,7 +95,7 @@ export const OrderToSellCard: FC = () => {
     }, [currencyToSell]);
 
     useEffect(() => {
-        if (hubConnection && userActiveCertificate) {
+        if (hubConnection && currencyToSell) {
           handleGetOrdersVolume();
         }
       }, [userActiveCertificate]);
@@ -168,11 +167,11 @@ export const OrderToSellCard: FC = () => {
 
     useEffect(() => {
         if (hubConnection && currencyToSell && currencyToChange) {
-          getBuyOrders();
+            getSellOrders();
         }
       }, [hubConnection, currencyToSell, currencyToChange]);
     
-      const getBuyOrders = async () => {
+      const getSellOrders = async () => {
         try {
           const res = await hubConnection!.invoke<GetSellOrdersModel>(
             'GetSellOrders', 
@@ -214,7 +213,6 @@ export const OrderToSellCard: FC = () => {
             setNewCreatedOrder(res);
             console.log('CreateSellOrder', res);
             setCreateOrderLoading(false);
-
         } catch (err) {
             setCreateOrderLoading(false);
             setShowOrderErrorModal(true);
@@ -253,6 +251,7 @@ export const OrderToSellCard: FC = () => {
         const pattern2 = /^[0-9]{1,10}\.[0-9]{6}$/;
         if (e.target.value === '' || pattern.test(e.target.value)) {
             // Clear Max limit
+            setOrderMinSumm('');
             setOrderMaxSumm('');
             if(!pattern2.test(e.target.value)) {
                 setChangeRate(e.target.value);
@@ -340,7 +339,25 @@ export const OrderToSellCard: FC = () => {
         setShowOrderSellModal(true)
     };
 
-    console.log("dailyLimitRestdailyLimitRest", dailyLimitRest)
+    // Listening to changes
+    useEffect(() => {
+        const cbOrderCreated = (order: ViewSellOrderModel) => {
+            console.log('__SOCKET__cbOrderCreated::', order);
+            if(order && order.userSafeId === userSafeId) {
+                handleGetOrdersVolume();
+                getSellOrders();
+            }
+        };
+
+        if (hubConnection) {
+            hubConnection.on("SellOrderCreated", cbOrderCreated);
+        };
+
+        return () => {
+            hubConnection?.off("SellOrderCreated", cbOrderCreated);
+        };
+    }, [hubConnection, userSafeId, currencyToSell, currencyToChange]);
+
     return (
         <S.Container>
         <LeftSide bg={'#EAEFF4'}>
@@ -394,7 +411,7 @@ export const OrderToSellCard: FC = () => {
             </S.TabsBlock>
 
             <S.Form>
-                <Space gap={20} mb={20}>
+                <Space gap={20} mb={20} mobileColumn>
                     <S.FormItem>
                         <Text size={14} weight={300} lH={20} mB={10} black>
                             Валюта продажи:
@@ -420,7 +437,7 @@ export const OrderToSellCard: FC = () => {
                     </S.FormItem>
                 </Space>
 
-                <Space gap={20} mb={20}>
+                <Space gap={20} mb={20} mobileColumn>
                     <S.FormItem>
                         <Text size={14} weight={300} lH={20} mB={10} black>
                             Валюта обмена:
@@ -566,6 +583,7 @@ export const OrderToSellCard: FC = () => {
                 
                 <Space gap={10} mb={40}>
                     <S.Button 
+                        fullWidthMobile
                         primary 
                         onClick={handlePublushOrder}
                         as={'button'}
@@ -600,6 +618,7 @@ export const OrderToSellCard: FC = () => {
                 onClose={() => setShowOrderSellModal(false)}
             />
             <OrderErrorModal 
+                onlyCloseAction
                 open={showOrderErrorModal}
                 onClose={() => setShowOrderErrorModal(false)}
             />
@@ -610,6 +629,7 @@ export const OrderToSellCard: FC = () => {
                 onClose={() => setShowHasFamiliarOrder(false)} 
             /> 
            <OrderErrorModal  
+                message="Отсутствует сертификат"
                 open={showCertificateIsMissingModal} 
                 onClose={() => setShowCertificateIsMissingModal(false)} 
             /> 

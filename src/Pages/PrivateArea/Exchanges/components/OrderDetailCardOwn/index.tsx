@@ -1,4 +1,4 @@
-import React, { FC, useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import * as S from './S.el';
 import {
@@ -19,6 +19,7 @@ import { FiatKind } from '../../../../../types/fiat';
 import { CollectionPayMethod, PaymentMethodKind } from '../../../../../types/paymentMethodKind';
 import { routers } from '../../../../../constantes/routers';
 import { countVolumeToShow } from '../../../utils';
+import { RootViewUserCertificatesModel, ViewUserCertificateModel } from '../../../../../types/certificates';
  
 interface OrderDetailsCardOwnProps {
   order: ViewBuyOrderModel | ViewSellOrderModel;
@@ -32,15 +33,36 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showDeleteErrorModal, setShowDeleteErrorModal] = useState(false);
   const [deleteSuccessed, setDeleteSuccessed] = useState(false);
+  const [dailyLimitRest, setDailyLimitRest] = useState<number>(0);
+  const [userActiveCertificate, setUserActiveCertificate] =
+  useState<ViewUserCertificateModel | null>(null);
 
+
+   // The Array should have the same queue as PaymentMethodKind enum
+   const paymentMethodsKinds = useMemo<{label: string; value: number}[]>(() => [
+    {label: 'ERC 20', value: 0},
+    {label: 'TRC 20', value: 1},
+    {label: 'BEP 20', value: 2},
+    {label: 'АО «Тинькофф Банк»', value: 3},
+    {label: 'ПАО Сбербанк', value: 4},
+    {label: 'АО «Альфа-Банк»', value: 5}
+], []);
 
   useEffect(() => {
     if(hubConnection) {
+      getUserCertificates();
+
       if(order && orderType === OrderType.Sell) {
         getSellOrderPaymentMethods();
       }
     }
   }, [hubConnection, orderType, order]);
+
+  useEffect(() => {
+    if (hubConnection) {
+      handleGetOrdersVolume();
+    }
+  }, [userActiveCertificate]);
 
   const getSellOrderPaymentMethods = async () => {
     try {
@@ -54,6 +76,47 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
       console.log(err);
     }
   };
+
+  const getUserCertificates = async () => {
+    try {
+      const res = await hubConnection!.invoke<RootViewUserCertificatesModel>(
+        'GetUserCertificates', 
+        [order.assetKind],
+        0, 
+        20
+      );
+      console.log('getUserCertificates', res);
+
+      if(res.collection.length > 0) {
+        const sorted = [...res.collection].sort((a, b) => new Date(b.creationDate).getTime() - new Date(a.creationDate).getTime());
+        setUserActiveCertificate(sorted[0]);
+      } else {
+        setUserActiveCertificate(null);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }; 
+
+  const handleGetOrdersVolume = async () => {
+    try {
+      const res = await hubConnection!.invoke<number>(
+        'GetOrdersVolume', 
+        order.assetKind
+      );
+      console.log('GetOrdersVolume', res);
+      if(userActiveCertificate) {
+        const rest = ( countVolumeToShow(userActiveCertificate.certificate.dailyVolume, userActiveCertificate.certificate.assetKind) - 
+        countVolumeToShow(res, order.assetKind) );
+        setDailyLimitRest(rest);
+      } else {
+        // Fake Value
+        setDailyLimitRest(0);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+};
 
 
 
@@ -102,7 +165,16 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
         <S.BlockWrapper>
           <Text size={14} lH={20} mB={10} black>Рейтинг аккаунта:</Text>
           <Title lH={28}>
-            {`${order.userRating ? Number(order.userRating).toFixed(1) : '-'}`}
+            {`${order.userRating ? Number(order.userRating).toFixed(1) : '0.0'}`}
+          </Title>
+        </S.BlockWrapper>
+
+        <S.BlockWrapper>
+          <Text size={14} lH={20} mB={10} black>
+            Оставшийся лимит в сутках:
+          </Text>
+          <Title lH={28}>
+            {`${dailyLimitRest} ${Balance[order.assetKind]}`}
           </Title>
         </S.BlockWrapper>
 
@@ -159,7 +231,7 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
                 {
                   order.methodsKinds.map((kind, i) => (
                     <Text size={14} lH={20} weight={500} black mB={4} key={`method-item-${i}`}>
-                      {PaymentMethodKind[kind]}
+                      {paymentMethodsKinds[kind].label}
                     </Text>
                   ))
                 }
@@ -195,7 +267,7 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
                     :
                         <Space gap={10} column mb={20} key={`payment-method-${method.safeId}-${i}`}>
                           <Text size={14} lH={20} weight={500} black>
-                            {PaymentMethodKind[method.kind]}
+                            {paymentMethodsKinds[method.kind].label}
                           </Text>
                           <S.PaymentMethodDetailsBlock>
                               <Text size={14} weight={300} lH={20} black mB={4}>Адрес кошелька:</Text>
@@ -212,7 +284,7 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
               </S.BlockWrapper>
           }
       
-          <Button primary onClick={() => setShowDeleteModal(true)}>
+          <Button primary onClick={() => setShowDeleteModal(true)} fullWidthMobile>
             Удалить ордер
           </Button>
       </RightSide>

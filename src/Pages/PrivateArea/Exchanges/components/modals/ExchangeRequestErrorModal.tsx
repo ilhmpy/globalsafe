@@ -24,7 +24,7 @@ export const ExchangeRequestErrorModal: FC<Props> = ({ onClose, open }: Props) =
           <S.Container>
             <S.Title>Ошибка отправления заявки</S.Title>
             <S.Desc>Ваша заявка на покупку не была отправлена на обмен по причине:</S.Desc>
-            <S.Reason>Владелец удалил ордер</S.Reason>
+            {/* <S.Reason>Владелец удалил ордер</S.Reason> */}
             <Button fullWidth bigSize primary onClick={handleGoToList}>
               Список ордеров
             </Button>
