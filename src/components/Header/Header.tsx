@@ -5,6 +5,7 @@ import { ReactComponent as Ball } from '../../assets/svg/ball.svg';
 import { ReactComponent as LightTheme } from '../../assets/svg/themeLight.svg';
 import { ReactComponent as DarkTheme } from '../../assets/v2/svg/dark-theme.svg';
 import { ReactComponent as Logo } from '../../assets/v2/svg/logo.svg';
+import { ReactComponent as GsLogo } from '../../assets/v2/svg/gs.svg';
 import { Container } from '../../components/UI/Container';
 import { routers } from '../../constantes/routers';
 import { AppContext } from '../../context/HubContext';
@@ -92,9 +93,7 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
       <HeaderWrap header={header}>
         <Container>
           <HeaderInner>
-            <HeaderLogo href="/">
-              <Logo />
-            </HeaderLogo>
+            <HeaderLogo href="/">{screen.width > 768 ? <Logo /> : <GsLogo />}</HeaderLogo>
             <HeaderMenu open={open}>
               {admPanel ? (
                 <NavAdmin lang={lang} onClose={onClose} />

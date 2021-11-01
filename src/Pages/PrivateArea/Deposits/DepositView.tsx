@@ -47,11 +47,15 @@ export const DepositView: FC = () => {
             history.push(routers.deposits);
           }}
         />
-        <ShowDeposit chosenDepositView={chosenDepositView}  />
+      </Container>
+      <Container pTabletNone>
+        <ShowDeposit chosenDepositView={chosenDepositView} />
       </Container>
       <Container>
         <Title small>История начислений</Title>
-        <TableHistory accrualHistory={accrualHistory}/>
+      </Container>
+      <Container pTabletNone>
+        <TableHistory accrualHistory={accrualHistory} />
       </Container>
     </S.Container>
   );

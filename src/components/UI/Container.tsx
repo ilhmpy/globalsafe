@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro';
+import styled from 'styled-components';
 
 export const Container = styled.div<{ pNone?: boolean; page?: boolean; mtNone?: boolean; pTabletNone?: boolean; }>`
   width: 100%;

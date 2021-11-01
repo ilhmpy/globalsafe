@@ -1,5 +1,4 @@
-import React, { FC } from 'react';
-import { Button } from '../../../../components/Button/V2/Button';
+import { FC } from 'react';
 import { Modal } from '../../../../components/ModalAnimated';
 import * as S from './S.el';
 
@@ -11,7 +10,7 @@ type Props = {
 export const CloseDepositError: FC<Props> = ({ onClose, open }: Props) => {
   return (
     <>
-      {open && (
+      {true && (
         <Modal onClose={onClose} open={open}>
           <S.Container>
             <S.Title>Ошибка закрытия депозита</S.Title>

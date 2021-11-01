@@ -11,6 +11,9 @@ import { Heading } from '../components/Heading';
 import { Loading } from '../components/Loading/Loading';
 import { Table } from '../components/Table';
 import * as S from './S.elements';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import SwiperCore, { A11y, Navigation, Pagination, Scrollbar, Thumbs, EffectFade } from 'swiper';
+import { Tiles } from '../components/Tiles';
 
 export const Deposits: FC = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -20,6 +23,8 @@ export const Deposits: FC = () => {
   const [depositsListHasMore, setDepositsListHasMore] = useState(true);
   const [skip, setSkip] = useState(0);
   const [activeFilter, setActiveFilter] = useState<'active' | 'archived' | 'hold'>('active');
+  const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
+  const [viewType, setViewType] = useState<string>('list');
 
   const { hubConnection, balanceList, setDepositsFilter } = useContext(AppContext);
 
@@ -177,10 +182,16 @@ export const Deposits: FC = () => {
         />
       </Container>
       <Container>
-        <Filter activeFilter={activeFilter} setActiveFilter={setActiveFilter} />
+        <Filter
+          activeFilter={activeFilter}
+          setActiveFilter={setActiveFilter}
+          viewType={viewType}
+          setViewType={setViewType}
+        />
       </Container>
-      <Container>
-        <Scrollbars style={{ height: '240px', minHeight: '240px' }}>
+      <Container pTabletNone>
+        {/* {viewType === 'list' ? ( */}
+        <Scrollbars style={{ height: '236px', minHeight: '236px' }}>
           {getDepositsLoading ? (
             <Loading />
           ) : (
@@ -196,18 +207,10 @@ export const Deposits: FC = () => {
             )
           )}
         </Scrollbars>
+        {/* ) : ( */}
+        {/* <Tiles depositsList={depositsList} /> */}
+        {/* )} */}
       </Container>
-      {/* <Container>
-        <Back text="Назад" onClick={() => undefined} />
-      </Container>
-      <Program /> */}
-      {/* <button onClick={() => setOpenModal(true)}>open</button> */}
-      {/* <ConfirmOpenDeposit onClose={onClose} open={openModal} /> */}
-      {/* <SuccessOpenDeposit onClose={onClose} open={openModal} /> */}
-      {/* <ErrorOpenDeposit onClose={onClose} open={openModal} /> */}
-      {/* <CloseDeposit onClose={onClose} open={openModal} /> */}
-      {/* <CloseDepositSuccess onClose={onClose} open={openModal} /> */}
-      {/* <CloseDepositError onClose={onClose} open={openModal} /> */}
     </S.Container>
   );
 };
