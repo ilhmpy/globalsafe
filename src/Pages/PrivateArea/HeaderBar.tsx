@@ -28,6 +28,7 @@ import { Commisions, DepositsCollection, RootDeposits } from '../../types/info';
 import { ConvertingModal } from './Converting/ConvertingModal';
 import { DepositListModal } from './Modals';
 import * as Styled from './Styles.elements';
+import { SelectButton } from "./components/ui/SelectButton";
 
 export const HeaderBar = () => {
   const { t } = useTranslation();
@@ -760,15 +761,23 @@ export const HeaderBar = () => {
                   ? (balance / 100000).toLocaleString('ru-RU', {
                       maximumFractionDigits: 5,
                     })
-                  : '0'}{' '}
+                  : '0'}{' '} 
                 CWD
               </BalanceValueText>
             </PanelInfoBlock>
-            <PanelActionsBlock>
-              <SecondaryButton title={'Конвертация'} onClick={() => setOpenConverting(true)} />
-              <SecondaryButton title={'Пополнить баланс'} onClick={() => setAddDrawModal(true)} />
-              <SecondaryButton title={'Вывести средства'} onClick={() => setWithDrawModal(true)} />
-            </PanelActionsBlock>
+            {screen.width > 1024 ?
+              <PanelActionsBlock>
+                <SecondaryButton title={'Конвертация'} onClick={() => setOpenConverting(true)} />
+                <SecondaryButton title={'Пополнить баланс'} onClick={() => setAddDrawModal(true)} />
+                <SecondaryButton title={'Вывести средства'} onClick={() => setWithDrawModal(true)} />
+              </PanelActionsBlock> 
+            : 
+              <SelectButton buttons={[
+                { text: "Пополнить баланс", onClick: () => setAddDrawModal(true) },
+                { text: "Вывести средств", onClick: () => setWithDrawModal(true) },
+                { text: "Конвертация", onClick: () => setOpenConverting(true) },
+              ]} />
+            }
           </PanelHeader>
           <BalanceChipsBlock>
             {balanceChips &&
@@ -1000,6 +1009,12 @@ const CustomPage = styled(Styled.Page)`
 const DepositsPanelContainer = styled(Container)`
   display: flex;
   flex-direction: column;
+  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+    width: 100%;
+    padding: 0px 34px;
+    margin: 0 auto;
+    max-width: 1128px;
+  }
 `;
 
 const PanelTitleBlock = styled.div`

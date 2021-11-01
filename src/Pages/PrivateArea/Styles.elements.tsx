@@ -1076,3 +1076,7 @@ export const Message = styled.h3`
   margin: 20px 0px 20px 0px;
   max-width: 240px;
 `;
+
+export const SelectButton = styled.div`
+
+`;

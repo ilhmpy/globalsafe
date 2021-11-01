@@ -7,6 +7,9 @@ export const RightSide = styled.div`
   @media (max-width: 768px) {
     width: 100%;
     padding: 20px;
+  };
+  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+    padding-right: 34px;
   }
 `;
  

@@ -137,26 +137,31 @@ export const OwnExchanges = () => {
     }
   }, [hubConnection, activeFilter, balanceKind, fiatKind, status, payments]);
 
-  function cb(res: any) {
-    const exchanges = [...userExchanges];
-    console.log("ExchangeChanged/Created/Completed", res);
-    userExchanges.forEach((item) => {
-      if (item.safeId === res.safeId) {
-        exchanges[userExchanges.indexOf(item)] = res;
-      };
-    });
-    setUserExchanges(exchanges);
+  function cb(res: ViewExchangeModel) {
+    if (
+      (activeFilter === "active" && (res.state !== ExchangeState.Completed && res.state !== ExchangeState.Cancelled))
+    ) {
+      const exchanges = [...userExchanges];
+      userExchanges.forEach((item) => {
+        if (item.safeId === res.safeId) {
+          exchanges[userExchanges.indexOf(item)] = res;
+        };
+      });
+      setUserExchanges(exchanges);
+    };
   };
 
   function volumeChanged(id: string, volume: number) {
-    console.log("ExchangeChanged/Created/Completed", id, volume);
-    const exchanges = [...userExchanges];
-    userExchanges.forEach((item) => {
-      if (item.safeId === id) {
-        exchanges[userExchanges.indexOf(item)].orderVolume = volume;
-      };
-    });
-    setUserExchanges(exchanges);
+    if (activeFilter !== "archived") {
+      console.log("ExchangeChanged/Created/Completed", id, volume);
+      const exchanges = [...userExchanges];
+      userExchanges.forEach((item) => {
+        if (item.safeId === id) {
+          exchanges[userExchanges.indexOf(item)].orderVolume = volume;
+        };
+      });
+      setUserExchanges(exchanges);
+    };
   };
 
   function exchangeCreated(res: ViewExchangeModel) {
@@ -168,6 +173,16 @@ export const OwnExchanges = () => {
       if (res.state >= 3 && activeFilter === "archived") {
         setUserExchanges([res, ...userExchanges]);
       };
+    };
+  };
+
+  function endCallback(res: ViewExchangeModel) {
+    if (
+      (activeFilter === "archived" && (res.state == ExchangeState.Completed || res.state == ExchangeState.Cancelled)) 
+    ) {
+      setUserExchanges(() => [res, ...userExchanges]);
+    } else {
+      setUserExchanges([...userExchanges.filter((i: ViewExchangeModel) => i.safeId != res.safeId)])
     };
   };
 
@@ -207,22 +222,22 @@ export const OwnExchanges = () => {
   useEffect(() => {
     let cancel = false;
     if (hubConnection && !cancel) {
-      hubConnection.on("ExchangeCompleted", cb);
+      hubConnection.on("ExchangeCompleted", endCallback);
     };
     return () => {
       cancel = true;
-      hubConnection?.off("ExchangeCompleted", cb);
+      hubConnection?.off("ExchangeCompleted", endCallback);
     };
   }, [hubConnection, userExchanges]);
 
   useEffect(() => {
     let cancel = false;
     if (hubConnection) {
-      hubConnection.on("ExchangeCancelled", cb);
+      hubConnection.on("ExchangeCancelled", endCallback);
     };
     return () => {
       cancel = true;
-      hubConnection?.off("ExchangeCancelled", cb);
+      hubConnection?.off("ExchangeCancelled", endCallback);
     };
   }, [hubConnection, userExchanges]);
 

@@ -18,65 +18,20 @@ export const Cell = styled.div`
   color: #000;
   width: 100%;
   padding: 0 10px;
-  /*
-  &:nth-child(1) {
-    max-width: 128px;
-    @media (max-width: 992px) {
-      max-width: 100%;
+  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+    &:nth-child(1) {
+      max-width: 120px;
+    }
+    &:nth-child(2) {
+      max-width: 90px;
+    }
+    &:nth-child(3) {
+      max-width: 90px;
+    }
+    &:nth-child(4) {
+      max-width: 70px;
     }
   }
-  &:nth-child(2) {
-    max-width: 140px;
-    @media (max-width: 992px) {
-      max-width: 100%;
-    }
-  }
-  &:nth-child(3) {
-    max-width: 165px;
-    @media (max-width: 992px) {
-      max-width: 100%;
-    }
-  }
-  &:nth-child(4) {
-    max-width: 115px;
-    @media (max-width: 992px) {
-      max-width: 100%;
-    }
-  }
-  &:nth-child(5) {
-    max-width: 168px;
-    @media (max-width: 992px) {
-      max-width: 100%;
-    }
-  }
-  &:nth-child(6) {
-    max-width: 160px;
-    @media (max-width: 992px) {
-      max-width: 100%;
-    }
-  }
-  &:nth-child(7) {
-    max-width: 120px;
-    @media (max-width: 992px) {
-      max-width: 100%;
-    }
-  }
-  @media (max-width: 992px) {
-    max-width: 100%;
-    display: flex;
-    justify-content: space-between;
-    padding: 6px 10px;
-    margin-bottom: 2px;
-    background: #ffffff;
-    &:before {
-      content: attr(data-label);
-      text-transform: uppercase;
-      font-weight: 400;
-      font-size: 14px;
-      line-height: 16px;
-      color: #000;
-    }
-  } */
 `;
 
 export const BodyItem = styled.div<{ active?: boolean }>`

@@ -1,4 +1,4 @@
-import React, { FC, useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import * as S from './S.el';
 import {
@@ -40,6 +40,16 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
 
     const [balanceLimitFrom, setBalanceLimitFrom] = useState(0);
     const [balanceLimitTo, setBalanceLimitTo] = useState(0);
+
+    // The Array should have the same queue as PaymentMethodKind enum
+    const paymentMethodsKinds = useMemo<{label: string; value: number}[]>(() => [
+        {label: 'ERC 20', value: 0},
+        {label: 'TRC 20', value: 1},
+        {label: 'BEP 20', value: 2},
+        {label: 'АО «Тинькофф Банк»', value: 3},
+        {label: 'ПАО Сбербанк', value: 4},
+        {label: 'АО «Альфа-Банк»', value: 5}
+    ], []);
 
     useEffect(() => {
         if(order) {
@@ -292,7 +302,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
             {
                 order.methodsKinds.map((kind, i) => (
                     <Title lH={28} mB={10} key={`method-item-${i}`}>
-                        {PaymentMethodKind[kind]}
+                        {paymentMethodsKinds[kind].label}
                     </Title>
                 ))
             }
@@ -438,7 +448,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                                         onChange={(e) => setPaymentMethodSafeId(e.target.value)} 
                                     >
                                         <Text size={14} lH={20} weight={500} mL={10} black>
-                                            {PaymentMethodKind[method.kind]}
+                                            {paymentMethodsKinds[method.kind].label}
                                         </Text>
                                     </Radio>
                                     <S.PaymentMethodDetailsBlock>
@@ -509,7 +519,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                                         onChange={(e) => setPaymentMethodSafeId(e.target.value)} 
                                     >
                                         <Text size={14} lH={20} weight={500} mL={10} black>
-                                            {PaymentMethodKind[method.kind]}
+                                            {paymentMethodsKinds[method.kind].label}
                                         </Text>
                                     </Radio>
                                     <S.PaymentMethodDetailsBlock>

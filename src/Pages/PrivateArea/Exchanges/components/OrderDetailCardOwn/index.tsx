@@ -1,4 +1,4 @@
-import React, { FC, useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import * as S from './S.el';
 import {
@@ -36,6 +36,17 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
   const [dailyLimitRest, setDailyLimitRest] = useState<number>(0);
   const [userActiveCertificate, setUserActiveCertificate] =
   useState<ViewUserCertificateModel | null>(null);
+
+
+   // The Array should have the same queue as PaymentMethodKind enum
+   const paymentMethodsKinds = useMemo<{label: string; value: number}[]>(() => [
+    {label: 'ERC 20', value: 0},
+    {label: 'TRC 20', value: 1},
+    {label: 'BEP 20', value: 2},
+    {label: 'АО «Тинькофф Банк»', value: 3},
+    {label: 'ПАО Сбербанк', value: 4},
+    {label: 'АО «Альфа-Банк»', value: 5}
+], []);
 
   useEffect(() => {
     if(hubConnection) {
@@ -220,7 +231,7 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
                 {
                   order.methodsKinds.map((kind, i) => (
                     <Text size={14} lH={20} weight={500} black mB={4} key={`method-item-${i}`}>
-                      {PaymentMethodKind[kind]}
+                      {paymentMethodsKinds[kind].label}
                     </Text>
                   ))
                 }
@@ -256,7 +267,7 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
                     :
                         <Space gap={10} column mb={20} key={`payment-method-${method.safeId}-${i}`}>
                           <Text size={14} lH={20} weight={500} black>
-                            {PaymentMethodKind[method.kind]}
+                            {paymentMethodsKinds[method.kind].label}
                           </Text>
                           <S.PaymentMethodDetailsBlock>
                               <Text size={14} weight={300} lH={20} black mB={4}>Адрес кошелька:</Text>
