@@ -5,9 +5,10 @@ import { Footer } from '../../../../components/Footer/Footer';
 import { ViewExchangeModel, ExchangeState } from '../../../../types/exchange';
 import { Balance } from '../../../../types/balance';
 import { FiatKind } from "../../../../types/fiatKind";
-import { countVolumeToShow } from "../../utils";
+import { countVolumeToShow, getFiatKindByStringName } from "../../utils";
 import { Exchange } from "../../Exchanges/components/OwnActiveExchangesTable/S.el";
 import { AppContext } from "../../../../context/HubContext";
+import { ConsoleLogger } from "@microsoft/signalr/dist/esm/Utils";
 
 export const MobileModal = () => {
     const { account } = useContext(AppContext);
@@ -32,10 +33,9 @@ export const MobileModal = () => {
     }, []);
 
     function redirect() {
-      // localStorage.removeItem("mobileResultData");
-      // localStorage.removeItem("feedback");
-      // window.location.href = "/info/p2p-changes/own";
-       return "";
+       localStorage.removeItem("mobileResultData");
+       localStorage.removeItem("feedback");
+       window.location.href = "/info/p2p-changes/own";
     };
 
     if (!exchange) {
@@ -43,6 +43,20 @@ export const MobileModal = () => {
     };
 
     console.log(exchange)
+
+    function getString() {
+        if (exchange) {
+            return (
+                <>
+                    {owner === "seller" && exchange.state === ExchangeState.Completed && "Продано"} 
+                    {owner === "buyer" && exchange.state === ExchangeState.Completed && "Куплено"}  
+                    {exchange.state === ExchangeState.Cancelled && "Количество"}
+                </>
+            );
+        };
+    };
+
+    console.log(owner);
 
     return (
         <div>
@@ -53,16 +67,16 @@ export const MobileModal = () => {
                       {exchange.state === ExchangeState.Completed ? "Обмен успешно завершен" : "Обмен отменен"}
                   </MB.ModalTitle>
                   <MB.ModalWhiteBox>
-                     {exchange.state === Exchange.Cancelled && (
+                     {exchange.state === ExchangeState.Cancelled && (
                          <MB.ModalLine>
                              <MB.ModalContent main>
-                                {owner === "seller" ? "Покупатель отменил" : "Вы отменили"} обмен {Balance[exchange.assetKind]} на {FiatKind[exchange.exchangeAssetKind]} был отменен:
+                                {owner === "seller" ? "Покупатель отменил" : "Вы успешно отменили"} обмен {Balance[exchange.assetKind]} на {FiatKind[exchange.exchangeAssetKind]}:
                              </MB.ModalContent>
                          </MB.ModalLine>
                       )}
                       <MB.ModalLine>
                           <MB.ModalContent main>
-                              {owner === "seller" ? "Продано" : "Куплено"} {Balance[exchange.assetKind]}:
+                            {getString()} {Balance[exchange.assetKind]}:
                           </MB.ModalContent>
                           <MB.ModalContent text>
                               {(countVolumeToShow(exchange.volume, exchange.assetKind)).toLocaleString('ru-RU', { maximumFractionDigits: 5 })}

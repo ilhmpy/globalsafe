@@ -286,7 +286,6 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
         .then((res) => {
           console.log('complete', res);
           setCall(true);
-          // handleToMobileModal()
         })
         .catch((err) => console.log(err));
     };
@@ -301,7 +300,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
           if (screen.width > 480) {
             setShowRejectModal(true);
           };
-          // handleToMobileModal();
+          handleToMobileModal(4);
         })
         .catch((err) => console.log(err));
     };
@@ -335,7 +334,9 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
         .then((res) => {
           console.log(res);
           setCall(true);
-          setShowSuccessModal(true);
+          if (screen.width > 480) {
+            setShowSuccessModal(true);
+          };
         })
         .catch((err) => console.log(err));
     }
@@ -355,13 +356,13 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
     return;
   }, [tab]);
 
-  function handleToMobileModal() {
+  function handleToMobileModal(state: number) {
     if (screen.width < 480) {
-      localStorage.setItem("mobileResultData", JSON.stringify({ ...exchange }));
+      localStorage.setItem("mobileResultData", JSON.stringify({ ...exchange, state }));
       localStorage.setItem("feedback", JSON.stringify(feedbackValue));
       history.push("/mobile/modal");
     };
-  };
+  };1
 
   return (
     <>
@@ -647,8 +648,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                     Средства отправлены
                   </Button>
                   <Button outlinePrimary bigSize style={{ marginBottom: "40px" }} fullWidthMobile onClick={() => {
-                    cancelExchange(exchange.safeId)
-                    handleToMobileModal();
+                    cancelExchange(exchange.safeId);
                   }}>
                     Отменить обмен
                   </Button>
@@ -957,6 +957,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                 if (screen.width > 480) {
                   setShowSuccessModal(true);
                 };
+                handleToMobileModal(2)
                 getUserMark();
               }}>
               Подтвердить 
@@ -1027,6 +1028,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                   setShowSuccessModal(true);
                 };
                 getUserMark();
+                handleToMobileModal(2)
               }}
             >
               Подтвердить
