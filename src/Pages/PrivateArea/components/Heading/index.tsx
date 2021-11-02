@@ -8,7 +8,7 @@ type Props = {
   onClick?: () => void;
   withoutBtn?: boolean;
   styles?: Object;
-};
+}; 
 
 export const Heading: FC<Props> = ({ title, onClick, btnText, withoutBtn, styles }: Props) => {
   return (

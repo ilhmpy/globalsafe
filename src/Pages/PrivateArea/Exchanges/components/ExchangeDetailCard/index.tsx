@@ -381,8 +381,8 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
     <Container pTabletNone>
     <S.Container>
       {screen.width > 480 || 
-      (screen.width <= 480 && tab === 'order' && exchange.state === ExchangeState.Initiated || exchange.state === ExchangeState.Confirmed) ||
-      (screen.width <= 480 && exchange.state === ExchangeState.Completed || exchange.state === ExchangeState.Abused || exchange.state === ExchangeState.Cancelled)
+      (screen.width <= 480 && tab === 'order' && (exchange.state === ExchangeState.Initiated || exchange.state === ExchangeState.Confirmed)) ||
+      (screen.width <= 480 && ((exchange.state === ExchangeState.Completed && mark != false) || exchange.state === ExchangeState.Abused || exchange.state === ExchangeState.Cancelled))
       ? (
         <LeftSide bg={'#EAEFF4'}> 
         {screen.width < 481 && 
@@ -469,8 +469,8 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
 
       {/* IF COMPLETED AND NOT GRADET */}
       {screen.width > 480 || 
-      (screen.width <= 480 && tab === 'exchange' && exchange.state === ExchangeState.Initiated || exchange.state === ExchangeState.Confirmed) ||
-      (screen.width <= 480 && exchange.state === ExchangeState.Completed || exchange.state === ExchangeState.Abused || exchange.state === ExchangeState.Cancelled)
+      (screen.width <= 480 && tab === 'exchange' && (exchange.state === ExchangeState.Initiated || exchange.state === ExchangeState.Confirmed)) ||
+      (screen.width <= 480 && (exchange.state === ExchangeState.Completed || exchange.state === ExchangeState.Abused || exchange.state === ExchangeState.Cancelled))
       ? (
         <RightSide>
         <S.TitleBlockWrapper>
@@ -602,7 +602,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                     </S.Space>
                   </S.Space>
                 </>
-              ) : (
+              ) : screen.width >= 480 && screen.width < 1024 ? (
                 <>
                   <S.Space justify="space-between">
                     <Button primary bigSize onClick={() => confirmExchangePayment(exchange.safeId)}>
@@ -628,6 +628,29 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                       </Button>
                     </S.Space>
                 </>
+              ) : (
+                <>
+                  <Button primary bigSize style={{ marginBottom: "20px" }} fullWidthMobile onClick={() => confirmExchangePayment(exchange.safeId)}>
+                    Средства отправлены
+                  </Button>
+                  <Button outlinePrimary bigSize style={{ marginBottom: "40px" }} fullWidthMobile onClick={() => cancelExchange(exchange.safeId)}>
+                    Отменить обмен
+                  </Button>
+                  <Button outlinePrimary fullWidthMobile bigSize style={{ marginBottom: "20px" }} onClick={handleClick}>
+                    Чат
+                  </Button>
+                  <Button
+                    outlinePrimary
+                    bigSize
+                    fullWidthMobile
+                    onClick={handleClick}
+                    as="button"
+                    disabled={exchange.state === 0}
+                    exchangeBtn
+                  >
+                    Пожаловаться
+                  </Button>
+                </>
               )}
           </S.StateBlock>
 
@@ -652,19 +675,30 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
               </Text>
             </S.TransferInfoBlock>
 
-            <S.Space justify="space-between">
-              <S.Space gap={20}>
-                <Button primary bigSize as="button" disabled={true} onClick={() => false}>
+            {screen.width > 480 ? (
+              <S.Space justify="space-between">
+                <S.Space gap={20}>
+                  <Button primary bigSize as="button" disabled={true} onClick={() => false}>
+                    Средства получены
+                  </Button>
+                </S.Space>
+
+                <S.Space gap={20}>
+                  <Button outlinePrimary bigSize onClick={handleClick}>
+                    Чат
+                  </Button>
+                </S.Space>
+              </S.Space>
+            ) : (
+              <>
+                <Button style={{ marginBottom: "20px" }} fullWidthMobile primary bigSize as="button" disabled={true} onClick={() => false}>
                   Средства получены
                 </Button>
-              </S.Space>
-
-              <S.Space gap={20}>
-                <Button outlinePrimary bigSize onClick={handleClick}>
+                <Button fullWidthMobile outlinePrimary bigSize onClick={handleClick}>
                   Чат
                 </Button>
-              </S.Space>
-            </S.Space>
+              </>
+            )}
           </S.StateBlock>
         </S.StateBlock>
 
@@ -693,7 +727,8 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
               </Text>
             </S.TransferInfoBlock>
 
-            <S.Space justify="space-between">
+            {screen.width > 480 ? (
+              <S.Space justify="space-between">
               <S.Space gap={20}>
                 <Button
                   primary
@@ -721,7 +756,36 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                   Пожаловаться
                 </Button>
               </S.Space>
-            </S.Space>
+              </S.Space>
+            ) : (
+              <>
+                <Button
+                  primary
+                  bigSize
+                  as="button"
+                  disabled={true}
+                  fullWidthMobile
+                  style={{ marginBottom: "40px" }}
+                  onClick={() => setShowSuccessModal(true)}
+                >
+                  Средства отправлены
+                </Button>
+                <Button outlinePrimary fullWidthMobile bigSize style={{ marginBottom: "20px" }} onClick={handleClick}>
+                  Чат
+                </Button>
+                <Button
+                  outlineDanger
+                  bigSize
+                  fullWidthMobile
+                  as="button"
+                  disabled={!timerDown}
+                  onClick={() => abuseExchange(exchange.safeId)}
+                  exchangeBtn
+                >
+                  Пожаловаться
+                </Button>
+              </>
+            )}
           </S.StateBlock>
 
           <S.StateBlock when={owner === 'seller'}>
@@ -745,7 +809,8 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
               </Text>
             </S.TransferInfoBlock>
 
-            <S.Space justify="space-between">
+            {screen.width > 480 ? (
+              <S.Space justify="space-between">
               <S.Space gap={20}>
                 <Button
                   primary
@@ -773,6 +838,34 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                 </Button>
               </S.Space>
             </S.Space>
+            ) : (
+              <>
+                <Button
+                  primary
+                  bigSize
+                  as="button"
+                  fullWidthMobile
+                  style={{ marginBottom: "20px" }}
+                  onClick={() => completeExchange(exchange.safeId)}
+                >
+                  Средства получены
+                </Button>
+                <Button outlinePrimary fullWidthMobile style={{ marginBottom: "40px" }} bigSize onClick={handleClick}>
+                  Чат
+                </Button>
+                <Button
+                  outlineDanger
+                  bigSize
+                  as="button" 
+                  disabled={true}
+                  onClick={() => abuseExchange(exchange.safeId)}
+                  exchangeBtn
+                  fullWidthMobile
+                >
+                  Пожаловаться
+                </Button>
+              </>
+            )}
           </S.StateBlock>
         </S.StateBlock>
 
@@ -837,12 +930,14 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
               </Radio.Group>
             </S.FeedbackBlock>
 
-            <Button primary onClick={() => {
-              rateUser();
-              setShowSuccessModal(true);
-              getUserMark();
-            }}>
-              Подтвердить
+            <Button primary 
+              fullWidthMobile={!(screen.width > 480)}
+              onClick={() => {
+                rateUser();
+                setShowSuccessModal(true);
+                getUserMark();
+              }}>
+              Подтвердить 
             </Button>
           </S.StateBlock>
 
@@ -901,11 +996,15 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                 />
               </Radio.Group>
             </S.FeedbackBlock>
-            <Button primary onClick={() => {
-              rateUser();
-              setShowSuccessModal(true);
-              getUserMark();
-            }}>
+            <Button 
+              primary 
+              fullWidthMobile={!(screen.width > 480)}
+              onClick={() => {
+                rateUser();
+                setShowSuccessModal(true);
+                getUserMark();
+              }}
+            >
               Подтвердить
             </Button>
           </S.StateBlock>
