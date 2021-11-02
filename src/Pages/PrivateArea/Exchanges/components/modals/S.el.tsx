@@ -1,8 +1,8 @@
 import styled from 'styled-components/macro';
 import { Button } from '../../../../../components/Button/V2/Button';
 
-export const Container = styled.div`
-  width: 338px;
+export const Container = styled.div<{wFull?: boolean}>`
+  width: ${props => props.wFull ? '100%' : '338px'};
   background: #fff;
 `;
 
@@ -122,4 +122,23 @@ export const DataListItem = styled.div<{justifyEnd?: boolean; spaceBetween?: boo
 export const ListItemDivider = styled.div`
   flex: 1;
   border-bottom: 1px dashed rgba(0, 0, 0, 0.2);
+`;
+
+export const MobileWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`;
+
+export const MobileHeader = styled.div`
+  padding: 20px;
+`;
+
+export const MobileContent = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  background: #FFFFFF;
+  box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
+  padding: 20px;
 `;

@@ -139,6 +139,12 @@ export const Advert = () => {
     setShowPaymentMethodsModal(false);
   };
 
+  const handleAcceptAllFilters = () => {
+    handleAcceptPair();
+    handleAcceptRate();
+    handleAcceptPaymentMethods();
+  }
+
   const resetFilters = () => {
     setSelectedPair(null);
     setSelectedBalanceKind(null);
@@ -375,6 +381,23 @@ export const Advert = () => {
         <AdvertFiltersMobile
           open={showMobileFilters}
           onClose={() => setShowMobileFilters(false)}
+          onAccept={handleAcceptAllFilters}
+          onResetFilters={resetFilters}
+          activeType={activeType}
+          setActiveType={setActiveType}
+          
+          selectedRate={selectedRate}
+          setSelectedRate={setSelectedRate}
+          rates={ratesList}
+
+          selectedBalanceKind={selectedBalanceKind}
+          setSelectedBalanceKind={setSelectedBalanceKind}
+          selectedFiatKind={selectedFiatKind}
+          setSelectedFiatKind={setSelectedFiatKind}
+
+          selectedPaymentMethods={selectedPaymentMethods}
+          setSelectedPaymentMethods={setSelectedPaymentMethods}
+          methodsList={paymentMethodsKinds}
         />
 
         <CurrencyPair

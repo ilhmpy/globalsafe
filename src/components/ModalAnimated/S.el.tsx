@@ -52,6 +52,7 @@ export const ContentMobile = css`
   margin: 0;
   margin-bottom: 40px;
   border: none;
+  padding: 0;
 `;
 
 
