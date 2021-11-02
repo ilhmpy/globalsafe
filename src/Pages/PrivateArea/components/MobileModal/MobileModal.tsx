@@ -1,20 +1,92 @@
-import { FC } from "react";
+import { useEffect, useState, useContext } from "react";
 import * as MB from "./MobileModal.elements";
 import { Header } from "../../../../components/Header/Header";
 import { Footer } from '../../../../components/Footer/Footer';
-import { ViewExchangeModel } from '../../../../types/exchange';
+import { ViewExchangeModel, ExchangeState } from '../../../../types/exchange';
+import { Balance } from '../../../../types/balance';
+import { FiatKind } from "../../../../types/fiatKind";
+import { countVolumeToShow } from "../../utils";
+import { Exchange } from "../../Exchanges/components/OwnActiveExchangesTable/S.el";
+import { AppContext } from "../../../../context/HubContext";
 
 export const MobileModal = () => {
+    const { account } = useContext(AppContext);
+    const [exchange, setExchange] = useState<ViewExchangeModel | null>(null);
+    const [feed, setFeed] = useState<string | undefined>();
+    const buyer = () => {
+        return (
+          (exchange && exchange.kind === 0 && exchange.ownerSafeId !== account.safeId) ||
+          (exchange && exchange.kind === 1 && exchange.ownerSafeId === account.safeId)
+        );
+      };
     
+      const [owner, setOwner] = useState<'seller' | 'buyer'>(buyer() ? 'buyer' : 'seller');
+
+    useEffect(() => {
+        const exc = localStorage.getItem("mobileResultData");
+        const feedback = localStorage.getItem("feedback");
+        if (exc && feedback) {
+            setExchange(JSON.parse(exc));
+            setFeed(feedback);
+        };
+    }, []);
+
+    function redirect() {
+      // localStorage.removeItem("mobileResultData");
+      // localStorage.removeItem("feedback");
+      // window.location.href = "/info/p2p-changes/own";
+       return "";
+    };
+
+    if (!exchange) {
+        return <div></div>
+    };
+
+    console.log(exchange)
+
     return (
-      <div>
-        <Header />
-        <MB.ModalBox>
-            <MB.ModalContainer> 
-                
-            </MB.ModalContainer>
-            <Footer />
-        </MB.ModalBox>
-      </div>
-    );
+        <div>
+          <Header />
+          <MB.ModalBox>
+              <MB.ModalContainer> 
+                  <MB.ModalTitle>
+                      {exchange.state === ExchangeState.Completed ? "Обмен успешно завершен" : "Обмен отменен"}
+                  </MB.ModalTitle>
+                  <MB.ModalWhiteBox>
+                     {exchange.state === Exchange.Cancelled && (
+                         <MB.ModalLine>
+                             <MB.ModalContent main>
+                                {owner === "seller" ? "Покупатель отменил" : "Вы отменили"} обмен {Balance[exchange.assetKind]} на {FiatKind[exchange.exchangeAssetKind]} был отменен:
+                             </MB.ModalContent>
+                         </MB.ModalLine>
+                      )}
+                      <MB.ModalLine>
+                          <MB.ModalContent main>
+                              {owner === "seller" ? "Продано" : "Куплено"} {Balance[exchange.assetKind]}:
+                          </MB.ModalContent>
+                          <MB.ModalContent text>
+                              {(countVolumeToShow(exchange.volume, exchange.assetKind)).toLocaleString('ru-RU', { maximumFractionDigits: 5 })}
+                          </MB.ModalContent>
+                      </MB.ModalLine>
+                      <MB.ModalLine>
+                          <MB.ModalContent main>Стоимость {FiatKind[exchange.exchangeAssetKind]}:</MB.ModalContent>
+                          <MB.ModalContent text>
+                            {(countVolumeToShow(exchange.exchangeVolume, exchange.assetKind)).toLocaleString('ru-RU', { maximumFractionDigits: 2 })}
+                          </MB.ModalContent>
+                      </MB.ModalLine>
+                      <MB.ModalLine>
+                        {exchange.state === ExchangeState.Completed && (
+                            <>
+                              <MB.ModalContent main>Ваша оценка {owner === "seller" ? "покупателю" : "продавцу"}:</MB.ModalContent>
+                              <MB.ModalContent text>{(Number(feed)).toFixed(1)}</MB.ModalContent>
+                           </>
+                        )}
+                      </MB.ModalLine>                    
+                      <MB.ModalButton onClick={redirect}>К списку обменов</MB.ModalButton>
+                  </MB.ModalWhiteBox>
+              </MB.ModalContainer>
+          </MB.ModalBox>
+          <Footer />
+        </div>
+      );
 }; 

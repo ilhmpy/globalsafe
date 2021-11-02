@@ -286,6 +286,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
         .then((res) => {
           console.log('complete', res);
           setCall(true);
+          // handleToMobileModal()
         })
         .catch((err) => console.log(err));
     };
@@ -297,7 +298,10 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
         .invoke('CancelExchange', id)
         .then((res) => {
           console.log('cancel', res);
-          setShowRejectModal(true);
+          if (screen.width > 480) {
+            setShowRejectModal(true);
+          };
+          // handleToMobileModal();
         })
         .catch((err) => console.log(err));
     };
@@ -352,9 +356,10 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
   }, [tab]);
 
   function handleToMobileModal() {
-    if (screen.width <= 480) {
-      localStorage.setItem("mobileResultData", JSON.stringify({ exchange, type: exchange.state === 2 ? 0 : 1 }));
-      history.push("/mobile/modal")
+    if (screen.width < 480) {
+      localStorage.setItem("mobileResultData", JSON.stringify({ ...exchange }));
+      localStorage.setItem("feedback", JSON.stringify(feedbackValue));
+      history.push("/mobile/modal");
     };
   };
 
@@ -586,7 +591,6 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                       </Button>
                       <Button outlinePrimary bigSize rightBtnOnTablet onClick={() => {
                         cancelExchange(exchange.safeId);
-                        handleToMobileModal();
                       }}>
                         Отменить обмен
                       </Button>
@@ -617,7 +621,6 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                     </Button>
                     <Button outlinePrimary bigSize rightBtnOnTablet onClick={() => {
                       cancelExchange(exchange.safeId);
-                      handleToMobileModal();
                     }}>
                       Отменить обмен
                     </Button>
@@ -643,7 +646,10 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                   <Button primary bigSize style={{ marginBottom: "20px" }} fullWidthMobile onClick={() => confirmExchangePayment(exchange.safeId)}>
                     Средства отправлены
                   </Button>
-                  <Button outlinePrimary bigSize style={{ marginBottom: "40px" }} fullWidthMobile onClick={() => cancelExchange(exchange.safeId)}>
+                  <Button outlinePrimary bigSize style={{ marginBottom: "40px" }} fullWidthMobile onClick={() => {
+                    cancelExchange(exchange.safeId)
+                    handleToMobileModal();
+                  }}>
                     Отменить обмен
                   </Button>
                   <Button outlinePrimary fullWidthMobile bigSize style={{ marginBottom: "20px" }} onClick={handleClick}>
@@ -827,7 +833,6 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                   bigSize
                   as="button"
                   onClick={() => {
-                    handleToMobileModal();
                     completeExchange(exchange.safeId);
                   }}
                 >
@@ -859,7 +864,9 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                   as="button"
                   fullWidthMobile
                   style={{ marginBottom: "20px" }}
-                  onClick={() => completeExchange(exchange.safeId)}
+                  onClick={() => {
+                    completeExchange(exchange.safeId);
+                  }}
                 >
                   Средства получены
                 </Button>
@@ -947,7 +954,9 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
               fullWidthMobile={!(screen.width > 480)}
               onClick={() => {
                 rateUser();
-                setShowSuccessModal(true);
+                if (screen.width > 480) {
+                  setShowSuccessModal(true);
+                };
                 getUserMark();
               }}>
               Подтвердить 
@@ -1014,7 +1023,9 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
               fullWidthMobile={!(screen.width > 480)}
               onClick={() => {
                 rateUser();
-                setShowSuccessModal(true);
+                if (screen.width > 480) {
+                  setShowSuccessModal(true);
+                };
                 getUserMark();
               }}
             >
