@@ -17,7 +17,7 @@ export const Container = styled.div<{ pNone?: boolean; page?: boolean; mtNone?: 
   ${({ pTabletNone }) => {
     if (pTabletNone) {
       return `
-        @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+        @media only screen and (max-device-width: 1024px) {
           padding-right: 0px;
           padding-left: 0px;
         }

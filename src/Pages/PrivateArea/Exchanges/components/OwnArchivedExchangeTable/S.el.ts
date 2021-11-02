@@ -115,3 +115,40 @@ export const TypeCrypto = styled.div`
     margin-right: 0;
   }
 `;
+
+export const Exchange = styled.div`
+  width: 100%;
+  background: #fff;
+  box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
+  margin-bottom: 10px;
+  padding: 20px;
+`;
+
+export const ExchangeLine = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  &:nth-child(6) {
+    margin-bottom: 0px;
+  }
+`;
+
+export const ExchangeLineContent = styled.h3<{ main?: boolean; text?: boolean; }>`
+  font-size: 14px;
+  line-height: right;
+  color: #000000;
+  ${({ main, text }) => {
+    if (main) {
+      return `
+        font-weight: 300;
+      `;
+    };
+    if (text) {
+      return `
+        font-weight: 500;
+        text-align: right;
+      `;
+    };
+  }}
+`; 

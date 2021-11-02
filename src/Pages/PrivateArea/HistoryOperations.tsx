@@ -20,7 +20,6 @@ import { ViewExchangeModel } from '../../types/exchange';
 import { isFirstDayOfMonth } from 'date-fns/esm';
 
 export const HistoryOperations = () => {
-    const history = useHistory();
     const [activeFilter, setActiveFilter] = useState<'active' | 'archived' | 'hold'>('active');
     const months = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
     const [buttons, setButtons] = useState<any[]>([
@@ -29,8 +28,6 @@ export const HistoryOperations = () => {
         { text: "Списание", active: "archived" }
     ]);
     const appContext = useContext(AppContext);
-    const user = appContext.user;
-    const balance = appContext.balance;
     const hubConnection = appContext.hubConnection;
     const balances = appContext.balanceList;
     const { t } = useTranslation();

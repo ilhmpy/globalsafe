@@ -5,6 +5,7 @@ import { Container } from '../../../components/UI/Container';
 import { Heading } from '../components/Heading';
 import { routers } from '../../../constantes/routers';
 import { TabNavItem, TabsBlock, Text, FilterButton } from '../components/ui';
+import { Spinner } from "../components/Loading/Loading";
 import * as S from './S.el';
 
 import { OwnActiveExchangesTable } from './components/OwnActiveExchangesTable/OwnActiveExchangesTable';
@@ -39,6 +40,8 @@ export const OwnExchanges = () => {
   const [payments, setPayments] = useState<any[]>([]);
   const [balanceKind, setBalanceKind] = useState<number | null>(null);
   const [fiatKind, setFiatKind] = useState<number | null>(null);
+  const [allExchanges, setAllExchanges] = useState<ViewExchangeModel[]>([]);
+  const [statusNew, setStatusNew] = useState<any>();
 
   /*
     CALLBACKS: 
@@ -60,6 +63,14 @@ export const OwnExchanges = () => {
       setSelectedStatus([]);
       setBalanceKind(null);
       setFiatKind(null);
+    };
+
+    function getFirstElements(collection: ViewExchangeModel[], elms: number) {
+      return collection.filter((i, idx) => {
+          if (idx < elms) {
+              return i;
+          };
+      });
     };
     
     function filters(res: GetExchangesCollectionResult) {
@@ -104,9 +115,11 @@ export const OwnExchanges = () => {
         });
         setUserExchanges(filter);
       } else {
-        setUserExchanges(res.collection);
+        const collection = getFirstElements(res.collection, 10);
+        setAllExchanges(res.collection);
+        setUserExchanges(collection);
       };
-    }
+    };
     
     async function getGetUserExchanges() {
       try {
@@ -125,6 +138,36 @@ export const OwnExchanges = () => {
         setLoading(false);
       };
     };
+
+    function changeNew() {
+      setUserExchanges(items => items && items.map((i: any) => {
+          return {
+              ...i,
+              new: false 
+          };
+      }));
+    };
+
+
+    function addMore() {
+      if (userExchanges && userExchanges.length <= allExchanges.length) {
+          changeNew();
+          let items: any[] = [];
+          for (let i = 0; i < 5; i++) {
+              if (allExchanges[userExchanges.length + i]) {
+                  items = [...items, { ...allExchanges[userExchanges.length + i], new: true }];
+              };
+          };            
+          if (items.length) {
+              setUserExchanges([...userExchanges, ...items].sort((x: any, y: any) => {
+                  const a = new Date(x.operationDate);
+                  const b = new Date(y.operationDate);
+                  return a > b ? -1 : a < b ? 1 : 0;
+              }));
+              setStatusNew(setTimeout(() => changeNew(), 2000));
+          };
+      };
+  };
 
   useEffect(() => {
     let cancel = false;
@@ -185,6 +228,27 @@ export const OwnExchanges = () => {
       setUserExchanges([...userExchanges.filter((i: ViewExchangeModel) => i.safeId != res.safeId)])
     };
   };
+
+  function setPaymentMethod(safeId: string, kind: string) {
+    const exchanges = [...userExchanges];
+    userExchanges.forEach((item) => {
+      if (item.safeId === safeId) {
+        exchanges[userExchanges.indexOf(item)].paymentMethod = { kind };
+      };
+    });
+    setUserExchanges(exchanges);
+  };
+
+  useEffect(() => {
+    let cancel = false;
+    if (hubConnection && !cancel) {
+      hubConnection.on("SetPaymentMethod", setPaymentMethod);
+    };
+    return () => {
+      cancel = true;
+      hubConnection?.off("SetPaymentMethod", setPaymentMethod);
+    }
+  }, [hubConnection, userExchanges]);
 
   useEffect(() => {
     let cancel = false;
@@ -302,11 +366,13 @@ export const OwnExchanges = () => {
   return (
     <div>
       <Container>
-        <Heading
-          onClick={() => history.push(routers.p2pchangesOrderToBuy)}
-          title="P2P обмены"
-          btnText="Опубликовать ордер"
-        />
+        {screen.width > 480 && (
+          <Heading
+            onClick={() => history.push(routers.p2pchangesOrderToBuy)}
+            title="P2P обмены"
+            btnText="Опубликовать ордер"
+          />
+        )}
         <S.SubHeader>
           <TabsBlock>
             <TabNavItem to={routers.p2pchanges} exact>
@@ -321,59 +387,104 @@ export const OwnExchanges = () => {
               <div>Сертификаты</div>
             </TabNavItem>
           </TabsBlock>
-          <Text size={14} lH={16} weight={500} black>
-            Рейтинг аккаунта: {getMyRating(account)}
-          </Text>
-        </S.SubHeader>
-        <S.Filters style={{ marginBottom: "10px", position: "relative" }}>
-          <FilterButton
-              active={activeFilter === 'active'}
-              onClick={() => setActiveFilter('active')}
-              style={{ marginRight: "0px" }}
-            >
-              Активные
-            </FilterButton>
-            <FilterButton
-              active={activeFilter === 'archived'}
-              onClick={() => setActiveFilter('archived')}
-              style={{ marginLeft: "0px", borderLeft: "0" }}
-            >
-              Архив
-            </FilterButton>
-        </S.Filters>
-        <S.Filters style={{ marginBottom: "10px", position: "relative" }}>
-          <S.Line style={{ display: "none" }} />
-          <FilterButton active style={{ marginLeft: "0px" }} onClick={() => setShowCurrencyPairModal(true)}>
-            {balanceKind != null && fiatKind != null ? 
-              `${Balance[balanceKind]} - ${FiatKind[fiatKind]}`  
-              : balanceKind != null && fiatKind == null ? 
-              `${Balance[balanceKind]} - Все` 
-              : balanceKind == null && fiatKind != null ? 
-              `Все - ${FiatKind[fiatKind]}` 
-              : "Все валюты"
-            }
-          </FilterButton>
-          <S.Line />
-          <FilterButton active onClick={() => setShowPaymentMethodsModal(true)}>
-            {payments && payments.length ? "Методы оплаты - " : "Все методы оплаты"} {payments && payments.length ? payments.length : ""}
-          </FilterButton>
-          <S.Line />
-          <FilterButton active onClick={() => setShowSelectedStatus(true)}>
-            {status && status.length ? "Статусы - " : "Все статусы"} {status && status.length ? status.length : ""}
-          </FilterButton>
-          {payments.length > 0 || (status != null && status.length > 0) || balanceKind != null || fiatKind != null ? (
-            <>
-              <FilterButton style={{ position: "absolute", right: "0px", }} onClick={resetFilters}>
-                Очистить фильтр
+          {screen.width > 480 && (
+            <Text size={14} lH={16} weight={500} black>
+              Рейтинг аккаунта: {getMyRating(account)}
+            </Text>
+          )}
+        </S.SubHeader> 
+        {screen.width < 480 && (
+          <>
+            <Heading
+              onClick={() => history.push(routers.p2pchangesOrderToBuy)}
+              title="P2P обмены"
+              btnText="Опубликовать ордер"
+              styles={{ marginBottom: "10px" }}
+            />
+            <Text center size={14} lH={16} weight={500} black mB={20} publish>
+              Рейтинг аккаунта: {getMyRating(account)}
+            </Text>
+            <S.Filters style={{ marginBottom: "10px", position: "relative" }}>
+              <FilterButton
+                active={activeFilter === 'active'}
+                onClick={() => setActiveFilter('active')}
+                style={{ marginRight: "0px" }}
+                big
+              >
+                Активные
               </FilterButton>
-            </>
-          ) : null}
-        </S.Filters>
-      </Container>
-
+              <FilterButton
+                active={activeFilter === 'archived'}
+                onClick={() => setActiveFilter('archived')}
+                style={{ marginLeft: "0px", borderLeft: "0" }}
+                big
+              >
+                Архив
+              </FilterButton>
+            </S.Filters>
+            <S.FiltersBox>
+              Фильтры (3)
+            </S.FiltersBox>
+          </>
+        )} 
+        {screen.width > 480 && (
+          <>
+            <S.Filters style={{ marginBottom: "10px", position: "relative" }}>
+              <FilterButton
+                active={activeFilter === 'active'}
+                onClick={() => setActiveFilter('active')}
+                style={{ marginRight: "0px" }}
+              >
+                Активные
+              </FilterButton>
+              <FilterButton
+                active={activeFilter === 'archived'}
+                onClick={() => setActiveFilter('archived')}
+                style={{ marginLeft: "0px", borderLeft: "0" }}
+              >
+                Архив
+              </FilterButton>
+          </S.Filters>
+          <S.Filters style={{ marginBottom: "10px", position: "relative" }}>
+            <S.Line style={{ display: "none" }} />
+            <FilterButton active style={{ marginLeft: "0px" }} onClick={() => setShowCurrencyPairModal(true)}>
+              {balanceKind != null && fiatKind != null ? 
+                `${Balance[balanceKind]} - ${FiatKind[fiatKind]}`  
+                : balanceKind != null && fiatKind == null ? 
+                `${Balance[balanceKind]} - Все` 
+                : balanceKind == null && fiatKind != null ? 
+                `Все - ${FiatKind[fiatKind]}` 
+                : "Все валюты"
+              }
+            </FilterButton>
+            <S.Line />
+            <FilterButton active onClick={() => setShowPaymentMethodsModal(true)}>
+              {payments && payments.length ? "Методы оплаты - " : "Все методы оплаты"} {payments && payments.length ? payments.length : ""}
+            </FilterButton>
+            <S.Line />
+            <FilterButton active onClick={() => setShowSelectedStatus(true)}>
+              {status && status.length ? "Статусы - " : "Все статусы"} {status && status.length ? status.length : ""}
+            </FilterButton>
+            {payments.length > 0 || (status != null && status.length > 0) || balanceKind != null || fiatKind != null ? (
+              <>
+                <FilterButton style={{ position: "absolute", right: "0px", }} onClick={resetFilters}>
+                  Очистить фильтр
+                </FilterButton>
+              </>
+            ) : null}
+          </S.Filters>
+        </>
+        )}      
+        </Container>
         {activeFilter === 'active' && <OwnActiveExchangesTable setExchanges={setUserExchanges} loading={loading} exchanges={userExchanges} />}
         {activeFilter === 'archived' && <OwnArchivedExchangesTable loading={loading} exchanges={userExchanges} />}
         
+        <S.Button onClick={addMore} newItems={!(userExchanges.length === allExchanges.length)}>
+          {userExchanges && userExchanges.some((item: any) => item.new === true) ? 
+              <Spinner style={{ width: 25, height: 25, borderTop: "2px solid #fff", margin: "0 auto" }} /> 
+                : "Показать ещё"}
+        </S.Button>
+
         <PaymentMethods 
           selectedPaymentMethods={selectedPaymentMethods}
           setSelectedPaymentMethods={setSelectedPaymentMethods}

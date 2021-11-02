@@ -82,16 +82,6 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
     const owner = (kind === 0 && ownerSafeId !== account.safeId) ||
     (kind === 1 && ownerSafeId === account.safeId) ? "buyer" : "seller";
     if (state === 0) {
-      /*
-      if (screen.width > 1024) {
-        if (owner === "seller") {
-          return "Ожидание перевода";
-        } else {
-          return "Ожидание подтверждения оплаты";        
-        };
-      } else {
-        return "Новый";
-      }; */
       if (owner === "seller") {
         return "Ожидание перевода";
       } else {
@@ -102,60 +92,116 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
     };
   };
 
+  function getOwner({ kind, ownerSafeId }: ViewExchangeModel) {
+    return (kind === 0 && ownerSafeId !== account.safeId) ||
+    (kind === 1 && ownerSafeId === account.safeId) ? "buyer" : "seller";
+  };
+
+  function localeCount(volume: number, assetKind: number, fiat: boolean) {
+    return (countVolumeToShow(volume, assetKind)).toLocaleString("ru-RU", { maximumFractionDigits: fiat ? 2 : 5 });
+  };
+
   return (
-    <Container pTabletNone>
-      <S.Table>
-        <S.Header>
-          <S.Cell>
-            <span>Тип</span>
-          </S.Cell>
-          <S.Cell>
-            <span>Кол-во</span>
-          </S.Cell>
-          <S.Cell>
-            <span>Курс</span>
-          </S.Cell>
-          <S.Cell>
-            <span>Сумма оплаты</span>
-          </S.Cell>
-          <S.Cell>
-            <span>Метод оплаты</span>
-          </S.Cell>
-          <S.Cell>
-            <span>{screen.width > 1024 ? "Оставшееся время" : "Время"}</span>
-          </S.Cell>
-          <S.Cell>
-            <span>Статус</span>
-          </S.Cell>
-        </S.Header>
-        {loading ? <Loading /> : (
-          <>
-            {exchanges.length === 0 ? <NotItems text="У вас не имеется обменов" /> : (
-              <>
-                {exchanges.map((exchange, idx) => (
-                  <S.BodyItem key={idx} onClick={() => handleNavigateToExchange(exchange.safeId)}>
-                      <S.Cell data-label="Тип">{exchange.kind === 0 ? "Продажа" : "Покупка"}</S.Cell>
-                      <S.Cell data-label="Кол-во">
-                        {(countVolumeToShow(exchange.volume, exchange.assetKind)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {Balance[exchange.assetKind]}
-                      </S.Cell>
-                      <S.Cell data-label="Курс">{exchange.rate}</S.Cell>
-                      <S.Cell data-label="Сумма оплаты">{(countVolumeToShow(exchange.exchangeVolume, exchange.assetKind)).toLocaleString("ru-RU", { maximumFractionDigits: 2 })} {FiatKind[exchange.exchangeAssetKind]}</S.Cell>
-                      <S.Cell data-label="Метод оплаты">
-                        <S.BankList>
-                            {getPaymentMethod(exchange.paymentMethod?.kind)}
-                        </S.BankList> 
-                      </S.Cell>
-                      <S.Cell data-label="Оставшееся время">
-                        <Counter text="Время на обмен закончилось" data={exchange.creationDate} delay={exchange.operationWindow.totalMilliseconds} formatNum />
-                      </S.Cell>
-                      <S.Cell data-label="Статус">{getStatus(exchange)}</S.Cell> 
-                  </S.BodyItem>
-                ))}
-              </>
-            )}
-          </>
-        )}
-      </S.Table>
-    </Container>
+    <>
+      {screen.width > 480 ? (
+        <Container pTabletNone>
+        <S.Table>
+          <S.Header>
+            <S.Cell>
+              <span>Тип</span>
+            </S.Cell>
+            <S.Cell>
+              <span>Кол-во</span>
+            </S.Cell>
+            <S.Cell>
+              <span>Курс</span>
+            </S.Cell>
+            <S.Cell>
+              <span>Сумма оплаты</span>
+            </S.Cell>
+            <S.Cell>
+              <span>Метод оплаты</span>
+            </S.Cell>
+            <S.Cell>
+              <span>{screen.width > 1024 ? "Оставшееся время" : "Время"}</span>
+            </S.Cell>
+            <S.Cell>
+              <span>Статус</span>
+            </S.Cell>
+          </S.Header>
+          {loading ? <Loading /> : (
+            <>
+              {exchanges.length === 0 ? <NotItems text="У вас не имеется обменов" /> : (
+                <>
+                  {exchanges.map((exchange, idx) => (
+                    <S.BodyItem key={idx} onClick={() => handleNavigateToExchange(exchange.safeId)}>
+                        <S.Cell data-label="Тип">{getOwner(exchange) === "seller" ? "Продажа" : "Покупка"}</S.Cell>
+                        <S.Cell data-label="Кол-во">
+                          {localeCount(exchange.volume, exchange.assetKind, false)} {Balance[exchange.assetKind]}
+                        </S.Cell>
+                        <S.Cell data-label="Курс">{exchange.rate}</S.Cell>
+                        <S.Cell data-label="Сумма оплаты">{localeCount(exchange.exchangeVolume, exchange.assetKind, true)} {FiatKind[exchange.exchangeAssetKind]}</S.Cell>
+                        <S.Cell data-label="Метод оплаты">
+                          <S.BankList>
+                              {getPaymentMethod(exchange.paymentMethod?.kind)}
+                          </S.BankList> 
+                        </S.Cell>
+                        <S.Cell data-label="Оставшееся время">
+                          <Counter text="Время на обмен закончилось" data={exchange.creationDate} delay={exchange.operationWindow.totalMilliseconds} formatNum />
+                        </S.Cell>
+                        <S.Cell data-label="Статус">{getStatus(exchange)}</S.Cell> 
+                    </S.BodyItem>
+                  ))}
+                </>
+              )}
+            </>
+          )}
+        </S.Table>
+      </Container>
+      ) : (
+        <>
+          {loading ? <Loading /> : (
+            <>
+              {exchanges.length === 0 ? <NotItems text="У вас не имеется обменов" /> : (
+                <>
+                  {exchanges.map((exchange, idx) => (
+                    <S.Exchange key={idx} onClick={() => handleNavigateToExchange(exchange.safeId)}>
+                      <S.ExchangeLine> 
+                        <S.ExchangeLineContent main>{getOwner(exchange) === "seller" ? "Продажа" : "Покупка"}:</S.ExchangeLineContent>
+                        <S.ExchangeLineContent text>
+                          {localeCount(getOwner(exchange) === "seller" ? exchange.orderVolume : exchange.volume, exchange.assetKind, false)} {Balance[exchange.assetKind]}
+                        </S.ExchangeLineContent>
+                      </S.ExchangeLine>
+                      <S.ExchangeLine>
+                        <S.ExchangeLineContent main>Курс:</S.ExchangeLineContent>
+                        <S.ExchangeLineContent text>{exchange.rate} {FiatKind[exchange.exchangeAssetKind]}</S.ExchangeLineContent>
+                      </S.ExchangeLine>
+                      <S.ExchangeLine>
+                        <S.ExchangeLineContent main>Метод оплаты:</S.ExchangeLineContent>
+                        <S.ExchangeLineContent text>{getPaymentMethod(exchange.paymentMethod?.kind)}</S.ExchangeLineContent>
+                      </S.ExchangeLine>
+                      <S.ExchangeLine>
+                        <S.ExchangeLineContent main>Сумма оплаты:</S.ExchangeLineContent>
+                        <S.ExchangeLineContent text>{localeCount(exchange.exchangeVolume, exchange.assetKind, true)} {FiatKind[exchange.exchangeAssetKind]}</S.ExchangeLineContent>
+                      </S.ExchangeLine>
+                      <S.ExchangeLine>
+                        <S.ExchangeLineContent main>Оставшееся время:</S.ExchangeLineContent>
+                        <S.ExchangeLineContent text>
+                          <Counter text="Время на обмен закончилось" data={exchange.creationDate} delay={exchange.operationWindow.totalMilliseconds} formatNum />
+                        </S.ExchangeLineContent>
+                      </S.ExchangeLine>
+                      <S.ExchangeLine>
+                        <S.ExchangeLineContent main>Статус:</S.ExchangeLineContent>
+                        <S.ExchangeLineContent text style={{ maxWidth: "170px" }}>{getStatus(exchange)}</S.ExchangeLineContent>
+                      </S.ExchangeLine>
+                    </S.Exchange>
+                  ))}
+                </>
+              )}
+            </>
+          )}
+        </>
+      )}
+    </> 
   );
 };
