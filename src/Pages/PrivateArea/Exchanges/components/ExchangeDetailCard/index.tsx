@@ -43,22 +43,19 @@ type DetailCardProps = {
   setExchange: (val: ViewExchangeModel) => any; 
   setLoading: (val: boolean) => any;
   exchangeId: string;
+  setEnd: (val: boolean) => void;
 };
 
 export const ExchangeDetailCard: FC<DetailCardProps> = ({ 
   exchange, setCall, setShowSuccessModal, 
   setShowRejectModal, showRejectModal, 
-  showSuccessModal, setExchange, setLoading, 
-  exchangeId
+  showSuccessModal, setExchange, setEnd
 }: DetailCardProps) => {
   const history = useHistory();
   const { account, hubConnection } = useContext(AppContext);
 
   const [feedbackValue, setFeedbackValue] = useState(5);
   const [totalExchanges, setTotalExchanges] = useState<any>();
-  const [draw, setDraw] = useState<boolean>(true);
-  const [time, setTime] = useState<string>();
-  const [timer, setTimer] = useState<any>();
   const [timerDown, setTimerDown] = useState<boolean>(false);
   const [tab, setTab] = useState<'order' | 'exchange'>('exchange');
   const buyer = () => {
@@ -179,7 +176,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
  
   useEffect(() => {
     getUserMark();
-  }, [hubConnection, exchange])
+  }, [hubConnection, exchange]);
 
   function getTotalExecutedExchanges(id: string) {
     if (hubConnection) {
