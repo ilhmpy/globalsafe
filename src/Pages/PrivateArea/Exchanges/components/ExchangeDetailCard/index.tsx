@@ -138,13 +138,17 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
     console.log("ExchangeChanged RES", res, res.safeId, exchange && exchange.safeId);
     if (exchange != null && exchange.safeId == res.safeId) {
         setExchange(res);
+        handleToMobileModal(2);
     };
   };
 
   function cancelledCallback(res: ViewExchangeModel) {
     if (exchange != null && exchange.safeId === res.safeId) {
-      setShowRejectModal(true);
+      if (screen.width > 480) {
+        setShowRejectModal(true);
+      }
       cb(res);
+      handleToMobileModal(4);
     };
   };
 
@@ -358,7 +362,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
 
   function handleToMobileModal(state: number) {
     if (screen.width < 480) {
-      localStorage.setItem("mobileResultData", JSON.stringify({ ...exchange, state }));
+      localStorage.setItem("mobileResultData", JSON.stringify({ ...exchange, state, owner }));
       localStorage.setItem("feedback", JSON.stringify(feedbackValue));
       history.push("/mobile/modal");
     };

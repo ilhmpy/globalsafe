@@ -12,16 +12,8 @@ import { ConsoleLogger } from "@microsoft/signalr/dist/esm/Utils";
 
 export const MobileModal = () => {
     const { account } = useContext(AppContext);
-    const [exchange, setExchange] = useState<ViewExchangeModel | null>(null);
+    const [exchange, setExchange] = useState<any>(null);
     const [feed, setFeed] = useState<string | undefined>();
-    const buyer = () => {
-        return (
-          (exchange && exchange.kind === 0 && exchange.ownerSafeId !== account.safeId) ||
-          (exchange && exchange.kind === 1 && exchange.ownerSafeId === account.safeId)
-        );
-      };
-    
-      const [owner, setOwner] = useState<'seller' | 'buyer'>(buyer() ? 'buyer' : 'seller');
 
     useEffect(() => {
         const exc = localStorage.getItem("mobileResultData");
@@ -48,15 +40,15 @@ export const MobileModal = () => {
         if (exchange) {
             return (
                 <>
-                    {owner === "seller" && exchange.state === ExchangeState.Completed && "Продано"} 
-                    {owner === "buyer" && exchange.state === ExchangeState.Completed && "Куплено"}  
+                    {exchange.owner === "seller" && exchange.state === ExchangeState.Completed && "Продано"} 
+                    {exchange.owner === "buyer" && exchange.state === ExchangeState.Completed && "Куплено"}  
                     {exchange.state === ExchangeState.Cancelled && "Количество"}
                 </>
             );
         };
     };
 
-    console.log(owner);
+    console.log(exchange.owner);
 
     return (
         <div>
@@ -70,7 +62,7 @@ export const MobileModal = () => {
                      {exchange.state === ExchangeState.Cancelled && (
                          <MB.ModalLine>
                              <MB.ModalContent main>
-                                {owner === "seller" ? "Покупатель отменил" : "Вы успешно отменили"} обмен {Balance[exchange.assetKind]} на {FiatKind[exchange.exchangeAssetKind]}:
+                                {exchange.owner === "seller" ? "Покупатель отменил" : "Вы успешно отменили"} обмен {Balance[exchange.assetKind]} на {FiatKind[exchange.exchangeAssetKind]}:
                              </MB.ModalContent>
                          </MB.ModalLine>
                       )}
@@ -91,7 +83,7 @@ export const MobileModal = () => {
                       <MB.ModalLine>
                         {exchange.state === ExchangeState.Completed && (
                             <>
-                              <MB.ModalContent main>Ваша оценка {owner === "seller" ? "покупателю" : "продавцу"}:</MB.ModalContent>
+                              <MB.ModalContent main>Ваша оценка {exchange.owner === "seller" ? "покупателю" : "продавцу"}:</MB.ModalContent>
                               <MB.ModalContent text>{(Number(feed)).toFixed(1)}</MB.ModalContent>
                            </>
                         )}
