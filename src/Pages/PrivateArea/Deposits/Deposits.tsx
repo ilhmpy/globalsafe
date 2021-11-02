@@ -14,6 +14,21 @@ import * as S from './S.elements';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, { A11y, Navigation, Pagination, Scrollbar, Thumbs, EffectFade } from 'swiper';
 import { Tiles } from '../components/Tiles';
+import styled from 'styled-components';
+import {
+  TilesContainer,
+  BottomValue,
+  BottomTitle,
+  BottomSide,
+  TopSide,
+  DateRange,
+  BoxAmount,
+  BoxTitle,
+  BlockBox,
+} from '../components/Tiles/styled';
+import { Balance } from '../../../types/balance';
+import moment from 'moment';
+import { BalanceKind } from '../../../enums/balanceKind';
 
 export const Deposits: FC = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -189,28 +204,145 @@ export const Deposits: FC = () => {
           setViewType={setViewType}
         />
       </Container>
-      <Container pTabletNone>
-        {/* {viewType === 'list' ? ( */}
-        <Scrollbars style={{ height: '236px', minHeight: '236px' }}>
-          {getDepositsLoading ? (
+
+      {screen.width > 768 ? (
+        <Container pTabletNone>
+          {viewType === 'list' ? (
+            <Scrollbars style={{ height: '236px', minHeight: '236px' }}>
+              {getDepositsLoading ? (
+                <Loading />
+              ) : (
+                depositsList.length && (
+                  <InfiniteScroll
+                    pageStart={0}
+                    loadMore={handleGetDepositsList}
+                    hasMore={depositsListHasMore}
+                    useWindow={false}
+                  >
+                    <Table depositsList={depositsList} />
+                  </InfiniteScroll>
+                )
+              )}
+            </Scrollbars>
+          ) : getDepositsLoading ? (
             <Loading />
           ) : (
-            depositsList.length > 0 && (
-              <InfiniteScroll
-                pageStart={0}
-                loadMore={handleGetDepositsList}
-                hasMore={depositsListHasMore}
-                useWindow={false}
-              >
-                <Table depositsList={depositsList} />
-              </InfiniteScroll>
-            )
+            <Tiles depositsList={depositsList} />
           )}
-        </Scrollbars>
-        {/* ) : ( */}
-        {/* <Tiles depositsList={depositsList} /> */}
-        {/* )} */}
-      </Container>
+        </Container>
+      ) : (
+        <>
+          <Container>
+            <SwiperUI
+              className="mySwiper"
+              slidesPerView={1}
+              pagination={true}
+              // pagination={{
+              //   dynamicBullets: true,
+              //   clickable: true,
+              //   el: '.swiper-pagination',
+              //   type: 'bullets',
+              // }}
+              // pagination={{
+              //   el: '.my-custom-pagination-div',
+              //   clickable: true,
+              //   renderBullet: (index, className) => {
+              //     return '<span class="' + className + '">' + (index + 1) + '</span>';
+              //   },
+              // }}
+            >
+              {depositsList &&
+                depositsList.map((deposit, i) => {
+                  return (
+                    <SwiperSlide key={`${deposit.safeId}-${i}`}>
+                      <BlockBox
+                        onClick={() => {
+                          //   setChosenDepositView(deposit);
+                          history.push(routers.depositsView);
+                        }}
+                      >
+                        <TopSide>
+                          <BoxTitle>{deposit.deposit.name}</BoxTitle>
+                          <BoxAmount>{`${deposit.amountView} ${
+                            Balance[deposit.deposit.asset]
+                          }`}</BoxAmount>
+                          <DateRange>{`${moment(new Date(deposit.creationDate)).format(
+                            'DD.MM.YYYY'
+                          )} - ${moment(new Date(deposit.endDate)).format(
+                            'DD.MM.YYYY'
+                          )}`}</DateRange>
+                        </TopSide>
+                        <BottomSide>
+                          <div>
+                            <BottomTitle>Ближайшая выплата:</BottomTitle>
+                            <BottomValue>
+                              {moment(deposit.paymentDate).format('DD.MM.YYYY')}
+                              {`(через ${moment
+                                .duration(
+                                  moment(
+                                    moment(deposit.paymentDate).format('YYYY-MM-DD'),
+                                    'YYYY-MM-DD'
+                                  ).diff(moment().startOf('day'))
+                                )
+                                .asDays()} дней)`}
+                            </BottomValue>
+                          </div>
+                          <div>
+                            <BottomTitle>Сумма ближайшей выплаты:</BottomTitle>
+                            <BottomValue>
+                              {deposit.paymentAmountView} {BalanceKind[deposit.deposit.asset]}
+                            </BottomValue>
+                          </div>
+                        </BottomSide>
+                      </BlockBox>
+                    </SwiperSlide>
+                  );
+                })}
+            </SwiperUI>
+            {/* <div className="my-custom-pagination-div" /> */}
+          </Container>
+          <PartnerProgramPagination />
+        </>
+      )}
     </S.Container>
   );
 };
+
+const SwiperUI = styled(Swiper)`
+  max-height: 290px;
+  height: 100%;
+`;
+
+export const PartnerProgramContainer = styled.div`
+  width: 90%;
+  margin: 0 auto;
+
+  .swiper-pagination-bullets {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+  }
+
+  .swiper-pagination-bullet {
+    width: 7px;
+    height: 7px;
+    background: #c4c4c4;
+    border-radius: 50%;
+  }
+
+  .swiper-pagination-bullet-active {
+    width: 20px;
+    height: 6px;
+    background: #0094ff;
+    border-radius: 6px;
+  }
+`;
+
+export const PartnerProgramPagination = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  margin-top: 33px;
+`;

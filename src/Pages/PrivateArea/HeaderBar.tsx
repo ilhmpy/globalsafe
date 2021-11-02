@@ -1256,7 +1256,6 @@ const BalanceChipsBlock = styled.div`
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    max-width: min-content;
   }
 `;
 
