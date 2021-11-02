@@ -830,7 +830,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                   outlineDanger
                   bigSize
                   as="button" 
-                  disabled={true}
+                  disabled={!timerDown}
                   onClick={() => abuseExchange(exchange.safeId)}
                   exchangeBtn
                 >
@@ -857,7 +857,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                   outlineDanger
                   bigSize
                   as="button" 
-                  disabled={true}
+                  disabled={!timerDown}
                   onClick={() => abuseExchange(exchange.safeId)}
                   exchangeBtn
                   fullWidthMobile
