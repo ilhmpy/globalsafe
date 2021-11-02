@@ -1,6 +1,30 @@
-import styled from 'styled-components/macro';
+import styled, { css } from 'styled-components/macro';
+import { Device } from '../../consts';
 
-export const Title = styled.h3<{ small?: boolean; mB?: number; lH?: number; main?: boolean; }>`
+interface TitleProps {
+  small?: boolean; 
+  mB?: number; 
+  lH?: number; 
+  main?: boolean;
+  mbMobile?: number;
+  heading2?: boolean;
+  heading3?: boolean;
+}
+
+const Heading2 = css`
+  font-size: 18px;
+  line-height: 21px;
+  font-weight: 900;
+`;
+
+const Heading3 = css`
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: ${props => props.theme.black};
+`;
+
+export const Title = styled.h3<TitleProps>`
   font-weight: bold;
   font-size: ${(props) => (props.small ? 18 : 24)}px;
   line-height: ${(props) => (props.small ? 21 : props.lH ? props.lH : 38)}px;
@@ -18,5 +42,10 @@ export const Title = styled.h3<{ small?: boolean; mB?: number; lH?: number; main
         }
       `;
     };
-  }}
+  }};
+  @media ${Device.mobile} {
+    ${props => props.heading2 && Heading2};
+    ${props => props.heading3 && Heading3};
+    ${props => props.mbMobile !== undefined && css`margin-bottom: ${props.mbMobile}px`};
+  };
 `;

@@ -10,7 +10,7 @@ import { GetBuyOrdersModel, OrderType, ViewBuyOrderModel } from '../../../../../
 import { CollectionPayMethod, PaymentMethodKind, RootPayMethod } from '../../../../../types/paymentMethodKind';
 import { Checkbox } from '../../../components/Checkbox';
 import { LeftSide, RightSide, Space, TabNavItem, Text, Title } from '../../../components/ui';
-import { countVolumeToSend, countVolumeToShow } from '../../../utils';
+import { countVolumeToSend, countVolumeToShow, getMyRating } from '../../../utils';
 import { OrderErrorModal } from '../modals/OrderErrorModal';
 import { OrderInfoModal } from '../modals/OrderInfoModal';
 import * as S from './S.el';
@@ -18,7 +18,7 @@ import * as S from './S.el';
 export const OrderToBuyCard: FC = () => {
   const history = useHistory();
   const appContext = useContext(AppContext);
-  const { hubConnection, user, balanceList, userSafeId } = appContext;
+  const { hubConnection, user, balanceList, userSafeId, account } = appContext;
   const [showOrderBuyModal, setShowOrderBuyModal] = useState(false);
   const [showOrderErrorModal, setShowOrderErrorModal] = useState(false);
 
@@ -379,7 +379,7 @@ export const OrderToBuyCard: FC = () => {
           <Text size={14} lH={20} mB={10} black>
             Рейтинг аккаунта:
           </Text>
-          <Title lH={28}>5.0</Title>
+          <Title lH={28}>{getMyRating(account)}</Title>
         </S.BlockWrapper>
         {
           currencyToBuy
