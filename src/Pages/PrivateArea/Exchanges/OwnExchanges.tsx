@@ -229,6 +229,27 @@ export const OwnExchanges = () => {
     };
   };
 
+  function setPaymentMethod(safeId: string, kind: string) {
+    const exchanges = [...userExchanges];
+    userExchanges.forEach((item) => {
+      if (item.safeId === safeId) {
+        exchanges[userExchanges.indexOf(item)].paymentMethod = { kind };
+      };
+    });
+    setUserExchanges(exchanges);
+  };
+
+  useEffect(() => {
+    let cancel = false;
+    if (hubConnection && !cancel) {
+      hubConnection.on("SetPaymentMethod", setPaymentMethod);
+    };
+    return () => {
+      cancel = true;
+      hubConnection?.off("SetPaymentMethod", setPaymentMethod);
+    }
+  }, [hubConnection, userExchanges]);
+
   useEffect(() => {
     let cancel = false;
     if (hubConnection && !cancel) {
