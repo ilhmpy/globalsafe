@@ -19,12 +19,14 @@ export const OrderNotActualModal: FC<Props> = ({ onClose, open }: Props) => {
     <>
       {open && (
         <Modal onClose={onClose} open={open}>
-          <S.SmallContainer>
-            <S.BlackTitle>Ордер исполнен</S.BlackTitle>
-            <S.Desc largeMb>Данный ордер был исполнен. Пожалуйста выберите другой ордер.</S.Desc>
-            <Button primary fullWidth onClick={() => history.replace(routers.p2pchanges)}>
-              Список ордеров
-            </Button>
+          <S.SmallContainer mobileWFull>
+            <S.Title>Ордер исполнен</S.Title>
+            <S.MobileContent>
+              <S.Desc largeMb>Данный ордер был исполнен. Пожалуйста выберите другой ордер.</S.Desc>
+              <Button primary fullWidth onClick={() => history.replace(routers.p2pchanges)}>
+                Список ордеров
+              </Button>
+            </S.MobileContent>
           </S.SmallContainer>
         </Modal>
       )}

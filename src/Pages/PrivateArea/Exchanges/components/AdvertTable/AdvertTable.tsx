@@ -51,7 +51,7 @@ export const AdvertTable = ({ list }: AdvertTableProps) => {
             <span>Рейтинг</span>
           </S.Cell>
         </S.Header>
-
+ 
         { 
           list.length > 0 
           ?
