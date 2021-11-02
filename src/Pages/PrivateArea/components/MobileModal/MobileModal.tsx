@@ -4,12 +4,8 @@ import { Header } from "../../../../components/Header/Header";
 import { Footer } from '../../../../components/Footer/Footer';
 import { ViewExchangeModel } from '../../../../types/exchange';
 
-type ViewMobileModal = {
-    type: 0 | 1;
-    exchange: ViewExchangeModel | null;
-};
-
-export const MobileModal: FC<ViewMobileModal> = ({ type }: ViewMobileModal) => {
+export const MobileModal = () => {
+    
     return (
       <div>
         <Header />

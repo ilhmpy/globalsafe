@@ -351,6 +351,13 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
     return;
   }, [tab]);
 
+  function handleToMobileModal() {
+    if (screen.width <= 480) {
+      localStorage.setItem("mobileResultData", JSON.stringify({ exchange, type: exchange.state === 2 ? 0 : 1 }));
+      history.push("/mobile/modal")
+    };
+  };
+
   return (
     <>
     <Container>
@@ -577,7 +584,10 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                       <Button primary bigSize onClick={() => confirmExchangePayment(exchange.safeId)}>
                         Средства отправлены
                       </Button>
-                      <Button outlinePrimary bigSize rightBtnOnTablet onClick={() => cancelExchange(exchange.safeId)}>
+                      <Button outlinePrimary bigSize rightBtnOnTablet onClick={() => {
+                        cancelExchange(exchange.safeId);
+                        handleToMobileModal();
+                      }}>
                         Отменить обмен
                       </Button>
                     </S.Space>
@@ -605,7 +615,10 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                     <Button primary bigSize onClick={() => confirmExchangePayment(exchange.safeId)}>
                       Средства отправлены
                     </Button>
-                    <Button outlinePrimary bigSize rightBtnOnTablet onClick={() => cancelExchange(exchange.safeId)}>
+                    <Button outlinePrimary bigSize rightBtnOnTablet onClick={() => {
+                      cancelExchange(exchange.safeId);
+                      handleToMobileModal();
+                    }}>
                       Отменить обмен
                     </Button>
                   </S.Space>
@@ -813,7 +826,10 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                   primary
                   bigSize
                   as="button"
-                  onClick={() => completeExchange(exchange.safeId)}
+                  onClick={() => {
+                    handleToMobileModal();
+                    completeExchange(exchange.safeId);
+                  }}
                 >
                   Средства получены
                 </Button>
