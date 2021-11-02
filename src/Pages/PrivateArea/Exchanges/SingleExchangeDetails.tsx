@@ -13,7 +13,6 @@ import { AppContext } from '../../../context/HubContext';
 import { Loading, NotItems } from "../components/Loading/Loading";
 import { Balance } from "../../../types/balance";
 import { FiatKind } from "../../../types/fiat";
-import { PaymentMethodKind } from "../../../types/paymentMethodKind";
 
 type PropsMatch = {
   exchangeId: string;

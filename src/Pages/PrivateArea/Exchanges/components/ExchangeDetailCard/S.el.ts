@@ -1,6 +1,6 @@
 import styled from 'styled-components/macro';
 
-export const Container = styled.div`
+export const Container = styled.div<{ when?: boolean; }>`
   width: 100%;
   display: flex;
   align-items: stretch;
@@ -13,6 +13,13 @@ export const Container = styled.div`
   @media only screen and (max-device-width: 480px) {
     flex-wrap: wrap;
   }
+  ${({ when }) => {
+    if (when != undefined) {
+      return `
+        display: ${when ? "flex" : "none"};
+      `;
+    };
+  }}
 `;
 
 export const BlockWrapper = styled.div<{ when?: boolean; }>`
@@ -81,9 +88,16 @@ export const FeedbackBlock = styled.div`
   margin-bottom: 40px;
 `;
 
-export const StateBlock = styled.div<{ when: boolean; }>`
+export const StateBlock = styled.div<{ when: boolean; left?: boolean; }>`
   width: 100%;
   display: ${({ when }) => {
     return when ? "block" : "none"
   }};
+  ${({ left }) => {
+    if (left) {
+      return `
+        width: 33%;
+      `;
+    }
+  }}
 `;

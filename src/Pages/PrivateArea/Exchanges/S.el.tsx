@@ -8,13 +8,20 @@ export const SubHeader = styled.div`
   margin-bottom: 20px;
 `;
 
-export const Filters = styled.div`
+export const Filters = styled.div<{ when?: boolean; }>`
   display: flex;
   margin-bottom: 20px;
   @media only screen and (max-device-width: 480px) {
     width: 100%;
     margin-bottom: 20px;
   }
+  ${({ when }) => {
+    if (when !== undefined) {
+      return `
+        display: ${when ? "flex" : "none"};
+      `;
+    };
+  }}
 `;
 
 export const FiltersBox = styled.div`

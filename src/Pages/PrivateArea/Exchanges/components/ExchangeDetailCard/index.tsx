@@ -1,5 +1,6 @@
 import React, { FC, useState, useContext, useEffect } from 'react';
 import * as S from './S.el';
+import * as FL from "../../S.el";
 import {
   Chip,
   CopyIconButton,
@@ -28,7 +29,8 @@ import { getTime } from 'date-fns';
 import { Counter } from '../../../components/ui/Counter';
 import  { countVolumeToShow } from "../../../utils";
 import { Container } from "../../../../../components/UI/Container";
-import { scryRenderedComponentsWithType } from 'react-dom/test-utils';
+import { FilterButton } from "../../../components/ui";
+import { Exchange } from '../OwnActiveExchangesTable/S.el';
 
 type DetailCardProps = {
   exchange: ViewExchangeModel;
@@ -58,6 +60,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
   const [time, setTime] = useState<string>();
   const [timer, setTimer] = useState<any>();
   const [timerDown, setTimerDown] = useState<boolean>(false);
+  const [tab, setTab] = useState<'order' | 'exchange'>('exchange');
   const buyer = () => {
     return (
       (exchange && exchange.kind === 0 && exchange.ownerSafeId !== account.safeId) ||
@@ -348,9 +351,32 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
   // editStateForTesting(0);
 
   return (
+    <>
+    <Container>
+      <FL.Filters style={{ marginBottom: "10px", position: "relative" }} 
+        when={screen.width < 480 && (exchange.state === ExchangeState.Initiated || exchange.state === ExchangeState.Confirmed)}
+      >
+        <FilterButton
+          active={tab === 'exchange'}
+          onClick={() => setTab('exchange')}
+          style={{ marginRight: "0px" }}
+          big
+        >
+          Обмен
+        </FilterButton>
+        <FilterButton
+          active={tab === 'order'}
+          onClick={() => setTab('order')}
+          style={{ marginLeft: "0px", borderLeft: "0" }}
+          big
+        >
+          Ордер
+        </FilterButton>
+      </FL.Filters>
+    </Container>
     <Container pTabletNone>
     <S.Container>
-      <LeftSide bg={'#EAEFF4'}>
+      <LeftSide bg={'#EAEFF4'}> 
         {screen.width < 481 && 
           <S.BlockWrapper>
             <Title lH={21} mB={20} fS={18} fW={900}>
@@ -433,7 +459,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
       </LeftSide>
 
       {/* IF COMPLETED AND NOT GRADET */}
-
+      
       <RightSide>
         <S.TitleBlockWrapper>
           <Title mB={10} lH={28} main>
@@ -886,5 +912,6 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
       />
     </S.Container>
     </Container>
+  </>
   );
 };
