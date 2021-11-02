@@ -380,7 +380,7 @@ export const OwnExchanges = () => {
               btnText="Опубликовать ордер"
               styles={{ marginBottom: "10px" }}
             />
-            <Text center size={14} lH={16} weight={500} black>
+            <Text center size={14} lH={16} weight={500} black mB={20} publish>
               Рейтинг аккаунта: {getMyRating(account)}
             </Text>
             <S.Filters style={{ marginBottom: "10px", position: "relative" }}>

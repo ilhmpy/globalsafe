@@ -14,6 +14,7 @@ type Props = {
   center?: boolean;
   detail?: boolean;
   phoneFWB?: boolean;
+  publish?: boolean;
 };
 
 export const Text = styled.p<Props>`
@@ -41,6 +42,15 @@ export const Text = styled.p<Props>`
       return `
         font-size: 12px;
         font-weight: 300;
+        margin-bottom: 20px;
+      `;
+    };
+  }}
+  ${({ publish }) => {
+    if (publish) {
+      return `
+        margin-bottom: 20px !important;
+        font-weight: 400 !important;
       `;
     };
   }}
