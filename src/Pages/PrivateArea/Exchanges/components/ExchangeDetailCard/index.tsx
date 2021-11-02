@@ -138,7 +138,6 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
     console.log("ExchangeChanged RES", res, res.safeId, exchange && exchange.safeId);
     if (exchange != null && exchange.safeId == res.safeId) {
         setExchange(res);
-        handleToMobileModal(2);
     };
   };
 
