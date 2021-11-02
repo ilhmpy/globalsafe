@@ -236,6 +236,7 @@ export const OwnExchanges = () => {
         exchanges[userExchanges.indexOf(item)].paymentMethod = { kind };
       };
     });
+    console.log("SetPaymentMethod", exchanges);
     setUserExchanges(exchanges);
   };
 

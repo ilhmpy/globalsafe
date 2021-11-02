@@ -350,11 +350,15 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
 
   // editStateForTesting(0);
 
+  useEffect(() => {
+    return;
+  }, [tab]);
+
   return (
     <>
     <Container>
       <FL.Filters style={{ marginBottom: "10px", position: "relative" }} 
-        when={screen.width < 480 && (exchange.state === ExchangeState.Initiated || exchange.state === ExchangeState.Confirmed)}
+        when={screen.width <= 480 && (exchange.state === ExchangeState.Initiated || exchange.state === ExchangeState.Confirmed)}
       >
         <FilterButton
           active={tab === 'exchange'}
@@ -376,11 +380,15 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
     </Container>
     <Container pTabletNone>
     <S.Container>
-      <LeftSide bg={'#EAEFF4'}> 
+      {screen.width > 480 || 
+      (screen.width <= 480 && tab === 'order' && exchange.state === ExchangeState.Initiated || exchange.state === ExchangeState.Confirmed) ||
+      (screen.width <= 480 && exchange.state === ExchangeState.Completed || exchange.state === ExchangeState.Abused || exchange.state === ExchangeState.Cancelled)
+      ? (
+        <LeftSide bg={'#EAEFF4'}> 
         {screen.width < 481 && 
           <S.BlockWrapper>
             <Title lH={21} mB={20} fS={18} fW={900}>
-                Детали по ордеру
+              Детали по ордеру
             </Title>
           </S.BlockWrapper>}
         <S.BlockWrapper>
@@ -456,11 +464,15 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
               : `${Number(exchange.userRating).toFixed(1)} (${totalExchanges})`}
           </Title>
         </S.BlockWrapper>
-      </LeftSide>
+        </LeftSide>
+      ) : null}
 
       {/* IF COMPLETED AND NOT GRADET */}
-      
-      <RightSide>
+      {screen.width > 480 || 
+      (screen.width <= 480 && tab === 'exchange' && exchange.state === ExchangeState.Initiated || exchange.state === ExchangeState.Confirmed) ||
+      (screen.width <= 480 && exchange.state === ExchangeState.Completed || exchange.state === ExchangeState.Abused || exchange.state === ExchangeState.Cancelled)
+      ? (
+        <RightSide>
         <S.TitleBlockWrapper>
           <Title mB={10} lH={28} main>
             {owner === "seller" ? 'Продажа' : 'Покупка'}{' '}
@@ -900,6 +912,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
         </S.StateBlock>
         {/* ************** */}
       </RightSide>
+      ) : null}
       <ExchangeSuccessModal
         exchange={{ ...exchange, feedback: feedbackValue, owner }}
         open={showSuccessModal}
