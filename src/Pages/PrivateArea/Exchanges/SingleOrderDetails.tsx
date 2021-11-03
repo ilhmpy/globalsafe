@@ -99,7 +99,7 @@ export const SingleOrderDetails: FC = () => {
   }, [hubConnection]);
 
   if(!currentOrder || !currentOrderType) {
-    return null;
+    return null; 
   };
 
   return (
@@ -107,13 +107,20 @@ export const SingleOrderDetails: FC = () => {
       <Container>
         <Back text="К списку ордеров" onGoBackClick={handleGoBack} />
         <S.TitleContainer>
-            <Title mB={0}> 
+            <Title mB={0} mbMobile={10} heading2> 
               {
                 `Ордер на ${currentOrderType === OrderType.Buy ? 
                 'покупку' : 'продажу'} ${Balance[currentOrder.assetKind]}-${FiatKind[currentOrder.operationAssetKind]}`
               }
             </Title>
-            <Text size={14} lH={20} black>
+            <Text 
+              size={14} 
+              lH={20} 
+              black
+              sizeMobile={12}
+              lHMobile={18}
+              weightMobile={300}
+            >
               {`№ ${currentOrder.safeId}`}
             </Text>
         </S.TitleContainer>
@@ -127,5 +134,5 @@ export const SingleOrderDetails: FC = () => {
         />
       </Container>
     </S.Container>
-  );
+  ); 
 };

@@ -23,12 +23,12 @@ import { FiatKind } from '../../../../../types/fiat';
 import { CollectionPayMethod, PaymentMethodKind, RootPayMethod } from '../../../../../types/paymentMethodKind';
 import { RootViewUserCertificatesModel, ViewUserCertificateModel } from '../../../../../types/certificates';
 import { GetSellOrdersModel, OrderType, ViewSellOrderModel } from '../../../../../types/orders';
-import { countVolumeToSend, countVolumeToShow } from '../../../utils';
+import { countVolumeToSend, countVolumeToShow, getMyRating } from '../../../utils';
  
 export const OrderToSellCard: FC = () => {
     const history = useHistory();
     const appContext = useContext(AppContext);
-    const { hubConnection, user, balanceList, userSafeId } = appContext;
+    const { hubConnection, user, balanceList, userSafeId, account } = appContext;
     const [showOrderSellModal, setShowOrderSellModal] = useState(false);
     const [showOrderErrorModal, setShowOrderErrorModal] = useState(false);
     const [currencyToSell, setCurrencyToSell] = useState('');
@@ -368,7 +368,7 @@ export const OrderToSellCard: FC = () => {
 
             <S.BlockWrapper>
                 <Text size={14} lH={20} mB={10} black>Рейтинг аккаунта:</Text>
-                <Title lH={28}>5.0</Title>
+                <Title lH={28}>{getMyRating(account)}</Title>
             </S.BlockWrapper>
 
             {

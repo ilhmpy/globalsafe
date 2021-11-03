@@ -16,8 +16,8 @@ import { PaymentMethods } from './components/modals/PaymentMethods';
 import { Balance } from '../../../types/balance';
 import { FiatKind } from '../../../types/fiat';
 import { getMyRating } from '../utils';
- 
-// TODO: Update Load more Functional.
+import { AdvertFiltersMobile } from './components/modals/AdvertFiltersMobile';
+  
 export const Advert = () => {
   const history = useHistory();
   const { hubConnection, account } = useContext(AppContext);
@@ -34,7 +34,9 @@ export const Advert = () => {
   const [showPaymentMethodsModal, setShowPaymentMethodsModal] = useState(false);
   const [selectedPaymentMethods, setSelectedPaymentMethods] = useState<number[]>([]);
   const [acceptedPaymentMethods, setAcceptedPaymentMethods] = useState<number[]>([]);
- 
+
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
+  
   const [totalCount, setTotalCount] = useState(0);
   const [skip, setSkip] = useState(0);
 
@@ -72,8 +74,6 @@ export const Advert = () => {
 
   const getBuyOrders = async () => {
       try {
-        console.log("=======================================", acceptedPaymentMethods)
-
         const res = await hubConnection!.invoke<GetBuyOrdersModel>(
           'GetBuyOrders', 
           selectedPair?.balance ? [ Balance[selectedPair?.balance as keyof typeof Balance] ] : [],  // Array of BalanceKind assetKinds
@@ -138,6 +138,12 @@ export const Advert = () => {
     setAcceptedPaymentMethods([...selectedPaymentMethods]);
     setShowPaymentMethodsModal(false);
   };
+
+  const handleAcceptAllFilters = () => {
+    handleAcceptPair();
+    handleAcceptRate();
+    handleAcceptPaymentMethods();
+  }
 
   const resetFilters = () => {
     setSelectedPair(null);
@@ -230,60 +236,101 @@ export const Advert = () => {
 
 
   return (
-    <div>
+    <div> 
       <Container>
-        <Heading
-          onClick={() => history.push(routers.p2pchangesOrderToBuy)}
-          title="P2P обмены"
-          btnText="Опубликовать ордер"
-        />
-        <S.SubHeader>
-          <TabsBlock>
-            <TabNavItem to={routers.p2pchanges} exact>
-              <div>Ордеры</div>
-            </TabNavItem>
+          {/* Visiable on mobile */}
+          <S.SubHeader hidden mobileVisible>
+            <TabsBlock>
+              <TabNavItem to={routers.p2pchanges} exact>
+                <div>Ордеры</div>
+              </TabNavItem>
 
-            <TabNavItem to={routers.p2pchangesOwn} exact>
-              <div>Мои обмены</div>
-            </TabNavItem>
+              <TabNavItem to={routers.p2pchangesOwn} exact>
+                <div>Мои обмены</div>
+              </TabNavItem>
 
-            <TabNavItem to={routers.certificates} exact>
-              <div>Сертификаты</div>
-            </TabNavItem>
-          </TabsBlock>
-          <Text size={14} lH={16} weight={500}>
-            Рейтинг аккаунта: {getMyRating(account)}
-          </Text>
-        </S.SubHeader>
-        <S.Filters>
-          <FilterButton 
-            active={!listingMyOrders}
-            onClick={() => setListingMyOrders(false)}
-            style={{ marginRight: "0px" }}
-          >
-            Все ордеры
-          </FilterButton>
+              <TabNavItem to={routers.certificates} exact>
+                <div>Сертификаты</div>
+              </TabNavItem>
+            </TabsBlock>
+            <Text size={14} lH={16} weight={500} smHidden>
+              Рейтинг аккаунта: {getMyRating(account)}
+            </Text>
+          </S.SubHeader>
+
+          <Heading
+            onClick={() => history.push(routers.p2pchangesOrderToBuy)}
+            title="P2P обмены"
+            btnText="Опубликовать ордер"
+            userRating={`Рейтинг аккаунта: ${getMyRating(account)}`}
+          />
+          {/* Visiable from Tablet */}
+          <S.SubHeader mobileHidden>
+            <TabsBlock>
+              <TabNavItem to={routers.p2pchanges} exact>
+                <div>Ордеры</div>
+              </TabNavItem>
+
+              <TabNavItem to={routers.p2pchangesOwn} exact>
+                <div>Мои обмены</div>
+              </TabNavItem>
+
+              <TabNavItem to={routers.certificates} exact>
+                <div>Сертификаты</div>
+              </TabNavItem>
+            </TabsBlock>
+            <Text size={14} lH={16} weight={500} smHidden>
+              Рейтинг аккаунта: {getMyRating(account)}
+            </Text>
+          </S.SubHeader>
+
+          <S.Filters>
+            <FilterButton 
+              smHalfWidth
+              active={!listingMyOrders}
+              onClick={() => setListingMyOrders(false)}
+              switchLeft
+            >
+              Все ордеры
+            </FilterButton>
+            <FilterButton
+              smHalfWidth
+              active={listingMyOrders}
+              onClick={() => setListingMyOrders(true)}
+              switchRight
+            >
+              Мои ордеры
+            </FilterButton>
+          </S.Filters>
+
+        {/* Show only on Mobile */}  
+        <S.Filters hidden smVisible>
           <FilterButton
-            active={listingMyOrders}
-            onClick={() => setListingMyOrders(true)}
-            style={{ marginLeft: "0px", borderLeft: "0" }}
+            wFull
+            active={false}
+            onClick={() => setShowMobileFilters(true)}
           >
-            Мои ордеры
+            Фильтры (3)
           </FilterButton>
-
         </S.Filters>
-        <S.Filters>
+
+        <S.AdvertTypeText>
+          {activeType === OrderType.Buy ? 'Покупка' : 'Продажа'}
+        </S.AdvertTypeText>
+
+        {/* Hide on Mobile */}
+        <S.Filters smHidden>
           <FilterButton 
             active={activeType === OrderType.Buy}
             onClick={() => setActiveType(OrderType.Buy)}
-            style={{ marginRight: "0px" }}
+            switchLeft
           >
             Покупка
           </FilterButton>
           <FilterButton
             active={activeType === OrderType.Sell}
             onClick={() => setActiveType(OrderType.Sell)}
-            style={{ marginLeft: "0px", borderLeft: "0" }}
+            switchRight
           >
             Продажа
           </FilterButton>
@@ -329,8 +376,29 @@ export const Advert = () => {
             :
               null
           }
-          
         </S.Filters>
+
+        <AdvertFiltersMobile
+          open={showMobileFilters}
+          onClose={() => setShowMobileFilters(false)}
+          onAccept={handleAcceptAllFilters}
+          onResetFilters={resetFilters}
+          activeType={activeType}
+          setActiveType={setActiveType}
+          
+          selectedRate={selectedRate}
+          setSelectedRate={setSelectedRate}
+          rates={ratesList}
+
+          selectedBalanceKind={selectedBalanceKind}
+          setSelectedBalanceKind={setSelectedBalanceKind}
+          selectedFiatKind={selectedFiatKind}
+          setSelectedFiatKind={setSelectedFiatKind}
+
+          selectedPaymentMethods={selectedPaymentMethods}
+          setSelectedPaymentMethods={setSelectedPaymentMethods}
+          methodsList={paymentMethodsKinds}
+        />
 
         <CurrencyPair
           open={showCurrencyPairModal}
@@ -368,4 +436,4 @@ export const Advert = () => {
         </S.ButtonWrap>}
     </div>
   );
-};
+}; 

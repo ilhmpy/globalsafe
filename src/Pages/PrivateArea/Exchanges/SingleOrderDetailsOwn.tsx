@@ -14,14 +14,18 @@ import { FiatKind } from '../../../types/fiatKind';
 import { OrderType, ViewBuyOrderModel, ViewSellOrderModel } from '../../../types/orders';
 import { AppContext } from '../../../context/HubContext';
 import { GetExchangesCollectionResult, ViewExchangeModel } from '../../../types/exchange';
+import { FilterButton } from '../components/ui';
+import { useIsMobile } from '../utils';
 
 export const SingleOrderDetailsOwn: FC = () => {
   const history = useHistory();
   const {hubConnection} = useContext(AppContext);
+  const isMobile = useIsMobile();
   const [currentOrder, setCurrentOrder] = useState<ViewBuyOrderModel | ViewSellOrderModel | null>(null);
   const [currentOrderType, setCurrentOrderType] = useState<OrderType | undefined>(undefined);
   const [activeFilter, setActiveFilter] = useState<'active' | 'archived' | 'all'>('active');
   const [orderExchanges, setOrderExchanges] = useState<ViewExchangeModel[]>([]);
+  const [mobileActiveTab, setMobileActiveTab] = useState<'order' | 'list'>('order');
 
   const { orderSafeId } = useParams<{orderSafeId: string}>();
 
@@ -90,7 +94,7 @@ export const SingleOrderDetailsOwn: FC = () => {
 
     const cbOrderCompleted = (orderSafeId: string) => {
       console.log('__SOCKET__cbOrderCompleted::', orderSafeId)
-    };
+    }; 
 
     // Exchanges Callbacks
     const cbExchangeCreated = (exchange: ViewExchangeModel) => {
@@ -175,48 +179,98 @@ export const SingleOrderDetailsOwn: FC = () => {
       <Container>
         <Back text="Назад" onGoBackClick={handleGoBack} />
         <S.TitleContainer>
-            <Title mB={0}>
+            <Title mB={0} mbMobile={10} heading2>
               {
                 `Ордер на ${currentOrderType === OrderType.Buy ? 
                 'покупку' : 'продажу'} ${Balance[currentOrder.assetKind]}-${FiatKind[currentOrder.operationAssetKind]}`
               }
             </Title>
-            <Text size={14} lH={20} black>
+            <Text 
+              size={14} 
+              lH={20} 
+              black
+              sizeMobile={12}
+              lHMobile={18}
+              weightMobile={300}
+              mBMobile={20}
+            >
               {`№ ${currentOrder.safeId}`}
             </Text>
+
+            <S.Filters hidden smVisible mB={0}>
+              <FilterButton 
+                smHalfWidth
+                active={mobileActiveTab === 'order'}
+                onClick={() => setMobileActiveTab('order')}
+                switchLeft
+                noMargin
+              >
+                Ордер
+              </FilterButton>
+              <FilterButton
+                smHalfWidth
+                active={mobileActiveTab === 'list'}
+                onClick={() => setMobileActiveTab('list')}
+                switchRight
+                noMargin
+              >
+                Обмены по ордеру
+              </FilterButton>
+            </S.Filters>
+
         </S.TitleContainer>
       </Container>
-      <Container pTabletNone pNone>
+
+      {/* Order Details Card */}
+      {
+        mobileActiveTab === 'order' &&
+        <Container pTabletNone pNone>
+            <S.Container >
+              <OrderDetailCardOwn order={currentOrder} orderType={currentOrderType} />
+            </S.Container> 
+        </Container>
+      }
+ 
+      {/* Show Exchanges List on Mobile if exchanges tab is active */}
+      {
+        isMobile && (mobileActiveTab === 'list') &&
+        <ExchangesInOrderTable 
+          exchangesList={orderExchanges} 
+          activeFilter={activeFilter} 
+        />
+      }
+
+      {/* Show Table on Tablet and large Devices */}
+      {
+        !isMobile &&
+        <Container>
           <S.Container>
-            <OrderDetailCardOwn order={currentOrder} orderType={currentOrderType} />
-          </S.Container> 
-      </Container>
-      <Container>
-        <S.Container>
-          <Title mB={20}>Обмены в рамках ордера</Title>
-          <S.Filters>
-            <S.FilterButton 
-              active={activeFilter === 'all'}
-              onClick={() => setActiveFilter('all')}
-             >
-              Все
-             </S.FilterButton>
-             <S.FilterButton 
-               active={activeFilter === 'active'}
-               onClick={() => setActiveFilter('active')}
+            <Title mB={20}>Обмены в рамках ордера</Title>
+            <S.Filters>
+              <S.FilterButton 
+                active={activeFilter === 'all'}
+                onClick={() => setActiveFilter('all')}
               >
-                Активные
+                Все
               </S.FilterButton>
               <S.FilterButton 
-                active={activeFilter === 'archived'}
-                onClick={() => setActiveFilter('archived')}
-              >
-                Архив
-              </S.FilterButton>
-            </S.Filters>
-            <ExchangesInOrderTable exchangesList={orderExchanges} activeFilter={activeFilter} />
-          </S.Container>
-      </Container>
+                active={activeFilter === 'active'}
+                onClick={() => setActiveFilter('active')}
+                >
+                  Активные
+                </S.FilterButton>
+                <S.FilterButton 
+                  active={activeFilter === 'archived'}
+                  onClick={() => setActiveFilter('archived')}
+                >
+                  Архив
+                </S.FilterButton>
+              </S.Filters>
+              <ExchangesInOrderTable exchangesList={orderExchanges} activeFilter={activeFilter} />
+            </S.Container>
+        </Container>
+      }
+      
     </S.Container>
   );
 };

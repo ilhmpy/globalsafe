@@ -157,23 +157,27 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
   return (
     <S.Container>
       <LeftSide bg={'#EAEFF4'}>
-        <S.BlockWrapper>
-          <Text size={14} lH={20} mB={10} black>Аккаунт:</Text>
-          <Title lH={28}>{user}</Title>
+        <S.BlockWrapper mobileMb={20}>
+          <Text size={14} lH={20} mB={10} black weightMobile={300} mBMobile={4}>
+            Аккаунт:
+          </Text>
+          <Title lH={28} mB={10} heading3>{user}</Title>
         </S.BlockWrapper>
 
-        <S.BlockWrapper>
-          <Text size={14} lH={20} mB={10} black>Рейтинг аккаунта:</Text>
-          <Title lH={28}>
+        <S.BlockWrapper mobileMb={10}>
+          <Text size={14} lH={20} mB={10} black weightMobile={300} mBMobile={4}>
+            Рейтинг аккаунта:
+          </Text>
+          <Title lH={28} heading3 mbMobile={0}>
             {`${order.userRating ? Number(order.userRating).toFixed(1) : '0.0'}`}
           </Title>
         </S.BlockWrapper>
 
-        <S.BlockWrapper>
-          <Text size={14} lH={20} mB={10} black>
+        <S.BlockWrapper mobileMb={0}>
+          <Text size={14} lH={20} mB={10} black weightMobile={300} mBMobile={4}>
             Оставшийся лимит в сутках:
           </Text>
-          <Title lH={28}>
+          <Title lH={28} heading3 mbMobile={0}>
             {`${dailyLimitRest} ${Balance[order.assetKind]}`}
           </Title>
         </S.BlockWrapper>
@@ -182,7 +186,9 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
 
       <RightSide>
           <S.BlockWrapper>
-            <Text size={14} lH={20} mB={4} black>Количество:</Text>
+            <Text size={14} lH={20} mB={4} black weightMobile={300}>
+              Количество:
+            </Text>
             <Text size={14} lH={20} weight={500} black>
               {`${countVolumeToShow(order.volume, order.assetKind).toLocaleString('ru-RU', {
                     maximumFractionDigits: 4,
@@ -191,7 +197,9 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
           </S.BlockWrapper>
 
           <S.BlockWrapper>
-            <Text size={14} lH={20} mB={4} black>Курс:</Text>
+            <Text size={14} lH={20} mB={4} black weightMobile={300}>
+              Курс:
+            </Text>
             <Text size={14} lH={20} weight={500} black>
               {order.rate.toLocaleString('ru-RU', {
                 maximumFractionDigits: 5,
@@ -200,7 +208,9 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
           </S.BlockWrapper>
 
           <S.BlockWrapper>
-            <Text size={14} lH={20} mB={4} black>На сумму:</Text>
+            <Text size={14} lH={20} mB={4} black weightMobile={300}>
+              На сумму:
+            </Text>
             <Text size={14} lH={20} weight={500} black>
               {`${(countVolumeToShow(order.volume, order.assetKind) * order.rate).toLocaleString('ru-RU', {
                     maximumFractionDigits: 4,
@@ -209,14 +219,18 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
           </S.BlockWrapper>
 
           <S.BlockWrapper>
-            <Text size={14} lH={20} mB={4} black>Лимиты:</Text>
+            <Text size={14} lH={20} mB={4} black weightMobile={300}>
+              Лимиты:
+            </Text>
             <Text size={14} lH={20} weight={500} black>
               {`${countVolumeToShow(order.limitFrom, order.assetKind)} - ${countVolumeToShow(order.limitTo, order.assetKind)} ${FiatKind[order.operationAssetKind]}`}
             </Text>
           </S.BlockWrapper>
 
           <S.BlockWrapper>
-            <Text size={14} lH={20} mB={4} black>Время на обмен:</Text>
+            <Text size={14} lH={20} mB={4} black weightMobile={300}>
+              Время на обмен:
+            </Text>
             <Text size={14} lH={20} weight={500} black>
               {`${order.operationWindow.totalMinutes}м. ${order.operationWindow.seconds}с.`}
             </Text>
@@ -225,8 +239,10 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
           {
             orderType === OrderType.Buy
             ?
-              <S.BlockWrapper largeMB>
-                <Text size={14} lH={20} mB={4} black>Платежные методы:</Text>
+              <S.BlockWrapper largeMB mobileMb={20}>
+                <Text size={14} lH={20} mB={4} black weightMobile={300}>
+                  Платежные методы:
+                </Text>
 
                 {
                   order.methodsKinds.map((kind, i) => (
@@ -237,8 +253,10 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
                 }
               </S.BlockWrapper>
             :
-              <S.BlockWrapper largeMB>
-                <Text size={14} lH={20} mB={20} black>Платежные методы:</Text>
+              <S.BlockWrapper largeMB mobileMb={20}>
+                <Text size={14} lH={20} mB={20} black weightMobile={300}>
+                  Платежные методы:
+                </Text>
                 {
                     sellOrderPaymentMethods?.length > 0 &&
                     sellOrderPaymentMethods.map((method, i) => (

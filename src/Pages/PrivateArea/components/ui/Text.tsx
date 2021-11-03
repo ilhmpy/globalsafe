@@ -1,4 +1,5 @@
-import styled from 'styled-components/macro';
+import styled, { css } from 'styled-components/macro';
+import { Device } from '../../consts';
 
 type Props = {
   size?: number;
@@ -15,6 +16,11 @@ type Props = {
   detail?: boolean;
   phoneFWB?: boolean;
   publish?: boolean;
+  smHidden?: boolean;
+  sizeMobile?: number;
+  lHMobile?: number;
+  mBMobile?: number;
+  weightMobile?: number;
 };
 
 export const Text = styled.p<Props>`
@@ -68,4 +74,11 @@ export const Text = styled.p<Props>`
       `;
     };
   }}
+  @media ${Device.mobile} {
+    display: ${props => props.smHidden ? 'none' : 'block'};
+    ${props => props.sizeMobile && css`font-size: ${props.sizeMobile}px`};
+    ${props => props.lHMobile && css`line-height: ${props.lHMobile}px`};
+    ${props => props.mBMobile && css`margin-bottom: ${props.mBMobile}px`};
+    ${props => props.weightMobile && css`font-weight: ${props.weightMobile}`};
+  };
 `;

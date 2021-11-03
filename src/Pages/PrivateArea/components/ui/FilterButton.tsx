@@ -1,6 +1,17 @@
 import styled from 'styled-components';
+import { Device } from '../../consts';
 
-export const FilterButton = styled.button<{ active?: boolean; big?: boolean; }>`
+interface FilterButtonProps {
+  active?: boolean;
+  smHalfWidth?: boolean;
+  switchLeft?: boolean;
+  switchRight?: boolean;
+  wFull?: boolean;
+  noMargin?: boolean;
+  big?: boolean;
+}
+
+export const FilterButton = styled.button<FilterButtonProps>`
   appearance: none;
   cursor: pointer;
   font-size: 12px;
@@ -13,7 +24,7 @@ export const FilterButton = styled.button<{ active?: boolean; big?: boolean; }>`
   border-radius: 2px;
   user-select: none;
   background: ${(props) => (props.active ? '#EBEBF2' : 'transparent')};
-  margin: 0 10px 10px 9px;
+  margin: ${props => props.noMargin ? '0' : '0 10px 10px 9px'};
   &:first-child {
     margin-left: 0;
   }
@@ -27,4 +38,25 @@ export const FilterButton = styled.button<{ active?: boolean; big?: boolean; }>`
       `;
     };
   }}
+  ${({ switchLeft, wFull, switchRight }) => {
+    if (switchLeft) {
+      return `
+        margin-right: ${switchLeft ? 0 : '10px'};
+      `;
+    };
+    if (wFull) {
+      return `
+        width: ${wFull ? '100%' : 'auto'};
+      `;
+    };
+    if (switchRight) {
+      return `
+        margin-left: ${switchRight ? 0 : '9px'};
+        border-left-width: ${switchRight ? '0px' : '1px'};
+      `;
+    };
+  }}
+  @media ${Device.mobile} {
+    width ${props => props.smHalfWidth ? '50%' : props.wFull ? '100%' : 'auto'}
+  };
 `;

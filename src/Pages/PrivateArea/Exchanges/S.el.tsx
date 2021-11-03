@@ -1,19 +1,39 @@
-import styled from 'styled-components/macro';
+import styled, {css} from 'styled-components/macro';
 import { FilterButton as BaseFilterButton } from '../components/ui';
+import { Device } from '../consts';
 
-export const SubHeader = styled.div`
-  display: flex;
+interface SubHeaderProps {
+  hidden?: boolean; 
+  mobileHidden?: boolean; 
+  mobileVisible?: boolean;
+};
+
+export const SubHeader = styled.div<SubHeaderProps>`
+  display: ${props => props.hidden ? 'none' : 'flex'};
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 20px;
+
+  @media ${Device.mobile} {
+    display: ${props => props.mobileHidden ? 'none' : props.mobileVisible ? 'flex' : 'flex'};
+  };
 `;
 
-export const Filters = styled.div<{ when?: boolean; }>`
+export const Filters = styled.div<{ when?: boolean; hidden?: boolean; smHidden?: boolean; smVisible?: boolean; mB?: number; }>`
   display: flex;
-  margin-bottom: 20px;
+  margin-bottom: ${props => props.mB ? props.mB : 20}px;
+  ${({ hidden }) => {
+    if (hidden != undefined) {
+      return `
+        display: ${hidden ?'none' : 'flex'};
+      `;
+    };
+  }}
   @media only screen and (max-device-width: 480px) {
     width: 100%;
     margin-bottom: 20px;
+    ${props => props.smHidden && css`display: none`};
+    ${props => props.smVisible && css`display: flex`};
   }
   ${({ when }) => {
     if (when !== undefined) {
@@ -57,10 +77,16 @@ export const ButtonWrap = styled.div`
 
 export const Container = styled.div`
   margin-bottom: 40px;
+  @media ${Device.mobile} {
+    margin-bottom: 20px;
+  };
 `;
 
 export const TitleContainer = styled.div`
   margin-bottom: 20px;
+  @media ${Device.mobile} {
+    margin-bottom: 10px;
+  };
 `;
 
 export const FilterButton = styled(BaseFilterButton)`
@@ -102,4 +128,16 @@ export const Button = styled.button<{ newItems: boolean; }>`
       margin-top: 20px;
       margin-bottom: 40px;
     }
+`;
+
+export const AdvertTypeText = styled.p`
+  display: none;
+  margin-bottom: 20px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+  color: ${props => props.theme.black};  
+  @media ${Device.mobile} {
+    display: block;
+  }
 `;
