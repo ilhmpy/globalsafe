@@ -11,7 +11,6 @@ import { AppContext } from "../../../../context/HubContext";
 import { ConsoleLogger } from "@microsoft/signalr/dist/esm/Utils";
 
 export const MobileModal = () => {
-    const { account } = useContext(AppContext);
     const [exchange, setExchange] = useState<any>(null);
     const [feed, setFeed] = useState<string | undefined>();
 
@@ -27,8 +26,6 @@ export const MobileModal = () => {
     }, []);
 
     function redirect() {
-       localStorage.removeItem("mobileResultData");
-       localStorage.removeItem("feedback");
        window.location.href = "/info/p2p-changes/own";
     };
 
@@ -47,9 +44,7 @@ export const MobileModal = () => {
             );
         };
     };
-
-    console.log(exchange.owner);
-
+    
     return (
         <div>
           <Header />
