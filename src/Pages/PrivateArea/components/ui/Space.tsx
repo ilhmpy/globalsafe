@@ -8,6 +8,7 @@ interface SpaceProps {
   column?: boolean; 
   mobileColumn?: boolean; 
   mobileGap?: number;
+  mobileMb?: number;
 };
 
 export const Space = styled.div<SpaceProps>`
@@ -22,7 +23,7 @@ export const Space = styled.div<SpaceProps>`
           return  `
             @media only screen and (max-device-width: 768px) {
               flex-direction: column;
-            }
+            };
           `;
         }
     }}
@@ -31,8 +32,17 @@ export const Space = styled.div<SpaceProps>`
         return  `
           @media ${Device.mobile} {
             gap: ${mobileGap}px;
-          }
+          };
         `;
       }
-  }}
+    }}
+    ${({ mobileMb }) => {
+      if(mobileMb !== undefined) {
+        return  `
+          @media ${Device.mobile} {
+            margin-bottom: ${mobileMb}px;
+          };
+        `;
+      }
+    }}
 `;

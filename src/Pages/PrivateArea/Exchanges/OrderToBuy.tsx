@@ -16,7 +16,9 @@ export const OrderToBuy: FC = () => {
       <Container>
         <Back text="Назад" onGoBackClick={() => history.replace(routers.p2pchangesOwn)} />
         <S.TitleContainer>
-          <Title mB={0}>Публикация ордера</Title>
+          <Title mB={0} mbMobile={20} heading2>
+            Публикация ордера
+          </Title>
         </S.TitleContainer>
       </Container>
       <Container pTabletNone pNone>        
@@ -24,4 +26,4 @@ export const OrderToBuy: FC = () => {
       </Container>
     </S.Container>
   );
-};
+}; 
