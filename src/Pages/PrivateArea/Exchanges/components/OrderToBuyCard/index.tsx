@@ -264,8 +264,9 @@ export const OrderToBuyCard: FC = () => {
     const pattern = /^[0-9][0-9\.]*$/;
     const pattern2 = /^[0-9]{1,10}\.[0-9]{3}$/;
     if (e.target.value === '' || pattern.test(e.target.value)) {
-      if (+e.target.value > ((+orderSumm - 1) * +changeRate)) {
-        setOrderMinSumm(((+orderSumm - 1) * +changeRate).toFixed(2));
+      const summ = (+orderSumm - 1) < 0 ? 0 : (+orderSumm - 1);
+      if (+e.target.value > (summ * +changeRate)) {
+        setOrderMinSumm((summ * +changeRate).toFixed(2));
       } else {
         if(!pattern2.test(e.target.value)) {
           setOrderMinSumm(e.target.value);
@@ -310,6 +311,9 @@ export const OrderToBuyCard: FC = () => {
     if (!orderSumm) {
       isValid = false;
     }
+    if(Number(orderSumm) <= 0) {
+      isValid = false;
+    }
     if (!changeRate) {
       isValid = false;
     }
@@ -317,6 +321,9 @@ export const OrderToBuyCard: FC = () => {
       isValid = false;
     }
     if (!orderMaxSumm) {
+      isValid = false;
+    }
+    if (orderMinSumm > orderMaxSumm) {
       isValid = false;
     }
     if (selectedPaymentMethodsIds.length === 0) {
