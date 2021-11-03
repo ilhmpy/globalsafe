@@ -178,8 +178,11 @@ export const Tariffs = () => {
   };
 
   return (
-      <Container pNone page mtNone>
+    <>
+      <Container>
         <H2 center>{t('partnersTitle')}</H2>
+      </Container>
+      <Container pNone page mtNone>
         <PartnersBlock>
           <PartnersHeader>
             <PartnersHeaderItem>START</PartnersHeaderItem>
@@ -196,6 +199,7 @@ export const Tariffs = () => {
           ))}
         </PartnersBlock>
       </Container>
+    </>
   );
 };
 
