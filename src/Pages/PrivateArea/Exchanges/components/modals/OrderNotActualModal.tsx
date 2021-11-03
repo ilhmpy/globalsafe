@@ -20,9 +20,9 @@ export const OrderNotActualModal: FC<Props> = ({ onClose, open }: Props) => {
       {open && (
         <Modal onClose={onClose} open={open}>
           <S.SmallContainer mobileWFull>
-            <S.Title>Ордер исполнен</S.Title>
+            <S.Title>Ордер удален</S.Title>
             <S.MobileContent>
-              <S.Desc largeMb>Данный ордер был исполнен. Пожалуйста выберите другой ордер.</S.Desc>
+              <S.Desc largeMb>Данный ордер был удален. Пожалуйста выберите другой ордер.</S.Desc>
               <Button primary fullWidth onClick={() => history.replace(routers.p2pchanges)}>
                 Список ордеров
               </Button>
