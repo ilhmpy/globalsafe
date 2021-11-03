@@ -366,6 +366,9 @@ export const OwnExchanges = () => {
 
   return (
     <div>
+      {screen.width <= 480 && (
+        <></>
+      )}
       <Container>
         {screen.width > 480 && (
           <Heading
@@ -401,11 +404,9 @@ export const OwnExchanges = () => {
               title="P2P обмены"
               btnText="Опубликовать ордер"
               styles={{ marginBottom: "10px" }}
+              userRating={`Рейтинг аккаунта: ${getMyRating(account)}`}
             />
-            <Text center size={14} lH={16} weight={500} black mB={20} publish>
-              Рейтинг аккаунта: {getMyRating(account)}
-            </Text>
-            <S.Filters style={{ marginBottom: "10px", position: "relative" }}>
+            <S.Filters style={{ marginTop: "20px", marginBottom: "20px", position: "relative" }}>
               <FilterButton
                 active={activeFilter === 'active'}
                 onClick={() => setActiveFilter('active')}

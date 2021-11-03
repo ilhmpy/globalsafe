@@ -47,12 +47,13 @@ export const Filters = styled.div<{ when?: boolean; hidden?: boolean; smHidden?:
 export const FiltersBox = styled.div`
   width: 100%;
   height: 26px;
-  border: 1px solid #EBEBF2;
+  border: 1px solid #DFDFE9;
   border-radius: 2px;
   justify-content: center;
   align-items: center;
   display: flex;
   font-weight: 400;
+  background: transparent;
   font-size: 12px;
   opacity: 60%;
   color: #000;
