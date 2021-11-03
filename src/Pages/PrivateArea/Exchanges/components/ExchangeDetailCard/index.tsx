@@ -26,8 +26,8 @@ import { setUncaughtExceptionCaptureCallback } from 'process';
 import { getVolume } from '../../../../../functions/getVolume';
 import { getTime } from 'date-fns';
 import { Counter } from '../../../components/ui/Counter';
-import  { countVolumeToShow } from "../../../utils";
-import { Container } from "../../../../../components/UI/Container";
+import { countVolumeToShow } from '../../../utils';
+import { Container } from '../../../../../components/UI/Container';
 import { scryRenderedComponentsWithType } from 'react-dom/test-utils';
 
 type DetailCardProps = {
@@ -37,20 +37,26 @@ type DetailCardProps = {
   setShowSuccessModal: (value: boolean) => void;
   showRejectModal: boolean;
   setShowRejectModal: (value: boolean) => void;
-  owner: "seller" | "buyer";
-  setExchange: (val: ViewExchangeModel) => any; 
+  owner: 'seller' | 'buyer';
+  setExchange: (val: ViewExchangeModel) => any;
   setLoading: (val: boolean) => any;
   exchangeId: string;
 };
 
-export const ExchangeDetailCard: FC<DetailCardProps> = ({ 
-  exchange, setCall, setShowSuccessModal, 
-  setShowRejectModal, showRejectModal, 
-  showSuccessModal, setExchange, setLoading, 
-  exchangeId
+export const ExchangeDetailCard: FC<DetailCardProps> = ({
+  exchange,
+  setCall,
+  setShowSuccessModal,
+  setShowRejectModal,
+  showRejectModal,
+  showSuccessModal,
+  setExchange,
+  setLoading,
+  exchangeId,
 }: DetailCardProps) => {
   const history = useHistory();
   const { account, hubConnection } = useContext(AppContext);
+  const { screen } = window;
 
   const [feedbackValue, setFeedbackValue] = useState(5);
   const [totalExchanges, setTotalExchanges] = useState<any>();
@@ -71,82 +77,82 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
   useEffect(() => {
     let cancel = false;
     if (hubConnection && !cancel) {
-      hubConnection.on("ExchangeAbused", cb);
-    };
+      hubConnection.on('ExchangeAbused', cb);
+    }
     return () => {
       cancel = true;
-      hubConnection?.off("ExchangeAbused", cb);
+      hubConnection?.off('ExchangeAbused', cb);
     };
   }, [hubConnection, exchange]);
 
   useEffect(() => {
     let cancel = false;
     if (hubConnection && !cancel) {
-      hubConnection.on("ExchangeCancelled", cancelledCallback);
-    } 
+      hubConnection.on('ExchangeCancelled', cancelledCallback);
+    }
     return () => {
       cancel = true;
-      hubConnection?.off("ExchangeCancelled", cancelledCallback);
+      hubConnection?.off('ExchangeCancelled', cancelledCallback);
     };
   }, [hubConnection, exchange]);
 
   useEffect(() => {
     let cancel = false;
     if (hubConnection && !cancel) {
-      hubConnection.on("ExchangeCompleted", cb);
-    };
+      hubConnection.on('ExchangeCompleted', cb);
+    }
     return () => {
       cancel = true;
-      hubConnection?.off("ExchangeCompleted", cb);
-    };  
+      hubConnection?.off('ExchangeCompleted', cb);
+    };
   }, [hubConnection, exchange]);
 
   useEffect(() => {
     let cancel = false;
     if (hubConnection && !cancel) {
-      hubConnection.on("ExchangeConfirmationRequired", cb);
-    };
+      hubConnection.on('ExchangeConfirmationRequired', cb);
+    }
     return () => {
       cancel = true;
-      hubConnection?.off("ExchangeConfirmationRequired", cb);
-    };  
+      hubConnection?.off('ExchangeConfirmationRequired', cb);
+    };
   }, [hubConnection, exchange]);
 
   useEffect(() => {
     let cancel = false;
     if (hubConnection && !cancel) {
-      hubConnection.on("BuyOrderVolumeChanged", volumeChanged);
-    };
+      hubConnection.on('BuyOrderVolumeChanged', volumeChanged);
+    }
     return () => {
       cancel = true;
-      hubConnection?.off("BuyOrderVolumeChanged", volumeChanged);
-    };  
-  }), [hubConnection], exchange;
+      hubConnection?.off('BuyOrderVolumeChanged', volumeChanged);
+    };
+  }, [hubConnection, exchange]);
 
   useEffect(() => {
     let cancel = false;
     if (hubConnection && !cancel) {
-      hubConnection.on("SellOrderVolumeChanged", volumeChanged);
-    };
+      hubConnection.on('SellOrderVolumeChanged', volumeChanged);
+    }
     return () => {
       cancel = true;
-      hubConnection?.off("SellOrderVolumeChanged", volumeChanged);
-    };  
-  }, [hubConnection, exchange])
+      hubConnection?.off('SellOrderVolumeChanged', volumeChanged);
+    };
+  }, [hubConnection, exchange]);
 
   function cb(res: ViewExchangeModel) {
-    console.log("ExchangeChanged RES", res, res.safeId, exchange && exchange.safeId);
+    console.log('ExchangeChanged RES', res, res.safeId, exchange && exchange.safeId);
     if (exchange != null && exchange.safeId == res.safeId) {
-        setExchange(res);
-    };
-  };
+      setExchange(res);
+    }
+  }
 
   function cancelledCallback(res: ViewExchangeModel) {
     if (exchange != null && exchange.safeId === res.safeId) {
       setShowRejectModal(true);
       cb(res);
-    };
-  };
+    }
+  }
 
   function volumeChanged(id: string, volume: number) {
     if (exchange != null) {
@@ -154,29 +160,30 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
       if (newExchange.safeId === id) {
         newExchange.orderVolume = volume;
         setExchange(newExchange);
-      };  
+      }
     }
-  };
+  }
 
   const handleClick = () => {
     history.push(routers.p2pchangesSingleExchangeChat + '/' + exchange.safeId);
-    console.log('ExchangeDetailCard Click');      
+    console.log('ExchangeDetailCard Click');
   };
 
   function getUserMark() {
     if (hubConnection) {
-      hubConnection.invoke("GetUserMark", exchange.safeId)
+      hubConnection
+        .invoke('GetUserMark', exchange.safeId)
         .then((res) => {
-          console.log("mark", res);
+          console.log('mark', res);
           setMark(res > 0);
         })
-        .catch(err => console.log(err));
-    };
-  };
- 
+        .catch((err) => console.log(err));
+    }
+  }
+
   useEffect(() => {
     getUserMark();
-  }, [hubConnection, exchange])
+  }, [hubConnection, exchange]);
 
   function getTotalExecutedExchanges(id: string) {
     if (hubConnection) {
@@ -188,7 +195,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
         })
         .catch((err) => console.error(err));
     }
-  };
+  }
 
   useEffect(() => {
     getTotalExecutedExchanges(exchange.ownerSafeId);
@@ -198,7 +205,14 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
     if (chip === 0 || chip === 1) {
       return (
         <Chip style={{ background: '#FF4A31', color: '#fff' }}>
-          {!timerDown && "Оставшееся время"} <Counter text="Время на обмен закончилось" setTimerDown={setTimerDown} data={exchange.creationDate} delay={exchange.operationWindow.totalMilliseconds} formatNum /> 
+          {!timerDown && 'Оставшееся время'}{' '}
+          <Counter
+            text="Время на обмен закончилось"
+            setTimerDown={setTimerDown}
+            data={exchange.creationDate}
+            delay={exchange.operationWindow.totalMilliseconds}
+            formatNum
+          />
         </Chip>
       );
     } else if (chip === 2) {
@@ -207,8 +221,8 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
       return <Chip>Спорный</Chip>;
     } else if (chip === 4) {
       return <Chip style={{ background: 'rgba(255, 74, 49, 0.1)' }}>Отменен</Chip>;
-    };
-  };
+    }
+  }
 
   const PaymentMethods = [
     'ERC20',
@@ -288,8 +302,8 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
           setCall(true);
         })
         .catch((err) => console.log(err));
-    };
-  };
+    }
+  }
 
   function cancelExchange(id: string) {
     if (hubConnection) {
@@ -300,8 +314,8 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
           setShowRejectModal(true);
         })
         .catch((err) => console.log(err));
-    };
-  };
+    }
+  }
 
   function confirmExchangePayment(id: string) {
     if (hubConnection) {
@@ -311,11 +325,11 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
           console.log('confirm', res);
           if (owner === 'buyer') {
             setCall(true);
-          };
+          }
         })
         .catch((err) => console.log(err));
     }
-  };
+  }
 
   console.log(exchange);
 
@@ -336,207 +350,230 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
         .catch((err) => console.log(err));
     }
   }
-  
+
   function editStateForTesting(state = 0) {
     if (hubConnection) {
-      hubConnection.invoke("EditExchangeState", "379035279365767168", 0)
-        .then(() => console.log("EDIT_EXCHANGE_STATE"))
-        .catch((err) => console.log("EDIT_EXCHANGE_STATE_ERROR", err));
-    };
-  };
+      hubConnection
+        .invoke('EditExchangeState', '379035279365767168', 0)
+        .then(() => console.log('EDIT_EXCHANGE_STATE'))
+        .catch((err) => console.log('EDIT_EXCHANGE_STATE_ERROR', err));
+    }
+  }
 
   // editStateForTesting(0);
 
   return (
     <Container pTabletNone>
-    <S.Container>
-      <LeftSide bg={'#EAEFF4'}>
-        <S.BlockWrapper>
-          <Text size={14} lH={20} mB={10} black>
-            Количество:
-          </Text>
-          <Title lH={28} mB={10}>
-            {countVolumeToShow(exchange.orderVolume, exchange.assetKind).toLocaleString('ru-RU', {
-              maximumFractionDigits: 5,
-            })}{' '}
-            {Balance[exchange.assetKind]}
-          </Title>
-          <Chip>{owner === "seller" ? 'Продажа' : 'Покупка'}</Chip>
-        </S.BlockWrapper>
-
-        <S.BlockWrapper>
-          <Text size={14} lH={20} mB={10} black>
-            Курс:
-          </Text>
-          <Title lH={28}>{exchange.rate}</Title>
-        </S.BlockWrapper>
-
-        <S.BlockWrapper>
-          <Text size={14} lH={20} mB={10} black>
-            На сумму:
-          </Text>
-          <Title lH={28}>
-            {(countVolumeToShow(exchange.orderVolume * exchange.rate, exchange.assetKind)).toLocaleString('ru-RU', {
-              maximumFractionDigits: 2,
-            })}{' '}
-            {FiatKind[exchange.exchangeAssetKind]}
-          </Title>
-        </S.BlockWrapper>
-
-        <S.BlockWrapper>
-          <Text size={14} lH={20} mB={10} black>
-            Лимиты:
-          </Text>
-          <Title lH={28}>
-            {`${countVolumeToShow(exchange.limitFrom, exchange.assetKind).toLocaleString('ru-RU', {
-              maximumFractionDigits: 0,
-            })} - ${countVolumeToShow(exchange.limitTo, exchange.assetKind).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} ${
-              FiatKind[exchange.exchangeAssetKind]
-            }`}
-          </Title>
-        </S.BlockWrapper>
-
-        <S.BlockWrapper>
-          <Text size={14} lH={20} mB={10} black>
-            Методы оплаты:
-          </Text>
-          {exchange.methodsKinds.map((method: any, idx: number) => (
-            <Title lH={28} key={idx}>
-              {PaymentMethods[method]}
-            </Title>
-          ))}
-        </S.BlockWrapper>
-
-        <S.BlockWrapper>
-          <Text size={14} lH={20} mB={10} black>
-            Время на обмен:
-          </Text>
-          <Title lH={28}>{getAllTime(exchange.operationWindow)}</Title>
-        </S.BlockWrapper>
-
-        <S.BlockWrapper>
-          <Text size={14} lH={20} mB={10} black>
-            Рейтинг продавца:
-          </Text>
-          <Title lH={28}>
-            {owner === 'seller'
-              ? `${getMyRating()} (${getMyExchanges()})`
-              : `${Number(exchange.userRating).toFixed(1)} (${totalExchanges})`}
-          </Title>
-        </S.BlockWrapper>
-      </LeftSide>
-
-      {/* IF COMPLETED AND NOT GRADET */}
-
-      <RightSide>
-        <S.TitleBlockWrapper>
-          <Title mB={10} lH={28} main>
-            {owner === "seller" ? 'Продажа' : 'Покупка'}{' '}
-            {`${Balance[exchange.assetKind]} за ${FiatKind[exchange.exchangeAssetKind]}`}
-          </Title>
-          {getExchangeChip(exchange.state)}
-        </S.TitleBlockWrapper>
-        <S.StateBlock when={exchange.state < 2 || exchange.state != 2 || mark != false}>
+      <S.Container>
+        <LeftSide bg={'#EAEFF4'}>
           <S.BlockWrapper>
-            <Text size={14} lH={20} mB={4} black>
+            <Text size={14} lH={20} mB={10} black>
               Количество:
             </Text>
-            <Text size={14} lH={20} weight={500} black>
-              {countVolumeToShow(exchange.volume, exchange.assetKind).toLocaleString('ru-RU', {
+            <Title lH={28} mB={10}>
+              {countVolumeToShow(exchange.orderVolume, exchange.assetKind).toLocaleString('ru-RU', {
                 maximumFractionDigits: 5,
               })}{' '}
               {Balance[exchange.assetKind]}
-            </Text>
+            </Title>
+            <Chip>{owner === 'seller' ? 'Продажа' : 'Покупка'}</Chip>
           </S.BlockWrapper>
 
           <S.BlockWrapper>
-            <Text size={14} lH={20} mB={4} black>
+            <Text size={14} lH={20} mB={10} black>
+              Курс:
+            </Text>
+            <Title lH={28}>{exchange.rate}</Title>
+          </S.BlockWrapper>
+
+          <S.BlockWrapper>
+            <Text size={14} lH={20} mB={10} black>
               На сумму:
             </Text>
-            <Text size={14} lH={20} weight={500} black>
-              {countVolumeToShow(exchange.exchangeVolume, exchange.assetKind).toLocaleString('ru-RU', { maximumFractionDigits: 0 })}{' '}
+            <Title lH={28}>
+              {countVolumeToShow(
+                exchange.orderVolume * exchange.rate,
+                exchange.assetKind
+              ).toLocaleString('ru-RU', {
+                maximumFractionDigits: 2,
+              })}{' '}
               {FiatKind[exchange.exchangeAssetKind]}
-            </Text>
+            </Title>
           </S.BlockWrapper>
 
           <S.BlockWrapper>
-            <Text size={14} lH={20} mB={4} black>
-              Метод оплаты:
+            <Text size={14} lH={20} mB={10} black>
+              Лимиты:
             </Text>
-            <Text size={14} lH={20} weight={500} black>
-              {exchange.paymentMethod ? (
-                <>
-                  {PaymentMethods[exchange.paymentMethod?.kind]},{' '}
-                  {FiatKind[exchange.paymentMethod?.assetKind]}
-                </>
-              ) : (
-                'N/A, N/A'
-              )}
-            </Text>
+            <Title lH={28}>
+              {`${countVolumeToShow(exchange.limitFrom, exchange.assetKind).toLocaleString(
+                'ru-RU',
+                {
+                  maximumFractionDigits: 0,
+                }
+              )} - ${countVolumeToShow(exchange.limitTo, exchange.assetKind).toLocaleString(
+                'ru-RU',
+                { maximumFractionDigits: 0 }
+              )} ${FiatKind[exchange.exchangeAssetKind]}`}
+            </Title>
           </S.BlockWrapper>
 
           <S.BlockWrapper>
-            <Text size={14} lH={20} mB={4} black>
-              Номер карты:
+            <Text size={14} lH={20} mB={10} black>
+              Методы оплаты:
             </Text>
-            <S.Space>
-              <Text size={14} lH={20} weight={500} black>
-                {getParsePaymentData('card')}
-              </Text>
-              <CopyIconButton copyValue={getParsePaymentData('card')} />
-            </S.Space>
+            {exchange.methodsKinds.map((method: any, idx: number) => (
+              <Title lH={28} key={idx}>
+                {PaymentMethods[method]}
+              </Title>
+            ))}
           </S.BlockWrapper>
 
           <S.BlockWrapper>
-            <Text size={14} lH={20} mB={4} black>
-              Держатель карты:
+            <Text size={14} lH={20} mB={10} black>
+              Время на обмен:
             </Text>
-            <Text size={14} lH={20} weight={500} black>
-              {getParsePaymentData('name')}
-            </Text>
+            <Title lH={28}>{getAllTime(exchange.operationWindow)}</Title>
           </S.BlockWrapper>
 
-          {/* COMPLETED, ABUSED, CANCELLED STATES */}
-
-          <S.BlockWrapper when={exchange.state != 0 && exchange.state != 1}>
-            <Text size={14} lH={20} mB={4} black>
-              Рейтинг покупателя:
+          <S.BlockWrapper>
+            <Text size={14} lH={20} mB={10} black>
+              Рейтинг продавца:
             </Text>
-            <Text size={14} lH={20} weight={500} mB={4} black>
+            <Title lH={28}>
               {owner === 'seller'
-                ? `${Number(exchange.userRating).toFixed(1)} (${totalExchanges})`
-                : `${getMyRating()} (${getMyExchanges()})`}
-            </Text>
+                ? `${getMyRating()} (${getMyExchanges()})`
+                : `${Number(exchange.userRating).toFixed(1)} (${totalExchanges})`}
+            </Title>
           </S.BlockWrapper>
-        </S.StateBlock>
-        {/* ************************************ */}
+        </LeftSide>
 
-        {/* ********************************************* */}
+        {/* IF COMPLETED AND NOT GRADET */}
 
-        {/* INITIATED STATE */}
-
-        <S.StateBlock when={exchange.state === 0}>
-          <S.StateBlock when={owner === 'buyer'}>
-            <S.TransferInfoBlock>
-              <Text size={14} lH={20} black>
-                Осуществите перевод средств на указанный счет в размере{' '}
-                <S.B>
-                  {(countVolumeToShow(exchange.exchangeVolume, exchange.assetKind)).toLocaleString('ru-RU', {
-                    maximumFractionDigits: 5,
-                  })}{' '}
-                  {FiatKind[exchange.exchangeAssetKind]}
-                </S.B>{' '}
-                и подтвердите перевод средств продавцу нажав на кнопку “средства отправлены”
+        <RightSide>
+          <S.TitleBlockWrapper>
+            <Title mB={10} lH={28} main>
+              {owner === 'seller' ? 'Продажа' : 'Покупка'}{' '}
+              {`${Balance[exchange.assetKind]} за ${FiatKind[exchange.exchangeAssetKind]}`}
+            </Title>
+            {getExchangeChip(exchange.state)}
+          </S.TitleBlockWrapper>
+          <S.StateBlock when={exchange.state < 2 || exchange.state != 2 || mark != false}>
+            <S.BlockWrapper>
+              <Text size={14} lH={20} mB={4} black>
+                Количество:
               </Text>
-            </S.TransferInfoBlock>
+              <Text size={14} lH={20} weight={500} black>
+                {countVolumeToShow(exchange.volume, exchange.assetKind).toLocaleString('ru-RU', {
+                  maximumFractionDigits: 5,
+                })}{' '}
+                {Balance[exchange.assetKind]}
+              </Text>
+            </S.BlockWrapper>
+
+            <S.BlockWrapper>
+              <Text size={14} lH={20} mB={4} black>
+                На сумму:
+              </Text>
+              <Text size={14} lH={20} weight={500} black>
+                {countVolumeToShow(exchange.exchangeVolume, exchange.assetKind).toLocaleString(
+                  'ru-RU',
+                  { maximumFractionDigits: 0 }
+                )}{' '}
+                {FiatKind[exchange.exchangeAssetKind]}
+              </Text>
+            </S.BlockWrapper>
+
+            <S.BlockWrapper>
+              <Text size={14} lH={20} mB={4} black>
+                Метод оплаты:
+              </Text>
+              <Text size={14} lH={20} weight={500} black>
+                {exchange.paymentMethod ? (
+                  <>
+                    {PaymentMethods[exchange.paymentMethod?.kind]},{' '}
+                    {FiatKind[exchange.paymentMethod?.assetKind]}
+                  </>
+                ) : (
+                  'N/A, N/A'
+                )}
+              </Text>
+            </S.BlockWrapper>
+
+            <S.BlockWrapper>
+              <Text size={14} lH={20} mB={4} black>
+                Номер карты:
+              </Text>
+              <S.Space>
+                <Text size={14} lH={20} weight={500} black>
+                  {getParsePaymentData('card')}
+                </Text>
+                <CopyIconButton copyValue={getParsePaymentData('card')} />
+              </S.Space>
+            </S.BlockWrapper>
+
+            <S.BlockWrapper>
+              <Text size={14} lH={20} mB={4} black>
+                Держатель карты:
+              </Text>
+              <Text size={14} lH={20} weight={500} black>
+                {getParsePaymentData('name')}
+              </Text>
+            </S.BlockWrapper>
+
+            {/* COMPLETED, ABUSED, CANCELLED STATES */}
+
+            <S.BlockWrapper when={exchange.state != 0 && exchange.state != 1}>
+              <Text size={14} lH={20} mB={4} black>
+                Рейтинг покупателя:
+              </Text>
+              <Text size={14} lH={20} weight={500} mB={4} black>
+                {owner === 'seller'
+                  ? `${Number(exchange.userRating).toFixed(1)} (${totalExchanges})`
+                  : `${getMyRating()} (${getMyExchanges()})`}
+              </Text>
+            </S.BlockWrapper>
+          </S.StateBlock>
+          {/* ************************************ */}
+
+          {/* ********************************************* */}
+
+          {/* INITIATED STATE */}
+
+          <S.StateBlock when={exchange.state === 0}>
+            <S.StateBlock when={owner === 'buyer'}>
+              <S.TransferInfoBlock>
+                <Text size={14} lH={20} black>
+                  Осуществите перевод средств на указанный счет в размере{' '}
+                  <S.B>
+                    {countVolumeToShow(exchange.exchangeVolume, exchange.assetKind).toLocaleString(
+                      'ru-RU',
+                      {
+                        maximumFractionDigits: 5,
+                      }
+                    )}{' '}
+                    {FiatKind[exchange.exchangeAssetKind]}
+                  </S.B>{' '}
+                  и подтвердите перевод средств продавцу нажав на кнопку “средства отправлены”
+                </Text>
+              </S.TransferInfoBlock>
               {screen.width > 1024 ? (
                 <>
                   <S.Space justify="space-between" tabletWrap>
                     <S.Space gap={20} justify="space-between">
-                      <Button primary bigSize onClick={() => confirmExchangePayment(exchange.safeId)}>
+                      <Button
+                        primary
+                        bigSize
+                        onClick={() => confirmExchangePayment(exchange.safeId)}
+                      >
                         Средства отправлены
                       </Button>
-                      <Button outlinePrimary bigSize rightBtnOnTablet onClick={() => cancelExchange(exchange.safeId)}>
+                      <Button
+                        outlinePrimary
+                        bigSize
+                        rightBtnOnTablet
+                        onClick={() => cancelExchange(exchange.safeId)}
+                      >
                         Отменить обмен
                       </Button>
                     </S.Space>
@@ -564,321 +601,353 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                     <Button primary bigSize onClick={() => confirmExchangePayment(exchange.safeId)}>
                       Средства отправлены
                     </Button>
-                    <Button outlinePrimary bigSize rightBtnOnTablet onClick={() => cancelExchange(exchange.safeId)}>
+                    <Button
+                      outlinePrimary
+                      bigSize
+                      rightBtnOnTablet
+                      onClick={() => cancelExchange(exchange.safeId)}
+                    >
                       Отменить обмен
                     </Button>
                   </S.Space>
                   <S.Space gap={20} justify="flex-end" className="intf_btns">
-                      <Button outlinePrimary bigSize onClick={handleClick}>
-                        Чат
-                      </Button>
-                      <Button
-                        outlinePrimary
-                        bigSize
-                        onClick={handleClick}
-                        as="button"
-                        disabled={exchange.state === 0}
-                        exchangeBtn
-                      >
-                        Пожаловаться
-                      </Button>
-                    </S.Space>
+                    <Button outlinePrimary bigSize onClick={handleClick}>
+                      Чат
+                    </Button>
+                    <Button
+                      outlinePrimary
+                      bigSize
+                      onClick={handleClick}
+                      as="button"
+                      disabled={exchange.state === 0}
+                      exchangeBtn
+                    >
+                      Пожаловаться
+                    </Button>
+                  </S.Space>
                 </>
               )}
+            </S.StateBlock>
+
+            <S.StateBlock when={owner === 'seller'}>
+              <S.TransferInfoBlock>
+                <Text size={14} lH={20} black>
+                  Покупатель осуществляет перевод средств на указанный счет в размере{' '}
+                  <S.B>
+                    {countVolumeToShow(exchange.exchangeVolume, exchange.assetKind).toLocaleString(
+                      'ru-RU',
+                      {
+                        maximumFractionDigits: 0,
+                      }
+                    )}{' '}
+                    {FiatKind[exchange.exchangeAssetKind]}
+                  </S.B>{' '}
+                  С вашего баланса списаны и заморожены{' '}
+                  <S.B>
+                    {countVolumeToShow(exchange.volume, exchange.assetKind).toLocaleString(
+                      'ru-RU',
+                      {
+                        maximumFractionDigits: 5,
+                      }
+                    )}{' '}
+                    {Balance[exchange.assetKind]}
+                  </S.B>{' '}
+                  до подтверждения вами получения средств.
+                </Text>
+              </S.TransferInfoBlock>
+
+              <S.Space justify="space-between">
+                <S.Space gap={20}>
+                  <Button primary bigSize as="button" disabled={true} onClick={() => false}>
+                    Средства получены
+                  </Button>
+                </S.Space>
+
+                <S.Space gap={20}>
+                  <Button outlinePrimary bigSize onClick={handleClick}>
+                    Чат
+                  </Button>
+                </S.Space>
+              </S.Space>
+            </S.StateBlock>
           </S.StateBlock>
 
-          <S.StateBlock when={owner === 'seller'}>
-            <S.TransferInfoBlock>
-              <Text size={14} lH={20} black>
-                Покупатель осуществляет перевод средств на указанный счет в размере{' '}
-                <S.B>
-                  {(countVolumeToShow(exchange.exchangeVolume, exchange.assetKind)).toLocaleString('ru-RU', {
-                    maximumFractionDigits: 0,
-                  })}{' '}
-                  {FiatKind[exchange.exchangeAssetKind]}
-                </S.B>{' '}
-                С вашего баланса списаны и заморожены{' '}
-                <S.B>
-                  {countVolumeToShow(exchange.volume, exchange.assetKind).toLocaleString('ru-RU', {
-                    maximumFractionDigits: 5,
-                  })}{' '}
-                  {Balance[exchange.assetKind]}
-                </S.B>{' '}
-                до подтверждения вами получения средств.
-              </Text>
-            </S.TransferInfoBlock>
+          {/* **************************** */}
 
-            <S.Space justify="space-between">
-              <S.Space gap={20}>
-                <Button primary bigSize as="button" disabled={true} onClick={() => false}>
-                  Средства получены
-                </Button>
+          {/* CONFIRMED STATE */}
+
+          <S.StateBlock when={exchange.state === 1}>
+            <S.StateBlock when={owner === 'buyer'}>
+              <S.TransferInfoBlock>
+                <Text size={14} lH={20} black>
+                  <S.B>
+                    {countVolumeToShow(exchange.volume, exchange.assetKind).toLocaleString(
+                      'ru-RU',
+                      {
+                        maximumFractionDigits: 5,
+                      }
+                    )}{' '}
+                    {Balance[exchange.assetKind]}
+                  </S.B>{' '}
+                  будут отправлены вам сразу после подтверждения продавцом получения средств размере{' '}
+                  <S.B>
+                    {countVolumeToShow(exchange.exchangeVolume, exchange.assetKind).toLocaleString(
+                      'ru-RU',
+                      {
+                        maximumFractionDigits: 0,
+                      }
+                    )}{' '}
+                    {FiatKind[exchange.exchangeAssetKind]}
+                  </S.B>{' '}
+                  на указанный счет.
+                </Text>
+              </S.TransferInfoBlock>
+
+              <S.Space justify="space-between">
+                <S.Space gap={20}>
+                  <Button
+                    primary
+                    bigSize
+                    as="button"
+                    disabled={true}
+                    onClick={() => setShowSuccessModal(true)}
+                  >
+                    Средства отправлены
+                  </Button>
+                </S.Space>
+
+                <S.Space gap={20}>
+                  <Button outlinePrimary bigSize onClick={handleClick}>
+                    Чат
+                  </Button>
+                  <Button
+                    outlineDanger
+                    bigSize
+                    as="button"
+                    disabled={!timerDown}
+                    onClick={() => abuseExchange(exchange.safeId)}
+                    exchangeBtn
+                  >
+                    Пожаловаться
+                  </Button>
+                </S.Space>
               </S.Space>
+            </S.StateBlock>
 
-              <S.Space gap={20}>
-                <Button outlinePrimary bigSize onClick={handleClick}>
-                  Чат
-                </Button>
+            <S.StateBlock when={owner === 'seller'}>
+              <S.TransferInfoBlock>
+                <Text size={14} lH={20} black>
+                  Покупатель указал, что перевел средства в размере{' '}
+                  <S.B>
+                    {countVolumeToShow(exchange.exchangeVolume, exchange.assetKind).toLocaleString(
+                      'ru-RU',
+                      {
+                        maximumFractionDigits: 0,
+                      }
+                    )}{' '}
+                    {FiatKind[exchange.exchangeAssetKind]}
+                  </S.B>{' '}
+                  на указанный счет. Подтвердите получение средств для успешного завершения обмена.
+                  Покупатель получит{' '}
+                  <S.B>
+                    {getVolume(exchange.volume, exchange.assetKind).toLocaleString('ru-RU', {
+                      maximumFractionDigits: 5,
+                    })}{' '}
+                    {Balance[exchange.assetKind]}
+                  </S.B>
+                </Text>
+              </S.TransferInfoBlock>
+
+              <S.Space justify="space-between">
+                <S.Space gap={20}>
+                  <Button
+                    primary
+                    bigSize
+                    as="button"
+                    onClick={() => completeExchange(exchange.safeId)}
+                  >
+                    Средства получены
+                  </Button>
+                </S.Space>
+
+                <S.Space gap={20}>
+                  <Button outlinePrimary bigSize onClick={handleClick}>
+                    Чат
+                  </Button>
+                  <Button
+                    outlineDanger
+                    bigSize
+                    as="button"
+                    disabled={true}
+                    onClick={() => abuseExchange(exchange.safeId)}
+                    exchangeBtn
+                  >
+                    Пожаловаться
+                  </Button>
+                </S.Space>
               </S.Space>
-            </S.Space>
-          </S.StateBlock>
-        </S.StateBlock>
-
-        {/* **************************** */}
-
-        {/* CONFIRMED STATE */}
-
-        <S.StateBlock when={exchange.state === 1}>
-          <S.StateBlock when={owner === 'buyer'}>
-            <S.TransferInfoBlock>
-              <Text size={14} lH={20} black>
-                <S.B>
-                  {countVolumeToShow(exchange.volume, exchange.assetKind).toLocaleString('ru-RU', {
-                    maximumFractionDigits: 5,
-                  })}{' '}
-                  {Balance[exchange.assetKind]}
-                </S.B>{' '}
-                будут отправлены вам сразу после подтверждения продавцом получения средств размере{' '}
-                <S.B>
-                  {(countVolumeToShow(exchange.exchangeVolume, exchange.assetKind)).toLocaleString('ru-RU', {
-                    maximumFractionDigits: 0,
-                  })}{' '}
-                  {FiatKind[exchange.exchangeAssetKind]}
-                </S.B>{' '}
-                на указанный счет.
-              </Text>
-            </S.TransferInfoBlock>
-
-            <S.Space justify="space-between">
-              <S.Space gap={20}>
-                <Button
-                  primary
-                  bigSize
-                  as="button"
-                  disabled={true}
-                  onClick={() => setShowSuccessModal(true)}
-                >
-                  Средства отправлены
-                </Button>
-              </S.Space>
-
-              <S.Space gap={20}>
-                <Button outlinePrimary bigSize onClick={handleClick}>
-                  Чат
-                </Button>
-                <Button
-                  outlineDanger
-                  bigSize
-                  as="button"
-                  disabled={!timerDown}
-                  onClick={() => abuseExchange(exchange.safeId)}
-                  exchangeBtn
-                >
-                  Пожаловаться
-                </Button>
-              </S.Space>
-            </S.Space>
-          </S.StateBlock>
-
-          <S.StateBlock when={owner === 'seller'}>
-            <S.TransferInfoBlock>
-              <Text size={14} lH={20} black>
-                Покупатель указал, что перевел средства в размере{' '}
-                <S.B>
-                  {(countVolumeToShow(exchange.exchangeVolume, exchange.assetKind)).toLocaleString('ru-RU', {
-                    maximumFractionDigits: 0,
-                  })}{' '}
-                  {FiatKind[exchange.exchangeAssetKind]}
-                </S.B>{' '}
-                на указанный счет. Подтвердите получение средств для успешного завершения обмена.
-                Покупатель получит{' '}
-                <S.B>
-                  {getVolume(exchange.volume, exchange.assetKind).toLocaleString('ru-RU', {
-                    maximumFractionDigits: 5,
-                  })}{' '}
-                  {Balance[exchange.assetKind]}
-                </S.B>
-              </Text>
-            </S.TransferInfoBlock>
-
-            <S.Space justify="space-between">
-              <S.Space gap={20}>
-                <Button
-                  primary
-                  bigSize
-                  as="button"
-                  onClick={() => completeExchange(exchange.safeId)}
-                >
-                  Средства получены
-                </Button>
-              </S.Space>
-
-              <S.Space gap={20}>
-                <Button outlinePrimary bigSize onClick={handleClick}>
-                  Чат
-                </Button>
-                <Button
-                  outlineDanger
-                  bigSize
-                  as="button" 
-                  disabled={true}
-                  onClick={() => abuseExchange(exchange.safeId)}
-                  exchangeBtn
-                >
-                  Пожаловаться
-                </Button>
-              </S.Space>
-            </S.Space>
-          </S.StateBlock>
-        </S.StateBlock>
-
-        {/* ******************** */}
-
-        {/* COMPLETED STATE */}
-
-        <S.StateBlock when={exchange.state === 2 && mark === false}>
-          <S.StateBlock when={owner === 'buyer'}>
-            <S.TransferInfoBlock>
-              <Text size={14} lH={20} black>
-                Обмен успешно завершен. Средства в размере{' '}
-                <S.B>
-                  {countVolumeToShow(exchange.volume, exchange.assetKind).toLocaleString('ru-RU', {
-                    maximumFractionDigits: 5,
-                  })}{' '}
-                  {Balance[exchange.assetKind]}
-                </S.B>{' '}
-                отправлены на ваш баланс. Оставьте свою оценку продавцу.
-              </Text>
-            </S.TransferInfoBlock>
-            <S.FeedbackBlock>
-              <Text size={14} lH={20} mB={10} black>
-                Оставьте свою оценку продавцу:
-              </Text>
-              <Radio.Group>
-                <Radio
-                  name="feedback"
-                  label="1"
-                  value="1"
-                  checked={feedbackValue === 1}
-                  onChange={(e) => setFeedbackValue(+e.target.value)}
-                />
-                <Radio
-                  name="feedback"
-                  label="2"
-                  value="2"
-                  checked={feedbackValue === 2}
-                  onChange={(e) => setFeedbackValue(+e.target.value)}
-                />
-                <Radio
-                  name="feedback"
-                  label="3"
-                  value="3"
-                  checked={feedbackValue === 3}
-                  onChange={(e) => setFeedbackValue(+e.target.value)}
-                />
-                <Radio
-                  name="feedback"
-                  label="4"
-                  value="4"
-                  checked={feedbackValue === 4}
-                  onChange={(e) => setFeedbackValue(+e.target.value)}
-                />
-                <Radio
-                  name="feedback"
-                  label="5"
-                  value="5"
-                  checked={feedbackValue === 5}
-                  onChange={(e) => setFeedbackValue(+e.target.value)}
-                />
-              </Radio.Group>
-            </S.FeedbackBlock>
-
-            <Button primary onClick={() => {
-              rateUser();
-              setShowSuccessModal(true);
-              getUserMark();
-            }}>
-              Подтвердить
-            </Button>
+            </S.StateBlock>
           </S.StateBlock>
 
-          <S.StateBlock when={owner === 'seller'}>
-            <S.TransferInfoBlock>
-              <Text size={14} lH={20} black>
-                Обмен успешно завершен. Средства в размере{' '}
-                <S.B>
-                  {countVolumeToShow(exchange.volume, exchange.assetKind).toLocaleString('ru-RU', {
-                    maximumFractionDigits: 5,
-                  })}{' '}
-                  {Balance[exchange.assetKind]}
-                </S.B>{' '}
-                отправлены покупателю. Оставьте свою оценку покупателю.
-              </Text>
-            </S.TransferInfoBlock>
-            <S.FeedbackBlock>
-              <Text size={14} lH={20} mB={10} black>
-                Оставьте свою оценку покупателю:
-              </Text>
-              <Radio.Group>
-                <Radio
-                  name="feedback"
-                  label="1"
-                  value="1"
-                  checked={feedbackValue === 1}
-                  onChange={(e) => setFeedbackValue(+e.target.value)}
-                />
-                <Radio
-                  name="feedback"
-                  label="2"
-                  value="2"
-                  checked={feedbackValue === 2}
-                  onChange={(e) => setFeedbackValue(+e.target.value)}
-                />
-                <Radio
-                  name="feedback"
-                  label="3"
-                  value="3"
-                  checked={feedbackValue === 3}
-                  onChange={(e) => setFeedbackValue(+e.target.value)}
-                />
-                <Radio
-                  name="feedback"
-                  label="4"
-                  value="4"
-                  checked={feedbackValue === 4}
-                  onChange={(e) => setFeedbackValue(+e.target.value)}
-                />
-                <Radio
-                  name="feedback"
-                  label="5"
-                  value="5"
-                  checked={feedbackValue === 5}
-                  onChange={(e) => setFeedbackValue(+e.target.value)}
-                />
-              </Radio.Group>
-            </S.FeedbackBlock>
-            <Button primary onClick={() => {
-              rateUser();
-              setShowSuccessModal(true);
-              getUserMark();
-            }}>
-              Подтвердить
-            </Button>
+          {/* ******************** */}
+
+          {/* COMPLETED STATE */}
+
+          <S.StateBlock when={exchange.state === 2 && mark === false}>
+            <S.StateBlock when={owner === 'buyer'}>
+              <S.TransferInfoBlock>
+                <Text size={14} lH={20} black>
+                  Обмен успешно завершен. Средства в размере{' '}
+                  <S.B>
+                    {countVolumeToShow(exchange.volume, exchange.assetKind).toLocaleString(
+                      'ru-RU',
+                      {
+                        maximumFractionDigits: 5,
+                      }
+                    )}{' '}
+                    {Balance[exchange.assetKind]}
+                  </S.B>{' '}
+                  отправлены на ваш баланс. Оставьте свою оценку продавцу.
+                </Text>
+              </S.TransferInfoBlock>
+              <S.FeedbackBlock>
+                <Text size={14} lH={20} mB={10} black>
+                  Оставьте свою оценку продавцу:
+                </Text>
+                <Radio.Group>
+                  <Radio
+                    name="feedback"
+                    label="1"
+                    value="1"
+                    checked={feedbackValue === 1}
+                    onChange={(e) => setFeedbackValue(+e.target.value)}
+                  />
+                  <Radio
+                    name="feedback"
+                    label="2"
+                    value="2"
+                    checked={feedbackValue === 2}
+                    onChange={(e) => setFeedbackValue(+e.target.value)}
+                  />
+                  <Radio
+                    name="feedback"
+                    label="3"
+                    value="3"
+                    checked={feedbackValue === 3}
+                    onChange={(e) => setFeedbackValue(+e.target.value)}
+                  />
+                  <Radio
+                    name="feedback"
+                    label="4"
+                    value="4"
+                    checked={feedbackValue === 4}
+                    onChange={(e) => setFeedbackValue(+e.target.value)}
+                  />
+                  <Radio
+                    name="feedback"
+                    label="5"
+                    value="5"
+                    checked={feedbackValue === 5}
+                    onChange={(e) => setFeedbackValue(+e.target.value)}
+                  />
+                </Radio.Group>
+              </S.FeedbackBlock>
+
+              <Button
+                primary
+                onClick={() => {
+                  rateUser();
+                  setShowSuccessModal(true);
+                  getUserMark();
+                }}
+              >
+                Подтвердить
+              </Button>
+            </S.StateBlock>
+
+            <S.StateBlock when={owner === 'seller'}>
+              <S.TransferInfoBlock>
+                <Text size={14} lH={20} black>
+                  Обмен успешно завершен. Средства в размере{' '}
+                  <S.B>
+                    {countVolumeToShow(exchange.volume, exchange.assetKind).toLocaleString(
+                      'ru-RU',
+                      {
+                        maximumFractionDigits: 5,
+                      }
+                    )}{' '}
+                    {Balance[exchange.assetKind]}
+                  </S.B>{' '}
+                  отправлены покупателю. Оставьте свою оценку покупателю.
+                </Text>
+              </S.TransferInfoBlock>
+              <S.FeedbackBlock>
+                <Text size={14} lH={20} mB={10} black>
+                  Оставьте свою оценку покупателю:
+                </Text>
+                <Radio.Group>
+                  <Radio
+                    name="feedback"
+                    label="1"
+                    value="1"
+                    checked={feedbackValue === 1}
+                    onChange={(e) => setFeedbackValue(+e.target.value)}
+                  />
+                  <Radio
+                    name="feedback"
+                    label="2"
+                    value="2"
+                    checked={feedbackValue === 2}
+                    onChange={(e) => setFeedbackValue(+e.target.value)}
+                  />
+                  <Radio
+                    name="feedback"
+                    label="3"
+                    value="3"
+                    checked={feedbackValue === 3}
+                    onChange={(e) => setFeedbackValue(+e.target.value)}
+                  />
+                  <Radio
+                    name="feedback"
+                    label="4"
+                    value="4"
+                    checked={feedbackValue === 4}
+                    onChange={(e) => setFeedbackValue(+e.target.value)}
+                  />
+                  <Radio
+                    name="feedback"
+                    label="5"
+                    value="5"
+                    checked={feedbackValue === 5}
+                    onChange={(e) => setFeedbackValue(+e.target.value)}
+                  />
+                </Radio.Group>
+              </S.FeedbackBlock>
+              <Button
+                primary
+                onClick={() => {
+                  rateUser();
+                  setShowSuccessModal(true);
+                  getUserMark();
+                }}
+              >
+                Подтвердить
+              </Button>
+            </S.StateBlock>
           </S.StateBlock>
-        </S.StateBlock>
-        {/* ************** */}
-      </RightSide>
-      <ExchangeSuccessModal
-        exchange={{ ...exchange, feedback: feedbackValue, owner }}
-        open={showSuccessModal}
-        onClose={() => setShowSuccessModal(false)}
-      />
-      <ExchangeRejectModal
-        exchange={{ ...exchange, feedback: feedbackValue, owner }}
-        open={showRejectModal}
-        onClose={() => setShowRejectModal(false)}
-      />
-    </S.Container>
+          {/* ************** */}
+        </RightSide>
+        <ExchangeSuccessModal
+          exchange={{ ...exchange, feedback: feedbackValue, owner }}
+          open={showSuccessModal}
+          onClose={() => setShowSuccessModal(false)}
+        />
+        <ExchangeRejectModal
+          exchange={{ ...exchange, feedback: feedbackValue, owner }}
+          open={showRejectModal}
+          onClose={() => setShowRejectModal(false)}
+        />
+      </S.Container>
     </Container>
   );
 };

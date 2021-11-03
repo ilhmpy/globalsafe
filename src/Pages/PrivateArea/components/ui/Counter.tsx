@@ -16,6 +16,7 @@ export const Counter: FC<Props> = ({ data, formatNum, over, delay, setTimerDown,
   const [count, setCount] = useState(0);
   const [start, setStart] = useState(false);
   const [state, setState] = useState<null | string>(null);
+  const { screen } = window;
 
   useEffect(() => {
     const day: unknown = moment.utc().valueOf();

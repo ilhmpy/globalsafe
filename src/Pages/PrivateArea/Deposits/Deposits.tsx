@@ -31,6 +31,7 @@ import moment from 'moment';
 import { BalanceKind } from '../../../enums/balanceKind';
 
 export const Deposits: FC = () => {
+  const { screen } = window;
   const [openModal, setOpenModal] = useState(false);
   const [depositsList, setDepositsList] = useState<Collection[]>([]);
   const [getDepositsLoading, setGetDepositsLoading] = useState(true);

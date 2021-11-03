@@ -32,6 +32,8 @@ export const Filter: FC<FilterProps> = ({
     if (type !== viewType) setViewType?.(type);
   };
 
+  const { screen } = window;
+
   return (
     <S.Container without={withoutContainer}>
       {screen.width > 768 ? (

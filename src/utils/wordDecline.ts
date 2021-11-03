@@ -5,7 +5,7 @@ export const wordDecline = (num: number, arr: string[]) => {
       result = arr[2];
     } else {
       count = count % 10;
-      if (count == 1) {
+      if (count === 1) {
         result = arr[0];
       } else if (count >= 2 && count <= 4) {
         result = arr[1];

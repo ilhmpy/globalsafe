@@ -35,6 +35,7 @@ import SwiperCore, { Navigation, Pagination, A11y } from 'swiper';
 export const HeaderBar = () => {
   const { t } = useTranslation();
   const [openConverting, setOpenConverting] = useState<boolean>(false);
+  const { screen } = window;
 
   const [notifications, setNotifications] = useState<Notify[]>([]);
   const [addDeposit, setAddDeposit] = useState<boolean>(false);
