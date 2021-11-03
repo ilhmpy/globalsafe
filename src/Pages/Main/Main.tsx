@@ -2204,13 +2204,8 @@ const Center = styled.div`
 
 const MainPage = styled(Page)`
   position: relative;
-  //margin-top: 200px;
   padding-top: 0px;
   margin-top: 94px;
-  /* @media only screen and (min-width: 577px) and (max-width: 768px) {
-    margin-top: 0px;
-    padding-top: 250px;
-  } */
   @media (max-width: 767px) {
     margin-top: 87px;
   }

@@ -13,11 +13,14 @@ import PageNotFound from './Pages/Tech/PageNotFound';
 import TechWorks from './Pages/Tech/TechWorks';
 import { HistoryOperations } from './Pages/PrivateArea/HistoryOperations';
 import { routers } from './constantes/routers';
+import { MobileModal } from './Pages/PrivateArea/components/MobileModal/MobileModal';
+
 declare global {
   interface Window {
     OneSignal: any;
   }
 }
+
 const App: FC = () => {
   const token = localStorage.getItem('token');
   window.OneSignal = window.OneSignal || [];
@@ -176,6 +179,7 @@ const App: FC = () => {
             <Route path="/register" component={Register} />
             <Route path="/tech" component={TechWorks} />
             <Route path="/404" component={PageNotFound} />
+            {window.screen.width <= 480 && <Route path="/mobile/modal" component={MobileModal} />}
           </Switch>
         </div>
       </Router>

@@ -22,32 +22,34 @@ export const OrderErrorModal: FC<Props> = ({ onClose, open, message, onlyCloseAc
     <>
       {open && (
         <Modal onClose={onClose} open={open}>
-          <S.SmallContainer>
-            <S.BlackTitle>Ошибка публикации ордера</S.BlackTitle>
+          <S.SmallContainer mobileWFull>
+            <S.Title>Ошибка публикации ордера</S.Title>
 
-            <Text size={14} lH={20} black mB={10}>
-              Ордер не был опубликован по причине:
-            </Text>
-            {
-              !!message
-              ?
-                <Text size={14} lH={20} error mB={20}>
-                  {message}
-                </Text>
+            <S.MobileContent>
+              <Text size={14} lH={20} black mB={10}>
+                Ордер не был опубликован по причине:
+              </Text>
+              {
+                !!message
+                ?
+                  <Text size={14} lH={20} error mB={20} mBMobile={20}>
+                    {message}
+                  </Text>
+                :
+                  null
+              }
+              {
+                onlyCloseAction
+                ?
+                  <Button primary onClick={onClose}>
+                    Закрыть
+                  </Button>
               :
-                null
-            }
-            {
-              onlyCloseAction
-              ?
-                <Button primary onClick={onClose}>
-                  Закрыть
-                </Button>
-            :
-                <Button primary onClick={() => history.replace(routers.certificates)}>
-                  Выбрать сертификат
-                </Button>
-            }
+                  <Button primary onClick={() => history.replace(routers.certificates)}>
+                    Выбрать сертификат
+                  </Button>
+              }
+            </S.MobileContent>
           </S.SmallContainer>
         </Modal>
       )}

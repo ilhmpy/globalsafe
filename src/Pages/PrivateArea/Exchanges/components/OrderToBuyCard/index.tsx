@@ -1,5 +1,5 @@
 import React, { FC, useContext, useEffect, useMemo, useState } from 'react';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 import { Input } from '../../../../../components/Input';
 import { routers } from '../../../../../constantes/routers';
 import { AppContext } from '../../../../../context/HubContext';
@@ -9,16 +9,18 @@ import { FiatKind } from '../../../../../types/fiat';
 import { GetBuyOrdersModel, OrderType, ViewBuyOrderModel } from '../../../../../types/orders';
 import { CollectionPayMethod, PaymentMethodKind, RootPayMethod } from '../../../../../types/paymentMethodKind';
 import { Checkbox } from '../../../components/Checkbox';
-import { LeftSide, RightSide, Space, TabNavItem, Text, Title } from '../../../components/ui';
-import { countVolumeToSend, countVolumeToShow } from '../../../utils';
+import { FilterButton, LeftSide, RightSide, Space, TabNavItem, Text, Title } from '../../../components/ui';
+import { countVolumeToSend, countVolumeToShow, getMyRating, useIsMobile } from '../../../utils';
 import { OrderErrorModal } from '../modals/OrderErrorModal';
 import { OrderInfoModal } from '../modals/OrderInfoModal';
 import * as S from './S.el';
-
+ 
 export const OrderToBuyCard: FC = () => {
   const history = useHistory();
+  const location = useLocation();
   const appContext = useContext(AppContext);
-  const { hubConnection, user, balanceList, userSafeId } = appContext;
+  const isMobile = useIsMobile();
+  const { hubConnection, user, balanceList, userSafeId, account } = appContext;
   const [showOrderBuyModal, setShowOrderBuyModal] = useState(false);
   const [showOrderErrorModal, setShowOrderErrorModal] = useState(false);
 
@@ -262,8 +264,9 @@ export const OrderToBuyCard: FC = () => {
     const pattern = /^[0-9][0-9\.]*$/;
     const pattern2 = /^[0-9]{1,10}\.[0-9]{3}$/;
     if (e.target.value === '' || pattern.test(e.target.value)) {
-      if (+e.target.value > ((+orderSumm - 1) * +changeRate)) {
-        setOrderMinSumm(((+orderSumm - 1) * +changeRate).toFixed(2));
+      const summ = (+orderSumm - 1) < 0 ? 0 : (+orderSumm - 1);
+      if (+e.target.value > (summ * +changeRate)) {
+        setOrderMinSumm((summ * +changeRate).toFixed(2));
       } else {
         if(!pattern2.test(e.target.value)) {
           setOrderMinSumm(e.target.value);
@@ -308,6 +311,9 @@ export const OrderToBuyCard: FC = () => {
     if (!orderSumm) {
       isValid = false;
     }
+    if(Number(orderSumm) <= 0) {
+      isValid = false;
+    }
     if (!changeRate) {
       isValid = false;
     }
@@ -315,6 +321,9 @@ export const OrderToBuyCard: FC = () => {
       isValid = false;
     }
     if (!orderMaxSumm) {
+      isValid = false;
+    }
+    if (orderMinSumm > orderMaxSumm) {
       isValid = false;
     }
     if (selectedPaymentMethodsIds.length === 0) {
@@ -369,28 +378,28 @@ export const OrderToBuyCard: FC = () => {
     <S.Container>
       <LeftSide bg={'#EAEFF4'}>
         <S.BlockWrapper>
-          <Text size={14} lH={20} mB={10} black>
+          <Text size={14} lH={20} mB={10} mBMobile={4} black>
             Аккаунт:
           </Text>
-          <Title lH={28}>{user}</Title>
+          <Title lH={28} heading3 mB={0}>{user}</Title>
         </S.BlockWrapper>
 
         <S.BlockWrapper>
-          <Text size={14} lH={20} mB={10} black>
+          <Text size={14} lH={20} mB={10} mBMobile={4} black>
             Рейтинг аккаунта:
           </Text>
-          <Title lH={28}>5.0</Title>
+          <Title lH={28} heading3 mB={0}>{getMyRating(account)}</Title>
         </S.BlockWrapper>
         {
-          currencyToBuy
+          (!isMobile && currencyToBuy)
           ?
             dailyLimitRest !== undefined
             ?
               <S.BlockWrapper>
-                <Text size={14} lH={20} mB={10} black>
+                <Text size={14} lH={20} mB={10} mBMobile={4} black>
                   Оставшийся лимит в сутках:
                 </Text>
-                <Title lH={28}>
+                <Title lH={28} heading3 mB={0}>
                   {`${dailyLimitRest} ${currencyToBuy}`}
                 </Title>
               </S.BlockWrapper>
@@ -404,24 +413,50 @@ export const OrderToBuyCard: FC = () => {
           :
             null
         }
-        
       </LeftSide>
 
-      <RightSide>
-        <S.TabsBlock>
-          <TabNavItem to={routers.p2pchangesOrderToBuy} exact>
-            <div>Покупка</div>
-          </TabNavItem>
+      {/*  */}
+      <RightSide mobilePadding={0}>
+        {
+          isMobile
+          ?
+            <S.Filters mB={0}>
+              <FilterButton 
+                smHalfWidth
+                active={location.pathname === routers.p2pchangesOrderToBuy}
+                onClick={() => history.push(routers.p2pchangesOrderToBuy)}
+                switchLeft
+                noMargin
+              >
+                Покупка
+              </FilterButton>
+              <FilterButton
+                smHalfWidth
+                active={location.pathname === routers.p2pchangesOrderToSell}
+                onClick={() => history.push(routers.p2pchangesOrderToSell)}
+                switchRight
+                noMargin
+              >
+                Продажа
+              </FilterButton>
+            </S.Filters>
+          :
+            <S.TabsBlock>
+              <TabNavItem to={routers.p2pchangesOrderToBuy} exact>
+                <div>Покупка</div>
+              </TabNavItem>
 
-          <TabNavItem to={routers.p2pchangesOrderToSell} exact>
-            <div>Продажа</div>
-          </TabNavItem>
-        </S.TabsBlock>
+              <TabNavItem to={routers.p2pchangesOrderToSell} exact>
+                <div>Продажа</div>
+              </TabNavItem>
+            </S.TabsBlock>
+        }
 
+        {/*  */}
         <S.Form>
           <Space gap={20} mb={20} mobileColumn>
             <S.FormItem>
-              <Text size={14} weight={300} lH={20} mB={10} black>
+              <Text size={14} weight={300} lH={20} mB={10} mBMobile={10} black>
                 Валюта покупки:
               </Text>
               <S.Select
@@ -430,9 +465,35 @@ export const OrderToBuyCard: FC = () => {
                 selectedOption={currencyToBuy}
                 setSelectedOption={(val: string) => setCurrencyToBuy(val)}
               />
+                {
+                  (isMobile && currencyToBuy)
+                  ?
+                    dailyLimitRest !== undefined
+                    ?
+                      <S.CertInfoBlock>
+                          <Text size={14} weightMobile={300} lH={20} mB={4} black>
+                            {`Оставшийся лимит в сутках:`}
+                          </Text>
+                          <Text size={14} weightMobile={500} lH={20} black>
+                            {`${dailyLimitRest} ${currencyToBuy}`}
+                          </Text>
+                      </S.CertInfoBlock>
+                    :
+                      <S.CertInfoBlock>
+                        <Text size={14} error weight={300} lH={20}>
+                          {`Сертификат на публикацию ордеров с выбранной валютой отсутствует, `}
+                          <S.Link to={routers.certificates}>
+                            Приобретите соответствующий сертификат
+                          </S.Link>
+                        </Text>
+                      </S.CertInfoBlock>
+                  :
+                    null
+                }
             </S.FormItem>
+
             <S.FormItem>
-              <Text size={14} weight={300} lH={20} mB={10} black>
+              <Text size={14} weight={300} lH={20} mB={10} mBMobile={10} black>
                 Количество покупки:
               </Text>
               <Input
@@ -447,7 +508,7 @@ export const OrderToBuyCard: FC = () => {
 
           <Space gap={20} mb={20} mobileColumn>
             <S.FormItem>
-              <Text size={14} weight={300} lH={20} mB={10} black>
+              <Text size={14} weight={300} lH={20} mB={10} mBMobile={10} black>
                 Валюта обмена:
               </Text>
               <S.Select
@@ -458,7 +519,7 @@ export const OrderToBuyCard: FC = () => {
               />
             </S.FormItem>
             <S.FormItem>
-              <Text size={14} weight={300} lH={20} mB={10} black>
+              <Text size={14} weight={300} lH={20} mB={10} mBMobile={10} black>
                 Курс:
               </Text>
               <Input
@@ -474,7 +535,7 @@ export const OrderToBuyCard: FC = () => {
           {paymentMethods === undefined ? null : (
             <Space mb={20}>
               <S.FormItem>
-                <Text size={14} weight={300} lH={20} mB={10} black>
+                <Text size={14} weight={300} lH={20} mB={10} mBMobile={10} black>
                   Платежный метод:
                 </Text>
                 {paymentMethods.length > 0 ? (
@@ -515,9 +576,9 @@ export const OrderToBuyCard: FC = () => {
           )}
 
           {currencyToBuy && currencyToChange && orderSumm && changeRate && (
-            <Space gap={20} mb={20}>
+            <Space gap={20} mb={20} mobileColumn>
               <S.FormItem>
-                <Text size={14} weight={300} lH={20} mB={10} black>
+                <Text size={14} weight={300} lH={20} mB={10} mBMobile={10} black>
                   Минимальный лимит операции:
                 </Text>
                 <Input
@@ -529,7 +590,7 @@ export const OrderToBuyCard: FC = () => {
                 />
               </S.FormItem>
               <S.FormItem>
-                <Text size={14} weight={300} lH={20} mB={10} black>
+                <Text size={14} weight={300} lH={20} mB={10} mBMobile={10} black>
                   Максимальный лимит операции:
                 </Text>
                 <Input
@@ -543,9 +604,9 @@ export const OrderToBuyCard: FC = () => {
             </Space>
           )}
 
-          <Space gap={20} mb={40}>
+          <Space gap={20} mb={40} mobileMb={20}>
             <S.FormItem>
-              <Text size={14} weight={300} lH={20} mB={10} black>
+              <Text size={14} weight={300} lH={20} mB={10} mBMobile={10} black>
                 Время на обмен:
               </Text>
               <S.Select
@@ -557,7 +618,7 @@ export const OrderToBuyCard: FC = () => {
             </S.FormItem>
           </Space>
 
-          <Space gap={10} mb={40}>
+          <Space gap={10} mb={40} mobileMb={0}>
             <S.Button
               fullWidthMobile
               primary

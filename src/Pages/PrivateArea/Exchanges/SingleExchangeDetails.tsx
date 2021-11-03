@@ -13,7 +13,7 @@ import { AppContext } from '../../../context/HubContext';
 import { Loading, NotItems } from "../components/Loading/Loading";
 import { Balance } from "../../../types/balance";
 import { FiatKind } from "../../../types/fiat";
-import { PaymentMethodKind } from "../../../types/paymentMethodKind";
+import { MobileModal } from '../components/MobileModal/MobileModal';
 
 type PropsMatch = {
   exchangeId: string;
@@ -28,6 +28,7 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
   const [call, setCall] = useState<boolean>(false);
   const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
   const [showRejectModal, setShowRejectModal] = useState<boolean>(false);
+  const [end, setEnd] = useState<boolean>(false);
   const buyer = () => {
     return (
       (exchange && exchange.kind === 0 && exchange.ownerSafeId !== account.safeId) ||
@@ -65,6 +66,11 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
     };
   }, [hubConnection, call]);
 
+  /*
+  if (end === true && screen.width <= 480 && exchange !== null) {
+    return <MobileModal exchange={exchange} type={exchange.state === 2 ? 0 : 1} />
+  }; */
+
   return (
     <>
       {loading ? <Loading /> : (
@@ -75,12 +81,13 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
                   <Back text="К списку обменов" onGoBackClick={() => history.replace(routers.p2pchangesOwn)} />
                   <S.TitleContainer>
                       <Title mB={0} main>Обмен {`${Balance[exchange.assetKind]}-${FiatKind[exchange.exchangeAssetKind]}`}</Title>
-                      <Text size={14} lH={20} black>
+                      <Text size={14} lH={20} black detail>
                         № {exchange.safeId}
                       </Text>
                   </S.TitleContainer>
                 </Container>
-                <ExchangeDetailCard setCall={setCall} 
+                <ExchangeDetailCard 
+                  setCall={setCall} 
                   setShowSuccessModal={setShowSuccessModal} 
                   setShowRejectModal={setShowRejectModal}
                   showSuccessModal={showSuccessModal} 
@@ -90,6 +97,7 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
                   owner={owner}
                   setLoading={setLoading}
                   exchangeId={exchangeId}
+                  setEnd={setEnd}
                 />
             </>
           )}

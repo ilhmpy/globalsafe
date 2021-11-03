@@ -1,5 +1,6 @@
 import styled from 'styled-components/macro';
 import { Button } from '../../../../components/Button/V2/Button';
+import { Device } from '../../consts';
 
 export const Container = styled.div`
   display: flex;
@@ -15,6 +16,10 @@ export const Container = styled.div`
       width: 100%;
     }
   }
+
+  @media ${Device.mobile} {
+    flex-direction: column;
+  };
 `;
 
 export const Title = styled.h3`
@@ -25,4 +30,15 @@ export const Title = styled.h3`
   @media (max-width: 768px) {
     display: none;
   }
+`;
+
+export const RateText = styled.p`
+  margin-top: 10px;
+  font-size: 12px;
+  line-height: 14px;
+  color: ${props => props.theme.black};
+  display: none;
+  @media ${Device.mobile} {
+    display: block;
+  };
 `;

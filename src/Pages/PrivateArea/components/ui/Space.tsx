@@ -1,6 +1,17 @@
 import styled from 'styled-components';
+import { Device } from '../../consts';
 
-export const Space = styled.div<{gap?: number, justify?: string, mb?: number; column?: boolean; mobileColumn?: boolean;}>`
+interface SpaceProps {
+  gap?: number, 
+  justify?: string, 
+  mb?: number; 
+  column?: boolean; 
+  mobileColumn?: boolean; 
+  mobileGap?: number;
+  mobileMb?: number;
+};
+
+export const Space = styled.div<SpaceProps>`
     display: flex;
     flex-direction: ${props => props.column ? 'column' : 'row'};
     justify-content: ${props => props.justify ? props.justify : 'flex-start'};
@@ -11,10 +22,27 @@ export const Space = styled.div<{gap?: number, justify?: string, mb?: number; co
         if(mobileColumn) {
           return  `
             @media only screen and (max-device-width: 768px) {
-                flex-direction: column
-            }
+              flex-direction: column;
+            };
           `;
         }
     }}
-    
+    ${({ mobileGap }) => {
+      if(mobileGap) {
+        return  `
+          @media ${Device.mobile} {
+            gap: ${mobileGap}px;
+          };
+        `;
+      }
+    }}
+    ${({ mobileMb }) => {
+      if(mobileMb !== undefined) {
+        return  `
+          @media ${Device.mobile} {
+            margin-bottom: ${mobileMb}px;
+          };
+        `;
+      }
+    }}
 `;
