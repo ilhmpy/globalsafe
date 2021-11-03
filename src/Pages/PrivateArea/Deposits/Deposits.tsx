@@ -29,6 +29,7 @@ import {
 import { Balance } from '../../../types/balance';
 import moment from 'moment';
 import { BalanceKind } from '../../../enums/balanceKind';
+import { SwiperContainer, SwiperUI } from './S.elements';
 
 export const Deposits: FC = () => {
   const { screen } = window;
@@ -41,8 +42,8 @@ export const Deposits: FC = () => {
   const [activeFilter, setActiveFilter] = useState<'active' | 'archived' | 'hold'>('active');
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   const [viewType, setViewType] = useState<string>('list');
-
-  const { hubConnection, balanceList, setDepositsFilter } = useContext(AppContext);
+  const { hubConnection, balanceList, setDepositsFilter, setChosenDepositView } =
+    useContext(AppContext);
 
   const history = useHistory();
 
@@ -233,32 +234,15 @@ export const Deposits: FC = () => {
         </Container>
       ) : (
         <>
-          <Container>
-            <SwiperUI
-              className="mySwiper"
-              slidesPerView={1}
-              pagination={true}
-              // pagination={{
-              //   dynamicBullets: true,
-              //   clickable: true,
-              //   el: '.swiper-pagination',
-              //   type: 'bullets',
-              // }}
-              // pagination={{
-              //   el: '.my-custom-pagination-div',
-              //   clickable: true,
-              //   renderBullet: (index, className) => {
-              //     return '<span class="' + className + '">' + (index + 1) + '</span>';
-              //   },
-              // }}
-            >
+          <SwiperContainer>
+            <SwiperUI slidesPerView={'auto'} pagination={{ clickable: true, dynamicBullets: true }}>
               {depositsList &&
                 depositsList.map((deposit, i) => {
                   return (
                     <SwiperSlide key={`${deposit.safeId}-${i}`}>
                       <BlockBox
                         onClick={() => {
-                          //   setChosenDepositView(deposit);
+                          setChosenDepositView(deposit);
                           history.push(routers.depositsView);
                         }}
                       >
@@ -300,50 +284,9 @@ export const Deposits: FC = () => {
                   );
                 })}
             </SwiperUI>
-            {/* <div className="my-custom-pagination-div" /> */}
-          </Container>
-          <PartnerProgramPagination />
+          </SwiperContainer>
         </>
       )}
     </S.Container>
   );
 };
-
-const SwiperUI = styled(Swiper)`
-  max-height: 290px;
-  height: 100%;
-`;
-
-export const PartnerProgramContainer = styled.div`
-  width: 90%;
-  margin: 0 auto;
-
-  .swiper-pagination-bullets {
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    margin-top: 50px;
-  }
-
-  .swiper-pagination-bullet {
-    width: 7px;
-    height: 7px;
-    background: #c4c4c4;
-    border-radius: 50%;
-  }
-
-  .swiper-pagination-bullet-active {
-    width: 20px;
-    height: 6px;
-    background: #0094ff;
-    border-radius: 6px;
-  }
-`;
-
-export const PartnerProgramPagination = styled.div`
-  display: flex;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  margin-top: 33px;
-`;
