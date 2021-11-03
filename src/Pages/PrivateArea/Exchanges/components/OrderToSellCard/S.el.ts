@@ -1,9 +1,10 @@
-import styled from 'styled-components/macro';
+import styled, { css } from 'styled-components/macro';
 import { NavLink } from 'react-router-dom';
 
 import { TabsBlock as BaseTabsBlock } from '../../../components/ui';
 import { Select as BaseSelect } from '../../../../../components/Select/Select5';
 import { Button as BaseButton } from '../../../../../components/Button/V2/Button';
+import { Device } from '../../../consts';
 
 export const Container = styled.div`
   width: 100%;
@@ -17,8 +18,16 @@ export const Container = styled.div`
   }
 `;
 
-export const BlockWrapper = styled.div<{largeMB?: boolean}>`
+export const BlockWrapper = styled.div<{largeMB?: boolean; mbMobile?: number;}>`
   margin-bottom: ${props => props.largeMB ? '40px' : '20px'};
+
+  @media ${Device.mobile} {
+    margin-bottom: ${props => props.mbMobile ? props.mbMobile : 20}px;
+  };
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 `;
 
 export const TabsBlock = styled(BaseTabsBlock)`
@@ -28,6 +37,7 @@ export const TabsBlock = styled(BaseTabsBlock)`
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
+  padding: 20px;
 `;
 
 export const Select = styled(BaseSelect)`
@@ -74,9 +84,41 @@ export const Link = styled(NavLink)`
   font-weight: 300;
   font-size: 14px;
   line-height: 20px;
+  text-decoration: underline;
 `;
 
 
 export const PaymentMethodDetailsBlock = styled.div`
   padding-left: 24px;
+`;
+
+export const Filters = styled.div<{hidden?: boolean; smHidden?: boolean; smVisible?: boolean; mB?: number; when?: boolean;}>`
+  display: ${props => props.hidden ? 'none' : 'flex'};
+  padding: 20px;
+  margin-bottom: ${props => props.mB !== undefined ? props.mB : 20}px;
+  background-color: #f8f9fa;
+  @media only screen and (max-device-width: 480px) {
+    width: 100%;
+  };
+  @media ${Device.mobile} {
+    ${props => props.smHidden && css`display: none`};
+    ${props => props.smVisible && css`display: flex`};
+  };
+  ${({ when }) => {
+    if (when !== undefined) {
+      return `
+        display: ${when ? "flex" : "none"};
+      `;
+    };
+  }};
+`;
+
+export const CertInfoBlock = styled.div`  
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  background: ${props => props.theme.white};
+  border: 1px solid #EAEFF4;
+  border-radius: 0px 4px 4px 0px;
+  padding: 19px 20px;
 `;

@@ -31,7 +31,12 @@ export const Text = styled.p<Props>`
   margin-left: ${(props) => (props.mL ? props.mL : 0)}px;
   user-select: ${(props) => (props.unone ? 'none' : 'text')};
   color: ${(props) => (props.black ? props.theme.black : props.error ? '#FF4A31' : '#000')};
-
+  line-break: anywhere;
+  @media only screen and (max-device-width: 480px) {
+    margin-bottom: 4px;
+    font-size: 14px;
+    font-weight: 300;
+  }
   @media ${Device.mobile} {
     display: ${props => props.smHidden ? 'none' : 'block'};
     ${props => props.sizeMobile && css`font-size: ${props.sizeMobile}px`};
@@ -68,11 +73,6 @@ export const Text = styled.p<Props>`
       `;
     };
   }}
-  @media only screen and (max-device-width: 480px) {
-    margin-bottom: 4px;
-    font-size: 14px;
-    font-weight: 300;
-  }
   ${({ phoneFWB }) => {
     if (phoneFWB) {
       return `

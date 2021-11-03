@@ -54,111 +54,115 @@ export const OrderInfoModal: FC<OrderInfoModalProps> = ({
     <>
       {open && (
         <Modal onClose={onClose} open={open}>
-          <S.SmallContainer>
-            <S.BlackTitle>
+          <S.SmallContainer mobileWFull>
+            <S.Title>
               {newCreatedOrder ? 'Ордер успешно опубликован' : 'Публикация ордера'}
-            </S.BlackTitle>
+            </S.Title>
 
-            <S.DataList>
-              <S.DataListItem>
-                <Text size={14} lH={20}>
-                  Направление:
-                </Text>
-                <S.ListItemDivider />
-                <Text size={14} lH={20} weight={700}>
-                  {type === OrderType.Buy ? 'Покупка' : 'Продажа'}
-                </Text>
-              </S.DataListItem>
+            <S.MobileContent>
+              <S.DataList>
+                <S.DataListItem>
+                  <Text size={14} lH={20} weightMobile={400}>
+                    Направление:
+                  </Text>
+                  <S.ListItemDivider />
+                  <Text size={14} lH={20} weight={700} weightMobile={700}>
+                    {type === OrderType.Buy ? 'Покупка' : 'Продажа'}
+                  </Text>
+                </S.DataListItem>
 
-              <S.DataListItem>
-                <Text size={14} lH={20}>
-                  Валюта покупки:
-                </Text>
-                <S.ListItemDivider />
-                <Text size={14} lH={20} weight={700}>
-                  {currencyToBuy}
-                </Text>
-              </S.DataListItem>
+                <S.DataListItem>
+                  <Text size={14} lH={20} weightMobile={400}>
+                    Валюта покупки:
+                  </Text>
+                  <S.ListItemDivider />
+                  <Text size={14} lH={20} weight={700} weightMobile={700}>
+                    {currencyToBuy}
+                  </Text>
+                </S.DataListItem>
 
-              <S.DataListItem>
-                <Text size={14} lH={20}>
-                  Кол-во покупки:
-                </Text>
-                <S.ListItemDivider />
-                <Text size={14} lH={20} weight={700}>
-                  {orderSumm}
-                </Text>
-              </S.DataListItem>
+                <S.DataListItem>
+                  <Text size={14} lH={20} weightMobile={400}>
+                    Кол-во покупки:
+                  </Text>
+                  <S.ListItemDivider />
+                  <Text size={14} lH={20} weight={700} weightMobile={700}>
+                    {orderSumm}
+                  </Text>
+                </S.DataListItem>
 
-              <S.DataListItem>
-                <Text size={14} lH={20}>
-                  Валюта обмена:
-                </Text>
-                <S.ListItemDivider />
-                <Text size={14} lH={20} weight={700}>
-                  {currencyToChange}
-                </Text>
-              </S.DataListItem>
+                <S.DataListItem>
+                  <Text size={14} lH={20} weightMobile={400}>
+                    Валюта обмена:
+                  </Text>
+                  <S.ListItemDivider />
+                  <Text size={14} lH={20} weight={700} weightMobile={700}>
+                    {currencyToChange}
+                  </Text>
+                </S.DataListItem>
 
-              <S.DataListItem>
-                <Text size={14} lH={20}>
-                  Курс:
-                </Text>
-                <S.ListItemDivider />
-                <Text size={14} lH={20} weight={700}>
-                  {rate}
-                </Text>
-              </S.DataListItem>
+                <S.DataListItem>
+                  <Text size={14} lH={20} weightMobile={400}>
+                    Курс:
+                  </Text>
+                  <S.ListItemDivider />
+                  <Text size={14} lH={20} weight={700} weightMobile={700}>
+                    {rate}
+                  </Text>
+                </S.DataListItem>
 
-              {type === OrderType.Buy ? (
-                <DrawBuyOrderPaymentsBlock
-                  paymentMethods={paymentMethods}
-                  currencyToChange={currencyToChange}
-                />
+                {type === OrderType.Buy ? (
+                  <DrawBuyOrderPaymentsBlock
+                    paymentMethods={paymentMethods}
+                    currencyToChange={currencyToChange}
+                  />
+                ) : (
+                  <DrawSellOrderPaymentsBlock
+                    paymentMethods={paymentMethods}
+                    currencyToChange={currencyToChange}
+                  />
+                )}
+
+                <S.DataListItem>
+                  <Text size={14} lH={20} weightMobile={400}>
+                    Лимиты:
+                  </Text>
+                  <S.ListItemDivider />
+                  <Text size={14} lH={20} weight={700} weightMobile={700}>
+                    {`${orderMinSumm} - ${orderMaxSumm}`}
+                  </Text>
+                </S.DataListItem>
+
+                <S.DataListItem>
+                  <Text size={14} lH={20} weightMobile={400}>
+                    Время на обмен:
+                  </Text>
+                  <S.ListItemDivider />
+                  <Text size={14} lH={20} weight={700} weightMobile={700}>
+                    {timePeriod}
+                  </Text>
+                </S.DataListItem>
+              </S.DataList>
+
+              {newCreatedOrder ? (
+                <Button
+                  primary
+                  fullWidth
+                  onClick={handleNavigateToOrder}
+                >
+                  Перейти к ордеру
+                </Button>
               ) : (
-                <DrawSellOrderPaymentsBlock
-                  paymentMethods={paymentMethods}
-                  currencyToChange={currencyToChange}
-                />
+                <Space mobileColumn>
+                  <Button primary fullWidth onClick={() => onPublish()}>
+                    Опубликовать
+                  </Button>
+                  <Button outlinePrimary fullWidth onClick={onClose}>
+                    Отмена
+                  </Button>
+                </Space>
               )}
-
-              <S.DataListItem>
-                <Text size={14} lH={20}>
-                  Лимиты:
-                </Text>
-                <S.ListItemDivider />
-                <Text size={14} lH={20} weight={700}>{`${orderMinSumm} - ${orderMaxSumm}`}</Text>
-              </S.DataListItem>
-
-              <S.DataListItem>
-                <Text size={14} lH={20}>
-                  Время на обмен:
-                </Text>
-                <S.ListItemDivider />
-                <Text size={14} lH={20} weight={700}>
-                  {timePeriod}
-                </Text>
-              </S.DataListItem>
-            </S.DataList>
-
-            {newCreatedOrder ? (
-              <Button
-                primary
-                fullWidth
-                onClick={handleNavigateToOrder}
-              >
-                Перейти к ордеру
-              </Button>
-            ) : (
-              <Space>
-                <Button primary fullWidth onClick={() => onPublish()}>
-                  Опубликовать
-                </Button>
-                <Button outlinePrimary fullWidth onClick={onClose}>
-                  Отмена
-                </Button>
-              </Space>
-            )}
+            </S.MobileContent>
           </S.SmallContainer>
         </Modal>
       )}
@@ -182,19 +186,19 @@ const DrawBuyOrderPaymentsBlock = ({ paymentMethods, currencyToChange }: PMProps
   if (FiatKind[currencyToChange as keyof typeof FiatKind] !== 7) {
     return (
       <>
-        <S.DataListItem>
-          <Text size={14} lH={20}>
+        <S.DataListItem mobileColumn mobileAlign="start">
+          <Text size={14} lH={20} weightMobile={400}>
             Платежные методы:
           </Text>
           <S.ListItemDivider />
-          <Text size={14} lH={20} weight={700}>
+          <Text size={14} lH={20} weight={700} weightMobile={700}>
             {JSON.parse(paymentMethods[0].data).bankName}
           </Text>
         </S.DataListItem>
         {paymentMethods.length > 1 &&
           [...paymentMethods].splice(1).map((method) => (
-            <S.DataListItem justifyEnd key={method.safeId}>
-              <Text size={14} lH={20} weight={700}>
+            <S.DataListItem justifyEnd key={method.safeId} mobileAlign="start">
+              <Text size={14} lH={20} weight={700} weightMobile={700}>
                 {JSON.parse(method.data).bankName}
               </Text>
             </S.DataListItem>
@@ -206,18 +210,18 @@ const DrawBuyOrderPaymentsBlock = ({ paymentMethods, currencyToChange }: PMProps
   return (
     <>
       <S.DataListItem>
-        <Text size={14} lH={20}>
+        <Text size={14} lH={20} weightMobile={400}>
           Платежные методы:
         </Text>
         <S.ListItemDivider />
-        <Text size={14} lH={20} weight={700}>
+        <Text size={14} lH={20} weight={700} weightMobile={700}>
           {PaymentMethodKind[paymentMethods[0].kind]}
         </Text>
       </S.DataListItem>
       {paymentMethods.length > 1 &&
         [...paymentMethods].splice(1).map((method) => (
           <S.DataListItem justifyEnd key={method.safeId}>
-            <Text size={14} lH={20} weight={700}>
+            <Text size={14} lH={20} weight={700} weightMobile={700}>
               {PaymentMethodKind[method.kind]}
             </Text>
           </S.DataListItem>
@@ -233,54 +237,54 @@ const DrawSellOrderPaymentsBlock = ({ paymentMethods, currencyToChange }: PMProp
         {paymentMethods.map((method, i) => {
           return i === 0 ? (
             <Fragment key={`payment-method-${method.safeId}-${i}`}>
-              <S.DataListItem>
-                <Text size={14} lH={20}>
+              <S.DataListItem mobileColumn mobileAlign="start">
+                <Text size={14} lH={20} weightMobile={400}>
                   Платежные методы:
                 </Text>
                 <S.ListItemDivider />
-                <Text size={14} lH={20} weight={700}>
+                <Text size={14} lH={20} weight={700} weightMobile={700}>
                   {JSON.parse(method.data).bankName}
                 </Text>
               </S.DataListItem>
 
-              <S.DataListItem spaceBetween>
-                <Text size={14} lH={20} weight={300}>
+              <S.DataListItem spaceBetween mobileAlign="start">
+                <Text size={14} lH={20} weight={300} smHidden>
                   Номер карты:
                 </Text>
-                <Text size={14} lH={20} weight={700}>
+                <Text size={14} lH={20} weight={700} weightMobile={700}>
                   {JSON.parse(method.data).bankNumber}
                 </Text>
               </S.DataListItem>
-              <S.DataListItem spaceBetween mb={20}>
-                <Text size={14} lH={20} weight={300}>
+              <S.DataListItem spaceBetween mb={20} mobileAlign="start">
+                <Text size={14} lH={20} weight={300} smHidden>
                   Держатель карты:
                 </Text>
-                <Text size={14} lH={20} weight={700}>
+                <Text size={14} lH={20} weight={700} weightMobile={700}>
                   {JSON.parse(method.data).name}
                 </Text>
               </S.DataListItem>
             </Fragment>
           ) : (
             <Fragment key={`payment-method-${method.safeId}-${i}`}>
-              <S.DataListItem justifyEnd>
-                <Text size={14} lH={20} weight={700}>
+              <S.DataListItem justifyEnd mobileColumn mobileAlign="start">
+                <Text size={14} lH={20} weight={700} weightMobile={700}>
                   {JSON.parse(method.data).bankName}
                 </Text>
               </S.DataListItem>
 
-              <S.DataListItem spaceBetween>
-                <Text size={14} lH={20} weight={300}>
+              <S.DataListItem spaceBetween mobileAlign="start">
+                <Text size={14} lH={20} weight={300} smHidden>
                   Номер карты:
                 </Text>
-                <Text size={14} lH={20} weight={700}>
+                <Text size={14} lH={20} weight={700} weightMobile={700}>
                   {JSON.parse(method.data).bankNumber}
                 </Text>
               </S.DataListItem>
-              <S.DataListItem spaceBetween>
-                <Text size={14} lH={20} weight={300}>
+              <S.DataListItem spaceBetween mobileAlign="start">
+                <Text size={14} lH={20} weight={300} smHidden>
                   Держатель карты:
                 </Text>
-                <Text size={14} lH={20} weight={700}>
+                <Text size={14} lH={20} weight={700} weightMobile={700}>
                   {JSON.parse(method.data).name}
                 </Text>
               </S.DataListItem>
@@ -296,38 +300,38 @@ const DrawSellOrderPaymentsBlock = ({ paymentMethods, currencyToChange }: PMProp
       {paymentMethods.map((method, i) => {
         return i === 0 ? (
           <Fragment key={`payment-method-${method.safeId}-${i}`}>
-            <S.DataListItem>
-              <Text size={14} lH={20}>
+            <S.DataListItem mobileColumn mobileAlign="start" mbMobile={0}>
+              <Text size={14} lH={20} weightMobile={400} mBMobile={10}>
                 Платежные методы:
               </Text>
               <S.ListItemDivider />
-              <Text size={14} lH={20} weight={700}>
+              <Text size={14} lH={20} weight={700} weightMobile={700}>
                 {PaymentMethodKind[method.kind]}
               </Text>
             </S.DataListItem>
 
-            <S.DataListItem spaceBetween mb={20}>
-              <Text size={14} lH={20} weight={300}>
+            <S.DataListItem spaceBetween mb={20} mobileAlign="start">
+              <Text size={14} lH={20} weight={300} smHidden>
                 Адрес кошелька:
               </Text>
-              <Text size={14} lH={20} weight={700}>
+              <Text size={14} lH={20} weight={700} weightMobile={700}>
                 {JSON.parse(method.data).paymentAddress}
               </Text>
             </S.DataListItem>
           </Fragment>
         ) : (
           <Fragment key={`payment-method-${method.safeId}-${i}`}>
-            <S.DataListItem justifyEnd>
-              <Text size={14} lH={20} weight={700}>
+            <S.DataListItem justifyEnd mobileColumn mobileAlign="start" mbMobile={0}>
+              <Text size={14} lH={20} weight={700} weightMobile={700}>
                 {PaymentMethodKind[method.kind]}
               </Text>
             </S.DataListItem>
 
-            <S.DataListItem spaceBetween mb={20}>
-              <Text size={14} lH={20} weight={300}>
+            <S.DataListItem spaceBetween mb={20} mobileAlign="start">
+              <Text size={14} lH={20} weight={300} smHidden>
                 Адрес кошелька:
               </Text>
-              <Text size={14} lH={20} weight={700}>
+              <Text size={14} lH={20} weight={700} weightMobile={700}>
                 {JSON.parse(method.data).paymentAddress}
               </Text>
             </S.DataListItem>
