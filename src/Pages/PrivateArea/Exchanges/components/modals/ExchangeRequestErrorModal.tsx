@@ -8,7 +8,7 @@ import * as S from './S.el';
 type Props = {
   onClose: () => void;
   open: boolean;
-};
+}; 
 
 export const ExchangeRequestErrorModal: FC<Props> = ({ onClose, open }: Props) => {
   const history = useHistory();

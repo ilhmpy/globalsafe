@@ -177,7 +177,7 @@ export const OwnArchivedExchangesTable: FC<OwnExchangesProps> = ({ exchanges, lo
                             </S.Cell>
                             <S.Cell data-label="Курс">{exchange.rate}</S.Cell>
                             <S.Cell data-label="Сумма оплаты">
-                              {(countVolumeToShow(exchange.exchangeVolume, exchange.assetKind)).toLocaleString("ru-RU", { maximumFractionDigits: 5 })} {FiatKind[exchange.exchangeAssetKind]}
+                              {localeCount(exchange.exchangeVolume, exchange.assetKind, true)} {FiatKind[exchange.exchangeAssetKind]}
                             </S.Cell>
                             <S.Cell data-label="Метод оплаты">
                                 <S.BankList>

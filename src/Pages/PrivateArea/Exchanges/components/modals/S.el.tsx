@@ -170,7 +170,7 @@ export const ListItemDivider = styled.div`
     opacity: 0;
   };
 `;
-
+ 
 export const MobileWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -180,14 +180,13 @@ export const MobileWrapper = styled.div`
 export const MobileHeader = styled.div`
   padding: 20px;
 `;
-
+ 
 export const MobileContent = styled.div`
   display: flex;
   flex-direction: column;
-
   @media ${Device.mobile} {
     background: #FFFFFF;
     box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
     padding: 20px;
-  };
+  }
 `;

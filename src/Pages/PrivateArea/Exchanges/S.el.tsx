@@ -19,17 +19,22 @@ export const SubHeader = styled.div<SubHeaderProps>`
   };
 `;
 
-export const Filters = styled.div<{hidden?: boolean; smHidden?: boolean; smVisible?: boolean; mB?: number; when?: boolean;}>`
-  display: ${props => props.hidden ? 'none' : 'flex'};
+export const Filters = styled.div<{ when?: boolean; hidden?: boolean; smHidden?: boolean; smVisible?: boolean; mB?: number; }>`
+  display: flex;
   margin-bottom: ${props => props.mB ? props.mB : 20}px;
+  ${({ hidden }) => {
+    if (hidden != undefined) {
+      return `
+        display: ${hidden ?'none' : 'flex'};
+      `;
+    };
+  }}
   @media only screen and (max-device-width: 480px) {
     width: 100%;
     margin-bottom: 20px;
-  };
-  @media ${Device.mobile} {
     ${props => props.smHidden && css`display: none`};
     ${props => props.smVisible && css`display: flex`};
-  };
+  }
   ${({ when }) => {
     if (when !== undefined) {
       return `
@@ -42,12 +47,13 @@ export const Filters = styled.div<{hidden?: boolean; smHidden?: boolean; smVisib
 export const FiltersBox = styled.div`
   width: 100%;
   height: 26px;
-  border: 1px solid #EBEBF2;
+  border: 1px solid #DFDFE9;
   border-radius: 2px;
   justify-content: center;
   align-items: center;
   display: flex;
   font-weight: 400;
+  background: transparent;
   font-size: 12px;
   opacity: 60%;
   color: #000;
