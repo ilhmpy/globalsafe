@@ -17,7 +17,8 @@ import { CurrencyPair } from './components/modals/CurrencyPair';
 import { Balance } from '../../../types/balance';
 import { FiatKind } from "../../../types/fiatKind";
 import { getBalanceKindByStringName, getFiatKindByStringName, getMyRating } from '../utils';
-import { ExchangesInOrderTable } from './components/ExchangesInOrderTable';
+import { ExchangeFiltersMobile } from './components/modals/ExchangeFiltersMobile';
+import { AdvertFiltersMobile } from './components/modals/AdvertFiltersMobile';
 
 export const OwnExchanges = () => {
   const history = useHistory();
@@ -42,6 +43,7 @@ export const OwnExchanges = () => {
   const [fiatKind, setFiatKind] = useState<number | null>(null);
   const [allExchanges, setAllExchanges] = useState<ViewExchangeModel[]>([]);
   const [statusNew, setStatusNew] = useState<any>();
+  const [filtersShow, setFiltersShow] = useState<boolean>(false);
 
   /*
     CALLBACKS: 
@@ -364,10 +366,42 @@ export const OwnExchanges = () => {
     setShowSelectedStatus(false);
   };
 
+  function onCloseFiltersMobile() {
+    setFiltersShow(false);
+  };
+
+  function handleAcceptAllFilters() {
+    handleAcceptSelectedStatus();
+    handleAcceptPair();
+    handleAcceptPaymentMethods();
+    onCloseFiltersMobile();
+  };
+
   return (
     <div>
       {screen.width <= 480 && (
-        <></>
+        <ExchangeFiltersMobile  
+          open={filtersShow}
+          onClose={onCloseFiltersMobile}
+          
+          setSelectedBalanceKind={setSelectedBalanceKind}
+          selectedBalanceKind={selectedBalanceKind}
+
+          setSelectedFiatKind={setSelectedFiatKind}
+          selectedFiatKind={selectedFiatKind}
+        
+          setSelectedStatus={setSelectedStatus}
+          selectedStatus={selectedStatus}
+
+          selectedPaymentMethods={selectedPaymentMethods}
+          setSelectedPaymentMethods={setSelectedPaymentMethods}
+
+          handleAccept={handleAcceptAllFilters}
+          resetFilters={resetFilters}
+
+          statuts={statuts}
+          methodsList={paymentMethodsKinds}
+        />      
       )}
       <Container>
         {screen.width > 480 && (
@@ -424,7 +458,7 @@ export const OwnExchanges = () => {
                 Архив
               </FilterButton>
             </S.Filters>
-            <S.FiltersBox>
+            <S.FiltersBox onClick={() => setFiltersShow(true)}>
               Фильтры (3)
             </S.FiltersBox>
           </>
