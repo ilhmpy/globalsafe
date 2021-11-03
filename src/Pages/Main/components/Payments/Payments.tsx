@@ -119,8 +119,6 @@ export const Payments: FC = () => {
         });
     }
   };
-
-  const [last, setLast] = useState(localStorage.getItem("last") || "");
   const [lastTime, setLastTime] = useState<string | null>(null);
   const [timeInterval, setTimeInterval] = useState<any>();
   const [actualDate, setActualDate] = useState(new Date());
@@ -137,18 +135,6 @@ export const Payments: FC = () => {
       getLastUpdate(newDate);
     };
   };
-
-  /*  let time: string; 
-   . if (updateTime.time.minutes == new Date().getMinutes()) {
-      time = moment().fromNow(true);
-    } else {
-      time = moment(
-        new Date(updateTime.date.year, updateTime.date.month, updateTime.date.day, updateTime.time.hours, updateTime.time.minutes))
-        .fromNow(true);
-    };
-    setActualDate(new Date());
-    setLastTime(time);
-    */
 
   function getLastUpdate(last: any) {
     const updateTime = last;
