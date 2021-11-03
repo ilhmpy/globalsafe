@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+
 import { Device } from '../../consts';
 
 interface FilterButtonProps {
@@ -28,6 +29,16 @@ export const FilterButton = styled.button<FilterButtonProps>`
   &:first-child {
     margin-left: 0;
   }
+<<<<<<< HEAD
+=======
+  width: ${props => props.wFull ? '100%' : 'auto'};
+  margin-right: ${props => props.switchLeft ? 0 : '10px'};
+  margin-left: ${props => props.switchRight ? 0 : '9px'};
+  border-left-width: ${props => props.switchRight ? '0px' : '1px'};
+  @media ${Device.mobile} {
+    width ${props => props.smHalfWidth ? '50%' : props.wFull ? '100%' : 'auto'}
+  };
+>>>>>>> dev
   ${({ big }) => {
     if (big) {
       return `
@@ -38,6 +49,7 @@ export const FilterButton = styled.button<FilterButtonProps>`
       `;
     };
   }}
+<<<<<<< HEAD
   ${({ switchLeft, wFull, switchRight }) => {
     if (switchLeft) {
       return `
@@ -59,4 +71,6 @@ export const FilterButton = styled.button<FilterButtonProps>`
   @media ${Device.mobile} {
     width ${props => props.smHalfWidth ? '50%' : props.wFull ? '100%' : 'auto'}
   };
+=======
+>>>>>>> dev
 `;

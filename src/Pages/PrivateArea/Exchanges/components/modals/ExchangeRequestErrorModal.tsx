@@ -8,7 +8,7 @@ import * as S from './S.el';
 type Props = {
   onClose: () => void;
   open: boolean;
-};
+}; 
 
 export const ExchangeRequestErrorModal: FC<Props> = ({ onClose, open }: Props) => {
   const history = useHistory();
@@ -21,13 +21,15 @@ export const ExchangeRequestErrorModal: FC<Props> = ({ onClose, open }: Props) =
     <>
       {open && (
         <Modal onClose={onClose} open={open}>
-          <S.Container>
+          <S.Container mobileWFull>
             <S.Title>Ошибка отправления заявки</S.Title>
-            <S.Desc>Ваша заявка на покупку не была отправлена на обмен по причине:</S.Desc>
-            {/* <S.Reason>Владелец удалил ордер</S.Reason> */}
-            <Button fullWidth bigSize primary onClick={handleGoToList}>
-              Список ордеров
-            </Button>
+            <S.MobileContent>
+              <S.Desc>Ваша заявка на покупку не была отправлена на обмен по причине:</S.Desc>
+              {/* <S.Reason>Владелец удалил ордер</S.Reason> */}
+              <Button fullWidth bigSize primary onClick={handleGoToList}>
+                Список ордеров
+              </Button>
+            </S.MobileContent>
           </S.Container>
         </Modal>
       )}

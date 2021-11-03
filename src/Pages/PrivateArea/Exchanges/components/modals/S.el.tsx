@@ -1,7 +1,7 @@
 import styled, {css} from 'styled-components/macro';
 import { Button } from '../../../../../components/Button/V2/Button';
-import { Device } from '../../../consts'; 
- 
+import { Device } from '../../../consts';
+
 export const Container = styled.div<{wFull?: boolean; mobileWFull?: boolean}>`
   width: ${props => props.wFull ? '100%' : '338px'};
   background: #fff;
@@ -166,7 +166,7 @@ export const MobileWrapper = styled.div`
 export const MobileHeader = styled.div`
   padding: 20px;
 `;
-
+ 
 export const MobileContent = styled.div`
   display: flex;
   flex-direction: column;
@@ -174,8 +174,5 @@ export const MobileContent = styled.div`
     background: #FFFFFF;
     box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
     padding: 20px;
-  };
-  background: #FFFFFF;
-  box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
-  padding: 20px;
+  }
 `;

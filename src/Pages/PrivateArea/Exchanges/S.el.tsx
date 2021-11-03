@@ -41,7 +41,7 @@ export const Filters = styled.div<{ when?: boolean; hidden?: boolean; smHidden?:
         display: ${when ? "flex" : "none"};
       `;
     };
-  }}
+  }};
 `;
 
 export const FiltersBox = styled.div`
@@ -111,6 +111,19 @@ export const FiltersResetItem = styled.h3`
   font-weight: 400;
 `;
 
+export const AdvertTypeText = styled.p`
+  display: none;
+  margin-bottom: 20px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+  color: ${props => props.theme.black};  
+
+  @media ${Device.mobile} {
+    display: block;
+  };
+`;
+
 export const Button = styled.button<{ newItems: boolean; }>`
     width: 134px;
     height: 38px;
@@ -129,16 +142,4 @@ export const Button = styled.button<{ newItems: boolean; }>`
       margin-top: 20px;
       margin-bottom: 40px;
     }
-`;
-
-export const AdvertTypeText = styled.p`
-  display: none;
-  margin-bottom: 20px;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 16px;
-  color: ${props => props.theme.black};  
-  @media ${Device.mobile} {
-    display: block;
-  }
 `;

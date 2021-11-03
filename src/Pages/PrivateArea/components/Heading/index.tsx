@@ -7,11 +7,11 @@ type Props = {
   btnText?: string;
   onClick?: () => void;
   withoutBtn?: boolean;
+  userRating?: string;
   styles?: Object;
-  userRating?: string | undefined;
 }; 
 
-export const Heading: FC<Props> = ({ title, onClick, btnText, withoutBtn, styles, userRating }: Props) => {
+export const Heading: FC<Props> = ({ title, onClick, btnText, withoutBtn, userRating, styles }: Props) => {
   return (
     <S.Container style={styles && styles}>
       <S.Title>{title}</S.Title>

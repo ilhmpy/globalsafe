@@ -34,97 +34,97 @@ export const DeleteOrderModal: FC<Props> = ({
         <>
         {open && (
             <Modal onClose={onClose} open={open}>
-                <S.SmallContainer>
-                    <S.BlackTitle>
+                <S.SmallContainer mobileWFull>
+                    <S.Title>
                         {deleteSuccessed ? 'Ордер успешно удален' : 'Удаление ордера'}
-                    </S.BlackTitle>
-
-                    {
-                        !deleteSuccessed &&
-                        <Text size={14} lH={20} mB={20}>
-                            Вы действительно хотите удалить ордер ?
-                        </Text>
-                    }
-
-                    <S.DataList>
-                        <S.DataListItem>
-                            <Text size={14} lH={20}>Номер ордера:</Text>
-                            <S.ListItemDivider />
-                            <Text size={14} lH={20} weight={700}>{order.safeId}</Text>
-                        </S.DataListItem>
-
-                        <S.DataListItem>
-                            <Text size={14} lH={20}>Направление:</Text>
-                            <S.ListItemDivider />
-                            <Text size={14} lH={20} weight={700}>
-                                {orderType === OrderType.Buy ? 'Покупка' : 'Продажа'}
+                    </S.Title>
+                    <S.MobileContent>
+                        {
+                            !deleteSuccessed &&
+                            <Text size={14} lH={20} mB={20}>
+                                Вы действительно хотите удалить ордер ?
                             </Text>
-                        </S.DataListItem>
+                        }
 
-                        <S.DataListItem>
-                            <Text size={14} lH={20}>Валюта:</Text>
-                            <S.ListItemDivider />
-                            <Text size={14} lH={20} weight={700}>
-                                {Balance[order.assetKind]}
-                            </Text>
-                        </S.DataListItem>
+                        <S.DataList>
+                            <S.DataListItem>
+                                <Text size={14} lH={20}>Номер ордера:</Text>
+                                <S.ListItemDivider />
+                                <Text size={14} lH={20} weight={700}>{order.safeId}</Text>
+                            </S.DataListItem>
 
-                        <S.DataListItem>
-                            <Text size={14} lH={20}>{`Кол-во (${Balance[order.assetKind]}):`}</Text>
-                            <S.ListItemDivider />
-                            <Text size={14} lH={20} weight={700}>
-                                {countVolumeToShow(order.volume, order.assetKind)}
-                            </Text>
-                        </S.DataListItem>
+                            <S.DataListItem>
+                                <Text size={14} lH={20}>Направление:</Text>
+                                <S.ListItemDivider />
+                                <Text size={14} lH={20} weight={700}>
+                                    {orderType === OrderType.Buy ? 'Покупка' : 'Продажа'}
+                                </Text>
+                            </S.DataListItem>
 
-                        <S.DataListItem>
-                            <Text size={14} lH={20}>
-                                {`Курс (${Balance[order.assetKind]}-${FiatKind[order.operationAssetKind]}):`}
-                            </Text>
-                            <S.ListItemDivider />
-                            <Text size={14} lH={20} weight={700}>
-                                {order.rate.toLocaleString('ru-RU', {
-                                    maximumFractionDigits: 5,
-                                })}
-                            </Text>
-                        </S.DataListItem>
+                            <S.DataListItem>
+                                <Text size={14} lH={20}>Валюта:</Text>
+                                <S.ListItemDivider />
+                                <Text size={14} lH={20} weight={700}>
+                                    {Balance[order.assetKind]}
+                                </Text>
+                            </S.DataListItem>
 
-                        <S.DataListItem>
-                            <Text size={14} lH={20}>
-                                {`На сумму (${FiatKind[order.operationAssetKind]}):`}
-                            </Text>
-                            <S.ListItemDivider />
-                            <Text size={14} lH={20} weight={700}>
-                                {(countVolumeToShow(order.volume, order.assetKind) * order.rate).toLocaleString('ru-RU', {
-                                    maximumFractionDigits: 4,
-                                })}
-                            </Text>
-                        </S.DataListItem>
+                            <S.DataListItem>
+                                <Text size={14} lH={20}>{`Кол-во (${Balance[order.assetKind]}):`}</Text>
+                                <S.ListItemDivider />
+                                <Text size={14} lH={20} weight={700}>
+                                    {countVolumeToShow(order.volume, order.assetKind)}
+                                </Text>
+                            </S.DataListItem>
 
-                        <S.DataListItem>
-                            <Text size={14} lH={20}>Кол-во успешных обменов:</Text>
-                            <S.ListItemDivider />
-                            <Text size={14} lH={20} weight={700}>{order.totalExecuted}</Text>
-                        </S.DataListItem>
-                    </S.DataList>
+                            <S.DataListItem>
+                                <Text size={14} lH={20}>
+                                    {`Курс (${Balance[order.assetKind]}-${FiatKind[order.operationAssetKind]}):`}
+                                </Text>
+                                <S.ListItemDivider />
+                                <Text size={14} lH={20} weight={700}>
+                                    {order.rate.toLocaleString('ru-RU', {
+                                        maximumFractionDigits: 5,
+                                    })}
+                                </Text>
+                            </S.DataListItem>
 
-                    {
-                        !deleteSuccessed
-                        ?
-                            <Space>
-                                <Button primary fullWidth onClick={onDelete}>
-                                    Удалить ордер
+                            <S.DataListItem>
+                                <Text size={14} lH={20}>
+                                    {`На сумму (${FiatKind[order.operationAssetKind]}):`}
+                                </Text>
+                                <S.ListItemDivider />
+                                <Text size={14} lH={20} weight={700}>
+                                    {(countVolumeToShow(order.volume, order.assetKind) * order.rate).toLocaleString('ru-RU', {
+                                        maximumFractionDigits: 4,
+                                    })}
+                                </Text>
+                            </S.DataListItem>
+
+                            <S.DataListItem>
+                                <Text size={14} lH={20}>Кол-во успешных обменов:</Text>
+                                <S.ListItemDivider />
+                                <Text size={14} lH={20} weight={700}>{order.totalExecuted}</Text>
+                            </S.DataListItem>
+                        </S.DataList>
+
+                        {
+                            !deleteSuccessed
+                            ?
+                                <Space mobileColumn mobileGap={20}>
+                                    <Button primary fullWidth onClick={onDelete}>
+                                        Удалить ордер
+                                    </Button>
+                                    <Button outlinePrimary fullWidth onClick={onClose}>
+                                        Отмена
+                                    </Button>
+                                </Space>
+                            :
+                                <Button primary fullWidth onClick={() => history.replace(routers.p2pchanges)}>
+                                    К списку ордеров
                                 </Button>
-                                <Button outlinePrimary fullWidth onClick={onClose}>
-                                    Отмена
-                                </Button>
-                            </Space>
-                        :
-                            <Button primary fullWidth onClick={() => history.replace(routers.p2pchanges)}>
-                                К списку ордеров
-                            </Button>
-                    }
-                   
+                        }
+                    </S.MobileContent>
                 </S.SmallContainer>
             </Modal>
         )}
