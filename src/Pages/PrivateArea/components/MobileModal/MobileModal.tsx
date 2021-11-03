@@ -21,6 +21,8 @@ export const MobileModal = () => {
         if (exc && feedback) {
             setExchange(JSON.parse(exc));
             setFeed(feedback);
+            localStorage.removeItem("mobileResultData");
+            localStorage.removeItem("feedback");
         };
     }, []);
 
@@ -33,8 +35,6 @@ export const MobileModal = () => {
     if (!exchange) {
         return <div></div>
     };
-
-    console.log(exchange)
 
     function getString() {
         if (exchange) {
