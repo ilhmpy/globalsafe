@@ -2,7 +2,7 @@ import styled from "styled-components/macro";
 
 export const ModalBox = styled.div`
     position: relative;
-    padding-top: 60px;
+    padding-top: 80px;
     margin-top: 94px;
     @media (max-width: 767px) {
      margin-top: 87px;
@@ -16,6 +16,7 @@ export const ModalContainer = styled.div`
     width: 100%;
     padding-top: 20px;
     position: relative;
+    margin-bottom: 62px;
 `;
 
 export const ModalTitle = styled.h3`

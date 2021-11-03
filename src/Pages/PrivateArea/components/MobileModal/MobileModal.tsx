@@ -91,8 +91,8 @@ export const MobileModal = () => {
                       <MB.ModalButton onClick={redirect}>К списку обменов</MB.ModalButton>
                   </MB.ModalWhiteBox>
               </MB.ModalContainer>
+              <Footer />
           </MB.ModalBox>
-          <Footer />
         </div>
       );
 }; 
