@@ -18,6 +18,7 @@ import { Balance } from '../../../types/balance';
 import { FiatKind } from "../../../types/fiatKind";
 import { getBalanceKindByStringName, getFiatKindByStringName, getMyRating } from '../utils';
 import { ExchangesInOrderTable } from './components/ExchangesInOrderTable';
+import { FiltersMobileModal } from "./components/modals/FiltersMobileModal";
 
 export const OwnExchanges = () => {
   const history = useHistory();
