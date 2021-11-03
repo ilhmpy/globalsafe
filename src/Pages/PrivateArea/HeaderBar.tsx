@@ -264,7 +264,7 @@ export const HeaderBar = () => {
   const balanceChips: any[] = [...edit, ...lockeds];
   const balanceFuture =
     depositSelect && [9, 10, 11].includes(depositSelect.priceKind) && depositSelect.priceKind !== 1;
-
+ 
   const copy = (text: string) => {
     createNotify({
       text: t('copy.text'),
