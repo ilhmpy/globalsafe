@@ -36,7 +36,7 @@ export const Advert = () => {
   const [acceptedPaymentMethods, setAcceptedPaymentMethods] = useState<number[]>([]);
 
   const [showMobileFilters, setShowMobileFilters] = useState(false);
- 
+  
   const [totalCount, setTotalCount] = useState(0);
   const [skip, setSkip] = useState(0);
 

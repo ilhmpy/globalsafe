@@ -9,7 +9,7 @@ import { routers } from '../../../../../constantes/routers';
 
 type Props = {
   onClose: () => void;
-  open: boolean;
+  open: boolean; 
 };
 
 export const OrderNotActualModal: FC<Props> = ({ onClose, open }: Props) => {

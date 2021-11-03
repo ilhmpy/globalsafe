@@ -99,7 +99,7 @@ export const SingleOrderDetails: FC = () => {
   }, [hubConnection]);
 
   if(!currentOrder || !currentOrderType) {
-    return null;
+    return null; 
   };
 
   return (

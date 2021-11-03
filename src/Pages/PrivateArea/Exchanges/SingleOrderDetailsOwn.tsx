@@ -94,7 +94,7 @@ export const SingleOrderDetailsOwn: FC = () => {
 
     const cbOrderCompleted = (orderSafeId: string) => {
       console.log('__SOCKET__cbOrderCompleted::', orderSafeId)
-    };
+    }; 
 
     // Exchanges Callbacks
     const cbExchangeCreated = (exchange: ViewExchangeModel) => {

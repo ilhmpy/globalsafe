@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { Button } from '../../../../../components/Button/V2/Button';
 import { Modal } from '../../../../../components/ModalAnimated';
 import { Balance } from '../../../../../types/balance';
 import { FiatKind } from '../../../../../types/fiatKind';
 import { OrderType, ViewBuyOrderModel, ViewSellOrderModel } from '../../../../../types/orders';
-import { Title } from '../../../components/ui';
+import { Title } from '../../../components/ui'; 
 import * as S from './S.el';
 
 type Props = {
