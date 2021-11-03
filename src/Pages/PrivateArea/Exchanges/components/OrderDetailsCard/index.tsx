@@ -562,6 +562,8 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                     fullWidthMobile
                     onClick={() => setShowCreateExchangeModal(true)}
                     disabled={
+                        order.volume === 0 ||
+                        order.volume < (order.limitFrom / order.rate) ||
                         !paymentMethodSafeId || 
                         !balanceSumm || 
                         (   order.volume < (order.limitFrom / order.rate)

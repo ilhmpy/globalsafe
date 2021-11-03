@@ -147,6 +147,7 @@ interface DataListItemProps {
   mbMobile?: number; 
   mobileColumn?: boolean;
   mobileAlign?: 'start' | 'end';
+  mobileJustify?: 'start' | 'end';
 }
 export const DataListItem = styled.div<DataListItemProps>`
   width: 100%;
@@ -159,6 +160,7 @@ export const DataListItem = styled.div<DataListItemProps>`
     ${props => props.mbMobile !== undefined && css`margin-bottom: ${props.mbMobile}px`};
     flex-direction: ${props => props.mobileColumn ? 'column' : 'row'};
     align-items: ${props => props.mobileAlign === 'start' ? 'flex-start' : 'flex-end'};
+    justify-content: ${props => props.mobileJustify === 'start' ? 'flex-start' : 'flex-end'};
   };
 `;
 

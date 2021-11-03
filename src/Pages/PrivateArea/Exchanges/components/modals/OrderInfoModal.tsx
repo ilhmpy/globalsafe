@@ -197,7 +197,7 @@ const DrawBuyOrderPaymentsBlock = ({ paymentMethods, currencyToChange }: PMProps
         </S.DataListItem>
         {paymentMethods.length > 1 &&
           [...paymentMethods].splice(1).map((method) => (
-            <S.DataListItem justifyEnd key={method.safeId} mobileAlign="start">
+            <S.DataListItem justifyEnd key={method.safeId} mobileAlign="start" mobileJustify="start">
               <Text size={14} lH={20} weight={700} weightMobile={700}>
                 {JSON.parse(method.data).bankName}
               </Text>
@@ -209,7 +209,7 @@ const DrawBuyOrderPaymentsBlock = ({ paymentMethods, currencyToChange }: PMProps
 
   return (
     <>
-      <S.DataListItem>
+      <S.DataListItem mobileColumn mobileAlign="start">
         <Text size={14} lH={20} weightMobile={400}>
           Платежные методы:
         </Text>
@@ -220,7 +220,7 @@ const DrawBuyOrderPaymentsBlock = ({ paymentMethods, currencyToChange }: PMProps
       </S.DataListItem>
       {paymentMethods.length > 1 &&
         [...paymentMethods].splice(1).map((method) => (
-          <S.DataListItem justifyEnd key={method.safeId}>
+          <S.DataListItem justifyEnd key={method.safeId} mobileJustify="start">
             <Text size={14} lH={20} weight={700} weightMobile={700}>
               {PaymentMethodKind[method.kind]}
             </Text>
@@ -237,8 +237,8 @@ const DrawSellOrderPaymentsBlock = ({ paymentMethods, currencyToChange }: PMProp
         {paymentMethods.map((method, i) => {
           return i === 0 ? (
             <Fragment key={`payment-method-${method.safeId}-${i}`}>
-              <S.DataListItem mobileColumn mobileAlign="start">
-                <Text size={14} lH={20} weightMobile={400}>
+              <S.DataListItem mobileColumn mobileAlign="start" mbMobile={0}>
+                <Text size={14} lH={20} weightMobile={400} mBMobile={10}>
                   Платежные методы:
                 </Text>
                 <S.ListItemDivider />
@@ -247,7 +247,7 @@ const DrawSellOrderPaymentsBlock = ({ paymentMethods, currencyToChange }: PMProp
                 </Text>
               </S.DataListItem>
 
-              <S.DataListItem spaceBetween mobileAlign="start">
+              <S.DataListItem spaceBetween mobileAlign="start" mobileJustify="start" mbMobile={0}>
                 <Text size={14} lH={20} weight={300} smHidden>
                   Номер карты:
                 </Text>
@@ -255,7 +255,7 @@ const DrawSellOrderPaymentsBlock = ({ paymentMethods, currencyToChange }: PMProp
                   {JSON.parse(method.data).bankNumber}
                 </Text>
               </S.DataListItem>
-              <S.DataListItem spaceBetween mb={20} mobileAlign="start">
+              <S.DataListItem spaceBetween mb={20} mobileAlign="start" mobileJustify="start" >
                 <Text size={14} lH={20} weight={300} smHidden>
                   Держатель карты:
                 </Text>
@@ -266,13 +266,13 @@ const DrawSellOrderPaymentsBlock = ({ paymentMethods, currencyToChange }: PMProp
             </Fragment>
           ) : (
             <Fragment key={`payment-method-${method.safeId}-${i}`}>
-              <S.DataListItem justifyEnd mobileColumn mobileAlign="start">
+              <S.DataListItem justifyEnd mobileColumn mobileAlign="start" mbMobile={0}>
                 <Text size={14} lH={20} weight={700} weightMobile={700}>
                   {JSON.parse(method.data).bankName}
                 </Text>
               </S.DataListItem>
 
-              <S.DataListItem spaceBetween mobileAlign="start">
+              <S.DataListItem spaceBetween mobileAlign="start" mobileJustify="start" mbMobile={0}>
                 <Text size={14} lH={20} weight={300} smHidden>
                   Номер карты:
                 </Text>
@@ -280,7 +280,7 @@ const DrawSellOrderPaymentsBlock = ({ paymentMethods, currencyToChange }: PMProp
                   {JSON.parse(method.data).bankNumber}
                 </Text>
               </S.DataListItem>
-              <S.DataListItem spaceBetween mobileAlign="start">
+              <S.DataListItem spaceBetween mobileAlign="start" mobileJustify="start">
                 <Text size={14} lH={20} weight={300} smHidden>
                   Держатель карты:
                 </Text>
@@ -300,7 +300,7 @@ const DrawSellOrderPaymentsBlock = ({ paymentMethods, currencyToChange }: PMProp
       {paymentMethods.map((method, i) => {
         return i === 0 ? (
           <Fragment key={`payment-method-${method.safeId}-${i}`}>
-            <S.DataListItem mobileColumn mobileAlign="start" mbMobile={0}>
+            <S.DataListItem mobileColumn mobileAlign="start" mbMobile={0} mobileJustify="start">
               <Text size={14} lH={20} weightMobile={400} mBMobile={10}>
                 Платежные методы:
               </Text>
@@ -310,7 +310,7 @@ const DrawSellOrderPaymentsBlock = ({ paymentMethods, currencyToChange }: PMProp
               </Text>
             </S.DataListItem>
 
-            <S.DataListItem spaceBetween mb={20} mobileAlign="start">
+            <S.DataListItem spaceBetween mb={20} mobileAlign="start" mobileJustify="start">
               <Text size={14} lH={20} weight={300} smHidden>
                 Адрес кошелька:
               </Text>
@@ -321,13 +321,13 @@ const DrawSellOrderPaymentsBlock = ({ paymentMethods, currencyToChange }: PMProp
           </Fragment>
         ) : (
           <Fragment key={`payment-method-${method.safeId}-${i}`}>
-            <S.DataListItem justifyEnd mobileColumn mobileAlign="start" mbMobile={0}>
+            <S.DataListItem justifyEnd mobileColumn mobileAlign="start" mbMobile={0} mobileJustify="start">
               <Text size={14} lH={20} weight={700} weightMobile={700}>
                 {PaymentMethodKind[method.kind]}
               </Text>
             </S.DataListItem>
 
-            <S.DataListItem spaceBetween mb={20} mobileAlign="start">
+            <S.DataListItem spaceBetween mb={20} mobileAlign="start" mobileJustify="start">
               <Text size={14} lH={20} weight={300} smHidden>
                 Адрес кошелька:
               </Text>
