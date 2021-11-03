@@ -135,5 +135,5 @@ export const Button = styled.button<{ newItems: boolean; }>`
     @media only screen and (max-device-width: 480px) {
       margin-top: 20px;
       margin-bottom: 40px;
-    }
+    };
 `;
