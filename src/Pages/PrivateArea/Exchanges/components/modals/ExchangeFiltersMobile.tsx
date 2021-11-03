@@ -105,7 +105,7 @@ export const ExchangeFiltersMobile: FC<ExchangeFiltersMobileProps> = ({
                     </S.MobileHeader>
                     <S.MobileContent>
                         <S.Container wFull>
-                            <Text sizeMobile={12} lHMobile={14} mBMobile={10}>
+                            <Text textInMobileFilter>
                                 Валютная пара:
                             </Text>
                             <S.DropdonwConatainer>
@@ -127,7 +127,7 @@ export const ExchangeFiltersMobile: FC<ExchangeFiltersMobileProps> = ({
                         </S.Container>
 
                         <S.Container wFull>
-                  <Text sizeMobile={12} lHMobile={14} mBMobile={20}>
+                  <Text textInMobileFilter style={{ marginBottom: "20px" }}>
                     Методы оплаты:
                   </Text>
                   <>
@@ -169,7 +169,7 @@ export const ExchangeFiltersMobile: FC<ExchangeFiltersMobileProps> = ({
                   </>
               </S.Container>
               <S.Container wFull>
-                <Text sizeMobile={12} lHMobile={14} mBMobile={20}>
+                <Text textInMobileFilter style={{ marginBottom: "20px" }}>
                     Статусы обменов:
                 </Text>
                 <>

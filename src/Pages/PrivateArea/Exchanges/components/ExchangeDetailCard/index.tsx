@@ -405,10 +405,10 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
             </Title>
           </S.BlockWrapper>}
         <S.BlockWrapper>
-          <Text size={14} lH={20} mB={10} black>
+          <Text size={14} lH={20} mB={10} black onMobileTitleInExchange>
             Количество:
           </Text>
-          <Title lH={28} mB={10}>
+          <Title lH={28} mB={10} onMobileTitleInExchange>
             {countVolumeToShow(exchange.orderVolume, exchange.assetKind).toLocaleString('ru-RU', {
               maximumFractionDigits: 5,
             })}{' '}
@@ -418,17 +418,17 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
         </S.BlockWrapper>
 
         <S.BlockWrapper>
-          <Text size={14} lH={20} mB={10} black>
+          <Text size={14} lH={20} mB={10} black onMobileTitleInExchange>
             Курс:
           </Text>
-          <Title lH={28}>{exchange.rate}</Title>
+          <Title lH={28} onMobileTitleInExchange>{exchange.rate}</Title>
         </S.BlockWrapper>
 
         <S.BlockWrapper>
-          <Text size={14} lH={20} mB={10} black>
+          <Text size={14} lH={20} mB={10} black onMobileTitleInExchange>
             На сумму:
           </Text>
-          <Title lH={28}>
+          <Title lH={28} onMobileTitleInExchange>
             {(countVolumeToShow(exchange.orderVolume * exchange.rate, exchange.assetKind)).toLocaleString('ru-RU', {
               maximumFractionDigits: 2,
             })}{' '}
@@ -437,10 +437,10 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
         </S.BlockWrapper>
 
         <S.BlockWrapper>
-          <Text size={14} lH={20} mB={10} black>
+          <Text size={14} lH={20} mB={10} black onMobileTitleInExchange>
             Лимиты:
           </Text>
-          <Title lH={28}>
+          <Title lH={28} onMobileTitleInExchange>
             {`${countVolumeToShow(exchange.limitFrom, exchange.assetKind).toLocaleString('ru-RU', {
               maximumFractionDigits: 0,
             })} - ${countVolumeToShow(exchange.limitTo, exchange.assetKind).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} ${
@@ -450,28 +450,28 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
         </S.BlockWrapper>
 
         <S.BlockWrapper>
-          <Text size={14} lH={20} mB={10} black>
+          <Text size={14} lH={20} mB={10} black onMobileTitleInExchange>
             Методы оплаты:
           </Text>
           {exchange.methodsKinds.map((method: any, idx: number) => (
-            <Title lH={28} key={idx}>
+            <Title lH={28} key={idx} onMobileTitleInExchange>
               {PaymentMethods[method]}
             </Title>
           ))}
         </S.BlockWrapper>
 
         <S.BlockWrapper>
-          <Text size={14} lH={20} mB={10} black>
+          <Text size={14} lH={20} mB={10} black onMobileTitleInExchange>
             Время на обмен:
           </Text>
-          <Title lH={28}>{getAllTime(exchange.operationWindow)}</Title>
+          <Title lH={28} onMobileTitleInExchange>{getAllTime(exchange.operationWindow)}</Title>
         </S.BlockWrapper>
 
         <S.BlockWrapper>
-          <Text size={14} lH={20} mB={10} black>
+          <Text size={14} lH={20} mB={10} black onMobileTitleInExchange>
             Рейтинг продавца:
           </Text>
-          <Title lH={28}>
+          <Title lH={28} onMobileTitleInExchange>
             {owner === 'seller'
               ? `${getMyRating()} (${getMyExchanges()})`
               : `${Number(exchange.userRating).toFixed(1)} (${totalExchanges})`}
@@ -495,7 +495,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
         </S.TitleBlockWrapper>
         <S.StateBlock when={exchange.state < 2 || exchange.state != 2 || mark != false}>
           <S.BlockWrapper>
-            <Text size={14} lH={20} mB={4} black>
+            <Text size={14} lH={20} mB={4} black onMobileTitleInExchange>
               Количество:
             </Text>
             <Text size={14} lH={20} weight={500} black phoneFWB> 
@@ -507,7 +507,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
           </S.BlockWrapper>
 
           <S.BlockWrapper>
-            <Text size={14} lH={20} mB={4} black>
+            <Text size={14} lH={20} mB={4} black onMobileTitleInExchange>
               На сумму:
             </Text>
             <Text size={14} lH={20} weight={500} black phoneFWB>
@@ -517,7 +517,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
           </S.BlockWrapper>
 
           <S.BlockWrapper>
-            <Text size={14} lH={20} mB={4} black>
+            <Text size={14} lH={20} mB={4} black onMobileTitleInExchange>
               Метод оплаты:
             </Text>
             <Text size={14} lH={20} weight={500} black phoneFWB>
@@ -533,7 +533,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
           </S.BlockWrapper>
 
           <S.BlockWrapper>
-            <Text size={14} lH={20} mB={4} black>
+            <Text size={14} lH={20} mB={4} black onMobileTitleInExchange>
               Номер карты:
             </Text>
             <S.Space>
@@ -545,7 +545,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
           </S.BlockWrapper>
 
           <S.BlockWrapper>
-            <Text size={14} lH={20} mB={4} black>
+            <Text size={14} lH={20} mB={4} black onMobileTitleInExchange>
               Держатель карты:
             </Text>
             <Text size={14} lH={20} weight={500} black phoneFWB>
@@ -556,7 +556,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
           {/* COMPLETED, ABUSED, CANCELLED STATES */}
 
           <S.BlockWrapper when={exchange.state != 0 && exchange.state != 1}>
-            <Text size={14} lH={20} mB={4} black>
+            <Text size={14} lH={20} mB={4} black onMobileTitleInExchange>
               Рейтинг покупателя:
             </Text>
             <Text size={14} lH={20} weight={500} mB={4} black phoneFWB>

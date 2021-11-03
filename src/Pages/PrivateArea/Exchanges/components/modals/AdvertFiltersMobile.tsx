@@ -113,7 +113,7 @@ export const AdvertFiltersMobile: FC<Props> = ({
             <S.MobileContent>
               {/* Type */}
               <S.Container wFull>
-                  <Text sizeMobile={12} lHMobile={14} mBMobile={10}>
+                  <Text textInMobileFilter>
                     Направление ордеров:
                   </Text>
                   <S.DropdonwConatainer big>
@@ -128,7 +128,7 @@ export const AdvertFiltersMobile: FC<Props> = ({
               {/* Currency Pair */}
 
               <S.Container wFull>
-                  <Text sizeMobile={12} lHMobile={14} mBMobile={10}>
+                  <Text textInMobileFilter>
                     Валютная пара:
                   </Text>
                   <S.DropdonwConatainer>
@@ -151,7 +151,7 @@ export const AdvertFiltersMobile: FC<Props> = ({
 
               {/* Rate */}
               <S.Container wFull>
-                  <Text sizeMobile={12} lHMobile={14} mBMobile={10}>
+                  <Text textInMobileFilter>
                     Выбор рейтинга:
                   </Text>
                   <S.DropdonwConatainer big>
@@ -165,7 +165,7 @@ export const AdvertFiltersMobile: FC<Props> = ({
 
               {/* Payment Methods */}
               <S.Container wFull>
-                  <Text sizeMobile={12} lHMobile={14} mBMobile={20}>
+                  <Text textInMobileFilter style={{ marginBottom: "20px" }}>
                     Методы оплаты:
                   </Text>
                   <>

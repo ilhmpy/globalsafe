@@ -99,6 +99,9 @@ export const NotifiesBlock = styled.div<{
     @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
       right: 125px;
     }
+    @media only screen and (max-device-width: 480px) {
+      right: -98px;
+    }
   }
   & > .scrollbars > div {
     right: -1px !important;
