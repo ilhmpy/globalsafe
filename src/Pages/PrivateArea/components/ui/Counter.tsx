@@ -16,7 +16,6 @@ export const Counter: FC<Props> = ({ data, formatNum, over, delay, setTimerDown,
   const [count, setCount] = useState(0);
   const [start, setStart] = useState(false);
   const [state, setState] = useState<null | string>(null);
-  const { screen } = window;
 
   useEffect(() => {
     const day: unknown = moment.utc().valueOf();
@@ -30,7 +29,7 @@ export const Counter: FC<Props> = ({ data, formatNum, over, delay, setTimerDown,
       setCount(mins);
     } else {
       setCount(mins1);
-    };
+    }
     setStart(true);
   }, [data]);
 
@@ -50,15 +49,15 @@ export const Counter: FC<Props> = ({ data, formatNum, over, delay, setTimerDown,
       return () => clearInterval(secondsLeft);
     } else {
       start && over && over();
-    };
+    }
   }, [start, count]);
 
   function getTime() {
     if (setTimerDown != undefined && count < -1) {
       setTimerDown(true);
-    };
-    return count > 0 ?? state ? state : `${text != undefined ? text : "0м. 0с."}`
-  };
+    }
+    return count > 0 && state ? state : `${text != undefined ? text : '0м. 0с.'}`;
+  }
 
   return <>{getTime()}</>;
 };

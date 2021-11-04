@@ -104,10 +104,10 @@ export const Filters = styled.div<{hidden?: boolean; smHidden?: boolean; smVisib
     ${props => props.smHidden && css`display: none`};
     ${props => props.smVisible && css`display: flex`};
   };
-  ${({ when }) => {
-    if (when !== undefined) {
+  ${props => {
+    if (props.when) {
       return `
-        display: ${when ? "flex" : "none"};
+        display:flex;
       `;
     };
   }};

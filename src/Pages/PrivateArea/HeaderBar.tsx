@@ -32,11 +32,12 @@ import { SelectButton } from './components/ui/SelectButton';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, { Navigation, Pagination, A11y } from 'swiper';
 import { countVolumeToShow } from './utils';
+import useWindowSize from '../../hooks/useWindowSize';
 
 export const HeaderBar = () => {
   const { t } = useTranslation();
   const [openConverting, setOpenConverting] = useState<boolean>(false);
-  const { screen } = window;
+  const screen = useWindowSize();
 
   const [notifications, setNotifications] = useState<Notify[]>([]);
   const [addDeposit, setAddDeposit] = useState<boolean>(false);
@@ -247,7 +248,7 @@ export const HeaderBar = () => {
       }
     });
 
-    const balancesArray = balanceList
+  const balancesArray = balanceList
     ?.filter((item) => !blackList.includes(item.balanceKind))
     .sort((a, b) => a.balanceKind - b.balanceKind)
     .map((obj) =>
@@ -264,7 +265,7 @@ export const HeaderBar = () => {
   const balanceChips: any[] = [...edit, ...lockeds];
   const balanceFuture =
     depositSelect && [9, 10, 11].includes(depositSelect.priceKind) && depositSelect.priceKind !== 1;
- 
+
   const copy = (text: string) => {
     createNotify({
       text: t('copy.text'),
@@ -766,7 +767,7 @@ export const HeaderBar = () => {
               </BalanceValueText>
             </PanelInfoBlock>
 
-            {screen.width <= 768 && (
+            {screen <= 768 && (
               <BalanceChipsBlock>
                 {balanceChips &&
                   balanceChips.map((i: any, idx: number) => {
@@ -789,7 +790,7 @@ export const HeaderBar = () => {
               </BalanceChipsBlock>
             )}
 
-            {screen.width > 1024 ? (
+            {screen > 1024 ? (
               <PanelActionsBlock>
                 <SecondaryButton title={'Конвертация'} onClick={() => setOpenConverting(true)} />
                 <SecondaryButton title={'Пополнить баланс'} onClick={() => setAddDrawModal(true)} />
@@ -809,7 +810,7 @@ export const HeaderBar = () => {
             )}
           </PanelHeader>
           {/* One */}
-          {screen.width > 768 && (
+          {screen > 768 && (
             <BalanceChipsBlock>
               {balanceChips &&
                 balanceChips.map((i: any, idx: number) => {
@@ -834,7 +835,7 @@ export const HeaderBar = () => {
 
           {/* Two */}
 
-          {screen.width > 768 ? (
+          {screen > 768 ? (
             <TabsBlock>
               <TabNavItem to={routers.deposits} exact>
                 <div>Мои депозиты</div>
@@ -1101,16 +1102,6 @@ const SwiperUI = styled(Swiper)`
   & > div > div {
     width: auto !important;
   }
-`;
-
-const AppWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-`;
-
-const CustomPage = styled(Styled.Page)`
-  flex: 1;
 `;
 
 const DepositsPanelContainer = styled(Container)`
