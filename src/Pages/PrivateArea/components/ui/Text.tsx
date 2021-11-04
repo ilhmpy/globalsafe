@@ -33,9 +33,33 @@ export const Text = styled.p<Props>`
   margin-left: ${(props) => (props.mL ? props.mL : 0)}px;
   user-select: ${(props) => (props.unone ? 'none' : 'text')};
   color: ${(props) => (props.black ? props.theme.black : props.error ? '#FF4A31' : '#000')};
+
   @media ${Device.mobile} {
-    ${({ textInMobileFilter }) => {
-      if (textInMobileFilter) {
+    display: ${(props) => (props.smHidden ? 'none' : 'block')};
+    ${(props) =>
+      props.sizeMobile &&
+      css`
+        font-size: ${props.sizeMobile}px;
+      `};
+    ${(props) =>
+      props.lHMobile &&
+      css`
+        line-height: ${props.lHMobile}px;
+      `};
+    ${(props) =>
+      props.mBMobile &&
+      css`
+        margin-bottom: ${props.mBMobile}px;
+      `};
+    ${(props) =>
+      props.weightMobile &&
+      css`
+        font-weight: ${props.weightMobile};
+      `};
+  }
+  @media ${Device.mobile} {
+    ${(props) => {
+      if (props.textInMobileFilter) {
         return `
           font-weight: 400 !important;
           font-size: 12px;
@@ -43,18 +67,18 @@ export const Text = styled.p<Props>`
           color: #3F3E4E;
           margin-bottom: 10px;
         `;
-      };
+      }
     }}
-    ${({ smHidden }) => {
-      if (smHidden) {
+    ${(props) => {
+      if (props.smHidden) {
         return `
           display: none;
         `;
-      };
+      }
     }}
-  };
-  ${({ center }) => {
-    if (center) {
+  }
+  ${(props) => {
+    if (props.center) {
       return `
         text-align: center;
         font-weight: 400;
@@ -63,44 +87,44 @@ export const Text = styled.p<Props>`
         margin-bottom: 20px;
         margin-top: 0;
       `;
-    };
+    }
   }}
-  ${({ detail }) => {
-    if (detail) {
+  ${(props) => {
+    if (props.detail) {
       return `
         font-size: 12px;
         font-weight: 300;
         margin-bottom: 20px;
       `;
-    };
+    }
   }}
-  ${({ publish }) => {
-    if (publish) {
+  ${(props) => {
+    if (props.publish) {
       return `
         margin-bottom: 20px !important;
         font-weight: 400 !important;
       `;
-    };
+    }
   }}
-  ${({ phoneFWB }) => {
-    if (phoneFWB) {
+  ${(props) => {
+    if (props.phoneFWB) {
       return `
         @media only screen and (max-device-width: 480px) {
           font-weight: 500;
         }
       `;
-    };
+    }
   }}
   @media ${Device.mobile} {
-    ${({ onMobileTitleInExchange }) => {
-      if (onMobileTitleInExchange) {
+    ${(props) => {
+      if (props.onMobileTitleInExchange) {
         return `
           font-weight: 300;
           font-size: 14px;
           line-height: 20px;
           margin-bottom: 4px;
         `;
-      };
+      }
     }}
   }
 `;

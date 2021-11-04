@@ -1,20 +1,20 @@
 import styled from 'styled-components/macro';
 
-export const Container = styled.div<{ without?: boolean; }>`
+export const Container = styled.div<{ without?: boolean }>`
   display: flex;
   justify-content: space-between;
   margin-bottom: 20px;
 
-  ${({ without }) => {
-    if (without) {
+  ${(props) => {
+    if (props.without) {
       return `
         margin-bottom: 0px;
       `;
-    };
+    }
   }}
 `;
 
-export const Button = styled.button<{ active?: boolean}>`
+export const Button = styled.button<{ active?: boolean }>`
   appearance: none;
   cursor: pointer;
   font-size: 12px;

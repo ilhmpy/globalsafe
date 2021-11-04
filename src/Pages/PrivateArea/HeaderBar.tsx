@@ -32,14 +32,12 @@ import { SelectButton } from './components/ui/SelectButton';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, { Navigation, Pagination, A11y } from 'swiper';
 import { countVolumeToShow } from './utils';
-import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
-import 'swiper/swiper-bundle.css';
-import 'swiper/swiper.scss'; // core Swiper
+import useWindowSize from '../../hooks/useWindowSize';
 
 export const HeaderBar: FC = () => {
   const { t } = useTranslation();
   const [openConverting, setOpenConverting] = useState<boolean>(false);
-  const { screen } = window;
+  const screen = useWindowSize();
 
   const [notifications, setNotifications] = useState<Notify[]>([]);
   const [addDeposit, setAddDeposit] = useState<boolean>(false);
@@ -770,7 +768,7 @@ export const HeaderBar: FC = () => {
               </BalanceValueText>
             </PanelInfoBlock>
 
-            {screen.width <= 768 && (
+            {screen <= 768 && (
               <BalanceChipsBlock>
                 {balanceChips &&
                   balanceChips.map((i: any, idx: number) => {
@@ -793,7 +791,7 @@ export const HeaderBar: FC = () => {
               </BalanceChipsBlock>
             )}
 
-            {screen.width > 1024 ? (
+            {screen > 1024 ? (
               <PanelActionsBlock>
                 <SecondaryButton title={'Конвертация'} onClick={() => setOpenConverting(true)} />
                 <SecondaryButton title={'Пополнить баланс'} onClick={() => setAddDrawModal(true)} />
@@ -813,7 +811,7 @@ export const HeaderBar: FC = () => {
             )}
           </PanelHeader>
           {/* One */}
-          {screen.width > 768 && (
+          {screen > 768 && (
             <BalanceChipsBlock>
               {balanceChips &&
                 balanceChips.map((i: any, idx: number) => {
@@ -838,7 +836,7 @@ export const HeaderBar: FC = () => {
 
           {/* Two */}
 
-          {screen.width > 768 ? (
+          {screen > 768 ? (
             <TabsBlock>
               <TabNavItem to={routers.deposits} exact>
                 <div>Мои депозиты</div>
@@ -1186,16 +1184,6 @@ const TabNavItem = styled(NavLink)`
   & > div {
     white-space: nowrap;
   }
-`;
-
-const AppWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-`;
-
-const CustomPage = styled(Styled.Page)`
-  flex: 1;
 `;
 
 const DepositsPanelContainer = styled(Container)`

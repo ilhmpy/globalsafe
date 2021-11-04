@@ -18,13 +18,12 @@ body{
     position: relative;
     font-weight: 400;
     background: #f9fafb;
-    /* background:${(props) => props.theme.body} ; */
     background-repeat: no-repeat;
     height: 100%;
     scrollbar-width: none;
     &::-webkit-scrollbar {
-  display: none;
-}
+      display: none;
+    }
 }
 img{
     max-width: 100%;
@@ -386,8 +385,8 @@ export const Container = styled.div<{ pNone?: boolean; bigMargin?: boolean; ppNo
   }
 
   @media only screen and (max-device-width: 480px) {
-    ${({ ppNone }) => {
-      if (ppNone) {
+    ${(props) => {
+      if (props.ppNone) {
         return `
           padding-left: 0;
           padding-right: 0;

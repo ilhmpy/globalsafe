@@ -1,4 +1,4 @@
-export const wordDecline = (num: number, arr: string[]) => {
+export const wordDecline = (num: number, arr: string[]): string => {
     let result;
     let count = num % 100;
     if (count >= 5 && count <= 20) {

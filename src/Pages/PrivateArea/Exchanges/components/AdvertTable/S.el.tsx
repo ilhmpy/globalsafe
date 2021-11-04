@@ -30,8 +30,7 @@ export const Cell = styled.div`
 
 export const BodyItem = styled.div<{ active?: boolean }>`
   ${table};
-  ${Cell} {
-  }
+  ${Cell};
   padding: 5px 10px 5px;
   min-height: 60px;
   background: ${(props) => (props.active ? 'rgba(0, 148, 255, 0.05)' : '#fff')};
@@ -112,10 +111,9 @@ export const TypeCrypto = styled.div`
   }
 `;
 
-
 export const MobileBodyItem = styled.div<{ active?: boolean }>`
   ${table};
-  
+
   flex-direction: column;
   width: 100%;
   padding: 20px;

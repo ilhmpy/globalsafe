@@ -30,9 +30,10 @@ import { Balance } from '../../../types/balance';
 import moment from 'moment';
 import { BalanceKind } from '../../../enums/balanceKind';
 import { SwiperContainer, SwiperUI, ProgressBar, Bar } from './S.elements';
+import useWindowSize from '../../../hooks/useWindowSize';
 
 export const Deposits: FC = () => {
-  const { screen } = window;
+  const screen = useWindowSize();
   const [openModal, setOpenModal] = useState(false);
   const [depositsList, setDepositsList] = useState<Collection[]>([]);
   const [getDepositsLoading, setGetDepositsLoading] = useState(true);
@@ -209,7 +210,7 @@ export const Deposits: FC = () => {
         />
       </Container>
 
-      {screen.width > 768 ? (
+      {screen > 768 ? (
         <Container pTabletNone>
           {viewType === 'list' ? (
             <Scrollbars style={{ height: '236px', minHeight: '236px' }}>

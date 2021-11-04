@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import styled from 'styled-components/macro';
@@ -9,24 +9,25 @@ import { Page } from '../../../../components/UI/Page';
 import { AppContext } from '../../../../context/HubContext';
 import { Container } from '../../../../components/UI/Container';
 import { Collection, RootOperations } from '../../../../types/operations';
+import useWindowSize from '../../../../hooks/useWindowSize';
 
-export const Operations = () => {
+export const Operations: FC = () => {
   const [notifyList, setNotifyList] = useState<Collection[]>([]);
   const [num, setNum] = useState(0);
   const [showLess, setShowLess] = useState<boolean>(false);
   const appContext = useContext(AppContext);
   const [maxItems, setMaxItems] = useState(4);
   const hubConnection = appContext.hubConnection;
-  const { screen } = window;
+  const screen = useWindowSize();
 
-  function req() {
+  useEffect(() => {
     let clean = false;
     const cb = (data: Collection) => {
       !clean && setNotifyList((notifyList) => [data, ...notifyList.slice(0, -1)]);
     };
     if (hubConnection) {
       hubConnection.on('OperationNotification', cb);
-      if (screen.width > 480) {
+      if (screen > 480) {
         hubConnection
           .invoke<RootOperations>('GetOperationsNotifications', [2, 4, 5, 6, 7, 8], 10, 10)
           .then((res) => {
@@ -46,10 +47,6 @@ export const Operations = () => {
       clean = true;
       hubConnection?.off('OperationNotification', cb);
     };
-  }
-
-  useEffect(() => {
-    req();
   }, [hubConnection]);
 
   const { t } = useTranslation();
@@ -97,12 +94,6 @@ export const Operations = () => {
     setShowLess(false);
   };
 
-  useEffect(() => {
-    setInterval(() => {
-      req();
-    }, 300000);
-  }, []);
-
   return (
     <>
       {notifyList.length > 0 ? (
@@ -114,10 +105,10 @@ export const Operations = () => {
           <Container pNone>
             <TableHead>
               <TableHeadItem>
-                {screen.width > 480 ? t('operations2.head1') : t('operations2.time')}
+                {screen > 480 ? t('operations2.head1') : t('operations2.time')}
               </TableHeadItem>
               <TableHeadItem>
-                {screen.width > 480 ? t('operations2.head2') : t('operations2.name')}
+                {screen > 480 ? t('operations2.head2') : t('operations2.name')}
               </TableHeadItem>
               <TableHeadItem>{t('operations2.head3')}</TableHeadItem>
             </TableHead>
@@ -125,7 +116,7 @@ export const Operations = () => {
               {notifyList.map((itm, idx) => (
                 <TableMapItem key={idx}>
                   <TableInnerItem>
-                    {screen.width > 480 ? (
+                    {screen > 480 ? (
                       <>
                         {moment(itm.date).format('DD.MM.YYYY')} {t('in')}{' '}
                         {moment(itm.date).format('HH:MM')}
@@ -137,7 +128,7 @@ export const Operations = () => {
                   <TableInnerItem>
                     <span>
                       {operation(itm.operationKind)}{' '}
-                      {screen.width > 480 ? (
+                      {screen > 480 ? (
                         <> {itm.depositName ? itm.depositName : ''} </>
                       ) : (
                         <>

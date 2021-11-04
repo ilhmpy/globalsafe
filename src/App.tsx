@@ -11,7 +11,7 @@ import { Main } from './Pages/Main/Main';
 import { InfoMain } from './Pages/PrivateArea';
 import PageNotFound from './Pages/Tech/PageNotFound';
 import TechWorks from './Pages/Tech/TechWorks';
-import { HistoryOperations } from './Pages/PrivateArea/HistoryOperations';
+// import { HistoryOperations } from './Pages/PrivateArea/HistoryOperations';
 import { routers } from './constantes/routers';
 import { MobileModal } from './Pages/PrivateArea/components/MobileModal/MobileModal';
 
@@ -179,7 +179,7 @@ const App: FC = () => {
             <Route path="/register" component={Register} />
             <Route path="/tech" component={TechWorks} />
             <Route path="/404" component={PageNotFound} />
-            {window.screen.width <= 480 && <Route path="/mobile/modal" component={MobileModal} />}
+            <Route path="/mobile/modal" component={MobileModal} />
           </Switch>
         </div>
       </Router>
