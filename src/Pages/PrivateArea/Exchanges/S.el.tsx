@@ -12,7 +12,7 @@ export const SubHeader = styled.div<SubHeaderProps>`
   display: ${props => props.hidden ? 'none' : 'flex'};
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 20px;
+  margin-bottom: 20px;   
 
   @media ${Device.mobile} {
     display: ${props => props.mobileHidden ? 'none' : props.mobileVisible ? 'flex' : 'flex'};
