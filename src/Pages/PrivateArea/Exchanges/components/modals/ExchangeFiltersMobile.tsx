@@ -34,7 +34,7 @@ type ExchangeFiltersMobileProps = {
     handleAccept: () => void;
     resetFilters: () => void;
 };
-
+   
 export const ExchangeFiltersMobile: FC<ExchangeFiltersMobileProps> = ({ 
     open, onClose,
     
