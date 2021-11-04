@@ -100,6 +100,7 @@ export const HeaderBar: FC = () => {
   );
   const [withDrawModal, setWithDrawModal] = useState<boolean>(false);
   const [addDrawModal, setAddDrawModal] = useState<boolean>(false);
+  const [clickedIndex, setClickedIndex] = useState<number>(0);
 
   // Get Balance Kinds List as an Array
   const balancesList = useMemo(() => {
@@ -857,6 +858,33 @@ export const HeaderBar: FC = () => {
             </TabsBlock>
           ) : (
             <SwiperUI
+              onClick={(swiper: any) => {
+                // console.log('balanceChips.map ~ swiper, event', swiper);
+
+                console.log(swiper.clickedIndex);
+                setClickedIndex(swiper.clickedIndex);
+                console.log(swiper.a11y);
+                // swiper.a11y.updateNavigation();
+                // swiper.a11y.enableEl(swiper.$el);
+                // swiper.a11y.addElControls();
+                // swiper.a11y.addElId();
+                // swiper.a11y.addElLabel();
+                // swiper.a11y.addElLive();
+                // swiper.a11y.addElRole();
+                // swiper.a11y.addElRoleDescription();
+                // swiper.a11y.destroy();
+                // swiper.a11y.disableEl();
+                // swiper.a11y.enableEl();
+                // swiper.a11y.getRandomNumber();
+                // swiper.a11y.init();
+                // swiper.a11y.liveRegion();
+                swiper.a11y.makeElFocusable(swiper.$el);
+                // swiper.a11y.makeElNotFocusable();
+                swiper.a11y.notify();
+                // swiper.a11y.onEnterOrSpaceKey();
+                swiper.a11y.updateNavigation();
+                swiper.a11y.updatePagination();
+              }}
               observer={true}
               observeParents={true}
               slidesPerView={'auto'}
@@ -892,31 +920,41 @@ export const HeaderBar: FC = () => {
                 swiper.navigation.update();
               }}
             >
-              <SwiperSlide>
-                <TabNavItem to={routers.deposits} exact>
-                  <div>Мои депозиты</div>
-                </TabNavItem>
-              </SwiperSlide>
-              <SwiperSlide>
-                <TabNavItem to={routers.p2pchanges}>
-                  <div>P2P обмены</div>
-                </TabNavItem>
-              </SwiperSlide>
-              <SwiperSlide>
-                <TabNavItem to={routers.operations}>
-                  <div>История операций</div>
-                </TabNavItem>
-              </SwiperSlide>
-              <SwiperSlide>
-                <TabNavItem to={routers.notifications}>
-                  <div>Уведомления</div>
-                </TabNavItem>
-              </SwiperSlide>
-              <SwiperSlide>
-                <TabNavItem to={routers.settings}>
-                  <div>Настройки</div>
-                </TabNavItem>
-              </SwiperSlide>
+              <SlideContainer>
+                <SwiperSlide>
+                  <TabNavItem to={routers.deposits} exact>
+                    <div>Мои депозиты</div>
+                  </TabNavItem>
+                </SwiperSlide>
+              </SlideContainer>
+              <SlideContainer>
+                <SwiperSlide>
+                  <TabNavItem to={routers.p2pchanges}>
+                    <div>P2P обмены</div>
+                  </TabNavItem>
+                </SwiperSlide>
+              </SlideContainer>
+              <SlideContainer>
+                <SwiperSlide>
+                  <TabNavItem to={routers.operations}>
+                    <div>История операций</div>
+                  </TabNavItem>
+                </SwiperSlide>
+              </SlideContainer>
+              <SlideContainer>
+                <SwiperSlide>
+                  <TabNavItem to={routers.notifications}>
+                    <div>Уведомления</div>
+                  </TabNavItem>
+                </SwiperSlide>
+              </SlideContainer>
+              <SlideContainer>
+                <SwiperSlide>
+                  <TabNavItem to={routers.settings}>
+                    <div>Настройки</div>
+                  </TabNavItem>
+                </SwiperSlide>
+              </SlideContainer>
             </SwiperUI>
           )}
         </PanelCard>
@@ -1103,15 +1141,33 @@ const SwiperUI = styled(Swiper)`
   align-items: center;
 
   .swiper-slide-active {
-    font-weight: 500;
+    /* font-weight: 500;
     opacity: 1;
     border-bottom: 2px solid ${(props) => props.theme.blue};
-    padding-bottom: 10px;
+    padding-bottom: 10px; */
   }
 
   .swiper-slide {
     width: auto;
   }
+`;
+
+const SwiperSlideUI = styled(SwiperSlide)<{ active?: boolean }>`
+  /* border-bottom: ${(props) => (props.active ? '2px solid #0094FF' : '')}; */
+  /* font-weight: 500; */
+  /* opacity: 1; */
+  /* border-bottom: 2px solid ${(props) => props.theme.blue}; */
+  /* padding-bottom: 10px; */
+  /* margin-right: 20px; */
+`;
+
+const SlideContainer = styled.p`
+  /* font-weight: 500;
+  opacity: 1;
+  border-bottom: 2px solid ${(props) => props.theme.blue};
+  padding-bottom: 10px;
+
+  background-color: red; */
 `;
 
 const TabNavItem = styled(NavLink)`
