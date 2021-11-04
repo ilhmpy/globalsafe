@@ -32,7 +32,6 @@ import { SelectButton } from './components/ui/SelectButton';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, { Navigation, Pagination, A11y } from 'swiper';
 import { countVolumeToShow } from './utils';
-import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 
 export const HeaderBar = () => {
   const { t } = useTranslation();
