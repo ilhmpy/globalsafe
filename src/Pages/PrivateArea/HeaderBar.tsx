@@ -37,6 +37,7 @@ import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 export const HeaderBar = () => {
   const { t } = useTranslation();
   const [openConverting, setOpenConverting] = useState<boolean>(false);
+  const { screen } = window;
 
   const [notifications, setNotifications] = useState<Notify[]>([]);
   const [addDeposit, setAddDeposit] = useState<boolean>(false);
@@ -1252,7 +1253,6 @@ const BalanceChipsBlock = styled.div`
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    max-width: min-content;
   }
 `;
 

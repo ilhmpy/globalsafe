@@ -32,6 +32,8 @@ export const Filter: FC<FilterProps> = ({
     if (type !== viewType) setViewType?.(type);
   };
 
+  const { screen } = window;
+
   return (
     <S.Container without={withoutContainer}>
       {screen.width > 768 ? (
@@ -83,26 +85,28 @@ export const Filter: FC<FilterProps> = ({
         </>
       ) : (
         <SwiperUI
-          onClick={() => console.log(111)}
-          slidesPerView={3}
+          //   onClick={() => console.log(111)}
+          //   slidesPerView={3}
           spaceBetween={10}
+          slidesPerView={'auto'}
           freeMode={true}
-          pagination={false}
-          className="mySwiper"
-          onSlideChange={(swiperCore) => {
-            const { activeIndex, previousIndex, realIndex } = swiperCore;
-            console.log({ activeIndex, previousIndex, realIndex });
-          }}
+          //   freeMode={true}
+          //   pagination={false}
+          //   className="mySwiper"
+          //   onSlideChange={(swiperCore) => {
+          //     const { activeIndex, previousIndex, realIndex } = swiperCore;
+          //     console.log({ activeIndex, previousIndex, realIndex });
+          //   }}
           // slideToClickedSlide={true}
 
-          onSwiper={(swiper) => console.log(swiper)}
+          //   onSwiper={(swiper) => console.log(swiper)}
           // navigation={{
           //   nextEl: '.next',
           //   prevEl: '.prev',
           // }}
-          onInit={(swiper) => {
-            swiper.navigation.update();
-          }}
+          //   onInit={(swiper) => {
+          //     swiper.navigation.update();
+          //   }}
         >
           <SwiperSlide>
             <S.Button active={activeFilter === 'active'} onClick={() => setActiveFilter('active')}>
@@ -124,58 +128,19 @@ export const Filter: FC<FilterProps> = ({
           </SwiperSlide>
         </SwiperUI>
       )}
-
-      {/* <S.Buttons>
-        {!withCustomButtons ? (
-          <>
-            <S.Button active={activeFilter === 'active'} onClick={() => setActiveFilter('active')}>
-              Активные
-            </S.Button>
-            <S.Button active={activeFilter === 'hold'} onClick={() => setActiveFilter('hold')}>
-              С отложенными выплатами
-            </S.Button>
-            <S.Button
-              active={activeFilter === 'archived'}
-              onClick={() => setActiveFilter('archived')}
-            >
-              В архиве
-            </S.Button>
-          </>
-        ) : (
-          <>
-            {buttons &&
-              buttons.map((button, idx) => (
-                <S.Button
-                  key={idx}
-                  active={activeFilter === button.active}
-                  onClick={() => setActiveFilter(button.active)}
-                >
-                  {button.text}
-                </S.Button>
-              ))}
-          </>
-        )}
-      </S.Buttons>
-      {!withoutViewType && (
-        <S.FilterTypes>
-          <S.FilterTypeList onClick={() => handleActive('list')}>
-            {viewType === 'list' ? <ListFillIcon /> : <ListIcon />}
-          </S.FilterTypeList>
-          <S.FilterTypeTile onClick={() => handleActive('tile')}>
-            {viewType === 'tile' ? <TileFillIcon /> : <TileIcon />}
-          </S.FilterTypeTile>
-        </S.FilterTypes>
-      )} */}
     </S.Container>
   );
 };
-
+const SwiperSlideUI = styled(Swiper)`
+  max-width: fit-content !important;
+`;
 const SwiperUI = styled(Swiper)`
   display: flex;
   align-items: center;
-  gap: 40px;
+  /* gap: 40px; */
 
   & .swiper-slide {
-    width: auto !important;
+    /* width: auto !important; */
+    max-width: fit-content !important;
   }
 `;

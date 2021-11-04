@@ -22,6 +22,7 @@ export const OwnArchivedExchangesTable: FC<OwnExchangesProps> = ({ exchanges, lo
   const history = useHistory();
   const [selectedOption, setSelectedOption] = useState<string | null>('Все валюты предложения');
   const { account } = useContext(AppContext);
+  const { location, screen } = window;
   
   const handleNavigateToExchange = (id: string) => {
     history.replace(`/info/p2p-changes/${id}`);

@@ -26,6 +26,7 @@ export const OwnExchanges = () => {
   const [activeFilter, setActiveFilter] = useState<'active' | 'archived'>('active');
   const [userExchanges, setUserExchanges] = useState<ViewExchangeModel[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const { location, screen } = window;
   
   const [selectedPaymentMethods, setSelectedPaymentMethods] = useState<number[]>([]);
   const [showPaymentMethodsModal, setShowPaymentMethodsModal] = useState<boolean>(false);

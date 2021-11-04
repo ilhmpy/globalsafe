@@ -23,8 +23,12 @@ export const ProgramDesc = styled(ProgramDescTitle)`
   width: 100%;
 `;
 
-export const TitleWrap = styled.div<{ small?: boolean; big?: boolean }>`
+export const TitleWrap = styled.div<{ small?: boolean; big?: boolean; minBtm?: boolean }>`
   margin-bottom: ${(props) => (props.small ? 4 : props.big ? 20 : 10)}px;
+  @media (max-width: 768px) {
+    margin-bottom: ${(props) => (props.minBtm ? 4 : props.big ? 20 : 10)}px;
+    /* margin-bottom: ${(props) => (props.big ? 20 : 10)}px; */
+  }
 `;
 
 export const TextValue = styled.p`

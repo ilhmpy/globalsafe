@@ -10,7 +10,7 @@ type Props = {
 export const CloseDepositError: FC<Props> = ({ onClose, open }: Props) => {
   return (
     <>
-      {true && (
+      {open && (
         <Modal onClose={onClose} open={open}>
           <S.Container>
             <S.Title>Ошибка закрытия депозита</S.Title>
