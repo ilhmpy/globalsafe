@@ -8,7 +8,6 @@ import { FiatKind } from "../../../../types/fiatKind";
 import { countVolumeToShow, getFiatKindByStringName } from "../../utils";
 import { Exchange } from "../../Exchanges/components/OwnActiveExchangesTable/S.el";
 import { AppContext } from "../../../../context/HubContext";
-import { ConsoleLogger } from "@microsoft/signalr/dist/esm/Utils";
 
 export const MobileModal = () => {
     const [exchange, setExchange] = useState<any>(null);
@@ -22,6 +21,9 @@ export const MobileModal = () => {
             setFeed(feedback);
             localStorage.removeItem("mobileResultData");
             localStorage.removeItem("feedback");
+        };
+        if (screen.width > 480) {
+            redirect();
         };
     }, []);
 

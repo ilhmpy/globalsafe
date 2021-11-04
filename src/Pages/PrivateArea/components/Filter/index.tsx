@@ -31,7 +31,6 @@ export const Filter: FC<FilterProps> = ({
   const handleActive = (type: string) => {
     if (type !== viewType) setViewType?.(type);
   };
-
   const { screen } = window;
 
   return (
