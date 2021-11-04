@@ -31,13 +31,13 @@ import {
   ViewUserCertificateModel,
 } from '../../../../../types/certificates';
 import { GetSellOrdersModel, OrderType, ViewSellOrderModel } from '../../../../../types/orders';
-import { countVolumeToSend, countVolumeToShow, getMyRating, useIsMobile } from '../../../utils';
+import { countVolumeToSend, countVolumeToShow, useIsMobile } from '../../../utils';
 
 export const OrderToSellCard: FC = () => {
   const history = useHistory();
   const appContext = useContext(AppContext);
   const isMobile = useIsMobile();
-  const { hubConnection, user, balanceList, userSafeId, account } = appContext;
+  const { hubConnection, user, balanceList, userSafeId, userRating } = appContext;
   const [showOrderSellModal, setShowOrderSellModal] = useState(false);
   const [showOrderErrorModal, setShowOrderErrorModal] = useState(false);
   const [currencyToSell, setCurrencyToSell] = useState('');
@@ -133,6 +133,7 @@ export const OrderToSellCard: FC = () => {
       console.log(err);
     }
   };
+  
   const getUserPaymentMethods = async () => {
     if (currencyToChange) {
       try {
@@ -268,6 +269,11 @@ export const OrderToSellCard: FC = () => {
     const pattern = /^[0-9][0-9\.]*$/;
     const pattern2 = /^[0-9]{1,10}\.[0-9]{6}$/;
     if (e.target.value === '' || pattern.test(e.target.value)) {
+      const dotsCount = e.target.value.split('.').length - 1;
+
+      if(dotsCount > 1) {
+          return;
+      };
       // Clear Max limit
       setOrderMinSumm('');
       setOrderMaxSumm('');
@@ -377,7 +383,11 @@ export const OrderToSellCard: FC = () => {
     const cbOrderCreated = (order: ViewSellOrderModel) => {
       console.log('__SOCKET__cbOrderCreated::', order);
       if (order && order.userSafeId === userSafeId) {
-        handleGetOrdersVolume();
+        if(dailyLimitRest) {
+          setDailyLimitRest(dailyLimitRest - Number(orderSumm))
+        }
+        // handleGetOrdersVolume();
+
         getSellOrders();
       }
     };
@@ -389,7 +399,7 @@ export const OrderToSellCard: FC = () => {
     return () => {
       hubConnection?.off('SellOrderCreated', cbOrderCreated);
     };
-  }, [hubConnection, userSafeId, currencyToSell, currencyToChange]);
+  }, [hubConnection, userSafeId, currencyToSell, currencyToChange, userActiveCertificate, dailyLimitRest, orderSumm]);
 
   return (
     <S.Container>
@@ -408,10 +418,10 @@ export const OrderToSellCard: FC = () => {
             Рейтинг аккаунта:
           </Text>
           <Title lH={28} heading3 mB={0}>
-            {getMyRating(account)}
+            {userRating}
           </Title>
         </S.BlockWrapper>
-
+ 
         {!isMobile && currencyToSell ? (
           dailyLimitRest !== undefined ? (
             <S.BlockWrapper>
