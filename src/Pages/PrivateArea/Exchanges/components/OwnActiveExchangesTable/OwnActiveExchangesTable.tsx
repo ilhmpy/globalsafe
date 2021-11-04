@@ -1,5 +1,5 @@
 import { FC, useState, useContext } from 'react';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import alfa from '../../../../../assets/v2/svg/banks/alfa.svg';
 import sber from '../../../../../assets/v2/svg/banks/sber.svg';
 import tinkoff from '../../../../../assets/v2/svg/banks/tinkoff.svg';

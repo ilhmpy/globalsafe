@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 
 import { Modal } from '../../../../../components/ModalAnimated';
 import { Button } from '../../../../../components/Button/V2/Button';

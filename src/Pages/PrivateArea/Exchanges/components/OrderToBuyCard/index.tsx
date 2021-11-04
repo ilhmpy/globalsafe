@@ -1,5 +1,5 @@
 import React, { FC, useContext, useEffect, useMemo, useState } from 'react';
-import { useHistory, useLocation } from 'react-router';
+import { useHistory, useLocation } from 'react-router-dom';
 import { Input } from '../../../../../components/Input';
 import { routers } from '../../../../../constantes/routers';
 import { AppContext } from '../../../../../context/HubContext';
