@@ -179,7 +179,7 @@ const App: FC = () => {
             <Route path="/register" component={Register} />
             <Route path="/tech" component={TechWorks} />
             <Route path="/404" component={PageNotFound} />
-            {window.screen.width <= 480 && <Route path="/mobile/modal" component={MobileModal} />}
+            <Route path="/mobile/modal" component={MobileModal} />
           </Switch>
         </div>
       </Router>

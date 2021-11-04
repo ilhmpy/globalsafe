@@ -23,6 +23,9 @@ export const MobileModal = () => {
             localStorage.removeItem("mobileResultData");
             localStorage.removeItem("feedback");
         };
+        if (screen.width > 480) {
+            redirect();
+        };
     }, []);
 
     function redirect() {
