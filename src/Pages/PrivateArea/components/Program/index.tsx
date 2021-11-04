@@ -3,6 +3,7 @@ import { useHistory } from 'react-router';
 import { SwiperSlide } from 'swiper/react';
 import { Button } from '../../../../components/Button/V2/Button';
 import { AppContext } from '../../../../context/HubContext';
+import useWindowSize from '../../../../hooks/useWindowSize';
 import { CollectionListDeposits, ListDeposits } from '../../../../types/deposits';
 import { RootList } from '../../../../types/info';
 import { SwiperContainer, SwiperUI } from '../../Deposits/S.elements';
@@ -17,7 +18,7 @@ export const Program = ({ className = '' }: ProgramProps) => {
   const { hubConnection } = useContext(AppContext);
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   const languale = lang === 'ru' ? 1 : 0;
-  const { screen } = window;
+  const screen = useWindowSize();
   const [depositProgramsList, setDepositProgramsList] = useState<CollectionListDeposits[]>([]);
   const [depositProgramsLoading, setDepositProgramsLoading] = useState(false);
 
@@ -50,7 +51,7 @@ export const Program = ({ className = '' }: ProgramProps) => {
 
   return (
     <>
-      {screen.width > 768 ? (
+      {screen > 768 ? (
         <S.CardContainer className={className}>
           {depositProgramsList.length > 0 &&
             depositProgramsList.map((program, i) => (

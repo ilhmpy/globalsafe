@@ -32,7 +32,7 @@ export const Modal: React.FC<ModalProps> = ({
   withClose,
   withoutClose,
   ptl,
-  p20
+  p20,
 }: ModalProps) => {
   const handleContainerClick = (e: React.MouseEvent) => {
     if (e.currentTarget == e.target) {
@@ -40,19 +40,23 @@ export const Modal: React.FC<ModalProps> = ({
     }
   };
 
-  const [isMobile, setIsMobile] = useState<boolean>(false);
-
-  useEffect(() => {
-    setIsMobile(window.screen.width > 480);
-  }, []);
-
   return (
     <Portal>
       <ModalContainer zIndex={zIndex} style={style} className="bbg" lottery={lottery}>
         <Center styles={styles} onClick={handleContainerClick} lottery={lottery}>
-          <ModalComponent width={width} mobMarg={mobMarg} paddingTop={paddingTop} paddingsTopLess={ptl} p20={p20}>
-              {withClose && (<span className="close"><Times onClick={handleContainerClick} /></span>)}
-              {children}
+          <ModalComponent
+            width={width}
+            mobMarg={mobMarg}
+            paddingTop={paddingTop}
+            paddingsTopLess={ptl}
+            p20={p20}
+          >
+            {withClose && (
+              <span className="close">
+                <Times onClick={handleContainerClick} />
+              </span>
+            )}
+            {children}
           </ModalComponent>
         </Center>
       </ModalContainer>
@@ -74,9 +78,9 @@ const Center = styled.div<{ styles?: string; lottery?: boolean }>`
   align-items: center;
   transition: 0.3s;
 
-  ${({ styles }) => {
-    if (styles) {
-      return styles;
+  ${(props) => {
+    if (props.styles) {
+      return props.styles;
     }
   }}
 
@@ -97,7 +101,7 @@ const Center = styled.div<{ styles?: string; lottery?: boolean }>`
     }
   }}
 `;
- 
+
 const ModalContainer = styled.div<{ zIndex: string; lottery?: boolean }>`
   position: fixed;
   top: 0;
@@ -108,7 +112,7 @@ const ModalContainer = styled.div<{ zIndex: string; lottery?: boolean }>`
   display: block;
   transition: 0.3s;
   z-index: ${(props) => props.zIndex};
-  overflow: auto; 
+  overflow: auto;
   @media (max-width: 576px) {
     padding: 20px;
   }
@@ -118,7 +122,6 @@ const ModalComponent = styled.div<{
   width?: number;
   mobMarg?: boolean;
   paddingTop?: number;
-  styles?: string;
   lottery?: boolean;
   paddingsTopLess?: boolean;
   p20?: boolean;
@@ -136,22 +139,22 @@ const ModalComponent = styled.div<{
   width: 100%;
   position: relative;
   /* padding: 20px; */
-  ${({ paddingTop }) => {
-    if (paddingTop) {
+  ${(props) => {
+    if (props.paddingTop) {
       return `
-        padding-top: ${paddingTop}px;
+        padding-top: ${props.paddingTop}px;
       `;
     }
   }}
 
-  ${({ paddingsTopLess, p20 }) => {
-    if (paddingsTopLess) {
+  ${(props) => {
+    if (props.paddingsTopLess) {
       return `
         padding-top: 20px;
         padding-bottom: 20px;
       `;
-    };
-    if (p20) {
+    }
+    if (props.p20) {
       return `
         padding: 20px;
       `;
@@ -184,13 +187,7 @@ const ModalComponent = styled.div<{
 
   .close > svg > path {
     fill: #000;
-  } 
-
-  ${({ styles }) => {
-    if (styles) {
-      return styles;
-    }
-  }}
+  }
 
   @media (max-width: 768px) {
     margin: ${(props) => (props.mobMarg ? '50px 20px' : '50px auto')};

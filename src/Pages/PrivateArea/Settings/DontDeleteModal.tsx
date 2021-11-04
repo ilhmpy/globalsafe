@@ -7,7 +7,6 @@ import { Modal } from '../../../components/Modal/Modal';
 import { routers } from '../../../constantes/routers';
 import { payList } from './utils';
 import { PaymentMethodKind, CollectionPayMethod } from '../../../types/paymentMethodKind';
-import { FiatKind } from '../../../types/fiatKind';
 
 interface IProps {
   open: boolean;
