@@ -39,8 +39,7 @@ export const Cell = styled.div`
 
 export const BodyItem = styled.div<{ active?: boolean }>`
   ${table};
-  ${Cell} {
-  }
+  ${Cell};
   padding: 5px 10px 5px;
   min-height: 60px;
   background: ${(props) => (props.active ? 'rgba(0, 148, 255, 0.05)' : '#fff')};
@@ -134,21 +133,21 @@ export const ExchangeLine = styled.div`
   }
 `;
 
-export const ExchangeLineContent = styled.h3<{ main?: boolean; text?: boolean; }>`
+export const ExchangeLineContent = styled.h3<{ main?: boolean; text?: boolean }>`
   font-size: 14px;
   line-height: right;
   color: #000000;
-  ${({ main, text }) => {
-    if (main) {
+  ${(props) => {
+    if (props.main) {
       return `
         font-weight: 300;
       `;
-    };
-    if (text) {
+    }
+    if (props.text) {
       return `
         font-weight: 500;
         text-align: right;
       `;
-    };
+    }
   }}
-`; 
+`;

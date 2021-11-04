@@ -5,6 +5,7 @@ import { Button } from '../../../../components/Button/V2/Button';
 import { routers } from '../../../../constantes/routers';
 import { AppContext } from '../../../../context/HubContext';
 import { BalanceKind } from '../../../../enums/balanceKind';
+import useWindowSize from '../../../../hooks/useWindowSize';
 import { IBalanceExchange } from '../../Converting/ConvertingModal';
 import { CloseDeposit } from '../Modals/CloseDeposit';
 import { CloseDepositError } from '../Modals/CloseDepositError';
@@ -29,7 +30,7 @@ interface IProps {
 export const ShowDeposit: FC<IProps> = ({ chosenDepositView }: IProps) => {
   console.log('chosenDepositView', chosenDepositView);
 
-  const { screen } = window;
+  const screen = useWindowSize();
   const history = useHistory();
   const { deposit } = chosenDepositView;
   const { hubConnection, depositsFilter } = useContext(AppContext);
@@ -128,7 +129,7 @@ export const ShowDeposit: FC<IProps> = ({ chosenDepositView }: IProps) => {
         <ChipWrap>
           <ProgramDesc>{deposit?.description}</ProgramDesc>
         </ChipWrap>
-        {screen.width > 768 && (
+        {screen > 768 && (
           <Button bigSize primary onClick={() => setIsOpenCloseDeposit(true)}>
             Закрыть депозит
           </Button>
@@ -189,7 +190,7 @@ export const ShowDeposit: FC<IProps> = ({ chosenDepositView }: IProps) => {
           </S.Block>
         </S.Blocks>
         <S.Blocks pTop>
-          {screen.width <= 768 && (
+          {screen <= 768 && (
             <Button fullWidth bigSize primary onClick={() => setIsOpenCloseDeposit(true)}>
               Закрыть депозит
             </Button>

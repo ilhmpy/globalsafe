@@ -1,57 +1,28 @@
 import moment from 'moment';
 import React, { FC, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import styled, { keyframes } from 'styled-components/macro';
+import styled from 'styled-components/macro';
 import SwiperCore, { A11y, Navigation, Pagination, Scrollbar } from 'swiper';
 import 'swiper/components/navigation/navigation.scss';
 import 'swiper/components/pagination/pagination.scss';
 import 'swiper/components/scrollbar/scrollbar.scss';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper.scss';
-import { ReactComponent as Refresh } from '../../../../assets/svg/refresh.svg';
-import { Button } from '../../../../components/Button/Button';
-import { RadialBar } from '../../../../components/Charts/Test';
-import { Modal } from '../../../../components/Modal/Modal';
-import { Input } from '../../../../components/UI/Input';
 import { H2 } from '../../../../components/UI/Heading';
-import { Page } from '../../../../components/UI/Page';
 import { AppContext } from '../../../../context/HubContext';
-import { Card } from '../../../../globalStyles';
 import { Container } from '../../../../components/UI/Container';
-import { Pokedex, RootPayDeposit } from '../../../../types/payouts';
-import { ModalBlock, ModalTitle } from '../Tariffs/Tariffs.elements';
+import { RootPayDeposit } from '../../../../types/payouts';
 import { ReactComponent as Reload } from '../../../../assets/svg/reload.svg';
-import { AnyMxRecord } from 'dns';
+import useWindowSize from '../../../../hooks/useWindowSize';
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
 export const Payments: FC = () => {
   const [statsDeposit, setStatsDeposit] = useState<RootPayDeposit[]>([]);
   const [bigArr, setBigArr] = useState<any>([]);
-  const { screen } = window;
+  const screen = useWindowSize();
 
-  const [smallArr, setSmallArr] = useState<any>(
-    [ /*
-      [ { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-        { deposit: { name: "TEST" }, date: new Date(), procent: 85 }],
-       [{ deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-        { deposit: { name: "TEST" }, date: new Date(), procent: 85 }],
-       [{ deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-        { deposit: { name: "TEST" }, date: new Date(), procent: 85 }]
-        */
-  ]);
+  const [smallArr, setSmallArr] = useState<any>([]);
   const [loadReset, setLoadReset] = useState(false);
   const arrSizeBig = 10;
   const arrSizeMob = 6;
@@ -60,7 +31,7 @@ export const Payments: FC = () => {
   const [isMobile, setIsMobile] = useState<boolean | undefined>();
   const { t } = useTranslation();
 
-  useEffect(() => setIsMobile(screen.width <= 480), []);
+  useEffect(() => setIsMobile(screen <= 480), []);
 
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   const languale = lang === 'ru' ? 1 : 0;
@@ -119,7 +90,6 @@ export const Payments: FC = () => {
     }
   };
 
-  const [last, setLast] = useState(localStorage.getItem('last') || '');
   const [lastTime, setLastTime] = useState<string | null>(null);
   const [timeInterval, setTimeInterval] = useState<any>();
   const [actualDate, setActualDate] = useState(new Date());

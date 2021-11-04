@@ -1,8 +1,8 @@
-import styled from "styled-components/macro";
-import React, { FC } from "react";
-import { Spinner } from "../../../Pages/PrivateArea/components/Loading/Loading";
+import styled from 'styled-components/macro';
+import React, { FC } from 'react';
+import { Spinner } from '../../../Pages/PrivateArea/components/Loading/Loading';
 
-export const Table = styled.div<{ none?: boolean; }>`
+export const Table = styled.div<{ none?: boolean }>`
   width: 100%;
   margin-bottom: 40px;
   box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
@@ -10,94 +10,105 @@ export const Table = styled.div<{ none?: boolean; }>`
   margin-top: 20px;
 `;
 
-export const Item = styled.h3<{ item?: boolean; }>`
-    color: #000;
-    font-size: 14px;
-    font-weight: 300;
-    margin-right: 75px;
-    min-height: 20px;
-    ${({ item }) => {
-        if (!item) {
-            return `
+export const Item = styled.h3<{ item?: boolean }>`
+  color: #000;
+  font-size: 14px;
+  font-weight: 300;
+  margin-right: 75px;
+  min-height: 20px;
+  ${(props) => {
+    if (!props.item) {
+      return `
                 @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
                     &:nth-child(1) {
                         min-width: 98px;
                     }
                 }  
             `;
-        };
-    }}
-    ${({ item }) => {
-        if (item) {
-            return `
+    }
+  }}
+  ${(props) => {
+    if (props.item) {
+      return `
                 font-weight: 500;
             `;
-        };
-    }}
+    }
+  }}
 `;
 
 export const Header = styled.header`
-    width: 100%;
-    display: flex;
-    align-items: center;
-    height: 56px;
-    position: relative;
-    background: #EBEBF2; 
-    border-top-right-radius: 4px;
-    border-top-left-radius: 4px;
-    padding-left: 20px;
-    padding-right: 20px;
-    & > h3 {
-        margin-right: 109px;
-    }
-    @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
-        padding-left: 40px;
-    }
+  width: 100%;
+  display: flex;
+  align-items: center;
+  height: 56px;
+  position: relative;
+  background: #ebebf2;
+  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
+  padding-left: 20px;
+  padding-right: 20px;
+  & > h3 {
+    margin-right: 109px;
+  }
+  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+    padding-left: 40px;
+  }
 `;
 
-export const More = styled.button<{ newItems: boolean; }>`
-    width: 134px;
-    height: 38px;
-    background: #515172;
-    border-radius: 4px;
-    color: #fff;
-    font-size: 14px;
-    line-height: 16px;
-    margin: 0 auto;
-    margin-bottom: 40px;
-    display: block;
-    cursor: pointer;
-    font-weight: 500;
-    display: ${({ newItems }) => newItems ? "block" : "none"};
+export const More = styled.button<{ newItems: boolean }>`
+  width: 134px;
+  height: 38px;
+  background: #515172;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 14px;
+  line-height: 16px;
+  margin: 0 auto;
+  margin-bottom: 40px;
+  display: block;
+  cursor: pointer;
+  font-weight: 500;
+  display: ${(props) => (props.newItems ? 'block' : 'none')};
 `;
 
 export const LinkButton = styled.a`
-    width: 122px;
-    height: 30px;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #0094FF;
-    border-radius: 4px;
-    font-weight: 400;
-    font-size: 12px;
-    line-height: 14px;
-    cursor: pointer;
-    margin-top: 14px;
+  width: 122px;
+  height: 30px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0094ff;
+  border-radius: 4px;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 14px;
+  cursor: pointer;
+  margin-top: 14px;
 `;
 
 type MoreButtonType = {
-    newItems: boolean;
-    text: string;
-    onMore: () => void;
-    loadingNewItems: boolean;
+  newItems: boolean;
+  text: string;
+  onMore: () => void;
+  loadingNewItems: boolean;
 };
 
-export const MoreButton: FC<MoreButtonType> = ({ newItems, onMore, text, loadingNewItems }: MoreButtonType) => {
-    return (
-        <More newItems={newItems} onClick={onMore}>
-            {loadingNewItems ? <Spinner style={{ width: "25px", height: "25px", borderTop: "2px solid #fff", margin: "0 auto" }} /> : text}
-        </More>
-    );
+export const MoreButton: FC<MoreButtonType> = ({
+  newItems,
+  onMore,
+  text,
+  loadingNewItems,
+}: MoreButtonType) => {
+  return (
+    <More newItems={newItems} onClick={onMore}>
+      {loadingNewItems ? (
+        <Spinner
+          style={{ width: '25px', height: '25px', borderTop: '2px solid #fff', margin: '0 auto' }}
+        />
+      ) : (
+        text
+      )}
+    </More>
+  );
 };

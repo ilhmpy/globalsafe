@@ -12,6 +12,7 @@ import { H2 } from '../../../../components/UI/Heading';
 import { Page } from '../../../../components/UI/Page';
 import * as Styled from './Styles.elements';
 import { AppContext } from '../../../../context/HubContext';
+import useWindowSize from '../../../../hooks/useWindowSize';
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
@@ -23,7 +24,7 @@ export const DepositsPrograms = () => {
   const user = appContext.user;
   const history = useHistory();
   const lang = localStorage.getItem('i18nextLng') === 'en' ? 0 : 1;
-  const { screen } = window;
+  const screen = useWindowSize();
 
   useEffect(() => {
     if (hubConnection) {
@@ -51,7 +52,7 @@ export const DepositsPrograms = () => {
       {deposits.length > 0 && (
         <Container page id="deposits">
           <H2>{t('sideNav.depositsPrograms')}</H2>
-          {screen.width > 480 ? (
+          {screen > 480 ? (
             <Styled.CardBox>
               {deposits &&
                 deposits.map((item, idx) => (

@@ -26,6 +26,7 @@ import { Nav } from './Nav';
 import { NavAdmin } from './NavAdmin';
 import { Notify } from './Notify/Notify';
 import * as Notifies from './Notify/Notify.styles';
+import useWindowSize from '../../hooks/useWindowSize';
 
 type Props = {
   admPanel?: boolean;
@@ -36,7 +37,7 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
   const [open, setOpen] = useState(false);
   const [notify, setNotify] = useState<boolean>(false);
   const [checkeds, setCheckeds] = useState<boolean>(false);
-  const { screen } = window;
+  const screen = useWindowSize();
 
   const appContext = useContext(AppContext);
   const themeContext = useContext(ThemeContext);
@@ -94,7 +95,7 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
       <HeaderWrap header={header}>
         <Container>
           <HeaderInner>
-            <HeaderLogo href="/">{screen.width > 768 ? <Logo /> : <GsLogo />}</HeaderLogo>
+            <HeaderLogo href="/">{screen > 768 ? <Logo /> : <GsLogo />}</HeaderLogo>
             <HeaderMenu open={open}>
               {admPanel ? (
                 <NavAdmin lang={lang} onClose={onClose} />

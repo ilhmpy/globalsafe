@@ -7,6 +7,8 @@ import * as S from './S.el';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, { Navigation, Pagination, A11y } from 'swiper';
 import styled from 'styled-components';
+import useWindowSize from '../../../../hooks/useWindowSize';
+
 interface FilterProps {
   activeFilter: 'active' | 'archived' | 'hold';
   setActiveFilter: (value: 'active' | 'archived' | 'hold') => void;
@@ -31,11 +33,11 @@ export const Filter: FC<FilterProps> = ({
   const handleActive = (type: string) => {
     if (type !== viewType) setViewType?.(type);
   };
-  const { screen } = window;
+  const screen = useWindowSize();
 
   return (
     <S.Container without={withoutContainer}>
-      {screen.width > 768 ? (
+      {screen > 768 ? (
         <>
           <S.Buttons>
             {!withCustomButtons ? (

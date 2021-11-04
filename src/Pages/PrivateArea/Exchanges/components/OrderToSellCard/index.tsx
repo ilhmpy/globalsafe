@@ -73,11 +73,10 @@ export const OrderToSellCard: FC = () => {
   const [showCertificateIsMissingModal, setShowCertificateIsMissingModal] = useState(false);
   const { location } = window;
   // Get Balance Kinds List as an Array
-  const balanceKinds = useMemo<string[]>(() => {
+  const balanceKinds = useMemo(() => {
     const ownBalanceKinds: number[] = balanceList?.map((b) => b.balanceKind) || [];
 
-    // @ts-ignore: Unreachable code error
-    const list: string[] = Object.values(Balance)
+    const list = Object.values(Balance)
       .filter((b) => typeof b === 'string')
       .filter((b, i) => ownBalanceKinds.includes(i))
       .filter((b) => b !== 'Na');
@@ -86,9 +85,8 @@ export const OrderToSellCard: FC = () => {
   }, [Balance, balanceList]);
 
   // Get Fiat Kinds List as an Array
-  const fiatKinds = useMemo<string[]>(() => {
-    // @ts-ignore: Unreachable code error
-    const list: string[] = Object.values(FiatKind).filter((i) => typeof i === 'string');
+  const fiatKinds = useMemo(() => {
+    const list = Object.values(FiatKind).filter((i) => typeof i === 'string');
     return list;
   }, [Balance]);
 
@@ -485,7 +483,7 @@ export const OrderToSellCard: FC = () => {
               </Text>
               <S.Select
                 placeholder="Не выбрано"
-                options={balanceKinds}
+                options={balanceKinds as string[]}
                 selectedOption={currencyToSell}
                 setSelectedOption={(val: string) => setCurrencyToSell(val)}
               />
@@ -533,7 +531,7 @@ export const OrderToSellCard: FC = () => {
               </Text>
               <S.Select
                 placeholder="Не выбрано"
-                options={fiatKinds}
+                options={fiatKinds as string[]}
                 selectedOption={currencyToChange}
                 setSelectedOption={(val: string) => setCurrencyToChange(val)}
               />

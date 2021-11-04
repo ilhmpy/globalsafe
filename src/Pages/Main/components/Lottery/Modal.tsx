@@ -41,11 +41,6 @@ export const ModalLottery: FC<Props> = ({
   testResult,
 }: Props) => {
   const { t } = useTranslation();
-  const [isMobile, setIsMobile] = useState<boolean | undefined>(undefined);
-
-  useEffect(() => {
-    setIsMobile(window.screen.width > 480);
-  }, []);
 
   /*
   return (

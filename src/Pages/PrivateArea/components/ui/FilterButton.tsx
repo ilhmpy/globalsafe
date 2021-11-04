@@ -26,16 +26,18 @@ export const FilterButton = styled.button<FilterButtonProps>`
   margin: ${(props) => (props.noMargin ? '0' : '0 10px 10px 9px')};
   &:first-child {
     margin-left: 0;
-  };
-  width: ${props => props.wFull ? '100%' : 'auto'};
-  margin-right: ${props => props.switchLeft ? 0 : '10px'};
-  margin-left: ${props => props.switchRight ? 0 : '9px'};
-  border-left-width: ${props => props.switchRight ? '0px' : '1px'};
+  }
+  width: ${(props) => (props.wFull ? '100%' : 'auto')};
+
+  margin-right: ${(props) => (props.switchLeft ? 0 : '10px')};
+  margin-left: ${(props) => (props.switchRight ? 0 : '9px')};
+  border-left-width: ${(props) => (props.switchRight ? '0px' : '1px')};
+
   @media ${Device.mobile} {
-    width ${(props) => (props.smHalfWidth ? '50%' : props.wFull ? '100%' : 'auto')}
-  };
-  ${({ big }) => {
-    if (big) {
+    width: ${(props) => (props.smHalfWidth ? '50%' : props.wFull ? '100%' : 'auto')};
+  }
+  ${(props) => {
+    if (props.big) {
       return `
         width: 50%;
         font-weight: 400;
@@ -44,25 +46,4 @@ export const FilterButton = styled.button<FilterButtonProps>`
       `;
     }
   }}
-  ${({ switchLeft, wFull, switchRight }) => {
-    if (switchLeft) {
-      return `
-        margin-right: ${switchLeft ? 0 : '10px'};
-      `;
-    };
-    if (wFull) {
-      return `
-        width: ${wFull ? '100%' : 'auto'};
-      `;
-    };
-    if (switchRight) {
-      return `
-        margin-left: ${switchRight ? 0 : '9px'};
-        border-left-width: ${switchRight ? '0px' : '1px'};
-      `;
-    };
-  }}
-  @media ${Device.mobile} {
-    width ${props => props.smHalfWidth ? '50%' : props.wFull ? '100%' : 'auto'}
-  };
 `;
