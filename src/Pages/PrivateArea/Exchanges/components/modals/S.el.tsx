@@ -8,7 +8,7 @@ export const Container = styled.div<{wFull?: boolean; mobileWFull?: boolean}>`
 
   @media ${Device.mobile} {
     ${props => props.mobileWFull !== undefined && css`width: 100%;`};
-  }
+  };
 `;
 
 export const Title = styled.h3`
@@ -28,7 +28,7 @@ export const Title = styled.h3`
     padding: 20px;
     background-color: #f8f9fa;
     color: ${props => props.theme.v2.text};
-  }
+  };
 `;
 
 export const DropdonwConatainer = styled.div<{ big?: boolean }>`
@@ -76,7 +76,7 @@ export const List = styled.ul`
 
   @media ${Device.mobile} {
     margin-bottom: 20px;
-  }
+  };
 `;
 
 export const Listitem = styled.li`
@@ -101,7 +101,7 @@ export const Line = styled.span`
 
   @media ${Device.mobile} {
     opacity: 0;
-  }
+  };
 `;
 
 export const Reason = styled.p`
@@ -126,7 +126,7 @@ export const SmallContainer = styled.div<{wFull?: boolean; mobileWFull?: boolean
 
   @media ${Device.mobile} {
     ${props => props.mobileWFull !== undefined && css`width: 100%;`};
-  }
+  };
 `;
 
 export const BlackTitle = styled(Title)`
@@ -161,7 +161,7 @@ export const DataListItem = styled.div<DataListItemProps>`
     flex-direction: ${props => props.mobileColumn ? 'column' : 'row'};
     align-items: ${props => props.mobileAlign === 'start' ? 'flex-start' : 'flex-end'};
     justify-content: ${props => props.mobileJustify === 'start' ? 'flex-start' : 'flex-end'};
-  }
+  };
 `;
 
 export const ListItemDivider = styled.div`
@@ -170,7 +170,7 @@ export const ListItemDivider = styled.div`
 
   @media ${Device.mobile} {
     opacity: 0;
-  }
+  };
 `;
  
 export const MobileWrapper = styled.div`
