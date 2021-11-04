@@ -30,8 +30,8 @@ export const Payments: FC = () => {
   const [bigArr, setBigArr] = useState<any>([]);
   const { screen } = window;
 
-  const [smallArr, setSmallArr] = useState<any>([
-    /*
+  const [smallArr, setSmallArr] = useState<any>(
+    [ /*
       [ { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
         { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
         { deposit: { name: "TEST" }, date: new Date(), procent: 85 },

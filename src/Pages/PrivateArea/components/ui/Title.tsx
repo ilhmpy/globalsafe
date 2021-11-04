@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components/macro';
+import styled, { css } from 'styled-components';
 import { Device } from '../../consts';
 
 interface TitleProps {
@@ -28,6 +28,7 @@ const Heading3 = css`
 `;
 
 export const Title = styled.h3<TitleProps>`
+  font-weight: bold;
   font-size: ${(props) => (props.small ? 18 : 24)}px;
   line-height: ${(props) => (props.small ? 21 : props.lH ? props.lH : 38)}px;
   font-weight: bold;
@@ -73,7 +74,7 @@ export const Title = styled.h3<TitleProps>`
         }
       `;
     }
-  }}
+  }};
   @media ${Device.mobile} {
     ${(props) => props.heading2 && Heading2};
     ${(props) => props.heading3 && Heading3};

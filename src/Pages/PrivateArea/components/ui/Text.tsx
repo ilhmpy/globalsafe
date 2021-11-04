@@ -33,6 +33,30 @@ export const Text = styled.p<Props>`
   margin-left: ${(props) => (props.mL ? props.mL : 0)}px;
   user-select: ${(props) => (props.unone ? 'none' : 'text')};
   color: ${(props) => (props.black ? props.theme.black : props.error ? '#FF4A31' : '#000')};
+
+  @media ${Device.mobile} {
+    display: ${(props) => (props.smHidden ? 'none' : 'block')};
+    ${(props) =>
+      props.sizeMobile &&
+      css`
+        font-size: ${props.sizeMobile}px;
+      `};
+    ${(props) =>
+      props.lHMobile &&
+      css`
+        line-height: ${props.lHMobile}px;
+      `};
+    ${(props) =>
+      props.mBMobile &&
+      css`
+        margin-bottom: ${props.mBMobile}px;
+      `};
+    ${(props) =>
+      props.weightMobile &&
+      css`
+        font-weight: ${props.weightMobile};
+      `};
+  }
   @media ${Device.mobile} {
     ${({ textInMobileFilter }) => {
       if (textInMobileFilter) {
@@ -43,16 +67,16 @@ export const Text = styled.p<Props>`
           color: #3F3E4E;
           margin-bottom: 10px;
         `;
-      };
+      }
     }}
     ${({ smHidden }) => {
       if (smHidden) {
         return `
           display: none;
         `;
-      };
+      }
     }}
-  };
+  }
   ${({ center }) => {
     if (center) {
       return `
@@ -63,7 +87,7 @@ export const Text = styled.p<Props>`
         margin-bottom: 20px;
         margin-top: 0;
       `;
-    };
+    }
   }}
   ${({ detail }) => {
     if (detail) {
@@ -72,7 +96,7 @@ export const Text = styled.p<Props>`
         font-weight: 300;
         margin-bottom: 20px;
       `;
-    };
+    }
   }}
   ${({ publish }) => {
     if (publish) {
@@ -80,7 +104,7 @@ export const Text = styled.p<Props>`
         margin-bottom: 20px !important;
         font-weight: 400 !important;
       `;
-    };
+    }
   }}
   ${({ phoneFWB }) => {
     if (phoneFWB) {
@@ -89,7 +113,7 @@ export const Text = styled.p<Props>`
           font-weight: 500;
         }
       `;
-    };
+    }
   }}
   @media ${Device.mobile} {
     ${({ onMobileTitleInExchange }) => {
@@ -100,7 +124,7 @@ export const Text = styled.p<Props>`
           line-height: 20px;
           margin-bottom: 4px;
         `;
-      };
+      }
     }}
   }
 `;
