@@ -30,11 +30,17 @@ export const Card = styled.div`
       justify-content: center;
       align-self: baseline;
     }
+    @media (max-width: 1024px) {
+      width: 100%;
+    }
   }
 
   @media (max-width: 1024px) {
     width: 220px;
     padding: 20px;
+  }
+  @media (max-width: 768px) {
+    width: auto;
   }
 `;
 

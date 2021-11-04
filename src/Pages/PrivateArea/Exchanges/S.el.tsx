@@ -41,9 +41,26 @@ export const Filters = styled.div<{
         display: flex;
       `};
   }
+  ${({ hidden }) => {
+    if (hidden != undefined) {
+      return `
+        display: ${hidden ? 'none' : 'flex'};
+      `;
+    }
+  }}
   @media only screen and (max-device-width: 480px) {
     width: 100%;
     margin-bottom: 20px;
+    ${(props) =>
+      props.smHidden &&
+      css`
+        display: none;
+      `};
+    ${(props) =>
+      props.smVisible &&
+      css`
+        display: flex;
+      `};
   }
   ${({ when }) => {
     if (when !== undefined) {
@@ -63,6 +80,7 @@ export const FiltersBox = styled.div`
   align-items: center;
   display: flex;
   font-weight: 400;
+  background: transparent;
   font-size: 12px;
   opacity: 60%;
   color: #000;

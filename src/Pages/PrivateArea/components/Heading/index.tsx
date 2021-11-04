@@ -20,7 +20,7 @@ export const Heading: FC<Props> = ({
   styles,
 }: Props) => {
   return (
-    <S.Container style={styles && styles}>
+    <S.Container style={styles ? styles : {}}>
       <S.Title>{title}</S.Title>
       {!withoutBtn && (
         <Button primary onClick={onClick}>

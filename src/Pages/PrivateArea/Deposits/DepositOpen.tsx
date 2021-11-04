@@ -60,7 +60,7 @@ export const DepositOpen: FC = () => {
         <Back text="К программам депозитов" onGoBackClick={goBackClick} />
         <Title>Открытие депозита</Title>
       </Container>
-      <Container pTabletNone>
+      <Container pTabletNone pNone>
         <OpenDeposit
           goBackClick={goBackClick}
           setIsConfirmOpenDeposit={setIsConfirmOpenDeposit}

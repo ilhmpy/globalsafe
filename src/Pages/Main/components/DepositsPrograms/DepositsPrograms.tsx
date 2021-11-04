@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { useHistory } from "react-router-dom";
+import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import SwiperCore, { A11y, Navigation, Pagination, Scrollbar } from 'swiper';
 import 'swiper/components/navigation/navigation.scss';
@@ -17,40 +17,35 @@ SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
 export const DepositsPrograms = () => {
   const { t } = useTranslation();
-  const [deposits, setDeposits] = useState<any[]>([]); 
+  const [deposits, setDeposits] = useState<any[]>([]);
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
   const user = appContext.user;
   const history = useHistory();
-  const lang = localStorage.getItem("i18nextLng") === "en" ? 0 : 1;
+  const lang = localStorage.getItem('i18nextLng') === 'en' ? 0 : 1;
   const { screen } = window;
 
   useEffect(() => {
     if (hubConnection) {
-      hubConnection.invoke(
-       "GetDeposits",
-       lang,
-       true,
-       0,
-       100,
-      )
+      hubConnection
+        .invoke('GetDeposits', lang, true, 0, 100)
         .then((res) => {
-          console.log("res", res);
+          console.log('res', res);
           setDeposits(res.collection);
-        })  
+        })
         .catch((err) => console.log(err));
     }
   }, [hubConnection, lang]);
 
   function toDeposits(id: string) {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     if (token && user) {
       history.push(`/info/deposits/new-deposit/${id}`);
     } else {
       history.push(`/login/${id}`);
-    };
-  };
-   
+    }
+  }
+
   return (
     <>
       {deposits.length > 0 && (
@@ -58,36 +53,50 @@ export const DepositsPrograms = () => {
           <H2>{t('sideNav.depositsPrograms')}</H2>
           {screen.width > 480 ? (
             <Styled.CardBox>
-              {deposits && deposits.map((item, idx) => (
-                <Styled.Card key={idx}>
-                  <Styled.CardName>{item.name.length > 0 ? (item.name).toUpperCase() : "Имя депозита"}</Styled.CardName>
-                  <Styled.CardDesc>{item.description.length > 0 ? item.description : "Описание"}</Styled.CardDesc>
-                  <Styled.CardButton onClick={() => toDeposits(item.id)}>{t('payments.open').toUpperCase()}</Styled.CardButton>
-                </Styled.Card>
-              ))} 
+              {deposits &&
+                deposits.map((item, idx) => (
+                  <Styled.Card key={idx}>
+                    <Styled.CardName>
+                      {item.name.length > 0 ? item.name.toUpperCase() : 'Имя депозита'}
+                    </Styled.CardName>
+                    <Styled.CardDesc>
+                      {item.description.length > 0 ? item.description : 'Описание'}
+                    </Styled.CardDesc>
+                    <Styled.CardButton onClick={() => toDeposits(item.id)}>
+                      {t('payments.open').toUpperCase()}
+                    </Styled.CardButton>
+                  </Styled.Card>
+                ))}
             </Styled.CardBox>
           ) : (
             <>
               <Styled.CardBox>
-                <Swiper 
-                  slidesPerView={"auto"} 
+                <Swiper
+                  slidesPerView={'auto'}
                   pagination={{ clickable: true, dynamicBullets: true }}
                 >
-                  {deposits && deposits.map((item, idx) => (
-                    <SwiperSlide key={idx}>
-                      <Styled.Card key={idx}>
-                        <Styled.CardName>{item.name.length > 0 ? (item.name).toUpperCase() : "Имя депозита"}</Styled.CardName>
-                        <Styled.CardDesc>{item.description.length > 0 ? item.description : "Описание"}</Styled.CardDesc>
-                        <Styled.CardButton onClick={() => toDeposits(item.id)}>{t('payments.open').toUpperCase()}</Styled.CardButton>
-                      </Styled.Card>
-                    </SwiperSlide>
-                  ))}
+                  {deposits &&
+                    deposits.map((item, idx) => (
+                      <SwiperSlide key={idx}>
+                        <Styled.Card key={idx}>
+                          <Styled.CardName>
+                            {item.name.length > 0 ? item.name.toUpperCase() : 'Имя депозита'}
+                          </Styled.CardName>
+                          <Styled.CardDesc>
+                            {item.description.length > 0 ? item.description : 'Описание'}
+                          </Styled.CardDesc>
+                          <Styled.CardButton onClick={() => toDeposits(item.id)}>
+                            {t('payments.open').toUpperCase()}
+                          </Styled.CardButton>
+                        </Styled.Card>
+                      </SwiperSlide>
+                    ))}
                 </Swiper>
               </Styled.CardBox>
             </>
           )}
         </Container>
       )}
-      </>
+    </>
   );
 };

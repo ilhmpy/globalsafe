@@ -14,8 +14,25 @@ import * as S from './S.elements';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, { A11y, Navigation, Pagination, Scrollbar, Thumbs, EffectFade } from 'swiper';
 import { Tiles } from '../components/Tiles';
+import styled from 'styled-components';
+import {
+  TilesContainer,
+  BottomValue,
+  BottomTitle,
+  BottomSide,
+  TopSide,
+  DateRange,
+  BoxAmount,
+  BoxTitle,
+  BlockBox,
+} from '../components/Tiles/styled';
+import { Balance } from '../../../types/balance';
+import moment from 'moment';
+import { BalanceKind } from '../../../enums/balanceKind';
+import { SwiperContainer, SwiperUI } from './S.elements';
 
 export const Deposits: FC = () => {
+  const { screen } = window;
   const [openModal, setOpenModal] = useState(false);
   const [depositsList, setDepositsList] = useState<Collection[]>([]);
   const [getDepositsLoading, setGetDepositsLoading] = useState(true);
@@ -25,8 +42,8 @@ export const Deposits: FC = () => {
   const [activeFilter, setActiveFilter] = useState<'active' | 'archived' | 'hold'>('active');
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   const [viewType, setViewType] = useState<string>('list');
-
-  const { hubConnection, balanceList, setDepositsFilter } = useContext(AppContext);
+  const { hubConnection, balanceList, setDepositsFilter, setChosenDepositView } =
+    useContext(AppContext);
 
   const history = useHistory();
 
@@ -189,28 +206,87 @@ export const Deposits: FC = () => {
           setViewType={setViewType}
         />
       </Container>
-      <Container pTabletNone>
-        {/* {viewType === 'list' ? ( */}
-        <Scrollbars style={{ height: '236px', minHeight: '236px' }}>
-          {getDepositsLoading ? (
+
+      {screen.width > 768 ? (
+        <Container pTabletNone>
+          {viewType === 'list' ? (
+            <Scrollbars style={{ height: '236px', minHeight: '236px' }}>
+              {getDepositsLoading ? (
+                <Loading />
+              ) : (
+                depositsList.length && (
+                  <InfiniteScroll
+                    pageStart={0}
+                    loadMore={handleGetDepositsList}
+                    hasMore={depositsListHasMore}
+                    useWindow={false}
+                  >
+                    <Table depositsList={depositsList} />
+                  </InfiniteScroll>
+                )
+              )}
+            </Scrollbars>
+          ) : getDepositsLoading ? (
             <Loading />
           ) : (
-            depositsList.length > 0 && (
-              <InfiniteScroll
-                pageStart={0}
-                loadMore={handleGetDepositsList}
-                hasMore={depositsListHasMore}
-                useWindow={false}
-              >
-                <Table depositsList={depositsList} />
-              </InfiniteScroll>
-            )
+            <Tiles depositsList={depositsList} />
           )}
-        </Scrollbars>
-        {/* ) : ( */}
-        {/* <Tiles depositsList={depositsList} /> */}
-        {/* )} */}
-      </Container>
+        </Container>
+      ) : (
+        <>
+          <SwiperContainer>
+            <SwiperUI slidesPerView={'auto'} pagination={{ clickable: true, dynamicBullets: true }}>
+              {depositsList &&
+                depositsList.map((deposit, i) => {
+                  return (
+                    <SwiperSlide key={`${deposit.safeId}-${i}`}>
+                      <BlockBox
+                        onClick={() => {
+                          setChosenDepositView(deposit);
+                          history.push(routers.depositsView);
+                        }}
+                      >
+                        <TopSide>
+                          <BoxTitle>{deposit.deposit.name}</BoxTitle>
+                          <BoxAmount>{`${deposit.amountView} ${
+                            Balance[deposit.deposit.asset]
+                          }`}</BoxAmount>
+                          <DateRange>{`${moment(new Date(deposit.creationDate)).format(
+                            'DD.MM.YYYY'
+                          )} - ${moment(new Date(deposit.endDate)).format(
+                            'DD.MM.YYYY'
+                          )}`}</DateRange>
+                        </TopSide>
+                        <BottomSide>
+                          <div>
+                            <BottomTitle>Ближайшая выплата:</BottomTitle>
+                            <BottomValue>
+                              {moment(deposit.paymentDate).format('DD.MM.YYYY')}
+                              {`(через ${moment
+                                .duration(
+                                  moment(
+                                    moment(deposit.paymentDate).format('YYYY-MM-DD'),
+                                    'YYYY-MM-DD'
+                                  ).diff(moment().startOf('day'))
+                                )
+                                .asDays()} дней)`}
+                            </BottomValue>
+                          </div>
+                          <div>
+                            <BottomTitle>Сумма ближайшей выплаты:</BottomTitle>
+                            <BottomValue>
+                              {deposit.paymentAmountView} {BalanceKind[deposit.deposit.asset]}
+                            </BottomValue>
+                          </div>
+                        </BottomSide>
+                      </BlockBox>
+                    </SwiperSlide>
+                  );
+                })}
+            </SwiperUI>
+          </SwiperContainer>
+        </>
+      )}
     </S.Container>
   );
 };

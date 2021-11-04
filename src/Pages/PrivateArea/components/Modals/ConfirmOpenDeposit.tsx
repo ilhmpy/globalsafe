@@ -75,7 +75,7 @@ export const ConfirmOpenDeposit: FC<Props> = ({ onClose, open, sumValue }: Props
                 </S.Text>
               </S.ListItem>
             </S.List>
-            <S.TextWrap big>
+            <S.TextWrap big sm>
               <S.List>
                 <S.ListItem>
                   <S.Text>

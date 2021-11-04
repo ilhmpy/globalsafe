@@ -8,6 +8,12 @@ export const Title = styled.h3`
   text-align: center;
   color: ${(props) => props.theme.v2.text};
   margin-bottom: 40px;
+  @media (max-width: 768px) {
+    font-weight: 900;
+    font-size: 18px;
+    line-height: 21px;
+    text-align: left;
+  }
 `;
 
 const text = css`
@@ -25,8 +31,11 @@ export const Text = styled.p<{ red?: boolean }>`
   }
 `;
 
-export const TextWrap = styled.div<{ big?: boolean }>`
+export const TextWrap = styled.div<{ big?: boolean; sm?: boolean }>`
   margin-bottom: ${(props) => (props.big ? 40 : 10)}px;
+  @media (max-width: 768px) {
+    margin-bottom: ${(props) => (props.sm ? 20 : 20)}px;
+  }
 `;
 
 export const List = styled.ul`
@@ -63,4 +72,7 @@ export const Buttons = styled.div`
 export const Container = styled.div`
   max-width: 340px;
   width: 100%;
+  @media (max-width: 768px) {
+    padding: 20px;
+  }
 `;

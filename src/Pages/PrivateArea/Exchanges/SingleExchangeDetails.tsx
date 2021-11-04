@@ -13,6 +13,7 @@ import { AppContext } from '../../../context/HubContext';
 import { Loading, NotItems } from "../components/Loading/Loading";
 import { Balance } from "../../../types/balance";
 import { FiatKind } from "../../../types/fiat";
+import { MobileModal } from '../components/MobileModal/MobileModal';
 
 type PropsMatch = {
   exchangeId: string;
@@ -27,6 +28,7 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
   const [call, setCall] = useState<boolean>(false);
   const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
   const [showRejectModal, setShowRejectModal] = useState<boolean>(false);
+  const [end, setEnd] = useState<boolean>(false);
   const buyer = () => {
     return (
       (exchange && exchange.kind === 0 && exchange.ownerSafeId !== account.safeId) ||
@@ -64,6 +66,11 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
     };
   }, [hubConnection, call]);
 
+  /*
+  if (end === true && screen.width <= 480 && exchange !== null) {
+    return <MobileModal exchange={exchange} type={exchange.state === 2 ? 0 : 1} />
+  }; */
+
   return (
     <>
       {loading ? <Loading /> : (
@@ -90,6 +97,7 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
                   owner={owner}
                   setLoading={setLoading}
                   exchangeId={exchangeId}
+                  setEnd={setEnd}
                 />
             </>
           )}

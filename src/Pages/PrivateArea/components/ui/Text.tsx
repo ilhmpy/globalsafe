@@ -12,15 +12,17 @@ type Props = {
   grey?: boolean;
   black?: boolean;
   error?: boolean;
+  center?: boolean;
+  detail?: boolean;
+  phoneFWB?: boolean;
+  publish?: boolean;
   smHidden?: boolean;
   sizeMobile?: number;
   lHMobile?: number;
   mBMobile?: number;
   weightMobile?: number;
-  center?: boolean;
-  detail?: boolean;
-  phoneFWB?: boolean;
-  publish?: boolean;
+  textInMobileFilter?: boolean;
+  onMobileTitleInExchange?: boolean;
 };
 
 export const Text = styled.p<Props>`
@@ -55,6 +57,26 @@ export const Text = styled.p<Props>`
         font-weight: ${props.weightMobile};
       `};
   }
+  @media ${Device.mobile} {
+    ${({ textInMobileFilter }) => {
+      if (textInMobileFilter) {
+        return `
+          font-weight: 400 !important;
+          font-size: 12px;
+          line-height: 14px;
+          color: #3F3E4E;
+          margin-bottom: 10px;
+        `;
+      }
+    }}
+    ${({ smHidden }) => {
+      if (smHidden) {
+        return `
+          display: none;
+        `;
+      }
+    }}
+  }
   ${({ center }) => {
     if (center) {
       return `
@@ -84,11 +106,6 @@ export const Text = styled.p<Props>`
       `;
     }
   }}
-  @media only screen and (max-device-width: 480px) {
-    margin-bottom: 4px;
-    font-size: 14px;
-    font-weight: 300;
-  }
   ${({ phoneFWB }) => {
     if (phoneFWB) {
       return `
@@ -98,4 +115,16 @@ export const Text = styled.p<Props>`
       `;
     }
   }}
+  @media ${Device.mobile} {
+    ${({ onMobileTitleInExchange }) => {
+      if (onMobileTitleInExchange) {
+        return `
+          font-weight: 300;
+          font-size: 14px;
+          line-height: 20px;
+          margin-bottom: 4px;
+        `;
+      }
+    }}
+  }
 `;

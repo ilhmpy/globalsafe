@@ -48,13 +48,13 @@ export const DepositView: FC = () => {
           }}
         />
       </Container>
-      <Container pTabletNone>
+      <Container pTabletNone pNone>
         <ShowDeposit chosenDepositView={chosenDepositView} />
       </Container>
       <Container>
         <Title small>История начислений</Title>
       </Container>
-      <Container pTabletNone>
+      <Container pTabletNone pNone>
         <TableHistory accrualHistory={accrualHistory} />
       </Container>
     </S.Container>

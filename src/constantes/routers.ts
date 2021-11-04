@@ -19,4 +19,5 @@ export const routers = {
   certificates: '/info/p2p-changes/certificates',
   orderCreate: '/info/p2p-changes/order-create',
   notifications: "/info/notifications",
+  mobileModal: "/mobile/modal/:type"
 };

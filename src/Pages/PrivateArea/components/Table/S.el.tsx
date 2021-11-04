@@ -33,6 +33,11 @@ export const Cell = styled.div`
       display: none;
     }
   }
+
+  @media (max-width: 768px) {
+    font-size: 12px !important;
+    line-height: 14px !important;
+  }
 `;
 
 export const Row = styled.div`
@@ -45,16 +50,26 @@ export const Row = styled.div`
   &:last-child {
     border-bottom: none;
   }
+  @media (max-width: 768px) {
+    margin: 0px 20px;
+  }
   ${Cell} {
     &:nth-child(1) {
       @media (max-width: 1024px) {
         margin-right: 90px;
+      }
+      @media (max-width: 768px) {
+        margin-right: 0px;
       }
       max-width: 270px;
     }
     &:nth-child(2) {
       @media (max-width: 1024px) {
         margin-right: 80px;
+      }
+      @media (max-width: 768px) {
+        margin-right: 0px;
+        max-width: fit-content !important;
       }
       max-width: 230px;
     }
@@ -70,6 +85,9 @@ export const Row = styled.div`
 export const RowHistory = styled(Row)`
   ${Cell} {
     padding: 20px 0;
+    @media (max-width: 768px) {
+      padding: 15px 0;
+    }
     &:nth-child(1) {
       max-width: 69%;
     }
@@ -93,6 +111,9 @@ const header = css`
     font-size: 14px;
     line-height: 16px;
   }
+  @media (max-width: 768px) {
+    padding: 10px 20px;
+  }
 `;
 
 export const Header = styled(Row)`
@@ -104,5 +125,8 @@ export const RowHeader = styled(RowHistory)`
   ${header};
   ${Cell} {
     padding: 10px 0 9px;
+    @media (max-width: 768px) {
+      padding: 3px 0 3px;
+    }
   }
 `;

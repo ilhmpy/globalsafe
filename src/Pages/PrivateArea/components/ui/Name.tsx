@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro';
+import styled from 'styled-components';
 
 export const Name = styled.div`
   font-weight: bold;
@@ -6,4 +6,9 @@ export const Name = styled.div`
   line-height: 28px;
   color: ${(props) => props.theme.v2.text};
   margin-bottom: 10px;
+
+  @media (max-width: 768px) {
+    font-size: 16px;
+    line-height: 20px;
+  }
 `;

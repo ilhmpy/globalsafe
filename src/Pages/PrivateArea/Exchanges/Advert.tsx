@@ -16,8 +16,8 @@ import { PaymentMethods } from './components/modals/PaymentMethods';
 import { Balance } from '../../../types/balance';
 import { FiatKind } from '../../../types/fiat';
 import { getMyRating } from '../utils';
- 
-// TODO: Update Load more Functional.
+import { AdvertFiltersMobile } from './components/modals/AdvertFiltersMobile';
+  
 export const Advert = () => {
   const history = useHistory();
   const { hubConnection, account } = useContext(AppContext);
@@ -34,7 +34,9 @@ export const Advert = () => {
   const [showPaymentMethodsModal, setShowPaymentMethodsModal] = useState(false);
   const [selectedPaymentMethods, setSelectedPaymentMethods] = useState<number[]>([]);
   const [acceptedPaymentMethods, setAcceptedPaymentMethods] = useState<number[]>([]);
- 
+
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
+  
   const [totalCount, setTotalCount] = useState(0);
   const [skip, setSkip] = useState(0);
 
@@ -136,6 +138,12 @@ export const Advert = () => {
     setAcceptedPaymentMethods([...selectedPaymentMethods]);
     setShowPaymentMethodsModal(false);
   };
+
+  const handleAcceptAllFilters = () => {
+    handleAcceptPair();
+    handleAcceptRate();
+    handleAcceptPaymentMethods();
+  }
 
   const resetFilters = () => {
     setSelectedPair(null);
@@ -276,31 +284,31 @@ export const Advert = () => {
             </Text>
           </S.SubHeader>
 
-        <S.Filters>
-          <FilterButton 
-            smHalfWidth
-            active={!listingMyOrders}
-            onClick={() => setListingMyOrders(false)}
-            switchLeft
-          >
-            Все ордеры
-          </FilterButton>
-          <FilterButton
-            smHalfWidth
-            active={listingMyOrders}
-            onClick={() => setListingMyOrders(true)}
-            switchRight
-          >
-            Мои ордеры
-          </FilterButton>
-        </S.Filters>
+          <S.Filters>
+            <FilterButton 
+              smHalfWidth
+              active={!listingMyOrders}
+              onClick={() => setListingMyOrders(false)}
+              switchLeft
+            >
+              Все ордеры
+            </FilterButton>
+            <FilterButton
+              smHalfWidth
+              active={listingMyOrders}
+              onClick={() => setListingMyOrders(true)}
+              switchRight
+            >
+              Мои ордеры
+            </FilterButton>
+          </S.Filters>
 
         {/* Show only on Mobile */}  
         <S.Filters hidden smVisible>
           <FilterButton
             wFull
             active={false}
-            onClick={() => console.log('toogle drawer')}
+            onClick={() => setShowMobileFilters(true)}
           >
             Фильтры (3)
           </FilterButton>
@@ -370,6 +378,28 @@ export const Advert = () => {
           }
         </S.Filters>
 
+        <AdvertFiltersMobile
+          open={showMobileFilters}
+          onClose={() => setShowMobileFilters(false)}
+          onAccept={handleAcceptAllFilters}
+          onResetFilters={resetFilters}
+          activeType={activeType}
+          setActiveType={setActiveType}
+          
+          selectedRate={selectedRate}
+          setSelectedRate={setSelectedRate}
+          rates={ratesList}
+
+          selectedBalanceKind={selectedBalanceKind}
+          setSelectedBalanceKind={setSelectedBalanceKind}
+          selectedFiatKind={selectedFiatKind}
+          setSelectedFiatKind={setSelectedFiatKind}
+
+          selectedPaymentMethods={selectedPaymentMethods}
+          setSelectedPaymentMethods={setSelectedPaymentMethods}
+          methodsList={paymentMethodsKinds}
+        />
+
         <CurrencyPair
           open={showCurrencyPairModal}
           onClose={() => setShowCurrenctPairModal(false)}
@@ -406,4 +436,4 @@ export const Advert = () => {
         </S.ButtonWrap>}
     </div>
   );
-};
+}; 

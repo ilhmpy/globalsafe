@@ -11,6 +11,7 @@ interface TitleProps {
   heading3?: boolean;
   fS?: number;
   fW?: number;
+  onMobileTitleInExchange?: boolean;
 }
 
 const Heading2 = css`
@@ -33,10 +34,10 @@ export const Title = styled.h3<TitleProps>`
   font-weight: bold;
   margin-bottom: ${(props) => (props.mB !== undefined ? `${props.mB}px` : '20px')};
   color: ${(props) => props.theme.v2.text};
-  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+  @media ${Device.tablet} {
     font-size: 24px;
   }
-  @media only screen and (max-device-width: 480px) {
+  @media ${Device.mobile} {
     font-size: 14px;
     font-weight: 500;
   }
@@ -82,5 +83,12 @@ export const Title = styled.h3<TitleProps>`
       css`
         margin-bottom: ${props.mbMobile}px;
       `};
+    ${({ onMobileTitleInExchange }) => {
+      if (onMobileTitleInExchange) {
+        return `
+          line-height: 20px;
+        `;
+      }
+    }}
   } ;
 `;

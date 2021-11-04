@@ -26,7 +26,6 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
   const { account } = useContext(AppContext);
   const { screen } = window;
 
-
   const handleNavigateToExchange = (id: string) => {
     history.replace(`/info/p2p-changes/${id}`);
   };

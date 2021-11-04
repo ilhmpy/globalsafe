@@ -1,6 +1,6 @@
 import React, { FC, useContext, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-
+ 
 import { Container } from '../../../components/UI/Container';
 import { Back } from '../components/Back';
 import { Title } from '../components/ui/Title';
@@ -99,7 +99,7 @@ export const SingleOrderDetails: FC = () => {
   }, [hubConnection]);
 
   if(!currentOrder || !currentOrderType) {
-    return null;
+    return null; 
   };
 
   return (

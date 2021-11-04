@@ -1,5 +1,6 @@
 import { ChangeEvent, FC, KeyboardEventHandler } from 'react';
 import styled from 'styled-components';
+import { Device } from '../../Pages/PrivateArea/consts';
 
 interface IProps {
   placeholder?: string;
@@ -50,7 +51,10 @@ export const InputWrapper = styled.div`
   position: relative;
   @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
     max-width: 200px;
-  }
+  };
+  @media ${Device.mobile} {
+    max-width: 100%;
+  };
 `;
 
 export const InputUI = styled.input`

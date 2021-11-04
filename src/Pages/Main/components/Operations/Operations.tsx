@@ -28,25 +28,25 @@ export const Operations = () => {
       hubConnection.on('OperationNotification', cb);
       if (screen.width > 480) {
         hubConnection
-        .invoke<RootOperations>('GetOperationsNotifications', [2, 4, 5, 6, 7, 8], 10, 10)
-        .then((res) => {
-          !clean && setNotifyList(res.collection);
-        })
-        .catch((e) => console.log(e));
+          .invoke<RootOperations>('GetOperationsNotifications', [2, 4, 5, 6, 7, 8], 10, 10)
+          .then((res) => {
+            !clean && setNotifyList(res.collection);
+          })
+          .catch((e) => console.log(e));
       } else {
         hubConnection
-        .invoke<RootOperations>('GetOperationsNotifications', [1, 2, 3, 4, 5], 5, 5)
-        .then((res) => {
-          !clean && setNotifyList(res.collection);
-        })
-        .catch((e) => console.log(e));
+          .invoke<RootOperations>('GetOperationsNotifications', [1, 2, 3, 4, 5], 5, 5)
+          .then((res) => {
+            !clean && setNotifyList(res.collection);
+          })
+          .catch((e) => console.log(e));
       }
     }
     return () => {
       clean = true;
       hubConnection?.off('OperationNotification', cb);
     };
-  };
+  }
 
   useEffect(() => {
     req();
@@ -100,7 +100,7 @@ export const Operations = () => {
   useEffect(() => {
     setInterval(() => {
       req();
-    }, 300000)
+    }, 300000);
   }, []);
 
   return (
@@ -108,14 +108,18 @@ export const Operations = () => {
       {notifyList.length > 0 ? (
         <>
           <Container page>
-              <H2 mb>{t('operation.last')}</H2>
-              <Description>{t("operations2.desc")}</Description>
+            <H2 mb>{t('operation.last')}</H2>
+            <Description>{t('operations2.desc')}</Description>
           </Container>
           <Container pNone>
             <TableHead>
-              <TableHeadItem>{screen.width > 480 ? t("operations2.head1") : t("operations2.time")}</TableHeadItem>
-              <TableHeadItem>{screen.width > 480 ? t("operations2.head2") : t("operations2.name")}</TableHeadItem>
-              <TableHeadItem>{t("operations2.head3")}</TableHeadItem>
+              <TableHeadItem>
+                {screen.width > 480 ? t('operations2.head1') : t('operations2.time')}
+              </TableHeadItem>
+              <TableHeadItem>
+                {screen.width > 480 ? t('operations2.head2') : t('operations2.name')}
+              </TableHeadItem>
+              <TableHeadItem>{t('operations2.head3')}</TableHeadItem>
             </TableHead>
             <TableMapBlock>
               {notifyList.map((itm, idx) => (
@@ -123,22 +127,36 @@ export const Operations = () => {
                   <TableInnerItem>
                     {screen.width > 480 ? (
                       <>
-                        {moment(itm.date).format("DD.MM.YYYY")} {t("in")} {moment(itm.date).format("HH:MM")}
+                        {moment(itm.date).format('DD.MM.YYYY')} {t('in')}{' '}
+                        {moment(itm.date).format('HH:MM')}
                       </>
                     ) : (
-                      <>
-                        {moment(itm.date).format("HH:MM")}
-                      </>
+                      <>{moment(itm.date).format('HH:MM')}</>
                     )}
                   </TableInnerItem>
-                  <TableInnerItem><span>{operation(itm.operationKind)} {screen.width > 480 ? ( <> {itm.depositName ? itm.depositName : ""} </> ) : ( <><br /> {itm.depositName ? itm.depositName : ""}</>)}</span></TableInnerItem>
-                  <TableInnerItem>{(itm.amount / 100000).toLocaleString("ru-RU", { maximumFractionDigits: 5 })}</TableInnerItem>
+                  <TableInnerItem>
+                    <span>
+                      {operation(itm.operationKind)}{' '}
+                      {screen.width > 480 ? (
+                        <> {itm.depositName ? itm.depositName : ''} </>
+                      ) : (
+                        <>
+                          <br /> {itm.depositName ? itm.depositName : ''}
+                        </>
+                      )}
+                    </span>
+                  </TableInnerItem>
+                  <TableInnerItem>
+                    {(itm.amount / 100000).toLocaleString('ru-RU', { maximumFractionDigits: 5 })}
+                  </TableInnerItem>
                 </TableMapItem>
               ))}
-           </TableMapBlock>
-         </Container>
-      </>
-      ) : ( "" )}
+            </TableMapBlock>
+          </Container>
+        </>
+      ) : (
+        ''
+      )}
     </>
   );
 };
@@ -287,16 +305,16 @@ const Description = styled.h3`
     max-width: 280px;
     margin-bottom: 10px;
   }
-  
+
   @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
     margin-bottom: 20px;
   }
 `;
 
-const TableHead = styled.div<{ item?: boolean; }>`
+const TableHead = styled.div<{ item?: boolean }>`
   width: 100%;
   height: 60px;
-  background: ${({ theme }) => theme.operations.headBg}; 
+  background: ${({ theme }) => theme.operations.headBg};
   border-top-right-radius: 4px;
   border-top-left-radius: 4px;
   display: flex;
@@ -337,7 +355,7 @@ const TableHeadItem = styled.div`
     &:nth-child(2) {
       max-width: 303px;
     }
-  } 
+  }
 
   @media only screen and (min-device-width: 850px) and (max-device-width: 949px) {
     &:nth-child(1) {
@@ -380,12 +398,12 @@ const TableHeadItem = styled.div`
       max-width: 114px;
     }
   }
-`;  
+`;
 
 const TableMapItem = styled.div`
   width: 100%;
   min-height: 60px;
-  background: ${({ theme }) => theme.operations.ich1}; 
+  background: ${({ theme }) => theme.operations.ich1};
   display: flex;
   align-items: center;
   padding: 0px 0px 0px 40px;
@@ -429,9 +447,8 @@ const TableInnerItem = styled.div`
     &:nth-child(2) {
       max-width: 303px;
     }
-  } 
+  }
 
-  
   @media only screen and (min-device-width: 850px) and (max-device-width: 949px) {
     &:nth-child(1) {
       max-width: 250px;

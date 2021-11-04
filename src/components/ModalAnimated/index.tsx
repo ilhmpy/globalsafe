@@ -1,5 +1,8 @@
 import React, { useRef, FC, ReactNode } from 'react';
 import { animated, useTransition } from 'react-spring';
+import useOnClickOutside from '../../hooks/useOutsideHook';
+import { useIsMobile } from '../../Pages/PrivateArea/utils';
+import { Footer } from '../Footer/Footer';
 import { Portal } from '../Portal/Portal';
 import * as S from './S.el';
 
@@ -11,6 +14,8 @@ type Props = {
 
 export const Modal: FC<Props> = ({ onClose, open, children }) => {
   const myRef = useRef(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
 
   const transitions = useTransition(open, {
     from: {
@@ -34,17 +39,27 @@ export const Modal: FC<Props> = ({ onClose, open, children }) => {
     }
   };
 
+  useOnClickOutside(wrapperRef, () => onClose());
+
+  const customStyles = !isMobile ? {} : {
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '100vh'
+  };
+
   return transitions(
-    (styles, item) =>
+    (styles: any, item) =>
       item && (
         <Portal>
-          <S.ModalContainer>
+          <S.ModalContainer ref={wrapperRef}>
             <S.Center onClick={handleContainerClick}>
-              <animated.div style={styles} ref={myRef}>
+              <animated.div style={{...styles, ...customStyles}} ref={myRef}>
                 <S.Content>
                   <S.Close onClick={onClose} />
                   {children}
                 </S.Content>
+
+                {isMobile && <Footer />}
               </animated.div>
             </S.Center>
           </S.ModalContainer>

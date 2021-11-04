@@ -7,7 +7,7 @@ export const Container = styled.div`
   box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
   border-radius: 4px;
   @media (max-width: 768px) {
-    /* flex-wrap: wrap; */
+    flex-direction: column;
   }
 `;
 
@@ -22,6 +22,9 @@ export const Name = styled.div`
 export const DropdownWrapper = styled.div`
   width: 300px;
   margin-bottom: 20px;
+  @media (max-width: 768px) {
+    width: auto;
+  }
 `;
 
 export const BlockWrapper = styled.div`
