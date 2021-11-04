@@ -1,9 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
+import { SwiperSlide } from 'swiper/react';
 import { Button } from '../../../../components/Button/V2/Button';
 import { AppContext } from '../../../../context/HubContext';
 import { CollectionListDeposits, ListDeposits } from '../../../../types/deposits';
 import { RootList } from '../../../../types/info';
+import { SwiperContainer, SwiperUI } from '../../Deposits/S.elements';
 import * as S from './S.el';
 
 interface ProgramProps {
@@ -15,7 +17,7 @@ export const Program = ({ className = '' }: ProgramProps) => {
   const { hubConnection } = useContext(AppContext);
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   const languale = lang === 'ru' ? 1 : 0;
-
+  const { screen } = window;
   const [depositProgramsList, setDepositProgramsList] = useState<CollectionListDeposits[]>([]);
   const [depositProgramsLoading, setDepositProgramsLoading] = useState(false);
 
@@ -47,17 +49,42 @@ export const Program = ({ className = '' }: ProgramProps) => {
   };
 
   return (
-    <S.CardContainer className={className}>
-      {depositProgramsList.length > 0 &&
-        depositProgramsList.map((program, i) => (
-          <S.Card key={`${program.id}-${i}`}>
-            <S.CardTitle>{program.name}</S.CardTitle>
-            <S.CardDesc dangerouslySetInnerHTML={{ __html: program.description }} />
-            <Button primary onClick={() => handleNavigateToOpen(program.safeId)}>
-              Открыть депозит
-            </Button>
-          </S.Card>
-        ))}
-    </S.CardContainer>
+    <>
+      {screen.width > 768 ? (
+        <S.CardContainer className={className}>
+          {depositProgramsList.length > 0 &&
+            depositProgramsList.map((program, i) => (
+              <S.Card key={`${program.id}-${i}`}>
+                <S.CardTitle>{program.name}</S.CardTitle>
+                <S.CardDesc dangerouslySetInnerHTML={{ __html: program.description }} />
+                <Button primary onClick={() => handleNavigateToOpen(program.safeId)}>
+                  Открыть депозит
+                </Button>
+              </S.Card>
+            ))}
+        </S.CardContainer>
+      ) : (
+        <>
+          <SwiperContainer>
+            <SwiperUI slidesPerView={'auto'} pagination={{ clickable: true, dynamicBullets: true }}>
+              {depositProgramsList &&
+                depositProgramsList.map((program, i) => {
+                  return (
+                    <SwiperSlide key={`${program.id}-${i}`}>
+                      <S.Card>
+                        <S.CardTitle>{program.name}</S.CardTitle>
+                        <S.CardDesc dangerouslySetInnerHTML={{ __html: program.description }} />
+                        <Button primary onClick={() => handleNavigateToOpen(program.safeId)}>
+                          Открыть депозит
+                        </Button>
+                      </S.Card>
+                    </SwiperSlide>
+                  );
+                })}
+            </SwiperUI>
+          </SwiperContainer>
+        </>
+      )}
+    </>
   );
 };

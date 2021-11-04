@@ -31,10 +31,13 @@ import * as Styled from './Styles.elements';
 import { SelectButton } from './components/ui/SelectButton';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, { Navigation, Pagination, A11y } from 'swiper';
+import { countVolumeToShow } from './utils';
+import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 
 export const HeaderBar = () => {
   const { t } = useTranslation();
   const [openConverting, setOpenConverting] = useState<boolean>(false);
+  const { screen } = window;
 
   const [notifications, setNotifications] = useState<Notify[]>([]);
   const [addDeposit, setAddDeposit] = useState<boolean>(false);
@@ -238,20 +241,14 @@ export const HeaderBar = () => {
       if (!lockeds.some((i: any) => i.balanceKind == item.balanceKind)) {
         lockeds.push({
           ...item,
-          volume:
-            item.balanceKind === 1
-              ? volume / 100000
-              : item.balanceKind === 43
-              ? volume / 10000
-              : item.balanceKind === 59
-              ? volume / 100
-              : volume,
+          volume: countVolumeToShow(item.volume, item.balanceKind),
           balanceKind: item.balanceKind,
           locked: true,
         });
       }
     });
-  const balancesArray = balanceList
+
+    const balancesArray = balanceList
     ?.filter((item) => !blackList.includes(item.balanceKind))
     .sort((a, b) => a.balanceKind - b.balanceKind)
     .map((obj) =>
@@ -268,7 +265,7 @@ export const HeaderBar = () => {
   const balanceChips: any[] = [...edit, ...lockeds];
   const balanceFuture =
     depositSelect && [9, 10, 11].includes(depositSelect.priceKind) && depositSelect.priceKind !== 1;
-
+ 
   const copy = (text: string) => {
     createNotify({
       text: t('copy.text'),
@@ -1256,7 +1253,6 @@ const BalanceChipsBlock = styled.div`
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    max-width: min-content;
   }
 `;
 

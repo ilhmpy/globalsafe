@@ -13,7 +13,7 @@ import PageNotFound from './Pages/Tech/PageNotFound';
 import TechWorks from './Pages/Tech/TechWorks';
 import { HistoryOperations } from './Pages/PrivateArea/HistoryOperations';
 import { routers } from './constantes/routers';
-import { MobileModal } from "./Pages/PrivateArea/components/MobileModal/MobileModal";
+import { MobileModal } from './Pages/PrivateArea/components/MobileModal/MobileModal';
 
 declare global {
   interface Window {
@@ -179,9 +179,7 @@ const App: FC = () => {
             <Route path="/register" component={Register} />
             <Route path="/tech" component={TechWorks} />
             <Route path="/404" component={PageNotFound} />
-            {screen.width <= 480 && (
-              <Route path="/mobile/modal" component={MobileModal} />
-            )}
+            {window.screen.width <= 480 && <Route path="/mobile/modal" component={MobileModal} />}
           </Switch>
         </div>
       </Router>

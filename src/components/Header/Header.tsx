@@ -36,6 +36,7 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
   const [open, setOpen] = useState(false);
   const [notify, setNotify] = useState<boolean>(false);
   const [checkeds, setCheckeds] = useState<boolean>(false);
+  const { screen } = window;
 
   const appContext = useContext(AppContext);
   const themeContext = useContext(ThemeContext);

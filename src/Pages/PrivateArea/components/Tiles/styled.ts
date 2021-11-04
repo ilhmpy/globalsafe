@@ -1,6 +1,7 @@
 import styled from 'styled-components';
+import { Container } from '../../../../components/UI/Container';
 
-export const TilesContainer = styled.div`
+export const TilesContainer = styled(Container)`
   display: flex;
   flex-wrap: wrap;
   gap: 20px;

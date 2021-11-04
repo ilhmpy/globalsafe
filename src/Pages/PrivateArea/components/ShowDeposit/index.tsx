@@ -29,6 +29,7 @@ interface IProps {
 export const ShowDeposit: FC<IProps> = ({ chosenDepositView }: IProps) => {
   console.log('chosenDepositView', chosenDepositView);
 
+  const { screen } = window;
   const history = useHistory();
   const { deposit } = chosenDepositView;
   const { hubConnection, depositsFilter } = useContext(AppContext);
@@ -127,21 +128,23 @@ export const ShowDeposit: FC<IProps> = ({ chosenDepositView }: IProps) => {
         <ChipWrap>
           <ProgramDesc>{deposit?.description}</ProgramDesc>
         </ChipWrap>
-        <Button bigSize primary onClick={() => setIsOpenCloseDeposit(true)}>
-          Закрыть депозит
-        </Button>
+        {screen.width > 768 && (
+          <Button bigSize primary onClick={() => setIsOpenCloseDeposit(true)}>
+            Закрыть депозит
+          </Button>
+        )}
       </LeftSide>
       <RightSide>
         <S.Blocks>
           <S.Block>
             <S.BlockItem>
-              <TitleWrap small>
+              <TitleWrap small minBtm>
                 <ProgramDescTitle>Дата открытия депозита:</ProgramDescTitle>
               </TitleWrap>
               <TextValue>{moment(chosenDepositView?.creationDate).format('DD.MM.YYYY')}</TextValue>
             </S.BlockItem>
             <S.BlockItem>
-              <TitleWrap small>
+              <TitleWrap small minBtm>
                 <ProgramDescTitle>Дата закрытия депозита:</ProgramDescTitle>
               </TitleWrap>
               <TextValue>{moment(chosenDepositView?.endDate).format('DD.MM.YYYY')}</TextValue>
@@ -149,7 +152,7 @@ export const ShowDeposit: FC<IProps> = ({ chosenDepositView }: IProps) => {
           </S.Block>
           <S.Block>
             <S.BlockItem>
-              <TitleWrap small>
+              <TitleWrap small minBtm>
                 <ProgramDescTitle>Всего выплачено:</ProgramDescTitle>
               </TitleWrap>
               <TextValue>
@@ -160,7 +163,7 @@ export const ShowDeposit: FC<IProps> = ({ chosenDepositView }: IProps) => {
 
           <S.Block>
             <S.BlockItem>
-              <TitleWrap small>
+              <TitleWrap small minBtm>
                 <ProgramDescTitle>Дата ближайшей выплаты:</ProgramDescTitle>
               </TitleWrap>
               <TextValue>
@@ -176,7 +179,7 @@ export const ShowDeposit: FC<IProps> = ({ chosenDepositView }: IProps) => {
               </TextValue>
             </S.BlockItem>
             <S.BlockItem>
-              <TitleWrap small>
+              <TitleWrap small minBtm>
                 <ProgramDescTitle>Сумма ближайшей выплаты:</ProgramDescTitle>
               </TitleWrap>
               <TextValue>
@@ -184,6 +187,13 @@ export const ShowDeposit: FC<IProps> = ({ chosenDepositView }: IProps) => {
               </TextValue>
             </S.BlockItem>
           </S.Block>
+        </S.Blocks>
+        <S.Blocks pTop>
+          {screen.width <= 768 && (
+            <Button fullWidth bigSize primary onClick={() => setIsOpenCloseDeposit(true)}>
+              Закрыть депозит
+            </Button>
+          )}
         </S.Blocks>
       </RightSide>
     </S.Container>

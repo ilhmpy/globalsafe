@@ -18,4 +18,7 @@ export const Field = styled.input`
   &::placeholder {
     color: rgba(0, 0, 0, 0.4);
   }
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;

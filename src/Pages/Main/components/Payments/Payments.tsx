@@ -11,25 +11,27 @@ import 'swiper/swiper.scss';
 import { ReactComponent as Refresh } from '../../../../assets/svg/refresh.svg';
 import { Button } from '../../../../components/Button/Button';
 import { RadialBar } from '../../../../components/Charts/Test';
-import { Modal } from '../../../../components/Modal/Modal'; 
+import { Modal } from '../../../../components/Modal/Modal';
 import { Input } from '../../../../components/UI/Input';
 import { H2 } from '../../../../components/UI/Heading';
 import { Page } from '../../../../components/UI/Page';
 import { AppContext } from '../../../../context/HubContext';
 import { Card } from '../../../../globalStyles';
-import { Container } from "../../../../components/UI/Container";
+import { Container } from '../../../../components/UI/Container';
 import { Pokedex, RootPayDeposit } from '../../../../types/payouts';
 import { ModalBlock, ModalTitle } from '../Tariffs/Tariffs.elements';
-import { ReactComponent as Reload } from "../../../../assets/svg/reload.svg";
+import { ReactComponent as Reload } from '../../../../assets/svg/reload.svg';
 import { AnyMxRecord } from 'dns';
- 
+
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
 export const Payments: FC = () => {
-  const [statsDeposit, setStatsDeposit] = useState<RootPayDeposit[]>([]); 
+  const [statsDeposit, setStatsDeposit] = useState<RootPayDeposit[]>([]);
   const [bigArr, setBigArr] = useState<any>([]);
-  const [smallArr, setSmallArr] = useState<any>(
-    [ /*
+  const { screen } = window;
+
+  const [smallArr, setSmallArr] = useState<any>([
+    /*
       [ { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
         { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
         { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
@@ -49,8 +51,7 @@ export const Payments: FC = () => {
         { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
         { deposit: { name: "TEST" }, date: new Date(), procent: 85 }]
         */
-      ]
-  );
+  ]);
   const [loadReset, setLoadReset] = useState(false);
   const arrSizeBig = 10;
   const arrSizeMob = 6;
@@ -65,7 +66,7 @@ export const Payments: FC = () => {
   const languale = lang === 'ru' ? 1 : 0;
 
   const stats = useCallback(() => {
-    localStorage.removeItem("last");
+    localStorage.removeItem('last');
     const newStats = statsDeposit.map((i) => {
       const color =
         '#' +
@@ -93,8 +94,6 @@ export const Payments: FC = () => {
     setSmallArr(newArrayMob);
   }, [statsDeposit]);
 
-
-
   useEffect(() => {
     stats();
   }, [stats]);
@@ -120,7 +119,7 @@ export const Payments: FC = () => {
     }
   };
 
-  const [last, setLast] = useState(localStorage.getItem("last") || "");
+  const [last, setLast] = useState(localStorage.getItem('last') || '');
   const [lastTime, setLastTime] = useState<string | null>(null);
   const [timeInterval, setTimeInterval] = useState<any>();
   const [actualDate, setActualDate] = useState(new Date());
@@ -128,128 +127,139 @@ export const Payments: FC = () => {
   function lastUpdate() {
     stats();
     clearInterval(timeInterval);
-    setTimeInterval(setInterval(() => update(), 60000)); 
+    setTimeInterval(setInterval(() => update(), 60000));
     const date = new Date();
-    const newDate = { time: { hours: date.getHours(), minutes: date.getMinutes() }, date: { day: date.getDate(), month: date.getMonth(), year: date.getFullYear()}};
-    localStorage.setItem("last", JSON.stringify(newDate));
+    const newDate = {
+      time: { hours: date.getHours(), minutes: date.getMinutes() },
+      date: { day: date.getDate(), month: date.getMonth(), year: date.getFullYear() },
+    };
+    localStorage.setItem('last', JSON.stringify(newDate));
     getLastUpdate(newDate);
     const update = () => {
       getLastUpdate(newDate);
     };
-  };
-
-  /*  let time: string; 
-   . if (updateTime.time.minutes == new Date().getMinutes()) {
-      time = moment().fromNow(true);
-    } else {
-      time = moment(
-        new Date(updateTime.date.year, updateTime.date.month, updateTime.date.day, updateTime.time.hours, updateTime.time.minutes))
-        .fromNow(true);
-    };
-    setActualDate(new Date());
-    setLastTime(time);
-    */
+  }
 
   function getLastUpdate(last: any) {
     const updateTime = last;
     const now = new Date();
-    const result: any = { date: { year: null, month: null, day: null, }, time: { hours: null, minutes: null }};
+    const result: any = {
+      date: { year: null, month: null, day: null },
+      time: { hours: null, minutes: null },
+    };
     result.date.year = now.getFullYear() - updateTime.date.year;
     result.date.month = now.getMonth() - updateTime.date.month;
     result.date.day = now.getDate() - updateTime.date.day;
     result.time.hours = now.getHours() - updateTime.time.hours;
     result.time.minutes = now.getMinutes() - updateTime.time.minutes;
     if (result.date.year != 0) {
-      setLastTime(result.date.year + " лет");
+      setLastTime(result.date.year + ' лет');
     } else if (result.date.month != 0) {
-      setLastTime(result.date.month + " месяцев");
+      setLastTime(result.date.month + ' месяцев');
     } else if (result.date.day != 0) {
-      setLastTime(result.date.day + " дней");
-    } else if (result.time.hours != 0) {  
-      setLastTime(result.time.hours + " часов");
+      setLastTime(result.date.day + ' дней');
+    } else if (result.time.hours != 0) {
+      setLastTime(result.time.hours + ' часов');
     } else if (result.time.minutes != 0) {
-      setLastTime(result.time.minutes + " минут");
+      setLastTime(result.time.minutes + ' минут');
     } else {
-      setLastTime("несколько секунд");
-    };
-  };
+      setLastTime('несколько секунд');
+    }
+  }
 
   return (
     <>
       {statsDeposit.length ? (
-      <>
-        <Container page pNone mtNone>
+        <>
+          <Container page pNone mtNone>
             <H2 center>{t('payments.currPay')}</H2>
             <WhiteBox>
               <WhiteIntf>
-                <Title>{t("payments2.actual")} {moment(actualDate).format("DD.MM.YYYY")}</Title>
+                <Title>
+                  {t('payments2.actual')} {moment(actualDate).format('DD.MM.YYYY')}
+                </Title>
                 <Title right>
-                  {t("payments2.last")} {lastTime != null ? ( <> {lastTime} {t("payments2.ago")} </> ) : t("payments2.now")} <Reload style={{ cursor: "pointer" }} onClick={() => lastUpdate()} />
-                </Title> 
+                  {t('payments2.last')}{' '}
+                  {lastTime != null ? (
+                    <>
+                      {' '}
+                      {lastTime} {t('payments2.ago')}{' '}
+                    </>
+                  ) : (
+                    t('payments2.now')
+                  )}{' '}
+                  <Reload style={{ cursor: 'pointer' }} onClick={() => lastUpdate()} />
+                </Title>
               </WhiteIntf>
               <WhiteMap>
                 {isMobile ? (
                   <>
-                    <Swiper 
-                      slidesPerView={"auto"} 
+                    <Swiper
+                      slidesPerView={'auto'}
                       pagination={{ clickable: true, dynamicBullets: true }}
                     >
-                        {smallArr.map((i: any, idx: number) => (
-                          <SwiperSlide key={idx}>                                       
-                            <>
-                              {i.map((item: any, idx: any) => (
-                                <WhiteItem key={idx} lastMargin={smallArr && smallArr[0].length}>
-                                  <WhiteItemText>{item.deposit.name}</WhiteItemText>
-                                  <WhiteItemText bold>{(item.procent).toFixed(0)} %</WhiteItemText>
-                                  <WhiteItemText>{moment(item.date).format("DD.MM.YYYY")}</WhiteItemText>
-                                  <WhiteItemLine procent={(item.procent).toFixed(0)} />
-                                </WhiteItem>
-                              ))}
-                            </>
-                          </SwiperSlide>
-                        ))}
+                      {smallArr.map((i: any, idx: number) => (
+                        <SwiperSlide key={idx}>
+                          <>
+                            {i.map((item: any, idx: any) => (
+                              <WhiteItem key={idx} lastMargin={smallArr && smallArr[0].length}>
+                                <WhiteItemText>{item.deposit.name}</WhiteItemText>
+                                <WhiteItemText bold>{item.procent.toFixed(0)} %</WhiteItemText>
+                                <WhiteItemText>
+                                  {moment(item.date).format('DD.MM.YYYY')}
+                                </WhiteItemText>
+                                <WhiteItemLine procent={item.procent.toFixed(0)} />
+                              </WhiteItem>
+                            ))}
+                          </>
+                        </SwiperSlide>
+                      ))}
                     </Swiper>
                   </>
                 ) : (
                   <>
                     {statsDeposit.length ? (
-                        <>
+                      <>
                         {bigArr.map((i: any, idx: any) => {
                           return (
                             <>
                               {i.map((item: any, idx: any) => (
                                 <WhiteItem key={idx}>
                                   <WhiteItemText>{item.deposit.name}</WhiteItemText>
-                                  <WhiteItemText bold>{(item.procent).toFixed(0)} %</WhiteItemText>
-                                  <WhiteItemText>{moment(item.date).format("DD.MM.YYYY")}</WhiteItemText>
-                                  <WhiteItemLine procent={(item.procent).toFixed(0)} />
+                                  <WhiteItemText bold>{item.procent.toFixed(0)} %</WhiteItemText>
+                                  <WhiteItemText>
+                                    {moment(item.date).format('DD.MM.YYYY')}
+                                  </WhiteItemText>
+                                  <WhiteItemLine procent={item.procent.toFixed(0)} />
                                 </WhiteItem>
                               ))}
                             </>
-                          )
-                          })}
-                        </>
-                        ) : ( "" )}
+                          );
+                        })}
                       </>
+                    ) : (
+                      ''
                     )}
-                  </WhiteMap>
-              </WhiteBox>
-            </Container> 
-          </>
-        ) : (
-          ''
-        )}
+                  </>
+                )}
+              </WhiteMap>
+            </WhiteBox>
+          </Container>
+        </>
+      ) : (
+        ''
+      )}
     </>
   );
 };
 
 const WhiteBox = styled.div`
   width: 100%;
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 4px;
-  -webkit-box-shadow: 0px 80px 80px -40px #DCDCE880;
-  -moz-box-shadow: 0px 80px 80px -40px #DCDCE880;
-  box-shadow: 0px 80px 80px -40px #DCDCE880;
+  -webkit-box-shadow: 0px 80px 80px -40px #dcdce880;
+  -moz-box-shadow: 0px 80px 80px -40px #dcdce880;
+  box-shadow: 0px 80px 80px -40px #dcdce880;
   padding: 30px;
   padding-top: 40px;
   padding-bottom: 0px;
@@ -259,7 +269,7 @@ const WhiteBox = styled.div`
     padding-top: 25px;
     padding-bottom: 0px;
   }
-  
+
   @media only screen and (max-device-width: 767px) {
     width: 100%;
     max-width: 100%;
@@ -271,7 +281,7 @@ const WhiteBox = styled.div`
   }
 `;
 
-const Title = styled.div<{ right?: boolean; }>`
+const Title = styled.div<{ right?: boolean }>`
   font-weight: 400;
   font-size: 14px;
   line-height: 20px;
@@ -285,7 +295,7 @@ const Title = styled.div<{ right?: boolean; }>`
       return `
         margin-right: 20px;
       `;
-    };
+    }
   }}
 
   & > svg {
@@ -305,7 +315,7 @@ const WhiteIntf = styled.div`
   justify-content: space-between;
   margin-bottom: 0px;
 
-  @media only screen and (max-device-width: 767px) { 
+  @media only screen and (max-device-width: 767px) {
     flex-direction: column;
   }
 `;
@@ -337,12 +347,12 @@ const WhiteMap = styled.div`
   }
 `;
 
-const WhiteItem = styled.div<{ lastMargin?: number; }>`
+const WhiteItem = styled.div<{ lastMargin?: number }>`
   width: 180px;
   height: 108px;
   min-width: 180px;
   min-height: 108px;
-  background: #F8F7FC;
+  background: #f8f7fc;
   margin-right: 20px;
   border-radius: 4px;
   margin-bottom: 20px;
@@ -386,46 +396,45 @@ const WhiteItem = styled.div<{ lastMargin?: number; }>`
   }
 
   @media only screen and (min-device-width: 410px) and (max-device-width: 480px) {
-    max-width: 200px; 
-    width: 45%;    
-  } 
+    max-width: 200px;
+    width: 45%;
+  }
 `;
 
-const WhiteItemText = styled.div<{ bold?: boolean; }>`
+const WhiteItemText = styled.div<{ bold?: boolean }>`
   color: #000000;
   font-weight: 500;
   font-size: 12px;
   line-height: 14px;
 
   ${({ bold }) => {
-      if (bold) {
-        return `
+    if (bold) {
+      return `
           font-weight: 700;
           color: #3F3E4E;
           font-size: 18px;
           line-height: 24px;
         `;
-      };
-   }}
+    }
+  }}
 `;
 
-const WhiteItemLine = styled.div<{ procent: number | string; }>`
-   width: 100%;
-   background: #DCDCE8;
-   height: 2px;
-   margin-top: 13px;
-   position: relative;
+const WhiteItemLine = styled.div<{ procent: number | string }>`
+  width: 100%;
+  background: #dcdce8;
+  height: 2px;
+  margin-top: 13px;
+  position: relative;
 
-   &::after {
-     display: inline;
-     content: "";
-     background: #0094FF;
-     position: absolute;
-     width: ${({ procent }) => procent}%;
-     height: inherit;
-   }
+  &::after {
+    display: inline;
+    content: '';
+    background: #0094ff;
+    position: absolute;
+    width: ${({ procent }) => procent}%;
+    height: inherit;
+  }
 
-   @media only screen and (max-device-width: 767px) {
-
-   }
+  @media only screen and (max-device-width: 767px) {
+  }
 `;

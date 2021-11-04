@@ -140,12 +140,28 @@ export const DataList = styled.div`
   margin-bottom: 20px;
 `;
 
-export const DataListItem = styled.div<{justifyEnd?: boolean; spaceBetween?: boolean; mb?: number;}>`
+interface DataListItemProps {
+  justifyEnd?: boolean; 
+  spaceBetween?: boolean; 
+  mb?: number; 
+  mbMobile?: number; 
+  mobileColumn?: boolean;
+  mobileAlign?: 'start' | 'end';
+  mobileJustify?: 'start' | 'end';
+}
+export const DataListItem = styled.div<DataListItemProps>`
   width: 100%;
   display: flex;
   align-items: flex-end;
   justify-content: ${props => props.justifyEnd ? 'flex-end' : props.spaceBetween ? 'space-between' : 'flex-start'};
   margin-bottom: ${props => props.mb ? props.mb : 10}px;
+
+  @media ${Device.mobile} {
+    ${props => props.mbMobile !== undefined && css`margin-bottom: ${props.mbMobile}px`};
+    flex-direction: ${props => props.mobileColumn ? 'column' : 'row'};
+    align-items: ${props => props.mobileAlign === 'start' ? 'flex-start' : 'flex-end'};
+    justify-content: ${props => props.mobileJustify === 'start' ? 'flex-start' : 'flex-end'};
+  };
 `;
 
 export const ListItemDivider = styled.div`

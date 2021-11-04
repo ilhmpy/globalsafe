@@ -116,7 +116,7 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
     } catch (err) {
       console.log(err);
     }
-};
+  };
 
 
 
@@ -152,7 +152,7 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
         setShowDeleteErrorModal(true);
       }
     }
-  }
+  };
 
   return (
     <S.Container>
