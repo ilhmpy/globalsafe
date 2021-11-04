@@ -28,6 +28,8 @@ SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 export const Payments: FC = () => {
   const [statsDeposit, setStatsDeposit] = useState<RootPayDeposit[]>([]); 
   const [bigArr, setBigArr] = useState<any>([]);
+  const { screen } = window;
+
   const [smallArr, setSmallArr] = useState<any>(
     [ /*
       [ { deposit: { name: "TEST" }, date: new Date(), procent: 85 },

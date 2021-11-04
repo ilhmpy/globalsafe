@@ -24,6 +24,7 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({ exchanges, load
   const history = useHistory();
   const [selectedOption, setSelectedOption] = useState<string | null>('Все валюты предложения');
   const { account } = useContext(AppContext);
+  const { screen } = window;
 
 
   const handleNavigateToExchange = (id: string) => {

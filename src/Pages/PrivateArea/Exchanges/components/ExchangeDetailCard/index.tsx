@@ -53,6 +53,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
 }: DetailCardProps) => {
   const history = useHistory();
   const { account, hubConnection } = useContext(AppContext);
+  const { screen } = window;
 
   const [feedbackValue, setFeedbackValue] = useState(5);
   const [totalExchanges, setTotalExchanges] = useState<any>();
@@ -124,7 +125,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
       cancel = true;
       hubConnection?.off("BuyOrderVolumeChanged", volumeChanged);
     };  
-  }), [hubConnection], exchange;
+  }, [hubConnection, exchange]);
 
   useEffect(() => {
     let cancel = false;

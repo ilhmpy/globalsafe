@@ -332,7 +332,6 @@ export const TestInput: FC<TestInputProps> = ({ label, openDate, setOpenDate }: 
                 const fromSplitted = arr[0].split('.');
                 const toSplitted = arr.length === 2 ? arr[1].split('.') : '';
                 const validValue = e.target.value.replace(/[^0-9\-\.]/gi, '');
-                6;
 
                 setInputString(validValue);
 
@@ -489,7 +488,6 @@ export const TestInputAnalitic: FC<TestInputAnaliticProps> = ({
                 const fromSplitted = arr[0].split('.');
                 const toSplitted = arr.length === 2 ? arr[1].split('.') : '';
                 const validValue = e.target.value.replace(/[^0-9\-\.]/gi, '');
-                6;
 
                 setInputString(validValue);
 

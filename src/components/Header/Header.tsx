@@ -47,7 +47,8 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
   const history = useHistory();
   const location = useLocation();
   const { t, i18n } = useTranslation();
-
+  const { screen } = window;
+  
   function handleClick() {
     if (user === null) return;
     if (!user) {

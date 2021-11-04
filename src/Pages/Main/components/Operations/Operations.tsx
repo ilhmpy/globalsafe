@@ -17,6 +17,7 @@ export const Operations = () => {
   const appContext = useContext(AppContext);
   const [maxItems, setMaxItems] = useState(4);
   const hubConnection = appContext.hubConnection;
+  const { screen } = window;
 
   function req() {
     let clean = false;

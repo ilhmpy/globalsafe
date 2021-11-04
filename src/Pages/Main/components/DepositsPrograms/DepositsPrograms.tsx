@@ -23,6 +23,7 @@ export const DepositsPrograms = () => {
   const user = appContext.user;
   const history = useHistory();
   const lang = localStorage.getItem("i18nextLng") === "en" ? 0 : 1;
+  const { screen } = window;
 
   useEffect(() => {
     if (hubConnection) {

@@ -95,6 +95,7 @@ export const HeaderBar = () => {
   );
   const [withDrawModal, setWithDrawModal] = useState<boolean>(false);
   const [addDrawModal, setAddDrawModal] = useState<boolean>(false);
+  const { screen } = window;
 
   // Get Balance Kinds List as an Array
   const balancesList = useMemo(() => {
