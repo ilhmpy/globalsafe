@@ -29,7 +29,7 @@ import {
 import { Balance } from '../../../types/balance';
 import moment from 'moment';
 import { BalanceKind } from '../../../enums/balanceKind';
-import { SwiperContainer, SwiperUI } from './S.elements';
+import { SwiperContainer, SwiperUI, ProgressBar, Bar } from './S.elements';
 
 export const Deposits: FC = () => {
   const { screen } = window;
@@ -170,12 +170,15 @@ export const Deposits: FC = () => {
     }
   };
 
-  // if(getDepositsLoading) {
-  //   return (
-  //     <Loading />
-  //   )
-  // };
+  const getPercentage = (creationDate: Date, endDate: Date) => {
+    const now = moment(new Date());
+    const percent =
+      (moment.duration(now.diff(creationDate)).asDays() * 100) /
+      moment.duration(moment(creationDate).diff(endDate)).asDays();
 
+    return Math.abs(Math.round(percent));
+  };
+  
   if (!getDepositsLoading && depositsList.length === 0) {
     // history.replace(routers.depositsProgram);
     return (
@@ -188,7 +191,6 @@ export const Deposits: FC = () => {
       </S.Container>
     );
   }
-
   return (
     <S.Container>
       <Container>
@@ -256,6 +258,9 @@ export const Deposits: FC = () => {
                           )} - ${moment(new Date(deposit.endDate)).format(
                             'DD.MM.YYYY'
                           )}`}</DateRange>
+                          <ProgressBar>
+                            <Bar percent={getPercentage(deposit.creationDate, deposit.endDate)} />
+                          </ProgressBar>
                         </TopSide>
                         <BottomSide>
                           <div>

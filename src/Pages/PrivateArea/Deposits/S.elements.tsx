@@ -58,3 +58,23 @@ export const SwiperContainer = styled(MainContainer)`
     bottom: 0px;
   }
 `;
+
+export const ProgressBar = styled.div`
+  position: absolute;
+  width: 240px;
+  height: 4px;
+  left: 20px;
+  top: 98%;
+  background: #ebebf2;
+  border: 1px solid #ffffff;
+  border-radius: 2px;
+`;
+
+export const Bar = styled.p<{ percent?: number }>`
+  position: relative;
+  max-width: 100%;
+  height: 2px;
+  width: ${(props) => (props.percent ? props.percent : 100)}%;
+  background: #0094ff;
+  border-radius: 2px;
+`;

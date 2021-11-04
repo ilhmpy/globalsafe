@@ -1,6 +1,6 @@
 import moment from 'moment';
 import 'moment/locale/ru';
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState, FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavLink, useHistory } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
@@ -33,8 +33,10 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, { Navigation, Pagination, A11y } from 'swiper';
 import { countVolumeToShow } from './utils';
 import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
+import 'swiper/swiper-bundle.css';
+import 'swiper/swiper.scss'; // core Swiper
 
-export const HeaderBar = () => {
+export const HeaderBar: FC = () => {
   const { t } = useTranslation();
   const [openConverting, setOpenConverting] = useState<boolean>(false);
   const { screen } = window;
@@ -248,7 +250,7 @@ export const HeaderBar = () => {
       }
     });
 
-    const balancesArray = balanceList
+  const balancesArray = balanceList
     ?.filter((item) => !blackList.includes(item.balanceKind))
     .sort((a, b) => a.balanceKind - b.balanceKind)
     .map((obj) =>
@@ -265,7 +267,7 @@ export const HeaderBar = () => {
   const balanceChips: any[] = [...edit, ...lockeds];
   const balanceFuture =
     depositSelect && [9, 10, 11].includes(depositSelect.priceKind) && depositSelect.priceKind !== 1;
- 
+
   const copy = (text: string) => {
     createNotify({
       text: t('copy.text'),
@@ -855,19 +857,27 @@ export const HeaderBar = () => {
             </TabsBlock>
           ) : (
             <SwiperUI
-              onClick={() => console.log(11)}
-              slidesPerView={4}
-              spaceBetween={20}
+              observer={true}
+              observeParents={true}
+              slidesPerView={'auto'}
               freeMode={true}
               pagination={false}
-              className="mySwiper"
               onSlideChange={(swiperCore) => {
-                const { activeIndex, previousIndex, realIndex } = swiperCore;
+                const { activeIndex, previousIndex, realIndex, a11y } = swiperCore;
+                console.log('balanceChips.map ~ a11y', a11y);
+                console.log('balanceChips.map ~ swiperCore', swiperCore);
+                // a11y?.init();
+                // swiperCore?.a11y?.updateNavigation();
+                // swiperCore.a11y.updatePagination();
                 console.log({ activeIndex, previousIndex, realIndex });
               }}
               // slideToClickedSlide={true}
-
-              onSwiper={(swiper) => swiper.update()}
+              spaceBetween={20}
+              onSwiper={(swiper) => {
+                swiper.update();
+                console.log(111);
+              }}
+              preventClicks={false}
               // navigation={{
               //   nextEl: '.next',
               //   prevEl: '.prev',
@@ -878,6 +888,7 @@ export const HeaderBar = () => {
               //   watchSlidesVisibility={true}
               //   watchSlidesProgress={true}
               onInit={(swiper) => {
+                console.log(222);
                 swiper.navigation.update();
               }}
             >
@@ -1090,17 +1101,34 @@ export const HeaderBar = () => {
 const SwiperUI = styled(Swiper)`
   display: flex;
   align-items: center;
-  gap: 40px;
+
   .swiper-slide-active {
     font-weight: 500;
     opacity: 1;
     border-bottom: 2px solid ${(props) => props.theme.blue};
-    width: auto;
     padding-bottom: 10px;
   }
 
-  & > div > div {
-    width: auto !important;
+  .swiper-slide {
+    width: auto;
+  }
+`;
+
+const TabNavItem = styled(NavLink)`
+  color: ${(props) => props.theme.black};
+  opacity: 0.6;
+  font-size: 14px;
+  line-height: 16px;
+  padding-bottom: 10px;
+
+  &.active {
+    font-weight: 500;
+    opacity: 1;
+
+    border-bottom: 2px solid ${(props) => props.theme.blue};
+  }
+  & > div {
+    white-space: nowrap;
   }
 `;
 
@@ -1260,22 +1288,4 @@ const TabsBlock = styled.div`
   display: flex;
   align-items: center;
   gap: 40px;
-`;
-
-const TabNavItem = styled(NavLink)`
-  color: ${(props) => props.theme.black};
-  opacity: 0.6;
-  font-size: 14px;
-  line-height: 16px;
-  padding-bottom: 10px;
-
-  &.active {
-    font-weight: 500;
-    opacity: 1;
-
-    border-bottom: 2px solid ${(props) => props.theme.blue};
-  }
-  & > div {
-    white-space: nowrap;
-  }
 `;
