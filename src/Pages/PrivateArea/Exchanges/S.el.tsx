@@ -16,7 +16,7 @@ export const SubHeader = styled.div<SubHeaderProps>`
 
   @media ${Device.mobile} {
     display: ${(props) => (props.mobileHidden ? 'none' : props.mobileVisible ? 'flex' : 'flex')};
-  }
+  } ;
 `;
 
 export const Filters = styled.div<{
@@ -106,14 +106,14 @@ export const Container = styled.div`
   margin-bottom: 40px;
   @media ${Device.mobile} {
     margin-bottom: 20px;
-  }
+  } ;
 `;
 
 export const TitleContainer = styled.div`
   margin-bottom: 20px;
   @media ${Device.mobile} {
     margin-bottom: 10px;
-  }
+  } ;
 `;
 
 export const FilterButton = styled(BaseFilterButton)`
@@ -147,7 +147,7 @@ export const AdvertTypeText = styled.p`
 
   @media ${Device.mobile} {
     display: block;
-  }
+  } ;
 `;
 
 export const Button = styled.button<{ newItems: boolean }>`
