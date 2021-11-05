@@ -1,6 +1,6 @@
 import moment from 'moment';
 import 'moment/locale/ru';
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState, FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavLink, useHistory } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
@@ -34,7 +34,7 @@ import SwiperCore, { Navigation, Pagination, A11y } from 'swiper';
 import { countVolumeToShow } from './utils';
 import useWindowSize from '../../hooks/useWindowSize';
 
-export const HeaderBar = () => {
+export const HeaderBar: FC = () => {
   const { t } = useTranslation();
   const [openConverting, setOpenConverting] = useState<boolean>(false);
   const screen = useWindowSize();
@@ -98,6 +98,7 @@ export const HeaderBar = () => {
   );
   const [withDrawModal, setWithDrawModal] = useState<boolean>(false);
   const [addDrawModal, setAddDrawModal] = useState<boolean>(false);
+  const [clickedIndex, setClickedIndex] = useState<number>(0);
 
   // Get Balance Kinds List as an Array
   const balancesList = useMemo(() => {
@@ -855,19 +856,54 @@ export const HeaderBar = () => {
             </TabsBlock>
           ) : (
             <SwiperUI
-              onClick={() => console.log(11)}
-              slidesPerView={4}
-              spaceBetween={20}
+              onClick={(swiper: any) => {
+                // console.log('balanceChips.map ~ swiper, event', swiper);
+
+                console.log(swiper.clickedIndex);
+                setClickedIndex(swiper.clickedIndex);
+                console.log(swiper.a11y);
+                // swiper.a11y.updateNavigation();
+                // swiper.a11y.enableEl(swiper.$el);
+                // swiper.a11y.addElControls();
+                // swiper.a11y.addElId();
+                // swiper.a11y.addElLabel();
+                // swiper.a11y.addElLive();
+                // swiper.a11y.addElRole();
+                // swiper.a11y.addElRoleDescription();
+                // swiper.a11y.destroy();
+                // swiper.a11y.disableEl();
+                // swiper.a11y.enableEl();
+                // swiper.a11y.getRandomNumber();
+                // swiper.a11y.init();
+                // swiper.a11y.liveRegion();
+                swiper.a11y.makeElFocusable(swiper.$el);
+                // swiper.a11y.makeElNotFocusable();
+                swiper.a11y.notify();
+                // swiper.a11y.onEnterOrSpaceKey();
+                swiper.a11y.updateNavigation();
+                swiper.a11y.updatePagination();
+              }}
+              observer={true}
+              observeParents={true}
+              slidesPerView={'auto'}
               freeMode={true}
               pagination={false}
-              className="mySwiper"
               onSlideChange={(swiperCore) => {
-                const { activeIndex, previousIndex, realIndex } = swiperCore;
+                const { activeIndex, previousIndex, realIndex, a11y } = swiperCore;
+                console.log('balanceChips.map ~ a11y', a11y);
+                console.log('balanceChips.map ~ swiperCore', swiperCore);
+                // a11y?.init();
+                // swiperCore?.a11y?.updateNavigation();
+                // swiperCore.a11y.updatePagination();
                 console.log({ activeIndex, previousIndex, realIndex });
               }}
               // slideToClickedSlide={true}
-
-              onSwiper={(swiper) => swiper.update()}
+              spaceBetween={20}
+              onSwiper={(swiper) => {
+                swiper.update();
+                console.log(111);
+              }}
+              preventClicks={false}
               // navigation={{
               //   nextEl: '.next',
               //   prevEl: '.prev',
@@ -878,34 +914,45 @@ export const HeaderBar = () => {
               //   watchSlidesVisibility={true}
               //   watchSlidesProgress={true}
               onInit={(swiper) => {
+                console.log(222);
                 swiper.navigation.update();
               }}
             >
-              <SwiperSlide>
-                <TabNavItem to={routers.deposits} exact>
-                  <div>Мои депозиты</div>
-                </TabNavItem>
-              </SwiperSlide>
-              <SwiperSlide>
-                <TabNavItem to={routers.p2pchanges}>
-                  <div>P2P обмены</div>
-                </TabNavItem>
-              </SwiperSlide>
-              <SwiperSlide>
-                <TabNavItem to={routers.operations}>
-                  <div>История операций</div>
-                </TabNavItem>
-              </SwiperSlide>
-              <SwiperSlide>
-                <TabNavItem to={routers.notifications}>
-                  <div>Уведомления</div>
-                </TabNavItem>
-              </SwiperSlide>
-              <SwiperSlide>
-                <TabNavItem to={routers.settings}>
-                  <div>Настройки</div>
-                </TabNavItem>
-              </SwiperSlide>
+              <SlideContainer>
+                <SwiperSlide>
+                  <TabNavItem to={routers.deposits} exact>
+                    <div>Мои депозиты</div>
+                  </TabNavItem>
+                </SwiperSlide>
+              </SlideContainer>
+              <SlideContainer>
+                <SwiperSlide>
+                  <TabNavItem to={routers.p2pchanges}>
+                    <div>P2P обмены</div>
+                  </TabNavItem>
+                </SwiperSlide>
+              </SlideContainer>
+              <SlideContainer>
+                <SwiperSlide>
+                  <TabNavItem to={routers.operations}>
+                    <div>История операций</div>
+                  </TabNavItem>
+                </SwiperSlide>
+              </SlideContainer>
+              <SlideContainer>
+                <SwiperSlide>
+                  <TabNavItem to={routers.notifications}>
+                    <div>Уведомления</div>
+                  </TabNavItem>
+                </SwiperSlide>
+              </SlideContainer>
+              <SlideContainer>
+                <SwiperSlide>
+                  <TabNavItem to={routers.settings}>
+                    <div>Настройки</div>
+                  </TabNavItem>
+                </SwiperSlide>
+              </SlideContainer>
             </SwiperUI>
           )}
         </PanelCard>
@@ -1090,17 +1137,52 @@ export const HeaderBar = () => {
 const SwiperUI = styled(Swiper)`
   display: flex;
   align-items: center;
-  gap: 40px;
+
   .swiper-slide-active {
-    font-weight: 500;
+    /* font-weight: 500;
     opacity: 1;
     border-bottom: 2px solid ${(props) => props.theme.blue};
-    width: auto;
-    padding-bottom: 10px;
+    padding-bottom: 10px; */
   }
 
-  & > div > div {
-    width: auto !important;
+  .swiper-slide {
+    width: auto;
+  }
+`;
+
+const SwiperSlideUI = styled(SwiperSlide)<{ active?: boolean }>`
+  /* border-bottom: ${(props) => (props.active ? '2px solid #0094FF' : '')}; */
+  /* font-weight: 500; */
+  /* opacity: 1; */
+  /* border-bottom: 2px solid ${(props) => props.theme.blue}; */
+  /* padding-bottom: 10px; */
+  /* margin-right: 20px; */
+`;
+
+const SlideContainer = styled.p`
+  /* font-weight: 500;
+  opacity: 1;
+  border-bottom: 2px solid ${(props) => props.theme.blue};
+  padding-bottom: 10px;
+
+  background-color: red; */
+`;
+
+const TabNavItem = styled(NavLink)`
+  color: ${(props) => props.theme.black};
+  opacity: 0.6;
+  font-size: 14px;
+  line-height: 16px;
+  padding-bottom: 10px;
+
+  &.active {
+    font-weight: 500;
+    opacity: 1;
+
+    border-bottom: 2px solid ${(props) => props.theme.blue};
+  }
+  & > div {
+    white-space: nowrap;
   }
 `;
 
@@ -1260,22 +1342,4 @@ const TabsBlock = styled.div`
   display: flex;
   align-items: center;
   gap: 40px;
-`;
-
-const TabNavItem = styled(NavLink)`
-  color: ${(props) => props.theme.black};
-  opacity: 0.6;
-  font-size: 14px;
-  line-height: 16px;
-  padding-bottom: 10px;
-
-  &.active {
-    font-weight: 500;
-    opacity: 1;
-
-    border-bottom: 2px solid ${(props) => props.theme.blue};
-  }
-  & > div {
-    white-space: nowrap;
-  }
 `;

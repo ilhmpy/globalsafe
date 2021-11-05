@@ -102,7 +102,6 @@ export const Advert = () => {
         0,
         10
       );
-      console.log('GetBuyOrders', res);
       setOrdersList(res.collection);
       setTotalCount(res.totalRecords);
       setSkip((s) => s + 10);
