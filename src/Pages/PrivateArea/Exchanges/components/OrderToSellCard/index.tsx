@@ -131,7 +131,7 @@ export const OrderToSellCard: FC = () => {
       console.log(err);
     }
   };
-  
+
   const getUserPaymentMethods = async () => {
     if (currencyToChange) {
       try {
@@ -269,9 +269,9 @@ export const OrderToSellCard: FC = () => {
     if (e.target.value === '' || pattern.test(e.target.value)) {
       const dotsCount = e.target.value.split('.').length - 1;
 
-      if(dotsCount > 1) {
-          return;
-      };
+      if (dotsCount > 1) {
+        return;
+      }
       // Clear Max limit
       setOrderMinSumm('');
       setOrderMaxSumm('');
@@ -381,8 +381,8 @@ export const OrderToSellCard: FC = () => {
     const cbOrderCreated = (order: ViewSellOrderModel) => {
       console.log('__SOCKET__cbOrderCreated::', order);
       if (order && order.userSafeId === userSafeId) {
-        if(dailyLimitRest) {
-          setDailyLimitRest(dailyLimitRest - Number(orderSumm))
+        if (dailyLimitRest) {
+          setDailyLimitRest(dailyLimitRest - Number(orderSumm));
         }
         // handleGetOrdersVolume();
 
@@ -397,7 +397,15 @@ export const OrderToSellCard: FC = () => {
     return () => {
       hubConnection?.off('SellOrderCreated', cbOrderCreated);
     };
-  }, [hubConnection, userSafeId, currencyToSell, currencyToChange, userActiveCertificate, dailyLimitRest, orderSumm]);
+  }, [
+    hubConnection,
+    userSafeId,
+    currencyToSell,
+    currencyToChange,
+    userActiveCertificate,
+    dailyLimitRest,
+    orderSumm,
+  ]);
 
   return (
     <S.Container>
@@ -419,7 +427,7 @@ export const OrderToSellCard: FC = () => {
             {userRating}
           </Title>
         </S.BlockWrapper>
- 
+
         {!isMobile && currencyToSell ? (
           dailyLimitRest !== undefined ? (
             <S.BlockWrapper>

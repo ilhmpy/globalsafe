@@ -41,10 +41,10 @@ export const Filters = styled.div<{
         display: flex;
       `};
   }
-  ${(props) => {
-    if (props.hidden) {
+  ${({ hidden }) => {
+    if (hidden != undefined) {
       return `
-        display: none;
+        display: ${hidden ? 'none' : 'flex'};
       `;
     }
   }}
@@ -62,10 +62,10 @@ export const Filters = styled.div<{
         display: flex;
       `};
   }
-  ${(props) => {
-    if (props.when) {
+  ${({ when }) => {
+    if (when !== undefined) {
       return `
-        display: flex;
+        display: ${when ? 'flex' : 'none'};
       `;
     }
   }}
@@ -120,8 +120,8 @@ export const FilterButton = styled(BaseFilterButton)`
   margin: 0 10px 0 0;
 `;
 
-export const FiltersResetModal = styled.div<{ show?: boolean }>`
-  display: ${(props) => (props.show ? 'block' : 'none')};
+export const FiltersResetModal = styled.div<{ show: boolean }>`
+  display: ${({ show }) => (show ? 'block' : 'none')};
   position: absolute;
   right: 10px;
   top: 28px;
@@ -150,7 +150,7 @@ export const AdvertTypeText = styled.p`
   } ;
 `;
 
-export const Button = styled.button<{ newItems?: boolean }>`
+export const Button = styled.button<{ newItems: boolean }>`
   width: 134px;
   height: 38px;
   background: #515172;
@@ -163,7 +163,7 @@ export const Button = styled.button<{ newItems?: boolean }>`
   display: block;
   cursor: pointer;
   font-weight: 500;
-  display: ${(props) => (props.newItems ? 'block' : 'none')};
+  display: ${({ newItems }) => (newItems ? 'block' : 'none')};
   @media only screen and (max-device-width: 480px) {
     margin-top: 20px;
     margin-bottom: 40px;

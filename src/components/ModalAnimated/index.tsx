@@ -1,7 +1,6 @@
 import React, { useRef, FC, ReactNode } from 'react';
 import { animated, useTransition } from 'react-spring';
 import useOnClickOutside from '../../hooks/useOutsideHook';
-import useWindowSize from '../../hooks/useWindowSize';
 import { useIsMobile } from '../../Pages/PrivateArea/utils';
 import { Footer } from '../Footer/Footer';
 import { Portal } from '../Portal/Portal';
@@ -16,7 +15,7 @@ type Props = {
 export const Modal: FC<Props> = ({ onClose, open, children }) => {
   const myRef = useRef(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const isMobile = useWindowSize();
+  const isMobile = useIsMobile();
 
   const transitions = useTransition(open, {
     from: {
@@ -42,13 +41,11 @@ export const Modal: FC<Props> = ({ onClose, open, children }) => {
 
   useOnClickOutside(wrapperRef, () => onClose());
 
-  const customStyles = !(isMobile < 769)
-    ? {}
-    : {
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '100vh',
-      };
+  const customStyles = !isMobile ? {} : {
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '100vh'
+  };
 
   return transitions(
     (styles: any, item) =>
@@ -56,13 +53,13 @@ export const Modal: FC<Props> = ({ onClose, open, children }) => {
         <Portal>
           <S.ModalContainer ref={wrapperRef}>
             <S.Center onClick={handleContainerClick}>
-              <animated.div style={{ ...styles, ...customStyles }} ref={myRef}>
+              <animated.div style={{...styles, ...customStyles}} ref={myRef}>
                 <S.Content>
                   <S.Close onClick={onClose} />
                   {children}
                 </S.Content>
 
-                {isMobile < 769 && <Footer />}
+                {isMobile && <Footer />}
               </animated.div>
             </S.Center>
           </S.ModalContainer>

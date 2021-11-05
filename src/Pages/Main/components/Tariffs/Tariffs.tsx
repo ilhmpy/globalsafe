@@ -1,20 +1,49 @@
-import React, { useState, useRef, useEffect, useContext, FC } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { Container } from '../../../../components/UI/Container';
-import { H2 } from '../../../../components/UI/Heading';
+import { H2 } from '../../../../components/UI/Heading'; 
+import { UpTitle } from '../../../../components/UI/UpTitle';
 import { Button } from '../../../../components/Button/Button';
+import {
+  BlockTitle,
+  DescContainer,
+  DescContainerInner,
+  BlockContainers,
+  BlockItem,
+  Text,
+  SwiperContainer,
+  ModalBlock,
+  ModalButton,
+  ModalTitle,
+  PartnerProgramBlock,
+  PartnerProgramTitle,
+  PartnerProgramContainer,
+  PartnerProgramData,
+  PartnerProgramHeader,
+  PartnerProgramHeaderItem,
+  PartnerProgramLine,
+  PartnerProgramLineNumber,
+  PartnerProgramLineItem,
+  PartnerProgramPagination,
+  PartnerProgramPaginationItem,
+} from './Tariffs.elements';
+import { Modal } from '../../../../components/Modal/Modal';
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
 import 'swiper/swiper.scss';
 import 'swiper/components/navigation/navigation.scss';
 import 'swiper/components/pagination/pagination.scss';
 import 'swiper/components/scrollbar/scrollbar.scss';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Input } from '../../../../components/UI/Input';
+import { useHistory } from 'react-router-dom';
 import { AppContext } from '../../../../context/HubContext';
 import { ListDeposits, CollectionListDeposits } from '../../../../types/deposits';
 import { useTranslation } from 'react-i18next';
+import { Page } from '../../../../components/UI/Page';
 import styled from 'styled-components';
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
-export const Tariffs: FC = () => {
+export const Tariffs = () => {
   const [isNormalOpen, setIsNormalOpen] = useState(false);
   const [oldLink, setOldLink] = useState('');
   const [link, setLink] = useState('');
@@ -276,10 +305,10 @@ const PartnersItemTitle = styled.div`
     font-weight: 14px;
     line-height: 20px;
     margin-right: 20%;
-  }
+  } 
   @media only screen and (min-device-width: 850px) and (max-device-width: 999px) {
     margin-right: 21%;
-  }
+  } 
   @media only screen and (min-device-width: 1000px) and (max-device-width: 1024px) {
     margin-right: 23%;
   }

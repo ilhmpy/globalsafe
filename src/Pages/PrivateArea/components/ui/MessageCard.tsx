@@ -1,6 +1,7 @@
 import moment from 'moment';
-import React, { FC } from 'react';
+import React from 'react';
 import styled, { css } from 'styled-components';
+import { ReactComponent as ChatTestImage } from '../../../../assets/v2/svg/chat-test-image.svg';
 import { CollectionHistory } from '../../../../types/messages';
 
 interface MessageCardProps {
@@ -10,7 +11,7 @@ interface MessageCardProps {
   onClickImage: (item: string) => void;
 }
 
-export const MessageCard: FC<MessageCardProps> = ({
+export const MessageCard = ({
   own = true,
   image = false,
   body,
@@ -35,7 +36,7 @@ export const MessageCard: FC<MessageCardProps> = ({
   );
 };
 
-const MessageContainer = styled.div<{ own?: boolean }>`
+const MessageContainer = styled.div<{ own: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: ${(props) => (props.own ? 'flex-end' : 'flex-start')};
@@ -62,7 +63,7 @@ const PartnerMessageStyles = css`
   border-radius: 0px 4px 4px 4px;
 `;
 
-const MessageBlock = styled.div<{ own?: boolean; pointer?: boolean }>`
+const MessageBlock = styled.div<{ own: boolean; pointer?: boolean }>`
   max-width: 470px;
   font-weight: 300;
   font-size: 14px;

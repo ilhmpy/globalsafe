@@ -58,8 +58,8 @@ export const Text = styled.p<Props>`
       `};
   }
   @media ${Device.mobile} {
-    ${(props) => {
-      if (props.textInMobileFilter) {
+    ${({ textInMobileFilter }) => {
+      if (textInMobileFilter) {
         return `
           font-weight: 400 !important;
           font-size: 12px;
@@ -69,16 +69,16 @@ export const Text = styled.p<Props>`
         `;
       }
     }}
-    ${(props) => {
-      if (props.smHidden) {
+    ${({ smHidden }) => {
+      if (smHidden) {
         return `
           display: none;
         `;
       }
     }}
   }
-  ${(props) => {
-    if (props.center) {
+  ${({ center }) => {
+    if (center) {
       return `
         text-align: center;
         font-weight: 400;
@@ -89,8 +89,8 @@ export const Text = styled.p<Props>`
       `;
     }
   }}
-  ${(props) => {
-    if (props.detail) {
+  ${({ detail }) => {
+    if (detail) {
       return `
         font-size: 12px;
         font-weight: 300;
@@ -98,16 +98,16 @@ export const Text = styled.p<Props>`
       `;
     }
   }}
-  ${(props) => {
-    if (props.publish) {
+  ${({ publish }) => {
+    if (publish) {
       return `
         margin-bottom: 20px !important;
         font-weight: 400 !important;
       `;
     }
   }}
-  ${(props) => {
-    if (props.phoneFWB) {
+  ${({ phoneFWB }) => {
+    if (phoneFWB) {
       return `
         @media only screen and (max-device-width: 480px) {
           font-weight: 500;
@@ -116,8 +116,8 @@ export const Text = styled.p<Props>`
     }
   }}
   @media ${Device.mobile} {
-    ${(props) => {
-      if (props.onMobileTitleInExchange) {
+    ${({ onMobileTitleInExchange }) => {
+      if (onMobileTitleInExchange) {
         return `
           font-weight: 300;
           font-size: 14px;

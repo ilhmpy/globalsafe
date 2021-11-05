@@ -37,6 +37,7 @@ export const CurrencyPair: FC<Props> = ({
     const list = Object.values(FiatKind).filter((i) => typeof i === 'string');
     return list;
   }, [Balance]);
+
   const bl: any[] = [
     'Na',
     'FUTURE4',
