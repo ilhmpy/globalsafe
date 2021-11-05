@@ -5,6 +5,7 @@ export const TilesContainer = styled(Container)`
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
+  padding: 0;
 `;
 
 export const BottomValue = styled.p`

@@ -7,7 +7,7 @@ import moment from 'moment';
 import 'moment/locale/ru';
 
 type SelectType = {
-  data: any[] | null | undefined | BalanceList[]; 
+  data: any[] | null | undefined | BalanceList[];
   setSwitch: (value: string) => void;
   withoutVolume?: boolean;
 };
@@ -20,63 +20,63 @@ export const Select: FC<SelectType> = ({ data, setSwitch, withoutVolume }: Selec
     setActiveSwitch(!activeSwitch);
   };
 
-    const getSwitch = (e: any) => {
-        hideList();
-        setValue(Balance[e.target.dataset.curr]);
-        setSwitch(Balance[e.target.dataset.curr]);
-    };
+  const getSwitch = (e: any) => {
+    hideList();
+    setValue(Balance[e.target.dataset.curr]);
+    setSwitch(Balance[e.target.dataset.curr]);
+  };
 
-    return (
-      <Field onClick={hideList} rotate={activeSwitch}>
-          <Arrow className="arrow" />
-          {value ? value : ( "Валюта не выбрана" )}
-          <FieldList block={activeSwitch}>
-            <Scrollbars className="pagination">
-                {data && data.map((item, idx) => (
-                    <FieldListItem 
-                        key={idx} 
-                        data-curr={item.balanceKind} 
-                        onClick={getSwitch}
-                    >
-                        {Balance[item.balanceKind]}{!withoutVolume && ` - ${(
-                                item.balanceKind === 1 ? 
-                                Number(item.volume) / 100000 : 
-                                item.balanceKind === 43 ?
-                                Number(item.volume) / 10000 : 
-                                item.balanceKind === 59 ? 
-                                Number(item.volume) / 100 : Number(item.volume)).toLocaleString("ru-RU", { maximumFractionDigits: 5 })}`}
-                    </FieldListItem>
-                ))}
-            </Scrollbars>
-          </FieldList>
-      </Field>
-    );
+  return (
+    <Field onClick={hideList} rotate={activeSwitch}>
+      <Arrow className="arrow" />
+      {value ? value : 'Валюта не выбрана'}
+      <FieldList block={activeSwitch}>
+        <Scrollbars className="pagination">
+          {data &&
+            data.map((item, idx) => (
+              <FieldListItem key={idx} data-curr={item.balanceKind} onClick={getSwitch}>
+                {Balance[item.balanceKind]}
+                {!withoutVolume &&
+                  ` - ${(item.balanceKind === 1
+                    ? Number(item.volume) / 100000
+                    : item.balanceKind === 43
+                    ? Number(item.volume) / 10000
+                    : item.balanceKind === 59
+                    ? Number(item.volume) / 100
+                    : Number(item.volume)
+                  ).toLocaleString('ru-RU', { maximumFractionDigits: 5 })}`}
+              </FieldListItem>
+            ))}
+        </Scrollbars>
+      </FieldList>
+    </Field>
+  );
 };
 
-const Field = styled.div<{ rotate?: boolean; }>` 
-    width: 100%;
-    border: 1px solid #EDF0F6;
-    border-radius: 4px;
-    height: 40px;
-    cursor: pointer;
-    background: #F9FAFB;
-    display: flex;
-    align-items: center;
-    padding: 12px;
-    position: relative;
-    color: #000;
-    font-size: 14px;
-    line-height: 16px;
-    font-weight: 400;
-    user-select: none;
-    margin-bottom: 10px;
+const Field = styled.div<{ rotate?: boolean }>`
+  width: 100%;
+  border: 1px solid #edf0f6;
+  border-radius: 4px;
+  height: 40px;
+  cursor: pointer;
+  background: #f9fafb;
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  position: relative;
+  color: #000;
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: 400;
+  user-select: none;
+  margin-bottom: 10px;
 
-    & > .arrow {
-        position: absolute;
-        right: 17px;
-        transform: ${({ rotate }) => `rotate(${rotate ? "90" : "0"}deg)`};
-        transition: .5s;
-    } 
+  & > .arrow {
+    position: absolute;
+    right: 17px;
+    transform: ${({ rotate }) => `rotate(${rotate ? '90' : '0'}deg)`};
+    transition: 0.5s;
+  }
 `;
 
 const FieldList = styled.div<{ block: boolean }>`
@@ -95,6 +95,9 @@ const FieldList = styled.div<{ block: boolean }>`
   min-width: 340px;
   overflow-y: hidden;
   display: ${({ block }) => (block ? 'block' : 'none')};
+  @media (max-width: 768px) {
+    min-width: auto;
+  }
 `;
 
 const FieldListItem = styled.div`

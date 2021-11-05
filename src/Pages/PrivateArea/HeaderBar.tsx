@@ -810,7 +810,6 @@ export const HeaderBar: FC = () => {
               />
             )}
           </PanelHeader>
-          {/* One */}
           {screen > 768 && (
             <BalanceChipsBlock>
               {balanceChips &&
@@ -833,9 +832,6 @@ export const HeaderBar: FC = () => {
                 })}
             </BalanceChipsBlock>
           )}
-
-          {/* Two */}
-
           {screen > 768 ? (
             <TabsBlock>
               <TabNavItem to={routers.deposits} exact>
@@ -857,102 +853,48 @@ export const HeaderBar: FC = () => {
           ) : (
             <SwiperUI
               onClick={(swiper: any) => {
-                // console.log('balanceChips.map ~ swiper, event', swiper);
-
-                console.log(swiper.clickedIndex);
                 setClickedIndex(swiper.clickedIndex);
-                console.log(swiper.a11y);
-                // swiper.a11y.updateNavigation();
-                // swiper.a11y.enableEl(swiper.$el);
-                // swiper.a11y.addElControls();
-                // swiper.a11y.addElId();
-                // swiper.a11y.addElLabel();
-                // swiper.a11y.addElLive();
-                // swiper.a11y.addElRole();
-                // swiper.a11y.addElRoleDescription();
-                // swiper.a11y.destroy();
-                // swiper.a11y.disableEl();
-                // swiper.a11y.enableEl();
-                // swiper.a11y.getRandomNumber();
-                // swiper.a11y.init();
-                // swiper.a11y.liveRegion();
-                swiper.a11y.makeElFocusable(swiper.$el);
-                // swiper.a11y.makeElNotFocusable();
-                swiper.a11y.notify();
-                // swiper.a11y.onEnterOrSpaceKey();
-                swiper.a11y.updateNavigation();
-                swiper.a11y.updatePagination();
               }}
-              observer={true}
-              observeParents={true}
               slidesPerView={'auto'}
               freeMode={true}
               pagination={false}
-              onSlideChange={(swiperCore) => {
-                const { activeIndex, previousIndex, realIndex, a11y } = swiperCore;
-                console.log('balanceChips.map ~ a11y', a11y);
-                console.log('balanceChips.map ~ swiperCore', swiperCore);
-                // a11y?.init();
-                // swiperCore?.a11y?.updateNavigation();
-                // swiperCore.a11y.updatePagination();
-                console.log({ activeIndex, previousIndex, realIndex });
-              }}
-              // slideToClickedSlide={true}
               spaceBetween={20}
-              onSwiper={(swiper) => {
-                swiper.update();
-                console.log(111);
-              }}
-              preventClicks={false}
-              // navigation={{
-              //   nextEl: '.next',
-              //   prevEl: '.prev',
-              // }}
-              //   observer={true}
-              //   observeParents={true}
-              //   loop={true}
-              //   watchSlidesVisibility={true}
-              //   watchSlidesProgress={true}
-              onInit={(swiper) => {
-                console.log(222);
-                swiper.navigation.update();
-              }}
             >
-              <SlideContainer>
-                <SwiperSlide>
+              <SwiperSlide>
+                <SlideContainer active={clickedIndex === 0}>
                   <TabNavItem to={routers.deposits} exact>
                     <div>Мои депозиты</div>
                   </TabNavItem>
-                </SwiperSlide>
-              </SlideContainer>
-              <SlideContainer>
-                <SwiperSlide>
+                </SlideContainer>
+              </SwiperSlide>
+              <SwiperSlide>
+                <SlideContainer active={clickedIndex === 1}>
                   <TabNavItem to={routers.p2pchanges}>
                     <div>P2P обмены</div>
                   </TabNavItem>
-                </SwiperSlide>
-              </SlideContainer>
-              <SlideContainer>
-                <SwiperSlide>
+                </SlideContainer>
+              </SwiperSlide>
+              <SwiperSlide>
+                <SlideContainer active={clickedIndex === 2}>
                   <TabNavItem to={routers.operations}>
                     <div>История операций</div>
                   </TabNavItem>
-                </SwiperSlide>
-              </SlideContainer>
-              <SlideContainer>
-                <SwiperSlide>
+                </SlideContainer>
+              </SwiperSlide>
+              <SwiperSlide>
+                <SlideContainer active={clickedIndex === 3}>
                   <TabNavItem to={routers.notifications}>
                     <div>Уведомления</div>
                   </TabNavItem>
-                </SwiperSlide>
-              </SlideContainer>
-              <SlideContainer>
-                <SwiperSlide>
+                </SlideContainer>
+              </SwiperSlide>
+              <SwiperSlide>
+                <SlideContainer active={clickedIndex === 4}>
                   <TabNavItem to={routers.settings}>
                     <div>Настройки</div>
                   </TabNavItem>
-                </SwiperSlide>
-              </SlideContainer>
+                </SlideContainer>
+              </SwiperSlide>
             </SwiperUI>
           )}
         </PanelCard>
@@ -1138,34 +1080,14 @@ const SwiperUI = styled(Swiper)`
   display: flex;
   align-items: center;
 
-  .swiper-slide-active {
-    /* font-weight: 500;
-    opacity: 1;
-    border-bottom: 2px solid ${(props) => props.theme.blue};
-    padding-bottom: 10px; */
-  }
-
   .swiper-slide {
     width: auto;
   }
 `;
 
-const SwiperSlideUI = styled(SwiperSlide)<{ active?: boolean }>`
-  /* border-bottom: ${(props) => (props.active ? '2px solid #0094FF' : '')}; */
-  /* font-weight: 500; */
-  /* opacity: 1; */
-  /* border-bottom: 2px solid ${(props) => props.theme.blue}; */
-  /* padding-bottom: 10px; */
-  /* margin-right: 20px; */
-`;
-
-const SlideContainer = styled.p`
-  /* font-weight: 500;
-  opacity: 1;
-  border-bottom: 2px solid ${(props) => props.theme.blue};
+const SlideContainer = styled.p<{ active?: boolean }>`
   padding-bottom: 10px;
-
-  background-color: red; */
+  border-bottom: ${(props) => props.active && '2px solid #0094FF'};
 `;
 
 const TabNavItem = styled(NavLink)`
