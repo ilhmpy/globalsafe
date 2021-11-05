@@ -3,7 +3,6 @@ import { useState, useEffect, useRef } from 'react';
 import alfa from '../../assets/v2/svg/banks/alfa.svg';
 import sber from '../../assets/v2/svg/banks/sber.svg';
 import tinkoff from '../../assets/v2/svg/banks/tinkoff.svg';
-import bankTransfer from '../../assets/v2/svg/banks/bankTransfer.svg';
 import erc20 from '../../assets/v2/svg/banks/erc20.svg';
 import trc20 from '../../assets/v2/svg/banks/trc20.svg';
 import bep20 from '../../assets/v2/svg/banks/bep20.svg';
@@ -106,37 +105,17 @@ export const removeLeadingZeros = (str: string): string => {
 
 // Hook
 export const useIsMobile = (): boolean => {
-  const isClient = typeof window === 'object'; // Object represents browser window
-  const lastWidth = useRef<any>();
-
-  function getSize() {
-    return {
-      width: isClient ? window.innerWidth : undefined
-    }
-  }
-
-  const [windowSize, setWindowSize] = useState(getSize);
+  const [windowSize, setWindowSize] = useState(0);
 
   useEffect(() => {
-    if (!isClient) { 
-      return;
-    } // Exit if not user/browser
-
     function handleResize() {
-      if (window?.innerWidth !== lastWidth.current) {
-        const width = getSize();
-        if(lastWidth && lastWidth.current) {
-          lastWidth.current  = width;
-        }
-        setWindowSize(width)
-      }
+      setWindowSize(window.innerWidth);
     }
+    handleResize();
+    window.addEventListener("resize", handleResize);
 
-    window.addEventListener('resize', handleResize) // <-- I am only interested in window.innerWidth !
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
-  }, []); // Empty array ensures that effect is only run on mount and unmount
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
-  return (windowSize && windowSize.width) ? windowSize.width < 769 : false;
+  return windowSize < 769;
 }
