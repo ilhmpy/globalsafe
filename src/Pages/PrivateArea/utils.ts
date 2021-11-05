@@ -88,6 +88,7 @@ export function getMyRating(account: any) {
   });
     return (Number(rating)).toFixed(1);
   };
+  return '0.0';
 };
 
 export const removeLeadingZeros = (str: string): string => {

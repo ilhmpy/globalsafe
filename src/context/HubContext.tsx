@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { API_URL } from '../constantes/api';
 import useLocalStorage from '../hooks/useLocalStorage';
+import { getMyRating } from '../Pages/PrivateArea/utils';
 import { BalanceList } from '../types/balance';
 type Nulable<T> = T | null;
 
@@ -28,6 +29,7 @@ type Context = {
   userSafeId: string | null;
   setDepositsFilter: (depositsFilter: 'active' | 'archived' | 'hold') => void;
   depositsFilter: string;
+  userRating: string;
 };
 
 export const AppContext = React.createContext<Context>({
@@ -51,6 +53,7 @@ export const AppContext = React.createContext<Context>({
   userSafeId: null,
   setDepositsFilter: () => undefined,
   depositsFilter: '',
+  userRating: '0.0',
 });
 
 export const HubProvider: FC = ({ children }: any) => {
@@ -71,6 +74,7 @@ export const HubProvider: FC = ({ children }: any) => {
   const [selectedDeposit, setSelectedDeposit] = useState({});
   const [account, setAccount] = useState<any>({});
   const [depositsFilter, setDepositsFilter] = useState<'active' | 'archived' | 'hold'>('active');
+  const [userRating, setUserRating] = useState('0.0');
 
   useEffect(() => {
     const hubConnection = new signalR.HubConnectionBuilder()
@@ -131,6 +135,21 @@ export const HubProvider: FC = ({ children }: any) => {
   }, [hubConnection, balanceList]);
 
   useEffect(() => {
+    const cbUserRated = (rating: string, mark: string) => {
+      console.log('SOKET_UserRated__rating', rating);
+      setUserRating(Number(rating).toFixed(1))
+    };
+
+    if (hubConnection) {
+      hubConnection.on('UserRated', cbUserRated);
+    }
+
+    return () => {
+      hubConnection?.off('UserRated', cbUserRated);
+    };
+  }, [hubConnection, userRating]);
+
+  useEffect(() => {
     if (hubConnection) {
       hubConnection
         .invoke('GetSigned')
@@ -145,6 +164,8 @@ export const HubProvider: FC = ({ children }: any) => {
           setAccount(res);
           setUserSafeId(res.safeId);
           setLoading(false);
+          const rating = getMyRating(res);
+          setUserRating(rating);
           if (res.balances.length) {
             const newArr = res.balances.filter((item: any) => item.balanceKind === 1);
             setBalance(newArr[0].volume);
@@ -208,6 +229,7 @@ export const HubProvider: FC = ({ children }: any) => {
         userSafeId,
         setDepositsFilter,
         depositsFilter,
+        userRating,
       }}
     >
       {children}

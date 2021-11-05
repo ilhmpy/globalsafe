@@ -65,7 +65,7 @@ export const SingleOrderDetailsOwn: FC = () => {
       const res = await hubConnection!.invoke<GetExchangesCollectionResult>(
         'GetExchangesByOrder',
         currentOrder?.safeId, // order safeId
-        activeFilter === 'all' ? [1, 2, 3, 4] : activeFilter === 'active' ? [1, 3] : [2, 4], // Array of ExchangeStates
+        activeFilter === 'all' ? [0, 1, 2, 3, 4] : activeFilter === 'active' ? [0, 1, 3] : [2, 4], // Array of ExchangeStates
         0, // skip
         20 // take
       );

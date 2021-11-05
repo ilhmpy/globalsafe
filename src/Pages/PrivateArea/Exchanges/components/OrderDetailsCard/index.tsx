@@ -163,11 +163,17 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
 
     const onBalanceSummChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const pattern = /^[0-9][0-9\.]*$/;
-        const pattern2 = order.operationAssetKind === 7 ? /^[0-9]{1,10}\.[0-9]{6}$/ : /^[0-9]{1,10}\.[0-9]{3}$/;
+        const pattern2 = /^[0-9]{1,10}\.[0-9]{6}$/;
         if (e.target.value === '' || pattern.test(e.target.value)) {
             const value = e.target.value;
             const volume = Math.floor((countVolumeToShow(order.volume, order.assetKind)) * 100000) / 100000;
             const limitTo = Math.floor((countVolumeToShow(order.limitTo, order.assetKind) / order.rate) * 100000) / 100000;
+
+            const dotsCount = value.split('.').length - 1;
+
+            if(dotsCount > 1) {
+                return;
+            };
 
             if(volume <= limitTo) {
                 if(+value >= volume) {
@@ -215,6 +221,12 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
             const limitToSumm = countVolumeToShow(+order.limitTo, order.assetKind);
             const volume = Math.floor((countVolumeToShow(order.volume, order.assetKind)) * 100000) / 100000;
             const limitTo = Math.floor((countVolumeToShow(order.limitTo, order.assetKind) / order.rate) * 100000) / 100000;
+
+            const dotsCount = value.split('.').length - 1;
+
+            if(dotsCount > 1) {
+                return;
+            };
 
             if(volumeSumm <= limitToSumm) {
                 if(+value >= volumeSumm) {

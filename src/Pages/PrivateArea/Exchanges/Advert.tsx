@@ -21,12 +21,11 @@ import { Rating } from './components/modals/Rating';
 import { PaymentMethods } from './components/modals/PaymentMethods';
 import { Balance } from '../../../types/balance';
 import { FiatKind } from '../../../types/fiat';
-import { getMyRating } from '../utils';
 import { AdvertFiltersMobile } from './components/modals/AdvertFiltersMobile';
 
 export const Advert: FC = () => {
   const history = useHistory();
-  const { hubConnection, account } = useContext(AppContext);
+  const { hubConnection, userRating } = useContext(AppContext);
   const [activeType, setActiveType] = useState<OrderType>(OrderType.Buy);
   const [listingMyOrders, setListingMyOrders] = useState<boolean>(false);
   const [selectedBalanceKind, setSelectedBalanceKind] = useState<string | null>(null);
@@ -270,7 +269,7 @@ export const Advert: FC = () => {
             </TabNavItem>
           </TabsBlock>
           <Text size={14} lH={16} weight={500} smHidden>
-            Рейтинг аккаунта: {getMyRating(account)}
+            Рейтинг аккаунта: {userRating}
           </Text>
         </S.SubHeader>
 
@@ -278,7 +277,7 @@ export const Advert: FC = () => {
           onClick={() => history.push(routers.p2pchangesOrderToBuy)}
           title="P2P обмены"
           btnText="Опубликовать ордер"
-          userRating={`Рейтинг аккаунта: ${getMyRating(account)}`}
+          userRating={`Рейтинг аккаунта: ${userRating}`}
         />
         {/* Visiable from Tablet */}
         <S.SubHeader mobileHidden>
@@ -296,7 +295,7 @@ export const Advert: FC = () => {
             </TabNavItem>
           </TabsBlock>
           <Text size={14} lH={16} weight={500} smHidden>
-            Рейтинг аккаунта: {getMyRating(account)}
+            Рейтинг аккаунта: {userRating}
           </Text>
         </S.SubHeader>
 
