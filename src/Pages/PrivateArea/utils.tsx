@@ -3,7 +3,6 @@ import { useState, useEffect, useRef } from 'react';
 import alfa from '../../assets/v2/svg/banks/alfa.svg';
 import sber from '../../assets/v2/svg/banks/sber.svg';
 import tinkoff from '../../assets/v2/svg/banks/tinkoff.svg';
-import bankTransfer from '../../assets/v2/svg/banks/bankTransfer.svg';
 import erc20 from '../../assets/v2/svg/banks/erc20.svg';
 import trc20 from '../../assets/v2/svg/banks/trc20.svg';
 import bep20 from '../../assets/v2/svg/banks/bep20.svg';
