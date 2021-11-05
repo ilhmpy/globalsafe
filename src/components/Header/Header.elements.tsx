@@ -20,6 +20,7 @@ export const SwitchTheme = styled.div<{ mob?: boolean; admin?: boolean; auth?: b
   margin-right: 20px;
   border-radius: 50%;
   cursor: pointer;
+
   ${({ admin, auth }) => {
     if (!auth || (auth && !admin)) {
       return `
@@ -31,6 +32,7 @@ export const SwitchTheme = styled.div<{ mob?: boolean; admin?: boolean; auth?: b
     display: none;
   }
   @media (max-width: 1100px) {
+    margin-right: 40px;
     div {
       display: flex;
       align-items: center;
@@ -70,7 +72,7 @@ export const Btn = styled.button<{ hide?: boolean }>`
   &:active {
     outline: none;
   }
-  @media (max-width: 768px) {
+  @media (max-width: 1100px) {
     display: none;
   }
 `;
@@ -91,7 +93,7 @@ export const AdminButton = styled(Btn)`
   &:focus {
     outline: none;
   }
-  @media (max-width: 768px) {
+  @media (max-width: 1100px) {
     display: none;
   }
 `;
