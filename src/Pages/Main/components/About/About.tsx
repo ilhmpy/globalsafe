@@ -1,29 +1,28 @@
-import React from "react";
-import { Container } from "../../../../globalStyles";
-import { H1 } from "../../../../components/UI/MainStyled";
-import { Page } from "../../../../components/UI/Page";
-import { UpTitle } from "../../../../components/UI/UpTitle";
-import img1 from "../../../../assets/img/1.png";
-import img2 from "../../../../assets/img/2.png";
-import img3 from "../../../../assets/img/3.png";
-import { useTranslation } from "react-i18next";
-import * as Styled from "./About.elements";
-import { ReactComponent as Tlg } from "../../../../assets/svg/tg.svg";
+import React, { FC } from 'react';
+import { Container } from '../../../../globalStyles';
+import { H1 } from '../../../../components/UI/MainStyled';
+import { Page } from '../../../../components/UI/Page';
+import { UpTitle } from '../../../../components/UI/UpTitle';
+import img1 from '../../../../assets/img/1.png';
+import img2 from '../../../../assets/img/2.png';
+import img3 from '../../../../assets/img/3.png';
+import { useTranslation } from 'react-i18next';
+import * as Styled from './About.elements';
 
-export const About = () => {
+export const About: FC = () => {
   const { t } = useTranslation();
   return (
     <Page id="about">
       <Container>
-        <UpTitle>{t("about.uptitle")}</UpTitle>
+        <UpTitle>{t('about.uptitle')}</UpTitle>
       </Container>
       <Container>
-        <H1>{t("about.H1")}</H1>
+        <H1>{t('about.H1')}</H1>
       </Container>
 
       <Container>
         <Styled.Text>
-          <span>{t("about.brand")}</span> - {t("about.desc")}
+          <span>{t('about.brand')}</span> - {t('about.desc')}
         </Styled.Text>
       </Container>
       {/* <Container>
@@ -34,51 +33,48 @@ export const About = () => {
       </Container> */}
 
       <Styled.BlockContainer>
-      <Styled.BlockItem>
+        <Styled.BlockItem>
           <Styled.Img src={img1} alt="" />
           <Styled.BlockInner>
             <Styled.BlockTitle>
-              {t("about.name2")} <Styled.Dot /> {t("about.founder")}
-              <br /> {t("about.crypto")} GLOBALSafe
+              {t('about.name2')} <Styled.Dot /> {t('about.founder')}
+              <br /> {t('about.crypto')} GLOBALSafe
             </Styled.BlockTitle>
             <Styled.BlockSubtitle>
-              {t("about.investor")}
+              {t('about.investor')}
               <br />
-              {t("about.apostol")} CWD Global
+              {t('about.apostol')} CWD Global
               {/* {t("about.desc1")}
               <br /> {t("about.desc2")} */}
             </Styled.BlockSubtitle>
           </Styled.BlockInner>
         </Styled.BlockItem>
-       
 
         <Styled.BlockItem>
           <Styled.Img src={img2} alt="" />
           <Styled.BlockInner mod>
             <Styled.BlockTitle>
-              {t("about.name1")}
+              {t('about.name1')}
               <Styled.Dot />
-              <br /> {t("about.position1")}
+              <br /> {t('about.position1')}
             </Styled.BlockTitle>
             <Styled.BlockSubtitle>
-              {t("about.self1")}
-              <br /> {t("about.impement")}
+              {t('about.self1')}
+              <br /> {t('about.impement')}
             </Styled.BlockSubtitle>
           </Styled.BlockInner>
         </Styled.BlockItem>
-
 
         <Styled.BlockItem>
           <Styled.Img src={img3} alt="" />
           <Styled.BlockInner>
             <Styled.BlockTitle pad>
-              {t("about.name3")} <Styled.Dot /> {t("about.position")} <br />{" "}
-              {t("about.fond")}
+              {t('about.name3')} <Styled.Dot /> {t('about.position')} <br /> {t('about.fond')}
               GLOBALSafe
             </Styled.BlockTitle>
             <Styled.BlockSubtitle pad>
-              {t("about.top")} <br />
-              {t("about.investor")}
+              {t('about.top')} <br />
+              {t('about.investor')}
               {/* {t("about.desc1")}
               <br /> {t("about.desc2")} */}
             </Styled.BlockSubtitle>

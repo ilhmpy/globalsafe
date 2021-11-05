@@ -41,8 +41,8 @@ export const Title = styled.h3<TitleProps>`
     font-size: 14px;
     font-weight: 500;
   }
-  ${(props) => {
-    if (props.main) {
+  ${({ main }) => {
+    if (main) {
       return `
         font-size: 24px;
         @media only screen and (min-device-width: 481px) and (max-device-width: 1024px)  {
@@ -55,22 +55,22 @@ export const Title = styled.h3<TitleProps>`
       `;
     }
   }}
-  ${(props) => {
-    if (props.fS) {
+  ${({ fS }) => {
+    if (fS) {
       return `
-        font-size: ${props.fS}px;
+        font-size: ${fS}px;
         @media only screen and (max-device-width: 3000px) {
-          font-size: ${props.fS}px;
+          font-size: ${fS}px;
         }
       `;
     }
   }}
-  ${(props) => {
-    if (props.fW) {
+  ${({ fW }) => {
+    if (fW) {
       return `
-        font-weight: ${props.fW};
+        font-weight: ${fW};
         @media only screen and (max-device-width: 3000px) {
-          font-weight: ${props.fW};
+          font-weight: ${fW};
         }
       `;
     }
@@ -78,17 +78,13 @@ export const Title = styled.h3<TitleProps>`
   @media ${Device.mobile} {
     ${(props) => props.heading2 && Heading2};
     ${(props) => props.heading3 && Heading3};
-
-    ${(props) => {
-      if (props.mbMobile !== undefined) {
-        return css`
-          margin-bottom: ${props.mbMobile}px;
-        `;
-      }
-    }};
-
-    ${(props) => {
-      if (props.onMobileTitleInExchange) {
+    ${(props) =>
+      props.mbMobile !== undefined &&
+      css`
+        margin-bottom: ${props.mbMobile}px;
+      `};
+    ${({ onMobileTitleInExchange }) => {
+      if (onMobileTitleInExchange) {
         return `
           line-height: 20px;
         `;

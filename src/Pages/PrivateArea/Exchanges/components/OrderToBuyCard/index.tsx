@@ -16,6 +16,7 @@ import {
   RootPayMethod,
 } from '../../../../../types/paymentMethodKind';
 import { Checkbox } from '../../../components/Checkbox';
+
 import {
   FilterButton,
   LeftSide,
@@ -26,6 +27,7 @@ import {
   Title,
 } from '../../../components/ui';
 import { countVolumeToSend, countVolumeToShow, useIsMobile } from '../../../utils';
+
 import { OrderErrorModal } from '../modals/OrderErrorModal';
 import { OrderInfoModal } from '../modals/OrderInfoModal';
 import * as S from './S.el';
@@ -268,9 +270,9 @@ export const OrderToBuyCard: FC = () => {
     if (e.target.value === '' || pattern.test(e.target.value)) {
       const dotsCount = e.target.value.split('.').length - 1;
 
-      if(dotsCount > 1) {
-          return;
-      };
+      if (dotsCount > 1) {
+        return;
+      }
 
       // Clear Max limit
       setOrderMinSumm('');
@@ -380,9 +382,9 @@ export const OrderToBuyCard: FC = () => {
   useEffect(() => {
     const cbOrderCreated = (order: ViewBuyOrderModel) => {
       console.log('__SOCKET__cbOrderCreated::', order);
-      if(order && order.userSafeId === userSafeId) {
-        if(dailyLimitRest) {
-          setDailyLimitRest(dailyLimitRest - Number(orderSumm))
+      if (order && order.userSafeId === userSafeId) {
+        if (dailyLimitRest) {
+          setDailyLimitRest(dailyLimitRest - Number(orderSumm));
         }
         // handleGetOrdersVolume();
 
@@ -397,7 +399,15 @@ export const OrderToBuyCard: FC = () => {
     return () => {
       hubConnection?.off('BuyOrderCreated', cbOrderCreated);
     };
-  }, [hubConnection, userSafeId, currencyToBuy, currencyToChange, userActiveCertificate, dailyLimitRest, orderSumm]);
+  }, [
+    hubConnection,
+    userSafeId,
+    currencyToBuy,
+    currencyToChange,
+    userActiveCertificate,
+    dailyLimitRest,
+    orderSumm,
+  ]);
 
   return (
     <S.Container>
@@ -415,7 +425,10 @@ export const OrderToBuyCard: FC = () => {
           <Text size={14} lH={20} mB={10} mBMobile={4} black>
             Рейтинг аккаунта:
           </Text>
-          <Title lH={28} heading3 mB={0}>{userRating}</Title>
+
+          <Title lH={28} heading3 mB={0}>
+            {userRating}
+          </Title>
         </S.BlockWrapper>
         {!isMobile && currencyToBuy ? (
           dailyLimitRest !== undefined ? (

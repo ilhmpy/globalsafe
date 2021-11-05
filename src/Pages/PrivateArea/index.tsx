@@ -41,45 +41,55 @@ export const InfoMain: FC = () => {
   }
 
   return (
-    <Styled.Page>
-      <HeaderBar />
-      <PrivateAreaProvider>
-        <Switch>
-          <Route path={routers.deposits} component={Deposits} exact />
-          <Route path={routers.depositsProgram} component={DepositProgram} exact />
-          <Route path={routers.depositsOpen} component={DepositOpen} exact />
-          <Route path={routers.depositsView} component={DepositView} exact />
-          <Route path="/info/deposits/:slug" component={OnePage} exact />
-          <Route path={routers.p2pchanges} component={Advert} exact />
-          <Route path={routers.p2pchangesOwn} component={OwnExchanges} exact />
-          <Route path={routers.p2pchangesOrderToBuy} component={OrderToBuy} exact />
-          <Route path={routers.p2pchangesOrderToSell} component={OrderToSell} exact />
-          <Route path={routers.certificates} component={Certificates} exact />
-          <Route
-            path={routers.p2pchangesSingleExchangeDetails}
-            component={SingleExchangeDetails}
-            exact
-          />
-          <Route path={routers.settings} component={Settings} exact />
-          <Route path={routers.settingsNewPayMethod} component={NewPayMethod} exact />
-          <Route path={routers.settingsViewPayMethod} component={ViewPayMethod} exact />
-          <Route path={routers.operations} component={HistoryOperations} exact />
-          <Route path={routers.notifications} component={Notifications} exact />
-          <Route
-            path={routers.p2pchangesSingleOrderDetailsOwn}
-            component={SingleOrderDetailsOwn}
-            exact
-          />
-          <Route path={routers.p2pchangesSingleOrderDetails} component={SingleOrderDetails} exact />
-          <Route path={routers.settingsViewPayMethod + '/:slug'} component={ViewPayMethod} exact />
-          <Route
-            path={routers.p2pchangesSingleExchangeChat + '/:slug'}
-            component={SingleExchangeChat}
-            exact
-          />
-        </Switch>
-      </PrivateAreaProvider>
-      <Footer />
-    </Styled.Page>
+    <>
+      <Styled.Page>
+        <HeaderBar />
+        <PrivateAreaProvider>
+          <Switch>
+            <Route path={routers.deposits} component={Deposits} exact />
+            <Route path={routers.depositsProgram} component={DepositProgram} exact />
+            <Route path={routers.depositsOpen} component={DepositOpen} exact />
+            <Route path={routers.depositsView} component={DepositView} exact />
+            <Route path="/info/deposits/:slug" component={OnePage} exact />
+            <Route path={routers.p2pchanges} component={Advert} exact />
+            <Route path={routers.p2pchangesOwn} component={OwnExchanges} exact />
+            <Route path={routers.p2pchangesOrderToBuy} component={OrderToBuy} exact />
+            <Route path={routers.p2pchangesOrderToSell} component={OrderToSell} exact />
+            <Route path={routers.certificates} component={Certificates} exact />
+            <Route
+              path={routers.p2pchangesSingleExchangeDetails}
+              component={SingleExchangeDetails}
+              exact
+            />
+            <Route path={routers.settings} component={Settings} exact />
+            <Route path={routers.settingsNewPayMethod} component={NewPayMethod} exact />
+            <Route path={routers.settingsViewPayMethod} component={ViewPayMethod} exact />
+            <Route path={routers.operations} component={HistoryOperations} exact />
+            <Route path={routers.notifications} component={Notifications} exact />
+            <Route
+              path={routers.p2pchangesSingleOrderDetailsOwn}
+              component={SingleOrderDetailsOwn}
+              exact
+            />
+            <Route
+              path={routers.p2pchangesSingleOrderDetails}
+              component={SingleOrderDetails}
+              exact
+            />
+            <Route
+              path={routers.settingsViewPayMethod + '/:slug'}
+              component={ViewPayMethod}
+              exact
+            />
+            <Route
+              path={routers.p2pchangesSingleExchangeChat + '/:slug'}
+              component={SingleExchangeChat}
+              exact
+            />
+          </Switch>
+        </PrivateAreaProvider>
+        <Footer />
+      </Styled.Page>
+    </>
   );
 };

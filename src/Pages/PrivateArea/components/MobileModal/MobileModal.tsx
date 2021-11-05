@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext, FC } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import * as MB from './MobileModal.elements';
 import { Header } from '../../../../components/Header/Header';
 import { Footer } from '../../../../components/Footer/Footer';
@@ -6,12 +6,10 @@ import { ViewExchangeModel, ExchangeState } from '../../../../types/exchange';
 import { Balance } from '../../../../types/balance';
 import { FiatKind } from '../../../../types/fiatKind';
 import { countVolumeToShow, getFiatKindByStringName } from '../../utils';
-import useWindowSize from '../../../../hooks/useWindowSize';
 
-export const MobileModal: FC = () => {
+export const MobileModal = () => {
   const [exchange, setExchange] = useState<any>(null);
   const [feed, setFeed] = useState<string | undefined>();
-  const screen = useWindowSize();
 
   useEffect(() => {
     const exc = localStorage.getItem('mobileResultData');
@@ -22,7 +20,7 @@ export const MobileModal: FC = () => {
       localStorage.removeItem('mobileResultData');
       localStorage.removeItem('feedback');
     }
-    if (screen > 480) {
+    if (screen.width > 480) {
       redirect();
     }
   }, []);

@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { useContext, useEffect, useState, FC } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import styled from 'styled-components/macro';
@@ -11,7 +11,7 @@ import { Container } from '../../../../components/UI/Container';
 import { Collection, RootOperations } from '../../../../types/operations';
 import useWindowSize from '../../../../hooks/useWindowSize';
 
-export const Operations: FC = () => {
+export const Operations = () => {
   const [notifyList, setNotifyList] = useState<Collection[]>([]);
   const [num, setNum] = useState(0);
   const [showLess, setShowLess] = useState<boolean>(false);

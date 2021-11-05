@@ -1,4 +1,4 @@
-import React, { useContext, FC } from 'react';
+import React, { useContext } from 'react';
 import { useHistory } from 'react-router';
 
 import { AppContext } from '../../../../../context/HubContext';
@@ -13,7 +13,7 @@ interface AdvertTableProps {
   list: Array<ViewBuyOrderModel | ViewSellOrderModel>;
 }
 
-export const AdvertTable: FC<AdvertTableProps> = ({ list }: AdvertTableProps) => {
+export const AdvertTable = ({ list }: AdvertTableProps) => {
   const history = useHistory();
   const isMobile = useIsMobile();
   const { userSafeId } = useContext(AppContext);

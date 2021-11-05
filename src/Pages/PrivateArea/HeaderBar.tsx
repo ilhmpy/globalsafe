@@ -1104,6 +1104,16 @@ const SwiperUI = styled(Swiper)`
   }
 `;
 
+const AppWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+`;
+
+const CustomPage = styled(Styled.Page)`
+  flex: 1;
+`;
+
 const DepositsPanelContainer = styled(Container)`
   display: flex;
   flex-direction: column;

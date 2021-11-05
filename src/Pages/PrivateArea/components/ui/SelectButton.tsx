@@ -11,7 +11,7 @@ type SelectButtonProps = {
   buttons: ViewSelectButtonsModel[];
 };
 
-export const SelectButton: FC<SelectButtonProps> = ({ buttons }: SelectButtonProps) => {
+export const SelectButton: FC<SelectButtonProps> = ({ buttons }) => {
   const [anim, setAnim] = useState<boolean>(false);
   return (
     <SelectContainer>
@@ -68,7 +68,7 @@ const SelectList = styled.div<{ when: boolean }>`
   margin-top: 1px;
   position: absolute;
   transition: 0.5s;
-  height: ${(props) => (props.when ? '114px' : '0px')};
+  height: ${({ when }) => (when ? '114px' : '0px')};
   background: #515172;
   z-index: 999;
   padding: 0px 20px;

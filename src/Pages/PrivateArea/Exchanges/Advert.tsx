@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState, FC } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { Container } from '../../../components/UI/Container';
@@ -23,7 +23,7 @@ import { Balance } from '../../../types/balance';
 import { FiatKind } from '../../../types/fiat';
 import { AdvertFiltersMobile } from './components/modals/AdvertFiltersMobile';
 
-export const Advert: FC = () => {
+export const Advert = () => {
   const history = useHistory();
   const { hubConnection, userRating } = useContext(AppContext);
   const [activeType, setActiveType] = useState<OrderType>(OrderType.Buy);
@@ -308,18 +308,7 @@ export const Advert: FC = () => {
           >
             Все ордеры
           </FilterButton>
-          <FilterButton
-            smHalfWidth
-            active={listingMyOrders}
-            onClick={() => setListingMyOrders(true)}
-            switchRight
-          >
-            Мои ордеры
-          </FilterButton>
-        </S.Filters>
 
-        {/* Show only on Mobile */}
-        <S.Filters hidden smVisible>
           <FilterButton wFull active={false} onClick={() => setShowMobileFilters(true)}>
             Фильтры (3)
           </FilterButton>
