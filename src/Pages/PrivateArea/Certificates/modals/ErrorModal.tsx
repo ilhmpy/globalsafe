@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { Button } from '../../../../components/Button/V2/Button';
 import { Modal } from '../../../../components/ModalAnimated';
 import { MarketCertificate } from '../../../../types/certificates';
 import * as S from './S.el';
@@ -19,6 +20,9 @@ export const ErrorModal: FC<Props> = ({ onClose, open, data, errorType }: Props)
             <S.BlackTitle>Ошибка покупки сертификата</S.BlackTitle>
             <S.Desc>Сертификат “{data.certificate.name}” не был приобретен по причине:</S.Desc>
             <S.Reason>{errorType}</S.Reason>
+            <Button primary bigSize onClick={onClose}>
+              Ок
+            </Button>
           </S.SmallContainer>
         </Modal>
       )}

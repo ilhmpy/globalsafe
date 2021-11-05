@@ -169,13 +169,7 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
                
               )} */}
             </ButtonsRev>
-            <Btn
-              className={user === null || admin === null ? 'is-placeholder' : ''}
-              hide={user === null}
-              onClick={handleClick}
-            >
-              {t('headerButton.personalArea')}
-            </Btn>
+            <Btn onClick={handleClick}>{t('headerButton.personalArea')}</Btn>
             <MenuBtn open={open} onClick={() => setOpen(!open)}>
               <span></span>
               <span></span>

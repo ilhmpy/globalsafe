@@ -14,7 +14,7 @@ import 'swiper/swiper.scss';
 import 'swiper/components/navigation/navigation.scss';
 import 'swiper/components/pagination/pagination.scss';
 import 'swiper/components/scrollbar/scrollbar.scss';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { Swiper, SwiperSlide } from 'swiper/react'; 
 import { ModalDeposit } from './Payments';
 import { Loading } from '../../../components/UI/Loading';
 import { useTranslation } from 'react-i18next';
