@@ -810,7 +810,6 @@ export const HeaderBar: FC = () => {
               />
             )}
           </PanelHeader>
-          {/* One */}
           {screen > 768 && (
             <BalanceChipsBlock>
               {balanceChips &&
@@ -833,9 +832,6 @@ export const HeaderBar: FC = () => {
                 })}
             </BalanceChipsBlock>
           )}
-
-          {/* Two */}
-
           {screen > 768 ? (
             <TabsBlock>
               <TabNavItem to={routers.deposits} exact>
