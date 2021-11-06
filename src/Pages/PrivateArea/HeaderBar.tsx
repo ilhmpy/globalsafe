@@ -541,8 +541,6 @@ export const HeaderBar: FC = () => {
     // window.location.reload();
   };
 
-  SwiperCore.use([Navigation, Pagination, A11y]);
-
   return (
     <>
       {withdrawValueLoad && (
