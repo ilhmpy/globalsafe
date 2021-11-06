@@ -30,13 +30,13 @@ export const paymentMethodIconSrc = (kind: number): string => {
 
 export const countVolumeToShow = (countVolume: number, asset: any): number => {
   let value = countVolume;
-  if(asset === 1) {
+  if (asset === 1) {
     value = countVolume / 100000;
   }
-  if(asset === 43) {
+  if (asset === 43) {
     value = countVolume / 10000;
   }
-  if(asset === 59) {
+  if (asset === 59) {
     value = countVolume / 100;
   }
   return value;
@@ -45,63 +45,78 @@ export const countVolumeToShow = (countVolume: number, asset: any): number => {
 export const countVolumeToSend = (summ: string, asset: number): string => {
   const summary = Number(summ);
   let value = summary;
-  if(asset === 1) {
+  if (asset === 1) {
     value = summary * 100000;
   }
-  if(asset === 43) {
+  if (asset === 43) {
     value = summary * 10000;
   }
-  if(asset === 59) {
+  if (asset === 59) {
     value = summary * 100;
   }
   return String(value);
 };
 
 export function getBalanceKindByStringName(name: string | null) {
-  return name === "CWD" ? 1 : 
-         name === "GLOBALSAFE" ? 14 :
-         name === "GLOBAL" ? 42 : 
-         name === "GF" ? 43 :
-         name === "FF" ? 44 : 
-         name === "MULTICS" ? 59 : null;
-};
+  return name === 'CWD'
+    ? 1
+    : name === 'GLOBALSAFE'
+    ? 14
+    : name === 'GLOBAL'
+    ? 42
+    : name === 'GF'
+    ? 43
+    : name === 'FF'
+    ? 44
+    : name === 'MULTICS'
+    ? 59
+    : null;
+}
 
 export function getFiatKindByStringName(name: string | null) {
-  return name === "RUB" ? 0 :
-         name === "BYN" ? 1 :
-         name === "UAH" ? 2 : 
-         name === "KZT" ? 3 :
-         name === "USD" ? 4 :
-         name === "EUR" ? 5 :
-         name === "THB" ? 6 :
-         name === "USDT" ? 7 : null;
-};
+  return name === 'RUB'
+    ? 0
+    : name === 'BYN'
+    ? 1
+    : name === 'UAH'
+    ? 2
+    : name === 'KZT'
+    ? 3
+    : name === 'USD'
+    ? 4
+    : name === 'EUR'
+    ? 5
+    : name === 'THB'
+    ? 6
+    : name === 'USDT'
+    ? 7
+    : null;
+}
 
 export function getMyRating(account: any) {
   if (account.claims) {
     let rating = 0;
     account.claims.forEach((claim: any) => {
-    if (claim.claimType === "exchanges-rating") {
-      rating = claim.claimValue;
-    };
-  });
-    return (Number(rating)).toFixed(1);
-  };
+      if (claim.claimType === 'exchanges-rating') {
+        rating = claim.claimValue;
+      }
+    });
+    return Number(rating).toFixed(1);
+  }
   return '0.0';
-};
+}
 
 export const removeLeadingZeros = (str: string): string => {
   // Regex to remove leading
   // zeros from a string
-  const regex = new RegExp("^0+(?!$)",'g');
+  const regex = new RegExp('^0+(?!$)', 'g');
 
   // Replaces the matched
   // value with given string
-  str = str.replaceAll(regex, "");
+  str = str.replaceAll(regex, '');
 
- return str;
+  return str;
 };
-
 
 // Hook
 export const useIsMobile = (): boolean => {
@@ -112,10 +127,10 @@ export const useIsMobile = (): boolean => {
       setWindowSize(window.innerWidth);
     }
     handleResize();
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
 
-    return () => window.removeEventListener("resize", handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   return windowSize < 769;
-}
+};
