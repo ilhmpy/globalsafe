@@ -68,6 +68,9 @@ export const ProgressBar = styled.div`
   background: #ebebf2;
   border: 1px solid #ffffff;
   border-radius: 2px;
+  @media (min-width: 768px) {
+    width: 210px;
+  }
 `;
 
 export const Bar = styled.p<{ percent?: number }>`

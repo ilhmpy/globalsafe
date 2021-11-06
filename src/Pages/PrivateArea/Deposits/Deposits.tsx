@@ -16,7 +16,6 @@ import SwiperCore, { A11y, Navigation, Pagination, Scrollbar, Thumbs, EffectFade
 import { Tiles } from '../components/Tiles';
 import styled from 'styled-components';
 import {
-  TilesContainer,
   BottomValue,
   BottomTitle,
   BottomSide,
@@ -31,6 +30,7 @@ import moment from 'moment';
 import { BalanceKind } from '../../../enums/balanceKind';
 import { SwiperContainer, SwiperUI, ProgressBar, Bar } from './S.elements';
 import useWindowSize from '../../../hooks/useWindowSize';
+import { getPercentage } from './helpers';
 
 export const Deposits: FC = () => {
   const screen = useWindowSize();
@@ -171,15 +171,6 @@ export const Deposits: FC = () => {
     }
   };
 
-  const getPercentage = (creationDate: Date, endDate: Date) => {
-    const now = moment(new Date());
-    const percent =
-      (moment.duration(now.diff(creationDate)).asDays() * 100) /
-      moment.duration(moment(creationDate).diff(endDate)).asDays();
-
-    return Math.abs(Math.round(percent));
-  };
-  
   if (!getDepositsLoading && depositsList.length === 0) {
     // history.replace(routers.depositsProgram);
     return (

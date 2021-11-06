@@ -54,8 +54,11 @@ export const DateRange = styled.p`
 
 export const BoxAmount = styled.p`
   font-weight: 500;
-  font-size: 14px;
+  font-size: 18px;
   line-height: 20px;
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
 `;
 
 export const BoxTitle = styled.p`
@@ -65,11 +68,14 @@ export const BoxTitle = styled.p`
 `;
 
 export const BlockBox = styled.div`
-  max-width: 280px;
+  max-width: 250px;
   width: 100%;
   background: #ffffff;
   border: 1px solid #ebebf2;
   box-sizing: border-box;
   border-radius: 4px;
   color: #000000;
+  @media (max-width: 768px) {
+    max-width: 280px;
+  }
 `;

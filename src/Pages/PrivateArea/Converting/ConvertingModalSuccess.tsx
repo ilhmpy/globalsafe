@@ -69,8 +69,8 @@ export const ConvertingModalSuccess: FC<Iprops> = ({
                           .split('.')[0]
                           .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
                           (userAmount / 100000).toFixed(5).toString().split('.')[1]
-                        }`
-                      : (userAmount / 100000).toFixed(5)}
+                        }`.replace(/(\.0+|0+)$/, '')
+                      : (userAmount / 100000).toFixed(5).replace(/(\.0+|0+)$/, '')}
                   </strong>
                 </p>
                 <p>
@@ -86,8 +86,10 @@ export const ConvertingModalSuccess: FC<Iprops> = ({
                             .toFixed(5)
                             .toString()
                             .split('.')[1]
-                        }`
-                      : (calculatedAmount / targetAmount / 1000).toFixed(5)}
+                        }`.replace(/(\.0+|0+)$/, '')
+                      : (calculatedAmount / targetAmount / 1000)
+                          .toFixed(5)
+                          .replace(/(\.0+|0+)$/, '')}
                   </strong>
                 </p>
                 <p>
@@ -99,7 +101,10 @@ export const ConvertingModalSuccess: FC<Iprops> = ({
                   <KeySpan>Зачислено (MULTICS):</KeySpan>
                   <Dots />
                   <strong>
-                    {(targetAmount / 100).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
+                    {(targetAmount / 100)
+                      .toString()
+                      .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')
+                      .replace(/(\.0+|0+)$/, '')}
                   </strong>
                 </p>
               </ContentBody>
