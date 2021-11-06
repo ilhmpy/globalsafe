@@ -23,7 +23,6 @@ interface Iprops {
   convertedData: IBalanceExchange;
   setOpenConverting: (open: boolean) => void;
   setIsOkConverting: (isOk: boolean) => void;
-  setConvertedData: (data: IBalanceExchange) => void;
   fromSumCloud: string;
   closeWithReset: () => void;
 }
@@ -34,7 +33,6 @@ export const ConvertingModalCorrection: FC<Iprops> = ({
   convertedData,
   setOpenConverting,
   fromSumCloud,
-  setConvertedData,
   setIsOkConverting,
   closeWithReset,
 }: Iprops) => {
@@ -66,17 +64,30 @@ export const ConvertingModalCorrection: FC<Iprops> = ({
                 <p>
                   <KeySpan sm>Указано к списанию (CWD)</KeySpan>
                   <Dots />
+                  {/* {console.log(
+                    `${(+fromSumCloud)
+                      .toFixed(5)
+                      .split('.')[0]
+                      .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
+                      (+fromSumCloud).toFixed(5).split('.')[1]
+                    }`
+                  )}
+                  {console.log(
+                    `${fromSumCloud.split('.')[0].replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
+                      (+fromSumCloud).toFixed(5).toString().split('.')[1]
+                    }`.replace(/(\.0+|0+)$/, '')
+                  )} */}
                   <strong>
                     {fromSumCloud.split('.').length > 1
                       ? `${fromSumCloud.split('.')[0].replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
                           (+fromSumCloud).toFixed(5).toString().split('.')[1]
-                        }`
+                        }`.replace(/(\.0+|0+)$/, '')
                       : `${(+fromSumCloud)
                           .toFixed(5)
                           .split('.')[0]
                           .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
                           (+fromSumCloud).toFixed(5).split('.')[1]
-                        }`}
+                        }`.replace(/(\.0+|0+)$/, '')}
                   </strong>
                 </p>
                 <p>
@@ -91,8 +102,8 @@ export const ConvertingModalCorrection: FC<Iprops> = ({
                           .split('.')[0]
                           .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
                           (calculatedAmount / 100000).toFixed(5).toString().split('.')[1]
-                        }`
-                      : (calculatedAmount / 100000).toFixed(5)}
+                        }`.replace(/(\.0+|0+)$/, '')
+                      : (calculatedAmount / 100000).toFixed(5).replace(/(\.0+|0+)$/, '')}
                   </strong>
                 </p>
                 <p>
@@ -108,8 +119,10 @@ export const ConvertingModalCorrection: FC<Iprops> = ({
                             .toFixed(5)
                             .toString()
                             .split('.')[1]
-                        }`
-                      : (calculatedAmount / targetAmount / 1000).toFixed(5)}
+                        }`.replace(/(\.0+|0+)$/, '')
+                      : (calculatedAmount / targetAmount / 1000)
+                          .toFixed(5)
+                          .replace(/(\.0+|0+)$/, '')}
                   </strong>
                 </p>
                 <p>
@@ -127,13 +140,13 @@ export const ConvertingModalCorrection: FC<Iprops> = ({
                           .split('.')[0]
                           .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
                           (targetAmount / 100).toFixed(2).toString().split('.')[1]
-                        }`
+                        }`.replace(/(\.0+|0+)$/, '')
                       : `${(+(targetAmount / 100).toString())
                           .toFixed(2)
                           .split('.')[0]
                           .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
                           (targetAmount / 100).toFixed(2).split('.')[1]
-                        }`}
+                        }`.replace(/(\.0+|0+)$/, '')}
                   </strong>
                 </p>
                 <CheckboxGroup>

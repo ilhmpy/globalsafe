@@ -141,7 +141,6 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
         open={isCorrectionConverting}
         setOpen={setIsCorrectionConverting}
         convertedData={convertedData}
-        setConvertedData={setConvertedData}
         setOpenConverting={setOpen}
         fromSumCloud={fromSumCloud}
         setIsOkConverting={setIsOkConverting}
@@ -371,12 +370,12 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                             .toFixed(5)
                             .toString()
                             .split('.')[1]
-                        }`
+                        }`.replace(/(\.0+|0+)$/, '')
                       : (
                           convertedData.calculatedAmount /
                           convertedData.targetAmount /
                           1000
-                        ).toFixed(5)}
+                        ).toFixed(5).replace(/(\.0+|0+)$/, '')}
                   </Rate>
                 </RateRow>
 
