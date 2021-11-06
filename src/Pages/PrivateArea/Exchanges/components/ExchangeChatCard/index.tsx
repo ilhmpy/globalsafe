@@ -157,6 +157,7 @@ export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
       // scrollto();
     } catch (err) {
       console.log(err);
+      setLoaderPicture(false);
     }
   };
 

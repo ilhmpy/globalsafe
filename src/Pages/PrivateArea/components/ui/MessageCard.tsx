@@ -64,7 +64,7 @@ const PartnerMessageStyles = css`
 `;
 
 const MessageBlock = styled.div<{ own: boolean; pointer?: boolean }>`
-  max-width: 470px;
+  max-width: 100%;
   font-weight: 300;
   font-size: 14px;
   line-height: 20px;
