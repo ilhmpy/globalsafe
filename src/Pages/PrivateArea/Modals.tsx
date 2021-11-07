@@ -67,7 +67,7 @@ type DividendsProps = {
   open: boolean;
 };
 
-export const ModalDividends: FC<DividendsProps> = ({ onClose, data, open }: DividendsProps) => {
+export const ModalDividends: FC<DividendsProps> = ({ onClose, data }: DividendsProps) => {
   const handleContainerClick = (e: React.MouseEvent) => {
     if (e.currentTarget === e.target) {
       onClose();
@@ -220,8 +220,8 @@ export const TokenModal = ({ block, setBlock, setToTranslate, onButton }: any) =
           {t('privateArea.translate')}
         </Button>
         <Button primary onClick={() => undefined}>
-              {t('logout')}
-            </Button>
+          {t('logout')}
+        </Button>
       </Modal>
     </CSSTransition>
   );
