@@ -74,7 +74,7 @@ export const Filters = styled.div<{
 export const FiltersBox = styled.div`
   width: 100%;
   height: 26px;
-  border: 1px solid #ebebf2;
+  border: 1px solid #DFDFE9;
   border-radius: 2px;
   justify-content: center;
   align-items: center;
