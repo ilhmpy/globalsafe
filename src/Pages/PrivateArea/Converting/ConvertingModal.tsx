@@ -260,6 +260,8 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                     const value = e.target.value.replaceAll(' ', '');
                     setToSum('');
 
+                    if (value.length > 1 && value[0] === '0' && +value[1] > 0) return;
+
                     if (value === '') {
                       setFromSumCloud('');
                       setFromSum('');
@@ -323,6 +325,8 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                     const value = e.target.value.replaceAll(' ', '');
                     setFromSum('');
 
+                    if (value.length > 1 && value[0] === '0' && +value[1] > 0) return;
+
                     if (
                       (value[0] !== '0' || value[1] !== '0') &&
                       (/^(\d+([.,]\d{0,2})?|\.?\d{1,2})$/gm.test(value) || !value)
@@ -371,11 +375,9 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                             .toString()
                             .split('.')[1]
                         }`.replace(/(\.0+|0+)$/, '')
-                      : (
-                          convertedData.calculatedAmount /
-                          convertedData.targetAmount /
-                          1000
-                        ).toFixed(5).replace(/(\.0+|0+)$/, '')}
+                      : (convertedData.calculatedAmount / convertedData.targetAmount / 1000)
+                          .toFixed(5)
+                          .replace(/(\.0+|0+)$/, '')}
                   </Rate>
                 </RateRow>
 
