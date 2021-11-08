@@ -129,8 +129,8 @@ export const Notify: FC<NotifyProps> = ({
           {notifies && notifies.length ? (
             <Scrollbars
               renderThumbVertical={(props) => 
-              <Notifies.Scrollbar lengthMoreThenFour={notifies.length > 4} {...props}></Notifies.Scrollbar>}
-            >
+              <Notifies.Scrollbar lengthMoreThenFour={notifies.length > 4} {...props} />}
+            > 
               {notifies &&
                 notifies.map((notify: any, idx: number) => (
                   <Notifies.Notify

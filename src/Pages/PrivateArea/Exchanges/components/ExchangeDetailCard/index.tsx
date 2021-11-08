@@ -346,7 +346,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
         .invoke(
           'RateUser',
           feedbackValue,
-          owner === 'seller' ? exchange.recepientSafeId : exchange.ownerSafeId,
+          account.safeId === exchange.ownerSafeId ? exchange.recepientSafeId : exchange.ownerSafeId,
           exchange.safeId
         )
         .then((res) => {

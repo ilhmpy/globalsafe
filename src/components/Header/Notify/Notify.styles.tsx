@@ -41,7 +41,7 @@ export const NotifiesBlock = styled.div<{
 }>`
   width: 80%;
   max-width: 420px;
-  height: ${({ empty, length }) => (empty ? '80px' : `${length && length < 4 ? (length * 127) + 50 : 584}px`)};
+  height: ${({ empty, length }) => (empty ? '80px' : `${length && length < 4 ? (length * 127) + 40 : 584}px`)};
   ${({ load }) => {
     if (load) {
       return `
@@ -97,12 +97,96 @@ export const NotifiesBlock = styled.div<{
     border-top: 1px solid #dcdce8;
     border-left: 1px solid #dcdce8;
     margin: auto;
-    @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
-      right: 125px;
+    @media only screen and (max-device-width: 359px) {
+      right: -99px;
     }
-    @media only screen and (max-device-width: 480px) {
-      right: -98px;
+    @media only screen and (min-device-width: 360px)  and (max-device-width: 379px) {
+      right: -115px;
     }
+    @media only screen and (min-device-width: 380px) and (max-device-width: 399px) {
+      right: -120px;
+    }
+    @media only screen and (min-device-width: 400px) and (max-device-width: 419px) {
+      right: -148px;
+    }
+    @media only screen and (min-device-width: 420px) and (max-device-width: 439px) {
+      right: -164px;
+    }
+    @media only screen and (min-device-width: 440px) and (max-device-width: 459px) {
+      right: -180px;
+    }
+    @media only screen and (min-device-width: 460px) and (max-device-width: 480px) {
+      right: -197px;
+    }
+    @media only screen and (min-device-width: 470px) and (max-device-width: 480px) {
+      right: -210px;
+    }
+  }
+  @media only screen and (min-device-width: 768px) and (max-device-width: 819px) {
+    left: -40px;   
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;   
+  }
+  @media only screen and (min-device-width: 820px) and (max-device-width: 839px) {
+    left: -20px;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;   
+  }
+  @media only screen and (min-device-width: 840px) and (max-device-width: 859px) {
+    left: 0px;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;   
+  }
+  @media only screen and (min-device-width: 860px) and (max-device-width: 879px) {
+    right: 0;
+    left: 20px;
+    margin-left: auto;
+    margin-right: auto;   
+  }
+  @media only screen and (min-device-width: 880px) and (max-device-width: 899px) {
+    right: 0;
+    left: 38px;
+    margin-left: auto;
+    margin-right: auto;   
+  }
+  @media only screen and (min-device-width: 900px) and (max-device-width: 919px) {
+    right: 0;
+    left: 58px;
+    margin-left: auto;
+    margin-right: auto;   
+  }
+  @media only screen and (min-device-width: 920px) and (max-device-width: 939px) {
+    right: 0;
+    left: 80px;
+    margin-left: auto;
+    margin-right: auto;   
+  }
+  @media only screen and (min-device-width: 940px) and (max-device-width: 959px) {
+    right: 0;
+    left: 100px;
+    margin-left: auto;
+    margin-right: auto;   
+  } 
+  @media only screen and (min-device-width: 960px) and (max-device-width: 979px) {
+    right: 0;
+    left: 120px;
+    margin-left: auto;
+    margin-right: auto;   
+  }
+  @media only screen and (min-device-width: 980px) and (max-device-width: 1000px) {
+    right: 0;
+    left: 140px;
+    margin-left: auto;
+    margin-right: auto;   
+  }
+  @media only screen and (min-device-width: 1000px) and (max-device-width: 1024px) {
+    right: 0;
+    left: 183px;
+    margin-left: auto;
+    margin-right: auto;   
   }
   & > .scrollbars > div {
     right: -1px !important;
@@ -215,6 +299,9 @@ export const NotifyItem = styled.h3<{
     if (notclb) {
       return `
                 cursor: initial;
+                @media only screen and (max-device-width: 480px) {
+                  font-size: 12px;
+                }
             `;
     }
   }}
