@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 
 import { AppContext } from '../../../../../context/HubContext';
 import { Balance } from '../../../../../types/balance';
@@ -7,7 +7,7 @@ import { FiatKind } from '../../../../../types/fiat';
 import { ViewBuyOrderModel, ViewSellOrderModel } from '../../../../../types/orders';
 import { countVolumeToShow, paymentMethodIconSrc, useIsMobile } from '../../../utils';
 
-import * as S from './S.el';
+import * as S from './S.el'; 
 
 interface AdvertTableProps {
   list: Array<ViewBuyOrderModel | ViewSellOrderModel>;
