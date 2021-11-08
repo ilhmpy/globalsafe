@@ -7,6 +7,7 @@ import useWindowSize from '../../../../hooks/useWindowSize';
 import { CollectionListDeposits, ListDeposits } from '../../../../types/deposits';
 import { RootList } from '../../../../types/info';
 import { SwiperContainer, SwiperUI } from '../../Deposits/S.elements';
+import { Loading } from '../Loading/Loading';
 import * as S from './S.el';
 
 interface ProgramProps {
@@ -48,6 +49,10 @@ export const Program = ({ className = '' }: ProgramProps) => {
   const handleNavigateToOpen = (depositId: string) => {
     history.replace(`/info/deposits/new-deposit/${depositId}`);
   };
+
+  if (!depositProgramsList.length) {
+    return <Loading />;
+  }
 
   return (
     <>

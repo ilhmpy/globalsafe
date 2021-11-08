@@ -13,51 +13,40 @@ import {
   ModalTitle,
 } from './styled';
 
-interface Iprops {
+interface IProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   setConvertedData: (convertedData: IBalanceExchange) => void;
   convertedData: IBalanceExchange;
 }
-export const ConvertingModalSuccess: FC<Iprops> = ({
+export const ConvertingModalSuccess: FC<IProps> = ({
   open,
   setOpen,
   convertedData,
   setConvertedData,
-}: Iprops) => {
+}: IProps) => {
   const { t } = useTranslation();
   const { userAmount, calculatedAmount, targetAmount, discountPercent } = convertedData;
+
+  const handleModalClose = () => {
+    setOpen(false);
+    setConvertedData({
+      userAmount: 0,
+      calculatedAmount: 0,
+      targetAmount: 0,
+      discountPercent: 0,
+    });
+  };
 
   return (
     <>
       {open && (
-        <Modal
-          onClose={() => {
-            setOpen(false);
-            setConvertedData({
-              userAmount: 0,
-              calculatedAmount: 0,
-              targetAmount: 0,
-              discountPercent: 0,
-            });
-          }}
-          width={420}
-        >
+        <Modal onClose={handleModalClose} width={420}>
           <ModalBlock>
             <ModalTitle>{t('privateArea.convertingSuccess')}</ModalTitle>
             <ModalContent gap20>
               <ContentTitle>Конвертация CWD в MULTICS успешно завершена:</ContentTitle>
-              <CloseButton
-                onClick={() => {
-                  setOpen(false);
-                  setConvertedData({
-                    userAmount: 0,
-                    calculatedAmount: 0,
-                    targetAmount: 0,
-                    discountPercent: 0,
-                  });
-                }}
-              />
+              <CloseButton onClick={handleModalClose} />
               <ContentBody>
                 <p>
                   <KeySpan>Списано (CWD):</KeySpan>
