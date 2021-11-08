@@ -1,51 +1,46 @@
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
 import { Modal } from '../../../components/Modal/Modal';
 import { IBalanceExchange } from './ConvertingModal';
-import { CloseButton, ContentTitle, ModalBlock, ModalContent, ModalTitle } from './styled';
+import {
+  CloseButton,
+  ContentTitle,
+  ModalBlock,
+  ModalContent,
+  ModalTitle,
+  BodyEmpty,
+} from './styled';
 
-interface Iprops {
+interface IProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   setConvertedData: (convertedData: IBalanceExchange) => void;
 }
-export const ConvertingModalFail: FC<Iprops> = ({ open, setOpen, setConvertedData }: Iprops) => {
+export const ConvertingModalFail: FC<IProps> = ({ open, setOpen, setConvertedData }: IProps) => {
   const { t } = useTranslation();
+
+  const handleModalClose = () => {
+    setOpen(false);
+    setConvertedData({
+      userAmount: 0,
+      calculatedAmount: 0,
+      targetAmount: 0,
+      discountPercent: 0,
+    });
+  };
 
   return (
     <>
       {open && (
-        <Modal
-          onClose={() => {
-            setOpen(false);
-            setConvertedData({
-              userAmount: 0,
-              calculatedAmount: 0,
-              targetAmount: 0,
-              discountPercent: 0,
-            });
-          }}
-          width={420}
-        >
+        <Modal onClose={handleModalClose} width={420}>
           <ModalBlock>
             <ModalTitle>{t('privateArea.convertingFail')}</ModalTitle>
             <ModalContent>
               <ContentTitle>Конвертация CWD в MULTICS завершена с ошибкой:</ContentTitle>
-              <CloseButton
-                onClick={() => {
-                  setOpen(false);
-                  setConvertedData({
-                    userAmount: 0,
-                    calculatedAmount: 0,
-                    targetAmount: 0,
-                    discountPercent: 0,
-                  });
-                }}
-              />
-              <ContentBody>
+              <CloseButton onClick={handleModalClose} />
+              <BodyEmpty>
                 <span>На балансе аккаунта недостаточно средств</span>
-              </ContentBody>
+              </BodyEmpty>
             </ModalContent>
           </ModalBlock>
         </Modal>
@@ -53,11 +48,3 @@ export const ConvertingModalFail: FC<Iprops> = ({ open, setOpen, setConvertedDat
     </>
   );
 };
-
-const ContentBody = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  text-align: start;
-  color: #ff4a31;
-`;

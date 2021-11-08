@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import { SwiperSlide } from 'swiper/react';
 import { Button } from '../../../../components/Button/V2/Button';
 import { AppContext } from '../../../../context/HubContext';
@@ -7,6 +7,7 @@ import useWindowSize from '../../../../hooks/useWindowSize';
 import { CollectionListDeposits, ListDeposits } from '../../../../types/deposits';
 import { RootList } from '../../../../types/info';
 import { SwiperContainer, SwiperUI } from '../../Deposits/S.elements';
+import { Loading } from '../Loading/Loading';
 import * as S from './S.el';
 
 interface ProgramProps {
@@ -48,6 +49,10 @@ export const Program = ({ className = '' }: ProgramProps) => {
   const handleNavigateToOpen = (depositId: string) => {
     history.replace(`/info/deposits/new-deposit/${depositId}`);
   };
+
+  if (!depositProgramsList.length) {
+    return <Loading />;
+  }
 
   return (
     <>

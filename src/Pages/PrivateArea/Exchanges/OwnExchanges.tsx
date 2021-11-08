@@ -7,6 +7,7 @@ import { routers } from '../../../constantes/routers';
 import { TabNavItem, TabsBlock, Text, FilterButton } from '../components/ui';
 import { Spinner } from '../components/Loading/Loading';
 import * as S from './S.el';
+import { getOwner } from '../../../utils/getOwner';
 
 import { OwnActiveExchangesTable } from './components/OwnActiveExchangesTable/OwnActiveExchangesTable';
 import { OwnArchivedExchangesTable } from './components/OwnArchivedExchangeTable/OwnArchivedExchangeTable';
@@ -116,11 +117,19 @@ export const OwnExchanges = () => {
     } else if (status && status.length) {
       const filter = res.collection.filter((i) => {
         for (let el = 0; el < status.length; el++) {
-          if (i.state === status[el]) {
+          if (
+            i.state === status[el] ||
+            (getOwner({ ...i, account }) === 'seller' &&
+              status[el] === 100 &&
+              i.state != ExchangeState.Abused &&
+              i.state != ExchangeState.Cancelled &&
+              i.state != ExchangeState.Confirmed)
+          ) {
             return i;
           }
         }
       });
+      console.log(filter);
       setUserExchanges(filter);
     } else {
       const collection = getFirstElements(res.collection, 10);
@@ -344,13 +353,19 @@ export const OwnExchanges = () => {
     };
   }, [hubConnection, userExchanges]);
 
-  const statuts = useMemo<Object[]>(
+  type ViewMethodModel = {
+    methodName: string;
+    kind: number;
+  };
+
+  const statuts = useMemo<ViewMethodModel[]>(
     () =>
       activeFilter === 'active'
         ? [
             { methodName: 'Новый', kind: 0 },
             { methodName: 'Ожидается подтверждение оплаты', kind: 1 },
             { methodName: 'Спорный', kind: 3 },
+            { methodName: 'Ожидание перевода', kind: 100 },
           ]
         : [
             { methodName: 'Завершен', kind: 2 },
@@ -359,7 +374,7 @@ export const OwnExchanges = () => {
     [activeFilter]
   );
 
-  const paymentMethodsKinds = useMemo<Object[]>(
+  const paymentMethodsKinds = useMemo<ViewMethodModel[]>(
     () => [
       { methodName: 'ERC 20', kind: 0 },
       { methodName: 'TRC 20', kind: 1 },
@@ -463,6 +478,7 @@ export const OwnExchanges = () => {
                 onClick={() => setActiveFilter('active')}
                 style={{ marginRight: '0px' }}
                 big
+                smHalfWidth
               >
                 Активные
               </FilterButton>
@@ -471,6 +487,7 @@ export const OwnExchanges = () => {
                 onClick={() => setActiveFilter('archived')}
                 style={{ marginLeft: '0px', borderLeft: '0' }}
                 big
+                smHalfWidth
               >
                 Архив
               </FilterButton>

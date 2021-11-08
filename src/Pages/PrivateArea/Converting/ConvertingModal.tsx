@@ -7,8 +7,8 @@ import { Modal } from '../../../components/Modal/Modal';
 import { Select } from '../../../components/Select/Select5';
 import { AppContext } from '../../../context/HubContext';
 import { Balance } from '../../../types/balance';
-import { ConvertingModalConfirm } from './ConveringModalConfirm ';
-import { ConvertingModalSuccess } from './ConveringModalSuccess';
+import { ConvertingModalConfirm } from './ConvertingModalConfirm ';
+import { ConvertingModalSuccess } from './ConvertingModalSuccess';
 import { ConvertingModalCorrection } from './ConvertingModalCorrection';
 import { ConvertingModalFail } from './ConvertingModalFail';
 import { getCookie } from './cookiesFns';
@@ -37,10 +37,10 @@ export interface IBalanceExchange {
 
 export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
   const { t } = useTranslation();
-  const [fromSum, setFromSum] = useState('');
-  const [toSum, setToSum] = useState('');
-  const [fromCurrency, setFromCurrency] = useState('');
-  const [toCurrency, setToCurrency] = useState('');
+  const [fromSum, setFromSum] = useState<string>('');
+  const [toSum, setToSum] = useState<string>('');
+  const [fromCurrency, setFromCurrency] = useState<string>('');
+  const [toCurrency, setToCurrency] = useState<string>('');
   const { hubConnection } = useContext(AppContext);
 
   const [isSuccessConverting, setIsSuccessConverting] = useState<boolean>(false);
@@ -135,13 +135,24 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
     }
   };
 
+  const handleModalClose = () => {
+    setOpen(false);
+    setIsOkConverting(false);
+    setTimeout(() => resetStateValues(), 500);
+    setConvertedData({
+      userAmount: 0,
+      calculatedAmount: 0,
+      targetAmount: 0,
+      discountPercent: 0,
+    });
+  };
+
   return (
     <>
       <ConvertingModalCorrection
         open={isCorrectionConverting}
         setOpen={setIsCorrectionConverting}
         convertedData={convertedData}
-        setConvertedData={setConvertedData}
         setOpenConverting={setOpen}
         fromSumCloud={fromSumCloud}
         setIsOkConverting={setIsOkConverting}
@@ -192,35 +203,10 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
         unmountOnExit
         style={{ display: isConfirmConverting ? 'none' : 'block' }}
       >
-        <Modal
-          onClose={() => {
-            setOpen(false);
-            setIsOkConverting(false);
-            setTimeout(() => resetStateValues(), 500);
-            setConvertedData({
-              userAmount: 0,
-              calculatedAmount: 0,
-              targetAmount: 0,
-              discountPercent: 0,
-            });
-          }}
-          width={420}
-        >
+        <Modal onClose={handleModalClose} width={420}>
           <Container>
             <ModalTitle mb20>{t('privateArea.converting')}</ModalTitle>
-            <CloseButton
-              onClick={() => {
-                setOpen(false);
-                setIsOkConverting(false);
-                setTimeout(() => resetStateValues(), 500);
-                setConvertedData({
-                  userAmount: 0,
-                  calculatedAmount: 0,
-                  targetAmount: 0,
-                  discountPercent: 0,
-                });
-              }}
-            />
+            <CloseButton onClick={handleModalClose} />
 
             <ContentWrapper>
               <InnerBlock>
@@ -261,6 +247,8 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                     const value = e.target.value.replaceAll(' ', '');
                     setToSum('');
 
+                    if (value.length > 1 && value[0] === '0' && +value[1] > 0) return;
+
                     if (value === '') {
                       setFromSumCloud('');
                       setFromSum('');
@@ -284,7 +272,6 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                         setFromSum(value.replaceAll(',', '.'));
                       }
                     }
-                    // if (!value) setFromSum(value);
 
                     setIsMultics(false);
                   }}
@@ -323,6 +310,8 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     const value = e.target.value.replaceAll(' ', '');
                     setFromSum('');
+
+                    if (value.length > 1 && value[0] === '0' && +value[1] > 0) return;
 
                     if (
                       (value[0] !== '0' || value[1] !== '0') &&
@@ -371,12 +360,10 @@ export const ConvertingModal: FC<IProps> = ({ open, setOpen }: IProps) => {
                             .toFixed(5)
                             .toString()
                             .split('.')[1]
-                        }`
-                      : (
-                          convertedData.calculatedAmount /
-                          convertedData.targetAmount /
-                          1000
-                        ).toFixed(5)}
+                        }`.replace(/(\.0+|0+)$/, '')
+                      : (convertedData.calculatedAmount / convertedData.targetAmount / 1000)
+                          .toFixed(5)
+                          .replace(/(\.0+|0+)$/, '')}
                   </Rate>
                 </RateRow>
 

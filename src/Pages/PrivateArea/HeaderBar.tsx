@@ -31,7 +31,7 @@ import * as Styled from './Styles.elements';
 import { SelectButton } from './components/ui/SelectButton';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, { Navigation, Pagination, A11y } from 'swiper';
-import { countVolumeToShow } from './utils';
+import { countVolumeToShow } from './utils'; 
 import useWindowSize from '../../hooks/useWindowSize';
 
 export const HeaderBar: FC = () => {
@@ -540,8 +540,6 @@ export const HeaderBar: FC = () => {
     // history.push('/');
     // window.location.reload();
   };
-
-  SwiperCore.use([Navigation, Pagination, A11y]);
 
   return (
     <>
