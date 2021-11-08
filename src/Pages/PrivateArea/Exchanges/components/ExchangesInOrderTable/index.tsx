@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import alfa from '../../../../../assets/v2/svg/banks/alfa.svg';
 import { Balance } from '../../../../../types/balance';
 import { ViewExchangeModel } from '../../../../../types/exchange';

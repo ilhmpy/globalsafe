@@ -9,6 +9,7 @@ import { Balance } from '../../../../types/balance';
 import { CollectionListDeposits, ListDeposits } from '../../../../types/deposits';
 import { Checkbox } from '../Checkbox';
 import { Dropdown } from '../Dropdown';
+import { Loading } from '../Loading/Loading';
 import { ErrorOpenDeposit } from '../Modals/ErrorOpenDeposit';
 import { SuccessOpenDeposit } from '../Modals/Success';
 import {
@@ -133,6 +134,10 @@ export const OpenDeposit: FC<IProps> = ({
       setDelayed(false);
     }
   };
+
+  if (!activeDeposit) {
+    return <Loading />;
+  }
 
   return (
     <S.Container>

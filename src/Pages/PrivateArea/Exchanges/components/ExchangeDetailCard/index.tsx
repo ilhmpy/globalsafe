@@ -14,7 +14,7 @@ import {
 import { Button } from '../../../../../components/Button/V2/Button';
 import { ExchangeSuccessModal } from '../modals/ExchangeSuccessModal';
 import { ExchangeRejectModal } from '../modals/ExchangeRejectModal';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import { routers } from '../../../../../constantes/routers';
 import { ViewExchangeModel, ExchangeState } from '../../../../../types/exchange';
 import { Balance } from '../../../../../types/balance';
@@ -347,7 +347,6 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
           'RateUser',
           feedbackValue,
           userSafeId === exchange.ownerSafeId ? exchange.recepientSafeId : exchange.ownerSafeId,
-          // owner === 'seller' ? exchange.recepientSafeId : exchange.ownerSafeId,
           exchange.safeId
         )
         .then((res) => {

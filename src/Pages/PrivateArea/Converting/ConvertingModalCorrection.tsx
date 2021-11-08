@@ -17,7 +17,7 @@ import {
   ModalTitle,
 } from './styled';
 
-interface Iprops {
+interface IProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   convertedData: IBalanceExchange;
@@ -27,7 +27,7 @@ interface Iprops {
   closeWithReset: () => void;
 }
 
-export const ConvertingModalCorrection: FC<Iprops> = ({
+export const ConvertingModalCorrection: FC<IProps> = ({
   open,
   setOpen,
   convertedData,
@@ -35,7 +35,7 @@ export const ConvertingModalCorrection: FC<Iprops> = ({
   fromSumCloud,
   setIsOkConverting,
   closeWithReset,
-}: Iprops) => {
+}: IProps) => {
   const [isNoShow, setIsNoShow] = useState<boolean>(false);
   const { calculatedAmount, targetAmount, discountPercent } = convertedData;
 
@@ -64,19 +64,6 @@ export const ConvertingModalCorrection: FC<Iprops> = ({
                 <p>
                   <KeySpan sm>Указано к списанию (CWD)</KeySpan>
                   <Dots />
-                  {/* {console.log(
-                    `${(+fromSumCloud)
-                      .toFixed(5)
-                      .split('.')[0]
-                      .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
-                      (+fromSumCloud).toFixed(5).split('.')[1]
-                    }`
-                  )}
-                  {console.log(
-                    `${fromSumCloud.split('.')[0].replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
-                      (+fromSumCloud).toFixed(5).toString().split('.')[1]
-                    }`.replace(/(\.0+|0+)$/, '')
-                  )} */}
                   <strong>
                     {fromSumCloud.split('.').length > 1
                       ? `${fromSumCloud.split('.')[0].replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${

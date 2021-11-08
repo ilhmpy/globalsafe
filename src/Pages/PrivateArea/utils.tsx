@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 
 import alfa from '../../assets/v2/svg/banks/alfa.svg';
 import sber from '../../assets/v2/svg/banks/sber.svg';
 import tinkoff from '../../assets/v2/svg/banks/tinkoff.svg';
-import erc20 from '../../assets/v2/svg/banks/erc20.svg';
+import erc20 from '../../assets/v2/svg/banks/erc20.svg'; 
 import trc20 from '../../assets/v2/svg/banks/trc20.svg';
 import bep20 from '../../assets/v2/svg/banks/bep20.svg';
 
@@ -16,7 +16,7 @@ export const paymentMethodIconSrc = (kind: number): string => {
     case PaymentMethodKind.TRC20:
       return trc20;
     case PaymentMethodKind.BEP20:
-      return bep20;
+      return bep20; 
     case PaymentMethodKind.Tinkoff:
       return tinkoff;
     case PaymentMethodKind.Sberbank:
@@ -57,7 +57,7 @@ export const countVolumeToSend = (summ: string, asset: number): string => {
   return String(value);
 };
 
-export function getBalanceKindByStringName(name: string | null) {
+export function getBalanceKindByStringName(name: string | null): number | null {
   return name === 'CWD'
     ? 1
     : name === 'GLOBALSAFE'
@@ -73,7 +73,7 @@ export function getBalanceKindByStringName(name: string | null) {
     : null;
 }
 
-export function getFiatKindByStringName(name: string | null) {
+export function getFiatKindByStringName(name: string | null): number | null {
   return name === 'RUB'
     ? 0
     : name === 'BYN'
@@ -93,7 +93,7 @@ export function getFiatKindByStringName(name: string | null) {
     : null;
 }
 
-export function getMyRating(account: any) {
+export function getMyRating(account: any): string {
   if (account.claims) {
     let rating = 0;
     account.claims.forEach((claim: any) => {

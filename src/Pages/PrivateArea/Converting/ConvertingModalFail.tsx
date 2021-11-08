@@ -19,36 +19,25 @@ interface IProps {
 export const ConvertingModalFail: FC<IProps> = ({ open, setOpen, setConvertedData }: IProps) => {
   const { t } = useTranslation();
 
+  const handleModalClose = () => {
+    setOpen(false);
+    setConvertedData({
+      userAmount: 0,
+      calculatedAmount: 0,
+      targetAmount: 0,
+      discountPercent: 0,
+    });
+  };
+
   return (
     <>
       {open && (
-        <Modal
-          onClose={() => {
-            setOpen(false);
-            setConvertedData({
-              userAmount: 0,
-              calculatedAmount: 0,
-              targetAmount: 0,
-              discountPercent: 0,
-            });
-          }}
-          width={420}
-        >
+        <Modal onClose={handleModalClose} width={420}>
           <ModalBlock>
             <ModalTitle>{t('privateArea.convertingFail')}</ModalTitle>
             <ModalContent>
               <ContentTitle>Конвертация CWD в MULTICS завершена с ошибкой:</ContentTitle>
-              <CloseButton
-                onClick={() => {
-                  setOpen(false);
-                  setConvertedData({
-                    userAmount: 0,
-                    calculatedAmount: 0,
-                    targetAmount: 0,
-                    discountPercent: 0,
-                  });
-                }}
-              />
+              <CloseButton onClick={handleModalClose} />
               <BodyEmpty>
                 <span>На балансе аккаунта недостаточно средств</span>
               </BodyEmpty>
