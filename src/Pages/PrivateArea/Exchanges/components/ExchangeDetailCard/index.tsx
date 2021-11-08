@@ -32,6 +32,7 @@ import { countVolumeToShow } from '../../../utils';
 import { Container } from '../../../../../components/UI/Container';
 import { Exchange } from '../OwnActiveExchangesTable/S.el';
 import useWindowSize from '../../../../../hooks/useWindowSize';
+import { getMyRating } from '../../../utils';
 
 type DetailCardProps = {
   exchange: ViewExchangeModel;
@@ -250,16 +251,6 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
     }
   }
 
-  function getMyRating() {
-    let rating = 0;
-    account.claims.forEach((claim: any) => {
-      if (claim.claimType === 'exchanges-rating') {
-        rating = claim.claimValue;
-      }
-    });
-    return Number(rating).toFixed(1);
-  }
-
   function getMyExchanges() {
     let exchanges = 0;
     account.claims.forEach((claim: any) => {
@@ -317,8 +308,9 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
           console.log('cancel', res);
           if (screen > 480) {
             setShowRejectModal(true);
-          }
-          handleToMobileModal(4);
+          } else {
+            handleToMobileModal(4);
+          };
         })
         .catch((err) => console.log(err));
     }
@@ -511,10 +503,10 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
               <S.BlockWrapper>
                 <Text size={14} lH={20} mB={10} black onMobileTitleInExchange>
                   Рейтинг продавца:
-                </Text>
+                </Text> 
                 <Title lH={28} onMobileTitleInExchange>
                   {owner === 'seller'
-                    ? `${getMyRating()} (${getMyExchanges()})`
+                    ? `${getMyRating(account)} (${getMyExchanges()})`
                     : `${Number(exchange.userRating).toFixed(1)} (${totalExchanges})`}
                 </Title>
               </S.BlockWrapper>
@@ -614,7 +606,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                   <Text size={14} lH={20} weight={500} mB={4} black phoneFWB>
                     {owner === 'seller'
                       ? `${Number(exchange.userRating).toFixed(1)} (${totalExchanges})`
-                      : `${getMyRating()} (${getMyExchanges()})`}
+                      : `${getMyRating(account)} (${getMyExchanges()})`} 
                   </Text>
                 </S.BlockWrapper>
               </S.StateBlock>
