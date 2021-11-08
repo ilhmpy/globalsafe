@@ -344,7 +344,7 @@ export const OrderToSellCard: FC = () => {
     if (!orderMaxSumm) {
       isValid = false;
     }
-    if (orderMinSumm > orderMaxSumm) {
+    if (+orderMinSumm > +orderMaxSumm) {
       isValid = false;
     }
     if (selectedPaymentMethodsIds.length === 0) {

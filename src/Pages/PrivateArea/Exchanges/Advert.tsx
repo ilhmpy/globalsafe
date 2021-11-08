@@ -102,7 +102,6 @@ export const Advert = () => {
         0,
         10
       );
-      console.log('GetBuyOrders', res);
       setOrdersList(res.collection);
       setTotalCount(res.totalRecords);
       setSkip((s) => s + 10);
@@ -300,16 +299,29 @@ export const Advert = () => {
         </S.SubHeader>
 
         <S.Filters>
-          <FilterButton
-            smHalfWidth
-            active={!listingMyOrders}
-            onClick={() => setListingMyOrders(false)}
-            switchLeft
-          >
-            Все ордеры
-          </FilterButton>
+            <FilterButton
+              smHalfWidth
+              active={!listingMyOrders}
+              onClick={() => setListingMyOrders(false)}
+              switchLeft
+              noMargin
+            >
+              Все ордеры
+            </FilterButton>
+            <FilterButton
+              smHalfWidth
+              active={listingMyOrders}
+              onClick={() => setListingMyOrders(true)}
+              switchRight
+              noMargin
+            >
+              Мои ордеры
+            </FilterButton>
+        </S.Filters>
 
-          <FilterButton wFull active={false} onClick={() => setShowMobileFilters(true)}>
+        {/* Show only on Mobile */}
+        <S.Filters hidden smVisible>
+          <FilterButton noMargin wFull active={false} onClick={() => setShowMobileFilters(true)}>
             Фильтры (3)
           </FilterButton>
         </S.Filters>
@@ -322,6 +334,7 @@ export const Advert = () => {
             active={activeType === OrderType.Buy}
             onClick={() => setActiveType(OrderType.Buy)}
             switchLeft
+            noMargin
           >
             Покупка
           </FilterButton>
@@ -329,13 +342,14 @@ export const Advert = () => {
             active={activeType === OrderType.Sell}
             onClick={() => setActiveType(OrderType.Sell)}
             switchRight
+            noMargin
           >
             Продажа
           </FilterButton>
 
           <S.Line />
 
-          <FilterButton onClick={() => setShowCurrenctPairModal(true)} active>
+          <FilterButton noMargin onClick={() => setShowCurrenctPairModal(true)} active>
             {!selectedPair
               ? 'Все валюты'
               : `${selectedPair.balance ? selectedPair.balance : 'все'} - ${
@@ -343,13 +357,13 @@ export const Advert = () => {
                 }`}
           </FilterButton>
           <S.Line />
-          <FilterButton active onClick={() => setShowPaymentMethodsModal(true)}>
+          <FilterButton noMargin active onClick={() => setShowPaymentMethodsModal(true)}>
             {`Все методы оплаты ${
               acceptedPaymentMethods.length ? acceptedPaymentMethods.length : ''
             }`}
           </FilterButton>
           <S.Line />
-          <FilterButton active onClick={() => setShowRatingModal(true)}>
+          <FilterButton noMargin active onClick={() => setShowRatingModal(true)}>
             {acceptedRate === 0 ? 'Все рейтинги' : ratesList[acceptedRate]}
           </FilterButton>
 

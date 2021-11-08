@@ -9,6 +9,7 @@ interface MessageCardProps {
   image: boolean;
   body: CollectionHistory;
   onClickImage: (item: string) => void;
+  error: boolean;
 }
 
 export const MessageCard = ({
@@ -16,7 +17,18 @@ export const MessageCard = ({
   image = false,
   body,
   onClickImage,
+  error,
 }: MessageCardProps) => {
+  if (error) {
+    return (
+      <MessageContainer own={own}>
+        <MessageDate>{moment.utc(body.messageDate).local().fromNow()}</MessageDate>
+        <MessageBlock own={own} error>
+          {body.message}
+        </MessageBlock>
+      </MessageContainer>
+    );
+  }
   if (image) {
     return (
       <MessageContainer own={own}>
@@ -41,6 +53,9 @@ const MessageContainer = styled.div<{ own: boolean }>`
   flex-direction: column;
   align-items: ${(props) => (props.own ? 'flex-end' : 'flex-start')};
   margin-bottom: 20px;
+  @media (max-width: 767px) {
+    padding: ${(props) => (props.own ? '0 0 0 40px' : '0 40px 0 0')};
+  }
 `;
 
 const MessageDate = styled.div`
@@ -49,6 +64,9 @@ const MessageDate = styled.div`
   line-height: 16px;
   color: ${(props) => props.theme.black};
   margin-bottom: 10px;
+  @media (max-width: 767px) {
+    padding: 0 20px;
+  }
 `;
 
 const OwnMessageStyles = css`
@@ -63,7 +81,7 @@ const PartnerMessageStyles = css`
   border-radius: 0px 4px 4px 4px;
 `;
 
-const MessageBlock = styled.div<{ own: boolean; pointer?: boolean }>`
+const MessageBlock = styled.div<{ own: boolean; pointer?: boolean; error?: boolean }>`
   max-width: 100%;
   font-weight: 300;
   font-size: 14px;
@@ -72,4 +90,13 @@ const MessageBlock = styled.div<{ own: boolean; pointer?: boolean }>`
   padding: 12px;
   ${(props) => (props.own ? OwnMessageStyles : PartnerMessageStyles)};
   cursor: ${(props) => (props.pointer ? 'pointer' : 'inherit')};
+  ${(props) => {
+    if (props.error) {
+      return `
+        background: none;
+        color: #FF4A31;
+        border: none
+      `;
+    }
+  }}
 `;

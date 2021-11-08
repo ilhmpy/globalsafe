@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components/macro';
-import { RightSide as BaseRightSide } from '../../../components/ui';
-
+import { RightSide as BaseRightSide, LeftSide } from '../../../components/ui';
+import { Button } from '../../../../../components/Button/V2/Button';
 
 export const RightSide = styled(BaseRightSide)`
     padding: 0;
@@ -15,6 +15,9 @@ export const Container = styled.div`
   border-radius: 4px;
   @media (max-width: 767px) {
     flex-wrap: wrap;
+    ${LeftSide}{
+      display: none;
+    }
   }
 `;
 
@@ -46,6 +49,9 @@ export const ChatWrapper = styled.div`
   position: relative;
   height: 748px;
   overflow: hidden;
+  @media (max-width: 767px){
+    height: 627px;
+  }
 `;
 
 export const ChatHeader = styled.div`
@@ -56,6 +62,7 @@ export const ChatHeader = styled.div`
   padding: 20px 40px;
   margin-bottom: 40px;
   border-bottom: 1px solid #EBEBF2;
+  text-transform: capitalize;
 `;
 
 export const ChatContainer = styled.div`
@@ -65,6 +72,9 @@ export const ChatContainer = styled.div`
     &::-webkit-scrollbar {
         display: none;
       }
+    @media (max-width: 767px){
+      padding: 15px 0;
+    }
 `;
 
 export const ChatFooter = styled.div`
@@ -73,6 +83,9 @@ export const ChatFooter = styled.div`
   align-items:center;
   justify-content: center;
   border-top: 1px solid #EBEBF2;
+  @media (max-width: 767px){
+      padding: 20px;
+    }
 `;
 
 
@@ -141,3 +154,92 @@ export const ImageContainer = styled.div`
     object-fit: contain;
   }
 `;
+
+export const Progress = styled.div`
+  margin: 10px 0;
+  width: 100%;
+`;
+
+export const LabelWrap = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+`
+
+export const LabelProgress = styled.div<{error: boolean}>`
+ font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  color: ${props => props.error ? '#FF4A31' : '#0094FF'};
+  padding-right: 10px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+`
+
+export const Percent = styled.div`
+  background: #0094FF;
+  border-radius: 2px;
+  height: 2px;
+  width: 0;
+`;
+
+export const ModalInner = styled.div`
+  width: 340px;
+  @media (max-width: 768px){
+    padding: 20px;
+  }
+`
+export const CloseBtn = styled.div`
+  cursor: pointer;
+
+`;
+
+export const Buttons = styled.div`
+  display: flex;
+  @media (max-width: 576px) {
+    flex-wrap: wrap;
+  }
+  ${Button} {
+    flex: 1;
+    padding: 12px 12px 11px;
+    &:last-child {
+      margin-left: 20px;
+      @media (max-width: 576px) {
+        margin-left: 0px;
+        margin-top: 15px;
+      }
+    }
+    @media (max-width: 576px) {
+      width: 100%;
+      flex: none;
+    }
+  }
+`;
+
+export const FileInputButton = styled.label<{hide: boolean}>`
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+  color: #fff;
+  padding: 12px;
+  text-align: center;
+  background: #0094FF;
+  border-radius: 4px;
+  width: 160px;
+  cursor: pointer;
+  @media (max-width: 576px) {
+      width: 100%;
+      flex: none;
+    }
+  ${props => {
+    if(props.hide){
+      return`
+        position: absolute;
+        top: 100%;
+        pointer-events: none;
+        opacity: 0;
+      `
+    }
+  }}
+`

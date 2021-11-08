@@ -16,6 +16,7 @@ import { AppContext } from '../../../context/HubContext';
 import { GetExchangesCollectionResult, ViewExchangeModel } from '../../../types/exchange';
 import { FilterButton } from '../components/ui';
 import { useIsMobile } from '../utils';
+import { Button } from '../../../components/Button/V2/Button';
 
 export const SingleOrderDetailsOwn: FC = () => {
   const history = useHistory();
@@ -28,6 +29,9 @@ export const SingleOrderDetailsOwn: FC = () => {
   const [activeFilter, setActiveFilter] = useState<'active' | 'archived' | 'all'>('active');
   const [orderExchanges, setOrderExchanges] = useState<ViewExchangeModel[]>([]);
   const [mobileActiveTab, setMobileActiveTab] = useState<'order' | 'list'>('order');
+
+  const [totalCount, setTotalCount] = useState(0);
+  const [skip, setSkip] = useState(0);
 
   const { orderSafeId } = useParams<{ orderSafeId: string }>();
 
@@ -55,6 +59,7 @@ export const SingleOrderDetailsOwn: FC = () => {
 
   useEffect(() => {
     if (hubConnection && currentOrder) {
+      setOrderExchanges([]);
       handleGetExchangesByOrder();
     }
   }, [hubConnection, currentOrder, activeFilter]);
@@ -66,10 +71,30 @@ export const SingleOrderDetailsOwn: FC = () => {
         currentOrder?.safeId, // order safeId
         activeFilter === 'all' ? [0, 1, 2, 3, 4] : activeFilter === 'active' ? [0, 1, 3] : [2, 4], // Array of ExchangeStates
         0, // skip
-        20 // take
+        10 // take
       );
       console.log('GetExchangesByOrder', res);
       setOrderExchanges(res.collection);
+      setTotalCount(res.totalRecords);
+      setSkip((s) => s + 10);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleLoadMoreExchanges = async () => {
+    try {
+      const res = await hubConnection!.invoke<GetExchangesCollectionResult>(
+        'GetExchangesByOrder',
+        currentOrder?.safeId, // order safeId
+        activeFilter === 'all' ? [0, 1, 2, 3, 4] : activeFilter === 'active' ? [0, 1, 3] : [2, 4], // Array of ExchangeStates
+        skip, // skip
+        10 // take
+      );
+      console.log('GetExchangesByOrder', res);
+      setOrderExchanges((s) => [...s, ...res.collection]);
+      setTotalCount(res.totalRecords);
+      setSkip((s) => s + 10);
     } catch (err) {
       console.log(err);
     }
@@ -230,8 +255,16 @@ export const SingleOrderDetailsOwn: FC = () => {
       )}
 
       {/* Show Exchanges List on Mobile if exchanges tab is active */}
+
       {isMobile && mobileActiveTab === 'list' && (
-        <ExchangesInOrderTable exchangesList={orderExchanges} activeFilter={activeFilter} />
+        <>
+          <ExchangesInOrderTable exchangesList={orderExchanges} activeFilter={activeFilter} />
+          {orderExchanges.length < totalCount && (
+            <S.ButtonWrap>
+              <Button onClick={handleLoadMoreExchanges}>Показать еще</Button>
+            </S.ButtonWrap>
+          )}
+        </>
       )}
 
       {/* Show Table on Tablet and large Devices */}
@@ -261,6 +294,11 @@ export const SingleOrderDetailsOwn: FC = () => {
             </S.Filters>
             <ExchangesInOrderTable exchangesList={orderExchanges} activeFilter={activeFilter} />
           </S.Container>
+          {orderExchanges.length < totalCount && (
+            <S.ButtonWrap>
+              <Button onClick={handleLoadMoreExchanges}>Показать еще</Button>
+            </S.ButtonWrap>
+          )}
         </Container>
       )}
     </S.Container>
