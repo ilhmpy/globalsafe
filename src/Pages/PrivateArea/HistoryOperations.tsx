@@ -39,7 +39,7 @@ export const HistoryOperations = () => {
     const [emptyItems, setEmptyItems] = useState<boolean>(false);
     const [allState, setAllState] = useState<ViewExchangeModel[]>([]);
 
-    const operation = (id: number) => {
+    const operation = (id: number, link: string) => {
         if (id === 1) {
             return t('operation.add');
         } else if (id === 2) {
@@ -71,15 +71,15 @@ export const HistoryOperations = () => {
         } else if (id === 15) {
             return "Обменный депозит.";
         } else if (id === 16) {
-            return "Создан ордер на продажу";
+            return <Styled.Link href={`info/p2p-changes/orders/${link}`}>Создан ордер на продажу</Styled.Link>;
         } else if (id === 17) {
-            return "Ордер на продажу отменен";
-        } else if (id === 18) {
-            return "Обмен";
+            return <Styled.Link href={`info/p2p-changes/orders/${link}`}>Ордер на продажу отменен</Styled.Link>;
+        } else if (id === 18) {1
+            return <Styled.Link href={`info/p2p-changes/${link}`}>Обмен начался</Styled.Link>;
         } else if (id === 19) {
-            return "Обмен завершен";
+            return <Styled.Link href={`info/p2p-changes/${link}`}>Обмен завершен</Styled.Link>;
         } else if (id === 20) {
-            return "Обмен отменен";
+            return <Styled.Link href={`info/p2p-changes/${link}`}>Обмен отменен</Styled.Link>;
         } else if (id === 21) {
             return "Куплен сертификат";
         };
@@ -296,7 +296,6 @@ export const HistoryOperations = () => {
                 }));
                 setStatusNew(setTimeout(() => changeNew(), 2000));
             };
-            console.log(allState.length, operations.length);
         };
     };
 
@@ -374,7 +373,7 @@ export const HistoryOperations = () => {
                                     {operations && operations.map((item: any, idx) => (
                                         <Styled.TableItem item key={idx} newItem={item.new && item.new}>
                                             <Styled.TableInnerItem item>{moment(item.operationDate).local().format("DD.MM.YYYY")} в {moment(item.operationDate).local().format("HH:MM")}</Styled.TableInnerItem>
-                                            <Styled.TableInnerItem item>{operation(item.operationKind)}</Styled.TableInnerItem>
+                                            <Styled.TableInnerItem item>{operation(item.operationKind, item.referenceSafeId)}</Styled.TableInnerItem>
                                             <Styled.TableInnerItem item income={item.balanceDelta > 0}>
                                                 {item.balanceDelta > 0 && (
                                                     <>{sign(countVolumeToShow(item.balanceDelta, getCurrency(item.balanceSafeId, "number"))
