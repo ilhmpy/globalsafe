@@ -58,7 +58,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
   setEnd,
 }: DetailCardProps) => {
   const history = useHistory();
-  const { account, hubConnection } = useContext(AppContext);
+  const { account, hubConnection, userSafeId } = useContext(AppContext);
 
   const [feedbackValue, setFeedbackValue] = useState(5);
   const [totalExchanges, setTotalExchanges] = useState<any>();
@@ -346,7 +346,8 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
         .invoke(
           'RateUser',
           feedbackValue,
-          owner === 'seller' ? exchange.recepientSafeId : exchange.ownerSafeId,
+          userSafeId === exchange.ownerSafeId ? exchange.recepientSafeId : exchange.ownerSafeId,
+          // owner === 'seller' ? exchange.recepientSafeId : exchange.ownerSafeId,
           exchange.safeId
         )
         .then((res) => {
@@ -358,7 +359,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
         })
         .catch((err) => console.log(err));
     }
-  }
+  };
 
   function editStateForTesting(state = 0) {
     if (hubConnection) {

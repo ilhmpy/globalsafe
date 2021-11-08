@@ -113,12 +113,12 @@ const BodyItem = ({exchange, onClick, activeFilter, setTimerDown, exchangeStateL
             <S.Cell data-label="№ обмена">{exchange.safeId}</S.Cell>
             <S.Cell data-label="Кол-во">
             {`${countVolumeToShow(exchange.volume, exchange.assetKind).toLocaleString('ru-RU', {
-                maximumFractionDigits: 4,
+                maximumFractionDigits: 5,
               })} ${Balance[exchange.assetKind]}`}
             </S.Cell>
             <S.Cell data-label="Стоимость">
               {`${(countVolumeToShow(exchange.volume, exchange.assetKind) * exchange.rate).toLocaleString('ru-RU', {
-                maximumFractionDigits: 4,
+                maximumFractionDigits: 5,
               })} ${FiatKind[exchange.exchangeAssetKind]}`}
             </S.Cell>
             <S.Cell data-label="Метод оплаты">
@@ -172,7 +172,7 @@ const MobileBodyItem = ({exchange, onClick, setTimerDown, exchangeStateLabels}: 
             </S.MobileCell>
             <S.MobileCell>
               {`${countVolumeToShow(exchange.volume, exchange.assetKind).toLocaleString('ru-RU', {
-                maximumFractionDigits: 4,
+                maximumFractionDigits: 5,
                 })} ${Balance[exchange.assetKind]}`
               }
             </S.MobileCell>
@@ -201,7 +201,7 @@ const MobileBodyItem = ({exchange, onClick, setTimerDown, exchangeStateLabels}: 
             </S.MobileCell>
             <S.MobileCell>
               {`${(countVolumeToShow(exchange.volume, exchange.assetKind) * exchange.rate).toLocaleString('ru-RU', {
-                maximumFractionDigits: 4,
+                maximumFractionDigits: 5,
                 })} ${FiatKind[exchange.exchangeAssetKind]}`
               }
             </S.MobileCell>
