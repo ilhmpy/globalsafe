@@ -120,7 +120,7 @@ export const Notify: FC<NotifyProps> = ({
       empty={!loading && notifies.length === 0}
       inPA={window.location.pathname.indexOf('info') === 1}
       load={loading}
-      onMouseLeave={() => setBlock(false)}
+      length={notifies.length}
     >
       {loading ? (
         <InBlockLoading />
@@ -128,8 +128,8 @@ export const Notify: FC<NotifyProps> = ({
         <>
           {notifies && notifies.length ? (
             <Scrollbars
-              style={{ width: '100%', height: '100%' }}
-              renderThumbVertical={(props) => <Notifies.Scrollbar {...props}></Notifies.Scrollbar>}
+              renderThumbVertical={(props) => 
+              <Notifies.Scrollbar lengthMoreThenFour={notifies.length > 4} {...props}></Notifies.Scrollbar>}
             >
               {notifies &&
                 notifies.map((notify: any, idx: number) => (

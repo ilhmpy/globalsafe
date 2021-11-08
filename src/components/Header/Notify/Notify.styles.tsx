@@ -37,10 +37,11 @@ export const NotifiesBlock = styled.div<{
   empty: boolean;
   load: boolean;
   inPA?: boolean;
+  length?: number;
 }>`
   width: 80%;
   max-width: 420px;
-  height: ${({ empty }) => (empty ? '80px' : '584px')};
+  height: ${({ empty, length }) => (empty ? '80px' : `${length && length < 4 ? (length * 127) + 50 : 584}px`)};
   ${({ load }) => {
     if (load) {
       return `
@@ -219,11 +220,12 @@ export const NotifyItem = styled.h3<{
   }}
 `;
 
-export const Scrollbar = styled.div`
+export const Scrollbar = styled.div<{ lengthMoreThenFour: boolean; }>`
   width: 3px !important;
   height: 203px !important;
   background: #93a1c1;
   border-radius: 2px;
+  display: ${({ lengthMoreThenFour }) => lengthMoreThenFour ? "block" : "none"} !important;
 `;
 
 export const DoneNotify = styled(Done)`
