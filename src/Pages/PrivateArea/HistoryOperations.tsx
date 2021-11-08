@@ -226,8 +226,13 @@ export const HistoryOperations = () => {
                 setLoading(false);
                 console.log("res", res);
                 setTotalRecords(res.totalRecords);
-                setAllState(res.collection);
-                const collection = getFirstElements(res.collection, 10);
+                const sortCollection = res.collection.sort((x: any, y: any) => {
+                    const a = new Date(x.operationDate);
+                    const b = new Date(y.operationDate);
+                    return a > b ? -1 : a < b ? 1 : 0;
+                });
+                setAllState(sortCollection);
+                const collection = getFirstElements(sortCollection, 10);
                 console.log(collection);
                 if (allCurrency) {
                    setOperations(() => {
@@ -252,11 +257,7 @@ export const HistoryOperations = () => {
                         });
                     };
                 };
-                if (res.collection.length > 0) {
-                    setEmptyItems(false);
-                } else {
-                    setEmptyItems(true);
-                };
+                setEmptyItems(!(res.collection.length > 0));
               })
               .catch(err => {
                 console.log(err);
@@ -295,6 +296,7 @@ export const HistoryOperations = () => {
                 }));
                 setStatusNew(setTimeout(() => changeNew(), 2000));
             };
+            console.log(allState.length, operations.length);
         };
     };
 
