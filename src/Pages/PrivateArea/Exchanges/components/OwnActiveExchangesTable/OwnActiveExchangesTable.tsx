@@ -1,8 +1,10 @@
 import { FC, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import alfa from '../../../../../assets/v2/svg/banks/alfa.svg';
+import alfa1 from '../../../../../assets/v2/svg/banks/alfa1.svg';
 import sber from '../../../../../assets/v2/svg/banks/sber.svg';
 import tinkoff from '../../../../../assets/v2/svg/banks/tinkoff.svg';
+import { CurrencyPair } from '../modals/CurrencyPair';
 import { OwnExchangesProps, ExchangeState } from '../../../../../types/exchange';
 import { Balance } from '../../../../../types/balance';
 import { FiatKind } from '../../../../../types/fiat';
@@ -14,6 +16,8 @@ import { AppContext } from '../../../../../context/HubContext';
 import { ViewExchangeModel } from '../../../../../types/exchange';
 
 import * as S from './S.el';
+import { getTime } from 'date-fns';
+import { BankItem } from '../AdvertTable/S.el';
 import { countVolumeToShow } from '../../../utils';
 import useWindowSize from '../../../../../hooks/useWindowSize';
 

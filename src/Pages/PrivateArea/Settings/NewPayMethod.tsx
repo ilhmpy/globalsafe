@@ -17,6 +17,17 @@ import { PaymentMethodKind } from '../../../types/paymentMethodKind';
 import { Back } from '../components/Back';
 import { Title } from '../components/ui/Title';
 
+
+type dataBank = {
+  name: string;
+  bankName: string;
+  bankNumber: string;
+};
+
+type dataCripto = {
+  paymentAddress: string;
+};
+
 export const NewPayMethod: FC = () => {
   const query = new URLSearchParams(useLocation().search);
 
@@ -115,7 +126,7 @@ export const NewPayMethod: FC = () => {
           JSON.stringify(addPayMethod())
         );
 
-        if (query.get('redirect')) {
+        if(query.get('redirect')) {
           history.goBack();
         } else {
           history.push(routers.settings);

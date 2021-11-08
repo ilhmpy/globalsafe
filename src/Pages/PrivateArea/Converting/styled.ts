@@ -161,3 +161,11 @@ export const ModalCurrencyDiv = styled.div`
     right: 70px;
   }
 `;
+
+export const BodyEmpty = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  text-align: start;
+  color: #ff4a31;
+`;

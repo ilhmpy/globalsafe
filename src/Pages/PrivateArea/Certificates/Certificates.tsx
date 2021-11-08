@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState, FC } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { Container } from '../../../components/UI/Container';
 import { Heading } from '../components/Heading';
 import { useHistory } from 'react-router-dom';
@@ -32,8 +32,22 @@ import { ErrorModal } from './modals/ErrorModal';
 import { wordDecline } from '../../../utils/wordDecline';
 import 'moment-duration-format';
 import { getMyRating } from '../utils';
+import SwiperCore, { A11y, Navigation, Pagination, Scrollbar } from 'swiper';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/components/navigation/navigation.scss';
+import 'swiper/components/pagination/pagination.scss';
+import 'swiper/components/scrollbar/scrollbar.scss';
+import 'swiper/swiper.scss';
+import useWindowSize from '../../../hooks/useWindowSize';
 
-export const Certificates: FC = () => {
+SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
+
+enum Tabs {
+  Active,
+  Available,
+}
+
+export const Certificates = () => {
   const [allCert, setAllCert] = useState<MarketCertificate[]>([]);
   const [userCertificat, setUserCertificat] = useState<ViewUserCertificateModel[]>([]);
   const [userPureCertificat, setUserPureCertificat] = useState<ViewUserCertificateModel[]>([]);
@@ -41,30 +55,17 @@ export const Certificates: FC = () => {
   const [successModal, setIsSuccessModal] = useState<MarketCertificate | null>(null);
   const [errorModal, setIsErrorModal] = useState<MarketCertificate | null>(null);
   const [errorType, setErrorType] = useState('');
-  const [dailyVolume, setDailyVolume] = useState(0);
+  const [tabActive, setTabActive] = useState(Tabs.Active);
   const history = useHistory();
-  const { hubConnection, balance, account } = useContext(AppContext);
+  const { hubConnection, account, balanceList } = useContext(AppContext);
+  const size = useWindowSize();
 
   useEffect(() => {
     if (hubConnection) {
       getUserCertificate();
-      // getCertificates();
       getCertificate();
-      // getDailyVolume();
     }
   }, [hubConnection]);
-
-  // async function getUserCertificate() {
-  //   if (!hubConnection) return;
-  //   try {
-  //     const res = await hubConnection.invoke<ViewUserCertificateModel>('GetUserCertificate', 1);
-  //     console.log('GetUserCertificate', res);
-  //     getDailyVolume(res.certificate.assetKind);
-  //     setUserCertificat(res);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }
 
   async function getUserCertificate() {
     if (!hubConnection) return;
@@ -75,8 +76,6 @@ export const Certificates: FC = () => {
         0,
         100
       );
-      // getDailyVolume(res.certificate.assetKind);
-      // setUserCertificat(res);
       setUserPureCertificat(res.collection);
       const arr = res.collection;
       (async () => {
@@ -93,30 +92,6 @@ export const Certificates: FC = () => {
     }
   }
 
-  // async function getCertificates() {
-  //   if (!hubConnection) return;
-  //   try {
-  //     const res = await hubConnection.invoke<RootCertificates>('GetCertificates', 0, 40);
-  //     console.log('GetCertificates', res);
-  //     setAllCert(res.collection);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }
-
-  const getDailyVolume = async (asset: number) => {
-    if (hubConnection) {
-      try {
-        const res = await hubConnection.invoke('GetOrdersVolume', asset);
-        console.log('GetOrdersVolume', res);
-        // setDailyVolume(res);
-        return res;
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  };
-
   const getCertificate = async () => {
     try {
       const res = await hubConnection!.invoke<RootMarketCertificate>(
@@ -125,7 +100,6 @@ export const Certificates: FC = () => {
         0,
         100
       );
-      console.log('GetMarket"', res);
       setAllCert(res.collection);
     } catch (err) {
       console.log(err);
@@ -147,17 +121,23 @@ export const Certificates: FC = () => {
   };
 
   const onValid = (item: MarketCertificate) => {
+    const asset = balanceList
+      ? balanceList?.filter((i) => i.balanceKind === item.certificate.assetKind)[0]
+      : null;
+
     const certificate = userPureCertificat.filter(
       (i) => i.certificate.assetKind === item.certificate.assetKind
     )[0];
-
-    if (certificate && certificate.certificate.safeId === item.certificate.safeId) {
+    if (!asset) {
+      setErrorType(`У вас нет валюты ${Balance[item.certificate.assetKind]}`);
+      setIsErrorModal(item);
+    } else if (certificate && certificate.certificate.safeId === item.certificate.safeId) {
       setErrorType('Данный сертификат уже куплен');
       setIsErrorModal(item);
     } else if (certificate && item.certificate.dailyVolume <= certificate.certificate.dailyVolume) {
       setErrorType('Сумма сертификата меньше существующей');
       setIsErrorModal(item);
-    } else if (balance !== null && balance < item.price) {
+    } else if (asset !== null && asset.volume < item.price) {
       setErrorType('На балансе аккаунта недостаточно средств');
       setIsErrorModal(item);
     } else {
@@ -166,8 +146,6 @@ export const Certificates: FC = () => {
     }
   };
 
-  console.log('userCertificat ', userCertificat);
-
   const balanceValue = (type: number, volume: number) => {
     if (type === Balance.GLOBAL) {
       return volume / 10000;
@@ -175,6 +153,12 @@ export const Certificates: FC = () => {
       return volume / 100;
     } else {
       return volume / 100000;
+    }
+  };
+
+  const tabSwitch = (tab: number) => {
+    if (tabActive !== tab) {
+      setTabActive(tab);
     }
   };
 
@@ -204,6 +188,7 @@ export const Certificates: FC = () => {
           onClick={() => history.push(routers.p2pchangesOrderToBuy)}
           title="P2P обмены"
           btnText="Опубликовать ордер"
+          userRating={`Рейтинг аккаунта: ${getMyRating(account)}`}
         />
         <S.SubHeader>
           <TabsBlock>
@@ -219,111 +204,257 @@ export const Certificates: FC = () => {
               <div>Сертификаты</div>
             </TabNavItem>
           </TabsBlock>
-          <Text size={14} lH={16} weight={500}>
+          <Text size={14} lH={16} weight={500} smHidden>
             Рейтинг аккаунта: {getMyRating(account)}
           </Text>
         </S.SubHeader>
-        {userCertificat.length > 1 ? (
-          <Title>Активные сертификаты</Title>
-        ) : userCertificat.length === 1 ? (
-          <Title>Активный сертификат</Title>
+
+        <S.Tabs>
+          <S.Tab active={tabActive === Tabs.Active} onClick={() => tabSwitch(Tabs.Active)}>
+            Активные
+          </S.Tab>
+          <S.Tab active={tabActive === Tabs.Available} onClick={() => tabSwitch(Tabs.Available)}>
+            Доступные
+          </S.Tab>
+        </S.Tabs>
+
+        {size > 768 ? (
+          <>
+            {userCertificat.length > 1 ? (
+              <Title>Активные сертификаты</Title>
+            ) : userCertificat.length === 1 ? (
+              <Title>Активный сертификат</Title>
+            ) : null}
+            {userCertificat.length
+              ? userCertificat.map((item) => (
+                  <div key={item.safeId}>
+                    <S.ActiveCert>
+                      <S.ActiveCertItem>
+                        <Text size={14} weight={300} lH={20}>
+                          Тип сертификата:
+                        </Text>
+                        <Text size={14} weight={500} lH={20}>
+                          {item.certificate.name}
+                        </Text>
+                      </S.ActiveCertItem>
+                      <S.ActiveCertItem>
+                        <Text size={14} weight={300} lH={20}>
+                          Оставшийся лимит в сутках:
+                        </Text>
+                        <Text size={14} weight={500} lH={20}>
+                          {item.certificate.dailyVolume > 0
+                            ? balanceValue(
+                                item.certificate.assetKind,
+                                item.certificate.dailyVolume
+                              ).toLocaleString()
+                            : 0}{' '}
+                          {Balance[item.certificate.assetKind]}
+                        </Text>
+                      </S.ActiveCertItem>
+                      <S.ActiveCertItem>
+                        <Text size={14} weight={300} lH={20}>
+                          Оставшийся срок действия:
+                        </Text>
+                        <Text size={14} weight={500} lH={20}>
+                          {moment.utc(item.finishDate).local().diff(moment.utc().local(), 'days')}
+                          &nbsp;
+                          {wordDecline(
+                            moment.utc(item.finishDate).local().diff(moment.utc().local(), 'days'),
+                            ['день', 'дня', 'дней']
+                          )}
+                        </Text>
+                      </S.ActiveCertItem>
+                    </S.ActiveCert>
+                  </div>
+                ))
+              : null}
+          </>
         ) : null}
-        {userCertificat.length
-          ? userCertificat.map((item) => (
-              <div key={item.safeId}>
+
+        {size < 768 && tabActive === Tabs.Active ? (
+          <S.ActiveCertWrapper>
+            <Swiper spaceBetween={50} slidesPerView={1} pagination={{ clickable: true }}>
+              {userCertificat.length ? (
+                userCertificat.map((item) => (
+                  <SwiperSlide key={item.safeId}>
+                    <div>
+                      <S.ActiveCert>
+                        <S.ActiveCertItem>
+                          <Text size={14} weight={300} lH={20}>
+                            Тип сертификата:
+                          </Text>
+                          <Text size={14} weight={500} lH={20}>
+                            {item.certificate.name}
+                          </Text>
+                        </S.ActiveCertItem>
+                        <S.ActiveCertItem>
+                          <Text size={14} weight={300} lH={20}>
+                            Оставшийся лимит в сутках:
+                          </Text>
+                          <Text size={14} weight={500} lH={20}>
+                            {item.certificate.dailyVolume > 0
+                              ? balanceValue(
+                                  item.certificate.assetKind,
+                                  item.certificate.dailyVolume
+                                ).toLocaleString()
+                              : 0}{' '}
+                            {Balance[item.certificate.assetKind]}
+                          </Text>
+                        </S.ActiveCertItem>
+                        <S.ActiveCertItem>
+                          <Text size={14} weight={300} lH={20}>
+                            Оставшийся срок действия:
+                          </Text>
+                          <Text size={14} weight={500} lH={20}>
+                            {moment.utc(item.finishDate).local().diff(moment.utc().local(), 'days')}
+                            &nbsp;
+                            {wordDecline(
+                              moment
+                                .utc(item.finishDate)
+                                .local()
+                                .diff(moment.utc().local(), 'days'),
+                              ['день', 'дня', 'дней']
+                            )}
+                          </Text>
+                        </S.ActiveCertItem>
+                      </S.ActiveCert>
+                    </div>
+                  </SwiperSlide>
+                ))
+              ) : (
                 <S.ActiveCert>
-                  <S.ActiveCertItem>
-                    <Text size={14} weight={300} lH={20}>
-                      Тип сертификата:
-                    </Text>
-                    <Text size={14} weight={500} lH={20}>
-                      {item.certificate.name}
-                    </Text>
-                  </S.ActiveCertItem>
-                  <S.ActiveCertItem>
-                    <Text size={14} weight={300} lH={20}>
-                      Оставшийся лимит в сутках:
-                    </Text>
-                    <Text size={14} weight={500} lH={20}>
-                      {item.certificate.dailyVolume > 0
-                        ? balanceValue(
-                            item.certificate.assetKind,
-                            item.certificate.dailyVolume
-                          ).toLocaleString()
-                        : 0}{' '}
-                      {Balance[item.certificate.assetKind]}
-                    </Text>
-                  </S.ActiveCertItem>
-                  <S.ActiveCertItem>
-                    <Text size={14} weight={300} lH={20}>
-                      Оставшийся срок действия:
-                    </Text>
-                    <Text size={14} weight={500} lH={20}>
-                      {moment.utc(item.finishDate).local().diff(moment.utc().local(), 'days')}
-                      &nbsp;
-                      {wordDecline(
-                        moment.utc(item.finishDate).local().diff(moment.utc().local(), 'days'),
-                        ['день', 'дня', 'дней']
-                      )}
-                    </Text>
-                  </S.ActiveCertItem>
+                  <Text size={14} weight={300} lH={20}>
+                    Активных сертификатов нет
+                  </Text>
                 </S.ActiveCert>
-              </div>
-            ))
-          : null}
-        <Title>Доступные сертификаты</Title>
+              )}
+            </Swiper>
+          </S.ActiveCertWrapper>
+        ) : null}
+
+        {size > 768 ? <Title>Доступные сертификаты</Title> : null}
       </Container>
 
-      <S.AvilableCertificates>
-        {allCert.length
-          ? allCert.map((item) => (
-              <S.AvilableCertificatesItem key={item.safeId}>
-                <Text size={24} weight={700} lH={28} mB={40}>
-                  {item.certificate.name}
-                </Text>
-                <TitleWrap small>
-                  <ProgramDescTitle>Лимит:</ProgramDescTitle>
-                </TitleWrap>
-                <Text size={14} weight={500} lH={20} mB={20}>
-                  {balanceValue(
-                    item.certificate.assetKind,
-                    item.certificate.dailyVolume
-                  ).toLocaleString('en-US', {
-                    maximumFractionDigits: 2,
-                  })}{' '}
-                  {Balance[item.certificate.assetKind]} / 24ч.
-                </Text>
+      {size > 768 ? (
+        <S.AvilableCertificates>
+          {allCert.length
+            ? allCert.map((item) => (
+                <S.AvilableCertificatesItem key={item.safeId}>
+                  <Text size={24} weight={700} lH={28} mB={40}>
+                    {item.certificate.name}
+                  </Text>
+                  <TitleWrap small>
+                    <ProgramDescTitle>Лимит:</ProgramDescTitle>
+                  </TitleWrap>
+                  <Text size={14} weight={500} lH={20} mB={20}>
+                    {balanceValue(
+                      item.certificate.assetKind,
+                      item.certificate.dailyVolume
+                    ).toLocaleString('en-US', {
+                      maximumFractionDigits: 2,
+                    })}{' '}
+                    {Balance[item.certificate.assetKind]} / 24ч.
+                  </Text>
 
-                <TitleWrap small>
-                  <ProgramDescTitle>Срок действия:</ProgramDescTitle>
-                </TitleWrap>
-                <Text size={14} weight={500} lH={20} mB={20}>
-                  {item.certificate.duration} дней
-                </Text>
+                  <TitleWrap small>
+                    <ProgramDescTitle>Срок действия:</ProgramDescTitle>
+                  </TitleWrap>
+                  <Text size={14} weight={500} lH={20} mB={20}>
+                    {item.certificate.duration} дней
+                  </Text>
 
-                <TitleWrap small>
-                  <ProgramDescTitle>Описание:</ProgramDescTitle>
-                </TitleWrap>
-                <Text size={14} weight={500} lH={20} mB={20}>
-                  {item.certificate.description}
-                </Text>
+                  <TitleWrap small>
+                    <ProgramDescTitle>Описание:</ProgramDescTitle>
+                  </TitleWrap>
+                  <Text size={14} weight={500} lH={20} mB={20}>
+                    {item.certificate.description}
+                  </Text>
 
-                <TitleWrap small>
-                  <ProgramDescTitle>Стоимость:</ProgramDescTitle>
-                </TitleWrap>
-                <Text size={14} weight={500} lH={20} mB={40}>
-                  {(item.price / 100000).toLocaleString('en-US', {
-                    maximumFractionDigits: 2,
-                  })}{' '}
-                  {Balance[item.certificate.assetKind]}
-                </Text>
-                <Button bigSize primary onClick={() => onValid(item)} as="button">
-                  Купить сертификат
-                </Button>
-              </S.AvilableCertificatesItem>
-            ))
-          : null}
-      </S.AvilableCertificates>
+                  <TitleWrap small>
+                    <ProgramDescTitle>Стоимость:</ProgramDescTitle>
+                  </TitleWrap>
+                  <Text size={14} weight={500} lH={20} mB={40}>
+                    {balanceValue(item.certificate.assetKind, item.price).toLocaleString('en-US', {
+                      maximumFractionDigits: 2,
+                    })}
+                    &nbsp;
+                    {Balance[item.certificate.assetKind]}
+                  </Text>
+                  <Button bigSize primary onClick={() => onValid(item)} as="button">
+                    Купить сертификат
+                  </Button>
+                </S.AvilableCertificatesItem>
+              ))
+            : null}
+        </S.AvilableCertificates>
+      ) : null}
+
+      {size < 768 && tabActive === Tabs.Available ? (
+        <S.AvilableCertificates>
+          {allCert.length ? (
+            <Swiper spaceBetween={50} slidesPerView={1} pagination={{ clickable: true }}>
+              {allCert.map((item) => (
+                <SwiperSlide key={item.safeId}>
+                  <S.AvilableCertificatesItem>
+                    <Text size={24} weight={700} lH={28} mB={40}>
+                      {item.certificate.name}
+                    </Text>
+                    <TitleWrap small>
+                      <ProgramDescTitle>Лимит:</ProgramDescTitle>
+                    </TitleWrap>
+                    <Text size={14} weight={500} lH={20} mB={20}>
+                      {balanceValue(
+                        item.certificate.assetKind,
+                        item.certificate.dailyVolume
+                      ).toLocaleString('en-US', {
+                        maximumFractionDigits: 2,
+                      })}{' '}
+                      {Balance[item.certificate.assetKind]} / 24ч.
+                    </Text>
+
+                    <TitleWrap small>
+                      <ProgramDescTitle>Срок действия:</ProgramDescTitle>
+                    </TitleWrap>
+                    <Text size={14} weight={500} lH={20} mB={20}>
+                      {item.certificate.duration} дней
+                    </Text>
+
+                    <TitleWrap small>
+                      <ProgramDescTitle>Описание:</ProgramDescTitle>
+                    </TitleWrap>
+                    <Text size={14} weight={500} lH={20} mB={20}>
+                      {item.certificate.description}
+                    </Text>
+
+                    <TitleWrap small>
+                      <ProgramDescTitle>Стоимость:</ProgramDescTitle>
+                    </TitleWrap>
+                    <Text size={14} weight={500} lH={20} mB={40}>
+                      {balanceValue(item.certificate.assetKind, item.price).toLocaleString(
+                        'en-US',
+                        {
+                          maximumFractionDigits: 2,
+                        }
+                      )}
+                      &nbsp;
+                      {Balance[item.certificate.assetKind]}
+                    </Text>
+                    <Button bigSize primary onClick={() => onValid(item)} as="button">
+                      Купить сертификат
+                    </Button>
+                  </S.AvilableCertificatesItem>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          ) : (
+            <S.AvilableCertificatesItem>
+              <Text size={14} weight={300} lH={28} mB={40}>
+                Нет доступных сертификатов
+              </Text>
+            </S.AvilableCertificatesItem>
+          )}
+        </S.AvilableCertificates>
+      ) : null}
     </S.Container>
   );
 };

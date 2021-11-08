@@ -1,6 +1,6 @@
 import moment from 'moment';
 import 'moment/locale/ru';
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState, FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavLink, useHistory } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
@@ -31,10 +31,10 @@ import * as Styled from './Styles.elements';
 import { SelectButton } from './components/ui/SelectButton';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, { Navigation, Pagination, A11y } from 'swiper';
-import { countVolumeToShow } from './utils';
+import { countVolumeToShow } from './utils'; 
 import useWindowSize from '../../hooks/useWindowSize';
 
-export const HeaderBar = () => {
+export const HeaderBar: FC = () => {
   const { t } = useTranslation();
   const [openConverting, setOpenConverting] = useState<boolean>(false);
   const screen = useWindowSize();
@@ -98,6 +98,7 @@ export const HeaderBar = () => {
   );
   const [withDrawModal, setWithDrawModal] = useState<boolean>(false);
   const [addDrawModal, setAddDrawModal] = useState<boolean>(false);
+  const [clickedIndex, setClickedIndex] = useState<number>(0);
 
   // Get Balance Kinds List as an Array
   const balancesList = useMemo(() => {
@@ -540,8 +541,6 @@ export const HeaderBar = () => {
     // window.location.reload();
   };
 
-  SwiperCore.use([Navigation, Pagination, A11y]);
-
   return (
     <>
       {withdrawValueLoad && (
@@ -809,7 +808,6 @@ export const HeaderBar = () => {
               />
             )}
           </PanelHeader>
-          {/* One */}
           {screen > 768 && (
             <BalanceChipsBlock>
               {balanceChips &&
@@ -832,9 +830,6 @@ export const HeaderBar = () => {
                 })}
             </BalanceChipsBlock>
           )}
-
-          {/* Two */}
-
           {screen > 768 ? (
             <TabsBlock>
               <TabNavItem to={routers.deposits} exact>
@@ -855,56 +850,48 @@ export const HeaderBar = () => {
             </TabsBlock>
           ) : (
             <SwiperUI
-              onClick={() => console.log(11)}
-              slidesPerView={4}
-              spaceBetween={20}
+              onClick={(swiper: any) => {
+                setClickedIndex(swiper.clickedIndex);
+              }}
+              slidesPerView={'auto'}
               freeMode={true}
               pagination={false}
-              className="mySwiper"
-              onSlideChange={(swiperCore) => {
-                const { activeIndex, previousIndex, realIndex } = swiperCore;
-                console.log({ activeIndex, previousIndex, realIndex });
-              }}
-              // slideToClickedSlide={true}
-
-              onSwiper={(swiper) => swiper.update()}
-              // navigation={{
-              //   nextEl: '.next',
-              //   prevEl: '.prev',
-              // }}
-              //   observer={true}
-              //   observeParents={true}
-              //   loop={true}
-              //   watchSlidesVisibility={true}
-              //   watchSlidesProgress={true}
-              onInit={(swiper) => {
-                swiper.navigation.update();
-              }}
+              spaceBetween={20}
             >
               <SwiperSlide>
-                <TabNavItem to={routers.deposits} exact>
-                  <div>Мои депозиты</div>
-                </TabNavItem>
+                <SlideContainer active={clickedIndex === 0}>
+                  <TabNavItem to={routers.deposits} exact>
+                    <div>Мои депозиты</div>
+                  </TabNavItem>
+                </SlideContainer>
               </SwiperSlide>
               <SwiperSlide>
-                <TabNavItem to={routers.p2pchanges}>
-                  <div>P2P обмены</div>
-                </TabNavItem>
+                <SlideContainer active={clickedIndex === 1}>
+                  <TabNavItem to={routers.p2pchanges}>
+                    <div>P2P обмены</div>
+                  </TabNavItem>
+                </SlideContainer>
               </SwiperSlide>
               <SwiperSlide>
-                <TabNavItem to={routers.operations}>
-                  <div>История операций</div>
-                </TabNavItem>
+                <SlideContainer active={clickedIndex === 2}>
+                  <TabNavItem to={routers.operations}>
+                    <div>История операций</div>
+                  </TabNavItem>
+                </SlideContainer>
               </SwiperSlide>
               <SwiperSlide>
-                <TabNavItem to={routers.notifications}>
-                  <div>Уведомления</div>
-                </TabNavItem>
+                <SlideContainer active={clickedIndex === 3}>
+                  <TabNavItem to={routers.notifications}>
+                    <div>Уведомления</div>
+                  </TabNavItem>
+                </SlideContainer>
               </SwiperSlide>
               <SwiperSlide>
-                <TabNavItem to={routers.settings}>
-                  <div>Настройки</div>
-                </TabNavItem>
+                <SlideContainer active={clickedIndex === 4}>
+                  <TabNavItem to={routers.settings}>
+                    <div>Настройки</div>
+                  </TabNavItem>
+                </SlideContainer>
               </SwiperSlide>
             </SwiperUI>
           )}
@@ -1090,18 +1077,43 @@ export const HeaderBar = () => {
 const SwiperUI = styled(Swiper)`
   display: flex;
   align-items: center;
-  gap: 40px;
-  .swiper-slide-active {
+
+  .swiper-slide {
+    width: auto;
+  }
+`;
+
+const SlideContainer = styled.p<{ active?: boolean }>`
+  padding-bottom: 10px;
+  border-bottom: ${(props) => props.active && '2px solid #0094FF'};
+`;
+
+const TabNavItem = styled(NavLink)`
+  color: ${(props) => props.theme.black};
+  opacity: 0.6;
+  font-size: 14px;
+  line-height: 16px;
+  padding-bottom: 10px;
+
+  &.active {
     font-weight: 500;
     opacity: 1;
-    border-bottom: 2px solid ${(props) => props.theme.blue};
-    width: auto;
-    padding-bottom: 10px;
-  }
 
-  & > div > div {
-    width: auto !important;
+    border-bottom: 2px solid ${(props) => props.theme.blue};
   }
+  & > div {
+    white-space: nowrap;
+  }
+`;
+
+const AppWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+`;
+
+const CustomPage = styled(Styled.Page)`
+  flex: 1;
 `;
 
 const DepositsPanelContainer = styled(Container)`
@@ -1250,22 +1262,4 @@ const TabsBlock = styled.div`
   display: flex;
   align-items: center;
   gap: 40px;
-`;
-
-const TabNavItem = styled(NavLink)`
-  color: ${(props) => props.theme.black};
-  opacity: 0.6;
-  font-size: 14px;
-  line-height: 16px;
-  padding-bottom: 10px;
-
-  &.active {
-    font-weight: 500;
-    opacity: 1;
-
-    border-bottom: 2px solid ${(props) => props.theme.blue};
-  }
-  & > div {
-    white-space: nowrap;
-  }
 `;

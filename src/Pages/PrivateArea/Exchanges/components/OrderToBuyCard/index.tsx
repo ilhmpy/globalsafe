@@ -16,6 +16,7 @@ import {
   RootPayMethod,
 } from '../../../../../types/paymentMethodKind';
 import { Checkbox } from '../../../components/Checkbox';
+
 import {
   FilterButton,
   LeftSide,
@@ -25,7 +26,8 @@ import {
   Text,
   Title,
 } from '../../../components/ui';
-import { countVolumeToSend, countVolumeToShow, getMyRating, useIsMobile } from '../../../utils';
+import { countVolumeToSend, countVolumeToShow, useIsMobile } from '../../../utils';
+
 import { OrderErrorModal } from '../modals/OrderErrorModal';
 import { OrderInfoModal } from '../modals/OrderInfoModal';
 import * as S from './S.el';
@@ -35,7 +37,7 @@ export const OrderToBuyCard: FC = () => {
   const location = useLocation();
   const appContext = useContext(AppContext);
   const isMobile = useIsMobile();
-  const { hubConnection, user, balanceList, userSafeId, account } = appContext;
+  const { hubConnection, user, balanceList, userSafeId, userRating } = appContext;
   const [showOrderBuyModal, setShowOrderBuyModal] = useState(false);
   const [showOrderErrorModal, setShowOrderErrorModal] = useState(false);
 
@@ -266,6 +268,12 @@ export const OrderToBuyCard: FC = () => {
     const pattern = /^[0-9][0-9\.]*$/;
     const pattern2 = /^[0-9]{1,10}\.[0-9]{6}$/;
     if (e.target.value === '' || pattern.test(e.target.value)) {
+      const dotsCount = e.target.value.split('.').length - 1;
+
+      if (dotsCount > 1) {
+        return;
+      }
+
       // Clear Max limit
       setOrderMinSumm('');
       setOrderMaxSumm('');
@@ -338,7 +346,7 @@ export const OrderToBuyCard: FC = () => {
     if (!orderMaxSumm) {
       isValid = false;
     }
-    if (orderMinSumm > orderMaxSumm) {
+    if (+orderMinSumm > +orderMaxSumm) {
       isValid = false;
     }
     if (selectedPaymentMethodsIds.length === 0) {
@@ -375,7 +383,11 @@ export const OrderToBuyCard: FC = () => {
     const cbOrderCreated = (order: ViewBuyOrderModel) => {
       console.log('__SOCKET__cbOrderCreated::', order);
       if (order && order.userSafeId === userSafeId) {
-        handleGetOrdersVolume();
+        if (dailyLimitRest) {
+          setDailyLimitRest(dailyLimitRest - Number(orderSumm));
+        }
+        // handleGetOrdersVolume();
+
         getBuyOrders();
       }
     };
@@ -387,7 +399,15 @@ export const OrderToBuyCard: FC = () => {
     return () => {
       hubConnection?.off('BuyOrderCreated', cbOrderCreated);
     };
-  }, [hubConnection, userSafeId, currencyToBuy, currencyToChange]);
+  }, [
+    hubConnection,
+    userSafeId,
+    currencyToBuy,
+    currencyToChange,
+    userActiveCertificate,
+    dailyLimitRest,
+    orderSumm,
+  ]);
 
   return (
     <S.Container>
@@ -405,8 +425,9 @@ export const OrderToBuyCard: FC = () => {
           <Text size={14} lH={20} mB={10} mBMobile={4} black>
             Рейтинг аккаунта:
           </Text>
+
           <Title lH={28} heading3 mB={0}>
-            {getMyRating(account)}
+            {userRating}
           </Title>
         </S.BlockWrapper>
         {!isMobile && currencyToBuy ? (

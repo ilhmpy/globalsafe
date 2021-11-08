@@ -5,6 +5,7 @@ export const TilesContainer = styled(Container)`
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
+  padding: 0;
 `;
 
 export const BottomValue = styled.p`
@@ -35,6 +36,7 @@ export const BottomSide = styled.div`
 `;
 
 export const TopSide = styled.div`
+  position: relative;
   background: #ebebf2;
   border-radius: 4px 4px 0px 0px;
   padding: 20px;
@@ -52,8 +54,11 @@ export const DateRange = styled.p`
 
 export const BoxAmount = styled.p`
   font-weight: 500;
-  font-size: 14px;
+  font-size: 18px;
   line-height: 20px;
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
 `;
 
 export const BoxTitle = styled.p`
@@ -63,12 +68,14 @@ export const BoxTitle = styled.p`
 `;
 
 export const BlockBox = styled.div`
-  max-width: 280px;
+  max-width: 250px;
   width: 100%;
-  /* padding: 20px; */
   background: #ffffff;
   border: 1px solid #ebebf2;
   box-sizing: border-box;
   border-radius: 4px;
   color: #000000;
+  @media (max-width: 768px) {
+    max-width: 280px;
+  }
 `;

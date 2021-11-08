@@ -1,7 +1,7 @@
 import moment from 'moment';
 import React, { FC, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components/macro';
+import styled, { keyframes } from 'styled-components/macro';
 import SwiperCore, { A11y, Navigation, Pagination, Scrollbar } from 'swiper';
 import 'swiper/components/navigation/navigation.scss';
 import 'swiper/components/pagination/pagination.scss';
@@ -9,9 +9,11 @@ import 'swiper/components/scrollbar/scrollbar.scss';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper.scss';
 import { H2 } from '../../../../components/UI/Heading';
+import { Page } from '../../../../components/UI/Page';
 import { AppContext } from '../../../../context/HubContext';
+import { Card } from '../../../../globalStyles';
 import { Container } from '../../../../components/UI/Container';
-import { RootPayDeposit } from '../../../../types/payouts';
+import { Pokedex, RootPayDeposit } from '../../../../types/payouts';
 import { ReactComponent as Reload } from '../../../../assets/svg/reload.svg';
 import useWindowSize from '../../../../hooks/useWindowSize';
 
@@ -22,7 +24,28 @@ export const Payments: FC = () => {
   const [bigArr, setBigArr] = useState<any>([]);
   const screen = useWindowSize();
 
-  const [smallArr, setSmallArr] = useState<any>([]);
+  const [smallArr, setSmallArr] = useState<any>([
+    /*
+      [ { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
+        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
+        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
+        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
+        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
+        { deposit: { name: "TEST" }, date: new Date(), procent: 85 }],
+       [{ deposit: { name: "TEST" }, date: new Date(), procent: 85 },
+        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
+        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
+        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
+        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
+        { deposit: { name: "TEST" }, date: new Date(), procent: 85 }],
+       [{ deposit: { name: "TEST" }, date: new Date(), procent: 85 },
+        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
+        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
+        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
+        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
+        { deposit: { name: "TEST" }, date: new Date(), procent: 85 }]
+        */
+  ]);
   const [loadReset, setLoadReset] = useState(false);
   const arrSizeBig = 10;
   const arrSizeMob = 6;
@@ -90,6 +113,7 @@ export const Payments: FC = () => {
     }
   };
 
+  const [last, setLast] = useState(localStorage.getItem('last') || '');
   const [lastTime, setLastTime] = useState<string | null>(null);
   const [timeInterval, setTimeInterval] = useState<any>();
   const [actualDate, setActualDate] = useState(new Date());

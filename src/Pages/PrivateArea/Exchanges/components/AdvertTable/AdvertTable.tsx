@@ -1,4 +1,4 @@
-import React, { useContext, FC } from 'react';
+import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { AppContext } from '../../../../../context/HubContext';
@@ -7,13 +7,13 @@ import { FiatKind } from '../../../../../types/fiat';
 import { ViewBuyOrderModel, ViewSellOrderModel } from '../../../../../types/orders';
 import { countVolumeToShow, paymentMethodIconSrc, useIsMobile } from '../../../utils';
 
-import * as S from './S.el';
+import * as S from './S.el'; 
 
 interface AdvertTableProps {
   list: Array<ViewBuyOrderModel | ViewSellOrderModel>;
 }
 
-export const AdvertTable: FC<AdvertTableProps> = ({ list }: AdvertTableProps) => {
+export const AdvertTable = ({ list }: AdvertTableProps) => {
   const history = useHistory();
   const isMobile = useIsMobile();
   const { userSafeId } = useContext(AppContext);
@@ -86,7 +86,7 @@ const BodyItem = ({ order, onClick, userSafeId }: ItemProps) => {
     <S.BodyItem active={order.userSafeId === userSafeId} onClick={() => onClick(order)}>
       <S.Cell data-label="Кол-во">
         {`${countVolumeToShow(order.volume, order.assetKind).toLocaleString('ru-RU', {
-          maximumFractionDigits: 4,
+          maximumFractionDigits: 5,
         })} ${Balance[order.assetKind]}`}
       </S.Cell>
       <S.Cell data-label="Курс">
@@ -98,7 +98,7 @@ const BodyItem = ({ order, onClick, userSafeId }: ItemProps) => {
         {`${(countVolumeToShow(order.volume, order.assetKind) * order.rate).toLocaleString(
           'ru-RU',
           {
-            maximumFractionDigits: 4,
+            maximumFractionDigits: 5,
           }
         )} ${FiatKind[order.operationAssetKind]}`}
       </S.Cell>
@@ -140,14 +140,14 @@ const MobileBodyItem = ({ order, onClick, userSafeId }: ItemProps) => {
       <S.MobileRow>
         <S.MobileCell>
           {`${countVolumeToShow(order.volume, order.assetKind).toLocaleString('ru-RU', {
-            maximumFractionDigits: 4,
+            maximumFractionDigits: 5,
           })} ${Balance[order.assetKind]}`}
         </S.MobileCell>
         <S.MobileCell>
           {`${(countVolumeToShow(order.volume, order.assetKind) * order.rate).toLocaleString(
             'ru-RU',
             {
-              maximumFractionDigits: 4,
+              maximumFractionDigits: 5,
             }
           )} ${FiatKind[order.operationAssetKind]}`}
         </S.MobileCell>

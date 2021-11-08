@@ -10,9 +10,10 @@ import { ExchangeDetailCard } from './components/ExchangeDetailCard';
 import { routers } from '../../../constantes/routers';
 import { ViewExchangeModel } from '../../../types/exchange';
 import { AppContext } from '../../../context/HubContext';
-import { Loading, NotItems } from '../components/Loading/Loading';
-import { Balance } from '../../../types/balance';
-import { FiatKind } from '../../../types/fiat';
+import { Loading, NotItems } from "../components/Loading/Loading";
+import { Balance } from "../../../types/balance";
+import { FiatKind } from "../../../types/fiat";
+import { MobileModal } from '../components/MobileModal/MobileModal';
 
 type PropsMatch = {
   exchangeId: string;
@@ -41,8 +42,7 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
     if (hubConnection) {
       setLoading(loading);
       setCall(false);
-      hubConnection
-        .invoke('GetExchange', exchangeId)
+      hubConnection.invoke("GetExchange", exchangeId)
         .then((res) => {
           setExchange(res);
           setLoading(false);
@@ -50,59 +50,55 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
         .catch((err) => {
           console.log(err);
           setLoading(false);
-        });
-    }
-  }
-
+        })
+    };
+  };
+ 
   useEffect(() => {
     if (hubConnection) {
       getExchange(true);
-    }
+    };
   }, [hubConnection]);
 
   useEffect(() => {
     if (hubConnection && call === true) {
       getExchange(false);
-    }
+    };
   }, [hubConnection, call]);
+
+  /*
+  if (end === true && screen.width <= 480 && exchange !== null) {
+    return <MobileModal exchange={exchange} type={exchange.state === 2 ? 0 : 1} />
+  }; */
 
   return (
     <>
-      {loading ? (
-        <Loading />
-      ) : (
+      {loading ? <Loading /> : (
         <>
-          {exchange === null ? (
-            <NotItems text="Не имеется информации по этому обмену" />
-          ) : (
+          {exchange === null ? <NotItems text="Не имеется информации по этому обмену" /> : (
             <>
-              <Container>
-                <Back
-                  text="К списку обменов"
-                  onGoBackClick={() => history.replace(routers.p2pchangesOwn)}
+                <Container>
+                  <Back text="К списку обменов" onGoBackClick={() => history.replace(routers.p2pchangesOwn)} />
+                  <S.TitleContainer>
+                      <Title mB={0} main>Обмен {`${Balance[exchange.assetKind]}-${FiatKind[exchange.exchangeAssetKind]}`}</Title>
+                      <Text size={14} lH={20} black detail>
+                        № {exchange.safeId}
+                      </Text>
+                  </S.TitleContainer>
+                </Container>
+                <ExchangeDetailCard 
+                  setCall={setCall} 
+                  setShowSuccessModal={setShowSuccessModal} 
+                  setShowRejectModal={setShowRejectModal}
+                  showSuccessModal={showSuccessModal} 
+                  showRejectModal={showRejectModal}
+                  exchange={exchange}
+                  setExchange={setExchange}
+                  owner={owner}
+                  setLoading={setLoading}
+                  exchangeId={exchangeId}
+                  setEnd={setEnd}
                 />
-                <S.TitleContainer>
-                  <Title mB={0} main>
-                    Обмен {`${Balance[exchange.assetKind]}-${FiatKind[exchange.exchangeAssetKind]}`}
-                  </Title>
-                  <Text size={14} lH={20} black detail>
-                    № {exchange.safeId}
-                  </Text>
-                </S.TitleContainer>
-              </Container>
-              <ExchangeDetailCard
-                setCall={setCall}
-                setShowSuccessModal={setShowSuccessModal}
-                setShowRejectModal={setShowRejectModal}
-                showSuccessModal={showSuccessModal}
-                showRejectModal={showRejectModal}
-                exchange={exchange}
-                setExchange={setExchange}
-                owner={owner}
-                setLoading={setLoading}
-                exchangeId={exchangeId}
-                setEnd={setEnd}
-              />
             </>
           )}
         </>

@@ -7,20 +7,6 @@ export enum OrderState {
     Completed,
 }
 
-export interface Time {
-    ticks: any;
-    days: number;
-    hours: number;
-    milliseconds: number;
-    minutes: number;
-    seconds: number;
-    totalDays: number;
-    totalHours: number;
-    totalMilliseconds: number;
-    totalMinutes: number;
-    totalSeconds: number;
-  }
-
 interface OrderBaseModel {
     id: number;
     safeId: string;
@@ -35,7 +21,7 @@ interface OrderBaseModel {
     methodsKinds: number[]; 
     creationDate: Date;
     rate: number;
-    operationWindow: Time;
+    operationWindow: any; //
     orderState: OrderState;
     totalExecuted: number;
     terms?: string;

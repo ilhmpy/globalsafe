@@ -15,7 +15,7 @@ import {
   ModalTitle,
 } from './styled';
 
-interface Iprops {
+interface IProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   convertedData: IBalanceExchange;
@@ -25,7 +25,7 @@ interface Iprops {
   setConvertedData: (open: IBalanceExchange) => void;
   closeWithReset: () => void;
 }
-export const ConvertingModalConfirm: FC<Iprops> = ({
+export const ConvertingModalConfirm: FC<IProps> = ({
   open,
   setOpen,
   convertedData,
@@ -34,7 +34,7 @@ export const ConvertingModalConfirm: FC<Iprops> = ({
   setIsSuccessConverting,
   setIsFailConverting,
   closeWithReset,
-}: Iprops) => {
+}: IProps) => {
   const { hubConnection } = useContext(AppContext);
   const { userAmount, calculatedAmount, targetAmount, discountPercent } = convertedData;
 
@@ -80,8 +80,8 @@ export const ConvertingModalConfirm: FC<Iprops> = ({
                           .split('.')[0]
                           .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}.${
                           (userAmount / 100000).toFixed(5).toString().split('.')[1]
-                        }`
-                      : (userAmount / 100000).toFixed(5)}
+                        }`.replace(/(\.0+|0+)$/, '')
+                      : (userAmount / 100000).toFixed(5).replace(/(\.0+|0+)$/, '')}
                   </strong>
                 </p>
                 <p>
@@ -98,8 +98,10 @@ export const ConvertingModalConfirm: FC<Iprops> = ({
                             .toFixed(5)
                             .toString()
                             .split('.')[1]
-                        }`
-                      : (calculatedAmount / targetAmount / 1000).toFixed(5)}
+                        }`.replace(/(\.0+|0+)$/, '')
+                      : (calculatedAmount / targetAmount / 1000)
+                          .toFixed(5)
+                          .replace(/(\.0+|0+)$/, '')}
                   </strong>
                 </p>
                 <p>
@@ -113,7 +115,10 @@ export const ConvertingModalConfirm: FC<Iprops> = ({
                   <Dots />
 
                   <strong>
-                    {(targetAmount / 100).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}
+                    {(targetAmount / 100)
+                      .toString()
+                      .replace(/(\d)(?=(\d{3})+$)/g, '$1 ')
+                      .replace(/(\.0+|0+)$/, '')}
                   </strong>
                 </p>
                 <ButtonsWrapper>

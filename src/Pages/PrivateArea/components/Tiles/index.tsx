@@ -17,6 +17,8 @@ import { routers } from '../../../../constantes/routers';
 import { Balance } from '../../../../types/balance';
 import moment from 'moment';
 import { BalanceKind } from '../../../../enums/balanceKind';
+import { Bar, ProgressBar } from '../../Deposits/S.elements';
+import { getPercentage } from '../../Deposits/helpers';
 
 interface IProps {
   depositsList: Collection[];
@@ -44,6 +46,9 @@ export const Tiles: FC<IProps> = ({ depositsList }: IProps) => {
                 <DateRange>{`${moment(new Date(deposit.creationDate)).format(
                   'DD.MM.YYYY'
                 )} - ${moment(new Date(deposit.endDate)).format('DD.MM.YYYY')}`}</DateRange>
+                <ProgressBar>
+                  <Bar percent={getPercentage(deposit.creationDate, deposit.endDate)} />
+                </ProgressBar>
               </TopSide>
               <BottomSide>
                 <div>

@@ -8,7 +8,6 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, { Navigation, Pagination, A11y } from 'swiper';
 import styled from 'styled-components';
 import useWindowSize from '../../../../hooks/useWindowSize';
-
 interface FilterProps {
   activeFilter: 'active' | 'archived' | 'hold';
   setActiveFilter: (value: 'active' | 'archived' | 'hold') => void;

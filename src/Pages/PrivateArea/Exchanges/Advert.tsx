@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState, FC } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { Container } from '../../../components/UI/Container';
@@ -21,12 +21,11 @@ import { Rating } from './components/modals/Rating';
 import { PaymentMethods } from './components/modals/PaymentMethods';
 import { Balance } from '../../../types/balance';
 import { FiatKind } from '../../../types/fiat';
-import { getMyRating } from '../utils';
 import { AdvertFiltersMobile } from './components/modals/AdvertFiltersMobile';
 
-export const Advert: FC = () => {
+export const Advert = () => {
   const history = useHistory();
-  const { hubConnection, account } = useContext(AppContext);
+  const { hubConnection, userRating } = useContext(AppContext);
   const [activeType, setActiveType] = useState<OrderType>(OrderType.Buy);
   const [listingMyOrders, setListingMyOrders] = useState<boolean>(false);
   const [selectedBalanceKind, setSelectedBalanceKind] = useState<string | null>(null);
@@ -103,7 +102,6 @@ export const Advert: FC = () => {
         0,
         10
       );
-      console.log('GetBuyOrders', res);
       setOrdersList(res.collection);
       setTotalCount(res.totalRecords);
       setSkip((s) => s + 10);
@@ -270,7 +268,7 @@ export const Advert: FC = () => {
             </TabNavItem>
           </TabsBlock>
           <Text size={14} lH={16} weight={500} smHidden>
-            Рейтинг аккаунта: {getMyRating(account)}
+            Рейтинг аккаунта: {userRating}
           </Text>
         </S.SubHeader>
 
@@ -278,7 +276,7 @@ export const Advert: FC = () => {
           onClick={() => history.push(routers.p2pchangesOrderToBuy)}
           title="P2P обмены"
           btnText="Опубликовать ордер"
-          userRating={`Рейтинг аккаунта: ${getMyRating(account)}`}
+          userRating={`Рейтинг аккаунта: ${userRating}`}
         />
         {/* Visiable from Tablet */}
         <S.SubHeader mobileHidden>
@@ -296,32 +294,34 @@ export const Advert: FC = () => {
             </TabNavItem>
           </TabsBlock>
           <Text size={14} lH={16} weight={500} smHidden>
-            Рейтинг аккаунта: {getMyRating(account)}
+            Рейтинг аккаунта: {userRating}
           </Text>
         </S.SubHeader>
 
         <S.Filters>
-          <FilterButton
-            smHalfWidth
-            active={!listingMyOrders}
-            onClick={() => setListingMyOrders(false)}
-            switchLeft
-          >
-            Все ордеры
-          </FilterButton>
-          <FilterButton
-            smHalfWidth
-            active={listingMyOrders}
-            onClick={() => setListingMyOrders(true)}
-            switchRight
-          >
-            Мои ордеры
-          </FilterButton>
+            <FilterButton
+              smHalfWidth
+              active={!listingMyOrders}
+              onClick={() => setListingMyOrders(false)}
+              switchLeft
+              noMargin
+            >
+              Все ордеры
+            </FilterButton>
+            <FilterButton
+              smHalfWidth
+              active={listingMyOrders}
+              onClick={() => setListingMyOrders(true)}
+              switchRight
+              noMargin
+            >
+              Мои ордеры
+            </FilterButton>
         </S.Filters>
 
         {/* Show only on Mobile */}
         <S.Filters hidden smVisible>
-          <FilterButton wFull active={false} onClick={() => setShowMobileFilters(true)}>
+          <FilterButton noMargin wFull active={false} onClick={() => setShowMobileFilters(true)}>
             Фильтры (3)
           </FilterButton>
         </S.Filters>
@@ -334,6 +334,7 @@ export const Advert: FC = () => {
             active={activeType === OrderType.Buy}
             onClick={() => setActiveType(OrderType.Buy)}
             switchLeft
+            noMargin
           >
             Покупка
           </FilterButton>
@@ -341,13 +342,14 @@ export const Advert: FC = () => {
             active={activeType === OrderType.Sell}
             onClick={() => setActiveType(OrderType.Sell)}
             switchRight
+            noMargin
           >
             Продажа
           </FilterButton>
 
           <S.Line />
 
-          <FilterButton onClick={() => setShowCurrenctPairModal(true)} active>
+          <FilterButton noMargin onClick={() => setShowCurrenctPairModal(true)} active>
             {!selectedPair
               ? 'Все валюты'
               : `${selectedPair.balance ? selectedPair.balance : 'все'} - ${
@@ -355,13 +357,13 @@ export const Advert: FC = () => {
                 }`}
           </FilterButton>
           <S.Line />
-          <FilterButton active onClick={() => setShowPaymentMethodsModal(true)}>
+          <FilterButton noMargin active onClick={() => setShowPaymentMethodsModal(true)}>
             {`Все методы оплаты ${
               acceptedPaymentMethods.length ? acceptedPaymentMethods.length : ''
             }`}
           </FilterButton>
           <S.Line />
-          <FilterButton active onClick={() => setShowRatingModal(true)}>
+          <FilterButton noMargin active onClick={() => setShowRatingModal(true)}>
             {acceptedRate === 0 ? 'Все рейтинги' : ratesList[acceptedRate]}
           </FilterButton>
 
