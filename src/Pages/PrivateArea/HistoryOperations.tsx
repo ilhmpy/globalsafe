@@ -71,15 +71,15 @@ export const HistoryOperations = () => {
         } else if (id === 15) {
             return "Обменный депозит.";
         } else if (id === 16) {
-            return <Styled.Link href={`info/p2p-changes/orders/${link}`}>Создан ордер на продажу</Styled.Link>;
+            return <Styled.Link href={`p2p-changes/orders/${link}`}>Создан ордер на продажу</Styled.Link>;
         } else if (id === 17) {
-            return <Styled.Link href={`info/p2p-changes/orders/${link}`}>Ордер на продажу отменен</Styled.Link>;
+            return <Styled.Link href={`p2p-changes/orders/${link}`}>Ордер на продажу отменен</Styled.Link>;
         } else if (id === 18) {1
-            return <Styled.Link href={`info/p2p-changes/${link}`}>Обмен начался</Styled.Link>;
+            return <Styled.Link href={`p2p-changes/${link}`}>Обмен начался</Styled.Link>;
         } else if (id === 19) {
-            return <Styled.Link href={`info/p2p-changes/${link}`}>Обмен завершен</Styled.Link>;
+            return <Styled.Link href={`p2p-changes/${link}`}>Обмен завершен</Styled.Link>;
         } else if (id === 20) {
-            return <Styled.Link href={`info/p2p-changes/${link}`}>Обмен отменен</Styled.Link>;
+            return <Styled.Link href={`p2p-changes/${link}`}>Обмен отменен</Styled.Link>;
         } else if (id === 21) {
             return "Куплен сертификат";
         };
@@ -337,6 +337,12 @@ export const HistoryOperations = () => {
         };
     };
 
+    function getLocaleTime(date: Date) {
+       const utc = moment.utc(date);
+       const local = utc.local();
+       return local.format("HH:MM");
+    };
+
     return (
         <>
         <Container>
@@ -372,7 +378,9 @@ export const HistoryOperations = () => {
                                 <Styled.TableMap>
                                     {operations && operations.map((item: any, idx) => (
                                         <Styled.TableItem item key={idx} newItem={item.new && item.new}>
-                                            <Styled.TableInnerItem item>{moment(item.operationDate).local().format("DD.MM.YYYY")} в {moment(item.operationDate).local().format("HH:MM")}</Styled.TableInnerItem>
+                                            <Styled.TableInnerItem item>
+                                                {moment(item.operationDate).format("DD.MM.YYYY")} в {getLocaleTime(item.operationDate)}
+                                            </Styled.TableInnerItem>
                                             <Styled.TableInnerItem item>{operation(item.operationKind, item.referenceSafeId)}</Styled.TableInnerItem>
                                             <Styled.TableInnerItem item income={item.balanceDelta > 0}>
                                                 {item.balanceDelta > 0 && (
