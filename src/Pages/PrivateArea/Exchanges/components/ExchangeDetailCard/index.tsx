@@ -203,7 +203,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
   }
 
   useEffect(() => {
-    getTotalExecutedExchanges(exchange.ownerSafeId);
+    getTotalExecutedExchanges(exchange.ownerSafeId === account.safeId ? exchange.recepientSafeId : exchange.ownerSafeId);
   }, [hubConnection]);
 
   function getExchangeChip(chip: ExchangeState) {
