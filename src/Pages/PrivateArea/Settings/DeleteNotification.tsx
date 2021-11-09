@@ -1,4 +1,4 @@
-import React, { FC, useContext, useState } from 'react';
+import React, { FC } from 'react';
 import { useHistory } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
@@ -6,7 +6,7 @@ import { ReactComponent as Close } from '../../../assets/svg/close.svg';
 import { Modal } from '../../../components/Modal/Modal';
 import { routers } from '../../../constantes/routers';
 import { payList } from './utils';
-import { PaymentMethodKind, CollectionPayMethod } from '../../../types/paymentMethodKind';
+import { CollectionPayMethod } from '../../../types/paymentMethodKind';
 import { FiatKind } from '../../../types/fiatKind';
 
 interface IProps {

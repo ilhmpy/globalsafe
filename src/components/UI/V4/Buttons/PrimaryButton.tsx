@@ -9,7 +9,6 @@ export const PrimaryButton: FC<ButtonProps> = ({
   title,
   onClick,
   disabled = false,
-  loading = false,
   type = 'button',
   block = false,
 }: ButtonProps) => {

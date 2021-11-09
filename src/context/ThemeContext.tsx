@@ -12,7 +12,7 @@ export const ThemeContext = React.createContext<Context>({
   toggleTheme: () => undefined,
 });
 
-export const ThemesProvider: FC = ({ children }: any) => {
+export const ThemesProvider: FC = ({ children }) => {
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
 
   const toggleTheme = () => {

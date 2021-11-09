@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { FC, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import DayPicker, { DateUtils } from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 import { useTranslation } from 'react-i18next';
@@ -10,15 +10,7 @@ import { ReactComponent as Right } from '../../assets/svg/monthRight.svg';
 import useOnClickOutside from '../../hooks/useOutsideHook';
 import { OpenDate } from '../../types/dates';
 
-function Navbar({
-  nextMonth,
-  previousMonth,
-  onPreviousClick,
-  onNextClick,
-  className,
-  localeUtils,
-  lang,
-}: any) {
+function Navbar({ nextMonth, previousMonth, onPreviousClick, onNextClick, localeUtils }: any) {
   const months = localeUtils.getMonths();
   const prev = months[previousMonth.getMonth()];
   const next = months[nextMonth.getMonth()];
@@ -30,7 +22,6 @@ function Navbar({
     </Arrows>
   );
 }
-const lang = localStorage.getItem('i18nextLng') || 'ru';
 const WEEKDAYS_SHORT = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
 const WEEKDAYS_SHORT_ENG = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 
