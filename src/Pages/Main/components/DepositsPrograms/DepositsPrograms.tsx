@@ -52,7 +52,7 @@ export const DepositsPrograms = () => {
       {deposits.length > 0 && (
         <Container page id="deposits">
           <H2>{t('sideNav.depositsPrograms')}</H2>
-          {screen > 480 ? (
+          {screen > 767 ? (
             <Styled.CardBox>
               {deposits &&
                 deposits.map((item, idx) => (

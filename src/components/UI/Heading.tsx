@@ -10,7 +10,7 @@ export const H2 = styled.h2<{ center?: boolean; mb?: boolean; mt?: boolean; }>`
     font-size: 36px;
     line-height: 42px;
   }
-  @media (max-width: 576px) {
+  @media (max-width: 767px) {
     font-size: 18px;
     line-height: 21px;
     margin-bottom: 10px;
@@ -28,14 +28,14 @@ export const H2 = styled.h2<{ center?: boolean; mb?: boolean; mt?: boolean; }>`
   ${({ mt }) => {
     if (mt) {
       return `
-        @media only screen and (max-device-width: 480px) {
+        @media only screen and (max-width: 767px) {
           margin-top: 10px;
         }
       `;
     };
   }}
 
-  @media only screen and (max-device-width: 767px) {
+  @media only screen and (max-width: 767px) {
     ${({ center }) => {
       if (center) {
         return `
@@ -49,7 +49,7 @@ export const H2 = styled.h2<{ center?: boolean; mb?: boolean; mt?: boolean; }>`
     }}
   }
 
-  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+  @media only screen and (min-width: 768px) and (max-width: 1024px) {
     margin-bottom: 20px;
   }
 `;

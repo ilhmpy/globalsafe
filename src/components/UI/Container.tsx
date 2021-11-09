@@ -9,22 +9,23 @@ export const Container = styled.div<{
   width: 100%;
   max-width: 1128px;
   margin: 0 auto;
-  padding: 0 40px;
+  padding: 0 34px;
   position: relative;
-  margin-bottom: 40px;
-  @media (max-width: 768px) {
-    padding-right: ${(props) => (props.pNone ? '0' : '20px')};
-    padding-left: ${(props) => (props.pNone ? '0' : '20px')};
-  }
   @media (max-width: 576px) {
     padding-right: ${(props) => (props.pNone ? '0' : '20px')};
     padding-left: ${(props) => (props.pNone ? '0' : '20px')};
   }
-
+  @media (max-width: 768px) {
+    padding-right: ${(props) => (props.pNone ? '0' : '20px')};
+    padding-left: ${(props) => (props.pNone ? '0' : '20px')};
+  }
+  @media (min-width: 769px) and (max-width: 1024px) {
+    margin-bottom: 40px;
+  }
   ${(props) => {
     if (props.pTabletNone) {
       return `
-        @media only screen and (max-device-width: 1024px) {
+        @media (max-width: 1024px) {
           padding-right: 0px;
           padding-left: 0px;
         }
@@ -35,10 +36,10 @@ export const Container = styled.div<{
     if (props.page) {
       return `
         margin-top: 60px;
-        @media only screen and (max-device-width: 480px) {
+        @media (max-width: 767px) {
           margin-top: ${props.mtNone ? '0' : '20px'};
         }
-        @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+        @media (min-width: 767px) and (max-width: 1024px) {
           margin-top: 40px;
         }
       `;

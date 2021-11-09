@@ -25,7 +25,7 @@ export const BallContainer = styled.div<{ notChecked: boolean }>`
     margin-right: 45px;
     width: 50px;
   }
-  @media only screen and (max-device-width: 330px) {
+  @media only screen and (max-width: 330px) {
     width: 35px;
   }
 `;
@@ -57,7 +57,7 @@ export const NotifiesBlock = styled.div<{
     if (admin) {
       return `
             right: 140px;
-            @media only screen and (max-device-width: 767px) {
+            @media only screen and (max-width: 767px) {
                 right: 0px;
             }
             `;
@@ -65,14 +65,14 @@ export const NotifiesBlock = styled.div<{
     if (!admin) {
       return `
             right: 48px;
-            @media only screen and (max-device-width: 767px) {
+            @media only screen and (max-width: 767px) {
                 right: 0px;
             }
             `;
     }
   }}
   top: ${({ block }) => (block ? '50px' : '1200px')};
-  @media only screen and (max-device-width: 1024px) {
+  @media only screen and (max-width: 1024px) {
     top: ${({ block }) => (block ? '50px' : '8000px')};
   }
   border: 1px solid #dcdce8;
@@ -97,62 +97,62 @@ export const NotifiesBlock = styled.div<{
     border-top: 1px solid #dcdce8;
     border-left: 1px solid #dcdce8;
     margin: auto;
-    @media only screen and (max-device-width: 359px) {
+    @media only screen and (max-width: 359px) {
       right: -99px;
     }
-    @media only screen and (min-device-width: 360px)  and (max-device-width: 379px) {
+    @media only screen and (min-width: 360px)  and (max-width: 379px) {
       right: -115px;
     }
-    @media only screen and (min-device-width: 380px) and (max-device-width: 399px) {
+    @media only screen and (min-width: 380px) and (max-width: 399px) {
       right: -120px;
     }
-    @media only screen and (min-device-width: 400px) and (max-device-width: 419px) {
+    @media only screen and (min-width: 400px) and (max-width: 419px) {
       right: -148px;
     }
-    @media only screen and (min-device-width: 420px) and (max-device-width: 439px) {
+    @media only screen and (min-width: 420px) and (max-width: 439px) {
       right: -164px;
     }
-    @media only screen and (min-device-width: 440px) and (max-device-width: 459px) {
+    @media only screen and (min-width: 440px) and (max-width: 459px) {
       right: -180px;
     }
-    @media only screen and (min-device-width: 460px) and (max-device-width: 480px) {
+    @media only screen and (min-width: 460px) and (max-width: 767px) {
       right: -197px;
     }
-    @media only screen and (min-device-width: 470px) and (max-device-width: 480px) {
+    @media only screen and (min-width: 470px) and (max-device-width: 767px) {
       right: -210px;
     }
   }
-  @media only screen and (min-device-width: 768px) and (max-device-width: 819px) {
+  @media only screen and (min-width: 768px) and (max-device-width: 819px) {
     left: -40px;   
     right: 0;
     margin-left: auto;
     margin-right: auto;   
   }
-  @media only screen and (min-device-width: 820px) and (max-device-width: 839px) {
+  @media only screen and (min-width: 820px) and (max-width: 839px) {
     left: -20px;
     right: 0;
     margin-left: auto;
     margin-right: auto;   
   }
-  @media only screen and (min-device-width: 840px) and (max-device-width: 859px) {
+  @media only screen and (min-width: 840px) and (max-width: 859px) {
     left: 0px;
     right: 0;
     margin-left: auto;
     margin-right: auto;   
   }
-  @media only screen and (min-device-width: 860px) and (max-device-width: 879px) {
+  @media only screen and (min-width: 860px) and (max-width: 879px) {
     right: 0;
     left: 20px;
     margin-left: auto;
     margin-right: auto;   
   }
-  @media only screen and (min-device-width: 880px) and (max-device-width: 899px) {
+  @media only screen and (min-width: 880px) and (max-width: 899px) {
     right: 0;
     left: 38px;
     margin-left: auto;
     margin-right: auto;   
   }
-  @media only screen and (min-device-width: 900px) and (max-device-width: 919px) {
+  @media only screen and (min-width: 900px) and (max-device-width: 919px) {
     right: 0;
     left: 58px;
     margin-left: auto;

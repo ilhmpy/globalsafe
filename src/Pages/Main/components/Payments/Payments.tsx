@@ -258,13 +258,13 @@ const WhiteBox = styled.div`
   padding-top: 40px;
   padding-bottom: 0px;
 
-  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+  @media only screen and (min-width: 481px) and (max-width: 1024px) {
     padding: 20px;
     padding-top: 25px;
     padding-bottom: 0px;
   }
 
-  @media only screen and (max-device-width: 767px) {
+  @media only screen and (max-width: 767px) {
     width: 100%;
     max-width: 100%;
     padding: 20px;
@@ -296,7 +296,7 @@ const Title = styled.div<{ right?: boolean }>`
     margin-left: 8px;
   }
 
-  @media only screen and (max-device-width: 767px) {
+  @media only screen and (max-width: 767px) {
     &:last-child {
       margin-bottom: 10px;
     }
@@ -309,7 +309,7 @@ const WhiteIntf = styled.div`
   justify-content: space-between;
   margin-bottom: 0px;
 
-  @media only screen and (max-device-width: 767px) {
+  @media only screen and (max-width: 767px) {
     flex-direction: column;
   }
 `;
@@ -356,12 +356,12 @@ const WhiteItem = styled.div<{ lastMargin?: number }>`
   flex-direction: column;
   justify-items: center;
 
-  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+  @media only screen and (min-width: 481px) and (max-width: 1024px) {
     width: 150px;
     min-width: 150px;
   }
 
-  @media only screen and (max-device-width: 767px) {
+  @media only screen and (max-width: 767px) {
     width: 135px;
     min-width: 135px;
     margin-right: 10px;
@@ -384,12 +384,12 @@ const WhiteItem = styled.div<{ lastMargin?: number }>`
     }
   }
 
-  @media only screen and (min-device-width: 360px) and (max-device-width: 409px) {
+  @media only screen and (min-width: 360px) and (max-width: 409px) {
     max-width: 180px;
     width: 45%;
   }
 
-  @media only screen and (min-device-width: 410px) and (max-device-width: 480px) {
+  @media only screen and (min-width: 410px) and (max-width: 480px) {
     max-width: 200px;
     width: 45%;
   }
@@ -429,6 +429,6 @@ const WhiteItemLine = styled.div<{ procent: number | string }>`
     height: inherit;
   }
 
-  @media only screen and (max-device-width: 767px) {
+  @media only screen and (max-width: 767px) {
   }
 `;
