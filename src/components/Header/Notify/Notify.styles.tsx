@@ -39,8 +39,11 @@ export const NotifiesBlock = styled.div<{
   inPA?: boolean;
   length?: number;
 }>`
-  width: 80%;
+  width: 100%;
   max-width: 420px;
+  transition: 0.3s;
+  top: 90px;
+  opacity: ${({ block }) => block ? "100%" : "0%"};
   height: ${({ empty, length }) => (empty ? '80px' : `${length && length < 4 ? (length * 127) + 40 : 584}px`)};
   ${({ load }) => {
     if (load) {
@@ -51,13 +54,28 @@ export const NotifiesBlock = styled.div<{
   }}
   background: #fff;
   border-radius: 4px;
-  position: absolute;
-  transition: 0.3s;
+  position: fixed;
+  @media (min-width: 1101px) {
+    position: absolute;
+    top: 50px;
+  }
+  @media (max-width: 1100px) {
+    max-width: 100%;
+    right: 0;
+    left: 0;
+    margin: 0;
+  }
+  @media (max-width: 767px) {
+    top: 60px;
+  }
+  @media (min-width: 769px) and (max-width: 1100px) {
+    top: 80px;
+  }
   ${({ admin }) => {
     if (admin) {
       return `
             right: 140px;
-            @media only screen and (max-width: 767px) {
+            @media (max-width: 767px) {
                 right: 0px;
             }
             `;
@@ -68,15 +86,11 @@ export const NotifiesBlock = styled.div<{
             @media only screen and (max-width: 767px) {
                 right: 0px;
             }
-            `;
+          `;
     }
   }}
-  top: ${({ block }) => (block ? '50px' : '1200px')};
-  @media only screen and (max-width: 1024px) {
-    top: ${({ block }) => (block ? '50px' : '8000px')};
-  }
   border: 1px solid #dcdce8;
-  z-index: 0;
+  z-index: 999999;
   background: #fff;
   box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
   padding: 20px 8px 1px 0px;
@@ -97,101 +111,30 @@ export const NotifiesBlock = styled.div<{
     border-top: 1px solid #dcdce8;
     border-left: 1px solid #dcdce8;
     margin: auto;
-    @media only screen and (max-width: 359px) {
-      right: -99px;
+    @media (max-width: 1100px) {
+      margin-right: 0;
+      right: 82px;
     }
-    @media only screen and (min-width: 360px)  and (max-width: 379px) {
-      right: -115px;
+    @media (min-width: 320px) and (max-width: 330px) {
+      right: 75px;
     }
-    @media only screen and (min-width: 380px) and (max-width: 399px) {
-      right: -120px;
+    @media (min-width: 768px) and (max-width: 1100px) {
+      right: 133px;
     }
-    @media only screen and (min-width: 400px) and (max-width: 419px) {
-      right: -148px;
+    @media (min-width: 769px) and (max-width: 1100px) {
+      right: 133px;
     }
-    @media only screen and (min-width: 420px) and (max-width: 439px) {
-      right: -164px;
+    @media (min-width: 779px) and (max-width: 1024px) {
+      right: 167px;
     }
-    @media only screen and (min-width: 440px) and (max-width: 459px) {
-      right: -180px;
+    @media (min-width: 783px) and (max-width: 1022px) {
+      right: 133px;
     }
-    @media only screen and (min-width: 460px) and (max-width: 767px) {
-      right: -197px;
-    }
-    @media only screen and (min-width: 470px) and (max-device-width: 767px) {
-      right: -210px;
-    }
-  }
-  @media only screen and (min-width: 768px) and (max-device-width: 819px) {
-    left: -40px;   
-    right: 0;
-    margin-left: auto;
-    margin-right: auto;   
-  }
-  @media only screen and (min-width: 820px) and (max-width: 839px) {
-    left: -20px;
-    right: 0;
-    margin-left: auto;
-    margin-right: auto;   
-  }
-  @media only screen and (min-width: 840px) and (max-width: 859px) {
-    left: 0px;
-    right: 0;
-    margin-left: auto;
-    margin-right: auto;   
-  }
-  @media only screen and (min-width: 860px) and (max-width: 879px) {
-    right: 0;
-    left: 20px;
-    margin-left: auto;
-    margin-right: auto;   
-  }
-  @media only screen and (min-width: 880px) and (max-width: 899px) {
-    right: 0;
-    left: 38px;
-    margin-left: auto;
-    margin-right: auto;   
-  }
-  @media only screen and (min-width: 900px) and (max-device-width: 919px) {
-    right: 0;
-    left: 58px;
-    margin-left: auto;
-    margin-right: auto;   
-  }
-  @media only screen and (min-device-width: 920px) and (max-device-width: 939px) {
-    right: 0;
-    left: 80px;
-    margin-left: auto;
-    margin-right: auto;   
-  }
-  @media only screen and (min-device-width: 940px) and (max-device-width: 959px) {
-    right: 0;
-    left: 100px;
-    margin-left: auto;
-    margin-right: auto;   
-  } 
-  @media only screen and (min-device-width: 960px) and (max-device-width: 979px) {
-    right: 0;
-    left: 120px;
-    margin-left: auto;
-    margin-right: auto;   
-  }
-  @media only screen and (min-device-width: 980px) and (max-device-width: 1000px) {
-    right: 0;
-    left: 140px;
-    margin-left: auto;
-    margin-right: auto;   
-  }
-  @media only screen and (min-device-width: 1000px) and (max-device-width: 1024px) {
-    right: 0;
-    left: 183px;
-    margin-left: auto;
-    margin-right: auto;   
   }
   & > .scrollbars > div {
     right: -1px !important;
   }
-  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+  @media only screen and (min-device-width: 481px) and (max-device-width: 1100px) {
     right: 0;
   }
 `;
@@ -299,7 +242,7 @@ export const NotifyItem = styled.h3<{
     if (notclb) {
       return `
                 cursor: initial;
-                @media only screen and (max-device-width: 480px) {
+                @media only screen and (max-width: 767px) {
                   font-size: 12px;
                 }
             `;

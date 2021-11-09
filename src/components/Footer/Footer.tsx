@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Container } from '../../globalStyles';
+import { Container } from '../UI/Container';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as FooterLogo } from '../../assets/svg/whiteFooterLogo.svg';

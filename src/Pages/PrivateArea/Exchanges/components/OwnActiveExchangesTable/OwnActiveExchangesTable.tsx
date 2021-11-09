@@ -99,7 +99,7 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({
 
   return (
     <>
-      {screen > 480 ? (
+      {screen > 767 ? (
         <Container pTabletNone>
           <S.Table>
             <S.Header>
