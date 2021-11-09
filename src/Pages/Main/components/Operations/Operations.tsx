@@ -105,10 +105,10 @@ export const Operations = () => {
           <Container pNone>
             <TableHead>
               <TableHeadItem>
-                {screen > 480 ? t('operations2.head1') : t('operations2.time')}
+                {screen > 767 ? t('operations2.head1') : t('operations2.time')}
               </TableHeadItem>
               <TableHeadItem>
-                {screen > 480 ? t('operations2.head2') : t('operations2.name')}
+                {screen > 767 ? t('operations2.head2') : t('operations2.name')}
               </TableHeadItem>
               <TableHeadItem>{t('operations2.head3')}</TableHeadItem>
             </TableHead>
@@ -116,7 +116,7 @@ export const Operations = () => {
               {notifyList.map((itm, idx) => (
                 <TableMapItem key={idx}>
                   <TableInnerItem>
-                    {screen > 480 ? (
+                    {screen > 767 ? (
                       <>
                         {moment(itm.date).format('DD.MM.YYYY')} {t('in')}{' '}
                         {moment(itm.date).format('HH:MM')}
@@ -128,7 +128,7 @@ export const Operations = () => {
                   <TableInnerItem>
                     <span>
                       {operation(itm.operationKind)}{' '}
-                      {screen > 480 ? (
+                      {screen > 767 ? (
                         <> {itm.depositName ? itm.depositName : ''} </>
                       ) : (
                         <>
@@ -205,31 +205,31 @@ const TableItem = styled.li`
   width: 100%;
   color: ${(props) => props.theme.text2};
   padding-right: 10px;
-  @media (max-width: 768px) {
+  @media (max-width: 767px) {
     font-size: 14px;
     line-height: 16px;
   }
-  @media (max-width: 576px) {
+  @media (max-width: 767px) {
     padding-bottom: 5px;
   }
-  @media (max-width: 576px) {
+  @media (max-width: 767px) {
     text-align: left;
   }
   &:nth-child(1) {
     max-width: 150px;
-    @media (max-width: 576px) {
+    @media (max-width: 767px) {
       max-width: 100%;
     }
   }
   &:nth-child(2) {
     max-width: 470px;
-    @media (max-width: 576px) {
+    @media (max-width: 767px) {
       max-width: 100%;
     }
   }
   &:nth-child(3) {
     max-width: 240px;
-    @media (max-width: 576px) {
+    @media (max-width: 767px) {
       max-width: 100%;
     }
   }
@@ -289,7 +289,7 @@ const Description = styled.h3`
   max-width: 367px;
   margin-bottom: 40px;
 
-  @media only screen and (max-device-width: 480px) {
+  @media only screen and (max-width: 767px) {
     margin-bottom: 10px;
     font-size: 12px;
     line-height: 18px;
@@ -297,7 +297,7 @@ const Description = styled.h3`
     margin-bottom: 10px;
   }
 
-  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+  @media only screen and (min-width: 768px) and (max-width: 1024px) {
     margin-bottom: 20px;
   }
 `;
@@ -312,7 +312,7 @@ const TableHead = styled.div<{ item?: boolean }>`
   align-items: center;
   padding: 0px 0px 0px 40px;
 
-  @media only screen and (max-device-width: 480px) {
+  @media only screen and (max-width: 767px) {
     padding-left: 20px;
     border-radius: 0;
     height: 38px;
@@ -338,7 +338,7 @@ const TableHeadItem = styled.div`
     max-width: 100px;
   }
 
-  @media only screen and (min-device-width: 481px) and (max-device-width: 849px) {
+  @media only screen and (min-width: 481px) and (max-width: 849px) {
     &:nth-child(1) {
       max-width: 250px;
     }
@@ -348,7 +348,7 @@ const TableHeadItem = styled.div`
     }
   }
 
-  @media only screen and (min-device-width: 850px) and (max-device-width: 949px) {
+  @media only screen and (min-width: 850px) and (max-width: 949px) {
     &:nth-child(1) {
       max-width: 250px;
     }
@@ -358,7 +358,7 @@ const TableHeadItem = styled.div`
     }
   }
 
-  @media only screen and (max-device-width: 480px) {
+  @media only screen and (max-width: 767px) {
     font-weight: 500;
     font-size: 12px;
     line-height: 18px;
@@ -368,19 +368,19 @@ const TableHeadItem = styled.div`
     }
   }
 
-  @media only screen and (max-device-width: 359px) {
+  @media only screen and (max-width: 359px) {
     &:nth-child(3) {
       max-width: 89px;
     }
   }
 
-  @media only screen and (min-device-width: 360px) and (max-device-width: 434px) {
+  @media only screen and (min-width: 360px) and (max-width: 434px) {
     &:nth-child(1) {
       max-width: 65px;
     }
   }
 
-  @media only screen and (min-device-width: 435px) and (max-device-width: 480px) {
+  @media only screen and (min-width: 435px) and (max-width: 767px) {
     &:nth-child(1) {
       max-width: 71px;
     }
@@ -403,7 +403,7 @@ const TableMapItem = styled.div`
     background: ${({ theme }) => theme.operations.ich2};
   }
 
-  @media only screen and (max-device-width: 480px) {
+  @media only screen and (max-width: 767px) {
     padding-left: 20px;
     padding-top: 10px;
     min-height: 38px;
@@ -418,6 +418,7 @@ const TableInnerItem = styled.div`
   color: ${({ theme }) => theme.operations.headClr};
   width: 100%;
 
+ 
   &:nth-child(1) {
     max-width: 330px;
   }
@@ -430,7 +431,7 @@ const TableInnerItem = styled.div`
     max-width: 100px;
   }
 
-  @media only screen and (min-device-width: 481px) and (max-device-width: 849px) {
+  @media only screen and (min-width: 481px) and (max-width: 849px) {
     &:nth-child(1) {
       max-width: 250px;
     }
@@ -440,7 +441,7 @@ const TableInnerItem = styled.div`
     }
   }
 
-  @media only screen and (min-device-width: 850px) and (max-device-width: 949px) {
+  @media only screen and (min-width: 850px) and (max-width: 949px) {
     &:nth-child(1) {
       max-width: 250px;
     }
@@ -450,7 +451,7 @@ const TableInnerItem = styled.div`
     }
   }
 
-  @media only screen and (max-device-width: 480px) {
+  @media only screen and (max-width: 767px) {
     font-weight: 400;
     font-size: 12px;
     line-height: 18px;
@@ -466,19 +467,19 @@ const TableInnerItem = styled.div`
     }
   }
 
-  @media only screen and (max-device-width: 359px) {
+  @media only screen and (max-width: 359px) {
     &:nth-child(3) {
       max-width: 89px;
     }
   }
 
-  @media only screen and (min-device-width: 360px) and (max-device-width: 434px) {
+  @media only screen and (min-width: 360px) and (max-width: 434px) {
     &:nth-child(1) {
       max-width: 65px;
     }
   }
 
-  @media only screen and (min-device-width: 435px) and (max-device-width: 480px) {
+  @media only screen and (min-width: 435px) and (max-width: 767px) {
     &:nth-child(1) {
       max-width: 71px;
     }

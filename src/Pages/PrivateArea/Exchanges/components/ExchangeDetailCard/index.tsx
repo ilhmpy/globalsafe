@@ -73,7 +73,12 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
 
   const [owner, setOwner] = useState<'seller' | 'buyer'>(buyer() ? 'buyer' : 'seller');
   const [mark, setMark] = useState<boolean | null>(null);
-  const screen = useWindowSize();
+  const scr = useWindowSize();
+  const [screen, setScreen] = useState<number>(0);
+  
+  useEffect(() => {
+    setScreen(scr);
+  }, [scr]);
 
   useEffect(() => {
     let cancel = false;
@@ -317,8 +322,9 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
           console.log('cancel', res);
           if (screen > 480) {
             setShowRejectModal(true);
-          }
-          handleToMobileModal(4);
+          } else {
+            // handleToMobileModal(1);
+          };
         })
         .catch((err) => console.log(err));
     }
@@ -354,7 +360,9 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
           setCall(true);
           if (screen > 480) {
             setShowSuccessModal(true);
-          }
+          } else {
+            handleToMobileModal(2);
+          };
         })
         .catch((err) => console.log(err));
     }
@@ -380,7 +388,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
       localStorage.setItem('mobileResultData', JSON.stringify({ ...exchange, state, owner }));
       localStorage.setItem('feedback', JSON.stringify(feedbackValue));
       history.push('/mobile/modal');
-    }
+    };
   }
 
   return (
@@ -1090,8 +1098,9 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                       rateUser();
                       if (screen > 480) {
                         setShowSuccessModal(true);
+                      } else {
+                        handleToMobileModal(2);
                       }
-                      handleToMobileModal(2);
                       getUserMark();
                     }}
                   >
@@ -1162,11 +1171,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                     fullWidthMobile={!(screen > 480)}
                     onClick={() => {
                       rateUser();
-                      if (screen > 480) {
-                        setShowSuccessModal(true);
-                      }
                       getUserMark();
-                      handleToMobileModal(2);
                     }}
                   >
                     Подтвердить
