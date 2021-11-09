@@ -5,13 +5,13 @@ import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
 
-import { Button } from '../../components/Button/Button';
+import { Button } from '../../components/Button/V2/Button';
 import { Container, Card } from '../../globalStyles';
 import { Input } from '../../components/UI/Input';
 import { Input as InputV4 } from '../../components/UI/V4';
 import { AppContext } from '../../context/HubContext';
 import { Timer } from './Timer';
-import { PrimaryButton, Tooltip } from '../UI/V4';
+import { Tooltip } from '../UI/V4';
 import { ReactComponent as QuestionIcon } from '../../assets/svg/question14.svg';
 
 
@@ -32,11 +32,11 @@ const TimerButton: FC<TimerButtonProps> = ({ password, tryCode, setTryCode }: Ti
       setState={setState}
     >
       {state === null ? (
-        <Submit as="button" danger type="submit" disabled={password === '' || state !== null}>
+        <Submit as="button" type="submit" disabled={password === '' || state !== null}>
           {t('login.in')}
         </Submit>
       ) : (
-        <Submit as="button" danger type="submit" disabled>
+        <Submit as="button" type="submit" disabled>
           {state}
         </Submit>
       )}
@@ -266,24 +266,36 @@ export const LoginComponent = ({ id }: any) => {
               setState={setStateRepeat}
             >
               {stateRepeat === null ? (
-                <PrimaryButton 
-                  title={t('login.getCode')}
+                <Button 
+                  as="button" 
+                  primary
+                  bigSize
                   type="submit"
                   disabled={value === ''}
-                />
+                >
+                  {t('login.getCode')}
+                </Button>
               ) : 
               (password && !passwordError)
                 ?
-                  <PrimaryButton 
-                    title={`${t('login.in')}`}
+                  <Button
+                    as="button"  
+                    primary
+                    bigSize
                     type="submit"
-                  />
+                  >
+                    {t('login.in')}
+                  </Button>
                 :
-                  <PrimaryButton 
-                    title={`${t('login.repeat')} ${stateRepeat}.`}
+                  <Button
+                    as="button"  
+                    primary
+                    bigSize
                     type="submit"
                     disabled={true}
-                  />
+                  >
+                    {`${t('login.repeat')} ${stateRepeat}.`}
+                  </Button>
               }
             </Timer>
 
@@ -496,7 +508,6 @@ const LinkToSmall = styled.a`
 export const Submit = styled(Button)<{ mb?: boolean }>`
   max-width: 100%;
   margin-bottom: ${(props) => (props.mb ? '20px' : '0')};
-  color: ${(props) => props.theme.text};
 `;
 
 const CardContainer = styled(Card)`

@@ -295,6 +295,10 @@ const SwitcherRow = styled.div<{ checked?: boolean }>`
     align-items: center;
 
     color: ${(props) => (props.checked ? '#0094FF' : '')};
+
+    &:hover {
+      color: ${(props) => (props.checked ? '#0094FF' : '#52515F')};
+    }
   }
 `;
 

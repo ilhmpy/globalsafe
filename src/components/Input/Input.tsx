@@ -72,6 +72,10 @@ export const InputUI = styled.input`
 
   &:focus {
     outline: none;
+    background: ${props => props.theme.white};
+  }
+  &:read-only {
+    background: #f9fafb;
   }
   ::placeholder,
   ::-webkit-input-placeholder {
@@ -81,6 +85,14 @@ export const InputUI = styled.input`
     line-height: 16px;
     opacity: 0.4;
     color: #000000;
+  }
+
+  &:disabled {
+    opacity: .4;
+  }
+
+  &:hover {
+    border-color: #D6D8DE;
   }
 `;
 

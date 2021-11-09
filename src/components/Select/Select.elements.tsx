@@ -282,4 +282,9 @@ export const DropDownHeader = styled.div`
       color: ${(props) => props.theme.depositHead};
     }
   }
+
+  &:hover {
+    border-color: #D6D8DE;
+    cursor: pointer;
+  }
 `;

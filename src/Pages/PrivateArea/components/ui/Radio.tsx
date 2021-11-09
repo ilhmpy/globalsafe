@@ -23,7 +23,11 @@ const RadioLabel = styled.label<{active: boolean;}>`
 
     background: ${props => props.active ? '#0094FF' : '#F9FAFB'};
     color: ${props => props.active ? props.theme.white : props.theme.black};
-    border: 1px solid ${props => props.active ? '#0094FF' : '#F9FAFB'};
+    border: 1px solid ${props => props.active ? '#0094FF' : '#EDF0F7'};
+
+    &:hover {
+        border-color: ${props => props.active ? '#0094FF' : '#D6D8DE'};
+    }
 `;
 
 const RadioInput = styled.span`
