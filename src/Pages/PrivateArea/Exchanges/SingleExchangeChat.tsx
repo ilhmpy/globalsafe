@@ -46,20 +46,21 @@ export const SingleExchangeChat = ({ match }: RouteComponentProps<PropsMatch>) =
 
   return (
     <S.Container>
-      <Container>
-        <Back text="Назад к обмену" onGoBackClick={() => history.goBack()} />
-        <S.TitleContainer>
-          {exchange && (
-            <Title mB={0}>
-              Чат в рамках обмена {Balance[exchange.assetKind]} -{' '}
-              {FiatKind[exchange.exchangeAssetKind]}
-            </Title>
-          )}
-          <Text size={14} lH={20} black>
-            № {safeId}
-          </Text>
-        </S.TitleContainer>
-
+      <Container pNone>
+        <S.Heading>
+          <Back text="Назад к обмену" onGoBackClick={() => history.goBack()} />
+          <S.TitleContainer>
+            {exchange && (
+              <Title mB={0}>
+                Чат в рамках обмена {Balance[exchange.assetKind]} -{' '}
+                {FiatKind[exchange.exchangeAssetKind]}
+              </Title>
+            )}
+            <Text size={14} sizeMobile={12} lH={20} black weightMobile={300}>
+              № {safeId}
+            </Text>
+          </S.TitleContainer>
+        </S.Heading>
         {loader ? <Loader /> : <ExchangeChatCard exchange={exchange} />}
       </Container>
     </S.Container>

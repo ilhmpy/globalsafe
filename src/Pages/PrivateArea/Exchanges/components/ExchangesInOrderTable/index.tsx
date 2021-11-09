@@ -17,95 +17,89 @@ interface ExchangesInOrderTable {
 
 // TODO: Check Exchange Fields and update Table | Update ViewExchangeModel
 export const ExchangesInOrderTable: React.FC<ExchangesInOrderTable> = ({
-  exchangesList, activeFilter
+  exchangesList,
+  activeFilter,
 }: ExchangesInOrderTable) => {
   const history = useHistory();
   const isMobile = useIsMobile();
   const [timerDown, setTimerDown] = useState<boolean>(false);
 
   const handleNavigateToExchange = (safeId: string) => {
-    history.replace(`/info/p2p-changes/${safeId}`)
+    history.replace(`/info/p2p-changes/${safeId}`);
   };
 
-  const exchangeStateLabels = useMemo(() => [
-    'Новый',
-    'Ожидание перевода',
-    'Завершен',
-    'Спорный',
-    'Отменен',
-  ], []);
+  const exchangeStateLabels = useMemo(
+    () => ['Новый', 'Ожидание перевода', 'Завершен', 'Спорный', 'Отменен'],
+    []
+  );
 
   return (
-      <S.Table>
-        <S.Header>
+    <S.Table>
+      <S.Header>
+        <S.Cell>
+          <span>№ обмена</span>
+        </S.Cell>
+        <S.Cell>
+          <span>Кол-во</span>
+        </S.Cell>
+        <S.Cell>
+          <span>Стоимость</span>
+        </S.Cell>
+        <S.Cell>
+          <span>Метод оплаты</span>
+        </S.Cell>
+        {activeFilter !== 'archived' ? (
           <S.Cell>
-            <span>№ обмена</span>
+            <span>Оставшееся время</span>
           </S.Cell>
-          <S.Cell>
-            <span>Кол-во</span>
-          </S.Cell>
-          <S.Cell>
-            <span>Стоимость</span>
-          </S.Cell>
-          <S.Cell>
-            <span>Метод оплаты</span>
-          </S.Cell>
-          {
-            activeFilter !== 'archived'
-            ?
-            <S.Cell>
-              <span>Оставшееся время</span>
-            </S.Cell>
-            :
-            null
-          }
-          <S.Cell>
-            <span>Статус</span>
-          </S.Cell>
-        </S.Header>
+        ) : null}
+        <S.Cell>
+          <span>Статус</span>
+        </S.Cell>
+      </S.Header>
 
-        {
-          exchangesList.length > 0 
-          ?
-            exchangesList.map((exchange) => (
-              !isMobile
-              ?
-                <BodyItem 
-                  key={`exchange-item-${exchange.safeId}`}
-                  exchange={exchange}
-                  onClick={handleNavigateToExchange}
-                  activeFilter={activeFilter}
-                  setTimerDown={setTimerDown}
-                  exchangeStateLabels={exchangeStateLabels}
-                />
-              :
-                <MobileBodyItem 
-                  key={`exchange-item-${exchange.safeId}`}
-                  exchange={exchange}
-                  onClick={handleNavigateToExchange}
-                  activeFilter={activeFilter}
-                  setTimerDown={setTimerDown}
-                  exchangeStateLabels={exchangeStateLabels}
-                />
-            ))
-          :
-          "Список Пустой"
-        }
-
-      </S.Table>
+      {exchangesList.length > 0
+        ? exchangesList.map((exchange) =>
+            !isMobile ? (
+              <BodyItem
+                key={`exchange-item-${exchange.safeId}`}
+                exchange={exchange}
+                onClick={handleNavigateToExchange}
+                activeFilter={activeFilter}
+                setTimerDown={setTimerDown}
+                exchangeStateLabels={exchangeStateLabels}
+              />
+            ) : (
+              <MobileBodyItem
+                key={`exchange-item-${exchange.safeId}`}
+                exchange={exchange}
+                onClick={handleNavigateToExchange}
+                activeFilter={activeFilter}
+                setTimerDown={setTimerDown}
+                exchangeStateLabels={exchangeStateLabels}
+              />
+            )
+          )
+        : 'Список Пустой'}
+    </S.Table>
   );
 };
-
 
 interface ItemProps {
   exchange: ViewExchangeModel;
   onClick: (exchangeSafeId: string) => void;
   activeFilter: 'active' | 'archived' | 'all';
-  setTimerDown:  (val: boolean) => void;
+  setTimerDown: (val: boolean) => void;
   exchangeStateLabels: string[];
-};
+}
 
-const BodyItem = ({exchange, onClick, activeFilter, setTimerDown, exchangeStateLabels}: ItemProps) => {
+const BodyItem = ({
+  exchange,
+  onClick,
+  activeFilter,
+  setTimerDown,
+  exchangeStateLabels,
+}: ItemProps) => {
   return (
         <S.BodyItem
           onClick={() => onClick(exchange.safeId)}
@@ -159,7 +153,7 @@ const BodyItem = ({exchange, onClick, activeFilter, setTimerDown, exchangeStateL
   )
 };
 
-const MobileBodyItem = ({exchange, onClick, setTimerDown, exchangeStateLabels}: ItemProps) => {
+const MobileBodyItem = ({ exchange, onClick, setTimerDown, exchangeStateLabels }: ItemProps) => {
   return (
         <S.MobileBodyItem
           onClick={() => onClick(exchange.safeId)}
