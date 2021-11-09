@@ -137,3 +137,11 @@ export const Tab = styled.div<{ active: boolean }>`
   background: ${(props) => (props.active ? '#EBEBF2;' : 'transparent')};
   cursor: pointer;
 `;
+
+export const Heading = styled.div`
+  display: flex;
+  flex-direction: column;
+  @media (max-width: 768px) {
+    flex-direction: column-reverse;
+  }
+`;

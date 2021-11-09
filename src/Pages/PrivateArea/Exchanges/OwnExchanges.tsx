@@ -118,13 +118,16 @@ export const OwnExchanges = () => {
       const filter = res.collection.filter((i) => {
         for (let el = 0; el < status.length; el++) {
           if (
-            i.state === status[el] || 
-            (getOwner({ ...i, account }) === "seller" && status[el] === 100 && i.state != ExchangeState.Abused &&
-            i.state != ExchangeState.Cancelled && i.state != ExchangeState.Confirmed)
-            ) {
-             return i;
-          };
-        };
+            i.state === status[el] ||
+            (getOwner({ ...i, account }) === 'seller' &&
+              status[el] === 100 &&
+              i.state != ExchangeState.Abused &&
+              i.state != ExchangeState.Cancelled &&
+              i.state != ExchangeState.Confirmed)
+          ) {
+            return i;
+          }
+        }
       });
       console.log(filter);
       setUserExchanges(filter);
@@ -362,7 +365,7 @@ export const OwnExchanges = () => {
             { methodName: 'Новый', kind: 0 },
             { methodName: 'Ожидается подтверждение оплаты', kind: 1 },
             { methodName: 'Спорный', kind: 3 },
-            { methodName: 'Ожидание перевода', kind: 100 }
+            { methodName: 'Ожидание перевода', kind: 100 },
           ]
         : [
             { methodName: 'Завершен', kind: 2 },

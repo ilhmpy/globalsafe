@@ -184,31 +184,32 @@ export const Certificates = () => {
         />
       )}
       <Container>
-        <Heading
-          onClick={() => history.push(routers.p2pchangesOrderToBuy)}
-          title="P2P обмены"
-          btnText="Опубликовать ордер"
-          userRating={`Рейтинг аккаунта: ${getMyRating(account)}`}
-        />
-        <S.SubHeader>
-          <TabsBlock>
-            <TabNavItem to={routers.p2pchanges} exact>
-              <div>Ордеры</div>
-            </TabNavItem>
+        <S.Heading>
+          <Heading
+            onClick={() => history.push(routers.p2pchangesOrderToBuy)}
+            title="P2P обмены"
+            btnText="Опубликовать ордер"
+            userRating={`Рейтинг аккаунта: ${getMyRating(account)}`}
+          />
+          <S.SubHeader>
+            <TabsBlock>
+              <TabNavItem to={routers.p2pchanges} exact>
+                <div>Ордеры</div>
+              </TabNavItem>
 
-            <TabNavItem to={routers.p2pchangesOwn} exact>
-              <div>Мои обмены</div>
-            </TabNavItem>
+              <TabNavItem to={routers.p2pchangesOwn} exact>
+                <div>Мои обмены</div>
+              </TabNavItem>
 
-            <TabNavItem to={routers.certificates} exact>
-              <div>Сертификаты</div>
-            </TabNavItem>
-          </TabsBlock>
-          <Text size={14} lH={16} weight={500} smHidden>
-            Рейтинг аккаунта: {getMyRating(account)}
-          </Text>
-        </S.SubHeader>
-
+              <TabNavItem to={routers.certificates} exact>
+                <div>Сертификаты</div>
+              </TabNavItem>
+            </TabsBlock>
+            <Text size={14} lH={16} weight={500} smHidden>
+              Рейтинг аккаунта: {getMyRating(account)}
+            </Text>
+          </S.SubHeader>
+        </S.Heading>
         <S.Tabs>
           <S.Tab active={tabActive === Tabs.Active} onClick={() => tabSwitch(Tabs.Active)}>
             Активные
