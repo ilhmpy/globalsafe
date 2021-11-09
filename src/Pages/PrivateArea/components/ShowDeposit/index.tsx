@@ -6,6 +6,7 @@ import { routers } from '../../../../constantes/routers';
 import { AppContext } from '../../../../context/HubContext';
 import { BalanceKind } from '../../../../enums/balanceKind';
 import useWindowSize from '../../../../hooks/useWindowSize';
+import { ListDeposits } from '../../../../types/deposits';
 import { IBalanceExchange } from '../../Converting/ConvertingModal';
 import { CloseDeposit } from '../Modals/CloseDeposit';
 import { CloseDepositError } from '../Modals/CloseDepositError';
@@ -30,6 +31,8 @@ interface IProps {
 export const ShowDeposit: FC<IProps> = ({ chosenDepositView }: IProps) => {
   console.log('chosenDepositView', chosenDepositView);
 
+  const lang = localStorage.getItem('i18nextLng') || 'ru';
+  const language = lang === 'ru' ? 1 : 0;
   const screen = useWindowSize();
   const history = useHistory();
   const { deposit } = chosenDepositView;
@@ -69,6 +72,20 @@ export const ShowDeposit: FC<IProps> = ({ chosenDepositView }: IProps) => {
       }
     })();
   }, [isAgree]);
+
+  const openSameProgram = () => {
+    if (hubConnection) {
+      hubConnection
+        .invoke<ListDeposits>('GetDeposits', language, true, 0, 20)
+        .then((res) => {
+          const historySafeId = res.collection.find((dep) => dep.name === deposit.name)?.safeId;
+          history.replace(`/info/deposits/new-deposit/${historySafeId}`);
+        })
+        .catch((err: Error) => {
+          console.log(err);
+        });
+    }
+  };
 
   const colorSwitcher = (type: string) => {
     if (type === 'active') return '#EFECFF';
@@ -122,18 +139,23 @@ export const ShowDeposit: FC<IProps> = ({ chosenDepositView }: IProps) => {
         <TitleWrap big>
           <Name>
             {(chosenDepositView?.amount / 100000).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1 ')}{' '}
-            GLOBAL
+            {BalanceKind[deposit?.asset]}
           </Name>
         </TitleWrap>
         <ProgramDescTitle>Описание и условия депозита:</ProgramDescTitle>
         <ChipWrap>
           <ProgramDesc>{deposit?.description}</ProgramDesc>
         </ChipWrap>
-        {screen > 768 && (
-          <Button bigSize primary onClick={() => setIsOpenCloseDeposit(true)}>
-            Закрыть депозит
-          </Button>
-        )}
+        {screen > 768 &&
+          (depositsFilter === 'archived' ? (
+            <Button bigSize primary onClick={openSameProgram}>
+              Открыть такой же депозит
+            </Button>
+          ) : (
+            <Button fullWidth bigSize primary onClick={() => setIsOpenCloseDeposit(true)}>
+              Закрыть депозит
+            </Button>
+          ))}
       </LeftSide>
       <RightSide>
         <S.Blocks>
@@ -148,7 +170,10 @@ export const ShowDeposit: FC<IProps> = ({ chosenDepositView }: IProps) => {
               <TitleWrap small minBtm>
                 <ProgramDescTitle>Дата закрытия депозита:</ProgramDescTitle>
               </TitleWrap>
-              <TextValue>{moment(chosenDepositView?.endDate).format('DD.MM.YYYY')}</TextValue>
+              <TextValue>
+                {moment(chosenDepositView?.endDate).format('DD.MM.YYYY')}
+                {depositsFilter === 'archived' && ' (закрыт)'}
+              </TextValue>
             </S.BlockItem>
           </S.Block>
           <S.Block>
@@ -157,7 +182,7 @@ export const ShowDeposit: FC<IProps> = ({ chosenDepositView }: IProps) => {
                 <ProgramDescTitle>Всего выплачено:</ProgramDescTitle>
               </TitleWrap>
               <TextValue>
-                {chosenDepositView?.payedAmountView} {BalanceKind[deposit?.depositKind]}
+                {chosenDepositView?.payedAmountView} {BalanceKind[deposit?.asset]}
               </TextValue>
             </S.BlockItem>
           </S.Block>
@@ -168,15 +193,18 @@ export const ShowDeposit: FC<IProps> = ({ chosenDepositView }: IProps) => {
                 <ProgramDescTitle>Дата ближайшей выплаты:</ProgramDescTitle>
               </TitleWrap>
               <TextValue>
-                {moment(chosenDepositView?.paymentDate).format('DD.MM.YYYY')}
-                {`(через ${moment
-                  .duration(
-                    moment(
-                      moment(chosenDepositView?.paymentDate).format('YYYY-MM-DD'),
-                      'YYYY-MM-DD'
-                    ).diff(moment().startOf('day'))
-                  )
-                  .asDays()} дней)`}
+                {depositsFilter === 'archived'
+                  ? '-'
+                  : depositsFilter === 'hold'
+                  ? 'На согласовании'
+                  : `${moment(chosenDepositView?.paymentDate).format('DD.MM.YYYY')} (через ${moment
+                      .duration(
+                        moment(
+                          moment(chosenDepositView?.paymentDate).format('YYYY-MM-DD'),
+                          'YYYY-MM-DD'
+                        ).diff(moment().startOf('day'))
+                      )
+                      .asDays()} дней)`}
               </TextValue>
             </S.BlockItem>
             <S.BlockItem>
@@ -184,17 +212,35 @@ export const ShowDeposit: FC<IProps> = ({ chosenDepositView }: IProps) => {
                 <ProgramDescTitle>Сумма ближайшей выплаты:</ProgramDescTitle>
               </TitleWrap>
               <TextValue>
-                {chosenDepositView?.payAmountView} {BalanceKind[deposit?.depositKind]}
+                {depositsFilter === 'archived'
+                  ? '-'
+                  : depositsFilter === 'hold'
+                  ? 'На согласовании'
+                  : moment
+                      .duration(
+                        moment(
+                          moment(chosenDepositView?.paymentDate).format('YYYY-MM-DD'),
+                          'YYYY-MM-DD'
+                        ).diff(moment().startOf('day'))
+                      )
+                      .asDays() === 0
+                  ? `${chosenDepositView?.payAmountView} ${BalanceKind[deposit?.asset]}`
+                  : '-'}
               </TextValue>
             </S.BlockItem>
           </S.Block>
         </S.Blocks>
         <S.Blocks pTop>
-          {screen <= 768 && (
-            <Button fullWidth bigSize primary onClick={() => setIsOpenCloseDeposit(true)}>
-              Закрыть депозит
-            </Button>
-          )}
+          {screen <= 768 &&
+            (depositsFilter === 'archived' ? (
+              <Button bigSize primary onClick={openSameProgram}>
+                Открыть такой же депозит
+              </Button>
+            ) : (
+              <Button fullWidth bigSize primary onClick={() => setIsOpenCloseDeposit(true)}>
+                Закрыть депозит
+              </Button>
+            ))}
         </S.Blocks>
       </RightSide>
     </S.Container>
