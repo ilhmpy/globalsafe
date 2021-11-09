@@ -405,7 +405,7 @@ export const OwnExchanges = () => {
 
   return (
     <div>
-      {screen <= 480 && (
+      {screen <= 767 && (
         <ExchangeFiltersMobile
           open={filtersShow}
           onClose={onCloseFiltersMobile}
@@ -424,7 +424,7 @@ export const OwnExchanges = () => {
         />
       )}
       <Container>
-        {screen > 480 && (
+        {screen > 767 && (
           <Heading
             onClick={() => history.push(routers.p2pchangesOrderToBuy)}
             title="P2P обмены"
@@ -451,7 +451,7 @@ export const OwnExchanges = () => {
             </Text>
           )}
         </S.SubHeader>
-        {screen < 480 && (
+        {screen <= 767 && (
           <>
             <Heading
               onClick={() => history.push(routers.p2pchangesOrderToBuy)}
@@ -483,7 +483,7 @@ export const OwnExchanges = () => {
             <S.FiltersBox onClick={() => setFiltersShow(true)}>Фильтры (3)</S.FiltersBox>
           </>
         )}
-        {screen > 480 && (
+        {screen > 767 && (
           <>
             <S.Filters style={{ marginBottom: '10px', position: 'relative' }}>
               <FilterButton

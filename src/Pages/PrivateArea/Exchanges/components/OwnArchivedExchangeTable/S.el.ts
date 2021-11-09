@@ -18,7 +18,7 @@ export const Cell = styled.div`
   color: #000;
   width: 100%;
   padding: 0 10px;
-  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+  @media (min-width: 768px) and (max-width: 1024px) {
     &:nth-child(1) {
       max-width: 120px;
     }
