@@ -479,11 +479,11 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                   {`${countVolumeToShow(exchange.limitFrom, exchange.assetKind).toLocaleString(
                     'ru-RU',
                     {
-                      maximumFractionDigits: 0,
+                      maximumFractionDigits: 2,
                     }
                   )} - ${countVolumeToShow(exchange.limitTo, exchange.assetKind).toLocaleString(
                     'ru-RU',
-                    { maximumFractionDigits: 0 }
+                    { maximumFractionDigits: 2 }
                   )} ${FiatKind[exchange.exchangeAssetKind]}`}
                 </Title>
               </S.BlockWrapper>
@@ -562,7 +562,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                   <Text size={14} lH={20} weight={500} black phoneFWB>
                     {countVolumeToShow(exchange.exchangeVolume, exchange.assetKind).toLocaleString(
                       'ru-RU',
-                      { maximumFractionDigits: 0 }
+                      { maximumFractionDigits: 2 }
                     )}{' '}
                     {FiatKind[exchange.exchangeAssetKind]}
                   </Text>
@@ -634,7 +634,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                           exchange.exchangeVolume,
                           exchange.assetKind
                         ).toLocaleString('ru-RU', {
-                          maximumFractionDigits: 5,
+                          maximumFractionDigits: 2,
                         })}{' '}
                         {FiatKind[exchange.exchangeAssetKind]}
                       </S.B>{' '}
@@ -773,7 +773,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                           exchange.exchangeVolume,
                           exchange.assetKind
                         ).toLocaleString('ru-RU', {
-                          maximumFractionDigits: 0,
+                          maximumFractionDigits: 2,
                         })}{' '}
                         {FiatKind[exchange.exchangeAssetKind]}
                       </S.B>{' '}
@@ -850,7 +850,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                           exchange.exchangeVolume,
                           exchange.assetKind
                         ).toLocaleString('ru-RU', {
-                          maximumFractionDigits: 0,
+                          maximumFractionDigits: 2,
                         })}{' '}
                         {FiatKind[exchange.exchangeAssetKind]}
                       </S.B>{' '}
@@ -934,7 +934,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                           exchange.exchangeVolume,
                           exchange.assetKind
                         ).toLocaleString('ru-RU', {
-                          maximumFractionDigits: 0,
+                          maximumFractionDigits: 2,
                         })}{' '}
                         {FiatKind[exchange.exchangeAssetKind]}
                       </S.B>{' '}
