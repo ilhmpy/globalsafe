@@ -68,7 +68,7 @@ export const SliderContainer = styled.div`
 `;
 
 export const SlideItemWrap = styled.div`
-  padding-bottom: 140px;
+  padding-bottom: 170px;
   @media (max-width: 1100px) {
     padding-bottom: 124px;
   }
