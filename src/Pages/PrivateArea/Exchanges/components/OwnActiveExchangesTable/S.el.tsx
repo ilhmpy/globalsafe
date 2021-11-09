@@ -37,7 +37,7 @@ export const Cell = styled.div`
   }
 `;
 
-export const BodyItem = styled.div<{ active?: boolean }>`
+export const BodyItem = styled.div<{ active?: boolean; new?: boolean; }>`
   ${table};
   ${Cell} {
   }
@@ -116,12 +116,12 @@ export const TypeCrypto = styled.div`
   }
 `;
 
-export const Exchange = styled.div`
+export const Exchange = styled.div<{ new?: boolean; }>`
   width: 100%;
   background: #fff;
   box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
   margin-bottom: 10px;
-  padding: 20px;
+  padding: 20px; 
 `;
 
 export const ExchangeLine = styled.div`

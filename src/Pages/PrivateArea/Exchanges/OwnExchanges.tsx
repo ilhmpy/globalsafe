@@ -25,6 +25,8 @@ import { getBalanceKindByStringName, getFiatKindByStringName, getMyRating, sortB
 import { ExchangeFiltersMobile } from './components/modals/ExchangeFiltersMobile';
 import { AdvertFiltersMobile } from './components/modals/AdvertFiltersMobile';
 import useWindowSize from '../../../hooks/useWindowSize';
+import { Exchange } from './components/OwnActiveExchangesTable/S.el';
+import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 
 export const OwnExchanges = () => {
   const history = useHistory();
@@ -119,13 +121,7 @@ export const OwnExchanges = () => {
     if (status && status.length) {
       filter = filter.filter((i) => {
         for (let el = 0; el < status.length; el++) {
-          if (
-            /* 
-               || 
-              (getOwner({ ...i, account }) === "seller" && status[el] === 100 && i.state != ExchangeState.Abused &&
-              i.state != ExchangeState.Cancelled && i.state != ExchangeState.Confirmed)  
-            */
-            i.state === status[el]) {
+          if (i.state === status[el]) {
              return i;
           };
         };
@@ -145,8 +141,9 @@ export const OwnExchanges = () => {
       );
       console.log('GetExchanges', res.collection);
       const collection = getFirstElements(filters(res.collection), 10);
-      setUserExchanges(collection);
-      setAllExchanges(sortByDate(res.collection));
+      console.log(collection);
+      setUserExchanges(collection.map((i: any) => ({ ...i, new: false })));
+      setAllExchanges(sortByDate(res.collection).map((i: any) => ({ ...i, new: false })));
     } catch (err) {
       console.log(err);
     } finally {
@@ -357,7 +354,6 @@ export const OwnExchanges = () => {
             { methodName: 'Новый', kind: 0 },
             { methodName: 'Ожидается подтверждение оплаты', kind: 1 },
             { methodName: 'Спорный', kind: 3 },
-            { methodName: 'Ожидание перевода', kind: 100 }
           ]
         : [
             { methodName: 'Завершен', kind: 2 },
