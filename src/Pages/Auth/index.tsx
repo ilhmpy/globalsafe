@@ -15,7 +15,7 @@ export const Authentication = ({ match }: any) => {
   return (
     <AuthPage>
       <Header />
-      <LoginComponent id={id} />
+      <LoginComponent id={id} /> 
       <Footer other />
     </AuthPage>
   );

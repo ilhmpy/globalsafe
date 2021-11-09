@@ -74,7 +74,7 @@ export const Select: FC<SelectProps> = ({
         </Styled.DropDownHeader>
         {isOpen && (
           <Styled.SelectList>
-            <Scrollbars style={{ height: '160px' }}>
+            <Scrollbars style={{ height: '160px' }} thumbSize={52}>
               {options.map((option, idx) => (
                 <Styled.ListItem
                   active={activeList === idx}
@@ -90,7 +90,7 @@ export const Select: FC<SelectProps> = ({
       </Styled.DropDownContainer>
     </div>
   );
-};
+}; 
 
 const Placeholder = styled.div`
   font-weight: normal;

@@ -30,8 +30,8 @@ export const lightTheme = {
   range: '#f0f8ff',
   slot: '#9d9d9d',
   card: {
-    background: '#fff',
-    backgroundAlfa: 'rgba(255, 255, 255, 0.4)',
+    background: '#F9FAFB',
+    backgroundAlfa: '#EDF0F6',
     border: 'none',
   },
   descFund: '#515172',

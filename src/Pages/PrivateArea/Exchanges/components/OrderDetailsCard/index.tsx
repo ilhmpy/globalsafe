@@ -422,9 +422,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                                         checked={paymentMethodSafeId === method.safeId} 
                                         onChange={(e) => setPaymentMethodSafeId(e.target.value)} 
                                     >
-                                        <Text size={14} lH={20} weight={500} mL={10} black>
-                                            {JSON.parse(method.data).bankName}
-                                        </Text>
+                                        {JSON.parse(method.data).bankName}
                                     </Radio>
                                     <S.PaymentMethodDetailsBlock>
                                         <Text size={14} weight={300} lH={20} black mB={4}>Номер карты:</Text>
@@ -450,9 +448,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                                         checked={paymentMethodSafeId === method.safeId} 
                                         onChange={(e) => setPaymentMethodSafeId(e.target.value)} 
                                     >
-                                        <Text size={14} lH={20} weight={500} mL={10} black>
-                                            {paymentMethodsKinds[method.kind].label}
-                                        </Text>
+                                        {paymentMethodsKinds[method.kind].label}
                                     </Radio>
                                     <S.PaymentMethodDetailsBlock>
                                         <Text size={14} weight={300} lH={20} black mB={4}>Адрес кошелька:</Text>
@@ -493,9 +489,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                                         checked={paymentMethodSafeId === method.safeId} 
                                         onChange={(e) => setPaymentMethodSafeId(e.target.value)} 
                                     >
-                                        <Text size={14} lH={20} weight={500} mL={10} black>
-                                            {JSON.parse(method.data).bankName}
-                                        </Text>
+                                        {JSON.parse(method.data).bankName}
                                     </Radio>
                                     <S.PaymentMethodDetailsBlock>
                                         <Text size={14} weight={300} lH={20} black mB={4}>Номер карты:</Text>
@@ -521,9 +515,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                                         checked={paymentMethodSafeId === method.safeId} 
                                         onChange={(e) => setPaymentMethodSafeId(e.target.value)} 
                                     >
-                                        <Text size={14} lH={20} weight={500} mL={10} black>
-                                            {paymentMethodsKinds[method.kind].label}
-                                        </Text>
+                                        {paymentMethodsKinds[method.kind].label}
                                     </Radio>
                                     <S.PaymentMethodDetailsBlock>
                                         <Text size={14} weight={300} lH={20} black mB={4}>Адрес кошелька:</Text>
