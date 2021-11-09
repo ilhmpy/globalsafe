@@ -16,7 +16,7 @@ import { OrderType, ViewBuyOrderModel, ViewSellOrderModel } from '../../../../..
 import { AppContext } from '../../../../../context/HubContext';
 import { Balance } from '../../../../../types/balance';
 import { FiatKind } from '../../../../../types/fiat';
-import { CollectionPayMethod, PaymentMethodKind } from '../../../../../types/paymentMethodKind';
+import { CollectionPayMethod } from '../../../../../types/paymentMethodKind';
 import { routers } from '../../../../../constantes/routers';
 import { countVolumeToShow } from '../../../utils';
 import { RootViewUserCertificatesModel, ViewUserCertificateModel } from '../../../../../types/certificates';
