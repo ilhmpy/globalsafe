@@ -99,7 +99,7 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({
 
   return (
     <>
-      {screen > 480 ? (
+      {screen > 767 ? (
         <Container pTabletNone>
           <S.Table>
             <S.Header>
@@ -133,10 +133,11 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({
                   <NotItems text="У вас не имеется обменов" />
                 ) : (
                   <>
-                    {exchanges.map((exchange, idx) => (
+                    {exchanges.map((exchange: any, idx) => (
                       <S.BodyItem
                         key={idx}
                         onClick={() => handleNavigateToExchange(exchange.safeId)}
+                        new={exchange.new && exchange.new}
                       >
                         <S.Cell data-label="Тип">
                           {getOwner(exchange) === 'seller' ? 'Продажа' : 'Покупка'}
@@ -180,9 +181,9 @@ export const OwnActiveExchangesTable: FC<OwnExchangesProps> = ({
                 <NotItems text="У вас не имеется обменов" />
               ) : (
                 <>
-                  {exchanges.map((exchange, idx) => (
-                    <S.Exchange key={idx} onClick={() => handleNavigateToExchange(exchange.safeId)}>
-                      <S.ExchangeLine>
+                  {exchanges.map((exchange: any, idx) => (
+                    <S.Exchange new={exchange.new && exchange.new} key={idx} onClick={() => handleNavigateToExchange(exchange.safeId)}>
+                      <S.ExchangeLine> 
                         <S.ExchangeLineContent main>
                           {getOwner(exchange) === 'seller' ? 'Продажа' : 'Покупка'}:
                         </S.ExchangeLineContent>

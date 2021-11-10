@@ -79,6 +79,11 @@ declare module 'styled-components' {
     rounIputBackground: string;
     v2:{
       text: string;
+      blackText: string;
+      bg: string;
+      neutral: string;
+      activeBlue: string;
+      neutralBlue: string;
       body: string;
       header:{
         background: string;

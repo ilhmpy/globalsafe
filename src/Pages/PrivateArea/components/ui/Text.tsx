@@ -81,11 +81,6 @@ export const Text = styled.p<Props>`
     if (center) {
       return `
         text-align: center;
-        font-weight: 400;
-        font-size: 12px;
-        line-height: 14px;
-        margin-bottom: 20px;
-        margin-top: 0;
       `;
     }
   }}

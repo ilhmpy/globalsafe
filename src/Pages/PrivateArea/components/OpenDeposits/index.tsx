@@ -89,7 +89,7 @@ export const OpenDeposit: FC<IProps> = ({
         .invoke('CreateUserDeposit', +sum * 100000, activeDeposit?.safeId)
         .then((res) => {
           console.log('response-------------->', res);
-          setIsSuccess(true);
+          res ? setIsSuccess(true) : setIsFailed(true);
         })
         .catch((err: Error) => {
           setIsFailed(true);

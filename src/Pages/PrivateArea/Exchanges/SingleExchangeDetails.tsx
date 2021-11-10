@@ -66,11 +66,6 @@ export const SingleExchangeDetails = ({ match }: RouteComponentProps<PropsMatch>
     };
   }, [hubConnection, call]);
 
-  /*
-  if (end === true && screen.width <= 480 && exchange !== null) {
-    return <MobileModal exchange={exchange} type={exchange.state === 2 ? 0 : 1} />
-  }; */
-
   return (
     <>
       {loading ? <Loading /> : (

@@ -170,7 +170,7 @@ export const PartnerProgramTitle = styled.h3<{ phone?: boolean }>`
   color: ${({ theme }) => theme.partnerProgram.titleColor};
   display: ${({ phone }) => (phone != undefined ? 'none' : 'inline')};
 
-  @media only screen and (max-device-width: 480px) {
+  @media only screen and (max-width: 767px) {
     font-size: 1.5em;
     display: ${({ phone }) => (phone ? 'inline' : 'none')};
     color: ${({ theme }) => theme.partnerProgram.titlePhoneColor};
@@ -238,7 +238,7 @@ export const PartnerProgramLine = styled.div`
     display: flex;
   }
 
-  @media only screen and (max-device-width: 1024px) {
+  @media only screen and (max-width: 1024px) {
     justify-content: space-around;
     &:last-child {
       margin-bottom: 50px;
@@ -274,7 +274,7 @@ export const PartnerProgramBlock = styled.div<{ phone?: boolean }>`
   padding-top: 26px;
   display: ${({ phone }) => (phone ? 'none' : 'block')};
 
-  @media only screen and (max-device-width: 1024px) {
+  @media only screen and (max-width: 1024px) {
     margin-top: 20px;
     padding-top: 20px;
     display: ${({ phone }) => (phone ? 'block' : 'none')};
@@ -299,7 +299,7 @@ export const PartnerProgramBlock = styled.div<{ phone?: boolean }>`
       width: 64%;
     }
 
-    @media only screen and (min-device-width: 481px) and (max-device-width: 900px) {
+    @media only screen and (min-width: 481px) and (max-width: 900px) {
       max-width: 300px;
     }
   }

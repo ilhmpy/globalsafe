@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { API_URL } from '../constantes/api';
 import useLocalStorage from '../hooks/useLocalStorage';
+import useWindowSize from '../hooks/useWindowSize';
 import { getMyRating } from '../Pages/PrivateArea/utils';
 import { BalanceList } from '../types/balance';
 type Nulable<T> = T | null;
@@ -30,6 +31,7 @@ type Context = {
   setDepositsFilter: (depositsFilter: 'active' | 'archived' | 'hold') => void;
   depositsFilter: string;
   userRating: string;
+  screen: number
 };
 
 export const AppContext = React.createContext<Context>({
@@ -54,6 +56,7 @@ export const AppContext = React.createContext<Context>({
   setDepositsFilter: () => undefined,
   depositsFilter: '',
   userRating: '0.0',
+  screen: 1600,
 });
 
 export const HubProvider: FC = ({ children }: any) => {
@@ -75,6 +78,7 @@ export const HubProvider: FC = ({ children }: any) => {
   const [account, setAccount] = useState<any>({});
   const [depositsFilter, setDepositsFilter] = useState<'active' | 'archived' | 'hold'>('active');
   const [userRating, setUserRating] = useState('0.0');
+  const screen = useWindowSize();
 
   useEffect(() => {
     const hubConnection = new signalR.HubConnectionBuilder()
@@ -230,6 +234,7 @@ export const HubProvider: FC = ({ children }: any) => {
         setDepositsFilter,
         depositsFilter,
         userRating,
+        screen 
       }}
     >
       {children}

@@ -16,7 +16,7 @@ import { OrderType, ViewBuyOrderModel, ViewSellOrderModel } from '../../../../..
 import { AppContext } from '../../../../../context/HubContext';
 import { Balance } from '../../../../../types/balance';
 import { FiatKind } from '../../../../../types/fiat';
-import { CollectionPayMethod, PaymentMethodKind } from '../../../../../types/paymentMethodKind';
+import { CollectionPayMethod } from '../../../../../types/paymentMethodKind';
 import { routers } from '../../../../../constantes/routers';
 import { countVolumeToShow } from '../../../utils';
 import { RootViewUserCertificatesModel, ViewUserCertificateModel } from '../../../../../types/certificates';
@@ -34,6 +34,7 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
   const [showDeleteErrorModal, setShowDeleteErrorModal] = useState(false);
   const [deleteSuccessed, setDeleteSuccessed] = useState(false);
   const [dailyLimitRest, setDailyLimitRest] = useState<number>(0);
+  const [getDailyLimitLoading, setGetDailyLimitLoading] = useState(true); 
   const [userActiveCertificate, setUserActiveCertificate] =
   useState<ViewUserCertificateModel | null>(null);
 
@@ -78,6 +79,7 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
   };
 
   const getUserCertificates = async () => {
+    setGetDailyLimitLoading(true);
     try {
       const res = await hubConnection!.invoke<RootViewUserCertificatesModel>(
         'GetUserCertificates', 
@@ -109,9 +111,11 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
         const rest = ( countVolumeToShow(userActiveCertificate.certificate.dailyVolume, userActiveCertificate.certificate.assetKind) - 
         countVolumeToShow(res, order.assetKind) );
         setDailyLimitRest(rest);
+        setGetDailyLimitLoading(false);
       } else {
         // Fake Value
         setDailyLimitRest(0);
+        setGetDailyLimitLoading(false);
       }
     } catch (err) {
       console.log(err);
@@ -173,15 +177,20 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
           </Title>
         </S.BlockWrapper>
 
-        <S.BlockWrapper mobileMb={0}>
-          <Text size={14} lH={20} mB={10} black weightMobile={300} mBMobile={4}>
-            Оставшийся лимит в сутках:
-          </Text>
-          <Title lH={28} heading3 mbMobile={0}>
-            {`${dailyLimitRest} ${Balance[order.assetKind]}`}
-          </Title>
-        </S.BlockWrapper>
-
+        {
+          !getDailyLimitLoading
+          ? 
+            <S.BlockWrapper mobileMb={0}>
+              <Text size={14} lH={20} mB={10} black weightMobile={300} mBMobile={4}>
+                Оставшийся лимит в сутках:
+              </Text>
+              <Title lH={28} heading3 mbMobile={0}>
+                {`${dailyLimitRest} ${Balance[order.assetKind]}`}
+              </Title>
+            </S.BlockWrapper>
+          :
+            null
+        }
       </LeftSide>
 
       <RightSide>
@@ -191,7 +200,7 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
             </Text>
             <Text size={14} lH={20} weight={500} black>
               {`${countVolumeToShow(order.volume, order.assetKind).toLocaleString('ru-RU', {
-                    maximumFractionDigits: 4,
+                    maximumFractionDigits: 5,
                 })} ${Balance[order.assetKind]}`}
             </Text>
           </S.BlockWrapper>
@@ -213,7 +222,7 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
             </Text>
             <Text size={14} lH={20} weight={500} black>
               {`${(countVolumeToShow(order.volume, order.assetKind) * order.rate).toLocaleString('ru-RU', {
-                    maximumFractionDigits: 4,
+                    maximumFractionDigits: 5,
                 })} ${FiatKind[order.operationAssetKind]}`}
             </Text>
           </S.BlockWrapper>

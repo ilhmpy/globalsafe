@@ -7,7 +7,7 @@ import { FiatKind } from '../../../../../types/fiat';
 import { ViewBuyOrderModel, ViewSellOrderModel } from '../../../../../types/orders';
 import { countVolumeToShow, paymentMethodIconSrc, useIsMobile } from '../../../utils';
 
-import * as S from './S.el'; 
+import * as S from './S.el';
 
 interface AdvertTableProps {
   list: Array<ViewBuyOrderModel | ViewSellOrderModel>;

@@ -13,8 +13,13 @@ export const TabNavItem = styled(NavLink)`
   line-height: 16px;
   padding-bottom: 10px;
   margin-right: 20px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0);
+
   &:last-child{
     margin-right: 0;
+  }
+  &:hover {
+    opacity: 0.8;
   }
   &.active {
     font-weight: 500;

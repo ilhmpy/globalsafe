@@ -151,3 +151,11 @@ export const Button = styled.button<{ newItems: boolean; }>`
     font-weight: 500;
     display: ${({ newItems }) => newItems ? "block" : "none"};
 `;
+
+export const Link = styled.a`
+    color: #000;
+    &:hover {
+        text-decoration: underline;
+        
+    }
+`;

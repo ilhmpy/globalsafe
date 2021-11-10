@@ -1,4 +1,4 @@
-import React, { FC, useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
 import { ReactComponent as Ball } from '../../assets/svg/ball.svg';
@@ -38,6 +38,8 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
   const [notify, setNotify] = useState<boolean>(false);
   const [checkeds, setCheckeds] = useState<boolean>(false);
   const screen = useWindowSize();
+  const [none, setNone] = useState<boolean>(false);
+  const [time, setTime] = useState<any>();
 
   const appContext = useContext(AppContext);
   const themeContext = useContext(ThemeContext);
@@ -86,16 +88,24 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
   const toAdmin = () => {
     history.push('/admin');
   };
+  const notifiesBlock = useRef();
   const lang = localStorage.getItem('i18nextLng') || 'ru';
-  function onBall(e: any) {
-    setNotify(!notify);
+  
+  function onBall() {
+    setNotify(false);
+    if (!none) {
+      setNone(true);
+      setNotify(true);
+    } {
+      setTime(setTimeout(() => setNone(!notify), 500));
+    };
   }
   return (
     <>
       <HeaderWrap header={header}>
-        <Container>
+        <Container style={{ position: "relative" }}>
           <HeaderInner>
-            <HeaderLogo href="/">{screen > 768 ? <Logo /> : <GsLogo />}</HeaderLogo>
+            <HeaderLogo href="/">{screen >= 768 ? <Logo /> : <GsLogo />}</HeaderLogo>
             <HeaderMenu open={open}>
               {admPanel ? (
                 <NavAdmin lang={lang} onClose={onClose} />
@@ -134,12 +144,14 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
                 <Notifies.BallContainer notChecked={checkeds}>
                   <Ball onClick={onBall} style={{ height: '20px' }} />
                 </Notifies.BallContainer>
-                <Notify
-                  block={notify}
-                  setBlock={setNotify}
-                  setCheckeds={setCheckeds}
-                  admin={admin ? true : false}
-                />
+                {screen > 1100 && 
+                  <Notify
+                    block={notify}
+                    none={none}
+                    setBlock={setNotify}
+                    setCheckeds={setCheckeds}
+                    admin={admin ? true : false}
+                  />}
               </>
             )}
             <SwitchTheme
@@ -153,21 +165,6 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
               {admin ? (
                 <AdminButton onClick={toAdmin}>{t('headerButton.admin')}</AdminButton>
               ) : null}
-
-              {/* {location.pathname === '/' ? (
-                <Button primary onClick={handleClick}>
-                  {t('headerButton.personalArea')}
-                </Button>
-              ) : user ? (
-                // <Button primary onClick={logOut}>
-                //   {t('logout')}
-                // </Button>
-                <Button primary onClick={handleClick}>
-                  {t('headerButton.personalArea')}
-                </Button>
-              ) : (
-               
-              )} */}
             </ButtonsRev>
             <Btn onClick={handleClick}>{t('headerButton.personalArea')}</Btn>
             <MenuBtn open={open} onClick={() => setOpen(!open)}>
@@ -177,6 +174,14 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
           </HeaderInner>
         </Container>
       </HeaderWrap>
+       {screen < 1100 && 
+        <Notify
+          none={none}
+          block={notify}
+          setBlock={setNotify}
+          setCheckeds={setCheckeds}
+          admin={admin ? true : false}
+        />}
     </>
   );
 };

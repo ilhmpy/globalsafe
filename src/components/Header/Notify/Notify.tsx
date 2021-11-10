@@ -13,14 +13,15 @@ type NotifyProps = {
   admin?: boolean;
   setCheckeds: (bool: boolean) => void;
   setBlock: (bool: boolean) => void;
+  id?: string;
+  none: boolean;
 };
 
 export const Notify: FC<NotifyProps> = ({
   block,
-  auth,
   admin,
   setCheckeds,
-  setBlock,
+  none,
 }: NotifyProps) => {
   const [notifies, setNotifies] = useState<NotifyItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -75,8 +76,8 @@ export const Notify: FC<NotifyProps> = ({
 
   useEffect(() => {
     if (block) {
-      getNotifies();
-    }
+      getNotifies(false);
+    };
   }, [hubConnection, block]);
 
   function changeHide(bool: boolean, id: string) {
@@ -115,6 +116,7 @@ export const Notify: FC<NotifyProps> = ({
 
   return (
     <Notifies.NotifiesBlock
+      none={none}
       block={block}
       admin={admin}
       empty={!loading && notifies.length === 0}

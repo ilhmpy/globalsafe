@@ -66,7 +66,7 @@ export const Dropdown: FC<SelectProps> = ({
         </Styled.DropDownHeader>
         {isOpen && (
           <Styled.SelectList>
-            <Scrollbars style={{ height: '200px' }}>
+            <Scrollbars style={{ height: '200px' }} thumbSize={52}>
               {options.map((option, idx) => (
                 <Styled.ListItem
                   active={activeList === idx}
@@ -80,6 +80,6 @@ export const Dropdown: FC<SelectProps> = ({
           </Styled.SelectList>
         )}
       </Styled.DropDownContainer>
-    </div>
+    </div> 
   );
 };
