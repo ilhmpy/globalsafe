@@ -1,4 +1,4 @@
-import { FC, useState, useContext } from 'react';
+import { FC, useState, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import alfa from '../../../../../assets/v2/svg/banks/alfa.svg';
 import alfa1 from '../../../../../assets/v2/svg/banks/alfa1.svg';
@@ -18,6 +18,8 @@ import { AppContext } from '../../../../../context/HubContext';
 import * as S from './S.el';
 import { countVolumeToShow } from '../../../utils';
 import useWindowSize from '../../../../../hooks/useWindowSize';
+import { UserMarksCollectionResult, ViewMarkModel } from '../../../../../types/mark';
+import { Space } from '../../../components/ui';
 
 export const OwnArchivedExchangesTable: FC<OwnExchangesProps> = ({
   exchanges,
@@ -25,8 +27,11 @@ export const OwnArchivedExchangesTable: FC<OwnExchangesProps> = ({
 }: OwnExchangesProps) => {
   const history = useHistory();
   const [selectedOption, setSelectedOption] = useState<string | null>('Все валюты предложения');
-  const { account } = useContext(AppContext);
+  const { account, hubConnection } = useContext(AppContext);
   const screen = useWindowSize();
+  const [userMarks, setUserMarks] = useState<ViewMarkModel[]>([]);
+  const [marksSkip, setMarksSkip] = useState(0);
+  const [marksTotal, setMarksTotal] = useState(0);
 
   const handleNavigateToExchange = (id: string) => {
     history.replace(`/info/p2p-changes/${id}`);
@@ -69,6 +74,37 @@ export const OwnArchivedExchangesTable: FC<OwnExchangesProps> = ({
     'Подана жалоба',
     'Отменен',
   ];
+
+ 
+  useEffect(() => {
+    if(hubConnection) {
+      handleGetUserMarks();
+    }
+  }, [hubConnection]);
+
+  useEffect(() => {
+    if(hubConnection) {
+      if(userMarks.length < marksTotal) {
+        handleGetUserMarks();
+      }
+    }
+  }, [hubConnection, userMarks]);
+
+  const handleGetUserMarks = async () => {
+    try {
+      const res = await hubConnection!.invoke<UserMarksCollectionResult>(
+        'GetUserMarks',
+        marksSkip, // skip
+        10 // take
+      );
+      console.log('GetUserMarks', res);
+      setMarksTotal(res.totalRecords);
+      setMarksSkip(s => s + 10);
+      setUserMarks((s) => [...s, ...res.collection]);
+    } catch (err) {
+        console.log(err);
+    }
+  };
 
   /*
   const test: ViewExchangeModel[] = [
@@ -199,7 +235,22 @@ export const OwnArchivedExchangesTable: FC<OwnExchangesProps> = ({
                         <S.Cell data-label="Метод оплаты">
                           <S.BankList>{getPaymentMethod(exchange.paymentMethod?.kind)}</S.BankList>
                         </S.Cell>
-                        <S.Cell data-label="Статус">{Status[exchange.state]}</S.Cell>
+                        <S.Cell data-label="Статус">
+                          <Space column gap={4}>
+                            {Status[exchange.state]}
+
+                            {
+                              (exchange.state === 2) && (userMarks.length > 0) &&
+                              !userMarks.some(mark => mark.exchangeId === exchange.id)
+                              ?
+                                <S.Link to={`/info/p2p-changes/${exchange.safeId}`}>
+                                  Оставить оценку
+                                </S.Link>
+                              :
+                              null
+                            }
+                          </Space>
+                        </S.Cell>
                       </S.BodyItem>
                     ))}
                   </>
@@ -263,7 +314,20 @@ export const OwnArchivedExchangesTable: FC<OwnExchangesProps> = ({
                       <S.ExchangeLine>
                         <S.ExchangeLineContent main>Статус:</S.ExchangeLineContent>
                         <S.ExchangeLineContent text style={{ maxWidth: '170px' }}>
-                          {getStatus(exchange)}
+                          <Space column gap={4}>
+                            {getStatus(exchange)}
+
+                            {
+                              (exchange.state === 2) && (userMarks.length > 0) &&
+                              !userMarks.some(mark => mark.exchangeId === exchange.id)
+                              ?
+                                <S.Link to={`/info/p2p-changes/${exchange.safeId}`}>
+                                  Оставить оценку
+                                </S.Link>
+                              :
+                              null
+                            }
+                          </Space>
                         </S.ExchangeLineContent>
                       </S.ExchangeLine>
                     </S.Exchange>

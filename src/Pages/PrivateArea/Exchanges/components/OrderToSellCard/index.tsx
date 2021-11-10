@@ -90,6 +90,16 @@ export const OrderToSellCard: FC = () => {
     return list;
   }, [Balance]);
 
+  const resetFormValues = () => {
+    setCurrencyToChange('');
+    setOrderSumm('');
+    setChangeRate('');
+    setOrderMinSumm('');
+    setOrderMaxSumm('');
+    setSelectedPaymentMethodsIds([]);
+    setPaymentMethods(undefined);
+  };
+
   useEffect(() => {
     if (hubConnection) {
       setSelectedPaymentMethodsIds([]);
@@ -99,6 +109,7 @@ export const OrderToSellCard: FC = () => {
 
   useEffect(() => {
     if (hubConnection && currencyToSell) {
+      resetFormValues();
       handleGetOrdersVolume();
       getUserCertificates();
     }
