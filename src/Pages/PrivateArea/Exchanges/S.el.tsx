@@ -48,7 +48,7 @@ export const Filters = styled.div<{
       `;
     }
   }}
-  @media only screen and (max-device-width: 480px) {
+  @media (max-width: 767px) {
     width: 100%;
     margin-bottom: 20px;
     ${(props) =>
@@ -164,7 +164,7 @@ export const Button = styled.button<{ newItems: boolean }>`
   cursor: pointer;
   font-weight: 500;
   display: ${({ newItems }) => (newItems ? 'block' : 'none')};
-  @media only screen and (max-device-width: 480px) {
+  @media (max-width: 767px) {
     margin-top: 20px;
     margin-bottom: 40px;
   }

@@ -10,13 +10,12 @@ export const LeftSide = styled.div<{ bg?: string }>`
     width: 100%;
     padding: 40px 35px;
   }
+  @media (max-width: 767px) {
+    max-width: 100%;
+    width: 100%;
+  }
   @media (max-width: 576px) {
     width: 100%;
     padding: 20px;
   }
-  /* @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
-    width: 33%;
-    padding-left: 35px;
-    padding-right: 35px;
-  } */
 `;

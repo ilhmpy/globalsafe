@@ -1,4 +1,4 @@
-import React, { FC, useState, useContext, useEffect } from 'react';
+import React, { FC, useState, useContext, useEffect, useMemo } from 'react';
 import * as S from './S.el';
 import * as FL from '../../S.el';
 import {
@@ -16,7 +16,7 @@ import { ExchangeSuccessModal } from '../modals/ExchangeSuccessModal';
 import { ExchangeRejectModal } from '../modals/ExchangeRejectModal';
 import { useHistory } from 'react-router-dom';
 import { routers } from '../../../../../constantes/routers';
-import { ViewExchangeModel, ExchangeState } from '../../../../../types/exchange';
+import { ViewExchangeModel, ExchangeState, ExchangeKind } from '../../../../../types/exchange';
 import { Balance } from '../../../../../types/balance';
 import { FiatKind } from '../../../../../types/fiat';
 import { PaymentMethodKind } from '../../../../../types/paymentMethodKind';
@@ -32,6 +32,7 @@ import { countVolumeToShow } from '../../../utils';
 import { Container } from '../../../../../components/UI/Container';
 import { Exchange } from '../OwnActiveExchangesTable/S.el';
 import useWindowSize from '../../../../../hooks/useWindowSize';
+import { getMyRating } from '../../../utils';
 
 type DetailCardProps = {
   exchange: ViewExchangeModel;
@@ -58,12 +59,15 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
   setEnd,
 }: DetailCardProps) => {
   const history = useHistory();
-  const { account, hubConnection, userSafeId } = useContext(AppContext);
+  const { account, hubConnection, userSafeId, screen } = useContext(AppContext);
 
   const [feedbackValue, setFeedbackValue] = useState(5);
   const [totalExchanges, setTotalExchanges] = useState<any>();
   const [timerDown, setTimerDown] = useState<boolean>(false);
   const [tab, setTab] = useState<'order' | 'exchange'>('exchange');
+  const [ownerTotalExchanges, setOwnerTotalExchanges] = useState<number>(0);
+  const [recepientTotalExchanges, setRecepientTotalExchanges] = useState<number>(0);
+  const [recepientRating, setRecepientRating] = useState<string>("");
   const buyer = () => {
     return (
       (exchange && exchange.kind === 0 && exchange.ownerSafeId !== account.safeId) ||
@@ -73,12 +77,35 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
 
   const [owner, setOwner] = useState<'seller' | 'buyer'>(buyer() ? 'buyer' : 'seller');
   const [mark, setMark] = useState<boolean | null>(null);
-  const scr = useWindowSize();
-  const [screen, setScreen] = useState<number>(0);
-  
+
+  const getObject = () => {
+    return exchange.kind === ExchangeKind.Sell ?
+      {
+        seller: { 
+          rating: Number(exchange.userRating).toFixed(1), 
+          totalExchanges: Number(ownerTotalExchanges) 
+        },
+        buyer: { 
+          rating: owner === "buyer" ? Number(getMyRating(account)).toFixed(1) : recepientRating, 
+          totalExchanges: owner === "buyer" ? Number(getMyExchanges()) : recepientTotalExchanges
+        },
+      } : {
+        seller: { 
+          rating: owner === "seller" ? Number(getMyRating(account)).toFixed(1) : recepientRating, 
+          totalExchanges: owner === "seller" ? Number(getMyExchanges()) : recepientTotalExchanges
+        },
+        buyer: { 
+          rating: Number(exchange.userRating).toFixed(1), 
+          totalExchanges: Number(ownerTotalExchanges) 
+        },
+      }
+  };
+
+  const [ownerInExchange, setOwnerInExchange] = useState<any>(getObject());
+
   useEffect(() => {
-    setScreen(scr);
-  }, [scr]);
+    setOwnerInExchange(getObject());
+  }, [ownerTotalExchanges, recepientTotalExchanges, recepientRating]);
 
   useEffect(() => {
     let cancel = false;
@@ -194,21 +221,39 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
     getUserMark();
   }, [hubConnection, exchange]);
 
-  function getTotalExecutedExchanges(id: string) {
+  function getTotalExecutedExchanges(id: string, setTotal: (val: number) => void) {
     if (hubConnection) {
       hubConnection
         .invoke('GetTotalExecutedExchanges', id)
         .then((res) => {
           console.log('totalExecutedExchanges', res);
-          setTotalExchanges(res);
+          setTotal(res);
+          setOwnerInExchange(getObject());
         })
         .catch((err) => console.error(err));
     }
   }
 
   useEffect(() => {
-    getTotalExecutedExchanges(exchange.ownerSafeId);
-  }, [hubConnection]);
+    getTotalExecutedExchanges(exchange.recepientSafeId, setRecepientTotalExchanges);
+    getTotalExecutedExchanges(exchange.ownerSafeId, setOwnerTotalExchanges);
+  }, [hubConnection, exchange]);
+
+  function getUserRating(id: string) {
+    if (hubConnection) {
+      hubConnection.invoke("GetUserRating", id)
+        .then((res) => {
+          console.log(res);
+          setRecepientRating(res);
+          setOwnerInExchange(getObject());
+        })
+        .catch((err) => console.error(err));
+    };
+  };
+
+  useEffect(() => {
+    getUserRating(exchange.recepientSafeId);
+  }, [hubConnection, exchange]);
 
   function getExchangeChip(chip: ExchangeState) {
     if (chip === 0 || chip === 1) {
@@ -253,16 +298,6 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
     } else {
       return `0м. 0с.`;
     }
-  }
-
-  function getMyRating() {
-    let rating = 0;
-    account.claims.forEach((claim: any) => {
-      if (claim.claimType === 'exchanges-rating') {
-        rating = claim.claimValue;
-      }
-    });
-    return Number(rating).toFixed(1);
   }
 
   function getMyExchanges() {
@@ -322,9 +357,8 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
           console.log('cancel', res);
           if (screen > 480) {
             setShowRejectModal(true);
-          } else {
-            // handleToMobileModal(1);
-          };
+          }
+          handleToMobileModal(ExchangeState.Cancelled);
         })
         .catch((err) => console.log(err));
     }
@@ -358,11 +392,10 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
         .then((res) => {
           console.log(res);
           setCall(true);
-          if (screen > 480) {
+          if (screen > 767) {
             setShowSuccessModal(true);
-          } else {
-            handleToMobileModal(2);
-          };
+          }; 
+          handleToMobileModal(ExchangeState.Completed);
         })
         .catch((err) => console.log(err));
     }
@@ -384,12 +417,15 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
   }, [tab]);
 
   function handleToMobileModal(state: number) {
-    if (screen < 480) {
-      localStorage.setItem('mobileResultData', JSON.stringify({ ...exchange, state, owner }));
-      localStorage.setItem('feedback', JSON.stringify(feedbackValue));
-      history.push('/mobile/modal');
+    console.log("call")
+    if (screen < 767) {
+       localStorage.setItem('mobileResultData', JSON.stringify({ ...exchange, state, owner }));
+       localStorage.setItem('feedback', JSON.stringify(feedbackValue));
+       history.push('/mobile/modal');
     };
-  }
+  };
+
+  console.log(owner, exchange);
 
   return (
     <>
@@ -397,7 +433,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
         <FL.Filters
           style={{ marginBottom: '10px', position: 'relative' }}
           when={
-            screen <= 480 &&
+            screen <= 767 &&
             (exchange.state === ExchangeState.Initiated ||
               exchange.state === ExchangeState.Confirmed)
           }
@@ -407,6 +443,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
             onClick={() => setTab('exchange')}
             style={{ marginRight: '0px' }}
             big
+            smHalfWidth
           >
             Обмен
           </FilterButton>
@@ -414,6 +451,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
             active={tab === 'order'}
             onClick={() => setTab('order')}
             style={{ marginLeft: '0px', borderLeft: '0' }}
+            smHalfWidth
             big
           >
             Ордер
@@ -422,17 +460,17 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
       </Container>
       <Container pTabletNone>
         <S.Container>
-          {screen > 480 ||
-          (screen <= 480 &&
+          {screen > 767 ||
+          (screen <= 767 &&
             tab === 'order' &&
             (exchange.state === ExchangeState.Initiated ||
               exchange.state === ExchangeState.Confirmed)) ||
-          (screen <= 480 &&
+          (screen <= 767 &&
             ((exchange.state === ExchangeState.Completed && mark != false) ||
               exchange.state === ExchangeState.Abused ||
               exchange.state === ExchangeState.Cancelled)) ? (
             <LeftSide bg={'#EAEFF4'}>
-              {screen < 481 && (
+              {screen < 767 && (
                 <S.BlockWrapper>
                   <Title lH={21} mB={20} fS={18} fW={900}>
                     Детали по ордеру
@@ -519,23 +557,21 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
               <S.BlockWrapper>
                 <Text size={14} lH={20} mB={10} black onMobileTitleInExchange>
                   Рейтинг продавца:
-                </Text>
+                </Text> 
                 <Title lH={28} onMobileTitleInExchange>
-                  {owner === 'seller'
-                    ? `${getMyRating()} (${getMyExchanges()})`
-                    : `${Number(exchange.userRating).toFixed(1)} (${totalExchanges})`}
+                    {`${ownerInExchange.seller.rating} (${ownerInExchange.seller.totalExchanges})`}
                 </Title>
               </S.BlockWrapper>
             </LeftSide>
           ) : null}
 
           {/* IF COMPLETED AND NOT GRADET */}
-          {screen > 480 ||
-          (screen <= 480 &&
+          {screen > 767 ||
+          (screen <= 767 &&
             tab === 'exchange' &&
             (exchange.state === ExchangeState.Initiated ||
               exchange.state === ExchangeState.Confirmed)) ||
-          (screen <= 480 &&
+          (screen <= 767 &&
             (exchange.state === ExchangeState.Completed ||
               exchange.state === ExchangeState.Abused ||
               exchange.state === ExchangeState.Cancelled)) ? (
@@ -620,9 +656,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                     Рейтинг покупателя:
                   </Text>
                   <Text size={14} lH={20} weight={500} mB={4} black phoneFWB>
-                    {owner === 'seller'
-                      ? `${Number(exchange.userRating).toFixed(1)} (${totalExchanges})`
-                      : `${getMyRating()} (${getMyExchanges()})`}
+                    {`${ownerInExchange.buyer.rating} (${ownerInExchange.buyer.totalExchanges})`}
                   </Text>
                 </S.BlockWrapper>
               </S.StateBlock>
@@ -689,7 +723,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                         </S.Space>
                       </S.Space>
                     </>
-                  ) : screen >= 480 && screen < 1024 ? (
+                  ) : screen >= 767 && screen < 1024 ? (
                     <>
                       <S.Space justify="space-between">
                         <Button
@@ -866,7 +900,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                     </Text>
                   </S.TransferInfoBlock>
 
-                  {screen > 480 ? (
+                  {screen > 767 ? (
                     <S.Space justify="space-between">
                       <S.Space gap={20}>
                         <Button
@@ -957,7 +991,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                     </Text>
                   </S.TransferInfoBlock>
 
-                  {screen > 480 ? (
+                  {screen > 767 ? (
                     <S.Space justify="space-between">
                       <S.Space gap={20}>
                         <Button
@@ -1093,14 +1127,9 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
 
                   <Button
                     primary
-                    fullWidthMobile={!(screen > 480)}
+                    fullWidthMobile={!(screen > 767)}
                     onClick={() => {
                       rateUser();
-                      if (screen > 480) {
-                        setShowSuccessModal(true);
-                      } else {
-                        handleToMobileModal(2);
-                      }
                       getUserMark();
                     }}
                   >
@@ -1168,7 +1197,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                   </S.FeedbackBlock>
                   <Button
                     primary
-                    fullWidthMobile={!(screen > 480)}
+                    fullWidthMobile={!(screen > 767)}
                     onClick={() => {
                       rateUser();
                       getUserMark();

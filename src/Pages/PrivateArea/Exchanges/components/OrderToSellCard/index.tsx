@@ -8,7 +8,7 @@ import {
   RightSide,
   Space,
   TabNavItem,
-  Text,
+  Text, 
   Title,
 } from '../../../components/ui';
 import { OrderInfoModal } from '../modals/OrderInfoModal';

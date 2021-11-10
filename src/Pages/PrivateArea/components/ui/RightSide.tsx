@@ -10,6 +10,7 @@ export const RightSide = styled.div<{mobilePadding?: number;}>`
   };
   @media ${Device.mobile} {
     width: 100%;
+    max-width: 100%;
     padding: ${props => props.mobilePadding !== undefined ? props.mobilePadding : 20}px;
   };
 `;

@@ -102,10 +102,12 @@ export function getMyRating(account: any): string {
         rating = claim.claimValue;
       }
     });
-    return Number(rating).toFixed(1);
-  }
+    if (rating) {
+      return (Number((rating.toString()).replace(",", "."))).toFixed(1);
+    };
+  };
   return '0.0';
-}
+};
 
 export const removeLeadingZeros = (str: string): string => {
   // Regex to remove leading

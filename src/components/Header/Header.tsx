@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
 import { ReactComponent as Ball } from '../../assets/svg/ball.svg';
@@ -38,6 +38,7 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
   const [notify, setNotify] = useState<boolean>(false);
   const [checkeds, setCheckeds] = useState<boolean>(false);
   const screen = useWindowSize();
+  const [none, setNone] = useState<boolean>(false);
   const [time, setTime] = useState<any>();
 
   const appContext = useContext(AppContext);
@@ -87,10 +88,17 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
   const toAdmin = () => {
     history.push('/admin');
   };
+  const notifiesBlock = useRef();
   const lang = localStorage.getItem('i18nextLng') || 'ru';
-  function onBall(e: any) {
-    setNotify(!notify);
-    setTime(setTimeout(() => e.target.display = !notify ? "block" : "none", 10));
+  
+  function onBall() {
+    setNotify(false);
+    if (!none) {
+      setNone(true);
+      setNotify(true);
+    } {
+      setTime(setTimeout(() => setNone(!notify), 500));
+    };
   }
   return (
     <>
@@ -139,6 +147,7 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
                 {screen > 1100 && 
                   <Notify
                     block={notify}
+                    none={none}
                     setBlock={setNotify}
                     setCheckeds={setCheckeds}
                     admin={admin ? true : false}
@@ -167,6 +176,7 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
       </HeaderWrap>
        {screen < 1100 && 
         <Notify
+          none={none}
           block={notify}
           setBlock={setNotify}
           setCheckeds={setCheckeds}

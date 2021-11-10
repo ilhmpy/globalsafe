@@ -12,7 +12,7 @@ import { FiatKind } from '../../../../../types/fiat';
 import { GetBuyOrdersModel, OrderType, ViewBuyOrderModel } from '../../../../../types/orders';
 import {
   CollectionPayMethod,
-  PaymentMethodKind,
+  PaymentMethodKind, 
   RootPayMethod,
 } from '../../../../../types/paymentMethodKind';
 import { Checkbox } from '../../../components/Checkbox';

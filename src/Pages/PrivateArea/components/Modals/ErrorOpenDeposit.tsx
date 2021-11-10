@@ -8,7 +8,7 @@ import * as S from './S.el';
 
 type Props = {
   onClose: () => void;
-  open: boolean;
+  open: boolean; 
   deposit?: CollectionListDeposits;
   sumValue: string;
 };

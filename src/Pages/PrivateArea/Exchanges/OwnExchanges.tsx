@@ -243,14 +243,13 @@ export const OwnExchanges = () => {
     };
   };
 
-  function setPaymentMethod(safeId: string, kind: string) {
+  function setPaymentMethod(safeId: string, paymentMethod: string) {
     const exchanges = [...userExchanges];
     userExchanges.forEach((item) => {
       if (item.safeId === safeId) {
-        exchanges[userExchanges.indexOf(item)].paymentMethod = { kind };
+        exchanges[userExchanges.indexOf(item)].paymentMethod = paymentMethod;
       };
     });
-    console.log('SetPaymentMethod', exchanges);
     setUserExchanges(exchanges);
   };
 
@@ -445,9 +444,9 @@ export const OwnExchanges = () => {
               <div>Сертификаты</div>
             </TabNavItem>
           </TabsBlock>
-          {screen > 480 && (
+          {screen > 767 && (
             <Text size={14} lH={16} weight={500} black>
-              Рейтинг аккаунта: {getMyRating(account)}
+              Рейтинг аккаунта: {Number(getMyRating(account)).toFixed(1)}
             </Text>
           )}
         </S.SubHeader>
@@ -458,7 +457,7 @@ export const OwnExchanges = () => {
               title="P2P обмены"
               btnText="Опубликовать ордер"
               styles={{ marginBottom: '10px' }}
-              userRating={`Рейтинг аккаунта: ${getMyRating(account)}`}
+              userRating={`Рейтинг аккаунта: ${Number(getMyRating(account)).toFixed(1)}`}
             />
             <S.Filters style={{ marginTop: '20px', marginBottom: '20px', position: 'relative' }}>
               <FilterButton

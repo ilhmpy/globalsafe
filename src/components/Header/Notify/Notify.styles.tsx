@@ -38,11 +38,13 @@ export const NotifiesBlock = styled.div<{
   load: boolean;
   inPA?: boolean;
   length?: number;
+  none: boolean;
 }>`
   width: 100%;
   max-width: 420px;
   transition: 0.3s;
   top: 90px;
+  display: ${({ none }) => none ? "block" : "none"};
   opacity: ${({ block }) => block ? "100%" : "0%"};
   height: ${({ empty, length }) => (empty ? '80px' : `${length && length < 4 ? (length * 127) + 40 : 584}px`)};
   ${({ load }) => {
