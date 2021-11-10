@@ -1,3 +1,4 @@
+import { NavLink } from 'react-router-dom';
 import styled, { css } from 'styled-components/macro';
 
 export const Table = styled.div`
@@ -152,3 +153,10 @@ export const ExchangeLineContent = styled.h3<{ main?: boolean; text?: boolean; }
     };
   }}
 `; 
+
+export const Link = styled(NavLink)`
+  font-size: 12px;
+  line-height: 14px;
+  text-decoration-line: underline;
+  color: #0094FF;
+`;

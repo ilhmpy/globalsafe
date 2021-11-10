@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import styled, { keyframes } from "styled-components";
+import { FC } from 'react';
+import styled, { keyframes } from 'styled-components';
 
 const BounceAnimation = keyframes`
   0% { margin-bottom: 0; }
@@ -15,7 +15,7 @@ const DotWrapper = styled.div`
   margin: 40px 0;
 
   & > div {
-    background-color: ${({ theme }) => theme.loader.pointsColor}
+    background-color: ${({ theme }) => theme.loader.pointsColor};
   }
 `;
 
@@ -28,7 +28,7 @@ const Dot = styled.div<{ delay?: string }>`
   animation-delay: ${(props) => props.delay};
 `;
 
-export const Loading = () => {
+export const Loading: FC = () => {
   return (
     <DotWrapper>
       <Dot delay="0s" />

@@ -1,18 +1,21 @@
-import React, { FC } from 'react';
+import { FC, useContext } from 'react';
 import { Button } from '../../../../components/Button/V2/Button';
 import { Modal } from '../../../../components/ModalAnimated';
+import { AppContext } from '../../../../context/HubContext';
 import { Balance } from '../../../../types/balance';
 import { CollectionListDeposits } from '../../../../types/deposits';
 import * as S from './S.el';
 
 type Props = {
   onClose: () => void;
-  open: boolean;
+  open: boolean; 
   deposit?: CollectionListDeposits;
   sumValue: string;
 };
 
 export const ErrorOpenDeposit: FC<Props> = ({ onClose, open, deposit, sumValue }: Props) => {
+  const { setAddDrawModalOpen } = useContext(AppContext);
+
   return (
     <>
       {open && (
@@ -21,7 +24,7 @@ export const ErrorOpenDeposit: FC<Props> = ({ onClose, open, deposit, sumValue }
             <S.Title>Ошибка открытия депозита</S.Title>
             <S.TextWrap>
               <S.Text>
-                Депозит по программе <a href="/">{deposit?.name}</a> {' '}
+                Депозит по программе <a href="/">{deposit?.name}</a>{' '}
                 {`на сумму ${sumValue} ${Balance[deposit?.asset as number]} не был открыт
                 по причине:`}
               </S.Text>
@@ -31,7 +34,14 @@ export const ErrorOpenDeposit: FC<Props> = ({ onClose, open, deposit, sumValue }
               <S.Text red>На балансе аккаунта недостаточно средств</S.Text>
             </S.TextWrap>
             <S.Buttons>
-              <Button bigSize primary onClick={onClose}>
+              <Button
+                bigSize
+                primary
+                onClick={() => {
+                  onClose();
+                  setAddDrawModalOpen(true);
+                }}
+              >
                 Пополнить баланс
               </Button>
               <Button bigSize outlinePrimary onClick={onClose}>

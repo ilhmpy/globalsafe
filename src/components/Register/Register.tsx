@@ -1,7 +1,6 @@
 import React, { FC, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory } from 'react-router-dom';
-import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components/macro';
 import moment from 'moment';
 

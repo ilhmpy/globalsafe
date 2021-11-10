@@ -6,7 +6,7 @@ import { APP_ID, APP_SAFARI_ID } from './constantes/onesignal';
 import { AppContext } from './context/HubContext';
 import GlobalStyle from './globalStyles';
 import { Admin } from './Pages/Admin';
-import { Authentication, Register } from './Pages/Auth';
+import { Authentication, Register } from './Pages/Auth'; 
 import { Main } from './Pages/Main/Main';
 import { InfoMain } from './Pages/PrivateArea';
 import PageNotFound from './Pages/Tech/PageNotFound';

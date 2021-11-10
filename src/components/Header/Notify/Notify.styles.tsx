@@ -1,4 +1,4 @@
-import styled, { keyframes } from 'styled-components/macro';
+import styled from 'styled-components';
 import { ReactComponent as Done } from '../../../assets/svg/done.svg';
 
 export const BallContainer = styled.div<{ notChecked: boolean }>`

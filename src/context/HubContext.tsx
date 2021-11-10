@@ -31,7 +31,9 @@ type Context = {
   setDepositsFilter: (depositsFilter: 'active' | 'archived' | 'hold') => void;
   depositsFilter: string;
   userRating: string;
-  screen: number
+  screen: number;
+  addDrawModalOpen: boolean;
+  setAddDrawModalOpen: (addDrawModal: boolean) => void;
 };
 
 export const AppContext = React.createContext<Context>({
@@ -57,6 +59,8 @@ export const AppContext = React.createContext<Context>({
   depositsFilter: '',
   userRating: '0.0',
   screen: 1600,
+  addDrawModalOpen: false,
+  setAddDrawModalOpen: () => undefined,
 });
 
 export const HubProvider: FC = ({ children }: any) => {
@@ -79,6 +83,7 @@ export const HubProvider: FC = ({ children }: any) => {
   const [depositsFilter, setDepositsFilter] = useState<'active' | 'archived' | 'hold'>('active');
   const [userRating, setUserRating] = useState('0.0');
   const screen = useWindowSize();
+  const [addDrawModalOpen, setAddDrawModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const hubConnection = new signalR.HubConnectionBuilder()
@@ -141,7 +146,7 @@ export const HubProvider: FC = ({ children }: any) => {
   useEffect(() => {
     const cbUserRated = (rating: string, mark: string) => {
       console.log('SOKET_UserRated__rating', rating);
-      setUserRating(Number(rating).toFixed(1))
+      setUserRating(Number(rating).toFixed(1));
     };
 
     if (hubConnection) {
@@ -234,7 +239,9 @@ export const HubProvider: FC = ({ children }: any) => {
         setDepositsFilter,
         depositsFilter,
         userRating,
-        screen 
+        screen,
+        addDrawModalOpen,
+        setAddDrawModalOpen,
       }}
     >
       {children}

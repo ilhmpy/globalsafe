@@ -12,7 +12,7 @@ import { ChartProvider } from './context/ChartContext';
 import { SettingsProvider } from './context/SettingsContext';
 
 ReactDOM.render(
-  <ThemesProvider>
+  <ThemesProvider> 
     <Suspense fallback={<Loader />}>
       <HubProvider>
         <SettingsProvider>

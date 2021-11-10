@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as Icon } from '../../assets/svg/selectArrow.svg';
@@ -89,7 +89,7 @@ export const Select: FC<Props> = ({ placeholder, values, setCheckList, checkList
   useOnClickOutside(ref, handleClickOutside);
 
   const addList = (e: any, id: number) => {
-    const { checked, name } = e.target;
+    const { checked } = e.target;
     const arr = list.map((item: any) =>
       item.safeId === id ? { ...item, checked: checked } : item
     );

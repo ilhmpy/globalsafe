@@ -71,10 +71,6 @@ export const Deposits: FC = () => {
     }
   };
 
-  const onClose = () => {
-    setOpenModal(false);
-  };
-
   useEffect(() => {
     if (hubConnection) {
       setGetDepositsLoading(true);
@@ -91,14 +87,6 @@ export const Deposits: FC = () => {
           sorting
         )
         .then((res) => {
-          console.log(
-            'GetUserDepositsInstant',
-            getFilterCode(activeFilter),
-            activeFilter === 'hold' ? false : null,
-            0,
-            20,
-            sorting
-          );
           if (res.totalRecords === [...depositsList, ...res.collection].length) {
             setDepositsListHasMore(false);
           }
