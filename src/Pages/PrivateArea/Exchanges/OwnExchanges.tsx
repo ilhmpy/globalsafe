@@ -446,7 +446,7 @@ export const OwnExchanges = () => {
           </TabsBlock>
           {screen > 767 && (
             <Text size={14} lH={16} weight={500} black>
-              Рейтинг аккаунта: {getMyRating(account)}
+              Рейтинг аккаунта: {Number(getMyRating(account)).toFixed(1)}
             </Text>
           )}
         </S.SubHeader>
@@ -457,7 +457,7 @@ export const OwnExchanges = () => {
               title="P2P обмены"
               btnText="Опубликовать ордер"
               styles={{ marginBottom: '10px' }}
-              userRating={`Рейтинг аккаунта: ${getMyRating(account)}`}
+              userRating={`Рейтинг аккаунта: ${Number(getMyRating(account)).toFixed(1)}`}
             />
             <S.Filters style={{ marginTop: '20px', marginBottom: '20px', position: 'relative' }}>
               <FilterButton

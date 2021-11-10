@@ -16,7 +16,7 @@ import { ExchangeSuccessModal } from '../modals/ExchangeSuccessModal';
 import { ExchangeRejectModal } from '../modals/ExchangeRejectModal';
 import { useHistory } from 'react-router-dom';
 import { routers } from '../../../../../constantes/routers';
-import { ViewExchangeModel, ExchangeState } from '../../../../../types/exchange';
+import { ViewExchangeModel, ExchangeState, ExchangeKind } from '../../../../../types/exchange';
 import { Balance } from '../../../../../types/balance';
 import { FiatKind } from '../../../../../types/fiat';
 import { PaymentMethodKind } from '../../../../../types/paymentMethodKind';
@@ -65,6 +65,8 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
   const [totalExchanges, setTotalExchanges] = useState<any>();
   const [timerDown, setTimerDown] = useState<boolean>(false);
   const [tab, setTab] = useState<'order' | 'exchange'>('exchange');
+  const [ownerTotalExchanges, setOwnerTotalExchanges] = useState<number>(0);
+  const [recepientTotalExchanges, setRecepientTotalExchanges] = useState<number>(0);
   const buyer = () => {
     return (
       (exchange && exchange.kind === 0 && exchange.ownerSafeId !== account.safeId) ||
@@ -74,6 +76,29 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
 
   const [owner, setOwner] = useState<'seller' | 'buyer'>(buyer() ? 'buyer' : 'seller');
   const [mark, setMark] = useState<boolean | null>(null);
+  const ownerInExchange =
+    exchange.kind === ExchangeKind.Sell ?
+      {
+        seller: { 
+          rating: Number(exchange.userRating).toFixed(1), 
+          totalExchanges: Number(ownerTotalExchanges) 
+        },
+        buyer: { 
+          rating: owner === "buyer" ? Number(getMyRating(account)).toFixed(1) : -1, 
+          totalExchanges: owner === "buyer" ? Number(getMyExchanges()) : recepientTotalExchanges 
+        },
+      } : {
+        seller: { 
+          rating: owner === "seller" ? Number(getMyRating(account)).toFixed(1) : -1, 
+          totalExchanges: owner === "seller" ? Number(getMyExchanges()) : recepientTotalExchanges
+        },
+        buyer: { 
+          rating: Number(exchange.userRating).toFixed(1), 
+          totalExchanges: Number(ownerTotalExchanges) 
+        },
+      };
+
+  console.log(ownerInExchange, account);
 
   useEffect(() => {
     let cancel = false;
@@ -189,25 +214,22 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
     getUserMark();
   }, [hubConnection, exchange]);
 
-  function getTotalExecutedExchanges(id: string) {
+  function getTotalExecutedExchanges(id: string, setTotal: (val: number) => void) {
     if (hubConnection) {
       hubConnection
         .invoke('GetTotalExecutedExchanges', id)
         .then((res) => {
           console.log('totalExecutedExchanges', res);
-          setTotalExchanges(res);
+          setTotal(res);
         })
         .catch((err) => console.error(err));
     }
   }
 
-  function getSafeIdToReq() {
-    // CHANGE LOGIC FOR GET USER SAFE ID FOR REQUEST
-    return account.safeId;
-  };
-
   useEffect(() => {
-    getTotalExecutedExchanges(getSafeIdToReq());
+    getTotalExecutedExchanges(exchange.recepientSafeId, setRecepientTotalExchanges);
+    getTotalExecutedExchanges(exchange.ownerSafeId, setOwnerTotalExchanges);
+    console.log(exchange.ownerSafeId)
   }, [hubConnection]);
 
   function getExchangeChip(chip: ExchangeState) {
@@ -380,7 +402,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
     };
   };
 
-  console.log(tab === "exchange", tab === "order");
+  console.log(owner, exchange);
 
   return (
     <>
@@ -514,9 +536,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                   Рейтинг продавца:
                 </Text> 
                 <Title lH={28} onMobileTitleInExchange>
-                  {owner === 'seller'
-                    ? `${getMyRating(account)} (${getMyExchanges()})`
-                    : `${Number(exchange.userRating).toFixed(1)} (${totalExchanges})`}
+                    {`${ownerInExchange.seller.rating} (${ownerInExchange.seller.totalExchanges})`}
                 </Title>
               </S.BlockWrapper>
             </LeftSide>
