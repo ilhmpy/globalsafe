@@ -3,7 +3,6 @@ import { FC, useState } from 'react';
 import { ReactComponent as Arrow } from '../../assets/svg/selArrow.svg';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { BalanceList, Balance } from '../../types/balance';
-import moment from 'moment';
 import 'moment/locale/ru';
 
 type SelectType = {

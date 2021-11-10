@@ -1,8 +1,6 @@
-import React, { useMemo, useEffect, FC } from 'react';
+import { useEffect, FC } from 'react';
 import styled from 'styled-components/macro';
 import { Modal } from '../Modal/Modal';
-import moment from 'moment';
-import { Name, NameData } from './Table.styled';
 import { Balance } from '../../types/balance';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../Button/Button';
@@ -17,7 +15,7 @@ type Props = {
   depositExchange: (amount: string, kind: number) => void;
 };
 
-export const ModalCancel = ({
+export const ModalCancel: FC<Props> = ({
   onClose,
   open,
   data,
@@ -28,7 +26,7 @@ export const ModalCancel = ({
   useEffect(() => {
     if (data && open) calculateBalanceExchange(data.safeId, Balance.MULTICS);
   }, [data, open]);
-  // console.log('data.safeId', data.safeId);
+
   return (
     <>
       {open && calcExchange ? (
@@ -53,8 +51,6 @@ export const InfoBlock: FC<InfoBlockProps> = ({
 }: InfoBlockProps) => {
   const { t } = useTranslation();
 
-  // const procent = ((+calcExchange[0] - data.amount) / data.amount) * 100;
-  // console.log('calcExchange', calcExchange);
   return (
     <>
       <Container>
@@ -88,25 +84,6 @@ export const InfoBlock: FC<InfoBlockProps> = ({
               : 0}
           </span>
         </Desc>
-        {/* <Desc>
-          {t('cancelDeposit.sumAndProcent')} ({procent > 0 ? Number(procent.toFixed(2)) : 0}%) -
-          <br />
-          <span>
-            {(+calcExchange[0] / 100000).toLocaleString('ru-RU', {
-              maximumFractionDigits: 2,
-            })}
-            &nbsp; {Balance[data.deposit.asset]}
-          </span>
-          <br />
-          {t('cancelDeposit.convert')}{' '}
-          <span>
-            {+calcExchange[1] / +calcExchange[2] / 1000 > 0 && +calcExchange[2] > 0
-              ? (+calcExchange[1] / +calcExchange[2] / 1000).toLocaleString('ru-RU', {
-                  maximumFractionDigits: 2,
-                })
-              : 0}
-          </span>
-        </Desc> */}
         <Desc>
           <strong>{t('cancelDeposit.getSum')}</strong>
           <br />

@@ -56,6 +56,7 @@ export const HeaderBar: FC = () => {
   const [switchType, setSwitchType] = useState<boolean>(false);
   const [account, setAccount] = useState('');
   const appContext = useContext(AppContext);
+  const { addDrawModalOpen, setAddDrawModalOpen } = useContext(AppContext);
   const user = appContext.user;
   const balance = appContext.balance;
   const hubConnection = appContext.hubConnection;
@@ -97,7 +98,7 @@ export const HeaderBar: FC = () => {
     'На балансе аккаунта недостаточно средств'
   );
   const [withDrawModal, setWithDrawModal] = useState<boolean>(false);
-  const [addDrawModal, setAddDrawModal] = useState<boolean>(false);
+  //   const [addDrawModal, setAddDrawModal] = useState<boolean>(addDrawModalOpen);
   const [clickedIndex, setClickedIndex] = useState<number>(0);
 
   // Get Balance Kinds List as an Array
@@ -390,14 +391,14 @@ export const HeaderBar: FC = () => {
           a.click();
           setTimeout(() => {
             setError(false);
-            setAddDrawModal(false);
+            setAddDrawModalOpen(false);
           }, 5000);
         })
         .catch((err: Error) => {
           console.log(err);
           setError(true);
           setErrorReason('На балансе аккаунта недостаточно средств.');
-          setAddDrawModal(false);
+          setAddDrawModalOpen(false);
         });
     }
   };
@@ -554,10 +555,10 @@ export const HeaderBar: FC = () => {
         </Styled.Loader>
       )}
 
-      <CSSTransition in={addDrawModal} timeout={0} unmountOnExit>
+      <CSSTransition in={addDrawModalOpen} timeout={0} unmountOnExit>
         <Modal
           onClose={() => {
-            setAddDrawModal(false);
+            setAddDrawModalOpen(false);
             setEd('');
             setCurrency('');
           }}
@@ -792,7 +793,10 @@ export const HeaderBar: FC = () => {
             {screen > 1024 ? (
               <PanelActionsBlock>
                 <SecondaryButton title={'Конвертация'} onClick={() => setOpenConverting(true)} />
-                <SecondaryButton title={'Пополнить баланс'} onClick={() => setAddDrawModal(true)} />
+                <SecondaryButton
+                  title={'Пополнить баланс'}
+                  onClick={() => setAddDrawModalOpen(true)}
+                />
                 <SecondaryButton
                   title={'Вывести средства'}
                   onClick={() => setWithDrawModal(true)}
@@ -801,7 +805,7 @@ export const HeaderBar: FC = () => {
             ) : (
               <SelectButton
                 buttons={[
-                  { text: 'Пополнить баланс', onClick: () => setAddDrawModal(true) },
+                  { text: 'Пополнить баланс', onClick: () => setAddDrawModalOpen(true) },
                   { text: 'Вывести средств', onClick: () => setWithDrawModal(true) },
                   { text: 'Конвертация', onClick: () => setOpenConverting(true) },
                 ]}

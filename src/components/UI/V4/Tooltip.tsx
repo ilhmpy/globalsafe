@@ -99,5 +99,3 @@ const TooltipText = styled.div`
   font-size: 12px;
   line-height: 20px;
 `;
-
-const ChildrenContainer = styled.div``;
