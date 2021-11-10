@@ -1,6 +1,6 @@
 import moment from 'moment';
 import React, { FC, useContext, useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import { Button } from '../../../../components/Button/V2/Button';
 import { routers } from '../../../../constantes/routers';
 import { AppContext } from '../../../../context/HubContext';

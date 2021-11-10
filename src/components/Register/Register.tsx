@@ -4,12 +4,12 @@ import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import moment from 'moment';
 
-import { Button } from '../../components/Button/Button';
+import { Button } from '../../components/Button/V2/Button';
 import { Input } from '../../components/UI/Input';
 import { Input as InputV4 } from '../../components/UI/V4';
 import { AppContext } from '../../context/HubContext';
 import { Card, Container } from '../../globalStyles';
-import { PrimaryButton, Tooltip } from '../UI/V4';
+import { Tooltip } from '../UI/V4';
 import { ReactComponent as QuestionIcon } from '../../assets/svg/question14.svg'
 import { Timer } from '../Login/Timer';
 
@@ -287,24 +287,36 @@ export const RegisterComponent: FC = () => {
               setState={setStateRepeat}
             >
               {stateRepeat === null ? (
-                <PrimaryButton 
-                  title={t('login.getCode')}
+                <Button
+                  as="button" 
+                  primary
+                  bigSize
                   type="submit"
                   disabled={value === ''}
-                />
+                >
+                  {t('login.getCode')}
+                </Button>
               ) : 
               (password && !passwordError)
                 ?
-                  <PrimaryButton 
-                    title={`${t('login.register')}`}
+                  <Button 
+                    as="button"
+                    primary
+                    bigSize
                     type="submit"
-                  />
+                  >
+                    {`${t('login.register')}`}
+                  </Button>
                 :
-                  <PrimaryButton 
-                    title={`${t('login.repeat')} ${stateRepeat}.`}
+                  <Button 
+                    as="button"
+                    primary
+                    bigSize
                     type="submit"
                     disabled={true}
-                  />
+                  >
+                    {`${t('login.repeat')} ${stateRepeat}.`}
+                  </Button>
               }
             </Timer>
 
@@ -328,7 +340,7 @@ export const RegisterComponent: FC = () => {
               </Tooltip>
             </LinkToBlock>
 
-            <LinkToPage to="/login">{t('login.authorize')}</LinkToPage>
+            <LinkToPage to="/login/0">{t('login.authorize')}</LinkToPage>
           </FormBlock>
         {/* </CSSTransition> */}
       </AuthCardContainer>
@@ -451,11 +463,9 @@ const InfoLinkBlock = styled.div`
   padding: 7px 0;
 `;
 
-
 const Submit = styled(Button)<{ mb?: boolean }>`
   max-width: 100%;
   margin-bottom: ${(props) => (props.mb ? '20px' : '0')};
-  color: ${(props) => props.theme.text};
 `;
 
 // const CardContainer = styled(Card)`

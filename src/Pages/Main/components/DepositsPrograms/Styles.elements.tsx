@@ -1,17 +1,18 @@
 import styled from 'styled-components/macro';
 
 export const CardBox = styled.div`
-    width: 100%;
+    width: auto;
     display: flex;
     flex-wrap: wrap;
     margin-top: 40px;
     min-height: 250px;
+    margin: 0 auto;
 
-    @media only screen and (max-device-width: 480px) {
+    @media only screen and (max-width: 767px) {
       margin-top: 10px;
     }
 
-    @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+    @media only screen and (min-width: 768px) and (max-width: 1024px) {
       min-height: 218px;
     }
     
@@ -48,17 +49,17 @@ export const Card = styled.div`
       margin-right: 0px;  
     }
 
-    @media only screen and (max-device-width: 1024px) {
+    @media only screen and (max-width: 1024px) {
        padding: 20px;
     }
 
-    @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+    @media only screen and (min-width: 768px) and (max-width: 1024px) {
       min-width: 220px;
       max-width: 220px;
       height: 218px;  
     }
 
-    @media only screen and (max-device-width: 480px) {
+    @media only screen and (max-width: 767px) {
       width: 280px;
       height: 194px;
       margin: 0 auto;
@@ -73,7 +74,7 @@ export const CardName = styled.h3`
     line-height: 28px;
     margin-bottom: 40px;
 
-    @media only screen and (max-device-width: 1024px) {
+    @media only screen and (max-width: 1024px) {
       margin-bottom: 10px;
       font-size: 18px;
       line-height: 24px;
@@ -92,7 +93,7 @@ export const CardDesc = styled.h3`
     text-overflow: ellipsis;
     margin-bottom: 40px;
     word-wrap: break-word;
-    @media only screen and (max-device-width: 480px) {
+    @media (max-width: 767px) {
         margin-bottom: 20px;
         max-width: 200px;
     }
@@ -116,7 +117,7 @@ export const CardButton = styled.button`
         border: 1px solid #515172;
     }
 
-    @media only screen and (max-device-width: 480px) {
+    @media (max-width: 767px) {
         width: 100%;
         max-width: 240px;
         margin: 0 auto;

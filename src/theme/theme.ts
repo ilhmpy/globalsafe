@@ -30,8 +30,8 @@ export const lightTheme = {
   range: '#f0f8ff',
   slot: '#9d9d9d',
   card: {
-    background: '#fff',
-    backgroundAlfa: 'rgba(255, 255, 255, 0.4)',
+    background: '#F9FAFB',
+    backgroundAlfa: '#EDF0F6',
     border: 'none',
   },
   descFund: '#515172',
@@ -99,6 +99,11 @@ export const lightTheme = {
   },
   v2:{
     text: "#3F3E4E",
+    blackText: '#000000',
+    bg: '#FFFFFF',
+    neutral: '#EBEBF2',
+    activeBlue: '#0094FF',
+    neutralBlue: 'rgba(0, 148, 255, 0.05)',
     body: "#E5E5E5",
     header:{
       background: "#fff",
@@ -203,7 +208,12 @@ export const darkTheme = {
     tableBg: "#2A2A31"
   },
   v2:{
-    text: "#3F3E4E",
+    text: "#FFFFFF",
+    blackText: '#FFFFFF',
+    bg: '#28282F',
+    neutral: '#33333A',
+    activeBlue: '#0094FF',
+    neutralBlue: '#33333A',
     body: "#E5E5E5",
     header:{
       background: "#fff",

@@ -14,7 +14,7 @@ import {
 import { Button } from '../../../../../components/Button/V2/Button';
 import { ExchangeSuccessModal } from '../modals/ExchangeSuccessModal';
 import { ExchangeRejectModal } from '../modals/ExchangeRejectModal';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import { routers } from '../../../../../constantes/routers';
 import { ViewExchangeModel, ExchangeState } from '../../../../../types/exchange';
 import { Balance } from '../../../../../types/balance';
@@ -58,7 +58,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
   setEnd,
 }: DetailCardProps) => {
   const history = useHistory();
-  const { account, hubConnection } = useContext(AppContext);
+  const { account, hubConnection, userSafeId } = useContext(AppContext);
 
   const [feedbackValue, setFeedbackValue] = useState(5);
   const [totalExchanges, setTotalExchanges] = useState<any>();
@@ -73,7 +73,12 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
 
   const [owner, setOwner] = useState<'seller' | 'buyer'>(buyer() ? 'buyer' : 'seller');
   const [mark, setMark] = useState<boolean | null>(null);
-  const screen = useWindowSize();
+  const scr = useWindowSize();
+  const [screen, setScreen] = useState<number>(0);
+  
+  useEffect(() => {
+    setScreen(scr);
+  }, [scr]);
 
   useEffect(() => {
     let cancel = false;
@@ -317,8 +322,9 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
           console.log('cancel', res);
           if (screen > 480) {
             setShowRejectModal(true);
-          }
-          handleToMobileModal(4);
+          } else {
+            // handleToMobileModal(1);
+          };
         })
         .catch((err) => console.log(err));
     }
@@ -346,7 +352,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
         .invoke(
           'RateUser',
           feedbackValue,
-          owner === 'seller' ? exchange.recepientSafeId : exchange.ownerSafeId,
+          userSafeId === exchange.ownerSafeId ? exchange.recepientSafeId : exchange.ownerSafeId,
           exchange.safeId
         )
         .then((res) => {
@@ -354,11 +360,13 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
           setCall(true);
           if (screen > 480) {
             setShowSuccessModal(true);
-          }
+          } else {
+            handleToMobileModal(2);
+          };
         })
         .catch((err) => console.log(err));
     }
-  }
+  };
 
   function editStateForTesting(state = 0) {
     if (hubConnection) {
@@ -380,7 +388,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
       localStorage.setItem('mobileResultData', JSON.stringify({ ...exchange, state, owner }));
       localStorage.setItem('feedback', JSON.stringify(feedbackValue));
       history.push('/mobile/modal');
-    }
+    };
   }
 
   return (
@@ -479,11 +487,11 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                   {`${countVolumeToShow(exchange.limitFrom, exchange.assetKind).toLocaleString(
                     'ru-RU',
                     {
-                      maximumFractionDigits: 0,
+                      maximumFractionDigits: 2,
                     }
                   )} - ${countVolumeToShow(exchange.limitTo, exchange.assetKind).toLocaleString(
                     'ru-RU',
-                    { maximumFractionDigits: 0 }
+                    { maximumFractionDigits: 2 }
                   )} ${FiatKind[exchange.exchangeAssetKind]}`}
                 </Title>
               </S.BlockWrapper>
@@ -562,7 +570,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                   <Text size={14} lH={20} weight={500} black phoneFWB>
                     {countVolumeToShow(exchange.exchangeVolume, exchange.assetKind).toLocaleString(
                       'ru-RU',
-                      { maximumFractionDigits: 0 }
+                      { maximumFractionDigits: 2 }
                     )}{' '}
                     {FiatKind[exchange.exchangeAssetKind]}
                   </Text>
@@ -634,7 +642,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                           exchange.exchangeVolume,
                           exchange.assetKind
                         ).toLocaleString('ru-RU', {
-                          maximumFractionDigits: 5,
+                          maximumFractionDigits: 2,
                         })}{' '}
                         {FiatKind[exchange.exchangeAssetKind]}
                       </S.B>{' '}
@@ -773,7 +781,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                           exchange.exchangeVolume,
                           exchange.assetKind
                         ).toLocaleString('ru-RU', {
-                          maximumFractionDigits: 0,
+                          maximumFractionDigits: 2,
                         })}{' '}
                         {FiatKind[exchange.exchangeAssetKind]}
                       </S.B>{' '}
@@ -850,7 +858,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                           exchange.exchangeVolume,
                           exchange.assetKind
                         ).toLocaleString('ru-RU', {
-                          maximumFractionDigits: 0,
+                          maximumFractionDigits: 2,
                         })}{' '}
                         {FiatKind[exchange.exchangeAssetKind]}
                       </S.B>{' '}
@@ -934,7 +942,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                           exchange.exchangeVolume,
                           exchange.assetKind
                         ).toLocaleString('ru-RU', {
-                          maximumFractionDigits: 0,
+                          maximumFractionDigits: 2,
                         })}{' '}
                         {FiatKind[exchange.exchangeAssetKind]}
                       </S.B>{' '}
@@ -1090,8 +1098,9 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                       rateUser();
                       if (screen > 480) {
                         setShowSuccessModal(true);
+                      } else {
+                        handleToMobileModal(2);
                       }
-                      handleToMobileModal(2);
                       getUserMark();
                     }}
                   >
@@ -1162,11 +1171,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                     fullWidthMobile={!(screen > 480)}
                     onClick={() => {
                       rateUser();
-                      if (screen > 480) {
-                        setShowSuccessModal(true);
-                      }
                       getUserMark();
-                      handleToMobileModal(2);
                     }}
                   >
                     Подтвердить

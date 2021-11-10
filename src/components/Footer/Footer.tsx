@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Container } from '../../globalStyles';
+import { Container } from '../UI/Container';
 import styled from 'styled-components/macro';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as FooterLogo } from '../../assets/svg/whiteFooterLogo.svg';
@@ -57,12 +57,12 @@ const FooterBlock = styled.footer<{ other?: boolean }>`
   padding-top: 40px;
   padding-bottom: 40px;
   margin-top: auto;
-  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+  @media only screen and (min-width: 768px) and (max-width: 1024px) {
     padding-left: 20px;
     min-height: 188px;
     max-height: 188px;
   }
-  @media only screen and (max-device-width: 767px) {
+  @media only screen and (max-width: 767px) {
     min-height: 320px;
     max-height: 320px;
 
@@ -91,13 +91,13 @@ const FooterHeader = styled.header`
   position: relative;
   margin-bottom: 38px;
 
-  @media only screen and (max-device-width: 767px) {
+  @media only screen and (max-width: 767px) {
     margin: 0 auto;
     margin-bottom: 38px;
     max-width: 145px;
   }
 
-  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+  @media only screen and (min-width: 768px) and (max-width: 1024px) {
     margin-bottom: 20px;
   }
 `;
@@ -107,7 +107,7 @@ const FooterLinks = styled.div`
   position: absolute;
   right: 0;
 
-  @media only screen and (max-device-width: 767px) {
+  @media only screen and (max-width: 767px) {
     position: relative;
     flex-wrap: wrap;
     text-align: center;
@@ -124,7 +124,7 @@ const FooterLink = styled(NavHashLink)`
   margin-right: 38px;
   cursor: pointer;
 
-  @media only screen and (max-device-width: 767px) {
+  @media only screen and (max-width: 767px) {
     text-align: center;
     display: block;
     width: 145px;
@@ -140,12 +140,12 @@ const FooterDesc = styled.h3`
   font-weight: 400;
   font-size: 14px;
   line-height: 17px;
-  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+  @media only screen and (min-width: 768) and (max-width: 1024px) {
     width: 170px;
     margin-bottom: 20px;
   }
 
-  @media only screen and (max-device-width: 767px) {
+  @media only screen and (max-width: 767px) {
     text-align: center;
     width: 170px;
     margin: 0 auto;

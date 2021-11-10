@@ -8,6 +8,7 @@ import trc20 from '../../assets/v2/svg/banks/trc20.svg';
 import bep20 from '../../assets/v2/svg/banks/bep20.svg';
 
 import { PaymentMethodKind } from '../../types/paymentMethodKind';
+import { ViewExchangeModel, GetExchangesCollectionResult } from '../../types/exchange';
 
 export const paymentMethodIconSrc = (kind: number): string => {
   switch (kind) {
@@ -134,3 +135,11 @@ export const useIsMobile = (): boolean => {
 
   return windowSize < 769;
 };
+
+export function sortByDate(collection: ViewExchangeModel[]) {
+  return collection.sort((x: any, y: any) => {
+    const a = new Date(x.operationDate);
+    const b = new Date(y.operationDate);
+    return a > b ? -1 : a < b ? 1 : 0;
+  }); 
+}; 

@@ -1,7 +1,9 @@
 import moment from 'moment';
 import 'moment/locale/ru';
-import { FC, useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { NavLink, Redirect, Route, Switch, useHistory } from 'react-router-dom';
+import { CSSTransition } from 'react-transition-group';
 import { Container } from '../../components/UI/Container';
 import * as Styled from './Styles.history';
 import { Heading } from './components/Heading';
@@ -10,14 +12,16 @@ import { Filter } from './components/Filter/index';
 import { AppContext } from '../../context/HubContext';
 import { Balance } from '../../types/balance';
 import { Loading, NotItems, Spinner } from './components/Loading/Loading';
+import formatRelativeWithOptions from 'date-fns/esm/fp/formatRelativeWithOptions/index.js';
+import { isObject } from 'highcharts';
+import { InternalSymbolName, isTemplateSpan } from 'typescript';
 import { countVolumeToShow } from './utils';
 import { ViewExchangeModel } from '../../types/exchange';
+import { isFirstDayOfMonth } from 'date-fns/esm';
 
-type ButtonTypes = 'active' | 'archived' | 'hold';
-
-export const HistoryOperations: FC = () => {
-  const [activeFilter, setActiveFilter] = useState<ButtonTypes>('active');
-  const months: string[] = [
+export const HistoryOperations = () => {
+  const [activeFilter, setActiveFilter] = useState<'active' | 'archived' | 'hold'>('active');
+  const months = [
     'Январь',
     'Февраль',
     'Март',
@@ -31,7 +35,7 @@ export const HistoryOperations: FC = () => {
     'Ноябрь',
     'Декабрь',
   ];
-  const [buttons] = useState<Array<{ text: string; active: ButtonTypes }>>([
+  const [buttons, setButtons] = useState<any[]>([
     { text: 'Все типы', active: 'active' },
     { text: 'Пополнение', active: 'hold' },
     { text: 'Списание', active: 'archived' },
@@ -43,12 +47,12 @@ export const HistoryOperations: FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [allCurrency, setAllCurrency] = useState<boolean>(true);
   const [nowMonth, setNowMonth] = useState<boolean>(true);
-  const [not] = useState<boolean>(false);
+  const [not, setNot] = useState<boolean>(false);
   const [newItems, setNewItems] = useState<boolean>(true);
   const [emptyItems, setEmptyItems] = useState<boolean>(false);
   const [allState, setAllState] = useState<ViewExchangeModel[]>([]);
 
-  const operation = (id: number) => {
+  const operation = (id: number, link: string) => {
     if (id === 1) {
       return t('operation.add');
     } else if (id === 2) {
@@ -80,15 +84,18 @@ export const HistoryOperations: FC = () => {
     } else if (id === 15) {
       return 'Обменный депозит.';
     } else if (id === 16) {
-      return 'Создан ордер на продажу';
+      return <Styled.Link href={`p2p-changes/orders/${link}`}>Создан ордер на продажу</Styled.Link>;
     } else if (id === 17) {
-      return 'Ордер на продажу отменен';
+      return (
+        <Styled.Link href={`p2p-changes/orders/${link}`}>Ордер на продажу отменен</Styled.Link>
+      );
     } else if (id === 18) {
-      return 'Обмен';
+      1;
+      return <Styled.Link href={`p2p-changes/${link}`}>Обмен начался</Styled.Link>;
     } else if (id === 19) {
-      return 'Обмен завершен';
+      return <Styled.Link href={`p2p-changes/${link}`}>Обмен завершен</Styled.Link>;
     } else if (id === 20) {
-      return 'Обмен отменен';
+      return <Styled.Link href={`p2p-changes/${link}`}>Обмен отменен</Styled.Link>;
     } else if (id === 21) {
       return 'Куплен сертификат';
     }
@@ -239,8 +246,13 @@ export const HistoryOperations: FC = () => {
           setLoading(false);
           console.log('res', res);
           setTotalRecords(res.totalRecords);
-          setAllState(res.collection);
-          const collection = getFirstElements(res.collection, 10);
+          const sortCollection = res.collection.sort((x: any, y: any) => {
+            const a = new Date(x.operationDate);
+            const b = new Date(y.operationDate);
+            return a > b ? -1 : a < b ? 1 : 0;
+          });
+          setAllState(sortCollection);
+          const collection = getFirstElements(sortCollection, 10);
           console.log(collection);
           if (allCurrency) {
             setOperations(() => {
@@ -269,11 +281,7 @@ export const HistoryOperations: FC = () => {
               });
             }
           }
-          if (res.collection.length > 0) {
-            setEmptyItems(false);
-          } else {
-            setEmptyItems(true);
-          }
+          setEmptyItems(!(res.collection.length > 0));
         })
         .catch((err) => {
           console.log(err);
@@ -329,7 +337,7 @@ export const HistoryOperations: FC = () => {
     }
   }
 
-  const getFilter = (key: ButtonTypes) => {
+  const getFilter = (key: 'active' | 'archived' | 'hold') => {
     if (key === 'active') {
       return [];
     }
@@ -357,6 +365,12 @@ export const HistoryOperations: FC = () => {
         }
       }
     }
+  }
+
+  function getLocaleTime(date: Date) {
+    const utc = moment.utc(date);
+    const local = utc.local();
+    return local.format('HH:MM');
   }
 
   return (
@@ -400,11 +414,11 @@ export const HistoryOperations: FC = () => {
                       operations.map((item: any, idx) => (
                         <Styled.TableItem item key={idx} newItem={item.new && item.new}>
                           <Styled.TableInnerItem item>
-                            {moment(item.operationDate).local().format('DD.MM.YYYY')} в{' '}
-                            {moment(item.operationDate).local().format('HH:MM')}
+                            {moment(item.operationDate).format('DD.MM.YYYY')} в{' '}
+                            {getLocaleTime(item.operationDate)}
                           </Styled.TableInnerItem>
                           <Styled.TableInnerItem item>
-                            {operation(item.operationKind)}
+                            {operation(item.operationKind, item.referenceSafeId)}
                           </Styled.TableInnerItem>
                           <Styled.TableInnerItem item income={item.balanceDelta > 0}>
                             {item.balanceDelta > 0 && (

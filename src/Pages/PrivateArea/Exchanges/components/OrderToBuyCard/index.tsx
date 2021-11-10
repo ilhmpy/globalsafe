@@ -1,5 +1,5 @@
 import React, { FC, useContext, useEffect, useMemo, useState } from 'react';
-import { useHistory, useLocation } from 'react-router';
+import { useHistory, useLocation } from 'react-router-dom';
 import { Input } from '../../../../../components/Input';
 import { routers } from '../../../../../constantes/routers';
 import { AppContext } from '../../../../../context/HubContext';
@@ -242,6 +242,11 @@ export const OrderToBuyCard: FC = () => {
     const pattern = /^[0-9][0-9\.]*$/;
     const pattern2 = /^[0-9]{1,10}\.[0-9]{6}$/;
     if (e.target.value === '' || pattern.test(e.target.value)) {
+      const dotsCount = e.target.value.split('.').length - 1;
+      if (dotsCount > 1) {
+        return;
+      };
+
       // Clear Min-Max values
       setOrderMinSumm('');
       setOrderMaxSumm('');
@@ -269,7 +274,6 @@ export const OrderToBuyCard: FC = () => {
     const pattern2 = /^[0-9]{1,10}\.[0-9]{6}$/;
     if (e.target.value === '' || pattern.test(e.target.value)) {
       const dotsCount = e.target.value.split('.').length - 1;
-
       if (dotsCount > 1) {
         return;
       }
@@ -287,6 +291,11 @@ export const OrderToBuyCard: FC = () => {
     const pattern = /^[0-9][0-9\.]*$/;
     const pattern2 = /^[0-9]{1,10}\.[0-9]{3}$/;
     if (e.target.value === '' || pattern.test(e.target.value)) {
+      const dotsCount = e.target.value.split('.').length - 1;
+      if (dotsCount > 1) {
+        return;
+      };
+
       const summ = +orderSumm - 1 < 0 ? 0 : +orderSumm - 1;
       if (+e.target.value > summ * +changeRate) {
         setOrderMinSumm((summ * +changeRate).toFixed(2));
@@ -302,6 +311,11 @@ export const OrderToBuyCard: FC = () => {
     const pattern = /^[0-9][0-9\.]*$/;
     const pattern2 = /^[0-9]{1,10}\.[0-9]{3}$/;
     if (e.target.value === '' || pattern.test(e.target.value)) {
+      const dotsCount = e.target.value.split('.').length - 1;
+      if (dotsCount > 1) {
+        return;
+      };
+
       if (+e.target.value > +orderSumm * +changeRate) {
         setOrderMaxSumm((+orderSumm * +changeRate).toFixed(2));
       } else {
@@ -340,8 +354,18 @@ export const OrderToBuyCard: FC = () => {
     if (!changeRate) {
       isValid = false;
     }
+    if (changeRate) {
+      if (Number(changeRate) <= 0) {
+        isValid = false;
+      }
+    }
     if (!orderMinSumm) {
       isValid = false;
+    }
+    if (orderMinSumm) {
+      if (Number(orderMinSumm) <= 0) {
+        isValid = false;
+      }
     }
     if (!orderMaxSumm) {
       isValid = false;

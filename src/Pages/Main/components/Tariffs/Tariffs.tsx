@@ -210,7 +210,7 @@ const PartnersBlock = styled.div`
   border-radius: 4px;
   padding: 1px;
   box-shadow: 0px 80px 80px -40px rgba(220, 220, 232, 0.5);
-  @media only screen and (max-device-width: 480px) {
+  @media (max-width: 767px) {
     min-height: 345px;
     margin-bottom: 20px;
   }
@@ -222,11 +222,11 @@ const PartnersHeader = styled.header`
   padding-left: 270px;
   display: flex;
   align-items: center;
-  @media only screen and (max-device-width: 480px) {
+  @media (max-width: 767px) {
     padding-left: 25%;
     height: 38px;
   }
-  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+  @media (min-width: 768px) and (max-width: 1024px) {
     padding-left: 30%;
     height: 60px;
   }
@@ -239,14 +239,14 @@ const PartnersHeaderItem = styled.div`
   font-size: 24px;
   font-weight: 700;
   margin-right: 217px;
-  @media only screen and (max-device-width: 480px) {
+  @media (max-width: 767px) {
     margin-right: 45px;
     font-weight: 700;
     font-size: 12px;
     width: 60px;
     line-height: 20px;
   }
-  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+  @media (min-width: 768px) and (max-width: 1024px) {
     width: 160px;
     margin-right: 0px;
     line-height: 24px;
@@ -265,9 +265,9 @@ const PartnersItem = styled.div`
   &:nth-child(2n) {
     background: #f8f7fc;
   }
-  @media only screen and (max-device-width: 480px) {
+  @media (max-width: 767px) {
     height: 38px;
-  }
+  } 
 `;
 
 const PartnersItemTitle = styled.div`
@@ -276,41 +276,64 @@ const PartnersItemTitle = styled.div`
   line-height: 20px;
   margin-right: 200px;
 
-  @media only screen and (max-device-width: 767px) {
+  @media (max-width: 767px) {
     font-size: 12px;
     font-weight: 400;
     line-height: 18px;
     margin-right: 5%;
   }
-
-  @media only screen and (min-device-width: 360px) and (max-device-width: 400px) {
+  @media (min-width: 360px) and (max-width: 400px) {
     margin-right: 7%;
   }
-  @media only screen and (min-device-width: 400px) and (max-device-width: 409px) {
+  @media (min-width: 400px) and (max-width: 409px) {
     margin-right: 8%;
   }
-  @media only screen and (min-device-width: 410px) and (max-device-width: 420px) {
+  @media (min-width: 410px) and (max-width: 420px) {
     margin-right: 9%;
   }
-  @media only screen and (min-device-width: 420px) and (max-device-width: 448px) {
+  @media (min-width: 420px) and (max-width: 448px) {
     margin-right: 10%;
   }
-  @media only screen and (min-device-width: 445px) and (max-device-width: 449px) {
+  @media (min-width: 445px) and (max-width: 449px) {
     margin-right: 11%;
   }
-  @media only screen and (min-device-width: 450px) and (max-device-width: 767px) {
+  @media (min-width: 450px) and (max-width: 767px) {
     margin-right: 11%;
   }
-  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+  @media (min-width: 768px) and (max-width: 1024px) {
     font-weight: 14px;
     line-height: 20px;
     margin-right: 20%;
   } 
-  @media only screen and (min-device-width: 850px) and (max-device-width: 999px) {
+  @media (min-width: 850px) and (max-width: 999px) {
     margin-right: 21%;
   } 
-  @media only screen and (min-device-width: 1000px) and (max-device-width: 1024px) {
+  @media (min-width: 1000px) and (max-width: 1024px) {
     margin-right: 23%;
+  }
+  @media (min-width: 500px) and (max-width: 520px) {
+    margin-right: 12%;
+  }
+  @media (min-width: 521px) and (max-width: 550px) {
+    margin-right: 13%;
+  }
+  @media (min-width: 551px) and (max-width: 767px) {
+    margin-right: 14%;
+  }
+  @media (min-width: 600px) and (max-width: 635px) {
+    margin-right: 14%;
+  }
+  @media (min-width: 636px) and (max-width: 673px) {
+    margin-right: 15%;
+  }
+  @media (min-width: 674px) and (max-width: 767px) {
+    margin-right: 16%;
+  }
+  @media (min-width: 830px) and (max-width: 850px) {
+    margin-right: 21%;
+  }
+  @media (min-width: 908px) and (max-width: 1000px) {
+    margin-right: 22%;
   }
 `;
 
@@ -326,7 +349,7 @@ const PartnersItemData = styled.div`
   &:nth-child(3) {
     width: 300px;
   }
-  @media only screen and (max-device-width: 767px) {
+  @media (max-width: 767px) {
     font-size: 12px;
     line-height: 18px;
 
@@ -338,7 +361,7 @@ const PartnersItemData = styled.div`
     }
     margin-right: 10%;
   }
-  @media only screen and (max-device-width: 369px) {
+  @media (max-width: 369px) {
     &:nth-child(2) {
       width: 36px;
     }
@@ -347,32 +370,32 @@ const PartnersItemData = styled.div`
       width: 36px;
     }
   }
-  @media only screen and (max-device-width: 359px) {
+  @media (max-width: 359px) {
     &:nth-child(3) {
       margin-right: 17%;
     }
   }
-  @media only screen and (min-device-width: 370px) and (max-device-width: 449px) {
+  @media (min-width: 370px) and (max-width: 449px) {
     margin-right: 11%;
   }
-  @media only screen and (min-device-width: 370px) and (max-device-width: 375px) {
+  @media (min-width: 370px) and (max-width: 375px) {
     margin-right: 9%;
   }
-  @media only screen and (min-device-width: 376px) and (max-device-width: 379px) {
+  @media (min-width: 376px) and (max-width: 379px) {
     margin-right: 9%;
     &:nth-child(2) {
       margin-right: 10%;
     }
   }
-  @media only screen and (min-device-width: 380px) and (max-device-width: 389px) {
+  @media (min-width: 380px) and (max-width: 389px) {
     &:nth-child(3) {
       margin-right: 9%;
     }
   }
-  @media only screen and (min-device-width: 450px) and (max-device-width: 767px) {
+  @media (min-width: 450px) and (max-width: 767px) {
     margin-right: 10%;
   }
-  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+  @media (min-width: 768px) and (max-width: 1024px) {
     font-size: 14px;
     line-height: 20px;
     margin-right: 9%;
@@ -383,13 +406,79 @@ const PartnersItemData = styled.div`
       width: 100px;
     }
   }
-  @media only screen and (min-device-width: 850px) and (max-device-width: 999px) {
+  @media (min-width: 850px) and (max-width: 999px) {
     margin-right: 8%;
   }
-  @media only screen and (min-device-width: 1000px) and (max-device-width: 1024px) {
+  @media (min-width: 1000px) and (max-width: 1024px) {
     margin-right: 6%;
     &:nth-child(3) {
       margin-right: 7%;
+    }
+  }
+  @media (min-width: 500px) and (max-width: 520px) {
+    &:nth-child(3) {
+      width: 55px;
+    }
+  }
+  @media (min-width: 521px) and (max-width: 550px) {
+    &:nth-child(2) {
+      width: 55px;
+    }
+    &:nth-child(3) {
+      width: 50px;
+    }
+  }
+  @media (min-width: 551px) and (max-width: 570px) {
+    &:nth-child(2) {
+      width: 53px;
+    }
+    &:nth-child(3) {
+      width: 50px;
+    }
+  }
+  @media (min-width: 571px) and (max-width: 634px) {
+    &:nth-child(2) {
+      width: 50px;
+    }
+    &:nth-child(3) {
+      width: 49px;
+    }
+  }
+  @media (min-width: 635px) and (max-width: 660px) {
+    &:nth-child(2) {
+      width: 47px;
+    }
+    &:nth-child(3) {
+      width: 44px;
+    }
+  }
+  @media (min-width: 661px) and (max-width: 673px) {
+    &:nth-child(2) {
+      width: 47px;
+    }
+    &:nth-child(3) {
+      width: 40px;
+    }
+  }
+  @media (min-width: 674px) and (max-width: 700px) {
+    &:nth-child(2) {
+      width: 40px;
+    }
+    &:nth-child(3) {
+      width: 40px;
+    }
+  }
+  @media (min-width: 701px) and (max-width: 767px) {
+    &:nth-child(2) {
+      width: 38px;
+    }
+    &:nth-child(3) {
+      width: 35px;
+    }
+  }
+  @media (min-width: 908px) and (max-width: 1000px) {
+    &:nth-child(2) {
+      width: 91px;
     }
   }
 `;

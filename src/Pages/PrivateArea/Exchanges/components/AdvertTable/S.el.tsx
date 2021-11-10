@@ -15,7 +15,7 @@ export const Cell = styled.div`
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
-  color: #000;
+  color: ${props => props.theme.v2.blackText};
   width: 100%;
   padding: 0 10px;
   @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
@@ -34,7 +34,7 @@ export const BodyItem = styled.div<{ active?: boolean }>`
   }
   padding: 5px 10px 5px;
   min-height: 60px;
-  background: ${(props) => (props.active ? 'rgba(0, 148, 255, 0.05)' : '#fff')};
+  background: ${(props) => (props.active ? props.theme.v2.neutralBlue : props.theme.v2.bg)};
   box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
   border-radius: 4px;
   margin-bottom: 2px;
@@ -47,7 +47,7 @@ export const BodyItem = styled.div<{ active?: boolean }>`
     height: 100%;
     position: absolute;
     width: 4px;
-    background: ${(props) => (props.active ? '#0094ff' : '#fff')};
+    background: ${(props) => (props.active ? props.theme.v2.activeBlue : 'transparent')};
     box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
     border-radius: 4px 0 0 4px;
   }
@@ -55,14 +55,14 @@ export const BodyItem = styled.div<{ active?: boolean }>`
 
 export const Header = styled.div`
   ${table};
-  background: #ebebf2;
+  background: ${props => props.theme.v2.neutral};
   border-radius: 4px;
   padding: 20px 10px 17px;
   span {
     font-weight: 300;
     font-size: 14px;
     line-height: 16px;
-    color: #000;
+    color: ${props => props.theme.v2.blackText};
   }
 
   @media (max-width: 768px) {
@@ -112,7 +112,6 @@ export const TypeCrypto = styled.div`
   }
 `;
 
-
 export const MobileBodyItem = styled.div<{ active?: boolean }>`
   ${table};
   
@@ -120,7 +119,7 @@ export const MobileBodyItem = styled.div<{ active?: boolean }>`
   width: 100%;
   padding: 20px;
 
-  background: ${(props) => (props.active ? 'rgba(0, 148, 255, 0.05)' : '#fff')};
+  background: ${(props) => (props.active ? props.theme.v2.neutralBlue : props.theme.v2.bg)};
   box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
   margin-bottom: 10px;
   position: relative;
@@ -132,7 +131,7 @@ export const MobileBodyItem = styled.div<{ active?: boolean }>`
     height: 100%;
     position: absolute;
     width: 4px;
-    background: ${(props) => (props.active ? '#0094ff' : '#fff')};
+    background: ${(props) => (props.active ? props.theme.v2.activeBlue : 'transparent')};
     box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
     border-radius: 4px 0 0 4px;
   }
@@ -155,5 +154,5 @@ export const MobileCell = styled.div`
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
-  color: #000;
+  color: ${props => props.theme.v2.blackText};
 `;

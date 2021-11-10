@@ -25,7 +25,7 @@ export const BallContainer = styled.div<{ notChecked: boolean }>`
     margin-right: 45px;
     width: 50px;
   }
-  @media only screen and (max-device-width: 330px) {
+  @media only screen and (max-width: 330px) {
     width: 35px;
   }
 `;
@@ -37,10 +37,14 @@ export const NotifiesBlock = styled.div<{
   empty: boolean;
   load: boolean;
   inPA?: boolean;
+  length?: number;
 }>`
-  width: 80%;
+  width: 100%;
   max-width: 420px;
-  height: ${({ empty }) => (empty ? '80px' : '584px')};
+  transition: 0.3s;
+  top: 90px;
+  opacity: ${({ block }) => block ? "100%" : "0%"};
+  height: ${({ empty, length }) => (empty ? '80px' : `${length && length < 4 ? (length * 127) + 40 : 584}px`)};
   ${({ load }) => {
     if (load) {
       return `
@@ -50,13 +54,28 @@ export const NotifiesBlock = styled.div<{
   }}
   background: #fff;
   border-radius: 4px;
-  position: absolute;
-  transition: 0.3s;
+  position: fixed;
+  @media (min-width: 1101px) {
+    position: absolute;
+    top: 50px;
+  }
+  @media (max-width: 1100px) {
+    max-width: 100%;
+    right: 0;
+    left: 0;
+    margin: 0;
+  }
+  @media (max-width: 767px) {
+    top: 60px;
+  }
+  @media (min-width: 769px) and (max-width: 1100px) {
+    top: 80px;
+  }
   ${({ admin }) => {
     if (admin) {
       return `
             right: 140px;
-            @media only screen and (max-device-width: 767px) {
+            @media (max-width: 767px) {
                 right: 0px;
             }
             `;
@@ -64,18 +83,14 @@ export const NotifiesBlock = styled.div<{
     if (!admin) {
       return `
             right: 48px;
-            @media only screen and (max-device-width: 767px) {
+            @media only screen and (max-width: 767px) {
                 right: 0px;
             }
-            `;
+          `;
     }
   }}
-  top: ${({ block }) => (block ? '50px' : '1200px')};
-  @media only screen and (max-device-width: 1024px) {
-    top: ${({ block }) => (block ? '50px' : '8000px')};
-  }
   border: 1px solid #dcdce8;
-  z-index: 0;
+  z-index: 999999;
   background: #fff;
   box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
   padding: 20px 8px 1px 0px;
@@ -96,17 +111,30 @@ export const NotifiesBlock = styled.div<{
     border-top: 1px solid #dcdce8;
     border-left: 1px solid #dcdce8;
     margin: auto;
-    @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
-      right: 125px;
+    @media (max-width: 1100px) {
+      margin-right: 0;
+      right: 82px;
     }
-    @media only screen and (max-device-width: 480px) {
-      right: -98px;
+    @media (min-width: 320px) and (max-width: 330px) {
+      right: 75px;
+    }
+    @media (min-width: 768px) and (max-width: 1100px) {
+      right: 133px;
+    }
+    @media (min-width: 769px) and (max-width: 1100px) {
+      right: 133px;
+    }
+    @media (min-width: 779px) and (max-width: 1024px) {
+      right: 167px;
+    }
+    @media (min-width: 783px) and (max-width: 1022px) {
+      right: 133px;
     }
   }
   & > .scrollbars > div {
     right: -1px !important;
   }
-  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+  @media only screen and (min-device-width: 481px) and (max-device-width: 1100px) {
     right: 0;
   }
 `;
@@ -214,16 +242,20 @@ export const NotifyItem = styled.h3<{
     if (notclb) {
       return `
                 cursor: initial;
+                @media only screen and (max-width: 767px) {
+                  font-size: 12px;
+                }
             `;
     }
   }}
 `;
 
-export const Scrollbar = styled.div`
+export const Scrollbar = styled.div<{ lengthMoreThenFour: boolean; }>`
   width: 3px !important;
   height: 203px !important;
   background: #93a1c1;
   border-radius: 2px;
+  display: ${({ lengthMoreThenFour }) => lengthMoreThenFour ? "block" : "none"} !important;
 `;
 
 export const DoneNotify = styled(Done)`

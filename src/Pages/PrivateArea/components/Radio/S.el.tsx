@@ -58,3 +58,15 @@ export const LabelContainer = styled.label`
   width: 100%;
   user-select: none;
 `;
+
+export const CheckboxLabel = styled.div<{checked: boolean}>`
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: ${props => props.checked ? '#0094FF' : '#000000'};
+  margin-left: 10px;
+
+  &:hover {
+    color: ${props => props.checked ? '#0094FF' : '#52515F'};
+  }
+`;

@@ -55,14 +55,15 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
         if(order) {
             let limitFrom = 0;
             let limitTo = 0;
-            if(countVolumeToShow(order.volume, order.assetKind) < (countVolumeToShow(order.limitFrom, order.assetKind) / order.rate) ) {
-                limitFrom = Math.ceil((countVolumeToShow(order.volume, order.assetKind)) * 100000) / 100000;
-            } else {
-                limitFrom = Math.ceil((countVolumeToShow(order.limitFrom, order.assetKind) / order.rate) * 100000) / 100000;
-            }
+        
+            limitFrom = Math.ceil((countVolumeToShow(order.limitFrom, order.assetKind) / order.rate) * 100000) / 100000;
 
             if(countVolumeToShow(order.volume, order.assetKind) < (countVolumeToShow(order.limitTo, order.assetKind) / order.rate)) {
-                limitTo = Math.floor((countVolumeToShow(order.volume, order.assetKind)) * 100000) / 100000;
+                if(countVolumeToShow(order.volume, order.assetKind) < (countVolumeToShow(order.limitFrom, order.assetKind) / order.rate)) {
+                    limitTo = Math.ceil((countVolumeToShow(order.limitFrom, order.assetKind) / order.rate) * 100000) / 100000;
+                } else {
+                    limitTo = Math.floor((countVolumeToShow(order.volume, order.assetKind)) * 100000) / 100000;
+                }
             } else {
                 limitTo = Math.floor((countVolumeToShow(order.limitTo, order.assetKind) / order.rate) * 100000) / 100000;
             }
@@ -296,7 +297,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                 </Text>
                 <Title lH={28} heading3>
                     {`${(countVolumeToShow(order.volume, order.assetKind) * order.rate).toLocaleString('ru-RU', {
-                        maximumFractionDigits: 4,
+                        maximumFractionDigits: 5,
                     })} ${FiatKind[order.operationAssetKind]}`}
                 </Title>
             </S.BlockWrapper>
@@ -372,21 +373,21 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                 <Text size={14} weight={300} lH={20} mB={10} black>
                     {
                         `Сумма к ${orderType === OrderType.Buy ? 'получению' : 'списанию'} (min ${
-                            countVolumeToShow(order.volume, order.assetKind) < (countVolumeToShow(order.limitFrom, order.assetKind) / order.rate)
-                            ?
-                                (countVolumeToShow(order.volume, order.assetKind) * order.rate).toLocaleString('ru-RU', {
-                                    maximumFractionDigits: fiatFixLength,
-                                })
-                            :
-                                (countVolumeToShow(order.limitFrom, order.assetKind)).toLocaleString('ru-RU', {
-                                    maximumFractionDigits: fiatFixLength,
-                                })
+                            (countVolumeToShow(order.limitFrom, order.assetKind)).toLocaleString('ru-RU', {
+                                maximumFractionDigits: fiatFixLength,
+                            })
                         } max ${
                             countVolumeToShow(order.volume, order.assetKind) < (countVolumeToShow(order.limitTo, order.assetKind) / order.rate)
                             ? 
-                                (countVolumeToShow(order.volume, order.assetKind) * order.rate).toLocaleString('ru-RU', {
-                                    maximumFractionDigits: fiatFixLength,
-                                })
+                                countVolumeToShow(order.volume, order.assetKind) > (countVolumeToShow(order.limitFrom, order.assetKind) / order.rate)
+                                ?
+                                    (countVolumeToShow(order.volume, order.assetKind) * order.rate).toLocaleString('ru-RU', {
+                                        maximumFractionDigits: fiatFixLength,
+                                    })
+                                :
+                                    (countVolumeToShow(order.limitFrom, order.assetKind)).toLocaleString('ru-RU', {
+                                        maximumFractionDigits: fiatFixLength,
+                                    })
                             : 
                                 (countVolumeToShow(order.limitTo, order.assetKind)).toLocaleString('ru-RU', {
                                     maximumFractionDigits: fiatFixLength,
@@ -421,9 +422,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                                         checked={paymentMethodSafeId === method.safeId} 
                                         onChange={(e) => setPaymentMethodSafeId(e.target.value)} 
                                     >
-                                        <Text size={14} lH={20} weight={500} mL={10} black>
-                                            {JSON.parse(method.data).bankName}
-                                        </Text>
+                                        {JSON.parse(method.data).bankName}
                                     </Radio>
                                     <S.PaymentMethodDetailsBlock>
                                         <Text size={14} weight={300} lH={20} black mB={4}>Номер карты:</Text>
@@ -449,9 +448,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                                         checked={paymentMethodSafeId === method.safeId} 
                                         onChange={(e) => setPaymentMethodSafeId(e.target.value)} 
                                     >
-                                        <Text size={14} lH={20} weight={500} mL={10} black>
-                                            {paymentMethodsKinds[method.kind].label}
-                                        </Text>
+                                        {paymentMethodsKinds[method.kind].label}
                                     </Radio>
                                     <S.PaymentMethodDetailsBlock>
                                         <Text size={14} weight={300} lH={20} black mB={4}>Адрес кошелька:</Text>
@@ -492,9 +489,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                                         checked={paymentMethodSafeId === method.safeId} 
                                         onChange={(e) => setPaymentMethodSafeId(e.target.value)} 
                                     >
-                                        <Text size={14} lH={20} weight={500} mL={10} black>
-                                            {JSON.parse(method.data).bankName}
-                                        </Text>
+                                        {JSON.parse(method.data).bankName}
                                     </Radio>
                                     <S.PaymentMethodDetailsBlock>
                                         <Text size={14} weight={300} lH={20} black mB={4}>Номер карты:</Text>
@@ -520,9 +515,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                                         checked={paymentMethodSafeId === method.safeId} 
                                         onChange={(e) => setPaymentMethodSafeId(e.target.value)} 
                                     >
-                                        <Text size={14} lH={20} weight={500} mL={10} black>
-                                            {paymentMethodsKinds[method.kind].label}
-                                        </Text>
+                                        {paymentMethodsKinds[method.kind].label}
                                     </Radio>
                                     <S.PaymentMethodDetailsBlock>
                                         <Text size={14} weight={300} lH={20} black mB={4}>Адрес кошелька:</Text>
@@ -578,12 +571,13 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                         order.volume < (order.limitFrom / order.rate) ||
                         !paymentMethodSafeId || 
                         !balanceSumm || 
-                        (   order.volume < (order.limitFrom / order.rate)
-                            ?
-                            countVolumeToShow(+order.volume, order.assetKind) > Number(balanceSumm)
-                            :
-                            (countVolumeToShow(+order.limitFrom, order.assetKind) / order.rate) > Number(balanceSumm)
-                        )
+                        (countVolumeToShow(+order.limitFrom, order.assetKind) / order.rate) > Number(balanceSumm)
+                        // (   order.volume < (order.limitFrom / order.rate)
+                        //     ?
+                        //     countVolumeToShow(+order.volume, order.assetKind) > Number(balanceSumm)
+                        //     :
+                        //     (countVolumeToShow(+order.limitFrom, order.assetKind) / order.rate) > Number(balanceSumm)
+                        // )
                     }
                 >
                     {orderType === OrderType.Buy ? 'Продать' : 'Купить'}

@@ -32,42 +32,85 @@ export const Button = styled.a<Props>`
   border: none;
   transition: all 0.3s ease 0s;
   background: #515172;
-  color: #ffffff;
   cursor: ${(props) => (props.disabled ? 'no-drop' : 'pointer')};
   opacity: ${(props) => (props.disabled ? '0.4' : '1')};
 
   &:hover {
-    box-shadow: ${(props) => (props.disabled ? 'none' : `0px 4px 10px #515172`)};
-    border-color: ${(props) => props.theme.buttonBorder};
+    background: #626280;
   }
+  &:active {
+    background: #494967;
+  }
+
   &:focus,
   &:active {
     outline: none;
   }
+
   ${(props) => {
     if (props.primary) {
       return `
         background: #0094FF;
+
+        &:hover {
+          background: #199EFF;
+        }
+
+        &:active {
+          background: #0085E6;
+        }
       `;
     }
     if (props.yellow) {
       return `
         background: #F6B817;
         color: #0E0D3D;
+
+        &:hover {
+          background: #F7BF2E;
+        }
+
+        &:active {
+          background: #DEA615;
+        }
     `;
     }
     if (props.outlinePrimary) {
       return `
         border: 1px solid #0094FF;
-        background: transparent;
+        background: rgba(0, 0, 0, 0);
         color: #0094FF;
+
+        &:hover {
+          border: 1px solid #199EFF;
+          background: rgba(0, 0, 0, 0);
+          color: #199EFF;
+        }
+
+        &:active {
+          border: 1px solid #0085E6;
+          background: rgba(0, 0, 0, 0);
+          color: #0085E6;
+        }
       `;
     }
     if (props.outlineDanger) {
       return `
         border: 1px solid #FF4A31;
-        background: transparent;
+        background: rgba(0, 0, 0, 0);
         color: #FF4A31;
+
+        &:hover {
+          border: 1px solid #ff604b;
+          background: rgba(0, 0, 0, 0);
+          color: #ff604b;
+        }
+
+        &:active {
+          border: 1px solid #ff3418;
+          background: rgba(0, 0, 0, 0);
+          color: #ff3418;
+        }
       `;
     }
   }}
@@ -81,14 +124,19 @@ export const Button = styled.a<Props>`
     if (exchangeBtn) {
       return `
         border: 1px solid #FF4A31;
+        background: rgba(0, 0, 0, 0);
         color: #FF4A31;
+
         &:hover {
-          box-shadow: 0px 4px 10px #FF4A31;
-          border: 1px solid #FF4A31;
+          border: 1px solid #ff604b;
+          background: rgba(0, 0, 0, 0);
+          color: #ff604b;
         }
-        &:disabled {
-          border: 1px solid #0094FF;
-          color: #0094FF;
+
+        &:active {
+          border: 1px solid #ff3418;
+          background: rgba(0, 0, 0, 0);
+          color: #ff3418;
         }
       `;
     };
@@ -96,8 +144,8 @@ export const Button = styled.a<Props>`
   ${({ rightBtnOnTablet }) => {
     if (rightBtnOnTablet) {
       return `
-          display: flex;
-          justify-content: flex-end;
+        display: flex;
+        justify-content: flex-end;
       `;
     };
   }};

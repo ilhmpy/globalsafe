@@ -31,7 +31,7 @@ import * as Styled from './Styles.elements';
 import { SelectButton } from './components/ui/SelectButton';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, { Navigation, Pagination, A11y } from 'swiper';
-import { countVolumeToShow } from './utils';
+import { countVolumeToShow } from './utils'; 
 import useWindowSize from '../../hooks/useWindowSize';
 
 export const HeaderBar: FC = () => {
@@ -862,7 +862,7 @@ export const HeaderBar: FC = () => {
               pagination={false}
               spaceBetween={20}
             >
-              <SwiperSlide>
+              <SwiperSlide> 
                 <SlideContainer active={clickedIndex === 0}>
                   <TabNavItem to={routers.deposits} exact>
                     <div>Мои депозиты</div>
@@ -1098,11 +1098,15 @@ const TabNavItem = styled(NavLink)`
   font-size: 14px;
   line-height: 16px;
   padding-bottom: 10px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0);
+
+  &:hover {
+    opacity: 0.8;
+  }
 
   &.active {
     font-weight: 500;
     opacity: 1;
-
     border-bottom: 2px solid ${(props) => props.theme.blue};
   }
   & > div {

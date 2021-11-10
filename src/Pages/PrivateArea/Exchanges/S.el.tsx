@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components/macro';
-import { FilterButton as BaseFilterButton } from '../components/ui';
+import { FilterButton as BaseFilterButton, Title } from '../components/ui';
 import { Device } from '../consts';
 
 interface SubHeaderProps {
@@ -74,7 +74,7 @@ export const Filters = styled.div<{
 export const FiltersBox = styled.div`
   width: 100%;
   height: 26px;
-  border: 1px solid #ebebf2;
+  border: 1px solid #DFDFE9;
   border-radius: 2px;
   justify-content: center;
   align-items: center;
@@ -167,5 +167,17 @@ export const Button = styled.button<{ newItems: boolean }>`
   @media only screen and (max-device-width: 480px) {
     margin-top: 20px;
     margin-bottom: 40px;
+  }
+`;
+
+export const Heading = styled.div`
+  width: 100%;
+  @media (max-width: 767px) {
+    padding: 0 20px;
+  }
+  ${Title} {
+    font-weight: 900;
+    font-size: 18px;
+    line-height: 21px;
   }
 `;

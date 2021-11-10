@@ -7,6 +7,7 @@ import { routers } from '../../../constantes/routers';
 import { TabNavItem, TabsBlock, Text, FilterButton } from '../components/ui';
 import { Spinner } from '../components/Loading/Loading';
 import * as S from './S.el';
+import { getOwner } from '../../../utils/getOwner';
 
 import { OwnActiveExchangesTable } from './components/OwnActiveExchangesTable/OwnActiveExchangesTable';
 import { OwnArchivedExchangesTable } from './components/OwnArchivedExchangeTable/OwnArchivedExchangeTable';
@@ -20,10 +21,12 @@ import { PaymentMethods } from './components/modals/PaymentMethods';
 import { CurrencyPair } from './components/modals/CurrencyPair';
 import { Balance } from '../../../types/balance';
 import { FiatKind } from '../../../types/fiatKind';
-import { getBalanceKindByStringName, getFiatKindByStringName, getMyRating } from '../utils';
+import { getBalanceKindByStringName, getFiatKindByStringName, getMyRating, sortByDate } from '../utils';
 import { ExchangeFiltersMobile } from './components/modals/ExchangeFiltersMobile';
 import { AdvertFiltersMobile } from './components/modals/AdvertFiltersMobile';
 import useWindowSize from '../../../hooks/useWindowSize';
+import { Exchange } from './components/OwnActiveExchangesTable/S.el';
+import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 
 export const OwnExchanges = () => {
   const history = useHistory();
@@ -79,55 +82,53 @@ export const OwnExchanges = () => {
         return i;
       }
     });
-  }
+  };
 
-  function filters(res: GetExchangesCollectionResult) {
+  function filters(collect: ViewExchangeModel[]) {
+    let filter = collect;
     if (payments.length) {
-      const filter = res.collection.filter((i) => {
+      filter = filter.filter((i) => {
         if (payments.includes(i.paymentMethod?.kind)) {
           return i;
         }
       });
-      setUserExchanges(filter);
-    } else if (balanceKind != null || fiatKind != null) {
-      let filter: ViewExchangeModel[] = [];
+    } 
+    if (balanceKind != null || fiatKind != null) {
+      let filterByKinds = filter;
       if (balanceKind != null && fiatKind == null) {
-        filter = res.collection.filter((i) => {
+        filterByKinds = filterByKinds.filter((i) => {
           if (i.assetKind === balanceKind) {
             return i;
           }
         });
       }
       if (balanceKind === null && fiatKind != null) {
-        filter = res.collection.filter((i) => {
+        filterByKinds = filterByKinds.filter((i) => {
           if (i.exchangeAssetKind === fiatKind) {
             return i;
           }
         });
       }
       if (balanceKind !== null && fiatKind !== null) {
-        filter = res.collection.filter((i) => {
+        filterByKinds = filterByKinds.filter((i) => {
           if (i.exchangeAssetKind === fiatKind && i.assetKind === balanceKind) {
             return i;
           }
         });
-      }
-      setUserExchanges(filter);
-    } else if (status && status.length) {
-      const filter = res.collection.filter((i) => {
+      };
+      filter = filterByKinds;
+    } 
+    if (status && status.length) {
+      filter = filter.filter((i) => {
         for (let el = 0; el < status.length; el++) {
           if (i.state === status[el]) {
-            return i;
-          }
-        }
+             return i;
+          };
+        };
       });
-      setUserExchanges(filter);
-    } else {
-      const collection = getFirstElements(res.collection, 10);
-      setAllExchanges(res.collection);
-      setUserExchanges(collection);
-    }
-  }
+    };
+    return filter;
+  };
 
   async function getGetUserExchanges() {
     try {
@@ -139,13 +140,16 @@ export const OwnExchanges = () => {
         100
       );
       console.log('GetExchanges', res.collection);
-      filters(res);
+      const collection = getFirstElements(filters(res.collection), 10);
+      console.log(collection);
+      setUserExchanges(collection.map((i: any) => ({ ...i, new: false })));
+      setAllExchanges(sortByDate(res.collection).map((i: any) => ({ ...i, new: false })));
     } catch (err) {
       console.log(err);
     } finally {
       setLoading(false);
-    }
-  }
+    };
+  };
 
   function changeNew() {
     setUserExchanges(
@@ -158,7 +162,7 @@ export const OwnExchanges = () => {
           };
         })
     );
-  }
+  };
 
   function addMore() {
     if (userExchanges && userExchanges.length <= allExchanges.length) {
@@ -170,24 +174,18 @@ export const OwnExchanges = () => {
         }
       }
       if (items.length) {
-        setUserExchanges(
-          [...userExchanges, ...items].sort((x: any, y: any) => {
-            const a = new Date(x.operationDate);
-            const b = new Date(y.operationDate);
-            return a > b ? -1 : a < b ? 1 : 0;
-          })
-        );
+        setUserExchanges(filters([...userExchanges, ...items]));
         setStatusNew(setTimeout(() => changeNew(), 2000));
-      }
-    }
-  }
+      };
+    };
+  };
 
   useEffect(() => {
     let cancel = false;
     if (hubConnection && !cancel) {
       setLoading(true);
       getGetUserExchanges();
-    }
+    };
     return () => {
       cancel = true;
     };
@@ -203,11 +201,11 @@ export const OwnExchanges = () => {
       userExchanges.forEach((item) => {
         if (item.safeId === res.safeId) {
           exchanges[userExchanges.indexOf(item)] = res;
-        }
+        };
       });
       setUserExchanges(exchanges);
-    }
-  }
+    };
+  };
 
   function volumeChanged(id: string, volume: number) {
     if (activeFilter !== 'archived') {
@@ -216,23 +214,23 @@ export const OwnExchanges = () => {
       userExchanges.forEach((item) => {
         if (item.safeId === id) {
           exchanges[userExchanges.indexOf(item)].orderVolume = volume;
-        }
+        };
       });
       setUserExchanges(exchanges);
-    }
-  }
+    };
+  };
 
   function exchangeCreated(res: ViewExchangeModel) {
     if (userExchanges) {
       console.log('ExchangeChanged/Created/Completed', res);
       if (res.state <= 2 && activeFilter === 'active') {
         setUserExchanges([res, ...userExchanges]);
-      }
+      };
       if (res.state >= 3 && activeFilter === 'archived') {
         setUserExchanges([res, ...userExchanges]);
-      }
-    }
-  }
+      };
+    };
+  };
 
   function endCallback(res: ViewExchangeModel) {
     if (
@@ -242,19 +240,19 @@ export const OwnExchanges = () => {
       setUserExchanges(() => [res, ...userExchanges]);
     } else {
       setUserExchanges([...userExchanges.filter((i: ViewExchangeModel) => i.safeId != res.safeId)]);
-    }
-  }
+    };
+  };
 
   function setPaymentMethod(safeId: string, kind: string) {
     const exchanges = [...userExchanges];
     userExchanges.forEach((item) => {
       if (item.safeId === safeId) {
         exchanges[userExchanges.indexOf(item)].paymentMethod = { kind };
-      }
+      };
     });
     console.log('SetPaymentMethod', exchanges);
     setUserExchanges(exchanges);
-  }
+  };
 
   useEffect(() => {
     let cancel = false;
@@ -344,7 +342,12 @@ export const OwnExchanges = () => {
     };
   }, [hubConnection, userExchanges]);
 
-  const statuts = useMemo<Object[]>(
+  type ViewMethodModel = {
+    methodName: string;
+    kind: number;
+  };
+
+  const statuts = useMemo<ViewMethodModel[]>(
     () =>
       activeFilter === 'active'
         ? [
@@ -359,7 +362,7 @@ export const OwnExchanges = () => {
     [activeFilter]
   );
 
-  const paymentMethodsKinds = useMemo<Object[]>(
+  const paymentMethodsKinds = useMemo<ViewMethodModel[]>(
     () => [
       { methodName: 'ERC 20', kind: 0 },
       { methodName: 'TRC 20', kind: 1 },
@@ -402,7 +405,7 @@ export const OwnExchanges = () => {
 
   return (
     <div>
-      {screen <= 480 && (
+      {screen <= 767 && (
         <ExchangeFiltersMobile
           open={filtersShow}
           onClose={onCloseFiltersMobile}
@@ -421,7 +424,7 @@ export const OwnExchanges = () => {
         />
       )}
       <Container>
-        {screen > 480 && (
+        {screen > 767 && (
           <Heading
             onClick={() => history.push(routers.p2pchangesOrderToBuy)}
             title="P2P обмены"
@@ -448,7 +451,7 @@ export const OwnExchanges = () => {
             </Text>
           )}
         </S.SubHeader>
-        {screen < 480 && (
+        {screen <= 767 && (
           <>
             <Heading
               onClick={() => history.push(routers.p2pchangesOrderToBuy)}
@@ -463,6 +466,7 @@ export const OwnExchanges = () => {
                 onClick={() => setActiveFilter('active')}
                 style={{ marginRight: '0px' }}
                 big
+                smHalfWidth
               >
                 Активные
               </FilterButton>
@@ -471,6 +475,7 @@ export const OwnExchanges = () => {
                 onClick={() => setActiveFilter('archived')}
                 style={{ marginLeft: '0px', borderLeft: '0' }}
                 big
+                smHalfWidth
               >
                 Архив
               </FilterButton>
@@ -478,7 +483,7 @@ export const OwnExchanges = () => {
             <S.FiltersBox onClick={() => setFiltersShow(true)}>Фильтры (3)</S.FiltersBox>
           </>
         )}
-        {screen > 480 && (
+        {screen > 767 && (
           <>
             <S.Filters style={{ marginBottom: '10px', position: 'relative' }}>
               <FilterButton

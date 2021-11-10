@@ -72,7 +72,7 @@ export const InfoMain: FC = () => {
               exact
             />
             <Route
-              path={routers.p2pchangesSingleOrderDetails}
+              path={routers.p2pchangesSingleOrderDetails + '/:orderSafeId'}
               component={SingleOrderDetails}
               exact
             />
