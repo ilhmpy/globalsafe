@@ -1,4 +1,4 @@
-import React, { FC, useState, useContext, useEffect } from 'react';
+import React, { FC, useState, useContext, useEffect, useMemo } from 'react';
 import * as S from './S.el';
 import * as FL from '../../S.el';
 import {
@@ -67,6 +67,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
   const [tab, setTab] = useState<'order' | 'exchange'>('exchange');
   const [ownerTotalExchanges, setOwnerTotalExchanges] = useState<number>(0);
   const [recepientTotalExchanges, setRecepientTotalExchanges] = useState<number>(0);
+  const [recepientRating, setRecepientRating] = useState<string>("");
   const buyer = () => {
     return (
       (exchange && exchange.kind === 0 && exchange.ownerSafeId !== account.safeId) ||
@@ -76,29 +77,35 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
 
   const [owner, setOwner] = useState<'seller' | 'buyer'>(buyer() ? 'buyer' : 'seller');
   const [mark, setMark] = useState<boolean | null>(null);
-  const ownerInExchange =
-    exchange.kind === ExchangeKind.Sell ?
+
+  const getObject = () => {
+    return exchange.kind === ExchangeKind.Sell ?
       {
         seller: { 
           rating: Number(exchange.userRating).toFixed(1), 
           totalExchanges: Number(ownerTotalExchanges) 
         },
         buyer: { 
-          rating: owner === "buyer" ? Number(getMyRating(account)).toFixed(1) : -1, 
-          totalExchanges: owner === "buyer" ? Number(getMyExchanges()) : recepientTotalExchanges 
+          rating: owner === "buyer" ? Number(getMyRating(account)).toFixed(1) : recepientRating, 
+          totalExchanges: owner === "buyer" ? Number(getMyExchanges()) : recepientTotalExchanges
         },
       } : {
         seller: { 
-          rating: owner === "seller" ? Number(getMyRating(account)).toFixed(1) : -1, 
+          rating: owner === "seller" ? Number(getMyRating(account)).toFixed(1) : recepientRating, 
           totalExchanges: owner === "seller" ? Number(getMyExchanges()) : recepientTotalExchanges
         },
         buyer: { 
           rating: Number(exchange.userRating).toFixed(1), 
           totalExchanges: Number(ownerTotalExchanges) 
         },
-      };
+      }
+  };
 
-  console.log(ownerInExchange, account);
+  const [ownerInExchange, setOwnerInExchange] = useState<any>(getObject());
+
+  useEffect(() => {
+    setOwnerInExchange(getObject());
+  }, [ownerTotalExchanges, recepientTotalExchanges, recepientRating]);
 
   useEffect(() => {
     let cancel = false;
@@ -221,6 +228,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
         .then((res) => {
           console.log('totalExecutedExchanges', res);
           setTotal(res);
+          setOwnerInExchange(getObject());
         })
         .catch((err) => console.error(err));
     }
@@ -229,8 +237,23 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
   useEffect(() => {
     getTotalExecutedExchanges(exchange.recepientSafeId, setRecepientTotalExchanges);
     getTotalExecutedExchanges(exchange.ownerSafeId, setOwnerTotalExchanges);
-    console.log(exchange.ownerSafeId)
-  }, [hubConnection]);
+  }, [hubConnection, exchange]);
+
+  function getUserRating(id: string) {
+    if (hubConnection) {
+      hubConnection.invoke("GetUserRating", id)
+        .then((res) => {
+          console.log(res);
+          setRecepientRating(res);
+          setOwnerInExchange(getObject());
+        })
+        .catch((err) => console.error(err));
+    };
+  };
+
+  useEffect(() => {
+    getUserRating(exchange.recepientSafeId);
+  }, [hubConnection, exchange]);
 
   function getExchangeChip(chip: ExchangeState) {
     if (chip === 0 || chip === 1) {
@@ -633,9 +656,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                     Рейтинг покупателя:
                   </Text>
                   <Text size={14} lH={20} weight={500} mB={4} black phoneFWB>
-                    {owner === 'seller'
-                      ? `${Number(exchange.userRating).toFixed(1)} (${totalExchanges})`
-                      : `${getMyRating(account)} (${getMyExchanges()})`} 
+                    {`${ownerInExchange.buyer.rating} (${ownerInExchange.buyer.totalExchanges})`}
                   </Text>
                 </S.BlockWrapper>
               </S.StateBlock>

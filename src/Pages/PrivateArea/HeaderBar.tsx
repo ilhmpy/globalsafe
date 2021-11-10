@@ -503,10 +503,10 @@ export const HeaderBar: FC = () => {
         .catch((err: Error) => {
           // console.log('ERROR', err);
           setWithdrawValueLoad(false);
-          setOutPutError(true);
           setWithDrawModal(false);
-          setOutPutErrorReason('Ошибка вывода средств.');
-        });
+          setOutPutErrorReason('Ошибка вывода средств.')
+        })
+        .finally(() => setOutPutError(true));
     }
   };
 
@@ -672,7 +672,7 @@ export const HeaderBar: FC = () => {
         </Modal>
       </CSSTransition>
 
-      <CSSTransition in={outPutError === false ? true : false} timeout={0} unmountOnExit>
+      <CSSTransition in={outPutError} timeout={0} unmountOnExit>
         <Modal
           onClose={() => {
             setOutPutError(undefined);
@@ -684,26 +684,15 @@ export const HeaderBar: FC = () => {
           p20
         >
           <H3 center modalTitle>
-            Успешный вывод средств
+              Вывод средств
           </H3>
-          <Styled.Desc>С баланса личного кабинета успешно выведены средства в размере:</Styled.Desc>
-          <Styled.Desc bold mMore>
-            {(
-              Number(outPutEd.replace(/[^0-9]/gi, '')) +
-              Number(blockchain) +
-              Number(service)
-            ).toLocaleString('ru-RU', { maximumFractionDigits: 2 })}{' '}
-            {outPutCurrency}
+          <Styled.Desc style={{ marginBottom: '20px', maxWidth: '340px' }}>
+            Мы сообщим вам о результате операции пополнения в личном уведомлении.
           </Styled.Desc>
-          <Styled.Desc mLess>
-            К зачислению: {Number(outPutEd).toLocaleString('ru-RU', { maximumFractionDigits: 2 })}
-          </Styled.Desc>
-          <Styled.Desc mLess>Комиссия блокчейн: {blockchain}</Styled.Desc>
-          <Styled.Desc mLess>Комиссия сервиса: {service}</Styled.Desc>
         </Modal>
       </CSSTransition>
 
-      <CSSTransition in={outPutError} timeout={0} unmountOnExit>
+      <CSSTransition in={false} timeout={0} unmountOnExit>
         <Modal
           onClose={() => {
             setOutPutError(undefined);
