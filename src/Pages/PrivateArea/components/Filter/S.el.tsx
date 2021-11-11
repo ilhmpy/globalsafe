@@ -1,6 +1,6 @@
 import styled from 'styled-components/macro';
 
-export const Container = styled.div<{ without?: boolean; }>`
+export const Container = styled.div<{ without?: boolean }>`
   display: flex;
   justify-content: space-between;
   margin-bottom: 20px;
@@ -10,11 +10,11 @@ export const Container = styled.div<{ without?: boolean; }>`
       return `
         margin-bottom: 0px;
       `;
-    };
+    }
   }}
 `;
 
-export const Button = styled.button<{ active?: boolean}>`
+export const Button = styled.button<{ active?: boolean }>`
   appearance: none;
   cursor: pointer;
   font-size: 12px;
@@ -34,6 +34,9 @@ export const Buttons = styled.div`
   display: flex;
   ${Button} {
     margin-right: 10px;
+    @media (max-width: 1024px) {
+      margin-right: -1px;
+    }
     &:last-child {
       margin-right: 0;
     }

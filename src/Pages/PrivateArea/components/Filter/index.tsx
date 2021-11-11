@@ -1,13 +1,12 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
+import styled from 'styled-components';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import { ReactComponent as ListIcon } from '../../../../assets/v2/svg/list.svg';
 import { ReactComponent as ListFillIcon } from '../../../../assets/v2/svg/listfill.svg';
 import { ReactComponent as TileIcon } from '../../../../assets/v2/svg/tile.svg';
 import { ReactComponent as TileFillIcon } from '../../../../assets/v2/svg/tilefill.svg';
-import * as S from './S.el';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import SwiperCore, { Navigation, Pagination, A11y } from 'swiper';
-import styled from 'styled-components';
 import useWindowSize from '../../../../hooks/useWindowSize';
+import * as S from './S.el';
 interface FilterProps {
   activeFilter: 'active' | 'archived' | 'hold';
   setActiveFilter: (value: 'active' | 'archived' | 'hold') => void;

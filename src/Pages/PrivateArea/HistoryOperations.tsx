@@ -1,25 +1,19 @@
 import moment from 'moment';
 import 'moment/locale/ru';
-import React, { FC, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { NavLink, Redirect, Route, Switch, useHistory } from 'react-router-dom';
-import { CSSTransition } from 'react-transition-group';
 import { Container } from '../../components/UI/Container';
-import * as Styled from './Styles.history';
-import { Heading } from './components/Heading';
-import * as FilterS from './components/Filter/S.el';
-import { Filter } from './components/Filter/index';
 import { AppContext } from '../../context/HubContext';
 import { Balance } from '../../types/balance';
-import { Loading, NotItems, Spinner } from './components/Loading/Loading';
-import formatRelativeWithOptions from 'date-fns/esm/fp/formatRelativeWithOptions/index.js';
-import { isObject } from 'highcharts';
-import { InternalSymbolName, isTemplateSpan } from 'typescript';
-import { countVolumeToShow } from './utils';
 import { ViewExchangeModel } from '../../types/exchange';
-import { isFirstDayOfMonth } from 'date-fns/esm';
+import { Filter } from './components/Filter/index';
+import * as FilterS from './components/Filter/S.el';
+import { Heading } from './components/Heading';
+import { Loading, NotItems, Spinner } from './components/Loading/Loading';
+import * as Styled from './Styles.history';
+import { countVolumeToShow } from './utils';
 
-export const HistoryOperations = () => {
+export const HistoryOperations: FC = () => {
   const [activeFilter, setActiveFilter] = useState<'active' | 'archived' | 'hold'>('active');
   const months = [
     'Январь',
@@ -375,7 +369,7 @@ export const HistoryOperations = () => {
 
   return (
     <>
-      <Container>
+      <Container mbNone>
         <Heading title="История операций" withoutBtn />
         <Styled.FilterAllBlock>
           <Styled.FilterDivision>
@@ -401,7 +395,9 @@ export const HistoryOperations = () => {
       <Container pTabletNone>
         <Styled.Table none={not}>
           <Styled.TableItem head>
-            <Styled.TableInnerItem head>Дата и время</Styled.TableInnerItem>
+            <Styled.TableInnerItem head mrLarger>
+              Дата и время
+            </Styled.TableInnerItem>
             <Styled.TableInnerItem head>Категория</Styled.TableInnerItem>
             <Styled.TableInnerItem head>Сумма</Styled.TableInnerItem>
           </Styled.TableItem>
@@ -413,14 +409,14 @@ export const HistoryOperations = () => {
                     {operations &&
                       operations.map((item: any, idx) => (
                         <Styled.TableItem item key={idx} newItem={item.new && item.new}>
-                          <Styled.TableInnerItem item>
+                          <Styled.TableInnerItem item mrLarger>
                             {moment(item.operationDate).format('DD.MM.YYYY')} в{' '}
                             {getLocaleTime(item.operationDate)}
                           </Styled.TableInnerItem>
-                          <Styled.TableInnerItem item>
+                          <Styled.TableInnerItem item mrLarger>
                             {operation(item.operationKind, item.referenceSafeId)}
                           </Styled.TableInnerItem>
-                          <Styled.TableInnerItem item income={item.balanceDelta > 0}>
+                          <Styled.TableInnerItem item mrLarger income={item.balanceDelta > 0}>
                             {item.balanceDelta > 0 && (
                               <>
                                 {sign(
