@@ -101,3 +101,27 @@ export const StateBlock = styled.div<{ when: boolean; left?: boolean; }>`
     }
   }}
 `;
+
+export const BlueButton = styled.button`
+  border-radius: 4px;
+  background: #0094FF;
+  width: 50%;
+  max-width: 153px;
+  height: 38px;
+  color: #fff;
+  font-size: 14px;
+  line-height: 16px;
+  text-align: center;
+  cursor: pointer;
+  margin-top: 40px;
+  font-weight: 500;
+  transition: 0.3s;
+  &:hover {
+    box-shadow: 0px 4px 10px #0e0d3d;
+    border-color: #0E0D3D;
+  }
+  @media (max-width: 767px) {
+    width: 100%;
+    max-width: 100%;
+  }
+`;

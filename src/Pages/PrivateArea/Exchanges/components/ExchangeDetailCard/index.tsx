@@ -68,6 +68,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
   const [ownerTotalExchanges, setOwnerTotalExchanges] = useState<number>(0);
   const [recepientTotalExchanges, setRecepientTotalExchanges] = useState<number>(0);
   const [recepientRating, setRecepientRating] = useState<string>("");
+  const [wantToAddGrade, setWantToAddGrade] = useState<boolean>(false);
   const buyer = () => {
     return (
       (exchange && exchange.kind === 0 && exchange.ownerSafeId !== account.safeId) ||
@@ -105,6 +106,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
 
   useEffect(() => {
     setOwnerInExchange(getObject());
+    console.log(ownerInExchange, exchange.kind);
   }, [ownerTotalExchanges, recepientTotalExchanges, recepientRating]);
 
   useEffect(() => {
@@ -226,9 +228,9 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
       hubConnection
         .invoke('GetTotalExecutedExchanges', id)
         .then((res) => {
-          console.log('totalExecutedExchanges', res);
           setTotal(res);
           setOwnerInExchange(getObject());
+          console.log('totalExecutedExchanges', res, recepientTotalExchanges);
         })
         .catch((err) => console.error(err));
     }
@@ -378,8 +380,6 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
     }
   }
 
-  console.log(exchange);
-
   function rateUser() {
     if (hubConnection) {
       hubConnection
@@ -392,6 +392,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
         .then((res) => {
           console.log(res);
           setCall(true);
+          setWantToAddGrade(false);
           if (screen > 767) {
             setShowSuccessModal(true);
           }; 
@@ -424,8 +425,6 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
        history.push('/mobile/modal');
     };
   };
-
-  console.log(owner, exchange);
 
   return (
     <>
@@ -574,7 +573,8 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
           (screen <= 767 &&
             (exchange.state === ExchangeState.Completed ||
               exchange.state === ExchangeState.Abused ||
-              exchange.state === ExchangeState.Cancelled)) ? (
+              exchange.state === ExchangeState.Cancelled))
+              ? (
             <RightSide>
               <S.TitleBlockWrapper>
                 <Title mB={10} lH={28} main>
@@ -583,7 +583,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                 </Title>
                 {getExchangeChip(exchange.state)}
               </S.TitleBlockWrapper>
-              <S.StateBlock when={exchange.state < 2 || exchange.state != 2 || mark != false}>
+              <S.StateBlock when={(!wantToAddGrade)}>
                 <S.BlockWrapper>
                   <Text size={14} lH={20} mB={4} black onMobileTitleInExchange>
                     Количество:
@@ -1066,7 +1066,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
               {/* COMPLETED STATE */}
 
               <S.StateBlock when={exchange.state === 2 && mark === false}>
-                <S.StateBlock when={owner === 'buyer'}>
+                <S.StateBlock when={owner === 'buyer' && wantToAddGrade}>
                   <S.TransferInfoBlock>
                     <Text size={14} lH={20} black>
                       Обмен успешно завершен. Средства в размере{' '}
@@ -1137,7 +1137,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                   </Button>
                 </S.StateBlock>
 
-                <S.StateBlock when={owner === 'seller'}>
+                <S.StateBlock when={owner === 'seller' && wantToAddGrade}>
                   <S.TransferInfoBlock>
                     <Text size={14} lH={20} black>
                       Обмен успешно завершен. Средства в размере{' '}
@@ -1205,9 +1205,12 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
                   >
                     Подтвердить
                   </Button>
-                </S.StateBlock>
+                </S.StateBlock> 
               </S.StateBlock>
               {/* ************** */}
+              <S.StateBlock when={wantToAddGrade === false && mark === false && exchange.state === ExchangeState.Completed}> 
+                <S.BlueButton onClick={() => setWantToAddGrade(true)}>Поставить оценку</S.BlueButton>
+              </S.StateBlock>
             </RightSide>
           ) : null}
           <ExchangeSuccessModal
