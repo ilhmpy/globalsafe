@@ -34,6 +34,9 @@ export const FilterAllBlock = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 20px;
+  @media (max-width: 768px) {
+    flex-direction: column-reverse;
+  }
 `;
 
 export const Table = styled.div<{ none?: boolean }>`

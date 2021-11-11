@@ -4,6 +4,7 @@ import { FC, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Container } from '../../components/UI/Container';
 import { AppContext } from '../../context/HubContext';
+import useWindowSize from '../../hooks/useWindowSize';
 import { Balance } from '../../types/balance';
 import { ViewExchangeModel } from '../../types/exchange';
 import { Filter } from './components/Filter/index';
@@ -29,8 +30,9 @@ export const HistoryOperations: FC = () => {
     'Ноябрь',
     'Декабрь',
   ];
+  const screen = useWindowSize();
   const [buttons, setButtons] = useState<any[]>([
-    { text: 'Все типы', active: 'active' },
+    { text: `Все ${screen > 767 ? 'типы' : ''},`, active: 'active' },
     { text: 'Пополнение', active: 'hold' },
     { text: 'Списание', active: 'archived' },
   ]);
