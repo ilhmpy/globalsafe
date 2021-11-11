@@ -20,7 +20,7 @@ import { Button } from '../../../components/Button/V2/Button';
 
 export const SingleOrderDetailsOwn: FC = () => {
   const history = useHistory();
-  const { hubConnection } = useContext(AppContext);
+  const { hubConnection, userSafeId } = useContext(AppContext);
   const isMobile = useIsMobile();
   const [currentOrder, setCurrentOrder] = useState<ViewBuyOrderModel | ViewSellOrderModel | null>(
     null
@@ -36,19 +36,29 @@ export const SingleOrderDetailsOwn: FC = () => {
   const { orderSafeId } = useParams<{ orderSafeId: string }>();
 
   useEffect(() => {
-    if (hubConnection && orderSafeId) {
+    if (hubConnection && orderSafeId && userSafeId) {
       getOrder();
     }
-  }, [hubConnection, orderSafeId]);
+  }, [hubConnection, orderSafeId, userSafeId]);
 
   const getOrder = async () => {
     try {
       const res = await hubConnection!.invoke<ViewBuyOrderModel>('GetBuyOrder', orderSafeId);
+      // Check if order is NOT yours
+      if(res.userSafeId !== userSafeId) {
+        history.replace(`/info/p2p-changes/orders/${res.safeId}`);
+        return;
+      }
       setCurrentOrder(res);
       setCurrentOrderType(OrderType.Buy);
     } catch (err) {
       try {
         const res = await hubConnection!.invoke<ViewSellOrderModel>('GetSellOrder', orderSafeId);
+        // Check if order is NOT yours
+        if(res.userSafeId !== userSafeId) {
+          history.replace(`/info/p2p-changes/orders/${res.safeId}`);
+          return;
+        }
         setCurrentOrder(res);
         setCurrentOrderType(OrderType.Sell);
       } catch (err) {
