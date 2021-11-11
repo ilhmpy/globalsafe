@@ -1,4 +1,4 @@
-import { FC, useContext, useState, useEffect } from 'react';
+import { FC, useContext, useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
@@ -25,6 +25,7 @@ import { DontDeleteModal } from './DontDeleteModal';
 import { useIsMobile } from '../utils';
 import { FilterButton } from '../components/ui';
 import { Device } from '../consts';
+import { MobileFiltersModal } from './MobileFiltersModal';
 
 type TableRowType = {
   method?: string;
@@ -115,6 +116,9 @@ export const Settings: FC = () => {
   const [activeFilter, setActiveFilter] = useState<string>('Все');
   const history = useHistory();
   const isMobile = useIsMobile();
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [selectedPaymentMethods, setSelectedPaymentMethods] = useState<number[]>([]);
+  const [acceptedPaymentMethods, setAcceptedPaymentMethods] = useState<number[]>([]);
 
   const { userPaymentsMethod, setUserPaymentsMethod, usePaymentMethods, setUsePaymentMethods } =
     useContext(SettingsContext);
@@ -242,6 +246,12 @@ export const Settings: FC = () => {
     }
   }, [hubConnection, activeFilter]);
 
+  useEffect(() => {
+    if (hubConnection) {
+      userPaymentsMethods(acceptedPaymentMethods);
+    }
+  }, [hubConnection, acceptedPaymentMethods])
+
   const adjustPaymentMethod = async (id: number, safeId: string) => {
     if (!hubConnection) return;
     try {
@@ -284,6 +294,29 @@ export const Settings: FC = () => {
     history.push(routers.settingsViewPayMethod + '/' + id);
   };
 
+  // The Array should have the same queue as PaymentMethodKind enum
+  const paymentMethodsKinds = useMemo<{ label: string; value: number }[]>(
+    () => [
+      { label: 'ERC 20', value: 0 },
+      { label: 'TRC 20', value: 1 },
+      { label: 'BEP 20', value: 2 },
+      { label: 'АО «Тинькофф Банк»', value: 3 },
+      { label: 'ПАО Сбербанк', value: 4 },
+      { label: 'АО «Альфа-Банк»', value: 5 },
+    ],
+    []
+  );
+
+  const handleAcceptPaymentMethods = () => {
+    setAcceptedPaymentMethods([...selectedPaymentMethods]);
+    setShowMobileFilters(false);
+  };
+
+  const resetFilters = () => {
+    setAcceptedPaymentMethods([]);
+    setSelectedPaymentMethods([]);
+  };
+
   return (
     <Container pNone>
       <Container>
@@ -317,7 +350,7 @@ export const Settings: FC = () => {
                 ))}
               </S.Buttons>
             :
-              <FilterButton noMargin wFull active={false} switchLeft onClick={() => console.log('toggle Filters')}>
+              <FilterButton noMargin wFull active={false} switchLeft onClick={() => setShowMobileFilters(true)}>
                 Фильтры (3)
               </FilterButton>
           }
@@ -340,6 +373,17 @@ export const Settings: FC = () => {
           <NotData>Нет платежных методов</NotData>
         )}
       </TableCard>
+
+      <MobileFiltersModal
+        open={showMobileFilters}
+        onClose={() => setShowMobileFilters(false)}
+        onAccept={handleAcceptPaymentMethods}
+        onResetFilters={resetFilters}
+
+        selectedPaymentMethods={selectedPaymentMethods}
+        setSelectedPaymentMethods={setSelectedPaymentMethods}
+        methodsList={paymentMethodsKinds}
+      />
     </Container>
   );
 };
