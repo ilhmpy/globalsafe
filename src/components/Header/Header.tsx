@@ -36,7 +36,6 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
   const [header, setHeader] = useState(false);
   const [open, setOpen] = useState(false);
   const [notify, setNotify] = useState<boolean>(false);
-  const [checkeds, setCheckeds] = useState<boolean>(false);
   const screen = useWindowSize();
   const [none, setNone] = useState<boolean>(false);
   const [time, setTime] = useState<any>();
@@ -51,6 +50,7 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
   const history = useHistory();
   const location = useLocation();
   const { t, i18n } = useTranslation();
+  const { checkeds, setCheckeds } = appContext;
 
   function handleClick() {
     if (user === null) return;
@@ -91,14 +91,10 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   
   function onBall() {
-    setNotify(false);
-    if (!none) {
-      setNone(true);
-      setNotify(true);
-    } {
-      setTime(setTimeout(() => setNone(!notify), 500));
-    };
-  }
+    setNone(!none);
+    setNotify(!notify);
+  };
+
   return (
     <>
       <HeaderWrap header={header}>
@@ -148,7 +144,6 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
                     block={notify}
                     none={none}
                     setBlock={setNotify}
-                    setCheckeds={setCheckeds}
                     admin={admin ? true : false}
                   />}
               </>
@@ -180,7 +175,6 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
           none={none}
           block={notify}
           setBlock={setNotify}
-          setCheckeds={setCheckeds}
           admin={admin ? true : false}
         />}
     </>

@@ -16,8 +16,7 @@ export const Notifications = () => {
     ]);
     const [activeFilter, setActiveFilter] = useState<'active' | 'archived' | 'hold'>('active');
     const appContext = useContext(AppContext);
-    const hubConnection = appContext.hubConnection;
-    const [notifies, setNotifies] = useState<NotifyItem[]>([]);
+    const { hubConnection, notifies, setNotifies, onNotify } = appContext;
     const [loading, setLoading] = useState<boolean>(false);
     const [newItems, setNewItems] = useState<boolean>(false);
     const [statusNew, setStatusNew] = useState<any>();
@@ -37,21 +36,6 @@ export const Notifications = () => {
         });
         setState(items);
     };
-
-    function cb () {
-        getNotifies(false);
-    };
-
-    useEffect(() => {
-        let cancel = false;
-        if (hubConnection && !cancel) {
-            hubConnection.on("InAppNotification", cb);
-        };
-        return () => {
-            cancel = true;
-            hubConnection?.off("InAppNotification", cb);
-        }; 
-    }, [hubConnection, notifies]);
 
     function getFirstElements(collection: NotifyItem[], elms: number) {
         return collection.filter((i, idx) => {
@@ -86,18 +70,8 @@ export const Notifications = () => {
         getNotifies()
     }, [hubConnection, activeFilter]);
 
-    function onNotify(id: string) {
-        if (hubConnection) {
-            hubConnection.invoke("SetStateInAppNotification", id, 1)
-             .then(() => {
-                 getNotifies();
-             })
-             .catch(err => console.error(err));
-        };
-    };
-
     function changeNew() {
-        setNotifies(items => items.map(item => {
+        setNotifies((items: any) => items.map((item: any) => {
             return { ...item, new: false };
         }));
     };
