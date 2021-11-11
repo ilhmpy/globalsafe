@@ -43,35 +43,11 @@ export const SwitchTheme = styled.div<{ mob?: boolean; admin?: boolean; auth?: b
   }
 `;
 
-export const Btn = styled.button<{ hide?: boolean }>`
-  padding: 11px 20px 11px;
+export const Btn = styled(Button)<{ hide?: boolean }>`
+  padding: 12px 20px;
   display: ${(props) => (props.hide ? 'none' : 'inline-block')};
-  text-align: center;
-  text-decoration: none;
-  box-sizing: border-box;
-  cursor: pointer;
-  appearance: none;
-  user-select: none;
-  border-radius: 4px;
-  font-weight: 500;
-  font-size: 12px;
-  line-height: 14px;
   text-transform: uppercase;
-  color: #ffffff;
-  border: none;
-  transition: all 0.3s ease 0s;
-  background: #0094ff;
-  color: #ffffff;
-  &:hover {
-    box-shadow: ${(props) =>
-      props.disabled ? 'none' : `0px 4px 10px ${props.theme.buttonBorder}`};
-
-    border-color: ${(props) => props.theme.buttonBorder};
-  }
-  &:focus,
-  &:active {
-    outline: none;
-  }
+ 
   @media (max-width: 1100px) {
     display: none;
   }
@@ -79,20 +55,9 @@ export const Btn = styled.button<{ hide?: boolean }>`
 
 export const AdminButton = styled(Btn)`
   padding: 12px 12px;
-  font-weight: 500;
-  font-family: 'Roboto', sans-serif;
-  background: transparent;
-  font-size: 12px;
-  line-height: 14px;
-  border: none;
-  cursor: pointer;
   margin-right: 28px;
-  color: ${(props) => props.theme.v2.text};
   text-transform: uppercase;
 
-  &:focus {
-    outline: none;
-  }
   @media (max-width: 1100px) {
     display: none;
   }
@@ -100,6 +65,7 @@ export const AdminButton = styled(Btn)`
 
 export const ButtonsRev = styled.div`
   width: auto;
+  margin-right: 28px;
   @media (max-width: 767px) {
     display: none;
   }
@@ -337,5 +303,14 @@ export const Switch = styled.div`
   align-items: center;
   @media (max-width: 992px) {
     position: relative;
+  }
+`;
+
+export const AdminLink = styled(StyledLink)`
+  padding: 12px 12px;
+  text-transform: uppercase;
+
+  @media (max-width: 1100px) {
+    display: none;
   }
 `;

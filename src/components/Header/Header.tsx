@@ -11,7 +11,6 @@ import { routers } from '../../constantes/routers';
 import { AppContext } from '../../context/HubContext';
 import { ThemeContext } from '../../context/ThemeContext';
 import {
-  AdminButton,
   Btn,
   ButtonsRev,
   HeaderInner,
@@ -21,6 +20,7 @@ import {
   Languale,
   MenuBtn,
   SwitchTheme,
+  AdminLink
 } from './Header.elements';
 import { Nav } from './Nav';
 import { NavAdmin } from './NavAdmin';
@@ -82,12 +82,12 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
       document.body.style.overflow = 'unset';
     }
   }, [open]);
+
   function onClose() {
     setOpen(false);
   }
-  const toAdmin = () => {
-    history.push('/admin');
-  };
+
+  const notifiesBlock = useRef();
   const lang = localStorage.getItem('i18nextLng') || 'ru';
   
   function onBall() {
@@ -157,10 +157,12 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
             </SwitchTheme>
             <ButtonsRev className={user === null || admin === null ? 'is-placeholder' : ''}>
               {admin ? (
-                <AdminButton onClick={toAdmin}>{t('headerButton.admin')}</AdminButton>
+                <AdminLink to="/admin">{t('headerButton.admin')}</AdminLink>
               ) : null}
             </ButtonsRev>
-            <Btn onClick={handleClick}>{t('headerButton.personalArea')}</Btn>
+            <Btn primary onClick={handleClick}>
+              {t('headerButton.personalArea')}
+            </Btn>
             <MenuBtn open={open} onClick={() => setOpen(!open)}>
               <span></span>
               <span></span>
