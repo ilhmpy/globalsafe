@@ -2,14 +2,15 @@ import React, { FC, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { ReactComponent as Close } from '../../../assets/svg/close.svg';
 import { Button } from '../../../components/Button/V2/Button';
-import { Modal } from '../../../components/Modal/Modal';
+import { Modal } from '../../../components/ModalAnimated';
 import { AppContext } from '../../../context/HubContext';
 import { payList } from './utils';
 import { PaymentMethodKind, CollectionPayMethod } from '../../../types/paymentMethodKind';
 import { FiatKind } from '../../../types/fiatKind';
+import { Device } from '../consts';
 
 type PayMethod = {
   bankNumber?: string;
@@ -35,64 +36,63 @@ export const DeleteModal: FC<IProps> = ({ open, setOpen, setConfirm, data }: IPr
   const payMethod: PayMethod = JSON.parse(data.data);
 
   return (
-    <CSSTransition in={open} timeout={300} unmountOnExit>
-      <Modal onClose={() => setOpen(false)} width={420}>
-        <Container>
-          <ModalTitle>Удаление платежного метода</ModalTitle>
-          <CloseButton onClick={() => setOpen(false)} />
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <SmallContainer mobileWFull>
+          <Title>Удаление платежного метода</Title>
 
-          <ContentWrapper>
-            <InnerBlock>
-              <Row>Вы действительно хотите удалить платежный метод ?:</Row>
-              <Row>
-                <b>
-                  {payList[data.kind]}, {FiatKind[data.assetKind]}
-                </b>
-              </Row>
-              {payMethod.name ? (
-                <Row>
-                  <strong>{payMethod.name}</strong>
-                </Row>
-              ) : null}
-              {payMethod.bankNumber ? (
-                <Row>
-                  <b>{payMethod.bankNumber}</b>
-                </Row>
-              ) : null}
-              {payMethod.paymentAddress ? (
-                <Row>
-                  <b>{payMethod.paymentAddress}</b>
-                </Row>
-              ) : null}
-            </InnerBlock>
-            <ButtonWrapper>
-              {/* <Button bigSize fullWidth primary onClick={() => history.push(routers.settings)}> */}
-              <Button
-                bigSize
-                fullWidth
-                primary
-                onClick={() => {
-                  setOpen(false);
-                  setConfirm();
-                }}
-              >
-                Удалить
-              </Button>
-              <Button
-                bigSize
-                fullWidth
-                outlinePrimary
-                onClick={() => {
-                  setOpen(false);
-                }}
-              >
-                Отмена
-              </Button>
-            </ButtonWrapper>
-          </ContentWrapper>
-        </Container>
+          <MobileContent>
+              <ContentWrapper>
+                <InnerBlock>
+                  <Row>Вы действительно хотите удалить платежный метод ?:</Row>
+                  <Row>
+                    <b>
+                      {payList[data.kind]}, {FiatKind[data.assetKind]}
+                    </b>
+                  </Row>
+                  {payMethod.name ? (
+                    <Row>
+                      <strong>{payMethod.name}</strong>
+                    </Row>
+                  ) : null}
+                  {payMethod.bankNumber ? (
+                    <Row>
+                      <b>{payMethod.bankNumber}</b>
+                    </Row>
+                  ) : null}
+                  {payMethod.paymentAddress ? (
+                    <Row>
+                      <b>{payMethod.paymentAddress}</b>
+                    </Row>
+                  ) : null}
+                </InnerBlock>
+                <ButtonWrapper>
+                  {/* <Button bigSize fullWidth primary onClick={() => history.push(routers.settings)}> */}
+                  <Button
+                    bigSize
+                    fullWidth
+                    primary
+                    onClick={() => {
+                      setOpen(false);
+                      setConfirm();
+                    }}
+                  >
+                    Удалить
+                  </Button>
+                  <Button
+                    bigSize
+                    fullWidth
+                    outlinePrimary
+                    onClick={() => {
+                      setOpen(false);
+                    }}
+                  >
+                    Отмена
+                  </Button>
+                </ButtonWrapper>
+              </ContentWrapper>
+          </MobileContent>
+        </SmallContainer>
       </Modal>
-    </CSSTransition>
   );
 };
 
@@ -101,6 +101,10 @@ const ButtonWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   gap: 20px;
+
+  @media ${Device.mobile} {
+    flex-direction: column;
+  }
 `;
 
 const Row = styled.div`
@@ -145,4 +149,47 @@ const ModalTitle = styled.h2`
   margin-bottom: 20px;
 
   color: #3f3e4e;
+`;
+
+
+export const Title = styled.h3`
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 28px;
+  text-align: center;
+  color: ${(props) => props.theme.v2.text};
+  margin-bottom: 40px;
+
+  @media ${Device.mobile} {
+    margin-bottom: 0;
+    text-align: left;
+    font-weight: 900;
+    font-size: 18px;
+    line-height: 21px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    color: ${props => props.theme.v2.text};
+  };
+`;
+
+export const SmallContainer = styled.div<{wFull?: boolean; mobileWFull?: boolean}>`
+  width: ${props => props.wFull ? '100%' : '340px'};
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+
+  @media ${Device.mobile} {
+    ${props => props.mobileWFull !== undefined && css`width: 100%;`};
+  };
+`;
+
+
+export const MobileContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  @media ${Device.mobile} {
+    background: #FFFFFF;
+    box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
+    padding: 20px;
+  }
 `;
