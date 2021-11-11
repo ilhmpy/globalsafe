@@ -313,16 +313,13 @@ export const StyledLink = styled(NavHashLink).attrs({ activeclassname })`
   &.${activeclassname} {
     color: red;
   }
-  color: ${(props) => props.theme.text};
+  color: #3F3E4E;
   font-weight: 500;
   font-size: 12px;
   line-height: 14px;
   cursor: pointer;
   transition: all 0.3s ease 0s;
   text-transform: uppercase;
-  &:hover {
-    color: #ff416e;
-  }
 `;
 
 export const LinkButton = styled.div`

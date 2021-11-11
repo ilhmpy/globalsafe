@@ -11,7 +11,6 @@ type NotifyProps = {
   block: boolean;
   auth?: boolean;
   admin?: boolean;
-  setCheckeds: (bool: boolean) => void;
   setBlock: (bool: boolean) => void;
   id?: string;
   none: boolean;
@@ -20,89 +19,11 @@ type NotifyProps = {
 export const Notify: FC<NotifyProps> = ({
   block,
   admin,
-  setCheckeds,
   none,
 }: NotifyProps) => {
-  const [notifies, setNotifies] = useState<NotifyItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const appContext = useContext(AppContext);
-  const hubConnection = appContext.hubConnection;
-
-  function cb(notify: NotifyItem) {
-    getNotifies(false);
-  }
-
-  function getNotifies(loading = true) {
-    if (hubConnection) {
-      setLoading(loading);
-      hubConnection
-        .invoke('GetInAppNotifications', [0], 0, 100)
-        .then((res) => {
-          setCheckeds(res.collection.some((item: NotifyItem) => item.readState === 0));
-          setNotifies(() =>
-            res.collection
-              .map((item: any) => {
-                return { ...item, click: undefined };
-              })
-              .sort((x: any, y: any) => {
-                const a = new Date(x.sentDate);
-                const b = new Date(y.sentDate);
-                return a > b ? -1 : a < b ? 1 : 0;
-              })
-          );
-          setLoading(false);
-        })
-        .catch((err) => {
-          console.error(err);
-          setLoading(false);
-        });
-    }
-  }
-
-  useEffect(() => {
-    let cancel = false;
-    if (hubConnection && !cancel) {
-      hubConnection.on('InAppNotification', cb);
-    }
-    return () => {
-      cancel = true;
-      hubConnection?.off('InAppNotification', cb);
-    };
-  }, [hubConnection, notifies]);
-
-  useEffect(() => {
-    getNotifies();
-  }, [hubConnection]);
-
-  useEffect(() => {
-    if (block) {
-      getNotifies(false);
-    };
-  }, [hubConnection, block]);
-
-  function changeHide(bool: boolean, id: string) {
-    notifies.forEach((notify: any) => {
-      if (notify.safeId === id) {
-        notify.click = bool;
-        setNotifies((items) => items.map((i) => i));
-      }
-    });
-  }
-
-  function onNotify(id: string) {
-    changeHide(true, id);
-    setTimeout(() => {
-      changeHide(false, id);
-      if (hubConnection) {
-        hubConnection
-          .invoke('SetStateInAppNotification', id, 1)
-          .then(() => {
-            getNotifies(false);
-          })
-          .catch((err) => console.error(err));
-      }
-    }, 500);
-  }
+  const { notifies, onNotify } = appContext;
 
   function getLinkAddress(link: string, kind: number) {
     if (kind === 20 || kind === 21 || kind === 22) {

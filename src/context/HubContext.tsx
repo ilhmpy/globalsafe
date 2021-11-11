@@ -7,6 +7,9 @@ import useLocalStorage from '../hooks/useLocalStorage';
 import useWindowSize from '../hooks/useWindowSize';
 import { getMyRating } from '../Pages/PrivateArea/utils';
 import { BalanceList } from '../types/balance';
+import { ViewExchangeModel } from '../types/exchange';
+import { NotifyItem } from '../constantes/notifies';
+
 type Nulable<T> = T | null;
 
 type Context = {
@@ -34,6 +37,11 @@ type Context = {
   screen: number;
   addDrawModalOpen: boolean;
   setAddDrawModalOpen: (addDrawModal: boolean) => void;
+  notifies: NotifyItem[];
+  setNotifies: (val: any) => void; 
+  checkeds: boolean;
+  setCheckeds: (val: boolean) => any;
+  onNotify: (id: string) => void;
 };
 
 export const AppContext = React.createContext<Context>({
@@ -61,6 +69,11 @@ export const AppContext = React.createContext<Context>({
   screen: 1600,
   addDrawModalOpen: false,
   setAddDrawModalOpen: () => undefined,
+  notifies: [],
+  setNotifies: (val: NotifyItem[]) => undefined,
+  checkeds: false,
+  setCheckeds: (val: boolean) => undefined,
+  onNotify: (id: string) => undefined,
 });
 
 export const HubProvider: FC = ({ children }: any) => {
@@ -84,6 +97,8 @@ export const HubProvider: FC = ({ children }: any) => {
   const [userRating, setUserRating] = useState('0.0');
   const screen = useWindowSize();
   const [addDrawModalOpen, setAddDrawModalOpen] = useState<boolean>(false);
+  const [notifies, setNotifies] = useState<NotifyItem[]>([]);
+  const [checkeds, setCheckeds] = useState<boolean>(false);
 
   useEffect(() => {
     const hubConnection = new signalR.HubConnectionBuilder()
@@ -215,6 +230,76 @@ export const HubProvider: FC = ({ children }: any) => {
     setMyToken(token);
   };
 
+  function getNotifies(loading = true) {
+    if (hubConnection) {
+      setLoading(loading);
+      hubConnection
+        .invoke('GetInAppNotifications', [0], 0, 100)
+        .then((res) => {
+          setCheckeds(res.collection.some((item: NotifyItem) => item.readState === 0));
+          setNotifies(() =>
+            res.collection
+              .map((item: any) => {
+                return { ...item, click: undefined };
+              })
+              .sort((x: any, y: any) => {
+                const a = new Date(x.sentDate);
+                const b = new Date(y.sentDate);
+                return a > b ? -1 : a < b ? 1 : 0;
+              })
+          );
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error(err);
+          setLoading(false);
+        });
+    }
+  }
+
+  useEffect(() => {
+    getNotifies();
+  }, [hubConnection]);
+
+  useEffect(() => {
+    let cancel = false;
+    if (hubConnection && !cancel) {
+      hubConnection.on('InAppNotification', cb);
+    }
+    return () => {
+      cancel = true;
+      hubConnection?.off('InAppNotification', cb);
+    };
+  }, [hubConnection, notifies]);
+
+  function cb(notify: NotifyItem) {
+    setNotifies([notify, ...notifies]);
+  };
+
+  function changeHide(bool: boolean, id: string) {
+    notifies.forEach((notify: any) => {
+      if (notify.safeId === id) {
+        notify.click = bool;
+        setNotifies((items: any) => items.map((i: any) => i));
+      };
+    });
+  };
+
+  function onNotify(id: string) {
+    changeHide(true, id);
+    setTimeout(() => {
+      changeHide(false, id);
+      if (hubConnection) {
+        hubConnection
+          .invoke('SetStateInAppNotification', id, 1)
+          .then(() => {
+            getNotifies(false);
+          })
+          .catch((err) => console.error(err));
+      }
+    }, 500);
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -242,6 +327,11 @@ export const HubProvider: FC = ({ children }: any) => {
         screen,
         addDrawModalOpen,
         setAddDrawModalOpen,
+        notifies,
+        setNotifies,
+        checkeds,
+        setCheckeds,
+        onNotify
       }}
     >
       {children}
