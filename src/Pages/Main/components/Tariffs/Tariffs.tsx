@@ -378,10 +378,10 @@ const PartnersItemData = styled.div`
   @media (min-width: 370px) and (max-width: 449px) {
     margin-right: 11%;
   }
-  @media (min-width: 370px) and (max-width: 375px) {
+  @media (min-width: 370px) and (max-width: 374px) {
     margin-right: 9%;
   }
-  @media (min-width: 376px) and (max-width: 379px) {
+  @media (min-width: 375px) and (max-width: 379px) {
     margin-right: 9%;
     &:nth-child(2) {
       margin-right: 10%;
