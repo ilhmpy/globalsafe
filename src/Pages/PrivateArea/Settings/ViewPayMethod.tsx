@@ -33,7 +33,7 @@ type PayMethod = {
 
 export const ViewPayMethod = ({ match }: RouteComponentProps<PropsMatch>) => {
   const appContext = useContext(AppContext);
-  const { chosenMethod, setChosenMethod, user, hubConnection } = appContext;
+  const { user, hubConnection } = appContext;
   const { t } = useTranslation();
   const id = match.params.slug;
   const history = useHistory();
