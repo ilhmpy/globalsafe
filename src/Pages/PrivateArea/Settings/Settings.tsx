@@ -1,4 +1,4 @@
-import { FC, useContext, useState, useEffect } from 'react';
+import { FC, useContext, useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
@@ -22,6 +22,10 @@ import {
   ExchangeState,
 } from '../../../types/exchange';
 import { DontDeleteModal } from './DontDeleteModal';
+import { useIsMobile } from '../utils';
+import { FilterButton } from '../components/ui';
+import { Device } from '../consts';
+import { MobileFiltersModal } from './MobileFiltersModal';
 
 type TableRowType = {
   method?: string;
@@ -49,6 +53,39 @@ type PayMethod = {
 export const TableRows: FC<Rows> = ({ data, active, toView }: Rows) => {
   const payMethod: PayMethod = JSON.parse(data.data);
   const { t } = useTranslation();
+  const isMobile = useIsMobile();
+
+  if(isMobile) {
+    return (
+      <MobileCard onClick={() => toView(data.safeId)}>
+        <MobileRow>
+          <MobileRowItem>
+            {payMethod.bankName ? payMethod.bankName : PaymentMethodKind[data.kind]}
+          </MobileRowItem>
+          <MobileRowItem>
+            <Ceil
+              checked={data.state === 1}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <Switcher
+                onChange={() => {
+                  active(data);
+                }}
+                checked={data.state === 1}
+              />
+              <span>{t(data.state === 1 ? 'depositsPrograms.on' : 'depositsPrograms.off')}</span>
+            </Ceil>
+          </MobileRowItem>
+        </MobileRow>
+        <MobileRow>
+          {payMethod.name ? payMethod.name : '-'}
+        </MobileRow>
+      </MobileCard>
+    )
+  };
+
   return (
     <TableRow onClick={() => toView(data.safeId)}>
       <Ceil>{payMethod.bankName ? payMethod.bankName : PaymentMethodKind[data.kind]}</Ceil>
@@ -78,6 +115,10 @@ export const Settings: FC = () => {
   const [dontDeleteModal, setDontDeleteModal] = useState(false);
   const [activeFilter, setActiveFilter] = useState<string>('Все');
   const history = useHistory();
+  const isMobile = useIsMobile();
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [selectedPaymentMethods, setSelectedPaymentMethods] = useState<number[]>([]);
+  const [acceptedPaymentMethods, setAcceptedPaymentMethods] = useState<number[]>([]);
 
   const { userPaymentsMethod, setUserPaymentsMethod, usePaymentMethods, setUsePaymentMethods } =
     useContext(SettingsContext);
@@ -205,6 +246,12 @@ export const Settings: FC = () => {
     }
   }, [hubConnection, activeFilter]);
 
+  useEffect(() => {
+    if (hubConnection) {
+      userPaymentsMethods(acceptedPaymentMethods);
+    }
+  }, [hubConnection, acceptedPaymentMethods])
+
   const adjustPaymentMethod = async (id: number, safeId: string) => {
     if (!hubConnection) return;
     try {
@@ -247,35 +294,68 @@ export const Settings: FC = () => {
     history.push(routers.settingsViewPayMethod + '/' + id);
   };
 
+  // The Array should have the same queue as PaymentMethodKind enum
+  const paymentMethodsKinds = useMemo<{ label: string; value: number }[]>(
+    () => [
+      { label: 'ERC 20', value: 0 },
+      { label: 'TRC 20', value: 1 },
+      { label: 'BEP 20', value: 2 },
+      { label: 'АО «Тинькофф Банк»', value: 3 },
+      { label: 'ПАО Сбербанк', value: 4 },
+      { label: 'АО «Альфа-Банк»', value: 5 },
+    ],
+    []
+  );
+
+  const handleAcceptPaymentMethods = () => {
+    setAcceptedPaymentMethods([...selectedPaymentMethods]);
+    setShowMobileFilters(false);
+  };
+
+  const resetFilters = () => {
+    setAcceptedPaymentMethods([]);
+    setSelectedPaymentMethods([]);
+  };
+
   return (
-    <Container>
-      <Heading
-        onClick={() => history.push(routers.settingsNewPayMethod)}
-        title="Настройки"
-        btnText="Добавить платежный метод"
-      />
-      <DontDeleteModal open={dontDeleteModal} setOpen={setDontDeleteModal} />
-      <S.Container>
-        <S.Buttons>
-          {[
-            'Все',
-            'АО «Альфа-Банк»',
-            'АО «Тинькофф Банк»',
-            'ПАО Сбербанк',
-            'ERC 20',
-            'TRC 20',
-            'BEP 20',
-          ].map((value: string, i: number) => (
-            <S.Button
-              key={i}
-              active={activeFilter === value}
-              onClick={() => setActiveFilter(value)}
-            >
-              {value}
-            </S.Button>
-          ))}
-        </S.Buttons>
-      </S.Container>
+    <Container pNone>
+      <Container>
+        <Heading
+          onClick={() => history.push(routers.settingsNewPayMethod)}
+          title="Настройки"
+          btnText="Добавить платежный метод"
+        />
+        <DontDeleteModal open={dontDeleteModal} setOpen={setDontDeleteModal} />
+        <S.Container>
+          {
+            !isMobile
+            ?
+              <S.Buttons>
+                {[
+                  'Все',
+                  'АО «Альфа-Банк»',
+                  'АО «Тинькофф Банк»',
+                  'ПАО Сбербанк',
+                  'ERC 20',
+                  'TRC 20',
+                  'BEP 20',
+                ].map((value: string, i: number) => (
+                  <S.Button
+                    key={i}
+                    active={activeFilter === value}
+                    onClick={() => setActiveFilter(value)}
+                  >
+                    {value}
+                  </S.Button>
+                ))}
+              </S.Buttons>
+            :
+              <FilterButton noMargin wFull active={false} switchLeft onClick={() => setShowMobileFilters(true)}>
+                Фильтры (3)
+              </FilterButton>
+          }
+        </S.Container>
+      </Container>
 
       <TableCard>
         <TableHeader>
@@ -293,6 +373,17 @@ export const Settings: FC = () => {
           <NotData>Нет платежных методов</NotData>
         )}
       </TableCard>
+
+      <MobileFiltersModal
+        open={showMobileFilters}
+        onClose={() => setShowMobileFilters(false)}
+        onAccept={handleAcceptPaymentMethods}
+        onResetFilters={resetFilters}
+
+        selectedPaymentMethods={selectedPaymentMethods}
+        setSelectedPaymentMethods={setSelectedPaymentMethods}
+        methodsList={paymentMethodsKinds}
+      />
     </Container>
   );
 };
@@ -360,6 +451,10 @@ const TableHeader = styled(TableRow)`
 
   background: #ebebf2;
   margin-bottom: 0px;
+
+  @media ${Device.mobile} {
+    display: none;
+  }
 `;
 
 const TableCard = styled(Card)`
@@ -367,4 +462,35 @@ const TableCard = styled(Card)`
   box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
   border-radius: 4px;
   margin-bottom: 40px;
+`;
+
+const MobileCard = styled.div`
+  width: 100;
+  display: flex;
+  flex-direction: column;
+  background: ${props => props.theme.white};
+  padding: 20px;
+  margin-bottom: 10px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+`;
+
+
+const MobileRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+`;
+
+const MobileRowItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;

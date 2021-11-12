@@ -10,7 +10,7 @@ type Props = {
   open: boolean;
   setLoaderPicture: (load: boolean) => void;
   scrolltoTest: () => void;
-  fetchPicture: (file: any) => void;
+  fetchPicture: (type: string, file: any) => void;
 };
 
 export const ModalLoadFile: FC<Props> = ({
@@ -73,10 +73,8 @@ export const ModalLoadFile: FC<Props> = ({
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0] && event.target.files[0].size < 10485760) {
-      const val = ['image/gif', 'image/jpeg', 'image/png', 'application/pdf'].includes(
-        event.target.files[0].type
-      );
+    if (event.target.files && event.target.files[0] && event.target.files[0].size < 5e6) {
+      const val = ['image/gif', 'image/jpeg', 'image/png'].includes(event.target.files[0].type);
       if (val) {
         const fileUploaded = event.target.files[0];
         setFile(fileUploaded);
@@ -89,7 +87,7 @@ export const ModalLoadFile: FC<Props> = ({
   const send = () => {
     setLoaderPicture(true);
     scrolltoTest();
-    fetchPicture(file);
+    fetchPicture(file.type, file);
     cancelUpload();
   };
 
@@ -117,10 +115,10 @@ export const ModalLoadFile: FC<Props> = ({
         </Text>
         <Text black mB={20} size={14} lH={20} weight={400}>
           Поддерживаемые форматы файлов:
-          <br /> JPEG, PNG, PDF, GIF
+          <br /> JPEG, PNG, GIF
         </Text>
         <Text black mB={20} size={14} lH={20} weight={400}>
-          Размер файла не должен превышать 10 Мб.
+          Размер файла не должен превышать 5 Мб.
         </Text>
         {file ? (
           <S.LabelWrap>
@@ -138,7 +136,7 @@ export const ModalLoadFile: FC<Props> = ({
         <S.Buttons>
           <S.FileInputButton hide={file}>
             <S.FileInput
-              accept="image/gif, image/jpeg, image/png, application/pdf"
+              accept="image/gif, image/jpeg, image/png"
               ref={refInput}
               onChange={handleChange}
               type="file"

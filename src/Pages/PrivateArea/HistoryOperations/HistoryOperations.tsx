@@ -1,20 +1,21 @@
 import moment from 'moment';
 import 'moment/locale/ru';
-import { FC, useContext, useEffect, useState } from 'react';
+import { FC, useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Container } from '../../components/UI/Container';
-import { AppContext } from '../../context/HubContext';
-import useWindowSize from '../../hooks/useWindowSize';
-import { Balance } from '../../types/balance';
-import { ViewExchangeModel } from '../../types/exchange';
-import { Filter } from './components/Filter/index';
-import * as FilterS from './components/Filter/S.el';
-import { Heading } from './components/Heading';
-import { Loading, NotItems, Spinner } from './components/Loading/Loading';
-import * as Styled from './Styles.history';
-import { countVolumeToShow } from './utils';
-import * as S from './Exchanges/S.el';
-import { TabNavItem, TabsBlock, Text, FilterButton } from './components/ui';
+import { Container } from '../../../components/UI/Container';
+import { AppContext } from '../../../context/HubContext';
+import useWindowSize from '../../../hooks/useWindowSize';
+import { Balance } from '../../../types/balance';
+import { ViewExchangeModel } from '../../../types/exchange';
+import { Filter } from '../components/Filter/index';
+import * as FilterS from '../components/Filter/S.el';
+import { Heading } from '../components/Heading';
+import { Loading, NotItems, Spinner } from '../components/Loading/Loading';
+import { FilterButton } from '../components/ui';
+import * as S from '../Exchanges/S.el';
+import * as Styled from '../Styles.history';
+import { countVolumeToShow } from '../utils';
+import { MobileFiltersModal } from './MobileFiltersModal';
 
 export const HistoryOperations: FC = () => {
   const [activeFilter, setActiveFilter] = useState<'active' | 'archived' | 'hold'>('active');
@@ -49,6 +50,7 @@ export const HistoryOperations: FC = () => {
   const [newItems, setNewItems] = useState<boolean>(true);
   const [emptyItems, setEmptyItems] = useState<boolean>(false);
   const [allState, setAllState] = useState<ViewExchangeModel[]>([]);
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   const operation = (id: number, link: string) => {
     if (id === 1) {
@@ -371,9 +373,26 @@ export const HistoryOperations: FC = () => {
     return local.format('HH:MM');
   }
 
+  const paymentMethodsKinds = useMemo<{ label: string; value: number }[]>(
+    () => [
+      { label: `${months[moment().month()]} ${new Date().getFullYear()}`, value: 0 },
+      { label: 'Все валюты', value: 1 },
+    ],
+    []
+  );
+
   return (
     <>
       <Container mbNone>
+        <MobileFiltersModal
+          open={showMobileFilters}
+          onClose={() => setShowMobileFilters(false)}
+          methodsList={paymentMethodsKinds}
+          setNowMonth={setNowMonth}
+          nowMonth={nowMonth}
+          setAllCurrency={setAllCurrency}
+          allCurrency={allCurrency}
+        />
         <Heading title="История операций" withoutBtn />
         <Styled.FilterAllBlock mbNone>
           {screen > 768 ? (
@@ -391,8 +410,14 @@ export const HistoryOperations: FC = () => {
             </>
           ) : (
             <S.Filters hidden smVisible>
-              <FilterButton noMargin wFull switchLeft active={false} onClick={() => console.log(1)}>
-                Фильтры (3)
+              <FilterButton
+                noMargin
+                wFull
+                switchLeft
+                active={false}
+                onClick={() => setShowMobileFilters(true)}
+              >
+                {`Фильтры (${paymentMethodsKinds.length})`}
               </FilterButton>
             </S.Filters>
           )}

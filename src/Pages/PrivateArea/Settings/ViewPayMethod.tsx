@@ -17,6 +17,7 @@ import { PaymentMethodState } from '../../../types/paymentMethodState';
 import { FiatKind } from '../../../types/fiatKind';
 import { payList } from './utils';
 import { DontDeleteModal } from './DontDeleteModal';
+import { Device } from '../consts';
 
 type PropsMatch = {
   slug: string;
@@ -32,7 +33,7 @@ type PayMethod = {
 
 export const ViewPayMethod = ({ match }: RouteComponentProps<PropsMatch>) => {
   const appContext = useContext(AppContext);
-  const { chosenMethod, setChosenMethod, user, hubConnection } = appContext;
+  const { user, hubConnection } = appContext;
   const { t } = useTranslation();
   const id = match.params.slug;
   const history = useHistory();
@@ -122,7 +123,7 @@ export const ViewPayMethod = ({ match }: RouteComponentProps<PropsMatch>) => {
   };
 
   return (
-    <Container>
+    <Container pNone>
       <DeleteModal
         data={userMethod}
         open={deleteModalIsOpen}
@@ -135,26 +136,28 @@ export const ViewPayMethod = ({ match }: RouteComponentProps<PropsMatch>) => {
         setOpen={setDeleteNotificationIsOpen}
       />
       <DontDeleteModal open={dontDeleteModal} setOpen={setDontDeleteModal} />
-      <Back
-        text="К списку платежных методов"
-        onGoBackClick={() => history.push(routers.settings)}
-        btnText={'Добавить платежный метод'}
-        onButtonClick={() => history.push(routers.settingsNewPayMethod)}
-      />
 
-      <TitleWrapper>
-        <Title>
-          {' '}
-          {userMethod && !payMethod.paymentAddress ? (
-            <>Платежный метод {payList[userMethod.kind]}</>
-          ) : payMethod.paymentAddress ? (
-            <>Криптокошелек {payList[userMethod.kind]}</>
-          ) : (
-            ''
-          )}
-        </Title>
-      </TitleWrapper>
+      <Container>
+        <Back
+          text="К списку платежных методов"
+          onGoBackClick={() => history.push(routers.settings)}
+          btnText={'Добавить платежный метод'}
+          onButtonClick={() => history.push(routers.settingsNewPayMethod)}
+        />
 
+        <TitleWrapper>
+         <Title mB={0} heading2>
+            {' '}
+            {userMethod && !payMethod.paymentAddress ? (
+              <>Платежный метод {payList[userMethod.kind]}</>
+            ) : payMethod.paymentAddress ? (
+              <>Криптокошелек {payList[userMethod.kind]}</>
+            ) : (
+              ''
+            )}
+          </Title>
+        </TitleWrapper>
+      </Container>
       {userMethod ? (
         <Blocks>
           <LeftSide>
@@ -214,7 +217,7 @@ export const ViewPayMethod = ({ match }: RouteComponentProps<PropsMatch>) => {
             </Entry>
 
             <ButtonWrapper>
-              <Button bigSize outlinePrimary onClick={isHaveDeleteMethod}>
+              <Button bigSize outlinePrimary fullWidthMobile onClick={isHaveDeleteMethod}>
                 Удалить
               </Button>
             </ButtonWrapper>
@@ -233,7 +236,11 @@ const ButtonWrapper = styled.div`
   width: 100%;
   max-width: 96px;
   margin-top: 20px;
+  @media ${Device.mobile} {
+    max-width: 100%;
+  }
 `;
+
 const SwitcherRow = styled.div<{ checked?: boolean }>`
   display: flex;
   align-items: center;
@@ -252,7 +259,12 @@ const SwitcherRow = styled.div<{ checked?: boolean }>`
 const Blocks = styled.div`
   display: flex;
   margin-bottom: 40px;
+
+  @media ${Device.mobile} {
+    flex-direction: column-reverse;
+  }
 `;
+
 const LeftSide = styled.div`
   width: calc(100% - 700px);
   background: #eaeff4;
@@ -264,7 +276,18 @@ const LeftSide = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+
+  @media ${Device.tablet} {
+    min-width: 300px;
+  }
+
+  @media ${Device.mobile} {
+    min-width: 320px;
+    width: 100%;
+    padding: 20px;
+  }
 `;
+
 const Entry = styled.div`
   display: flex;
   flex-direction: column;
@@ -301,6 +324,12 @@ const RightSide = styled.div`
   background: #ffffff;
   box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
   border-radius: 0px 4px 4px 0px;
+
+  @media ${Device.mobile} {
+    width: 100%;
+    max-width: 100%;
+    padding: 20px;
+  }
 
   ${Entry} {
     gap: 4px;

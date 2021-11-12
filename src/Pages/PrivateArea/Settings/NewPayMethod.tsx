@@ -16,6 +16,7 @@ import { FiatKind } from '../../../types/fiatKind';
 import { PaymentMethodKind } from '../../../types/paymentMethodKind';
 import { Back } from '../components/Back';
 import { Title } from '../components/ui/Title';
+import { Device } from '../consts';
 
 
 type dataBank = {
@@ -146,13 +147,15 @@ export const NewPayMethod: FC = () => {
   }, [isUSDT]);
 
   return (
-    <Container>
-      <Back text="Назад" onGoBackClick={() => history.push(routers.settings)} />
+    <Container pNone>
+      <Container>
+        <Back text="Назад" onGoBackClick={() => history.push(routers.settings)} />
 
-      <TitleWrapper>
-        <Title>Добавление платежного метода</Title>
-      </TitleWrapper>
-
+        <TitleWrapper>
+          <Title mB={0} heading2>Добавление платежного метода</Title>
+        </TitleWrapper>
+      </Container>
+      
       <Blocks>
         <LeftSide>
           <Entry>
@@ -281,7 +284,12 @@ const ButtonWrapper = styled.div`
   display: flex;
   gap: 20px;
   margin-top: 18px;
+
+  @media ${Device.mobile} {
+    flex-direction: column;
+    max-width: 300px;
 `;
+
 const SwitcherRow = styled.div<{ checked?: boolean }>`
   display: flex;
   align-items: center;
@@ -306,6 +314,7 @@ const Blocks = styled.div`
   display: flex;
   margin-bottom: 40px;
 `;
+
 const LeftSide = styled.div`
   width: calc(100% - 700px);
   background: #eaeff4;
@@ -317,11 +326,21 @@ const LeftSide = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+
+  @media ${Device.tablet} {
+    min-width: 300px;
+  }
+
+  @media ${Device.mobile} {
+    display: none;
+  }
 `;
+
 const Entry = styled.div<{ sm?: boolean }>`
   display: flex;
   flex-direction: column;
   gap: ${(props) => (props.sm ? '5px' : '10px')};
+  width: 100%;
 
   & > span {
     :nth-child(1) {
@@ -342,6 +361,7 @@ const Entry = styled.div<{ sm?: boolean }>`
     }
   }
 `;
+
 const RightSide = styled.div`
   max-width: 700px;
   width: 100%;
@@ -354,6 +374,12 @@ const RightSide = styled.div`
   background: #ffffff;
   box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
   border-radius: 0px 4px 4px 0px;
+
+  @media ${Device.mobile} {
+    width: 100%;
+    max-width: 100%;
+    padding: 20px;
+  }
 
   ${Entry} {
     max-width: 300px;
