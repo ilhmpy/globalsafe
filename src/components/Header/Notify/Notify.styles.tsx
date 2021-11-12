@@ -94,7 +94,7 @@ export const NotifiesBlock = styled.div<{
   border: 1px solid #dcdce8;
   z-index: 999999;
   background: #fff;
-  box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
+  box-shadow: 0px 16px 30px rgba(220, 220, 232, 0.5);
   padding: 20px 8px 1px 0px;
   &::before {
     content: '';

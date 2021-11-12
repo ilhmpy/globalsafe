@@ -1,5 +1,20 @@
 import styled from 'styled-components/macro';
 
+export const Block = styled.div`
+  .slick-slider {
+    width: 100% !important;
+  }
+
+  .slick-list {
+    overflow: hidden !important;
+    width: 100% !important;
+  }
+
+  .slick-track {
+    display: flex !important;
+  }
+`;
+
 export const CardBox = styled.div`
     width: auto;
     display: flex;
@@ -10,6 +25,7 @@ export const CardBox = styled.div`
 
     @media only screen and (max-width: 767px) {
       margin-top: 10px;
+      width: 100%;
     }
 
     @media only screen and (min-width: 768px) and (max-width: 1024px) {
@@ -64,6 +80,7 @@ export const Card = styled.div`
       height: 194px;
       margin: 0 auto;
       min-width: 280px;
+      margin-right: 20px;
     }
 `;
 
