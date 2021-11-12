@@ -156,7 +156,7 @@ export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
     }
   };
 
-  const fetchPicture = async (img: any) => {
+  const fetchPicture = async (type: string, img: any) => {
     const formData = new FormData();
     formData.append('file', img);
 
@@ -241,6 +241,15 @@ export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
 
   const onClose = () => {
     setModalLoadFile(false);
+  };
+
+  const onChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value[value.length - 1] === "'") {
+      setValue((text) => text + '`');
+    } else {
+      setValue(value);
+    }
   };
 
   return (
@@ -397,11 +406,7 @@ export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
                 <S.FileUpload onClick={() => setModalLoadFile(true)}>
                   <AttachIcon />
                 </S.FileUpload>
-                <S.SendInput
-                  placeholder="Ваше сообщение"
-                  value={value}
-                  onChange={(e) => setValue(e.target.value)}
-                />
+                <S.SendInput placeholder="Ваше сообщение" value={value} onChange={onChangeText} />
                 <S.SendButton type="submit">
                   <SendIcon />
                 </S.SendButton>
