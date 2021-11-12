@@ -16,6 +16,8 @@ interface FilterProps {
   withoutContainer?: boolean;
   viewType?: string;
   setViewType?: (viewType: string) => void;
+  btnsFullWidth?: boolean;
+  fullWidth?: boolean;
 }
 
 export const Filter: FC<FilterProps> = ({
@@ -27,6 +29,8 @@ export const Filter: FC<FilterProps> = ({
   withoutContainer,
   viewType,
   setViewType,
+  btnsFullWidth,
+  fullWidth,
 }: FilterProps) => {
   const handleActive = (type: string) => {
     if (type !== viewType) setViewType?.(type);
@@ -34,7 +38,7 @@ export const Filter: FC<FilterProps> = ({
   const screen = useWindowSize();
 
   return (
-    <S.Container without={withoutContainer}>
+    <S.Container without={withoutContainer} fullWidth={fullWidth}>
       {screen > 768 ? (
         <>
           <S.Buttons>
@@ -82,31 +86,22 @@ export const Filter: FC<FilterProps> = ({
             </S.FilterTypes>
           )}
         </>
+      ) : withCustomButtons ? (
+        <>
+          {buttons &&
+            buttons.map((button, idx) => (
+              <S.Button
+                btnsFullWidth={btnsFullWidth}
+                key={idx}
+                active={activeFilter === button.active}
+                onClick={() => setActiveFilter(button.active)}
+              >
+                {button.text}
+              </S.Button>
+            ))}
+        </>
       ) : (
-        <SwiperUI
-          //   onClick={() => console.log(111)}
-          //   slidesPerView={3}
-          spaceBetween={10}
-          slidesPerView={'auto'}
-          freeMode={true}
-          //   freeMode={true}
-          //   pagination={false}
-          //   className="mySwiper"
-          //   onSlideChange={(swiperCore) => {
-          //     const { activeIndex, previousIndex, realIndex } = swiperCore;
-          //     console.log({ activeIndex, previousIndex, realIndex });
-          //   }}
-          // slideToClickedSlide={true}
-
-          //   onSwiper={(swiper) => console.log(swiper)}
-          // navigation={{
-          //   nextEl: '.next',
-          //   prevEl: '.prev',
-          // }}
-          //   onInit={(swiper) => {
-          //     swiper.navigation.update();
-          //   }}
-        >
+        <SwiperUI spaceBetween={10} slidesPerView={'auto'} freeMode={true}>
           <SwiperSlide>
             <S.Button active={activeFilter === 'active'} onClick={() => setActiveFilter('active')}>
               Активные

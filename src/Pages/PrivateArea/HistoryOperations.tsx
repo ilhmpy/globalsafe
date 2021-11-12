@@ -13,6 +13,8 @@ import { Heading } from './components/Heading';
 import { Loading, NotItems, Spinner } from './components/Loading/Loading';
 import * as Styled from './Styles.history';
 import { countVolumeToShow } from './utils';
+import * as S from './Exchanges/S.el';
+import { TabNavItem, TabsBlock, Text, FilterButton } from './components/ui';
 
 export const HistoryOperations: FC = () => {
   const [activeFilter, setActiveFilter] = useState<'active' | 'archived' | 'hold'>('active');
@@ -32,7 +34,7 @@ export const HistoryOperations: FC = () => {
   ];
   const screen = useWindowSize();
   const [buttons, setButtons] = useState<any[]>([
-    { text: `Все ${screen > 767 ? 'типы' : ''},`, active: 'active' },
+    { text: 'Все типы', active: 'active' },
     { text: 'Пополнение', active: 'hold' },
     { text: 'Списание', active: 'archived' },
   ]);
@@ -248,7 +250,7 @@ export const HistoryOperations: FC = () => {
             return a > b ? -1 : a < b ? 1 : 0;
           });
           setAllState(sortCollection);
-          const collection = getFirstElements(sortCollection, 10);
+          const collection = getFirstElements(sortCollection, screen > 768 ? 10 : 5);
           console.log(collection);
           if (allCurrency) {
             setOperations(() => {
@@ -373,17 +375,28 @@ export const HistoryOperations: FC = () => {
     <>
       <Container mbNone>
         <Heading title="История операций" withoutBtn />
-        <Styled.FilterAllBlock>
-          <Styled.FilterDivision>
-            <FilterS.Button active={nowMonth} onClick={() => setNowMonth(!nowMonth)}>
-              {months[moment().month()]} {new Date().getFullYear()}
-            </FilterS.Button>
-          </Styled.FilterDivision>
-          <Styled.FilterDivision>
-            <FilterS.Button active={allCurrency} onClick={() => setAllCurrency(!allCurrency)}>
-              Все валюты
-            </FilterS.Button>
-          </Styled.FilterDivision>
+        <Styled.FilterAllBlock mbNone>
+          {screen > 768 ? (
+            <>
+              <Styled.FilterDivision>
+                <FilterS.Button active={nowMonth} onClick={() => setNowMonth(!nowMonth)}>
+                  {months[moment().month()]} {new Date().getFullYear()}
+                </FilterS.Button>
+              </Styled.FilterDivision>
+              <Styled.FilterDivision>
+                <FilterS.Button active={allCurrency} onClick={() => setAllCurrency(!allCurrency)}>
+                  Все валюты
+                </FilterS.Button>
+              </Styled.FilterDivision>
+            </>
+          ) : (
+            <S.Filters hidden smVisible>
+              <FilterButton noMargin wFull switchLeft active={false} onClick={() => console.log(1)}>
+                Фильтры (3)
+              </FilterButton>
+            </S.Filters>
+          )}
+
           <Filter
             activeFilter={activeFilter}
             setActiveFilter={setActiveFilter}
@@ -391,63 +404,110 @@ export const HistoryOperations: FC = () => {
             withCustomButtons
             withoutContainer
             buttons={buttons}
+            btnsFullWidth
+            fullWidth
           />
         </Styled.FilterAllBlock>
       </Container>
       <Container pTabletNone>
-        <Styled.Table none={not}>
-          <Styled.TableItem head>
-            <Styled.TableInnerItem head mrLarger>
-              Дата и время
-            </Styled.TableInnerItem>
-            <Styled.TableInnerItem head>Категория</Styled.TableInnerItem>
-            <Styled.TableInnerItem head>Сумма</Styled.TableInnerItem>
-          </Styled.TableItem>
-          {operations ? (
-            <>
-              {!emptyItems ? (
-                <>
-                  <Styled.TableMap>
-                    {operations &&
-                      operations.map((item: any, idx) => (
-                        <Styled.TableItem item key={idx} newItem={item.new && item.new}>
-                          <Styled.TableInnerItem item mrLarger>
-                            {moment(item.operationDate).format('DD.MM.YYYY')} в{' '}
-                            {getLocaleTime(item.operationDate)}
-                          </Styled.TableInnerItem>
-                          <Styled.TableInnerItem item mrLarger>
-                            {operation(item.operationKind, item.referenceSafeId)}
-                          </Styled.TableInnerItem>
-                          <Styled.TableInnerItem item mrLarger income={item.balanceDelta > 0}>
-                            {item.balanceDelta > 0 && (
-                              <>
-                                {sign(
-                                  countVolumeToShow(
-                                    item.balanceDelta,
-                                    getCurrency(item.balanceSafeId, 'number')
-                                  )
-                                )}{' '}
-                              </>
-                            )}{' '}
-                            {item.balanceSafeId &&
-                              countVolumeToShow(
-                                item.balanceDelta,
-                                getCurrency(item.balanceSafeId, 'number')
-                              ).toLocaleString('ru-RU', { maximumFractionDigits: 2 })}{' '}
-                            {item.balanceSafeId && getCurrency(item.balanceSafeId, 'string')}
-                          </Styled.TableInnerItem>
-                        </Styled.TableItem>
-                      ))}
-                  </Styled.TableMap>
-                </>
-              ) : (
-                <NotItems text="Операции отсутствуют" />
-              )}
-            </>
+        {screen > 768 ? (
+          <Styled.Table none={not}>
+            <Styled.TableItem head>
+              <Styled.TableInnerItem head mrLarger>
+                Дата и время
+              </Styled.TableInnerItem>
+              <Styled.TableInnerItem head>Категория</Styled.TableInnerItem>
+              <Styled.TableInnerItem head>Сумма</Styled.TableInnerItem>
+            </Styled.TableItem>
+            {operations ? (
+              <>
+                {!emptyItems ? (
+                  <>
+                    <Styled.TableMap>
+                      {operations &&
+                        operations.map((item: any, idx) => (
+                          <Styled.TableItem item key={idx} newItem={item.new && item.new}>
+                            <Styled.TableInnerItem item mrLarger>
+                              {moment(item.operationDate).format('DD.MM.YYYY')} в{' '}
+                              {getLocaleTime(item.operationDate)}
+                            </Styled.TableInnerItem>
+                            <Styled.TableInnerItem item mrLarger>
+                              {operation(item.operationKind, item.referenceSafeId)}
+                            </Styled.TableInnerItem>
+                            <Styled.TableInnerItem item mrLarger income={item.balanceDelta > 0}>
+                              {item.balanceDelta > 0 && (
+                                <>
+                                  {sign(
+                                    countVolumeToShow(
+                                      item.balanceDelta,
+                                      getCurrency(item.balanceSafeId, 'number')
+                                    )
+                                  )}{' '}
+                                </>
+                              )}{' '}
+                              {item.balanceSafeId &&
+                                countVolumeToShow(
+                                  item.balanceDelta,
+                                  getCurrency(item.balanceSafeId, 'number')
+                                ).toLocaleString('ru-RU', { maximumFractionDigits: 2 })}{' '}
+                              {item.balanceSafeId && getCurrency(item.balanceSafeId, 'string')}
+                            </Styled.TableInnerItem>
+                          </Styled.TableItem>
+                        ))}
+                    </Styled.TableMap>
+                  </>
+                ) : (
+                  <NotItems text="Операции отсутствуют" />
+                )}
+              </>
+            ) : (
+              <Loading />
+            )}
+          </Styled.Table>
+        ) : operations ? (
+          !emptyItems ? (
+            <Styled.MobWrapper>
+              {operations &&
+                operations.map((item: any, idx) => (
+                  <>
+                    <Styled.MobTab key={idx}>
+                      <Styled.TabRow green={item.balanceDelta > 0}>
+                        <span>
+                          {moment(item.operationDate).format('DD.MM.YYYY')} в{' '}
+                          {getLocaleTime(item.operationDate)}
+                        </span>
+                        <span>
+                          {item.balanceDelta > 0 && (
+                            <>
+                              {sign(
+                                countVolumeToShow(
+                                  item.balanceDelta,
+                                  getCurrency(item.balanceSafeId, 'number')
+                                )
+                              )}{' '}
+                            </>
+                          )}{' '}
+                          {item.balanceSafeId &&
+                            countVolumeToShow(
+                              item.balanceDelta,
+                              getCurrency(item.balanceSafeId, 'number')
+                            ).toLocaleString('ru-RU', { maximumFractionDigits: 2 })}{' '}
+                          {item.balanceSafeId && getCurrency(item.balanceSafeId, 'string')}
+                        </span>
+                      </Styled.TabRow>
+                      <Styled.TabRow>
+                        <span>{operation(item.operationKind, item.referenceSafeId)}</span>
+                      </Styled.TabRow>
+                    </Styled.MobTab>
+                  </>
+                ))}
+            </Styled.MobWrapper>
           ) : (
-            <Loading />
-          )}
-        </Styled.Table>
+            <NotItems text="Операции отсутствуют" />
+          )
+        ) : (
+          <Loading />
+        )}
         <Styled.Button
           onClick={addMore}
           newItems={operations && operations.length > 0 ? newItems : false}

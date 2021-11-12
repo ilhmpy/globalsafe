@@ -29,13 +29,16 @@ export const FilterDivision = styled.div`
   }
 `;
 
-export const FilterAllBlock = styled.div`
+export const FilterAllBlock = styled.div<{ mbNone?: boolean }>`
   width: 100%;
   display: flex;
   align-items: center;
   margin-bottom: 20px;
+
   @media (max-width: 768px) {
+    margin-bottom: ${({ mbNone }) => (mbNone ? 0 : '20px')};
     flex-direction: column-reverse;
+    gap: 20px;
   }
 `;
 
@@ -176,5 +179,37 @@ export const Link = styled.a`
   color: #000;
   &:hover {
     text-decoration: underline;
+  }
+`;
+
+export const MobWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+`;
+export const MobTab = styled.div`
+  display: flex;
+  flex-direction: column;
+  max-height: 90px;
+  width: 100%;
+  padding: 20px;
+  justify-content: space-between;
+  gap: 10px;
+
+  background: #ffffff;
+  box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
+`;
+export const TabRow = styled.div<{ green?: boolean }>`
+  display: flex;
+  justify-content: space-between;
+  & > span {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    color: #000000;
+    :nth-child(2) {
+      color: ${(props) => (props.green ? '#61AD00' : '#000000')};
+    }
   }
 `;
