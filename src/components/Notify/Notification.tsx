@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import { FC } from 'react';
 import { CountdownTimer } from './CountDown';
 import * as Styled from './Styled.element';
 import { Notify } from '../../types/notify';

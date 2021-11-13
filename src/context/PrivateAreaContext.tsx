@@ -15,7 +15,7 @@ export const PrivateAreaContext = React.createContext<Context>({
     setCurrentOrderType: () => undefined,
 });
 
-export const PrivateAreaProvider: FC = ({ children }: any) => {
+export const PrivateAreaProvider: FC = ({ children }) => {
   const [currentOrder, setCurrentOrder] = useState<ViewBuyOrderModel | ViewSellOrderModel | null>(null);
   const [currentOrderType, setCurrentOrderType] = useState<OrderType | undefined>(undefined);
 

@@ -1,8 +1,6 @@
-import { Link } from 'react-scroll';
-import styled from 'styled-components/macro';
-import { Button } from '../Button/V2/Button';
 import { NavHashLink } from 'react-router-hash-link';
-import { ReactComponent as DarkTheme } from '../../assets/svg/theme.svg';
+import styled from 'styled-components';
+import { Button } from '../Button/V2/Button';
 
 export const Text = styled.p`
   font-weight: 500;
@@ -47,7 +45,7 @@ export const Btn = styled(Button)<{ hide?: boolean }>`
   padding: 12px 20px;
   display: ${(props) => (props.hide ? 'none' : 'inline-block')};
   text-transform: uppercase;
- 
+
   @media (max-width: 1100px) {
     display: none;
   }
@@ -279,7 +277,7 @@ export const StyledLink = styled(NavHashLink).attrs({ activeclassname })`
   &.${activeclassname} {
     color: red;
   }
-  color: #3F3E4E;
+  color: #3f3e4e;
   font-weight: 500;
   font-size: 12px;
   line-height: 14px;

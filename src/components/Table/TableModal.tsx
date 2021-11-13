@@ -1,12 +1,12 @@
-﻿import React, { useMemo } from 'react';
-import styled from 'styled-components/macro';
-import { Modal } from '../Modal/Modal';
-import moment from 'moment';
-import { Name, NameData } from './Table.styled';
-import { Balance } from '../../types/balance';
+﻿import moment from 'moment';
+import { FC, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from '../Button/Button';
+import styled from 'styled-components/macro';
+import { Balance } from '../../types/balance';
 import { Collection } from '../../types/info';
+import { Button } from '../Button/Button';
+import { Modal } from '../Modal/Modal';
+import { NameData } from './Table.styled';
 
 type Props = {
   data: Collection;
@@ -15,7 +15,7 @@ type Props = {
   showModalCancel: () => void;
 };
 
-export const TableModal = ({ onClose, open, data, showModalCancel }: Props) => {
+export const TableModal: FC<Props> = ({ onClose, open, data, showModalCancel }: Props) => {
   return (
     <>
       {!!(open === data.safeId) && (
@@ -27,7 +27,7 @@ export const TableModal = ({ onClose, open, data, showModalCancel }: Props) => {
   );
 };
 
-export const InfoBlock = ({ data, showModalCancel }: any) => {
+export const InfoBlock: FC<any> = ({ data, showModalCancel }: any) => {
   const { t } = useTranslation();
 
   const convertedLoanValue = useMemo(() => {

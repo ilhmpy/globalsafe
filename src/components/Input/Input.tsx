@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, KeyboardEventHandler } from 'react';
+import { ChangeEvent, FC } from 'react';
 import styled from 'styled-components';
 import { Device } from '../../Pages/PrivateArea/consts';
 

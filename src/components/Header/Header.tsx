@@ -38,7 +38,6 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
   const [notify, setNotify] = useState<boolean>(false);
   const screen = useWindowSize();
   const [none, setNone] = useState<boolean>(false);
-  const [time, setTime] = useState<any>();
 
   const appContext = useContext(AppContext);
   const themeContext = useContext(ThemeContext);

@@ -34,7 +34,7 @@ export const HistoryOperations: FC = () => {
     'Декабрь',
   ];
   const screen = useWindowSize();
-  const [buttons, setButtons] = useState<any[]>([
+  const [buttons] = useState<{ text: string; active: string }[]>([
     { text: 'Все типы', active: 'active' },
     { text: 'Пополнение', active: 'hold' },
     { text: 'Списание', active: 'archived' },
@@ -104,118 +104,6 @@ export const HistoryOperations: FC = () => {
   const [operations, setOperations] = useState<any[] | null>(null);
   const [statusNew, setStatusNew] = useState<any>();
   const [totalRecords, setTotalRecords] = useState<number | null>(null);
-
-  /*    /// NA.
-        /// <summary>
-        /// NA.
-        /// </summary>
-        Null, 0
-
-        /// <summary>
-        /// Top-up operation.
-        /// </summary>
-        TopUp, 1
-
-        /// <summary>
-        /// Withdraw operation.
-        /// </summary>
-        Withdraw, 2
-
-        /// <summary>
-        /// Balance rollback due to transaction failure.
-        /// </summary>
-        Rollback, 3
-
-        /// <summary>
-        /// Promo balance adjustment.
-        /// </summary>
-        Promo, 4
-
-        /// <summary>
-        /// Affiliate charges.
-        /// </summary>
-        AffiliateCharges, 5
-
-        /// <summary>
-        /// Open new user deposit.
-        /// </summary>
-        DepositOpen, 6
-
-        /// <summary>
-        /// Deposit charges.
-        /// </summary>
-        DepositPayments, 7
-
-        /// <summary>
-        /// Return deposit body on expiry.
-        /// </summary>
-        DepositClose, 8
-
-        /// <summary>
-        /// Balance operation adjustemnt.
-        /// </summary>
-        Adjustment, 9
-
-        /// <summary>
-        /// Balance prize adjustment.
-        /// </summary>
-        Prize, 10
-
-        /// <summary>
-        /// Network commission from the transaction amount
-        /// </summary>
-        TransactionNetworkFee, 11
-
-        /// <summary>
-        /// Service commission from the transaction amount
-        /// </summary>
-        TransactionServiceFee, 12
-
-        /// <summary>
-        /// Deposit loan.
-        /// </summary>
-        DepositLoan, 13
-
-        /// <summary>
-        /// Transfer between balances.
-        /// </summary>
-        BalanceExchange, 14
- 
-        /// <summary>
-        /// Exchange deposit.
-        /// </summary>
-        DepositExchange, 15
-
-        /// <summary>
-        /// Funds reservation for sell order creation.
-        /// </summary>
-        SellOrderCreation, 16
- 
-        /// <summary>
-        /// Refund on sell order cancelation.
-        /// </summary>
-        SellOrderCancelation, 17
-
-        /// <summary>
-        /// Exchange funds keep.
-        /// </summary>
-        Exchange, 18
-
-        /// <summary>
-        /// Exchange completion.
-        /// </summary>
-        ExchangeCompletion, 19
-
-        /// <summary>
-        /// Return funds due to exchange cancelation.
-        /// </summary>
-        ExchangeCancelation, 20
-        
-        /// <summary>
-        /// Purchase new certificate.
-        /// </summary>
-        CertificatePurchase, 21
-    */
 
   function getFirstElements(collection: ViewExchangeModel[], elms: number) {
     return collection.filter((i, idx) => {
@@ -373,10 +261,10 @@ export const HistoryOperations: FC = () => {
     return local.format('HH:MM');
   }
 
-  const paymentMethodsKinds = useMemo<{ label: string; value: number }[]>(
+  const paymentMethodsKinds = useMemo<{ label: string }[]>(
     () => [
-      { label: `${months[moment().month()]} ${new Date().getFullYear()}`, value: 0 },
-      { label: 'Все валюты', value: 1 },
+      { label: `${months[moment().month()]} ${new Date().getFullYear()}` },
+      { label: 'Все валюты' },
     ],
     []
   );

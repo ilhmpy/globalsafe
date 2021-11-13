@@ -1,8 +1,7 @@
-import React, { useEffect, useState, FC, ReactNode } from 'react';
+import { useEffect, useState, FC, ReactNode } from 'react';
 import moment from 'moment';
 import 'moment-duration-format';
 import { useTranslation } from 'react-i18next';
-import { Submit } from '.';
 
 type Props = {
   state: null | string;
@@ -13,7 +12,6 @@ type Props = {
 };
 
 export const Timer: FC<Props> = ({ state, setState, last, children }: Props) => {
-  // const last = localStorage.getItem("time");
   const [deadline, setDeadline] = useState<number>(0);
   const { t } = useTranslation();
   useEffect(() => {

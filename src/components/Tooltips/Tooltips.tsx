@@ -1,7 +1,7 @@
-import { useRef, useState } from 'react';
+import { FC, useRef, useState } from 'react';
 import { Portal } from '../Portal/Portal';
 
-export const Tooltip = (props: any) => {
+export const Tooltip: FC<any> = (props: any) => {
   const [visible, setVisible] = useState(false);
   const [style, setStyle] = useState({ left: 0, top: 0, right: 0, bottom: 0 });
   const width = props.width || 256;
@@ -11,13 +11,8 @@ export const Tooltip = (props: any) => {
     const styles: any = {};
     if (el && el.current) {
       const dimensions = el.current.getBoundingClientRect();
-
       styles.left = dimensions.left - width / 3;
-      // styles.left = Math.max(space, styles.left);
-      // styles.left = Math.min(
-      //   styles.left,
-      //   document.body.clientWidth - width - space
-      // );
+
       if (dimensions.top < window.innerHeight / 2) {
         styles.top = dimensions.top + dimensions.height + space;
       } else {
@@ -52,7 +47,7 @@ export const Tooltip = (props: any) => {
   );
 };
 
-export const TestTolltips = () => (
+export const TestTolltips: FC = () => (
   <div>
     <p>
       Some text, some of which{' '}

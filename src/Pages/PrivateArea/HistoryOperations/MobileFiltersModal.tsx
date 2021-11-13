@@ -10,7 +10,7 @@ import { Device } from '../consts';
 type Props = {
   onClose: () => void;
   open: boolean;
-  methodsList: any[];
+  methodsList: { label: string }[];
   allCurrency: boolean;
   setAllCurrency: (val: boolean) => void;
   nowMonth: boolean;
