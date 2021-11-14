@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components/macro';
 import { Footer } from '../../components/Footer/Footer';
@@ -6,11 +6,9 @@ import { Header } from '../../components/Header/Header';
 import { Page } from '../../components/UI/Page';
 import { AppContext } from '../../context/HubContext';
 import { Prize } from '../../types/drawResult';
-import { About } from './components/About/About';
 import { Banner } from './components/Banner/Banner';
-import { Carousel } from './components/Carousel/Carousel';
 import { ExchangeChart } from './components/ChartActiv';
-import { ChartActiv } from './components/ChartActiv/ChartActiv';
+import { DepositsPrograms } from './components/DepositsPrograms/DepositsPrograms';
 import { DrawHistory } from './components/DrawHistory/DrawHistory';
 import { ModalLottery } from './components/Lottery/Modal';
 import { ModalCongrats } from './components/Lottery/ModalCongrats';
@@ -18,7 +16,6 @@ import { Timer } from './components/Lottery/Timer';
 import { Operations } from './components/Operations/Operations';
 import { Payments } from './components/Payments/Payments';
 import { Tariffs } from './components/Tariffs/Tariffs';
-import { DepositsPrograms } from './components/DepositsPrograms/DepositsPrograms';
 
 const fakeData = [
   [
@@ -2037,21 +2034,18 @@ const fakeData = [
   },
 ];
 
-export const Main = () => {
+export const Main: FC = () => {
   const [clock, setClock] = useState<number | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [showModalCongrats, setShowModalCongrats] = useState(false);
   const [showTimer, setShowTimer] = useState(true);
-  // const [drawResult, setDrawResult] =
-  //   useState<[Prize[], Prize, Users[], Winner, string] | null>(null);
   const [drawResult, setDrawResult] = useState<any | null>(null);
 
   const [result, setResult] = useState<Prize | null>(null);
   const [winName, setWinName] = useState<string | null>(null);
   const { t } = useTranslation();
 
-  const appContext = useContext(AppContext);
-  const hubConnection = appContext.hubConnection;
+  const { hubConnection, isAdmin, user } = useContext(AppContext);
 
   useEffect(() => {
     setShowModal(false);
@@ -2121,7 +2115,6 @@ export const Main = () => {
   return (
     <div>
       <Header />
-      {/* <Carousel /> */}
       <MainPage id="banner">
         {showTimer && (
           <FixedBlock>
@@ -2164,11 +2157,7 @@ export const Main = () => {
         <DepositsPrograms />
         <Tariffs />
         <Operations />
-        {/* <Assets /> */}
-
         <DrawHistory onOpenModal={onOpenModal} clock={clock} />
-
-        {/* <About /> */}
         <Footer />
       </MainPage>
     </div>

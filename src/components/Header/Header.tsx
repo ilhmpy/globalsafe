@@ -1,16 +1,18 @@
-import React, { FC, useContext, useEffect, useState, useRef } from 'react';
+import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
 import { ReactComponent as Ball } from '../../assets/svg/ball.svg';
 import { ReactComponent as LightTheme } from '../../assets/svg/themeLight.svg';
 import { ReactComponent as DarkTheme } from '../../assets/v2/svg/dark-theme.svg';
-import { ReactComponent as Logo } from '../../assets/v2/svg/logo.svg';
 import { ReactComponent as GsLogo } from '../../assets/v2/svg/gs.svg';
+import { ReactComponent as Logo } from '../../assets/v2/svg/logo.svg';
 import { Container } from '../../components/UI/Container';
 import { routers } from '../../constantes/routers';
 import { AppContext } from '../../context/HubContext';
 import { ThemeContext } from '../../context/ThemeContext';
+import useWindowSize from '../../hooks/useWindowSize';
 import {
+  AdminLink,
   Btn,
   ButtonsRev,
   HeaderInner,
@@ -20,13 +22,11 @@ import {
   Languale,
   MenuBtn,
   SwitchTheme,
-  AdminLink
 } from './Header.elements';
 import { Nav } from './Nav';
 import { NavAdmin } from './NavAdmin';
 import { Notify } from './Notify/Notify';
 import * as Notifies from './Notify/Notify.styles';
-import useWindowSize from '../../hooks/useWindowSize';
 
 type Props = {
   admPanel?: boolean;
@@ -44,9 +44,13 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
   const themeContext = useContext(ThemeContext);
   const swithTheme = themeContext.toggleTheme;
   const theme = themeContext.theme;
-  const user = appContext.user;
   const logOut = appContext.logOut;
-  const admin = appContext.isAdmin;
+  // const user = appContext.user;
+  // const admin = appContext.isAdmin;
+  const admin = localStorage.getItem('admin') === 'true';
+  console.log('admin', admin);
+  const user = localStorage.getItem('token');
+  console.log('user', user);
   const history = useHistory();
   const location = useLocation();
   const { t, i18n } = useTranslation();
@@ -89,16 +93,16 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
 
   const notifiesBlock = useRef();
   const lang = localStorage.getItem('i18nextLng') || 'ru';
-  
+
   function onBall() {
     setNone(!none);
     setNotify(!notify);
-  };
+  }
 
   return (
     <>
       <HeaderWrap header={header}>
-        <Container style={{ position: "relative" }}>
+        <Container style={{ position: 'relative' }}>
           <HeaderInner>
             <HeaderLogo href="/">{screen >= 768 ? <Logo /> : <GsLogo />}</HeaderLogo>
             <HeaderMenu open={open}>
@@ -139,13 +143,14 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
                 <Notifies.BallContainer notChecked={checkeds}>
                   <Ball onClick={onBall} style={{ height: '20px' }} />
                 </Notifies.BallContainer>
-                {screen > 1100 && 
+                {screen > 1100 && (
                   <Notify
                     block={notify}
                     none={none}
                     setBlock={setNotify}
                     admin={admin ? true : false}
-                  />}
+                  />
+                )}
               </>
             )}
             <SwitchTheme
@@ -156,9 +161,7 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
               {theme === 'light' ? <DarkTheme /> : <LightTheme />}
             </SwitchTheme>
             <ButtonsRev className={user === null || admin === null ? 'is-placeholder' : ''}>
-              {admin ? (
-                <AdminLink to="/admin">{t('headerButton.admin')}</AdminLink>
-              ) : null}
+              {admin ? <AdminLink to="/admin">{t('headerButton.admin')}</AdminLink> : null}
             </ButtonsRev>
             <Btn primary onClick={handleClick}>
               {t('headerButton.personalArea')}
@@ -170,13 +173,9 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
           </HeaderInner>
         </Container>
       </HeaderWrap>
-       {screen < 1100 && 
-        <Notify
-          none={none}
-          block={notify}
-          setBlock={setNotify}
-          admin={admin ? true : false}
-        />}
+      {screen < 1100 && (
+        <Notify none={none} block={notify} setBlock={setNotify} admin={admin ? true : false} />
+      )}
     </>
   );
 };
