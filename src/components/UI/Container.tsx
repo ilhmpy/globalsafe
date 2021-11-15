@@ -5,6 +5,7 @@ export const Container = styled.div<{
   page?: boolean;
   mtNone?: boolean;
   pTabletNone?: boolean;
+  mbNone?: boolean;
 }>`
   width: 100%;
   max-width: 1128px;
@@ -20,7 +21,7 @@ export const Container = styled.div<{
     padding-left: ${(props) => (props.pNone ? '0' : '20px')};
   }
   @media (min-width: 769px) and (max-width: 1024px) {
-    margin-bottom: 40px;
+    margin-bottom: ${(props) => (props.mbNone ? '0px' : '40px')};
   }
   ${(props) => {
     if (props.pTabletNone) {

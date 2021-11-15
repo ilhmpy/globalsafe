@@ -1,4 +1,4 @@
-import React, { useState, FC } from 'react';
+import {  FC } from 'react';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import styled from 'styled-components/macro';

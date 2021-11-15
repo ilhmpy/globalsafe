@@ -1,25 +1,23 @@
 import moment from 'moment';
 import 'moment/locale/ru';
-import React, { FC, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { FC, useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { NavLink, Redirect, Route, Switch, useHistory } from 'react-router-dom';
-import { CSSTransition } from 'react-transition-group';
-import { Container } from '../../components/UI/Container';
-import * as Styled from './Styles.history';
-import { Heading } from './components/Heading';
-import * as FilterS from './components/Filter/S.el';
-import { Filter } from './components/Filter/index';
-import { AppContext } from '../../context/HubContext';
-import { Balance } from '../../types/balance';
-import { Loading, NotItems, Spinner } from './components/Loading/Loading';
-import formatRelativeWithOptions from 'date-fns/esm/fp/formatRelativeWithOptions/index.js';
-import { isObject } from 'highcharts';
-import { InternalSymbolName, isTemplateSpan } from 'typescript';
-import { countVolumeToShow } from './utils';
-import { ViewExchangeModel } from '../../types/exchange';
-import { isFirstDayOfMonth } from 'date-fns/esm';
+import { Container } from '../../../components/UI/Container';
+import { AppContext } from '../../../context/HubContext';
+import useWindowSize from '../../../hooks/useWindowSize';
+import { Balance } from '../../../types/balance';
+import { ViewExchangeModel } from '../../../types/exchange';
+import { Filter } from '../components/Filter/index';
+import * as FilterS from '../components/Filter/S.el';
+import { Heading } from '../components/Heading';
+import { Loading, NotItems, Spinner } from '../components/Loading/Loading';
+import { FilterButton } from '../components/ui';
+import * as S from '../Exchanges/S.el';
+import * as Styled from '../Styles.history';
+import { countVolumeToShow } from '../utils';
+import { MobileFiltersModal } from './MobileFiltersModal';
 
-export const HistoryOperations = () => {
+export const HistoryOperations: FC = () => {
   const [activeFilter, setActiveFilter] = useState<'active' | 'archived' | 'hold'>('active');
   const months = [
     'Январь',
@@ -35,7 +33,8 @@ export const HistoryOperations = () => {
     'Ноябрь',
     'Декабрь',
   ];
-  const [buttons, setButtons] = useState<any[]>([
+  const screen = useWindowSize();
+  const [buttons] = useState<{ text: string; active: string }[]>([
     { text: 'Все типы', active: 'active' },
     { text: 'Пополнение', active: 'hold' },
     { text: 'Списание', active: 'archived' },
@@ -51,6 +50,7 @@ export const HistoryOperations = () => {
   const [newItems, setNewItems] = useState<boolean>(true);
   const [emptyItems, setEmptyItems] = useState<boolean>(false);
   const [allState, setAllState] = useState<ViewExchangeModel[]>([]);
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   const operation = (id: number, link: string) => {
     if (id === 1) {
@@ -105,118 +105,6 @@ export const HistoryOperations = () => {
   const [statusNew, setStatusNew] = useState<any>();
   const [totalRecords, setTotalRecords] = useState<number | null>(null);
 
-  /*    /// NA.
-        /// <summary>
-        /// NA.
-        /// </summary>
-        Null, 0
-
-        /// <summary>
-        /// Top-up operation.
-        /// </summary>
-        TopUp, 1
-
-        /// <summary>
-        /// Withdraw operation.
-        /// </summary>
-        Withdraw, 2
-
-        /// <summary>
-        /// Balance rollback due to transaction failure.
-        /// </summary>
-        Rollback, 3
-
-        /// <summary>
-        /// Promo balance adjustment.
-        /// </summary>
-        Promo, 4
-
-        /// <summary>
-        /// Affiliate charges.
-        /// </summary>
-        AffiliateCharges, 5
-
-        /// <summary>
-        /// Open new user deposit.
-        /// </summary>
-        DepositOpen, 6
-
-        /// <summary>
-        /// Deposit charges.
-        /// </summary>
-        DepositPayments, 7
-
-        /// <summary>
-        /// Return deposit body on expiry.
-        /// </summary>
-        DepositClose, 8
-
-        /// <summary>
-        /// Balance operation adjustemnt.
-        /// </summary>
-        Adjustment, 9
-
-        /// <summary>
-        /// Balance prize adjustment.
-        /// </summary>
-        Prize, 10
-
-        /// <summary>
-        /// Network commission from the transaction amount
-        /// </summary>
-        TransactionNetworkFee, 11
-
-        /// <summary>
-        /// Service commission from the transaction amount
-        /// </summary>
-        TransactionServiceFee, 12
-
-        /// <summary>
-        /// Deposit loan.
-        /// </summary>
-        DepositLoan, 13
-
-        /// <summary>
-        /// Transfer between balances.
-        /// </summary>
-        BalanceExchange, 14
- 
-        /// <summary>
-        /// Exchange deposit.
-        /// </summary>
-        DepositExchange, 15
-
-        /// <summary>
-        /// Funds reservation for sell order creation.
-        /// </summary>
-        SellOrderCreation, 16
- 
-        /// <summary>
-        /// Refund on sell order cancelation.
-        /// </summary>
-        SellOrderCancelation, 17
-
-        /// <summary>
-        /// Exchange funds keep.
-        /// </summary>
-        Exchange, 18
-
-        /// <summary>
-        /// Exchange completion.
-        /// </summary>
-        ExchangeCompletion, 19
-
-        /// <summary>
-        /// Return funds due to exchange cancelation.
-        /// </summary>
-        ExchangeCancelation, 20
-        
-        /// <summary>
-        /// Purchase new certificate.
-        /// </summary>
-        CertificatePurchase, 21
-    */
-
   function getFirstElements(collection: ViewExchangeModel[], elms: number) {
     return collection.filter((i, idx) => {
       if (idx < elms) {
@@ -252,7 +140,7 @@ export const HistoryOperations = () => {
             return a > b ? -1 : a < b ? 1 : 0;
           });
           setAllState(sortCollection);
-          const collection = getFirstElements(sortCollection, 10);
+          const collection = getFirstElements(sortCollection, screen > 768 ? 10 : 5);
           console.log(collection);
           if (allCurrency) {
             setOperations(() => {
@@ -373,21 +261,55 @@ export const HistoryOperations = () => {
     return local.format('HH:MM');
   }
 
+  const paymentMethodsKinds = useMemo<{ label: string }[]>(
+    () => [
+      { label: `${months[moment().month()]} ${new Date().getFullYear()}` },
+      { label: 'Все валюты' },
+    ],
+    []
+  );
+
   return (
     <>
-      <Container>
+      <Container mbNone>
+        <MobileFiltersModal
+          open={showMobileFilters}
+          onClose={() => setShowMobileFilters(false)}
+          methodsList={paymentMethodsKinds}
+          setNowMonth={setNowMonth}
+          nowMonth={nowMonth}
+          setAllCurrency={setAllCurrency}
+          allCurrency={allCurrency}
+        />
         <Heading title="История операций" withoutBtn />
-        <Styled.FilterAllBlock>
-          <Styled.FilterDivision>
-            <FilterS.Button active={nowMonth} onClick={() => setNowMonth(!nowMonth)}>
-              {months[moment().month()]} {new Date().getFullYear()}
-            </FilterS.Button>
-          </Styled.FilterDivision>
-          <Styled.FilterDivision>
-            <FilterS.Button active={allCurrency} onClick={() => setAllCurrency(!allCurrency)}>
-              Все валюты
-            </FilterS.Button>
-          </Styled.FilterDivision>
+        <Styled.FilterAllBlock mbNone>
+          {screen > 768 ? (
+            <>
+              <Styled.FilterDivision>
+                <FilterS.Button active={nowMonth} onClick={() => setNowMonth(!nowMonth)}>
+                  {months[moment().month()]} {new Date().getFullYear()}
+                </FilterS.Button>
+              </Styled.FilterDivision>
+              <Styled.FilterDivision>
+                <FilterS.Button active={allCurrency} onClick={() => setAllCurrency(!allCurrency)}>
+                  Все валюты
+                </FilterS.Button>
+              </Styled.FilterDivision>
+            </>
+          ) : (
+            <S.Filters hidden smVisible>
+              <FilterButton
+                noMargin
+                wFull
+                switchLeft
+                active={false}
+                onClick={() => setShowMobileFilters(true)}
+              >
+                {`Фильтры (${paymentMethodsKinds.length})`}
+              </FilterButton>
+            </S.Filters>
+          )}
+
           <Filter
             activeFilter={activeFilter}
             setActiveFilter={setActiveFilter}
@@ -395,61 +317,110 @@ export const HistoryOperations = () => {
             withCustomButtons
             withoutContainer
             buttons={buttons}
+            btnsFullWidth
+            fullWidth
           />
         </Styled.FilterAllBlock>
       </Container>
       <Container pTabletNone>
-        <Styled.Table none={not}>
-          <Styled.TableItem head>
-            <Styled.TableInnerItem head>Дата и время</Styled.TableInnerItem>
-            <Styled.TableInnerItem head>Категория</Styled.TableInnerItem>
-            <Styled.TableInnerItem head>Сумма</Styled.TableInnerItem>
-          </Styled.TableItem>
-          {operations ? (
-            <>
-              {!emptyItems ? (
-                <>
-                  <Styled.TableMap>
-                    {operations &&
-                      operations.map((item: any, idx) => (
-                        <Styled.TableItem item key={idx} newItem={item.new && item.new}>
-                          <Styled.TableInnerItem item>
-                            {moment(item.operationDate).format('DD.MM.YYYY')} в{' '}
-                            {getLocaleTime(item.operationDate)}
-                          </Styled.TableInnerItem>
-                          <Styled.TableInnerItem item>
-                            {operation(item.operationKind, item.referenceSafeId)}
-                          </Styled.TableInnerItem>
-                          <Styled.TableInnerItem item income={item.balanceDelta > 0}>
-                            {item.balanceDelta > 0 && (
-                              <>
-                                {sign(
-                                  countVolumeToShow(
-                                    item.balanceDelta,
-                                    getCurrency(item.balanceSafeId, 'number')
-                                  )
-                                )}{' '}
-                              </>
-                            )}{' '}
-                            {item.balanceSafeId &&
-                              countVolumeToShow(
-                                item.balanceDelta,
-                                getCurrency(item.balanceSafeId, 'number')
-                              ).toLocaleString('ru-RU', { maximumFractionDigits: 2 })}{' '}
-                            {item.balanceSafeId && getCurrency(item.balanceSafeId, 'string')}
-                          </Styled.TableInnerItem>
-                        </Styled.TableItem>
-                      ))}
-                  </Styled.TableMap>
-                </>
-              ) : (
-                <NotItems text="Операции отсутствуют" />
-              )}
-            </>
+        {screen > 768 ? (
+          <Styled.Table none={not}>
+            <Styled.TableItem head>
+              <Styled.TableInnerItem head mrLarger>
+                Дата и время
+              </Styled.TableInnerItem>
+              <Styled.TableInnerItem head>Категория</Styled.TableInnerItem>
+              <Styled.TableInnerItem head>Сумма</Styled.TableInnerItem>
+            </Styled.TableItem>
+            {operations ? (
+              <>
+                {!emptyItems ? (
+                  <>
+                    <Styled.TableMap>
+                      {operations &&
+                        operations.map((item: any, idx) => (
+                          <Styled.TableItem item key={idx} newItem={item.new && item.new}>
+                            <Styled.TableInnerItem item mrLarger>
+                              {moment(item.operationDate).format('DD.MM.YYYY')} в{' '}
+                              {getLocaleTime(item.operationDate)}
+                            </Styled.TableInnerItem>
+                            <Styled.TableInnerItem item mrLarger>
+                              {operation(item.operationKind, item.referenceSafeId)}
+                            </Styled.TableInnerItem>
+                            <Styled.TableInnerItem item mrLarger income={item.balanceDelta > 0}>
+                              {item.balanceDelta > 0 && (
+                                <>
+                                  {sign(
+                                    countVolumeToShow(
+                                      item.balanceDelta,
+                                      getCurrency(item.balanceSafeId, 'number')
+                                    )
+                                  )}{' '}
+                                </>
+                              )}{' '}
+                              {item.balanceSafeId &&
+                                countVolumeToShow(
+                                  item.balanceDelta,
+                                  getCurrency(item.balanceSafeId, 'number')
+                                ).toLocaleString('ru-RU', { maximumFractionDigits: 2 })}{' '}
+                              {item.balanceSafeId && getCurrency(item.balanceSafeId, 'string')}
+                            </Styled.TableInnerItem>
+                          </Styled.TableItem>
+                        ))}
+                    </Styled.TableMap>
+                  </>
+                ) : (
+                  <NotItems text="Операции отсутствуют" />
+                )}
+              </>
+            ) : (
+              <Loading />
+            )}
+          </Styled.Table>
+        ) : operations ? (
+          !emptyItems ? (
+            <Styled.MobWrapper>
+              {operations &&
+                operations.map((item: any, idx) => (
+                  <>
+                    <Styled.MobTab key={idx}>
+                      <Styled.TabRow green={item.balanceDelta > 0}>
+                        <span>
+                          {moment(item.operationDate).format('DD.MM.YYYY')} в{' '}
+                          {getLocaleTime(item.operationDate)}
+                        </span>
+                        <span>
+                          {item.balanceDelta > 0 && (
+                            <>
+                              {sign(
+                                countVolumeToShow(
+                                  item.balanceDelta,
+                                  getCurrency(item.balanceSafeId, 'number')
+                                )
+                              )}{' '}
+                            </>
+                          )}{' '}
+                          {item.balanceSafeId &&
+                            countVolumeToShow(
+                              item.balanceDelta,
+                              getCurrency(item.balanceSafeId, 'number')
+                            ).toLocaleString('ru-RU', { maximumFractionDigits: 2 })}{' '}
+                          {item.balanceSafeId && getCurrency(item.balanceSafeId, 'string')}
+                        </span>
+                      </Styled.TabRow>
+                      <Styled.TabRow>
+                        <span>{operation(item.operationKind, item.referenceSafeId)}</span>
+                      </Styled.TabRow>
+                    </Styled.MobTab>
+                  </>
+                ))}
+            </Styled.MobWrapper>
           ) : (
-            <Loading />
-          )}
-        </Styled.Table>
+            <NotItems text="Операции отсутствуют" />
+          )
+        ) : (
+          <Loading />
+        )}
         <Styled.Button
           onClick={addMore}
           newItems={operations && operations.length > 0 ? newItems : false}
