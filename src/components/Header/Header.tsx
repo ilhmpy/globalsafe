@@ -95,12 +95,18 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
     setNotify(!notify);
   };
 
+  function handleAuthClick() {
+    history.push(`/login/0`);
+  };
+
   return (
     <>
       <HeaderWrap header={header}>
         <Container style={{ position: "relative" }}>
           <HeaderInner>
-            <HeaderLogo href="/">{screen >= 768 ? <Logo /> : <GsLogo />}</HeaderLogo>
+            <HeaderLogo href="/">
+              <Logo />
+            </HeaderLogo>
             <HeaderMenu open={open}>
               {admPanel ? (
                 <NavAdmin lang={lang} onClose={onClose} />
@@ -160,9 +166,13 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
                 <AdminLink to="/admin">{t('headerButton.admin')}</AdminLink>
               ) : null}
             </ButtonsRev>
+            {user ?
             <Btn primary onClick={handleClick}>
               {t('headerButton.personalArea')}
-            </Btn>
+            </Btn> :
+            <Btn primary onClick={handleAuthClick}>
+              Войти
+            </Btn>}
             <MenuBtn open={open} onClick={() => setOpen(!open)}>
               <span></span>
               <span></span>

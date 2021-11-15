@@ -151,7 +151,10 @@ export const HeaderLogo = styled.a`
   text-decoration: none;
   cursor: pointer;
   z-index: 5;
-  margin-top: 5px;
+  margin-top: 10px;
+  @media (max-width: 767px) {
+    margin-top: 8px;
+  }
   .logo {
     fill: ${(props) => props.theme.text};
   }
