@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { PaymentMethodKind, RootPayMethod, CollectionPayMethod } from '../types/paymentMethodKind';
+import { CollectionPayMethod } from '../types/paymentMethodKind';
 
 type Context = {
   userPaymentsMethod: CollectionPayMethod[];

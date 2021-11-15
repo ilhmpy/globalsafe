@@ -4,22 +4,22 @@ import React, { FC, useContext, useEffect, useMemo, useRef, useState } from 'rea
 import { useTranslation } from 'react-i18next';
 import { NavLink, Redirect, Route, Switch, useHistory } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
-import { Container } from '../../components/UI/Container';
-import * as Styled from './Styles.history';
-import { Heading } from './components/Heading';
-import * as FilterS from './components/Filter/S.el';
-import { Filter } from './components/Filter/index';
-import { AppContext } from '../../context/HubContext';
-import { Balance } from '../../types/balance';
-import { Loading, NotItems, Spinner } from './components/Loading/Loading';
+import { Container } from '../../../components/UI/Container';
+import * as Styled from '../Styles.history';
+import { Heading } from '../components/Heading';
+import * as FilterS from '../components/Filter/S.el';
+import { Filter } from '../components/Filter/index';
+import { AppContext } from '../../../context/HubContext';
+import { Balance } from '../../../types/balance';
+import { Loading, NotItems, Spinner } from '../components/Loading/Loading';
 import formatRelativeWithOptions from 'date-fns/esm/fp/formatRelativeWithOptions/index.js';
 import { isObject } from 'highcharts';
 import { InternalSymbolName, isTemplateSpan } from 'typescript';
-import { countVolumeToShow } from './utils';
-import { ViewExchangeModel } from '../../types/exchange';
+import { countVolumeToShow } from '../utils';
+import { ViewExchangeModel } from '../../../types/exchange';
 import { isFirstDayOfMonth } from 'date-fns/esm';
-import { PaymentMethods } from "./Exchanges/components/modals/PaymentMethods";
-import { FilterButton } from './components/ui';
+import { PaymentMethods } from "../Exchanges/components/modals/PaymentMethods";
+import { FilterButton } from '../components/ui';
 
 export const HistoryOperations = () => {
   const [activeFilter, setActiveFilter] = useState<'active' | 'archived' | 'hold'>('active');

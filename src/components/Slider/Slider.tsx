@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
-import Slider, { Range } from 'rc-slider';
+import { FC } from 'react';
+import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import * as Styled from './Slider.elements';
 

@@ -10,7 +10,7 @@ import { ViewPayMethod } from './Settings/ViewPayMethod';
 import * as Styled from './Styles.elements';
 import { Footer } from '../../components/Footer/Footer';
 import { Advert } from './Exchanges/Advert';
-import { HistoryOperations } from './HistoryOperations';
+import { HistoryOperations } from './HistoryOperations/HistoryOperations';
 import { OwnExchanges } from './Exchanges/OwnExchanges';
 import { SingleExchangeDetails } from './Exchanges/SingleExchangeDetails';
 import { routers } from '../../constantes/routers';

@@ -1,6 +1,6 @@
-import React, { FC, useState, useEffect, useContext } from 'react';
-import * as Styled from './Styled.element';
+import { FC, useContext, useEffect, useState } from 'react';
 import { ThemeContext } from '../../context/ThemeContext';
+import * as Styled from './Styled.element';
 
 type Props = {
   seconds: number;
@@ -72,7 +72,7 @@ export const CountdownTimer: FC<Props> = ({
             cy={radius}
             fill="none"
             strokeLinecap="round"
-            stroke={"#fff"}
+            stroke={'#fff'}
             strokeWidth={strokeWidth}
           ></circle>
         </svg>
