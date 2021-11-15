@@ -29,7 +29,7 @@ interface OrderDetailsCardProps {
 
 export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }: OrderDetailsCardProps) => {
     const history = useHistory();
-    const { hubConnection } = useContext(AppContext);
+    const { hubConnection, balanceList } = useContext(AppContext);
     const [balanceSumm, setBalanceSumm] = useState('');
     const [fiatSumm, setFiatSumm] = useState('');
     const [paymentMethodSafeId, setPaymentMethodSafeId] = useState('');
@@ -37,6 +37,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
     const [userPaymentMethods, setUserPaymentMethods] = useState<CollectionPayMethod[]>([]);
     const [showCreateExchangeModal, setShowCreateExchangeModal] = useState(false);
     const [showErrorModal, setShowErrorModal] = useState(false);
+    const [showNotEnoughFunds, setShowNotEnoughFunds] = useState(false);
 
     const [balanceLimitFrom, setBalanceLimitFrom] = useState(0);
     const [balanceLimitTo, setBalanceLimitTo] = useState(0);
@@ -113,6 +114,19 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
         } catch (err) { 
             console.log(err);
         }
+    };
+
+    const handleShowCreateExchangeModal = () => {
+        const balanceItem = balanceList?.find(b => b.balanceKind === order.assetKind);
+        if (balanceItem) {
+            const balanceRest = countVolumeToShow(balanceItem.volume, balanceItem.balanceKind);
+            if(balanceRest >= Number(balanceSumm)) {
+                setShowCreateExchangeModal(true);
+                return;
+            }
+        }
+
+        setShowNotEnoughFunds(true);
     };
 
     // TODO Use SetExchangePaymentMethod for CreateSellExchange created exchange
@@ -217,7 +231,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
         const pattern = /^[0-9][0-9\.]*$/;
         const pattern2 = order.operationAssetKind === 7 ? /^[0-9]{1,10}\.[0-9]{6}$/ : /^[0-9]{1,10}\.[0-9]{3}$/;
         if (e.target.value === '' || pattern.test(e.target.value)) {
-            const value = removeLeadingZeros(e.target.value);
+            const value = e.target.value;
             const volumeSumm = countVolumeToShow(+order.volume, order.assetKind) * order.rate;
             const limitToSumm = countVolumeToShow(+order.limitTo, order.assetKind);
             const volume = Math.floor((countVolumeToShow(order.volume, order.assetKind)) * 100000) / 100000;
@@ -257,7 +271,6 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                 }
             }
            
-            
             if(!pattern2.test(e.target.value)) {
                 setFiatSumm(value);
                 setBalanceSumm(String(Math.ceil((+value / order.rate) * 100000) / 100000))
@@ -565,7 +578,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                     as="button"
                     primary 
                     fullWidthMobile
-                    onClick={() => setShowCreateExchangeModal(true)}
+                    onClick={handleShowCreateExchangeModal}
                     disabled={
                         order.volume === 0 ||
                         order.volume < (order.limitFrom / order.rate) ||
@@ -593,9 +606,15 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                 open={showCreateExchangeModal}
                 onClose={() => setShowCreateExchangeModal(false)}
             />
-            <ExchangeRequestErrorModal
+            <ExchangeRequestErrorModal 
                 open={showErrorModal}
                 onClose={() => setShowErrorModal(false)}
+            />
+            <ExchangeRequestErrorModal 
+                message={'Недостаточно средств.'}
+                withAction={false}
+                open={showNotEnoughFunds}
+                onClose={() => setShowNotEnoughFunds(false)}
             />
         </RightSide>
     </S.Container>
