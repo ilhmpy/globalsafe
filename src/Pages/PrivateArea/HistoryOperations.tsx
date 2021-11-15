@@ -18,6 +18,8 @@ import { InternalSymbolName, isTemplateSpan } from 'typescript';
 import { countVolumeToShow } from './utils';
 import { ViewExchangeModel } from '../../types/exchange';
 import { isFirstDayOfMonth } from 'date-fns/esm';
+import { PaymentMethods } from "./Exchanges/components/modals/PaymentMethods";
+import { FilterButton } from './components/ui';
 
 export const HistoryOperations = () => {
   const [activeFilter, setActiveFilter] = useState<'active' | 'archived' | 'hold'>('active');
@@ -51,6 +53,7 @@ export const HistoryOperations = () => {
   const [newItems, setNewItems] = useState<boolean>(true);
   const [emptyItems, setEmptyItems] = useState<boolean>(false);
   const [allState, setAllState] = useState<ViewExchangeModel[]>([]);
+  const [currenciesModal, setCurrenciesModal] = useState<boolean>(false);
 
   const operation = (id: number, link: string) => {
     if (id === 1) {
@@ -104,6 +107,8 @@ export const HistoryOperations = () => {
   const [operations, setOperations] = useState<any[] | null>(null);
   const [statusNew, setStatusNew] = useState<any>();
   const [totalRecords, setTotalRecords] = useState<number | null>(null);
+  const [selectedCurrencies, setSelectedCurrencies] = useState<number[]>([]);
+  const [currencies, setCurrencies] = useState<number[]>([]);
 
   /*    /// NA.
         /// <summary>
@@ -234,7 +239,7 @@ export const HistoryOperations = () => {
         .invoke(
           'GetBalanceLog',
           [1],
-          getFilter(activeFilter),
+          [],
           nowMonth
             ? new Date(date.getFullYear(), date.getMonth(), 1, 0, 0)
             : new Date(2013, 5, 13, 10, 0, 0),
@@ -251,37 +256,30 @@ export const HistoryOperations = () => {
             const b = new Date(y.operationDate);
             return a > b ? -1 : a < b ? 1 : 0;
           });
-          setAllState(sortCollection);
-          const collection = getFirstElements(sortCollection, 10);
-          console.log(collection);
-          if (allCurrency) {
-            setOperations(() => {
-              return collection
-                .map((i: any) => ({ ...i, new: false }))
-                .sort((x: any, y: any) => {
-                  const a = new Date(x.operationDate);
-                  const b = new Date(y.operationDate);
-                  return a > b ? -1 : a < b ? 1 : 0;
-                });
-            });
+          let collection;
+          let filterCollection = sortCollection;
+          if (activeFilter === "active") {
+            collection = getFirstElements(sortCollection, 10);
+          } else if (activeFilter === "hold") {
+            filterCollection = sortCollection.filter((i: any) => i.balanceDelta > 0);
+            collection = getFirstElements(filterCollection, 10);
           } else {
-            if (balances) {
-              setOperations(() => {
-                return collection
-                  .filter((i: any) => {
-                    if (Number(i.id) === balances[1].id) {
-                      return { ...i, new: false };
-                    }
-                  })
-                  .sort((x: any, y: any) => {
-                    const a = new Date(x.operationDate);
-                    const b = new Date(y.operationDate);
-                    return a > b ? -1 : a < b ? 1 : 0;
-                  });
-              });
-            }
-          }
-          setEmptyItems(!(res.collection.length > 0));
+            filterCollection = sortCollection.filter((i: any) => i.balanceDelta < 0);
+            collection = getFirstElements(filterCollection, 10);
+          };
+          if (selectedCurrencies.length > 0) {
+            filterCollection = filterCollection.filter((f: any) => {
+              for (let i = 0; i < selectedCurrencies.length; i++) {
+                if (Number(f.balanceSafeId) === selectedCurrencies[i]) {
+                  return f;
+                };
+              };
+            });
+            collection = getFirstElements(filterCollection, 10);
+          };
+          setAllState(filterCollection);
+          setOperations(collection);
+          setEmptyItems(!(collection.length > 0));
         })
         .catch((err) => {
           console.log(err);
@@ -292,7 +290,7 @@ export const HistoryOperations = () => {
 
   useEffect(() => {
     getBalanceLog();
-  }, [activeFilter, hubConnection, nowMonth, allCurrency, totalRecords]);
+  }, [activeFilter, hubConnection, nowMonth, currencies, totalRecords]);
 
   function changeNew() {
     setOperations(
@@ -309,6 +307,7 @@ export const HistoryOperations = () => {
 
   function addMore() {
     if (operations && operations.length <= allState.length) {
+      console.log("false");
       changeNew();
       let items: any[] = [];
       for (let i = 0; i < 5; i++) {
@@ -367,24 +366,45 @@ export const HistoryOperations = () => {
     }
   }
 
+  const balanceList = balances?.map((i) => ({
+    methodName: Balance[i.balanceKind],
+    kind: i.id
+  }));
+
   function getLocaleTime(date: Date) {
     const utc = moment.utc(date);
     const local = utc.local();
     return local.format('HH:MM');
   }
 
+  function handleAccept() {
+    setCurrenciesModal(false);
+    setCurrencies(selectedCurrencies);
+  };
+
+  function handleClose() {
+    setCurrenciesModal(false);
+  };
+
+  function resetFilters() {
+    handleClose();
+    setCurrencies([]);
+    setSelectedCurrencies([]);
+    setActiveFilter("active");
+  };
+
   return (
     <>
       <Container>
         <Heading title="История операций" withoutBtn />
-        <Styled.FilterAllBlock>
+        <Styled.FilterAllBlock style={{ position: "relative" }}>
           <Styled.FilterDivision>
             <FilterS.Button active={nowMonth} onClick={() => setNowMonth(!nowMonth)}>
               {months[moment().month()]} {new Date().getFullYear()}
             </FilterS.Button>
           </Styled.FilterDivision>
           <Styled.FilterDivision>
-            <FilterS.Button active={allCurrency} onClick={() => setAllCurrency(!allCurrency)}>
+            <FilterS.Button active={currenciesModal} onClick={() => setCurrenciesModal(true)}>
               Все валюты
             </FilterS.Button>
           </Styled.FilterDivision>
@@ -396,6 +416,14 @@ export const HistoryOperations = () => {
             withoutContainer
             buttons={buttons}
           />
+          {currencies.length > 0 && (
+            <FilterButton 
+              style={{ position: 'absolute', right: '0px' }}
+              onClick={resetFilters}
+            >
+              Очистить фильтр
+            </FilterButton>
+          )}
         </Styled.FilterAllBlock>
       </Container>
       <Container pTabletNone>
@@ -463,6 +491,18 @@ export const HistoryOperations = () => {
           )}
         </Styled.Button>
       </Container>
+      {balanceList && (
+        <PaymentMethods 
+          text="Выбор валют"
+          selectedPaymentMethods={selectedCurrencies}
+          setSelectedPaymentMethods={setSelectedCurrencies}
+          methodsList={balanceList}
+          onAccept={handleAccept}
+          onClose={handleClose}
+          open={currenciesModal}
+          objectsArray
+        />
+      )}
     </>
   );
 };
