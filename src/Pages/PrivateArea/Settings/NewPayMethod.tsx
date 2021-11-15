@@ -1,9 +1,8 @@
-import { ChangeEvent, FC, useContext, useState, useEffect } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import NumberFormat from 'react-number-format';
 import { useHistory, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import NumberFormat from 'react-number-format';
-
 import { Button } from '../../../components/Button/V2/Button';
 import { Input } from '../../../components/Input';
 import { Select } from '../../../components/Select/Select5';
@@ -11,13 +10,11 @@ import { Switcher } from '../../../components/Switcher';
 import { routers } from '../../../constantes/routers';
 import { AppContext } from '../../../context/HubContext';
 import { Container } from '../../../globalStyles';
-import { Balance } from '../../../types/balance';
 import { FiatKind } from '../../../types/fiatKind';
 import { PaymentMethodKind } from '../../../types/paymentMethodKind';
 import { Back } from '../components/Back';
 import { Title } from '../components/ui/Title';
 import { Device } from '../consts';
-
 
 type dataBank = {
   name: string;
@@ -127,7 +124,7 @@ export const NewPayMethod: FC = () => {
           JSON.stringify(addPayMethod())
         );
 
-        if(query.get('redirect')) {
+        if (query.get('redirect')) {
           history.goBack();
         } else {
           history.push(routers.settings);
@@ -152,10 +149,12 @@ export const NewPayMethod: FC = () => {
         <Back text="Назад" onGoBackClick={() => history.push(routers.settings)} />
 
         <TitleWrapper>
-          <Title mB={0} heading2>Добавление платежного метода</Title>
+          <Title mB={0} heading2>
+            Добавление платежного метода
+          </Title>
         </TitleWrapper>
       </Container>
-      
+
       <Blocks>
         <LeftSide>
           <Entry>
@@ -288,6 +287,7 @@ const ButtonWrapper = styled.div`
   @media ${Device.mobile} {
     flex-direction: column;
     max-width: 300px;
+  }
 `;
 
 const SwitcherRow = styled.div<{ checked?: boolean }>`

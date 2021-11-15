@@ -1,10 +1,11 @@
 import moment from 'moment';
 import 'moment/locale/ru';
-import React, { useContext, useEffect, useMemo, useRef, useState, FC } from 'react';
+import React, { FC, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavLink, useHistory } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import { ReactComponent as Copy } from '../../assets/svg/copy.svg';
 import { ReactComponent as LockIcon } from '../../assets/v2/svg/lock.svg';
 import { ReactComponent as LogOutIcon } from '../../assets/v2/svg/logOut.svg';
@@ -23,16 +24,14 @@ import { Input as Inputv2 } from '../../components/UI/V4/Inputs/Input';
 import { routers } from '../../constantes/routers';
 import { AppContext } from '../../context/HubContext';
 import { Card, Container } from '../../globalStyles';
+import useWindowSize from '../../hooks/useWindowSize';
 import { Balance, Notify } from '../../types/balance';
 import { Commisions, DepositsCollection, RootDeposits } from '../../types/info';
+import { SelectButton } from './components/ui/SelectButton';
 import { ConvertingModal } from './Converting/ConvertingModal';
 import { DepositListModal } from './Modals';
 import * as Styled from './Styles.elements';
-import { SelectButton } from './components/ui/SelectButton';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import SwiperCore, { Navigation, Pagination, A11y } from 'swiper';
-import { countVolumeToShow } from './utils'; 
-import useWindowSize from '../../hooks/useWindowSize';
+import { countVolumeToShow } from './utils';
 
 export const HeaderBar: FC = () => {
   const { t } = useTranslation();
@@ -505,7 +504,7 @@ export const HeaderBar: FC = () => {
           // console.log('ERROR', err);
           setWithdrawValueLoad(false);
           setWithDrawModal(false);
-          setOutPutErrorReason('Ошибка вывода средств.')
+          setOutPutErrorReason('Ошибка вывода средств.');
         })
         .finally(() => setOutPutError(true));
     }
@@ -685,7 +684,7 @@ export const HeaderBar: FC = () => {
           p20
         >
           <H3 center modalTitle>
-              Вывод средств
+            Вывод средств
           </H3>
           <Styled.Desc style={{ marginBottom: '20px', maxWidth: '340px' }}>
             Мы сообщим вам о результате операции пополнения в личном уведомлении.
@@ -851,7 +850,7 @@ export const HeaderBar: FC = () => {
               pagination={false}
               spaceBetween={20}
             >
-              <SwiperSlide> 
+              <SwiperSlide>
                 <SlideContainer active={clickedIndex === 0}>
                   <TabNavItem to={routers.deposits} exact>
                     <div>Мои депозиты</div>
@@ -1179,6 +1178,9 @@ const PanelCard = styled(Card)`
   border-radius: 4px;
   box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
   padding: 20px;
+  @media (max-width: 1024px) {
+    padding: 20px 0;
+  }
 `;
 
 const PanelHeader = styled.div`
@@ -1259,4 +1261,7 @@ const TabsBlock = styled.div`
   display: flex;
   align-items: center;
   gap: 40px;
+  @media (max-width: 1024px) {
+    gap: 20px;
+  }
 `;

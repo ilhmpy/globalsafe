@@ -1,4 +1,4 @@
-﻿import React, { FC, useEffect, useRef, useState } from 'react';
+﻿import { FC, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components/macro';
 import { ReactComponent as Icon } from '../../assets/svg/selectArrow.svg';
 import useOnClickOutside from '../../hooks/useOutsideHook';
@@ -48,7 +48,6 @@ type Arr = {
 
 export const Select: FC<Props> = ({ placeholder, values, setCheckList, checkList, idx }: Props) => {
   const [show, setShow] = useState(false);
-  // const [checkList, setCheckList] = useState<any>([]);
   const [list, setList] = useState<Arr[]>([]);
 
   useEffect(() => {
@@ -130,10 +129,6 @@ const Placeholder = styled.div`
   letter-spacing: 0.1px;
   color: rgba(86, 101, 127, 0.6);
 `;
-
-const MobileFilter = () => {
-  return <div></div>;
-};
 
 const InputItem = styled.div`
   span {

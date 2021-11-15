@@ -32,7 +32,7 @@ export const Modal: React.FC<ModalProps> = ({
   withClose,
   withoutClose,
   ptl,
-  p20
+  p20,
 }: ModalProps) => {
   const handleContainerClick = (e: React.MouseEvent) => {
     if (e.currentTarget == e.target) {
@@ -50,9 +50,19 @@ export const Modal: React.FC<ModalProps> = ({
     <Portal>
       <ModalContainer zIndex={zIndex} style={style} className="bbg" lottery={lottery}>
         <Center styles={styles} onClick={handleContainerClick} lottery={lottery}>
-          <ModalComponent width={width} mobMarg={mobMarg} paddingTop={paddingTop} paddingsTopLess={ptl} p20={p20}>
-              {withClose && (<span className="close"><Times onClick={handleContainerClick} /></span>)}
-              {children}
+          <ModalComponent
+            width={width}
+            mobMarg={mobMarg}
+            paddingTop={paddingTop}
+            paddingsTopLess={ptl}
+            p20={p20}
+          >
+            {withClose && (
+              <span className="close">
+                <Times onClick={handleContainerClick} />
+              </span>
+            )}
+            {children}
           </ModalComponent>
         </Center>
       </ModalContainer>
@@ -97,7 +107,7 @@ const Center = styled.div<{ styles?: string; lottery?: boolean }>`
     }
   }}
 `;
- 
+
 const ModalContainer = styled.div<{ zIndex: string; lottery?: boolean }>`
   position: fixed;
   top: 0;
@@ -108,7 +118,7 @@ const ModalContainer = styled.div<{ zIndex: string; lottery?: boolean }>`
   display: block;
   transition: 0.3s;
   z-index: ${(props) => props.zIndex};
-  overflow: auto; 
+  overflow: auto;
   @media (max-width: 576px) {
     padding: 20px;
   }
@@ -150,7 +160,7 @@ const ModalComponent = styled.div<{
         padding-top: 20px;
         padding-bottom: 20px;
       `;
-    };
+    }
     if (p20) {
       return `
         padding: 20px;
@@ -184,7 +194,7 @@ const ModalComponent = styled.div<{
 
   .close > svg > path {
     fill: #000;
-  } 
+  }
 
   ${({ styles }) => {
     if (styles) {

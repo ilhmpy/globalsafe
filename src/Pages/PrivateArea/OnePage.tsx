@@ -1,26 +1,20 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Header } from '../../components/Header/Header';
-import * as Styled from './Styles.elements';
-import { Card, Container, ContainerRow } from '../../globalStyles';
-import { UpTitle } from '../../components/UI/UpTitle';
-import { Redirect, useHistory } from 'react-router-dom';
-import { Button } from '../../components/Button/Button';
-import { Tabs, Tab } from '../../components/UI/Tabs';
-import { AppContext } from '../../context/HubContext';
-import { RoundChart } from '../../components/Charts/Chart';
-import { Tables } from '../../components/Table/Table';
-import { InfoBlock } from '../../components/Table/TableModal';
-import { RouteComponentProps, useLocation, Link } from 'react-router-dom';
-import { ReactComponent as Left } from '../../assets/svg/left.svg';
+import { FC, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Redirect, RouteComponentProps, useHistory, useLocation } from 'react-router-dom';
 import { ModalCancel } from '../../components/Table/ModalCancel';
+import { InfoBlock } from '../../components/Table/TableModal';
+import { AppContext } from '../../context/HubContext';
+import { Card, Container } from '../../globalStyles';
 import { Collection } from '../../types/info';
+import * as Styled from './Styles.elements';
 
 type PropsMatch = {
   slug: string;
 };
 
-export const OnePage = ({ match }: RouteComponentProps<PropsMatch>) => {
+export const OnePage: FC<RouteComponentProps<PropsMatch>> = ({
+  match,
+}: RouteComponentProps<PropsMatch>) => {
   const [active, setActive] = useState(1);
   const [cancelModal, setCancelModal] = useState<boolean>(false);
   const [calcExchange, setCalcExchange] = useState<null | string[]>(null);
@@ -42,7 +36,6 @@ export const OnePage = ({ match }: RouteComponentProps<PropsMatch>) => {
     if (hubConnection) {
       try {
         const res = await hubConnection.invoke<string[]>('CalculateDepositExchange', amount, kind);
-        // console.log('res', res);
         setCalcExchange(res);
       } catch (e) {
         console.log(e);

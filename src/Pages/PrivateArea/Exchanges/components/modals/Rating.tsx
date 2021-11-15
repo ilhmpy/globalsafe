@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from 'react';
+import { FC } from 'react';
 import { Button } from '../../../../../components/Button/V2/Button';
 import { Modal } from '../../../../../components/ModalAnimated';
 import { Dropdown } from '../../../components/Dropdown';
@@ -21,7 +21,6 @@ export const Rating: FC<Props> = ({
   rates,
   onAccept,
 }: Props) => {
-  
   return (
     <>
       {open && (
