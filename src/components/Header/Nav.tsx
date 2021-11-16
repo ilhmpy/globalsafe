@@ -1,20 +1,7 @@
-import React, { FC, useContext } from 'react';
-import {
-  HeaderNav,
-  List,
-  ListItem,
-  StyledLink,
-  LinkButton,
-  Languale,
-  SwitchTheme,
-  Text,
-} from './Header.elements';
+import { FC, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import usa from '../../assets/svg/usa.svg';
-import ru from '../../assets/svg/russia.svg';
 import { ThemeContext } from '../../context/ThemeContext';
-import { ReactComponent as DarkTheme } from '../../assets/svg/theme.svg';
-import { ReactComponent as LightTheme } from '../../assets/svg/themeLight.svg';
+import { HeaderNav, LinkButton, List, ListItem, StyledLink } from './Header.elements';
 
 type Props = {
   onClose: () => void;
@@ -85,34 +72,6 @@ export const Nav: FC<Props> = ({
             </StyledLink>
           </ListItem>
         )}
-        {/* <ListItem>
-          {lang === 'ru' ? (
-            <Languale onClick={() => i18n.changeLanguage('en')}>
-              en
-              <img src={usa} alt="en" />
-            </Languale>
-          ) : (
-            <Languale onClick={() => i18n.changeLanguage('ru')}>
-              ru
-              <img src={ru} alt="ru" />
-            </Languale>
-          )}
-        </ListItem>
-        <ListItem>
-          <SwitchTheme onClick={swithTheme}>
-            {theme === 'light' ? (
-              <div>
-                <DarkTheme />
-                <Text>{t('themeDark')}</Text>
-              </div>
-            ) : (
-              <div>
-                <LightTheme />
-                <Text>{t('themeLight')}</Text>
-              </div>
-            )}
-          </SwitchTheme>
-        </ListItem> */}
       </List>
     </HeaderNav>
   );

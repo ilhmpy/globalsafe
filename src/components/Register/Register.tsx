@@ -1,16 +1,14 @@
+import moment from 'moment';
 import React, { FC, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components/macro';
-import moment from 'moment';
-
+import { ReactComponent as QuestionIcon } from '../../assets/svg/question14.svg';
 import { Button } from '../../components/Button/V2/Button';
 import { Input } from '../../components/UI/Input';
-import { Input as InputV4 } from '../../components/UI/V4';
+import { Input as InputV4, Tooltip } from '../../components/UI/V4';
 import { AppContext } from '../../context/HubContext';
 import { Card, Container } from '../../globalStyles';
-import { Tooltip } from '../UI/V4';
-import { ReactComponent as QuestionIcon } from '../../assets/svg/question14.svg'
 import { Timer } from '../Login/Timer';
 
 export const RegisterComponent: FC = () => {
@@ -36,7 +34,7 @@ export const RegisterComponent: FC = () => {
   const [passwordSuccessed, setPasswordSuccessed] = useState(false);
 
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLoginError(false)
+    setLoginError(false);
     setError(true);
     setValue(e.target.value);
   };
@@ -47,7 +45,7 @@ export const RegisterComponent: FC = () => {
   }, []);
 
   useEffect(() => {
-    if(user) {
+    if (user) {
       history.replace('/info');
     }
   }, [user]);
@@ -57,8 +55,8 @@ export const RegisterComponent: FC = () => {
     setError(true);
 
     let val = e.target.value;
-    if(e.target.value.length >= 4 && password.length < 4) {
-      val = [val.slice(0, 3), ' ', val.slice(3)].join('')
+    if (e.target.value.length >= 4 && password.length < 4) {
+      val = [val.slice(0, 3), ' ', val.slice(3)].join('');
     }
     setPassword(val);
   };
@@ -66,11 +64,11 @@ export const RegisterComponent: FC = () => {
   const singIn = () => {
     if (hubConnection) {
       hubConnection
-        .invoke('SignIn', { login: value, password: password.replace(/\s/g, ""), signInMethod: 3 })
+        .invoke('SignIn', { login: value, password: password.replace(/\s/g, ''), signInMethod: 3 })
         .then((res: any) => {
           setTryCode((tryCode) => tryCode + 1);
           localStorage.setItem('time', moment().toISOString());
-          console.log("SignIn", res);
+          console.log('SignIn', res);
           if (res.token !== null) {
             setPasswordError(false);
             setPasswordSuccessed(true);
@@ -86,10 +84,11 @@ export const RegisterComponent: FC = () => {
           }
         })
         .catch((err: Error) => {
+          console.log(err);
           setPasswordError(true);
           setPasswordSuccessed(false);
 
-          setError(false)
+          setError(false);
         });
     }
   };
@@ -99,32 +98,28 @@ export const RegisterComponent: FC = () => {
       hubConnection
         .invoke('SendAuthCode', value)
         .then((res: boolean) => {
-          console.log("SendAuthCode res", res);
+          console.log('SendAuthCode res', res);
           setError(true);
           setLogin(true);
         })
         .catch((err: Error) => {
+          console.log(err);
           setError(false);
         });
     }
   };
 
-  // const onSubmitCode = (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   singIn();
-  // };
-
   const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if(value && !password) {
+    if (value && !password) {
       checkCwdAccount();
       return;
     }
-    if(value && passwordError) {
+    if (value && passwordError) {
       loginSubmit();
       return;
-    } 
-    if(value && password) {
+    }
+    if (value && password) {
       singIn();
     }
   };
@@ -198,7 +193,6 @@ export const RegisterComponent: FC = () => {
             setError(true);
             loginSubmit();
           } else {
-            
             createAccount();
             // setError(false);
           }
@@ -206,155 +200,99 @@ export const RegisterComponent: FC = () => {
         .catch((err: Error) => {
           setLoginError(true);
           setLoginSuccessed(false);
-          console.log(err)
-      });
+          console.log(err);
+        });
     }
   };
-
 
   return (
     <AuthContainer>
       <AuthCardContainer>
-        {/* <CSSTransition in={where || !!user} timeout={300} classNames="alert" unmountOnExit>
-          <FormBlock>
-            <H4>{t('login.where')}</H4>
+        <FormBlock onSubmit={onFormSubmit}>
+          <H4>{t('headerButton.register')}</H4>
+          <InputV4
+            value={value}
+            name="login"
+            placeholder={t('login.loginCWD')}
+            onChange={onChangeValue}
+            autoComplete="off"
+            error={loginError ? t('login.incorrectLogin') : undefined}
+            mb={10}
+          />
+          <InputV4
+            value={password}
+            name="password"
+            placeholder={t('login.oneTimeCode')}
+            onChange={onChangeNumber}
+            autoComplete="new-password"
+            disabled={!loginSuccessed}
+            isValid={passwordSuccessed}
+            error={passwordError ? t('login.incorrectCode') : undefined}
+            mb={20}
+          />
 
-            <Submit mb as="button" onClick={() => history.push('/info')} dangerOutline>
-              {t('headerButton.personalArea')}
-            </Submit>
-            <Submit as="button" onClick={() => history.push('/admin')} danger disabled={!admin}>
-              {t('headerButton.admin')}
-            </Submit>
-          </FormBlock>
-        </CSSTransition> */}
-
-        {/* <CSSTransition in={login && !user && !where} timeout={300} classNames="alert" unmountOnExit>
-          <FormBlock onSubmit={onSubmitCode}>
-            <H4>{t('headerButton.register')}</H4>
-            <SelfInput
-              value={password}
-              name="password"
-              placeholder={t('login.code')}
-              onChange={onChangeNumber}
-              autoComplete="new-password"
-            />
-            {!error && (
-              <StyledInlineErrorMessage>{t('login.incorrectCode')}</StyledInlineErrorMessage>
+          <Timer
+            last={localStorage.getItem('timeRepeat') || ''}
+            setTryCode={setTryCode}
+            state={stateRepeat}
+            setState={setStateRepeat}
+          >
+            {stateRepeat === null ? (
+              <Button as="button" primary bigSize type="submit" disabled={value === ''}>
+                {t('login.getCode')}
+              </Button>
+            ) : password && !passwordError ? (
+              <Button as="button" primary bigSize type="submit">
+                {`${t('login.register')}`}
+              </Button>
+            ) : (
+              <Button as="button" primary bigSize type="submit" disabled={true}>
+                {`${t('login.repeat')} ${stateRepeat}.`}
+              </Button>
             )}
-            <Submit as="button" danger type="submit" disabled={password === ''}>
-              {t('login.in')}
-            </Submit>
-            <LinkToPage to="/login">{t('login.enter')}</LinkToPage>
+          </Timer>
+
+          <LinkToBlock>
             <LinkTo href={`https://backup.cwd.global/account/${value}`} target="_blank">
-              {t('login.goTo')}
+              {`${t('login.activityOn')} cwd.global`}
             </LinkTo>
-          </FormBlock>
-        </CSSTransition> */}
-
-        {/* <CSSTransition
-          in={!login && !user && !where}
-          timeout={300}
-          classNames="alert"
-          unmountOnExit
-        > */}
-          <FormBlock onSubmit={onFormSubmit}>
-            <H4>{t('headerButton.register')}</H4>
-            <InputV4 
-              value={value}
-              name="login"
-              placeholder={t('login.loginCWD')}
-              onChange={onChangeValue}
-              autoComplete="off"
-              error={loginError ? t('login.incorrectLogin') : undefined}
-              mb={10}
-            />
-            <InputV4 
-                value={password}
-                name="password"
-                placeholder={t('login.oneTimeCode')}
-                onChange={onChangeNumber}
-                autoComplete="new-password"
-                disabled={!loginSuccessed}
-                isValid={passwordSuccessed}
-                error={passwordError ? t('login.incorrectCode') : undefined}
-                mb={20}
-            />
-           
-           <Timer
-              last={localStorage.getItem('timeRepeat') || ''}
-              setTryCode={setTryCode}
-              state={stateRepeat}
-              setState={setStateRepeat}
+            <Tooltip
+              renderLabel={() => (
+                <InfoLinkBlock>
+                  <span>Откроется в новом окне.</span>
+                  <br />
+                  <span>Код доступа приходит в раздел</span>
+                  <br />
+                  <div>
+                    Активность на
+                    <LinkToSmall
+                      href={`https://backup.cwd.global/account/${value}`}
+                      target="_blank"
+                    >
+                      cwd.global
+                    </LinkToSmall>
+                  </div>
+                </InfoLinkBlock>
+              )}
+              direction="right"
             >
-              {stateRepeat === null ? (
-                <Button
-                  as="button" 
-                  primary
-                  bigSize
-                  type="submit"
-                  disabled={value === ''}
-                >
-                  {t('login.getCode')}
-                </Button>
-              ) : 
-              (password && !passwordError)
-                ?
-                  <Button 
-                    as="button"
-                    primary
-                    bigSize
-                    type="submit"
-                  >
-                    {`${t('login.register')}`}
-                  </Button>
-                :
-                  <Button 
-                    as="button"
-                    primary
-                    bigSize
-                    type="submit"
-                    disabled={true}
-                  >
-                    {`${t('login.repeat')} ${stateRepeat}.`}
-                  </Button>
-              }
-            </Timer>
+              <QuestionIcon />
+            </Tooltip>
+          </LinkToBlock>
 
-            <LinkToBlock>
-              <LinkTo href={`https://backup.cwd.global/account/${value}`} target="_blank">
-                {`${t('login.activityOn')} cwd.global`}
-              </LinkTo>
-              <Tooltip 
-                renderLabel={() => (
-                  <InfoLinkBlock>
-                    <span>Откроется в новом окне.</span><br />
-                    <span>Код доступа приходит в раздел</span><br />
-                    <div>Активность на 
-                      <LinkToSmall href={`https://backup.cwd.global/account/${value}`} target="_blank">cwd.global</LinkToSmall>
-                    </div>
-                  </InfoLinkBlock>
-                )} 
-                direction="right"
-              >
-                <QuestionIcon />
-              </Tooltip>
-            </LinkToBlock>
-
-            <LinkToPage to="/login/0">{t('login.authorize')}</LinkToPage>
-          </FormBlock>
+          <LinkToPage to="/login/0">{t('login.authorize')}</LinkToPage>
+        </FormBlock>
         {/* </CSSTransition> */}
       </AuthCardContainer>
     </AuthContainer>
   );
 };
 
-
-
 const AuthContainer = styled(Container)`
   justify-content: flex-start;
   flex: 1;
   margin: 38px auto 0 auto;
-  
+
   padding: 0;
   padding-top: 80px;
   align-items: center;
@@ -376,8 +314,8 @@ const AuthCardContainer = styled(Card)`
   width: 100%;
   height: 444px;
   border-radius: 8px;
-  background-color: ${props => props.theme.white};
-  border-color: ${props => props.theme.white};
+  background-color: ${(props) => props.theme.white};
+  border-color: ${(props) => props.theme.white};
   box-shadow: none;
 
   @media (max-width: 768px) {
@@ -392,7 +330,7 @@ const AuthCardContainer = styled(Card)`
 
 const H4 = styled.h4`
   text-align: center;
-  color: ${props => props.theme.black};
+  color: ${(props) => props.theme.black};
   font-weight: 700;
   font-size: 36px;
   line-height: 42px;
@@ -419,7 +357,6 @@ const FormBlock = styled.form`
     width: 280px;
   }
 `;
-
 
 const SelfInput = styled(Input)`
   margin-bottom: 26px;
@@ -455,7 +392,7 @@ const LinkToSmall = styled.a`
   font-size: 12px;
   line-height: 20px;
   text-decoration-line: underline;
-  color: #3F3E4E;
+  color: #3f3e4e;
   margin-left: 5px;
 `;
 

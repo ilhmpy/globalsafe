@@ -1,8 +1,8 @@
-import { useContext } from 'react';
-import { Loading } from '../UI/Loading';
+import { FC } from 'react';
 import styled from 'styled-components';
+import { Loading } from '../UI/Loading';
 
-export function Loader() {
+export const Loader: FC = () => {
   return (
     <LoaderWrap>
       <Loading />
@@ -24,4 +24,3 @@ const LoaderWrap = styled.div`
   justify-content: center;
   background-color: ${({ theme }) => theme.loader.bg};
 `;
-   

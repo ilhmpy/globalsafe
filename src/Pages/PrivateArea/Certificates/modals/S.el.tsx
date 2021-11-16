@@ -95,14 +95,43 @@ export const Desc = styled.p`
 `;
 
 export const SmallContainer = styled.div`
-  width: 340px;
+  width: 420px;
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
+  @media (max-width: 767px) {
+    margin-top: 60px;
+    width: 100%;
+    padding: 0;
+    border-radius: 0;
+    margin-bottom: 60px;
+    background: transparent;
+  }
+`;
+
+export const SmallContainerInner = styled.div`
+  display: flex;
+  flex-direction: column;
+  @media (max-width: 767px) {
+    width: 100%;
+    padding: 20px;
+    background: #ffffff;
+  }
 `;
 
 export const BlackTitle = styled(Title)`
   margin-top: 8px;
   color: ${(props) => props.theme.black};
+  @media (max-width: 767px) {
+    font-weight: 900;
+    font-size: 18px;
+    line-height: 21px;
+    color: #3f3e4e;
+    padding: 20px;
+    margin: 0;
+  }
 `;
 
 export const DataList = styled.div`

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import styled, { css } from 'styled-components/macro';
 import { Button } from '../../../components/Button/V2/Button';
 import { Modal } from '../../../components/ModalAnimated';
@@ -10,35 +10,34 @@ import { Device } from '../consts';
 type Props = {
   onClose: () => void;
   open: boolean;
-  onAccept: () => void;
-  onResetFilters: () => void;
-
-  selectedPaymentMethods: number[];
-  setSelectedPaymentMethods: (val: any[]) => void;
-  methodsList: any[];
+  methodsList: { label: string }[];
+  allCurrency: boolean;
+  setAllCurrency: (val: boolean) => void;
+  nowMonth: boolean;
+  setNowMonth: (val: boolean) => void;
 };
 
 export const MobileFiltersModal: FC<Props> = ({
   onClose,
   open,
-  onAccept,
-  onResetFilters,
-
-  selectedPaymentMethods,
-  setSelectedPaymentMethods,
   methodsList,
+  allCurrency,
+  setAllCurrency,
+  nowMonth,
+  setNowMonth,
 }: Props) => {
-  const handleCheckboxChange = (value: number) => {
-    if (selectedPaymentMethods.includes(value)) {
-      setSelectedPaymentMethods([...selectedPaymentMethods].filter((ind) => ind !== value));
-    } else {
-      setSelectedPaymentMethods([...selectedPaymentMethods, value]);
-    }
-  };
+  const [allCurrencyLocal, setAllCurrencyLocal] = useState<boolean>(allCurrency);
+  const [nowMonthLocal, setNowMonthLocal] = useState<boolean>(nowMonth);
 
   const handleAccept = () => {
-    onAccept();
+    setAllCurrency(allCurrencyLocal);
+    setNowMonth(nowMonthLocal);
     onClose();
+  };
+
+  const resetFilters = () => {
+    setNowMonth(false);
+    setAllCurrency(false);
   };
 
   return (
@@ -49,52 +48,38 @@ export const MobileFiltersModal: FC<Props> = ({
             <MobileHeader>
               <Back text="Назад" onGoBackClick={onClose} />
               <Title mB={0} mbMobile={0} heading2>
-                Фильтрация по типу
+                Фильтрация
               </Title>
             </MobileHeader>
             <MobileContent>
-              {/* Payment Methods */}
               <Container wFull>
                 <Text textInMobileFilter style={{ marginBottom: '20px' }}>
-                  Методы оплаты:
+                  Параметры:
                 </Text>
                 <>
-                  {[...methodsList].reverse().map((method, i) =>
-                    i !== 2 ? (
-                      <DropdonwConatainer big key={`payment-item-${i}`}>
-                        <Checkbox
-                          dis={false}
-                          checked={selectedPaymentMethods.includes(method.value)}
-                          onChange={() => handleCheckboxChange(method.value)}
-                        >
-                          <Label active={selectedPaymentMethods.includes(method.value)} dis={false}>
-                            {method.label}
-                          </Label>
-                        </Checkbox>
-                      </DropdonwConatainer>
-                    ) : (
-                      <>
-                        <DropdonwConatainer big key={`payment-item-${i}`}>
-                          <Checkbox
-                            dis={false}
-                            checked={selectedPaymentMethods.includes(method.value)}
-                            onChange={() => handleCheckboxChange(method.value)}
-                          >
-                            <Label
-                              active={selectedPaymentMethods.includes(method.value)}
-                              dis={false}
-                            >
-                              {method.label}
-                            </Label>
-                          </Checkbox>
-                        </DropdonwConatainer>
+                  <DropdonwConatainer big>
+                    <Checkbox
+                      dis={false}
+                      checked={nowMonthLocal}
+                      onChange={() => setNowMonthLocal(!nowMonthLocal)}
+                    >
+                      <Label active={nowMonthLocal} dis={false}>
+                        {methodsList[0].label}
+                      </Label>
+                    </Checkbox>
+                  </DropdonwConatainer>
 
-                        <DropdonwConatainer big key={`payment-item-${i}`}>
-                          <Hr />
-                        </DropdonwConatainer>
-                      </>
-                    )
-                  )}
+                  <DropdonwConatainer big>
+                    <Checkbox
+                      dis={false}
+                      checked={allCurrencyLocal}
+                      onChange={() => setAllCurrencyLocal(!allCurrencyLocal)}
+                    >
+                      <Label active={allCurrencyLocal} dis={false}>
+                        {methodsList[1].label}
+                      </Label>
+                    </Checkbox>
+                  </DropdonwConatainer>
                 </>
               </Container>
 
@@ -103,7 +88,7 @@ export const MobileFiltersModal: FC<Props> = ({
                   Применить
                 </Button>
 
-                <Button bigSize fullWidth outlinePrimary onClick={onResetFilters}>
+                <Button bigSize fullWidth outlinePrimary onClick={resetFilters}>
                   Очистить фильтр
                 </Button>
               </Space>

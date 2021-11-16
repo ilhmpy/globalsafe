@@ -1,25 +1,31 @@
 import React, { FC } from 'react';
-import { Modal } from '../../../../components/ModalAnimated';
+import { ModalMob } from '../../../../components/ModalMob';
 import { MarketCertificate } from '../../../../types/certificates';
+import { Button } from '../../../../components/Button/V2/Button';
 import * as S from './S.el';
 
 type Props = {
-  onClose: () => void;
   open: boolean;
-  data: MarketCertificate;
+  onClose: () => void;
+  data: MarketCertificate | null;
 };
 
-export const SuccessModal: FC<Props> = ({ onClose, open, data }: Props) => {
+export const SuccessModal: FC<Props> = ({ onClose, data, open }: Props) => {
   return (
     <>
-      {open && (
-        <Modal onClose={onClose} open={open}>
+      <ModalMob onClose={onClose} open={open}>
+        {data ? (
           <S.SmallContainer>
-            <S.BlackTitle>Сертификат успешно куплен</S.BlackTitle>
-            <S.Desc>Сертификат “{data.certificate.name}” успешно куплен</S.Desc>
+            <S.SmallContainerInner>
+              <S.BlackTitle>Сертификат успешно куплен</S.BlackTitle>
+              <S.Desc>Сертификат “{data.certificate.name}” успешно куплен</S.Desc>
+              <Button primary bigSize onClick={onClose}>
+                Ок
+              </Button>
+            </S.SmallContainerInner>
           </S.SmallContainer>
-        </Modal>
-      )}
+        ) : null}
+      </ModalMob>
     </>
   );
 };

@@ -38,7 +38,6 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
   const [notify, setNotify] = useState<boolean>(false);
   const screen = useWindowSize();
   const [none, setNone] = useState<boolean>(false);
-  const [time, setTime] = useState<any>();
 
   const appContext = useContext(AppContext);
   const themeContext = useContext(ThemeContext);
@@ -99,12 +98,18 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
     setNotify(!notify);
   }
 
+  function handleAuthClick() {
+    history.push(`/login/0`);
+  };
+
   return (
     <>
       <HeaderWrap header={header}>
         <Container style={{ position: 'relative' }}>
           <HeaderInner>
-            <HeaderLogo href="/">{screen >= 768 ? <Logo /> : <GsLogo />}</HeaderLogo>
+            <HeaderLogo href="/">
+              <Logo />
+            </HeaderLogo>
             <HeaderMenu open={open}>
               {admPanel ? (
                 <NavAdmin lang={lang} onClose={onClose} />
@@ -163,9 +168,13 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
             <ButtonsRev className={user === null || admin === null ? 'is-placeholder' : ''}>
               {admin ? <AdminLink to="/admin">{t('headerButton.admin')}</AdminLink> : null}
             </ButtonsRev>
+            {user ?
             <Btn primary onClick={handleClick}>
               {t('headerButton.personalArea')}
-            </Btn>
+            </Btn> :
+            <Btn primary onClick={handleAuthClick}>
+              Войти
+            </Btn>}
             <MenuBtn open={open} onClick={() => setOpen(!open)}>
               <span></span>
               <span></span>

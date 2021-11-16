@@ -193,7 +193,7 @@ export const SliderChart: FC<Props> = ({
                     <S.ChartName>GLOBAL</S.ChartName>
                     <S.ChartValue>
                       {listGLOBAL.length
-                        ? (listGLOBAL[listGLOBAL.length - 1].latestBid / 100).toLocaleString(
+                        ? (listGLOBAL[listGLOBAL.length - 1].latestBid / 10000).toLocaleString(
                             'ru-RU',
                             {
                               maximumFractionDigits: 2,
@@ -304,7 +304,7 @@ export const SliderChart: FC<Props> = ({
                     <S.ChartName>GLOBAL</S.ChartName>
                     <S.ChartValue>
                       {listGLOBAL.length
-                        ? (listGLOBAL[listGLOBAL.length - 1].latestBid / 100).toLocaleString(
+                        ? (listGLOBAL[listGLOBAL.length - 1].latestBid / 10000).toLocaleString(
                             'ru-RU',
                             {
                               maximumFractionDigits: 2,
