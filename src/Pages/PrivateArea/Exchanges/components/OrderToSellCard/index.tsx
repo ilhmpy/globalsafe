@@ -371,7 +371,7 @@ export const OrderToSellCard: FC = () => {
       isValid = false;
     }
     if (orderMinSumm) {
-      if (Number(orderMinSumm) <= 0) {
+      if (Number(orderMinSumm) < 0) {
         isValid = false;
       }
     }
