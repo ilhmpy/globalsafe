@@ -193,13 +193,13 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
             if(volume <= limitTo) {
                 if(+value >= volume) {
                     setBalanceSumm(String(volume));
-                    setFiatSumm((volume * order.rate).toFixed(fiatFixLength));
+                    setFiatSumm(String( Number( (volume * order.rate).toFixed(fiatFixLength)) ));
                     return;
                 }
     
                 if(+value >= limitTo) {
                     setBalanceSumm(String(limitTo));
-                    setFiatSumm((limitTo * order.rate).toFixed(fiatFixLength));
+                    setFiatSumm(String( Number( (limitTo * order.rate).toFixed(fiatFixLength)) ));
                     return;  
                 } 
             }
@@ -207,13 +207,13 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
             if(limitTo <= volume) {
                 if(+value >= limitTo) {
                     setBalanceSumm(String(limitTo));
-                    setFiatSumm((limitTo * order.rate).toFixed(fiatFixLength));
+                    setFiatSumm(String( Number( (limitTo * order.rate).toFixed(fiatFixLength)) ));
                     return;  
                 } 
 
                 if(+value >= volume) {
                     setBalanceSumm(String(volume));
-                    setFiatSumm((volume * order.rate).toFixed(fiatFixLength));
+                    setFiatSumm(String( Number( (volume * order.rate).toFixed(fiatFixLength)) ));
                     return;
                 }
             }
@@ -245,13 +245,13 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
 
             if(volumeSumm <= limitToSumm) {
                 if(+value >= volumeSumm) {
-                    setFiatSumm((volumeSumm).toFixed(fiatFixLength));
+                    setFiatSumm(String(Number(volumeSumm.toFixed(fiatFixLength))));
                     setBalanceSumm(String(volume));
                     return;
                 }
     
                 if(+value >= limitToSumm) {
-                    setFiatSumm((limitToSumm).toFixed(fiatFixLength));
+                    setFiatSumm(String(Number(limitToSumm.toFixed(fiatFixLength))));
                     setBalanceSumm(String(limitTo));
                     return;
                 } 
@@ -259,13 +259,13 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
 
             if(limitToSumm <= volumeSumm) {
                 if(+value >= limitToSumm) {
-                    setFiatSumm((limitToSumm).toFixed(fiatFixLength));
+                    setFiatSumm(String(Number(limitToSumm.toFixed(fiatFixLength))));
                     setBalanceSumm(String(limitTo));
                     return;
                 } 
 
                 if(+value >= volumeSumm) {
-                    setFiatSumm((volumeSumm).toFixed(fiatFixLength));
+                    setFiatSumm(String(Number(volumeSumm.toFixed(fiatFixLength))));
                     setBalanceSumm(String(volume));
                     return;
                 }
