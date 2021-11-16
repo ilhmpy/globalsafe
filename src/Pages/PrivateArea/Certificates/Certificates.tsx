@@ -39,6 +39,7 @@ import 'swiper/components/pagination/pagination.scss';
 import 'swiper/components/scrollbar/scrollbar.scss';
 import 'swiper/swiper.scss';
 import useWindowSize from '../../../hooks/useWindowSize';
+import { ModalMob } from '../../../components/ModalMob';
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
@@ -52,8 +53,11 @@ export const Certificates = () => {
   const [userCertificat, setUserCertificat] = useState<ViewUserCertificateModel[]>([]);
   const [userPureCertificat, setUserPureCertificat] = useState<ViewUserCertificateModel[]>([]);
   const [buyCertificateModal, setBuyCertificateModal] = useState<MarketCertificate | null>(null);
+  const [buyCertificateShow, setBuyCertificateShow] = useState(false);
   const [successModal, setIsSuccessModal] = useState<MarketCertificate | null>(null);
   const [errorModal, setIsErrorModal] = useState<MarketCertificate | null>(null);
+  const [errorModalShow, setErrorModalShow] = useState(false);
+  const [successModalShow, setSuccessModalShow] = useState(false);
   const [errorType, setErrorType] = useState('');
   const [tabActive, setTabActive] = useState(Tabs.Active);
   const history = useHistory();
@@ -113,9 +117,11 @@ export const Certificates = () => {
         await hubConnection.invoke('PurchaseCertificate', data.safeId);
         getUserCertificate();
         setIsSuccessModal(data);
+        setSuccessModalShow(true);
       } catch (e) {
         console.log(e);
         setIsErrorModal(data);
+        setErrorModalShow(true);
       }
     }
   };
@@ -131,18 +137,23 @@ export const Certificates = () => {
     if (!asset) {
       setErrorType(`У вас нет валюты ${Balance[item.certificate.assetKind]}`);
       setIsErrorModal(item);
+      setErrorModalShow(true);
     } else if (certificate && certificate.certificate.safeId === item.certificate.safeId) {
       setErrorType('Данный сертификат уже куплен');
       setIsErrorModal(item);
+      setErrorModalShow(true);
     } else if (certificate && item.certificate.dailyVolume <= certificate.certificate.dailyVolume) {
       setErrorType('Сумма сертификата меньше существующей');
       setIsErrorModal(item);
+      setErrorModalShow(true);
     } else if (asset !== null && asset.volume < item.price) {
       setErrorType('На балансе аккаунта недостаточно средств');
       setIsErrorModal(item);
+      setErrorModalShow(true);
     } else {
       setErrorType('');
       setBuyCertificateModal(item);
+      setBuyCertificateShow(true);
     }
   };
 
@@ -162,27 +173,23 @@ export const Certificates = () => {
     }
   };
 
+  const onClose = () => {
+    setBuyCertificateShow(false);
+    setSuccessModalShow(false);
+    setErrorModalShow(false);
+  };
+
   return (
     <S.Container>
-      {buyCertificateModal && (
-        <BuyCertificateModal
-          data={buyCertificateModal}
-          purchase={purchase}
-          onClose={() => setBuyCertificateModal(null)}
-          open={true}
-        />
-      )}
-      {successModal && (
-        <SuccessModal open={true} data={successModal} onClose={() => setIsSuccessModal(null)} />
-      )}
-      {errorModal && (
-        <ErrorModal
-          errorType={errorType}
-          open={true}
-          data={errorModal}
-          onClose={() => setIsErrorModal(null)}
-        />
-      )}
+      <BuyCertificateModal
+        open={buyCertificateShow}
+        data={buyCertificateModal}
+        purchase={purchase}
+        onClose={onClose}
+      />
+      <SuccessModal open={successModalShow} data={successModal} onClose={onClose} />
+      <ErrorModal open={errorModalShow} errorType={errorType} data={errorModal} onClose={onClose} />
+
       <Container>
         <S.Heading>
           <Heading
