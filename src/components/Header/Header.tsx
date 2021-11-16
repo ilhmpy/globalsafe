@@ -47,9 +47,7 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
   // const user = appContext.user;
   // const admin = appContext.isAdmin;
   const admin = localStorage.getItem('admin') === 'true';
-  console.log('admin', admin);
   const user = localStorage.getItem('token');
-  console.log('user', user);
   const history = useHistory();
   const location = useLocation();
   const { t, i18n } = useTranslation();
