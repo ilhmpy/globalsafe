@@ -12,7 +12,7 @@ import * as S from './S.elements';
 
 export const DepositView: FC = () => {
   const history = useHistory();
-  const { hubConnection, balanceList, chosenDepositView, setChosenDepositView } =
+  const { hubConnection, chosenDepositView, setChosenDepositView } =
     useContext(AppContext);
 
   const [accrualHistory, setAccrualHistory] = useState<Collection[]>([]);

@@ -3,12 +3,11 @@ import React, { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { API_URL } from '../constantes/api';
+import { NotifyItem } from '../constantes/notifies';
 import useLocalStorage from '../hooks/useLocalStorage';
 import useWindowSize from '../hooks/useWindowSize';
 import { getMyRating } from '../Pages/PrivateArea/utils';
 import { BalanceList } from '../types/balance';
-import { ViewExchangeModel } from '../types/exchange';
-import { NotifyItem } from '../constantes/notifies';
 
 type Nulable<T> = T | null;
 
@@ -38,7 +37,7 @@ type Context = {
   addDrawModalOpen: boolean;
   setAddDrawModalOpen: (addDrawModal: boolean) => void;
   notifies: NotifyItem[];
-  setNotifies: (val: any) => void; 
+  setNotifies: (val: any) => void;
   checkeds: boolean;
   setCheckeds: (val: boolean) => any;
   onNotify: (id: string) => void;
@@ -181,8 +180,10 @@ export const HubProvider: FC = ({ children }: any) => {
           console.log('GetSigned', res);
           if (res.roles.length && res.roles[0].name === 'administrator') {
             setIsAdmin(true);
+            localStorage.setItem('admin', 'true');
           } else {
             setIsAdmin(false);
+            localStorage.setItem('admin', 'false');
           }
           setUser(res.name);
           setAccount(res);
@@ -223,6 +224,7 @@ export const HubProvider: FC = ({ children }: any) => {
     setMyToken(null);
     setUser(null);
     setIsAdmin(false);
+    localStorage.setItem('admin', 'false');
     // history.push('/');
   };
 
@@ -331,7 +333,7 @@ export const HubProvider: FC = ({ children }: any) => {
         setNotifies,
         checkeds,
         setCheckeds,
-        onNotify
+        onNotify,
       }}
     >
       {children}
