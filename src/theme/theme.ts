@@ -110,6 +110,22 @@ export const lightTheme = {
       burger: "#000"
     }
   },
+
+
+
+  // NEW CODE
+  main: {
+    bodyBackground: "#fff",
+    bodyColor: "#3F3E4E"
+  },
+  notifies: {
+    notifyBlockBackground: "#fff",
+    notifyBackground: "#F9FAFB",
+    notifiesBorder: "#DCDCE8",
+    notifiesDateColor: "#3F3E4E",
+    doneNotify: "#030D45",
+    notifiesBoxShadow: "0px 16px 30px rgba(220, 220, 232, 0.5)",
+  }
 };
 
 export const darkTheme = {
@@ -220,5 +236,20 @@ export const darkTheme = {
       burger: "#FFF"
     }
   },
+
+  // NEW CODE
+
+  main: {
+    bodyBackground: "#28282F",
+    bodyColor: "#FFFFFF"
+  },
+  notifies: {
+    notifyBlockBackground: "#28282F",
+    notifyBackground: "#313139",
+    notifiesBorder: "#51517266",
+    notifiesDateColor: "#fff",
+    doneNotify: "#fff",
+    notifiesBoxShadow: "0",
+  }
 };
  

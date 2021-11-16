@@ -104,7 +104,7 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
         <Container style={{ position: "relative" }}>
           <HeaderInner>
             <HeaderLogo href="/">
-              <Logo />
+              <Logo className="logo" />
             </HeaderLogo>
             <HeaderMenu open={open}>
               {admPanel ? (
@@ -123,7 +123,7 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
             </HeaderMenu>
 
             {lang === 'ru' ? (
-              <Languale
+              <Languale 
                 auth={user ? true : false}
                 admin={admin ? true : false}
                 onClick={() => i18n.changeLanguage('en')}

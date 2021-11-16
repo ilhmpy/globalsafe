@@ -10,6 +10,9 @@ export const BallContainer = styled.div<{ notChecked: boolean }>`
   & > svg {
     cursor: pointer;
   }
+  & > svg > path {
+    fill: ${({ theme }) => theme.main.bodyColor};
+  }
   &::before {
     content: '';
     display: ${({ notChecked }) => (notChecked ? 'block' : 'none')};
@@ -54,7 +57,6 @@ export const NotifiesBlock = styled.div<{
             `;
     }
   }}
-  background: #fff;
   border-radius: 4px;
   position: fixed;
   @media (min-width: 1101px) {
@@ -91,16 +93,16 @@ export const NotifiesBlock = styled.div<{
           `;
     }
   }}
-  border: 1px solid #dcdce8;
+  border: 1px solid ${({ theme }) => theme.notifies.notifiesBorder};
   z-index: 999999;
-  background: #fff;
-  box-shadow: 0px 16px 30px rgba(220, 220, 232, 0.5);
+  background: ${({ theme }) => theme.notifies.notifyBlockBackground};
+  box-shadow: ${({ theme }) => theme.notifies.notifiesBoxShadow};
   padding: 20px 8px 1px 0px;
   &::before {
     content: '';
     width: 14px;
     height: 14px;
-    background: #fff;
+    background: ${({ theme }) => theme.main.bodyBackground};
     display: block;
     border-radius: 3px;
     border-bottom-left-radius: 0px;
@@ -110,8 +112,8 @@ export const NotifiesBlock = styled.div<{
     right: 0;
     left: 0;
     top: -8px;
-    border-top: 1px solid #dcdce8;
-    border-left: 1px solid #dcdce8;
+    border-top: 1px solid ${({ theme }) => theme.notifies.notifiesBorder};
+    border-left: 1px solid ${({ theme }) => theme.notifies.notifiesBorder};
     margin: auto;
     @media (max-width: 1100px) {
       margin-right: 0;
@@ -148,7 +150,7 @@ export const Notify = styled.div<{
   notclb?: boolean;
 }>`
   width: 100%;
-  background: #f9fafb;
+  background: ${({ theme }) => theme.notifies.notifyBackground};
   margin-bottom: 10px;
   padding: 10px;
   padding-left: 29px;
@@ -206,8 +208,8 @@ export const NotifyItem = styled.h3<{
   font-weight: 400;
   font-size: 12px;
   line-height: 20px;
-  color: #3f3e4e;
-  & > a {
+  color: ${({ theme }) => theme.notifies.notifiesDateColor};
+  & > a { 
     color: inherit;
     line-height: inherit;
     font-size: inherit;
@@ -260,6 +262,9 @@ export const Scrollbar = styled.div<{ lengthMoreThenFour: boolean; }>`
   display: ${({ lengthMoreThenFour }) => lengthMoreThenFour ? "block" : "none"} !important;
 `;
 
-export const DoneNotify = styled(Done)`
+export const DoneNotify = styled.div`
   margin: 10px 0px 0px 0px;
+  & > svg > path {
+    fill: ${({ theme }) => theme.notifies.doneNotify} !important;
+  }
 `;

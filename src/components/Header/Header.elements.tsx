@@ -114,9 +114,7 @@ export const HeaderWrap = styled.header<{ header?: boolean }>`
   padding: 30px 0;
   height: 98px;
   transition: all 0.3s ease 0s;
-  background: ${(props) => props.theme.v2.header.background};
-  /* background: ${(props) =>
-    props.header ? props.theme.header : props.theme.v2.header.background}; */
+  background: ${({ theme }) => theme.main.bodyBackground};
   @media (max-width: 768px) {
     height: 60px;
     padding: 15px 0;
@@ -153,8 +151,8 @@ export const HeaderLogo = styled.a`
   @media (max-width: 767px) {
     margin-top: 8px;
   }
-  .logo {
-    fill: ${(props) => props.theme.text};
+  & svg > path {
+    fill: ${({ theme }) => theme.main.bodyColor} !important;
   }
 `;
 
@@ -280,7 +278,7 @@ export const StyledLink = styled(NavHashLink).attrs({ activeclassname })`
   &.${activeclassname} {
     color: red;
   }
-  color: #3f3e4e;
+  color: ${({ theme }) => theme.main.bodyColor};
   font-weight: 500;
   font-size: 12px;
   line-height: 14px;

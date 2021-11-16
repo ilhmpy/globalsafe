@@ -2,6 +2,7 @@ import 'styled-components';
 
 declare module 'styled-components' {
   export interface DefaultTheme {
+    // OLD CODE
     body: string;
     text: string;
     text2: string;
@@ -107,6 +108,20 @@ declare module 'styled-components' {
       ich1: string;
       ich2: string;
       tableBg: string;
+    }
+
+    // NEW CODE
+    main: {
+      bodyBackground: string;
+      bodyColor: string;
+    }, 
+    notifies: {
+      notifyBackground: string;
+      notifiesBorder: string;
+      notifiesDateColor: string;
+      doneNotify: string;
+      notifiesBoxShadow: string;
+      notifyBlockBackground: string;
     }
   }
 }

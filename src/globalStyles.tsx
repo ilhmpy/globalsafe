@@ -18,7 +18,7 @@ body{
     position: relative;
     font-weight: 400;
     background: #f9fafb;
-    /* background:${(props) => props.theme.body} ; */
+    background:${({ theme }) => theme.main.bodyBackground};
     background-repeat: no-repeat;
     height: 100%;
     scrollbar-width: none;
