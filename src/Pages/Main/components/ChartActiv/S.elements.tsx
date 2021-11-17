@@ -3,7 +3,7 @@ import styled from 'styled-components/macro';
 export const ChartContainer = styled.div`
   padding: 40px;
   background: ${(props) => props.theme.v2.chart.background};
-  box-shadow: 0px 80px 80px -40px rgba(220, 220, 232, 0.5);
+  box-shadow: ${(props) => props.theme.v2.chart.shadow};
   border-radius: 4px;
   margin-bottom: 20px;
   @media (max-width: 992px) {
@@ -134,9 +134,10 @@ export const Button = styled.button<{ active: boolean }>`
   line-height: 14px;
   cursor: pointer;
   color: ${(props) => (props.active ? '#fff' : props.theme.v2.text)};
-  background: ${(props) => (props.active ? ' #0094FF' : props.theme.v2.chart.btn)};
+  background: ${(props) => (props.active ? ' #0094FF' : props.theme.charts.chartButtonBg)};
   border-radius: 4px;
   padding: 5px 10px;
+  opacity: ${(props) => (props.active ? '100%' : props.theme.charts.chartOpacityBtn)};
   margin-right: 10px;
   &:last-child {
     margin-right: 0;

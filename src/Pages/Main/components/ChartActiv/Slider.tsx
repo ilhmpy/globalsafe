@@ -268,7 +268,7 @@ export const SliderChart: FC<Props> = ({
               <S.ChartItem>
                 {listGCWD.length ? (
                   <>
-                    <S.ChartName>GCWD </S.ChartName>
+                    <S.ChartName>GCWD</S.ChartName>
                     <S.ChartValue>
                       {(listGCWD[listGCWD.length - 1].latestBid / 100000).toLocaleString('ru-RU', {
                         maximumFractionDigits: 2,

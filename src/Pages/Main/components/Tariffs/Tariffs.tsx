@@ -206,10 +206,10 @@ export const Tariffs = () => {
 const PartnersBlock = styled.div`
   width: 100%;
   min-height: 544px;
-  background: #fff;
+  background: ${({ theme }) => theme.main.blocksBackground};
   border-radius: 4px;
   padding: 1px;
-  box-shadow: 0px 80px 80px -40px rgba(220, 220, 232, 0.5);
+  box-shadow: ${({ theme }) => theme.partnersProgramsBlock.boxShadow};
   @media (max-width: 767px) {
     min-height: 345px;
     margin-bottom: 20px;
@@ -234,7 +234,8 @@ const PartnersHeader = styled.header`
 
 const PartnersHeaderItem = styled.div`
   width: 74px;
-  color: #000;
+  color: ${({ theme }) => theme.main.bodyColor};
+  opacity: ${({ theme }) => theme.depositsProgramsCards.descOpacity};
   line-height: 28px;
   font-size: 24px;
   font-weight: 700;
@@ -257,13 +258,14 @@ const PartnersHeaderItem = styled.div`
 const PartnersItem = styled.div`
   width: 100%;
   height: 60px;
-  background: #fff;
+  background: ${({ theme }) => theme.partnersProgramsBlock.background2ich};
   display: flex;
   align-items: center;
   padding-left: 20px;
-  color: #000;
+  color: ${({ theme }) => theme.main.bodyColor};
+  opacity: ${({ theme }) => theme.depositsProgramsCards.descOpacity};
   &:nth-child(2n) {
-    background: #f8f7fc;
+    background: ${({ theme }) => theme.partnersProgramsBlock.background};
   }
   @media (max-width: 767px) {
     height: 38px;

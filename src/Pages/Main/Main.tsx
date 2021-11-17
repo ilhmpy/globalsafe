@@ -2059,7 +2059,7 @@ export const Main: FC = () => {
   const closeTimer = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowTimer(false);
-  };
+  }; 
 
   const onShowModal = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -2160,7 +2160,7 @@ export const Main: FC = () => {
         <DrawHistory onOpenModal={onOpenModal} clock={clock} />
         <Footer />
       </MainPage>
-    </div>
+    </div> 
   );
 };
 
