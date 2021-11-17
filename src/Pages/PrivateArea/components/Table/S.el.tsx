@@ -4,6 +4,7 @@ export const Wrapper = styled.div`
   margin: 0 auto;
   width: 100%;
   background: #ffffff;
+
   box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
   border-radius: 4px;
   overflow: hidden;
@@ -11,6 +12,7 @@ export const Wrapper = styled.div`
 
 export const Table = styled.div`
   width: 100%;
+  background: ${(props) => props.theme.lkMain.balanceBlock};
 `;
 
 export const Cell = styled.div`
@@ -118,6 +120,8 @@ const header = css`
 
 export const Header = styled(Row)`
   cursor: auto;
+  background: ${(props) => props.theme.lkMain.depositHeader} !important;
+
   ${header};
 `;
 

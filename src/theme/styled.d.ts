@@ -77,19 +77,6 @@ declare module 'styled-components' {
     };
     pink: string;
     rounIputBackground: string;
-    v2:{
-      text: string;
-      blackText: string;
-      bg: string;
-      neutral: string;
-      activeBlue: string;
-      neutralBlue: string;
-      body: string;
-      header:{
-        background: string;
-        burger: string;
-      }
-    },
     titles: string;
     toToken: {
       background: string;
@@ -107,6 +94,26 @@ declare module 'styled-components' {
       ich1: string;
       ich2: string;
       tableBg: string;
-    }
+    };
+    v2: {
+      text: string;
+      blackText: string;
+      bg: string;
+      neutral: string;
+      activeBlue: string;
+      neutralBlue: string;
+      body: string;
+      header: {
+        background: string;
+        burger: string;
+      };
+    };
+    lkMain: {
+      background: string;
+      balanceBlock: string;
+      boxShadow: string;
+      borderRadius: string;
+      depositHeader: string;
+    };
   }
 }

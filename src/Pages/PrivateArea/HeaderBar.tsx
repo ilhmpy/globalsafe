@@ -1081,7 +1081,7 @@ const SlideContainer = styled.p<{ active?: boolean }>`
 `;
 
 const TabNavItem = styled(NavLink)`
-  color: ${(props) => props.theme.black};
+  color: #FFFFFF;
   opacity: 0.6;
   font-size: 14px;
   line-height: 16px;
@@ -1115,6 +1115,7 @@ const CustomPage = styled(Styled.Page)`
 const DepositsPanelContainer = styled(Container)`
   display: flex;
   flex-direction: column;
+  /* background: ${(props) => props.theme.lkMain.background}; */
   @media (max-width: 1024px) {
     width: 100%;
     padding: 0px 34px;
@@ -1176,8 +1177,9 @@ const UsernameText = styled.span`
 
 const PanelCard = styled(Card)`
   border-radius: 4px;
-  box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
+  box-shadow: ${(props) => props.theme.lkMain.boxShadow};
   padding: 20px;
+  background: ${(props) => props.theme.lkMain.balanceBlock};
   @media (max-width: 1024px) {
     padding: 20px 0;
   }

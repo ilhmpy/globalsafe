@@ -7,7 +7,7 @@ export const lightTheme = {
   modal: '#fff',
   toggleBorder: '#FFF',
   buttonBorder: '#0E0D3D',
-  dangerButtonText:'#FFF',
+  dangerButtonText: '#FFF',
   inputBg: '#fff',
   repeatCode: '#212121',
   header: `linear-gradient(
@@ -57,7 +57,7 @@ export const lightTheme = {
   },
   acceptAll: {
     bg: '#fff',
-    desc: '#56657F',  
+    desc: '#56657F',
     opacity: '60%',
     item: '#515172',
   },
@@ -70,45 +70,52 @@ export const lightTheme = {
   },
   loader: {
     bg: 'rgba(0, 0, 0, 0.2)',
-    pointsColor: '#2b3595', 
+    pointsColor: '#2b3595',
   },
   timer: {
     bg: '#fff',
     color: '#515172',
-    beforeBg: "#f2e9e4"
+    beforeBg: '#f2e9e4',
   },
   pink: '#FF416E',
   rounIputBackground: '#FFF0F0',
-  titles: "#3F3E4E",
+  titles: '#3F3E4E',
   authBgGray: '#E5E5E5',
   toToken: {
-    color: "rgba(14, 13, 61, 0.5)",
-    background: "#fff",
-    convertColor: "#0E0D3D"
+    color: 'rgba(14, 13, 61, 0.5)',
+    background: '#fff',
+    convertColor: '#0E0D3D',
   },
   black: '#000000',
   white: '#ffffff',
   blue: '#0094FF',
   operations: {
-    descClr: "#3F3E4E",
-    headBg: "rgba(220, 220, 232, 100%)",
-    headClr: "#3F3E4E",
-    ich1: "#fff",
-    ich2: "#F8F7FC",
-    tableBg: "#fff"
+    descClr: '#3F3E4E',
+    headBg: 'rgba(220, 220, 232, 100%)',
+    headClr: '#3F3E4E',
+    ich1: '#fff',
+    ich2: '#F8F7FC',
+    tableBg: '#fff',
   },
-  v2:{
-    text: "#3F3E4E",
+  v2: {
+    text: '#3F3E4E',
     blackText: '#000000',
     bg: '#FFFFFF',
     neutral: '#EBEBF2',
     activeBlue: '#0094FF',
     neutralBlue: 'rgba(0, 148, 255, 0.05)',
-    body: "#E5E5E5",
-    header:{
-      background: "#fff",
-      burger: "#000"
-    }
+    body: '#E5E5E5',
+    header: {
+      background: '#fff',
+      burger: '#000',
+    },
+  },
+  lkMain: {
+    background: '#F9FAFB',
+    balanceBlock: '#FFFFFF',
+    boxShadow: '0px 40px 40px -40px rgba(220, 220, 232, 0.5)',
+    borderRadius: '4px',
+    depositHeader: 'transparent',
   },
 };
 
@@ -117,7 +124,7 @@ export const darkTheme = {
   text: '#FFF',
   toggleBorder: '#6B8096',
   buttonBorder: '#FF416E',
-  dangerButtonText:'#FFF',
+  dangerButtonText: '#FFF',
   text2: '#E2E2E2',
   text3: '#fff',
   text3Hover: '#fff',
@@ -142,7 +149,7 @@ export const darkTheme = {
   card: {
     background: '#212121',
     backgroundAlfa: 'rgba(33, 33, 33, 1)',
-    border: '1px solid #000000',
+    border: 'none',
   },
   descFund: '#fff',
   partnerProgram: {
@@ -185,40 +192,46 @@ export const darkTheme = {
   timer: {
     bg: 'rgba(33,33,33,1)',
     color: '#fff',
-    beforeBg: "#000"
+    beforeBg: '#000',
   },
   pink: '#FF416E',
   rounIputBackground: '#ffffff',
-  titles: "#fff",
+  titles: '#fff',
   toToken: {
-    color: "#fff",
-    background: "#212121",
-    convertColor: "#fff"
+    color: '#fff',
+    background: '#212121',
+    convertColor: '#fff',
   },
   authBgGray: '#E5E5E5',
   black: '#000000',
   white: '#ffffff',
   blue: '#0094FF',
   operations: {
-    descClr: "#fff",
-    headBg: "#131317",
-    headClr: "#fff",
-    ich1: "#1D1D21",
-    ich2: "#28282F",
-    tableBg: "#2A2A31"
+    descClr: '#fff',
+    headBg: '#131317',
+    headClr: '#fff',
+    ich1: '#1D1D21',
+    ich2: '#28282F',
+    tableBg: '#2A2A31',
   },
-  v2:{
-    text: "#FFFFFF",
+  v2: {
+    text: '#FFFFFF',
     blackText: '#FFFFFF',
     bg: '#28282F',
     neutral: '#33333A',
     activeBlue: '#0094FF',
     neutralBlue: '#33333A',
-    body: "#E5E5E5",
-    header:{
-      background: "#fff",
-      burger: "#FFF"
-    }
+    body: '#E5E5E5',
+    header: {
+      background: '#fff',
+      burger: '#FFF',
+    },
+  },
+  lkMain: {
+    background: '#1F1F25',
+    balanceBlock: '#28282F',
+    boxShadow: 'none',
+    borderRadius: '0',
+    depositHeader: '#313139',
   },
 };
- 
