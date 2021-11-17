@@ -40,12 +40,6 @@ export const Modal: React.FC<ModalProps> = ({
     }
   };
 
-  const [isMobile, setIsMobile] = useState<boolean>(false);
-
-  useEffect(() => {
-    setIsMobile(window.screen.width > 480);
-  }, []);
-
   return (
     <Portal>
       <ModalContainer zIndex={zIndex} style={style} className="bbg" lottery={lottery}>

@@ -1,9 +1,6 @@
 import React, { FC } from 'react';
-import { useHistory } from 'react-router-dom';
-
 import { Button } from '../../../../components/Button/V2/Button';
 import { ModalMob } from '../../../../components/ModalMob';
-import { routers } from '../../../../constantes/routers';
 import { Text } from '../../components/ui';
 import { MarketCertificate } from '../../../../types/certificates';
 import { Balance } from '../../../../types/balance';
@@ -18,8 +15,8 @@ type Props = {
 
 export const BuyCertificateModal: FC<Props> = ({ onClose, data, purchase, open }: Props) => {
   return (
-    <>
-      <ModalMob onClose={onClose} open={open}>
+    <ModalMob onClose={onClose} open={open}>
+      <div>
         {data ? (
           <S.SmallContainer>
             <S.BlackTitle>Покупка сертификата</S.BlackTitle>
@@ -72,7 +69,7 @@ export const BuyCertificateModal: FC<Props> = ({ onClose, data, purchase, open }
             </S.SmallContainerInner>
           </S.SmallContainer>
         ) : null}
-      </ModalMob>
-    </>
+      </div>
+    </ModalMob>
   );
 };

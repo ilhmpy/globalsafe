@@ -26,8 +26,7 @@ export const SecondaryButton: FC<ButtonProps> = ({
 };
 
 SecondaryButton.defaultProps = {
-  // eslint-disable-next-line
-  onClick: () => {},
+  onClick: () => undefined,
 };
 
 const Secondary = styled(BaseButton)`

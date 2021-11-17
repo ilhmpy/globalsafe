@@ -11,7 +11,7 @@ export const MobWrapper: FC<Props> = ({ children }: Props) => {
   return (
     <S.ModalWrapper>
       <Header />
-      {children}
+      <>{children}</>
       <Footer />
     </S.ModalWrapper>
   );
