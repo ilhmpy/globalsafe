@@ -1,9 +1,8 @@
 import React, { FC } from 'react';
 import { useHistory } from 'react-router-dom';
-import { CSSTransition } from 'react-transition-group';
 import styled, { css } from 'styled-components';
 import { ReactComponent as Close } from '../../../assets/svg/close.svg';
-import { Modal } from '../../../components/ModalAnimated';
+import { ModalMob } from '../../../components/ModalMob';
 import { routers } from '../../../constantes/routers';
 import { payList } from './utils';
 import { CollectionPayMethod } from '../../../types/paymentMethodKind';
@@ -36,53 +35,45 @@ export const DeleteNotification: FC<IProps> = ({ open, setOpen, data }: IProps) 
   };
 
   return (
-      <Modal
-        open={open}
-        onClose={handleClose}
-      >
-          <SmallContainer mobileWFull>
-              <Title>Платежный метод удален</Title>
+    <ModalMob open={open} onClose={handleClose}>
+      <SmallContainer mobileWFull>
+        <Title>Платежный метод удален</Title>
 
-                <MobileContent>
-                  <ContentWrapper>
-                    <InnerBlock>
-                      <Row>Успешно удален платежный метод:</Row>
-                      <Row>
-                        <b>
-                          {payList[data.kind]}, {FiatKind[data.assetKind]}
-                        </b>
-                      </Row>
-                      {payMethod.name ? (
-                        <Row>
-                          <strong>{payMethod.name}</strong>
-                        </Row>
-                      ) : null}
-                      {payMethod.bankNumber ? (
-                        <Row>
-                          <b>{payMethod.bankNumber}</b>
-                        </Row>
-                      ) : null}
-                      {payMethod.paymentAddress ? (
-                        <Row>
-                          <b>{payMethod.paymentAddress}</b>
-                        </Row>
-                      ) : null}
-                    </InnerBlock>
-                  </ContentWrapper>
+        <MobileContent>
+          <ContentWrapper>
+            <InnerBlock>
+              <Row>Успешно удален платежный метод:</Row>
+              <Row>
+                <b>
+                  {payList[data.kind]}, {FiatKind[data.assetKind]}
+                </b>
+              </Row>
+              {payMethod.name ? (
+                <Row>
+                  <strong>{payMethod.name}</strong>
+                </Row>
+              ) : null}
+              {payMethod.bankNumber ? (
+                <Row>
+                  <b>{payMethod.bankNumber}</b>
+                </Row>
+              ) : null}
+              {payMethod.paymentAddress ? (
+                <Row>
+                  <b>{payMethod.paymentAddress}</b>
+                </Row>
+              ) : null}
+            </InnerBlock>
+          </ContentWrapper>
 
-                  <ButtonWrapper>
-                    <Button
-                      bigSize
-                      fullWidth
-                      primary
-                      onClick={handleClose}
-                    >
-                      Ок
-                    </Button>
-                </ButtonWrapper>
-              </MobileContent>
-          </SmallContainer>
-      </Modal>
+          <ButtonWrapper>
+            <Button bigSize fullWidth primary onClick={handleClose}>
+              Ок
+            </Button>
+          </ButtonWrapper>
+        </MobileContent>
+      </SmallContainer>
+    </ModalMob>
   );
 };
 
@@ -130,8 +121,6 @@ const ModalTitle = styled.h2`
   color: #3f3e4e;
 `;
 
-
-
 export const Title = styled.h3`
   font-weight: bold;
   font-size: 24px;
@@ -148,27 +137,32 @@ export const Title = styled.h3`
     line-height: 21px;
     padding: 20px;
     background-color: #f8f9fa;
-    color: ${props => props.theme.v2.text};
-  };
+    color: ${(props) => props.theme.v2.text};
+  } ;
 `;
 
-export const SmallContainer = styled.div<{wFull?: boolean; mobileWFull?: boolean}>`
-  width: ${props => props.wFull ? '100%' : '340px'};
-  background: #fff;
+export const SmallContainer = styled.div<{ wFull?: boolean; mobileWFull?: boolean }>`
+  width: 420px;
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
-
-  @media ${Device.mobile} {
-    ${props => props.mobileWFull !== undefined && css`width: 100%;`};
-  };
+  @media (max-width: 767px) {
+    margin-top: 60px;
+    width: 100%;
+    padding: 0;
+    border-radius: 0;
+    margin-bottom: 60px;
+    background: transparent;
+  }
 `;
-
 
 export const MobileContent = styled.div`
   display: flex;
   flex-direction: column;
   @media ${Device.mobile} {
-    background: #FFFFFF;
+    background: #ffffff;
     box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
     padding: 20px;
   }
