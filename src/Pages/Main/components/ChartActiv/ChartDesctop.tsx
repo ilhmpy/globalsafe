@@ -108,9 +108,9 @@ export const ChartDesctop: FC<Props> = ({ data, setDate, setValCWD }: Props) => 
   const ref = useRef<any>();
   const [update, setUpdate] = useState(false);
 
-  useEffect(() => {
-    setUpdate(!update);
-  }, [data]);
+  // useEffect(() => {
+  //   setUpdate(!update);
+  // }, [data]);
 
   const state = {
     options: {
@@ -126,6 +126,7 @@ export const ChartDesctop: FC<Props> = ({ data, setDate, setValCWD }: Props) => 
         height: 358,
         spacingBottom: 0,
         spacingRight: 0,
+        animation: false,
         style: {
           fontFamily: 'Roboto',
         },
@@ -327,12 +328,7 @@ export const ChartDesctop: FC<Props> = ({ data, setDate, setValCWD }: Props) => 
         <MobChart data={data} setDate={setDate} setValCWD={setValCWD} />
       </S.MobChartBlock>
       <S.MobChartBlock>
-        <HighchartsReact
-          allowChartUpdate={update}
-          ref={ref}
-          highcharts={Highcharts}
-          options={state.options}
-        />
+        <HighchartsReact ref={ref} highcharts={Highcharts} options={state.options} />
       </S.MobChartBlock>
     </>
   );

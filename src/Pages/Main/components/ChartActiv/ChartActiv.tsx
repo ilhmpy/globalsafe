@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, FC } from 'react';
+import React, { useContext, useState, useEffect, FC, useCallback } from 'react';
 import Highcharts from 'highcharts/highstock';
 import HighchartsReact from 'highcharts-react-official';
 import { Container } from '../../../../components/UI/Container';
@@ -12,7 +12,6 @@ import { ReactComponent as Arrow } from '../../../../assets/v2/svg/arrow-exchang
 import { Dropdown } from './components/Dropdown';
 import { ChartDesctop } from './ChartDesctop';
 import { ChartContext } from '../../../../context/ChartContext';
-import { MobChart } from './MobChart';
 
 require('highcharts/modules/exporting')(Highcharts);
 
@@ -37,8 +36,8 @@ export const ChartActiv: FC<Props> = ({
     useContext(ChartContext);
 
   moment.locale(localStorage.getItem('i18nextLng') || 'ru');
-  // console.log('data', data);
-  const data1 = () => {
+
+  const data1 = useCallback(() => {
     if (type === 'GCWD') {
       return data.map((i) => [
         momenttz.utc(i.date).tz('Europe/Moscow').valueOf(),
@@ -57,137 +56,133 @@ export const ChartActiv: FC<Props> = ({
     } else {
       return data.map((i) => [momenttz.utc(i.date).tz('Europe/Moscow').valueOf(), i.latestBid]);
     }
-  };
-
-  const [chartData, setChartData] = useState<number[][]>();
-
-  // useEffect(() => {
-  //   if (!data) return;
-  //   setChartData(data1());
-  // }, [data]);
+  }, [data, type]);
 
   const [date, setDate] = useState(0);
-
   const [valCWD, setValCWD] = useState(0);
-
   const btns = ['День', 'Месяц', 'Квартал', 'Год', 'Все время'];
-
   const [selected, setSelected] = useState(btns[0]);
   const [active, setActive] = useState('День');
 
-  const changeValue = (data: Collection[]) => {
-    const currValue = data[data.length - 1].latestBid;
+  const changeValue = useCallback(
+    (data: Collection[]) => {
+      const currValue = data[data.length - 1].latestBid;
 
-    const filterPrevValues = data.filter((item) => item.latestBid !== currValue);
-    const value =
-      ((currValue - filterPrevValues[filterPrevValues.length - 1].latestBid) / currValue) * 100;
-    if (value > 0) {
-      return (
-        <S.Price green>
-          <Arrow />
-          {value.toFixed(2)} &nbsp;%
-        </S.Price>
-      );
-    } else {
-      return (
-        <S.Price red>
-          <Arrow />
-          {value.toFixed(2)}&nbsp;%
-        </S.Price>
-      );
-    }
-  };
+      const filterPrevValues = data.filter((item) => item.latestBid !== currValue);
+      const value =
+        ((currValue - filterPrevValues[filterPrevValues.length - 1].latestBid) / currValue) * 100;
+      if (value > 0) {
+        return (
+          <S.Price green>
+            <Arrow />
+            {value.toFixed(2)} &nbsp;%
+          </S.Price>
+        );
+      } else {
+        return (
+          <S.Price red>
+            <Arrow />
+            {value.toFixed(2)}&nbsp;%
+          </S.Price>
+        );
+      }
+    },
+    [data]
+  );
 
-  const typesBalanceInfo = (type: string) => {
-    switch (type) {
-      case 'GCWD':
-        return (
-          <S.PriceChangesWrap>
-            <S.PriceChanges>
-              <S.Price>GCWD - CWD</S.Price>&nbsp;
-              <S.Price>
-                {(data[data.length - 1].latestBid / 100000).toLocaleString('ru-RU', {
-                  maximumFractionDigits: 2,
-                })}
-              </S.Price>
-              {changeValue(data)}
-            </S.PriceChanges>
-            <S.Date>
-              {momenttz
-                .utc(data[data.length - 1].date)
-                .tz('Europe/Moscow')
-                .format('DD.MM.YYYY, dddd, HH:mm')}
-              MCK
-            </S.Date>
-          </S.PriceChangesWrap>
-        );
-      case 'MGCWD':
-        return (
-          <S.PriceChangesWrap>
-            <S.PriceChanges>
-              <S.Price>MGCWD - CWD</S.Price>&nbsp;
-              <S.Price>
-                {(data[data.length - 1].latestBid / 100000).toLocaleString('ru-RU', {
-                  maximumFractionDigits: 2,
-                })}
-              </S.Price>
-              {changeValue(data)}
-            </S.PriceChanges>
-            <S.Date>
-              {momenttz
-                .utc(data[data.length - 1].date)
-                .tz('Europe/Moscow')
-                .format('DD.MM.YYYY, dddd, HH:mm')}{' '}
-              MCK
-            </S.Date>
-          </S.PriceChangesWrap>
-        );
-      case 'DIAMOND':
-        return (
-          <S.PriceChangesWrap>
-            <S.PriceChanges>
-              <S.Price>DIAMOND - CWD</S.Price>&nbsp;
-              <S.Price>
-                {(data[data.length - 1].latestBid / 100).toLocaleString('ru-RU', {
-                  maximumFractionDigits: 2,
-                })}
-              </S.Price>
-              {changeValue(data)}
-            </S.PriceChanges>
-            <S.Date>
-              {momenttz
-                .utc(data[data.length - 1].date)
-                .tz('Europe/Moscow')
-                .format('DD.MM.YYYY, dddd, HH:mm')}{' '}
-              MCK
-            </S.Date>
-          </S.PriceChangesWrap>
-        );
-      case 'GLOBAL':
-        return (
-          <S.PriceChangesWrap>
-            <S.PriceChanges>
-              <S.Price>GLOBAL - CWD</S.Price>&nbsp;
-              <S.Price>
-                {(data[data.length - 1].latestBid / 10000).toLocaleString('ru-RU', {
-                  maximumFractionDigits: 2,
-                })}
-              </S.Price>
-              {changeValue(data)}
-            </S.PriceChanges>
-            <S.Date>
-              {momenttz
-                .utc(data[data.length - 1].date)
-                .tz('Europe/Moscow')
-                .format('DD.MM.YYYY, dddd, HH:mm')}{' '}
-              MCK
-            </S.Date>
-          </S.PriceChangesWrap>
-        );
-    }
-  };
+  const typesBalanceInfo = useCallback(
+    (type: string) => {
+      switch (type) {
+        case 'GCWD':
+          return (
+            <S.PriceChangesWrap>
+              <S.PriceChanges>
+                <S.Price>GCWD - CWD</S.Price>&nbsp;
+                <S.Price>
+                  {(data[data.length - 1].latestBid / 100000).toLocaleString('ru-RU', {
+                    maximumFractionDigits: 2,
+                  })}
+                </S.Price>
+                {changeValue(data)}
+              </S.PriceChanges>
+              <S.Date>
+                {momenttz
+                  .utc(data[data.length - 1].date)
+                  .tz('Europe/Moscow')
+                  .format('DD.MM.YYYY, dddd, HH:mm')}
+                MCK
+              </S.Date>
+            </S.PriceChangesWrap>
+          );
+        case 'MGCWD':
+          return (
+            <S.PriceChangesWrap>
+              <S.PriceChanges>
+                <S.Price>MGCWD - CWD</S.Price>&nbsp;
+                <S.Price>
+                  {(data[data.length - 1].latestBid / 100000).toLocaleString('ru-RU', {
+                    maximumFractionDigits: 2,
+                  })}
+                </S.Price>
+                {changeValue(data)}
+              </S.PriceChanges>
+              <S.Date>
+                {momenttz
+                  .utc(data[data.length - 1].date)
+                  .tz('Europe/Moscow')
+                  .format('DD.MM.YYYY, dddd, HH:mm')}{' '}
+                MCK
+              </S.Date>
+            </S.PriceChangesWrap>
+          );
+        case 'DIAMOND':
+          return (
+            <S.PriceChangesWrap>
+              <S.PriceChanges>
+                <S.Price>DIAMOND - CWD</S.Price>&nbsp;
+                <S.Price>
+                  {(data[data.length - 1].latestBid / 100).toLocaleString('ru-RU', {
+                    maximumFractionDigits: 2,
+                  })}
+                </S.Price>
+                {changeValue(data)}
+              </S.PriceChanges>
+              <S.Date>
+                {momenttz
+                  .utc(data[data.length - 1].date)
+                  .tz('Europe/Moscow')
+                  .format('DD.MM.YYYY, dddd, HH:mm')}{' '}
+                MCK
+              </S.Date>
+            </S.PriceChangesWrap>
+          );
+        case 'GLOBAL':
+          return (
+            <S.PriceChangesWrap>
+              <S.PriceChanges>
+                <S.Price>GLOBAL - CWD</S.Price>&nbsp;
+                <S.Price>
+                  {(data[data.length - 1].latestBid / 10000).toLocaleString('ru-RU', {
+                    maximumFractionDigits: 2,
+                  })}
+                </S.Price>
+                {changeValue(data)}
+              </S.PriceChanges>
+              <S.Date>
+                {momenttz
+                  .utc(data[data.length - 1].date)
+                  .tz('Europe/Moscow')
+                  .format('DD.MM.YYYY, dddd, HH:mm')}{' '}
+                MCK
+              </S.Date>
+            </S.PriceChangesWrap>
+          );
+      }
+    },
+    [data, type]
+  );
 
-  const returnValues = () => {
+  const returnValues = useCallback(() => {
     switch (type) {
       case 'GCWD':
         return (data[data.length - 1].latestBid / 100000).toLocaleString('ru-RU', {
@@ -206,7 +201,7 @@ export const ChartActiv: FC<Props> = ({
           maximumFractionDigits: 2,
         });
     }
-  };
+  }, [data, type]);
 
   const dateFetch = (day: string) => {
     switch (day) {
@@ -225,6 +220,7 @@ export const ChartActiv: FC<Props> = ({
     }
   };
   const loader = loadDIAMOND || loadGLOBAL || loadMGCWD || loadGCWD;
+
   const typeSelected = (str: string) => {
     if (loader) return;
     setActive(str);

@@ -85,133 +85,163 @@ export const SliderChart: FC<Props> = ({
           }}
         >
           <SwiperSlide>
-            <ChartActiv
-              data={listGCWD}
-              type="GCWD"
-              fetchMGCWD={fetchMGCWD}
-              fetchGCWD={fetchGCWD}
-              fetchDIAMOND={fetchDIAMOND}
-              fetchGLOBAL={fetchGLOBAL}
-            />
-            <S.SubChartMob>
-              <S.ChartItem>
-                {listGCWD.length ? (
-                  <>
-                    <S.ChartName>GCWD </S.ChartName>
-                    <S.ChartValue>
-                      {(listGCWD[listGCWD.length - 1].latestBid / 100000).toLocaleString('ru-RU', {
-                        maximumFractionDigits: 2,
-                      })}{' '}
-                      CWD
-                    </S.ChartValue>
-                    {changeValue(listGCWD)}
-                    <S.ChartGraph>
-                      <SmallChart values={listGCWD.slice(0).map((i) => i.latestBid / 100)} />
-                    </S.ChartGraph>
-                  </>
-                ) : null}
-              </S.ChartItem>
-            </S.SubChartMob>
+            {({ isActive }) =>
+              isActive ? (
+                <>
+                  <ChartActiv
+                    data={listGCWD}
+                    type="GCWD"
+                    fetchMGCWD={fetchMGCWD}
+                    fetchGCWD={fetchGCWD}
+                    fetchDIAMOND={fetchDIAMOND}
+                    fetchGLOBAL={fetchGLOBAL}
+                  />
+                  <S.SubChartMob>
+                    <S.ChartItem>
+                      {listGCWD.length ? (
+                        <>
+                          <S.ChartName>GCWD </S.ChartName>
+                          <S.ChartValue>
+                            {(listGCWD[listGCWD.length - 1].latestBid / 100000).toLocaleString(
+                              'ru-RU',
+                              {
+                                maximumFractionDigits: 2,
+                              }
+                            )}{' '}
+                            CWD
+                          </S.ChartValue>
+                          {changeValue(listGCWD)}
+                          <S.ChartGraph>
+                            <SmallChart values={listGCWD.slice(0).map((i) => i.latestBid / 100)} />
+                          </S.ChartGraph>
+                        </>
+                      ) : null}
+                    </S.ChartItem>
+                  </S.SubChartMob>
+                </>
+              ) : null
+            }
           </SwiperSlide>
           <SwiperSlide>
-            <ChartActiv
-              data={listMGCWD}
-              type="MGCWD"
-              fetchMGCWD={fetchMGCWD}
-              fetchGCWD={fetchGCWD}
-              fetchDIAMOND={fetchDIAMOND}
-              fetchGLOBAL={fetchGLOBAL}
-            />
-            <S.SubChartMob>
-              <S.ChartItem>
-                {listMGCWD.length ? (
-                  <>
-                    <S.ChartName>MGCWD</S.ChartName>
-                    <S.ChartValue>
-                      {(listMGCWD[listMGCWD.length - 1].latestBid / 100000).toLocaleString(
-                        'ru-RU',
-                        {
-                          maximumFractionDigits: 2,
-                        }
-                      )}{' '}
-                      CWD
-                    </S.ChartValue>
-                    {changeValue(listMGCWD)}
-                    <S.ChartGraph>
-                      <SmallChart values={listMGCWD.slice(0).map((i) => i.latestBid / 100)} />
-                    </S.ChartGraph>
-                  </>
-                ) : null}
-              </S.ChartItem>
-            </S.SubChartMob>
+            {({ isActive }) =>
+              isActive ? (
+                <>
+                  <ChartActiv
+                    data={listMGCWD}
+                    type="MGCWD"
+                    fetchMGCWD={fetchMGCWD}
+                    fetchGCWD={fetchGCWD}
+                    fetchDIAMOND={fetchDIAMOND}
+                    fetchGLOBAL={fetchGLOBAL}
+                  />
+                  <S.SubChartMob>
+                    <S.ChartItem>
+                      {listMGCWD.length ? (
+                        <>
+                          <S.ChartName>MGCWD</S.ChartName>
+                          <S.ChartValue>
+                            {(listMGCWD[listMGCWD.length - 1].latestBid / 100000).toLocaleString(
+                              'ru-RU',
+                              {
+                                maximumFractionDigits: 2,
+                              }
+                            )}{' '}
+                            CWD
+                          </S.ChartValue>
+                          {changeValue(listMGCWD)}
+                          <S.ChartGraph>
+                            <SmallChart values={listMGCWD.slice(0).map((i) => i.latestBid / 100)} />
+                          </S.ChartGraph>
+                        </>
+                      ) : null}
+                    </S.ChartItem>
+                  </S.SubChartMob>
+                </>
+              ) : null
+            }
           </SwiperSlide>
           <SwiperSlide>
-            <ChartActiv
-              data={listDIAMOND}
-              type="DIAMOND"
-              fetchMGCWD={fetchMGCWD}
-              fetchGCWD={fetchGCWD}
-              fetchDIAMOND={fetchDIAMOND}
-              fetchGLOBAL={fetchGLOBAL}
-            />
-            <S.SubChartMob>
-              <S.ChartItem>
-                {listDIAMOND.length ? (
-                  <>
-                    <S.ChartName>DIAMOND</S.ChartName>
-                    <S.ChartValue>
-                      {(listDIAMOND[listDIAMOND.length - 1].latestBid / 100).toLocaleString(
-                        'ru-RU',
-                        {
-                          maximumFractionDigits: 2,
-                        }
-                      )}{' '}
-                      CWD
-                    </S.ChartValue>
-                    {changeValue(listDIAMOND)}
-                    <S.ChartGraph>
-                      <SmallChart values={listDIAMOND.slice(0).map((i) => i.latestBid / 100)} />
-                    </S.ChartGraph>
-                  </>
-                ) : null}
-              </S.ChartItem>
-            </S.SubChartMob>
+            {({ isActive }) =>
+              isActive ? (
+                <>
+                  <ChartActiv
+                    data={listDIAMOND}
+                    type="DIAMOND"
+                    fetchMGCWD={fetchMGCWD}
+                    fetchGCWD={fetchGCWD}
+                    fetchDIAMOND={fetchDIAMOND}
+                    fetchGLOBAL={fetchGLOBAL}
+                  />
+                  <S.SubChartMob>
+                    <S.ChartItem>
+                      {listDIAMOND.length ? (
+                        <>
+                          <S.ChartName>DIAMOND</S.ChartName>
+                          <S.ChartValue>
+                            {(listDIAMOND[listDIAMOND.length - 1].latestBid / 100).toLocaleString(
+                              'ru-RU',
+                              {
+                                maximumFractionDigits: 2,
+                              }
+                            )}{' '}
+                            CWD
+                          </S.ChartValue>
+                          {changeValue(listDIAMOND)}
+                          <S.ChartGraph>
+                            <SmallChart
+                              values={listDIAMOND.slice(0).map((i) => i.latestBid / 100)}
+                            />
+                          </S.ChartGraph>
+                        </>
+                      ) : null}
+                    </S.ChartItem>
+                  </S.SubChartMob>
+                </>
+              ) : null
+            }
           </SwiperSlide>
           <SwiperSlide>
-            <ChartActiv
-              data={listGLOBAL}
-              type="GLOBAL"
-              fetchMGCWD={fetchMGCWD}
-              fetchGCWD={fetchGCWD}
-              fetchDIAMOND={fetchDIAMOND}
-              fetchGLOBAL={fetchGLOBAL}
-            />
-            <S.SubChartMob>
-              <S.ChartItem>
-                {listGLOBAL.length ? (
-                  <>
-                    <S.ChartName>GLOBAL</S.ChartName>
-                    <S.ChartValue>
-                      {listGLOBAL.length
-                        ? (listGLOBAL[listGLOBAL.length - 1].latestBid / 10000).toLocaleString(
-                            'ru-RU',
-                            {
-                              maximumFractionDigits: 2,
-                            }
-                          )
-                        : 0}{' '}
-                      CWD
-                    </S.ChartValue>
+            {({ isActive }) =>
+              isActive ? (
+                <>
+                  <ChartActiv
+                    data={listGLOBAL}
+                    type="GLOBAL"
+                    fetchMGCWD={fetchMGCWD}
+                    fetchGCWD={fetchGCWD}
+                    fetchDIAMOND={fetchDIAMOND}
+                    fetchGLOBAL={fetchGLOBAL}
+                  />
+                  <S.SubChartMob>
+                    <S.ChartItem>
+                      {listGLOBAL.length ? (
+                        <>
+                          <S.ChartName>GLOBAL</S.ChartName>
+                          <S.ChartValue>
+                            {listGLOBAL.length
+                              ? (
+                                  listGLOBAL[listGLOBAL.length - 1].latestBid / 10000
+                                ).toLocaleString('ru-RU', {
+                                  maximumFractionDigits: 2,
+                                })
+                              : 0}{' '}
+                            CWD
+                          </S.ChartValue>
 
-                    <S.ChartProcent red={false}>{changeValue(listGLOBAL)}</S.ChartProcent>
+                          <S.ChartProcent red={false}>{changeValue(listGLOBAL)}</S.ChartProcent>
 
-                    <S.ChartGraph>
-                      <SmallChart values={listGLOBAL.slice(0).map((i) => i.latestBid / 100)} />
-                    </S.ChartGraph>
-                  </>
-                ) : null}
-              </S.ChartItem>
-            </S.SubChartMob>
+                          <S.ChartGraph>
+                            <SmallChart
+                              values={listGLOBAL.slice(0).map((i) => i.latestBid / 100)}
+                            />
+                          </S.ChartGraph>
+                        </>
+                      ) : null}
+                    </S.ChartItem>
+                  </S.SubChartMob>
+                </>
+              ) : null
+            }
           </SwiperSlide>
         </Swiper>
         <S.ThumbSlider>

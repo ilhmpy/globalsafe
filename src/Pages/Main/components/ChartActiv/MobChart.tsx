@@ -122,7 +122,7 @@ export const MobChart: FC<Props> = ({ data, type, setValCWD, setDate }: Props) =
       spacingRight: 10,
       backgroundColor: '#FFF',
       height: 288,
-      // spacingTop: 50,
+      animation: false,
       spacingBottom: 5,
     },
     legend: {
