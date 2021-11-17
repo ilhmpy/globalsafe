@@ -1,4 +1,5 @@
 import 'styled-components';
+import { StringMappingType } from 'typescript';
 
 declare module 'styled-components' {
   export interface DefaultTheme {
@@ -114,6 +115,8 @@ declare module 'styled-components' {
     main: {
       bodyBackground: string;
       bodyColor: string;
+      buttonBackground: string;
+      blocksBackground: string;
     }, 
     notifies: {
       notifyBackground: string;
@@ -122,6 +125,31 @@ declare module 'styled-components' {
       doneNotify: string;
       notifiesBoxShadow: string;
       notifyBlockBackground: string;
+    },
+    charts: {
+      chartButtonBg: string;
+      chartOpacityBtn: string;
+    },
+    footerB: {
+      background: string;
+    },
+    operations2: {
+      background: string;
+      ich2Background: string;
+    },
+    header2: {
+      background: string;
+    },
+    depositsProgramsCards: {
+      background: string;
+      text: string;
+      boxShadow: string;
+      descOpacity: string;
+    },
+    partnersProgramsBlock: {
+      background: string;
+      background2ich: string;
+      boxShadow: string;
     }
   }
 }

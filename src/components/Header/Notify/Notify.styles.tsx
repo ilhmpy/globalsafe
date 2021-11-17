@@ -102,7 +102,7 @@ export const NotifiesBlock = styled.div<{
     content: '';
     width: 14px;
     height: 14px;
-    background: ${({ theme }) => theme.main.bodyBackground};
+    background: ${({ theme }) => theme.notifies.notifyBlockBackground};
     display: block;
     border-radius: 3px;
     border-bottom-left-radius: 0px;

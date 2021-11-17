@@ -31,7 +31,7 @@ export const Button = styled.a<Props>`
   color: #ffffff;
   border: none;
   transition: all 0.3s ease 0s;
-  background: #515172;
+  background: ${({ theme }) => theme.main.buttonBackground};
   cursor: ${(props) => (props.disabled ? 'no-drop' : 'pointer')};
   opacity: ${(props) => (props.disabled ? '0.4' : '1')};
 

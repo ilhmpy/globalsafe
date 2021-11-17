@@ -260,8 +260,8 @@ export const ChartActiv: FC<Props> = ({
                     .utc(data[data.length - 1].date)
                     .tz('Europe/Moscow')
                     .format('DD.MM.YYYY, dd, HH:mm')
-                : null}
-              &nbsp; MCK
+                : null} 
+              &nbsp; МСK
             </S.TooltipsDate>
             <S.TooltipsValue>
               {valCWD ? valCWD.toLocaleString() : data.length ? returnValues() : 0} CWD

@@ -114,7 +114,7 @@ export const HeaderWrap = styled.header<{ header?: boolean }>`
   padding: 30px 0;
   height: 98px;
   transition: all 0.3s ease 0s;
-  background: ${({ theme }) => theme.main.bodyBackground};
+  background: ${({ theme }) => theme.header2.background};
   @media (max-width: 768px) {
     height: 60px;
     padding: 15px 0;

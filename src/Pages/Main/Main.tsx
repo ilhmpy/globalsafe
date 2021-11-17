@@ -2171,7 +2171,7 @@ export const Main = () => {
         {/* <About /> */}
         <Footer />
       </MainPage>
-    </div>
+    </div> 
   );
 };
 

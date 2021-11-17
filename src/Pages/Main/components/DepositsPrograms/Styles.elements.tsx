@@ -52,15 +52,15 @@ export const CardBox = styled.div`
 export const Card = styled.div`
     width: 340px;
     height: 288px;
-    background: #fff;
-    box-shadow: 0px 80px 80px -40px rgba(220, 220, 232, 0.5);
+    background: ${({ theme }) => theme.depositsProgramsCards.background};
+    box-shadow: ${({ theme }) => theme.depositsProgramsCards.boxShadow};
     margin: 20px;
     margin-top: 0px;
-    margin-left: 0px;
+    margin-left: 0px; 
     padding: 40px;
     min-width: 340px;
     border-radius: 4px;
-
+ 
     &:nth-child(3n) { 
       margin-right: 0px;  
     }
@@ -85,7 +85,7 @@ export const Card = styled.div`
 `;
 
 export const CardName = styled.h3`
-    color: #000;
+    color: ${({ theme }) => theme.depositsProgramsCards.text};
     font-weight: 700;
     font-size: 24px;
     line-height: 28px;
@@ -102,8 +102,8 @@ export const CardDesc = styled.h3`
     font-weight: 400;
     font-size: 14px;
     line-height: 20px;
-    color: #000;
-    width: 100%;
+    color: ${({ theme }) => theme.depositsProgramsCards.text};
+    opacity: ${({ theme }) => theme.depositsProgramsCards.descOpacity};
     height: 60px;
     overflow: hidden;
     width: 149px;
@@ -121,7 +121,7 @@ export const CardButton = styled.button`
     height: 40px;
     border-radius: 4px;
     color: #fff;
-    background: #515172;
+    background: ${({ theme }) => theme.main.buttonBackground};
     outline: none;
     cursor: pointer;
     border: 0;
@@ -130,8 +130,7 @@ export const CardButton = styled.button`
     transition: all 0.3s ease 0s;
 
     &:hover {
-        box-shadow: 0px 4px 10px #515172;
-        border: 1px solid #515172;
+      opacity: 90%;
     }
 
     @media (max-width: 767px) {

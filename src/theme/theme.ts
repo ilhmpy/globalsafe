@@ -115,16 +115,43 @@ export const lightTheme = {
 
   // NEW CODE
   main: {
-    bodyBackground: "#fff",
-    bodyColor: "#3F3E4E"
+    bodyBackground: "#F7F8FA",
+    bodyColor: "#3F3E4E",
+    buttonBackground: "#515172",
+    blocksBackground: "#FFFFFF",
   },
   notifies: {
     notifyBlockBackground: "#fff",
-    notifyBackground: "#F9FAFB",
+    notifyBackground: "#F7F8FA",
     notifiesBorder: "#DCDCE8",
     notifiesDateColor: "#3F3E4E",
     doneNotify: "#030D45",
     notifiesBoxShadow: "0px 16px 30px rgba(220, 220, 232, 0.5)",
+  },
+  charts: {
+    chartButtonBg: "#F7F8FA",
+    chartOpacityBtn: "100%",
+  },
+  footerB: {
+    background: "#3F3E4E"
+  },
+  operations2: {
+    background: "#DCDCE8",
+    ich2Background: "#F8F7FC",
+  },
+  header2: {
+    background: "#FFFFFF"
+  },
+  depositsProgramsCards: {
+    background: "#fff",
+    text: "#000",
+    boxShadow: "0px 80px 80px -40px rgba(220, 220, 232, 0.5)",
+    descOpacity: "100%",
+  },
+  partnersProgramsBlock: {
+    background: "#F8F7FC",
+    background2ich: "#FFFFFF",
+    boxShadow: "0px 80px 80px -40px rgba(220, 220, 232, 0.5)",
   }
 };
 
@@ -240,8 +267,10 @@ export const darkTheme = {
   // NEW CODE
 
   main: {
-    bodyBackground: "#28282F",
-    bodyColor: "#FFFFFF"
+    bodyBackground: "#1F1F25",
+    bodyColor: "#FFFFFF",
+    buttonBackground: "#0094FF",
+    blocksBackground: "#28282F",
   },
   notifies: {
     notifyBlockBackground: "#28282F",
@@ -250,6 +279,31 @@ export const darkTheme = {
     notifiesDateColor: "#fff",
     doneNotify: "#fff",
     notifiesBoxShadow: "0",
+  },
+  charts: {
+    chartButtonBg: "#515172",
+    chartOpacityBtn: "40%"
+  },
+  footerB: {
+    background: "#28282F"
+  },
+  operations2: {
+    background: "#222228",
+    ich2Background: "#222228",
+  },
+  header2: {
+    background: "#28282F"
+  },
+  depositsProgramsCards: {
+    background: "#28282F",
+    text: "#fff",
+    boxShadow: "0",
+    descOpacity: "80%"
+  },
+  partnersProgramsBlock: {
+    background: "#222228",
+    background2ich: "#28282F",
+    boxShadow: "0",
   }
 };
  
