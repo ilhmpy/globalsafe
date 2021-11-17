@@ -36,6 +36,7 @@ export const Chip = styled.div<ChipProps>`
   border-radius: 2px;
   padding: 6px 10px;
   user-select: none;
+  
   ${props => (
       props.type === 'success' && Success ||
       props.type === 'rejected' && Rejected ||

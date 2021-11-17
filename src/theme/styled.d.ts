@@ -112,8 +112,20 @@ declare module 'styled-components' {
       background: string;
       balanceBlock: string;
       boxShadow: string;
-      borderRadius: string;
+      navLink: string;
       depositHeader: string;
+      activeChipBckgr: string;
+      activeChip: string;
+      chip: string;
+      activeChipBorder: string;
+      chipBorder: string;
+      borderBottom: string;
+      cwdChip: string;
+      globalChip: string;
+      globalFutureChip: string;
+      gsFutureChip: string;
+      tileTopSide: string;
+      depositOpenLeftSide: string;
     };
   }
 }

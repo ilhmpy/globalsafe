@@ -4,7 +4,7 @@ import { Device } from '../../consts';
 export const RightSide = styled.div<{mobilePadding?: number;}>`
   padding: 40px;
   width: 100%;
-  background: #fff;
+  background: ${(props) => props.theme.lkMain.balanceBlock};
   @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
     padding-right: 34px;
   };

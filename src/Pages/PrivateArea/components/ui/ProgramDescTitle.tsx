@@ -6,6 +6,7 @@ export const ProgramDescTitle = styled.p`
   font-size: 14px;
   line-height: 20px;
   color: #000000;
+  color: ${(props) => props.theme.lkMain.navLink};
   margin-bottom: 2px;
   user-select: none;
   display: flex;
@@ -21,6 +22,7 @@ export const ProgramDesc = styled(ProgramDescTitle)`
   font-weight: normal;
   max-width: 260px;
   width: 100%;
+  color: ${(props) => props.theme.lkMain.navLink};
 `;
 
 export const TitleWrap = styled.div<{ small?: boolean; big?: boolean; minBtm?: boolean }>`

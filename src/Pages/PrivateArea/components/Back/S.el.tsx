@@ -12,7 +12,7 @@ export const GoBack = styled.div`
   align-items: center;
   cursor: pointer;
 
-  color: #000000;
+  color: ${(props) => props.theme.lkMain.navLink};
 `;
 export const Container = styled.div`
   margin-bottom: 20px;

@@ -1,34 +1,34 @@
-import { useContext, useEffect, useState, FC } from 'react';
+import moment from 'moment';
+import { FC, useContext, useEffect, useState } from 'react';
 import Scrollbars from 'react-custom-scrollbars';
 import InfiniteScroll from 'react-infinite-scroller';
 import { useHistory } from 'react-router-dom';
+import { SwiperSlide } from 'swiper/react';
 import { Container } from '../../../components/UI/Container';
 import { routers } from '../../../constantes/routers';
 import { AppContext } from '../../../context/HubContext';
+import { BalanceKind } from '../../../enums/balanceKind';
+import useWindowSize from '../../../hooks/useWindowSize';
+import { Balance } from '../../../types/balance';
 import { Collection, RootList } from '../../../types/info';
 import { Filter } from '../components/Filter';
 import { Heading } from '../components/Heading';
 import { Loading } from '../components/Loading/Loading';
 import { Table } from '../components/Table';
-import * as S from './S.elements';
-import { SwiperSlide } from 'swiper/react';
 import { Tiles } from '../components/Tiles';
 import {
-  BottomValue,
-  BottomTitle,
+  BlockBox,
   BottomSide,
-  TopSide,
-  DateRange,
+  BottomTitle,
+  BottomValue,
   BoxAmount,
   BoxTitle,
-  BlockBox,
+  DateRange,
+  TopSide,
 } from '../components/Tiles/styled';
-import { Balance } from '../../../types/balance';
-import moment from 'moment';
-import { BalanceKind } from '../../../enums/balanceKind';
-import { SwiperContainer, SwiperUI, ProgressBar, Bar } from './S.elements';
-import useWindowSize from '../../../hooks/useWindowSize';
 import { getPercentage } from './helpers';
+import * as S from './S.elements';
+import { Bar, ProgressBar, SwiperContainer, SwiperUI } from './S.elements';
 
 export const Deposits: FC = () => {
   const screen = useWindowSize();

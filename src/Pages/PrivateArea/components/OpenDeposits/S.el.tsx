@@ -35,7 +35,7 @@ export const TextValue = styled.p`
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
-  color: #000;
+  color: ${(props) => props.theme.lkMain.navLink};
 `;
 
 export const FieldContainer = styled.div`
@@ -47,7 +47,7 @@ export const Agree = styled.p`
   font-size: 14px;
   line-height: 20px;
   margin-left: 10px;
-  color: #000000;
+  color: ${(props) => props.theme.lkMain.navLink};
 
   a {
     text-decoration: underline;

@@ -512,17 +512,21 @@ export const HeaderBar: FC = () => {
 
   const getChipColor = (i: any) => {
     let color = '#E0F8FF';
+    const theme = localStorage.getItem('theme');
     if (i.balanceKind === 1) {
+      // color = theme === 'light' ? '#FFF4D9' : '#464440';
       color = '#FFF4D9';
     } else if (i.balanceKind === 9) {
       color = '#FF416E';
     } else if (i.balanceKind === 10) {
       color = '#6DB9FF';
     } else if (i.balanceKind === 11) {
+      // color = theme === 'light' ? '#BCD476' : '#BCD476';
       color = '#BCD476';
     } else if (i.balanceKind === 12) {
       color = '#A78CF2';
     } else if (i.balanceKind === 43) {
+      // color = theme === 'light' ? '#EFECFF' : '#373D38';
       color = '#EFECFF';
     } else if (i.balanceKind === 44) {
       color = '#DAFFE2';
@@ -1081,7 +1085,7 @@ const SlideContainer = styled.p<{ active?: boolean }>`
 `;
 
 const TabNavItem = styled(NavLink)`
-  color: #FFFFFF;
+  color: ${(props) => props.theme.lkMain.navLink};
   opacity: 0.6;
   font-size: 14px;
   line-height: 16px;
@@ -1191,7 +1195,7 @@ const PanelHeader = styled.div`
   margin-bottom: 10px;
   @media (max-width: 768px) {
     flex-direction: column;
-    border-bottom: 1px solid #ebebf2;
+    border-bottom: ${(props) => props.theme.lkMain.borderBottom};
     margin-bottom: 10px;
     padding-bottom: 10px;
     gap: 10px;
@@ -1247,7 +1251,8 @@ const BalanceChipsBlock = styled.div`
   gap: 10px;
   margin-bottom: 20px;
   padding-bottom: 20px;
-  border-bottom: 1px solid #ebebf2;
+  border-bottom: ${(props) => props.theme.lkMain.borderBottom};
+
   @media (max-width: 768px) {
     border-bottom: none;
     margin-bottom: 0px;
