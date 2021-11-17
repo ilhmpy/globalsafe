@@ -20,7 +20,7 @@ export const Button = styled.a<Props>`
   text-decoration: none;
   display: inline-block;
   box-sizing: border-box;
-  appreance: none;
+  appearance: none;
   user-select: none;
   border-radius: 4px;
   width: ${(props) => (props.fullWidth ? '100%' : 'auto')};
@@ -113,7 +113,21 @@ export const Button = styled.a<Props>`
         }
       `;
     }
+    if (props.fullWidthMobile) {
+      return `
+        @media only screen and (max-width: 768px) {
+          width: 100%;
+        }
+      `;
+    }
+    if (props.rightBtnOnTablet) {
+      return `
+        display: flex;
+        justify-content: flex-end;
+      `;
+    }
   }}
+
   &:disabled {
     box-shadow: none;
     user-select: none;
@@ -139,30 +153,6 @@ export const Button = styled.a<Props>`
           color: #ff3418;
         }
       `;
-    };
-  }}
-  ${({ rightBtnOnTablet }) => {
-    if (rightBtnOnTablet) {
-      return `
-        display: flex;
-        justify-content: flex-end;
-      `;
-    };
-  }};
-  ${({ fullWidthMobile }) => {
-    if(fullWidthMobile) {
-      return  `
-        @media only screen and (max-device-width: 768px) {
-          width: 100%;
-        }
-      `;
     }
   }}
 `;
-
-// &:disabled {
-//   background: #ccc;
-//   border-color: #ccc;
-//   box-shadow: none;
-//   user-select: none;
-// }
