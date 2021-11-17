@@ -8,7 +8,7 @@ import { MobWrapper } from './MobWrapper';
 type Props = {
   open: boolean;
   onClose: () => void;
-  children: ReactNode;
+  children: ReactNode; 
 };
 
 export const ModalMob: FC<Props> = ({ open, onClose, children }: Props) => {

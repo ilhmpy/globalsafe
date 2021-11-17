@@ -316,6 +316,7 @@ export const Timer: FC<Props> = ({
 const TimerBlock = styled.div`
   display: flex;
   & > span {
+    color: ${({ theme }) => theme.main.bodyColor};
     &:nth-child(2n) {
       font-size: 22px;
       font-weight: 400;

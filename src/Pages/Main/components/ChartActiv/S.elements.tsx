@@ -2,7 +2,7 @@ import styled from 'styled-components/macro';
 
 export const ChartContainer = styled.div`
   padding: 40px;
-  background: #fff;
+  background: ${({ theme }) => theme.main.blocksBackground}; 
   box-shadow: 0px 80px 80px -40px rgba(220, 220, 232, 0.5);
   border-radius: 4px;
   margin-bottom: 20px;
@@ -134,9 +134,10 @@ export const Button = styled.button<{ active: boolean }>`
   line-height: 14px;
   cursor: pointer;
   color: ${(props) => (props.active ? '#fff' : props.theme.v2.text)};
-  background: ${(props) => (props.active ? ' #0094FF' : '#F7F8FA')};
+  background: ${(props) => (props.active ? ' #0094FF' : props.theme.charts.chartButtonBg)};
   border-radius: 4px;
   padding: 5px 10px;
+  opacity: ${(props) => props.active ? "100%" : props.theme.charts.chartOpacityBtn};
   margin-right: 10px;
   &:last-child {
     margin-right: 0;
@@ -153,7 +154,7 @@ export const ChartList = styled.div`
 `;
 
 export const ChartItem = styled.div<{ active?: boolean }>`
-  background: #ffffff;
+  background: #ffff;
   border-radius: 4px;
   padding: 20px;
   cursor: pointer;
