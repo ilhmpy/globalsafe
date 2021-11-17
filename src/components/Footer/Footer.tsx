@@ -41,13 +41,19 @@ export const Footer: FC<FooterType> = ({ other }: FooterType) => {
           </FooterLinks>
         </FooterHeader>
         <FooterDesc>2021 © Globalsafe v2.0. Все права защищены.</FooterDesc>
-        <a target="_blank" rel="noreferrer" href="https:/t.me/joinchat/E_Acz5BKQnJlNTVi">
+        <TargetLink target="_blank" rel="noreferrer" href="https:/t.me/joinchat/E_Acz5BKQnJlNTVi">
           <Tg className="tg" />
-        </a>
+        </TargetLink>
       </Container>
     </FooterBlock>
   );
 };
+
+const TargetLink = styled.a`
+  & > svg > path {
+    opacity: ${({ theme }) => theme.charts.chartOpacityBtn};
+  }
+`;
 
 const FooterBlock = styled.footer<{ other?: boolean }>`
   width: 100%;

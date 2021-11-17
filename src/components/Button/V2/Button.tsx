@@ -36,10 +36,10 @@ export const Button = styled.a<Props>`
   opacity: ${(props) => (props.disabled ? '0.4' : '1')};
 
   &:hover {
-    background: #626280;
+    opacity: 90%;
   }
   &:active {
-    background: #494967;
+    opacity: 90%;
   }
 
   &:focus,

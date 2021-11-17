@@ -152,6 +152,11 @@ export const lightTheme = {
     background: "#F8F7FC",
     background2ich: "#FFFFFF",
     boxShadow: "0px 80px 80px -40px rgba(220, 220, 232, 0.5)",
+  },
+  drawHistory: {
+    descColor: "#3F3E4E",
+    background: "",
+    background2ich: "#F8F7FC"
   }
 };
 
@@ -304,6 +309,11 @@ export const darkTheme = {
     background: "#222228",
     background2ich: "#28282F",
     boxShadow: "0",
+  },
+  drawHistory: {
+    descColor: "#FFFFFF",
+    background: "",
+    background2ich: "#222228",
   }
 };
  

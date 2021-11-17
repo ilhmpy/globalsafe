@@ -150,6 +150,11 @@ declare module 'styled-components' {
       background: string;
       background2ich: string;
       boxShadow: string;
+    },
+    drawHistory: {
+      descColor: string;
+      background: string;
+      background2ich: string;
     }
   }
 }
