@@ -1,5 +1,5 @@
 import { NavHashLink } from 'react-router-hash-link';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { Button } from '../Button/V2/Button';
 
 export const Text = styled.p`
@@ -81,7 +81,9 @@ export const Languale = styled.div<{ auth?: boolean; admin?: boolean }>`
   font-weight: 500;
   font-size: 12px;
   line-height: 14px;
+
   color: ${({ theme }) => theme.main.bodyColor};
+
   cursor: pointer;
   ${({ auth, admin }) => {
     if (!auth) {
@@ -218,7 +220,7 @@ export const MenuBtn = styled.span<{ open?: boolean }>`
     border-radius: 2px;
     transform: ${(props) => (props.open ? 'rotate(45deg)' : 'rotate(0deg)')};
   }
-  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+  @media only screen and (min-width: 481px) and (max-width: 1024px) {
     position: relative;
     margin-left: 10px;
   }
