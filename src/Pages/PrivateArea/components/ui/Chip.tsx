@@ -1,8 +1,8 @@
 import styled, { css } from 'styled-components/macro';
 
 interface ChipProps {
-  type?: 'default' | 'success' | 'rejected' | 'danger' | 'info'
-};
+  type?: 'default' | 'success' | 'rejected' | 'danger' | 'info';
+}
 
 const Default = css`
   background: rgba(0, 0, 0, 0.1);
@@ -20,8 +20,8 @@ const Rejected = css`
 `;
 
 const Danger = css`
-  background: #FF4A31;
-  color: #FFFFFF;
+  background: #ff4a31;
+  color: #ffffff;
 `;
 
 const Info = css`

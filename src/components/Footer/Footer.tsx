@@ -41,19 +41,25 @@ export const Footer: FC<FooterType> = ({ other }: FooterType) => {
           </FooterLinks>
         </FooterHeader>
         <FooterDesc>2021 © Globalsafe v2.0. Все права защищены.</FooterDesc>
-        <a target="_blank" rel="noreferrer" href="https:/t.me/joinchat/E_Acz5BKQnJlNTVi">
+        <TargetLink target="_blank" rel="noreferrer" href="https:/t.me/joinchat/E_Acz5BKQnJlNTVi">
           <Tg className="tg" />
-        </a>
+        </TargetLink>
       </Container>
     </FooterBlock>
   );
 };
 
+const TargetLink = styled.a`
+  & > svg > path {
+    opacity: ${({ theme }) => theme.charts.chartOpacityBtn};
+  }
+`;
+
 const FooterBlock = styled.footer<{ other?: boolean }>`
   width: 100%;
   min-height: 217px;
   max-height: 217px;
-  background: #3f3e4e;
+  background: ${({ theme }) => theme.footerB.background};
   padding-top: 40px;
   padding-bottom: 40px;
   margin-top: auto;
@@ -81,6 +87,9 @@ const FooterBlock = styled.footer<{ other?: boolean }>`
       right: 0;
       left: 0;
       top: 155px;
+    }
+    .tg > svg {
+      opacity: ${({ theme }) => theme.charts.chartOpacityBtn};
     }
   }
 `;
@@ -130,13 +139,12 @@ const FooterLink = styled(NavHashLink)`
     width: 145px;
     margin-bottom: 20px;
   }
-  
-  @media 
 `;
 
 const FooterDesc = styled.h3`
   margin-bottom: 38px;
   color: #fff;
+  opacity: ${({ theme }) => theme.charts.chartOpacityBtn};
   font-weight: 400;
   font-size: 14px;
   line-height: 17px;

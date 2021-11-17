@@ -2,6 +2,7 @@ import 'styled-components';
 
 declare module 'styled-components' {
   export interface DefaultTheme {
+    // OLD CODE
     body: string;
     text: string;
     text2: string;
@@ -126,6 +127,55 @@ declare module 'styled-components' {
       gsFutureChip: string;
       tileTopSide: string;
       depositOpenLeftSide: string;
+    };
+    main: {
+      bodyBackground: string;
+      bodyColor: string;
+      buttonBackground: string;
+      blocksBackground: string;
+    };
+    notifies: {
+      notifyBackground: string;
+      notifiesBorder: string;
+      notifiesDateColor: string;
+      doneNotify: string;
+      notifiesBoxShadow: string;
+      notifyBlockBackground: string;
+    };
+    charts: {
+      chartButtonBg: string;
+      chartOpacityBtn: string;
+    };
+    footerB: {
+      background: string;
+    };
+    operations2: {
+      background: string;
+      ich2Background: string;
+    };
+    header2: {
+      background: string;
+    };
+    depositsProgramsCards: {
+      background: string;
+      text: string;
+      boxShadow: string;
+      descOpacity: string;
+    };
+    partnersProgramsBlock: {
+      background: string;
+      background2ich: string;
+      boxShadow: string;
+    };
+    drawHistory: {
+      descColor: string;
+      background: string;
+      background2ich: string;
+    };
+    payments2: {
+      background: string;
+      color: string;
+      itemBackground: string;
     };
   }
 }

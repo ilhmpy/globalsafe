@@ -211,13 +211,14 @@ export const Button = styled.a<Props>`
       }
       `;
     }
-  }}
-  ${({ maxWidth }) => {
-    return `
-      max-width: ${maxWidth}px;
-      min-width: ${maxWidth}px;
+    if (props.maxWidth) {
+      return `
+      max-width: ${props.maxWidth}px;
+      min-width: ${props.maxWidth}px;
     `;
-  }};
+    }
+  }}
+
   &:disabled {
     cursor: initial;
   }

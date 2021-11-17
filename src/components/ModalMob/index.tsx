@@ -8,7 +8,7 @@ import { MobWrapper } from './MobWrapper';
 type Props = {
   open: boolean;
   onClose: () => void;
-  children: ReactNode;
+  children: ReactNode; 
 };
 
 export const ModalMob: FC<Props> = ({ open, onClose, children }: Props) => {
@@ -42,6 +42,10 @@ export const ModalMob: FC<Props> = ({ open, onClose, children }: Props) => {
     }
   }, [open]);
 
+  if (size === 0) {
+    return null;
+  }
+
   return transitions(
     (styles, item) =>
       item && (
@@ -52,9 +56,8 @@ export const ModalMob: FC<Props> = ({ open, onClose, children }: Props) => {
                 <MobWrapper>{children}</MobWrapper>
               ) : (
                 <>
-                  {' '}
                   <S.Close onClick={onClose} />
-                  {children}
+                  <>{children}</>
                 </>
               )}
             </animated.div>

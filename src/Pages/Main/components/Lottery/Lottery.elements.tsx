@@ -23,7 +23,7 @@ export const TimerHisroryTitle = styled.div`
   font-size: 14px;
   letter-spacing: 0.1px;
   line-height: 20px;
-  color: #3f3e4e;
+  color: ${({ theme }) => theme.main.bodyColor};
 
   @media (max-width: 576px) {
     font-size: 14px;

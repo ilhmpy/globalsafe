@@ -61,8 +61,7 @@ export const Input: FC<InputProps> = ({
 };
 
 Input.defaultProps = {
-  // eslint-disable-next-line
-  onBlur: () => {},
+  onBlur: () => undefined,
   error: undefined,
   isValid: false,
 };

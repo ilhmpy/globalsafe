@@ -208,7 +208,7 @@ export const ListItem = styled.li<{ active?: boolean }>`
   background: ${(props) => props.theme.card.background};
   cursor: pointer;
   color: #000000;
-  
+
   &:focus,
   &:hover {
     background: ${(props) => props.theme.card.backgroundAlfa};
@@ -250,7 +250,6 @@ export const DropDownHeader = styled.div`
   width: 100%;
   transition: 200ms ease-in-out;
   color: #000000;
-  
   ${Arrow} {
     position: absolute;
     right: 14px;
@@ -286,7 +285,7 @@ export const DropDownHeader = styled.div`
   }
 
   &:hover {
-    border-color: #D6D8DE;
+    border-color: #d6d8de;
     cursor: pointer;
   }
 `;

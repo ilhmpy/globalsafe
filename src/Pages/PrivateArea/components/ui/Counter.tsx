@@ -1,8 +1,6 @@
 import React, { useEffect, useState, FC } from 'react';
 import moment from 'moment';
 import 'moment-duration-format';
-import { getTime } from 'date-fns';
-import useWindowSize from '../../../../hooks/useWindowSize';
 
 type Props = {
   data: string | Date;
@@ -13,7 +11,7 @@ type Props = {
   text?: string | undefined;
 };
 
-export const Counter: FC<Props> = ({ data, formatNum, over, delay, setTimerDown, text }) => {
+export const Counter: FC<Props> = ({ data, formatNum, over, delay, setTimerDown, text }: Props) => {
   const [count, setCount] = useState(0);
   const [start, setStart] = useState(false);
   const [state, setState] = useState<null | string>(null);

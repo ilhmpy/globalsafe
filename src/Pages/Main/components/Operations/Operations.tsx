@@ -305,7 +305,7 @@ const Description = styled.h3`
 const TableHead = styled.div<{ item?: boolean }>`
   width: 100%;
   height: 60px;
-  background: ${({ theme }) => theme.operations.headBg};
+  background: ${({ theme }) => theme.operations2.background};
   border-top-right-radius: 4px;
   border-top-left-radius: 4px;
   display: flex;
@@ -394,13 +394,13 @@ const TableHeadItem = styled.div`
 const TableMapItem = styled.div`
   width: 100%;
   min-height: 60px;
-  background: ${({ theme }) => theme.operations.ich1};
+  // background: ${({ theme }) => theme.operations2.background};
   display: flex;
   align-items: center;
   padding: 0px 0px 0px 40px;
-
+ 
   &:nth-child(2n) {
-    background: ${({ theme }) => theme.operations.ich2};
+    background: ${({ theme }) => theme.operations2.ich2Background};
   }
 
   @media only screen and (max-width: 767px) {
