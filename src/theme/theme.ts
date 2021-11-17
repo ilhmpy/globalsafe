@@ -113,10 +113,6 @@ export const lightTheme = {
       background: ""
     }
   },
-
-
-
-  // NEW CODE
   main: {
     bodyBackground: "#F7F8FA",
     bodyColor: "#3F3E4E",
@@ -276,9 +272,6 @@ export const darkTheme = {
       burger: "#FFF"
     }
   },
-
-  // NEW CODE
-
   main: {
     bodyBackground: "#1F1F25",
     bodyColor: "#FFFFFF",

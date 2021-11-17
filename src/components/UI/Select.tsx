@@ -7,7 +7,7 @@ import 'moment/locale/ru';
 
 type SelectType = {
   data: any[] | null | undefined | BalanceList[];
-  setSwitch: (value: string) => void;
+  setSwitch: (value: any) => void;
   withoutVolume?: boolean;
 };
 
