@@ -155,6 +155,11 @@ declare module 'styled-components' {
       descColor: string;
       background: string;
       background2ich: string;
-    }
-  }
+    },
+    payments2: {
+      background: string;
+      color: string;
+      itemBackground: string;
+    },
+  } 
 }

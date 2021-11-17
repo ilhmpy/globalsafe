@@ -164,9 +164,9 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
               {admin ? (
                 <AdminLink to="/admin">{t('headerButton.admin')}</AdminLink>
               ) : null}
-            </ButtonsRev>
+            </ButtonsRev> 
             {user ?
-            <Btn primary onClick={handleClick}>
+            <Btn primary header onClick={handleClick}>
               {t('headerButton.personalArea')}
             </Btn> :
             <Btn primary onClick={handleAuthClick}>

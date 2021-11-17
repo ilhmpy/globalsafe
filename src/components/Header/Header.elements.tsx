@@ -41,14 +41,20 @@ export const SwitchTheme = styled.div<{ mob?: boolean; admin?: boolean; auth?: b
   }
 `;
 
-export const Btn = styled(Button)<{ hide?: boolean }>`
+export const Btn = styled(Button)<{ hide?: boolean; header?: boolean; }>`
   padding: 12px 20px;
   display: ${(props) => (props.hide ? 'none' : 'inline-block')};
   text-transform: uppercase;
 
-  @media (max-width: 1100px) {
-    display: none;
-  }
+  ${({ header }) => {
+    if (header) {
+      return `
+        @media (max-width: 1100px) {
+          display: none;
+        }
+      `;
+    };
+  }}
 `;
 
 export const AdminButton = styled(Btn)`

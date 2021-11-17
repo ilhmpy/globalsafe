@@ -1,4 +1,5 @@
 import styled from 'styled-components/macro';
+import { Button } from '../../../../components/Button/V2/Button';
 
 export const Block = styled.div`
   .slick-slider {
@@ -22,6 +23,7 @@ export const CardBox = styled.div`
     margin-top: 40px;
     min-height: 250px;
     margin: 0 auto;
+    margin-bottom: 30px;
 
     @media only screen and (max-width: 767px) {
       margin-top: 10px;
@@ -116,23 +118,8 @@ export const CardDesc = styled.h3`
     }
 `;
 
-export const CardButton = styled.button`
-    width: 160px;
-    height: 40px;
-    border-radius: 4px;
-    color: #fff;
-    background: ${({ theme }) => theme.main.buttonBackground};
-    outline: none;
-    cursor: pointer;
-    border: 0;
-    font-size: 12px;
-    font-weight: 500;
-    transition: all 0.3s ease 0s;
-
-    &:hover {
-      opacity: 90%;
-    }
-
+export const CardButton = styled(Button)`
+  
     @media (max-width: 767px) {
         width: 100%;
         max-width: 240px;

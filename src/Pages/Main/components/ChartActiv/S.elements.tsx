@@ -154,7 +154,7 @@ export const ChartList = styled.div`
 `;
 
 export const ChartItem = styled.div<{ active?: boolean }>`
-  background: #ffffff;
+  background: #ffff;
   border-radius: 4px;
   padding: 20px;
   cursor: pointer;

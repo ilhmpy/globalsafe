@@ -108,6 +108,9 @@ export const lightTheme = {
     header:{
       background: "#fff",
       burger: "#000"
+    },
+    payments2: {
+      background: ""
     }
   },
 
@@ -157,6 +160,11 @@ export const lightTheme = {
     descColor: "#3F3E4E",
     background: "",
     background2ich: "#F8F7FC"
+  },
+  payments2: {
+    background: "#FFFF",
+    color: "#3F3E4E",
+    itemBackground: "#F8F7FC"
   }
 };
 
@@ -314,6 +322,11 @@ export const darkTheme = {
     descColor: "#FFFFFF",
     background: "",
     background2ich: "#222228",
-  }
+  },
+  payments2: {
+    background: "#1D1D21",
+    color: "#FFF",
+    itemBackground: "#28282F"
+  },
 };
  
