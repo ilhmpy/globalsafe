@@ -1,5 +1,6 @@
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
 import Chart from 'react-apexcharts';
+import { ThemeContext } from '../../../../context/ThemeContext';
 
 type ChartProps = {
   values: number[];
@@ -7,6 +8,10 @@ type ChartProps = {
 };
 
 export const SmallChart: FC<ChartProps> = ({ values }: ChartProps) => {
+  const themeContext = useContext(ThemeContext);
+  const theme = themeContext.theme;
+  const color = theme === 'light' ? '#3F3E4E' : '#fff';
+
   const data = {
     series: [
       {
@@ -45,7 +50,7 @@ export const SmallChart: FC<ChartProps> = ({ values }: ChartProps) => {
           text: 'Loading...',
         },
       },
-      colors: ['#3F3E4E'],
+      colors: [color],
       dataLabels: {
         enabled: false,
       },

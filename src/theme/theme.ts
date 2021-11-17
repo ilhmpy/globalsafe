@@ -108,6 +108,16 @@ export const lightTheme = {
     header:{
       background: "#fff",
       burger: "#000"
+    },
+    chart:{
+      background: '#fff',
+      btn: '#fff',
+      text: '#000',
+      text1: '#000',
+      thumbBg: '#fff',
+      thumbBorder: '#0094ff',
+      topBorder: '#eaeff8',
+      dropBg: '#fff'
     }
   },
 };
@@ -214,10 +224,20 @@ export const darkTheme = {
     neutral: '#33333A',
     activeBlue: '#0094FF',
     neutralBlue: '#33333A',
-    body: "#E5E5E5",
+    body: "#E5E5E5", 
     header:{
       background: "#fff",
       burger: "#FFF"
+    },
+    chart:{
+      background: '#28282F',
+      btn: 'rgba(81, 81, 114, 0.4)',
+      text: 'rgba(255, 255, 255, .8)',
+      text1: '#fff',
+      thumbBg: '#28282F',
+      thumbBorder: 'rgba(255, 255, 255, 0.3)',
+      topBorder: 'rgba(81, 81, 114, 0.4)',
+      dropBg: '#515172'
     }
   },
 };

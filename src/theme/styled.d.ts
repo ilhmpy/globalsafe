@@ -47,7 +47,7 @@ declare module 'styled-components' {
       selectCountBackgroundImage: string;
     };
     footer: {
-      color: string;
+      color: string; 
     };
     sortingWindow: {
       backgroundColor: string;
@@ -88,6 +88,16 @@ declare module 'styled-components' {
       header:{
         background: string;
         burger: string;
+      },
+      chart:{
+        background: string;
+        btn: string;
+        text: string;
+        text1: string;
+        thumbBg: string;
+        thumbBorder: string;
+        topBorder: string;
+        dropBg: string;
       }
     },
     titles: string;

@@ -2,7 +2,7 @@ import styled from 'styled-components/macro';
 
 export const ChartContainer = styled.div`
   padding: 40px;
-  background: #fff;
+  background: ${(props) => props.theme.v2.chart.background};
   box-shadow: 0px 80px 80px -40px rgba(220, 220, 232, 0.5);
   border-radius: 4px;
   margin-bottom: 20px;
@@ -90,10 +90,10 @@ export const Price = styled.span<{ red?: boolean; green?: boolean }>`
 export const Date = styled.div`
   font-size: 12px;
   line-height: 14px;
-  color: #000000;
+  color: ${(props) => props.theme.v2.chart.text};
   @media (max-width: 767px) {
     padding: 0 20px 20px;
-    border-bottom: 1px solid #eaeff8;
+    border-bottom: 1px solid ${(props) => props.theme.v2.chart.topBorder};
     text-align: left;
     margin: 0 auto 8px;
     width: 100%;
@@ -134,7 +134,7 @@ export const Button = styled.button<{ active: boolean }>`
   line-height: 14px;
   cursor: pointer;
   color: ${(props) => (props.active ? '#fff' : props.theme.v2.text)};
-  background: ${(props) => (props.active ? ' #0094FF' : '#F7F8FA')};
+  background: ${(props) => (props.active ? ' #0094FF' : props.theme.v2.chart.btn)};
   border-radius: 4px;
   padding: 5px 10px;
   margin-right: 10px;
@@ -153,7 +153,7 @@ export const ChartList = styled.div`
 `;
 
 export const ChartItem = styled.div<{ active?: boolean }>`
-  background: #ffffff;
+  background: ${(props) => props.theme.v2.chart.thumbBg};
   border-radius: 4px;
   padding: 20px;
   cursor: pointer;
@@ -163,7 +163,7 @@ export const ChartItem = styled.div<{ active?: boolean }>`
   ${(props) => {
     if (props.active) {
       return `
-      border: 1px solid #0094FF;
+      border: 1px solid ${props.theme.v2.chart.thumbBorder};
       box-shadow: 0px 16px 30px -8px rgba(220, 220, 232, 0.5);
       `;
     }
@@ -173,7 +173,7 @@ export const ChartItem = styled.div<{ active?: boolean }>`
 export const ChartName = styled.div`
   font-size: 12px;
   line-height: 14px;
-  color: #000000;
+  color: ${(props) => props.theme.v2.chart.text1};
   margin-bottom: 2px;
 `;
 
@@ -228,7 +228,7 @@ export const SwiperContainer = styled.div`
     border: 1px solid #fff;
   }
   .mySwiper .swiper-slide-thumb-active {
-    border: 1px solid #0094ff;
+    border: 1px solid ${(props) => props.theme.v2.chart.thumbBorder};
     box-sizing: border-box;
     box-shadow: 0px 16px 30px -8px rgba(220, 220, 232, 0.5);
     border-radius: 4px;
@@ -298,10 +298,16 @@ export const MobChartBlock = styled.div<{ mob?: boolean }>`
     display: ${(props) => (props.mob ? 'block' : 'none')};
   }
   .highcharts-plot-background {
-    fill: #f7f8fa;
+    fill: ${(props) => props.theme.v2.chart.background};
   }
   .highcharts-yaxis-labels,
   .highcharts-xaxis-labels {
     font-family: 'Roboto', sans-serif;
+  }
+  .highcharts-tooltip,
+  .highcharts-tooltip-box,
+  .highcharts-tooltip text,
+  .highcharts-tooltip-header {
+    color: #fff !important;
   }
 `;
