@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useContext, useState, FC } from 'react';
 import { Container } from '../../../components/UI/Container';
 import { Heading } from '../components/Heading';
 import { useHistory } from 'react-router-dom';
@@ -48,7 +48,7 @@ enum Tabs {
   Available,
 }
 
-export const Certificates = () => {
+export const Certificates: FC = () => {
   const [allCert, setAllCert] = useState<MarketCertificate[]>([]);
   const [userCertificat, setUserCertificat] = useState<ViewUserCertificateModel[]>([]);
   const [userPureCertificat, setUserPureCertificat] = useState<ViewUserCertificateModel[]>([]);

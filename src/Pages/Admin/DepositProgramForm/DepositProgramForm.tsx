@@ -13,9 +13,10 @@ import { BalanceKind } from '../../../enums/balanceKind';
 import { defaultFormState } from './helpers';
 import { AddDepositModel, DepositProgramFormPropsType } from './types';
 
-// eslint-disable-next-line react/prop-types
-export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({setOpenNewProgram,chosen,
-}) => {
+export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({
+  setOpenNewProgram,
+  chosen,
+}: DepositProgramFormPropsType) => {
   console.log('chosen', chosen);
   const [checkList, setCheckList] = useState<any>([]);
   const { t } = useTranslation();
@@ -47,16 +48,16 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({setOpenNewP
       try {
         console.log('updating............');
         const response = await hubConnection.invoke('PatchDeposit', program.id, {
-            ...program,
-            affiliateRatio: getArr(tableState),
-          });
+          ...program,
+          affiliateRatio: getArr(tableState),
+        });
         console.log('updateProgram ~ response', response);
       } catch (error) {
         console.log(error);
       }
     }
   };
-  
+
   async function createProgram() {
     console.log('1111111111~~~~~~~~~~~~~~~~~~start');
     console.log(program);
@@ -102,7 +103,7 @@ export const DepositProgramForm: FC<DepositProgramFormPropsType> = ({setOpenNewP
       expert: { '0': '', '1': '', '2': '', '3': '', '4': '', '5': '', '6': '', '7': '' },
       infinity: { '0': '', '1': '', '2': '', '3': '', '4': '', '5': '', '6': '', '7': '' },
     };
-console.log(arr);
+    console.log(arr);
     arr.length &&
       arr?.forEach((it: any, i: number) => {
         it.forEach((items: number[]) => {
@@ -152,7 +153,7 @@ console.log(arr);
               name="name"
               value={program.name}
               onChange={({ target: { name, value } }) => setProgram({ ...program, [name]: value })}
-              onBlur={() => program.name !== storage.name ? setIsOpenCancelConfirm(true) : null}
+              onBlur={() => (program.name !== storage.name ? setIsOpenCancelConfirm(true) : null)}
             />
             <Circle hide={program.name === storage.name} onClick={updateProgram} />
           </InputGroup>

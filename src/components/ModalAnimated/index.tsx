@@ -12,7 +12,7 @@ type Props = {
   children: ReactNode;
 };
 
-export const Modal: FC<Props> = ({ onClose, open, children }) => {
+export const Modal: FC<Props> = ({ onClose, open, children }: Props) => {
   const myRef = useRef(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();

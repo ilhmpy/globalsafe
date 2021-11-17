@@ -160,9 +160,6 @@ export const ChartItem = styled.div<{ active?: boolean }>`
   height: 94px;
   user-select: none;
   position: relative;
-  /* &:last-child {
-    margin-right: 0;
-  } */
   ${(props) => {
     if (props.active) {
       return `

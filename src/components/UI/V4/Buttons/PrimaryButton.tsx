@@ -20,8 +20,7 @@ export const PrimaryButton: FC<ButtonProps> = ({
 };
 
 PrimaryButton.defaultProps = {
-  // eslint-disable-next-line
-  onClick: () => {},
+  onClick: () => undefined,
 };
 
 const Primary = styled(BaseButton)`

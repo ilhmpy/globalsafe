@@ -12,8 +12,8 @@ type Props = {
 
 export const SuccessModal: FC<Props> = ({ onClose, data, open }: Props) => {
   return (
-    <>
-      <ModalMob onClose={onClose} open={open}>
+    <ModalMob onClose={onClose} open={open}>
+      <div>
         {data ? (
           <S.SmallContainer>
             <S.SmallContainerInner>
@@ -25,7 +25,7 @@ export const SuccessModal: FC<Props> = ({ onClose, data, open }: Props) => {
             </S.SmallContainerInner>
           </S.SmallContainer>
         ) : null}
-      </ModalMob>
-    </>
+      </div>
+    </ModalMob>
   );
 };

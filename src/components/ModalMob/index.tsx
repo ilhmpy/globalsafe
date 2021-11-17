@@ -54,7 +54,7 @@ export const ModalMob: FC<Props> = ({ open, onClose, children }: Props) => {
                 <>
                   {' '}
                   <S.Close onClick={onClose} />
-                  {children}
+                  <>{children}</>
                 </>
               )}
             </animated.div>
