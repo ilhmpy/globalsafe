@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import styled, { css } from 'styled-components/macro';
 import { Button } from '../../../components/Button/V2/Button';
-import { Modal } from '../../../components/ModalAnimated';
+import { ModalMob } from '../../../components/ModalMob';
 import { Back } from '../components/Back';
 import { Checkbox } from '../components/Checkbox';
 import { Space, Text, Title } from '../components/ui';
@@ -43,24 +43,36 @@ export const MobileFiltersModal: FC<Props> = ({
 
   return (
     <>
-      {open && (
-        <Modal open={open} onClose={onClose}>
-          <MobileWrapper>
-            <MobileHeader>
-              <Back text="Назад" onGoBackClick={onClose} />
-              <Title mB={0} mbMobile={0} heading2>
-                Фильтрация по типу
-              </Title>
-            </MobileHeader>
-            <MobileContent>
-              {/* Payment Methods */}
-              <Container wFull>
-                <Text textInMobileFilter style={{ marginBottom: '20px' }}>
-                  Методы оплаты:
-                </Text>
-                <>
-                  {[...methodsList].reverse().map((method, i) =>
-                    i !== 2 ? (
+      <ModalMob open={open} onClose={onClose}>
+        <MobileWrapper>
+          <MobileHeader>
+            <Back text="Назад" onGoBackClick={onClose} />
+            <Title mB={0} mbMobile={0} heading2>
+              Фильтрация по типу
+            </Title>
+          </MobileHeader>
+          <MobileContent>
+            {/* Payment Methods */}
+            <Container wFull>
+              <Text textInMobileFilter style={{ marginBottom: '20px' }}>
+                Методы оплаты:
+              </Text>
+              <>
+                {[...methodsList].reverse().map((method, i) =>
+                  i !== 2 ? (
+                    <DropdonwConatainer big key={`payment-item-${i}`}>
+                      <Checkbox
+                        dis={false}
+                        checked={selectedPaymentMethods.includes(method.value)}
+                        onChange={() => handleCheckboxChange(method.value)}
+                      >
+                        <Label active={selectedPaymentMethods.includes(method.value)} dis={false}>
+                          {method.label}
+                        </Label>
+                      </Checkbox>
+                    </DropdonwConatainer>
+                  ) : (
+                    <>
                       <DropdonwConatainer big key={`payment-item-${i}`}>
                         <Checkbox
                           dis={false}
@@ -72,45 +84,28 @@ export const MobileFiltersModal: FC<Props> = ({
                           </Label>
                         </Checkbox>
                       </DropdonwConatainer>
-                    ) : (
-                      <>
-                        <DropdonwConatainer big key={`payment-item-${i}`}>
-                          <Checkbox
-                            dis={false}
-                            checked={selectedPaymentMethods.includes(method.value)}
-                            onChange={() => handleCheckboxChange(method.value)}
-                          >
-                            <Label
-                              active={selectedPaymentMethods.includes(method.value)}
-                              dis={false}
-                            >
-                              {method.label}
-                            </Label>
-                          </Checkbox>
-                        </DropdonwConatainer>
 
-                        <DropdonwConatainer big key={`payment-item-${i}`}>
-                          <Hr />
-                        </DropdonwConatainer>
-                      </>
-                    )
-                  )}
-                </>
-              </Container>
+                      <DropdonwConatainer big key={`payment-item-${i}`}>
+                        <Hr />
+                      </DropdonwConatainer>
+                    </>
+                  )
+                )}
+              </>
+            </Container>
 
-              <Space column gap={20}>
-                <Button bigSize fullWidth primary onClick={handleAccept}>
-                  Применить
-                </Button>
+            <Space column gap={20}>
+              <Button bigSize fullWidth primary onClick={handleAccept}>
+                Применить
+              </Button>
 
-                <Button bigSize fullWidth outlinePrimary onClick={onResetFilters}>
-                  Очистить фильтр
-                </Button>
-              </Space>
-            </MobileContent>
-          </MobileWrapper>
-        </Modal>
-      )}
+              <Button bigSize fullWidth outlinePrimary onClick={onResetFilters}>
+                Очистить фильтр
+              </Button>
+            </Space>
+          </MobileContent>
+        </MobileWrapper>
+      </ModalMob>
     </>
   );
 };
@@ -146,9 +141,20 @@ export const Hr = styled.hr`
 `;
 
 export const MobileWrapper = styled.div`
+  width: 420px;
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
-  width: 100%;
+  @media (max-width: 767px) {
+    margin-top: 60px;
+    width: 100%;
+    padding: 0;
+    border-radius: 0;
+    margin-bottom: 60px;
+    background: transparent;
+  }
 `;
 
 export const MobileHeader = styled.div`

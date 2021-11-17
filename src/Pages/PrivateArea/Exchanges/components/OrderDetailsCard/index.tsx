@@ -29,7 +29,7 @@ interface OrderDetailsCardProps {
 
 export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }: OrderDetailsCardProps) => {
     const history = useHistory();
-    const { hubConnection } = useContext(AppContext);
+    const { hubConnection, balanceList } = useContext(AppContext);
     const [balanceSumm, setBalanceSumm] = useState('');
     const [fiatSumm, setFiatSumm] = useState('');
     const [paymentMethodSafeId, setPaymentMethodSafeId] = useState('');
@@ -37,6 +37,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
     const [userPaymentMethods, setUserPaymentMethods] = useState<CollectionPayMethod[]>([]);
     const [showCreateExchangeModal, setShowCreateExchangeModal] = useState(false);
     const [showErrorModal, setShowErrorModal] = useState(false);
+    const [showNotEnoughFunds, setShowNotEnoughFunds] = useState(false);
 
     const [balanceLimitFrom, setBalanceLimitFrom] = useState(0);
     const [balanceLimitTo, setBalanceLimitTo] = useState(0);
@@ -115,6 +116,19 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
         }
     };
 
+    const handleShowCreateExchangeModal = () => {
+        const balanceItem = balanceList?.find(b => b.balanceKind === order.assetKind);
+        if (balanceItem) {
+            const balanceRest = countVolumeToShow(balanceItem.volume, balanceItem.balanceKind);
+            if(balanceRest >= Number(balanceSumm)) {
+                setShowCreateExchangeModal(true);
+                return;
+            }
+        }
+
+        setShowNotEnoughFunds(true);
+    };
+
     // TODO Use SetExchangePaymentMethod for CreateSellExchange created exchange
     const handleCreateExchange = async () => {
         if(orderType === OrderType.Buy) {
@@ -179,13 +193,13 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
             if(volume <= limitTo) {
                 if(+value >= volume) {
                     setBalanceSumm(String(volume));
-                    setFiatSumm((volume * order.rate).toFixed(fiatFixLength));
+                    setFiatSumm(String( Number( (volume * order.rate).toFixed(fiatFixLength)) ));
                     return;
                 }
     
                 if(+value >= limitTo) {
                     setBalanceSumm(String(limitTo));
-                    setFiatSumm((limitTo * order.rate).toFixed(fiatFixLength));
+                    setFiatSumm(String( Number( (limitTo * order.rate).toFixed(fiatFixLength)) ));
                     return;  
                 } 
             }
@@ -193,13 +207,13 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
             if(limitTo <= volume) {
                 if(+value >= limitTo) {
                     setBalanceSumm(String(limitTo));
-                    setFiatSumm((limitTo * order.rate).toFixed(fiatFixLength));
+                    setFiatSumm(String( Number( (limitTo * order.rate).toFixed(fiatFixLength)) ));
                     return;  
                 } 
 
                 if(+value >= volume) {
                     setBalanceSumm(String(volume));
-                    setFiatSumm((volume * order.rate).toFixed(fiatFixLength));
+                    setFiatSumm(String( Number( (volume * order.rate).toFixed(fiatFixLength)) ));
                     return;
                 }
             }
@@ -217,7 +231,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
         const pattern = /^[0-9][0-9\.]*$/;
         const pattern2 = order.operationAssetKind === 7 ? /^[0-9]{1,10}\.[0-9]{6}$/ : /^[0-9]{1,10}\.[0-9]{3}$/;
         if (e.target.value === '' || pattern.test(e.target.value)) {
-            const value = removeLeadingZeros(e.target.value);
+            const value = e.target.value;
             const volumeSumm = countVolumeToShow(+order.volume, order.assetKind) * order.rate;
             const limitToSumm = countVolumeToShow(+order.limitTo, order.assetKind);
             const volume = Math.floor((countVolumeToShow(order.volume, order.assetKind)) * 100000) / 100000;
@@ -231,13 +245,13 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
 
             if(volumeSumm <= limitToSumm) {
                 if(+value >= volumeSumm) {
-                    setFiatSumm((volumeSumm).toFixed(fiatFixLength));
+                    setFiatSumm(String(Number(volumeSumm.toFixed(fiatFixLength))));
                     setBalanceSumm(String(volume));
                     return;
                 }
     
                 if(+value >= limitToSumm) {
-                    setFiatSumm((limitToSumm).toFixed(fiatFixLength));
+                    setFiatSumm(String(Number(limitToSumm.toFixed(fiatFixLength))));
                     setBalanceSumm(String(limitTo));
                     return;
                 } 
@@ -245,19 +259,18 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
 
             if(limitToSumm <= volumeSumm) {
                 if(+value >= limitToSumm) {
-                    setFiatSumm((limitToSumm).toFixed(fiatFixLength));
+                    setFiatSumm(String(Number(limitToSumm.toFixed(fiatFixLength))));
                     setBalanceSumm(String(limitTo));
                     return;
                 } 
 
                 if(+value >= volumeSumm) {
-                    setFiatSumm((volumeSumm).toFixed(fiatFixLength));
+                    setFiatSumm(String(Number(volumeSumm.toFixed(fiatFixLength))));
                     setBalanceSumm(String(volume));
                     return;
                 }
             }
            
-            
             if(!pattern2.test(e.target.value)) {
                 setFiatSumm(value);
                 setBalanceSumm(String(Math.ceil((+value / order.rate) * 100000) / 100000))
@@ -565,7 +578,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                     as="button"
                     primary 
                     fullWidthMobile
-                    onClick={() => setShowCreateExchangeModal(true)}
+                    onClick={handleShowCreateExchangeModal}
                     disabled={
                         order.volume === 0 ||
                         order.volume < (order.limitFrom / order.rate) ||
@@ -593,9 +606,15 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                 open={showCreateExchangeModal}
                 onClose={() => setShowCreateExchangeModal(false)}
             />
-            <ExchangeRequestErrorModal
+            <ExchangeRequestErrorModal 
                 open={showErrorModal}
                 onClose={() => setShowErrorModal(false)}
+            />
+            <ExchangeRequestErrorModal 
+                message={'Недостаточно средств.'}
+                withAction={false}
+                open={showNotEnoughFunds}
+                onClose={() => setShowNotEnoughFunds(false)}
             />
         </RightSide>
     </S.Container>

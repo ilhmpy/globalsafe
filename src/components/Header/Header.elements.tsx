@@ -81,7 +81,7 @@ export const Languale = styled.div<{ auth?: boolean; admin?: boolean }>`
   font-weight: 500;
   font-size: 12px;
   line-height: 14px;
-  color: ${(props) => props.theme.text};
+  color: ${({ theme }) => theme.main.bodyColor};
   cursor: pointer;
   ${({ auth, admin }) => {
     if (!auth) {

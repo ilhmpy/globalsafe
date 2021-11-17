@@ -1,31 +1,33 @@
 import React, { FC } from 'react';
 import { Button } from '../../../../components/Button/V2/Button';
-import { Modal } from '../../../../components/ModalAnimated';
+import { ModalMob } from '../../../../components/ModalMob';
 import { MarketCertificate } from '../../../../types/certificates';
 import * as S from './S.el';
 
 type Props = {
-  onClose: () => void;
   open: boolean;
-  data: MarketCertificate;
+  onClose: () => void;
+  data: MarketCertificate | null;
   errorType: string;
 };
 
-export const ErrorModal: FC<Props> = ({ onClose, open, data, errorType }: Props) => {
+export const ErrorModal: FC<Props> = ({ onClose, data, errorType, open }: Props) => {
   return (
     <>
-      {open && (
-        <Modal onClose={onClose} open={open}>
+      <ModalMob onClose={onClose} open={open}>
+        {data ? (
           <S.SmallContainer>
             <S.BlackTitle>Ошибка покупки сертификата</S.BlackTitle>
-            <S.Desc>Сертификат “{data.certificate.name}” не был приобретен по причине:</S.Desc>
-            <S.Reason>{errorType}</S.Reason>
-            <Button primary bigSize onClick={onClose}>
-              Ок
-            </Button>
+            <S.SmallContainerInner>
+              <S.Desc>Сертификат “{data.certificate.name}” не был приобретен по причине:</S.Desc>
+              <S.Reason>{errorType}</S.Reason>
+              <Button primary bigSize onClick={onClose}>
+                Ок
+              </Button>
+            </S.SmallContainerInner>
           </S.SmallContainer>
-        </Modal>
-      )}
+        ) : null}
+      </ModalMob>
     </>
   );
 };
