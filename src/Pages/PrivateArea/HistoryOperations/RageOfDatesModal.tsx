@@ -6,7 +6,6 @@ import styled from "styled-components/macro";
 import moment from "moment";
 import { Button } from '../../../components/Button/V2/Button';
 import { AppContext } from '../../../context/HubContext';
-import { setNestedObjectValues } from "formik";
 
 type RageOfDatesModalProps = {
     onClose: () => void;
