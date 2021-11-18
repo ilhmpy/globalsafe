@@ -4,7 +4,7 @@ export const Name = styled.div`
   font-weight: bold;
   font-size: 24px;
   line-height: 28px;
-  color: ${(props) => props.theme.v2.text};
+  color: ${(props) => props.theme.lkMain.navLink};
   margin-bottom: 10px;
 
   @media (max-width: 768px) {

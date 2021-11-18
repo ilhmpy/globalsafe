@@ -1,5 +1,5 @@
 import { NavHashLink } from 'react-router-hash-link';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { Button } from '../Button/V2/Button';
 
 export const Text = styled.p`
@@ -41,7 +41,7 @@ export const SwitchTheme = styled.div<{ mob?: boolean; admin?: boolean; auth?: b
   }
 `;
 
-export const Btn = styled(Button)<{ hide?: boolean; header?: boolean; }>`
+export const Btn = styled(Button)<{ hide?: boolean; header?: boolean }>`
   padding: 12px 20px;
   display: ${(props) => (props.hide ? 'none' : 'inline-block')};
   text-transform: uppercase;
@@ -53,7 +53,7 @@ export const Btn = styled(Button)<{ hide?: boolean; header?: boolean; }>`
           display: none;
         }
       `;
-    };
+    }
   }}
 `;
 
@@ -218,7 +218,7 @@ export const MenuBtn = styled.span<{ open?: boolean }>`
     border-radius: 2px;
     transform: ${(props) => (props.open ? 'rotate(45deg)' : 'rotate(0deg)')};
   }
-  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+  @media only screen and (min-width: 481px) and (max-width: 1024px) {
     position: relative;
     margin-left: 10px;
   }

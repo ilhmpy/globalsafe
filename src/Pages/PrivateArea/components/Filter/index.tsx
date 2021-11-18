@@ -7,6 +7,7 @@ import { ReactComponent as TileIcon } from '../../../../assets/v2/svg/tile.svg';
 import { ReactComponent as TileFillIcon } from '../../../../assets/v2/svg/tilefill.svg';
 import useWindowSize from '../../../../hooks/useWindowSize';
 import * as S from './S.el';
+
 interface FilterProps {
   activeFilter: 'active' | 'archived' | 'hold';
   setActiveFilter: (value: 'active' | 'archived' | 'hold') => void;
@@ -35,6 +36,7 @@ export const Filter: FC<FilterProps> = ({
   const handleActive = (type: string) => {
     if (type !== viewType) setViewType?.(type);
   };
+
   const screen = useWindowSize();
 
   return (
@@ -125,14 +127,11 @@ export const Filter: FC<FilterProps> = ({
     </S.Container>
   );
 };
-const SwiperSlideUI = styled(Swiper)`
-  max-width: fit-content !important;
-`;
+
 const SwiperUI = styled(Swiper)`
   display: flex;
   align-items: center;
   /* gap: 40px; */
-
   & .swiper-slide {
     /* width: auto !important; */
     max-width: fit-content !important;

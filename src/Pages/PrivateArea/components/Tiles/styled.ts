@@ -37,7 +37,8 @@ export const BottomSide = styled.div`
 
 export const TopSide = styled.div`
   position: relative;
-  background: #ebebf2;
+  background: ${(props) => props.theme.lkMain.tileTopSide};
+
   border-radius: 4px 4px 0px 0px;
   padding: 20px;
 
@@ -70,11 +71,13 @@ export const BoxTitle = styled.p`
 export const BlockBox = styled.div`
   max-width: 250px;
   width: 100%;
-  background: #ffffff;
-  border: 1px solid #ebebf2;
+  border: 1px solid ${(props) => props.theme.lkMain.tileTopSide};
   box-sizing: border-box;
   border-radius: 4px;
-  color: #000000;
+  color: ${(props) => props.theme.lkMain.navLink};
+
+  background: ${(props) => props.theme.lkMain.balanceBlock};
+
   @media (max-width: 768px) {
     max-width: 280px;
   }

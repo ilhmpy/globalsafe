@@ -4,7 +4,7 @@ export const Container = styled.div`
   width: 100%;
   display: flex;
   align-items: stretch;
-  box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
+  box-shadow: ${(props) => props.theme.lkMain.boxShadow};
   border-radius: 4px;
   @media (max-width: 768px) {
     flex-direction: column;
@@ -35,7 +35,7 @@ export const TextValue = styled.p`
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
-  color: #000;
+  color: ${(props) => props.theme.lkMain.navLink};
 `;
 
 export const FieldContainer = styled.div`
@@ -47,7 +47,7 @@ export const Agree = styled.p`
   font-size: 14px;
   line-height: 20px;
   margin-left: 10px;
-  color: #000000;
+  color: ${(props) => props.theme.lkMain.navLink};
 
   a {
     text-decoration: underline;

@@ -1,7 +1,9 @@
-import React, { FC, useRef, useState } from 'react';
+import React, { FC, useContext, useRef, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 
-import { ReactComponent as Icon } from '../../../../assets/v2/svg/down-arrow.svg';
+import { ReactComponent as LightIcon } from '../../../../assets/v2/svg/down-arrow.svg';
+import { ReactComponent as DarkIcon } from '../../../../assets//svg/dark-down-arrow.svg';
+import { ThemeContext } from '../../../../context/ThemeContext';
 import useOnClickOutside from '../../../../hooks/useOutsideHook';
 import * as Styled from './S.el';
 
@@ -35,6 +37,7 @@ export const Dropdown: FC<SelectProps> = ({
     setIsOpen(false);
   };
   useOnClickOutside(ref, handleClickOutside);
+  const { theme } = useContext(ThemeContext);
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'ArrowUp') {
@@ -61,7 +64,7 @@ export const Dropdown: FC<SelectProps> = ({
           {selectedOption ? selectedOption : label ? label : ''}
 
           <Styled.Arrow rotat={true}>
-            <Icon />
+            {theme === 'light' ? <LightIcon /> : <DarkIcon />}
           </Styled.Arrow>
         </Styled.DropDownHeader>
         {isOpen && (
@@ -80,6 +83,6 @@ export const Dropdown: FC<SelectProps> = ({
           </Styled.SelectList>
         )}
       </Styled.DropDownContainer>
-    </div> 
+    </div>
   );
 };

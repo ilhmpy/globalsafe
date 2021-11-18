@@ -4,7 +4,8 @@ export const LeftSide = styled.div<{ bg?: string }>`
   width: 360px;
   flex: none;
   padding: 40px;
-  background: ${(props) => (props.bg ? props.bg : '#ebebf2')};
+  background: ${(props) => (props.bg ? props.bg : props.theme.lkMain.depositOpenLeftSide)};
+
   @media (max-width: 992px) {
     max-width: 310px;
     width: 100%;

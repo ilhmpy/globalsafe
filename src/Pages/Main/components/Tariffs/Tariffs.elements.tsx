@@ -316,7 +316,6 @@ export const PartnerProgramPagination = styled.div`
 export const PartnerProgramPaginationItem = styled.span<{ active?: boolean }>`
   margin-right: 5px;
   display: block;
-
   ${({ active }) => {
     if (active) {
       return `
