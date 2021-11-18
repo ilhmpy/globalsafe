@@ -127,6 +127,9 @@ declare module 'styled-components' {
       gsFutureChip: string;
       tileTopSide: string;
       depositOpenLeftSide: string;
+      selectBack: string;
+      selectBorder: string;
+      inputPlaceholder: string;
     };
     main: {
       bodyBackground: string;

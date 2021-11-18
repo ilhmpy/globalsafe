@@ -4,7 +4,7 @@ export const Container = styled.div`
   width: 100%;
   display: flex;
   align-items: stretch;
-  box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
+  box-shadow: ${(props) => props.theme.lkMain.boxShadow};
   border-radius: 4px;
   @media (max-width: 768px) {
     flex-direction: column;

@@ -129,14 +129,9 @@ export const lightTheme = {
     chipBorder: '#DFDFE9',
     tileTopSide: '#ebebf2',
     depositOpenLeftSide: '#ebebf2',
-    body: '#E5E5E5',
-    header: {
-      background: '#fff',
-      burger: '#000',
-    },
-    payments2: {
-      background: '',
-    },
+    selectBack: '#f9fafb',
+    selectBorder: '1px solid #edf0f7',
+    inputPlaceholder: 'rgba(0, 0, 0, 0.4)',
   },
 
   // NEW CODE
@@ -318,6 +313,9 @@ export const darkTheme = {
     chipBorder: 'rgba(81, 81, 114, 0.4)',
     tileTopSide: 'rgba(81, 81, 114, 0.4)',
     depositOpenLeftSide: '#33333A',
+    selectBack: '#1F1F25',
+    selectBorder: '1px solid rgba(81, 81, 114, 0.4)',
+    inputPlaceholder: 'rgba(255, 255, 255, 0.4)',
   },
 
   // NEW CODE
