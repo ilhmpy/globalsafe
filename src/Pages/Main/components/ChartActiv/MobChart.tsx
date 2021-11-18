@@ -1,10 +1,9 @@
-import React, { FC } from 'react';
-import ReactDOM from 'react-dom';
+import React, { FC, useContext } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { Collection } from '../../../../types/currency';
 import moment from 'moment';
 import 'moment/locale/ru';
+import { ThemeContext } from '../../../../context/ThemeContext';
 
 type Props = {
   data: number[][];
@@ -98,17 +97,14 @@ function opt1(H: any) {
 export const MobChart: FC<Props> = ({ data, type, setValCWD, setDate }: Props) => {
   localStorage.getItem('i18nextLng') === 'ru' ? opt(Highcharts) : opt1(Highcharts);
   moment.locale(localStorage.getItem('i18nextLng') || 'ru');
-  //   const data1 = () => {
-  //     if (type === 'GCWD') {
-  //       return data.map((i) => [new Date(i.date).valueOf(), i.latestBid / 100000]);
-  //     } else if (type === 'MGCWD') {
-  //       return data.map((i) => [new Date(i.date).valueOf(), i.latestBid / 100000]);
-  //     } else if (type === 'DIAMOND') {
-  //       return data.map((i) => [new Date(i.date).valueOf(), i.latestBid / 1000]);
-  //     } else {
-  //       return data.map((i) => [new Date(i.date).valueOf(), i.latestBid]);
-  //     }
-  //   };
+
+  const themeContext = useContext(ThemeContext);
+  const theme = themeContext.theme;
+  const bg = theme === 'light' ? '#fff' : '#28282F';
+  const glc = theme === 'light' ? '#DCDCE8' : '#515172';
+  const tcolor = theme === 'light' ? '#3F3E4E' : '#fff';
+  const lineColor = theme === 'light' ? '#F7F8FA' : '#28282F';
+
   const state = {
     series: [
       {
@@ -120,7 +116,7 @@ export const MobChart: FC<Props> = ({ data, type, setValCWD, setDate }: Props) =
     chart: {
       marginLeft: 0,
       spacingRight: 10,
-      backgroundColor: '#FFF',
+      backgroundColor: bg,
       height: 288,
       animation: false,
       spacingBottom: 5,
@@ -149,13 +145,14 @@ export const MobChart: FC<Props> = ({ data, type, setValCWD, setDate }: Props) =
         text: '',
       },
       tickColor: '#DCDCE8',
-      lineColor: '#F7F8FA',
+      lineColor: lineColor,
       dateTimeLabelFormats: {
         day: {
           main: '%e %b',
         },
       },
       crosshair: {
+        borderRadius: 4,
         color: '#DCDCE8',
         // dashStyle:Solid,
         snap: true,
@@ -164,13 +161,14 @@ export const MobChart: FC<Props> = ({ data, type, setValCWD, setDate }: Props) =
       },
       labels: {
         style: {
-          color: '#3F3E4E',
+          color: tcolor,
           fontSize: '12px',
         },
       },
     },
     yAxis: {
       gridLineDashStyle: 'Dash',
+      gridLineColor: glc,
       left: 0,
       opposite: true,
       labels: {
@@ -178,7 +176,7 @@ export const MobChart: FC<Props> = ({ data, type, setValCWD, setDate }: Props) =
         x: 10,
         y: 0,
         style: {
-          color: '#3F3E4E',
+          color: tcolor,
           fontSize: '14px',
         },
       },
