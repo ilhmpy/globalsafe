@@ -1,5 +1,5 @@
 import { NavHashLink } from 'react-router-hash-link';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { Button } from '../Button/V2/Button';
 
 export const Text = styled.p`
@@ -41,14 +41,20 @@ export const SwitchTheme = styled.div<{ mob?: boolean; admin?: boolean; auth?: b
   }
 `;
 
-export const Btn = styled(Button)<{ hide?: boolean }>`
+export const Btn = styled(Button)<{ hide?: boolean; header?: boolean }>`
   padding: 12px 20px;
   display: ${(props) => (props.hide ? 'none' : 'inline-block')};
   text-transform: uppercase;
 
-  @media (max-width: 1100px) {
-    display: none;
-  }
+  ${({ header }) => {
+    if (header) {
+      return `
+        @media (max-width: 1100px) {
+          display: none;
+        }
+      `;
+    }
+  }}
 `;
 
 export const AdminButton = styled(Btn)`
@@ -75,7 +81,7 @@ export const Languale = styled.div<{ auth?: boolean; admin?: boolean }>`
   font-weight: 500;
   font-size: 12px;
   line-height: 14px;
-  color: #3F3E4E;
+  color: ${({ theme }) => theme.main.bodyColor};
   cursor: pointer;
   ${({ auth, admin }) => {
     if (!auth) {
@@ -114,9 +120,7 @@ export const HeaderWrap = styled.header<{ header?: boolean }>`
   padding: 30px 0;
   height: 98px;
   transition: all 0.3s ease 0s;
-  background: ${(props) => props.theme.v2.header.background};
-  /* background: ${(props) =>
-    props.header ? props.theme.header : props.theme.v2.header.background}; */
+  background: ${({ theme }) => theme.header2.background};
   @media (max-width: 768px) {
     height: 60px;
     padding: 15px 0;
@@ -153,8 +157,8 @@ export const HeaderLogo = styled.a`
   @media (max-width: 767px) {
     margin-top: 8px;
   }
-  .logo {
-    fill: ${(props) => props.theme.text};
+  & svg > path {
+    fill: ${({ theme }) => theme.main.bodyColor} !important;
   }
 `;
 
@@ -214,7 +218,7 @@ export const MenuBtn = styled.span<{ open?: boolean }>`
     border-radius: 2px;
     transform: ${(props) => (props.open ? 'rotate(45deg)' : 'rotate(0deg)')};
   }
-  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+  @media only screen and (min-width: 481px) and (max-width: 1024px) {
     position: relative;
     margin-left: 10px;
   }
@@ -280,7 +284,7 @@ export const StyledLink = styled(NavHashLink).attrs({ activeclassname })`
   &.${activeclassname} {
     color: red;
   }
-  color: #3f3e4e;
+  color: ${({ theme }) => theme.main.bodyColor};
   font-weight: 500;
   font-size: 12px;
   line-height: 14px;

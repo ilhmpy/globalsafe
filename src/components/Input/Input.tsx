@@ -26,7 +26,7 @@ export const Input: FC<IProps> = ({
   readOnly = false,
   type,
   required,
-  suffix
+  suffix,
 }: IProps) => {
   return (
     <InputWrapper>
@@ -49,12 +49,12 @@ export const Input: FC<IProps> = ({
 
 export const InputWrapper = styled.div`
   position: relative;
-  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+  @media only screen and (min-width: 481px) and (max-width: 1024px) {
     max-width: 200px;
-  };
+  }
   @media ${Device.mobile} {
     max-width: 100%;
-  };
+  } ;
 `;
 
 export const InputUI = styled.input`
@@ -88,7 +88,7 @@ export const InputUI = styled.input`
   }
 
   &:disabled {
-    opacity: .4;
+    opacity: 0.4;
   }
 
   &:hover {
@@ -100,7 +100,6 @@ export const InputSuffix = styled.div`
   font-size: 14px;
   line-height: 16px;
   color: ${props => props.theme.v2.blackText};
-
   position: absolute;
   right: 12px;
   top: 12px;

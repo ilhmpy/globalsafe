@@ -2,6 +2,7 @@ import 'styled-components';
 
 declare module 'styled-components' {
   export interface DefaultTheme {
+    // OLD CODE
     body: string;
     text: string;
     text2: string;
@@ -77,7 +78,7 @@ declare module 'styled-components' {
     };
     pink: string;
     rounIputBackground: string;
-    v2:{
+    v2: {
       text: string;
       blackText: string;
       whiteText: string;
@@ -95,8 +96,20 @@ declare module 'styled-components' {
       header:{
         background: string;
         burger: string;
-      }
-    },
+      };
+      chart: {
+        background: string;
+        btn: string;
+        text: string;
+        text1: string;
+        thumbBg: string;
+        thumbBorder: string;
+        topBorder: string;
+        dropBg: string;
+        shadow: string;
+      };
+    };
+
     titles: string;
     toToken: {
       background: string;
@@ -114,6 +127,77 @@ declare module 'styled-components' {
       ich1: string;
       ich2: string;
       tableBg: string;
-    }
+    };
+    lkMain: {
+      background: string;
+      balanceBlock: string;
+      boxShadow: string;
+      navLink: string;
+      depositHeader: string;
+      activeChipBckgr: string;
+      activeChip: string;
+      chip: string;
+      activeChipBorder: string;
+      chipBorder: string;
+      borderBottom: string;
+      cwdChip: string;
+      globalChip: string;
+      globalFutureChip: string;
+      gsFutureChip: string;
+      tileTopSide: string;
+      depositOpenLeftSide: string;
+      selectBack: string;
+      selectBorder: string;
+      inputPlaceholder: string;
+    };
+    main: {
+      bodyBackground: string;
+      bodyColor: string;
+      buttonBackground: string;
+      blocksBackground: string;
+    };
+    notifies: {
+      notifyBackground: string;
+      notifiesBorder: string;
+      notifiesDateColor: string;
+      doneNotify: string;
+      notifiesBoxShadow: string;
+      notifyBlockBackground: string;
+    };
+    charts: {
+      chartButtonBg: string;
+      chartOpacityBtn: string;
+    };
+    footerB: {
+      background: string;
+    };
+    operations2: {
+      background: string;
+      ich2Background: string;
+    };
+    header2: {
+      background: string;
+    };
+    depositsProgramsCards: {
+      background: string;
+      text: string;
+      boxShadow: string;
+      descOpacity: string;
+    };
+    partnersProgramsBlock: {
+      background: string;
+      background2ich: string;
+      boxShadow: string;
+    };
+    drawHistory: {
+      descColor: string;
+      background: string;
+      background2ich: string;
+    };
+    payments2: {
+      background: string;
+      color: string;
+      itemBackground: string;
+    };
   }
 }

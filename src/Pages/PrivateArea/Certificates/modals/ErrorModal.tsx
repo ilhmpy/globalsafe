@@ -13,8 +13,8 @@ type Props = {
 
 export const ErrorModal: FC<Props> = ({ onClose, data, errorType, open }: Props) => {
   return (
-    <>
-      <ModalMob onClose={onClose} open={open}>
+    <ModalMob onClose={onClose} open={open}>
+      <div>
         {data ? (
           <S.SmallContainer>
             <S.BlackTitle>Ошибка покупки сертификата</S.BlackTitle>
@@ -27,7 +27,7 @@ export const ErrorModal: FC<Props> = ({ onClose, data, errorType, open }: Props)
             </S.SmallContainerInner>
           </S.SmallContainer>
         ) : null}
-      </ModalMob>
-    </>
+      </div>
+    </ModalMob>
   );
 };

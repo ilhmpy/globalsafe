@@ -61,10 +61,15 @@ export const LabelContainer = styled.label`
   user-select: none;
 `;
 
-export const CheckboxLabel = styled.div<{checked: boolean | undefined; labelBold: boolean;}>`
+export const CheckboxLabel = styled.div<{ checked: boolean | undefined; labelBold: boolean }>`
   font-size: 14px;
   line-height: 20px;
+<<<<<<< HEAD
   font-weight: ${props => props.labelBold ? 500 : 400};
   color: ${props => props.checked ? props.theme.blue : props.theme.v2.blackText};
+=======
+  font-weight: ${(props) => (props.labelBold ? 500 : 400)};
+  color: ${(props) => (props.checked ? props.theme.blue : props.theme.black)};
+>>>>>>> 221b6c8860220aaca87b316a9bd034be482422fb
   margin-left: 10px;
 `;

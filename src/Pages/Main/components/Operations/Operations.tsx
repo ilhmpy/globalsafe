@@ -152,135 +152,6 @@ export const Operations = () => {
   );
 };
 
-const TableContainer = styled(Container)`
-  display: flex;
-  flex-direction: column;
-  ${Button} {
-    margin: 30px auto;
-    width: 160px;
-  }
-`;
-
-const TableList = styled.ul<{ card?: boolean; dn?: boolean }>`
-  list-style: none;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  justify-content: space-between;
-  padding: 10px 50px;
-  margin-bottom: 18px;
-  background: ${(props) => (props.card ? props.theme.card.backgroundAlfa : 'transparent')};
-  box-shadow: ${(props) => (props.card ? '0px 1px 3px rgba(0, 0, 0, 0.25)' : 'none')};
-  border-radius: 20px;
-  border: ${(props) => (props.card ? props.theme.card.border : 'none')};
-  @media (max-width: 992px) {
-    padding: 10px 15px;
-  }
-  @media (max-width: 768px) {
-    padding: 10px 5px;
-  }
-  @media (max-width: 576px) {
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    padding: 10px 15px;
-    display: ${(props) => (props.dn ? 'none' : 'flex')};
-  }
-  ${(props) => {
-    if (props.card) {
-      return `
-            background: ${({ theme }: any) => theme.card.backgroundAlfa};
-            box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
-            border-radius: 20px;
-            border: ${({ theme }: any) => theme.card.border};
-          `;
-    }
-  }}
-`;
-
-const TableItem = styled.li`
-  letter-spacing: 0.1px;
-  font-weight: normal;
-  font-size: 18px;
-  line-height: 21px;
-  width: 100%;
-  color: ${(props) => props.theme.text2};
-  padding-right: 10px;
-  @media (max-width: 767px) {
-    font-size: 14px;
-    line-height: 16px;
-  }
-  @media (max-width: 767px) {
-    padding-bottom: 5px;
-  }
-  @media (max-width: 767px) {
-    text-align: left;
-  }
-  &:nth-child(1) {
-    max-width: 150px;
-    @media (max-width: 767px) {
-      max-width: 100%;
-    }
-  }
-  &:nth-child(2) {
-    max-width: 470px;
-    @media (max-width: 767px) {
-      max-width: 100%;
-    }
-  }
-  &:nth-child(3) {
-    max-width: 240px;
-    @media (max-width: 767px) {
-      max-width: 100%;
-    }
-  }
-`;
-
-const TableItemHead = styled(TableItem)`
-  color: ${(props) => props.theme.text2};
-  @media (max-width: 576px) {
-    display: none;
-  }
-`;
-
-const Value = styled.div`
-  font-weight: 500;
-  font-size: 24px;
-  line-height: 28px;
-  display: flex;
-  align-items: center;
-  letter-spacing: 0.1px;
-  text-transform: uppercase;
-  color: #ff416e;
-  @media (max-width: 768px) {
-    font-size: 14px;
-    line-height: 16px;
-  }
-  @media (max-width: 576px) {
-    flex-wrap: wrap;
-    text-align: right;
-    justify-content: flex-start;
-    span {
-      display: block;
-      width: 100%;
-    }
-  }
-`;
-
-const Text = styled.div`
-  font-weight: normal;
-  font-size: 20px;
-  line-height: 23px;
-  letter-spacing: 0.1px;
-  color: ${(props) => props.theme.text2};
-  span {
-    color: rgba(255, 65, 110, 1);
-  }
-  @media (max-width: 768px) {
-    font-size: 14px;
-    line-height: 16px;
-  }
-`;
-
 const Description = styled.h3`
   font-weight: 400;
   font-size: 14px;
@@ -305,7 +176,7 @@ const Description = styled.h3`
 const TableHead = styled.div<{ item?: boolean }>`
   width: 100%;
   height: 60px;
-  background: ${({ theme }) => theme.operations.headBg};
+  background: ${({ theme }) => theme.operations2.background};
   border-top-right-radius: 4px;
   border-top-left-radius: 4px;
   display: flex;
@@ -394,13 +265,12 @@ const TableHeadItem = styled.div`
 const TableMapItem = styled.div`
   width: 100%;
   min-height: 60px;
-  background: ${({ theme }) => theme.operations.ich1};
   display: flex;
   align-items: center;
   padding: 0px 0px 0px 40px;
 
   &:nth-child(2n) {
-    background: ${({ theme }) => theme.operations.ich2};
+    background: ${({ theme }) => theme.operations2.ich2Background};
   }
 
   @media only screen and (max-width: 767px) {
@@ -418,7 +288,6 @@ const TableInnerItem = styled.div`
   color: ${({ theme }) => theme.operations.headClr};
   width: 100%;
 
- 
   &:nth-child(1) {
     max-width: 330px;
   }

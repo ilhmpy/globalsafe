@@ -134,6 +134,11 @@ export const ChartProvider: FC = ({ children }: any) => {
   const [loadMGCWD, setLoadMGCWD] = useState(false);
   const [loadGCWD, setLoadGCWD] = useState(false);
 
+  const [totalDiamond, setTotalDiamond] = useState<number | null>(null);
+  const [totalGLOBAL, setTotalGLOBAL] = useState<number | null>(null);
+  const [totalMGCWD, setTotalMGCWD] = useState<number | null>(null);
+  const [totalGCWD, setTotalGCWD] = useState<number | null>(null);
+
   const appContext = useContext(AppContext);
   const hubConnection = appContext.hubConnection;
 
@@ -184,16 +189,26 @@ export const ChartProvider: FC = ({ children }: any) => {
           );
           if (res) {
             if (arrList.length < res.totalRecords) {
+              arrList = [...arrList, ...res.collection];
+              if (arrList.length === res.totalRecords) {
+                setTotalDiamond(res.totalRecords);
+                isFetching = false;
+                break;
+              }
+              if (totalDiamond === 0) {
+                setTotalDiamond(0);
+              }
               total = res.totalRecords;
               totalNum += 100;
-              arrList = [...arrList, ...res.collection];
             } else {
+              setTotalDiamond(0);
               isFetching = false;
               break;
             }
           }
         } catch (e) {
           console.log(e);
+          setTotalDiamond(0);
         }
       }
       if (type === 'day') {
@@ -263,16 +278,26 @@ export const ChartProvider: FC = ({ children }: any) => {
           );
           if (res) {
             if (arrList.length < res.totalRecords) {
+              arrList = [...arrList, ...res.collection];
+              if (arrList.length === res.totalRecords) {
+                setTotalMGCWD(res.totalRecords);
+                isFetching = false;
+                break;
+              }
+              if (totalMGCWD === 0) {
+                setTotalMGCWD(0);
+              }
               total = res.totalRecords;
               totalNum += 100;
-              arrList = [...arrList, ...res.collection];
             } else {
               isFetching = false;
+              setTotalMGCWD(0);
               break;
             }
           }
         } catch (e) {
           console.log(e);
+          setTotalMGCWD(0);
         }
       }
       if (type === 'day') {
@@ -343,16 +368,26 @@ export const ChartProvider: FC = ({ children }: any) => {
           );
           if (res) {
             if (arrList.length < res.totalRecords) {
+              arrList = [...arrList, ...res.collection];
+              if (arrList.length === res.totalRecords) {
+                setTotalGCWD(res.totalRecords);
+                isFetching = false;
+                break;
+              }
+              if (totalGCWD === 0) {
+                setTotalGCWD(0);
+              }
               total = res.totalRecords;
               totalNum += 100;
-              arrList = [...arrList, ...res.collection];
             } else {
               isFetching = false;
+              setTotalGCWD(0);
               break;
             }
           }
         } catch (e) {
           console.log(e);
+          setTotalGCWD(0);
         }
       }
       if (type === 'day') {
@@ -423,16 +458,26 @@ export const ChartProvider: FC = ({ children }: any) => {
           );
           if (res) {
             if (arrList.length < res.totalRecords) {
+              arrList = [...arrList, ...res.collection];
+              if (arrList.length === res.totalRecords) {
+                setTotalGLOBAL(res.totalRecords);
+                isFetching = false;
+                break;
+              }
+              if (totalGLOBAL === 0) {
+                setTotalGLOBAL(0);
+              }
               total = res.totalRecords;
               totalNum += 100;
-              arrList = [...arrList, ...res.collection];
             } else {
               isFetching = false;
+              setTotalGLOBAL(0);
               break;
             }
           }
         } catch (e) {
           console.log(e);
+          setTotalGLOBAL(0);
         }
       }
       if (type === 'day') {

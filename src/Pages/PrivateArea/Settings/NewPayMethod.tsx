@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import NumberFormat from 'react-number-format';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -78,8 +78,7 @@ export const NewPayMethod: FC = () => {
   const isUSDT = [PaymentMethodKind[0], PaymentMethodKind[1], PaymentMethodKind[2]].includes(
     bankName
   );
-  console.log('bankName', bankName);
-  console.log('balanceType', balanceType);
+
   const addPayMethod = () => {
     if (isUSDT) {
       return {
@@ -143,6 +142,14 @@ export const NewPayMethod: FC = () => {
     }
   }, [isUSDT]);
 
+  const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const pattern = /^([а-яё\s]+|[a-z\s]+)$/iu;
+    if (value === '' || pattern.test(value)) {
+      setName(value);
+    }
+  };
+  console.log('bankNumber', bankNumber.trim().length);
   return (
     <Container pNone>
       <Container>
@@ -217,7 +224,7 @@ export const NewPayMethod: FC = () => {
               </Entry>
               <Entry>
                 <span>Держатель карты:</span>
-                <Input name="toSum" value={name} onChange={(e) => setName(e.target.value)} />
+                <Input name="toSum" value={name} onChange={onChangeName} />
               </Entry>
             </>
           )}
@@ -241,7 +248,9 @@ export const NewPayMethod: FC = () => {
               primary
               as="button"
               disabled={
-                isUSDT ? payAddress.trim() === '' : bankNumber.length < 16 || name.trim() === ''
+                isUSDT
+                  ? payAddress.trim() === ''
+                  : bankNumber.trim().length < 19 || name.trim() === ''
               }
               onClick={addPaymentMethod}
             >

@@ -209,7 +209,8 @@ export const ListItem = styled.li<{ active?: boolean }>`
   background: ${(props) => props.theme.card.background};
   cursor: pointer;
   color: #000000;
-  
+  color: ${(props) => props.theme.lkMain.navLink};
+
   &:focus,
   &:hover {
     background: ${(props) => props.theme.card.backgroundAlfa};
@@ -251,7 +252,6 @@ export const DropDownHeader = styled.div`
   width: 100%;
   transition: 200ms ease-in-out;
   color: ${props => props.theme.v2.blackText};
-  
   ${Arrow} {
     position: absolute;
     right: 14px;

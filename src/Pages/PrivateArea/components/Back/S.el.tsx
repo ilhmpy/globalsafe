@@ -11,9 +11,9 @@ export const GoBack = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
-
   color: ${props => props.theme.v2.blackText};
 `;
+
 export const Container = styled.div`
   margin-bottom: 20px;
   display: flex;

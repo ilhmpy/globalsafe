@@ -6,6 +6,7 @@ import { AppContext } from '../../../context/HubContext';
 import { InBlockLoading } from '../../UI/V4/InBlockLoading/InBlockLoading';
 import { NotifyItem } from '../../../constantes/notifies';
 import * as Table from '../../UI/V4/TableItems';
+import { ReactComponent as Done } from '../../../assets/svg/done.svg';
 
 type NotifyProps = {
   block: boolean;
@@ -75,7 +76,9 @@ export const Notify: FC<NotifyProps> = ({
                         Перейти к обмену
                       </Table.LinkButton>
                     )}
-                    <Notifies.DoneNotify onClick={() => onNotify(notify.safeId)} />
+                    <Notifies.DoneNotify onClick={() => onNotify(notify.safeId)}>
+                       <Done />
+                    </Notifies.DoneNotify>
                   </Notifies.Notify>
                 ))}
             </Scrollbars>

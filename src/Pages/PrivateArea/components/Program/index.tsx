@@ -5,7 +5,6 @@ import { Button } from '../../../../components/Button/V2/Button';
 import { AppContext } from '../../../../context/HubContext';
 import useWindowSize from '../../../../hooks/useWindowSize';
 import { CollectionListDeposits, ListDeposits } from '../../../../types/deposits';
-import { RootList } from '../../../../types/info';
 import { SwiperContainer, SwiperUI } from '../../Deposits/S.elements';
 import { Loading } from '../Loading/Loading';
 import * as S from './S.el';

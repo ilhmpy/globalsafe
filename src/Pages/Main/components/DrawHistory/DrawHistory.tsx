@@ -30,7 +30,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
   useEffect(() => {
     let clean = false;
     const cb = (data: any) => {
-      console.log('DrawResult history', data);
+      // console.log('DrawResult history', data);
       !clean && repeat();
     };
     if (hubConnection) {
@@ -104,7 +104,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
           <Button as="button">{'Перейти к розыгрышу'}</Button>
         </TimerHistoryContainer>
       </Container>
-    
+
       <TableContainer>
         {notifyList.length && (
           <TableList dn>
@@ -112,18 +112,18 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
             <TableItemHead>{t('lotteryTable.typeWin')}</TableItemHead>
             <TableItemHead>{t('lotteryTable.sumWin')}</TableItemHead>
             <TableItemHead>{t('lotteryTable.winner')}</TableItemHead>
-        </TableList>
+          </TableList>
         )}
         <TransitionGroup>
-        {notifyList.length && (
-          notifyList.map((item, idx) => {
+          {notifyList.length &&
+            notifyList.map((item, idx) => {
               if (!isMobile) {
                 return (
                   <CSSTransition key={idx} timeout={500} classNames="item">
                     <TableList card>
-                      <TableItem>{moment(item.date).format('DD.MM.YYYY')}</TableItem>
-                      <TableItem>{typeWin(item.kind)}</TableItem>
-                      <TableItem>
+                      <TableItem tb>{moment(item.date).format('DD.MM.YYYY')}</TableItem>
+                      <TableItem tb>{typeWin(item.kind)}</TableItem>
+                      <TableItem tb>
                         {item.kind === 0
                           ? (item.volume / 100000).toLocaleString('ru-RU', {
                               maximumFractionDigits: 5,
@@ -134,7 +134,7 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
                         &nbsp;
                         {item.volume ? Balance[item.balanceKind] : '-'}
                       </TableItem>
-                      <TableItem>
+                      <TableItem tb>
                         <Value data-title={item.name}>{item.name}</Value>
                       </TableItem>
                     </TableList>
@@ -145,26 +145,26 @@ export const DrawHistory: FC<Props> = ({ onOpenModal, clock }: Props) => {
                   <CSSTransition key={idx} timeout={500} classNames="item">
                     <TableList card>
                       <TableItem>{moment(item.date).format('DD.MM.YYYY')}</TableItem>
-                      <TableItem style={{ display: "block", position: "absolute", right: "47px", maxWidth: "100px" }}>
+                      <TableItem
+                        style={{
+                          display: 'block',
+                          position: 'absolute',
+                          right: '47px',
+                          maxWidth: '100px',
+                        }}
+                      >
                         <Value data-title={item.name}>{item.name}</Value>
                       </TableItem>
                     </TableList>
                   </CSSTransition>
                 );
               }
-          }))}
+            })}
         </TransitionGroup>
       </TableContainer>
     </Page>
   );
 };
-
-const MainPage = styled(Page)`
-  margin-bottom: 80px;
-  @media (max-width: 768px) {
-    margin-bottom: 20px;
-  }
-`;
 
 const TitleContainer = styled(Container)`
   display: flex;
@@ -182,7 +182,8 @@ const Subtitle = styled.p`
   font-size: 14px;
   line-height: 20px;
   max-width: 373px;
-  color: #3f3e4e;
+  color: ${({ theme }) => theme.drawHistory.descColor};
+  opacity: ${({ theme }) => theme.depositsProgramsCards.descOpacity};
 
   @media (max-width: 576px) {
     font-size: 12px;
@@ -198,7 +199,8 @@ const TimerHistoryContainer = styled(Card)`
   gap: 20px;
   border-radius: 4px;
   margin-bottom: 20px;
-  background: #ffffff;
+  background: ${({ theme }) => theme.main.blocksBackground};
+  border: 0;
   box-shadow: none;
   & > button {
     width: 100%;
@@ -223,7 +225,7 @@ const TableContainer = styled(Container)`
     width: 160px;
   }
 
-  @media only screen and (max-device-width: 480px) {
+  @media only screen and (max-width: 480px) {
     padding-right: 0px;
     padding-left: 0px;
   }
@@ -236,14 +238,25 @@ const TableList = styled.ul<{ card?: boolean; dn?: boolean }>`
   width: 100%;
   justify-content: space-between;
   padding: 20px 40px;
-  background: ${(props) => (props.card ? props.theme.card.backgroundAlfa : '#dcdce8')};
-  border: ${(props) => (props.card ? props.theme.card.border : 'none')};
   border-radius: 4px 4px 0px 0px;
 
-  &:nth-child(2n) {
-    background: #f8f7fc;
-    box-shadow: 0px 80px 80px -40px rgba(220, 220, 232, 0.5);
-  }
+  ${({ dn, card, theme }) => {
+    if (dn) {
+      return `
+        background: ${theme.operations2.background};
+      `;
+    }
+    if (card) {
+      return `
+        background: ${theme.main.blocksBackground};
+        &:nth-child(2n) {
+          background: ${theme.drawHistory.background2ich};
+          box-shadow: 0px 80px 80px -40px rgba(220, 220, 232, 0.5);
+        }
+      `;
+    }
+  }}
+
   @media (max-width: 992px) {
     /* padding: 10px 15px; */
   }
@@ -272,13 +285,21 @@ const TableList = styled.ul<{ card?: boolean; dn?: boolean }>`
   }}
 `;
 
-const TableItem = styled.li`
+const TableItem = styled.li<{ tb?: boolean }>`
   font-weight: normal;
   font-size: 14px;
   line-height: 20px;
   width: 100%;
   /* color: ${(props) => props.theme.text2}; */
-  color: #3f3e4e;
+  color: ${({ theme }) => theme.main.bodyColor};
+
+  ${({ tb, theme }) => {
+    if (tb) {
+      return `
+        opacity: ${theme.depositsProgramsCards.descOpacity};
+      `;
+    }
+  }}
 
   padding-right: 10px;
 
@@ -317,7 +338,7 @@ const TableItem = styled.li`
       right: 47px;
     }
   }
-  @media only screen and (max-device-width: 600px) {
+  @media only screen and (max-width: 600px) {
     text-align: left;
   }
 `;
@@ -337,7 +358,8 @@ const Value = styled.div`
   font-weight: normal;
   font-size: 14px;
   line-height: 20px;
-  color: #3f3e4e;
+  opacity: ${({ theme }) => theme.depositsProgramsCards.descOpacity};
+  color: ${({ theme }) => theme.main.bodyColor};
 
   &:hover {
     cursor: pointer;
@@ -345,7 +367,7 @@ const Value = styled.div`
 
   &:hover:after {
     background: rgba(0, 0, 0, 0.25);
-    box-shadow: 0 10зч 20px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
     color: #fff;
     margin-top: -30px;
     left: 68%;

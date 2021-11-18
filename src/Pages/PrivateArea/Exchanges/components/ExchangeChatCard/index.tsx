@@ -351,7 +351,10 @@ export const ExchangeChatCard: FC<Props> = ({ exchange }: Props) => {
             <Text size={14} lH={20} mB={10} black>
               Рейтинг продавца:
             </Text>
-            <Title lH={28}>{exchange.userRating ? exchange.userRating : 0}</Title>
+
+            <Title lH={28}>{`${
+              exchange.userRating ? Number(exchange.userRating).toFixed(1) : '0.0'
+            }`}</Title>
           </S.BlockWrapper>
 
           <S.BlockWrapper>

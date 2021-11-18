@@ -7,7 +7,7 @@ export const lightTheme = {
   modal: '#fff',
   toggleBorder: '#FFF',
   buttonBorder: '#0E0D3D',
-  dangerButtonText:'#FFF',
+  dangerButtonText: '#FFF',
   inputBg: '#fff',
   repeatCode: '#212121',
   header: `linear-gradient(
@@ -57,7 +57,7 @@ export const lightTheme = {
   },
   acceptAll: {
     bg: '#fff',
-    desc: '#56657F',  
+    desc: '#56657F',
     opacity: '60%',
     item: '#515172',
   },
@@ -70,35 +70,35 @@ export const lightTheme = {
   },
   loader: {
     bg: 'rgba(0, 0, 0, 0.2)',
-    pointsColor: '#2b3595', 
+    pointsColor: '#2b3595',
   },
   timer: {
     bg: '#fff',
     color: '#515172',
-    beforeBg: "#f2e9e4"
+    beforeBg: '#f2e9e4',
   },
   pink: '#FF416E',
   rounIputBackground: '#FFF0F0',
-  titles: "#3F3E4E",
+  titles: '#3F3E4E',
   authBgGray: '#E5E5E5',
   toToken: {
-    color: "rgba(14, 13, 61, 0.5)",
-    background: "#fff",
-    convertColor: "#0E0D3D"
+    color: 'rgba(14, 13, 61, 0.5)',
+    background: '#fff',
+    convertColor: '#0E0D3D',
   },
   black: '#000000',
   white: '#ffffff',
   blue: '#0094FF',
   operations: {
-    descClr: "#3F3E4E",
-    headBg: "rgba(220, 220, 232, 100%)",
-    headClr: "#3F3E4E",
-    ich1: "#fff",
-    ich2: "#F8F7FC",
-    tableBg: "#fff"
+    descClr: '#3F3E4E',
+    headBg: 'rgba(220, 220, 232, 100%)',
+    headClr: '#3F3E4E',
+    ich1: '#fff',
+    ich2: '#F8F7FC',
+    tableBg: '#fff',
   },
-  v2:{
-    text: "#3F3E4E",
+  v2: {
+    text: '#3F3E4E',
     blackText: '#000000',
     whiteText: '#FFFFFF',
     bg: '#FFFFFF',
@@ -115,7 +115,92 @@ export const lightTheme = {
     header:{
       background: "#fff",
       burger: "#000"
-    }
+    },
+    chart: {
+      background: '#fff',
+      btn: '#fff',
+      text: '#000',
+      text1: '#000',
+      thumbBg: '#fff',
+      thumbBorder: '#0094ff',
+      topBorder: '#eaeff8',
+      dropBg: '#fff',
+      shadow: '0px 80px 80px -40px rgba(220, 220, 232, 0.5)',
+    },
+  },
+  lkMain: {
+    background: '#F9FAFB',
+    balanceBlock: '#FFFFFF',
+    boxShadow: '0px 40px 40px -40px rgba(220, 220, 232, 0.5)',
+    navLink: '#000000',
+    cwdChip: '#FFF4D9',
+    globalChip: '#FFFFFF',
+    globalFutureChip: '#EFECFF',
+    gsFutureChip: '#BCD476',
+
+    depositHeader: '#EBEBF2',
+    borderBottom: '1px solid #ebebf2',
+    activeChipBckgr: '#EBEBF2',
+    activeChip: '000',
+    chip: 'rgba(0, 0, 0, .6)',
+    activeChipBorder: '#EBEBF2',
+    chipBorder: '#DFDFE9',
+    tileTopSide: '#ebebf2',
+    depositOpenLeftSide: '#ebebf2',
+    selectBack: '#f9fafb',
+    selectBorder: '1px solid #edf0f7',
+    inputPlaceholder: 'rgba(0, 0, 0, 0.4)',
+  },
+
+  // NEW CODE
+  main: {
+    bodyBackground: '#F7F8FA',
+    bodyColor: '#3F3E4E',
+    buttonBackground: '#515172',
+    blocksBackground: '#FFFFFF',
+  },
+  notifies: {
+    notifyBlockBackground: '#fff',
+    notifyBackground: '#F7F8FA',
+    notifiesBorder: '#DCDCE8',
+    notifiesDateColor: '#3F3E4E',
+    doneNotify: '#030D45',
+    notifiesBoxShadow: '0px 16px 30px rgba(220, 220, 232, 0.5)',
+  },
+  charts: {
+    chartButtonBg: '#F7F8FA',
+    chartOpacityBtn: '100%',
+  },
+  footerB: {
+    background: '#3F3E4E',
+  },
+  operations2: {
+    background: '#DCDCE8',
+    ich2Background: '#F8F7FC',
+  },
+  header2: {
+    background: '#FFFFFF',
+  },
+  depositsProgramsCards: {
+    background: '#fff',
+    text: '#000',
+    boxShadow: '0px 80px 80px -40px rgba(220, 220, 232, 0.5)',
+    descOpacity: '100%',
+  },
+  partnersProgramsBlock: {
+    background: '#F8F7FC',
+    background2ich: '#FFFFFF',
+    boxShadow: '0px 80px 80px -40px rgba(220, 220, 232, 0.5)',
+  },
+  drawHistory: {
+    descColor: '#3F3E4E',
+    background: '',
+    background2ich: '#F8F7FC',
+  },
+  payments2: {
+    background: '#FFFF',
+    color: '#3F3E4E',
+    itemBackground: '#F8F7FC',
   },
 };
 
@@ -124,7 +209,7 @@ export const darkTheme = {
   text: '#FFF',
   toggleBorder: '#6B8096',
   buttonBorder: '#FF416E',
-  dangerButtonText:'#FFF',
+  dangerButtonText: '#FFF',
   text2: '#E2E2E2',
   text3: '#fff',
   text3Hover: '#fff',
@@ -149,7 +234,7 @@ export const darkTheme = {
   card: {
     background: '#212121',
     backgroundAlfa: 'rgba(33, 33, 33, 1)',
-    border: '1px solid #000000',
+    border: 'none',
   },
   descFund: '#fff',
   partnerProgram: {
@@ -192,30 +277,30 @@ export const darkTheme = {
   timer: {
     bg: 'rgba(33,33,33,1)',
     color: '#fff',
-    beforeBg: "#000"
+    beforeBg: '#000',
   },
   pink: '#FF416E',
   rounIputBackground: '#ffffff',
-  titles: "#fff",
+  titles: '#fff',
   toToken: {
-    color: "#fff",
-    background: "#212121",
-    convertColor: "#fff"
+    color: '#fff',
+    background: '#212121',
+    convertColor: '#fff',
   },
   authBgGray: '#E5E5E5',
   black: '#000000',
   white: '#ffffff',
   blue: '#0094FF',
   operations: {
-    descClr: "#fff",
-    headBg: "#131317",
-    headClr: "#fff",
-    ich1: "#1D1D21",
-    ich2: "#28282F",
-    tableBg: "#2A2A31"
+    descClr: '#fff',
+    headBg: '#131317',
+    headClr: '#fff',
+    ich1: '#1D1D21',
+    ich2: '#28282F',
+    tableBg: '#2A2A31',
   },
-  v2:{
-    text: "#FFFFFF",
+  v2: {
+    text: '#FFFFFF',
     blackText: '#FFFFFF',
     whiteText: '#000000',
     bg: '#28282F',
@@ -232,7 +317,92 @@ export const darkTheme = {
     header:{
       background: "#fff",
       burger: "#FFF"
-    }
+    },
+    chart: {
+      background: '#28282F',
+      btn: 'rgba(81, 81, 114, 0.4)',
+      text: 'rgba(255, 255, 255, .8)',
+      text1: '#fff',
+      thumbBg: '#28282F',
+      thumbBorder: 'rgba(255, 255, 255, 0.3)',
+      topBorder: 'rgba(81, 81, 114, 0.4)',
+      dropBg: '#515172',
+      shadow: 'none',
+    },
+  },
+  lkMain: {
+    background: '#1F1F25',
+    balanceBlock: '#28282F',
+    boxShadow: 'none',
+    navLink: '#FFFFFF',
+    cwdChip: '#464440',
+    globalChip: '#FFFFFF',
+    globalFutureChip: '#373D38',
+    gsFutureChip: '#404749',
+
+    depositHeader: '#313139',
+    borderBottom: '1px solid rgba(81, 81, 114, 0.4)',
+    activeChipBckgr: '#515172',
+    activeChip: '#FFFFFF',
+    chip: 'rgba(255, 255, 255, 0.6)',
+    activeChipBorder: '#515172',
+    chipBorder: 'rgba(81, 81, 114, 0.4)',
+    tileTopSide: 'rgba(81, 81, 114, 0.4)',
+    depositOpenLeftSide: '#33333A',
+    selectBack: '#1F1F25',
+    selectBorder: '1px solid rgba(81, 81, 114, 0.4)',
+    inputPlaceholder: 'rgba(255, 255, 255, 0.4)',
+  },
+
+  // NEW CODE
+
+  main: {
+    bodyBackground: '#1F1F25',
+    bodyColor: '#FFFFFF',
+    buttonBackground: '#0094FF',
+    blocksBackground: '#28282F',
+  },
+  notifies: {
+    notifyBlockBackground: '#28282F',
+    notifyBackground: '#313139',
+    notifiesBorder: '#51517266',
+    notifiesDateColor: '#fff',
+    doneNotify: '#fff',
+    notifiesBoxShadow: '0',
+  },
+  charts: {
+    chartButtonBg: '#515172',
+    chartOpacityBtn: '40%',
+  },
+  footerB: {
+    background: '#28282F',
+  },
+  operations2: {
+    background: '#222228',
+    ich2Background: '#222228',
+  },
+  header2: {
+    background: '#28282F',
+  },
+  depositsProgramsCards: {
+    background: '#28282F',
+    text: '#fff',
+    boxShadow: '0',
+    descOpacity: '80%',
+  },
+  partnersProgramsBlock: {
+    background: '#222228',
+    background2ich: '#28282F',
+    boxShadow: '0',
+  },
+  drawHistory: {
+    descColor: '#FFFFFF',
+    background: '',
+    background2ich: '#222228',
+  },
+  payments2: {
+    background: '#1D1D21',
+    color: '#FFF',
+    itemBackground: '#28282F',
   },
 };
- 

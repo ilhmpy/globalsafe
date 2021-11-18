@@ -1,7 +1,6 @@
 import { FC, ReactNode, useEffect } from 'react';
 import { useTransition, animated } from 'react-spring';
 import { Portal } from '../Portal/Portal';
-import { easeSinInOut, easeLinear } from 'd3-ease';
 import * as S from './S.el';
 import useWindowSize from '../../hooks/useWindowSize';
 import { MobWrapper } from './MobWrapper';
@@ -9,7 +8,7 @@ import { MobWrapper } from './MobWrapper';
 type Props = {
   open: boolean;
   onClose: () => void;
-  children: ReactNode;
+  children: ReactNode; 
 };
 
 export const ModalMob: FC<Props> = ({ open, onClose, children }: Props) => {
@@ -19,18 +18,12 @@ export const ModalMob: FC<Props> = ({ open, onClose, children }: Props) => {
     from: { opacity: 0, transform: 'translateY(-100%)' },
     enter: { opacity: 1, transform: 'translateY(0px)' },
     leave: { opacity: 0, transform: 'translateY(-100%)' },
-    config: {
-      easing: easeSinInOut,
-    },
   };
 
   const mob = {
     from: { opacity: 0, transform: 'translateX(100%)' },
     enter: { opacity: 1, transform: 'translateX(0px)' },
     leave: { opacity: 0, transform: 'translateX(100%)' },
-    config: {
-      easing: easeLinear,
-    },
   };
 
   const transitions = useTransition(open, size < 767 ? mob : pc);
@@ -49,6 +42,10 @@ export const ModalMob: FC<Props> = ({ open, onClose, children }: Props) => {
     }
   }, [open]);
 
+  if (size === 0) {
+    return null;
+  }
+
   return transitions(
     (styles, item) =>
       item && (
@@ -59,9 +56,8 @@ export const ModalMob: FC<Props> = ({ open, onClose, children }: Props) => {
                 <MobWrapper>{children}</MobWrapper>
               ) : (
                 <>
-                  {' '}
                   <S.Close onClick={onClose} />
-                  {children}
+                  <>{children}</>
                 </>
               )}
             </animated.div>

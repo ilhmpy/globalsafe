@@ -1,18 +1,12 @@
 import React, { useContext, useState, useEffect, FC, useRef } from 'react';
 import Highcharts from 'highcharts/highstock';
 import HighchartsReact from 'highcharts-react-official';
-import { Container } from '../../../../components/UI/Container';
-import { LeftIcon } from '../../../PrivateArea/Styles.elements';
 import * as S from './S.elements';
-import { Collection, RootChange } from '../../../../types/currency';
 import moment from 'moment';
 import 'moment/locale/ru';
 import momenttz from 'moment-timezone';
-import { ReactComponent as Arrow } from '../../../../assets/v2/svg/arrow-exchange.svg';
-import { SmallChart } from './SmallChart';
-import useWindowSize from '../../../../hooks/useWindowSize';
-import { Dropdown } from './components/Dropdown';
 import { MobChart } from './MobChart';
+import { ThemeContext } from '../../../../context/ThemeContext';
 
 require('highcharts/modules/exporting')(Highcharts);
 
@@ -106,11 +100,20 @@ export const ChartDesctop: FC<Props> = ({ data, setDate, setValCWD }: Props) => 
   localStorage.getItem('i18nextLng') === 'ru' ? opt(Highcharts) : opt1(Highcharts);
   moment.locale(localStorage.getItem('i18nextLng') || 'ru');
   const ref = useRef<any>();
-  const [update, setUpdate] = useState(false);
 
-  useEffect(() => {
-    setUpdate(!update);
-  }, [data]);
+  const themeContext = useContext(ThemeContext);
+  const theme = themeContext.theme;
+
+  const bg = theme === 'light' ? '#fff' : '#28282F';
+  const glc = theme === 'light' ? '#DCDCE8' : '#515172';
+  const bgTooltip = theme === 'light' ? '#fff' : '#19191C';
+  const tcolor = theme === 'light' ? '#3F3E4E' : '#fff';
+  const lineColor = theme === 'light' ? '#F7F8FA' : '#28282F';
+  const handlesBg = theme === 'light' ? '#fff' : '#787887';
+  const handlesBrd = theme === 'light' ? '#9E9EB8' : '#DADAEB';
+  const mask = theme === 'light' ? 'rgba(0, 148, 255, 0.2)' : 'rgba(247, 248, 250, 0.05)';
+  const navigatorBg = theme === 'light' ? 'rgba(0, 148, 255, 0.2)' : 'rgba(158, 158, 184, 0.4)';
+  const colorNav = theme === 'light' ? '#9E9EB8' : '#fff';
 
   const state = {
     options: {
@@ -126,6 +129,8 @@ export const ChartDesctop: FC<Props> = ({ data, setDate, setValCWD }: Props) => 
         height: 358,
         spacingBottom: 0,
         spacingRight: 0,
+        animation: false,
+        backgroundColor: bg,
         style: {
           fontFamily: 'Roboto',
         },
@@ -141,17 +146,23 @@ export const ChartDesctop: FC<Props> = ({ data, setDate, setValCWD }: Props) => 
         shape: 'rect',
         crosshairs: true,
         padding: 10,
-        backgroundColor: '#fff',
+        backgroundColor: bgTooltip,
+        className: 'chart-toolt',
         // enabled: false,
         formatter: function () {
-          return `
-          <b style="font-size: 18px; font-weight: bold; line-height: 24px; font-family: 'Roboto', sans-serif; color: #3F3E4E;">${
+          return theme === 'light'
+            ? `
+          <b style="font-size: 18px; font-weight: bold; line-height: 24px; font-family: 'Roboto', sans-serif; color: #3F3E4E ;">${
             (this as any).y
           }  CWD </b> <br/> <b style="font-size: 12px; font-weight: normal; line-height: 14px; font-family: 'Roboto', sans-serif; color: #000000">${moment(
-            (this as any).x
-          ).format('DD.MM.YYYY, dddd, HH:mm')} MCK</b>
-          
-          `;
+                (this as any).x
+              ).format('DD.MM.YYYY, dddd, HH:mm')} MCK</b>
+          `
+            : `<b style="font-size: 18px; font-weight: bold; line-height: 24px; font-family: 'Roboto', sans-serif; color: #ffffff ;">${
+                (this as any).y
+              }  CWD </b> <br/> <b style="font-size: 12px; font-weight: normal; line-height: 14px; font-family: 'Roboto', sans-serif; color: #ffffff">${moment(
+                (this as any).x
+              ).format('DD.MM.YYYY, dddd, HH:mm')} MCK</b>`;
         },
       },
       plotOptions: {
@@ -191,20 +202,22 @@ export const ChartDesctop: FC<Props> = ({ data, setDate, setValCWD }: Props) => 
       navigator: {
         enabled: true,
         adaptToUpdatedData: false,
-        maskFill: 'rgba(0, 148, 255, 0.2)',
+        maskFill: mask,
         maskInside: true,
         outlineWidth: 0,
         marginBottom: 0,
+        outlineColor: '#fff',
         handles: {
-          backgroundColor: '#FFFFFF',
-          borderColor: '#9E9EB8',
+          backgroundColor: handlesBg,
+          borderColor: handlesBrd,
         },
         series: {
           id: 'nav',
           type: 'areaspline',
-          fillOpacity: 0.1,
+          fillOpacity: 1,
           lineWidth: 0,
-
+          color: navigatorBg,
+          fillColor: navigatorBg,
           dataGrouping: {
             anchor: 'start',
             forced: true,
@@ -231,7 +244,7 @@ export const ChartDesctop: FC<Props> = ({ data, setDate, setValCWD }: Props) => 
           width: '100%',
           labels: {
             style: {
-              color: '#888',
+              color: colorNav,
             },
             y: -15,
           },
@@ -249,7 +262,7 @@ export const ChartDesctop: FC<Props> = ({ data, setDate, setValCWD }: Props) => 
           },
           plotBands: [
             {
-              color: 'rgba(115, 113, 115, 0.2)',
+              color: '#fff',
               from: 0,
               to: 1,
             },
@@ -260,15 +273,15 @@ export const ChartDesctop: FC<Props> = ({ data, setDate, setValCWD }: Props) => 
       yAxis: {
         left: '0',
         opposite: false,
+        gridLineColor: glc,
         gridLineDashStyle: 'Dash',
         labels: {
           align: 'left',
-
           x: 0,
           y: 0,
           style: {
             fontSize: '12px',
-            color: '#3F3E4E',
+            color: tcolor,
           },
         },
         plotBands: [
@@ -290,7 +303,7 @@ export const ChartDesctop: FC<Props> = ({ data, setDate, setValCWD }: Props) => 
           text: '',
         },
         tickColor: '#DCDCE8',
-        lineColor: '#F7F8FA',
+        lineColor: lineColor,
         dateTimeLabelFormats: {
           day: {
             main: '%e %b',
@@ -304,7 +317,7 @@ export const ChartDesctop: FC<Props> = ({ data, setDate, setValCWD }: Props) => 
         },
         labels: {
           style: {
-            color: '#3F3E4E',
+            color: tcolor,
             fontSize: '12px',
             fontFamily: 'Roboto',
           },
@@ -327,12 +340,7 @@ export const ChartDesctop: FC<Props> = ({ data, setDate, setValCWD }: Props) => 
         <MobChart data={data} setDate={setDate} setValCWD={setValCWD} />
       </S.MobChartBlock>
       <S.MobChartBlock>
-        <HighchartsReact
-          allowChartUpdate={update}
-          ref={ref}
-          highcharts={Highcharts}
-          options={state.options}
-        />
+        <HighchartsReact ref={ref} highcharts={Highcharts} options={state.options} />
       </S.MobChartBlock>
     </>
   );

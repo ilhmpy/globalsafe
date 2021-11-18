@@ -20,6 +20,7 @@ import { ViewExchangeModel } from '../../../types/exchange';
 import { isFirstDayOfMonth } from 'date-fns/esm';
 import { PaymentMethods } from "../Exchanges/components/modals/PaymentMethods";
 import { FilterButton } from '../components/ui';
+import { RageOfDatesModal } from "./RageOfDatesModal";
 
 export const HistoryOperations = () => {
   const [activeFilter, setActiveFilter] = useState<'active' | 'archived' | 'hold'>('active');
@@ -109,6 +110,7 @@ export const HistoryOperations = () => {
   const [totalRecords, setTotalRecords] = useState<number | null>(null);
   const [selectedCurrencies, setSelectedCurrencies] = useState<number[]>([]);
   const [currencies, setCurrencies] = useState<number[]>([]);
+  const [rageOfDatesModalShow, setRageOfDatesModalShow] = useState<boolean>(false);
 
   /*    /// NA.
         /// <summary>
@@ -399,7 +401,7 @@ export const HistoryOperations = () => {
         <Heading title="История операций" withoutBtn />
         <Styled.FilterAllBlock style={{ position: "relative" }}>
           <Styled.FilterDivision>
-            <FilterS.Button active={nowMonth} onClick={() => setNowMonth(!nowMonth)}>
+            <FilterS.Button active={nowMonth} onClick={() => setRageOfDatesModalShow(true)}>
               {months[moment().month()]} {new Date().getFullYear()}
             </FilterS.Button>
           </Styled.FilterDivision>
@@ -503,6 +505,10 @@ export const HistoryOperations = () => {
           objectsArray
         />
       )}
+      <RageOfDatesModal 
+        open={rageOfDatesModalShow} 
+        onClose={() => setRageOfDatesModalShow(false)} 
+      />
     </>
   );
 };

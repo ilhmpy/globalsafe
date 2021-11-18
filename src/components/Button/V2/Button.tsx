@@ -20,7 +20,7 @@ export const Button = styled.a<Props>`
   text-decoration: none;
   display: inline-block;
   box-sizing: border-box;
-  appreance: none;
+  appearance: none;
   user-select: none;
   border-radius: 4px;
   width: ${(props) => (props.fullWidth ? '100%' : 'auto')};
@@ -31,15 +31,15 @@ export const Button = styled.a<Props>`
   color: #ffffff;
   border: none;
   transition: all 0.3s ease 0s;
-  background: #515172;
+  background: ${({ theme }) => theme.main.buttonBackground};
   cursor: ${(props) => (props.disabled ? 'no-drop' : 'pointer')};
   opacity: ${(props) => (props.disabled ? '0.4' : '1')};
 
   &:hover {
-    background: #626280;
+    opacity: 90%;
   }
   &:active {
-    background: #494967;
+    opacity: 90%;
   }
 
   &:focus,
@@ -113,15 +113,20 @@ export const Button = styled.a<Props>`
         }
       `;
     }
-  }}
-  &:disabled {
-    box-shadow: none;
-    user-select: none;
-    cursor: not-allowed;
-    opacity: 0.4;
-  }
-  ${({ exchangeBtn }) => {
-    if (exchangeBtn) {
+    if (props.fullWidthMobile) {
+      return `
+        @media only screen and (max-width: 768px) {
+          width: 100%;
+        }
+      `;
+    }
+    if (props.rightBtnOnTablet) {
+      return `
+        display: flex;
+        justify-content: flex-end;
+      `;
+    }
+    if (props.exchangeBtn) {
       return `
         border: 1px solid #FF4A31;
         background: rgba(0, 0, 0, 0);
@@ -139,30 +144,13 @@ export const Button = styled.a<Props>`
           color: #ff3418;
         }
       `;
-    };
-  }}
-  ${({ rightBtnOnTablet }) => {
-    if (rightBtnOnTablet) {
-      return `
-        display: flex;
-        justify-content: flex-end;
-      `;
-    };
-  }};
-  ${({ fullWidthMobile }) => {
-    if(fullWidthMobile) {
-      return  `
-        @media only screen and (max-device-width: 768px) {
-          width: 100%;
-        }
-      `;
     }
   }}
-`;
 
-// &:disabled {
-//   background: #ccc;
-//   border-color: #ccc;
-//   box-shadow: none;
-//   user-select: none;
-// }
+  &:disabled {
+    box-shadow: none;
+    user-select: none;
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
+`;

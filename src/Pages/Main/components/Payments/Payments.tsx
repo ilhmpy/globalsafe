@@ -9,7 +9,6 @@ import 'swiper/components/scrollbar/scrollbar.scss';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper.scss';
 import { H2 } from '../../../../components/UI/Heading';
-import { Page } from '../../../../components/UI/Page';
 import { AppContext } from '../../../../context/HubContext';
 import { Card } from '../../../../globalStyles';
 import { Container } from '../../../../components/UI/Container';
@@ -20,32 +19,37 @@ import useWindowSize from '../../../../hooks/useWindowSize';
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
 export const Payments: FC = () => {
+  const testArray = [
+    [
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+    ],
+    [
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+    ],
+    [
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+    ],
+  ];
   const [statsDeposit, setStatsDeposit] = useState<RootPayDeposit[]>([]);
-  const [bigArr, setBigArr] = useState<any>([]);
+  const [bigArr, setBigArr] = useState<any>(testArray);
   const screen = useWindowSize();
 
-  const [smallArr, setSmallArr] = useState<any>([
-    /*
-      [ { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-        { deposit: { name: "TEST" }, date: new Date(), procent: 85 }],
-       [{ deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-        { deposit: { name: "TEST" }, date: new Date(), procent: 85 }],
-       [{ deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-        { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-        { deposit: { name: "TEST" }, date: new Date(), procent: 85 }]
-        */
-  ]);
+  const [smallArr, setSmallArr] = useState<any>([]);
   const [loadReset, setLoadReset] = useState(false);
   const arrSizeBig = 10;
   const arrSizeMob = 6;
@@ -161,9 +165,11 @@ export const Payments: FC = () => {
     }
   }
 
+  console.log(statsDeposit);
+
   return (
     <>
-      {statsDeposit.length ? (
+      {statsDeposit.length || bigArr.length || smallArr.length ? (
         <>
           <Container page pNone mtNone>
             <H2 center>{t('payments.currPay')}</H2>
@@ -212,7 +218,7 @@ export const Payments: FC = () => {
                   </>
                 ) : (
                   <>
-                    {statsDeposit.length ? (
+                    {bigArr.length ? (
                       <>
                         {bigArr.map((i: any, idx: any) => {
                           return (
@@ -249,11 +255,9 @@ export const Payments: FC = () => {
 
 const WhiteBox = styled.div`
   width: 100%;
-  background: #ffffff;
+  background: ${({ theme }) => theme.payments2.background};
   border-radius: 4px;
-  -webkit-box-shadow: 0px 80px 80px -40px #dcdce880;
-  -moz-box-shadow: 0px 80px 80px -40px #dcdce880;
-  box-shadow: 0px 80px 80px -40px #dcdce880;
+  box-shadow: ${({ theme }) => theme.depositsProgramsCards.boxShadow};
   padding: 30px;
   padding-top: 40px;
   padding-bottom: 0px;
@@ -346,7 +350,6 @@ const WhiteItem = styled.div<{ lastMargin?: number }>`
   height: 108px;
   min-width: 180px;
   min-height: 108px;
-  background: #f8f7fc;
   margin-right: 20px;
   border-radius: 4px;
   margin-bottom: 20px;
@@ -355,6 +358,7 @@ const WhiteItem = styled.div<{ lastMargin?: number }>`
   display: flex;
   flex-direction: column;
   justify-items: center;
+  background: ${({ theme }) => theme.payments2.itemBackground};
 
   @media only screen and (min-width: 481px) and (max-width: 1024px) {
     width: 150px;
@@ -396,16 +400,16 @@ const WhiteItem = styled.div<{ lastMargin?: number }>`
 `;
 
 const WhiteItemText = styled.div<{ bold?: boolean }>`
-  color: #000000;
+  color: ${({ theme }) => theme.main.bodyColor};
   font-weight: 500;
   font-size: 12px;
   line-height: 14px;
 
-  ${({ bold }) => {
+  ${({ bold, theme }) => {
     if (bold) {
       return `
           font-weight: 700;
-          color: #3F3E4E;
+          color: ${theme.payments2.color};
           font-size: 18px;
           line-height: 24px;
         `;
@@ -427,8 +431,5 @@ const WhiteItemLine = styled.div<{ procent: number | string }>`
     position: absolute;
     width: ${({ procent }) => procent}%;
     height: inherit;
-  }
-
-  @media only screen and (max-width: 767px) {
   }
 `;

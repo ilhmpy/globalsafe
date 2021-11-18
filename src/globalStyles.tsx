@@ -17,7 +17,7 @@ body {
     color: ${(props) => props.theme.text};
     position: relative;
     font-weight: 400;
-    background: ${props => props.theme.v2.cover};
+    background:${({ theme }) => theme.main.bodyBackground};
     background-repeat: no-repeat;
     height: 100%;
     scrollbar-width: none;

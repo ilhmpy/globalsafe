@@ -127,6 +127,7 @@ export const Tab = styled.div<{ active: boolean }>`
   width: 50%;
   text-align: center;
   padding: 6px 20px;
+  font-style: normal;
   font-weight: normal;
   font-size: 12px;
   line-height: 14px;

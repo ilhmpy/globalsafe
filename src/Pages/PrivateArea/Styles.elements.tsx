@@ -268,6 +268,8 @@ export const Page = styled.div`
   flex-direction: column;
   height: calc(100vh - 40px);
   display: flex;
+  background: ${(props) => props.theme.lkMain.background};
+
   @media (max-width: 768px) {
     margin-top: 40px;
   }

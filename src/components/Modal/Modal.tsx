@@ -40,12 +40,6 @@ export const Modal: React.FC<ModalProps> = ({
     }
   };
 
-  const [isMobile, setIsMobile] = useState<boolean>(false);
-
-  useEffect(() => {
-    setIsMobile(window.screen.width > 480);
-  }, []);
-
   return (
     <Portal>
       <ModalContainer zIndex={zIndex} style={style} className="bbg" lottery={lottery}>
@@ -97,7 +91,7 @@ const Center = styled.div<{ styles?: string; lottery?: boolean }>`
         border-radius: 10px; 
         max-height: 358px;
 
-        @media only screen and (max-device-width: 620px) {
+        @media only screen and (max-width: 620px) {
           max-width: 280px;
           & > div {
             min-width: 280px;
@@ -154,14 +148,14 @@ const ModalComponent = styled.div<{
     }
   }}
 
-  ${({ paddingsTopLess, p20 }) => {
-    if (paddingsTopLess) {
+  ${(props) => {
+    if (props.paddingsTopLess) {
       return `
         padding-top: 20px;
         padding-bottom: 20px;
       `;
     }
-    if (p20) {
+    if (props.p20) {
       return `
         padding: 20px;
       `;
@@ -196,9 +190,9 @@ const ModalComponent = styled.div<{
     fill: #000;
   }
 
-  ${({ styles }) => {
-    if (styles) {
-      return styles;
+  ${(props) => {
+    if (props.styles) {
+      return props.styles;
     }
   }}
 
@@ -207,7 +201,7 @@ const ModalComponent = styled.div<{
     padding: ${(props) => (props.mobMarg ? '0' : '1rem')};
   }
 
-  @media only screen and (max-device-width: 620px) {
+  @media (max-width: 620px) {
     margin: 0 auto;
   }
 `;

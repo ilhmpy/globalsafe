@@ -372,7 +372,6 @@ export const InfoBalance = () => {
         )
         .then((res) => {
           const result: any = {};
-          // eslint-disable-next-line max-len
           for (const key in res) {
             if (res) {
               const newArr =
