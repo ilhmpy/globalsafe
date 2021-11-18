@@ -35,8 +35,6 @@ export const Button = styled.a<Props>`
   margin-bottom: ${(props) => (props.mb ? '20px' : '0')};
   cursor: pointer;
   transition: all 0.3s ease 0s;
-  -webkit-appearance: none;
-  -moz-appearance: none;
   appearance: none;
   &:hover {
     box-shadow: 0px 4px 10px ${(props) => props.theme.buttonBorder};

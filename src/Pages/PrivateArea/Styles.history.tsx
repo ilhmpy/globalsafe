@@ -7,7 +7,6 @@ export const FilterDivision = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-
   &:nth-child(1) {
     justify-content: normal;
     width: 125px;
@@ -16,12 +15,9 @@ export const FilterDivision = styled.div`
       width: auto;
       padding-right: 10px;
     }
-    }
   }
-
   &:nth-child(2) {
     margin-right: 20px;
-
     @media (max-width: 1024px) {
       margin-right: 10px;
       width: 105px;

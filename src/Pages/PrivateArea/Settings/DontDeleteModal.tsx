@@ -57,29 +57,6 @@ const ContentWrapper = styled.div`
   position: relative;
 `;
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
-
-const CloseButton = styled(Close)`
-  position: absolute;
-  right: 19px;
-  top: 19px;
-  cursor: pointer;
-`;
-
-const ModalTitle = styled.h2`
-  font-style: normal;
-  font-weight: 500;
-  font-size: 24px;
-  line-height: 28px;
-  text-align: center;
-  margin-bottom: 20px;
-  color: #3f3e4e;
-`;
-
 export const Title = styled.h3`
   font-weight: bold;
   font-size: 24px;

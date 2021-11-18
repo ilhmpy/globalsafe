@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect, FC, useCallback } from 'react';
 import Highcharts from 'highcharts/highstock';
-import HighchartsReact from 'highcharts-react-official';
 import { Container } from '../../../../components/UI/Container';
 import { LeftIcon } from '../../../PrivateArea/Styles.elements';
 import * as S from './S.elements';
@@ -110,7 +109,7 @@ export const ChartActiv: FC<Props> = ({
                   .utc(data[data.length - 1].date)
                   .tz('Europe/Moscow')
                   .format('DD.MM.YYYY, dddd, HH:mm')}
-                MCK
+                МСК
               </S.Date>
             </S.PriceChangesWrap>
           );
@@ -131,7 +130,7 @@ export const ChartActiv: FC<Props> = ({
                   .utc(data[data.length - 1].date)
                   .tz('Europe/Moscow')
                   .format('DD.MM.YYYY, dddd, HH:mm')}{' '}
-                MCK
+                МСК
               </S.Date>
             </S.PriceChangesWrap>
           );
@@ -152,7 +151,7 @@ export const ChartActiv: FC<Props> = ({
                   .utc(data[data.length - 1].date)
                   .tz('Europe/Moscow')
                   .format('DD.MM.YYYY, dddd, HH:mm')}{' '}
-                MCK
+                МСК
               </S.Date>
             </S.PriceChangesWrap>
           );
@@ -173,7 +172,7 @@ export const ChartActiv: FC<Props> = ({
                   .utc(data[data.length - 1].date)
                   .tz('Europe/Moscow')
                   .format('DD.MM.YYYY, dddd, HH:mm')}{' '}
-                MCK
+                МСК
               </S.Date>
             </S.PriceChangesWrap>
           );
@@ -256,8 +255,8 @@ export const ChartActiv: FC<Props> = ({
                     .utc(data[data.length - 1].date)
                     .tz('Europe/Moscow')
                     .format('DD.MM.YYYY, dd, HH:mm')
-                : null} 
-              &nbsp; МСK
+                : null}
+              &nbsp; МСК
             </S.TooltipsDate>
             <S.TooltipsValue>
               {valCWD ? valCWD.toLocaleString() : data.length ? returnValues() : 0} CWD

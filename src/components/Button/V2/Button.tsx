@@ -126,16 +126,7 @@ export const Button = styled.a<Props>`
         justify-content: flex-end;
       `;
     }
-  }}
-
-  &:disabled {
-    box-shadow: none;
-    user-select: none;
-    cursor: not-allowed;
-    opacity: 0.4;
-  }
-  ${({ exchangeBtn }) => {
-    if (exchangeBtn) {
+    if (props.exchangeBtn) {
       return `
         border: 1px solid #FF4A31;
         background: rgba(0, 0, 0, 0);
@@ -155,4 +146,11 @@ export const Button = styled.a<Props>`
       `;
     }
   }}
+
+  &:disabled {
+    box-shadow: none;
+    user-select: none;
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
 `;

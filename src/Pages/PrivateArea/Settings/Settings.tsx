@@ -55,7 +55,7 @@ export const TableRows: FC<Rows> = ({ data, active, toView }: Rows) => {
   const { t } = useTranslation();
   const isMobile = useIsMobile();
 
-  if(isMobile) {
+  if (isMobile) {
     return (
       <MobileCard onClick={() => toView(data.safeId)}>
         <MobileRow>
@@ -79,12 +79,10 @@ export const TableRows: FC<Rows> = ({ data, active, toView }: Rows) => {
             </Ceil>
           </MobileRowItem>
         </MobileRow>
-        <MobileRow>
-          {payMethod.name ? payMethod.name : '-'}
-        </MobileRow>
+        <MobileRow>{payMethod.name ? payMethod.name : '-'}</MobileRow>
       </MobileCard>
-    )
-  };
+    );
+  }
 
   return (
     <TableRow onClick={() => toView(data.safeId)}>
@@ -250,7 +248,7 @@ export const Settings: FC = () => {
     if (hubConnection) {
       userPaymentsMethods(acceptedPaymentMethods);
     }
-  }, [hubConnection, acceptedPaymentMethods])
+  }, [hubConnection, acceptedPaymentMethods]);
 
   const adjustPaymentMethod = async (id: number, safeId: string) => {
     if (!hubConnection) return;
@@ -327,33 +325,37 @@ export const Settings: FC = () => {
         />
         <DontDeleteModal open={dontDeleteModal} setOpen={setDontDeleteModal} />
         <S.Container>
-          {
-            !isMobile
-            ?
-              <S.Buttons>
-                {[
-                  'Все',
-                  'АО «Альфа-Банк»',
-                  'АО «Тинькофф Банк»',
-                  'ПАО Сбербанк',
-                  'ERC 20',
-                  'TRC 20',
-                  'BEP 20',
-                ].map((value: string, i: number) => (
-                  <S.Button
-                    key={i}
-                    active={activeFilter === value}
-                    onClick={() => setActiveFilter(value)}
-                  >
-                    {value}
-                  </S.Button>
-                ))}
-              </S.Buttons>
-            :
-              <FilterButton noMargin wFull active={false} switchLeft onClick={() => setShowMobileFilters(true)}>
-                Фильтры (3)
-              </FilterButton>
-          }
+          {!isMobile ? (
+            <S.Buttons>
+              {[
+                'Все',
+                'АО «Альфа-Банк»',
+                'АО «Тинькофф Банк»',
+                'ПАО Сбербанк',
+                'ERC 20',
+                'TRC 20',
+                'BEP 20',
+              ].map((value: string, i: number) => (
+                <S.Button
+                  key={i}
+                  active={activeFilter === value}
+                  onClick={() => setActiveFilter(value)}
+                >
+                  {value}
+                </S.Button>
+              ))}
+            </S.Buttons>
+          ) : (
+            <FilterButton
+              noMargin
+              wFull
+              active={false}
+              switchLeft
+              onClick={() => setShowMobileFilters(true)}
+            >
+              Фильтры (3)
+            </FilterButton>
+          )}
         </S.Container>
       </Container>
 
@@ -379,7 +381,6 @@ export const Settings: FC = () => {
         onClose={() => setShowMobileFilters(false)}
         onAccept={handleAcceptPaymentMethods}
         onResetFilters={resetFilters}
-
         selectedPaymentMethods={selectedPaymentMethods}
         setSelectedPaymentMethods={setSelectedPaymentMethods}
         methodsList={paymentMethodsKinds}
@@ -426,7 +427,6 @@ const TableRow = styled.ul`
   padding: 0;
   text-indent: 0;
   list-style-type: none;
-
   display: flex;
   padding: 20px;
 
@@ -446,7 +446,6 @@ const TableHeader = styled(TableRow)`
   font-weight: 300;
   font-size: 14px;
   line-height: 16px;
-
   color: #000000;
 
   background: #ebebf2;
@@ -468,15 +467,13 @@ const MobileCard = styled.div`
   width: 100;
   display: flex;
   flex-direction: column;
-  background: ${props => props.theme.white};
+  background: ${(props) => props.theme.white};
   padding: 20px;
   margin-bottom: 10px;
-
   &:last-child {
     margin-bottom: 0;
   }
 `;
-
 
 const MobileRow = styled.div`
   display: flex;
