@@ -17,7 +17,7 @@ import { isObject } from 'highcharts';
 import { InternalSymbolName, isTemplateSpan } from 'typescript';
 import { countVolumeToShow } from '../utils';
 import { ViewExchangeModel } from '../../../types/exchange';
-import { isFirstDayOfMonth } from 'date-fns/esm';
+import { endOfYesterday, isFirstDayOfMonth } from 'date-fns/esm';
 import { PaymentMethods } from "../Exchanges/components/modals/PaymentMethods";
 import { FilterButton } from '../components/ui';
 import { RageOfDatesModal } from "./RageOfDatesModal";
@@ -44,8 +44,8 @@ export const HistoryOperations = () => {
     { text: 'Списание', active: 'archived' },
   ]);
   const appContext = useContext(AppContext);
-  const hubConnection = appContext.hubConnection;
   const balances = appContext.balanceList;
+  const { account, hubConnection } = appContext;
   const { t } = useTranslation();
   const [loading, setLoading] = useState<boolean>(false);
   const [allCurrency, setAllCurrency] = useState<boolean>(true);
@@ -55,6 +55,14 @@ export const HistoryOperations = () => {
   const [emptyItems, setEmptyItems] = useState<boolean>(false);
   const [allState, setAllState] = useState<ViewExchangeModel[]>([]);
   const [currenciesModal, setCurrenciesModal] = useState<boolean>(false);
+  const [start, setStart] = useState<Date | undefined>();
+  const [end, setEnd] = useState<Date | undefined>();
+  const [operations, setOperations] = useState<any[] | null>(null);
+  const [statusNew, setStatusNew] = useState<any>();
+  const [totalRecords, setTotalRecords] = useState<number | null>(null);
+  const [selectedCurrencies, setSelectedCurrencies] = useState<number[]>([]);
+  const [currencies, setCurrencies] = useState<number[]>([]);
+  const [rageOfDatesModalShow, setRageOfDatesModalShow] = useState<boolean>(false);
 
   const operation = (id: number, link: string) => {
     if (id === 1) {
@@ -104,13 +112,6 @@ export const HistoryOperations = () => {
       return 'Куплен сертификат';
     }
   };
-
-  const [operations, setOperations] = useState<any[] | null>(null);
-  const [statusNew, setStatusNew] = useState<any>();
-  const [totalRecords, setTotalRecords] = useState<number | null>(null);
-  const [selectedCurrencies, setSelectedCurrencies] = useState<number[]>([]);
-  const [currencies, setCurrencies] = useState<number[]>([]);
-  const [rageOfDatesModalShow, setRageOfDatesModalShow] = useState<boolean>(false);
 
   /*    /// NA.
         /// <summary>
@@ -242,24 +243,25 @@ export const HistoryOperations = () => {
           'GetBalanceLog',
           [1],
           [],
-          nowMonth
-            ? new Date(date.getFullYear(), date.getMonth(), 1, 0, 0)
-            : new Date(2013, 5, 13, 10, 0, 0),
-          new Date(),
+          start ? start : new Date(2013, 1, 1),
+          end ? end : new Date(),
           0,
           100
         )
         .then((res) => {
-          setLoading(false);
           console.log('res', res);
+          setLoading(false);
           setTotalRecords(res.totalRecords);
+          
           const sortCollection = res.collection.sort((x: any, y: any) => {
             const a = new Date(x.operationDate);
             const b = new Date(y.operationDate);
             return a > b ? -1 : a < b ? 1 : 0;
           });
+          
           let collection;
           let filterCollection = sortCollection;
+          
           if (activeFilter === "active") {
             collection = getFirstElements(sortCollection, 10);
           } else if (activeFilter === "hold") {
@@ -269,6 +271,7 @@ export const HistoryOperations = () => {
             filterCollection = sortCollection.filter((i: any) => i.balanceDelta < 0);
             collection = getFirstElements(filterCollection, 10);
           };
+          
           if (selectedCurrencies.length > 0) {
             filterCollection = filterCollection.filter((f: any) => {
               for (let i = 0; i < selectedCurrencies.length; i++) {
@@ -279,6 +282,7 @@ export const HistoryOperations = () => {
             });
             collection = getFirstElements(filterCollection, 10);
           };
+          
           setAllState(filterCollection);
           setOperations(collection);
           setEmptyItems(!(collection.length > 0));
@@ -292,7 +296,7 @@ export const HistoryOperations = () => {
 
   useEffect(() => {
     getBalanceLog();
-  }, [activeFilter, hubConnection, nowMonth, currencies, totalRecords]);
+  }, [activeFilter, hubConnection, start, end, currencies, totalRecords]);
 
   function changeNew() {
     setOperations(
@@ -304,12 +308,11 @@ export const HistoryOperations = () => {
             new: false,
           };
         })
-    );
+    ); 
   }
 
   function addMore() {
     if (operations && operations.length <= allState.length) {
-      console.log("false");
       changeNew();
       let items: any[] = [];
       for (let i = 0; i < 5; i++) {
@@ -392,6 +395,8 @@ export const HistoryOperations = () => {
     handleClose();
     setCurrencies([]);
     setSelectedCurrencies([]);
+    setStart(undefined);
+    setEnd(undefined);
     setActiveFilter("active");
   };
 
@@ -402,7 +407,7 @@ export const HistoryOperations = () => {
         <Styled.FilterAllBlock style={{ position: "relative" }}>
           <Styled.FilterDivision>
             <FilterS.Button active={nowMonth} onClick={() => setRageOfDatesModalShow(true)}>
-              {months[moment().month()]} {new Date().getFullYear()}
+              {end ? `${months[moment(end).month()]} ${moment(end).year()}` : `${months[moment().month()]} ${new Date().getFullYear()}`}
             </FilterS.Button>
           </Styled.FilterDivision>
           <Styled.FilterDivision>
@@ -418,7 +423,7 @@ export const HistoryOperations = () => {
             withoutContainer
             buttons={buttons}
           />
-          {currencies.length > 0 && (
+          {currencies.length > 0 || (start != undefined || end != undefined) && (
             <FilterButton 
               style={{ position: 'absolute', right: '0px' }}
               onClick={resetFilters}
@@ -507,6 +512,8 @@ export const HistoryOperations = () => {
       )}
       <RageOfDatesModal 
         open={rageOfDatesModalShow} 
+        setStart={setStart}
+        setEnd={setEnd}
         onClose={() => setRageOfDatesModalShow(false)} 
       />
     </>
