@@ -64,7 +64,7 @@ export const Dropdown: FC<SelectProps> = ({
           {selectedOption ? selectedOption : label ? label : ''}
 
           <Styled.Arrow rotat={true}>
-            {theme === 'light' ? <LightIcon /> : <DarkIcon />}
+            <Styled.Icon />
           </Styled.Arrow>
         </Styled.DropDownHeader>
         {isOpen && (
@@ -86,3 +86,4 @@ export const Dropdown: FC<SelectProps> = ({
     </div>
   );
 };
+

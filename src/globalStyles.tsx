@@ -10,14 +10,13 @@ html{
   min-height: 100vh;
   /* scroll-behavior: smooth; */
 }
-body{
+body {
     font-family: 'Roboto', sans-serif;
     font-size: 16px;
     line-height: 1.25;
-    color:${(props) => props.theme.text};
+    color: ${(props) => props.theme.text};
     position: relative;
     font-weight: 400;
-    background: #f9fafb;
     background:${({ theme }) => theme.main.bodyBackground};
     background-repeat: no-repeat;
     height: 100%;

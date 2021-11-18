@@ -1,11 +1,12 @@
 import styled from 'styled-components/macro';
+import { ReactComponent as ChevronBottom } from '../../../../assets/v2/svg/down-arrow.svg';
 
 export const Placeholder = styled.div`
   font-weight: normal;
   font-size: 14px;
   line-height: 21px;
   letter-spacing: 0.1px;
-  color: ${(props) => props.theme.depositHead};
+  color: ${(props) => props.theme.v2.blackText};
 `;
 
 export const InputItem = styled.div`
@@ -14,7 +15,7 @@ export const InputItem = styled.div`
     font-size: 14px;
     line-height: 21px;
     letter-spacing: 0.1px;
-    color: ${(props) => props.theme.text2};
+    color: ${(props) => props.theme.v2.blackText};
     white-space: nowrap;
   }
   display: inline-block;
@@ -221,8 +222,7 @@ export const Text = styled.div`
   font-weight: normal;
   font-size: 14px;
   line-height: 20px;
-  color: #000000;
-  color: ${(props) => props.theme.lkMain.navLink};
+  color: ${props => props.theme.v2.blackText};
 `;
 
 export const Value = styled.div`
@@ -238,8 +238,8 @@ export const DropDownContainer = styled.div`
 `;
 
 export const DropDownHeader = styled.div`
-  background: ${(props) => props.theme.lkMain.selectBack};
-  border: ${(props) => props.theme.lkMain.selectBorder};
+  background: ${props => props.theme.v2.cover};
+  border: 1px solid ${props => props.theme.v2.dropdownBorder};
   box-sizing: border-box;
   border-radius: 4px;
   position: relative;
@@ -251,7 +251,7 @@ export const DropDownHeader = styled.div`
   position: relative;
   width: 100%;
   transition: 200ms ease-in-out;
-  color: ${(props) => props.theme.lkMain.navLink};
+  color: ${props => props.theme.v2.blackText};
   ${Arrow} {
     position: absolute;
     right: 14px;
@@ -287,7 +287,11 @@ export const DropDownHeader = styled.div`
   }
 
   &:hover {
-    border-color: #d6d8de;
+    border-color: ${(props) => props.theme.v2.dropdownBorderHover};
     cursor: pointer;
   }
+`;
+
+export const Icon = styled(ChevronBottom)`
+  fill: ${props => props.theme.v2.blackText};
 `;

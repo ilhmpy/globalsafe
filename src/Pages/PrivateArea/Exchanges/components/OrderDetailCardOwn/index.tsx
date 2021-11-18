@@ -160,16 +160,16 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
 
   return (
     <S.Container>
-      <LeftSide bg={'#EAEFF4'}>
+      <LeftSide order>
         <S.BlockWrapper mobileMb={20}>
-          <Text size={14} lH={20} mB={10} black weightMobile={300} mBMobile={4}>
+          <Text size={14} lH={20} mB={10} weightMobile={300} mBMobile={4}>
             Аккаунт:
           </Text>
           <Title lH={28} mB={10} heading3>{user}</Title>
         </S.BlockWrapper>
 
         <S.BlockWrapper mobileMb={10}>
-          <Text size={14} lH={20} mB={10} black weightMobile={300} mBMobile={4}>
+          <Text size={14} lH={20} mB={10} weightMobile={300} mBMobile={4}>
             Рейтинг аккаунта:
           </Text>
           <Title lH={28} heading3 mbMobile={0}>
@@ -181,7 +181,7 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
           !getDailyLimitLoading
           ? 
             <S.BlockWrapper mobileMb={0}>
-              <Text size={14} lH={20} mB={10} black weightMobile={300} mBMobile={4}>
+              <Text size={14} lH={20} mB={10} weightMobile={300} mBMobile={4}>
                 Оставшийся лимит в сутках:
               </Text>
               <Title lH={28} heading3 mbMobile={0}>
@@ -195,10 +195,10 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
 
       <RightSide>
           <S.BlockWrapper>
-            <Text size={14} lH={20} mB={4} black weightMobile={300}>
+            <Text size={14} lH={20} mB={4} weightMobile={300}>
               Количество:
             </Text>
-            <Text size={14} lH={20} weight={500} black>
+            <Text size={14} lH={20} weight={500}>
               {`${countVolumeToShow(order.volume, order.assetKind).toLocaleString('ru-RU', {
                     maximumFractionDigits: 5,
                 })} ${Balance[order.assetKind]}`}
@@ -206,10 +206,10 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
           </S.BlockWrapper>
 
           <S.BlockWrapper>
-            <Text size={14} lH={20} mB={4} black weightMobile={300}>
+            <Text size={14} lH={20} mB={4} weightMobile={300}>
               Курс:
             </Text>
-            <Text size={14} lH={20} weight={500} black>
+            <Text size={14} lH={20} weight={500}>
               {order.rate.toLocaleString('ru-RU', {
                 maximumFractionDigits: 5,
               })}
@@ -217,10 +217,10 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
           </S.BlockWrapper>
 
           <S.BlockWrapper>
-            <Text size={14} lH={20} mB={4} black weightMobile={300}>
+            <Text size={14} lH={20} mB={4} weightMobile={300}>
               На сумму:
             </Text>
-            <Text size={14} lH={20} weight={500} black>
+            <Text size={14} lH={20} weight={500}>
               {`${(countVolumeToShow(order.volume, order.assetKind) * order.rate).toLocaleString('ru-RU', {
                     maximumFractionDigits: 5,
                 })} ${FiatKind[order.operationAssetKind]}`}
@@ -228,19 +228,19 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
           </S.BlockWrapper>
 
           <S.BlockWrapper>
-            <Text size={14} lH={20} mB={4} black weightMobile={300}>
+            <Text size={14} lH={20} mB={4} weightMobile={300}>
               Лимиты:
             </Text>
-            <Text size={14} lH={20} weight={500} black>
+            <Text size={14} lH={20} weight={500}>
               {`${countVolumeToShow(order.limitFrom, order.assetKind)} - ${countVolumeToShow(order.limitTo, order.assetKind)} ${FiatKind[order.operationAssetKind]}`}
             </Text>
           </S.BlockWrapper>
 
           <S.BlockWrapper>
-            <Text size={14} lH={20} mB={4} black weightMobile={300}>
+            <Text size={14} lH={20} mB={4} weightMobile={300}>
               Время на обмен:
             </Text>
-            <Text size={14} lH={20} weight={500} black>
+            <Text size={14} lH={20} weight={500}>
               {`${order.operationWindow.totalMinutes}м. ${order.operationWindow.seconds}с.`}
             </Text>
           </S.BlockWrapper>
@@ -249,13 +249,13 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
             orderType === OrderType.Buy
             ?
               <S.BlockWrapper largeMB mobileMb={20}>
-                <Text size={14} lH={20} mB={4} black weightMobile={300}>
+                <Text size={14} lH={20} mB={4} weightMobile={300}>
                   Платежные методы:
                 </Text>
 
                 {
                   order.methodsKinds.map((kind, i) => (
-                    <Text size={14} lH={20} weight={500} black mB={4} key={`method-item-${i}`}>
+                    <Text size={14} lH={20} weight={500} mB={4} key={`method-item-${i}`}>
                       {paymentMethodsKinds[kind].label}
                     </Text>
                   ))
@@ -263,7 +263,7 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
               </S.BlockWrapper>
             :
               <S.BlockWrapper largeMB mobileMb={20}>
-                <Text size={14} lH={20} mB={20} black weightMobile={300}>
+                <Text size={14} lH={20} mB={20} weightMobile={300}>
                   Платежные методы:
                 </Text>
                 {
@@ -272,34 +272,34 @@ export const OrderDetailCardOwn: FC<OrderDetailsCardOwnProps> = ({ order, orderT
                     method.assetKind !== 7
                       ?
                         <Space gap={10} column mb={20} key={`payment-method-${method.safeId}-${i}`}>
-                          <Text size={14} lH={20} weight={500} black>
+                          <Text size={14} lH={20} weight={500}>
                             {JSON.parse(method.data).bankName}
                           </Text>
                           <S.PaymentMethodDetailsBlock>
-                              <Text size={14} weight={300} lH={20} black mB={4}>Номер карты:</Text>
+                              <Text size={14} weight={300} lH={20} mB={4}>Номер карты:</Text>
                               <Space gap={10} mb={10}>
-                                <Text size={14} weight={500} lH={16} black>
+                                <Text size={14} weight={500} lH={16}>
                                   {JSON.parse(method.data).bankNumber}
                                 </Text>
                                 <CopyIconButton copyValue={JSON.parse(method.data).bankNumber} />
                               </Space>
                              
 
-                              <Text size={14} weight={300} lH={20} black mB={4}>Держатель карты:</Text>
-                              <Text size={14} weight={500} lH={16} black>
+                              <Text size={14} weight={300} lH={20} mB={4}>Держатель карты:</Text>
+                              <Text size={14} weight={500} lH={16}>
                                 {JSON.parse(method.data).name}
                               </Text>
                           </S.PaymentMethodDetailsBlock>
                         </Space>
                     :
                         <Space gap={10} column mb={20} key={`payment-method-${method.safeId}-${i}`}>
-                          <Text size={14} lH={20} weight={500} black>
+                          <Text size={14} lH={20} weight={500}>
                             {paymentMethodsKinds[method.kind].label}
                           </Text>
                           <S.PaymentMethodDetailsBlock>
-                              <Text size={14} weight={300} lH={20} black mB={4}>Адрес кошелька:</Text>
+                              <Text size={14} weight={300} lH={20} mB={4}>Адрес кошелька:</Text>
                               <Space gap={10} mb={10}>
-                                <Text size={14} weight={500} lH={16} black>
+                                <Text size={14} weight={500} lH={16}>
                                   {JSON.parse(method.data).paymentAddress}
                                 </Text>
                                 <CopyIconButton copyValue={JSON.parse(method.data).bankNumber} />

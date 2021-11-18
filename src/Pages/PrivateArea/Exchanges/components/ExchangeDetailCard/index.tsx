@@ -231,7 +231,7 @@ export const ExchangeDetailCard: FC<DetailCardProps> = ({
   ) {
     if (hubConnection) {
       hubConnection
-        .invoke('GetTotalExecutedExchanges', id)
+        .invoke('GetTotalExecutedExchanges', [id])
         .then((res) => {
           setTotal(res);
           console.log(type, res);

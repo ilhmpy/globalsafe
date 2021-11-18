@@ -7,7 +7,7 @@ export const TabsBlock = styled.div`
 `;
 
 export const TabNavItem = styled(NavLink)`
-  color: ${(props) => props.theme.black};
+  color: ${(props) => props.theme.v2.blackText};
   opacity: 0.6;
   font-size: 14px;
   line-height: 16px;

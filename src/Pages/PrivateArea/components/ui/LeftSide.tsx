@@ -1,11 +1,11 @@
 import styled from 'styled-components/macro';
 
-export const LeftSide = styled.div<{ bg?: string }>`
+export const LeftSide = styled.div<{ bg?: string; order?: boolean }>`
   width: 360px;
   flex: none;
   padding: 40px;
   background: ${(props) => (props.bg ? props.bg : props.theme.lkMain.depositOpenLeftSide)};
-
+  background: ${(props) => props.order ? props.theme.v2.neutral2 : props.theme.v2.neutral};
   @media (max-width: 992px) {
     max-width: 310px;
     width: 100%;

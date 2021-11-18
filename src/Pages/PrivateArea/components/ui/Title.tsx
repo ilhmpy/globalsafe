@@ -24,7 +24,7 @@ const Heading3 = css`
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
-  color: ${(props) => props.theme.black};
+  color: ${(props) => props.theme.v2.blackText};
 `;
 
 export const Title = styled.h3<TitleProps>`

@@ -22,7 +22,7 @@ export const DeleteOrderErrorModal: FC<Props> = ({
                     <S.Title>Ошибка удаления ордера</S.Title>
 
                     <S.MobileContent>
-                        <Text size={14} lH={20} black mB={10}>Ордер не был удален по причине:</Text>
+                        <Text size={14} lH={20} mB={10}>Ордер не был удален по причине:</Text>
                         <Text size={14} lH={20} error mB={20}>Присутствуют не завершенные обмены</Text>
 
                         <Button primary fullWidth onClick={onClose}>

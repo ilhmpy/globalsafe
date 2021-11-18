@@ -18,12 +18,13 @@ export const FilterButton = styled.button<FilterButtonProps>`
   line-height: 12px;
   padding: 6px 10px;
   font-family: 'Roboto', sans-serif;
-  color: ${(props) => (props.active ? '#000' : 'rgba(0, 0, 0, .6)')};
-  border: 1px solid ${(props) => (props.active ? '#EBEBF2' : '#DFDFE9')};
+  color: ${(props) => props.theme.v2.blackText};
+  opacity: ${(props) => props.active ? 1 : 0.6};
+  background: ${(props) => (props.active ? props.theme.v2.btnNeutral : 'rgba(0, 0, 0, 0)')};
+  border: 1px solid ${(props) => props.theme.v2.btnNeutral};
   box-sizing: border-box;
   border-radius: 2px;
   user-select: none;
-  background: ${(props) => (props.active ? '#EBEBF2' : 'rgba(0, 0, 0, 0)')};
   margin: ${(props) => (props.noMargin ? '0' : '0 10px 10px 9px')};
   &:first-child {
     margin-left: 0;
@@ -37,9 +38,7 @@ export const FilterButton = styled.button<FilterButtonProps>`
 
   @media ${Device.desktop} {
     &:hover {
-      color: rgba(0, 0, 0, .8);
-      background: rgba(0, 0, 0, 0);
-      border-color: #C9C9D2;
+      opacity: 0.8;
     }
   }
 

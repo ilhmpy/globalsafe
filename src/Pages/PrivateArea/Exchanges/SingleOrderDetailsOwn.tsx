@@ -223,7 +223,6 @@ export const SingleOrderDetailsOwn: FC = () => {
           <Text
             size={14}
             lH={20}
-            black
             sizeMobile={12}
             lHMobile={18}
             weightMobile={300}

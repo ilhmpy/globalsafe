@@ -32,7 +32,7 @@ export const Text = styled.p<Props>`
   margin-bottom: ${(props) => (props.mB ? props.mB : 0)}px;
   margin-left: ${(props) => (props.mL ? props.mL : 0)}px;
   user-select: ${(props) => (props.unone ? 'none' : 'text')};
-  color: ${(props) => (props.black ? props.theme.black : props.error ? '#FF4A31' : '#000')};
+  color: ${(props) => (props.black ? props.theme.black : props.error ? '#FF4A31' : props.theme.v2.blackText)};
 
   @media ${Device.mobile} {
     display: ${(props) => (props.smHidden ? 'none' : 'block')};
@@ -64,7 +64,7 @@ export const Text = styled.p<Props>`
           font-weight: 400 !important;
           font-size: 12px;
           line-height: 14px;
-          color: #3F3E4E;
+          color: ${(props: any) => props.theme.v2.text};
           margin-bottom: 10px;
         `;
       }

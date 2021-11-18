@@ -2,7 +2,7 @@ import styled from 'styled-components/macro';
 
 export const CheckboxIcon = styled.span<{ dis?: boolean }>`
   background: transparent;
-  border: 1px solid #000;
+  border: 1px solid ${props => props.theme.v2.blackText};
   border-radius: 50%;
   display: block;
   height: 14px;
@@ -29,7 +29,7 @@ export const CheckboxIcon = styled.span<{ dis?: boolean }>`
     margin: auto;
     border-radius: 50%;
     width: 8px;
-    background: #fff;
+    background: rgba(0, 0, 0, 0);
     transition-duration: 0.1s;
     transition-property: border-color;
     transition-timing-function: cubic-bezier(0.33, 0.96, 0.49, 1.01);
@@ -63,10 +63,10 @@ export const CheckboxLabel = styled.div<{checked: boolean}>`
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
-  color: ${props => props.checked ? '#0094FF' : '#000000'};
+  color: ${props => props.checked ? '#0094FF' : props.theme.v2.blackText};
   margin-left: 10px;
 
   &:hover {
-    color: ${props => props.checked ? '#0094FF' : '#52515F'};
+    color: ${props => props.checked ? '#0094FF' : props.theme.v2.blackText};
   }
 `;

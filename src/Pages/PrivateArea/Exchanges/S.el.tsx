@@ -94,7 +94,7 @@ export const MLAutoFilterButton = styled(BaseFilterButton)`
 export const Line = styled.span`
   height: 26px;
   width: 1px;
-  background: #ebebf2;
+  background: ${props => props.theme.v2.neutral};
 `;
 
 export const ButtonWrap = styled.div`
@@ -103,6 +103,7 @@ export const ButtonWrap = styled.div`
 `;
 
 export const Container = styled.div`
+  background: ${props => props.theme.v2.cover};
   margin-bottom: 40px;
   @media ${Device.mobile} {
     margin-bottom: 20px;
@@ -143,11 +144,11 @@ export const AdvertTypeText = styled.p`
   font-weight: 500;
   font-size: 14px;
   line-height: 16px;
-  color: ${(props) => props.theme.black};
+  color: ${(props) => props.theme.v2.blackText};
 
   @media ${Device.mobile} {
     display: block;
-  } ;
+  }
 `;
 
 export const Button = styled.button<{ newItems: boolean }>`
@@ -180,4 +181,8 @@ export const Heading = styled.div`
     font-size: 18px;
     line-height: 21px;
   }
+`;
+
+export const PageWrapper = styled.main`
+  background: ${props => props.theme.v2.cover};
 `;

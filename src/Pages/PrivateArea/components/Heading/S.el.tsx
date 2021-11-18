@@ -36,7 +36,7 @@ export const RateText = styled.p`
   margin-top: 10px;
   font-size: 12px;
   line-height: 14px;
-  color: ${props => props.theme.black};
+  color: ${props => props.theme.v2.blackText};
   display: none;
   @media ${Device.mobile} {
     display: block;

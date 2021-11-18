@@ -59,23 +59,23 @@ export const InputWrapper = styled.div`
 
 export const InputUI = styled.input`
   width: 100%;
-  border: 1px solid #edf0f7;
+  border: 1px solid ${props => props.theme.v2.dropdownBorder};
   box-sizing: border-box;
   border-radius: 2px;
   min-height: 40px;
   padding: 0 12px;
   font-weight: normal;
-  background: #f9fafb;
+  background: ${props => props.theme.v2.cover};
   font-size: 14px;
   line-height: 16px;
-  color: #000000;
+  color: ${props => props.theme.v2.blackText};
 
   &:focus {
     outline: none;
-    background: ${(props) => props.theme.white};
+    background: ${props => props.theme.v2.bg};
   }
   &:read-only {
-    background: #f9fafb;
+    background: ${props => props.theme.v2.cover};
   }
   ::placeholder,
   ::-webkit-input-placeholder {
@@ -84,7 +84,7 @@ export const InputUI = styled.input`
     font-size: 14px;
     line-height: 16px;
     opacity: 0.4;
-    color: #000000;
+    color: ${props => props.theme.v2.blackText};
   }
 
   &:disabled {
@@ -92,14 +92,14 @@ export const InputUI = styled.input`
   }
 
   &:hover {
-    border-color: #d6d8de;
+    border-color: ${props => props.theme.v2.dropdownBorderHover};
   }
 `;
 
 export const InputSuffix = styled.div`
   font-size: 14px;
   line-height: 16px;
-  color: #000000;
+  color: ${props => props.theme.v2.blackText};
   position: absolute;
   right: 12px;
   top: 12px;

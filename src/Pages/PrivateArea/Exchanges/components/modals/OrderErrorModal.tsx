@@ -26,7 +26,7 @@ export const OrderErrorModal: FC<Props> = ({ onClose, open, message, onlyCloseAc
             <S.Title>Ошибка публикации ордера</S.Title>
 
             <S.MobileContent>
-              <Text size={14} lH={20} black mB={10}>
+              <Text size={14} lH={20} mB={10}>
                 Ордер не был опубликован по причине:
               </Text>
               {

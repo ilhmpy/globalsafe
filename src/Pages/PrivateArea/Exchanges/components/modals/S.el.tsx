@@ -4,7 +4,7 @@ import { Device } from '../../../consts';
 
 export const Container = styled.div<{wFull?: boolean; mobileWFull?: boolean}>`
   width: ${props => props.wFull ? '100%' : '338px'};
-  background: #fff;
+  background: ${(props) => props.theme.v2.bg};
 
   @media ${Device.mobile} {
     ${props => props.mobileWFull !== undefined && css`width: 100%;`};
@@ -26,7 +26,7 @@ export const Title = styled.h3`
     font-size: 18px;
     line-height: 21px;
     padding: 20px;
-    background-color: #f8f9fa;
+    background-color: ${props => props.theme.v2.cover};
     color: ${props => props.theme.v2.text};
   };
 `;
@@ -39,11 +39,11 @@ export const Label = styled.div<{ active?: boolean; dis?: boolean }>`
   font-size: 14px;
   line-height: 20px;
   margin-left: 10px;
-  color: ${(props) => (props.active ? '#0094FF' : props.dis ? 'rgba(0, 0, 0, 0.2)' : '#000')};
+  color: ${(props) => (props.active ? '#0094FF' : props.dis ? 'rgba(0, 0, 0, 0.2)' : props.theme.v2.blackText)};
 `;
 
 export const Hr = styled.hr`
-  background: #ebebf2;
+  background: ${props => props.theme.v2.btnNeutral};
   width: 100%;
   height: 1px;
 `;
@@ -88,7 +88,7 @@ export const ListitemName = styled.span`
   font-weight: normal;
   font-size: 14px;
   line-height: 20px;
-  color: #000;
+  color: ${props => props.theme.v2.blackText};
 `;
 
 export const ListitemValue = styled(ListitemName)`
@@ -114,13 +114,13 @@ export const Reason = styled.p`
 export const Desc = styled.p<{largeMb?: boolean}>`
   font-size: 14px;
   line-height: 20px;
-  color: #000000;
+  color: ${props => props.theme.v2.blackText};
   margin-bottom: ${props => props.largeMb ? 20 : 10}px;
 `;
 
 export const SmallContainer = styled.div<{wFull?: boolean; mobileWFull?: boolean}>`
   width: ${props => props.wFull ? '100%' : '340px'};
-  background: #fff;
+  background: ${props => props.theme.v2.bg};
   display: flex;
   flex-direction: column;
 
@@ -131,7 +131,7 @@ export const SmallContainer = styled.div<{wFull?: boolean; mobileWFull?: boolean
 
 export const BlackTitle = styled(Title)`
   margin-top: 8px;
-  color: ${(props) => props.theme.black};
+  color: ${(props) => props.theme.v2.blackText};
 `;
 
 export const DataList = styled.div`
@@ -166,7 +166,8 @@ export const DataListItem = styled.div<DataListItemProps>`
 
 export const ListItemDivider = styled.div`
   flex: 1;
-  border-bottom: 1px dashed rgba(0, 0, 0, 0.2);
+  border-bottom: 1px dashed ${props => props.theme.v2.blackText};
+  opacity: 0.2;
 
   @media ${Device.mobile} {
     opacity: 0;
@@ -177,6 +178,7 @@ export const MobileWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  background: ${props => props.theme.v2.bg};
 `;
 
 export const MobileHeader = styled.div`
@@ -187,7 +189,7 @@ export const MobileContent = styled.div`
   display: flex;
   flex-direction: column;
   @media ${Device.mobile} {
-    background: #FFFFFF;
+    background: ${props => props.theme.v2.bg};
     box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
     padding: 20px;
   }

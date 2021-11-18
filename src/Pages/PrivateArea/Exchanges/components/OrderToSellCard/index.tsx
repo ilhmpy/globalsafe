@@ -443,9 +443,9 @@ export const OrderToSellCard: FC = () => {
 
   return (
     <S.Container>
-      <LeftSide bg={'#EAEFF4'}>
+      <LeftSide order>
         <S.BlockWrapper>
-          <Text size={14} lH={20} mB={10} mBMobile={4} black>
+          <Text size={14} lH={20} mB={10} mBMobile={4}>
             Аккаунт:
           </Text>
           <Title lH={28} heading3 mB={0}>
@@ -454,7 +454,7 @@ export const OrderToSellCard: FC = () => {
         </S.BlockWrapper>
 
         <S.BlockWrapper>
-          <Text size={14} lH={20} mB={10} mBMobile={4} black>
+          <Text size={14} lH={20} mB={10} mBMobile={4}>
             Рейтинг аккаунта:
           </Text>
           <Title lH={28} heading3 mB={0}>
@@ -465,7 +465,7 @@ export const OrderToSellCard: FC = () => {
         {!isMobile && currencyToSell ? (
           dailyLimitRest !== undefined ? (
             <S.BlockWrapper>
-              <Text size={14} lH={20} mB={10} mBMobile={4} black>
+              <Text size={14} lH={20} mB={10} mBMobile={4}>
                 Оставшийся лимит в сутках:
               </Text>
               <Title lH={28} heading3 mB={0}>
@@ -474,7 +474,7 @@ export const OrderToSellCard: FC = () => {
             </S.BlockWrapper>
           ) : (
             <S.BlockWrapper>
-              <Text size={14} lH={20} mB={10} black>
+              <Text size={14} lH={20} mB={10}>
                 Отсутствует сертификат
               </Text>
               <S.Link to={routers.certificates}>Купить сертификат</S.Link>
@@ -520,7 +520,7 @@ export const OrderToSellCard: FC = () => {
         <S.Form>
           <Space gap={20} mb={20} mobileColumn>
             <S.FormItem>
-              <Text size={14} weight={300} lH={20} mB={10} mBMobile={10} black>
+              <Text size={14} weight={300} lH={20} mB={10} mBMobile={10}>
                 Валюта продажи:
               </Text>
               <S.Select
@@ -532,10 +532,10 @@ export const OrderToSellCard: FC = () => {
               {isMobile && currencyToSell ? (
                 dailyLimitRest !== undefined ? (
                   <S.CertInfoBlock>
-                    <Text size={14} weightMobile={300} lH={20} mB={4} black>
+                    <Text size={14} weightMobile={300} lH={20} mB={4}>
                       {`Оставшийся лимит в сутках:`}
                     </Text>
-                    <Text size={14} weightMobile={500} lH={20} black>
+                    <Text size={14} weightMobile={500} lH={20}>
                       {`${dailyLimitRest} ${currencyToSell}`}
                     </Text>
                   </S.CertInfoBlock>
@@ -553,7 +553,7 @@ export const OrderToSellCard: FC = () => {
             </S.FormItem>
 
             <S.FormItem>
-              <Text size={14} weight={300} lH={20} mB={10} mBMobile={10} black>
+              <Text size={14} weight={300} lH={20} mB={10} mBMobile={10}>
                 Количество продажи:
               </Text>
               <Input
@@ -568,7 +568,7 @@ export const OrderToSellCard: FC = () => {
 
           <Space gap={20} mb={20} mobileColumn>
             <S.FormItem>
-              <Text size={14} weight={300} lH={20} mB={10} mBMobile={10} black>
+              <Text size={14} weight={300} lH={20} mB={10} mBMobile={10}>
                 Валюта обмена:
               </Text>
               <S.Select
@@ -579,7 +579,7 @@ export const OrderToSellCard: FC = () => {
               />
             </S.FormItem>
             <S.FormItem>
-              <Text size={14} weight={300} lH={20} mB={10} mBMobile={10} black>
+              <Text size={14} weight={300} lH={20} mB={10} mBMobile={10}>
                 Курс:
               </Text>
               <Input
@@ -594,7 +594,7 @@ export const OrderToSellCard: FC = () => {
           {paymentMethods === undefined ? null : (
             <Space mb={20}>
               <S.FormItem>
-                <Text size={14} weight={300} lH={20} mB={10} mBMobile={10} black>
+                <Text size={14} weight={300} lH={20} mB={10} mBMobile={10}>
                   Платежный метод:
                 </Text>
                 {paymentMethods.length > 0 ? (
@@ -610,17 +610,17 @@ export const OrderToSellCard: FC = () => {
                             onChange={handleMethodsCheckboxChange}
                           />
                           <S.PaymentMethodDetailsBlock>
-                            <Text size={14} weight={300} lH={20} black mB={4}>
+                            <Text size={14} weight={300} lH={20} mB={4}>
                               Номер карты:
                             </Text>
-                            <Text size={14} weight={500} weightMobile={500} lH={16} black mB={10}>
+                            <Text size={14} weight={500} weightMobile={500} lH={16} mB={10}>
                               {JSON.parse(method.data).bankNumber}
                             </Text>
 
-                            <Text size={14} weight={300} lH={20} black mB={4}>
+                            <Text size={14} weight={300} lH={20} mB={4}>
                               Держатель карты:
                             </Text>
-                            <Text size={14} weight={500} weightMobile={500} lH={16} black>
+                            <Text size={14} weight={500} weightMobile={500} lH={16}>
                               {JSON.parse(method.data).name}
                             </Text>
                           </S.PaymentMethodDetailsBlock>
@@ -635,10 +635,10 @@ export const OrderToSellCard: FC = () => {
                             onChange={handleMethodsCheckboxChange}
                           />
                           <S.PaymentMethodDetailsBlock>
-                            <Text size={14} weight={300} lH={20} black mB={4}>
+                            <Text size={14} weight={300} lH={20} mB={4}>
                               Адрес кошелька:
                             </Text>
-                            <Text size={14} weight={500} weightMobile={500} lH={16} black>
+                            <Text size={14} weight={500} weightMobile={500} lH={16}>
                               {JSON.parse(method.data).paymentAddress}
                             </Text>
                           </S.PaymentMethodDetailsBlock>
@@ -649,7 +649,7 @@ export const OrderToSellCard: FC = () => {
                 ) : (
                   // Empty State
                   <S.EmptyPaymentsBlock>
-                    <Text size={14} weight={300} lH={20} black>
+                    <Text size={14} weight={300} lH={20}>
                       {`Платежные методы отсутствуют, `}
                       <S.Link to={routers.settingsNewPayMethod}>добавьте платежный метод</S.Link>
                     </Text>
@@ -662,7 +662,7 @@ export const OrderToSellCard: FC = () => {
           {currencyToSell && currencyToChange && orderSumm && changeRate && (
             <Space gap={20} mb={20} mobileColumn>
               <S.FormItem>
-                <Text size={14} weight={300} lH={20} mB={10} mBMobile={10} black>
+                <Text size={14} weight={300} lH={20} mB={10} mBMobile={10}>
                   Минимальный лимит операции:
                 </Text>
                 <Input
@@ -674,7 +674,7 @@ export const OrderToSellCard: FC = () => {
                 />
               </S.FormItem>
               <S.FormItem>
-                <Text size={14} weight={300} lH={20} mB={10} mBMobile={10} black>
+                <Text size={14} weight={300} lH={20} mB={10} mBMobile={10}>
                   Максимальный лимит операции:
                 </Text>
                 <Input
@@ -690,7 +690,7 @@ export const OrderToSellCard: FC = () => {
 
           <Space gap={20} mb={40} mobileMb={20}>
             <S.FormItem>
-              <Text size={14} weight={300} lH={20} mB={10} mBMobile={10} black>
+              <Text size={14} weight={300} lH={20} mB={10} mBMobile={10}>
                 Время на обмен:
               </Text>
               <S.Select
