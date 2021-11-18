@@ -12,7 +12,7 @@ import { H2 } from '../../../../components/UI/Heading';
 import { Page } from '../../../../components/UI/Page';
 import * as Styled from './Styles.elements';
 import { AppContext } from '../../../../context/HubContext';
-import Slider from "react-slick";
+import Slider from 'react-slick';
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
@@ -36,31 +36,32 @@ export const DepositsPrograms = () => {
   }, [hubConnection, lang]);
 
   function getSettingsObject(slidesToShow: number, breakpoint: number) {
-    return { breakpoint, settings: { slidesToShow }};
-  };
+    return { breakpoint, settings: { slidesToShow } };
+  }
 
-  const slides = useMemo<number[]>(() => 
-    [
-     1.1, 1.1, 1.1, 1.1, 1.2, 1.2, 1.2, 
-     1.3, 1.3, 1.3, 1.4, 1.4, 1.4, 1.4, 
-     1.4, 1.5, 1.5, 1.6, 1.6, 1.7, 1.7, 
-     1.7, 1.7, 1.8, 1.8, 1.9, 1.9, 2,
-     2, 2, 2, 2.1, 2.1, 2.1, 2.1, 2.3,
-     2.3, 2.3, 2.3, 2.3, 2.3,
-    ], 
-  []);
+  const slides = useMemo<number[]>(
+    () => [
+      1.1, 1.1, 1.1, 1.1, 1.2, 1.2, 1.2, 1.3, 1.3, 1.3, 1.4, 1.4, 1.4, 1.4, 1.4, 1.5, 1.5, 1.6, 1.6,
+      1.7, 1.7, 1.7, 1.7, 1.8, 1.8, 1.9, 1.9, 2, 2, 2, 2, 2.1, 2.1, 2.1, 2.1, 2.3, 2.3, 2.3, 2.3,
+      2.3, 2.3,
+    ],
+    []
+  );
 
   const width = 370;
   let widthForItems = width;
 
-  const slickProps = useMemo<any>(() => ({
-    infinite: false,
-    slidesToShow: 1,
-    responsive: slides.map((item, idx) => {
-      widthForItems += idx === 0 ? 0 : 10;
-      return getSettingsObject(item, widthForItems);
-    })
-  }), []);
+  const slickProps = useMemo<any>(
+    () => ({
+      infinite: false,
+      slidesToShow: 1,
+      responsive: slides.map((item, idx) => {
+        widthForItems += idx === 0 ? 0 : 10;
+        return getSettingsObject(item, widthForItems);
+      }),
+    }),
+    []
+  );
 
   return (
     <>
@@ -69,35 +70,27 @@ export const DepositsPrograms = () => {
           <H2>{t('sideNav.depositsPrograms')}</H2>
           {screen > 767 && (
             <Styled.CardBox>
-              {deposits &&
-                deposits.map((item, idx) => (
-                  <DepositCard key={idx} item={item} />
-                ))}
+              {deposits && deposits.map((item, idx) => <DepositCard key={idx} item={item} />)}
             </Styled.CardBox>
-          )} 
+          )}
           {screen < 767 && screen < width && (
-              <Styled.CardBox>
-                <Swiper
-                  slidesPerView={1}
-                  pagination={{ clickable: true, dynamicBullets: true }}
-                >
-                  {deposits &&
-                    deposits.map((item, idx) => (
-                      <SwiperSlide key={idx}>
-                        <DepositCard item={item} key={idx} />
-                      </SwiperSlide>
+            <Styled.CardBox>
+              <Swiper slidesPerView={1} pagination={{ clickable: true, dynamicBullets: true }}>
+                {deposits &&
+                  deposits.map((item, idx) => (
+                    <SwiperSlide key={idx}>
+                      <DepositCard item={item} key={idx} />
+                    </SwiperSlide>
                   ))}
-                </Swiper>
-              </Styled.CardBox>
+              </Swiper>
+            </Styled.CardBox>
           )}
           {screen < 767 && screen >= width && screen < 768 && (
-              <Styled.Block style={{ marginBottom: "20px" }}>
-                <Slider {...slickProps}>
-                  {deposits && deposits.map((item, idx) => (
-                    <DepositCard item={item} key={idx} />
-                  ))}      
-                </Slider>          
-              </Styled.Block>
+            <Styled.Block style={{ marginBottom: '20px' }}>
+              <Slider {...slickProps}>
+                {deposits && deposits.map((item, idx) => <DepositCard item={item} key={idx} />)}
+              </Slider>
+            </Styled.Block>
           )}
         </Container>
       )}
@@ -107,31 +100,33 @@ export const DepositsPrograms = () => {
 
 type DepositCardProps = {
   item: any;
-} 
+};
 
 const DepositCard = ({ item }: DepositCardProps) => {
   const appContext = useContext(AppContext);
   const { user } = appContext;
   const { t } = useTranslation();
   const history = useHistory();
-  
+
   function toDeposits(id: string) {
     const token = localStorage.getItem('token');
     if (token && user) {
       history.push(`/info/deposits/new-deposit/${id}`);
     } else {
       history.push(`/login/${id}`);
-    };
-  };
+    }
+  }
 
   return (
     <Styled.Card>
       <Styled.CardName>
         {item.name.length > 0 ? item.name.toUpperCase() : 'Имя депозита'}
       </Styled.CardName>
-      <Styled.CardDesc>
-        {item.description.length > 0 ? item.description : 'Описание'}
-      </Styled.CardDesc>
+      <Styled.CardDesc
+        dangerouslySetInnerHTML={{
+          __html: item.description.length > 0 ? item.description : 'Описание',
+        }}
+      ></Styled.CardDesc>
       <Styled.CardButton onClick={() => toDeposits(item.id)}>
         {t('payments.open').toUpperCase()}
       </Styled.CardButton>

@@ -305,3 +305,25 @@ export const MobChartBlock = styled.div<{ mob?: boolean }>`
     font-family: 'Roboto', sans-serif;
   }
 `;
+
+export const LoaderWrap = styled.div`
+  height: 358px;
+  width: 100%;
+  position: relative;
+  div:first-child {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    margin: -20px auto auto;
+  }
+  @media (max-width: 767px) {
+    height: 288px;
+  }
+`;
+
+export const LoaderInner = styled.span`
+  height: 100%;
+  width: 100%;
+  position: absolute;
+`;
