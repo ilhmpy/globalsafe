@@ -77,7 +77,7 @@ export const BankList = styled.div`
 `;
 
 export const BankItem = styled.div`
-  border: 1px solid #ebebf2;
+  border: 1px solid ${props => props.theme.v2.btnNeutral};
   border-radius: 2px;
   display: flex;
   align-items: center;
@@ -86,7 +86,8 @@ export const BankItem = styled.div`
   height: 24px;
   margin-right: 10px;
   margin-bottom: 6px;
-
+  background: ${props => props.theme.v2.cover};
+  color: ${props => props.theme.v2.blackText};
   &:last-child {
     margin-right: 0;
   }
@@ -95,7 +96,7 @@ export const BankItem = styled.div`
 export const BankItemText = styled(BankItem)`
   width: auto;
   padding: 0 6px;
-`;
+`; 
 
 export const TypeCrypto = styled.div`
   font-weight: 500;

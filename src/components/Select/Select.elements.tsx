@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { ReactComponent as StrokeIcon } from '../../assets/svg/StrokeBottom.svg';
 
 export const Placeholder = styled.div`
   font-weight: normal;
@@ -234,7 +235,7 @@ export const DropDownContainer = styled.div`
 `;
 
 export const DropDownHeader = styled.div`
-  border: 1px solid #edf0f7;
+  border: 1px solid ${props => props.theme.v2.dropdownBorder};
   border-radius: 4px;
   position: relative;
   height: 40px;
@@ -245,9 +246,9 @@ export const DropDownHeader = styled.div`
   transition: 200ms ease-in-out;
   display: flex;
   align-items: center;
-  background: #f9fafb;
+  background: ${props => props.theme.v2.cover};
   box-sizing: border-box;
-  color: #000000;
+  color: ${props => props.theme.v2.blackText};
 
   ${Arrow} {
     position: absolute;
@@ -284,7 +285,12 @@ export const DropDownHeader = styled.div`
   }
 
   &:hover {
-    border-color: #D6D8DE;
+    border-color: ${props => props.theme.v2.dropdownBorderHover};
     cursor: pointer;
   }
+`;
+
+
+export const StrokeBottom = styled(StrokeIcon)`
+  fill: ${props => props.theme.v2.blackText};
 `;

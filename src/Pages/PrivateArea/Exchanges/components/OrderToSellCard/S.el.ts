@@ -96,7 +96,7 @@ export const Filters = styled.div<{hidden?: boolean; smHidden?: boolean; smVisib
   display: ${props => props.hidden ? 'none' : 'flex'};
   padding: 20px;
   margin-bottom: ${props => props.mB !== undefined ? props.mB : 20}px;
-  background-color: #f8f9fa;
+  background-color: ${props => props.theme.v2.cover}
   @media only screen and (max-device-width: 480px) {
     width: 100%;
   };
@@ -117,8 +117,8 @@ export const CertInfoBlock = styled.div`
   margin-top: 10px;
   display: flex;
   flex-direction: column;
-  background: ${props => props.theme.white};
-  border: 1px solid #EAEFF4;
+  background: ${props => props.theme.v2.bg};
+  border: 1px solid ${props => props.theme.v2.dropdownBorder};
   border-radius: 0px 4px 4px 0px;
   padding: 19px 20px;
 `;

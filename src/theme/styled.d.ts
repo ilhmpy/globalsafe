@@ -80,11 +80,18 @@ declare module 'styled-components' {
     v2:{
       text: string;
       blackText: string;
+      whiteText: string;
       bg: string;
       neutral: string;
+      neutral2: string;
       activeBlue: string;
       neutralBlue: string;
+      btnNeutral: string;
       body: string;
+      cover: string;
+      modalBg: string;
+      dropdownBorder: string;
+      dropdownBorderHover: string;
       header:{
         background: string;
         burger: string;

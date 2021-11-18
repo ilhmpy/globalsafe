@@ -2,7 +2,7 @@ import styled from 'styled-components/macro';
 
 export const CheckboxIcon = styled.span<{ dis?: boolean }>`
   background: transparent;
-  border: 1px solid #000;
+  border: 1px solid ${props => props.theme.v2.blackText};
   border-radius: 3px;
   display: block;
   height: 14px;
@@ -65,6 +65,6 @@ export const CheckboxLabel = styled.div<{checked: boolean | undefined; labelBold
   font-size: 14px;
   line-height: 20px;
   font-weight: ${props => props.labelBold ? 500 : 400};
-  color: ${props => props.checked ? props.theme.blue : props.theme.black};
+  color: ${props => props.checked ? props.theme.blue : props.theme.v2.blackText};
   margin-left: 10px;
 `;

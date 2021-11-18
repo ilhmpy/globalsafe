@@ -2,7 +2,6 @@ import React, { FC, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Scrollbars from "react-custom-scrollbars";
 
-import { ReactComponent as StrokeBottom } from '../../assets/svg/StrokeBottom.svg';
 import useOnClickOutside from '../../hooks/useOutsideHook';
 import * as Styled from './Select.elements';
 
@@ -69,7 +68,7 @@ export const Select: FC<SelectProps> = ({
             : placeholder && <Placeholder>{placeholder}</Placeholder>}
           {label && <span data-label={label} />}
           <Styled.Arrow>
-            <StrokeBottom />
+            <Styled.StrokeBottom />
           </Styled.Arrow>
         </Styled.DropDownHeader>
         {isOpen && (
@@ -96,6 +95,5 @@ const Placeholder = styled.div`
   font-weight: normal;
   font-size: 14px;
   line-height: 16px;
-  color: ${(props) => props.theme.text};
-  color: #000000;
+  color: ${(props) => props.theme.v2.blackText};
 `;

@@ -100,11 +100,18 @@ export const lightTheme = {
   v2:{
     text: "#3F3E4E",
     blackText: '#000000',
+    whiteText: '#FFFFFF',
     bg: '#FFFFFF',
     neutral: '#EBEBF2',
+    neutral2: '#EAEFF4',
     activeBlue: '#0094FF',
     neutralBlue: 'rgba(0, 148, 255, 0.05)',
+    btnNeutral: '#EBEBF2',
     body: "#E5E5E5",
+    cover: '#f9fafb',
+    modalBg: 'rgba(63, 62, 78, 0.4)',
+    dropdownBorder: '#EDF0F7',
+    dropdownBorderHover: '#EDF0F7',
     header:{
       background: "#fff",
       burger: "#000"
@@ -210,11 +217,18 @@ export const darkTheme = {
   v2:{
     text: "#FFFFFF",
     blackText: '#FFFFFF',
+    whiteText: '#000000',
     bg: '#28282F',
     neutral: '#33333A',
+    neutral2: '#33333A',
     activeBlue: '#0094FF',
     neutralBlue: '#33333A',
+    btnNeutral: 'rgba(81, 81, 114, 0.4)',
     body: "#E5E5E5",
+    cover: '#1F1F25',
+    modalBg: 'rgba(15, 15, 20, 0.8)',
+    dropdownBorder: 'rgba(81, 81, 114, 0.4)',
+    dropdownBorderHover: 'rgba(81, 81, 114, 0.6)',
     header:{
       background: "#fff",
       burger: "#FFF"

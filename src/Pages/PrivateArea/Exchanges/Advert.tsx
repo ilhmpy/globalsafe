@@ -22,6 +22,7 @@ import { PaymentMethods } from './components/modals/PaymentMethods';
 import { Balance } from '../../../types/balance';
 import { FiatKind } from '../../../types/fiat';
 import { AdvertFiltersMobile } from './components/modals/AdvertFiltersMobile';
+import { GetTotalExecutedExchangesModel, TotalExecutedExchangesModel } from '../../../types/exchange';
 
 export const Advert = () => {
   const history = useHistory();
@@ -44,6 +45,8 @@ export const Advert = () => {
 
   const [totalCount, setTotalCount] = useState(0);
   const [skip, setSkip] = useState(0);
+  // TEEC: Total Executed Exchanges Count
+  const [ordersOwnersTEEC, setOrdersOwnersTEEC] = useState<TotalExecutedExchangesModel[]>([]);
 
   const ratesList = useMemo<string[]>(
     () => [
@@ -211,6 +214,26 @@ export const Advert = () => {
     }
   };
 
+  const handleGetTotalExecutedExchanges = async (usersSafeIds: string[]) => {
+    try {
+      const res = await hubConnection!.invoke<GetTotalExecutedExchangesModel>(
+        'GetTotalExecutedExchanges', 
+        usersSafeIds
+      );
+      console.log('GetTotalExecutedExchanges', res);
+      setOrdersOwnersTEEC(res.collection);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    if(ordersList.length > 0) {
+      const ownersSafeIds = [...ordersList].map(o => o.userSafeId);
+      handleGetTotalExecutedExchanges(ownersSafeIds);
+    }
+  }, [ordersList]);
+
   // Listening to changes
   useEffect(() => {
     const cbOrderVolumeChanged = (orderSafeId: string, summ: number) => {
@@ -250,7 +273,7 @@ export const Advert = () => {
   }, [hubConnection, ordersList]);
 
   return (
-    <div>
+    <S.PageWrapper>
       <Container>
         {/* Visiable on mobile */}
         <S.SubHeader hidden mobileVisible>
@@ -419,13 +442,14 @@ export const Advert = () => {
         />
       </Container>
       <Container pTabletNone pNone>
-        <AdvertTable list={ordersList} />
+        <AdvertTable list={ordersList} ordersOwnersTEEC={ordersOwnersTEEC} />
       </Container>
       {ordersList.length < totalCount && (
         <S.ButtonWrap>
           <Button onClick={handleLoadMoreOrders}>Показать еще</Button>
         </S.ButtonWrap>
       )}
-    </div>
+    </S.PageWrapper>
   );
 };
+

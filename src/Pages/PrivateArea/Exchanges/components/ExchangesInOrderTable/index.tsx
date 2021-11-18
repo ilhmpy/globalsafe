@@ -160,7 +160,7 @@ const MobileBodyItem = ({ exchange, onClick, setTimerDown, exchangeStateLabels }
         >
           <S.MobileRow>
             <S.MobileCell>
-              <Text black size={14} weight={300} lH={20}>
+              <Text size={14} weight={300} lH={20}>
                 Покупка:
               </Text>
             </S.MobileCell>
@@ -174,7 +174,7 @@ const MobileBodyItem = ({ exchange, onClick, setTimerDown, exchangeStateLabels }
 
           <S.MobileRow>
             <S.MobileCell>
-              <Text black size={14} weight={300} lH={20}>
+              <Text size={14} weight={300} lH={20}>
                 Метод оплаты:
               </Text>
             </S.MobileCell>
@@ -189,7 +189,7 @@ const MobileBodyItem = ({ exchange, onClick, setTimerDown, exchangeStateLabels }
 
           <S.MobileRow>
             <S.MobileCell>
-              <Text black size={14} weight={300} lH={20}>
+              <Text size={14} weight={300} lH={20}>
                 Сумма оплаты:
               </Text>
             </S.MobileCell>
@@ -203,7 +203,7 @@ const MobileBodyItem = ({ exchange, onClick, setTimerDown, exchangeStateLabels }
 
           <S.MobileRow>
             <S.MobileCell>
-              <Text black size={14} weight={300} lH={20}>
+              <Text size={14} weight={300} lH={20}>
                 Оставшееся время:
               </Text>
             </S.MobileCell>
@@ -229,7 +229,7 @@ const MobileBodyItem = ({ exchange, onClick, setTimerDown, exchangeStateLabels }
 
           <S.MobileRow>
             <S.MobileCell>
-              <Text black size={14} weight={300} lH={20}>
+              <Text size={14} weight={300} lH={20}>
                 № обмена:
               </Text>
             </S.MobileCell>
@@ -240,7 +240,7 @@ const MobileBodyItem = ({ exchange, onClick, setTimerDown, exchangeStateLabels }
 
           <S.MobileRow>
             <S.MobileCell>
-              <Text black size={14} weight={300} lH={20}>
+              <Text size={14} weight={300} lH={20}>
                 Статус:
               </Text>
             </S.MobileCell>

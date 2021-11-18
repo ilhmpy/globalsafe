@@ -47,8 +47,8 @@ export const Input = styled(BaseInput)`
 `;
 
 export const TransferInfoBlock = styled.div`
-  background: ${props => props.theme.white};
-  border: 1px solid #EAEFF4;
+  background: rgba(0, 0, 0, 0);
+  border: 1px solid ${props => props.theme.v2.dropdownBorder};
   border-radius: 0px 4px 4px 0px;
   padding: 20px;
   margin: 40px 0;
@@ -66,8 +66,8 @@ export const Button = styled(BaseButton)`
 
 export const EmptyPaymentsBlock = styled.div`
   display: flex;
-  background: ${props => props.theme.white};
-  border: 1px solid #EAEFF4;
+  background: rgba(0, 0, 0, 0);
+  border: 1px solid ${props => props.theme.v2.dropdownBorder};
   border-radius: 0px 4px 4px 0px;
   padding: 19px 20px;
   margin-bottom: 20px;

@@ -12,7 +12,7 @@ export const GoBack = styled.div`
   align-items: center;
   cursor: pointer;
 
-  color: #000000;
+  color: ${props => props.theme.v2.blackText};
 `;
 export const Container = styled.div`
   margin-bottom: 20px;
@@ -21,7 +21,7 @@ export const Container = styled.div`
   justify-content: space-between;
   font-size: 14px;
   line-height: 16px;
-  color: #000000;
+  color: ${props => props.theme.v2.blackText};
   svg {
     margin-right: 10px;
   }

@@ -7,6 +7,8 @@ export const Close = styled(CloseIcon)`
   cursor: pointer;
   top: 20px;
   right: 20px;
+  fill: ${props => props.theme.v2.blackText};
+  stroke: ${props => props.theme.v2.blackText};
 
   @media ${Device.mobile} {
     display: none;
@@ -60,7 +62,7 @@ export const ModalContainer = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(38, 50, 56, 0.5);
+  background-color: ${props => props.theme.v2.modalBg};
   display: block;
   transition: 0.3s;
   z-index: 99999;
@@ -85,8 +87,8 @@ export const Center = styled.div`
 
 export const Content = styled.div`
   margin: 0 20px;
-  background: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: ${(props) => props.theme.v2.bg};
+  border: 1px solid ${(props) => props.theme.v2.bg};
   box-sizing: border-box;
   border-radius: 8px;
   /* width: 480px; */

@@ -25,9 +25,10 @@ import { Radio } from '../../../components/Radio/Radio';
 interface OrderDetailsCardProps {
   order: ViewBuyOrderModel | ViewSellOrderModel;
   orderType: OrderType;
+  ownerExecutedExchangesCount: number;
 };
 
-export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }: OrderDetailsCardProps) => {
+export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType, ownerExecutedExchangesCount }: OrderDetailsCardProps) => {
     const history = useHistory();
     const { hubConnection, balanceList } = useContext(AppContext);
     const [balanceSumm, setBalanceSumm] = useState('');
@@ -279,10 +280,10 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
     }; 
 
   return (
-    <S.Container>
-        <LeftSide bg={'#EAEFF4'}>
+    <S.Container> 
+        <LeftSide order>
             <S.BlockWrapper>
-                <Text size={14} lH={20} mB={10} black weightMobile={300} mBMobile={4}>
+                <Text size={14} lH={20} mB={10} weightMobile={300} mBMobile={4}>
                     Количество:
                 </Text>
                 <Title lH={28} mB={10} heading3>
@@ -294,7 +295,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
             </S.BlockWrapper>
 
             <S.BlockWrapper>
-                <Text size={14} lH={20} mB={10} black weightMobile={300} mBMobile={4}>
+                <Text size={14} lH={20} mB={10} weightMobile={300} mBMobile={4}>
                     Курс:
                 </Text>
                 <Title lH={28} heading3>
@@ -305,7 +306,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
             </S.BlockWrapper>
 
             <S.BlockWrapper>
-                <Text size={14} lH={20} mB={10} black weightMobile={300} mBMobile={4}>
+                <Text size={14} lH={20} mB={10} weightMobile={300} mBMobile={4}>
                     На сумму:
                 </Text>
                 <Title lH={28} heading3>
@@ -316,7 +317,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
             </S.BlockWrapper>
 
             <S.BlockWrapper>
-                <Text size={14} lH={20} mB={10} black weightMobile={300} mBMobile={4}>
+                <Text size={14} lH={20} mB={10} weightMobile={300} mBMobile={4}>
                     Лимиты:
                 </Text>
                 <Title lH={28} heading3>
@@ -326,7 +327,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
             </S.BlockWrapper>
 
             <S.BlockWrapper>
-                <Text size={14} lH={20} mB={10} black weightMobile={300} mBMobile={4}>
+                <Text size={14} lH={20} mB={10} weightMobile={300} mBMobile={4}>
                     Методы оплаты:
                 </Text>
                 {
@@ -339,7 +340,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
             </S.BlockWrapper>
 
             <S.BlockWrapper>
-                <Text size={14} lH={20} mB={10} black weightMobile={300} mBMobile={4}>
+                <Text size={14} lH={20} mB={10} weightMobile={300} mBMobile={4}>
                     Время на обмен:
                 </Text>
                 <Title lH={28} heading3>
@@ -348,11 +349,11 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
             </S.BlockWrapper>
 
             <S.BlockWrapper noMb>
-                <Text size={14} lH={20} mB={10} black weightMobile={300} mBMobile={4}>
+                <Text size={14} lH={20} mB={10} weightMobile={300} mBMobile={4}>
                     {`Рейтинг ${orderType === OrderType.Buy ? 'покупателя' : 'продавца'}:`}
                 </Text>
                 <Title lH={28} mB={0} heading3>
-                    {`${order.userRating ? Number(order.userRating).toFixed(1) : '0.0'} (${order.totalExecuted})`}
+                    {`${order.userRating ? Number(order.userRating).toFixed(1) : '0.0'} (${ownerExecutedExchangesCount})`}
                 </Title>
             </S.BlockWrapper>
         </LeftSide>
@@ -364,7 +365,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
             </Title>
 
             <S.FormItem>
-                <Text size={14} weight={300} lH={20} mB={10} black>
+                <Text size={14} weight={300} lH={20} mB={10}>
                     {
                         `Количество ${orderType === OrderType.Buy ? 'продажи' : 'покупки'} (min ${
                             balanceLimitFrom
@@ -383,7 +384,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
             </S.FormItem>
 
             <S.FormItem>
-                <Text size={14} weight={300} lH={20} mB={10} black>
+                <Text size={14} weight={300} lH={20} mB={10}>
                     {
                         `Сумма к ${orderType === OrderType.Buy ? 'получению' : 'списанию'} (min ${
                             (countVolumeToShow(order.limitFrom, order.assetKind)).toLocaleString('ru-RU', {
@@ -421,7 +422,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                 orderType === OrderType.Buy
                 ?
                 <S.BlockWrapper largeMB mobileMb={20}>
-                    <Text size={14} lH={20} mB={10} black>Платежные методы:</Text>
+                    <Text size={14} lH={20} mB={10}>Платежные методы:</Text>
                     {
                         userPaymentMethods?.length > 0 
                         ?
@@ -438,17 +439,17 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                                         {JSON.parse(method.data).bankName}
                                     </Radio>
                                     <S.PaymentMethodDetailsBlock>
-                                        <Text size={14} weight={300} lH={20} black mB={4}>Номер карты:</Text>
+                                        <Text size={14} weight={300} lH={20} mB={4}>Номер карты:</Text>
                                         <Space gap={10} mb={10}>
-                                            <Text size={14} weight={500} lH={16} black>
+                                            <Text size={14} weight={500} lH={16}>
                                             {JSON.parse(method.data).bankNumber}
                                             </Text>
                                             <CopyIconButton copyValue={JSON.parse(method.data).bankNumber} />
                                         </Space>
                                         
 
-                                        <Text size={14} weight={300} lH={20} black mB={4}>Держатель карты:</Text>
-                                        <Text size={14} weight={500} lH={16} black>
+                                        <Text size={14} weight={300} lH={20} mB={4}>Держатель карты:</Text>
+                                        <Text size={14} weight={500} lH={16}>
                                             {JSON.parse(method.data).name}
                                         </Text>
                                     </S.PaymentMethodDetailsBlock>
@@ -464,9 +465,9 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                                         {paymentMethodsKinds[method.kind].label}
                                     </Radio>
                                     <S.PaymentMethodDetailsBlock>
-                                        <Text size={14} weight={300} lH={20} black mB={4}>Адрес кошелька:</Text>
+                                        <Text size={14} weight={300} lH={20} mB={4}>Адрес кошелька:</Text>
                                         <Space gap={10} mb={10}>
-                                            <Text size={14} weight={500} lH={16} black>
+                                            <Text size={14} weight={500} lH={16}>
                                             {JSON.parse(method.data).paymentAddress}
                                             </Text>
                                             <CopyIconButton copyValue={JSON.parse(method.data).bankNumber} />
@@ -477,7 +478,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                         :
                          // Empty State
                         <S.EmptyPaymentsBlock>
-                            <Text size={14} weight={300} lH={20} black>
+                            <Text size={14} weight={300} lH={20}>
                                 {`Платежные методы отсутствуют, `}
                                 <S.Link to={`${routers.settingsNewPayMethod}?redirect=${order.safeId}`}>
                                     добавьте платежный метод
@@ -488,7 +489,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                 </S.BlockWrapper>
                 :
                 <S.BlockWrapper largeMB mobileMb={20}>
-                    <Text size={14} lH={20} mB={10} black>Платежные методы:</Text>
+                    <Text size={14} lH={20} mB={10}>Платежные методы:</Text>
                     {
                         sellOrderPaymentMethods?.length > 0 ?
 
@@ -505,17 +506,17 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                                         {JSON.parse(method.data).bankName}
                                     </Radio>
                                     <S.PaymentMethodDetailsBlock>
-                                        <Text size={14} weight={300} lH={20} black mB={4}>Номер карты:</Text>
+                                        <Text size={14} weight={300} lH={20} mB={4}>Номер карты:</Text>
                                         <Space gap={10} mb={10}>
-                                            <Text size={14} weight={500} lH={16} black>
+                                            <Text size={14} weight={500} lH={16}>
                                             {JSON.parse(method.data).bankNumber}
                                             </Text>
                                             <CopyIconButton copyValue={JSON.parse(method.data).bankNumber} />
                                         </Space>
                                         
 
-                                        <Text size={14} weight={300} lH={20} black mB={4}>Держатель карты:</Text>
-                                        <Text size={14} weight={500} lH={16} black>
+                                        <Text size={14} weight={300} lH={20} mB={4}>Держатель карты:</Text>
+                                        <Text size={14} weight={500} lH={16}>
                                             {JSON.parse(method.data).name}
                                         </Text>
                                     </S.PaymentMethodDetailsBlock>
@@ -531,9 +532,9 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                                         {paymentMethodsKinds[method.kind].label}
                                     </Radio>
                                     <S.PaymentMethodDetailsBlock>
-                                        <Text size={14} weight={300} lH={20} black mB={4}>Адрес кошелька:</Text>
+                                        <Text size={14} weight={300} lH={20} mB={4}>Адрес кошелька:</Text>
                                         <Space gap={10} mb={10}>
-                                            <Text size={14} weight={500} lH={16} black>
+                                            <Text size={14} weight={500} lH={16}>
                                             {JSON.parse(method.data).paymentAddress}
                                             </Text>
                                             <CopyIconButton copyValue={JSON.parse(method.data).bankNumber} />
@@ -544,7 +545,7 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                         :
                             // Empty State
                             <S.EmptyPaymentsBlock>
-                                <Text size={14} weight={300} lH={20} black>
+                                <Text size={14} weight={300} lH={20}>
                                     {`Платежные методы отсутствуют, `}
                                     <S.Link to={routers.settingsNewPayMethod}>добавьте платежный метод</S.Link>
                                 </Text>
@@ -557,14 +558,14 @@ export const OrderDetailsCard: FC<OrderDetailsCardProps> = ({ order, orderType }
                 {
                     orderType === OrderType.Buy
                     ?
-                        <Text size={14} lH={20} weight={300} black>
+                        <Text size={14} lH={20} weight={300}>
                             {` 
                                 После начала обмена - в течении ${order.operationWindow.totalMinutes} минут покупатель осуществит перевод средств на указанный счет, 
                                 а покупаемое количество ${Balance[order.assetKind]} будет списано с вашего баланса и заморожено до вашего подтверждения получения средств.
                             `}
                         </Text>
                     :
-                        <Text size={14} lH={20} weight={300} black>
+                        <Text size={14} lH={20} weight={300}>
                            {`
                             После начала обмена - в течении ${order.operationWindow.totalMinutes} минут осуществите перевод средств выбранным платежным методом.
                            `}

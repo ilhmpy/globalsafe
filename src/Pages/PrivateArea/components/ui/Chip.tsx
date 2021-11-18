@@ -6,27 +6,27 @@ interface ChipProps {
 
 const Default = css`
   background: rgba(0, 0, 0, 0.1);
-  color: #000000;
+  color: ${props => props.theme.v2.blackText};
 `;
 
 const Success = css`
   background: rgba(93, 167, 0, 0.1);
-  color: #000000;
+  color: ${props => props.theme.v2.blackText};
 `;
 
 const Rejected = css`
   background: rgba(255, 74, 49, 0.1);
-  color: #000000;
+  color: ${props => props.theme.v2.blackText};
 `;
 
 const Danger = css`
   background: #FF4A31;
-  color: #FFFFFF;
+  color: ${props => props.theme.v2.whiteText};
 `;
 
 const Info = css`
   background: rgba(0, 148, 255, 0.1);
-  color: #000000;
+  color: ${props => props.theme.v2.blackText};
 `;
 
 export const Chip = styled.div<ChipProps>`

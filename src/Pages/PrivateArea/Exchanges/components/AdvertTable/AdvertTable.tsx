@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 
 import { AppContext } from '../../../../../context/HubContext';
 import { Balance } from '../../../../../types/balance';
+import { TotalExecutedExchangesModel } from '../../../../../types/exchange';
 import { FiatKind } from '../../../../../types/fiat';
 import { ViewBuyOrderModel, ViewSellOrderModel } from '../../../../../types/orders';
 import { countVolumeToShow, paymentMethodIconSrc, useIsMobile } from '../../../utils';
@@ -11,9 +12,10 @@ import * as S from './S.el';
 
 interface AdvertTableProps {
   list: Array<ViewBuyOrderModel | ViewSellOrderModel>;
+  ordersOwnersTEEC: TotalExecutedExchangesModel[];
 }
 
-export const AdvertTable = ({ list }: AdvertTableProps) => {
+export const AdvertTable = ({ list, ordersOwnersTEEC }: AdvertTableProps) => {
   const history = useHistory();
   const isMobile = useIsMobile();
   const { userSafeId } = useContext(AppContext);
@@ -60,6 +62,7 @@ export const AdvertTable = ({ list }: AdvertTableProps) => {
                 order={order}
                 onClick={() => handleNavigateTo(order)}
                 userSafeId={userSafeId ? userSafeId : ''}
+                ownerTEEC={ordersOwnersTEEC.find(i => i.userId === order.userId)?.totalExecutedExchanges || 0}
               />
             ) : (
               <MobileBodyItem
@@ -67,6 +70,7 @@ export const AdvertTable = ({ list }: AdvertTableProps) => {
                 order={order}
                 onClick={() => handleNavigateTo(order)}
                 userSafeId={userSafeId ? userSafeId : ''}
+                ownerTEEC={ordersOwnersTEEC.find(i => i.userId === order.userId)?.totalExecutedExchanges || 0}
               />
             )
           )
@@ -79,9 +83,10 @@ interface ItemProps {
   order: ViewBuyOrderModel | ViewSellOrderModel;
   onClick: (order: ViewBuyOrderModel | ViewSellOrderModel) => void;
   userSafeId: string;
+  ownerTEEC: number;
 }
 
-const BodyItem = ({ order, onClick, userSafeId }: ItemProps) => {
+const BodyItem = ({ order, onClick, userSafeId, ownerTEEC }: ItemProps) => {
   return (
     <S.BodyItem active={order.userSafeId === userSafeId} onClick={() => onClick(order)}>
       <S.Cell data-label="Кол-во">
@@ -127,14 +132,14 @@ const BodyItem = ({ order, onClick, userSafeId }: ItemProps) => {
       <S.Cell data-label="Время на обмен">{`${order.operationWindow.totalMinutes} м`}</S.Cell>
       <S.Cell data-label="Рейтинг">
         {`${order.userRating ? Number(order.userRating).toFixed(1) : '0.0'} (${
-          order.totalExecuted
+          ownerTEEC
         })`}
       </S.Cell>
     </S.BodyItem>
   );
 };
 
-const MobileBodyItem = ({ order, onClick, userSafeId }: ItemProps) => {
+const MobileBodyItem = ({ order, onClick, userSafeId, ownerTEEC }: ItemProps) => {
   return (
     <S.MobileBodyItem active={order.userSafeId === userSafeId} onClick={() => onClick(order)}>
       <S.MobileRow>
@@ -182,7 +187,7 @@ const MobileBodyItem = ({ order, onClick, userSafeId }: ItemProps) => {
         </S.MobileCell>
         <S.MobileCell>
           {`${order.userRating ? Number(order.userRating).toFixed(1) : '0.0'} (${
-            order.totalExecuted
+            ownerTEEC
           })`}
         </S.MobileCell>
       </S.MobileRow>

@@ -10,12 +10,12 @@ const table = css`
   display: flex;
   align-items: center;
 `;
-
+ 
 export const Cell = styled.div`
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
-  color: #000;
+  color: ${props => props.theme.v2.blackText};
   width: 100%;
   padding: 0 10px;
   &:nth-child(1) {
@@ -78,7 +78,7 @@ export const BodyItem = styled.div<{ active?: boolean }>`
   }
   padding: 5px 10px 5px;
   min-height: 60px;
-  background: ${(props) => (props.active ? 'rgba(0, 148, 255, 0.05)' : '#fff')};
+  background: ${(props) => (props.active ? props.theme.v2.neutralBlue : props.theme.v2.bg)};
   box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
   border-radius: 4px;
   margin-bottom: 2px;
@@ -91,7 +91,7 @@ export const BodyItem = styled.div<{ active?: boolean }>`
     height: 100%;
     position: absolute;
     width: 4px;
-    background: ${(props) => (props.active ? '#0094ff' : '#fff')};
+    background: ${(props) => (props.active ? props.theme.v2.activeBlue : 'transparent')};
     box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
     border-radius: 4px 0 0 4px;
   }
@@ -105,14 +105,14 @@ export const BodyItem = styled.div<{ active?: boolean }>`
 
 export const Header = styled.div`
   ${table};
-  background: #ebebf2;
+  background: ${props => props.theme.v2.neutral};
   border-radius: 4px;
   padding: 20px 10px 17px;
   span {
     font-weight: 300;
     font-size: 14px;
     line-height: 16px;
-    color: #000;
+    color: ${props => props.theme.v2.blackText};
   }
   @media (max-width: 992px) {
     display: none;
@@ -126,7 +126,7 @@ export const BankList = styled.div`
 `;
 
 export const BankItem = styled.div`
-  border: 1px solid #ebebf2;
+  border: 1px solid ${props => props.theme.v2.btnNeutral};
   border-radius: 2px;
   display: flex;
   align-items: center;
@@ -135,7 +135,8 @@ export const BankItem = styled.div`
   height: 24px;
   margin-right: 10px;
   margin-bottom: 6px;
-
+  background: ${props => props.theme.v2.cover};
+  color: ${props => props.theme.v2.blackText};
   &:last-child {
     margin-right: 0;
   }
@@ -164,7 +165,7 @@ export const MobileBodyItem = styled.div<{ active?: boolean }>`
   width: 100%;
   padding: 20px;
 
-  background: ${(props) => (props.active ? 'rgba(0, 148, 255, 0.05)' : '#fff')};
+  background: ${(props) => (props.active ? props.theme.v2.neutralBlue : props.theme.v2.bg)};
   box-shadow: 0px 40px 40px -40px rgba(220, 220, 232, 0.5);
   margin-bottom: 10px;
   position: relative;
@@ -188,5 +189,5 @@ export const MobileCell = styled.div`
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
-  color: #000;
+  color: ${props => props.theme.v2.blackText};
 `;

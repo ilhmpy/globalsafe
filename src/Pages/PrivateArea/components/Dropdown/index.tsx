@@ -1,7 +1,6 @@
 import React, { FC, useRef, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 
-import { ReactComponent as Icon } from '../../../../assets/v2/svg/down-arrow.svg';
 import useOnClickOutside from '../../../../hooks/useOutsideHook';
 import * as Styled from './S.el';
 
@@ -61,7 +60,7 @@ export const Dropdown: FC<SelectProps> = ({
           {selectedOption ? selectedOption : label ? label : ''}
 
           <Styled.Arrow rotat={true}>
-            <Icon />
+            <Styled.Icon />
           </Styled.Arrow>
         </Styled.DropDownHeader>
         {isOpen && (
@@ -83,3 +82,4 @@ export const Dropdown: FC<SelectProps> = ({
     </div> 
   );
 };
+

@@ -55,3 +55,14 @@ export type OwnExchangesProps = {
     loading: boolean;
     setExchanges?: (value: any) => any; 
 };
+
+export interface TotalExecutedExchangesModel {
+    userId: number;
+    totalExecutedExchanges: number;
+};
+
+export interface GetTotalExecutedExchangesModel {
+    collection: TotalExecutedExchangesModel[];
+    totalRecords: number;
+}
+

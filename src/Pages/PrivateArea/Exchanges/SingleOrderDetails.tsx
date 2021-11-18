@@ -13,6 +13,7 @@ import { OrderType, ViewBuyOrderModel, ViewSellOrderModel } from '../../../types
 import { OrderDetailsCard } from './components/OrderDetailsCard';
 import { AppContext } from '../../../context/HubContext';
 import { OrderNotActualModal } from './components/modals/OrderNotActualModal';
+import { GetTotalExecutedExchangesModel, TotalExecutedExchangesModel } from '../../../types/exchange';
 
 export const SingleOrderDetails: FC = () => {
   const history = useHistory();
@@ -22,6 +23,7 @@ export const SingleOrderDetails: FC = () => {
   );
   const [currentOrderType, setCurrentOrderType] = useState<OrderType | undefined>(undefined);
   const [showOrderNotActualModal, setShowOrderNotActualModal] = useState(false);
+  const [ownerTotalExecutedExchangesCount, setOwnerTotalExecutedExchangesCount] = useState(0);
 
   const { orderSafeId } = useParams<{ orderSafeId: string }>();
 
@@ -39,6 +41,8 @@ export const SingleOrderDetails: FC = () => {
         history.replace(`/info/p2p-changes/orders/my/${res.safeId}`);
         return;
       }
+
+      await handleGetOwnerTotalExecutedExchanges(res.userSafeId);
       setCurrentOrder(res);
       setCurrentOrderType(OrderType.Buy);
     } catch (err) {
@@ -49,11 +53,26 @@ export const SingleOrderDetails: FC = () => {
           history.replace(`/info/p2p-changes/orders/my/${res.safeId}`);
           return;
         }
+
+        await handleGetOwnerTotalExecutedExchanges(res.userSafeId);
         setCurrentOrder(res);
         setCurrentOrderType(OrderType.Sell);
       } catch (err) {
         console.log(err);
       }
+    }
+  };
+
+  const handleGetOwnerTotalExecutedExchanges = async (ownerId: string) => {
+    try {
+      const res = await hubConnection!.invoke<GetTotalExecutedExchangesModel>(
+        'GetTotalExecutedExchanges', 
+        [ownerId]
+      );
+      console.log('GetTotalExecutedExchanges', res);
+      setOwnerTotalExecutedExchangesCount(res.collection[0].totalExecutedExchanges);
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -123,14 +142,18 @@ export const SingleOrderDetails: FC = () => {
               Balance[currentOrder.assetKind]
             }-${FiatKind[currentOrder.operationAssetKind]}`}
           </Title>
-          <Text size={14} lH={20} black sizeMobile={12} lHMobile={18} weightMobile={300}>
+          <Text size={14} lH={20} sizeMobile={12} lHMobile={18} weightMobile={300}>
             {`№ ${currentOrder.safeId}`}
           </Text>
         </S.TitleContainer>
       </Container>
 
       <Container pTabletNone pNone>
-        <OrderDetailsCard order={currentOrder} orderType={currentOrderType} />
+        <OrderDetailsCard 
+          order={currentOrder} 
+          orderType={currentOrderType} 
+          ownerExecutedExchangesCount={ownerTotalExecutedExchangesCount} 
+        />
         <OrderNotActualModal
           open={showOrderNotActualModal}
           onClose={handleCloseOrderNotActualModal}
@@ -138,4 +161,4 @@ export const SingleOrderDetails: FC = () => {
       </Container>
     </S.Container>
   );
-};
+};  

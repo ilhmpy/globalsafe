@@ -446,9 +446,9 @@ export const OrderToBuyCard: FC = () => {
 
   return (
     <S.Container>
-      <LeftSide bg={'#EAEFF4'}>
+      <LeftSide order>
         <S.BlockWrapper>
-          <Text size={14} lH={20} mB={10} mBMobile={4} black>
+          <Text size={14} lH={20} mB={10} mBMobile={4}>
             Аккаунт:
           </Text>
           <Title lH={28} heading3 mB={0}>
@@ -457,7 +457,7 @@ export const OrderToBuyCard: FC = () => {
         </S.BlockWrapper>
 
         <S.BlockWrapper>
-          <Text size={14} lH={20} mB={10} mBMobile={4} black>
+          <Text size={14} lH={20} mB={10} mBMobile={4}>
             Рейтинг аккаунта:
           </Text>
 
@@ -468,7 +468,7 @@ export const OrderToBuyCard: FC = () => {
         {!isMobile && currencyToBuy ? (
           dailyLimitRest !== undefined ? (
             <S.BlockWrapper>
-              <Text size={14} lH={20} mB={10} mBMobile={4} black>
+              <Text size={14} lH={20} mB={10} mBMobile={4}>
                 Оставшийся лимит в сутках:
               </Text>
               <Title lH={28} heading3 mB={0}>
@@ -477,7 +477,7 @@ export const OrderToBuyCard: FC = () => {
             </S.BlockWrapper>
           ) : (
             <S.BlockWrapper>
-              <Text size={14} lH={20} mB={10} black>
+              <Text size={14} lH={20} mB={10}>
                 Отсутствует сертификат
               </Text>
               <S.Link to={routers.certificates}>Купить сертификат</S.Link>
@@ -525,9 +525,10 @@ export const OrderToBuyCard: FC = () => {
         <S.Form>
           <Space gap={20} mb={20} mobileColumn>
             <S.FormItem>
-              <Text size={14} weight={300} lH={20} mB={10} mBMobile={10} black>
+              <Text size={14} weight={300} lH={20} mB={10} mBMobile={10}>
                 Валюта покупки:
               </Text>
+             
               <S.Select
                 placeholder="Не выбрано"
                 options={balanceKinds as string[]}
@@ -537,10 +538,10 @@ export const OrderToBuyCard: FC = () => {
               {isMobile && currencyToBuy ? (
                 dailyLimitRest !== undefined ? (
                   <S.CertInfoBlock>
-                    <Text size={14} weightMobile={300} lH={20} mB={4} black>
+                    <Text size={14} weightMobile={300} lH={20} mB={4}>
                       {`Оставшийся лимит в сутках:`}
                     </Text>
-                    <Text size={14} weightMobile={500} lH={20} black>
+                    <Text size={14} weightMobile={500} lH={20}>
                       {`${dailyLimitRest} ${currencyToBuy}`}
                     </Text>
                   </S.CertInfoBlock>
@@ -558,7 +559,7 @@ export const OrderToBuyCard: FC = () => {
             </S.FormItem>
 
             <S.FormItem>
-              <Text size={14} weight={300} lH={20} mB={10} mBMobile={10} black>
+              <Text size={14} weight={300} lH={20} mB={10} mBMobile={10}>
                 Количество покупки:
               </Text>
               <Input
@@ -573,7 +574,7 @@ export const OrderToBuyCard: FC = () => {
 
           <Space gap={20} mb={20} mobileColumn>
             <S.FormItem>
-              <Text size={14} weight={300} lH={20} mB={10} mBMobile={10} black>
+              <Text size={14} weight={300} lH={20} mB={10} mBMobile={10}>
                 Валюта обмена:
               </Text>
               <S.Select
@@ -584,7 +585,7 @@ export const OrderToBuyCard: FC = () => {
               />
             </S.FormItem>
             <S.FormItem>
-              <Text size={14} weight={300} lH={20} mB={10} mBMobile={10} black>
+              <Text size={14} weight={300} lH={20} mB={10} mBMobile={10}>
                 Курс:
               </Text>
               <Input
@@ -600,7 +601,7 @@ export const OrderToBuyCard: FC = () => {
           {paymentMethods === undefined ? null : (
             <Space mb={20}>
               <S.FormItem>
-                <Text size={14} weight={300} lH={20} mB={10} mBMobile={10} black>
+                <Text size={14} weight={300} lH={20} mB={10} mBMobile={10}>
                   Платежный метод:
                 </Text>
                 {paymentMethods.length > 0 ? (
@@ -630,7 +631,7 @@ export const OrderToBuyCard: FC = () => {
                 ) : (
                   // Empty State
                   <S.EmptyPaymentsBlock>
-                    <Text size={14} weight={300} lH={20} black>
+                    <Text size={14} weight={300} lH={20}>
                       {`Платежные методы отсутствуют, `}
                       <S.Link to={routers.settingsNewPayMethod}>добавьте платежный метод</S.Link>
                     </Text>
@@ -643,7 +644,7 @@ export const OrderToBuyCard: FC = () => {
           {currencyToBuy && currencyToChange && orderSumm && changeRate && (
             <Space gap={20} mb={20} mobileColumn>
               <S.FormItem>
-                <Text size={14} weight={300} lH={20} mB={10} mBMobile={10} black>
+                <Text size={14} weight={300} lH={20} mB={10} mBMobile={10}>
                   Минимальный лимит операции:
                 </Text>
                 <Input
@@ -655,7 +656,7 @@ export const OrderToBuyCard: FC = () => {
                 />
               </S.FormItem>
               <S.FormItem>
-                <Text size={14} weight={300} lH={20} mB={10} mBMobile={10} black>
+                <Text size={14} weight={300} lH={20} mB={10} mBMobile={10}>
                   Максимальный лимит операции:
                 </Text>
                 <Input
@@ -671,7 +672,7 @@ export const OrderToBuyCard: FC = () => {
 
           <Space gap={20} mb={40} mobileMb={20}>
             <S.FormItem>
-              <Text size={14} weight={300} lH={20} mB={10} mBMobile={10} black>
+              <Text size={14} weight={300} lH={20} mB={10} mBMobile={10}>
                 Время на обмен:
               </Text>
               <S.Select
