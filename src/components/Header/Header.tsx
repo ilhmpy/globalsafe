@@ -100,12 +100,16 @@ export const Header: FC<Props> = ({ admPanel }: Props) => {
     history.push(`/login/0`);
   };
 
+  function handleLogoClick() {
+    history.push("/");
+  };
+
   return (
     <>
       <HeaderWrap header={header}>
         <Container style={{ position: 'relative' }}>
           <HeaderInner>
-            <HeaderLogo href="/">
+            <HeaderLogo onClick={handleLogoClick}>
               <Logo className="logo" />
             </HeaderLogo>
             <HeaderMenu open={open}>
