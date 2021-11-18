@@ -19,7 +19,7 @@ export const ActionMenu = styled.ul<{ open?: boolean }>`
   right: 0;
   margin: 0 auto;
   padding: 13px 0;
-  background: #fff;
+  background: ${(props) => props.theme.v2.chart.dropBg};
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
   border-radius: 0px 0px 5px 5px;
   max-height: ${(props) => (props.open ? '300px' : 0)};
