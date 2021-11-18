@@ -11,6 +11,7 @@ import { ReactComponent as Arrow } from '../../../../assets/v2/svg/arrow-exchang
 import { Dropdown } from './components/Dropdown';
 import { ChartDesctop } from './ChartDesctop';
 import { ChartContext } from '../../../../context/ChartContext';
+import { Loading } from '../../../../components/UI/Loading';
 
 require('highcharts/modules/exporting')(Highcharts);
 
@@ -270,22 +271,33 @@ export const ChartActiv: FC<Props> = ({
             ))}
           </S.Buttons>
         </S.ChartHeader>
-        {/* {data1().length && <ChartDesctop data={data1()} setDate={setDate} setValCWD={setValCWD} />} */}
-        {activeTab === 'День' ? (
-          <ChartDesctop data={data1()} setDate={setDate} setValCWD={setValCWD} />
-        ) : null}
-        {activeTab === 'Месяц' ? (
-          <ChartDesctop data={data1()} setDate={setDate} setValCWD={setValCWD} />
-        ) : null}
-        {activeTab === 'Квартал' ? (
-          <ChartDesctop data={data1()} setDate={setDate} setValCWD={setValCWD} />
-        ) : null}
-        {activeTab === 'Год' ? (
-          <ChartDesctop data={data1()} setDate={setDate} setValCWD={setValCWD} />
-        ) : null}
-        {activeTab === 'Все время' ? (
-          <ChartDesctop data={data1()} setDate={setDate} setValCWD={setValCWD} />
-        ) : null}
+        {(!loadMGCWD && type === 'MGCWD') ||
+        (!loadGCWD && type === 'GCWD') ||
+        (!loadGLOBAL && type === 'GLOBAL') ||
+        (!loadDIAMOND && type === 'DIAMOND') ? (
+          <>
+            {activeTab === 'День' ? (
+              <ChartDesctop data={data1()} setDate={setDate} setValCWD={setValCWD} />
+            ) : null}
+            {activeTab === 'Месяц' ? (
+              <ChartDesctop data={data1()} setDate={setDate} setValCWD={setValCWD} />
+            ) : null}
+            {activeTab === 'Квартал' ? (
+              <ChartDesctop data={data1()} setDate={setDate} setValCWD={setValCWD} />
+            ) : null}
+            {activeTab === 'Год' ? (
+              <ChartDesctop data={data1()} setDate={setDate} setValCWD={setValCWD} />
+            ) : null}
+            {activeTab === 'Все время' ? (
+              <ChartDesctop data={data1()} setDate={setDate} setValCWD={setValCWD} />
+            ) : null}
+          </>
+        ) : (
+          <S.LoaderWrap>
+            <Loading />
+            <S.LoaderInner className="is-placeholder" />
+          </S.LoaderWrap>
+        )}
         {/* <S.MobChartBlock mob>
           <MobChart data={data1()} setDate={setDate} setValCWD={setValCWD} />
         </S.MobChartBlock> */}

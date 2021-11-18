@@ -48,10 +48,11 @@ a{
         width: 100%;
         visibility: visible;
         left: 0;
-        background-color: rgba(0, 0, 0, 0.075);
+        background-color: rgba(202, 78, 78, 0.075);
         animation: flickerAnimation 1.5s infinite;
     }
 }
+
 .chart-toltip{
   display: flex;
   flex-direction: column;
@@ -364,7 +365,6 @@ button {
   outline: none;
   border: 0;
 }
-
 `;
 
 export const Container = styled.div<{ pNone?: boolean; bigMargin?: boolean; ppNone?: boolean }>`
