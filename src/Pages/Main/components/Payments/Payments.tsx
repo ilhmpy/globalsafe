@@ -9,39 +9,42 @@ import 'swiper/components/scrollbar/scrollbar.scss';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper.scss';
 import { H2 } from '../../../../components/UI/Heading';
-import { Page } from '../../../../components/UI/Page';
 import { AppContext } from '../../../../context/HubContext';
 import { Card } from '../../../../globalStyles';
 import { Container } from '../../../../components/UI/Container';
 import { Pokedex, RootPayDeposit } from '../../../../types/payouts';
 import { ReactComponent as Reload } from '../../../../assets/svg/reload.svg';
 import useWindowSize from '../../../../hooks/useWindowSize';
-import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
-import { isArrayBindingPattern } from 'typescript';
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
 export const Payments: FC = () => {
   const testArray = [
-  [ 
-  { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-  { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-  { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-  { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-  { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-  { deposit: { name: "TEST" }, date: new Date(), procent: 85 }],
- [{ deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-  { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-  { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-  { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-  { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-  { deposit: { name: "TEST" }, date: new Date(), procent: 85 }],
- [{ deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-  { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-  { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-  { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-  { deposit: { name: "TEST" }, date: new Date(), procent: 85 },
-  { deposit: { name: "TEST" }, date: new Date(), procent: 85 }]];
+    [
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+    ],
+    [
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+    ],
+    [
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+      { deposit: { name: 'TEST' }, date: new Date(), procent: 85 },
+    ],
+  ];
   const [statsDeposit, setStatsDeposit] = useState<RootPayDeposit[]>([]);
   const [bigArr, setBigArr] = useState<any>(testArray);
   const screen = useWindowSize();
@@ -308,7 +311,7 @@ const WhiteIntf = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
-  margin-bottom: 0px; 
+  margin-bottom: 0px;
 
   @media only screen and (max-width: 767px) {
     flex-direction: column;
@@ -428,8 +431,5 @@ const WhiteItemLine = styled.div<{ procent: number | string }>`
     position: absolute;
     width: ${({ procent }) => procent}%;
     height: inherit;
-  }
-
-  @media only screen and (max-width: 767px) {
   }
 `;

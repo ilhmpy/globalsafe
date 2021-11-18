@@ -41,7 +41,7 @@ export const SwitchTheme = styled.div<{ mob?: boolean; admin?: boolean; auth?: b
   }
 `;
 
-export const Btn = styled(Button)<{ hide?: boolean; header?: boolean; }>`
+export const Btn = styled(Button)<{ hide?: boolean; header?: boolean }>`
   padding: 12px 20px;
   display: ${(props) => (props.hide ? 'none' : 'inline-block')};
   text-transform: uppercase;
@@ -53,7 +53,7 @@ export const Btn = styled(Button)<{ hide?: boolean; header?: boolean; }>`
           display: none;
         }
       `;
-    };
+    }
   }}
 `;
 
@@ -81,9 +81,7 @@ export const Languale = styled.div<{ auth?: boolean; admin?: boolean }>`
   font-weight: 500;
   font-size: 12px;
   line-height: 14px;
-
   color: ${({ theme }) => theme.main.bodyColor};
-
   cursor: pointer;
   ${({ auth, admin }) => {
     if (!auth) {

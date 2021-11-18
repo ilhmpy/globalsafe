@@ -226,12 +226,11 @@ export const SliderNav = styled.div`
 
 export const SwiperContainer = styled.div`
   .thumb {
-    border: 1px solid #fff;
+    border: 1px solid ${(props) => props.theme.v2.chart.thumbBg};
   }
   .mySwiper .swiper-slide-thumb-active {
     border: 1px solid ${(props) => props.theme.v2.chart.thumbBorder};
     box-sizing: border-box;
-    box-shadow: 0px 16px 30px -8px rgba(220, 220, 232, 0.5);
     border-radius: 4px;
   }
 
@@ -304,11 +303,5 @@ export const MobChartBlock = styled.div<{ mob?: boolean }>`
   .highcharts-yaxis-labels,
   .highcharts-xaxis-labels {
     font-family: 'Roboto', sans-serif;
-  }
-  .highcharts-tooltip,
-  .highcharts-tooltip-box,
-  .highcharts-tooltip text,
-  .highcharts-tooltip-header {
-    color: #fff !important;
   }
 `;

@@ -63,7 +63,7 @@ export const TimerHistoryInner = styled.div<{ mt?: boolean; history?: boolean }>
     margin-right: 0px;
   }
 
-  ${({ mt, history }) => {
+  ${({ history }) => {
     if (history) {
       return `
         margin: 0;
@@ -82,7 +82,6 @@ export const TimerTitle = styled.div`
   line-height: 21px;
   display: flex;
   align-items: center;
-  /* justify-content: center; */
   letter-spacing: 0.1px;
   color: ${(props) => props.theme.text2};
   margin-bottom: 10px;
@@ -268,7 +267,7 @@ export const Container = styled.div<{ before?: boolean; lotteryModal?: boolean }
         align-items: normal;
         justify-content: normal;
 
-        @media only screen and (max-device-width: 620px) {
+        @media only screen and (max-width: 620px) {
           margin: 0px auto 14px;
         }
 
@@ -508,7 +507,6 @@ export const TimerHistoryValue = styled.div<{ nodata?: boolean }>`
   font-weight: bold;
   font-size: 24px;
   line-height: 28px;
-
   color: #3f3e4e;
 
   ${(props) => {
@@ -778,7 +776,6 @@ export const TimerModalTitle = styled.h3`
   font-weight: 500;
   margin-bottom: 10px;
   line-height: 20px;
-
   color: #3f3e4e;
 `;
 
