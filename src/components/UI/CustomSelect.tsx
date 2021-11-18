@@ -1,51 +1,35 @@
-import { FC, useState } from "react";
+import React, { FC } from "react";
 import 'moment/locale/ru';
 import styled from "styled-components/macro";
 import Scrollbars from "react-custom-scrollbars";
 import { ReactComponent as Arrow } from '../../assets/svg/selArrow.svg';
+import moment from "moment";
 
 type CustomSelectType = {
-    data: any[];
-    onSwitch: (value: string) => void;
-    defaultValue?: string;
+    listOpen: boolean;
+    children: React.ReactNode;
+    defaultDesc: any;
+    hideList: () => void;
 };
 
-export const CustomSelect: FC<CustomSelectType> = ({ data, onSwitch, defaultValue }: CustomSelectType) => {
-    const [value, setValue] = useState<string | undefined>();
-    const [activeSwitch, setActiveSwitch] = useState<boolean>(false);
-  
-    const hideList = () => {
-      setActiveSwitch(!activeSwitch);
-    };
-  
-    const getSwitch = (e: any) => {
-      hideList();
-      onSwitch(e.target.dataset.value);
-      setValue(e.target.dataset.value);
-    };
-
+export const CustomSelect: FC<CustomSelectType> = ({ listOpen, children, defaultDesc, hideList }: CustomSelectType) => {
     return (
-      <Field onClick={hideList} rotate={activeSwitch}>
+      <Field onClick={hideList} rotate={listOpen}>
         <Arrow className="arrow" />
-        {value ? value : data[0]}
-        <FieldList block={activeSwitch}>
+        {defaultDesc}
+        <FieldList block={listOpen}>
           <Scrollbars className="pagination">
-            {data &&
-              data.map((item, idx) => (
-                <FieldListItem key={idx} data-value={item} onClick={getSwitch}>
-                    {item}                  
-                </FieldListItem>
-              ))}
+            {children}
           </Scrollbars>
         </FieldList>
       </Field>
     );
 };
 
-const Field = styled.div<{ rotate?: boolean }>`
+export const Field = styled.div<{ rotate?: boolean }>`
   width: 100%;
   border: 1px solid #edf0f6;
-  border-radius: 4px;
+  border-radius: 4px; 
   height: 40px;
   cursor: pointer;
   background: #f9fafb;
@@ -88,7 +72,7 @@ const FieldList = styled.div<{ block: boolean }>`
   }
 `;
 
-const FieldListItem = styled.div`
+export const FieldListItem = styled.div`
   width: 100%;
   height: 40px;
   display: flex;
