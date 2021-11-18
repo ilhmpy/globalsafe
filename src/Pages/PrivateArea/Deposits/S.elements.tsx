@@ -29,6 +29,7 @@ export const SwiperUI = styled(Swiper)`
 
 export const SwiperContainer = styled(MainContainer)`
   display: none;
+  background: ${(props) => props.theme.lkMain.tileTopSide};
   @media (max-width: 992px) {
     display: block;
   }
@@ -65,8 +66,10 @@ export const ProgressBar = styled.div`
   height: 4px;
   left: 20px;
   top: 98%;
-  background: #ebebf2;
-  border: 1px solid #ffffff;
+  background: ${(props) => props.theme.lkMain.tileTopSide};
+
+  
+  border: 1px solid ${(props) => props.theme.lkMain.balanceBlock};
   border-radius: 2px;
   @media (min-width: 768px) {
     width: 210px;

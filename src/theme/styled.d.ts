@@ -1,5 +1,4 @@
 import 'styled-components';
-import { StringMappingType } from 'typescript';
 
 declare module 'styled-components' {
   export interface DefaultTheme {
@@ -49,7 +48,7 @@ declare module 'styled-components' {
       selectCountBackgroundImage: string;
     };
     footer: {
-      color: string; 
+      color: string;
     };
     sortingWindow: {
       backgroundColor: string;
@@ -79,7 +78,7 @@ declare module 'styled-components' {
     };
     pink: string;
     rounIputBackground: string;
-    v2:{
+    v2: {
       text: string;
       blackText: string;
       bg: string;
@@ -87,11 +86,11 @@ declare module 'styled-components' {
       activeBlue: string;
       neutralBlue: string;
       body: string;
-      header:{
+      header: {
         background: string;
         burger: string;
-      },
-      chart:{
+      };
+      chart: {
         background: string;
         btn: string;
         text: string;
@@ -101,8 +100,9 @@ declare module 'styled-components' {
         topBorder: string;
         dropBg: string;
         shadow: string;
-      }
-    },
+      };
+    };
+
     titles: string;
     toToken: {
       background: string;
@@ -120,15 +120,35 @@ declare module 'styled-components' {
       ich1: string;
       ich2: string;
       tableBg: string;
-    }
-
-    // NEW CODE
+    };
+    lkMain: {
+      background: string;
+      balanceBlock: string;
+      boxShadow: string;
+      navLink: string;
+      depositHeader: string;
+      activeChipBckgr: string;
+      activeChip: string;
+      chip: string;
+      activeChipBorder: string;
+      chipBorder: string;
+      borderBottom: string;
+      cwdChip: string;
+      globalChip: string;
+      globalFutureChip: string;
+      gsFutureChip: string;
+      tileTopSide: string;
+      depositOpenLeftSide: string;
+      selectBack: string;
+      selectBorder: string;
+      inputPlaceholder: string;
+    };
     main: {
       bodyBackground: string;
       bodyColor: string;
       buttonBackground: string;
       blocksBackground: string;
-    }, 
+    };
     notifies: {
       notifyBackground: string;
       notifiesBorder: string;
@@ -136,41 +156,41 @@ declare module 'styled-components' {
       doneNotify: string;
       notifiesBoxShadow: string;
       notifyBlockBackground: string;
-    },
+    };
     charts: {
       chartButtonBg: string;
       chartOpacityBtn: string;
-    },
+    };
     footerB: {
       background: string;
-    },
+    };
     operations2: {
       background: string;
       ich2Background: string;
-    },
+    };
     header2: {
       background: string;
-    },
+    };
     depositsProgramsCards: {
       background: string;
       text: string;
       boxShadow: string;
       descOpacity: string;
-    },
+    };
     partnersProgramsBlock: {
       background: string;
       background2ich: string;
       boxShadow: string;
-    },
+    };
     drawHistory: {
       descColor: string;
       background: string;
       background2ich: string;
-    },
+    };
     payments2: {
       background: string;
       color: string;
       itemBackground: string;
-    },
-  } 
+    };
+  }
 }

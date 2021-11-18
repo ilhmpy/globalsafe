@@ -9,14 +9,16 @@ export const Field = styled.input`
   font-size: 14px;
   line-height: 16px;
   font-family: 'Roboto', sans-serif;
-  color: #000000;
+  color: ${(props) => props.theme.lkMain.navLink};
   width: 300px;
   font-weight: 500;
+  background: ${(props) => props.theme.lkMain.selectBack};
+  border: ${(props) => props.theme.lkMain.selectBorder};
   &:focus {
     outline: none;
   }
   &::placeholder {
-    color: rgba(0, 0, 0, 0.4);
+    color: ${(props) => props.theme.lkMain.inputPlaceholder};
   }
   @media (max-width: 768px) {
     width: 100%;

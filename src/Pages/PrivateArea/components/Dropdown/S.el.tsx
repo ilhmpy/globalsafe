@@ -208,6 +208,7 @@ export const ListItem = styled.li<{ active?: boolean }>`
   background: ${(props) => props.theme.card.background};
   cursor: pointer;
   color: #000000;
+  color: ${(props) => props.theme.lkMain.navLink};
 
   &:focus,
   &:hover {
@@ -221,6 +222,7 @@ export const Text = styled.div`
   font-size: 14px;
   line-height: 20px;
   color: #000000;
+  color: ${(props) => props.theme.lkMain.navLink};
 `;
 
 export const Value = styled.div`
@@ -236,8 +238,8 @@ export const DropDownContainer = styled.div`
 `;
 
 export const DropDownHeader = styled.div`
-  background: #f9fafb;
-  border: 1px solid #edf0f7;
+  background: ${(props) => props.theme.lkMain.selectBack};
+  border: ${(props) => props.theme.lkMain.selectBorder};
   box-sizing: border-box;
   border-radius: 4px;
   position: relative;
@@ -249,7 +251,7 @@ export const DropDownHeader = styled.div`
   position: relative;
   width: 100%;
   transition: 200ms ease-in-out;
-  color: #000000;
+  color: ${(props) => props.theme.lkMain.navLink};
   ${Arrow} {
     position: absolute;
     right: 14px;
